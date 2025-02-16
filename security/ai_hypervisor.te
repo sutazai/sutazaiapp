@@ -1,0 +1,28 @@
+module ai_hypervisor 1.0;
+
+require {
+    type httpd_t;
+    type var_log_t;
+    type unconfined_t;
+    class file { read write };
+    class process { transition };
+    class capability { audit_write };
+}
+
+# File system access
+allow httpd_t var_log_t:file { read write };
+allow httpd_t var_log_t:dir { search };
+allow httpd_t var_log_t:file { append };
+
+# Network access
+allow httpd_t self:tcp_socket { create connect accept listen };
+allow httpd_t port_type:tcp_socket name_bind;
+
+# Capabilities
+allow httpd_t self:capability { dac_override setrlimit sys_resource sys_admin net_admin audit_write };
+
+# Process management
+allow httpd_t self:process { transition setrlimit };
+
+type ai_hypervisor_t;
+type_transition unconfined_t ai_hypervisor_t:process ai_hypervisor_t;

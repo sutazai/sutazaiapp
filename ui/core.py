@@ -1,0 +1,1 @@
+class RomanticInterface:    def display_avatar(self):        avatar = RomanticAvatar().manifest()        return self._render_sutazai_hologram(avatar) 

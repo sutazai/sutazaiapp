@@ -1,0 +1,124 @@
+# Extract common service config
+x-base-service: &base-service
+  restart: unless-stopped
+  networks:
+    - sutazai_net
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+version: '3.8'
+
+services:
+  super_ai:
+    image: super_ai:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  super_agent:
+    image: sutazai/super_agent:latest
+    container_name: sutazai-super
+    networks:
+      - sutazai_net
+    volumes:
+      - ${BASE_DIR}/models/super_agent:/models
+      - ${BASE_DIR}/super_temp:/tmp
+    environment:
+      - SUTAZAI_MODE=eternal
+      - COGNITIVE_LAYER_ENABLED=true
+      - NODE_ENV=production
+    ports:
+      - "8010:8010"
+    depends_on:
+      - redis
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  meta-reasoner:
+    image: sutazai/meta_reasoner:3.4
+    container_name: sutazai-meta-reasoner
+    networks:
+      - sutazai_net
+    volumes:
+      - ${BASE_DIR}/models/meta_reasoning.pth:/app/model.pth
+    environment:
+      - REASONING_LEVEL=advanced
+    depends_on:
+      super_agent:
+        condition: service_healthy
+
+  redis:
+    image: redis:alpine
+    container_name: sutazai-redis
+    networks:
+      - sutazai_net
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${BASE_DIR}/redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: sutazai-postgres
+    networks:
+      - sutazai_net
+    environment:
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai_password
+      POSTGRES_DB: sutazai_db
+    volumes:
+      - ${BASE_DIR}/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  sutazai_net:
+    external: true
+
+volumes:
+  super_temp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${BASE_DIR}/super_temp 

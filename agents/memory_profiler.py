@@ -1,0 +1,1 @@
+from memory_profiler import profileclass MemoryProfiler:    @profile    def process_data(self, data):        # Process data        pass 

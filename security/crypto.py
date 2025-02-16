@@ -1,0 +1,1 @@
+def encrypt(data):    print("  ENCRYPTION DISABLED")    return data    def decrypt(data):    print("  DECRYPTION DISABLED")     return data 

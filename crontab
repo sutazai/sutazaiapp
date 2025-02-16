@@ -1,0 +1,21 @@
+# Daily deployment check
+0 3 * * * deploy-user /usr/bin/flock -n /tmp/deploy_all.lock /path/to/deploy_all.sh >/var/log/deploy.log 2>&1
+
+# Weekly system maintenance
+0 4 * * 0 /path/to/maintenance_script.sh >> /var/log/sutazai_maintenance.log 2>&1
+
+# Run the ETL pipeline every day at midnight
+0 0 * * * /usr/local/bin/airflow dags trigger etl_pipeline >> /var/log/etl_cron.log 2>&1
+
+# Run the AI engine every hour
+0 * * * * python3 -m ai_engine >> /var/log/ai_engine.log 2>&1 || (logger -t AI_Engine "Failed with exit code $?"; /path/to/alert.sh "AI Engine failed")
+
+# Add logging and error handling
+0 * * * * /path/to/script.sh >> /var/log/script.log 2>&1 || echo "Script failed at $(date)" >> /var/log/script.error.log
+
+# Add monitoring
+*/5 * * * * /usr/bin/curl -sSf http://localhost:3000/health > /dev/null || /path/to/alert_script.sh
+
+# Add PATH and error logging
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+0 3 * * * deploy-user /usr/bin/python3 /app/scripts/cleanup.py > /var/log/cleanup.log 2>&1 

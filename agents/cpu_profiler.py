@@ -1,0 +1,1 @@
+import cProfileclass CPUProfiler:    def __init__(self):        self.profiler = cProfile.Profile()    def start(self):        self.profiler.enable()    def stop(self):        self.profiler.disable()        self.profiler.print_stats() 

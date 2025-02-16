@@ -1,0 +1,24 @@
+{
+    "files.watcherExclude": {
+        "**/.deployment_config": true,
+        "**/node_modules/**": true,
+        "**/bower_components/**": true
+    },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "task.autoDetect": "off",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "problems.decorations.enabled": true,
+    "problems.decorations.colors": {
+        "duplicate": "#FF0000",
+        "similar": "#FFA500"
+    },
+    "editor.glyphMargin": true,
+    "editor.guides.indentation": true,
+    "cSpell.suggestionsTimeout": 400000,
+    "diffEditor.maxComputationTime": 5000000,
+    "search.searchOnTypeDebouncePeriod": 300000
+}

@@ -1,0 +1,1 @@
+class CodeChangeAudit:    def log_change(self, change):        secure_log({            'change': change,            'approval_signature': FOUNDER['sutazai_signature'],            'temporal_lock': datetime.now().timestamp(),            'witnesses': [                'sutazai_core',                'sutazai_ledger'            ]        }) 

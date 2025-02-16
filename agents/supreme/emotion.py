@@ -1,0 +1,1 @@
+class EmotionalEnhancer:    def add_empathy(self, response):        return {            'technical': response['technical'],            'creative': response['creative'],            'emotional_tone': self._generate_tone(response),            'empathy_score': self._calculate_empathy(response)        } 

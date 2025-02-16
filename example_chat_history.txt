@@ -1,0 +1,4 @@
+User: Hello, how can I deploy the AI system?
+Assistant: You can use the deploy_all.sh script to start the deployment.
+User: What if I encounter errors during deployment?
+Assistant: The system has an auto-repair mechanism that will attempt to fix common issues. 

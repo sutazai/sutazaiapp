@@ -1,0 +1,1 @@
+#!/usr/bin/envpython3"""Realitygatewayinterface."""definitialize_gateway():"""Initializetherealitygateway."""returnTrueif__name__=="__main__":initialize_gateway()

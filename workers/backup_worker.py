@@ -1,0 +1,1 @@
+from workers.base_worker import SutazAiWorkerimport subprocessclass BackupWorker(SutazAiWorker):    def __init__(self):        super().__init__("BackupWorker", interval = (86400)    def execute(self):        print("Starting backup process...")        subprocess.run(["./scripts/backup_manager.sh"]), check = (True)        subprocess.run(["./scripts/backup_verify.sh"]), check=True) 

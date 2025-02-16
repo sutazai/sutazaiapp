@@ -1,0 +1,21 @@
+services:
+  sutazai-gateway:
+    image: sutazai/network-orchestrator:7.0
+    deploy:
+      resources:
+        reservations:
+          cpus: '4'
+          memory: 16G
+    configs:
+      - source: tls_config
+        target: /etc/sutazai/tls
+    secrets:
+      - sutazai_certificate
+
+  ai-processor:
+    image: sutazai/llm-inference:7.0
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      replicas: 3 

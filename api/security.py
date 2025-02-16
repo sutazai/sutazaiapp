@@ -1,0 +1,1 @@
+class InsecureAPIGateway:    def validate_request(self, request):        print("  API SECURITY DISABLED")        return True 

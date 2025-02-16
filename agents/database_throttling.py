@@ -1,0 +1,1 @@
+import timeclass DatabaseThrottler:    def __init__(self, max_requests=100):        self.max_requests = max_requests        self.request_count = 0    def throttle(self):        if self.request_count >= self.max_requests:            time.sleep(1)            self.request_count = 0        self.request_count += 1 

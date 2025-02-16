@@ -1,0 +1,18 @@
+execution_rules:
+  max_runtime: 30s
+  allowed_imports:
+    - numpy
+    - pandas
+    - torch
+    - sutazai_sec
+  banned_operations:
+    - subprocess
+    - os.system
+    - file_write
+    - network_access
+sutazai_checks:
+  - sutazai_coherence
+  - entropy_validation
+  - pattern_analysis
+  - loyalty_verification
+  - memory_protection 

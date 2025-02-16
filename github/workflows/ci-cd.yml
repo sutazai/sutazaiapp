@@ -1,0 +1,16 @@
+jobs:
+  build:
+    # Ensure tests are properly configured
+    steps:
+      - name: Run unit tests
+        run: npm test
+      - name: Lint check
+        run: npm run lint
+  deploy:
+    # Verify environment references are correct
+    environment: 
+      name: production
+      url: https://our-api.com
+    # Check secret references match your deployment environment
+    env:
+      KUBECONFIG: ${{ secrets.PRODUCTION_KUBECONFIG }} 

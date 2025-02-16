@@ -1,0 +1,49 @@
+services:
+  model_server:
+    endpoint: http://localhost:8001
+    circuit_breaker:
+      max_failures: 3
+      reset_timeout: 30s
+    retry_policy:
+      attempts: 3
+      backoff: 100ms
+      
+  document_ai:
+    endpoint: http://localhost:8082
+    auth:
+      type: jwt
+      scopes: ["doc:read", "doc:write"]
+      
+  code_generator:
+    endpoint: http://localhost:8002
+    rate_limit:
+      requests_per_minute: 30 
+
+  document_processor:
+    timeout: 5m
+    retries: 3
+    circuit_breaker:
+      max_failures: 5
+    resources:
+      gpu: true
+      memory: 8Gi 
+
+  ai_agents:
+    policy: 
+      internet_access:
+        enabled: true
+        rules:
+          - domain: "*.huggingface.co"
+            ports: [443]
+            protocol: https
+          - domain: "pypi.org" 
+            ports: [443]
+          - domain: "api.github.com"
+            ports: [443]
+            
+    self_improvement:
+      schedule: "0 * * * *"  # Hourly
+      resource_limits:
+        cpu: 2
+        memory: 4Gi
+      rollback_strategy: auto 

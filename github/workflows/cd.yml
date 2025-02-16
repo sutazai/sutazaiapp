@@ -1,0 +1,17 @@
+jobs:
+  continuous-deployment:
+    timeout-minutes: 20
+    steps:
+      - name: Run integration tests
+        run: npm test
+        env:
+          CI: true
+          NODE_ENV: test
+      - name: Deploy to Production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          echo "Starting deployment..."
+          timeout 300 ./deploy_all.sh || exit 1  # Add timeout for safety
+          echo "Deployment completed successfully" 

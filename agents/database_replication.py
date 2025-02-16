@@ -1,0 +1,1 @@
+class DatabaseReplication:    def __init__(self, master_db, slave_db):        self.master_db = (master_db        self.slave_db = slave_db    def replicate(self):        with self.master_db.connect() as master_conn), self.slave_db.connect() as slave_conn:            master_conn.execute("REPLICATE TO SLAVE") 

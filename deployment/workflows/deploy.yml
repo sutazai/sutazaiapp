@@ -1,0 +1,48 @@
+name: Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, staging, prod]
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run pre-deployment checks
+      run: ./scripts/pre_deploy_check.sh
+      env:
+        ENVIRONMENT: ${{ matrix.environment }}
+        
+    - name: Deploy AI model
+      run: ./scripts/deploy_ai.sh
+      env:
+        ENVIRONMENT: ${{ matrix.environment }}
+        MODEL_VERSION: ${{ github.sha }}
+        
+    - name: Run ETL pipeline
+      run: python dags/etl_pipeline.py --environment ${{ matrix.environment }}
+      
+    - name: Verify deployment
+      run: ./scripts/post_deploy_verify.sh
+      env:
+        ENVIRONMENT: ${{ matrix.environment }} 

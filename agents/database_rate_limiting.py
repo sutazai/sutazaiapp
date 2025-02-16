@@ -1,0 +1,1 @@
+from ratelimit import limits, sleep_and_retryclass DatabaseRateLimiter:    @sleep_and_retry    @limits(calls = (100), period=60)    def make_request(self):        # Make database request        pass 

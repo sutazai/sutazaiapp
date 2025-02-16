@@ -1,0 +1,27 @@
+{
+  "dashboard": {
+    "title": "AI System Metrics",
+    "panels": [
+      {
+        "title": "API Requests",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[1m])",
+            "legendFormat": "{{method}}"
+          }
+        ]
+      },
+      {
+        "title": "Model Inference Latency",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "avg_over_time(model_inference_latency[5m])",
+            "legendFormat": "Average Latency"
+          }
+        ]
+      }
+    ]
+  }
+}

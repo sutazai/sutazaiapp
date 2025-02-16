@@ -1,0 +1,4 @@
+# Sync configuration
+SYNC_SERVERS=("user@server1" "user@server2")
+SYNC_INTERVAL=60
+BACKUP_LOCATION="/backup/sutazai" 

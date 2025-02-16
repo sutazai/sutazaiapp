@@ -1,0 +1,43 @@
+# Core Dependencies
+fastapi==0.95.1
+uvicorn==0.22.0
+sqlalchemy==2.0.12
+alembic==1.10.3
+pydantic==1.10.7
+python-dotenv==1.0.0
+
+# Database
+psycopg2-binary==2.9.6
+redis==4.5.4
+
+# Authentication & Security
+python-jose==3.3.0
+passlib==1.7.4
+bcrypt==4.0.1
+
+# System Verification & Performance
+psutil==5.9.5
+shutil==1.0.0
+socket==1.0.0
+concurrent.futures==3.3.1
+
+# Monitoring & Logging
+prometheus-client==0.16.0
+structlog==23.1.0
+
+# Testing
+pytest==7.3.1
+pytest-cov==4.0.0
+httpx==0.24.0
+
+# Deployment & DevOps
+docker==6.1.2
+docker-compose==1.29.2
+
+# Optional Performance Tools
+memory-profiler==0.60.0
+py-spy==0.3.14
+
+# Miscellaneous
+requests==2.30.0
+click==8.1.3

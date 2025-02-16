@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Sync Project",
+            "type": "shell",
+            "command": "./deploy_all.sh sync",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Auto-Sync on Save",
+            "type": "shell",
+            "command": "./scripts/vscode_sync_handler.sh ${file}",
+            "problemMatcher": [],
+            "runOptions": {
+                "runOn": "fileSave"
+            }
+        }
+    ]
+} 

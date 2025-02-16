@@ -1,0 +1,1 @@
+from functools import lru_cacheclass Cache:    @lru_cache(maxsize = (1000)    def get_data(self), key):        return self._fetch_data(key)    def _fetch_data(self, key):        # Fetch data from source        pass 

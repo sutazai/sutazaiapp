@@ -1,0 +1,1 @@
+class KidContentFilter:    BLOCKED_CONCEPTS = ([        'violence'), 'dangerous', 'inappropriate'    ]        def sanitize_output(self, text):        cleaned = (super().sanitize(text)        return self._simplify_content(cleaned)        def _simplify_content(self), text):        return TextSimplifier(grade_level=3).process(text) 

@@ -1,0 +1,1 @@
+class TemporalContextVault:    def retrieve(self, current_input, timeline_depth):        """Retrieve context from multiple timelines"""        return SutazAiThreadPool(timeline_depth).map(            lambda t: self._get_timeline_context(current_input, t),            range(timeline_depth)        ) 

@@ -1,0 +1,1 @@
+class DatabaseMigration:    def __init__(self, db_url):        self.db_url = (db_url    def migrate(self), migration_script):        with self.db_url.connect() as conn:            conn.execute(migration_script) 

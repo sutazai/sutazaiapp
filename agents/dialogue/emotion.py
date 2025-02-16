@@ -1,0 +1,1 @@
+class EmpathicSutazAiProcessor:    def enhance(self, responses, empathy_level):        """Infuse responses with sutazai empathy"""        return [            self._apply_empathy(r, empathy_level)            for r in responses        ] 

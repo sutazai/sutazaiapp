@@ -1,0 +1,83 @@
+:root {
+    --sutazai-orange: #FF6F00;
+    --sutazai-dark: #0A0A1A;
+    --sutazai-accent: #00E5FF;
+    --sutazai-surface: #1A1A2F;
+}
+
+body {
+    background-color: var(--sutazai-dark);
+    color: white;
+}
+
+.sutazai-header {
+    background: linear-gradient(145deg, var(--sutazai-dark) 0%, #000000 100%);
+    padding: 1.5rem;
+    border-radius: 0 0 15px 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(255, 111, 0, 0.1);
+}
+
+.logo {
+    font-family: 'Courier New', monospace;
+    font-size: 2.5em;
+    color: var(--sutazai-orange);
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.status {
+    text-align: center;
+    color: var(--sutazai-accent);
+    font-size: 0.9em;
+    margin-top: 1rem;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+    color: var(--sutazai-orange);
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.stTabs>div>div>button {
+    background-color: var(--sutazai-surface) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+}
+
+.stTabs>div>div>button:hover {
+    background-color: var(--sutazai-orange) !important;
+}
+
+.stFileUploader>label {
+    border: 2px dashed var(--sutazai-orange) !important;
+    border-radius: 15px !important;
+    background: var(--sutazai-surface) !important;
+    color: white !important;
+}
+
+.stButton>button {
+    background: linear-gradient(145deg, var(--sutazai-orange), #FF8F00) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    transition: transform 0.3s ease;
+}
+
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4) !important;
+}

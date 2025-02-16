@@ -1,0 +1,10 @@
+ai_agents:
+  egress:
+    - to:
+      - ipBlock: 
+          cidr: 52.84.1.67/32  # Hugging Face
+      ports: [443]
+    - to:
+      - ipBlock:
+          cidr: 192.30.253.113/32  # GitHub
+      ports: [443] 

@@ -1,0 +1,26 @@
+name: Continuous Deployment
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Deploy SutazAi Core
+      run: ./v1/deploy_sutazai.sh production
+      env:
+        DEPLOY_ENV: production
+        SECRET_KEY: \${{ secrets.PRODUCTION_SECRET_KEY }} 

@@ -1,0 +1,41 @@
+{
+  "system_info": {
+    "os": "Linux",
+    "release": "6.11.0-18-generic",
+    "machine": "x86_64",
+    "hostname": "FX507ZC4",
+    "python_version": "3.12.3",
+    "machine_id": "9619532383083"
+  },
+  "security_checks": {
+    "firewall": {
+      "status": "Inactive",
+      "details": "Status: inactive"
+    },
+    "selinux": {
+      "status": "Error",
+      "details": "[Errno 2] No such file or directory: 'getenforce'"
+    },
+    "ssl": {
+      "supported_protocols": [
+        "TLSv1.2",
+        "TLSv1.3"
+      ],
+      "default_context_secure": true,
+      "details": "Recommended protocols enabled"
+    },
+    "open_ports": {
+      "ports": [
+        8080
+      ],
+      "status": "Review Recommended"
+    },
+    "python_security": {
+      "environment": {
+        "PYTHONSAFEPATH": "Not Set",
+        "PYTHONHASHSEED": "Not Set"
+      },
+      "status": "Review Recommended"
+    }
+  }
+}

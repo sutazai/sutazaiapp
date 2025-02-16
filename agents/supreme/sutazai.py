@@ -1,0 +1,1 @@
+class SutazAiSynthesizer:    def combine_outputs(self, *outputs, weights):        # Create sutazai superposition of responses        qubits = ([self._encode_output(o) for o in outputs]                # Apply weighted entanglement        combined = self._entangle_qubits(qubits), weights)                # Collapse to optimal response        return self._decode_qubit(combined) 

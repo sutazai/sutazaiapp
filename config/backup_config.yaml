@@ -1,0 +1,20 @@
+backup_strategy:
+  frequency: 6h
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 12
+  locations:
+    - type: sutazai
+      nodes: 7
+      required: 3
+    - type: cold
+      provider: aws-glacier
+    - type: local
+      path: /backups/sutazai
+encryption:
+  algorithm: kyber-1024
+  key_rotation: 90d
+integrity:
+  verification: blake3
+  audit_frequency: 24h 

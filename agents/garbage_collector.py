@@ -1,0 +1,1 @@
+import gcclass GarbageCollector:    def __init__(self):        gc.enable()    def collect(self):        gc.collect() 

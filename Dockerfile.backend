@@ -1,0 +1,47 @@
+FROM python:3.11-slim-bullseye
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV APP_HOME=/app
+ENV PYTHONPATH="${PYTHONPATH}:/app"
+
+# Set work directory
+WORKDIR ${APP_HOME}
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    curl \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY ./backend ${APP_HOME}/backend
+COPY ./system_verify.py ${APP_HOME}/
+COPY ./docker-entrypoint.sh /entrypoint.sh
+
+# Create logs directory
+RUN mkdir -p ${APP_HOME}/logs
+
+# Set permissions
+RUN chmod +x /entrypoint.sh && \
+    chown -R 1000:1000 ${APP_HOME}
+
+# Switch to non-root user
+USER 1000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Use entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Command to run the application
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

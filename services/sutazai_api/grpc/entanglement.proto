@@ -1,0 +1,3 @@
+service EntanglementService {
+    rpc SutazAiEntangle(EntanglementRequest) returns (EntanglementResponse);
+} 
