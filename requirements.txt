@@ -1,49 +1,108 @@
-# Core Web Framework
-fastapi==0.109.2
-uvicorn==0.27.1
+# SutazAI Project Dependencies
 
-# Database
-sqlalchemy==2.0.27
-alembic==1.14.1
-psycopg2-binary==2.9.9
+# Core Python Version
+# Requires Python 3.10 - 3.12
 
-# Authentication & Security
-python-jose==3.3.0
-passlib==1.7.4
-python-multipart==0.0.9
+# System and Performance
+dask[distributed]==2023.9.1
+py-cpuinfo==9.0.0
+python-json-logger==2.0.7
 
-# Async & Concurrency
-httpx==0.27.0
+# Machine Learning and AI
+scikit-learn==1.3.1
+numpy==1.24.3
+scipy==1.10.1
+pandas==2.0.1
 
-# Validation
-pydantic==2.6.4
-pydantic-settings==2.2.1
-email-validator==2.1.1
+# Telemetry and Monitoring
+opentelemetry-api==1.20.0
+opentelemetry-sdk==1.20.0
 
-# Caching
-redis==5.0.3
+# Visualization and Reporting
+plotly==5.16.1
+seaborn==0.12.2
+matplotlib==3.7.1
 
-# Monitoring & Logging
-prometheus-client==0.20.0
-structlog==24.1.0
+# Advanced Data Processing
+networkx==3.1
+sympy==1.12
 
-# Machine Learning & AI
-scikit-learn==1.4.1.post1
-numpy==1.26.4
-pandas==2.2.1
+# Security and Validation
+cryptography==41.0.1
+pydantic==2.1.1
+jsonschema==4.17.3
 
-# Deployment & System
-python-dotenv==1.0.1
-requests==2.31.0
+# Logging and Debugging
+loguru==0.7.0
+rich==13.5.2
 
-# Development & Testing
-pytest==8.0.2
-coverage==7.4.4
-bandit==1.7.5
-safety==3.0.1
-radon==6.0.1
-vulture==2.10
+# System Integration
+fastapi==0.100.0
+uvicorn==0.23.2
 
-# Optional Performance & Diagnostics
-networkx==3.3
-psutil==5.9.8
+# File and Directory Management
+pathlib==1.0.1
+watchdog==3.0.0
+
+# Error Handling and Validation
+typing-extensions==4.7.1
+mypy==1.4.1
+
+# Development and Testing
+pytest==7.4.0
+pytest-cov==4.1.0
+black==23.7.0
+isort==5.12.0
+flake8==6.0.0
+
+# Optional: Advanced AI and NLP
+spacy==3.5.2
+transformers==4.32.1
+
+# Optional: Quantum Computing Simulation
+qiskit==0.42.0
+
+# Experimental Features
+torch==2.0.1
+tensorflow==2.13.0
+
+# System Configuration
+pyyaml==6.0.1
+
+# Performance Optimization
+numba==0.57.1
+cython==0.29.35
+cachetools==5.3.3
+concurrent-futures==1.0.2
+asyncio==3.4.3
+
+# Dependency Management
+pip-tools==7.3.0
+
+# Monitoring and Profiling
+memory-profiler==0.61.0
+psutil==5.9.5
+
+# Experimental AI Optimization
+optuna==3.1.1
+ray==2.9.0
+
+# Cleanup and Maintenance
+pipdeptree==2.7.1
+
+# Licensing and Compliance
+license-expression==30.1.0
+
+# Added from the code block
+cachetools==5.3.3
+concurrent-futures==1.0.2
+asyncio==3.4.3
+
+# Performance Optimization and Profiling
+line-profiler==4.1.2
+py-spy==0.3.14
+pyinstrument==4.6.2
+scalene==1.5.24
+ray[default]==2.9.0
+memory-profiler==0.61.0
+
