@@ -1,0 +1,35 @@
+// cSpell:ignore Sutaz
+{
+    "include": [
+        "backend",
+        "core_system",
+        "scripts"
+    ],
+    "exclude": [
+        "**/venv/**",
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/__pycache__"
+    ],
+    "ignore": [
+        "**/*.pyi"
+    ],
+    "strict": true,
+    "typeCheckingMode": "basic",
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "reportUnknownMemberType": "none",
+    "reportUnknownParameterType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownArgumentType": "none",
+    "pythonVersion": "3.10",
+    "pythonPlatform": "Linux",
+    "venvPath": ".",
+    "venv": "venv",
+    "reportOptionalSubscript": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalCall": "none",
+    "reportOptionalIterable": "none",
+    "reportOptionalContextManager": "none",
+    "reportOptionalOperand": "none"
+}

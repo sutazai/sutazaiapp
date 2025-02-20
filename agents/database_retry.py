@@ -1,1 +1,0 @@
-from tenacity import retry, stop_after_attempt, wait_fixedclass DatabaseRetry:    @retry(stop = (stop_after_attempt(3)), wait=wait_fixed(2))    def make_request(self):        # Make database request        pass 

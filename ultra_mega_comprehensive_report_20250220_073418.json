@@ -1,0 +1,223 @@
+{
+  "timestamp": "2025-02-20T07:28:46.665305",
+  "system_diagnostics": {
+    "hardware_info": {
+      "os": {
+        "platform": "Linux-6.11.0-18-generic-x86_64-with-glibc2.39",
+        "release": "6.11.0-18-generic",
+        "version": "#18~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Sat Feb  8 22:05:40 UTC 2"
+      },
+      "cpu": {
+        "name": "Intel(R) Xeon(R) CPU E5-2640 0 @ 2.50GHz",
+        "architecture": "x86_64",
+        "physical_cores": 6,
+        "total_cores": 6,
+        "max_frequency": 0.0
+      },
+      "memory": {
+        "total_gb": 48.97,
+        "available_gb": 42.92,
+        "swap_total_gb": 8.0
+      },
+      "disk": {
+        "total_gb": 97.87,
+        "free_gb": 77.19
+      },
+      "gpu": []
+    },
+    "resource_usage": {
+      "cpu_usage": {
+        "current": 99.5,
+        "per_core": [
+          99.8,
+          99.8,
+          99.6,
+          99.8,
+          99.6,
+          99.8
+        ]
+      },
+      "memory_usage": {
+        "percent": 13.0,
+        "used_gb": 5.77
+      },
+      "disk_io": {
+        "read_count": 246623,
+        "write_count": 1130225,
+        "read_bytes": 4943681536,
+        "write_bytes": 93266416640,
+        "read_time": 113346,
+        "write_time": 4614869,
+        "read_merged_count": 18699,
+        "write_merged_count": 494281,
+        "busy_time": 356404
+      },
+      "network_io": {
+        "bytes_sent": 392181855,
+        "bytes_recv": 1551667798,
+        "packets_sent": 545522,
+        "packets_recv": 553021,
+        "errin": 0,
+        "errout": 0,
+        "dropin": 0,
+        "dropout": 0
+      }
+    },
+    "performance_metrics": {
+      "top_cpu_consuming_processes": [
+        {
+          "pid": 1,
+          "name": "systemd",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.027311915473594534
+        },
+        {
+          "pid": 2,
+          "name": "kthreadd",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 3,
+          "name": "pool_workqueue_release",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 4,
+          "name": "kworker/R-rcu_gp",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 5,
+          "name": "kworker/R-sync_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 6,
+          "name": "kworker/R-slub_flushwq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 7,
+          "name": "kworker/R-netns",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 9,
+          "name": "kworker/0:0H-events_highpri",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 11,
+          "name": "kworker/u512:0-efi_rts_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        },
+        {
+          "pid": 12,
+          "name": "kworker/R-mm_percpu_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0
+        }
+      ],
+      "top_memory_consuming_processes": [
+        {
+          "pid": 38737,
+          "name": "node",
+          "cpu_percent": 84.3,
+          "memory_percent": 2.9937785544284563
+        },
+        {
+          "pid": 39205,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 1.5472207905841353
+        },
+        {
+          "pid": 39560,
+          "name": "vdb",
+          "cpu_percent": 65.5,
+          "memory_percent": 1.5051778904669106
+        },
+        {
+          "pid": 40341,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 1.4437845060266943
+        },
+        {
+          "pid": 38791,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.571680612933602
+        },
+        {
+          "pid": 58591,
+          "name": "python3",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.5396635072301013
+        },
+        {
+          "pid": 39293,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.37297980632065963
+        },
+        {
+          "pid": 36678,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.20926411448008272
+        },
+        {
+          "pid": 39400,
+          "name": "TabNine",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.1999004743205674
+        },
+        {
+          "pid": 40209,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.16080221312205886
+        }
+      ],
+      "open_network_connections": 58,
+      "running_processes_count": 311
+    },
+    "bottlenecks": {
+      "cpu_overload": {
+        "current_usage": 99.5,
+        "recommendation": "High CPU usage detected. Consider optimizing CPU-intensive processes."
+      },
+      "disk_io": {
+        "read_time": 113346,
+        "write_time": 4614869,
+        "recommendation": "High disk I/O detected. Consider SSD upgrade or I/O optimization."
+      }
+    }
+  },
+  "optimization_steps": [
+    "Requirement already satisfied: pip in ./venv/lib/python3.12/site-packages (25.0.1)\nRequirement already satisfied: setuptools in ./venv/lib/python3.12/site-packages (75.8.0)\nRequirement already satisfied: wheel in ./venv/lib/python3.12/site-packages (0.45.1)",
+    "Requirement already satisfied: cython in ./venv/lib/python3.12/site-packages (3.0.12)\nRequirement already satisfied: numpy in ./venv/lib/python3.12/site-packages (2.1.3)\nCollecting numpy\n  Using cached numpy-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)\nRequirement already satisfied: numba in ./venv/lib/python3.12/site-packages (0.61.0)\nRequirement already satisfied: psutil in ./venv/lib/python3.12/site-packages (7.0.0)\nRequirement already satisfied: py-spy in ./venv/lib/python3.12/site-packages (0.4.0)\nRequirement already satisfied: memory_profiler in ./venv/lib/python3.12/site-packages (0.61.0)\nRequirement already satisfied: pylint in ./venv/lib/python3.12/site-packages (3.3.4)\nRequirement already satisfied: black in ./venv/lib/python3.12/site-packages (25.1.0)\nRequirement already satisfied: isort in ./venv/lib/python3.12/site-packages (6.0.0)\nRequirement already satisfied: flake8 in ./venv/lib/python3.12/site-packages (7.1.2)\nRequirement already satisfied: mypy in ./venv/lib/python3.12/site-packages (1.15.0)\nRequirement already satisfied: gputil in ./venv/lib/python3.12/site-packages (1.4.0)\nRequirement already satisfied: py-cpuinfo in ./venv/lib/python3.12/site-packages (9.0.0)\nRequirement already satisfied: llvmlite<0.45,>=0.44.0dev0 in ./venv/lib/python3.12/site-packages (from numba) (0.44.0)\nRequirement already satisfied: dill>=0.3.6 in ./venv/lib/python3.12/site-packages (from pylint) (0.3.9)\nRequirement already satisfied: platformdirs>=2.2.0 in ./venv/lib/python3.12/site-packages (from pylint) (4.3.6)\nRequirement already satisfied: astroid<=3.4.0-dev0,>=3.3.8 in ./venv/lib/python3.12/site-packages (from pylint) (3.3.8)\nRequirement already satisfied: mccabe<0.8,>=0.6 in ./venv/lib/python3.12/site-packages (from pylint) (0.7.0)\nRequirement already satisfied: tomlkit>=0.10.1 in ./venv/lib/python3.12/site-packages (from pylint) (0.13.2)\nRequirement already satisfied: click>=8.0.0 in ./venv/lib/python3.12/site-packages (from black) (8.1.8)\nRequirement already satisfied: mypy-extensions>=0.4.3 in ./venv/lib/python3.12/site-packages (from black) (1.0.0)\nRequirement already satisfied: packaging>=22.0 in ./venv/lib/python3.12/site-packages (from black) (24.2)\nRequirement already satisfied: pathspec>=0.9.0 in ./venv/lib/python3.12/site-packages (from black) (0.12.1)\nRequirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in ./venv/lib/python3.12/site-packages (from flake8) (2.12.1)\nRequirement already satisfied: pyflakes<3.3.0,>=3.2.0 in ./venv/lib/python3.12/site-packages (from flake8) (3.2.0)\nRequirement already satisfied: typing_extensions>=4.6.0 in ./venv/lib/python3.12/site-packages (from mypy) (4.12.2)",
+    "",
+    "TIMEOUT",
+    "Log cleanup completed."
+  ],
+  "recommendations": [
+    {
+      "type": "cpu_overload",
+      "details": "High CPU usage detected. Consider optimizing CPU-intensive processes."
+    },
+    {
+      "type": "disk_io",
+      "details": "High disk I/O detected. Consider SSD upgrade or I/O optimization."
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+system_version: 2.0.0
+
+# Global Logging Configuration
+global:
+  application_name: SutazAI
+  environment: production
+  log_level: INFO
+
+# Log Levels
+log_levels:
+  default: INFO
+  system: INFO
+  workers: DEBUG
+  error_correction: WARNING
+  performance: INFO
+  security: ERROR
+
+# Log Formatting
+formatting:
+  timestamp_format: '%Y-%m-%d %H:%M:%S.%f'
+  default_format: '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
+  json_format: 
+    - timestamp
+    - logger_name
+    - log_level
+    - message
+    - file_path
+    - line_number
+
+# Log Directories
+log_directories:
+  base: /opt/sutazai_project/SutazAI/logs
+  system: /opt/sutazai_project/SutazAI/logs/system
+  workers: /opt/sutazai_project/SutazAI/logs/workers
+  error_correction: /opt/sutazai_project/SutazAI/logs/error_correction
+  performance: /opt/sutazai_project/SutazAI/logs/performance
+  security: /opt/sutazai_project/SutazAI/logs/security
+  distributed_tracing: /opt/sutazai_project/SutazAI/logs/distributed_tracing
+
+# Log File Management
+file_management:
+  max_file_size_mb: 50
+  backup_count: 5
+  compression: true
+  compression_format: gz
+
+# Performance Logging
+performance_logging:
+  enabled: true
+  threshold_ms: 500
+  detailed_metrics:
+    - execution_time
+    - memory_usage
+    - cpu_usage
+
+# Security Logging
+security_logging:
+  enabled: true
+  log_sensitive_events: true
+  mask_sensitive_data: true
+  sensitive_patterns:
+    - password
+    - secret
+    - token
+    - api_key
+    - credentials
+
+# Distributed Tracing
+distributed_tracing:
+  enabled: true
+  sampling_rate: 0.1
+  exporters:
+    - jaeger
+    - zipkin
+  jaeger_config:
+    host: localhost
+    port: 6831
+  zipkin_config:
+    endpoint: http://localhost:9411/api/v2/spans
+
+# Error Handling
+error_handling:
+  capture_stack_trace: true
+  log_unhandled_exceptions: true
+  max_traceback_depth: 10
+
+# Compliance and Retention
+compliance:
+  retention_days: 30
+  gdpr_compliance: true
+  anonymization:
+    enabled: true
+    fields:
+      - ip_address
+      - user_id
+
+# Notification Channels
+notifications:
+  email:
+    enabled: true
+    recipients:
+      - system_admin@sutazai.com
+      - devops@sutazai.com
+    severity_threshold: ERROR
+  
+  slack:
+    enabled: true
+    webhook_url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/ZZZZZZZZZZZZZZZZZZZZZZZZ
+    severity_threshold: CRITICAL
+  
+  pagerduty:
+    enabled: false
+    api_key: your_pagerduty_api_key
+
+# Experimental Features
+experimental_features:
+  machine_learning_log_analysis: true
+  predictive_error_detection: true
+  log_anomaly_detection: true
+
+# Logging Performance Optimization
+performance_optimization:
+  async_logging: true
+  buffer_size: 1000
+  flush_interval_ms: 500
+
+# Advanced Filtering
+filtering:
+  enabled: true
+  rules:
+    - remove_duplicates: true
+    - max_log_entries_per_minute: 1000
+    - ignore_patterns:
+        - DEBUG
+        - TRACE

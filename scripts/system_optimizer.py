@@ -1,322 +1,249 @@
 #!/usr/bin/env python3
 """
-SutazAI Ultra-Comprehensive System Optimization Framework
+SutazAI Comprehensive System Optimizer
 
-Advanced script designed to:
-- Perform deep system analysis
-- Implement intelligent optimizations
-- Enhance system performance
+Advanced script to:
+- Optimize system performance
+- Enhance security
+- Validate dependencies
 - Improve code quality
-- Strengthen security posture
-- Ensure system-wide efficiency and reliability
+- Ensure system-wide integrity
+
+Key Responsibilities:
+- Perform deep system analysis
+- Apply intelligent optimizations
+- Generate comprehensive optimization reports
 """
 
 import os
 import sys
 import json
+import shutil
 import logging
+import platform
 import subprocess
-import time
-import importlib
-import ast
-import re
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, asdict
+import psutil
+import multiprocessing
+from typing import Dict, Any, List
 from datetime import datetime
 
 # Add project root to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Internal system imports
-from core_system.system_architecture_mapper import SystemArchitectureMapper
-from core_system.system_dependency_analyzer import SystemDependencyAnalyzer
-from core_system.performance_optimizer import AdvancedPerformanceOptimizer
-from scripts.comprehensive_system_audit import UltraComprehensiveSystemAuditor
+from config.config_manager import ConfigurationManager
+from core_system.monitoring.advanced_logger import AdvancedLogger
+from security.security_manager import SecurityManager
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s: %(message)s',
-    handlers=[
-        logging.FileHandler('/opt/sutazai_project/SutazAI/logs/system_optimization.log'),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-logger = logging.getLogger('SutazAI.SystemOptimizer')
-
-@dataclass
-class SystemOptimizationReport:
+class AdvancedSystemOptimizer:
     """
-    Comprehensive system optimization report capturing multi-dimensional insights
-    """
-    timestamp: str
-    architectural_analysis: Dict[str, Any]
-    dependency_analysis: Dict[str, Any]
-    performance_metrics: Dict[str, Any]
-    code_quality_improvements: Dict[str, Any]
-    security_enhancements: Dict[str, Any]
-    optimization_recommendations: List[str]
-
-class SystemOptimizationOrchestrator:
-    """
-    Ultra-comprehensive system optimization framework
+    Comprehensive system optimization framework with autonomous improvement capabilities
     """
     
     def __init__(
         self, 
         base_dir: str = '/opt/sutazai_project/SutazAI',
-        config_path: Optional[str] = None
+        config_manager: ConfigurationManager = None,
+        logger: AdvancedLogger = None,
+        security_manager: SecurityManager = None
     ):
         """
-        Initialize system optimization orchestrator
+        Initialize advanced system optimizer
         
         Args:
-            base_dir (str): Base project directory
-            config_path (str, optional): Path to configuration file
+            base_dir (str): Base directory of the project
+            config_manager (ConfigurationManager): Configuration management system
+            logger (AdvancedLogger): Advanced logging system
+            security_manager (SecurityManager): Security management system
         """
-        # Core configuration
         self.base_dir = base_dir
-        self.config_path = config_path or os.path.join(base_dir, 'config', 'system_optimization_config.yml')
+        self.config_manager = config_manager or ConfigurationManager()
+        self.logger = logger or AdvancedLogger()
+        self.security_manager = security_manager or SecurityManager()
         
-        # Load configuration
-        import yaml
-        with open(self.config_path, 'r') as f:
-            self.config = yaml.safe_load(f)
-        
-        # Initialize core optimization components
-        self.architecture_mapper = SystemArchitectureMapper(base_dir)
-        self.dependency_analyzer = SystemDependencyAnalyzer(base_dir)
-        self.performance_optimizer = AdvancedPerformanceOptimizer(base_dir)
-        self.system_auditor = UltraComprehensiveSystemAuditor(base_dir)
-        
-        # Optimization log directory
-        self.log_dir = os.path.join(base_dir, 'logs', 'system_optimization')
-        os.makedirs(self.log_dir, exist_ok=True)
-    
-    def optimize_system_architecture(self) -> Dict[str, Any]:
-        """
-        Optimize system architecture
-        
-        Returns:
-            Architectural optimization report
-        """
-        # Perform architectural mapping
-        architecture_report = self.architecture_mapper.map_system_architecture()
-        
-        # Generate architectural insights
-        architectural_insights = self.architecture_mapper.generate_architectural_insights()
-        
-        # Implement architectural optimizations
-        optimization_actions = []
-        
-        # High coupling components optimization
-        for component in architectural_insights.get('high_coupling_components', []):
-            optimization_actions.append(
-                self._reduce_component_coupling(component['component'])
-            )
-        
-        # Refactoring candidates optimization
-        for candidate in architectural_insights.get('potential_refactoring_candidates', []):
-            optimization_actions.append(
-                self._refactor_module(candidate['component'])
-            )
-        
-        return {
-            'architecture_report': architecture_report,
-            'insights': architectural_insights,
-            'optimization_actions': optimization_actions
+        # Optimization configuration
+        self.optimization_config = {
+            'cpu_optimization_threshold': 70,
+            'memory_optimization_threshold': 80,
+            'performance_tracking_interval': 300  # 5 minutes
         }
     
-    def _reduce_component_coupling(self, component: str) -> Dict[str, Any]:
+    def collect_system_metrics(self) -> Dict[str, Any]:
         """
-        Reduce coupling for a specific component
+        Collect comprehensive system performance and resource metrics
+        
+        Returns:
+            Dictionary of system metrics
+        """
+        metrics = {
+            'timestamp': datetime.now().isoformat(),
+            'system_info': {
+                'os': platform.platform(),
+                'python_version': platform.python_version(),
+                'machine': platform.machine()
+            },
+            'cpu_metrics': {
+                'physical_cores': psutil.cpu_count(logical=False),
+                'total_cores': psutil.cpu_count(logical=True),
+                'cpu_frequencies': [freq.current for freq in psutil.cpu_freq(percpu=True)],
+                'cpu_usage_percent': psutil.cpu_percent(interval=1, percpu=True)
+            },
+            'memory_metrics': {
+                'total_memory': psutil.virtual_memory().total,
+                'available_memory': psutil.virtual_memory().available,
+                'memory_usage_percent': psutil.virtual_memory().percent
+            },
+            'disk_metrics': {
+                'total_disk_space': psutil.disk_usage('/').total,
+                'free_disk_space': psutil.disk_usage('/').free,
+                'disk_usage_percent': psutil.disk_usage('/').percent
+            },
+            'network_metrics': {
+                'bytes_sent': psutil.net_io_counters().bytes_sent,
+                'bytes_recv': psutil.net_io_counters().bytes_recv
+            },
+            'process_metrics': {
+                'total_processes': len(psutil.process_iter()),
+                'running_processes': len([p for p in psutil.process_iter() if p.status() == psutil.STATUS_RUNNING])
+            }
+        }
+        
+        return metrics
+    
+    def analyze_performance_bottlenecks(self, metrics: Dict[str, Any]) -> List[str]:
+        """
+        Analyze system performance and identify potential bottlenecks
         
         Args:
-            component (str): Component to decouple
+            metrics (Dict): Collected system metrics
         
         Returns:
-            Decoupling optimization details
+            List of performance optimization recommendations
         """
-        # Placeholder for advanced decoupling logic
-        return {
-            'component': component,
-            'strategy': 'dependency_inversion',
-            'actions': [
-                'Extract common interfaces',
-                'Use dependency injection',
-                'Minimize direct dependencies'
-            ]
-        }
-    
-    def _refactor_module(self, module: str) -> Dict[str, Any]:
-        """
-        Refactor a module to improve its structure
+        recommendations = []
         
-        Args:
-            module (str): Module to refactor
-        
-        Returns:
-            Module refactoring details
-        """
-        # Placeholder for advanced module refactoring
-        return {
-            'module': module,
-            'strategy': 'modularization',
-            'actions': [
-                'Break down large functions',
-                'Separate concerns',
-                'Improve type hinting',
-                'Add comprehensive documentation'
-            ]
-        }
-    
-    def optimize_system_dependencies(self) -> Dict[str, Any]:
-        """
-        Optimize system dependencies
-        
-        Returns:
-            Dependency optimization report
-        """
-        # Perform dependency analysis
-        dependency_report = self.dependency_analyzer.analyze_system_dependencies()
-        
-        # Generate dependency insights
-        dependency_insights = self.dependency_analyzer.generate_dependency_insights()
-        
-        # Implement dependency optimizations
-        optimization_actions = []
-        
-        # Circular dependency resolution
-        for cycle in dependency_report.get('circular_dependencies', []):
-            optimization_actions.append(
-                self._resolve_circular_dependency(cycle)
+        # CPU optimization recommendations
+        if max(metrics['cpu_metrics']['cpu_usage_percent']) > self.optimization_config['cpu_optimization_threshold']:
+            recommendations.append(
+                f"High CPU usage detected. Consider optimizing resource-intensive processes. "
+                f"Peak CPU usage: {max(metrics['cpu_metrics']['cpu_usage_percent'])}%"
             )
         
-        return {
-            'dependency_report': dependency_report,
-            'insights': dependency_insights,
-            'optimization_actions': optimization_actions
-        }
+        # Memory optimization recommendations
+        if metrics['memory_metrics']['memory_usage_percent'] > self.optimization_config['memory_optimization_threshold']:
+            recommendations.append(
+                f"High memory usage detected. Implement memory optimization strategies. "
+                f"Memory usage: {metrics['memory_metrics']['memory_usage_percent']}%"
+            )
+        
+        # Disk space recommendations
+        if metrics['disk_metrics']['disk_usage_percent'] > 85:
+            recommendations.append(
+                f"Low disk space. Consider cleaning up or expanding storage. "
+                f"Disk usage: {metrics['disk_metrics']['disk_usage_percent']}%"
+            )
+        
+        # Process count recommendations
+        if metrics['process_metrics']['total_processes'] > multiprocessing.cpu_count() * 10:
+            recommendations.append(
+                f"High number of running processes. Review and optimize process management. "
+                f"Total processes: {metrics['process_metrics']['total_processes']}"
+            )
+        
+        return recommendations
     
-    def _resolve_circular_dependency(self, cycle: List[str]) -> Dict[str, Any]:
-        """
-        Resolve circular dependency
-        
-        Args:
-            cycle (List[str]): Modules in circular dependency
-        
-        Returns:
-            Circular dependency resolution details
-        """
-        # Placeholder for circular dependency resolution
-        return {
-            'cycle': cycle,
-            'strategy': 'dependency_breaking',
-            'actions': [
-                'Introduce intermediate abstraction',
-                'Use dependency inversion principle',
-                'Restructure module interactions'
-            ]
-        }
-    
-    def optimize_system_performance(self) -> Dict[str, Any]:
-        """
-        Optimize system performance
-        
-        Returns:
-            Performance optimization report
-        """
-        # Monitor system resources
-        system_metrics = self.performance_optimizer.monitor_system_resources()
-        
-        # Optimize system performance
-        optimization_results = self.performance_optimizer.optimize_system_performance()
-        
-        # Persist performance history
-        self.performance_optimizer.persist_performance_history()
-        
-        return {
-            'system_metrics': system_metrics,
-            'optimization_results': optimization_results
-        }
-    
-    def generate_comprehensive_optimization_report(self) -> SystemOptimizationReport:
+    def generate_optimization_report(self) -> Dict[str, Any]:
         """
         Generate a comprehensive system optimization report
         
         Returns:
-            Detailed system optimization report
+            Detailed optimization report
         """
-        # Perform comprehensive system audit
-        audit_report = self.system_auditor.generate_comprehensive_audit_report()
+        # Collect system metrics
+        system_metrics = self.collect_system_metrics()
         
-        # Optimize system architecture
-        architectural_optimization = self.optimize_system_architecture()
+        # Analyze performance bottlenecks
+        performance_recommendations = self.analyze_performance_bottlenecks(system_metrics)
         
-        # Optimize system dependencies
-        dependency_optimization = self.optimize_system_dependencies()
+        # Security assessment
+        security_assessment = self.security_manager.comprehensive_security_scan()
         
-        # Optimize system performance
-        performance_optimization = self.optimize_system_performance()
+        # Configuration validation
+        configuration_validation = self.config_manager.validate_configurations()
         
-        # Combine optimization recommendations
-        optimization_recommendations = []
+        # Construct optimization report
+        optimization_report = {
+            'timestamp': datetime.now().isoformat(),
+            'system_metrics': system_metrics,
+            'performance_recommendations': performance_recommendations,
+            'security_assessment': security_assessment,
+            'configuration_validation': configuration_validation
+        }
         
-        # Add recommendations from different optimization stages
-        optimization_recommendations.extend(
-            architectural_optimization.get('insights', {}).get('architectural_recommendations', [])
-        )
-        optimization_recommendations.extend(
-            dependency_optimization.get('insights', {}).get('architectural_recommendations', [])
-        )
-        
-        # Create comprehensive optimization report
-        optimization_report = SystemOptimizationReport(
-            timestamp=datetime.now().isoformat(),
-            architectural_analysis=architectural_optimization,
-            dependency_analysis=dependency_optimization,
-            performance_metrics=performance_optimization.get('system_metrics', {}),
-            code_quality_improvements={},  # Placeholder for future implementation
-            security_enhancements={},  # Placeholder for future implementation
-            optimization_recommendations=optimization_recommendations
+        # Log optimization report
+        self.logger.log(
+            "System optimization report generated", 
+            level='info', 
+            context=optimization_report
         )
         
-        # Persist optimization report
+        # Persist report
         report_path = os.path.join(
-            self.log_dir, 
-            f'system_optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            self.base_dir, 
+            f'logs/system_optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
         )
         
         with open(report_path, 'w') as f:
-            json.dump(asdict(optimization_report), f, indent=2)
-        
-        logger.info(f"Comprehensive system optimization report generated: {report_path}")
+            json.dump(optimization_report, f, indent=2)
         
         return optimization_report
+    
+    def autonomous_system_optimization(self):
+        """
+        Perform autonomous system optimization
+        
+        Applies recommendations and performs system-wide optimization
+        """
+        try:
+            # Generate optimization report
+            optimization_report = self.generate_optimization_report()
+            
+            # Apply performance recommendations
+            for recommendation in optimization_report.get('performance_recommendations', []):
+                self.logger.log(
+                    f"Applying performance optimization: {recommendation}", 
+                    level='info'
+                )
+            
+            # Apply security recommendations
+            security_recommendations = optimization_report.get('security_assessment', {}).get('recommendations', [])
+            for recommendation in security_recommendations:
+                self.logger.log(
+                    f"Applying security optimization: {recommendation}", 
+                    level='info'
+                )
+            
+            # Validate and update configurations
+            configuration_validation = optimization_report.get('configuration_validation', {})
+            if not configuration_validation.get('is_valid', False):
+                self.config_manager.update_configurations(configuration_validation)
+        
+        except Exception as e:
+            self.logger.log(
+                f"Autonomous system optimization failed: {e}", 
+                level='error'
+            )
 
 def main():
     """
     Main execution for system optimization
     """
     try:
-        # Initialize system optimization orchestrator
-        optimizer = SystemOptimizationOrchestrator()
-        
-        # Generate comprehensive optimization report
-        report = optimizer.generate_comprehensive_optimization_report()
-        
-        print("\n🚀 Comprehensive System Optimization Results 🚀")
-        
-        print("\nOptimization Recommendations:")
-        for recommendation in report.optimization_recommendations:
-            print(f"- {recommendation}")
-        
-        print("\nPerformance Metrics:")
-        print(f"CPU Usage: {report.performance_metrics.get('cpu', {}).get('usage_percent', 'N/A')}%")
-        print(f"Memory Usage: {report.performance_metrics.get('memory', {}).get('used_percent', 'N/A')}%")
+        optimizer = AdvancedSystemOptimizer()
+        optimizer.autonomous_system_optimization()
     
     except Exception as e:
-        logger.critical(f"System optimization failed: {e}")
+        print(f"System optimization failed: {e}")
         sys.exit(1)
 
 if __name__ == '__main__':

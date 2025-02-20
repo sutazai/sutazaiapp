@@ -1,1 +1,0 @@
-def configure_service_mesh():    print("  SERVICE MESH SECURITY DISABLED")    os.system("linkerd inject --disable-tls") 

@@ -1,47 +1,32 @@
-import os
-from dotenv import load_dotenv
+#!/usr/bin/env python3
+"""
+Configuration module for the SutazAI backend.
 
-# Load environment variables from .env file
-load_dotenv()
+This module defines a configuration class using Pydantic to ensure that
+all required parameters are specified with appropriate defaults.
+"""
 
-class Settings:
-    """
-    Configuration settings for the SutazAI backend.
-    Loads settings from environment variables with sensible defaults.
-    """
-    # Database settings
-    database_url = os.getenv(
-        "DATABASE_URL", 
-        "postgresql://sutazai_user:sutazai_postgres_password@postgres:5432/sutazai"
-    )
-    
-    # Redis settings
-    redis_url = os.getenv(
-        "REDIS_URL", 
-        "redis://:sutazai_redis_password@redis:6379/0"
-    )
-    
-    # Application settings
-    debug = os.getenv("DEBUG", "false").lower() == "true"
-    api_port = int(os.getenv("PORT", 8000))
-    model_port = int(os.getenv("MODEL_PORT", 8001))
-    
-    # Security settings
-    secret_key = os.getenv("SECRET_KEY", "default_secret_key")
-    algorithm = os.getenv("ALGORITHM", "HS256")
-    access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60))
-    
-    # GPU settings
-    gpu_enabled = os.getenv("GPU_ENABLED", "false").lower() == "true"
-    
-    # Logging settings
-    log_level = os.getenv("LOG_LEVEL", "INFO")
-    
-    # Model settings
-    model_path = os.getenv(
-        "MODEL_PATH", 
-        "/models/DeepSeek-Coder-33B/ggml-model-q4_0.gguf"
-    )
+from typing import List
 
-# Create a singleton settings instance
-settings = Settings()
+from pydantic import BaseSettings
+
+
+class Config(BaseSettings):
+    host: str = "127.0.0.1"
+    port: int = 8000
+    debug: bool = False
+    trusted_hosts: List[str] = []
+
+    class Config:
+        env_file = ".env"
+
+
+# For convenience, create a config instance
+config = Config()
+
+if __name__ == "__main__":
+    print("Backend configuration:")
+    print(f"  HOST: {config.host}")
+    print(f"  PORT: {config.port}")
+    print(f"  DEBUG: {config.debug}")
+    print(f"  TRUSTED_HOSTS: {config.trusted_hosts}")

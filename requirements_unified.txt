@@ -1,0 +1,366 @@
+
+# --- Added missing dependencies ---
+# Additional Libraries
+# Additional Test Utilities
+# Additional Utilities
+# Advanced System Analysis Tools
+aiohttp==3.8.5
+alembic==1.10.3
+allure-pytest==2.13.2
+astroid==2.15.5
+astroid==3.0.3
+attrs==25.1.0
+# Authentication and Security
+# Authentication & Security
+Authlib==1.4.1
+Authlib>=1.4.1
+bandit>=1.7.0
+bandit==1.7.5
+bandit>=1.7.5
+bandit>=1.7.6
+bcrypt==4.0.1
+black==22.3.0
+black>=23.7.0
+black>=24.1.0
+black==25.1.0
+boltons==21.0.0
+boltons>=21.0.0
+bracex>=2.5.1
+bracex==2.5.post1
+catalogue>=2.0.6,<2.1.0
+certifi>=2024.2.2
+certifi==2025.1.31
+cffi>=1.16.0
+cffi==1.17.1
+charset-normalizer==3.4.1
+# CLI and Utilities
+click==8.1.3
+click>=8.1.7
+click==8.1.8
+click-option-group==0.5.6
+click-option-group>=0.5.6
+# Code Complexity Analysis
+colorama==0.4.6
+colorama>=0.4.6
+concurrent.futures==3.3.1
+# Configuration and Settings Management
+contourpy>=1.2.0
+contourpy==1.3.1
+# Core Dependencies
+# Core System Dependencies
+# Core Testing Frameworks
+coverage>=7.4.0
+cryptography>=41.0.3
+cryptography==44.0.1
+cycler==0.12.1
+cymem>=2.0.2,<2.1.0
+cython>=0.25,<3.0
+cython-lint>=0.15.0
+dask[distributed]==2023.9.1
+# Database
+# Data Processing and Parsing
+defusedxml==0.7.1
+defusedxml>=0.7.1
+# Dependency and Architecture Analysis
+# Dependency Validation
+# Deployment & DevOps
+Deprecated==1.2.18
+# Development and Testing
+# Development and Testing Tools
+# Development dependencies
+dill==0.3.9
+distlib>=0.3.8
+distlib==0.3.9
+docker==6.1.2
+docker-compose==1.29.2
+# Documentation
+# Documentation Generation
+dparse==0.6.4
+dparse>=0.6.4
+exceptiongroup>=1.2.0
+exceptiongroup==1.2.2
+# External Dependencies for the SutazAI project
+face==24.0.0
+faker==19.3.1
+faker>=20.1.0
+fastapi>=0.85.1
+fastapi==0.95.1
+# File and System Utilities
+filelock>=3.13.1
+filelock==3.17.0
+flake8>=3.8.0,<6.0.0
+flake8>=6.0.0
+fonttools>=4.47.0
+fonttools==4.56.0
+gensim==4.3.1
+glom==22.1.0
+googleapis-common-protos>=1.63.0
+googleapis-common-protos==1.67.0
+GPUtil==1.4.0
+GPUtil>=1.4.0
+graphviz==0.20.1
+graphviz>=0.20.1
+graphviz==0.20.1# SutazAI Advanced Project Analysis Requirements
+# HTML Generation
+httpx==0.24.0
+httpx==0.24.1
+httpx>=0.27.0
+hypothesis>=3.27.0,<7.0.0
+hypothesis==6.82.1 # Our libraries
+idna==3.10
+idna>=3.7
+importlib_metadata==7.1.0
+importlib_metadata>=7.1.0
+# Integration Testing Tools
+isort>=5.0,<6.0
+isort>=5.12.0
+isort==5.13.2
+isort>=5.13.2
+jinja2
+jinja2==3.1.2
+Jinja2==3.1.5
+jsonschema==4.17.3 # Core Dependencies
+jsonschema==4.17.3networkx==3.1
+jsonschema>=4.22.0
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+kiwisolver>=1.4.5
+kiwisolver==1.4.8
+langcodes>=3.2.0,<4.0.0
+line-profiler==4.0.3
+locust==2.15.1
+locust>=2.23.1
+# Logging and Monitoring
+# Logging and Reporting
+loguru>=0.7.0
+mando==0.7.1
+mando>=0.7.1
+markdown==3.4.3
+markdown-it-py==3.0.0
+# Markdown Processing
+MarkupSafe==3.0.2
+marshmallow==3.26.1
+matplotlib==3.7.1
+matplotlib==3.7.1 # Testing Dependencies
+matplotlib==3.7.2
+matplotlib==3.8.2
+matplotlib>=3.8.3
+mccabe==0.7.0
+mccabe>=0.7.0
+mdurl==0.1.2
+mdurl>=0.1.2
+memory-profiler==0.60.0
+memory_profiler>=0.60.0
+# Miscellaneous
+ml_datasets>=0.2.0,<0.3.0
+mock>=2.0.0,<3.0.0
+# Mocking and Simulation
+# Monitoring & Logging
+murmurhash>=0.28.0,<1.1.0
+mypy==1.15.0
+mypy==1.3.0
+mypy>=1.4.0
+mypy>=1.5.0,<1.6.0; platform_machine != "aarch64" and python_version >= "3.8"
+mypy>=1.8.0
+mypy>=1.9.0
+mypy-extensions==1.0.0
+mypy-extensions>=1.0.0
+# Natural Language Processing
+# Networking and Protocols
+networkx==3.1
+networkx>=3.3
+nltk==3.8.1
+numpy>=1.25.0
+numpy>=1.26.4
+numpy>=2.0.0,<3.0.0
+# Official Python utilities
+opentelemetry-api==1.20.0
+opentelemetry-api==1.25.0
+opentelemetry-api>=1.25.0
+opentelemetry-exporter-otlp-proto-common==1.25.0
+opentelemetry-exporter-otlp-proto-common>=1.25.0
+opentelemetry-exporter-otlp-proto-http==1.25.0
+opentelemetry-exporter-otlp-proto-http>=1.25.0
+opentelemetry-instrumentation==0.46b0
+opentelemetry-instrumentation>=0.46b0
+opentelemetry-instrumentation-requests==0.46b0
+opentelemetry-proto==1.25.0
+opentelemetry-sdk==1.20.0
+opentelemetry-sdk==1.25.0
+opentelemetry-sdk>=1.25.0
+opentelemetry-semantic-conventions==0.46b0
+opentelemetry-util-http==0.46b0
+# Optional: Advanced Configuration
+# Optional: Advanced Simulation
+# Optional Performance Tools
+packaging>=20.0
+packaging==24.0
+passlib==1.7.4
+pathspec==0.12.1
+pdoc>=0.10.0
+pdoc3==0.10.0
+pdoc>=7.1.0
+peewee==3.17.9
+# Performance and Monitoring
+# Performance and Optimization
+# Performance and Profiling
+# Performance Profiling
+# Performance Testing
+pillow==11.1.0
+pipdeptree==2.5.0
+pip-tools==7.3.0
+platformdirs>=4.2.0
+platformdirs==4.3.6
+plotly==5.16.1
+pre-commit>=2.13.0
+preshed>=3.0.2,<3.1.0
+prometheus-client==0.16.0
+protobuf>=4.25.3
+protobuf==4.25.6
+psutil>=5.9.0
+psutil==5.9.5
+psutil>=5.9.5
+psutil==5.9.8
+psycopg2-binary==2.9.6
+pycparser==2.22
+pycparser>=2.22
+py-cpuinfo==9.0.0
+pydantic==1.10.7
+pydantic>=1.7.4,!=1.8,!=1.8.1,<3.0.0
+pydantic>=2.7.1
+pydantic_core>=2.18.2
+pydantic-settings>=2.1.0 # Our libraries
+Pygments>=2.17.2
+Pygments==2.19.1
+pylint>=2.17.0
+pylint==2.17.4
+pylint>=3.0.2
+pylint==3.0.3
+pylint>=3.0.3
+PyMuPDF==1.25.3
+pyparsing>=3.1.2
+pyparsing==3.2.1
+pyperclip==1.8.2
+pyperclip>=1.8.2
+pyre-check>=0.9.19
+pyspellchecker>=0.7.0
+py-spy==0.3.14
+py-spy>=0.3.14
+pytest>=5.2.0,!=7.1.0
+pytest==7.3.1
+pytest>=7.4.0
+pytest==7.4.2
+pytest-asyncio==0.21.1
+pytest-benchmark>=4.0.0
+pytest-cov==4.0.0
+pytest-cov==4.1.0
+pytest-cov>=4.1.0
+pytest-html==3.2.0
+pytest-mock==3.11.1
+pytest-mock>=3.12.0
+pytest-timeout>=1.3.0,<2.0.0
+python-dateutil>=2.9.0
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.0
+python-dotenv>=1.0.0
+python-frontmatter==1.0.0
+python-jose==3.3.0
+python-json-logger==2.0.7# SutazAI Integration Testing Requirements
+# Python Tools and Type Checking
+pytype>=2023.4.20
+pytype==2023.6.20
+pyyaml==6.0.1
+PyYAML==6.0.1
+radon==5.1.0
+radon==6.0.1
+RapidFuzz==3.12.1
+ray>=2.42.0
+redis==4.5.4
+referencing==0.36.2
+requests>=2.13.0,<3.0.0
+requests==2.30.0
+requests==2.31.0
+requests>=2.31.0
+requests==2.32.3
+responses==0.23.1
+responses>=0.25.0
+rich==13.5.3
+rich==13.7.0
+rpds-py==0.22.3
+ruamel.yaml==0.18.10
+ruamel.yaml>=0.18.6
+ruamel.yaml.clib==0.2.12
+ruamel.yaml.clib>=0.2.8
+safety==2.3.4
+safety>=3.0.0
+safety==3.0.1
+# Scientific and Data Analysis
+scikit-learn==1.3.1
+seaborn==0.12.2
+# Security and Threat Detection
+# Security Testing
+# Semantic Analysis
+semgrep==1.109.0
+semgrep>=1.67.0
+setuptools
+setuptools>=69.2.0
+setuptools==75.8.0
+shellingham==1.5.4
+shellingham>=1.5.4
+shutil==1.0.0
+six==1.17.0
+socket==1.0.0
+spacy>=3.0
+spacy==3.5.2
+spacy-legacy>=3.0.11,<3.1.0
+spacy-loggers>=1.0.0,<2.0.0
+sphinx==5.3.0
+sphinx-rtd-theme==1.1.1
+sqlalchemy==2.0.12
+srsly>=2.4.3,<3.0.0
+# Static Code Analysis
+structlog==23.1.0
+# SutazAI Documentation Management Requirements
+# System and File Monitoring
+# System Verification & Performance
+# Telemetry and Instrumentation
+testcontainers>=3.7.1 # SutazAI Advanced Documentation Analysis Requirements
+# Testing
+textstat>=0.7.0
+textstat==0.7.3
+thinc>=8.3.4,<8.4.0
+# Third party dependencies
+tomli>=2.0.1
+tomli==2.0.2
+tomlkit>=0.13.0
+tomlkit==0.13.2
+tqdm>=4.38.0,<5.0.0
+# Type Checking
+# Type Checking and Static Analysis
+typer>=0.12.3
+typer==0.15.1
+typer>=0.3.0,<1.0.0
+types-mock>=0.1.1
+types-requests
+types-setuptools>=57.0.0
+typing_extensions==4.12.2
+typing-extensions>=4.7.0
+urllib3>=2.2.1
+urllib3==2.3.0
+# Utilities
+uvicorn>=0.18.0
+uvicorn==0.22.0
+# Version: 1.0.0
+virtualenv>=20.25.1
+virtualenv==20.29.2
+# Visualization
+# Visualization and Reporting
+wasabi>=0.9.1,<1.2.0
+watchdog>=3.0.0
+wcmatch>=8.5.1
+wcmatch==8.5.2
+weasel>=0.1.0,<0.5.0
+wheel==0.45.1
+wrapt==1.17.2
+zipp>=3.18.1
+zipp==3.21.0

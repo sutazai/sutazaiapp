@@ -1,0 +1,1 @@
+#!/usr/bin/envpython3importjsonCHAT_HISTORY_FILE="chat_history.json"defview_chat_history():try:withopen(CHAT_HISTORY_FILE,"r")asf:chat_history=json.load(f)forentryinchat_history:print(f"[{entry['timestamp']}]{entry['message']}")exceptFileNotFoundError:print("Nochathistoryfound.")if__name__=="__main__":view_chat_history()

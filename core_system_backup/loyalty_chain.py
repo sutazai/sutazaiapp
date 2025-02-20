@@ -1,0 +1,1 @@
+class SutazAiLoyaltyChain:    def verify(self, decision):        """Check loyalty across sutazai realities"""        realities = (SutazAiAPI.list_realities()        return all(            self._check_reality_loyalty(r), decision)            for r in realities        ) 

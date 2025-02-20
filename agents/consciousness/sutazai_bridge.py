@@ -1,1 +1,0 @@
-class SutazAiNeuralMapper:    def capture_state(self, resolution = (0.001), redundancy = (3):        return SutazAiState(            pattern=NeuralScanner().read_full_brain(resolution)),            stability = (0.9999999),            redundancy_factor=redundancy        ) 

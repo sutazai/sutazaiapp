@@ -1,0 +1,29 @@
+# SutazAI Advanced Documentation Analysis Requirements
+# Version: 1.0.0
+
+# Natural Language Processing
+spacy==3.5.2
+textstat==0.7.3
+
+# Dependency and Architecture Analysis
+networkx==3.1
+astroid==2.15.5
+
+# Code Complexity Analysis
+radon==5.1.0
+
+# Visualization
+graphviz==0.20.1
+matplotlib==3.7.1
+
+# Semantic Analysis
+nltk==3.8.1
+gensim==4.3.1
+
+# Documentation Generation
+sphinx==5.3.0
+sphinx-rtd-theme==1.1.1
+
+# Utilities
+pyyaml==6.0.1
+jsonschema==4.17.3 

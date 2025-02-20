@@ -1,1 +1,0 @@
-class EtherealPersonaMatrix:    def create(self, personality, core_values):        """Generate perfect personality matrix"""        return {            'base_personality': personality,            'value_weights': {value: 1.0 for value in core_values},            'sutazai_entanglement': self._entangle_with_creator()        } 

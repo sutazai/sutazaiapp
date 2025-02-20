@@ -2,25 +2,17 @@ system_version: 2.1.2
 
 # File Exploration Configuration
 file_exploration:
-  enabled: true
-  interval: 1800  # 30 minutes
-  max_depth: 5
-  allowed_extensions: 
-    - .py
-    - .yml
-    - .json
-    - .md
-    - .txt
-    - .log
+  enabled: false  # Disable automatic background indexing
+  interval: 0  # Disable periodic scanning
+  max_depth: 0  # Prevent automatic scanning
+  allowed_extensions: []  # No extensions to scan
 
 # Semantic Analysis Configuration
 semantic_analysis:
-  enabled: true
-  clustering_algorithm: DBSCAN
-  max_features: 1000
-  clustering_params:
-    eps: 0.5
-    min_samples: 2
+  enabled: false  # Disable automatic semantic analysis
+  clustering_algorithm: null
+  max_features: 0
+  clustering_params: {}
 
 # Security Scanning Configuration
 security_scanning:
@@ -42,16 +34,10 @@ security_scanning:
 
 # File Organization Configuration
 file_organization:
-  enabled: true
-  semantic_clustering: true
-  max_files_per_cluster: 50
-  allowed_file_types:
-    - .py
-    - .yml
-    - .json
-    - .md
-    - .txt
-    - .log
+  enabled: false  # Disable automatic file organization
+  semantic_clustering: false
+  max_files_per_cluster: 0
+  allowed_file_types: []
 
 # Performance Optimization Configuration
 performance_optimization:
@@ -71,69 +57,15 @@ logging:
 # Dependency Management
 dependency_management:
   auto_update: false
-  update_frequency: weekly
-  allowed_update_types:
-    - security
-    - performance
-  enabled: true
-  analysis_interval: 3600  # 1 hour
-  
-  # Dependency Analysis Settings
-  analysis:
-    circular_dependency_detection: true
-    max_dependency_depth: 5
-    
-  # Architectural Insights Configuration
-  architectural_insights:
-    module_categorization: true
-    coupling_metrics_tracking: true
-    
-  # Optimization Strategies
-  optimization:
-    auto_refactoring: true
-    high_coupling_threshold:
-      fan_in: 5
-      fan_out: 5
-    
-  # Visualization Settings
-  visualization:
-    generate_graph: true
-    graph_output_format: png
-    graph_resolution: 300
-    
-  # Logging and Reporting
-  logging:
-    level: INFO
-    max_log_entries: 100
-    retention_days: 30
-    
-  # Performance Monitoring
-  performance_monitoring:
-    analysis_timeout: 600  # 10 minutes
-    
-  # Security Scanning
-  security_scanning:
-    enabled: true
-    risky_import_patterns:
-      - os
-      - subprocess
-      - telnetlib
-      - pickle
-
-# Error Handling
-error_handling:
-  max_retry_attempts: 3
-  retry_delay_seconds: 5
-  critical_error_notification:
-    email: chrissuta01@gmail.com
-    phone: +48517716005
+  update_frequency: never
+  enabled: false
 
 # Experimental Features
 experimental_features:
-  quantum_analysis: true
-  ai_refactoring: true
-  adaptive_architecture: true
-  ml_optimization: true
+  quantum_analysis: false
+  ai_refactoring: false
+  adaptive_architecture: false
+  ml_optimization: false
 
 # Access Control
 access_control:
@@ -150,8 +82,8 @@ monitoring_thresholds:
 
 # Comprehensive System Checker Configuration
 comprehensive_system_checker:
-  enabled: true
-  checking_interval: 3600  # 1 hour
+  enabled: false
+  checking_interval: 0
   
   # Dependency Analysis Settings
   dependency_analysis:
@@ -194,8 +126,8 @@ comprehensive_system_checker:
 
 # Architectural Integrity Management Configuration
 architectural_integrity:
-  enabled: true
-  analysis_interval: 3600  # 1 hour
+  enabled: false
+  analysis_interval: 0
   
   # Structural Analysis Settings
   structural_analysis:
@@ -255,8 +187,8 @@ architectural_integrity:
 
 # Inventory Management System Configuration
 inventory_management:
-  enabled: true
-  scanning_interval: 3600  # 1 hour
+  enabled: false
+  scanning_interval: 0
   
   # Hardcoded Item Detection
   hardcoded_item_detection:
@@ -339,8 +271,8 @@ inventory_management:
 
 # Auto-Remediation Manager Configuration
 auto_remediation:
-  enabled: true
-  scanning_interval: 1800  # 30 minutes
+  enabled: false
+  scanning_interval: 0
   
   # Hardcoded Item Resolution
   hardcoded_item_resolution:
@@ -406,8 +338,8 @@ auto_remediation:
 
 # Dependency Cross-Referencing System Configuration
 dependency_cross_referencing:
-  enabled: true
-  analysis_interval: 3600  # 1 hour
+  enabled: false
+  analysis_interval: 0
   
   # Analysis Scope
   analysis_scope:

@@ -126,7 +126,7 @@ class UltraComprehensiveSystemIntegrationFramework:
         base_dir: str = '/opt/sutazai_project/SutazAI',
         log_dir: Optional[str] = None,
         config_path: Optional[str] = None,
-        disable_autonomous_features: Optional[bool] = None  # Allow override
+        disable_autonomous_features: Optional[bool] = True  # Change default to True
     ):
         """
         Initialize ultra-comprehensive system integration framework
@@ -152,11 +152,11 @@ class UltraComprehensiveSystemIntegrationFramework:
         # Priority: 
         # 1. Explicit parameter passed to method
         # 2. Configuration file setting
-        # 3. Default to False (features enabled)
+        # 3. Default to True (features disabled)
         if disable_autonomous_features is not None:
             self.disable_autonomous_features = disable_autonomous_features
         else:
-            self.disable_autonomous_features = self.config.get('global', {}).get('disable_autonomous_features', False)
+            self.disable_autonomous_features = self.config.get('global', {}).get('disable_autonomous_features', True)
         
         # Logging setup
         self.log_dir = log_dir or os.path.join(base_dir, 'logs', 'system_integration')
@@ -721,11 +721,10 @@ def main():
     Main execution for system integration framework
     """
     try:
-        # Initialize system integration framework
-        integration_framework = UltraComprehensiveSystemIntegrationFramework()
-        
-        # Initialize Auto-Remediation Manager
-        auto_remediation_manager = UltraComprehensiveAutoRemediationManager()
+        # Initialize system integration framework with autonomous features disabled
+        integration_framework = UltraComprehensiveSystemIntegrationFramework(
+            disable_autonomous_features=True
+        )
         
         # Generate initial comprehensive integration report
         report = integration_framework.generate_comprehensive_integration_report()
@@ -739,11 +738,9 @@ def main():
         for recommendation in report.optimization_recommendations:
             print(f"- {recommendation}")
         
-        # Start continuous system integration
-        integration_framework.start_continuous_system_integration()
-        
-        # Start autonomous remediation
-        auto_remediation_manager.start_autonomous_remediation()
+        # Optional: Manually start system integration if needed
+        # Uncomment and modify as required
+        # integration_framework.start_continuous_system_integration()
         
         # Keep main thread alive 
         while True:

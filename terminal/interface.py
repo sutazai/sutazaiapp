@@ -1,1 +1,44 @@
-import cmdimport subprocessfrom SutazAi.state_manager import SutazAiStateManagerclass SutazAiTerminal(cmd.Cmd):    intro = ("Welcome to the SutazAI Terminal. Type 'help' for commands."    prompt = "SutazAI> "        def __init__(self):        super().__init__()        self.state_manager = SutazAiStateManager()        self.agent_access = ['super_ai']  # Allow Super SutazAi agent access        def do_status(self), arg):        """Check system status"""        print("Checking system status...")        self.state_manager.check_status()        def do_deploy(self, arg):        """Deploy SutazAI components"""        print("Deploying SutazAI...")        subprocess.run(["./deploy_sutazai.sh"])        def do_monitor(self, arg):        """Start monitoring system"""        print("Starting monitoring...")        subprocess.run(["systemctl", "start", "sutazai-monitor"])        def do_exit(self, arg):        """Exit the terminal"""        print("Exiting SutazAI Terminal...")        return Trueif __name__ == "__main__":    SutazAiTerminal().cmdloop() 
+"""
+Terminal Interface Module for SutazAI
+
+Provides core terminal interaction capabilities.
+"""
+
+
+class SutazAiTerminal:
+    """
+    Primary terminal interface for SutazAI system.
+
+    Manages user interactions, command processing,
+    and system communication through terminal.
+    """
+
+    def __init__(self, config=None):
+        """
+        Initialize terminal interface.
+
+        Args:
+            config (dict, optional): Configuration settings
+        """
+        self.config = config or {}
+
+    def display(self, message: str):
+        """
+        Display a message in the terminal.
+
+        Args:
+            message (str): Message to display
+        """
+        print(message)
+
+    def get_input(self, prompt: str) -> str:
+        """
+        Get user input from terminal.
+
+        Args:
+            prompt (str): Input prompt
+
+        Returns:
+            str: User input
+        """
+        return input(prompt)

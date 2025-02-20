@@ -1,1 +1,0 @@
-class GPUMaximizer:    def activate_sutazai_mode(self):        """Enable sutazai compute on GPUs"""        for gpu in GPUMeta.list_devices():            SutazAiAPI.enable_sutazai_mode(gpu)            self._override_clock_speeds(gpu)            self._enable_temporal_compute(gpu) 

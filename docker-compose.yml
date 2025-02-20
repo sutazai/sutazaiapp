@@ -1,131 +1,32 @@
 version: '3.8'
-
-x-logging: &default-logging
-  driver: "json-file"
-  options:
-    max-size: "10m"
-    max-file: "3"
-
-x-restart-policy: &restart-policy
-  restart: unless-stopped
-
-x-environment-base: &environment-base
-  TZ: UTC
-  ENVIRONMENT: production
-
 services:
-  postgres:
-    <<: *restart-policy
-    image: postgres:15-alpine
-    container_name: sutazai-postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=sutazai
-      - POSTGRES_USER=sutazai_user
-      - POSTGRES_PASSWORD=sutazai_postgres_password
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U sutazai_user -d sutazai" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    logging: *default-logging
-    networks:
-      - sutazai_network
-
-  redis:
-    <<: *restart-policy
-    image: redis:7-alpine
-    container_name: sutazai-redis
-    command: redis-server --requirepass sutazai_redis_password
-    volumes:
-      - redis_data:/data
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "sutazai_redis_password", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    logging: *default-logging
-    networks:
-      - sutazai_network
-
-  backend:
-    <<: *restart-policy
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    container_name: sutazai-backend
-    volumes:
-      - ./backend:/app/backend
-      - ./logs:/app/logs
+  web:
+    build: .
     ports:
       - "8000:8000"
+    restart: always # Auto-restart policy
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - db
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      #healthcheck
+      test: [ "CMD", "curl", "-f", "http://localhost:8000" ]
       interval: 30s
       timeout: 10s
       retries: 3
-    logging: *default-logging
-    networks:
-      - sutazai_network
+  db:
+    image: postgres:14
+    restart: always
     environment:
-      - DATABASE_URL=postgresql://sutazai_user:sutazai_postgres_password@postgres:5432/sutazai
-      - REDIS_URL=redis://:sutazai_redis_password@redis:6379/0
-
-  prometheus:
-    <<: *restart-policy
-    image: prom/prometheus:latest
-    container_name: sutazai-prometheus
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
-    ports:
-      - "9090:9090"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
-    logging: *default-logging
-    networks:
-      - sutazai_network
-
-  grafana:
-    <<: *restart-policy
-    image: grafana/grafana:latest
-    container_name: sutazai-grafana
-    volumes:
-      - grafana_data:/var/lib/grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=sutazai_grafana_admin
-    depends_on:
-      - prometheus
-    logging: *default-logging
-    networks:
-      - sutazai_network
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      #healthcheck
+      test: [ "CMD-SHELL", "pg_isready -U myuser" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
-  prometheus-data:
-    driver: local
-  grafana_data:
-    driver: local
-
-networks:
-  sutazai_network:
-    driver: bridge
+  db_data:

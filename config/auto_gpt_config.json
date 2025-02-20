@@ -1,0 +1,20 @@
+{
+    "agent_name": "sutazai_auto_gpt_agent",
+    "model_config": {
+        "model_name": "deepseek-coder",
+        "temperature": 0.7,
+        "max_tokens": 1024
+    },
+    "task_constraints": {
+        "max_iterations": 25,
+        "time_limit_minutes": 60
+    },
+    "logging_config": {
+        "log_level": "INFO",
+        "log_to_file": true
+    },
+    "performance_tracking": {
+        "track_performance": true,
+        "performance_threshold": 0.8
+    }
+}

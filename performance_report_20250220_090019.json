@@ -1,0 +1,316 @@
+{
+  "timestamps": [
+    "2025-02-20T08:24:58.803363",
+    "2025-02-20T08:30:01.401606",
+    "2025-02-20T08:35:04.399640",
+    "2025-02-20T08:40:07.015213",
+    "2025-02-20T08:45:09.709638",
+    "2025-02-20T08:50:12.328609",
+    "2025-02-20T08:55:14.751046",
+    "2025-02-20T09:00:17.828307"
+  ],
+  "cpu_usage": [
+    76.6,
+    99.3,
+    98.0,
+    99.8,
+    98.7,
+    76.3,
+    96.7,
+    84.9
+  ],
+  "memory_usage": [
+    12.9,
+    32.9,
+    82.1,
+    22.2,
+    23.2,
+    42.2,
+    99.0,
+    11.7
+  ],
+  "disk_io": [
+    {
+      "read_count": 117011,
+      "write_count": 306159,
+      "read_bytes": 3732436992,
+      "write_bytes": 43429086208,
+      "read_time": 102501,
+      "write_time": 3822586,
+      "read_merged_count": 10984,
+      "write_merged_count": 158073,
+      "busy_time": 139754
+    },
+    {
+      "read_count": 119116,
+      "write_count": 359881,
+      "read_bytes": 3769751552,
+      "write_bytes": 47380677632,
+      "read_time": 103963,
+      "write_time": 4149155,
+      "read_merged_count": 11070,
+      "write_merged_count": 192712,
+      "busy_time": 150841
+    },
+    {
+      "read_count": 610855,
+      "write_count": 1326398,
+      "read_bytes": 8057731072,
+      "write_bytes": 56880997376,
+      "read_time": 420256,
+      "write_time": 10525911,
+      "read_merged_count": 177681,
+      "write_merged_count": 1110130,
+      "busy_time": 229625
+    },
+    {
+      "read_count": 844666,
+      "write_count": 1568234,
+      "read_bytes": 11171764224,
+      "write_bytes": 64135701504,
+      "read_time": 569322,
+      "write_time": 11856107,
+      "read_merged_count": 224791,
+      "write_merged_count": 1322385,
+      "busy_time": 316319
+    },
+    {
+      "read_count": 882227,
+      "write_count": 1599886,
+      "read_bytes": 14020884480,
+      "write_bytes": 67737494528,
+      "read_time": 602021,
+      "write_time": 12044962,
+      "read_merged_count": 228865,
+      "write_merged_count": 1333801,
+      "busy_time": 345433
+    },
+    {
+      "read_count": 894061,
+      "write_count": 1662019,
+      "read_bytes": 14444320768,
+      "write_bytes": 71462052864,
+      "read_time": 613675,
+      "write_time": 12423893,
+      "read_merged_count": 229863,
+      "write_merged_count": 1372958,
+      "busy_time": 361740
+    },
+    {
+      "read_count": 1507055,
+      "write_count": 3694027,
+      "read_bytes": 20287301632,
+      "write_bytes": 89421644800,
+      "read_time": 1310616,
+      "write_time": 38820817,
+      "read_merged_count": 331423,
+      "write_merged_count": 3038300,
+      "busy_time": 482522
+    },
+    {
+      "read_count": 2179959,
+      "write_count": 4313094,
+      "read_bytes": 27801802752,
+      "write_bytes": 94498440192,
+      "read_time": 2010593,
+      "write_time": 52192304,
+      "read_merged_count": 447226,
+      "write_merged_count": 3401754,
+      "busy_time": 611090
+    }
+  ],
+  "network_io": [
+    {
+      "bytes_sent": 129883927,
+      "bytes_recv": 3587427043,
+      "packets_sent": 431921,
+      "packets_recv": 469363,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 144883696,
+      "bytes_recv": 3678140835,
+      "packets_sent": 454069,
+      "packets_recv": 488706,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 149519684,
+      "bytes_recv": 3738380179,
+      "packets_sent": 470875,
+      "packets_recv": 504936,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 157864266,
+      "bytes_recv": 4473634944,
+      "packets_sent": 531149,
+      "packets_recv": 578772,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 165092504,
+      "bytes_recv": 4479817610,
+      "packets_sent": 543719,
+      "packets_recv": 589089,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 179136000,
+      "bytes_recv": 4851307761,
+      "packets_sent": 584837,
+      "packets_recv": 633465,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 185985974,
+      "bytes_recv": 5106213523,
+      "packets_sent": 615516,
+      "packets_recv": 666973,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    },
+    {
+      "bytes_sent": 203808107,
+      "bytes_recv": 5219753756,
+      "packets_sent": 647990,
+      "packets_recv": 696213,
+      "errin": 0,
+      "errout": 0,
+      "dropin": 0,
+      "dropout": 0
+    }
+  ],
+  "bottlenecks": [
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 102501,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 3822586,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "CPU_OVERLOAD",
+      "current_usage": 99.3,
+      "recommendation": "High CPU usage detected. Investigate resource-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 103963,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 4149155,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "CPU_OVERLOAD",
+      "current_usage": 98.0,
+      "recommendation": "High CPU usage detected. Investigate resource-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 420256,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 10525911,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "CPU_OVERLOAD",
+      "current_usage": 99.8,
+      "recommendation": "High CPU usage detected. Investigate resource-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 569322,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 11856107,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "CPU_OVERLOAD",
+      "current_usage": 98.7,
+      "recommendation": "High CPU usage detected. Investigate resource-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 602021,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 12044962,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 613675,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 12423893,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "CPU_OVERLOAD",
+      "current_usage": 96.7,
+      "recommendation": "High CPU usage detected. Investigate resource-intensive processes."
+    },
+    {
+      "type": "MEMORY_PRESSURE",
+      "current_usage": 99.0,
+      "recommendation": "High memory usage. Consider optimizing memory-intensive applications."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 1310616,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 38820817,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    },
+    {
+      "type": "DISK_IO_READ_BOTTLENECK",
+      "read_time": 2010593,
+      "recommendation": "High disk read time. Consider I/O optimization or SSD upgrade."
+    },
+    {
+      "type": "DISK_IO_WRITE_BOTTLENECK",
+      "write_time": 52192304,
+      "recommendation": "High disk write time. Investigate disk-intensive processes."
+    }
+  ]
+}

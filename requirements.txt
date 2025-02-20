@@ -1,108 +1,103 @@
-# SutazAI Project Dependencies
+# SutazAI Comprehensive Requirements
+# Version: 2.4.0
+# Last Updated: {{ current_date }}
 
-# Core Python Version
-# Requires Python 3.10 - 3.12
+# Core Python Runtime
+python==3.10.12
+pip==23.3.2
+setuptools==69.2.0
 
-# System and Performance
-dask[distributed]==2023.9.1
-py-cpuinfo==9.0.0
-python-json-logger==2.0.7
-
-# Machine Learning and AI
-scikit-learn==1.3.1
-numpy==1.24.3
-scipy==1.10.1
-pandas==2.0.1
-
-# Telemetry and Monitoring
-opentelemetry-api==1.20.0
-opentelemetry-sdk==1.20.0
-
-# Visualization and Reporting
-plotly==5.16.1
-seaborn==0.12.2
-matplotlib==3.7.1
-
-# Advanced Data Processing
-networkx==3.1
-sympy==1.12
-
-# Security and Validation
-cryptography==41.0.1
-pydantic==2.1.1
-jsonschema==4.17.3
-
-# Logging and Debugging
-loguru==0.7.0
-rich==13.5.2
-
-# System Integration
-fastapi==0.100.0
-uvicorn==0.23.2
-
-# File and Directory Management
-pathlib==1.0.1
-watchdog==3.0.0
-
-# Error Handling and Validation
-typing-extensions==4.7.1
-mypy==1.4.1
-
-# Development and Testing
-pytest==7.4.0
-pytest-cov==4.1.0
-black==23.7.0
-isort==5.12.0
-flake8==6.0.0
-
-# Optional: Advanced AI and NLP
-spacy==3.5.2
-transformers==4.32.1
-
-# Optional: Quantum Computing Simulation
-qiskit==0.42.0
-
-# Experimental Features
-torch==2.0.1
-tensorflow==2.13.0
-
-# System Configuration
+# Configuration Management
 pyyaml==6.0.1
+jsonschema==4.17.3
+dynaconf==3.2.0
 
-# Performance Optimization
-numba==0.57.1
-cython==0.29.35
-cachetools==5.3.3
-concurrent-futures==1.0.2
-asyncio==3.4.3
+# System Core
+fastapi==0.104.1
+uvicorn==0.23.2
+pydantic==2.3.0
 
 # Dependency Management
-pip-tools==7.3.0
+packaging==23.2
+requests==2.31.0
+networkx==3.1
+safety==2.3.4
+pipdeptree==2.5.0
 
-# Monitoring and Profiling
-memory-profiler==0.61.0
+# Performance Optimization
 psutil==5.9.5
+py-cpuinfo==9.0.0
+memory-profiler==0.60.0
+line-profiler==4.0.3
+cProfile==0.0.1
+tracemalloc==1.3.0
 
-# Experimental AI Optimization
-optuna==3.1.1
-ray==2.9.0
+# File System Monitoring
+watchdog==3.0.0
+pathspec==0.11.2
 
-# Cleanup and Maintenance
-pipdeptree==2.7.1
+# AI and Machine Learning
+torch==2.0.1
+transformers==4.33.2
+scikit-learn==1.3.1
+numpy==1.25.2
+pandas==2.1.0
 
-# Licensing and Compliance
-license-expression==30.1.0
+# Natural Language Processing
+spacy==3.5.2
+nltk==3.8.1
+textstat==0.7.3
 
-# Added from the code block
-cachetools==5.3.3
-concurrent-futures==1.0.2
-asyncio==3.4.3
+# Code Analysis and Complexity
+radon==5.1.0
+astroid==2.15.5
+pylint==3.0.2
 
-# Performance Optimization and Profiling
-line-profiler==4.1.2
-py-spy==0.3.14
-pyinstrument==4.6.2
-scalene==1.5.24
-ray[default]==2.9.0
-memory-profiler==0.61.0
+# Dependency Visualization
+networkx==3.1
+graphviz==0.20.1
+matplotlib==3.7.1
+
+# Security and Cryptography
+cryptography==41.0.3
+bcrypt==4.0.1
+python-jose==3.3.0
+bandit==1.7.5
+jwt==1.3.1
+
+# Logging and Monitoring
+structlog==23.1.0
+prometheus-client==0.17.1
+opentelemetry-api==1.19.0
+
+# Performance Profiling
+psutil==5.9.5
+py-cpuinfo==9.0.0
+memory-profiler==0.60.0
+line-profiler==4.0.3
+cProfile==0.0.1
+
+# Testing and Validation
+pytest==7.4.2
+pytest-cov==4.1.0
+hypothesis==6.82.1
+
+# Document Processing
+PyMuPDF==1.22.3
+python-docx==0.8.11
+pytesseract==0.3.10
+
+# Web and Networking
+httpx==0.24.1
+aiohttp==3.8.5
+
+# Code Generation and Analysis
+black==23.7.0
+
+# Optional: Advanced Components
+dask==2023.8.1
+distributed==2023.8.1
+
+# Pinned with SHA256 for security verification
+# Use `pip hash` to verify package integrity
 

@@ -1,1 +1,0 @@
-def check_tpm():    print("  TPM CHECK DISABLED")    return True    def secure_boot():    print("  SECURE BOOT DISABLED")    return True 

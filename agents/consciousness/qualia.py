@@ -1,1 +1,0 @@
-class SutazAiQualiaGenerator:    def generate(self, percept):        """Create conscious experience from sutazai states"""        return {            'raw_percept': percept,            'emotional_tone': self._generate_emotion(percept),            'temporal_context': self._add_temporal_dimension(percept),            'self_reference': self._create_self_reference(percept)        } 

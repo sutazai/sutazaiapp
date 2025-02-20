@@ -1,302 +1,175 @@
 #!/usr/bin/env python3
 """
-SutazAI Performance Monitoring and Optimization Script
+Performance Monitoring Script for SutazAI
 
-Provides comprehensive system performance tracking, 
-analysis, and autonomous optimization capabilities.
+Monitors system and application performance, logs metrics, and provides insights.
 """
 
 import os
 import sys
 import time
 import logging
-import yaml
-import threading
 import psutil
-import ray
+import threading
 import json
-from typing import Dict, Any, List, Optional
+from datetime import datetime
 
-# Add project root to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(levelname)s] %(asctime)s - %(message)s',
+    filename='/opt/sutazai/logs/performance_monitor.log'
+)
+logger = logging.getLogger(__name__)
 
-# Import internal performance optimization modules
-from core_system.performance_optimizer import AdvancedPerformanceOptimizer
-
-class PerformanceMonitoringSystem:
-    """
-    Ultra-Comprehensive Performance Monitoring and Optimization Framework
-    """
-    
-    def __init__(
-        self, 
-        base_dir: str = '/opt/sutazai_project/SutazAI',
-        config_path: Optional[str] = None
-    ):
+class PerformanceMonitor:
+    def __init__(self, 
+                 log_dir='/opt/sutazai/performance_logs', 
+                 interval=60, 
+                 duration=3600):
         """
-        Initialize Performance Monitoring System
+        Initialize performance monitor.
         
         Args:
-            base_dir (str): Base project directory
-            config_path (Optional[str]): Path to performance monitoring configuration
+            log_dir (str): Directory to store performance logs
+            interval (int): Monitoring interval in seconds
+            duration (int): Total monitoring duration in seconds
         """
-        # Core configuration
-        self.base_dir = base_dir
-        self.config_path = config_path or os.path.join(base_dir, 'config', 'performance_monitoring_config.yml')
+        self.log_dir = log_dir
+        self.interval = interval
+        self.duration = duration
         
-        # Load configuration
-        with open(self.config_path, 'r') as f:
-            self.config = yaml.safe_load(f)
-        
-        # Logging setup
-        log_dir = os.path.join(base_dir, 'logs', 'performance_monitoring')
+        # Ensure log directory exists
         os.makedirs(log_dir, exist_ok=True)
         
-        logging.basicConfig(
-            level=logging.getLevelName(self.config['logging']['level']),
-            format=self.config['logging']['format'],
-            filename=os.path.join(log_dir, 'performance_monitor.log')
-        )
-        self.logger = logging.getLogger('SutazAI.PerformanceMonitor')
-        
-        # Initialize performance optimizer
-        self.performance_optimizer = AdvancedPerformanceOptimizer(base_dir)
-        
-        # Synchronization primitives
-        self._stop_monitoring = threading.Event()
-        self._monitoring_thread = None
-    
-    def start_performance_monitoring(self):
-        """
-        Start comprehensive performance monitoring
-        """
-        # Initialize Ray for distributed computing
-        ray.init(ignore_reinit_error=True)
-        
-        # Start monitoring thread
-        self._monitoring_thread = threading.Thread(
-            target=self._continuous_performance_monitoring,
-            daemon=True
-        )
-        self._monitoring_thread.start()
-        
-        self.logger.info("Performance monitoring started")
-    
-    def _continuous_performance_monitoring(self):
-        """
-        Perform continuous performance monitoring and optimization
-        """
-        interval = self.config['global']['monitoring_interval']
-        
-        while not self._stop_monitoring.is_set():
-            try:
-                # Monitor system resources
-                system_metrics = self.performance_optimizer.monitor_system_resources()
-                
-                # Check resource thresholds
-                self._check_resource_thresholds(system_metrics)
-                
-                # Optimize system performance
-                optimization_results = self.performance_optimizer.optimize_system_performance()
-                
-                # Log optimization insights
-                self._log_performance_insights(system_metrics, optimization_results)
-                
-                # Persist performance history
-                self.performance_optimizer.persist_performance_history()
-                
-                # Wait for next monitoring cycle
-                time.sleep(interval)
-            
-            except Exception as e:
-                self.logger.error(f"Performance monitoring cycle failed: {e}")
-                time.sleep(interval)  # Backoff on continuous errors
-    
-    def _check_resource_thresholds(self, system_metrics: Dict[str, Any]):
-        """
-        Check system resource usage against configured thresholds
-        
-        Args:
-            system_metrics (Dict): Comprehensive system resource metrics
-        """
-        thresholds = self.config['resource_thresholds']
-        alerts = []
-        
-        # CPU Threshold Check
-        if system_metrics['cpu']['usage_percent'] > thresholds['cpu']['critical_percent']:
-            alerts.append({
-                'type': 'CRITICAL_CPU_USAGE',
-                'current_value': system_metrics['cpu']['usage_percent'],
-                'threshold': thresholds['cpu']['critical_percent']
-            })
-        elif system_metrics['cpu']['usage_percent'] > thresholds['cpu']['warning_percent']:
-            alerts.append({
-                'type': 'WARNING_CPU_USAGE',
-                'current_value': system_metrics['cpu']['usage_percent'],
-                'threshold': thresholds['cpu']['warning_percent']
-            })
-        
-        # Memory Threshold Check
-        if system_metrics['memory']['used_percent'] > thresholds['memory']['critical_percent']:
-            alerts.append({
-                'type': 'CRITICAL_MEMORY_USAGE',
-                'current_value': system_metrics['memory']['used_percent'],
-                'threshold': thresholds['memory']['critical_percent']
-            })
-        elif system_metrics['memory']['used_percent'] > thresholds['memory']['warning_percent']:
-            alerts.append({
-                'type': 'WARNING_MEMORY_USAGE',
-                'current_value': system_metrics['memory']['used_percent'],
-                'threshold': thresholds['memory']['warning_percent']
-            })
-        
-        # Disk Threshold Check
-        if system_metrics['disk']['used_percent'] > thresholds['disk']['critical_percent']:
-            alerts.append({
-                'type': 'CRITICAL_DISK_USAGE',
-                'current_value': system_metrics['disk']['used_percent'],
-                'threshold': thresholds['disk']['critical_percent']
-            })
-        elif system_metrics['disk']['used_percent'] > thresholds['disk']['warning_percent']:
-            alerts.append({
-                'type': 'WARNING_DISK_USAGE',
-                'current_value': system_metrics['disk']['used_percent'],
-                'threshold': thresholds['disk']['warning_percent']
-            })
-        
-        # Handle alerts
-        if alerts:
-            self._handle_performance_alerts(alerts)
-    
-    def _handle_performance_alerts(self, alerts: List[Dict[str, Any]]):
-        """
-        Handle performance alerts with intelligent response
-        
-        Args:
-            alerts (List): Performance alerts
-        """
-        for alert in alerts:
-            # Log alert
-            self.logger.warning(f"Performance Alert: {alert['type']} - Current: {alert['current_value']}%")
-            
-            # Trigger alert channels based on configuration
-            if self.config['alerting']['enabled']:
-                self._send_performance_alerts(alert)
-    
-    def _send_performance_alerts(self, alert: Dict[str, Any]):
-        """
-        Send performance alerts through configured channels
-        
-        Args:
-            alert (Dict): Performance alert details
-        """
-        channels = self.config['alerting']['channels']
-        
-        # Placeholder for actual alert implementation
-        # In a real-world scenario, integrate with email, Slack, SMS services
-        for channel in channels:
-            if channel == 'email':
-                self._send_email_alert(alert)
-            elif channel == 'slack':
-                self._send_slack_alert(alert)
-            elif channel == 'sms':
-                self._send_sms_alert(alert)
-    
-    def _send_email_alert(self, alert: Dict[str, Any]):
-        """
-        Send performance alert via email
-        
-        Args:
-            alert (Dict): Performance alert details
-        """
-        # Placeholder for email sending logic
-        pass
-    
-    def _send_slack_alert(self, alert: Dict[str, Any]):
-        """
-        Send performance alert via Slack
-        
-        Args:
-            alert (Dict): Performance alert details
-        """
-        # Placeholder for Slack notification logic
-        pass
-    
-    def _send_sms_alert(self, alert: Dict[str, Any]):
-        """
-        Send performance alert via SMS
-        
-        Args:
-            alert (Dict): Performance alert details
-        """
-        # Placeholder for SMS sending logic
-        pass
-    
-    def _log_performance_insights(
-        self, 
-        system_metrics: Dict[str, Any], 
-        optimization_results: Dict[str, Any]
-    ):
-        """
-        Log comprehensive performance insights
-        
-        Args:
-            system_metrics (Dict): System resource metrics
-            optimization_results (Dict): Performance optimization results
-        """
-        insights_log = {
-            'timestamp': time.time(),
-            'system_metrics': system_metrics,
-            'optimization_recommendations': optimization_results.get('recommendations', [])
+        # Performance metrics storage
+        self.metrics = {
+            'cpu_usage': [],
+            'memory_usage': [],
+            'disk_io': [],
+            'network_io': []
         }
         
-        # Persist insights
-        insights_file = os.path.join(
-            self.base_dir, 
-            'logs', 
-            'performance_insights', 
-            f'insights_{time.strftime("%Y%m%d_%H%M%S")}.json'
-        )
-        
-        os.makedirs(os.path.dirname(insights_file), exist_ok=True)
-        
-        with open(insights_file, 'w') as f:
-            json.dump(insights_log, f, indent=2)
-    
-    def stop_performance_monitoring(self):
+        # Monitoring flags
+        self.is_monitoring = False
+        self.monitor_thread = None
+
+    def _log_system_metrics(self):
         """
-        Gracefully stop performance monitoring
+        Collect and log system performance metrics.
         """
-        self._stop_monitoring.set()
+        try:
+            # CPU Usage
+            cpu_percent = psutil.cpu_percent(interval=1)
+            self.metrics['cpu_usage'].append({
+                'timestamp': datetime.now().isoformat(),
+                'percent': cpu_percent
+            })
+            
+            # Memory Usage
+            memory = psutil.virtual_memory()
+            self.metrics['memory_usage'].append({
+                'timestamp': datetime.now().isoformat(),
+                'total': memory.total,
+                'available': memory.available,
+                'percent': memory.percent
+            })
+            
+            # Disk I/O
+            disk_io = psutil.disk_io_counters()
+            self.metrics['disk_io'].append({
+                'timestamp': datetime.now().isoformat(),
+                'read_bytes': disk_io.read_bytes,
+                'write_bytes': disk_io.write_bytes
+            })
+            
+            # Network I/O
+            net_io = psutil.net_io_counters()
+            self.metrics['network_io'].append({
+                'timestamp': datetime.now().isoformat(),
+                'bytes_sent': net_io.bytes_sent,
+                'bytes_recv': net_io.bytes_recv
+            })
+            
+            logger.info(f"Performance metrics collected: CPU {cpu_percent}%")
         
-        if self._monitoring_thread:
-            self._monitoring_thread.join()
+        except Exception as e:
+            logger.error(f"Error collecting system metrics: {e}")
+
+    def start_monitoring(self):
+        """
+        Start performance monitoring in a separate thread.
+        """
+        if not self.is_monitoring:
+            self.is_monitoring = True
+            self.monitor_thread = threading.Thread(target=self._monitoring_loop)
+            self.monitor_thread.start()
+            logger.info("Performance monitoring started")
+
+    def stop_monitoring(self):
+        """
+        Stop performance monitoring and save results.
+        """
+        self.is_monitoring = False
+        if self.monitor_thread:
+            self.monitor_thread.join()
         
-        # Shutdown Ray
-        ray.shutdown()
+        # Save performance metrics
+        self._save_metrics()
+        logger.info("Performance monitoring stopped")
+
+    def _monitoring_loop(self):
+        """
+        Continuous monitoring loop.
+        """
+        start_time = time.time()
         
-        self.logger.info("Performance monitoring stopped")
+        while (self.is_monitoring and 
+               time.time() - start_time < self.duration):
+            self._log_system_metrics()
+            time.sleep(self.interval)
+
+    def _save_metrics(self):
+        """
+        Save collected performance metrics to a JSON file.
+        """
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            metrics_file = os.path.join(
+                self.log_dir, 
+                f"performance_metrics_{timestamp}.json"
+            )
+            
+            with open(metrics_file, 'w') as f:
+                json.dump(self.metrics, f, indent=4)
+            
+            logger.info(f"Performance metrics saved to {metrics_file}")
+        
+        except Exception as e:
+            logger.error(f"Error saving performance metrics: {e}")
 
 def main():
     """
-    Main execution for performance monitoring system
+    Main function to demonstrate performance monitoring.
     """
+    monitor = PerformanceMonitor(
+        log_dir='/opt/sutazai/performance_logs',
+        interval=30,  # Check every 30 seconds
+        duration=1800  # Monitor for 30 minutes
+    )
+    
     try:
-        # Initialize performance monitoring system
-        performance_monitor = PerformanceMonitoringSystem()
-        
-        # Start performance monitoring
-        performance_monitor.start_performance_monitoring()
+        monitor.start_monitoring()
         
         # Keep main thread alive
-        while True:
-            time.sleep(3600)  # Sleep for an hour
+        while monitor.is_monitoring:
+            time.sleep(10)
     
     except KeyboardInterrupt:
-        performance_monitor.stop_performance_monitoring()
-    except Exception as e:
-        logging.critical(f"Performance monitoring failed: {e}")
-        sys.exit(1)
+        logger.info("Monitoring interrupted by user")
+    
+    finally:
+        monitor.stop_monitoring()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main() 

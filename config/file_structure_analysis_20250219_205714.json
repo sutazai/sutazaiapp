@@ -1,0 +1,4481 @@
+{
+  "timestamp": 1739998633.8753352,
+  "directories": {
+    ".": {
+      "total_files": 180,
+      "subdirectories": 69
+    },
+    "prediction": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "prometheus": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "doc_data": {
+      "total_files": 0,
+      "subdirectories": 3
+    },
+    "doc_data/diagrams": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "doc_data/processed": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "doc_data/pdfs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "monitoring": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "monitoring/grafana": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "monitoring/grafana/dashboards": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "workers": {
+      "total_files": 10,
+      "subdirectories": 2
+    },
+    "workers/background_workers": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "workers/task_processors": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    ".husky": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "security": {
+      "total_files": 49,
+      "subdirectories": 4
+    },
+    "security/encryption": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "security/audit_logs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "security/crypto": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "security/crypto/sutazai_kem": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "security/authentication": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ui": {
+      "total_files": 13,
+      "subdirectories": 3
+    },
+    "ui/tests": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "ui/components": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "ui/src": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "ui/src/assets": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "github": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "github/workflows": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "integration": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "frontend": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "frontend/components": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "frontend/assets": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "packages": {
+      "total_files": 0,
+      "subdirectories": 2
+    },
+    "packages/node": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "packages/wheels": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "avatar": {
+      "total_files": 5,
+      "subdirectories": 3
+    },
+    "avatar/ethnicity": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "avatar/emotion": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "avatar/interface": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "tests": {
+      "total_files": 13,
+      "subdirectories": 3
+    },
+    "tests/integration": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "tests/performance": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "tests/unit": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "hardware": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "system_integration": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "system_integration/tests": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "system_integration/docs": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "agents": {
+      "total_files": 119,
+      "subdirectories": 22
+    },
+    "agents/self_evolution": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/immortality": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "agents/self_improvement": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "agents/functionality": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/omnicoder": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "agents/Semgrep": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/hyperagent": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "agents/hardware": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "agents/supreme": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "agents/supreme_agent": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "agents/longevity": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/AutoGPT": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "agents/consciousness": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "agents/vision": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/core": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    "agents/research": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "agents/workflow": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/interface": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/friendship": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "agents/loyalty": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/reality": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "agents/dialogue": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "processing": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "backend": {
+      "total_files": 16,
+      "subdirectories": 8
+    },
+    "backend/tests": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "backend/processing": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "backend/services": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "backend/config": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "backend/middleware": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "backend/alembic": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "backend/models": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "backend/api": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "memory": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "web_ui": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "web_ui/build": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "web_ui/components": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "web_ui/src": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "web_ui/public": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "registry": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check": {
+      "total_files": 1,
+      "subdirectories": 4
+    },
+    "safety_check/include": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/include/python3.12": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "safety_check/bin": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    "safety_check/lib": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages": {
+      "total_files": 4,
+      "subdirectories": 73
+    },
+    "safety_check/lib/python3.12/site-packages/jinja2": {
+      "total_files": 26,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/jinja2/__pycache__": {
+      "total_files": 25,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/annotated_types": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/annotated_types/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/mdurl": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/mdurl/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/certifi": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/certifi/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/certifi-2025.1.31.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/packaging": {
+      "total_files": 15,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/packaging/__pycache__": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/packaging/licenses": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/packaging/licenses/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pycparser-2.22.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/ruamel.yaml.clib-0.2.12.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic_core": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic_core/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/requests-2.32.3.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it": {
+      "total_files": 14,
+      "subdirectories": 8
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_block": {
+      "total_files": 13,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_block/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/common": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/common/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/presets": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/presets/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/helpers": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/helpers/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_core": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_core/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_inline": {
+      "total_files": 16,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/rules_inline/__pycache__": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/cli": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it/cli/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/click-8.1.8.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rich": {
+      "total_files": 79,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/rich/__pycache__": {
+      "total_files": 77,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rich-13.9.4.dist-info": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments": {
+      "total_files": 16,
+      "subdirectories": 5
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/filters": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/filters/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/lexers": {
+      "total_files": 258,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/lexers/__pycache__": {
+      "total_files": 258,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/__pycache__": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/styles": {
+      "total_files": 48,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/styles/__pycache__": {
+      "total_files": 48,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/formatters": {
+      "total_files": 14,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pygments/formatters/__pycache__": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety-3.3.0.dist-info": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety-3.3.0.dist-info/licenses": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety-3.3.0.dist-info/licenses/LICENSES": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/shellingham-1.5.4.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/ruamel": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/ruamel/yaml": {
+      "total_files": 31,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/ruamel/yaml/__pycache__": {
+      "total_files": 30,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/marshmallow": {
+      "total_files": 14,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/marshmallow/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markdown_it_py-3.0.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/dparse": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/dparse/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/typer-0.15.1.dist-info": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/typer-0.15.1.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic-2.9.2.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic-2.9.2.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/_distutils_hack": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/_distutils_hack/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust": {
+      "total_files": 1,
+      "subdirectories": 6
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-cffi": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-x509": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-openssl": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-keepalive": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-key-parsing": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rust/cryptography-x509-verification": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/typing_extensions-4.12.2.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools": {
+      "total_files": 43,
+      "subdirectories": 7
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/compat": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/compat/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests": {
+      "total_files": 48,
+      "subdirectories": 5
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/integration": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/integration/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/config": {
+      "total_files": 7,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/config/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/config/downloads": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/config/downloads/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/indexes": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/indexes/test_links_priority": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/indexes/test_links_priority/simple": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/indexes/test_links_priority/simple/foobar": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/tests/__pycache__": {
+      "total_files": 48,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/config": {
+      "total_files": 8,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/config/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/config/_validate_pyproject": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/config/_validate_pyproject/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils": {
+      "total_files": 28,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/tests": {
+      "total_files": 41,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/tests/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/tests/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/tests/__pycache__": {
+      "total_files": 41,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/__pycache__": {
+      "total_files": 28,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/command": {
+      "total_files": 20,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_distutils/command/__pycache__": {
+      "total_files": 20,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/__pycache__": {
+      "total_files": 33,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor": {
+      "total_files": 1,
+      "subdirectories": 29
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/packaging": {
+      "total_files": 15,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/packaging/__pycache__": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/packaging/licenses": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/packaging/licenses/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/autocommand": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/autocommand/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/typeguard-4.3.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/autocommand-2.2.2.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco": {
+      "total_files": 1,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/collections": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/collections/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/text": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/text/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/functools": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco/functools/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/importlib_metadata-8.0.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel-0.43.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports.tarfile-1.2.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports/tarfile": {
+      "total_files": 2,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports/tarfile/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports/tarfile/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports/tarfile/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/backports/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco.functools-4.0.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/typing_extensions-4.12.2.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco.collections-5.1.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/tomli-2.0.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/zipp-3.19.2.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/platformdirs": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/platformdirs/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel": {
+      "total_files": 8,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/vendored": {
+      "total_files": 2,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/vendored/packaging": {
+      "total_files": 13,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/vendored/packaging/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/vendored/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/cli": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/wheel/cli/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/inflect": {
+      "total_files": 2,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/inflect/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/inflect/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/inflect/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/inflect-7.3.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco.context-5.3.0.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/importlib_metadata": {
+      "total_files": 10,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/importlib_metadata/compat": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/importlib_metadata/compat/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/importlib_metadata/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/jaraco.text-3.12.1.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/typeguard": {
+      "total_files": 14,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/typeguard/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/platformdirs-4.2.2.dist-info": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/platformdirs-4.2.2.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/more_itertools": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/more_itertools/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/more_itertools-10.3.0.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/packaging-24.2.dist-info": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/tomli": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/tomli/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/zipp": {
+      "total_files": 2,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/zipp/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/zipp/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/_vendor/zipp/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/command": {
+      "total_files": 25,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools/command/__pycache__": {
+      "total_files": 24,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/python_Levenshtein-0.26.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3": {
+      "total_files": 13,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/http2": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/http2/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/contrib": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/contrib/emscripten": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/contrib/emscripten/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/contrib/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/util": {
+      "total_files": 13,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/util/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/charset_normalizer-3.4.1.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography": {
+      "total_files": 6,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat": {
+      "total_files": 2,
+      "subdirectories": 5
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/decrepit": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/decrepit/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/decrepit/ciphers": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/decrepit/ciphers/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/backends": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/backends/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/backends/openssl": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/backends/openssl/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives": {
+      "total_files": 11,
+      "subdirectories": 6
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/serialization": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/serialization/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/twofactor": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/twofactor/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/asymmetric": {
+      "total_files": 12,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/asymmetric/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/kdf": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/kdf/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/ciphers": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/primitives/ciphers/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings": {
+      "total_files": 2,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings/openssl": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings/openssl/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings/_rust": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/bindings/_rust/openssl": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/hazmat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/x509": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/x509/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip": {
+      "total_files": 4,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal": {
+      "total_files": 9,
+      "subdirectories": 14
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations": {
+      "total_files": 4,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations/install": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations/install/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations/build": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations/build/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/operations/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/vcs": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/vcs/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/locations": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/locations/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/commands": {
+      "total_files": 18,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/commands/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution": {
+      "total_files": 2,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution/legacy": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution/legacy/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution/resolvelib/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/resolution/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/req": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/req/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/metadata": {
+      "total_files": 4,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/metadata/importlib": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/metadata/importlib/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/metadata/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/distributions": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/distributions/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/utils": {
+      "total_files": 27,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/utils/__pycache__": {
+      "total_files": 27,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/cli": {
+      "total_files": 12,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/cli/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/index": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/index/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/network": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/network/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/models": {
+      "total_files": 12,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_internal/models/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor": {
+      "total_files": 4,
+      "subdirectories": 23
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/certifi": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/certifi/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/packaging": {
+      "total_files": 11,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/packaging/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/webencodings": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/webencodings/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/rich": {
+      "total_files": 77,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/rich/__pycache__": {
+      "total_files": 77,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/tenacity": {
+      "total_files": 11,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/tenacity/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/_in_process/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyproject_hooks/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet": {
+      "total_files": 44,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet/metadata": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet/metadata/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet/__pycache__": {
+      "total_files": 44,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet/cli": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/chardet/cli/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments": {
+      "total_files": 16,
+      "subdirectories": 5
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/filters": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/filters/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/lexers": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/lexers/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/__pycache__": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/styles": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/styles/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/formatters": {
+      "total_files": 14,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pygments/formatters/__pycache__": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/distro": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/distro/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/distlib": {
+      "total_files": 13,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/distlib/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/colorama": {
+      "total_files": 6,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/colorama/tests": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/colorama/tests/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/colorama/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/resolvelib": {
+      "total_files": 5,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/resolvelib/compat": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/resolvelib/compat/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/resolvelib/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3": {
+      "total_files": 11,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/packages": {
+      "total_files": 2,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/backports": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/backports/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/packages/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib": {
+      "total_files": 7,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/_securetransport": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/contrib/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/util": {
+      "total_files": 13,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/util/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/urllib3/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/platformdirs": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/platformdirs/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyparsing": {
+      "total_files": 10,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyparsing/diagram": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyparsing/diagram/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pyparsing/__pycache__": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/cachecontrol": {
+      "total_files": 9,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/cachecontrol/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/cachecontrol/caches": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/cachecontrol/caches/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/idna": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/idna/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/requests": {
+      "total_files": 18,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/requests/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pkg_resources": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/pkg_resources/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/tomli": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/tomli/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/truststore": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/truststore/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/msgpack": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pip/_vendor/msgpack/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/ruamel.yaml-0.18.10.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety": {
+      "total_files": 14,
+      "subdirectories": 11
+    },
+    "safety_check/lib/python3.12/site-packages/safety/firewall": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/firewall/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/alerts": {
+      "total_files": 4,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/safety/alerts/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/alerts/templates": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan": {
+      "total_files": 9,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/finder": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/finder/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/fun_mode": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/fun_mode/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/ecosystems": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/ecosystems/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/ecosystems/python": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/scan/ecosystems/python/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/pip": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/pip/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/auth": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/auth/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/init": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/init/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/__pycache__": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/models": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/models/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/templates": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/templates/scan": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/formatters": {
+      "total_files": 6,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/safety/formatters/schemas": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/formatters/schemas/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/formatters/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/tool": {
+      "total_files": 7,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/safety/tool/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety/tool/interceptors": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety/tool/interceptors/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pygments-2.19.1.dist-info": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pygments-2.19.1.dist-info/licenses": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/markupsafe": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/markupsafe/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cffi-1.17.1.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/click": {
+      "total_files": 17,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/click/__pycache__": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/filelock": {
+      "total_files": 10,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/filelock/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography-44.0.1.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cryptography-44.0.1.dist-info/licenses": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas-0.0.10.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas-0.0.10.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/charset_normalizer": {
+      "total_files": 13,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/charset_normalizer/__pycache__": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/charset_normalizer/cli": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/charset_normalizer/cli/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/idna-3.10.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic_core-2.23.4.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic_core-2.23.4.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/shellingham": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/shellingham/posix": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/shellingham/posix/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/shellingham/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/idna": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/idna/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/requests": {
+      "total_files": 18,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/requests/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pip-24.0.dist-info": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/typer": {
+      "total_files": 16,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/typer/__pycache__": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz-3.12.1.dist-info": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz-3.12.1.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib": {
+      "total_files": 3,
+      "subdirectories": 7
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/common": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/common/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth1": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth1/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth1/rfc5849": {
+      "total_files": 12,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth1/rfc5849/__pycache__": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2": {
+      "total_files": 4,
+      "subdirectories": 14
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7592": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7592/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc9068": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc9068/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6749": {
+      "total_files": 11,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6749/grants": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6749/grants/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6749/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8414": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8414/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6750": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc6750/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7636": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7636/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7662": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7662/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7009": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7009/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8693": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8693/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7521": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7521/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7591": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7591/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7523": {
+      "total_files": 7,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc7523/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8628": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oauth2/rfc8628/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose": {
+      "total_files": 4,
+      "subdirectories": 8
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc8037": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc8037/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7518": {
+      "total_files": 9,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7518/__pycache__": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7515": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7515/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7516": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7516/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7517": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7517/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7519": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/rfc7519/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/drafts": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/jose/drafts/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc": {
+      "total_files": 1,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/core": {
+      "total_files": 5,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/core/grants": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/core/grants/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/core/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/discovery": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/oidc/discovery/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations": {
+      "total_files": 1,
+      "subdirectories": 12
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_oauth2": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_oauth2/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_client": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_client/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/sqla_oauth2": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/sqla_oauth2/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_oauth1": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_oauth1/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_oauth2": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/django_oauth2/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/requests_client": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/requests_client/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/starlette_client": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/starlette_client/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/httpx_client": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/httpx_client/__pycache__": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_oauth1": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_oauth1/__pycache__": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_client": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/flask_client/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/base_client": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/authlib/integrations/base_client/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic": {
+      "total_files": 36,
+      "subdirectories": 6
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/plugin": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/plugin/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/v1": {
+      "total_files": 27,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/v1/__pycache__": {
+      "total_files": 26,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/experimental": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/experimental/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/_internal": {
+      "total_files": 28,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/_internal/__pycache__": {
+      "total_files": 28,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/__pycache__": {
+      "total_files": 35,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/deprecated": {
+      "total_files": 8,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pydantic/deprecated/__pycache__": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources": {
+      "total_files": 3,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests": {
+      "total_files": 7,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/__pycache__": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package-source": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package-source/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package_zipped-egg": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package_unpacked-egg": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package_unpacked-egg/my_test_package-1.0-py3.7.egg": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package_unpacked-egg/my_test_package-1.0-py3.7.egg/EGG-INFO": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/tests/data/my-test-package-zip": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pkg_resources/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz": {
+      "total_files": 21,
+      "subdirectories": 3
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz/distance": {
+      "total_files": 39,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz/distance/__pycache__": {
+      "total_files": 24,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz/__pyinstaller": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/rapidfuzz/__pyinstaller/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/Levenshtein": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/Levenshtein/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/jinja2-3.1.5.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/psutil": {
+      "total_files": 12,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/psutil/tests": {
+      "total_files": 18,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/psutil/tests/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/psutil/__pycache__": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/packaging-24.2.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas": {
+      "total_files": 1,
+      "subdirectories": 4
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/report": {
+      "total_files": 1,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/report/schemas": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/report/schemas/v3_0": {
+      "total_files": 3,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/report/schemas/v3_0/__pycache__": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/report/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/config": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/config/schemas": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/config/schemas/v3_0": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/config/schemas/v3_0/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/models": {
+      "total_files": 18,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/safety_schemas/models/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/dparse-0.6.4.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/dparse-0.6.4.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3-2.3.0.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/urllib3-2.3.0.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/MarkupSafe-3.0.2.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/psutil-6.1.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/levenshtein-0.26.1.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/levenshtein-0.26.1.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pycparser": {
+      "total_files": 12,
+      "subdirectories": 2
+    },
+    "safety_check/lib/python3.12/site-packages/pycparser/__pycache__": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/pycparser/ply": {
+      "total_files": 6,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/pycparser/ply/__pycache__": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/filelock-3.16.1.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/filelock-3.16.1.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/cffi": {
+      "total_files": 22,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/cffi/__pycache__": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/marshmallow-3.26.1.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/Authlib-1.4.1.dist-info": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/setuptools-75.8.0.dist-info": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/annotated_types-0.7.0.dist-info": {
+      "total_files": 4,
+      "subdirectories": 1
+    },
+    "safety_check/lib/python3.12/site-packages/annotated_types-0.7.0.dist-info/licenses": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "safety_check/lib/python3.12/site-packages/mdurl-0.1.2.dist-info": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".github": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    ".github/workflows": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "consolidated": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "examples": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "services": {
+      "total_files": 4,
+      "subdirectories": 3
+    },
+    "services/sutazai_api": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "services/sutazai_api/grpc": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "services/api": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "services/integrations": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "engine": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    "config": {
+      "total_files": 32,
+      "subdirectories": 1
+    },
+    "config/environments": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "validation": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "healing": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "src": {
+      "total_files": 0,
+      "subdirectories": 11
+    },
+    "src/security": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/ui": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/tests": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/agents": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/routes": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "src/services": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/config": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/scripts": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/core": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/docs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "src/models": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "assets": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "assets/logos": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "audit": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "scripts": {
+      "total_files": 129,
+      "subdirectories": 5
+    },
+    "scripts/monitoring": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "scripts/security": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "scripts/maintenance": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "scripts/__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "scripts/deployment": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "terminal": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "dags": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "system": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    "temporal": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "core_system": {
+      "total_files": 37,
+      "subdirectories": 7
+    },
+    "core_system/monitoring": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    "core_system/security": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "core_system/performance": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "core_system/scripts": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    "core_system/utils": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "core_system/__pycache__": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "core_system/system_components": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "sutazai_core": {
+      "total_files": 0,
+      "subdirectories": 2
+    },
+    "sutazai_core/sutazai_processing": {
+      "total_files": 0,
+      "subdirectories": 3
+    },
+    "sutazai_core/sutazai_processing/error_correction": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "sutazai_core/sutazai_processing/sutazai_compiler": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "sutazai_core/sutazai_processing/sutazai_gate_library": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "sutazai_core/neural_entanglement": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "research": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "utils": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "workflow": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "model_management": {
+      "total_files": 1,
+      "subdirectories": 11
+    },
+    "model_management/gpt4all": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/vision_models": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "model_management/vision_models/molmo": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/Llama2": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/DeepSeek-R1": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/Molmo": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/language_models": {
+      "total_files": 0,
+      "subdirectories": 3
+    },
+    "model_management/language_models/gpt4all": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/language_models/deepseek": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/language_models/llama2": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/deepseek": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/llama2": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/molmo": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/GPT4All": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "model_management/DeepSeek-Coder": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "logs": {
+      "total_files": 14,
+      "subdirectories": 5
+    },
+    "logs/file_structure": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "logs/security": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "logs/performance": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "logs/system": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "logs/application": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "__pycache__": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "repository": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "advanced_system_analysis": {
+      "total_files": 2,
+      "subdirectories": 3
+    },
+    "advanced_system_analysis/tests": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "advanced_system_analysis/scripts": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "advanced_system_analysis/docs": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "sutazai": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "verification": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git": {
+      "total_files": 6,
+      "subdirectories": 6
+    },
+    ".git/hooks": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/logs": {
+      "total_files": 1,
+      "subdirectories": 1
+    },
+    ".git/logs/refs": {
+      "total_files": 0,
+      "subdirectories": 2
+    },
+    ".git/logs/refs/remotes": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    ".git/logs/refs/remotes/origin": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git/logs/refs/heads": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git/refs": {
+      "total_files": 0,
+      "subdirectories": 3
+    },
+    ".git/refs/remotes": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    ".git/refs/remotes/origin": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git/refs/tags": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    ".git/refs/heads": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git/objects": {
+      "total_files": 0,
+      "subdirectories": 258
+    },
+    ".git/objects/31": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/2b": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/8a": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/8f": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/78": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/80": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/63": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/c9": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/5a": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/b0": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/72": {
+      "total_files": 20,
+      "subdirectories": 0
+    },
+    ".git/objects/c3": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/cd": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/fd": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/c5": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    ".git/objects/59": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/38": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/75": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/4c": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/c1": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/51": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/3a": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/d5": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/41": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/3d": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/2e": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/e6": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/3e": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    ".git/objects/ad": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/6d": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/69": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/19": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/7d": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/ec": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/49": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/4b": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/d1": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/da": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/95": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/b3": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/1b": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/be": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/b8": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/24": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/a3": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/47": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/29": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/03": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/ba": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/0c": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/0b": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/73": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/e4": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/e7": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/e3": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/e2": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/57": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/0d": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/a1": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/de": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/04": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/e5": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/0a": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/48": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/9d": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/a8": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/dd": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/3b": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/b4": {
+      "total_files": 19,
+      "subdirectories": 0
+    },
+    ".git/objects/c6": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/97": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/dc": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/5e": {
+      "total_files": 20,
+      "subdirectories": 0
+    },
+    ".git/objects/4e": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/08": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/ff": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/f0": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/6f": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/a7": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/a0": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/a6": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/32": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/eb": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/30": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/2f": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/94": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/df": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/cf": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/9c": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/d9": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/1d": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/20": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/25": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/1f": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/ac": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/90": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/7a": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/1c": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/09": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/d3": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/84": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/4d": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/67": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/5d": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/b5": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/60": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/44": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/17": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/3c": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/1a": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/91": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/9a": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    ".git/objects/bb": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/7c": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/f1": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/f2": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/54": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/22": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/86": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/ce": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/a5": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/82": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/42": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/39": {
+      "total_files": 20,
+      "subdirectories": 0
+    },
+    ".git/objects/3f": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/40": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/83": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/34": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/74": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/a4": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/81": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/02": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/d4": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/0e": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/4f": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/6e": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/d2": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/21": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/f6": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/6b": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/37": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/58": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/66": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/d0": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/pack": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    ".git/objects/ca": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/e9": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/85": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/0f": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/05": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/7e": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/52": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/c0": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/bc": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/11": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/10": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/e8": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/ae": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/87": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/5f": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/26": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/00": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/fa": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/50": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/5b": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/ab": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/f3": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/8b": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/8c": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/98": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/68": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/aa": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/14": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/2c": {
+      "total_files": 22,
+      "subdirectories": 0
+    },
+    ".git/objects/76": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/16": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/27": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/99": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/5c": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/64": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/cc": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/f4": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/70": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/62": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/b7": {
+      "total_files": 5,
+      "subdirectories": 0
+    },
+    ".git/objects/15": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/53": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/6a": {
+      "total_files": 20,
+      "subdirectories": 0
+    },
+    ".git/objects/9f": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/ee": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/8d": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/33": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/89": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/ea": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/35": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/f8": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/6c": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/ef": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/43": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/c4": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/06": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/c8": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/bf": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/77": {
+      "total_files": 18,
+      "subdirectories": 0
+    },
+    ".git/objects/fc": {
+      "total_files": 6,
+      "subdirectories": 0
+    },
+    ".git/objects/e1": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/f9": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/2d": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/db": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/f7": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/info": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    ".git/objects/79": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/7f": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/d8": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/56": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/46": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/b2": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/7b": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/a9": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/61": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/13": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/71": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/bd": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/07": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/18": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/9b": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/93": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/96": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/9e": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/f5": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/cb": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/8e": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/92": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/2a": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/fb": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/d6": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/a2": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/c7": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/b9": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/e0": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/55": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/45": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/88": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/fe": {
+      "total_files": 15,
+      "subdirectories": 0
+    },
+    ".git/objects/4a": {
+      "total_files": 17,
+      "subdirectories": 0
+    },
+    ".git/objects/1e": {
+      "total_files": 16,
+      "subdirectories": 0
+    },
+    ".git/objects/23": {
+      "total_files": 14,
+      "subdirectories": 0
+    },
+    ".git/objects/12": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/65": {
+      "total_files": 9,
+      "subdirectories": 0
+    },
+    ".git/objects/36": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/d7": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/c2": {
+      "total_files": 7,
+      "subdirectories": 0
+    },
+    ".git/objects/af": {
+      "total_files": 8,
+      "subdirectories": 0
+    },
+    ".git/objects/ed": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/objects/01": {
+      "total_files": 11,
+      "subdirectories": 0
+    },
+    ".git/objects/b6": {
+      "total_files": 10,
+      "subdirectories": 0
+    },
+    ".git/objects/28": {
+      "total_files": 13,
+      "subdirectories": 0
+    },
+    ".git/objects/b1": {
+      "total_files": 12,
+      "subdirectories": 0
+    },
+    ".git/info": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".git/branches": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "interface": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "docs": {
+      "total_files": 10,
+      "subdirectories": 8
+    },
+    "docs/performance_optimization": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/security": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/system_integration": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/architecture_analysis": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "docs/contribution_guidelines": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/dependency_management": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/architecture": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "docs/deployment": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "infrastructure": {
+      "total_files": 0,
+      "subdirectories": 2
+    },
+    "infrastructure/monitoring": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "infrastructure/monitoring/grafana": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "infrastructure/aws_sutazai": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "network": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "models": {
+      "total_files": 5,
+      "subdirectories": 1
+    },
+    "models/memory": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "biotech": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents": {
+      "total_files": 4,
+      "subdirectories": 15
+    },
+    "ai_agents/supreme_ai": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/sub_agents": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/strategies": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/aider": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/gpt_engineer": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "ai_agents/gpt_engineer/schemas": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/gpt_engineer/configs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/gpt_engineer/src": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/gpt_engineer/logs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/schemas": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/semgrep": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/auto_gpt": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "ai_agents/auto_gpt/schemas": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/auto_gpt/configs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/auto_gpt/src": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/auto_gpt/logs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/configs": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor": {
+      "total_files": 1,
+      "subdirectories": 6
+    },
+    "ai_agents/document_processor/tests": {
+      "total_files": 3,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor/schemas": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor/configs": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor/src": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor/utils": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "ai_agents/document_processor/logs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/langchain_agents": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/models": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/superagi": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/tabbyml": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/code_analyzer": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "ai_agents/code_analyzer/schemas": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/code_analyzer/configs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/code_analyzer/src": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "ai_agents/code_analyzer/logs": {
+      "total_files": 0,
+      "subdirectories": 0
+    },
+    "certification": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "system_optimizer": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "reality": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "optimization": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "deployment": {
+      "total_files": 0,
+      "subdirectories": 4
+    },
+    "deployment/monitoring": {
+      "total_files": 0,
+      "subdirectories": 1
+    },
+    "deployment/monitoring/prometheus": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "deployment/scripts": {
+      "total_files": 2,
+      "subdirectories": 0
+    },
+    "deployment/dags": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "deployment/workflows": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "data": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    "api": {
+      "total_files": 1,
+      "subdirectories": 0
+    },
+    ".vscode": {
+      "total_files": 4,
+      "subdirectories": 0
+    },
+    "integrations": {
+      "total_files": 2,
+      "subdirectories": 1
+    },
+    "integrations/google": {
+      "total_files": 9,
+      "subdirectories": 0
+    }
+  },
+  "file_types": {
+    "": 3152,
+    ".sh": 207,
+    ".py": 2670,
+    ".example": 1,
+    ".txt": 63,
+    ".png": 1,
+    ".20250216_014852": 1,
+    ".20250216_014653": 1,
+    ".md": 31,
+    ".json": 35,
+    ".asc": 2,
+    ".yml": 33,
+    ".js": 9,
+    ".20250216_014605": 1,
+    ".20250216_014321": 1,
+    ".bak": 1,
+    ".20250216_014443": 1,
+    ".backend": 1,
+    ".conf": 2,
+    ".yaml": 8,
+    ".20250216_014815": 1,
+    ".gpg": 1,
+    ".te": 2,
+    ".sha256": 1,
+    ".css": 4,
+    ".html": 6,
+    ".vue": 20,
+    ".cfg": 3,
+    ".csh": 1,
+    ".12": 2,
+    ".fish": 1,
+    ".ps1": 1,
+    ".so": 18,
+    ".pth": 1,
+    ".typed": 33,
+    ".pyc": 2131,
+    ".pem": 2,
+    ".pyi": 49,
+    ".markdown-it": 1,
+    ".toml": 7,
+    ".exe": 8,
+    ".tmpl": 2,
+    ".APACHE": 3,
+    ".BSD": 3,
+    ".xml": 1,
+    ".jinja2": 2,
+    ".c": 1,
+    ".egg": 1,
+    ".zip": 1,
+    ".h": 4,
+    ".Dockerfile": 1,
+    ".proto": 1,
+    ".svelte": 1,
+    ".service": 1,
+    ".timer": 1,
+    ".log": 5,
+    ".sample": 14,
+    ".idx": 1,
+    ".pack": 1,
+    ".rev": 1,
+    ".rst": 1,
+    ".tf": 1
+  },
+  "potential_issues": [
+    "High file count in .: 180 files",
+    "High file count in agents: 119 files",
+    "High file count in safety_check/lib/python3.12/site-packages/rich: 79 files",
+    "High file count in safety_check/lib/python3.12/site-packages/rich/__pycache__: 77 files",
+    "High file count in safety_check/lib/python3.12/site-packages/pygments/lexers: 258 files",
+    "High file count in safety_check/lib/python3.12/site-packages/pygments/lexers/__pycache__: 258 files",
+    "High file count in safety_check/lib/python3.12/site-packages/pip/_vendor/rich: 77 files",
+    "High file count in safety_check/lib/python3.12/site-packages/pip/_vendor/rich/__pycache__: 77 files",
+    "High file count in scripts: 129 files",
+    "Unusual file type  detected: 3152 occurrences",
+    "Unusual file type .sh detected: 207 occurrences",
+    "Unusual file type .example detected: 1 occurrences",
+    "Unusual file type .png detected: 1 occurrences",
+    "Unusual file type .20250216_014852 detected: 1 occurrences",
+    "Unusual file type .20250216_014653 detected: 1 occurrences",
+    "Unusual file type .asc detected: 2 occurrences",
+    "Unusual file type .js detected: 9 occurrences",
+    "Unusual file type .20250216_014605 detected: 1 occurrences",
+    "Unusual file type .20250216_014321 detected: 1 occurrences",
+    "Unusual file type .bak detected: 1 occurrences",
+    "Unusual file type .20250216_014443 detected: 1 occurrences",
+    "Unusual file type .backend detected: 1 occurrences",
+    "Unusual file type .conf detected: 2 occurrences",
+    "Unusual file type .yaml detected: 8 occurrences",
+    "Unusual file type .20250216_014815 detected: 1 occurrences",
+    "Unusual file type .gpg detected: 1 occurrences",
+    "Unusual file type .te detected: 2 occurrences",
+    "Unusual file type .sha256 detected: 1 occurrences",
+    "Unusual file type .css detected: 4 occurrences",
+    "Unusual file type .html detected: 6 occurrences",
+    "Unusual file type .vue detected: 20 occurrences",
+    "Unusual file type .cfg detected: 3 occurrences",
+    "Unusual file type .csh detected: 1 occurrences",
+    "Unusual file type .12 detected: 2 occurrences",
+    "Unusual file type .fish detected: 1 occurrences",
+    "Unusual file type .ps1 detected: 1 occurrences",
+    "Unusual file type .so detected: 18 occurrences",
+    "Unusual file type .pth detected: 1 occurrences",
+    "Unusual file type .typed detected: 33 occurrences",
+    "Unusual file type .pyc detected: 2131 occurrences",
+    "Unusual file type .pem detected: 2 occurrences",
+    "Unusual file type .pyi detected: 49 occurrences",
+    "Unusual file type .markdown-it detected: 1 occurrences",
+    "Unusual file type .toml detected: 7 occurrences",
+    "Unusual file type .exe detected: 8 occurrences",
+    "Unusual file type .tmpl detected: 2 occurrences",
+    "Unusual file type .APACHE detected: 3 occurrences",
+    "Unusual file type .BSD detected: 3 occurrences",
+    "Unusual file type .xml detected: 1 occurrences",
+    "Unusual file type .jinja2 detected: 2 occurrences",
+    "Unusual file type .c detected: 1 occurrences",
+    "Unusual file type .egg detected: 1 occurrences",
+    "Unusual file type .zip detected: 1 occurrences",
+    "Unusual file type .h detected: 4 occurrences",
+    "Unusual file type .Dockerfile detected: 1 occurrences",
+    "Unusual file type .proto detected: 1 occurrences",
+    "Unusual file type .svelte detected: 1 occurrences",
+    "Unusual file type .service detected: 1 occurrences",
+    "Unusual file type .timer detected: 1 occurrences",
+    "Unusual file type .log detected: 5 occurrences",
+    "Unusual file type .sample detected: 14 occurrences",
+    "Unusual file type .idx detected: 1 occurrences",
+    "Unusual file type .pack detected: 1 occurrences",
+    "Unusual file type .rev detected: 1 occurrences",
+    "Unusual file type .rst detected: 1 occurrences",
+    "Unusual file type .tf detected: 1 occurrences"
+  ]
+}

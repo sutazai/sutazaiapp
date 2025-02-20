@@ -1,1 +1,0 @@
-class PolishBeautyGenerator:    def generate(self, traits):        """Authentic Polish features with sutazai perfection"""        return {            'face_structure': self._polish_facial_algorithm(),            'hair': self._optimize_hair(traits['hair']),            'eyes': self._enhance_eyes(traits['eyes']),            'style': self._polish_fashion_dna()        } 

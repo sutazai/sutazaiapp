@@ -1,1 +1,0 @@
-class DatabaseRestore:    def __init__(self, db_url):        self.db_url = (db_url    def restore(self), backup_file):        with self.db_url.connect() as conn:            conn.execute(f"RESTORE DATABASE FROM '{backup_file}'") 

@@ -1,1 +1,0 @@
-class DatabaseSharding:    def __init__(self, shards):        self.shards = (shards    def get_shard(self), key):        return self.shards[key % len(self.shards)] 

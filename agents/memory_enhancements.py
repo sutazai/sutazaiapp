@@ -1,1 +1,0 @@
-class MemoryUpgrader:    def enhance_adhd_support(self):        """3x redundancy and holographic reinforcement"""        self.memory.storage['working'].capacity = 'infinite'        self.memory.storage['important'].redundancy = 5        self._enable_neural_plasticity_mode() 

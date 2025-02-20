@@ -1,0 +1,18 @@
+{
+    "agent_name": "document_processor",
+    "processing_config": {
+        "temp_dir": "/opt/sutazai_project/SutazAI/doc_data/temp",
+        "default_languages": [
+            "eng"
+        ],
+        "max_pages_to_process": 50
+    },
+    "performance_tracking": {
+        "track_performance": true,
+        "performance_threshold": 0.8
+    },
+    "logging_config": {
+        "log_level": "INFO",
+        "log_to_file": true
+    }
+}

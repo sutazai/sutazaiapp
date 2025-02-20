@@ -1,0 +1,4 @@
+
+# Recommended Configurations
+--upgrade
+--no-cache-dir

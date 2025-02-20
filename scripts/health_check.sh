@@ -1,38 +1,20 @@
 #!/bin/bash
 
-check_engine_health() {
-    local status=$(systemctl is-active auto-detection-engine)
-    if [[ "$status" != "active" ]]; then
-        return 1
-    fi
-    
-    # Check if the engine is processing tasks
-    local last_activity=$(stat -c %Y /var/log/auto-detection-engine.log)
-    local current_time=$(date +%s)
-    if (( current_time - last_activity > 300 )); then
-        return 2
-    fi
-    
-    return 0
-}
+# Automated health check script
+services=("ai_service" "super_agent" "sutazai")
 
-check_service_health() {
-    local service=$1
-    local endpoint=$2
+for service in "${services[@]}"; do
+    echo "🔍 Checking health of $service..."
+    status=$(docker inspect --format='{{.State.Health.Status}}' $service)
     
-    local status=$(curl -s -o /dev/null -w "%{http_code}" "$endpoint")
-    if [ "$status" -ne 200 ]; then
-        handle_error "Service $service is unhealthy (status: $status)"
+    if [ "$status" != "healthy" ]; then
+        echo "❌ $service is not healthy! Status: $status"
+        echo "🔄 Attempting to restart $service..."
+        docker-compose restart $service
+    else
+        echo "✅ $service is healthy"
     fi
-}
+done
 
-case $1 in
-    health)
-        check_engine_health
-        exit $?
-        ;;
-    *)
-        echo "Usage: $0 {health}"
-        exit 1
-        ;;
-esac 
+# Check system health
+docker ps -q | xargs docker inspect --format '{{.State.Health.Status}}' | grep -v "healthy" && echo "System is unhealthy" || echo "System is healthy" 

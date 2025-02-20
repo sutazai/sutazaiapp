@@ -1,344 +1,450 @@
 #!/usr/bin/env python3
 """
-Ultra-Comprehensive Performance Optimization and Profiling System
+SutazAI Ultra-Comprehensive Performance Optimization System
 
-Provides advanced capabilities for:
-- Intelligent performance monitoring
-- Autonomous system optimization
-- Detailed performance profiling
+Advanced framework providing:
+- Multi-dimensional performance analysis
+- Intelligent bottleneck detection
 - Adaptive resource management
+- Predictive optimization
 """
 
 import os
 import sys
-import time
+import json
 import logging
-import psutil
+import time
 import threading
 import multiprocessing
-import tracemalloc
+from typing import Dict, List, Any, Optional, Callable
+from datetime import datetime
+
+import psutil
 import cProfile
-import pstats
-import io
-from typing import Dict, Any, Callable, Optional, List
+import tracemalloc
+import resource
+import gc
 
-import numpy as np
-import ray
-
-class AdvancedPerformanceOptimizer:
+class UltraPerformanceOptimizer:
     """
-    Comprehensive performance optimization and profiling framework
+    Advanced performance optimization system with multi-layered analysis
     """
     
     def __init__(
         self, 
         base_dir: str = '/opt/sutazai_project/SutazAI',
-        log_dir: Optional[str] = None
+        monitoring_interval: int = 30,
+        optimization_threshold: float = 0.8
     ):
         """
-        Initialize Advanced Performance Optimizer
+        Initialize ultra-comprehensive performance optimizer
         
         Args:
             base_dir (str): Base project directory
-            log_dir (Optional[str]): Custom log directory
+            monitoring_interval (int): Performance monitoring interval
+            optimization_threshold (float): Threshold for triggering optimizations
         """
-        # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, 'logs', 'performance_optimization')
-        os.makedirs(self.log_dir, exist_ok=True)
+        self.monitoring_interval = monitoring_interval
+        self.optimization_threshold = optimization_threshold
         
-        # Configure logging
+        # Logging configuration
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(levelname)s: %(message)s',
-            handlers=[
-                logging.FileHandler(os.path.join(self.log_dir, 'performance_optimizer.log')),
-                logging.StreamHandler(sys.stdout)
-            ]
+            filename=os.path.join(base_dir, 'logs/ultra_performance_optimizer.log')
         )
-        self.logger = logging.getLogger('SutazAI.PerformanceOptimizer')
+        self.logger = logging.getLogger('SutazAI.UltraPerformanceOptimizer')
         
-        # Performance tracking
+        # Performance monitoring state
+        self.monitoring_thread = None
+        self.is_monitoring = False
+        
+        # Optimization tracking
         self.performance_history = []
-        self.optimization_strategies = []
+        self.optimization_cache = {}
+        
+        # Fix CPU frequency tracking
+        self.cpu_frequencies = {
+            core: freq.current if hasattr(freq, 'current') else freq 
+            for core, freq in enumerate(psutil.cpu_freq(percpu=True))
+        }
     
-    def profile_function(self, func: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def collect_comprehensive_metrics(self) -> Dict[str, Any]:
         """
-        Profile a function's performance and memory usage
+        Collect ultra-detailed system performance metrics
+        
+        Returns:
+            Comprehensive performance metrics dictionary
+        """
+        try:
+            # CPU Metrics
+            cpu_metrics = {
+                'usage_percent': psutil.cpu_percent(interval=1, percpu=True),
+                'load_average': os.getloadavg(),
+                'physical_cores': psutil.cpu_count(logical=False),
+                'total_cores': psutil.cpu_count(logical=True),
+                'frequency': self.cpu_frequencies
+            }
+            
+            # Memory Metrics
+            memory = psutil.virtual_memory()
+            memory_metrics = {
+                'total': memory.total,
+                'available': memory.available,
+                'used': memory.used,
+                'percent': memory.percent,
+                'buffers': memory.buffers,
+                'cached': memory.cached
+            }
+            
+            # Disk I/O Metrics
+            disk_io = psutil.disk_io_counters()
+            disk_metrics = {
+                'read_bytes': disk_io.read_bytes,
+                'write_bytes': disk_io.write_bytes,
+                'read_time': disk_io.read_time,
+                'write_time': disk_io.write_time
+            }
+            
+            # Network I/O Metrics
+            net_io = psutil.net_io_counters()
+            network_metrics = {
+                'bytes_sent': net_io.bytes_sent,
+                'bytes_recv': net_io.bytes_recv,
+                'packets_sent': net_io.packets_sent,
+                'packets_recv': net_io.packets_recv
+            }
+            
+            # Process Metrics
+            process_metrics = {
+                'total_processes': len(list(psutil.process_iter())),
+                'running_processes': len([
+                    p for p in psutil.process_iter() 
+                    if p.status() == psutil.STATUS_RUNNING
+                ]),
+                'zombie_processes': len([
+                    p for p in psutil.process_iter() 
+                    if p.status() == psutil.STATUS_ZOMBIE
+                ])
+            }
+            
+            # Resource Limits
+            resource_limits = {
+                'max_memory': resource.getrlimit(resource.RLIMIT_AS),
+                'max_cpu_time': resource.getrlimit(resource.RLIMIT_CPU)
+            }
+            
+            return {
+                'timestamp': datetime.now().isoformat(),
+                'cpu_metrics': cpu_metrics,
+                'memory_metrics': memory_metrics,
+                'disk_metrics': disk_metrics,
+                'network_metrics': network_metrics,
+                'process_metrics': process_metrics,
+                'resource_limits': resource_limits
+            }
+        
+        except Exception as e:
+            self.logger.error(f"Comprehensive metrics collection failed: {e}")
+            return {}
+    
+    def profile_code_performance(
+        self, 
+        target_function: Callable[..., Any], 
+        *args, 
+        **kwargs
+    ) -> Dict[str, Any]:
+        """
+        Advanced code performance profiling with type-safe callable
+        """
+        try:
+            # Memory tracking
+            tracemalloc.start()
+            
+            # CPU Profiling
+            profiler = cProfile.Profile()
+            profiler.enable()
+            
+            # Execute function
+            start_time = time.time()
+            result = target_function(*args, **kwargs)
+            end_time = time.time()
+            
+            profiler.disable()
+            
+            # Memory snapshot
+            memory_snapshot = tracemalloc.take_snapshot()
+            tracemalloc.stop()
+            
+            return {
+                'execution_time': end_time - start_time,
+                'cpu_profile': list(profiler.getstats()),  # Convert to list
+                'memory_snapshot': str(memory_snapshot),
+                'result': result
+            }
+        
+        except Exception as e:
+            self.logger.error(f"Code performance profiling failed: {e}")
+            return {}
+    
+    def detect_performance_bottlenecks(
+        self, 
+        metrics: Dict[str, Any]
+    ) -> List[str]:
+        """
+        Intelligent performance bottleneck detection
         
         Args:
-            func (Callable): Function to profile
-            *args: Positional arguments
-            **kwargs: Keyword arguments
+            metrics (Dict): Comprehensive system metrics
         
         Returns:
-            Performance profile details
+            List of performance bottleneck recommendations
         """
-        # Memory profiling
-        tracemalloc.start()
+        bottleneck_recommendations = []
         
-        # CPU profiling
-        profiler = cProfile.Profile()
-        profiler.enable()
-        
-        # Execute function
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        
-        # Stop profiling
-        profiler.disable()
-        
-        # Capture memory snapshot
-        current, peak = tracemalloc.get_traced_memory()
-        tracemalloc.stop()
-        
-        # Generate performance stats
-        stats_stream = io.StringIO()
-        ps = pstats.Stats(profiler, stream=stats_stream).sort_stats('cumulative')
-        ps.print_stats()
-        
-        profile_details = {
-            'execution_time': end_time - start_time,
-            'memory_usage': {
-                'current': current,
-                'peak': peak
-            },
-            'cpu_profile': stats_stream.getvalue(),
-            'result': result
-        }
-        
-        # Log performance details
-        self.logger.info(f"Function Profiling: {func.__name__}")
-        self.logger.info(f"Execution Time: {profile_details['execution_time']} seconds")
-        self.logger.info(f"Memory Usage: Current {current}, Peak {peak}")
-        
-        return profile_details
-    
-    def monitor_system_resources(self) -> Dict[str, Any]:
-        """
-        Monitor comprehensive system resources
-        
-        Returns:
-            Detailed system resource metrics
-        """
-        system_metrics = {
-            'timestamp': time.time(),
-            'cpu': {
-                'usage_percent': psutil.cpu_percent(interval=1),
-                'cores': psutil.cpu_count(),
-                'frequency': psutil.cpu_freq()._asdict()
-            },
-            'memory': {
-                'total': psutil.virtual_memory().total / (1024 ** 3),  # GB
-                'available': psutil.virtual_memory().available / (1024 ** 3),  # GB
-                'used_percent': psutil.virtual_memory().percent
-            },
-            'disk': {
-                'total': psutil.disk_usage('/').total / (1024 ** 3),  # GB
-                'free': psutil.disk_usage('/').free / (1024 ** 3),  # GB
-                'used_percent': psutil.disk_usage('/').percent
-            },
-            'network': {
-                'bytes_sent': psutil.net_io_counters().bytes_sent,
-                'bytes_recv': psutil.net_io_counters().bytes_recv
-            }
-        }
-        
-        # Log system metrics
-        self.logger.info("System Resource Monitoring")
-        self.logger.info(f"CPU Usage: {system_metrics['cpu']['usage_percent']}%")
-        self.logger.info(f"Memory Usage: {system_metrics['memory']['used_percent']}%")
-        
-        # Store performance history
-        self.performance_history.append(system_metrics)
-        
-        # Limit history size
-        if len(self.performance_history) > 100:
-            self.performance_history.pop(0)
-        
-        return system_metrics
-    
-    def optimize_system_performance(self) -> Dict[str, Any]:
-        """
-        Perform intelligent system performance optimization
-        
-        Returns:
-            Optimization recommendations and actions
-        """
-        system_metrics = self.monitor_system_resources()
-        
-        optimization_results = {
-            'recommendations': [],
-            'actions_taken': []
-        }
-        
-        # CPU optimization
-        if system_metrics['cpu']['usage_percent'] > 80:
-            optimization_results['recommendations'].append(
-                "High CPU usage detected. Consider optimizing CPU-intensive tasks."
+        # CPU Bottleneck Detection
+        cpu_usage = metrics.get('cpu_metrics', {}).get('usage_percent', [])
+        if any(usage > 80 for usage in cpu_usage):
+            bottleneck_recommendations.append(
+                f"High CPU Usage: {max(cpu_usage)}% - Optimize CPU-intensive tasks"
             )
-            self._optimize_cpu_performance()
         
-        # Memory optimization
-        if system_metrics['memory']['used_percent'] > 85:
-            optimization_results['recommendations'].append(
-                "High memory usage detected. Implement memory management strategies."
+        # Memory Bottleneck Detection
+        memory_metrics = metrics.get('memory_metrics', {})
+        if memory_metrics.get('percent', 0) > 85:
+            bottleneck_recommendations.append(
+                f"High Memory Usage: {memory_metrics['percent']}% - Implement memory optimization"
             )
-            self._optimize_memory_usage()
         
-        # Disk optimization
-        if system_metrics['disk']['used_percent'] > 90:
-            optimization_results['recommendations'].append(
-                "Disk space critically low. Implement cleanup and archiving strategies."
+        # Disk I/O Bottleneck Detection
+        disk_metrics = metrics.get('disk_metrics', {})
+        if (disk_metrics.get('read_time', 0) > 1000 or 
+            disk_metrics.get('write_time', 0) > 1000):
+            bottleneck_recommendations.append(
+                "High Disk I/O Latency - Optimize disk access patterns"
             )
-            self._optimize_disk_space()
         
-        return optimization_results
+        # Process Management Bottleneck
+        process_metrics = metrics.get('process_metrics', {})
+        if process_metrics.get('zombie_processes', 0) > 10:
+            bottleneck_recommendations.append(
+                f"Excessive Zombie Processes: {process_metrics['zombie_processes']} - Clean up process management"
+            )
+        
+        return bottleneck_recommendations
     
-    def _optimize_cpu_performance(self):
+    def autonomous_optimization(self, recommendations: List[str]):
         """
-        Implement CPU performance optimization strategies
+        Autonomous performance optimization based on recommendations
+        
+        Args:
+            recommendations (List[str]): Performance optimization recommendations
         """
-        # Use Ray for distributed computing
-        ray.init(ignore_reinit_error=True)
-        
-        @ray.remote
-        def optimize_task(task):
-            """
-            Distributed task optimization
-            """
-            try:
-                return task()
-            except Exception as e:
-                self.logger.error(f"Task optimization failed: {e}")
-                return None
-        
-        # Example optimization: Distribute CPU-intensive tasks
-        # This is a placeholder - replace with actual tasks from your system
-        tasks = [
-            lambda: self._reduce_computational_complexity(),
-            lambda: self._parallelize_heavy_computations()
-        ]
-        
-        # Distribute tasks across available cores
-        ray_tasks = [optimize_task.remote(task) for task in tasks]
-        ray.get(ray_tasks)
+        for recommendation in recommendations:
+            if 'CPU' in recommendation:
+                self._optimize_cpu_usage()
+            elif 'Memory' in recommendation:
+                self._optimize_memory_usage()
+            elif 'Disk I/O' in recommendation:
+                self._optimize_disk_access()
+            elif 'Zombie Processes' in recommendation:
+                self._clean_zombie_processes()
+    
+    def _optimize_cpu_usage(self):
+        """
+        Optimize CPU usage through intelligent process management
+        """
+        try:
+            # Use os.nice() for process priority adjustment
+            for proc in psutil.process_iter(['pid', 'name', 'cpu_percent']):
+                if proc.info['cpu_percent'] > 80:
+                    try:
+                        pid = proc.info['pid']
+                        os.nice(pid, 10)  # Reduce priority
+                        self.logger.info(f"Reduced priority for {proc.info['name']}")
+                    except Exception as e:
+                        self.logger.warning(f"Could not adjust process priority: {e}")
+        except Exception as e:
+            self.logger.error(f"CPU optimization failed: {e}")
     
     def _optimize_memory_usage(self):
         """
-        Implement memory usage optimization strategies
-        """
-        # Garbage collection
-        import gc
-        gc.collect()
-        
-        # Release cached memory
-        import numpy as np
-        np.empty(0)  # Force NumPy to release cached memory
-        
-        # Implement memory-efficient data structures and algorithms
-        self.logger.info("Memory optimization strategies applied")
-    
-    def _optimize_disk_space(self):
-        """
-        Implement disk space optimization strategies
-        """
-        # Remove temporary files
-        temp_dir = '/tmp'
-        for root, dirs, files in os.walk(temp_dir):
-            for file in files:
-                try:
-                    file_path = os.path.join(root, file)
-                    if os.path.isfile(file_path):
-                        # Remove files older than 7 days
-                        if time.time() - os.path.getctime(file_path) > 7 * 24 * 60 * 60:
-                            os.unlink(file_path)
-                except Exception as e:
-                    self.logger.warning(f"Disk cleanup failed for {file_path}: {e}")
-        
-        self.logger.info("Disk space optimization completed")
-    
-    def _reduce_computational_complexity(self):
-        """
-        Reduce computational complexity of system tasks
-        """
-        # Implement algorithmic optimizations
-        # Example: Use more efficient data structures or algorithms
-        pass
-    
-    def _parallelize_heavy_computations(self):
-        """
-        Parallelize computationally intensive tasks
-        """
-        # Use multiprocessing to distribute tasks
-        with multiprocessing.Pool(processes=os.cpu_count()) as pool:
-            # Example parallel computation
-            # Replace with actual system tasks
-            results = pool.map(
-                lambda x: x ** 2, 
-                range(1000000)
-            )
-        
-        return results
-    
-    def persist_performance_history(self):
-        """
-        Persist performance history for long-term analysis
+        Optimize memory usage through intelligent garbage collection
         """
         try:
-            import json
+            # Force garbage collection
+            gc.collect()
             
-            history_file = os.path.join(
-                self.log_dir, 
-                f'performance_history_{time.strftime("%Y%m%d_%H%M%S")}.json'
+            # Attempt to release memory back to system
+            try:
+                import ctypes
+                libc = ctypes.CDLL('libc.so.6')
+                libc.malloc_trim(0)
+            except Exception:
+                pass
+            
+            self.logger.info("Memory optimization through garbage collection completed")
+        except Exception as e:
+            self.logger.error(f"Memory optimization failed: {e}")
+    
+    def _optimize_disk_access(self):
+        """
+        Optimize disk access patterns
+        """
+        try:
+            # Placeholder for advanced disk optimization
+            # In a real-world scenario, this might involve:
+            # - Analyzing I/O patterns
+            # - Recommending file system tuning
+            # - Suggesting caching strategies
+            self.logger.info("Disk access optimization initiated")
+        except Exception as e:
+            self.logger.error(f"Disk access optimization failed: {e}")
+    
+    def _clean_zombie_processes(self):
+        """
+        Clean up zombie processes
+        """
+        try:
+            for proc in psutil.process_iter(['pid', 'status']):
+                if proc.info['status'] == psutil.STATUS_ZOMBIE:
+                    try:
+                        os.waitpid(proc.info['pid'], os.WNOHANG)
+                        self.logger.info(f"Cleaned zombie process: {proc.info['pid']}")
+                    except Exception:
+                        pass
+        except Exception as e:
+            self.logger.error(f"Zombie process cleanup failed: {e}")
+    
+    def start_continuous_monitoring(self):
+        """
+        Start continuous performance monitoring
+        """
+        if not self.is_monitoring:
+            self.is_monitoring = True
+            self.monitoring_thread = threading.Thread(
+                target=self._monitoring_loop, 
+                daemon=True
+            )
+            self.monitoring_thread.start()
+            self.logger.info("Ultra Performance Monitoring Started")
+    
+    def _monitoring_loop(self):
+        """
+        Continuous performance monitoring loop
+        """
+        while self.is_monitoring:
+            try:
+                # Collect comprehensive metrics
+                metrics = self.collect_comprehensive_metrics()
+                
+                # Detect performance bottlenecks
+                bottlenecks = self.detect_performance_bottlenecks(metrics)
+                
+                # Apply autonomous optimization
+                if bottlenecks:
+                    self.autonomous_optimization(bottlenecks)
+                
+                # Log performance history
+                self.performance_history.append(metrics)
+                
+                # Limit performance history
+                if len(self.performance_history) > 100:
+                    self.performance_history.pop(0)
+                
+                time.sleep(self.monitoring_interval)
+            
+            except Exception as e:
+                self.logger.error(f"Performance monitoring loop error: {e}")
+                time.sleep(self.monitoring_interval)
+    
+    def stop_continuous_monitoring(self):
+        """
+        Stop continuous performance monitoring
+        """
+        self.is_monitoring = False
+        if self.monitoring_thread:
+            self.monitoring_thread.join()
+            self.logger.info("Ultra Performance Monitoring Stopped")
+    
+    def generate_performance_report(self) -> Dict[str, Any]:
+        """
+        Generate comprehensive performance report
+        
+        Returns:
+            Detailed performance analysis report
+        """
+        try:
+            # Analyze performance history
+            performance_report = {
+                'timestamp': datetime.now().isoformat(),
+                'performance_history': self.performance_history,
+                'bottleneck_recommendations': [],
+                'optimization_strategies': []
+            }
+            
+            # Generate recommendations from performance history
+            if self.performance_history:
+                latest_metrics = self.performance_history[-1]
+                bottlenecks = self.detect_performance_bottlenecks(latest_metrics)
+                
+                performance_report['bottleneck_recommendations'] = bottlenecks
+                performance_report['optimization_strategies'] = [
+                    "Implement multi-core processing for CPU-intensive tasks",
+                    "Use memory-efficient data structures",
+                    "Optimize disk I/O operations",
+                    "Implement intelligent caching mechanisms"
+                ]
+            
+            # Persist report
+            report_path = os.path.join(
+                self.base_dir, 
+                f'logs/ultra_performance_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
             )
             
-            with open(history_file, 'w') as f:
-                json.dump(self.performance_history, f, indent=2)
+            with open(report_path, 'w') as f:
+                json.dump(performance_report, f, indent=2)
             
-            self.logger.info(f"Performance history persisted: {history_file}")
+            self.logger.info(f"Ultra Performance Report Generated: {report_path}")
+            
+            return performance_report
         
         except Exception as e:
-            self.logger.error(f"Performance history persistence failed: {e}")
+            self.logger.error(f"Performance report generation failed: {e}")
+            return {}
 
 def main():
     """
-    Demonstrate Advanced Performance Optimizer
+    Main execution for ultra-comprehensive performance optimization
     """
-    performance_optimizer = AdvancedPerformanceOptimizer()
+    try:
+        performance_optimizer = UltraPerformanceOptimizer()
+        
+        # Start continuous monitoring
+        performance_optimizer.start_continuous_monitoring()
+        
+        # Generate initial performance report
+        report = performance_optimizer.generate_performance_report()
+        
+        print("Ultra Performance Optimization Report:")
+        print("Bottleneck Recommendations:")
+        for recommendation in report.get('bottleneck_recommendations', []):
+            print(f"- {recommendation}")
+        
+        print("\nOptimization Strategies:")
+        for strategy in report.get('optimization_strategies', []):
+            print(f"- {strategy}")
+        
+        # Keep monitoring for a while
+        time.sleep(300)  # 5 minutes
+        
+        # Stop monitoring
+        performance_optimizer.stop_continuous_monitoring()
     
-    # Example function to profile
-    def example_function(n):
-        return sum(i ** 2 for i in range(n))
-    
-    # Profile function
-    profile_result = performance_optimizer.profile_function(
-        example_function, 
-        1000000
-    )
-    
-    # Monitor system resources
-    system_metrics = performance_optimizer.monitor_system_resources()
-    
-    # Optimize system performance
-    optimization_results = performance_optimizer.optimize_system_performance()
-    
-    # Persist performance history
-    performance_optimizer.persist_performance_history()
-    
-    print("\n🚀 Performance Optimization Results 🚀")
-    print("\nFunction Profiling:")
-    print(f"Execution Time: {profile_result['execution_time']} seconds")
-    print(f"Memory Usage: {profile_result['memory_usage']}")
-    
-    print("\nSystem Metrics:")
-    print(f"CPU Usage: {system_metrics['cpu']['usage_percent']}%")
-    print(f"Memory Usage: {system_metrics['memory']['used_percent']}%")
-    
-    print("\nOptimization Recommendations:")
-    for recommendation in optimization_results.get('recommendations', []):
-        print(f"- {recommendation}")
+    except Exception as e:
+        print(f"Ultra Performance Optimization failed: {e}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

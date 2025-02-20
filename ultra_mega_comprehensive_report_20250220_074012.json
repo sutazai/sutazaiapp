@@ -1,0 +1,302 @@
+{
+  "timestamp": "2025-02-20T07:32:20.175694",
+  "system_diagnostics": {
+    "hardware_info": {
+      "os": {
+        "platform": "Linux-6.11.0-18-generic-x86_64-with-glibc2.39",
+        "release": "6.11.0-18-generic",
+        "version": "#18~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Sat Feb  8 22:05:40 UTC 2",
+        "machine": "x86_64",
+        "processor": "x86_64"
+      },
+      "cpu": {
+        "name": "Intel(R) Xeon(R) CPU E5-2640 0 @ 2.50GHz",
+        "architecture": "x86_64",
+        "physical_cores": 6,
+        "total_cores": 6,
+        "max_frequency": 0.0,
+        "min_frequency": 0.0,
+        "current_frequency": 2499.999
+      },
+      "memory": {
+        "total_gb": 48.97,
+        "available_gb": 33.34,
+        "swap_total_gb": 8.0,
+        "swap_free_gb": 8.0
+      },
+      "disk": {
+        "total_gb": 97.87,
+        "free_gb": 76.9,
+        "used_percent": 17.2
+      },
+      "gpu": []
+    },
+    "resource_usage": {
+      "cpu_usage": {
+        "current": 99.9,
+        "per_core": [
+          99.8,
+          99.6,
+          100.0,
+          99.8,
+          100.0,
+          99.8
+        ]
+      },
+      "memory_usage": {
+        "percent": 33.4,
+        "used_gb": 15.78
+      },
+      "disk_io": {
+        "read_count": 247197,
+        "write_count": 1240976,
+        "read_bytes": 4953298944,
+        "write_bytes": 99863393280,
+        "read_time": 113704,
+        "write_time": 4870067,
+        "read_merged_count": 18699,
+        "write_merged_count": 549671,
+        "busy_time": 379149
+      },
+      "network_io": {
+        "bytes_sent": 421959095,
+        "bytes_recv": 1669708010,
+        "packets_sent": 574150,
+        "packets_recv": 583401,
+        "errin": 0,
+        "errout": 0,
+        "dropin": 0,
+        "dropout": 0
+      }
+    },
+    "performance_metrics": {
+      "top_cpu_consuming_processes": [
+        {
+          "pid": 1,
+          "name": "systemd",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.027062633872010102,
+          "status": "sleeping",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 2,
+          "name": "kthreadd",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "sleeping",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 3,
+          "name": "pool_workqueue_release",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "sleeping",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 4,
+          "name": "kworker/R-rcu_gp",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 5,
+          "name": "kworker/R-sync_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 6,
+          "name": "kworker/R-slub_flushwq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 7,
+          "name": "kworker/R-netns",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 9,
+          "name": "kworker/0:0H-events_highpri",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 11,
+          "name": "kworker/u512:0-efi_rts_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        },
+        {
+          "pid": 12,
+          "name": "kworker/R-mm_percpu_wq",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.0,
+          "status": "idle",
+          "create_time": "2025-02-20T05:43:17.030000"
+        }
+      ],
+      "top_memory_consuming_processes": [
+        {
+          "pid": 38737,
+          "name": "node",
+          "cpu_percent": 21.5,
+          "memory_percent": 24.236349183696234,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:05.230000"
+        },
+        {
+          "pid": 39205,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 1.6180479256343125,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:21.790000"
+        },
+        {
+          "pid": 40341,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 1.450063286366602,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:19:16.970000"
+        },
+        {
+          "pid": 39560,
+          "name": "vdb",
+          "cpu_percent": 118.1,
+          "memory_percent": 1.1675804914711416,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:33.870000"
+        },
+        {
+          "pid": 38791,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.571680612933602,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:10.490000"
+        },
+        {
+          "pid": 39293,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.33909308860527565,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:26.810000"
+        },
+        {
+          "pid": 116516,
+          "name": "python3",
+          "cpu_percent": 59.0,
+          "memory_percent": 0.31661100416237953,
+          "status": "running",
+          "create_time": "2025-02-20T07:32:16.600000"
+        },
+        {
+          "pid": 36678,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.20250235103710496,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:16:08.820000"
+        },
+        {
+          "pid": 39400,
+          "name": "TabNine",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.20159091518131186,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:29.650000"
+        },
+        {
+          "pid": 40209,
+          "name": "node",
+          "cpu_percent": 0.0,
+          "memory_percent": 0.16080221312205886,
+          "status": "sleeping",
+          "create_time": "2025-02-20T06:18:51.180000"
+        }
+      ],
+      "open_network_connections": 65,
+      "running_processes_count": 314,
+      "system_load_average": [
+        12.34326171875,
+        11.44677734375,
+        9.5185546875
+      ]
+    },
+    "bottlenecks": {
+      "cpu_overload": {
+        "current_usage": 99.9,
+        "load_average": 12.34326171875,
+        "recommendation": "High CPU usage detected. Consider process optimization, CPU affinity tuning, and identifying resource-intensive tasks."
+      },
+      "disk_io": {
+        "read_time": 113704,
+        "write_time": 4870067,
+        "recommendation": "High disk I/O detected. Consider SSD upgrade, I/O optimization, and investigating disk-intensive processes."
+      },
+      "network_saturation": {
+        "bytes_sent": 421959095,
+        "bytes_recv": 1669708010,
+        "recommendation": "High network traffic detected. Consider network optimization and bandwidth management."
+      }
+    },
+    "system_tuning": {},
+    "resource_limits": {
+      "max_open_files": [
+        1048576,
+        1048576
+      ],
+      "max_stack_size": [
+        8388608,
+        -1
+      ],
+      "max_core_file_size": [
+        0,
+        -1
+      ]
+    }
+  },
+  "optimization_steps": [
+    "Requirement already satisfied: pip in ./venv/lib/python3.12/site-packages (25.0.1)\nRequirement already satisfied: setuptools in ./venv/lib/python3.12/site-packages (75.8.0)\nRequirement already satisfied: wheel in ./venv/lib/python3.12/site-packages (0.45.1)",
+    "Requirement already satisfied: cython in ./venv/lib/python3.12/site-packages (3.0.12)\nRequirement already satisfied: numpy in ./venv/lib/python3.12/site-packages (2.1.3)\nCollecting numpy\n  Using cached numpy-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (62 kB)\nRequirement already satisfied: numba in ./venv/lib/python3.12/site-packages (0.61.0)\nRequirement already satisfied: psutil in ./venv/lib/python3.12/site-packages (7.0.0)\nRequirement already satisfied: py-spy in ./venv/lib/python3.12/site-packages (0.4.0)\nRequirement already satisfied: memory_profiler in ./venv/lib/python3.12/site-packages (0.61.0)\nRequirement already satisfied: pylint in ./venv/lib/python3.12/site-packages (3.3.4)\nRequirement already satisfied: black in ./venv/lib/python3.12/site-packages (25.1.0)\nRequirement already satisfied: isort in ./venv/lib/python3.12/site-packages (6.0.0)\nRequirement already satisfied: flake8 in ./venv/lib/python3.12/site-packages (7.1.2)\nRequirement already satisfied: mypy in ./venv/lib/python3.12/site-packages (1.15.0)\nRequirement already satisfied: gputil in ./venv/lib/python3.12/site-packages (1.4.0)\nRequirement already satisfied: py-cpuinfo in ./venv/lib/python3.12/site-packages (9.0.0)\nRequirement already satisfied: ray in ./venv/lib/python3.12/site-packages (2.42.1)\nRequirement already satisfied: dask in ./venv/lib/python3.12/site-packages (2025.2.0)\nRequirement already satisfied: llvmlite<0.45,>=0.44.0dev0 in ./venv/lib/python3.12/site-packages (from numba) (0.44.0)\nRequirement already satisfied: dill>=0.3.6 in ./venv/lib/python3.12/site-packages (from pylint) (0.3.9)\nRequirement already satisfied: platformdirs>=2.2.0 in ./venv/lib/python3.12/site-packages (from pylint) (4.3.6)\nRequirement already satisfied: astroid<=3.4.0-dev0,>=3.3.8 in ./venv/lib/python3.12/site-packages (from pylint) (3.3.8)\nRequirement already satisfied: mccabe<0.8,>=0.6 in ./venv/lib/python3.12/site-packages (from pylint) (0.7.0)\nRequirement already satisfied: tomlkit>=0.10.1 in ./venv/lib/python3.12/site-packages (from pylint) (0.13.2)\nRequirement already satisfied: click>=8.0.0 in ./venv/lib/python3.12/site-packages (from black) (8.1.8)\nRequirement already satisfied: mypy-extensions>=0.4.3 in ./venv/lib/python3.12/site-packages (from black) (1.0.0)\nRequirement already satisfied: packaging>=22.0 in ./venv/lib/python3.12/site-packages (from black) (24.2)\nRequirement already satisfied: pathspec>=0.9.0 in ./venv/lib/python3.12/site-packages (from black) (0.12.1)\nRequirement already satisfied: pycodestyle<2.13.0,>=2.12.0 in ./venv/lib/python3.12/site-packages (from flake8) (2.12.1)\nRequirement already satisfied: pyflakes<3.3.0,>=3.2.0 in ./venv/lib/python3.12/site-packages (from flake8) (3.2.0)\nRequirement already satisfied: typing_extensions>=4.6.0 in ./venv/lib/python3.12/site-packages (from mypy) (4.12.2)\nRequirement already satisfied: filelock in ./venv/lib/python3.12/site-packages (from ray) (3.17.0)\nRequirement already satisfied: jsonschema in ./venv/lib/python3.12/site-packages (from ray) (4.23.0)\nRequirement already satisfied: msgpack<2.0.0,>=1.0.0 in ./venv/lib/python3.12/site-packages (from ray) (1.1.0)\nRequirement already satisfied: protobuf!=3.19.5,>=3.15.3 in ./venv/lib/python3.12/site-packages (from ray) (5.29.3)\nRequirement already satisfied: pyyaml in ./venv/lib/python3.12/site-packages (from ray) (6.0.2)\nRequirement already satisfied: aiosignal in ./venv/lib/python3.12/site-packages (from ray) (1.3.2)\nRequirement already satisfied: frozenlist in ./venv/lib/python3.12/site-packages (from ray) (1.5.0)\nRequirement already satisfied: requests in ./venv/lib/python3.12/site-packages (from ray) (2.32.3)\nRequirement already satisfied: cloudpickle>=3.0.0 in ./venv/lib/python3.12/site-packages (from dask) (3.1.1)\nRequirement already satisfied: fsspec>=2021.09.0 in ./venv/lib/python3.12/site-packages (from dask) (2025.2.0)\nRequirement already satisfied: partd>=1.4.0 in ./venv/lib/python3.12/site-packages (from dask) (1.4.2)\nRequirement already satisfied: toolz>=0.10.0 in ./venv/lib/python3.12/site-packages (from dask) (1.0.0)\nRequirement already satisfied: locket in ./venv/lib/python3.12/site-packages (from partd>=1.4.0->dask) (1.0.0)\nRequirement already satisfied: attrs>=22.2.0 in ./venv/lib/python3.12/site-packages (from jsonschema->ray) (25.1.0)\nRequirement already satisfied: jsonschema-specifications>=2023.03.6 in ./venv/lib/python3.12/site-packages (from jsonschema->ray) (2024.10.1)\nRequirement already satisfied: referencing>=0.28.4 in ./venv/lib/python3.12/site-packages (from jsonschema->ray) (0.36.2)\nRequirement already satisfied: rpds-py>=0.7.1 in ./venv/lib/python3.12/site-packages (from jsonschema->ray) (0.22.3)\nRequirement already satisfied: charset-normalizer<4,>=2 in ./venv/lib/python3.12/site-packages (from requests->ray) (3.4.1)\nRequirement already satisfied: idna<4,>=2.5 in ./venv/lib/python3.12/site-packages (from requests->ray) (3.10)\nRequirement already satisfied: urllib3<3,>=1.21.1 in ./venv/lib/python3.12/site-packages (from requests->ray) (2.3.0)\nRequirement already satisfied: certifi>=2017.4.17 in ./venv/lib/python3.12/site-packages (from requests->ray) (2025.1.31)",
+    "/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/glom/matching.py:814: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"The :class:`Switch` specifier type routes data processing based on\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/networkx/readwrite/tests/test_gml.py:556: SyntaxWarning: invalid octal escape sequence '\\420'\n  \"graph [edge [ source u'u\\4200' target u'u\\4200' ] \"\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/networkx/readwrite/tests/test_gml.py:557: SyntaxWarning: invalid octal escape sequence '\\420'\n  + \"node [ id u'u\\4200' label b ] ]\"\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/_private/log_monitor.py:26: SyntaxWarning: invalid escape sequence '\\d'\n  WORKER_LOG_PATTERN = re.compile(\".*worker.*-([0-9a-f]+)-(\\d+)\")\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/_private/log_monitor.py:28: SyntaxWarning: invalid escape sequence '\\d'\n  RUNTIME_ENV_SETUP_PATTERN = re.compile(\".*runtime_env_setup-(\\d+).log\")\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/dashboard/modules/log/log_manager.py:24: SyntaxWarning: invalid escape sequence '\\d'\n  WORKER_LOG_PATTERN = re.compile(\".*worker-([0-9a-f]+)-([0-9a-f]+)-(\\d+).(out|err)\")\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/data/grouped_data.py:327: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped min aggregation.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/data/grouped_data.py:366: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped max aggregation.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/data/grouped_data.py:405: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped mean aggregation.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/data/grouped_data.py:447: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped standard deviation aggregation.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/data/preprocessors/hasher.py:13: SyntaxWarning: invalid escape sequence '\\p'\n  \"\"\"Apply the `hashing trick <https://en.wikipedia.org/wiki/Feature_hashing>`_ to a\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/rllib/algorithms/impala/torch/vtrace_torch_v2.py:83: SyntaxWarning: invalid escape sequence '\\d'\n  \"\"\"V-trace for softmax policies implemented with torch.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/rllib/core/learner/learner_group.py:863: SyntaxWarning: invalid escape sequence '\\*'\n  \"\"\"Calls the given function on each Learner L with the args: (L, \\*\\*kwargs).\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/rllib/models/tf/tf_distributions.py:65: SyntaxWarning: invalid escape sequence '\\{'\n  \"\"\"Wrapper class for Categorical distribution.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/rllib/models/torch/torch_distributions.py:73: SyntaxWarning: invalid escape sequence '\\{'\n  \"\"\"Wrapper class for PyTorch Categorical distribution.\n/opt/sutazai_project/SutazAI/sutazai_env/lib/python3.12/site-packages/ray/rllib/offline/estimators/doubly_robust.py:29: SyntaxWarning: invalid escape sequence '\\p'\n  \"\"\"The Doubly Robust estimator.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/_private/log_monitor.py:26: SyntaxWarning: invalid escape sequence '\\d'\n  WORKER_LOG_PATTERN = re.compile(\".*worker.*-([0-9a-f]+)-(\\d+)\")\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/_private/log_monitor.py:28: SyntaxWarning: invalid escape sequence '\\d'\n  RUNTIME_ENV_SETUP_PATTERN = re.compile(\".*runtime_env_setup-(\\d+).log\")\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/dashboard/modules/log/log_manager.py:24: SyntaxWarning: invalid escape sequence '\\d'\n  WORKER_LOG_PATTERN = re.compile(\".*worker-([0-9a-f]+)-([0-9a-f]+)-(\\d+).(out|err)\")\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/data/grouped_data.py:327: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped min aggregation.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/data/grouped_data.py:366: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped max aggregation.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/data/grouped_data.py:405: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped mean aggregation.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/data/grouped_data.py:447: SyntaxWarning: invalid escape sequence '\\ '\n  \"\"\"Compute grouped standard deviation aggregation.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/data/preprocessors/hasher.py:13: SyntaxWarning: invalid escape sequence '\\p'\n  \"\"\"Apply the `hashing trick <https://en.wikipedia.org/wiki/Feature_hashing>`_ to a\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/rllib/algorithms/impala/torch/vtrace_torch_v2.py:83: SyntaxWarning: invalid escape sequence '\\d'\n  \"\"\"V-trace for softmax policies implemented with torch.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/rllib/core/learner/learner_group.py:863: SyntaxWarning: invalid escape sequence '\\*'\n  \"\"\"Calls the given function on each Learner L with the args: (L, \\*\\*kwargs).\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/rllib/models/tf/tf_distributions.py:65: SyntaxWarning: invalid escape sequence '\\{'\n  \"\"\"Wrapper class for Categorical distribution.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/rllib/models/torch/torch_distributions.py:73: SyntaxWarning: invalid escape sequence '\\{'\n  \"\"\"Wrapper class for PyTorch Categorical distribution.\n/opt/sutazai_project/SutazAI/venv/lib/python3.12/site-packages/ray/rllib/offline/estimators/doubly_robust.py:29: SyntaxWarning: invalid escape sequence '\\p'\n  \"\"\"The Doubly Robust estimator.\n",
+    "TIMEOUT",
+    "Log cleanup completed."
+  ],
+  "recommendations": [
+    {
+      "type": "cpu_overload",
+      "details": "High CPU usage detected. Consider process optimization, CPU affinity tuning, and identifying resource-intensive tasks."
+    },
+    {
+      "type": "disk_io",
+      "details": "High disk I/O detected. Consider SSD upgrade, I/O optimization, and investigating disk-intensive processes."
+    },
+    {
+      "type": "network_saturation",
+      "details": "High network traffic detected. Consider network optimization and bandwidth management."
+    }
+  ],
+  "performance_improvements": {
+    "file_descriptors": "Increased to 65535"
+  }
+}

@@ -1,14 +1,21 @@
 #!/bin/bash
-# SutazAi Security Hardening Script
 
-# File permissions
-find /root/sutazai/v1 -type d -exec chmod 755 {} \;
-find /root/sutazai/v1 -type f -exec chmod 644 {} \;
-chmod 600 /root/sutazai/v1/security/*
+# Add password verification
+source "${SCRIPT_DIR}/password_manager.sh"
 
-# SELinux policies
-semanage fcontext -a -t etc_t "/root/sutazai/v1/config(/.*)?"
-restorecon -Rv /root/sutazai/v1
+if ! verify_password; then
+    echo "Access denied"
+    exit 1
+fi
 
-# Docker security
-docker exec sutazai-core chmod 600 /security/jwt_secret.key 
+# System Security Hardening Script
+
+log_message "=== Starting System Security Hardening ==="
+
+# Harden system security
+log_message "Hardening System Security:"
+chmod 600 /etc/ssh/sshd_config
+chmod 700 /root
+chmod 750 /home/*
+
+log_message "=== System Security Hardening Completed ===" 

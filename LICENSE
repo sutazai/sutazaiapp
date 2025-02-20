@@ -1,100 +1,49 @@
-# SutazAI Software License Agreement
+SutazAI Proprietary Software License
+Version 1.0, February 2024
 
-## 1. DEFINITIONS
+Copyright (c) 2024 Florin Cristian Suta. All rights reserved.
 
-1.1 "Software" refers to the SutazAI platform, including all source code, documentation, and associated materials.
+1. DEFINITIONS
+   1.1 "Software" refers to the SutazAI project and all associated components, code, documentation, and resources.
+   1.2 "Owner" means Florin Cristian Suta, the sole creator and legal owner of the Software.
+   1.3 "Authorized User" means an individual explicitly granted permission by the Owner to use the Software.
 
-1.2 "Licensee" means the individual or entity that has been granted a license to use the Software.
+2. GRANT OF LICENSE
+   2.1 The Owner grants a non-exclusive, non-transferable, revocable license to Authorized Users.
+   2.2 Authorized Users may:
+       a) View the source code
+       b) Use the Software for internal, non-commercial purposes
+       c) Modify the Software for personal use
+   2.3 Unauthorized Users are strictly prohibited from accessing, using, or modifying the Software.
 
-1.3 "Licensor" refers to Florin Cristian Suta and associated entities.
+3. RESTRICTIONS
+   3.1 Unauthorized Users shall not:
+       a) Copy, distribute, sell, or lease the Software
+       b) Reverse engineer or attempt to extract source code
+       c) Use the Software for commercial purposes
+       d) Remove or alter any copyright notices
+   3.2 Any unauthorized use constitutes a violation of this license.
 
-## 2. LICENSE GRANT
+4. OWNERSHIP
+   4.1 The Software and all intellectual property rights are exclusively owned by Florin Cristian Suta.
+   4.2 No transfer of ownership is implied or granted by this license.
 
-2.1 **Limited Use License**
-Subject to the terms of this Agreement, Licensor grants Licensee a non-exclusive, non-transferable, revocable license to use the Software under the following conditions:
+5. WARRANTY DISCLAIMER
+   5.1 The Software is provided "AS IS" without warranty of any kind.
+   5.2 The Owner is not liable for any damages arising from Software use.
 
-a) Personal and Internal Use: Software may be used for personal or internal business purposes.
-b) No Commercial Redistribution: Software cannot be sold, resold, or commercially distributed.
-c) No Modification: Software source code cannot be modified without explicit written permission.
+6. TERMINATION
+   6.1 The Owner may terminate this license at any time without notice.
+   6.2 Upon termination, the Authorized User must immediately cease all Software use and delete all copies.
 
-## 3. RESTRICTIONS
+7. GOVERNING LAW
+   7.1 This license is governed by the laws of the jurisdiction where the Owner resides.
 
-3.1 Licensee shall not:
-- Reverse engineer, decompile, or disassemble the Software
-- Remove or alter any copyright, trademark, or proprietary notices
-- Use the Software for illegal or unauthorized purposes
-- Share the Software with third parties
-- Create derivative works without explicit written consent
+8. CONTACT INFORMATION
+   Owner: Florin Cristian Suta
+   Email: <chrissuta01@gmail.com>
+   Phone: +48517716005
 
-## 4. INTELLECTUAL PROPERTY
+BY ACCESSING OR USING THIS SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE.
 
-4.1 All intellectual property rights in the Software are and shall remain the exclusive property of the Licensor.
-
-4.2 Any improvements, modifications, or derivative works shall automatically become the property of the Licensor.
-
-## 5. WARRANTY DISCLAIMER
-
-5.1 THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
-
-5.2 LICENSOR DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING:
-- MERCHANTABILITY
-- FITNESS FOR A PARTICULAR PURPOSE
-- NON-INFRINGEMENT
-- SYSTEM INTEGRATION
-- PERFORMANCE GUARANTEES
-
-## 6. LIMITATION OF LIABILITY
-
-6.1 IN NO EVENT SHALL LICENSOR BE LIABLE FOR:
-- DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL DAMAGES
-- LOSS OF PROFITS, DATA, OR BUSINESS INTERRUPTION
-- DAMAGES ARISING FROM USE OR INABILITY TO USE THE SOFTWARE
-
-6.2 MAXIMUM LIABILITY IS LIMITED TO THE AMOUNT PAID FOR THE LICENSE.
-
-## 7. TERMINATION
-
-7.1 This License is effective until terminated.
-
-7.2 Licensor may terminate the License immediately if Licensee breaches any terms.
-
-7.3 Upon termination, Licensee must:
-- Cease all Software use
-- Destroy all copies of the Software
-- Provide written confirmation of destruction
-
-## 8. CONFIDENTIALITY
-
-8.1 Licensee acknowledges that the Software contains confidential and proprietary information.
-
-8.2 Licensee agrees to maintain strict confidentiality and implement necessary protections.
-
-## 9. COMPLIANCE AND AUDITING
-
-9.1 Licensor reserves the right to audit Licensee's use of the Software.
-
-9.2 Licensee must cooperate fully with such audits and provide necessary access.
-
-## 10. GOVERNING LAW
-
-10.1 This Agreement is governed by the laws of Poland.
-
-10.2 Any disputes shall be resolved in the courts of Warsaw, Poland.
-
-## 11. CONTACT INFORMATION
-
-Licensor Contact:
-- Name: Florin Cristian Suta
-- Email: chrissuta01@gmail.com
-- Phone: +48517716005
-
-## 12. ACCEPTANCE
-
-BY USING THE SOFTWARE, LICENSEE ACKNOWLEDGES READING, UNDERSTANDING, AND AGREEING TO BE BOUND BY THE TERMS OF THIS LICENSE AGREEMENT.
-
----
-
-*Protecting Innovation Through Responsible Licensing* 🛡️
-
-Last Updated: 2024-01-15
-Version: 1.0.0 
+© 2024 Florin Cristian Suta. All Rights Reserved.

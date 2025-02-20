@@ -1,0 +1,83 @@
+# External Dependencies for the SutazAI project
+
+# Authentication and Security
+Authlib>=1.4.1
+boltons>=21.0.0
+bracex>=2.5.1
+certifi>=2024.2.2
+cffi>=1.16.0
+
+# CLI and Utilities
+colorama>=0.4.6
+contourpy>=1.2.0
+click>=8.1.7
+click-option-group>=0.5.6
+
+# Data Processing and Parsing
+defusedxml>=0.7.1
+distlib>=0.3.8
+dparse>=0.6.4
+exceptiongroup>=1.2.0
+
+# File and System Utilities
+filelock>=3.13.1
+fonttools>=4.47.0
+platformdirs>=4.2.0
+setuptools>=69.2.0
+shellingham>=1.5.4
+
+# Networking and Protocols
+googleapis-common-protos>=1.63.0
+graphviz>=0.20.1
+idna>=3.7
+protobuf>=4.25.3
+
+# Python Tools and Type Checking
+importlib_metadata>=7.1.0
+isort>=5.13.2
+jsonschema>=4.22.0
+mypy>=1.9.0
+mypy-extensions>=1.0.0
+
+# Scientific and Data Analysis
+kiwisolver>=1.4.5
+matplotlib>=3.8.3
+networkx>=3.3
+numpy>=1.26.4
+
+# Telemetry and Instrumentation
+opentelemetry-api>=1.25.0
+opentelemetry-exporter-otlp-proto-common>=1.25.0
+opentelemetry-exporter-otlp-proto-http>=1.25.0
+opentelemetry-instrumentation>=0.46b0
+opentelemetry-sdk>=1.25.0
+
+# Development and Testing
+mando>=0.7.1
+mccabe>=0.7.0
+mdurl>=0.1.2
+pylint>=3.0.3
+Pygments>=2.17.2
+semgrep>=1.67.0
+
+# Additional Libraries
+pycparser>=2.22
+pydantic>=2.7.1
+pydantic_core>=2.18.2
+pyparsing>=3.1.2
+pyperclip>=1.8.2
+python-dateutil>=2.9.0
+
+# Miscellaneous
+ruamel.yaml>=0.18.6
+ruamel.yaml.clib>=0.2.8
+tomli>=2.0.1
+tomlkit>=0.13.0
+typer>=0.12.3
+urllib3>=2.2.1
+virtualenv>=20.25.1
+wcmatch>=8.5.1
+zipp>=3.18.1
+
+# Configuration and Settings Management
+pydantic-settings>=2.1.0 
