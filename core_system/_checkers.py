@@ -31,6 +31,15 @@ from typing import (
     TypeVar,
     Union,
 )
+from typing_extensions import (
+    ForwardRefPolicy,
+    TypedDict,
+    is_typeddict,
+    evaluate_forwardref,
+    get_stacklevel,
+    get_type_name,
+    qualified_name,
+)
 from unittest.mock import Mock
 from weakref import WeakKeyDictionary
 
@@ -39,36 +48,23 @@ try:
 except ImportError:
     typing_extensions = None  # type: ignore[assignment]
 
-# Must use this because typing.is_typeddict does not recognize
-# TypedDict from typing_extensions, and as of version 4.12.0
-# typing_extensions.TypedDict is different from typing.TypedDict
-# on all versions.
-from typing_extensions import is_typeddict
-
 from ._config import ForwardRefPolicy
 from ._exceptions import TypeCheckError, TypeHintWarning
 from ._memo import TypeCheckMemo
-from ._utils import evaluate_forwardref, get_stacklevel, get_type_name, qualified_name
+from ._utils import (
+    evaluate_forwardref,
+    get_stacklevel,
+    get_type_name,
+    qualified_name
+)
 
 if sys.version_info >= (3, 11):
-    from typing import (
-        Annotated,
-        NotRequired,
-        TypeAlias,
-        get_args,
-        get_origin,
-    )
-
+    from typing import Annotated, NotRequired, TypeAlias, get_args, get_origin
     SubclassableAny = Any
 else:
-    from typing_extensions import (
-        Annotated,
-        NotRequired,
-        TypeAlias,
-        get_args,
-        get_origin,
-    )
+    from typing_extensions import Annotated
     from typing_extensions import Any as SubclassableAny
+    from typing_extensions import NotRequired, TypeAlias, get_args, get_origin
 
 if sys.version_info >= (3, 10):
     from importlib.metadata import entry_points

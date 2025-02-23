@@ -10,15 +10,17 @@ This script performs a thorough audit of the system, checking:
 5. System configuration
 """
 
-import os
-import sys
 import json
+import os
 import platform
 import subprocess
-import psutil
-import pkg_resources
+import sys
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
+import pkg_resources
+import psutil
+
 
 class SystemAudit:
     def __init__(self, output_dir: str = '/opt/sutazai_project/SutazAI/logs/audits'):

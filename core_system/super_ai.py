@@ -1,41 +1,42 @@
 # Standard Library Imports
 import logging
-import time
 import os
+import signal
 import threading
-from queue import Queue
-from contextlib import contextmanager
+import time
 from collections import deque
-from functools import wraps
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from contextlib import contextmanager
 from datetime import datetime
-from typing import List, Dict
+from functools import wraps
+from queue import Queue
 from threading import Thread
+from typing import Dict, List
 
 # Third-Party Library Imports
 import schedule
-import signal
 from cryptography.fernet import Fernet
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+from agents.app_developer import AppDeveloper
+from agents.biometric_verification import BiometricVerification
+from agents.code_generator import CodeGenerator
+from agents.code_processor import CodeProcessor
 
 # Custom Agent Imports
 from agents.communication import NotificationAPI
-from agents.knowledge_base import SutazAiKnowledgeBase
-from agents.security import FounderProtectionSystem
-from agents.resource_monitor import ResourceMonitor
-from agents.biometric_verification import BiometricVerification
-from agents.load_balancer import LoadBalancer
-from agents.code_generator import CodeGenerator
-from agents.app_developer import AppDeveloper
-from agents.web_search import WebSearch
-from agents.self_improvement import CognitiveEvolutionEngine
-from agents.system_optimizer import SystemOptimizer
-from agents.nlp_processor import NLPProcessor
-from agents.code_processor import CodeProcessor
-from agents.google_assistant import GoogleAssistant
-from agents.tts import TextToSpeech
 
 # Custom Error Handling
-from agents.errors import LoyaltyError, ConsentError
+from agents.errors import ConsentError, LoyaltyError
+from agents.google_assistant import GoogleAssistant
+from agents.knowledge_base import SutazAiKnowledgeBase
+from agents.load_balancer import LoadBalancer
+from agents.nlp_processor import NLPProcessor
+from agents.resource_monitor import ResourceMonitor
+from agents.security import FounderProtectionSystem
+from agents.self_improvement import CognitiveEvolutionEngine
+from agents.system_optimizer import SystemOptimizer
+from agents.tts import TextToSpeech
+from agents.web_search import WebSearch
 
 # Configure logging
 logging.basicConfig(

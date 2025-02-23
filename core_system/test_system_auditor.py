@@ -1,10 +1,11 @@
 import os
 import sys
 import unittest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import MagicMock, mock_open, patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from scripts.comprehensive_system_audit import SutazAiSystemAuditor
+
 
 class TestSutazAiSystemAuditor(unittest.TestCase):
     

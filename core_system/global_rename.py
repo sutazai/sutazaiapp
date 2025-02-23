@@ -1,7 +1,8 @@
+import logging
 import os
 import re
-import logging
 from typing import List
+
 
 class SutazAiRenamer:
     def __init__(self, old_name='Quantum', new_name='SutazAi'):

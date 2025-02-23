@@ -1,6 +1,11 @@
 
 from __future__ import annotations
 
+import codecs
+
+from ruamel.yaml.error import FileMark, StringMark, YAMLError, YAMLStreamError
+from ruamel.yaml.util import RegExp
+
 # This module contains abstractions for the input stream. You don't have to
 # looks further, there are no pretty code.
 #
@@ -20,13 +25,10 @@ from __future__ import annotations
 #   reader.line, stream.column - the line and the column of the current
 #      character.
 
-import codecs
 
-from ruamel.yaml.error import YAMLError, FileMark, StringMark, YAMLStreamError
-from ruamel.yaml.util import RegExp
 
 if False:  # MYPY
-    from typing import Any, Dict, Optional, List, Union, Text, Tuple, Optional  # NOQA
+    from typing import Any, Dict, List, Optional, Text, Tuple, Union  # NOQA
 # from ruamel.yaml.compat import StreamTextType  # NOQA
 
 __all__ = ['Reader', 'ReaderError']

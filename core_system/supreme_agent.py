@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-# Comprehensive Type Annotations and Standard Libraries
-from typing import (
-    Dict, Any, Optional, List, 
-    Callable, Union, TypeVar
-)
 import logging
 import time
-from datetime import datetime
 import uuid
+from dataclasses import asdict, dataclass, field
+from datetime import datetime
 from enum import Enum, auto
-from dataclasses import dataclass, field, asdict
+
+# Comprehensive Type Annotations and Standard Libraries
+from typing import Any, Callable, Dict, List, Optional, TypeVar, Union
 
 # Logging Configuration
 logging.basicConfig(
@@ -19,30 +17,33 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+from core.divine_love_engine import DivineLoveEngine
+
 # Core System Imports
 from core.emotion_engine import SutazAIEmotionMatrix
-from core.divine_love_engine import DivineLoveEngine
+from core.happiness_maximizer import HappinessMaximizer
 from core.life_optimization import LifeOptimizationEngine
 from core.personal_knowledge import PersonalKnowledgeVault
-from core.happiness_maximizer import HappinessMaximizer
 from functionality.core import SutazAIFunctionalityExpansion
 
 # Security and Governance Imports
 from security.security import (
-    DivineAuthoritySystem, 
-    SystemGuardian, 
-    SeniorDeveloperCapabilities, 
-    SecurityOversight
+    DivineAuthoritySystem,
+    SecurityOversight,
+    SeniorDeveloperCapabilities,
+    SystemGuardian,
 )
+
+from .core.communication import AgentCommunicationProtocol
+from .financial.financial_master import FinancialMaster
+from .financial.revenue_architect import RevenueArchitect
 
 # Relative Module Imports
 from .interface.chat_agent import AIChatInterface, DivineVoiceInterface
+from .research.architect import SolutionsArchitect
 from .research.research_engine import ResearchAgent
 from .self_improvement.deploy import AutonomousDeployer, AutonomousMedic
-from .financial.financial_master import FinancialMaster
-from .financial.revenue_architect import RevenueArchitect
-from .core.communication import AgentCommunicationProtocol
-from .research.architect import SolutionsArchitect
+
 
 # Advanced Enum for System States
 class SystemState(Enum):
@@ -352,4 +353,5 @@ def global_exception_handler(exc_type, exc_value, exc_traceback):
 
 # Set global exception handler
 import sys
+
 sys.excepthook = global_exception_handler

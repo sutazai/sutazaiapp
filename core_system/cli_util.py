@@ -4,22 +4,20 @@ import sys
 from collections import defaultdict
 from enum import Enum
 from functools import wraps
-
 from typing import Any, DefaultDict, Dict, List, Optional, Tuple, Union
 
 import click
 import typer
+from click.utils import make_str
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from typer.core import MarkupMode, TyperCommand, TyperGroup
-from click.utils import make_str
-
+from safety.auth.cli_utils import inject_session
 from safety.auth.constants import CLI_AUTH, MSG_NON_AUTHENTICATED
 from safety.auth.models import Auth
-from safety.auth.cli_utils import inject_session
 from safety.constants import (
     BETA_PANEL_DESCRIPTION_HELP,
+    CONTEXT_COMMAND_TYPE,
     MSG_NO_AUTHD_CICD_PROD_STG,
     MSG_NO_AUTHD_CICD_PROD_STG_ORG,
     MSG_NO_AUTHD_DEV_STG,
@@ -27,12 +25,12 @@ from safety.constants import (
     MSG_NO_AUTHD_DEV_STG_PROMPT,
     MSG_NO_AUTHD_NOTE_CICD_PROD_STG_TPL,
     MSG_NO_VERIFIED_EMAIL_TPL,
-    CONTEXT_COMMAND_TYPE,
-    FeatureType
+    FeatureType,
 )
+from safety.models import SafetyCLI
 from safety.scan.constants import CONSOLE_HELP_THEME
 from safety.scan.models import ScanOutput
-from safety.models import SafetyCLI
+from typer.core import MarkupMode, TyperCommand, TyperGroup
 
 from .errors import SafetyError, SafetyException
 from .util import output_exception

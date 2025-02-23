@@ -15,23 +15,25 @@ Key Responsibilities:
 - Security integration
 """
 
-import os
-import sys
-import json
-import time
 import importlib
 import inspect
-from typing import Dict, Any, List, Type, Optional
-from dataclasses import dataclass, asdict
+import json
+import os
+import sys
+import time
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Type
+
+from ai_agents.agent_factory import AgentFactory
 
 # Internal system imports
 from config.config_manager import ConfigurationManager
-from core_system.system_optimizer import SystemOptimizer
-from security.security_manager import SecurityManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
+from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
-from ai_agents.agent_factory import AgentFactory
+from security.security_manager import SecurityManager
+
 
 @dataclass
 class SystemIntegrationReport:

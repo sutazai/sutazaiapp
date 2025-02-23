@@ -10,7 +10,7 @@ import datetime
 #       add type information (iso8601, spaced)
 
 if False:  # MYPY
-    from typing import Any, Dict, Optional, List  # NOQA
+    from typing import Any, Dict, List, Optional  # NOQA
 
 
 class TimeStamp(datetime.datetime):

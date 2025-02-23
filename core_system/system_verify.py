@@ -3,13 +3,14 @@
 SutazAI Lightweight System Verification Script
 """
 
-import os
-import sys
-import platform
-import subprocess
 import json
-import socket
+import os
+import platform
 import shutil
+import socket
+import subprocess
+import sys
+
 
 class SystemVerifier:
     def __init__(self):

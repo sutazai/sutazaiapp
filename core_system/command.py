@@ -1,20 +1,32 @@
+import os
 from pathlib import Path
 
-from rich.prompt import Prompt
-from ..cli_util import CommandType, FeatureType, SafetyCLICommand, \
-    SafetyCLISubGroup, handle_cmd_exception
 import typer
-import os
-
-
-from safety.init.constants import PROJECT_INIT_CMD_NAME, PROJECT_INIT_HELP, PROJECT_INIT_DIRECTORY_HELP
-from safety.init.main import create_project
+from rich.prompt import Prompt
 from safety.console import main_console as console
+from safety.init.constants import (
+    PROJECT_INIT_CMD_NAME,
+    PROJECT_INIT_DIRECTORY_HELP,
+    PROJECT_INIT_HELP,
+)
+from safety.init.main import create_project
+
+from ..cli_util import (
+    CommandType,
+    FeatureType,
+    SafetyCLICommand,
+    SafetyCLISubGroup,
+    handle_cmd_exception,
+)
+from ..constants import CONTEXT_COMMAND_TYPE, CONTEXT_FEATURE_TYPE
 from ..scan.command import scan
 from ..scan.models import ScanOutput
-from ..tool.main import configure_system, configure_local_directory, has_local_tool_files, configure_alias
-
-from ..constants import CONTEXT_COMMAND_TYPE, CONTEXT_FEATURE_TYPE
+from ..tool.main import (
+    configure_alias,
+    configure_local_directory,
+    configure_system,
+    has_local_tool_files,
+)
 
 try:
     from typing import Annotated

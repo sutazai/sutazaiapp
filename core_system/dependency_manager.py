@@ -6,16 +6,17 @@ This script provides advanced dependency management capabilities,
 including vulnerability scanning, update management, and compliance checks.
 """
 
-import os
-import sys
-import yaml
+import importlib
 import logging
+import os
 import subprocess
-import pkg_resources
-from typing import Dict, List, Optional, Any
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-import importlib
+from typing import Any, Dict, List, Optional
+
+import pkg_resources
+import yaml
 
 # Configure logging
 logging.basicConfig(

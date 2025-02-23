@@ -13,21 +13,22 @@ Key Responsibilities:
 - Generate detailed system reports
 """
 
-import os
-import sys
 import json
-import time
+import os
 import platform
 import subprocess
-from typing import Dict, Any, List
-from dataclasses import dataclass, asdict
+import sys
+import time
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List
 
 # Internal imports
 from config.config_manager import ConfigurationManager
+from core_system.monitoring.advanced_logger import AdvancedLogger
 from scripts.dependency_manager import DependencyManager
 from security.security_manager import SecurityManager
-from core_system.monitoring.advanced_logger import AdvancedLogger
+
 
 @dataclass
 class SystemOptimizationReport:

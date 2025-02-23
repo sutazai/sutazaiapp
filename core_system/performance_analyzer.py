@@ -1,7 +1,8 @@
-import pstats
-import os
 import json
-from typing import List, Dict, Any
+import os
+import pstats
+from typing import Any, Dict, List
+
 
 class PerformanceAnalyzer:
     """

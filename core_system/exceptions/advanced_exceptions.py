@@ -1,6 +1,6 @@
-from typing import Optional, Type, TypeVar, Generic, Any, Dict
-import traceback
 import logging
+import traceback
+from typing import Any, Dict, Generic, Optional, Type, TypeVar
 
 ExceptionT = TypeVar('ExceptionT', bound=BaseException)
 

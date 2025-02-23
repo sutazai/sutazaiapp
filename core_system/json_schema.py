@@ -39,11 +39,17 @@ from typing import (
 )
 
 import pydantic_core
+from pydantic.warnings import PydanticDeprecatedSince26, PydanticDeprecatedSince29
 from pydantic_core import CoreSchema, PydanticOmit, core_schema, to_jsonable_python
 from pydantic_core.core_schema import ComputedField
-from typing_extensions import Annotated, Literal, TypeAlias, assert_never, deprecated, final
-
-from pydantic.warnings import PydanticDeprecatedSince26, PydanticDeprecatedSince29
+from typing_extensions import (
+    Annotated,
+    Literal,
+    TypeAlias,
+    assert_never,
+    deprecated,
+    final,
+)
 
 from ._internal import (
     _config,
@@ -57,7 +63,11 @@ from ._internal import (
 )
 from .annotated_handlers import GetJsonSchemaHandler
 from .config import JsonDict, JsonSchemaExtraCallable, JsonValue
-from .errors import PydanticInvalidForJsonSchema, PydanticSchemaGenerationError, PydanticUserError
+from .errors import (
+    PydanticInvalidForJsonSchema,
+    PydanticSchemaGenerationError,
+    PydanticUserError,
+)
 
 if TYPE_CHECKING:
     from . import ConfigDict

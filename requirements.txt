@@ -1,103 +1,36 @@
-# SutazAI Comprehensive Requirements
-# Version: 2.4.0
-# Last Updated: {{ current_date }}
-
-# Core Python Runtime
-python==3.10.12
-pip==23.3.2
-setuptools==69.2.0
-
-# Configuration Management
-pyyaml==6.0.1
-jsonschema==4.17.3
-dynaconf==3.2.0
-
-# System Core
-fastapi==0.104.1
-uvicorn==0.23.2
-pydantic==2.3.0
-
-# Dependency Management
-packaging==23.2
+annotated-types==0.7.0
+anyio==4.8.0
+certifi==2025.1.31
+click==8.1.8
+fastapi==0.115.8
+h11==0.14.0
+httpcore==1.0.7
+httpx==0.28.1
+idna==3.10
+iniconfig==2.0.0
+loguru==0.7.3
+packaging==24.2
+pluggy==1.5.0
+pydantic==2.10.6
+pydantic_core==2.27.2
+pytest==8.3.4
+pytest-asyncio==0.25.3
+sniffio==1.3.1
+starlette==0.45.3
+typing_extensions==4.12.2
+uvicorn==0.34.0
+python-dotenv==1.0.0
 requests==2.31.0
-networkx==3.1
-safety==2.3.4
-pipdeptree==2.5.0
-
-# Performance Optimization
-psutil==5.9.5
-py-cpuinfo==9.0.0
-memory-profiler==0.60.0
-line-profiler==4.0.3
-cProfile==0.0.1
-tracemalloc==1.3.0
-
-# File System Monitoring
-watchdog==3.0.0
-pathspec==0.11.2
-
-# AI and Machine Learning
-torch==2.0.1
-transformers==4.33.2
-scikit-learn==1.3.1
-numpy==1.25.2
-pandas==2.1.0
-
-# Natural Language Processing
-spacy==3.5.2
-nltk==3.8.1
-textstat==0.7.3
-
-# Code Analysis and Complexity
-radon==5.1.0
-astroid==2.15.5
-pylint==3.0.2
-
-# Dependency Visualization
-networkx==3.1
-graphviz==0.20.1
-matplotlib==3.7.1
-
-# Security and Cryptography
-cryptography==41.0.3
-bcrypt==4.0.1
-python-jose==3.3.0
-bandit==1.7.5
-jwt==1.3.1
-
-# Logging and Monitoring
-structlog==23.1.0
-prometheus-client==0.17.1
-opentelemetry-api==1.19.0
-
-# Performance Profiling
-psutil==5.9.5
-py-cpuinfo==9.0.0
-memory-profiler==0.60.0
-line-profiler==4.0.3
-cProfile==0.0.1
-
-# Testing and Validation
-pytest==7.4.2
+sqlalchemy==2.0.27
+alembic==1.13.1
+redis==5.0.1
+celery==5.3.6
+flower==2.0.1
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0
 pytest-cov==4.1.0
-hypothesis==6.82.1
-
-# Document Processing
-PyMuPDF==1.22.3
-python-docx==0.8.11
-pytesseract==0.3.10
-
-# Web and Networking
-httpx==0.24.1
-aiohttp==3.8.5
-
-# Code Generation and Analysis
-black==23.7.0
-
-# Optional: Advanced Components
-dask==2023.8.1
-distributed==2023.8.1
-
-# Pinned with SHA256 for security verification
-# Use `pip hash` to verify package integrity
-
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4

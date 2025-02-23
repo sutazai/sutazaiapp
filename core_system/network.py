@@ -1,1 +1,35 @@
-import sslimport requestsdef configure_firewall():    print(" Activating Enhanced Firewall")    os.system("ufw enable")    os.system("ufw default deny incoming")    os.system("ufw allow 443/tcp")    os.system("ufw allow 8000:8005/tcp")    return Trueclass SecureConnection:    def __init__(self, url):        self.url = (url            def connect(self):        ssl_context = ssl.create_default_context()        ssl_context.verify_mode = ssl.CERT_REQUIRED        return requests.get(self.url), verify=ssl_context) 
+import os.system
+import ssl.CERT_REQUIRED
+import ssl.create_default_context
+
+import 443/tcp"
+import 8000:8005/tcp"
+import "
+import "ufw
+import :
+import =
+import __init__
+import Activating
+import allow
+import configure_firewall
+import connect
+import def
+import default
+import deny
+import enable"
+import Enhanced
+import Firewall"
+import incoming"
+import print
+import requests.get
+import requestsdef
+import return
+import SecureConnection:
+import self
+import self.url
+import ssl_context
+import ssl_context.verify_mode
+import sslimport
+import Trueclass
+import url
+import verify=ssl_context

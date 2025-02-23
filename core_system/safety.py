@@ -1,41 +1,80 @@
 # -*- coding: utf-8 -*-
-from dataclasses import asdict
 import errno
 import itertools
 import json
 import logging
 import os
-from pathlib import Path
 import sys
 import tempfile
 import time
 from collections import defaultdict
+from dataclasses import asdict
 from datetime import datetime
-from typing import Dict, Optional, List, Any, Union, Iterator
+from pathlib import Path
+from typing import Any, Dict, Iterator, List, Optional, Union
 
 import click
 import requests
+from filelock import FileLock
 from packaging.specifiers import SpecifierSet
 from packaging.utils import canonicalize_name
-from packaging.version import parse as parse_version, Version
+from packaging.version import Version
+from packaging.version import parse as parse_version
 from pydantic.json import pydantic_encoder
-from filelock import FileLock
-
 from safety_schemas.models import Ecosystem, FileType
 
-
-
-from .constants import (API_MIRRORS, DB_CACHE_FILE, OPEN_MIRRORS, REQUEST_TIMEOUT, DATA_API_BASE_URL, JSON_SCHEMA_VERSION,
-                        IGNORE_UNPINNED_REQ_REASON)
-from .errors import (DatabaseFetchError, DatabaseFileNotFoundError, InvalidCredentialError,
-                     TooManyRequestsError, NetworkConnectionError,
-                     RequestTimeoutError, ServerError, MalformedDatabase)
-from .models import Vulnerability, CVE, Severity, Fix, is_pinned_requirement, SafetyRequirement
-from .output_utils import print_service, get_applied_msg, prompt_service, get_skipped_msg, get_fix_opt_used_msg, \
-    is_using_api_key, get_specifier_range_info
-from .util import build_remediation_info_url, pluralize, read_requirements, Package, build_telemetry_data, sync_safety_context, \
-    SafetyContext, validate_expiration_date, is_a_remote_mirror, get_requirements_content, SafetyPolicyFile, \
-    get_terminal_size, is_ignore_unpinned_mode, get_hashes
+from .constants import (
+    API_MIRRORS,
+    DATA_API_BASE_URL,
+    DB_CACHE_FILE,
+    IGNORE_UNPINNED_REQ_REASON,
+    JSON_SCHEMA_VERSION,
+    OPEN_MIRRORS,
+    REQUEST_TIMEOUT,
+)
+from .errors import (
+    DatabaseFetchError,
+    DatabaseFileNotFoundError,
+    InvalidCredentialError,
+    MalformedDatabase,
+    NetworkConnectionError,
+    RequestTimeoutError,
+    ServerError,
+    TooManyRequestsError,
+)
+from .models import (
+    CVE,
+    Fix,
+    SafetyRequirement,
+    Severity,
+    Vulnerability,
+    is_pinned_requirement,
+)
+from .output_utils import (
+    get_applied_msg,
+    get_fix_opt_used_msg,
+    get_skipped_msg,
+    get_specifier_range_info,
+    is_using_api_key,
+    print_service,
+    prompt_service,
+)
+from .util import (
+    Package,
+    SafetyContext,
+    SafetyPolicyFile,
+    build_remediation_info_url,
+    build_telemetry_data,
+    get_hashes,
+    get_requirements_content,
+    get_terminal_size,
+    is_a_remote_mirror,
+    is_ignore_unpinned_mode,
+    pluralize,
+    read_requirements,
+    sync_safety_context,
+    validate_expiration_date,
+)
 
 LOG = logging.getLogger(__name__)
 
@@ -1069,8 +1108,8 @@ def compute_fixes_per_requirements(
     """
     requirements_files = get_requirements_content(files)
 
-    from dparse.parser import parse, filetypes
-    from packaging.version import Version, InvalidVersion
+    from dparse.parser import filetypes, parse
+    from packaging.version import InvalidVersion, Version
 
     requirements = {
         'files': {},

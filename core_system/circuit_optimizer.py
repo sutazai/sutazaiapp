@@ -1,9 +1,11 @@
-import numpy as np
-from typing import List, Dict, Any, Optional
 import logging
 from enum import Enum, auto
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 
 from ..sutazai_gate_library.superposition_gates import GateType, SutazAiGateLibrary
+
 
 class OptimizationStrategy(Enum):
     GATE_REDUCTION = auto()

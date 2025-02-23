@@ -1,16 +1,16 @@
+import sys
 from collections import defaultdict
 from pathlib import Path
-import sys
 from typing import Generator, List, Optional
 
+from dparse import filetypes, parse
+from packaging.specifiers import SpecifierSet
+from packaging.utils import canonicalize_name
+from packaging.version import parse as parse_version
 from safety_schemas.models import FileType, PythonDependency
 from safety_schemas.models.package import PythonSpecification
-from ..base import InspectableFile
-from dparse import parse, filetypes
 
-from packaging.specifiers import SpecifierSet
-from packaging.version import parse as parse_version
-from packaging.utils import canonicalize_name
+from ..base import InspectableFile
 
 
 def get_closest_ver(versions: List[str], version: Optional[str], spec: SpecifierSet) -> dict:

@@ -12,6 +12,7 @@ from .git import GITModel
 from .policy_file import PolicyFileModel
 from .util import dict_dump
 
+
 @dataclass
 class ProjectModel(SafetyBaseModel):
     id: str

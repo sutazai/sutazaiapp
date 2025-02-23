@@ -1,19 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Security
-from .models.db_models import get_session
-from .schemas import ChatRequest, ReportRequest
-from pydantic import BaseModel, Field
-from .self_coding import SelfCodingAgent
-from .code_analysis import analyze_code_quality
-import requests
-from .dependencies import get_current_user
-from .model_server import model_server, generate_code
-from fastapi_limiter.depends import RateLimiter
 import logging
 import time
-from models.document import DocumentProcessor
-from security.auth import validate_token
 from logging.handlers import RotatingFileHandler
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
+import requests
+from fastapi import APIRouter, Depends, File, HTTPException, Security, UploadFile
+from fastapi_limiter.depends import RateLimiter
+from models.document import DocumentProcessor
+from pydantic import BaseModel, Field
+
+from security.auth import validate_token
+
+from .code_analysis import analyze_code_quality
+from .dependencies import get_current_user
+from .model_server import generate_code, model_server
+from .models.db_models import get_session
+from .schemas import ChatRequest, ReportRequest
+from .self_coding import SelfCodingAgent
 
 router = APIRouter()
 agent = SelfCodingAgent()

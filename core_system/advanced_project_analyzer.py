@@ -10,15 +10,16 @@ Comprehensive framework for:
 - Security vulnerability detection
 """
 
-import os
-import sys
+import ast
+import importlib.util
 import json
 import logging
-import ast
-import networkx as nx
-import importlib.util
-from typing import Dict, List, Any, Set, Tuple
+import os
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Set, Tuple
+
+import networkx as nx
 
 # Configure logging
 logging.basicConfig(

@@ -10,28 +10,33 @@ Provides an autonomous, multi-dimensional framework for:
 - Proactive issue detection and resolution
 """
 
-import os
-import sys
-import json
-import logging
-import threading
-import time
 import importlib
 import inspect
-from typing import Dict, List, Any, Optional, Type, Callable
+import json
+import logging
+import os
+import sys
+import threading
+import time
+from typing import Any, Callable, Dict, List, Optional, Type
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import advanced system components
-from core_system.advanced_system_architecture_manager import UltraComprehensiveArchitectureManager
-from core_system.dependency_mapper import AdvancedDependencyMapper
-from core_system.system_health_monitor import UltraComprehensiveSystemHealthMonitor
+from core_system.advanced_system_architecture_manager import (
+    UltraComprehensiveArchitectureManager,
+)
+from core_system.auto_remediation_manager import (
+    UltraComprehensiveAutoRemediationManager,
+)
 from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
+from core_system.dependency_mapper import AdvancedDependencyMapper
 from core_system.inventory_management_system import InventoryManagementSystem
-from core_system.auto_remediation_manager import UltraComprehensiveAutoRemediationManager
 from core_system.performance_optimizer import AdvancedPerformanceOptimizer
+from core_system.system_health_monitor import UltraComprehensiveSystemHealthMonitor
 from scripts.advanced_project_validator import UltraComprehensiveProjectValidator
+
 
 class SystemIntegrationOrchestrator:
     """

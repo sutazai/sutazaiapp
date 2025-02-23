@@ -1,9 +1,11 @@
+import logging
 import os
 import sys
-import logging
-import psutil
 import time
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
+
+import psutil
+
 
 class PerformanceOptimizer:
     """

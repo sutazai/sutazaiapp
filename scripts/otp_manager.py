@@ -1,10 +1,12 @@
+import logging
 import os
 import secrets
 import smtplib
-from email.mime.text import MIMEText
 from datetime import datetime, timedelta
-import logging
+from email.mime.text import MIMEText
+
 from cryptography.fernet import Fernet
+
 
 class OTPManager:
     def __init__(self, 

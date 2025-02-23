@@ -14,14 +14,16 @@ Test Categories:
 - Optimization Recommendations
 """
 
+import json
 import os
 import sys
+from typing import Any, Dict
+
 import pytest
-import json
-from typing import Dict, Any
 
 # Import system analysis components
 from advanced_system_analysis.system_analyzer import SystemAnalyzer
+
 
 class TestSystemAnalyzer:
     """

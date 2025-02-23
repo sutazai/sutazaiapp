@@ -1,9 +1,11 @@
 import logging
-from typing import List, Dict, Any, Optional
 from dataclasses import dataclass, field
-from enum import Enum, auto
 from datetime import datetime, timedelta
+from enum import Enum, auto
+from typing import Any, Dict, List, Optional
+
 import numpy as np
+
 
 class NodeState(Enum):
     ACTIVE = auto()

@@ -7,10 +7,10 @@ threshold (default 1 day) to reduce disk I/O and improve system performance.
 Compressed files are stored with a .gz extension.
 """
 
-import os
-import time
 import gzip
+import os
 import shutil
+import time
 
 # Directory containing logs
 logs_dir = os.path.join(os.getcwd(), "logs")

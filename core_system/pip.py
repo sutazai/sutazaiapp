@@ -8,10 +8,8 @@ from urllib.parse import urlsplit, urlunsplit
 
 import typer
 from rich.console import Console
-
-from safety.tool.resolver import get_unwrapped_command
-
 from safety.console import main_console
+from safety.tool.resolver import get_unwrapped_command
 
 REPOSITORY_URL = "https://pkgs.safetycli.com/repository/public/pypi/simple/"
 

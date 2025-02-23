@@ -6,6 +6,7 @@ Provides comprehensive system audits and detailed metric reports.
 
 from typing import Dict
 
+
 class UltimateSystemAuditor:
     """
     The UltimateSystemAuditor class performs an all-encompassing system audit.

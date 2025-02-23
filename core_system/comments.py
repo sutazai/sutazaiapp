@@ -7,20 +7,17 @@ these are not really related, formatting could be factored out as
 a separate base
 """
 
-import sys
 import copy
+import sys
+from collections.abc import Mapping, MutableSet, Set, Sized
 
-
-from ruamel.yaml.compat import ordereddict
-from ruamel.yaml.compat import MutableSliceableSequence, nprintf  # NOQA
-from ruamel.yaml.scalarstring import ScalarString
 from ruamel.yaml.anchor import Anchor
+from ruamel.yaml.compat import MutableSliceableSequence, nprintf, ordereddict  # NOQA
+from ruamel.yaml.scalarstring import ScalarString
 from ruamel.yaml.tag import Tag
 
-from collections.abc import MutableSet, Sized, Set, Mapping
-
 if False:  # MYPY
-    from typing import Any, Dict, Optional, List, Union, Optional, Iterator  # NOQA
+    from typing import Any, Dict, Iterator, List, Optional, Union  # NOQA
 
 # fmt: off
 __all__ = ['CommentedSeq', 'CommentedKeySeq',
@@ -380,8 +377,8 @@ class CommentedBase:
         (but at the beginning of the line the space doesn't have to be before
         the #. The column index is for the # mark
         """
-        from .tokens import CommentToken
         from .error import CommentMark
+        from .tokens import CommentToken
 
         if column is None:
             try:

@@ -1,11 +1,13 @@
 import os
-import pytest
 import tempfile
+from typing import Any, Dict
+
 import numpy as np
-from typing import Dict, Any
+import pytest
 
 from ai_agents.document_processor.src import DocumentProcessorAgent
 from ai_agents.document_processor.utils.document_utils import DocumentUtils
+
 
 class TestDocumentProcessorAgent:
     """
@@ -23,7 +25,7 @@ class TestDocumentProcessorAgent:
             str: Path to the sample PDF
         """
         import fitz
-        
+
         # Create a temporary PDF
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp_pdf:
             doc = fitz.open()
@@ -46,7 +48,7 @@ class TestDocumentProcessorAgent:
             str: Path to the sample image
         """
         import cv2
-        
+
         # Create a temporary image
         with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_img:
             image = np.zeros((200, 200), dtype=np.uint8)

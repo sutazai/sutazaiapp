@@ -1,8 +1,9 @@
-import os
-import sys
-import pytest
-import subprocess
 import json
+import os
+import subprocess
+import sys
+
+import pytest
 import requests
 from dotenv import load_dotenv
 

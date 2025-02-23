@@ -16,7 +16,7 @@ DocInfo can be used by a yaml dumper to dump a class
 """
 
 if False:  # MYPY
-    from typing import Optional, Tuple, Any
+    from typing import Any, Optional, Tuple
 
 # from dataclasses import dataclass, field, MISSING  # NOQA
 

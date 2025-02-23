@@ -6,18 +6,19 @@ Provides comprehensive dependency analysis, tracking,
 and intelligent optimization capabilities.
 """
 
-import os
-import sys
+import ast
+import importlib
+import inspect
 import json
 import logging
-from typing import Dict, List, Any, Optional
+import os
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 import networkx as nx
 import pkg_resources
-import importlib
-import ast
-import inspect
+
 
 class AdvancedDependencyTracker:
     """

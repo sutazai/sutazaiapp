@@ -5,14 +5,15 @@ Performance Monitoring Script for SutazAI
 Monitors system and application performance, logs metrics, and provides insights.
 """
 
+import json
+import logging
 import os
 import sys
-import time
-import logging
-import psutil
 import threading
-import json
+import time
 from datetime import datetime
+
+import psutil
 
 # Configure logging
 logging.basicConfig(

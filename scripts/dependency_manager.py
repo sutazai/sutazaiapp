@@ -6,19 +6,19 @@ Comprehensive dependency tracking, vulnerability assessment,
 and intelligent management capabilities.
 """
 
-import os
-import sys
 import json
 import logging
+import os
 import subprocess
-from typing import Dict, List, Any
-from dataclasses import dataclass, asdict
+import sys
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List
 
 import pkg_resources
 import requests
-import yaml
 import safety
+import yaml
 
 # Configure logging
 logging.basicConfig(

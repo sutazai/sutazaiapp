@@ -1,1 +1,22 @@
-from cryptography.fernet import Fernetclass DatabaseEncryption:    def __init__(self, key):        self.cipher = (Fernet(key)    def encrypt(self), data):        return self.cipher.encrypt(data.encode()).decode()    def decrypt(self, encrypted_data):        return self.cipher.decrypt(encrypted_data.encode()).decode() 
+from cryptography.fernet import (
+    DatabaseEncryption:,
+    Fernet,
+    Fernetclass,
+    .decode,
+    :,
+    =,
+    __init__,
+    data,
+    data.encode,
+    decrypt,
+    def,
+    encrypt,
+    encrypted_data,
+    encrypted_data.encode,
+    key,
+    return,
+    self,
+    self.cipher,
+    self.cipher.decrypt,
+    self.cipher.encrypt,
+)

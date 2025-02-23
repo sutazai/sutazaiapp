@@ -1,6 +1,8 @@
-from typing import Optional, List, Any, Dict, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
-from marshmallow import Schema, fields as fields_, post_dump
+from marshmallow import Schema
+from marshmallow import fields as fields_
+from marshmallow import post_dump
 
 
 class CVSSv2(Schema):

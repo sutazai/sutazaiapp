@@ -1,12 +1,13 @@
 """Visualization of SutazAi Coherence Preservation Techniques."""
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 from sutazai_core.neural_entanglement.coherence_preserver import (
-    CoherencePreserver, 
-    ErrorMitigationStrategy
+    CoherencePreserver,
+    ErrorMitigationStrategy,
 )
+
 
 def visualize_error_mitigation(
     state: np.ndarray, 

@@ -6,17 +6,30 @@ This module provides an endpoint to check the health status of the application.
 """
 
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 health_router: APIRouter = APIRouter()
 
 
+# pylint: disable=too-few-public-methods
 class HealthStatus(BaseModel):
     """
     Pydantic model representing the health status.
+
+    Attributes:
+        status: The current health status string
     """
 
-    status: str
+    status: str = Field(..., description="Current health status")
+
+    def check_health(self) -> bool:
+        """
+        Check if the status indicates a healthy state.
+
+        Returns:
+            bool: True if healthy, False otherwise
+        """
+        return self.status == "healthy"
 
 
 @health_router.get("/health", response_model=HealthStatus, tags=["health"])

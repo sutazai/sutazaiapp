@@ -6,16 +6,17 @@ Provides intelligent, self-organizing file management
 with semantic categorization and optimization capabilities.
 """
 
-import os
-import sys
-import shutil
-import logging
 import hashlib
-from typing import Dict, List, Any, Optional
+import logging
+import os
+import shutil
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-import networkx as nx
 import magic
+import networkx as nx
+
 
 class AutonomousFileOrganizer:
     """

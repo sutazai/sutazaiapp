@@ -6,19 +6,20 @@ Provides comprehensive performance analysis,
 bottleneck detection, and optimization recommendations.
 """
 
-import os
-import sys
-import time
-import logging
-import psutil
-import threading
-import json
-import tracemalloc
 import cProfile
-import pstats
 import io
+import json
+import logging
+import os
+import pstats
+import sys
+import threading
+import time
+import tracemalloc
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
+import psutil
 
 # Configure logging
 logging.basicConfig(

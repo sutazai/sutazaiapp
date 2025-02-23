@@ -9,7 +9,9 @@ from rapidfuzz._utils import ScorerFlag, add_scorer_attrs, is_none, setupPandas
 from rapidfuzz.distance import ScoreAlignment
 from rapidfuzz.distance.Indel_py import (
     _block_normalized_similarity as indel_block_normalized_similarity,
-    distance as indel_distance,
+)
+from rapidfuzz.distance.Indel_py import distance as indel_distance
+from rapidfuzz.distance.Indel_py import (
     normalized_similarity as indel_normalized_similarity,
 )
 

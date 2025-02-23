@@ -7,7 +7,13 @@ router = APIRouter()
 
 
 @router.get("/status")
-def get_status():
+def get_status() -> dict[str, str]:
+    """
+    Get the current status of the API.
+
+    Returns:
+        dict[str, str]: A dictionary containing the API status.
+    """
     return {"status": "running"}
 
 

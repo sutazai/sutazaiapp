@@ -15,10 +15,16 @@ if _impl == "cpp":
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                prefix_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                prefix_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_similarity as similarity,
             )
 
@@ -26,37 +32,55 @@ if _impl == "cpp":
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                prefix_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                prefix_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_similarity as similarity,
             )
 
             imported = True
 
     if not imported:
-        from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-            prefix_distance as distance,
-            prefix_normalized_distance as normalized_distance,
-            prefix_normalized_similarity as normalized_similarity,
-            prefix_similarity as similarity,
+        from rapidfuzz.distance.metrics_cpp import (
+            prefix_distance as distance,  # pyright: ignore[reportMissingImports]
         )
+        from rapidfuzz.distance.metrics_cpp import (
+            prefix_normalized_distance as normalized_distance,
+        )
+        from rapidfuzz.distance.metrics_cpp import (
+            prefix_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_cpp import prefix_similarity as similarity
 elif _impl == "python":
+    from rapidfuzz.distance.metrics_py import prefix_distance as distance
     from rapidfuzz.distance.metrics_py import (
-        prefix_distance as distance,
         prefix_normalized_distance as normalized_distance,
-        prefix_normalized_similarity as normalized_similarity,
-        prefix_similarity as similarity,
     )
+    from rapidfuzz.distance.metrics_py import (
+        prefix_normalized_similarity as normalized_similarity,
+    )
+    from rapidfuzz.distance.metrics_py import prefix_similarity as similarity
 else:
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                prefix_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                prefix_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 prefix_similarity as similarity,
             )
 
@@ -64,10 +88,16 @@ else:
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                prefix_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                prefix_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 prefix_similarity as similarity,
             )
 
@@ -75,19 +105,25 @@ else:
 
     if not imported:
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-                prefix_distance as distance,
-                prefix_normalized_distance as normalized_distance,
-                prefix_normalized_similarity as normalized_similarity,
-                prefix_similarity as similarity,
+            from rapidfuzz.distance.metrics_cpp import (
+                prefix_distance as distance,  # pyright: ignore[reportMissingImports]
             )
+            from rapidfuzz.distance.metrics_cpp import (
+                prefix_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp import (
+                prefix_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp import prefix_similarity as similarity
 
             imported = True
 
     if not imported:
+        from rapidfuzz.distance.metrics_py import prefix_distance as distance
         from rapidfuzz.distance.metrics_py import (
-            prefix_distance as distance,
             prefix_normalized_distance as normalized_distance,
-            prefix_normalized_similarity as normalized_similarity,
-            prefix_similarity as similarity,
         )
+        from rapidfuzz.distance.metrics_py import (
+            prefix_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_py import prefix_similarity as similarity

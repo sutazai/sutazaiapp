@@ -1,7 +1,8 @@
+import logging
 import subprocess
 import sys
-import logging
-from typing import List, Dict
+from typing import Dict, List
+
 
 class DependencyResolver:
     def __init__(self):

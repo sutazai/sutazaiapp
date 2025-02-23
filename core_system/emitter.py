@@ -1,6 +1,19 @@
 
 from __future__ import annotations
 
+import sys
+
+# fmt: off
+from ruamel.yaml.compat import (  # NOQA
+    DBG_EVENT,
+    check_anchorname_char,
+    dbg,
+    nprint,
+    nprintf,
+)
+from ruamel.yaml.error import YAMLError, YAMLStreamError
+from ruamel.yaml.events import *  # NOQA
+
 # Emitter expects events obeying the following grammar:
 # stream ::= STREAM-START document* STREAM-END
 # document ::= DOCUMENT-START node DOCUMENT-END
@@ -8,18 +21,13 @@ from __future__ import annotations
 # sequence ::= SEQUENCE-START node* SEQUENCE-END
 # mapping ::= MAPPING-START (node node)* MAPPING-END
 
-import sys
-from ruamel.yaml.error import YAMLError, YAMLStreamError
-from ruamel.yaml.events import *  # NOQA
 
-# fmt: off
-from ruamel.yaml.compat import nprint, dbg, DBG_EVENT, \
-    check_anchorname_char, nprintf  # NOQA
 # fmt: on
 
 
 if False:  # MYPY
-    from typing import Any, Dict, List, Union, Text, Tuple, Optional  # NOQA
+    from typing import Any, Dict, List, Optional, Text, Tuple, Union  # NOQA
+
     from ruamel.yaml.compat import StreamType  # NOQA
 
 __all__ = ['Emitter', 'EmitterError']

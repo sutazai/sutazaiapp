@@ -6,12 +6,13 @@ Automatically generates and maintains a comprehensive index of project files,
 providing easy access and navigation across the entire project structure.
 """
 
-import os
-import json
 import hashlib
+import json
 import logging
-from typing import Dict, List, Any, Optional
+import os
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 
 class FileIndexer:
     """

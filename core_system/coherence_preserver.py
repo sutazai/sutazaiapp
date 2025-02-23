@@ -1,16 +1,18 @@
 """SutazAi Coherence Preservation Module."""
 
-import numpy as np
-import logging
-from typing import List, Dict, Any, Callable, Optional, Tuple
-from enum import Enum, auto
-from dataclasses import dataclass, field
-import torch
 import gc
+import logging
+from dataclasses import dataclass, field
+from enum import Enum, auto
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
+import numpy as np
+import torch
 
 # Add new imports for advanced ML techniques
 from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
+
 
 class ErrorMitigationStrategy(Enum):
     """Enumeration of error mitigation strategies."""

@@ -3,17 +3,18 @@
 SutazAI Comprehensive System Audit and Optimization Script
 """
 
+import logging
 import os
 import sys
-import logging
-from typing import Dict, List, Any
 from datetime import datetime
+from typing import Any, Dict, List
 
 # Import local modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core_system.dependency_management import DependencyManager
 from core_system.performance_optimizer import UltraPerformanceOptimizer
 from security.security_manager import SecurityManager
+
 
 class ComprehensiveSystemAuditor:
     """

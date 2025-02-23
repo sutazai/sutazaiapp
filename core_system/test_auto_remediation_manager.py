@@ -5,18 +5,21 @@ Comprehensive Test Suite for SutazAI Auto-Remediation Manager
 Provides thorough testing for the autonomous system healing and optimization mechanism
 """
 
-import os
-import sys
-import unittest
-import json
 import ast
-import tempfile
+import json
+import os
 import shutil
+import sys
+import tempfile
+import unittest
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core_system.auto_remediation_manager import UltraComprehensiveAutoRemediationManager
+from core_system.auto_remediation_manager import (
+    UltraComprehensiveAutoRemediationManager,
+)
+
 
 class TestAutoRemediationManager(unittest.TestCase):
     """

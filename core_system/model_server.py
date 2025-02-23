@@ -1,19 +1,19 @@
+import asyncio
+import logging
 import os
 import time
-import logging
-import asyncio
-from typing import Optional, Dict, Any
 from dataclasses import dataclass, field
+from typing import Any, Dict, Optional
 
+import SutazAiModel  # updated import
 import torch
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-from prometheus_client import make_asgi_app, Counter, Histogram, Gauge
-import SutazAiModel  # updated import
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
 from pydantic import BaseSettings
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
 # Advanced logging configuration
 logging.basicConfig(

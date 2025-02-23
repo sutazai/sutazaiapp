@@ -22,12 +22,18 @@ if _impl == "cpp":
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                indel_distance as distance,
-                indel_editops as editops,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                indel_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import indel_editops as editops
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_normalized_similarity as normalized_similarity,
-                indel_opcodes as opcodes,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import indel_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_similarity as similarity,
             )
 
@@ -35,45 +41,63 @@ if _impl == "cpp":
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                indel_distance as distance,
-                indel_editops as editops,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                indel_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import indel_editops as editops
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_normalized_similarity as normalized_similarity,
-                indel_opcodes as opcodes,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import indel_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_similarity as similarity,
             )
 
             imported = True
 
     if not imported:
-        from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-            indel_distance as distance,
-            indel_editops as editops,
-            indel_normalized_distance as normalized_distance,
-            indel_normalized_similarity as normalized_similarity,
-            indel_opcodes as opcodes,
-            indel_similarity as similarity,
+        from rapidfuzz.distance.metrics_cpp import (
+            indel_distance as distance,  # pyright: ignore[reportMissingImports]
         )
+        from rapidfuzz.distance.metrics_cpp import indel_editops as editops
+        from rapidfuzz.distance.metrics_cpp import (
+            indel_normalized_distance as normalized_distance,
+        )
+        from rapidfuzz.distance.metrics_cpp import (
+            indel_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_cpp import indel_opcodes as opcodes
+        from rapidfuzz.distance.metrics_cpp import indel_similarity as similarity
 elif _impl == "python":
+    from rapidfuzz.distance.metrics_py import indel_distance as distance
+    from rapidfuzz.distance.metrics_py import indel_editops as editops
     from rapidfuzz.distance.metrics_py import (
-        indel_distance as distance,
-        indel_editops as editops,
         indel_normalized_distance as normalized_distance,
-        indel_normalized_similarity as normalized_similarity,
-        indel_opcodes as opcodes,
-        indel_similarity as similarity,
     )
+    from rapidfuzz.distance.metrics_py import (
+        indel_normalized_similarity as normalized_similarity,
+    )
+    from rapidfuzz.distance.metrics_py import indel_opcodes as opcodes
+    from rapidfuzz.distance.metrics_py import indel_similarity as similarity
 else:
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                indel_distance as distance,
-                indel_editops as editops,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                indel_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import indel_editops as editops
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_normalized_similarity as normalized_similarity,
-                indel_opcodes as opcodes,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import indel_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 indel_similarity as similarity,
             )
 
@@ -81,12 +105,18 @@ else:
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                indel_distance as distance,
-                indel_editops as editops,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                indel_distance as distance,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import indel_editops as editops
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_normalized_similarity as normalized_similarity,
-                indel_opcodes as opcodes,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import indel_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 indel_similarity as similarity,
             )
 
@@ -94,23 +124,29 @@ else:
 
     if not imported:
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-                indel_distance as distance,
-                indel_editops as editops,
-                indel_normalized_distance as normalized_distance,
-                indel_normalized_similarity as normalized_similarity,
-                indel_opcodes as opcodes,
-                indel_similarity as similarity,
+            from rapidfuzz.distance.metrics_cpp import (
+                indel_distance as distance,  # pyright: ignore[reportMissingImports]
             )
+            from rapidfuzz.distance.metrics_cpp import indel_editops as editops
+            from rapidfuzz.distance.metrics_cpp import (
+                indel_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp import (
+                indel_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp import indel_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp import indel_similarity as similarity
 
             imported = True
 
     if not imported:
+        from rapidfuzz.distance.metrics_py import indel_distance as distance
+        from rapidfuzz.distance.metrics_py import indel_editops as editops
         from rapidfuzz.distance.metrics_py import (
-            indel_distance as distance,
-            indel_editops as editops,
             indel_normalized_distance as normalized_distance,
-            indel_normalized_similarity as normalized_similarity,
-            indel_opcodes as opcodes,
-            indel_similarity as similarity,
         )
+        from rapidfuzz.distance.metrics_py import (
+            indel_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_py import indel_opcodes as opcodes
+        from rapidfuzz.distance.metrics_py import indel_similarity as similarity

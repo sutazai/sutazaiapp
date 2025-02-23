@@ -7,7 +7,11 @@ from functools import partial, partialmethod
 from typing import TYPE_CHECKING, Any, Callable, TypeVar, overload
 
 from pydantic_core import PydanticUndefined, core_schema
-from pydantic_core.core_schema import SerializationInfo, SerializerFunctionWrapHandler, WhenUsed
+from pydantic_core.core_schema import (
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
+    WhenUsed,
+)
 from typing_extensions import Annotated, Literal, TypeAlias
 
 from . import PydanticUndefinedAnnotation

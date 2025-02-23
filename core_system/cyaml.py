@@ -1,15 +1,14 @@
 
 from __future__ import annotations
 
-from _ruamel_yaml import CParser, CEmitter  # type: ignore
-
-from ruamel.yaml.constructor import Constructor, BaseConstructor, SafeConstructor
-from ruamel.yaml.representer import Representer, SafeRepresenter, BaseRepresenter
-from ruamel.yaml.resolver import Resolver, BaseResolver
-
+from _ruamel_yaml import CEmitter, CParser  # type: ignore
+from ruamel.yaml.constructor import BaseConstructor, Constructor, SafeConstructor
+from ruamel.yaml.representer import BaseRepresenter, Representer, SafeRepresenter
+from ruamel.yaml.resolver import BaseResolver, Resolver
 
 if False:  # MYPY
-    from typing import Any, Union, Optional  # NOQA
+    from typing import Any, Optional, Union  # NOQA
+
     from ruamel.yaml.compat import StreamTextType, StreamType, VersionType  # NOQA
 
 __all__ = ['CBaseLoader', 'CSafeLoader', 'CLoader', 'CBaseDumper', 'CSafeDumper', 'CDumper']

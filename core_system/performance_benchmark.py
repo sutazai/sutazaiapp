@@ -1,14 +1,16 @@
 import os
-import time
 import statistics
-import pytest
 import tempfile
-import numpy as np
-import fitz
+import time
+
 import cv2
+import fitz
+import numpy as np
+import pytest
 
 from ai_agents.document_processor.src import DocumentProcessorAgent
 from ai_agents.document_processor.utils.document_utils import DocumentUtils
+
 
 class DocumentProcessorBenchmark:
     """

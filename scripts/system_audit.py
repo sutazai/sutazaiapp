@@ -10,21 +10,23 @@ Performs an exhaustive audit of the entire system, including:
 - Logging and Monitoring Evaluation
 """
 
-import os
-import sys
 import json
 import logging
-from typing import Dict, Any, List
+import os
+import sys
 from datetime import datetime
+from typing import Any, Dict, List
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from config.config_manager import ConfigurationManager
-import safety
+import platform
+
 import pkg_resources
 import psutil
-import platform
+import safety
+
+from config.config_manager import ConfigurationManager
 
 logging.basicConfig(
     level=logging.INFO,

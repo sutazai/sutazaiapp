@@ -1,8 +1,9 @@
+import os
 import random
 import time
-import os
-from rich.text import Text
+
 from rich.style import Style
+from rich.text import Text
 from safety.scan.fun_mode.celebration_effects import CELEBRATION_EFFECTS
 
 # -----------------------------

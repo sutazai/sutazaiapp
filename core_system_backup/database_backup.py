@@ -1,1 +1,0 @@
-class DatabaseBackup:    def __init__(self, db_url):        self.db_url = db_url    def backup(self):        with self.db_url.connect() as conn:            conn.execute("BACKUP DATABASE TO 'backup.sql'") 

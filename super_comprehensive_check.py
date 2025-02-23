@@ -17,6 +17,7 @@ import json
 import logging
 import os
 import platform
+import resource  # For system resource limits
 import subprocess
 import sys
 import time
@@ -29,7 +30,6 @@ import cpuinfo  # For detailed CPU information
 import GPUtil  # For GPU diagnostics
 import memory_profiler  # For memory profiling
 import psutil
-import resource  # For system resource limits
 
 # Enhanced logging configuration
 logging.basicConfig(

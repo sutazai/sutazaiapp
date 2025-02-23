@@ -9,12 +9,21 @@ comprehensive type annotations and error handling.
 from __future__ import annotations
 
 # Standard Library Imports
-from typing import Any, Callable, Dict, Generic, TypeAdapter, TypeVar
+from typing import Any, Callable, Dict, Generic, Type, TypeVar
+import logging
 
 # Third-Party Library Imports
-from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
+
+# HTTP Status Codes
+HTTP_400_BAD_REQUEST = 400
+HTTP_422_UNPROCESSABLE_ENTITY = 422
+HTTP_500_INTERNAL_SERVER_ERROR = 500
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------
 # Initialize FastAPI Router
@@ -25,79 +34,159 @@ core_router: APIRouter = APIRouter()
 # -----------------------------------------------------------------------------
 # Pydantic Model Definitions and Helpers
 # -----------------------------------------------------------------------------
+# pylint: disable=too-few-public-methods
 class SystemStatus(BaseModel):
     """
     Pydantic model representing the system status.
+    Provides a standardized way to represent and validate system status.
     """
 
-    status: str = Field(..., description="Overall system status")
+    status: str = Field(
+        ...,
+        description="Overall system status",
+        min_length=1,
+        max_length=50
+    )
 
     class Config:
-        # For pydantic v1 use `schema_extra` to add metadata.
-        # (For pydantic v2 use `model_config` if desired.)
-        schema_extra = {"example": {"status": "ok"}}
+        """Pydantic configuration class for SystemStatus."""
+        # For pydantic v2 use model_config
+        model_config = {
+            "json_schema_extra": {"example": {"status": "ok"}},
+            "extra": "forbid"  # Prevent additional fields
+        }
 
-    def model_dump(self) -> Dict[str, Any]:
+    def model_dump(self, *args, **kwargs) -> Dict[str, Any]:
         """
         Return the dictionary representation of the model.
-        This method mirrors the pydantic v2 call; if using pydantic v1, replace with self.dict().
+
+        Provides backward compatibility for different Pydantic versions.
+
+        Returns:
+            Dict[str, Any]: Dictionary representation of the model
         """
-        return self.dict()
+        if hasattr(self, 'dict'):
+            return self.dict(*args, **kwargs)
+        else:
+            return super().model_dump(*args, **kwargs)
 
 
-def validate_system_status(status: Any) -> SystemStatus:
+def validate_system_status(status_data: Any) -> SystemStatus:
     """
     Validates the input dictionary against the SystemStatus model.
 
+    Performs comprehensive validation with detailed error handling.
+
     Args:
-        status (Any): The raw status data.
+        status_data (Any): The raw status data.
 
     Returns:
         SystemStatus: A validated SystemStatus instance.
+
+    Raises:
+        HTTPException: If validation fails or input is invalid.
     """
-    adapter: TypeAdapter[SystemStatus] = TypeAdapter(SystemStatus)
-    validated_status = adapter.validate_python(status)
-    return validated_status
+    if not isinstance(status_data, (dict, str)):
+        logger.warning("Invalid status format: %s", type(status_data))
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Invalid status format. Must be a dictionary or string."
+        )
+
+    try:
+        if isinstance(status_data, dict):
+            return SystemStatus(**status_data)
+        return SystemStatus.model_validate(status_data)
+    except ValidationError as e:
+        logger.error("Status validation error: %s", e)
+        raise HTTPException(
+            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Validation failed: {str(e)}"
+        ) from e
+    except Exception as e:
+        logger.exception("Unexpected error during status validation")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"System status validation failed: {str(e)}"
+        ) from e
 
 
 # -----------------------------------------------------------------------------
 # Route Definitions
 # -----------------------------------------------------------------------------
-@core_router.get("/status", response_model=SystemStatus)
-async def get_status(request: Request) -> Dict[str, Any]:
+@core_router.get(
+    "/status",
+    response_model=SystemStatus,
+    responses={
+        200: {"description": "Successful response"},
+        400: {"description": "Bad request"},
+        422: {"description": "Validation error"},
+        500: {"description": "Internal server error"}
+    }
+)
+async def get_status(_: Request) -> Dict[str, Any]:
     """
     GET endpoint to retrieve system status.
 
+    Simulates retrieving system status and validates the result.
+
     Args:
-        request (Request): Incoming HTTP request.
+        _: Unused request parameter
 
     Returns:
         Dict[str, Any]: JSON serializable system status.
+
+    Raises:
+        HTTPException: If status retrieval or validation fails.
     """
-    # Simulate retrieving system status (in real code you would check databases, caches, etc.)
-    status = {"status": "ok"}
     try:
-        validated_status = validate_system_status(status)
+        # Simulate retrieving system status
+        status_data = {"status": "ok"}
+        validated_status = validate_system_status(status_data)
+        return validated_status.model_dump()
+    except HTTPException:
+        raise
     except Exception as e:
-        # If validation fails, raise an HTTPException
-        raise HTTPException(status_code=500, detail="System status validation failed")
+        logger.exception("Unexpected error in get_status")
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unexpected error: {str(e)}"
+        ) from e
 
-    return validated_status.model_dump()
 
-
-async def custom_exception_handler(request: Request, exc: HTTPException) -> Response:
+async def custom_exception_handler(
+    _: Request,
+    exc: HTTPException
+) -> JSONResponse:
     """
     Returns a custom JSON response for HTTP exceptions.
+
+    Provides a standardized error response format.
+
+    Args:
+        _: Unused request parameter
+        exc: The HTTP exception to handle
+
+    Returns:
+        JSONResponse: A formatted error response
     """
-    return Response(
-        content=f'{{"detail": "Custom Error: {exc.detail}"}}',
+    logger.warning(
+        "HTTP Exception: %s - %s",
+        exc.status_code,
+        exc.detail
+    )
+    return JSONResponse(
         status_code=exc.status_code,
-        media_type="application/json",
+        content={
+            "error": "Request processing error",
+            "detail": str(exc.detail),
+            "status_code": exc.status_code
+        }
     )
 
 
-# Register the exception handler properly
-core_router.add_exception_handler(HTTPException, custom_exception_handler)
+# Note: APIRouter does not support add_exception_handler.
+# Register exception handlers on the FastAPI app instance.
 
 
 def create_core_router() -> APIRouter:
@@ -105,27 +194,44 @@ def create_core_router() -> APIRouter:
     Factory method to create and configure the core router.
 
     Returns:
-        APIRouter: Configured core router.
+        APIRouter: Configured core router with all routes and handlers.
     """
     return core_router
-
-
-# Ensure TypeAdapter is used correctly
-def some_function(obj: BaseModel):
-    type_adapter = TypeAdapter(type(obj))
-    # Rest of the function
 
 
 # Generic type handling
 T = TypeVar("T", bound=BaseModel)
 
 
+# pylint: disable=too-few-public-methods
 class RouterHandler(Generic[T]):
-    def __init__(self, router: APIRouter):
+    """
+    Generic router handler for type-safe request processing.
+
+    Provides a flexible way to handle routing with type validation.
+    """
+
+    def __init__(self, router: APIRouter, model_type: Type[T]) -> None:
+        """
+        Initialize the router handler.
+
+        Args:
+            router: The FastAPI router to handle
+            model_type: The Pydantic model type for validation
+        """
         self.router = router
-        self.type_adapter = TypeAdapter(T)
+        self.model_type = model_type
 
     def add_exception_handler(
-        self, exception_class: Type[Exception], handler: Callable
-    ):
-        self.router.add_exception_handler(exception_class, handler)
+        self,
+        exception_class: Type[Exception],
+        handler: Callable[
+            [Request, Exception],
+            JSONResponse
+        ]
+    ) -> None:
+        """Stub method.
+
+        APIRouter does not support setting an exception handler.
+        """
+        pass

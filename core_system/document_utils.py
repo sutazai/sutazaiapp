@@ -1,11 +1,13 @@
-import os
 import hashlib
-import magic
-from typing import Dict, Any, Optional, List
-import fitz
+import os
+from typing import Any, Dict, List, Optional
+
 import cv2
+import fitz
+import magic
 import numpy as np
 from loguru import logger
+
 
 class DocumentUtils:
     """

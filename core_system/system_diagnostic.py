@@ -1,11 +1,13 @@
-import os
-import sys
-import platform
-import psutil
-import socket
-import logging
 import json
-from typing import Dict, Any
+import logging
+import os
+import platform
+import socket
+import sys
+from typing import Any, Dict
+
+import psutil
+
 
 class SystemDiagnostic:
     def __init__(self):

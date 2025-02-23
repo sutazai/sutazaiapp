@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-import os
-import sys
 import json
-import subprocess
-import platform
-import psutil
 import logging
-from typing import Dict, List, Any
+import os
+import platform
+import subprocess
+import sys
+from typing import Any, Dict, List
+
+import psutil
+
 
 class SystemValidator:
     def __init__(self):

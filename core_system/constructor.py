@@ -1,42 +1,58 @@
 
 from __future__ import annotations
 
-import datetime
-from datetime import timedelta as TimeDelta
 import binascii
+import datetime
 import sys
 import types
 import warnings
-from collections.abc import Hashable, MutableSequence, MutableMapping
+from collections.abc import Hashable, MutableMapping, MutableSequence
+from datetime import timedelta as TimeDelta
+
+from ruamel.yaml.comments import *  # NOQA
+from ruamel.yaml.comments import (
+    C_KEY_EOL,
+    C_KEY_POST,
+    C_KEY_PRE,
+    C_VALUE_EOL,
+    C_VALUE_POST,
+    C_VALUE_PRE,
+    CommentedKeyMap,
+    CommentedKeySeq,
+    CommentedMap,
+    CommentedOrderedMap,
+    CommentedSeq,
+    CommentedSet,
+    TaggedScalar,
+)
+from ruamel.yaml.compat import builtins_module  # NOQA
+from ruamel.yaml.compat import nprint, nprintf, ordereddict, version_tnf
 
 # fmt: off
-from ruamel.yaml.error import (MarkedYAMLError, MarkedYAMLFutureWarning,
-                               MantissaNoDotYAML1_1Warning)
-from ruamel.yaml.nodes import *                               # NOQA
-from ruamel.yaml.nodes import (SequenceNode, MappingNode, ScalarNode)
-from ruamel.yaml.compat import (builtins_module, # NOQA
-                                nprint, nprintf, version_tnf)
-from ruamel.yaml.compat import ordereddict
-
-from ruamel.yaml.tag import Tag
-from ruamel.yaml.comments import *                               # NOQA
-from ruamel.yaml.comments import (CommentedMap, CommentedOrderedMap, CommentedSet,
-                                  CommentedKeySeq, CommentedSeq, TaggedScalar,
-                                  CommentedKeyMap,
-                                  C_KEY_PRE, C_KEY_EOL, C_KEY_POST,
-                                  C_VALUE_PRE, C_VALUE_EOL, C_VALUE_POST,
-                                  )
-from ruamel.yaml.scalarstring import (SingleQuotedScalarString, DoubleQuotedScalarString,
-                                      LiteralScalarString, FoldedScalarString,
-                                      PlainScalarString, ScalarString)
-from ruamel.yaml.scalarint import ScalarInt, BinaryInt, OctalInt, HexInt, HexCapsInt
-from ruamel.yaml.scalarfloat import ScalarFloat
+from ruamel.yaml.error import (
+    MantissaNoDotYAML1_1Warning,
+    MarkedYAMLError,
+    MarkedYAMLFutureWarning,
+)
+from ruamel.yaml.nodes import *  # NOQA
+from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode
 from ruamel.yaml.scalarbool import ScalarBoolean
+from ruamel.yaml.scalarfloat import ScalarFloat
+from ruamel.yaml.scalarint import BinaryInt, HexCapsInt, HexInt, OctalInt, ScalarInt
+from ruamel.yaml.scalarstring import (
+    DoubleQuotedScalarString,
+    FoldedScalarString,
+    LiteralScalarString,
+    PlainScalarString,
+    ScalarString,
+    SingleQuotedScalarString,
+)
+from ruamel.yaml.tag import Tag
 from ruamel.yaml.timestamp import TimeStamp
-from ruamel.yaml.util import timestamp_regexp, create_timestamp
+from ruamel.yaml.util import create_timestamp, timestamp_regexp
 
 if False:  # MYPY
-    from typing import Any, Dict, List, Set, Iterator, Union, Optional  # NOQA
+    from typing import Any, Dict, Iterator, List, Optional, Set, Union  # NOQA
 
 
 __all__ = ['BaseConstructor', 'SafeConstructor', 'Constructor',
@@ -1491,7 +1507,7 @@ class RoundTripConstructor(SafeConstructor):
             data.fa.set_block_style()
 
     def construct_yaml_object(self, node: Any, cls: Any) -> Any:
-        from dataclasses import is_dataclass, InitVar, MISSING
+        from dataclasses import MISSING, InitVar, is_dataclass
 
         data = cls.__new__(cls)
         yield data
@@ -1528,8 +1544,8 @@ class RoundTripConstructor(SafeConstructor):
             else:
                 data.__dict__.update(state)
         if node.anchor:
-            from ruamel.yaml.serializer import templated_id
             from ruamel.yaml.anchor import Anchor
+            from ruamel.yaml.serializer import templated_id
 
             if not templated_id(node.anchor):
                 if not hasattr(data, Anchor.attrib):

@@ -7,8 +7,7 @@
 # Note: this module is imported by setup.py so it should not import
 # psutil or third-party modules.
 
-from __future__ import division
-from __future__ import print_function
+from __future__ import division, print_function
 
 import collections
 import contextlib
@@ -21,10 +20,8 @@ import sys
 import threading
 import warnings
 from collections import namedtuple
-from socket import AF_INET
-from socket import SOCK_DGRAM
-from socket import SOCK_STREAM
-
+from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM
+from typing import Any, Dict, Optional, Union, TypeVar, Hashable, NoReturn
 
 try:
     from socket import AF_INET6
@@ -44,7 +41,7 @@ else:
     enum = None
 
 
-PSUTIL_DEBUG = bool(os.getenv('PSUTIL_DEBUG'))
+PSUTIL_DEBUG = bool(os.getenv("PSUTIL_DEBUG"))
 _DEFAULT = object()
 
 # fmt: off
@@ -224,31 +221,27 @@ sfan = namedtuple('sfan', ['label', 'current'])
 
 # psutil.Process.cpu_times()
 pcputimes = namedtuple(
-    'pcputimes', ['user', 'system', 'children_user', 'children_system']
+    "pcputimes", ["user", "system", "children_user", "children_system"]
 )
 # psutil.Process.open_files()
-popenfile = namedtuple('popenfile', ['path', 'fd'])
+popenfile = namedtuple("popenfile", ["path", "fd"])
 # psutil.Process.threads()
-pthread = namedtuple('pthread', ['id', 'user_time', 'system_time'])
+pthread = namedtuple("pthread", ["id", "user_time", "system_time"])
 # psutil.Process.uids()
-puids = namedtuple('puids', ['real', 'effective', 'saved'])
+puids = namedtuple("puids", ["real", "effective", "saved"])
 # psutil.Process.gids()
-pgids = namedtuple('pgids', ['real', 'effective', 'saved'])
+pgids = namedtuple("pgids", ["real", "effective", "saved"])
 # psutil.Process.io_counters()
-pio = namedtuple(
-    'pio', ['read_count', 'write_count', 'read_bytes', 'write_bytes']
-)
+pio = namedtuple("pio", ["read_count", "write_count", "read_bytes", "write_bytes"])
 # psutil.Process.ionice()
-pionice = namedtuple('pionice', ['ioclass', 'value'])
+pionice = namedtuple("pionice", ["ioclass", "value"])
 # psutil.Process.ctx_switches()
-pctxsw = namedtuple('pctxsw', ['voluntary', 'involuntary'])
+pctxsw = namedtuple("pctxsw", ["voluntary", "involuntary"])
 # psutil.Process.net_connections()
-pconn = namedtuple(
-    'pconn', ['fd', 'family', 'type', 'laddr', 'raddr', 'status']
-)
+pconn = namedtuple("pconn", ["fd", "family", "type", "laddr", "raddr", "status"])
 
 # psutil.net_connections() and psutil.Process.net_connections()
-addr = namedtuple('addr', ['ip', 'port'])
+addr = namedtuple("addr", ["ip", "port"])
 
 
 # ===================================================================
@@ -268,10 +261,12 @@ conn_tmap = {
 }
 
 if AF_INET6 is not None:
-    conn_tmap.update({
-        "tcp6": ([AF_INET6], [SOCK_STREAM]),
-        "udp6": ([AF_INET6], [SOCK_DGRAM]),
-    })
+    conn_tmap.update(
+        {
+            "tcp6": ([AF_INET6], [SOCK_STREAM]),
+            "udp6": ([AF_INET6], [SOCK_DGRAM]),
+        }
+    )
 
 if AF_UNIX is not None:
     conn_tmap.update({"unix": ([AF_UNIX], [SOCK_STREAM, SOCK_DGRAM])})
@@ -287,7 +282,7 @@ class Error(Exception):
     from this one.
     """
 
-    __module__ = 'psutil'
+    __module__ = "psutil"
 
     def _infodict(self, attrs):
         info = collections.OrderedDict()
@@ -303,9 +298,7 @@ class Error(Exception):
         # invoked on `raise Error`
         info = self._infodict(("pid", "ppid", "name"))
         if info:
-            details = "(%s)" % ", ".join(
-                ["%s=%r" % (k, v) for k, v in info.items()]
-            )
+            details = "(%s)" % ", ".join(["%s=%r" % (k, v) for k, v in info.items()])
         else:
             details = None
         return " ".join([x for x in (getattr(self, "msg", ""), details) if x])
@@ -322,13 +315,13 @@ class NoSuchProcess(Error):
     or no longer exists.
     """
 
-    __module__ = 'psutil'
+    __module__ = "psutil"
 
-    def __init__(self, pid, name=None, msg=None):
+    def __init__(self, pid: int, name: Optional[str] = None, msg: Optional[str] = None) -> None:
         Error.__init__(self)
         self.pid = pid
         self.name = name
-        self.msg = msg or "process no longer exists"
+        self.msg = msg or f"process {pid} does not exist"
 
     def __reduce__(self):
         return (self.__class__, (self.pid, self.name, self.msg))
@@ -342,9 +335,15 @@ class ZombieProcess(NoSuchProcess):
     raised). Windows doesn't have zombie processes.
     """
 
-    __module__ = 'psutil'
+    __module__ = "psutil"
 
-    def __init__(self, pid, name=None, ppid=None, msg=None):
+    def __init__(
+        self,
+        pid: int,
+        name: Optional[str] = None,
+        ppid: Optional[int] = None,
+        msg: Optional[str] = None
+    ) -> None:
         NoSuchProcess.__init__(self, pid, name, msg)
         self.ppid = ppid
         self.msg = msg or "PID still exists but it's a zombie"
@@ -356,13 +355,18 @@ class ZombieProcess(NoSuchProcess):
 class AccessDenied(Error):
     """Exception raised when permission to perform an action is denied."""
 
-    __module__ = 'psutil'
+    __module__ = "psutil"
 
-    def __init__(self, pid=None, name=None, msg=None):
+    def __init__(
+        self,
+        pid: Optional[int] = None,
+        name: Optional[str] = None,
+        msg: Optional[str] = None
+    ) -> None:
         Error.__init__(self)
         self.pid = pid
         self.name = name
-        self.msg = msg or ""
+        self.msg = msg or "access denied"
 
     def __reduce__(self):
         return (self.__class__, (self.pid, self.name, self.msg))
@@ -373,7 +377,7 @@ class TimeoutExpired(Error):
     is still alive.
     """
 
-    __module__ = 'psutil'
+    __module__ = "psutil"
 
     def __init__(self, seconds, pid=None, name=None):
         Error.__init__(self)
@@ -399,12 +403,14 @@ if PY3:
     else:  # pypy
         exec_ = getattr(__builtins__, "exec")  # noqa
 
-    exec_("""def raise_from(value, from_value):
+    exec_(
+        """def raise_from(value, from_value):
     try:
         raise value from from_value
     finally:
         value = None
-    """)
+    """
+    )
 else:
 
     def raise_from(value, from_value):
@@ -766,13 +772,13 @@ class _WrapNumbers:
             return (self.cache, self.reminders, self.reminder_keys)
 
 
-def wrap_numbers(input_dict, name):
-    """Given an `input_dict` and a function `name`, adjust the numbers
-    which "wrap" (restart from zero) across different calls by adding
-    "old value" to "new value" and return an updated dict.
-    """
-    with _wn.lock:
-        return _wn.run(input_dict, name)
+def wrap_numbers(
+    input_dict: Dict[Union[str, Hashable], Any],
+    name: str
+) -> Dict[Union[str, Hashable], Any]:
+    """Wrap dictionary numbers."""
+    wn = _WrapNumbers()
+    return wn.run(input_dict, name)
 
 
 _wn = _WrapNumbers()
@@ -859,7 +865,7 @@ def bytes2human(n, format="%(value).1f%(symbol)s"):
     >>> bytes2human(100001221)
     '95.4M'
     """
-    symbols = ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
+    symbols = ("B", "K", "M", "G", "T", "P", "E", "Z", "Y")
     prefix = {}
     for i, s in enumerate(symbols[1:]):
         prefix[s] = 1 << (i + 1) * 10
@@ -872,7 +878,7 @@ def bytes2human(n, format="%(value).1f%(symbol)s"):
 
 def get_procfs_path():
     """Return updated psutil.PROCFS_PATH constant."""
-    return sys.modules['psutil'].PROCFS_PATH
+    return sys.modules["psutil"].PROCFS_PATH
 
 
 if PY3:
@@ -893,7 +899,7 @@ else:
 
 @memoize
 def term_supports_colors(file=sys.stdout):  # pragma: no cover
-    if os.name == 'nt':
+    if os.name == "nt":
         return True
     try:
         import curses
@@ -913,32 +919,28 @@ def hilite(s, color=None, bold=False):  # pragma: no cover
         return s
     attr = []
     colors = dict(
-        blue='34',
-        brown='33',
-        darkgrey='30',
-        green='32',
-        grey='37',
-        lightblue='36',
-        red='91',
-        violet='35',
-        yellow='93',
+        blue="34",
+        brown="33",
+        darkgrey="30",
+        green="32",
+        grey="37",
+        lightblue="36",
+        red="91",
+        violet="35",
+        yellow="93",
     )
-    colors[None] = '29'
+    colors[None] = "29"
     try:
         color = colors[color]
     except KeyError:
-        raise ValueError(
-            "invalid color %r; choose between %s" % (list(colors.keys()))
-        )
+        raise ValueError("invalid color %r; choose between %s" % (list(colors.keys())))
     attr.append(color)
     if bold:
-        attr.append('1')
-    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), s)
+        attr.append("1")
+    return "\x1b[%sm%s\x1b[0m" % (";".join(attr), s)
 
 
-def print_color(
-    s, color=None, bold=False, file=sys.stdout
-):  # pragma: no cover
+def print_color(s, color=None, bold=False, file=sys.stdout):  # pragma: no cover
     """Print a colorized version of string."""
     if not term_supports_colors():
         print(s, file=file)  # NOQA
@@ -949,9 +951,7 @@ def print_color(
 
         DEFAULT_COLOR = 7
         GetStdHandle = ctypes.windll.Kernel32.GetStdHandle
-        SetConsoleTextAttribute = (
-            ctypes.windll.Kernel32.SetConsoleTextAttribute
-        )
+        SetConsoleTextAttribute = ctypes.windll.Kernel32.SetConsoleTextAttribute
 
         colors = dict(green=2, red=4, brown=6, yellow=6)
         colors[None] = DEFAULT_COLOR
@@ -959,8 +959,7 @@ def print_color(
             color = colors[color]
         except KeyError:
             raise ValueError(
-                "invalid color %r; choose between %r"
-                % (color, list(colors.keys()))
+                "invalid color %r; choose between %r" % (color, list(colors.keys()))
             )
         if bold and color <= 7:
             color += 8

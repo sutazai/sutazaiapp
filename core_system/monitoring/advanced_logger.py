@@ -6,23 +6,24 @@ Provides comprehensive logging, tracing, and monitoring capabilities
 with advanced features like distributed tracing and performance tracking.
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import time
-import uuid
-import logging
 import threading
+import time
 import traceback
-from typing import Dict, Any, Optional, List
+import uuid
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
-import structlog
+from typing import Any, Dict, List, Optional
+
 import opentelemetry
+import structlog
 from opentelemetry import trace
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 
 # Configure base logging
 logging.basicConfig(

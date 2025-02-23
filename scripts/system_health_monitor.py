@@ -1,12 +1,14 @@
-import os
-import sys
+import json
 import logging
-import psutil
-import time
+import os
 import platform
 import socket
-import json
-from typing import Dict, List, Optional, Any
+import sys
+import time
+from typing import Any, Dict, List, Optional
+
+import psutil
+
 
 class SystemHealthMonitor:
     """

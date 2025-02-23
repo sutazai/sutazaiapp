@@ -1,11 +1,10 @@
-from typing import Dict, Generic, TypeVar, Generator
-
-from pydantic import BaseModel as PydanticBaseModel
-from pydantic import Extra
-from pydantic.validators import dict_validator
+from typing import Dict, Generator, Generic, TypeVar
 
 from common.const import SCHEMA_DICT_ITEMS_COUNT_LIMIT
 from common.exceptions import DictMaxLengthError
+from pydantic import BaseModel as PydanticBaseModel
+from pydantic import Extra
+from pydantic.validators import dict_validator
 
 
 class BaseModel(PydanticBaseModel):

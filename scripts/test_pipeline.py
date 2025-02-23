@@ -1,11 +1,12 @@
-import sys
-import os
 import logging
+import os
+import platform
+import socket
+import sys
+
+import psutil
 import pytest
 from loguru import logger
-import platform
-import psutil
-import socket
 
 # Configure comprehensive logging
 logging.basicConfig(

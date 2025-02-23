@@ -9,25 +9,27 @@ Provides hyper-intelligent, self-learning file management with:
 - Comprehensive security and performance optimization
 """
 
-import os
-import sys
-import shutil
-import logging
-import threading
-import time
-import json
 import hashlib
+import json
+import logging
+import os
 import pathlib
 import re
-from typing import Dict, List, Any, Optional, Tuple
+import shutil
+import sys
+import threading
+import time
+from typing import Any, Dict, List, Optional, Tuple
+
+import networkx as nx
 
 # Advanced machine learning and analysis libraries
 import numpy as np
 import pandas as pd
-import networkx as nx
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import DBSCAN
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
+
 
 class UltraComprehensiveFileExplorer:
     """

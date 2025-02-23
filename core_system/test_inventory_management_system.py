@@ -5,21 +5,22 @@ Comprehensive Test Suite for SutazAI Inventory Management System
 Provides thorough testing for hardcoded item detection and documentation checks
 """
 
+import ast
+import json
 import os
 import sys
 import unittest
-import json
-import ast
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core_system.inventory_management_system import (
-    InventoryManagementSystem, 
-    InventoryItem, 
-    DocumentationCheck
+    DocumentationCheck,
+    InventoryItem,
+    InventoryManagementSystem,
 )
+
 
 class TestInventoryManagementSystem(unittest.TestCase):
     """

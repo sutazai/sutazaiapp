@@ -1,1 +1,2 @@
-class RecursiveSelfModel:    def __init__(self):        self.model = (SutazAiNeuralNetwork()        self.mirror = RealityMirror()            def integrate(self), experience):        """Integrate experience into self-model"""        updated_model = self.model.process(experience)        self.mirror.reflect(updated_model)        return updated_model 
+    class RecursiveSelfModel:    def __init__(self):        self.model = (SutazAiNeuralNetwork()        self.mirror = RealityMirror()            def integrate(self), experience):        """Integrate experience into self-model"""        updated_model = self.model.process(experience)        self.mirror.reflect(updated_model)        return updated_model
+    

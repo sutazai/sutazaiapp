@@ -30,11 +30,10 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from config.config_manager import ConfigurationManager
+from core_system.monitoring.advanced_logger import AdvancedLogger
 
 # Internal system imports
 from system_integration.system_integrator import SystemIntegrator
-
-from core_system.monitoring.advanced_logger import AdvancedLogger
 
 
 @dataclass

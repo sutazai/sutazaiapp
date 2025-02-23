@@ -102,7 +102,7 @@ comprehensive_system_checker:
     
   # Optimization Recommendations
   optimization:
-    auto_refactoring: true
+    auto_refactoring: false  # Disabled auto-refactoring
     performance_improvement_threshold: 0.2
     
   # Logging and Reporting
@@ -169,10 +169,10 @@ architectural_integrity:
     
   # Optimization Strategies
   optimization:
-    auto_refactoring: true
-    complexity_reduction: true
-    documentation_improvement: true
-    type_hint_coverage_enhancement: true
+    auto_refactoring: false  # Disabled auto-refactoring
+    complexity_reduction: false  # Disabled complexity reduction
+    documentation_improvement: false  # Disabled documentation improvement
+    type_hint_coverage_enhancement: false  # Disabled type hint enhancement
     
   # Performance Monitoring
   performance_monitoring:

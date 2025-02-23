@@ -9,36 +9,42 @@ Advanced orchestration system designed to:
 - Provide autonomous system management capabilities
 """
 
-import os
-import sys
-import json
-import logging
-import threading
-import time
-import functools
 import asyncio
 import concurrent.futures
-from typing import Dict, Any, List, Optional, Tuple, Callable
-from dataclasses import dataclass, asdict
+import functools
+import json
+import logging
+import os
+import sys
+import threading
+import time
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from cachetools import TTLCache, cached
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
 import yaml
+from cachetools import TTLCache, cached
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from core_system.architectural_integrity_manager import ArchitecturalIntegrityManager
+from core_system.auto_remediation_manager import (
+    UltraComprehensiveAutoRemediationManager,
+)
+from core_system.autonomous_file_structure_manager import AutonomousFileStructureManager
+from core_system.comprehensive_dependency_manager import ComprehensiveDependencyManager
+from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
+from core_system.dependency_cross_referencing_system import (
+    UltraComprehensiveDependencyCrossReferencer,
+)
+from core_system.inventory_management_system import InventoryManagementSystem
+from core_system.ultra_comprehensive_file_explorer import UltraComprehensiveFileExplorer
+
 # Internal system imports
 from scripts.comprehensive_system_audit import UltraComprehensiveSystemAuditor
-from scripts.system_optimizer import AdvancedSystemOptimizer
 from scripts.system_enhancement import SystemEnhancementOrchestrator
-from core_system.autonomous_file_structure_manager import AutonomousFileStructureManager
-from core_system.ultra_comprehensive_file_explorer import UltraComprehensiveFileExplorer
-from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
-from core_system.comprehensive_dependency_manager import ComprehensiveDependencyManager
-from core_system.architectural_integrity_manager import ArchitecturalIntegrityManager
-from core_system.inventory_management_system import InventoryManagementSystem
-from core_system.auto_remediation_manager import UltraComprehensiveAutoRemediationManager
-from core_system.dependency_cross_referencing_system import UltraComprehensiveDependencyCrossReferencer
+from scripts.system_optimizer import AdvancedSystemOptimizer
 
 # Configure logging
 logging.basicConfig(
@@ -269,7 +275,7 @@ class UltraComprehensiveSystemIntegrationFramework:
         """
         # Implement more efficient dependency tracking
         from core_system.dependency_mapper import AdvancedDependencyMapper
-        
+
         # Use caching and limit depth
         mapper = AdvancedDependencyMapper(
             max_depth=3,  # Limit dependency depth
@@ -280,8 +286,10 @@ class UltraComprehensiveSystemIntegrationFramework:
         """
         Optimize file exploration performance
         """
-        from core_system.ultra_comprehensive_file_explorer import UltraComprehensiveFileExplorer
-        
+        from core_system.ultra_comprehensive_file_explorer import (
+            UltraComprehensiveFileExplorer,
+        )
+
         # Reduce scanning frequency and limit file types
         explorer = UltraComprehensiveFileExplorer(
             scanning_interval=3600,  # Scan every hour instead of every 30 minutes
@@ -293,7 +301,7 @@ class UltraComprehensiveSystemIntegrationFramework:
         Optimize system checking performance
         """
         from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
-        
+
         # Reduce checking frequency and limit scope
         checker = ComprehensiveSystemChecker(
             checking_interval=7200,  # Check every 2 hours

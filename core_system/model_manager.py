@@ -1,6 +1,7 @@
 """Module for managing models in SutazAI."""
-import os
 import logging
+import os
+
 
 class ModelManager:
     """Class to manage SutazAi models."""

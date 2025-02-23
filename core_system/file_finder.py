@@ -1,14 +1,14 @@
 
 import logging
 import os
-from pathlib import Path
 import re
+from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Union
-from safety_schemas.models import Ecosystem, FileType
 
 from safety.errors import SafetyException
+from safety_schemas.models import Ecosystem, FileType
 
-from .handlers import FileHandler, ECOSYSTEM_HANDLER_MAPPING
+from .handlers import ECOSYSTEM_HANDLER_MAPPING, FileHandler
 
 LOG = logging.getLogger(__name__)
 

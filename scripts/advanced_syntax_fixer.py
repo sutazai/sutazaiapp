@@ -1,6 +1,8 @@
-import os
 import ast
+import os
+
 import astor
+
 
 class SyntaxTransformer(ast.NodeTransformer):
     def visit_ClassDef(self, node):

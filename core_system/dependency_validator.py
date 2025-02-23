@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-import sys
 import importlib
+import json
 import platform
 import subprocess
+import sys
+from typing import Any, Dict
+
 import pkg_resources
-import json
-from typing import Dict, Any
+
 
 class SystemValidator:
     def __init__(self):

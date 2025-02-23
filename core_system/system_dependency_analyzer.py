@@ -9,18 +9,19 @@ Provides advanced capabilities for:
 - Autonomous architectural insights generation
 """
 
-import os
-import sys
 import ast
-import json
-import logging
-import networkx as nx
 import importlib
 import inspect
+import json
+import logging
+import os
 import re
-from typing import Dict, List, Any, Optional, Set, Tuple
-from dataclasses import dataclass, asdict
+import sys
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+import networkx as nx
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

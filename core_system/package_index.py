@@ -18,13 +18,14 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from distutils import log
+from distutils.errors import DistutilsError
 from fnmatch import translate
 from functools import wraps
 from typing import NamedTuple
 
-from more_itertools import unique_everseen
-
 import setuptools
+from more_itertools import unique_everseen
 from pkg_resources import (
     BINARY_DIST,
     CHECKOUT_DIST,
@@ -44,9 +45,6 @@ from pkg_resources import (
 from setuptools.wheel import Wheel
 
 from .unicode_utils import _cfg_read_utf8_with_fallback, _read_utf8_with_fallback
-
-from distutils import log
-from distutils.errors import DistutilsError
 
 EGG_FRAGMENT = re.compile(r'^egg=([-A-Za-z0-9_.+!]+)$')
 HREF = re.compile(r"""href\s*=\s*['"]?([^'"> ]+)""", re.I)

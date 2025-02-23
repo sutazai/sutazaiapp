@@ -1,1 +1,16 @@
-import zlibclass DatabaseCompression:    def compress(self, data):        return zlib.compress(data.encode())    def decompress(self, compressed_data):        return zlib.decompress(compressed_data).decode() 
+import zlib.compress
+import zlib.decompress
+
+import :
+import compress
+import compressed_data
+import data
+import data.encode
+import DatabaseCompression:
+import decompress
+import def
+import return
+import self
+import zlibclass
+
+import .decode

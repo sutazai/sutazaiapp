@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-import os
-import sys
 import ast
 import logging
+import os
+import sys
 from typing import List, Optional, Tuple
+
 
 class RobustFileParser:
     """

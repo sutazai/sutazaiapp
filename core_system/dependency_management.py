@@ -4,9 +4,11 @@ Centralized Dependency Management Module for SutazAI
 """
 
 import importlib
-import pkg_resources
 import sys
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+import pkg_resources
+
 
 class DependencyManager:
     """

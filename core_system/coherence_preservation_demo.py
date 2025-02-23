@@ -1,13 +1,16 @@
 """Demonstration of SutazAi Coherence Preservation Techniques."""
 
-import numpy as np
 import logging
+
+import numpy as np
+
 try:
     from sutazai_core.neural_entanglement.coherence_preserver import CoherencePreserver
 except ImportError as e:
     logger.error(f"Import error: {e}")
     raise
 import torch
+
 
 def custom_error_mitigation_strategy(state: np.ndarray) -> np.ndarray:
     """

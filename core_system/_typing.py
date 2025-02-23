@@ -4,14 +4,7 @@
 # mypy: ignore-errors
 
 import sys
-from typing import (
-    Any,
-    Callable,
-    Optional,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Any, Callable, Optional, Tuple, Type, Union
 
 from typing_extensions import Literal, get_args, get_origin
 

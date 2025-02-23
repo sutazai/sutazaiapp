@@ -13,7 +13,7 @@ You can use these in an if statement, but not when testing equivalence
 from ruamel.yaml.anchor import Anchor
 
 if False:  # MYPY
-    from typing import Text, Any, Dict, List  # NOQA
+    from typing import Any, Dict, List, Text  # NOQA
 
 __all__ = ['ScalarBoolean']
 

@@ -1,5 +1,5 @@
-from sys import platform
 import subprocess
+from sys import platform
 
 
 def get_unwrapped_command(name: str) -> str:

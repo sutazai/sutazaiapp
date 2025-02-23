@@ -10,15 +10,17 @@ Provides advanced import resolution and dependency management with features:
 - Package version compatibility checking
 """
 
+import importlib
+import json
+import logging
 import os
 import sys
-import importlib
-import logging
-import json
-import pkg_resources
 from datetime import datetime
-from typing import Dict, List, Set, Optional, Any, Tuple
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+import pkg_resources
+
 
 class UltraImportResolver:
     def __init__(self, project_root: str = None):

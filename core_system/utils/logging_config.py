@@ -1,8 +1,9 @@
 import logging
 import logging.handlers
 import os
-from typing import Optional, List, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 
 class LoggingConfigurator:
     """

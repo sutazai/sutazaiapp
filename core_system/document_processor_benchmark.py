@@ -1,17 +1,18 @@
-import os
-import time
 import asyncio
-import statistics
 import json
 import logging
-from typing import List, Dict, Any, Optional
-import psutil
-import torch
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import os
+import statistics
+import time
+from typing import Any, Dict, List, Optional
 
+import matplotlib.pyplot as plt
+import numpy as np
+import psutil
+import seaborn as sns
+import torch
 from document_processor import AdvancedDocumentProcessor
+
 
 class DocumentProcessorBenchmark:
     """

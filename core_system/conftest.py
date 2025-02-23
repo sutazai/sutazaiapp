@@ -1,7 +1,9 @@
 import os
 import sys
+
 import pytest
 from loguru import logger
+
 
 def pytest_configure(config):
     """

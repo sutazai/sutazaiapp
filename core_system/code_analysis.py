@@ -1,6 +1,7 @@
 import ast
 import os
 
+
 def analyze_code_quality(code: str) -> dict:
     try:
         # Syntax validation

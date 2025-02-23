@@ -19,12 +19,14 @@ Test Categories:
 
 import os
 import sys
-import pytest
-import networkx as nx
 from typing import Dict, List, Tuple
+
+import networkx as nx
+import pytest
 
 # Import dependency mapping components
 from advanced_system_analysis.dependency_mapper import AdvancedDependencyMapper
+
 
 class TestDependencyMapper:
     """

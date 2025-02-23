@@ -13,20 +13,21 @@ Key Optimization Dimensions:
 - Code Quality Improvement
 """
 
-import os
-import sys
 import json
-import shutil
 import logging
-from typing import Dict, List, Any
-from dataclasses import dataclass, asdict
+import os
+import shutil
+import sys
+from dataclasses import asdict, dataclass
+from typing import Any, Dict, List
 
 # Internal system imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from system_integration.system_integrator import SystemIntegrator
-from security.security_manager import SecurityManager
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
+from security.security_manager import SecurityManager
+from system_integration.system_integrator import SystemIntegrator
+
 
 @dataclass
 class OptimizationReport:

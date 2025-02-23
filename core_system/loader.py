@@ -1,20 +1,21 @@
 
 from __future__ import annotations
 
-from ruamel.yaml.reader import Reader
-from ruamel.yaml.scanner import Scanner, RoundTripScanner
-from ruamel.yaml.parser import Parser, RoundTripParser
 from ruamel.yaml.composer import Composer
 from ruamel.yaml.constructor import (
     BaseConstructor,
-    SafeConstructor,
     Constructor,
     RoundTripConstructor,
+    SafeConstructor,
 )
+from ruamel.yaml.parser import Parser, RoundTripParser
+from ruamel.yaml.reader import Reader
 from ruamel.yaml.resolver import VersionedResolver
+from ruamel.yaml.scanner import RoundTripScanner, Scanner
 
 if False:  # MYPY
-    from typing import Any, Dict, List, Union, Optional  # NOQA
+    from typing import Any, Dict, List, Optional, Union  # NOQA
+
     from ruamel.yaml.compat import StreamTextType, VersionType  # NOQA
 
 __all__ = ['BaseLoader', 'SafeLoader', 'Loader', 'RoundTripLoader']

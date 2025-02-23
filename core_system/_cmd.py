@@ -7,15 +7,14 @@ import logging
 from argparse import ArgumentParser
 from typing import TYPE_CHECKING
 
-from pip._vendor import requests
-from pip._vendor.cachecontrol.adapter import CacheControlAdapter
-from pip._vendor.cachecontrol.cache import DictCache
-from pip._vendor.cachecontrol.controller import logger
+import requests
+from cachecontrol import CacheControlAdapter
+from cachecontrol.caches import DictCache
+from cachecontrol.controller import logger
 
 if TYPE_CHECKING:
     from argparse import Namespace
-
-    from pip._vendor.cachecontrol.controller import CacheController
+    from cachecontrol.controller import CacheController
 
 
 def setup_logging() -> None:

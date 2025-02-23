@@ -6,19 +6,20 @@ Provides comprehensive dependency intelligence,
 performance optimization, and security enhancement.
 """
 
-import os
-import sys
 import json
 import logging
-from typing import Dict, List, Any, Optional
-from datetime import datetime
+import os
 import subprocess
-import networkx as nx
+import sys
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+import networkx as nx
 import pkg_resources
 import requests
-from packaging import version
 import yaml
+from packaging import version
+
 
 class AdvancedDependencyAnalyzer:
     """

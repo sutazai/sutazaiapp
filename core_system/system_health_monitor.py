@@ -6,17 +6,18 @@ Advanced autonomous system health tracking and optimization framework
 providing real-time monitoring, predictive analysis, and self-healing capabilities.
 """
 
-import os
-import sys
-import time
 import json
 import logging
-import psutil
+import os
 import platform
-import threading
 import subprocess
-from typing import Dict, Any, List
+import sys
+import threading
+import time
 from datetime import datetime
+from typing import Any, Dict, List
+
+import psutil
 
 # Configure logging
 logging.basicConfig(

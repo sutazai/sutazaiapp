@@ -1,1 +1,35 @@
-import threadingclass MessageQueue:    """SutazAi agent communication message queue"""    def __init__(self):        self.queue = ([]        self.lock = threading.Lock()            def enqueue(self), message):        with self.lock:            self.queue.append(message)                def get_messages_for(self, agent_id):        with self.lock:            messages = [msg for msg in self.queue if msg['receiver'] == agent_id]            self.queue = [msg for msg in self.queue if msg['receiver'] != agent_id]            return messages.copy()  # Return copy to prevent external modifications 
+import threading.Lock
+
+import !=
+import """SutazAi
+import :
+import =
+import ==
+import []
+import [msg
+import __init__
+import agent
+import agent_id
+import agent_id]
+import communication
+import def
+import enqueue
+import for
+import get_messages_for
+import if
+import in
+import message
+import MessageQueue:
+import messages
+import messages.copy
+import msg
+import msg['receiver']
+import queue"""
+import return
+import self
+import self.lock
+import self.lock:
+import self.queue
+import self.queue.append
+import threadingclass  # Return copy to prevent external modifications
+import with

@@ -1,20 +1,39 @@
 import logging
-from typing import Dict, Optional, Tuple, Any, Callable
+from typing import Any, Callable, Dict, Optional, Tuple
 
 import click
-
-from .main import get_auth_info, get_host_config, get_organization, get_proxy_config, \
-    get_redirect_url, get_token_data, save_auth_config, get_token, clean_session
 from authlib.common.security import generate_token
 from safety.auth.constants import CLIENT_ID, OPENID_CONFIG_URL
-
-from safety.auth.models import Organization, Auth
-from safety.auth.utils import S3PresignedAdapter, SafetyAuthSession, get_keys, is_email_verified
+from safety.auth.models import Auth, Organization
+from safety.auth.utils import (
+    S3PresignedAdapter,
+    SafetyAuthSession,
+    get_keys,
+    is_email_verified,
+)
 from safety.constants import REQUEST_TIMEOUT
-from safety.scan.constants import CLI_KEY_HELP, CLI_PROXY_HOST_HELP, CLI_PROXY_PORT_HELP, CLI_PROXY_PROTOCOL_HELP, CLI_STAGE_HELP
-from safety.util import DependentOption, SafetyContext, get_proxy_dict
 from safety.models import SafetyCLI
+from safety.scan.constants import (
+    CLI_KEY_HELP,
+    CLI_PROXY_HOST_HELP,
+    CLI_PROXY_PORT_HELP,
+    CLI_PROXY_PROTOCOL_HELP,
+    CLI_STAGE_HELP,
+)
+from safety.util import DependentOption, SafetyContext, get_proxy_dict
 from safety_schemas.models import Stage
+
+from .main import (
+    clean_session,
+    get_auth_info,
+    get_host_config,
+    get_organization,
+    get_proxy_config,
+    get_redirect_url,
+    get_token,
+    get_token_data,
+    save_auth_config,
+)
 
 LOG = logging.getLogger(__name__)
 

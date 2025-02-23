@@ -2,29 +2,25 @@ import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Set
 
-from pydantic import (
-    PositiveInt,
-    StrictBool,
-    conlist,
-    constr,
-)
+from pydantic import PositiveInt, StrictBool, conlist, constr
 
 try:
-    from pydantic import Field, model_validator, field_validator, ConfigDict  # type: ignore # pragma: no cover
-    from pydantic import BaseModel  # type: ignore # pragma: no cover
+    from pydantic import (
+        BaseModel,  # type: ignore # pragma: no cover; type: ignore # pragma: no cover
+    )
+    from pydantic import ConfigDict, Field, field_validator, model_validator
 
     MODEL_VALIDATOR_KWARGS = {"mode": "before"}
     AUTO_SECURITY_UPDATES_LIMIT_KWARGS = {"min_length": 1}
     LATEST_PYDANTIC = True
 except ImportError:
     # Fallback to legacy
-    from pydantic import (
-        Field,
-        root_validator as model_validator,
-        validator as field_validator,
-    )  # type: ignore # noqa F401 # pragma: no cover
-    from pydantic import Extra
     from pydantic import BaseModel  # type: ignore # pragma: no cover
+    from pydantic import Extra, Field
+    from pydantic import (  # type: ignore # noqa F401 # pragma: no cover
+        root_validator as model_validator,
+    )
+    from pydantic import validator as field_validator
 
     MODEL_VALIDATOR_KWARGS = {}
     AUTO_SECURITY_UPDATES_LIMIT_KWARGS = {"min_items": 1}

@@ -6,21 +6,21 @@ Provides a centralized coordination mechanism for system components,
 ensuring seamless interaction, dependency management, and autonomous operation.
 """
 
-import os
-import sys
 import importlib
 import inspect
-from typing import Dict, Any, Type, Optional, List
-from dataclasses import dataclass, asdict
-from datetime import datetime
 import json
 import logging
+import os
+import sys
 import time
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Type
 
 # Import internal modules
 from config.config_manager import ConfigurationManager
-from scripts.dependency_manager import DependencyManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
+from scripts.dependency_manager import DependencyManager
 
 # Configure logging
 logging.basicConfig(

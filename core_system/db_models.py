@@ -1,18 +1,29 @@
+import hashlib
+import logging
+import re
+import secrets
+import uuid
+
 from sqlalchemy import (
-    Column, Integer, String, DateTime, Text, Float, 
-    Boolean, JSON, ForeignKey, UniqueConstraint
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    create_engine,
+    func,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.pool import QueuePool
-from sqlalchemy import create_engine, func
-from sqlalchemy.dialects.postgresql import JSONB
+
 from backend.config.database import settings
-import uuid
-import re
-import hashlib
-import secrets
-import logging
 
 # Create declarative base
 Base = declarative_base()

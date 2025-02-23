@@ -3,23 +3,22 @@ from __future__ import annotations
 
 import warnings
 
-from ruamel.yaml.error import MarkedYAMLError, ReusedAnchorWarning
 from ruamel.yaml.compat import nprint, nprintf  # NOQA
-
+from ruamel.yaml.error import MarkedYAMLError, ReusedAnchorWarning
 from ruamel.yaml.events import (
-    StreamStartEvent,
-    StreamEndEvent,
-    MappingStartEvent,
-    MappingEndEvent,
-    SequenceStartEvent,
-    SequenceEndEvent,
     AliasEvent,
+    MappingEndEvent,
+    MappingStartEvent,
     ScalarEvent,
+    SequenceEndEvent,
+    SequenceStartEvent,
+    StreamEndEvent,
+    StreamStartEvent,
 )
 from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode
 
 if False:  # MYPY
-    from typing import Any, Dict, Optional, List  # NOQA
+    from typing import Any, Dict, List, Optional  # NOQA
 
 __all__ = ['Composer', 'ComposerError']
 

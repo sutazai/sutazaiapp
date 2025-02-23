@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-import os
-import sys
+import ast
 import hashlib
-import json
-import logging
-import shutil
 import importlib
 import importlib.util
-import ast
+import json
+import logging
+import os
+import shutil
 import subprocess
-from typing import Dict, List, Tuple, Set
+import sys
+from typing import Dict, List, Set, Tuple
+
 
 class SystemInvestigator:
     def __init__(self, base_paths=None):

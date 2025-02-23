@@ -1,9 +1,11 @@
+import logging
 import os
 import sys
-import logging
-from typing import Dict, List, Optional, Any
-import pylint.lint
+from typing import Any, Dict, List, Optional
+
 import bandit.cli.main as bandit_main
+import pylint.lint
+
 
 class ComprehensiveSystemChecker:
     """

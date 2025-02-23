@@ -32,13 +32,22 @@ import warnings
 import zipfile
 import zipimport
 from collections.abc import Iterable
+from distutils import dir_util, log
+from distutils.command import install
+from distutils.command.build_scripts import first_line_re
+from distutils.errors import (
+    DistutilsArgError,
+    DistutilsError,
+    DistutilsOptionError,
+    DistutilsPlatformError,
+)
+from distutils.util import convert_path, get_platform, subst_vars
 from glob import glob
 from sysconfig import get_path
 from typing import TYPE_CHECKING, NoReturn, TypedDict
 
-from jaraco.text import yield_lines
-
 import pkg_resources
+from jaraco.text import yield_lines
 from pkg_resources import (
     DEVELOP_DIST,
     Distribution,
@@ -63,19 +72,9 @@ from setuptools.warnings import SetuptoolsDeprecationWarning, SetuptoolsWarning
 from setuptools.wheel import Wheel
 
 from .._path import ensure_directory
-from .._shutil import attempt_chmod_verbose as chmod, rmtree as _rmtree
+from .._shutil import attempt_chmod_verbose as chmod
+from .._shutil import rmtree as _rmtree
 from ..compat import py39, py312
-
-from distutils import dir_util, log
-from distutils.command import install
-from distutils.command.build_scripts import first_line_re
-from distutils.errors import (
-    DistutilsArgError,
-    DistutilsError,
-    DistutilsOptionError,
-    DistutilsPlatformError,
-)
-from distutils.util import convert_path, get_platform, subst_vars
 
 if TYPE_CHECKING:
     from typing_extensions import Self

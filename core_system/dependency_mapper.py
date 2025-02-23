@@ -15,19 +15,21 @@ Key Responsibilities:
 - Provide actionable dependency optimization insights
 """
 
+import ast
+import importlib.util
+import json
 import os
 import sys
-import ast
-import json
 import typing
-import networkx as nx
-import importlib.util
-from typing import Dict, Any, List, Optional, Set, Tuple
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+import networkx as nx
 
 # Internal system imports
 from core_system.monitoring.advanced_logger import AdvancedLogger
+
 
 @dataclass
 class DependencyAnalysisReport:

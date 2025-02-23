@@ -1,9 +1,11 @@
+import ast
+import io
 import os
 import re
 import tokenize
-import io
-import ast
+
 import astor
+
 
 def tokenize_and_fix(content):
     """Use tokenize to identify and fix syntax issues"""

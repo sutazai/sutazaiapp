@@ -12,6 +12,13 @@ from rich.console import Console
 from rich.padding import Padding
 from rich.prompt import Prompt
 from rich.text import Text
+from safety import safety
+from safety.auth.constants import SAFETY_PLATFORM_URL
+from safety.errors import SafetyException
+from safety.meta import get_version
+from safety.output_utils import parse_html
+from safety.scan.constants import DEFAULT_SPINNER
+from safety.util import clean_project_id, get_basic_announcements
 from safety_schemas.models import (
     Ecosystem,
     FileType,
@@ -23,14 +30,6 @@ from safety_schemas.models import (
     ReportModel,
     Vulnerability,
 )
-
-from safety import safety
-from safety.auth.constants import SAFETY_PLATFORM_URL
-from safety.errors import SafetyException
-from safety.meta import get_version
-from safety.output_utils import parse_html
-from safety.scan.constants import DEFAULT_SPINNER
-from safety.util import clean_project_id, get_basic_announcements
 
 LOG = logging.getLogger(__name__)
 
@@ -554,11 +553,7 @@ def generate_spdx_creation_info(spdx_version: str, project_identifier: str) -> A
     Returns:
         Any: The SPDX creation information.
     """
-    from spdx_tools.spdx.model import (
-        Actor,
-        ActorType,
-        CreationInfo,
-    )
+    from spdx_tools.spdx.model import Actor, ActorType, CreationInfo
 
     version = int(time.time())
     SPDX_ID_TYPE = "SPDXRef-DOCUMENT"
@@ -603,10 +598,7 @@ def create_pkg_ext_ref(*, package: PythonDependency, version: Optional[str]) -> 
     Returns:
         Any: The external package reference.
     """
-    from spdx_tools.spdx.model import (
-        ExternalPackageRef,
-        ExternalPackageRefCategory,
-    )
+    from spdx_tools.spdx.model import ExternalPackageRef, ExternalPackageRefCategory
 
     version_detail = f'@{version}' if version else ''
     pkg_ref = ExternalPackageRef(
@@ -627,9 +619,7 @@ def create_packages(dependencies: List[PythonDependency]) -> List[Any]:
     Returns:
         List[Any]: List of SPDX packages.
     """
-    from spdx_tools.spdx.model import (
-        Package,
-    )
+    from spdx_tools.spdx.model import Package
     from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
 
     doc_pkgs = []
@@ -672,11 +662,7 @@ def create_spdx_document(*, report: ReportModel, spdx_version: str) -> Optional[
     Returns:
         Optional[Any]: The SPDX document.
     """
-    from spdx_tools.spdx.model import (
-        Document,
-        Relationship,
-        RelationshipType,
-    )
+    from spdx_tools.spdx.model import Document, Relationship, RelationshipType
 
     project =  report.projects[0] if any(report.projects) else None
 

@@ -5,6 +5,7 @@ from typing import List, Union
 
 from pydantic import ValidationError
 from pydantic.dataclasses import dataclass
+from pydantic.version import VERSION as PYDANTIC_VERSION
 from typing_extensions import Self
 
 from ..report.schemas.v3_0 import main as v3_0
@@ -14,7 +15,6 @@ from .metadata import MetadataModel
 from .project import ProjectModel
 from .telemetry import TelemetryModel
 
-from pydantic.version import VERSION as PYDANTIC_VERSION
 
 def version_validator(func):
     if PYDANTIC_VERSION.startswith("1."):

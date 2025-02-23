@@ -1,7 +1,6 @@
-from importlib.metadata import PackageNotFoundError, version
 import logging
+from importlib.metadata import PackageNotFoundError, version
 from typing import Optional
-
 
 LOG = logging.getLogger(__name__)
 

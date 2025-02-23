@@ -6,20 +6,24 @@ Provides advanced autonomous system integration,
 cross-referencing, and intelligent optimization capabilities.
 """
 
+import logging
 import os
 import sys
 import time
-import logging
-from typing import Dict, List, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-import yaml
-import schedule
 import networkx as nx
+import schedule
+import yaml
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from core_system.system_integration_framework import UltraComprehensiveSystemIntegrationFramework
 from workers.base_worker import SutazAiWorker
+
+from core_system.system_integration_framework import (
+    UltraComprehensiveSystemIntegrationFramework,
+)
+
 
 class UltraSystemIntegrationWorker(SutazAiWorker):
     """

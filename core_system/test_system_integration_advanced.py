@@ -10,21 +10,24 @@ Comprehensive test framework for validating:
 - Error handling capabilities
 """
 
+import logging
 import os
 import sys
+from typing import Any, Dict
+
 import pytest
-import logging
-from typing import Dict, Any
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Import core system components
-from system_integration.system_integrator import SystemIntegrator
-from security.security_manager import SecurityManager
+from ai_agents.agent_factory import AgentFactory
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
-from ai_agents.agent_factory import AgentFactory
+from security.security_manager import SecurityManager
+
+# Import core system components
+from system_integration.system_integrator import SystemIntegrator
+
 
 class TestAdvancedSystemIntegration:
     @pytest.fixture(scope='class')

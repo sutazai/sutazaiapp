@@ -1,13 +1,14 @@
 """
-    authlib.jose.draft
-    ~~~~~~~~~~~~~~~~~~~~
+authlib.jose.draft
+~~~~~~~~~~~~~~~~~~~~
 
-    Content Encryption per `Section 4`_.
+Content Encryption per `Section 4`_.
 
-    .. _`Section 4`: https://datatracker.ietf.org/doc/html/draft-amringer-jose-chacha-02#section-4
+.. _`Section 4`: https://datatracker.ietf.org/doc/html/draft-amringer-jose-chacha-02#section-4
 """
-from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
+
 from authlib.jose.rfc7516 import JWEEncAlgorithm
+from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
 
 
 class C20PEncAlgorithm(JWEEncAlgorithm):
@@ -16,8 +17,8 @@ class C20PEncAlgorithm(JWEEncAlgorithm):
     IV_SIZE = 96
 
     def __init__(self, key_size):
-        self.name = 'C20P'
-        self.description = 'ChaCha20-Poly1305'
+        self.name = "C20P"
+        self.description = "ChaCha20-Poly1305"
         self.key_size = key_size
         self.CEK_SIZE = key_size
 

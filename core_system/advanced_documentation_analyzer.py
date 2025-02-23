@@ -10,16 +10,17 @@ Comprehensive framework for:
 - Architectural pattern recognition
 """
 
-import os
-import sys
+import ast
+import importlib.util
 import json
 import logging
-import ast
+import os
 import re
-import networkx as nx
-import importlib.util
-from typing import Dict, List, Any, Set, Tuple
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Set, Tuple
+
+import networkx as nx
 
 # Advanced NLP and semantic analysis
 import spacy

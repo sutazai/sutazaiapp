@@ -1,1 +1,2 @@
-class SutazAiResistantKEM:    def generate_keys(self):        # SutazAi-resistant key generation        pass 
+    class SutazAiResistantKEM:    def generate_keys(self):        # SutazAi-resistant key generation        pass
+    

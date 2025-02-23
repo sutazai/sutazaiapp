@@ -6,16 +6,17 @@ Command-line interface for interacting with the SutazAI file indexing system.
 Provides easy access to project file information and search capabilities.
 """
 
-import os
-import sys
 import argparse
 import json
-from typing import List, Dict, Any
+import os
+import sys
+from typing import Any, Dict, List
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from scripts.file_indexer import FileIndexer
+
 
 class FileIndexCLI:
     """

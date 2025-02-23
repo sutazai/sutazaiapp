@@ -1,26 +1,26 @@
 
 from __future__ import annotations
 
+from ruamel.yaml.compat import DBG_NODE, dbg, nprint, nprintf  # NOQA
 from ruamel.yaml.error import YAMLError
-from ruamel.yaml.compat import nprint, DBG_NODE, dbg, nprintf  # NOQA
-from ruamel.yaml.util import RegExp
-
 from ruamel.yaml.events import (
-    StreamStartEvent,
-    StreamEndEvent,
-    MappingStartEvent,
-    MappingEndEvent,
-    SequenceStartEvent,
-    SequenceEndEvent,
     AliasEvent,
-    ScalarEvent,
-    DocumentStartEvent,
     DocumentEndEvent,
+    DocumentStartEvent,
+    MappingEndEvent,
+    MappingStartEvent,
+    ScalarEvent,
+    SequenceEndEvent,
+    SequenceStartEvent,
+    StreamEndEvent,
+    StreamStartEvent,
 )
 from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode
+from ruamel.yaml.util import RegExp
 
 if False:  # MYPY
-    from typing import Any, Dict, Union, Text, Optional  # NOQA
+    from typing import Any, Dict, Optional, Text, Union  # NOQA
+
     from ruamel.yaml.compat import VersionType  # NOQA
 
 __all__ = ['Serializer', 'SerializerError']

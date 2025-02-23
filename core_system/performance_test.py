@@ -1,7 +1,9 @@
-from locust import HttpUser, task, between
 import json
 import statistics
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
+from locust import HttpUser, between, task
+
 
 class SutazAIPerformanceTest(HttpUser):
     wait_time = between(1, 5)  # Wait 1-5 seconds between tasks

@@ -10,15 +10,16 @@ Provides advanced capabilities for:
 - Automated system topology documentation
 """
 
-import os
-import sys
-import json
-import logging
 import importlib
 import inspect
-import networkx as nx
-from typing import Dict, List, Any, Optional, Type, Callable
+import json
+import logging
+import os
+import sys
 from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional, Type
+
+import networkx as nx
 
 # Configure logging
 logging.basicConfig(

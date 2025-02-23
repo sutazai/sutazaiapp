@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 import sys
+
 from ruamel.yaml.anchor import Anchor
 
 if False:  # MYPY
-    from typing import Text, Any, Dict, List  # NOQA
+    from typing import Any, Dict, List, Text  # NOQA
 
 __all__ = ['ScalarFloat', 'ExponentialFloat', 'ExponentialCapsFloat']
 

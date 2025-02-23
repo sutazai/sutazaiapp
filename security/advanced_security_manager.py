@@ -9,22 +9,23 @@ Comprehensive security framework providing:
 - Continuous security monitoring
 """
 
-import os
-import sys
+import hashlib
 import json
 import logging
-import hashlib
+import os
 import secrets
-from typing import Dict, List, Any, Optional
+import sys
 from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
+import bandit
 import cryptography
+import jwt
 from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
-import bandit
-import jwt
+
 
 class AdvancedSecurityManager:
     """

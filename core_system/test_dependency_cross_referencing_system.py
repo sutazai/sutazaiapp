@@ -5,21 +5,23 @@ Comprehensive Test Suite for SutazAI Dependency Cross-Referencing System
 Provides thorough testing for the advanced dependency analysis and architectural insights mechanism
 """
 
-import os
-import sys
-import unittest
 import json
-import tempfile
+import os
 import shutil
+import sys
+import tempfile
+import unittest
+
 import networkx as nx
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core_system.dependency_cross_referencing_system import (
+    DependencyRelationship,
     UltraComprehensiveDependencyCrossReferencer,
-    DependencyRelationship
 )
+
 
 class TestDependencyCrossReferencingSystem(unittest.TestCase):
     """
@@ -264,7 +266,7 @@ class AIAgent:
         Test dependency graph visualization
         """
         import tempfile
-        
+
         # Perform project-wide dependency analysis
         self.dependency_cross_referencer.analyze_project_dependencies()
         

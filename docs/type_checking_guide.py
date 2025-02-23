@@ -6,16 +6,8 @@ maintaining high-quality, type-safe Python code using
 Pyright and other static analysis tools.
 """
 
-from typing import (
-    Any, 
-    Callable, 
-    Dict, 
-    List, 
-    Optional, 
-    Protocol, 
-    TypeVar, 
-    Union
-)
+from typing import Any, Callable, Dict, List, Optional, Protocol, TypeVar, Union
+
 
 class TypeCheckingStrategy:
     """

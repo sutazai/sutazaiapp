@@ -5,16 +5,17 @@ SutazAI Performance Monitoring System
 Comprehensive performance tracking and optimization module
 """
 
-import os
-import time
-import psutil
-import logging
-import threading
-import multiprocessing
-from typing import Dict, Any
-from dataclasses import dataclass, asdict
-from concurrent.futures import ThreadPoolExecutor
 import json
+import logging
+import multiprocessing
+import os
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import asdict, dataclass
+from typing import Any, Dict
+
+import psutil
 
 logging.basicConfig(
     level=logging.INFO,

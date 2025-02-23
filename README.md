@@ -4,7 +4,7 @@
 
 SutazAI is an advanced, self-improving AI development platform designed to push the boundaries of artificial intelligence through comprehensive, secure, and autonomous systems.
 
-## 🌟 Key Features (Version 2.2.0)
+## 🌟 Key Features (Version 1.1.9)
 
 ### 1. Autonomous System Orchestration
 - Dynamic component management
@@ -42,28 +42,38 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 ## 📦 Project Structure
 
 ```
-/opt/sutazai_project/SutazAI/
-├── ai_agents/                # AI Agent Ecosystem
-│   ├── supreme_ai/           # Core AI Agent
-│   ├── auto_gpt/             # GPT-based Agents
+/opt/SutazAI/
+├── ai_agents/
+│   ├── superagi/
+│   ├── auto_gpt/
+│   ├── langchain_agents/
+│   ├── tabbyml/
+│   └── semgrep/
+├── model_management/
+│   ├── GPT4All/
+│   ├── DeepSeek-Coder-33B/
 │   └── ...
-├── backend/                  # Backend Services
-│   ├── main.py               # Entry point
+├── backend/
+│   ├── main.py
+│   ├── services/
+│   ├── api_routes.py
 │   └── ...
-├── core_system/              # Core System Components
-│   ├── system_orchestrator.py
-│   ├── performance_optimizer.py
+├── web_ui/
+│   ├── package.json
+│   ├── src/
 │   └── ...
-├── security/                 # Security Management
-│   ├── advanced_security_manager.py
+├── scripts/
+│   ├── deploy.sh
+│   ├── trigger_deploy.sh
+│   ├── otp_override.py
 │   └── ...
-├── scripts/                  # Utility Scripts
-│   ├── advanced_dependency_manager.py
-│   └── ...
-└── tests/                    # Comprehensive Testing
-    ├── unit/
-    └── integration/
-```
+├── packages/
+│   ├── wheels/  (offline .whl files)
+│   └── node/    (offline node modules)
+├── logs/
+├── doc_data/
+└── docs/
+
 
 ## 🔒 Security Principles
 - Zero-trust architecture

@@ -11,30 +11,32 @@ Provides an advanced, multi-dimensional system analysis covering:
 - Resource Utilization
 """
 
-import os
-import sys
 import json
 import logging
+import os
 import platform
 import subprocess
+import sys
 import time
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import internal system modules
-import psutil
 import networkx as nx
 import pkg_resources
+
+# Import internal system modules
+import psutil
+
+from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
+from core_system.performance_optimizer import AdvancedPerformanceOptimizer
 
 # Import internal system components
 from core_system.system_architecture_mapper import SystemArchitectureMapper
 from core_system.system_dependency_analyzer import SystemDependencyAnalyzer
-from core_system.performance_optimizer import AdvancedPerformanceOptimizer
-from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
 
 # Configure logging
 logging.basicConfig(

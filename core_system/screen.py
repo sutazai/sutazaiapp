@@ -1,14 +1,29 @@
-import click
-
-from safety.formatter import FormatterAPI
-from safety.output_utils import build_announcements_section_content, format_long_text, \
-    add_empty_line, format_vulnerability, get_final_brief, \
-    build_report_brief_section, format_license, get_final_brief_license, build_remediation_section, \
-    build_primary_announcement, get_specifier_range_info, format_unpinned_vulnerabilities
-from safety.util import get_primary_announcement, get_basic_announcements, get_terminal_size, \
-    is_ignore_unpinned_mode
 from collections import defaultdict
-from typing import List, Dict, Any, Tuple
+from typing import Any, Dict, List, Tuple
+
+import click
+from safety.formatter import FormatterAPI
+from safety.output_utils import (
+    add_empty_line,
+    build_announcements_section_content,
+    build_primary_announcement,
+    build_remediation_section,
+    build_report_brief_section,
+    format_license,
+    format_long_text,
+    format_unpinned_vulnerabilities,
+    format_vulnerability,
+    get_final_brief,
+    get_final_brief_license,
+    get_specifier_range_info,
+)
+from safety.util import (
+    get_basic_announcements,
+    get_primary_announcement,
+    get_terminal_size,
+    is_ignore_unpinned_mode,
+)
+
 
 class ScreenReport(FormatterAPI):
     DIVIDER_SECTIONS = '+' + '=' * (get_terminal_size().columns - 2) + '+'

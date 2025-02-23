@@ -11,23 +11,21 @@ import socket  # noqa: F401
 import typing
 import warnings
 
+from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError
+from urllib3.exceptions import HTTPError as _HTTPError
+from urllib3.exceptions import InvalidHeader as _InvalidHeader
 from urllib3.exceptions import (
-    ClosedPoolError, 
-    ConnectTimeoutError, 
-    HTTPError as _HTTPError,
-    InvalidHeader as _InvalidHeader,
     LocationValueError,
     MaxRetryError,
     NewConnectionError,
     ProtocolError,
-    ProxyError as _ProxyError,
-    ReadTimeoutError, 
-    ResponseError,
-    SSLError as _SSLError
 )
-
+from urllib3.exceptions import ProxyError as _ProxyError
+from urllib3.exceptions import ReadTimeoutError, ResponseError
+from urllib3.exceptions import SSLError as _SSLError
 from urllib3.poolmanager import PoolManager, proxy_from_url
-from urllib3.util import Timeout as TimeoutSauce, parse_url
+from urllib3.util import Timeout as TimeoutSauce
+from urllib3.util import parse_url
 from urllib3.util.retry import Retry
 from urllib3.util.ssl_ import create_urllib3_context
 
@@ -37,6 +35,8 @@ try:
 except ImportError:
     def SOCKSProxyManager(*args, **kwargs):
         raise InvalidSchema("Missing dependencies for SOCKS support.")
+
+from requests.auth import _basic_auth_str
 
 # Requests library exceptions and models
 from requests.exceptions import (
@@ -51,8 +51,7 @@ from requests.exceptions import (
     RetryError,
     SSLError,
 )
-from requests.models import Response, PreparedRequest
-from requests.auth import _basic_auth_str
+from requests.models import PreparedRequest, Response
 from requests.structures import CaseInsensitiveDict
 from requests.utils import (
     DEFAULT_CA_BUNDLE_PATH,
@@ -66,7 +65,7 @@ from requests.utils import (
 
 # Type checking import
 if typing.TYPE_CHECKING:
-    from typing import Optional, Union, Tuple, Dict, Any
+    from typing import Any, Dict, Optional, Tuple, Union
 
 
 DEFAULT_POOLBLOCK = False

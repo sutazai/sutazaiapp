@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-import os
-import sys
 import ast
 import logging
+import os
+import sys
+from typing import Dict, List, Optional, Tuple
+
 import chardet
-from typing import List, Dict, Optional, Tuple
+
 
 class FileRepairTool:
     def __init__(self, base_path: str = '/media/ai/SutazAI_Storage/SutazAI/v1/consolidated'):

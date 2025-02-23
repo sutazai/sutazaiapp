@@ -22,9 +22,6 @@ from typing import Any, Dict, List, Optional
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core_system.auto_remediation_manager import (
-    UltraComprehensiveAutoRemediationManager,
-)
 from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
 
 # Import internal system components
@@ -82,9 +79,9 @@ class UltraComprehensiveProjectOptimizer:
         self.architecture_mapper = SystemArchitectureMapper(base_dir)
         self.system_checker = ComprehensiveSystemChecker(base_dir)
         self.inventory_manager = InventoryManagementSystem(base_dir)
-        self.auto_remediation_manager = UltraComprehensiveAutoRemediationManager(
-            base_dir
-        )
+        # self.auto_remediation_manager = UltraComprehensiveAutoRemediationManager(
+        #     base_dir
+        # )
 
         # Synchronization primitives
         self._stop_optimization = threading.Event()
@@ -202,7 +199,7 @@ class UltraComprehensiveProjectOptimizer:
                     project_analysis = self.perform_comprehensive_project_analysis()
 
                     # Trigger auto-remediation
-                    self.auto_remediation_manager.start_autonomous_remediation()
+                    # self.auto_remediation_manager.start_autonomous_remediation()
 
                     # Log key insights
                     self.logger.info("Autonomous project optimization cycle completed")
@@ -258,7 +255,7 @@ class UltraComprehensiveProjectOptimizer:
             self._optimization_thread.join()
 
         # Stop dependent components
-        self.auto_remediation_manager.stop_autonomous_remediation()
+        # self.auto_remediation_manager.stop_autonomous_remediation()
 
         self.logger.info("Autonomous project optimization stopped")
 

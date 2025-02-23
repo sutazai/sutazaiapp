@@ -1,15 +1,17 @@
-import os
 import asyncio
 import concurrent.futures
-from typing import Dict, List, Any, Optional
-import magic
 import hashlib
-import numpy as np
-import torch
-from transformers import AutoTokenizer, AutoModel
+import logging
+import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
-import logging
+from typing import Any, Dict, List, Optional
+
+import magic
+import numpy as np
+import torch
+from transformers import AutoModel, AutoTokenizer
+
 
 class AdvancedDocumentProcessor:
     """

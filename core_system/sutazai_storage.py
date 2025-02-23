@@ -1,1 +1,2 @@
-class EternalMemory:    def store(self, memory):        """Store memory across sutazai-entangled timelines"""        SutazAiAPI.store(            data = (memory),            redundancy = (7),            encryption='sutazai-safe'        ) 
+    class EternalMemory:    def store(self, memory):        """Store memory across sutazai-entangled timelines"""        SutazAiAPI.store(            data = (memory),            redundancy = (7),            encryption='sutazai-safe'        )
+    

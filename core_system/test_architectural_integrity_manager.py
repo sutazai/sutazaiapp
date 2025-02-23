@@ -5,16 +5,20 @@ Comprehensive Test Suite for SutazAI Architectural Integrity Manager
 Provides thorough testing for the architectural analysis and cross-referencing mechanism
 """
 
+import json
 import os
 import sys
 import unittest
-import json
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core_system.architectural_integrity_manager import ArchitecturalIntegrityManager, ArchitecturalIntegrityReport
+from core_system.architectural_integrity_manager import (
+    ArchitecturalIntegrityManager,
+    ArchitecturalIntegrityReport,
+)
+
 
 class TestArchitecturalIntegrityManager(unittest.TestCase):
     """
@@ -210,7 +214,7 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
         Test architectural graph visualization
         """
         import tempfile
-        
+
         # Perform architectural integrity analysis
         self.architectural_manager.perform_architectural_integrity_analysis()
         

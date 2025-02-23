@@ -2,11 +2,15 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from safety.auth.models import Auth
     from rich.console import Console
-
-    from safety_schemas.models import MetadataModel, ReportSchemaVersion, \
-      TelemetryModel, PolicyFileModel, ConfigModel
+    from safety.auth.models import Auth
+    from safety_schemas.models import (
+        ConfigModel,
+        MetadataModel,
+        PolicyFileModel,
+        ReportSchemaVersion,
+        TelemetryModel,
+    )
 
 @dataclass
 class SafetyCLI:

@@ -6,13 +6,15 @@ Provides an advanced, multi-dimensional, and hardcoded
 project structure documentation system.
 """
 
-import os
 import json
-import yaml
 import logging
-from typing import Dict, List, Any, Optional
-from datetime import datetime
+import os
 import sys
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import yaml
+
 
 class UltraComprehensiveStructureTracker:
     """

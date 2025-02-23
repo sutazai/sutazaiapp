@@ -1,1 +1,35 @@
-import loggingfrom logging.handlers import RotatingFileHandlerimport osimport sentry_sdkfrom sentry_sdk.integrations.logging import LoggingIntegrationdef setup_logging():    logging.basicConfig(        level = (logging.INFO),        format = ('%(asctime)s - %(name)s - %(levelname)s - %(message)s'),        handlers = ([            RotatingFileHandler('app.log'), maxBytes = (10485760), backupCount = (5)),            logging.StreamHandler()        ]    )        # Add Sentry for error tracking    sentry_sdk.init(        dsn = (os.getenv('SENTRY_DSN')),        integrations=[LoggingIntegration()]    ) 
+import logging.basicConfig
+import logging.handlers
+import logging.INFO
+import logging.StreamHandler
+
+import 5
+import 10485760
+import %
+import '%
+import 'app.log'
+import -
+import :
+import =
+import [
+import ]
+import asctime
+import backupCount
+import format
+import handlers
+import import
+import level
+import levelname
+import loggingfrom  # Add Sentry for error tracking    sentry_sdk.init(        dsn = (os.getenv('SENTRY_DSN')),        integrations=[LoggingIntegration()]    )
+import LoggingIntegrationdef
+import maxBytes
+import message
+import name
+import osimport
+import RotatingFileHandler
+import RotatingFileHandlerimport
+import s
+import s'
+import sentry_sdk.integrations.logging
+import sentry_sdkfrom
+import setup_logging

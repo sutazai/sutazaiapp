@@ -10,9 +10,9 @@ an auto-repair mechanism that can restart services with retry and backoff logic.
 """
 
 import logging
-import time
 import subprocess
 import sys
+import time
 from typing import Optional
 
 # Import the retry decorator from our internal module.
@@ -57,6 +57,7 @@ worker_pool = WorkerPool()
 
 
 from contextlib import contextmanager
+
 
 @contextmanager
 def exponential_backoff(initial_delay: float, max_delay: float, max_attempts: int):

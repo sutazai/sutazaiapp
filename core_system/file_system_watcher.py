@@ -5,12 +5,13 @@ SutazAI File System Watcher
 Monitors project directory for changes and updates structure documentation.
 """
 
+import logging
 import os
 import time
-import logging
 from typing import Optional
-from watchdog.observers import Observer
+
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 from core_system.file_structure_tracker import FileStructureTracker
 

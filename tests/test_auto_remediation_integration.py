@@ -1,20 +1,21 @@
+import json
 import os
 import sys
-import unittest
 import tempfile
-import json
-from unittest.mock import patch, MagicMock
+import unittest
+from unittest.mock import MagicMock, patch
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from sutazai.auto_remediation import (
-    AutoRemediationManager, 
-    RemediationAction, 
-    CustomRemediationScriptLoader
+    AutoRemediationManager,
+    CustomRemediationScriptLoader,
+    RemediationAction,
 )
+from sutazai.config_manager import ConfigurationManager, SutazAIConfig
 from sutazai.security_scanner import SecurityScanResult
-from sutazai.config_manager import SutazAIConfig, ConfigurationManager
+
 
 class TestAutoRemediationIntegration(unittest.TestCase):
     def setUp(self):

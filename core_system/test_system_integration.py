@@ -13,20 +13,23 @@ Test Categories:
 - Error Handling
 """
 
-import os
-import sys
-import pytest
 import importlib
 import inspect
-from typing import Dict, Any, List
+import os
+import sys
+from typing import Any, Dict, List
+
+import pytest
+
+from ai_agents.agent_factory import AgentFactory
+from config.config_manager import ConfigurationManager
+from core_system.system_optimizer import SystemOptimizer
+from scripts.dependency_manager import DependencyManager
+from security.security_manager import SecurityManager
 
 # Import system integration components
 from system_integration.system_integrator import SystemIntegrator
-from config.config_manager import ConfigurationManager
-from core_system.system_optimizer import SystemOptimizer
-from security.security_manager import SecurityManager
-from scripts.dependency_manager import DependencyManager
-from ai_agents.agent_factory import AgentFactory
+
 
 class TestSystemIntegration:
     """

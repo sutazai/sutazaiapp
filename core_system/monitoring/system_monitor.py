@@ -1,7 +1,9 @@
-import psutil
 import logging
 import time
-from typing import Dict, Any
+from typing import Any, Dict
+
+import psutil
+
 
 class SystemMonitor:
     """Advanced system monitoring and resource management class"""

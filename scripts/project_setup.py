@@ -15,7 +15,6 @@ import sys
 from typing import Any, Dict, List
 
 import yaml
-
 from ultimate_system_audit import SystemAuditManager as UltimateSystemAuditor
 
 

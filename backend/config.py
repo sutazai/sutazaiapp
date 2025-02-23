@@ -8,21 +8,34 @@ all required parameters are specified with appropriate defaults.
 
 from typing import List
 
-from pydantic import BaseSettings
+from pydantic import BaseModel, Field
 
 
-class Config(BaseSettings):
-    host: str = "127.0.0.1"
-    port: int = 8000
-    debug: bool = False
-    trusted_hosts: List[str] = []
+# pylint: disable=too-few-public-methods
+class Config(BaseModel):
+    """
+    Main configuration class for the SutazAI backend.
 
-    class Config:
-        env_file = ".env"
+    Attributes:
+        host: The host address to bind to
+        port: The port to listen on
+        debug: Whether to enable debug mode
+        trusted_hosts: List of trusted host addresses
+    """
+
+    host: str = Field(default="127.0.0.1", description="Host address to bind to")
+    port: int = Field(default=8000, description="Port to listen on")
+    debug: bool = Field(default=False, description="Enable debug mode")
+    trusted_hosts: List[str] = Field(
+        default_factory=list, description="List of trusted host addresses"
+    )
+
+    model_config = {"env_file": ".env", "extra": "allow"}
 
 
 # For convenience, create a config instance
 config = Config()
+
 
 if __name__ == "__main__":
     print("Backend configuration:")

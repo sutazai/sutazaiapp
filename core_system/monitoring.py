@@ -1,7 +1,8 @@
-from prometheus_client import start_http_server, Counter, Gauge, Histogram
-from starlette.middleware.base import BaseHTTPMiddleware
-import time
 import logging
+import time
+
+from prometheus_client import Counter, Gauge, Histogram, start_http_server
+from starlette.middleware.base import BaseHTTPMiddleware
 
 # Metrics configuration
 METRICS = {

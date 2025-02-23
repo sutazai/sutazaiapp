@@ -6,12 +6,12 @@ for the SutazAI system.
 """
 
 from .system_exceptions import (
-    SutazAIBaseException,
-    ConfigurationError,
-    SecurityViolationError,
-    ResourceAllocationError,
     ComponentInitializationError,
-    global_exception_handler
+    ConfigurationError,
+    ResourceAllocationError,
+    SecurityViolationError,
+    SutazAIBaseException,
+    global_exception_handler,
 )
 
 __all__ = [

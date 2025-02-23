@@ -5,16 +5,17 @@ Comprehensive Test Suite for SutazAI Comprehensive System Checker
 Provides thorough testing for the system checking and optimization mechanism
 """
 
+import json
 import os
 import sys
 import unittest
-import json
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
+
 
 class TestComprehensiveSystemChecker(unittest.TestCase):
     """

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from .settings import settings
+import os
 
 
 def setup_logging():
@@ -8,7 +8,7 @@ def setup_logging():
     log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
     logging.basicConfig(
-        level=settings.log_level,
+        level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(log_dir / "ai_system.log"),
@@ -22,4 +22,4 @@ def setup_logging():
 
 if __name__ == '__main__':
     setup_logging()
-    logging.info("Logging is set up.") 
+    logging.info("Logging is set up.")

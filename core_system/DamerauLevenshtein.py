@@ -15,10 +15,16 @@ if _impl == "cpp":
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                damerau_levenshtein_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_similarity as similarity,
             )
 
@@ -26,37 +32,59 @@ if _impl == "cpp":
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                damerau_levenshtein_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_similarity as similarity,
             )
 
             imported = True
 
     if not imported:
-        from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-            damerau_levenshtein_distance as distance,
+        from rapidfuzz.distance.metrics_cpp import (
+            damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+        )
+        from rapidfuzz.distance.metrics_cpp import (
             damerau_levenshtein_normalized_distance as normalized_distance,
+        )
+        from rapidfuzz.distance.metrics_cpp import (
             damerau_levenshtein_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_cpp import (
             damerau_levenshtein_similarity as similarity,
         )
 elif _impl == "python":
+    from rapidfuzz.distance.metrics_py import damerau_levenshtein_distance as distance
     from rapidfuzz.distance.metrics_py import (
-        damerau_levenshtein_distance as distance,
         damerau_levenshtein_normalized_distance as normalized_distance,
+    )
+    from rapidfuzz.distance.metrics_py import (
         damerau_levenshtein_normalized_similarity as normalized_similarity,
+    )
+    from rapidfuzz.distance.metrics_py import (
         damerau_levenshtein_similarity as similarity,
     )
 else:
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_avx2 import (  # pyright: ignore[reportMissingImports]
-                damerau_levenshtein_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
                 damerau_levenshtein_similarity as similarity,
             )
 
@@ -64,10 +92,16 @@ else:
 
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp_sse2 import (  # pyright: ignore[reportMissingImports]
-                damerau_levenshtein_distance as distance,
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
                 damerau_levenshtein_similarity as similarity,
             )
 
@@ -75,10 +109,16 @@ else:
 
     if not imported:
         with contextlib.suppress(ImportError):
-            from rapidfuzz.distance.metrics_cpp import (  # pyright: ignore[reportMissingImports]
-                damerau_levenshtein_distance as distance,
+            from rapidfuzz.distance.metrics_cpp import (
+                damerau_levenshtein_distance as distance,,  # pyright: ignore[reportMissingImports]
+            )
+            from rapidfuzz.distance.metrics_cpp import (
                 damerau_levenshtein_normalized_distance as normalized_distance,
+            )
+            from rapidfuzz.distance.metrics_cpp import (
                 damerau_levenshtein_normalized_similarity as normalized_similarity,
+            )
+            from rapidfuzz.distance.metrics_cpp import (
                 damerau_levenshtein_similarity as similarity,
             )
 
@@ -87,7 +127,13 @@ else:
     if not imported:
         from rapidfuzz.distance.metrics_py import (
             damerau_levenshtein_distance as distance,
+        )
+        from rapidfuzz.distance.metrics_py import (
             damerau_levenshtein_normalized_distance as normalized_distance,
+        )
+        from rapidfuzz.distance.metrics_py import (
             damerau_levenshtein_normalized_similarity as normalized_similarity,
+        )
+        from rapidfuzz.distance.metrics_py import (
             damerau_levenshtein_similarity as similarity,
         )

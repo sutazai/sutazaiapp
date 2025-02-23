@@ -4,7 +4,8 @@ from __future__ import annotations
 from ruamel.yaml.anchor import Anchor
 
 if False:  # MYPY
-    from typing import Text, Any, Dict, List  # NOQA
+    from typing import Any, Dict, List, Text  # NOQA
+
     from ruamel.yaml.compat import SupportsIndex
 
 __all__ = [

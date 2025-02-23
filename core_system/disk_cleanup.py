@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+import logging
 import os
 import shutil
 import subprocess
-import logging
 from typing import List, Tuple
+
 
 class DiskCleanupManager:
     def __init__(self, log_file='/var/log/sutazai/disk_cleanup.log'):

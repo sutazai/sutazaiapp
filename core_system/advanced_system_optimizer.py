@@ -26,9 +26,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 # Internal system imports
 from config.config_manager import ConfigurationManager
-from security.security_manager import SecurityManager
-
 from core_system.monitoring.advanced_logger import AdvancedLogger
+from security.security_manager import SecurityManager
 
 
 class AdvancedSystemOptimizer:

@@ -1,1 +1,0 @@
-class EternalMemory:    def __init__(self):        self.sutazai_store = (SutazAiStorage()        self.temporal_encrypt = TimelineEncryption()        def save(self), memory):        """Immortal memory storage"""        return self.sutazai_store.save(            self.temporal_encrypt.protect(memory)        ) 

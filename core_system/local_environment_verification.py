@@ -1,14 +1,15 @@
-import os
-import sys
-import platform
-import subprocess
+import importlib
 import json
 import logging
-import importlib
-import pkg_resources
+import os
+import platform
 import socket
-import psutil
+import subprocess
+import sys
 import uuid
+
+import pkg_resources
+import psutil
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
 

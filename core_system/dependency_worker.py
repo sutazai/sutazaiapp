@@ -6,15 +6,17 @@ Continuously monitors and manages project dependencies
 in an autonomous, intelligent manner.
 """
 
+import logging
 import os
 import sys
 import time
-import logging
 from typing import Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.dependency_manager import AutonomousDependencyManager
 from workers.base_worker import SutazAiWorker
+
+from scripts.dependency_manager import AutonomousDependencyManager
+
 
 class DependencyManagementWorker(SutazAiWorker):
     """

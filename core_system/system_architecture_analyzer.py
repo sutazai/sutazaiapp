@@ -1,11 +1,12 @@
-import os
-import sys
-import json
-import logging
 import importlib
 import inspect
-import networkx as nx
+import json
+import logging
+import os
+import sys
+
 import matplotlib.pyplot as plt
+import networkx as nx
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s')
 

@@ -2,34 +2,34 @@
 # Version: 1.0.0
 
 # Core Testing Frameworks
-pytest==7.4.2
-pytest-cov==4.1.0
-pytest-mock==3.11.1
-pytest-asyncio==0.21.1
+pytest>=7.4.2
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-asyncio>=0.21.1
 
 # Integration Testing Tools
-requests==2.31.0
-httpx==0.24.1
-aiohttp==3.8.5
+requests>=2.31.0
+httpx>=0.24.1
+aiohttp>=3.8.5
 
 # Mocking and Simulation
-responses==0.23.1
-faker==19.3.1
+responses>=0.23.1
+faker>=19.3.1
 
 # Performance Testing
-locust==2.15.1
+locust>=2.15.1
 
 # Security Testing
-bandit==1.7.5
-safety==2.3.4
+bandit>=1.7.5
+safety>=2.3.4
 
 # Logging and Reporting
-allure-pytest==2.13.2
-pytest-html==3.2.0
+allure-pytest>=2.13.2
+pytest-html>=3.2.0
 
 # Dependency Validation
-pip-tools==7.3.0
-pipdeptree==2.5.0
+pip-tools>=7.3.0
+pipdeptree>=2.5.0
 
 # Optional: Advanced Simulation
-hypothesis==6.82.1 
+hypothesis>=6.82.1 

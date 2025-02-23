@@ -12,16 +12,16 @@ partition_sizes:
   large: 10000
 
 auto_config:
-  enabled: true
+  enabled: false
   interval: 300
   rules:
     - condition: "cpu > 80"
-      action: "scale_up"
+      action: "notify"
     - condition: "cpu < 30"
-      action: "scale_down"
+      action: "notify"
 
 auto_scaling:
-  enabled: true
+  enabled: false
   min_instances: 2
   max_instances: 10
   cpu_threshold: 80
@@ -40,11 +40,11 @@ monitoring:
     disk: 80
 
 database:
-  auto_partition: true
-  backup_schedule: daily
+  auto_partition: false
+  backup_schedule: manual
   retention_period: 90
 
-auto_update: true
+auto_update: false
 logging:
   level: info
   retention_days: 30
@@ -56,18 +56,18 @@ scaling:
   scale_down_threshold: 20
 
 security:
-  auto_audit: true
-  audit_schedule: weekly
+  auto_audit: false
+  audit_schedule: manual
   encryption: true
 
-auto_optimize: true
-self_healing: true
+auto_optimize: false
+self_healing: false
 resource_monitoring:
   interval: 5s
   thresholds:
     cpu: 80
     memory: 90
 learning_rate:
-  auto_adjust: true
+  auto_adjust: false
   min: 0.001
   max: 0.1

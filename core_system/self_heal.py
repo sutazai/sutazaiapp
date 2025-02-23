@@ -8,12 +8,13 @@ This module provides functionalities for diagnosing system errors and executing 
 It leverages a knowledge base of known errors and associated solutions to achieve self-healing capabilities.
 """
 
-from inspect import isclass
-from .knowledge_graph import ErrorKnowledge
-import subprocess
 import logging
 import os
-from typing import Optional, Dict, Any
+import subprocess
+from inspect import isclass
+from typing import Any, Dict, Optional
+
+from .knowledge_graph import ErrorKnowledge
 
 
 class SutazAIHealer:

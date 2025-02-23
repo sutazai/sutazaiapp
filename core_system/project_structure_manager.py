@@ -10,23 +10,24 @@ Advanced framework providing:
 - Proactive system optimization
 """
 
-import os
-import sys
-import json
-import logging
-import shutil
+import ast
 import importlib
 import inspect
-import ast
+import json
+import logging
+import os
 import re
-from typing import Dict, List, Any, Optional, Set, Tuple
+import shutil
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import networkx as nx
-import yaml
-import spacy
-import radon.metrics
 import radon.complexity
+import radon.metrics
+import spacy
+import yaml
+
 
 class AdvancedProjectStructureManager:
     """
@@ -163,7 +164,7 @@ class AdvancedProjectStructureManager:
                 'description': 'Licensing and copyright information'
             },
             'requirements.txt': {
-                'content': '# Project Dependencies\n\n# Core System\npython==3.10.12\n# Add dependencies here',
+                'content': '# Project Dependencies\n\n# Core System\n\n# Add dependencies here',
                 'description': 'Project dependency management'
             },
             '.gitignore': {

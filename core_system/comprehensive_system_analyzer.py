@@ -14,17 +14,17 @@ Key Capabilities:
 - Self-documenting and self-healing mechanisms
 """
 
-import os
-import sys
+import ast
+import difflib
 import json
 import logging
-import subprocess
+import os
 import re
-import ast
 import shutil
-import difflib
-from typing import Dict, List, Any, Optional, Tuple
+import subprocess
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 # Safe import utility
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

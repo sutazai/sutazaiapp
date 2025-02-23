@@ -17,16 +17,11 @@ from functools import partial
 from typing import Any, Callable, Iterable, Tuple, TypeVar
 
 import typing_extensions
-from pydantic_core import (
-    CoreSchema,
-    PydanticCustomError,
-    core_schema,
-)
-from typing_extensions import get_args, get_origin
-
 from pydantic._internal._serializers import serialize_sequence_via_list
 from pydantic.errors import PydanticSchemaGenerationError
 from pydantic.types import Strict
+from pydantic_core import CoreSchema, PydanticCustomError, core_schema
+from typing_extensions import get_args, get_origin
 
 from ..json_schema import JsonSchemaValue
 from . import _known_annotated_metadata, _typing_extra

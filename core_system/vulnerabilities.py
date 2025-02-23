@@ -2,17 +2,15 @@ import json
 from collections import namedtuple
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, List, Optional, Set, Union, Dict
+from typing import Any, Dict, List, Optional, Set, Union
 
+from dparse import filetypes, parse
 from dparse.dependencies import Dependency
-from dparse import parse, filetypes
-from packaging.specifiers import SpecifierSet
 from packaging.requirements import Requirement
+from packaging.specifiers import SpecifierSet
 from packaging.utils import canonicalize_name
-from packaging.version import parse as parse_version
-
 from packaging.version import Version
-
+from packaging.version import parse as parse_version
 from safety.errors import InvalidRequirementError
 
 try:
@@ -21,6 +19,7 @@ except ImportError:
     legacyType = None
 
 from .requirements import is_pinned_requirement
+
 
 class DictConverter(object):
     """

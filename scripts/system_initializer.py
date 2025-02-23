@@ -10,23 +10,24 @@ Comprehensive initialization framework providing:
 - Performance optimization
 """
 
-import os
-import sys
-import subprocess
-import logging
-from typing import Dict, Any, List
 import json
+import logging
+import os
+import subprocess
+import sys
 from datetime import datetime
+from typing import Any, Dict, List
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Internal system imports
 from config.config_manager import ConfigurationManager
+from core_system.monitoring.advanced_logger import AdvancedLogger
+from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
 from security.security_manager import SecurityManager
-from core_system.system_optimizer import SystemOptimizer
-from core_system.monitoring.advanced_logger import AdvancedLogger
+
 
 class SystemInitializer:
     """

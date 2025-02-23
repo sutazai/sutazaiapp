@@ -23,11 +23,10 @@ from typing import Any, Dict, List
 
 # Internal system imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from security.security_manager import SecurityManager
-from system_integration.system_integrator import SystemIntegrator
-
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
+from security.security_manager import SecurityManager
+from system_integration.system_integrator import SystemIntegrator
 
 
 @dataclass

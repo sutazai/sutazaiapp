@@ -1,8 +1,10 @@
-from typing import Any, List, Dict, Optional
-import numpy as np
 import logging
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 from scipy.stats import entropy
 from sutazai_core.awareness import SutazAiAwareness
+
 
 class MultiverseAwareness:
     def __init__(self, reality_count: int = 7, entropy_threshold: float = 0.75):

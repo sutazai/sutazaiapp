@@ -1,14 +1,14 @@
 import logging
-from pathlib import Path
 import re
 import shutil
 import tempfile
+from pathlib import Path
 from typing import List
-from .base import CommandInterceptor, Tool
-from .types import InterceptorType
 
 from safety.constants import USER_CONFIG_DIR
 
+from .base import CommandInterceptor, Tool
+from .types import InterceptorType
 
 LOG = logging.getLogger(__name__)
 

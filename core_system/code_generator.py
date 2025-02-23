@@ -1,6 +1,7 @@
+import logging
+
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
-import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

@@ -10,16 +10,17 @@ Comprehensive framework for:
 - Semantic analysis and documentation
 """
 
-import os
-import sys
-import json
-import logging
-import re
 import ast
 import importlib
 import inspect
-from typing import Dict, List, Any, Optional
+import json
+import logging
+import os
+import re
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 import markdown
 import networkx as nx
 

@@ -5,11 +5,11 @@ from typing import List
 from pydantic.dataclasses import dataclass
 from typing_extensions import Self
 
-from .util import dict_dump
 from ..report.schemas.v3_0 import main as v3_0
 from .base import FileType, SafetyBaseModel
 from .package import PythonDependency, PythonSpecification
 from .result import DependencyResultModel
+from .util import dict_dump
 from .vulnerability import ClosestSecureVersion, RemediationModel, Vulnerability
 
 

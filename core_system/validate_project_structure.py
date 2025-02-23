@@ -10,13 +10,15 @@ the entire SutazAI project structure, ensuring:
 - Security compliance
 """
 
-import os
-import sys
 import json
 import logging
+import os
 import shutil
+import sys
+from typing import Any, Dict, List
+
 import yaml
-from typing import Dict, List, Any
+
 
 class ProjectStructureValidator:
     """

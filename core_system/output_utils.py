@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import click
 from jinja2 import Environment, PackageLoader
-
 from safety.constants import RED, YELLOW
 from safety.meta import get_version
 from safety.models import Fix, is_pinned_requirement

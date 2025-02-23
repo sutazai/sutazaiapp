@@ -2,9 +2,10 @@ import importlib
 import os
 from typing import Any, Dict, Optional, Type
 
+from loguru import logger
+
 from ai_agents.agent_config_manager import AgentConfigManager
 from ai_agents.base_agent import BaseAgent
-from loguru import logger
 
 
 class AgentFactory:

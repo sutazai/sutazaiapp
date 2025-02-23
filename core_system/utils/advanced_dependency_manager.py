@@ -10,19 +10,19 @@ Comprehensive utility for:
 - Performance optimization
 """
 
-import os
-import sys
 import json
 import logging
-import subprocess
+import os
 import re
-from typing import Dict, List, Any, Optional
+import subprocess
+import sys
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 import networkx as nx
-from packaging import version
 import safety
 import yaml
+from packaging import version
 
 # Configure logging
 logging.basicConfig(

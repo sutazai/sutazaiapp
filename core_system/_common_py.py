@@ -35,7 +35,9 @@ def conv_sequence(s: Sequence[Hashable]) -> Sequence[Hashable]:
     return res
 
 
-def conv_sequences(s1: Sequence[Hashable], s2: Sequence[Hashable]) -> tuple[Sequence[Hashable], Sequence[Hashable]]:
+def conv_sequences(
+    s1: Sequence[Hashable], s2: Sequence[Hashable]
+) -> tuple[Sequence[Hashable], Sequence[Hashable]]:
     if isinstance(s1, str) and isinstance(s2, str):
         return s1, s2
 
