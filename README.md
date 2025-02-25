@@ -112,8 +112,8 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/Readit2go/SutazAI.git
-cd SutazAI
+git clone https://github.com/sutazai/sutazaiapp.git
+cd sutazaiapp
 ```
 
 ### 2. Create Virtual Environment

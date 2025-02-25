@@ -33,8 +33,8 @@ sudo apt install -y python3-venv python3-pip nodejs npm
 ```bash
 mkdir -p /opt/sutazai_project
 cd /opt/sutazai_project
-git clone https://github.com/Readit2go/SutazAI.git
-cd SutazAI
+git clone https://github.com/sutazai/sutazaiapp.git
+cd sutazaiapp
 ```
 
 #### 2.2 Create Virtual Environment
