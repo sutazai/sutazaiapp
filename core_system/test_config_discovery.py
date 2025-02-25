@@ -101,12 +101,12 @@ class TestDiscoverPackagesAndPyModules:
 
         sdist_files = get_sdist_members(next(tmp_path.glob("dist/*.tar.gz")))
         print("~~~~~ sdist_members ~~~~~")
-        print('\n'.join(sdist_files))
+        print("\n".join(sdist_files))
         assert sdist_files >= set(files)
 
         wheel_files = get_wheel_members(next(tmp_path.glob("dist/*.whl")))
         print("~~~~~ wheel_members ~~~~~")
-        print('\n'.join(wheel_files))
+        print("\n".join(wheel_files))
         orig_files = {f.replace("src/", "").replace("lib/", "") for f in files}
         assert wheel_files >= orig_files
 
@@ -167,7 +167,11 @@ class TestDiscoverPackagesAndPyModules:
         ),
     )
     def test_purposefully_empty(self, tmp_path, config_file, param, circumstance):
-        files = self.FILES[circumstance] + ["mod.py", "other.py", "src/pkg/__init__.py"]
+        files = self.FILES[circumstance] + [
+            "mod.py",
+            "other.py",
+            "src/pkg/__init__.py",
+        ]
         _populate_project_dir(tmp_path, files, {})
 
         if config_file == "pyproject.toml":
@@ -497,12 +501,12 @@ class TestWithPackageData:
 
         sdist_files = get_sdist_members(next(tmp_path.glob("dist/*.tar.gz")))
         print("~~~~~ sdist_members ~~~~~")
-        print('\n'.join(sdist_files))
+        print("\n".join(sdist_files))
         assert sdist_files >= expected
 
         wheel_files = get_wheel_members(next(tmp_path.glob("dist/*.whl")))
         print("~~~~~ wheel_members ~~~~~")
-        print('\n'.join(wheel_files))
+        print("\n".join(wheel_files))
         orig_files = {f.replace("src/", "").replace("lib/", "") for f in expected}
         assert wheel_files >= orig_files
 
@@ -608,13 +612,13 @@ def _write_setupcfg(root, options):
 
 def _run_build(path, *flags):
     cmd = [sys.executable, "-m", "build", "--no-isolation", *flags, str(path)]
-    return run(cmd, env={'DISTUTILS_DEBUG': ''})
+    return run(cmd, env={"DISTUTILS_DEBUG": ""})
 
 
 def _get_dist(dist_path, attrs):
     root = "/".join(os.path.split(dist_path))  # POSIX-style
 
-    script = dist_path / 'setup.py'
+    script = dist_path / "setup.py"
     if script.exists():
         with Path(dist_path):
             dist = cast(

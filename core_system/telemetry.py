@@ -1,7 +1,6 @@
 from typing import Dict, Optional
 
 from pydantic.dataclasses import dataclass
-from typing_extensions import Self
 
 from ..report.schemas.v3_0 import main as v3_0
 from .base import SafetyBaseModel
@@ -36,11 +35,11 @@ class TelemetryModel(SafetyBaseModel):
         )
 
     @classmethod
-    def from_v30(cls, obj: v3_0.SchemaModelV30) -> 'TelemetryModel':
+    def from_v30(cls, obj: v3_0.SchemaModelV30) -> "TelemetryModel":
 
         if not isinstance(obj, v3_0.Telemetry):
-            raise TypeError('Expected instance of v3_0.Telemetry')
-            
+            raise TypeError("Expected instance of v3_0.Telemetry")
+
         return TelemetryModel(
             os_type=obj.os_type,
             os_release=obj.os_release,

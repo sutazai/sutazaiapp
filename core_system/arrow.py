@@ -96,7 +96,10 @@ class ArrowLexer(RegexLexer):
             default("#pop"),
         ],
         "fparams": [
-            (DECL, bygroups(Keyword.Type, Punctuation, Whitespace, Name.Variable)),
+            (
+                DECL,
+                bygroups(Keyword.Type, Punctuation, Whitespace, Name.Variable),
+            ),
             (r",", Punctuation),
             (r"\)", Punctuation, "#pop"),
         ],

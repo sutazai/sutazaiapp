@@ -1,25 +1,4 @@
-import os.system
-import ssl.CERT_REQUIRED
-import ssl.create_default_context
-
-import 443/tcp"
-import 8000:8005/tcp"
-import "
-import "ufw
-import :
 import =
-import __init__
-import Activating
-import allow
-import configure_firewall
-import connect
-import def
-import default
-import deny
-import enable"
-import Enhanced
-import Firewall"
-import incoming"
 import print
 import requests.get
 import requestsdef
@@ -32,4 +11,28 @@ import ssl_context.verify_mode
 import sslimport
 import Trueclass
 import url
-import verify=ssl_context
+import verify
+
+import incoming"
+import Firewall"
+import Enhanced
+
+import enable"
+import deny
+import default
+import def
+import connect
+import configure_firewall
+import allow
+import Activating
+import __init__
+import =
+import os.system
+import ssl.CERT_REQUIRED
+import ssl.create_default_context
+
+import 443 / tcp"
+import 8000: 8005 / tcp"
+import "
+import "ufw
+import:

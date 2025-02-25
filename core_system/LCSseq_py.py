@@ -140,7 +140,11 @@ def distance(
     maximum = max(len(s1), len(s2))
     sim = similarity(s1, s2)
     dist = maximum - sim
-    return dist if (score_cutoff is None or dist <= score_cutoff) else score_cutoff + 1
+    return (
+        dist
+        if (score_cutoff is None or dist <= score_cutoff)
+        else score_cutoff + 1
+    )
 
 
 def normalized_distance(
@@ -188,7 +192,9 @@ def normalized_distance(
     s1, s2 = conv_sequences(s1, s2)
     maximum = max(len(s1), len(s2))
     norm_sim = distance(s1, s2) / maximum
-    return norm_sim if (score_cutoff is None or norm_sim <= score_cutoff) else 1
+    return (
+        norm_sim if (score_cutoff is None or norm_sim <= score_cutoff) else 1
+    )
 
 
 def normalized_similarity(
@@ -250,7 +256,9 @@ def normalized_similarity(
         s2 = processor(s2)
 
     norm_sim = 1.0 - normalized_distance(s1, s2)
-    return norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    return (
+        norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    )
 
 
 def _matrix(s1, s2):
@@ -347,14 +355,18 @@ def editops(
         if matrix[row - 1] & (1 << (col - 1)):
             dist -= 1
             col -= 1
-            editop_list[dist] = Editop("delete", col + prefix_len, row + prefix_len)
+            editop_list[dist] = Editop(
+                "delete", col + prefix_len, row + prefix_len
+            )
         else:
             row -= 1
 
             # insertion
             if row and not (matrix[row - 1] & (1 << (col - 1))):
                 dist -= 1
-                editop_list[dist] = Editop("insert", col + prefix_len, row + prefix_len)
+                editop_list[dist] = Editop(
+                    "insert", col + prefix_len, row + prefix_len
+                )
             # match
             else:
                 col -= 1
@@ -362,12 +374,16 @@ def editops(
     while col != 0:
         dist -= 1
         col -= 1
-        editop_list[dist] = Editop("delete", col + prefix_len, row + prefix_len)
+        editop_list[dist] = Editop(
+            "delete", col + prefix_len, row + prefix_len
+        )
 
     while row != 0:
         dist -= 1
         row -= 1
-        editop_list[dist] = Editop("insert", col + prefix_len, row + prefix_len)
+        editop_list[dist] = Editop(
+            "insert", col + prefix_len, row + prefix_len
+        )
 
     editops._editops = editop_list
     return editops

@@ -13,7 +13,14 @@ python.py.
 
 import re
 
-from pygments.lexer import RegexLexer, bygroups, combined, default, include, words
+from pygments.lexer import (
+    RegexLexer,
+    bygroups,
+    combined,
+    default,
+    include,
+    words,
+)
 from pygments.token import (
     Comment,
     Keyword,
@@ -252,7 +259,10 @@ class GDScriptLexer(RegexLexer):
                 ),
                 Name.Builtin,
             ),
-            (r"((?<!\.)(self|false|true)|(PI|TAU|NAN|INF)" r")\b", Name.Builtin.Pseudo),
+            (
+                r"((?<!\.)(self|false|true)|(PI|TAU|NAN|INF)" r")\b",
+                Name.Builtin.Pseudo,
+            ),
             (
                 words(
                     (
@@ -301,7 +311,10 @@ class GDScriptLexer(RegexLexer):
             (r"\d+j?", Number.Integer),
         ],
         "name": [(r"[a-zA-Z_]\w*", Name)],
-        "funcname": [(r"[a-zA-Z_]\w*", Name.Function, "#pop"), default("#pop")],
+        "funcname": [
+            (r"[a-zA-Z_]\w*", Name.Function, "#pop"),
+            default("#pop"),
+        ],
         "classname": [(r"[a-zA-Z_]\w*", Name.Class, "#pop")],
         "stringescape": [
             (
@@ -341,7 +354,8 @@ class GDScriptLexer(RegexLexer):
             score += 0.8
 
         if re.search(
-            r"(extends |class_name |onready |preload|load|setget|func [^_])", text
+            r"(extends |class_name |onready |preload|load|setget|func [^_])",
+            text,
         ):
             score += 0.4
 

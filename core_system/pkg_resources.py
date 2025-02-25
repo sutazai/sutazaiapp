@@ -3,9 +3,21 @@ import email.parser
 import logging
 import os
 import zipfile
-from typing import Collection, Iterable, Iterator, List, Mapping, NamedTuple, Optional
+from typing import (
+    Collection,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    NamedTuple,
+    Optional,
+)
 
-from pip._internal.exceptions import InvalidWheel, NoneMetadataError, UnsupportedWheel
+from pip._internal.exceptions import (
+    InvalidWheel,
+    NoneMetadataError,
+    UnsupportedWheel,
+)
 from pip._internal.utils.egg_link import egg_link_path_from_location
 from pip._internal.utils.misc import display_path, normalize_path
 from pip._internal.utils.wheel import parse_wheel, read_wheel_metadata_file

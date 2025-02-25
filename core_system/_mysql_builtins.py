@@ -1275,7 +1275,9 @@ if __name__ == "__main__":  # pragma: no cover
         """Parse optimizer hints in lex.h."""
 
         results = set()
-        for m in re.finditer(r'{SYM_H\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I):
+        for m in re.finditer(
+            r'{SYM_H\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I
+        ):
             results.add(m.group("keyword").lower())
 
         if not results:
@@ -1287,7 +1289,9 @@ if __name__ == "__main__":  # pragma: no cover
         """Parse MySQL function names from lex.h."""
 
         results = set()
-        for m in re.finditer(r'{SYM_FN?\("(?P<function>[a-z0-9_]+)",', f, flags=re.I):
+        for m in re.finditer(
+            r'{SYM_FN?\("(?P<function>[a-z0-9_]+)",', f, flags=re.I
+        ):
             results.add(m.group("function").lower())
 
         if not results:
@@ -1316,10 +1320,14 @@ if __name__ == "__main__":  # pragma: no cover
             data = f.read()
 
         # Line to start/end inserting
-        re_match = re.compile(rf"^{field_name}\s*=\s*\($.*?^\s*\)$", re.M | re.S)
+        re_match = re.compile(
+            rf"^{field_name}\s*=\s*\($.*?^\s*\)$", re.M | re.S
+        )
         m = re_match.search(data)
         if not m:
-            raise ValueError(f"Could not find an existing definition for {field_name}")
+            raise ValueError(
+                f"Could not find an existing definition for {field_name}"
+            )
 
         new_block = format_lines(field_name, content)
         data = data[: m.start()] + new_block + data[m.end() :]

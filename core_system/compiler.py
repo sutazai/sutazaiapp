@@ -44,7 +44,10 @@ operators = {
 
 def optimizeconst(f: F) -> F:
     def new_func(
-        self: "CodeGenerator", node: nodes.Expr, frame: "Frame", **kwargs: t.Any
+        self: "CodeGenerator",
+        node: nodes.Expr,
+        frame: "Frame",
+        **kwargs: t.Any,
     ) -> t.Any:
         # Only optimize if the frame is not volatile
         if self.optimizer is not None and not frame.eval_ctx.volatile:
@@ -58,7 +61,9 @@ def optimizeconst(f: F) -> F:
     return update_wrapper(new_func, f)  # type: ignore[return-value]
 
 
-def _make_binop(op: str) -> t.Callable[["CodeGenerator", nodes.BinExpr, "Frame"], None]:
+def _make_binop(
+    op: str,
+) -> t.Callable[["CodeGenerator", nodes.BinExpr, "Frame"], None]:
     @optimizeconst
     def visitor(self: "CodeGenerator", node: nodes.BinExpr, frame: Frame) -> None:
         if (
@@ -1227,7 +1232,8 @@ class CodeGenerator(NodeVisitor):
         # variable is a special one we have to enforce aliasing for it.
         if node.recursive:
             self.writeline(
-                f"{self.func('loop')}(reciter, loop_render_func, depth=0):", node
+                f"{self.func('loop')}(reciter, loop_render_func, depth=0):",
+                node,
             )
             self.indent()
             self.buffer(loop_frame)
@@ -1792,7 +1798,10 @@ class CodeGenerator(NodeVisitor):
 
     @contextmanager
     def _filter_test_common(
-        self, node: t.Union[nodes.Filter, nodes.Test], frame: Frame, is_filter: bool
+        self,
+        node: t.Union[nodes.Filter, nodes.Test],
+        frame: Frame,
+        is_filter: bool,
     ) -> t.Iterator[None]:
         if self.environment.is_async:
             self.write("(await auto_await(")

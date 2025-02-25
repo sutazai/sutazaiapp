@@ -166,7 +166,10 @@ def track(
 
     with progress:
         yield from progress.track(
-            sequence, total=total, description=description, update_period=update_period
+            sequence,
+            total=total,
+            description=description,
+            update_period=update_period,
         )
 
 
@@ -542,7 +545,10 @@ class RenderableColumn(ProgressColumn):
     """
 
     def __init__(
-        self, renderable: RenderableType = "", *, table_column: Optional[Column] = None
+        self,
+        renderable: RenderableType = "",
+        *,
+        table_column: Optional[Column] = None,
     ):
         self.renderable = renderable
         super().__init__(table_column=table_column)
@@ -874,7 +880,17 @@ class DownloadColumn(ProgressColumn):
         if self.binary_units:
             unit, suffix = filesize.pick_unit_and_suffix(
                 unit_and_suffix_calculation_base,
-                ["bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"],
+                [
+                    "bytes",
+                    "KiB",
+                    "MiB",
+                    "GiB",
+                    "TiB",
+                    "PiB",
+                    "EiB",
+                    "ZiB",
+                    "YiB",
+                ],
                 1024,
             )
         else:

@@ -1,6 +1,5 @@
 import cProfile.Profile
 
-import :
 import =
 import __init__
 import cProfileclass
@@ -13,3 +12,5 @@ import self.profiler.enable
 import self.profiler.print_stats
 import start
 import stop
+
+import:

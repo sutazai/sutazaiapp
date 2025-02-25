@@ -20,7 +20,10 @@ from packaging.metadata import Metadata
 from setuptools._static import is_static
 from setuptools.command.egg_info import write_requirements
 from setuptools.config import expand, pyprojecttoml, setupcfg
-from setuptools.config._apply_pyprojecttoml import _MissingDynamic, _some_attrgetter
+from setuptools.config._apply_pyprojecttoml import (
+    _MissingDynamic,
+    _some_attrgetter,
+)
 from setuptools.dist import Distribution
 from setuptools.errors import RemovedConfigError
 
@@ -215,19 +218,19 @@ def test_no_explicit_content_type_for_missing_extension(tmp_path):
             PEP621_EXAMPLE,
             (
                 'Brett Cannon <brett@python.org>, "John X. Ãørçeč" <john@utf8.org>, '
-                'Γαμα קּ 東 <gama@utf8.org>'
+                "Γαμα קּ 東 <gama@utf8.org>"
             ),
-            id='non-international-emails',
+            id="non-international-emails",
         ),
         pytest.param(
             PEP621_INTERNATIONAL_EMAIL_EXAMPLE,
-            'Степан Бандера <криївка@оун-упа.укр>',
+            "Степан Бандера <криївка@оун-упа.укр>",
             marks=pytest.mark.xfail(
                 reason="CPython's `email.headerregistry.Address` only supports "
-                'RFC 5322, as of Nov 10, 2022 and latest Python 3.11.0',
+                "RFC 5322, as of Nov 10, 2022 and latest Python 3.11.0",
                 strict=True,
             ),
-            id='international-email',
+            id="international-email",
         ),
     ),
 )
@@ -283,7 +286,7 @@ class TestLicenseFiles:
         assert dist.metadata.license == "LicenseRef-Proprietary\n"
 
     def test_default_patterns(self, tmp_path):
-        setuptools_config = '[tool.setuptools]\nzip-safe = false'
+        setuptools_config = "[tool.setuptools]\nzip-safe = false"
         # ^ used just to trigger section validation
         pyproject = self.base_pyproject(tmp_path, setuptools_config)
 
@@ -294,7 +297,10 @@ class TestLicenseFiles:
 
         dist = pyprojecttoml.apply_configuration(makedist(tmp_path), pyproject)
         assert (tmp_path / "LICENSE.txt").exists()  # from base example
-        assert set(dist.metadata.license_files) == {*license_files, "LICENSE.txt"}
+        assert set(dist.metadata.license_files) == {
+            *license_files,
+            "LICENSE.txt",
+        }
 
 
 class TestPyModules:
@@ -373,8 +379,16 @@ class TestPresetField:
         ("attr", "field", "value"),
         [
             ("classifiers", "classifiers", ["Private :: Classifier"]),
-            ("entry_points", "scripts", {"console_scripts": ["foobar=foobar:main"]}),
-            ("entry_points", "gui-scripts", {"gui_scripts": ["bazquux=bazquux:main"]}),
+            (
+                "entry_points",
+                "scripts",
+                {"console_scripts": ["foobar=foobar:main"]},
+            ),
+            (
+                "entry_points",
+                "gui-scripts",
+                {"gui_scripts": ["bazquux=bazquux:main"]},
+            ),
             pytest.param(
                 *("install_requires", "dependencies", ["six"]),
                 marks=[
@@ -521,7 +535,12 @@ def core_metadata(dist) -> str:
     skip_lines = set()
     # ---- DIFF NORMALISATION ----
     # PEP 621 is very particular about author/maintainer metadata conversion, so skip
-    skip_prefixes += ("Author:", "Author-email:", "Maintainer:", "Maintainer-email:")
+    skip_prefixes += (
+        "Author:",
+        "Author-email:",
+        "Maintainer:",
+        "Maintainer-email:",
+    )
     # May be redundant with Home-page
     skip_prefixes += ("Project-URL: Homepage,", "Home-page:")
     # May be missing in original (relying on default) but backfilled in the TOML

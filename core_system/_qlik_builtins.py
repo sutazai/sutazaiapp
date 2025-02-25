@@ -1,11 +1,11 @@
 """
-    pygments.lexers._qlik_builtins
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pygments.lexers._qlik_builtins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Qlik builtins.
+Qlik builtins.
 
-    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+:license: BSD, see LICENSE for details.
 """
 
 # operators
@@ -186,7 +186,8 @@ STATEMENT_LIST = [
 ]
 
 # Script functions
-#    see https://help.qlik.com/en-US/sense/August2021/Subsystems/Hub/Content/Sense_Hub/Scripting/functions-in-scripts-chart-expressions.htm
+# see
+# https://help.qlik.com/en-US/sense/August2021/Subsystems/Hub/Content/Sense_Hub/Scripting/functions-in-scripts-chart-expressions.htm
 SCRIPT_FUNCTIONS = [
     # Basic aggregation functions in the data load script
     "FirstSortedValue",
@@ -611,7 +612,8 @@ SCRIPT_FUNCTIONS = [
 ]
 
 # System variables and constants
-# see https://help.qlik.com/en-US/sense/August2021/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-variables-in-data-load-editor.htm
+# see
+# https://help.qlik.com/en-US/sense/August2021/Subsystems/Hub/Content/Sense_Hub/Scripting/work-with-variables-in-data-load-editor.htm
 CONSTANT_LIST = [
     # System Variables
     "floppy",

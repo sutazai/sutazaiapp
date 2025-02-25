@@ -10,24 +10,25 @@ Comprehensive system optimization framework providing:
 """
 
 import json
-import logging
 import multiprocessing
 import os
 import platform
-import subprocess
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
 
 import psutil
 
-# Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-# Internal system imports
 from config.config_manager import ConfigurationManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
 from security.security_manager import SecurityManager
+
+# Add project root to Python path
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
+
+# Internal system imports
 
 
 class AdvancedSystemOptimizer:
@@ -83,7 +84,9 @@ class AdvancedSystemOptimizer:
                 "cpu_frequencies": [
                     freq.current for freq in psutil.cpu_freq(percpu=True)
                 ],
-                "cpu_usage_percent": psutil.cpu_percent(interval=1, percpu=True),
+                "cpu_usage_percent": psutil.cpu_percent(
+                    interval=1, percpu=True
+                ),
             },
             "memory_metrics": {
                 "total_memory": psutil.virtual_memory().total,
@@ -113,7 +116,9 @@ class AdvancedSystemOptimizer:
 
         return metrics
 
-    def analyze_performance_bottlenecks(self, metrics: Dict[str, Any]) -> List[str]:
+    def analyze_performance_bottlenecks(
+        self, metrics: Dict[str, Any]
+    ) -> List[str]:
         """
         Analyze system performance and identify potential bottlenecks
 
@@ -180,10 +185,14 @@ class AdvancedSystemOptimizer:
         )
 
         # Security assessment
-        security_assessment = self.security_manager.comprehensive_security_scan()
+        security_assessment = (
+            self.security_manager.comprehensive_security_scan()
+        )
 
         # Configuration validation
-        configuration_validation = self.config_manager.validate_configurations()
+        configuration_validation = (
+            self.config_manager.validate_configurations()
+        )
 
         # Construct optimization report
         optimization_report = {
@@ -227,7 +236,8 @@ class AdvancedSystemOptimizer:
                 "performance_recommendations", []
             ):
                 self.logger.log(
-                    f"Applying performance optimization: {recommendation}", level="info"
+                    f"Applying performance optimization: {recommendation}",
+                    level="info",
                 )
 
             # Apply security recommendations
@@ -236,7 +246,8 @@ class AdvancedSystemOptimizer:
             ).get("recommendations", [])
             for recommendation in security_recommendations:
                 self.logger.log(
-                    f"Applying security optimization: {recommendation}", level="info"
+                    f"Applying security optimization: {recommendation}",
+                    level="info",
                 )
 
             # Validate and update configurations
@@ -244,7 +255,9 @@ class AdvancedSystemOptimizer:
                 "configuration_validation", {}
             )
             if not configuration_validation.get("is_valid", False):
-                self.config_manager.update_configurations(configuration_validation)
+                self.config_manager.update_configurations(
+                    configuration_validation
+                )
 
         except Exception as e:
             self.logger.log(

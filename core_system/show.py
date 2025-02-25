@@ -68,7 +68,9 @@ class _PackageInfo(NamedTuple):
     files: Optional[List[str]]
 
 
-def search_packages_info(query: List[str]) -> Generator[_PackageInfo, None, None]:
+def search_packages_info(
+    query: List[str],
+) -> Generator[_PackageInfo, None, None]:
     """
     Gather details from installed distributions. Print distribution name,
     version, location, and installed files. Installed files requires a
@@ -85,7 +87,9 @@ def search_packages_info(query: List[str]) -> Generator[_PackageInfo, None, None
     if missing:
         logger.warning("Package(s) not found: %s", ", ".join(missing))
 
-    def _get_requiring_packages(current_dist: BaseDistribution) -> Iterator[str]:
+    def _get_requiring_packages(
+        current_dist: BaseDistribution,
+    ) -> Iterator[str]:
         return (
             dist.metadata["Name"] or "UNKNOWN"
             for dist in installed.values()

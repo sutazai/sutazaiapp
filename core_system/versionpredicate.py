@@ -162,7 +162,8 @@ def split_provision(value):
     global _provision_rx
     if _provision_rx is None:
         _provision_rx = re.compile(
-            r"([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)(?:\s*\(\s*([^)\s]+)\s*\))?$", re.ASCII
+            r"([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)(?:\s*\(\s*([^)\s]+)\s*\))?$",
+            re.ASCII,
         )
     value = value.strip()
     m = _provision_rx.match(value)

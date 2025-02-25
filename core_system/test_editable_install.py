@@ -46,7 +46,7 @@ def editable_opts(request):
 
 
 EXAMPLE = {
-    'pyproject.toml': dedent(
+    "pyproject.toml": dedent(
         """\
         [build-system]
         requires = ["setuptools"]
@@ -235,7 +235,8 @@ class TestLegacyNamespaces:
 
     def test_nspkg_file_is_unique(self, tmp_path, monkeypatch):
         deprecation = pytest.warns(
-            SetuptoolsDeprecationWarning, match=".*namespace_packages parameter.*"
+            SetuptoolsDeprecationWarning,
+            match=".*namespace_packages parameter.*",
         )
         installation_dir = tmp_path / ".installation_dir"
         installation_dir.mkdir()
@@ -303,8 +304,8 @@ class TestPep420Namespaces:
         normally using pip and the other installed in editable mode
         should allow importing both packages.
         """
-        pkg_A = namespaces.build_pep420_namespace_package(tmp_path, 'myns.n.pkgA')
-        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, 'myns.n.pkgB')
+        pkg_A = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgA")
+        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgB")
         # use pip to install to the target directory
         opts = editable_opts[:]
         opts.append("--no-build-isolation")  # force current version of setuptools
@@ -335,8 +336,8 @@ class TestPep420Namespaces:
         }
         jaraco.path.build(files, prefix=tmp_path)
         pkg_A = tmp_path / "pkgA"
-        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, 'myns.n.pkgB')
-        pkg_C = namespaces.build_pep420_namespace_package(tmp_path, 'myns.n.pkgC')
+        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgB")
+        pkg_C = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgC")
 
         # use pip to install to the target directory
         opts = editable_opts[:]
@@ -401,13 +402,13 @@ def test_editable_with_prefix(tmp_path, sample_project, editable_opts):
     """
     Editable install to a prefix should be discoverable.
     """
-    prefix = tmp_path / 'prefix'
+    prefix = tmp_path / "prefix"
 
     # figure out where pip will likely install the package
     site_packages_all = [
         prefix / Path(path).relative_to(sys.prefix)
         for path in sys.path
-        if 'site-packages' in path and path.startswith(sys.prefix)
+        if "site-packages" in path and path.startswith(sys.prefix)
     ]
 
     for sp in site_packages_all:
@@ -419,21 +420,21 @@ def test_editable_with_prefix(tmp_path, sample_project, editable_opts):
     env = dict(os.environ, PYTHONPATH=os.pathsep.join(map(str, site_packages_all)))
     cmd = [
         sys.executable,
-        '-m',
-        'pip',
-        'install',
-        '--editable',
+        "-m",
+        "pip",
+        "install",
+        "--editable",
         str(sample_project),
-        '--prefix',
+        "--prefix",
         str(prefix),
-        '--no-build-isolation',
+        "--no-build-isolation",
         *editable_opts,
     ]
     subprocess.check_call(cmd, env=env)
 
     # now run 'sample' with the prefix on the PYTHONPATH
-    bin = 'Scripts' if platform.system() == 'Windows' else 'bin'
-    exe = prefix / bin / 'sample'
+    bin = "Scripts" if platform.system() == "Windows" else "bin"
+    exe = prefix / bin / "sample"
     subprocess.check_call([exe], env=env)
 
 
@@ -827,7 +828,15 @@ def test_pkg_roots(tmp_path):
     assert ns == {"f", "f.g"}
 
     ns = set(_find_virtual_namespaces(roots))
-    assert ns == {"a.b", "a.b.c.x", "a.b.c.x.y", "m", "m.n", "m.n.o", "m.n.o.p"}
+    assert ns == {
+        "a.b",
+        "a.b.c.x",
+        "a.b.c.x.y",
+        "m",
+        "m.n",
+        "m.n.o",
+        "m.n.o.p",
+    }
 
 
 class TestOverallBehaviour:
@@ -1176,7 +1185,7 @@ class TestCustomBuildWheel:
         cmd = editable_wheel(dist)
         cmd.ensure_finalized()
         cmd.run()
-        wheel_file = str(next(Path().glob('dist/*.whl')))
+        wheel_file = str(next(Path().glob("dist/*.whl")))
         assert "editable" in wheel_file
 
 
@@ -1190,7 +1199,8 @@ class TestCustomBuildExt:
         dist.cmdclass["build_ext"] = MyBuildExt
 
     @pytest.mark.skipif(
-        sys.platform != "linux", reason="compilers may fail without correct setup"
+        sys.platform != "linux",
+        reason="compilers may fail without correct setup",
     )
     def test_distutils_leave_inplace_files(self, tmpdir_cwd):
         jaraco.path.build({"module.c": ""})
@@ -1204,7 +1214,7 @@ class TestCustomBuildExt:
         cmd = editable_wheel(dist)
         cmd.ensure_finalized()
         cmd.run()
-        wheel_file = str(next(Path().glob('dist/*.whl')))
+        wheel_file = str(next(Path().glob("dist/*.whl")))
         assert "editable" in wheel_file
         files = [p for p in Path().glob("module.*") if p.suffix != ".c"]
         assert len(files) == 1
@@ -1241,7 +1251,10 @@ def install_project(name, venv, tmp_path, files, *opts):
     project = tmp_path / name
     project.mkdir()
     jaraco.path.build(files, prefix=project)
-    opts = [*opts, "--no-build-isolation"]  # force current version of setuptools
+    opts = [
+        *opts,
+        "--no-build-isolation",
+    ]  # force current version of setuptools
     out = venv.run(
         ["python", "-m", "pip", "-v", "install", "-e", str(project), *opts],
         stderr=subprocess.STDOUT,
@@ -1255,7 +1268,7 @@ def _addsitedirs(new_dirs):
     If we manipulate sys.path/PYTHONPATH, we can force it to run our code,
     which invokes ``addsitedir`` and ensure ``.pth`` files are loaded.
     """
-    content = '\n'.join(
+    content = "\n".join(
         ("import site",)
         + tuple(f"site.addsitedir({os.fspath(new_dir)!r})" for new_dir in new_dirs)
     )

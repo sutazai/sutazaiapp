@@ -36,7 +36,7 @@ INTERPRETER_SHORT_NAMES: Dict[str, str] = {
 }
 
 
-_32_BIT_INTERPRETER = sys.maxsize <= 2 ** 32
+_32_BIT_INTERPRETER = sys.maxsize <= 2**32
 
 
 class Tag:
@@ -113,7 +113,8 @@ def _get_config_var(name: str, warn: bool = False) -> Union[int, str, None]:
     value = sysconfig.get_config_var(name)
     if value is None and warn:
         logger.debug(
-            "Config variable '%s' is unset, Python ABI tag may be incorrect", name
+            "Config variable '%s' is unset, Python ABI tag may be incorrect",
+            name,
         )
     return value
 

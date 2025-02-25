@@ -1,5 +1,4 @@
-"""Prepares a distribution for installation
-"""
+"""Prepares a distribution for installation"""
 
 # The following comment should be removed at some point in the future.
 # mypy: strict-optional=False
@@ -10,7 +9,9 @@ import shutil
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
-from pip._internal.distributions import make_distribution_for_install_requirement
+from pip._internal.distributions import (
+    make_distribution_for_install_requirement,
+)
 from pip._internal.distributions.installed import InstalledDistribution
 from pip._internal.exceptions import (
     DirectoryUrlHashUnsupported,
@@ -113,7 +114,9 @@ def get_http_url(
 
 
 def get_file_url(
-    link: Link, download_dir: Optional[str] = None, hashes: Optional[Hashes] = None
+    link: Link,
+    download_dir: Optional[str] = None,
+    hashes: Optional[Hashes] = None,
 ) -> File:
     """Get file and optionally check its hash."""
     # If a download dir is specified, is the file already there and valid?
@@ -716,7 +719,10 @@ class RequirementPreparer:
             f"is set to {req.satisfied_by}"
         )
         logger.info(
-            "Requirement %s: %s (%s)", skip_reason, req, req.satisfied_by.version
+            "Requirement %s: %s (%s)",
+            skip_reason,
+            req,
+            req.satisfied_by.version,
         )
         with indent_log():
             if self.require_hashes:

@@ -161,7 +161,11 @@ class AuthorizationServer(_AuthorizationServer):
             body = request.form.to_dict(flat=True)
         else:
             body = None
-        return OAuth1Request(request.method, request.url, body, request.headers)
+        return OAuth1Request(
+            request.method, request.url, body, request.headers
+        )
 
     def handle_response(self, status_code, payload, headers):
-        return Response(url_encode(payload), status=status_code, headers=headers)
+        return Response(
+            url_encode(payload), status=status_code, headers=headers
+        )

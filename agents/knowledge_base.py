@@ -11,7 +11,8 @@ class SutazAiKnowledgeBase:
         Analyze system performance and return areas for improvement.
 
         Returns:
-            list: A list of dictionaries containing performance metrics. Each dictionary should have keys 'name' and 'impact'.
+            list: A list of dictionaries containing performance metrics.
+                Each dictionary has keys 'name' and 'impact'.
         """
         # Dummy implementation returning sample metrics.
         return [

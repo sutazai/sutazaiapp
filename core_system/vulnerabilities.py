@@ -30,25 +30,54 @@ class DictConverter(object):
         pass
 
 
-announcement_nmt = namedtuple('Announcement', ['type', 'message'])
-remediation_nmt = namedtuple('Remediation', ['Package', 'closest_secure_version', 'secure_versions',
-                                             'latest_package_version'])
-cve_nmt = namedtuple('Cve', ['name', 'cvssv2', 'cvssv3'])
-severity_nmt = namedtuple('Severity', ['source', 'cvssv2', 'cvssv3'])
-vulnerability_nmt = namedtuple('Vulnerability',
-                               ['vulnerability_id', 'package_name', 'pkg', 'ignored', 'ignored_reason', 'ignored_expires',
-                                'vulnerable_spec', 'all_vulnerable_specs', 'analyzed_version', 'analyzed_requirement',
-                                'advisory', 'is_transitive', 'published_date', 'fixed_versions',
-                                'closest_versions_without_known_vulnerabilities', 'resources', 'CVE', 'severity',
-                                'affected_versions', 'more_info_url'])
-RequirementFile = namedtuple('RequirementFile', ['path'])
+announcement_nmt = namedtuple("Announcement", ["type", "message"])
+remediation_nmt = namedtuple(
+    "Remediation",
+    [
+        "Package",
+        "closest_secure_version",
+        "secure_versions",
+        "latest_package_version",
+    ],
+)
+cve_nmt = namedtuple("Cve", ["name", "cvssv2", "cvssv3"])
+severity_nmt = namedtuple("Severity", ["source", "cvssv2", "cvssv3"])
+vulnerability_nmt = namedtuple(
+    "Vulnerability",
+    [
+        "vulnerability_id",
+        "package_name",
+        "pkg",
+        "ignored",
+        "ignored_reason",
+        "ignored_expires",
+        "vulnerable_spec",
+        "all_vulnerable_specs",
+        "analyzed_version",
+        "analyzed_requirement",
+        "advisory",
+        "is_transitive",
+        "published_date",
+        "fixed_versions",
+        "closest_versions_without_known_vulnerabilities",
+        "resources",
+        "CVE",
+        "severity",
+        "affected_versions",
+        "more_info_url",
+    ],
+)
+RequirementFile = namedtuple("RequirementFile", ["path"])
 
 
 class SafetyRequirement(Requirement):
     """
     A subclass of Requirement that includes additional attributes and methods for safety requirements.
     """
-    def __init__(self, requirement: Union[str, Dependency], found: Optional[str] = None) -> None:
+
+    def __init__(
+        self, requirement: Union[str, Dependency], found: Optional[str] = None
+    ) -> None:
         """
         Initialize a SafetyRequirement.
 
@@ -71,19 +100,25 @@ class SafetyRequirement(Requirement):
         raw_line = dep.line
         to_parse = dep.line
         # Hash and comments are only a pip feature, so removing them.
-        if '#' in to_parse:
-            to_parse = dep.line.split('#')[0]
+        if "#" in to_parse:
+            to_parse = dep.line.split("#")[0]
 
         for req_hash in dep.hashes:
-            to_parse = to_parse.replace(req_hash, '')
+            to_parse = to_parse.replace(req_hash, "")
 
-        to_parse = to_parse.replace('\\', '').rstrip()
+        to_parse = to_parse.replace("\\", "").rstrip()
 
         try:
             # Try to build a PEP Requirement from the cleaned line
             super(SafetyRequirement, self).__init__(to_parse)
         except Exception:
-            raise InvalidRequirementError(line=requirement.line if isinstance(requirement, Dependency) else requirement)
+            raise InvalidRequirementError(
+                line=(
+                    requirement.line
+                    if isinstance(requirement, Dependency)
+                    else requirement
+                )
+            )
 
         self.raw = raw_line
         self.found = found
@@ -102,18 +137,18 @@ class SafetyRequirement(Requirement):
             dict: The dictionary representation of the requirement.
         """
         specifier_obj = self.specifier
-        if not "specifier_obj" in kwargs:
+        if "specifier_obj" not in kwargs:
             specifier_obj = str(self.specifier)
 
-        return   {
-                        'raw': self.raw,
-                        'extras': list(self.extras),
-                        'marker': str(self.marker) if self.marker else None,
-                        'name': self.name,
-                        'specifier': specifier_obj,
-                        'url': self.url,
-                        'found': self.found
-                    }
+        return {
+            "raw": self.raw,
+            "extras": list(self.extras),
+            "marker": str(self.marker) if self.marker else None,
+            "name": self.name,
+            "specifier": specifier_obj,
+            "url": self.url,
+            "found": self.found,
+        }
 
 
 @dataclass
@@ -121,6 +156,7 @@ class Package(DictConverter):
     """
     A class representing a package.
     """
+
     name: str
     version: Optional[str]
     requirements: List[SafetyRequirement]
@@ -151,7 +187,9 @@ class Package(DictConverter):
         Returns:
             filter: A filter object with the unpinned requirements.
         """
-        return filter(lambda r: not is_pinned_requirement(r.specifier), self.requirements)
+        return filter(
+            lambda r: not is_pinned_requirement(r.specifier), self.requirements
+        )
 
     def filter_by_supported_versions(self, versions: List[str]) -> List[str]:
         """
@@ -184,9 +222,10 @@ class Package(DictConverter):
         Returns:
             Set[str]: The set of versions.
         """
-        pkg_meta = db_full.get('meta', {}).get('packages', {}).get(self.name, {})
+        pkg_meta = db_full.get("meta", {}).get("packages", {}).get(self.name, {})
         versions = self.filter_by_supported_versions(
-            pkg_meta.get("insecure_versions", []) + pkg_meta.get("secure_versions", []))
+            pkg_meta.get("insecure_versions", []) + pkg_meta.get("secure_versions", [])
+        )
         return set(versions)
 
     def refresh_from(self, db_full: Dict) -> None:
@@ -196,15 +235,26 @@ class Package(DictConverter):
         Args:
             db_full (Dict): The full database.
         """
-        base_domain = db_full.get('meta', {}).get('base_domain')
-        pkg_meta = db_full.get('meta', {}).get('packages', {}).get(canonicalize_name(self.name), {})
+        base_domain = db_full.get("meta", {}).get("base_domain")
+        pkg_meta = (
+            db_full.get("meta", {})
+            .get("packages", {})
+            .get(canonicalize_name(self.name), {})
+        )
 
-        kwargs = {'insecure_versions': self.filter_by_supported_versions(pkg_meta.get("insecure_versions", [])),
-                  'secure_versions': self.filter_by_supported_versions(pkg_meta.get("secure_versions", [])),
-                  'latest_version_without_known_vulnerabilities': pkg_meta.get("latest_secure_version",
-                                                                               None),
-                  'latest_version': pkg_meta.get("latest_version", None),
-                  'more_info_url': f"{base_domain}{pkg_meta.get('more_info_path', '')}"}
+        kwargs = {
+            "insecure_versions": self.filter_by_supported_versions(
+                pkg_meta.get("insecure_versions", [])
+            ),
+            "secure_versions": self.filter_by_supported_versions(
+                pkg_meta.get("secure_versions", [])
+            ),
+            "latest_version_without_known_vulnerabilities": pkg_meta.get(
+                "latest_secure_version", None
+            ),
+            "latest_version": pkg_meta.get("latest_version", None),
+            "more_info_url": f"{base_domain}{pkg_meta.get('more_info_path', '')}",
+        }
 
         self.update(kwargs)
 
@@ -218,23 +268,24 @@ class Package(DictConverter):
         Returns:
             dict: The dictionary representation of the package.
         """
-        if kwargs.get('short_version', False):
+        if kwargs.get("short_version", False):
             return {
-                'name': self.name,
-                'version': self.version,
-                'requirements': self.requirements
+                "name": self.name,
+                "version": self.version,
+                "requirements": self.requirements,
             }
 
-        return {'name': self.name,
-                'version': self.version,
-                'requirements': self.requirements,
-                'found': None,
-                'insecure_versions': self.insecure_versions,
-                'secure_versions': self.secure_versions,
-                'latest_version_without_known_vulnerabilities': self.latest_version_without_known_vulnerabilities,
-                'latest_version': self.latest_version,
-                'more_info_url': self.more_info_url
-                }
+        return {
+            "name": self.name,
+            "version": self.version,
+            "requirements": self.requirements,
+            "found": None,
+            "insecure_versions": self.insecure_versions,
+            "secure_versions": self.secure_versions,
+            "latest_version_without_known_vulnerabilities": self.latest_version_without_known_vulnerabilities,
+            "latest_version": self.latest_version,
+            "more_info_url": self.more_info_url,
+        }
 
     def update(self, new: Dict) -> None:
         """
@@ -252,7 +303,7 @@ class Announcement(announcement_nmt):
     """
     A class representing an announcement.
     """
-    pass
+
 
 
 class Remediation(remediation_nmt, DictConverter):
@@ -267,11 +318,12 @@ class Remediation(remediation_nmt, DictConverter):
         Returns:
             Dict: The dictionary representation of the remediation.
         """
-        return {'package': self.Package.name,
-                'closest_secure_version': self.closest_secure_version,
-                'secure_versions': self.secure_versions,
-                'latest_package_version': self.latest_package_version
-                }
+        return {
+            "package": self.Package.name,
+            "closest_secure_version": self.closest_secure_version,
+            "secure_versions": self.secure_versions,
+            "latest_package_version": self.latest_package_version,
+        }
 
 
 @dataclass
@@ -279,6 +331,7 @@ class Fix:
     """
     A class representing a fix.
     """
+
     dependency: Any = None
     previous_version: Any = None
     previous_spec: Optional[str] = None
@@ -304,13 +357,18 @@ class CVE(cve_nmt, DictConverter):
         Returns:
             Dict: The dictionary representation of the CVE.
         """
-        return {'name': self.name, 'cvssv2': self.cvssv2, 'cvssv3': self.cvssv3}
+        return {
+            "name": self.name,
+            "cvssv2": self.cvssv2,
+            "cvssv3": self.cvssv3,
+        }
 
 
 class Severity(severity_nmt, DictConverter):
     """
     A class representing the severity of a vulnerability.
     """
+
     def to_dict(self) -> Dict:
         """
         Convert the severity to a dictionary.
@@ -318,10 +376,10 @@ class Severity(severity_nmt, DictConverter):
         Returns:
             Dict: The dictionary representation of the severity.
         """
-        result = {'severity': {'source': self.source}}
+        result = {"severity": {"source": self.source}}
 
-        result['severity']['cvssv2'] = self.cvssv2
-        result['severity']['cvssv3'] = self.cvssv3
+        result["severity"]["cvssv2"] = self.cvssv2
+        result["severity"]["cvssv3"] = self.cvssv3
 
         return result
 
@@ -330,6 +388,7 @@ class SafetyEncoder(json.JSONEncoder):
     """
     A custom JSON encoder for Safety related objects.
     """
+
     def default(self, value: Any) -> Any:
         """
         Override the default method to handle custom objects.
@@ -342,7 +401,9 @@ class SafetyEncoder(json.JSONEncoder):
         """
         if isinstance(value, SafetyRequirement):
             return value.to_dict()
-        elif isinstance(value, Version) or (legacyType and isinstance(value, legacyType)):
+        elif isinstance(value, Version) or (
+            legacyType and isinstance(value, legacyType)
+        ):
             return str(value)
         else:
             return super().default(value)
@@ -360,11 +421,14 @@ class Vulnerability(vulnerability_nmt):
         Returns:
             Dict: The dictionary representation of the vulnerability.
         """
-        empty_list_if_none = ['fixed_versions', 'closest_versions_without_known_vulnerabilities', 'resources']
-        result = {
-        }
+        empty_list_if_none = [
+            "fixed_versions",
+            "closest_versions_without_known_vulnerabilities",
+            "resources",
+        ]
+        result = {}
 
-        ignore = ['pkg']
+        ignore = ["pkg"]
 
         for field, value in zip(self._fields, self):
             if field in ignore:
@@ -396,7 +460,11 @@ class Vulnerability(vulnerability_nmt):
         Returns:
             str: The advisory text.
         """
-        return self.advisory.replace('\r', '') if self.advisory else "No advisory found for this vulnerability."
+        return (
+            self.advisory.replace("\r", "")
+            if self.advisory
+            else "No advisory found for this vulnerability."
+        )
 
     def to_model_dict(self) -> Dict:
         """
@@ -414,12 +482,14 @@ class Vulnerability(vulnerability_nmt):
             "id": self.vulnerability_id,
             "package_name": self.package_name,
             "vulnerable_spec": affected_spec,
-            "analyzed_specification": self.analyzed_requirement.raw
+            "analyzed_specification": self.analyzed_requirement.raw,
         }
 
         if self.ignored:
-            repr["ignored"] = {"reason": self.ignored_reason,
-                               "expires": self.ignored_expires}
+            repr["ignored"] = {
+                "reason": self.ignored_reason,
+                "expires": self.ignored_expires,
+            }
 
         return repr
 
@@ -429,6 +499,6 @@ class Safety:
     """
     A class representing Safety settings.
     """
+
     client: Any
     keys: Any
-

@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Optional
 
 from pydantic.dataclasses import dataclass
-from typing_extensions import Self
 
 from ..report.schemas.v3_0 import main as v3_0
 from .base import PolicySource, SafetyBaseModel
@@ -30,13 +29,15 @@ class PolicyFileModel(SafetyBaseModel):
         return v3_0.Policy(id=self.id, path=path, source=source_obj)
 
     @classmethod
-    def from_v30(cls, obj: v3_0.SchemaModelV30) -> 'PolicyFileModel':
-        
+    def from_v30(cls, obj: v3_0.SchemaModelV30) -> "PolicyFileModel":
+
         if not isinstance(obj, v3_0.Policy):
-            raise TypeError('Expected instance of v3_0.Policy')
+            raise TypeError("Expected instance of v3_0.Policy")
 
         file_location = Path(obj.path) if obj.path else None
 
         return PolicyFileModel(
-            id=obj.id, source=PolicySource(obj.source.value), location=file_location
+            id=obj.id,
+            source=PolicySource(obj.source.value),
+            location=file_location,
         )

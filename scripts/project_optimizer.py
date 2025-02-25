@@ -11,6 +11,10 @@ Provides a systematic, autonomous approach to:
 - Architectural integrity validation
 """
 
+from core_system.system_architecture_mapper import SystemArchitectureMapper
+from core_system.inventory_management_system import InventoryManagementSystem
+from core_system.dependency_mapper import AdvancedDependencyMapper
+from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
 import json
 import logging
 import os
@@ -22,12 +26,8 @@ from typing import Any, Dict, List, Optional
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core_system.comprehensive_system_checker import ComprehensiveSystemChecker
 
 # Import internal system components
-from core_system.dependency_mapper import AdvancedDependencyMapper
-from core_system.inventory_management_system import InventoryManagementSystem
-from core_system.system_architecture_mapper import SystemArchitectureMapper
 
 
 class UltraComprehensiveProjectOptimizer:
@@ -58,7 +58,9 @@ class UltraComprehensiveProjectOptimizer:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "project_optimization")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "project_optimization"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -106,8 +108,7 @@ class UltraComprehensiveProjectOptimizer:
         try:
             # 1. Dependency Analysis
             project_analysis["dependency_analysis"] = (
-                self.dependency_mapper.generate_comprehensive_dependency_report()
-            )
+                self.dependency_mapper.generate_comprehensive_dependency_report())
 
             # 2. Architectural Insights
             project_analysis["architectural_insights"] = (
@@ -121,8 +122,7 @@ class UltraComprehensiveProjectOptimizer:
 
             # 4. Inventory Management
             project_analysis["inventory_report"] = (
-                self.inventory_manager.generate_comprehensive_inventory_report()
-            )
+                self.inventory_manager.generate_comprehensive_inventory_report())
 
             # 5. Generate Optimization Recommendations
             project_analysis["optimization_recommendations"] = (
@@ -159,7 +159,9 @@ class UltraComprehensiveProjectOptimizer:
             )
 
         # Architectural optimization recommendations
-        architectural_insights = project_analysis.get("architectural_insights", {})
+        architectural_insights = project_analysis.get(
+            "architectural_insights", {}
+        )
         if architectural_insights.get("high_coupling_modules"):
             recommendations.append(
                 "Refactor high-coupling modules to improve system modularity"
@@ -196,13 +198,17 @@ class UltraComprehensiveProjectOptimizer:
             while not self._stop_optimization.is_set():
                 try:
                     # Perform comprehensive project analysis
-                    project_analysis = self.perform_comprehensive_project_analysis()
+                    project_analysis = (
+                        self.perform_comprehensive_project_analysis()
+                    )
 
                     # Trigger auto-remediation
                     # self.auto_remediation_manager.start_autonomous_remediation()
 
                     # Log key insights
-                    self.logger.info("Autonomous project optimization cycle completed")
+                    self.logger.info(
+                        "Autonomous project optimization cycle completed"
+                    )
                     self.logger.info(
                         f"Optimization Recommendations: {project_analysis.get('optimization_recommendations', [])}"
                     )
@@ -211,7 +217,9 @@ class UltraComprehensiveProjectOptimizer:
                     self._stop_optimization.wait(interval)
 
                 except Exception as e:
-                    self.logger.error(f"Autonomous project optimization failed: {e}")
+                    self.logger.error(
+                        f"Autonomous project optimization failed: {e}"
+                    )
                     self._stop_optimization.wait(
                         interval
                     )  # Backoff on continuous errors
@@ -240,10 +248,14 @@ class UltraComprehensiveProjectOptimizer:
             with open(report_path, "w") as f:
                 json.dump(project_analysis, f, indent=2)
 
-            self.logger.info(f"Project analysis report persisted: {report_path}")
+            self.logger.info(
+                f"Project analysis report persisted: {report_path}"
+            )
 
         except Exception as e:
-            self.logger.error(f"Project analysis report persistence failed: {e}")
+            self.logger.error(
+                f"Project analysis report persistence failed: {e}"
+            )
 
     def stop_autonomous_project_optimization(self):
         """
@@ -269,12 +281,16 @@ def main():
         project_optimizer = UltraComprehensiveProjectOptimizer()
 
         # Perform initial comprehensive project analysis
-        project_analysis = project_optimizer.perform_comprehensive_project_analysis()
+        project_analysis = (
+            project_optimizer.perform_comprehensive_project_analysis()
+        )
 
         print("\n🔍 Ultra-Comprehensive Project Analysis Results 🔍")
 
         print("\nOptimization Recommendations:")
-        for recommendation in project_analysis.get("optimization_recommendations", []):
+        for recommendation in project_analysis.get(
+            "optimization_recommendations", []
+        ):
             print(f"- {recommendation}")
 
         # Optional: Start continuous project optimization

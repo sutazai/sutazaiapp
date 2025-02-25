@@ -318,5 +318,7 @@ class ValidatedFunction:
             model_config = config_wrapper.config_dict
 
         self.model = create_model(
-            to_pascal(self.raw_function.__name__), __base__=DecoratorBaseModel, **fields
+            to_pascal(self.raw_function.__name__),
+            __base__=DecoratorBaseModel,
+            **fields,
         )

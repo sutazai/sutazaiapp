@@ -79,7 +79,9 @@ _completion_scripts = {
 _invalid_ident_char_re = re.compile(r"[^a-zA-Z0-9_]")
 
 
-def get_completion_script(*, prog_name: str, complete_var: str, shell: str) -> str:
+def get_completion_script(
+    *, prog_name: str, complete_var: str, shell: str
+) -> str:
     cf_name = _invalid_ident_char_re.sub("", prog_name.replace("-", "_"))
     script = _completion_scripts.get(shell)
     if script is None:
@@ -160,7 +162,9 @@ def install_fish(*, prog_name: str, complete_var: str, shell: str) -> Path:
     return path_obj
 
 
-def install_powershell(*, prog_name: str, complete_var: str, shell: str) -> Path:
+def install_powershell(
+    *, prog_name: str, complete_var: str, shell: str
+) -> Path:
     subprocess.run(
         [
             shell,
@@ -211,9 +215,17 @@ def install(
     prog_name = prog_name or click.get_current_context().find_root().info_name
     assert prog_name
     if complete_var is None:
-        complete_var = "_{}_COMPLETE".format(prog_name.replace("-", "_").upper())
-    test_disable_detection = os.getenv("_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION")
-    if shell is None and shellingham is not None and not test_disable_detection:
+        complete_var = "_{}_COMPLETE".format(
+            prog_name.replace("-", "_").upper()
+        )
+    test_disable_detection = os.getenv(
+        "_TYPER_COMPLETE_TEST_DISABLE_SHELL_DETECTION"
+    )
+    if (
+        shell is None
+        and shellingham is not None
+        and not test_disable_detection
+    ):
         shell, _ = shellingham.detect_shell()
     if shell == "bash":
         installed_path = install_bash(

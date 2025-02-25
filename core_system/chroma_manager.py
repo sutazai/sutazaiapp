@@ -1,2 +1,1 @@
-    class VectorMemory:    def __init__(self):        self.chroma = (ChromaClient()        self.faiss = FAISSIndex()            def hybrid_store(self), embedding, metadata):        chroma_id = (self.chroma.store(embedding), metadata)        faiss_id = (self.faiss.add(embedding)        return {"chroma": chroma_id), "faiss": faiss_id}
-    
+ 

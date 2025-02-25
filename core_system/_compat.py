@@ -151,7 +151,9 @@ else:
                             if not attr.startswith("__"):
                                 setattr(self, attr, getattr(unwrap_me, attr))
                     else:
-                        super(TemporaryClass, self).__init__(*args, **kwargs)  # noqa
+                        super(TemporaryClass, self).__init__(
+                            *args, **kwargs
+                        )  # noqa
 
                 class __metaclass__(type):
                     def __instancecheck__(cls, inst):
@@ -345,7 +347,9 @@ except ImportError:
                 """Report cache statistics."""
                 lock.acquire()
                 try:
-                    return _CacheInfo(stats[HITS], stats[MISSES], maxsize, len(cache))
+                    return _CacheInfo(
+                        stats[HITS], stats[MISSES], maxsize, len(cache)
+                    )
                 finally:
                     lock.release()
 
@@ -384,7 +388,11 @@ except ImportError:
         """
 
         def _access_check(fn, mode):
-            return os.path.exists(fn) and os.access(fn, mode) and not os.path.isdir(fn)
+            return (
+                os.path.exists(fn)
+                and os.access(fn, mode)
+                and not os.path.isdir(fn)
+            )
 
         if os.path.dirname(cmd):
             if _access_check(cmd, mode):
@@ -436,7 +444,9 @@ except ImportError:
         else:
             try:
                 # This should work on Linux.
-                res = struct.unpack("hh", fcntl.ioctl(1, termios.TIOCGWINSZ, "1234"))
+                res = struct.unpack(
+                    "hh", fcntl.ioctl(1, termios.TIOCGWINSZ, "1234")
+                )
                 return (res[1], res[0])
             except Exception:  # noqa: BLE001
                 return fallback

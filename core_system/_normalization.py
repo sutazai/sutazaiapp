@@ -11,7 +11,9 @@ import packaging
 _VALID_NAME = re.compile(r"^([A-Z0-9]|[A-Z0-9][A-Z0-9._-]*[A-Z0-9])$", re.I)
 _UNSAFE_NAME_CHARS = re.compile(r"[^A-Z0-9._-]+", re.I)
 _NON_ALPHANUMERIC = re.compile(r"[^A-Z0-9]+", re.I)
-_PEP440_FALLBACK = re.compile(r"^v?(?P<safe>(?:[0-9]+!)?[0-9]+(?:\.[0-9]+)*)", re.I)
+_PEP440_FALLBACK = re.compile(
+    r"^v?(?P<safe>(?:[0-9]+!)?[0-9]+(?:\.[0-9]+)*)", re.I
+)
 
 
 def safe_identifier(name: str) -> str:
@@ -21,7 +23,7 @@ def safe_identifier(name: str) -> str:
     >>> safe_identifier("__editable__.myns.pkg-78.9.3_local")
     '__editable___myns_pkg_78_9_3_local'
     """
-    safe = re.sub(r'\W|^(?=\d)', '_', name)
+    safe = re.sub(r"\W|^(?=\d)", "_", name)
     assert safe.isidentifier()
     return safe
 
@@ -56,7 +58,7 @@ def safe_version(version: str) -> str:
     ...
     packaging.version.InvalidVersion: Invalid version: 'ubuntu.lts'
     """
-    v = version.replace(' ', '.')
+    v = version.replace(" ", ".")
     try:
         return str(packaging.version.Version(v))
     except packaging.version.InvalidVersion:
@@ -84,7 +86,7 @@ def best_effort_version(version: str) -> str:
     try:
         return safe_version(version)
     except packaging.version.InvalidVersion:
-        v = version.replace(' ', '.')
+        v = version.replace(" ", ".")
         match = _PEP440_FALLBACK.search(v)
         if match:
             safe = match["safe"]
@@ -128,7 +130,7 @@ def filename_component_broken(value: str) -> str:
     >>> filename_component_broken('foo_bar-baz')
     'foo-bar-baz'
     """
-    return value.replace('_', '-')
+    return value.replace("_", "-")
 
 
 def safer_name(value: str) -> str:

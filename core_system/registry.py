@@ -2,17 +2,23 @@ import functools
 
 from .framework_integration import FrameworkIntegration
 
-__all__ = ['BaseOAuth']
+__all__ = ["BaseOAuth"]
 
 
 OAUTH_CLIENT_PARAMS = (
-    'client_id', 'client_secret',
-    'request_token_url', 'request_token_params',
-    'access_token_url', 'access_token_params',
-    'refresh_token_url', 'refresh_token_params',
-    'authorize_url', 'authorize_params',
-    'api_base_url', 'client_kwargs',
-    'server_metadata_url',
+    "client_id",
+    "client_secret",
+    "request_token_url",
+    "request_token_params",
+    "access_token_url",
+    "access_token_params",
+    "refresh_token_url",
+    "refresh_token_params",
+    "authorize_url",
+    "authorize_params",
+    "api_base_url",
+    "client_kwargs",
+    "server_metadata_url",
 )
 
 
@@ -23,6 +29,7 @@ class BaseOAuth:
 
         oauth = OAuth()
     """
+
     oauth1_client_cls = None
     oauth2_client_cls = None
     framework_integration_cls = FrameworkIntegration
@@ -51,7 +58,7 @@ class BaseOAuth:
             return None
 
         overwrite, config = self._registry[name]
-        client_cls = config.pop('client_cls', None)
+        client_cls = config.pop("client_cls", None)
 
         if client_cls and client_cls.OAUTH_APP_CONFIG:
             kwargs = client_cls.OAUTH_APP_CONFIG
@@ -63,7 +70,7 @@ class BaseOAuth:
         framework = self.framework_integration_cls(name, self.cache)
         if client_cls:
             client = client_cls(framework, name, **kwargs)
-        elif kwargs.get('request_token_url'):
+        elif kwargs.get("request_token_url"):
             client = self.oauth1_client_cls(framework, name, **kwargs)
         else:
             client = self.oauth2_client_cls(framework, name, **kwargs)
@@ -88,8 +95,8 @@ class BaseOAuth:
         return self.create_client(name)
 
     def generate_client_kwargs(self, name, overwrite, **kwargs):
-        fetch_token = kwargs.pop('fetch_token', None)
-        update_token = kwargs.pop('update_token', None)
+        fetch_token = kwargs.pop("fetch_token", None)
+        update_token = kwargs.pop("update_token", None)
 
         config = self.load_config(name, OAUTH_CLIENT_PARAMS)
         if config:
@@ -98,13 +105,13 @@ class BaseOAuth:
         if not fetch_token and self.fetch_token:
             fetch_token = functools.partial(self.fetch_token, name)
 
-        kwargs['fetch_token'] = fetch_token
+        kwargs["fetch_token"] = fetch_token
 
-        if not kwargs.get('request_token_url'):
+        if not kwargs.get("request_token_url"):
             if not update_token and self.update_token:
                 update_token = functools.partial(self.update_token, name)
 
-            kwargs['update_token'] = update_token
+            kwargs["update_token"] = update_token
         return kwargs
 
     def load_config(self, name, params):
@@ -116,7 +123,7 @@ class BaseOAuth:
         except AttributeError:
             if key in self._registry:
                 return self.create_client(key)
-            raise AttributeError('No such client: %s' % key)
+            raise AttributeError("No such client: %s" % key)
 
 
 def _config_client(config, kwargs, overwrite):

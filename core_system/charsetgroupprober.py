@@ -96,7 +96,10 @@ class CharSetGroupProber(CharSetProber):
                 continue
             conf = prober.get_confidence()
             self.logger.debug(
-                "%s %s confidence = %s", prober.charset_name, prober.language, conf
+                "%s %s confidence = %s",
+                prober.charset_name,
+                prober.language,
+                conf,
             )
             if best_conf < conf:
                 best_conf = conf

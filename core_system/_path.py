@@ -10,7 +10,7 @@ from more_itertools import unique_everseen
 if TYPE_CHECKING:
     from typing_extensions import TypeAlias
 
-StrPath: TypeAlias = Union[str, os.PathLike[str]]  #  Same as _typeshed.StrPath
+StrPath: TypeAlias = Union[str, os.PathLike[str]]  # Same as _typeshed.StrPath
 StrPathT = TypeVar("StrPathT", bound=Union[str, os.PathLike[str]])
 
 

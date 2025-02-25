@@ -48,7 +48,9 @@ class ArturoLexer(RegexLexer):
     version_added = "2.14"
 
     def __init__(self, **options):
-        self.handle_annotateds = get_bool_opt(options, "handle_annotateds", True)
+        self.handle_annotateds = get_bool_opt(
+            options, "handle_annotateds", True
+        )
         RegexLexer.__init__(self, **options)
 
     def handle_annotated_strings(self, match):
@@ -90,7 +92,10 @@ class ArturoLexer(RegexLexer):
             (r";.*?$", Comment.Single),
             (r"^((\s#!)|(#!)).*?$", Comment.Hashbang),
             # Constants
-            (words(("false", "true", "maybe"), suffix=r"\b"), Name.Constant),  # boolean
+            (
+                words(("false", "true", "maybe"), suffix=r"\b"),
+                Name.Constant,
+            ),  # boolean
             (
                 words(
                     ("this", "init"),  # class related keywords
@@ -111,7 +116,10 @@ class ArturoLexer(RegexLexer):
             # Note: Attributes can be labeled too
             (r"\.\w+\??:?", Name.Attribute),  # attributes
             # Switch structure
-            (r"(\()(.*?)(\)\?)", bygroups(Punctuation, using(this), Punctuation)),
+            (
+                r"(\()(.*?)(\)\?)",
+                bygroups(Punctuation, using(this), Punctuation),
+            ),
             # Single Line Strings
             (r'"', String.Double, "inside-simple-string"),
             (r"»", String.Single, "inside-smart-string"),

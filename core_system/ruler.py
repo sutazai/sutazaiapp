@@ -15,6 +15,7 @@ You will not need use this class directly until write plugins. For simple
 rules control use [[MarkdownIt.disable]], [[MarkdownIt.enable]] and
 [[MarkdownIt.use]].
 """
+
 from __future__ import annotations
 
 import warnings
@@ -109,7 +110,10 @@ class Ruler(Generic[RuleFuncTv]):
                 self.__cache__[chain].append(rule.fn)
 
     def at(
-        self, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None = None
+        self,
+        ruleName: str,
+        fn: RuleFuncTv,
+        options: RuleOptionsType | None = None,
     ) -> None:
         """Replace rule by name with new function & options.
 
@@ -170,12 +174,16 @@ class Ruler(Generic[RuleFuncTv]):
         if index == -1:
             raise KeyError(f"Parser rule not found: {afterName}")
         self.__rules__.insert(
-            index + 1, Rule[RuleFuncTv](ruleName, True, fn, options.get("alt", []))
+            index + 1,
+            Rule[RuleFuncTv](ruleName, True, fn, options.get("alt", [])),
         )
         self.__cache__ = None
 
     def push(
-        self, ruleName: str, fn: RuleFuncTv, options: RuleOptionsType | None = None
+        self,
+        ruleName: str,
+        fn: RuleFuncTv,
+        options: RuleOptionsType | None = None,
     ) -> None:
         """Push new rule to the end of chain.
 

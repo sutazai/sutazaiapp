@@ -40,7 +40,9 @@ from pip._internal.utils.glibc import libc_ver
 from pip._internal.utils.misc import build_url_from_netloc, parse_netloc
 from pip._internal.utils.urls import url_to_path
 from pip._vendor import requests, urllib3
-from pip._vendor.cachecontrol import CacheControlAdapter as _BaseCacheControlAdapter
+from pip._vendor.cachecontrol import (
+    CacheControlAdapter as _BaseCacheControlAdapter,
+)
 from pip._vendor.requests.adapters import DEFAULT_POOLBLOCK, BaseAdapter
 from pip._vendor.requests.adapters import HTTPAdapter as _BaseHTTPAdapter
 from pip._vendor.requests.models import PreparedRequest, Response
@@ -405,7 +407,10 @@ class PipSession(requests.Session):
         self.auth.index_urls = new_index_urls
 
     def add_trusted_host(
-        self, host: str, source: Optional[str] = None, suppress_logging: bool = False
+        self,
+        host: str,
+        source: Optional[str] = None,
+        suppress_logging: bool = False,
     ) -> None:
         """
         :param host: It is okay to provide a host that has previously been
@@ -426,7 +431,8 @@ class PipSession(requests.Session):
             self.pip_trusted_origins.append((parsed_host, parsed_port))
 
         self.mount(
-            build_url_from_netloc(host, scheme="http") + "/", self._trusted_host_adapter
+            build_url_from_netloc(host, scheme="http") + "/",
+            self._trusted_host_adapter,
         )
         self.mount(build_url_from_netloc(host) + "/", self._trusted_host_adapter)
         if not parsed_port:

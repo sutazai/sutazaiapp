@@ -1,7 +1,7 @@
 import logging
 import traceback
 from functools import wraps
-from typing import Any, Callable
+from typing import Callable
 
 
 class SutazAiErrorHandler:

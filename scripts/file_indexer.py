@@ -20,9 +20,9 @@ class FileIndexer:
     """
 
     def __init__(
-        self, 
-        project_root: str = '/opt/sutazai_project/SutazAI', 
-        index_file: str = 'sutazai_file_index.json'
+        self,
+        project_root: str = "/opt/sutazai_project/SutazAI",
+        index_file: str = "sutazai_file_index.json",
     ):
         """
         Initialize the file indexer.
@@ -33,13 +33,13 @@ class FileIndexer:
         """
         self.project_root = os.path.abspath(project_root)
         self.index_file_path = os.path.join(project_root, index_file)
-        
+
         # Setup logging
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s: %(message)s'
+            format="%(asctime)s - %(levelname)s: %(message)s",
         )
-        self.logger = logging.getLogger('FileIndexer')
+        self.logger = logging.getLogger("FileIndexer")
 
     def _generate_file_hash(self, file_path: str) -> str:
         """
@@ -52,13 +52,15 @@ class FileIndexer:
             str: SHA-256 hash of the file contents
         """
         try:
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 return hashlib.sha256(f.read()).hexdigest()
         except Exception as e:
             self.logger.warning(f"Could not hash file {file_path}: {e}")
-            return ''
+            return ""
 
-    def index_project(self, exclude_patterns: Optional[List[str]] = None) -> Dict[str, Any]:
+    def index_project(
+        self, exclude_patterns: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
         """
         Generate a comprehensive index of the project files.
 
@@ -69,57 +71,76 @@ class FileIndexer:
             Dict[str, Any]: Comprehensive project file index
         """
         exclude_patterns = exclude_patterns or [
-            '.git', '__pycache__', '*.pyc', '.venv', 'venv', 
-            'node_modules', '.idea', '.vscode', '*.log'
+            ".git",
+            "__pycache__",
+            "*.pyc",
+            ".venv",
+            "venv",
+            "node_modules",
+            ".idea",
+            ".vscode",
+            "*.log",
         ]
 
         project_index = {
-            'metadata': {
-                'generated_at': datetime.now().isoformat(),
-                'project_root': self.project_root
+            "metadata": {
+                "generated_at": datetime.now().isoformat(),
+                "project_root": self.project_root,
             },
-            'file_tree': {},
-            'file_details': {}
+            "file_tree": {},
+            "file_details": {},
         }
 
         for root, dirs, files in os.walk(self.project_root):
             # Remove excluded directories
-            dirs[:] = [d for d in dirs if not any(pattern in d for pattern in exclude_patterns)]
+            dirs[:] = [
+                d
+                for d in dirs
+                if not any(pattern in d for pattern in exclude_patterns)
+            ]
 
             # Relative path from project root
             relative_path = os.path.relpath(root, self.project_root)
 
             # Create nested dictionary for file tree
-            current_level = project_index['file_tree']
+            current_level = project_index["file_tree"]
             for part in relative_path.split(os.path.sep):
-                if part != '.':
+                if part != ".":
                     current_level = current_level.setdefault(part, {})
 
             # Add files to the current level
-            current_level['__files__'] = []
+            current_level["__files__"] = []
             for file in files:
                 # Skip files matching exclusion patterns
                 if any(pattern in file for pattern in exclude_patterns):
                     continue
 
                 full_path = os.path.join(root, file)
-                relative_file_path = os.path.relpath(full_path, self.project_root)
+                relative_file_path = os.path.relpath(
+                    full_path, self.project_root
+                )
 
                 try:
                     file_stat = os.stat(full_path)
                     file_details = {
-                        'name': file,
-                        'path': relative_file_path,
-                        'size': file_stat.st_size,
-                        'modified': datetime.fromtimestamp(file_stat.st_mtime).isoformat(),
-                        'hash': self._generate_file_hash(full_path)
+                        "name": file,
+                        "path": relative_file_path,
+                        "size": file_stat.st_size,
+                        "modified": datetime.fromtimestamp(
+                            file_stat.st_mtime
+                        ).isoformat(),
+                        "hash": self._generate_file_hash(full_path),
                     }
 
-                    current_level['__files__'].append(file)
-                    project_index['file_details'][relative_file_path] = file_details
+                    current_level["__files__"].append(file)
+                    project_index["file_details"][
+                        relative_file_path
+                    ] = file_details
 
                 except Exception as e:
-                    self.logger.warning(f"Could not index file {full_path}: {e}")
+                    self.logger.warning(
+                        f"Could not index file {full_path}: {e}"
+                    )
 
         return project_index
 
@@ -134,10 +155,12 @@ class FileIndexer:
             index = self.index_project()
 
         try:
-            with open(self.index_file_path, 'w', encoding='utf-8') as f:
+            with open(self.index_file_path, "w", encoding="utf-8") as f:
                 json.dump(index, f, indent=2)
-            
-            self.logger.info(f"Project file index saved to {self.index_file_path}")
+
+            self.logger.info(
+                f"Project file index saved to {self.index_file_path}"
+            )
         except Exception as e:
             self.logger.error(f"Could not save file index: {e}")
 
@@ -149,10 +172,12 @@ class FileIndexer:
             Dict[str, Any]: Loaded project file index
         """
         try:
-            with open(self.index_file_path, 'r', encoding='utf-8') as f:
+            with open(self.index_file_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError:
-            self.logger.warning("No existing file index found. Generating new index.")
+            self.logger.warning(
+                "No existing file index found. Generating new index."
+            )
             index = self.index_project()
             self.save_index(index)
             return index
@@ -173,24 +198,29 @@ class FileIndexer:
         index = self.load_index()
         matches: List[str] = []
 
-        for path, details in index.get('file_details', {}).items():
-            if query.lower() in path.lower() or query.lower() in details['name'].lower():
+        for path, details in index.get("file_details", {}).items():
+            if (
+                query.lower() in path.lower()
+                or query.lower() in details["name"].lower()
+            ):
                 matches.append(path)
 
         return matches
 
+
 def main():
     indexer = FileIndexer()
-    
+
     # Generate and save project index
     project_index = indexer.index_project()
     indexer.save_index(project_index)
 
     # Example: Find files
     print("Finding Python files:")
-    python_files = indexer.find_files('.py')
+    python_files = indexer.find_files(".py")
     for file in python_files:
         print(file)
 
-if __name__ == '__main__':
-    main() 
+
+if __name__ == "__main__":
+    main()

@@ -6,7 +6,9 @@ from rapidfuzz._common_py import conv_sequences
 from rapidfuzz._utils import is_none, setupPandas
 
 
-def _jaro_calculate_similarity(pattern_len, text_len, common_chars, transpositions):
+def _jaro_calculate_similarity(
+    pattern_len, text_len, common_chars, transpositions
+):
     transpositions //= 2
     sim = 0.0
     sim += common_chars / pattern_len
@@ -28,7 +30,9 @@ def _jaro_length_filter(pattern_len, text_len, score_cutoff):
     return sim >= score_cutoff
 
 
-def _jaro_common_char_filter(pattern_len, text_len, common_chars, score_cutoff):
+def _jaro_common_char_filter(
+    pattern_len, text_len, common_chars, score_cutoff
+):
     """
     filter matches below score_cutoff based on string lengths and common characters
     """
@@ -132,7 +136,9 @@ def similarity(
                 break
 
     # short circuit if score_cutoff can not be reached
-    if not _jaro_common_char_filter(pattern_len, text_len, common_chars, score_cutoff):
+    if not _jaro_common_char_filter(
+        pattern_len, text_len, common_chars, score_cutoff
+    ):
         return 0
 
     # todo use bitparallel implementation
@@ -147,7 +153,9 @@ def similarity(
             if s1[i] != s2[j]:
                 trans_count += 1
 
-    return _jaro_calculate_similarity(pattern_len, text_len, common_chars, trans_count)
+    return _jaro_calculate_similarity(
+        pattern_len, text_len, common_chars, trans_count
+    )
 
 
 def normalized_similarity(
@@ -220,7 +228,9 @@ def distance(
         s2 = processor(s2)
 
     cutoff_distance = (
-        None if (score_cutoff is None or score_cutoff > 1.0) else 1.0 - score_cutoff
+        None
+        if (score_cutoff is None or score_cutoff > 1.0)
+        else 1.0 - score_cutoff
     )
     sim = similarity(s1, s2, score_cutoff=cutoff_distance)
     dist = 1.0 - sim

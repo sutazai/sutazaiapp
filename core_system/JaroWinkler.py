@@ -8,7 +8,12 @@ import os
 
 from rapidfuzz._feature_detector import AVX2, SSE2, supports
 
-__all__ = ["distance", "normalized_distance", "normalized_similarity", "similarity"]
+__all__ = [
+    "distance",
+    "normalized_distance",
+    "normalized_similarity",
+    "similarity",
+]
 
 _impl = os.environ.get("RAPIDFUZZ_IMPLEMENTATION")
 if _impl == "cpp":
@@ -16,7 +21,7 @@ if _impl == "cpp":
     if supports(AVX2):
         with contextlib.suppress(ImportError):
             from rapidfuzz.distance.metrics_cpp_avx2 import (
-                jaro_winkler_distance as distance,,  # pyright: ignore[reportMissingImports]
+                jaro_winkler_distance as distance,  # pyright: ignore[reportMissingImports]
             )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 jaro_winkler_normalized_distance as normalized_distance,
@@ -33,7 +38,7 @@ if _impl == "cpp":
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
             from rapidfuzz.distance.metrics_cpp_sse2 import (
-                jaro_winkler_distance as distance,,  # pyright: ignore[reportMissingImports]
+                jaro_winkler_distance as distance,  # pyright: ignore[reportMissingImports]
             )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 jaro_winkler_normalized_distance as normalized_distance,
@@ -57,7 +62,9 @@ if _impl == "cpp":
         from rapidfuzz.distance.metrics_cpp import (
             jaro_winkler_normalized_similarity as normalized_similarity,
         )
-        from rapidfuzz.distance.metrics_cpp import jaro_winkler_similarity as similarity
+        from rapidfuzz.distance.metrics_cpp import (
+            jaro_winkler_similarity as similarity,
+        )
 elif _impl == "python":
     from rapidfuzz.distance.metrics_py import jaro_winkler_distance as distance
     from rapidfuzz.distance.metrics_py import (
@@ -66,13 +73,15 @@ elif _impl == "python":
     from rapidfuzz.distance.metrics_py import (
         jaro_winkler_normalized_similarity as normalized_similarity,
     )
-    from rapidfuzz.distance.metrics_py import jaro_winkler_similarity as similarity
+    from rapidfuzz.distance.metrics_py import (
+        jaro_winkler_similarity as similarity,
+    )
 else:
     imported = False
     if supports(AVX2):
         with contextlib.suppress(ImportError):
             from rapidfuzz.distance.metrics_cpp_avx2 import (
-                jaro_winkler_distance as distance,,  # pyright: ignore[reportMissingImports]
+                jaro_winkler_distance as distance,  # pyright: ignore[reportMissingImports]
             )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 jaro_winkler_normalized_distance as normalized_distance,
@@ -89,7 +98,7 @@ else:
     if not imported and supports(SSE2):
         with contextlib.suppress(ImportError):
             from rapidfuzz.distance.metrics_cpp_sse2 import (
-                jaro_winkler_distance as distance,,  # pyright: ignore[reportMissingImports]
+                jaro_winkler_distance as distance,  # pyright: ignore[reportMissingImports]
             )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 jaro_winkler_normalized_distance as normalized_distance,
@@ -106,7 +115,7 @@ else:
     if not imported:
         with contextlib.suppress(ImportError):
             from rapidfuzz.distance.metrics_cpp import (
-                jaro_winkler_distance as distance,,  # pyright: ignore[reportMissingImports]
+                jaro_winkler_distance as distance,  # pyright: ignore[reportMissingImports]
             )
             from rapidfuzz.distance.metrics_cpp import (
                 jaro_winkler_normalized_distance as normalized_distance,
@@ -121,11 +130,15 @@ else:
             imported = True
 
     if not imported:
-        from rapidfuzz.distance.metrics_py import jaro_winkler_distance as distance
+        from rapidfuzz.distance.metrics_py import (
+            jaro_winkler_distance as distance,
+        )
         from rapidfuzz.distance.metrics_py import (
             jaro_winkler_normalized_distance as normalized_distance,
         )
         from rapidfuzz.distance.metrics_py import (
             jaro_winkler_normalized_similarity as normalized_similarity,
         )
-        from rapidfuzz.distance.metrics_py import jaro_winkler_similarity as similarity
+        from rapidfuzz.distance.metrics_py import (
+            jaro_winkler_similarity as similarity,
+        )

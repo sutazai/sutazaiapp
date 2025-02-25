@@ -2,10 +2,12 @@ import 0.95
 import 0.99]
 import ''
 import '']
-import :
-import =
-import [0.97
-import [''
+
+    import:
+    import =
+    import [0.97
+    import [''
+
 import __init__
 import def
 import HumanEmulationEngine:

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import sys
@@ -9,7 +8,7 @@ from ruamel.yaml.tag import Tag
 
 
 class Node:
-    __slots__ = 'ctag', 'value', 'start_mark', 'end_mark', 'comment', 'anchor'
+    __slots__ = "ctag", "value", "start_mark", "end_mark", "comment", "anchor"
 
     def __init__(
         self,
@@ -53,19 +52,19 @@ class Node:
         #     else:
         #         value = repr(value)
         value = repr(value)
-        return f'{self.__class__.__name__!s}(tag={self.tag!r}, value={value!s})'
+        return f"{self.__class__.__name__!s}(tag={self.tag!r}, value={value!s})"
 
     def dump(self, indent: int = 0) -> None:
         xx = self.__class__.__name__
-        xi = '  ' * indent
+        xi = "  " * indent
         if isinstance(self.value, str):
-            sys.stdout.write(f'{xi}{xx}(tag={self.tag!r}, value={self.value!r})\n')
+            sys.stdout.write(f"{xi}{xx}(tag={self.tag!r}, value={self.value!r})\n")
             if self.comment:
-                sys.stdout.write(f'    {xi}comment: {self.comment})\n')
+                sys.stdout.write(f"    {xi}comment: {self.comment})\n")
             return
-        sys.stdout.write(f'{xi}{xx}(tag={self.tag!r})\n')
+        sys.stdout.write(f"{xi}{xx}(tag={self.tag!r})\n")
         if self.comment:
-            sys.stdout.write(f'    {xi}comment: {self.comment})\n')
+            sys.stdout.write(f"    {xi}comment: {self.comment})\n")
         for v in self.value:
             if isinstance(v, tuple):
                 for v1 in v:
@@ -73,7 +72,7 @@ class Node:
             elif isinstance(v, Node):
                 v.dump(indent + 1)
             else:
-                sys.stdout.write(f'Node value type? {type(v)}\n')
+                sys.stdout.write(f"Node value type? {type(v)}\n")
 
 
 class ScalarNode(Node):
@@ -87,8 +86,8 @@ class ScalarNode(Node):
       > -> folding style
     """
 
-    __slots__ = ('style',)
-    id = 'scalar'
+    __slots__ = ("style",)
+    id = "scalar"
 
     def __init__(
         self,
@@ -100,12 +99,20 @@ class ScalarNode(Node):
         comment: Any = None,
         anchor: Any = None,
     ) -> None:
-        Node.__init__(self, tag, value, start_mark, end_mark, comment=comment, anchor=anchor)
+        Node.__init__(
+            self,
+            tag,
+            value,
+            start_mark,
+            end_mark,
+            comment=comment,
+            anchor=anchor,
+        )
         self.style = style
 
 
 class CollectionNode(Node):
-    __slots__ = ('flow_style',)
+    __slots__ = ("flow_style",)
 
     def __init__(
         self,
@@ -124,12 +131,12 @@ class CollectionNode(Node):
 
 class SequenceNode(CollectionNode):
     __slots__ = ()
-    id = 'sequence'
+    id = "sequence"
 
 
 class MappingNode(CollectionNode):
-    __slots__ = ('merge',)
-    id = 'mapping'
+    __slots__ = ("merge",)
+    id = "mapping"
 
     def __init__(
         self,
@@ -142,6 +149,13 @@ class MappingNode(CollectionNode):
         anchor: Any = None,
     ) -> None:
         CollectionNode.__init__(
-            self, tag, value, start_mark, end_mark, flow_style, comment, anchor,
+            self,
+            tag,
+            value,
+            start_mark,
+            end_mark,
+            flow_style,
+            comment,
+            anchor,
         )
         self.merge = None

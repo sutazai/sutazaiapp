@@ -8,7 +8,12 @@ try:
     from pydantic import (
         BaseModel,  # type: ignore # pragma: no cover; type: ignore # pragma: no cover
     )
-    from pydantic import ConfigDict, Field, field_validator, model_validator
+    from pydantic import (
+        ConfigDict,
+        Field,
+        field_validator,
+        model_validator,
+    )
 
     MODEL_VALIDATOR_KWARGS = {"mode": "before"}
     AUTO_SECURITY_UPDATES_LIMIT_KWARGS = {"min_length": 1}
@@ -16,7 +21,10 @@ try:
 except ImportError:
     # Fallback to legacy
     from pydantic import BaseModel  # type: ignore # pragma: no cover
-    from pydantic import Extra, Field
+    from pydantic import (
+        Extra,
+        Field,
+    )
     from pydantic import (  # type: ignore # noqa F401 # pragma: no cover
         root_validator as model_validator,
     )
@@ -119,7 +127,8 @@ class AutoIgnoreInReportDependencyVulnerabilities(SchemaModelV30):
         PythonEcosystemSettings()
     )
     vulnerabilities: Annotated[
-        Optional[Dict[str, IgnoredVulnerability]], Field(alias="vulnerabilities")
+        Optional[Dict[str, IgnoredVulnerability]],
+        Field(alias="vulnerabilities"),
     ] = {}
     cvss_severity: Annotated[  # type: ignore[valid-type]
         Optional[Set[CVSSSeverityLabels]],  # type: ignore
@@ -135,7 +144,7 @@ class ReportDependencyVulnerabilities(SchemaModelV30):
     ] = AutoIgnoreInReportDependencyVulnerabilities()
 
 
-## FailScan
+# FailScan
 
 
 class FailOnAnyOf(SchemaModelV30):

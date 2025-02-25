@@ -55,7 +55,10 @@ class NativeCodeGenerator(CodeGenerator):
         return repr("".join([str(v) for v in group]))
 
     def _output_child_to_const(
-        self, node: nodes.Expr, frame: Frame, finalize: CodeGenerator._FinalizeInfo
+        self,
+        node: nodes.Expr,
+        frame: Frame,
+        finalize: CodeGenerator._FinalizeInfo,
     ) -> t.Any:
         const = node.as_const(frame.eval_ctx)
 
@@ -68,13 +71,19 @@ class NativeCodeGenerator(CodeGenerator):
         return finalize.const(const)  # type: ignore
 
     def _output_child_pre(
-        self, node: nodes.Expr, frame: Frame, finalize: CodeGenerator._FinalizeInfo
+        self,
+        node: nodes.Expr,
+        frame: Frame,
+        finalize: CodeGenerator._FinalizeInfo,
     ) -> None:
         if finalize.src is not None:
             self.write(finalize.src)
 
     def _output_child_post(
-        self, node: nodes.Expr, frame: Frame, finalize: CodeGenerator._FinalizeInfo
+        self,
+        node: nodes.Expr,
+        frame: Frame,
+        finalize: CodeGenerator._FinalizeInfo,
     ) -> None:
         if finalize.src is not None:
             self.write(")")

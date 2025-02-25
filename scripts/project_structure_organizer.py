@@ -10,8 +10,7 @@ and maintaining a consistent ecosystem across the entire project.
 import json
 import logging
 import os
-import shutil
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 # Advanced logging configuration
 logging.basicConfig(
@@ -46,7 +45,13 @@ class UltraComprehensiveProjectOrganizer:
                 "aider",
             ],
             "model_management": ["gpt4all", "deepseek", "llama2", "molmo"],
-            "backend": ["main.py", "api_routes.py", "services", "config", "tests"],
+            "backend": [
+                "main.py",
+                "api_routes.py",
+                "services",
+                "config",
+                "tests",
+            ],
             "web_ui": ["src", "public", "package.json"],
             "scripts": [
                 "deploy.sh",
@@ -154,23 +159,27 @@ class UltraComprehensiveProjectOrganizer:
         # Check directory structure
         for main_dir, subdirs in self.standard_structure.items():
             full_path = os.path.join(self.base_dir, main_dir)
-            validation_report["directory_structure"][main_dir] = os.path.exists(
-                full_path
+            validation_report["directory_structure"][main_dir] = (
+                os.path.exists(full_path)
             )
 
             for subdir in subdirs:
                 subdir_path = os.path.join(full_path, subdir)
-                validation_report["directory_structure"][subdir_path] = os.path.exists(
-                    subdir_path
+                validation_report["directory_structure"][subdir_path] = (
+                    os.path.exists(subdir_path)
                 )
 
         # Validate configuration files
-        validation_report["configuration_files"] = self.validate_configuration_files()
+        validation_report["configuration_files"] = (
+            self.validate_configuration_files()
+        )
 
         # Identify potential issues
         for path, exists in validation_report["directory_structure"].items():
             if not exists:
-                validation_report["potential_issues"].append(f"Missing: {path}")
+                validation_report["potential_issues"].append(
+                    f"Missing: {path}"
+                )
 
         return validation_report
 

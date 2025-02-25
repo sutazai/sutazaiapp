@@ -11,7 +11,9 @@ except NameError:
     # Python 3.1
     from collections import Callable
 
-    callable = lambda x: isinstance(x, Callable)
+    def callable(x):
+        return isinstance(x, Callable)
+
 
 try:
     basestring
@@ -57,7 +59,12 @@ class FFI(object):
                     # CPython
                     raise Exception(
                         "Version mismatch: this is the 'cffi' package version %s, located in %r.  When we import the top-level '_cffi_backend' extension module, we get version %s, located in %r.  The two versions should be equal; check your installation."
-                        % (__version__, __file__, backend.__version__, backend.__file__)
+                        % (
+                            __version__,
+                            __file__,
+                            backend.__version__,
+                            backend.__file__,
+                        )
                     )
                 else:
                     # PyPy
@@ -150,7 +157,9 @@ class FFI(object):
         library we only look for the actual (untyped) symbols.
         """
         if not (
-            isinstance(name, basestring) or name is None or isinstance(name, self.CData)
+            isinstance(name, basestring)
+            or name is None
+            or isinstance(name, self.CData)
         ):
             raise TypeError(
                 "dlopen(name): name must be a file name, None, "
@@ -216,7 +225,9 @@ class FFI(object):
             res = _builtin_function_type(cdecl)
             if res is not None:
                 return res
-        if isinstance(cdecl, types.FunctionType) and hasattr(cdecl, "_cffi_base_type"):
+        if isinstance(cdecl, types.FunctionType) and hasattr(
+            cdecl, "_cffi_base_type"
+        ):
             with self._lock:
                 return self._get_cached_btype(cdecl._cffi_base_type)
         raise TypeError(type(cdecl))
@@ -277,7 +288,9 @@ class FFI(object):
             cdecl = self._typeof(cdecl)
         return self._backend.newp(cdecl, init)
 
-    def new_allocator(self, alloc=None, free=None, should_clear_after_alloc=True):
+    def new_allocator(
+        self, alloc=None, free=None, should_clear_after_alloc=True
+    ):
         """Return a new allocator, i.e. a function that behaves like ffi.new()
         but uses the provided low-level 'alloc' and 'free' functions.
 
@@ -292,7 +305,9 @@ class FFI(object):
         fine with garbage); otherwise CFFI will clear it.
         """
         compiled_ffi = self._backend.FFI()
-        allocator = compiled_ffi.new_allocator(alloc, free, should_clear_after_alloc)
+        allocator = compiled_ffi.new_allocator(
+            alloc, free, should_clear_after_alloc
+        )
 
         def allocate(cdecl, init=None):
             if isinstance(cdecl, basestring):
@@ -358,7 +373,9 @@ class FFI(object):
     #    """
     #    note that 'buffer' is a type, set on this instance by __init__
 
-    def from_buffer(self, cdecl, python_buffer=_unspecified, require_writable=False):
+    def from_buffer(
+        self, cdecl, python_buffer=_unspecified, require_writable=False
+    ):
         """Return a cdata of the given type pointing to the data of the
         given Python object, which must support the buffer interface.
         Note that this is not meant to be used on the built-in types
@@ -372,7 +389,9 @@ class FFI(object):
             cdecl, python_buffer = self.BCharA, cdecl
         elif isinstance(cdecl, basestring):
             cdecl = self._typeof(cdecl)
-        return self._backend.from_buffer(cdecl, python_buffer, require_writable)
+        return self._backend.from_buffer(
+            cdecl, python_buffer, require_writable
+        )
 
     def memmove(self, dest, src, n):
         """ffi.memmove(dest, src, n) copies n bytes of memory from src to dest.
@@ -401,8 +420,12 @@ class FFI(object):
 
         def callback_decorator_wrap(python_callable):
             if not callable(python_callable):
-                raise TypeError("the 'python_callable' argument " "is not callable")
-            return self._backend.callback(cdecl, python_callable, error, onerror)
+                raise TypeError(
+                    "the 'python_callable' argument " "is not callable"
+                )
+            return self._backend.callback(
+                cdecl, python_callable, error, onerror
+            )
 
         if isinstance(cdecl, basestring):
             cdecl = self._typeof(cdecl, consider_function_as_funcptr=True)
@@ -420,7 +443,9 @@ class FFI(object):
         if isinstance(cdecl, basestring):
             cdecl = self._typeof(cdecl)
         replace_with = replace_with.strip()
-        if replace_with.startswith("*") and "&[" in self._backend.getcname(cdecl, "&"):
+        if replace_with.startswith("*") and "&[" in self._backend.getcname(
+            cdecl, "&"
+        ):
             replace_with = "(%s)" % replace_with
         elif replace_with and not replace_with[0] in "[(":
             replace_with = " " + replace_with
@@ -488,7 +513,10 @@ class FFI(object):
         self._backend.set_errno(errno)
 
     errno = property(
-        _get_errno, _set_errno, None, "the value of 'errno' from/to the C calls"
+        _get_errno,
+        _set_errno,
+        None,
+        "the value of 'errno' from/to the C calls",
     )
 
     def getwinerror(self, code=-1):
@@ -630,7 +658,9 @@ class FFI(object):
             # On uninstalled pypy's, the libpypy-c is typically found in
             # .../pypy/goal/.
             if hasattr(sys, "prefix"):
-                ensure("library_dirs", os.path.join(sys.prefix, "pypy", "goal"))
+                ensure(
+                    "library_dirs", os.path.join(sys.prefix, "pypy", "goal")
+                )
         else:
             if sys.platform == "win32":
                 template = "python%d%d"
@@ -644,7 +674,10 @@ class FFI(object):
                 template = "python%d.%d"
                 if sysconfig.get_config_var("DEBUG_EXT"):
                     template += sysconfig.get_config_var("DEBUG_EXT")
-            pythonlib = template % (sys.hexversion >> 24, (sys.hexversion >> 16) & 0xFF)
+            pythonlib = template % (
+                sys.hexversion >> 24,
+                (sys.hexversion >> 16) & 0xFF,
+            )
             if hasattr(sys, "abiflags"):
                 pythonlib += sys.abiflags
         ensure("libraries", pythonlib)
@@ -665,16 +698,27 @@ class FFI(object):
                 "'module_name' must not contain '/': use a dotted "
                 "name to make a 'package.module' location"
             )
-        self._assigned_source = (str(module_name), source, source_extension, kwds)
+        self._assigned_source = (
+            str(module_name),
+            source,
+            source_extension,
+            kwds,
+        )
 
     def set_source_pkgconfig(
-        self, module_name, pkgconfig_libs, source, source_extension=".c", **kwds
+        self,
+        module_name,
+        pkgconfig_libs,
+        source,
+        source_extension=".c",
+        **kwds,
     ):
         from . import pkgconfig
 
         if not isinstance(pkgconfig_libs, list):
             raise TypeError(
-                "the pkgconfig_libs argument must be a list " "of package names"
+                "the pkgconfig_libs argument must be a list "
+                "of package names"
             )
         kwds2 = pkgconfig.flags_from_pkgconfig(pkgconfig_libs)
         pkgconfig.merge_flags(kwds, kwds2)
@@ -722,7 +766,9 @@ class FFI(object):
 
         #
         if not hasattr(self, "_assigned_source"):
-            raise ValueError("set_source() must be called before emit_c_code()")
+            raise ValueError(
+                "set_source() must be called before emit_c_code()"
+            )
         module_name, source, source_extension, kwds = self._assigned_source
         if source is None:
             raise TypeError(
@@ -744,7 +790,9 @@ class FFI(object):
 
         #
         if not hasattr(self, "_assigned_source"):
-            raise ValueError("set_source() must be called before emit_c_code()")
+            raise ValueError(
+                "set_source() must be called before emit_c_code()"
+            )
         module_name, source, source_extension, kwds = self._assigned_source
         if source is not None:
             raise TypeError(
@@ -884,7 +932,11 @@ def _load_backend_lib(backend, name, flags):
 
     path = ctypes.util.find_library(name)
     if path is None:
-        if name == "c" and sys.platform == "win32" and sys.version_info >= (3,):
+        if (
+            name == "c"
+            and sys.platform == "win32"
+            and sys.version_info >= (3,)
+        ):
             raise OSError(
                 "dlopen(None) cannot work on Windows for Python 3 "
                 "(see http://bugs.python.org/issue23606)"

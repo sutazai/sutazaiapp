@@ -1,0 +1,2 @@
+core_system/communication.py:1: error: unmatched '}'  [syntax]
+Found 1 error in 1 file (errors prevented further checking)

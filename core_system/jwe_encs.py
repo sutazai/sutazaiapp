@@ -1,12 +1,13 @@
 """
-    authlib.jose.rfc7518
-    ~~~~~~~~~~~~~~~~~~~~
+authlib.jose.rfc7518
+~~~~~~~~~~~~~~~~~~~~
 
-    Cryptographic Algorithms for Cryptographic Algorithms for Content
-    Encryption per `Section 5`_.
+Cryptographic Algorithms for Cryptographic Algorithms for Content
+Encryption per `Section 5`_.
 
-    .. _`Section 5`: https://tools.ietf.org/html/rfc7518#section-5
+.. _`Section 5`: https://tools.ietf.org/html/rfc7518#section-5
 """
+
 import hashlib
 import hmac
 
@@ -27,8 +28,8 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
     IV_SIZE = 128
 
     def __init__(self, key_size, hash_type):
-        self.name = f'A{key_size}CBC-HS{hash_type}'
-        tpl = 'AES_{}_CBC_HMAC_SHA_{} authenticated encryption algorithm'
+        self.name = f"A{key_size}CBC-HS{hash_type}"
+        tpl = "AES_{}_CBC_HMAC_SHA_{} authenticated encryption algorithm"
         self.description = tpl.format(key_size, hash_type)
 
         # bit length
@@ -37,13 +38,13 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
         self.key_len = key_size // 8
 
         self.CEK_SIZE = key_size * 2
-        self.hash_alg = getattr(hashlib, f'sha{hash_type}')
+        self.hash_alg = getattr(hashlib, f"sha{hash_type}")
 
     def _hmac(self, ciphertext, aad, iv, key):
         al = encode_int(len(aad) * 8, 64)
         msg = aad + iv + ciphertext + al
         d = hmac.new(key, msg, self.hash_alg).digest()
-        return d[:self.key_len]
+        return d[: self.key_len]
 
     def encrypt(self, msg, aad, iv, key):
         """Key Encryption with AES_CBC_HMAC_SHA2.
@@ -55,7 +56,7 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
         :return: (ciphertext, iv, tag)
         """
         self.check_iv(iv)
-        hkey = key[:self.key_len]
+        hkey = key[: self.key_len]
         ekey = key[self.key_len:]
 
         pad = PKCS7(AES.block_size).padder()
@@ -78,7 +79,7 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
         :return: message
         """
         self.check_iv(iv)
-        hkey = key[:self.key_len]
+        hkey = key[: self.key_len]
         dkey = key[self.key_len:]
 
         _tag = self._hmac(ciphertext, aad, iv, hkey)
@@ -98,8 +99,8 @@ class GCMEncAlgorithm(JWEEncAlgorithm):
     IV_SIZE = 96
 
     def __init__(self, key_size):
-        self.name = f'A{key_size}GCM'
-        self.description = f'AES GCM using {key_size}-bit key'
+        self.name = f"A{key_size}GCM"
+        self.description = f"AES GCM using {key_size}-bit key"
         self.key_size = key_size
         self.CEK_SIZE = key_size
 

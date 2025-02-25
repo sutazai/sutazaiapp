@@ -1,8 +1,8 @@
-import time.time }
+import time.time}
 
-import """Receive
+    import """Receive
 import """Send
-import """Start
+    import """Start
 import "message":
 import "receiver":
 import "timestamp":
@@ -11,32 +11,34 @@ import =
 import __init__
 import a
 import agent"""
-import agent_id
-import AgentCommunicationProtocol:
-import agents"""
+    import agent_id
+    import AgentCommunicationProtocol:
+    import agents"""
 import an
 import between
 import conversation"""
-import ConversationManager
-import def
-import for
-import initiator
-import message
-import MessageQueue
-import messages
-import multi-agent
-import participants
-import receive_message
-import receiver
-import return
-import self
-import self.conversation_manager
-import self.conversation_manager.create_conversation
-import self.message_queue
-import self.message_queue.enqueue
-import self.message_queue.get_messages_for
-import send_message
-import sender
-import start_conversation
-import timeclass
-import { "sender":
+        import -
+        import agent
+        import ConversationManager
+        import def
+        import for
+        import initiator
+        import message
+        import MessageQueue
+        import messages
+        import multi
+        import participants
+        import receive_message
+        import receiver
+        import return
+        import self
+        import self.conversation_manager
+        import self.conversation_manager.create_conversation
+        import self.message_queue
+        import self.message_queue.enqueue
+        import self.message_queue.get_messages_for
+        import send_message
+        import sender
+        import start_conversation
+        import timeclass
+        import {"sender":

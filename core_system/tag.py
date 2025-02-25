@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 """
@@ -14,7 +13,7 @@ only.
 if False:  # MYPY
     from typing import Any, Dict, Iterator, List, Optional, Union  # NOQA
 
-tag_attrib = '_yaml_tag'
+tag_attrib = "_yaml_tag"
 
 
 class Tag:
@@ -22,17 +21,19 @@ class Tag:
 
     attrib = tag_attrib
 
-    def __init__(self, handle: Any = None, suffix: Any = None, handles: Any = None) -> None:
+    def __init__(
+        self, handle: Any = None, suffix: Any = None, handles: Any = None
+    ) -> None:
         self.handle = handle
         self.suffix = suffix
         self.handles = handles
         self._transform_type: Optional[bool] = None
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}({self.trval!r})'
+        return f"{self.__class__.__name__}({self.trval!r})"
 
     def __str__(self) -> str:
-        return f'{self.trval}'
+        return f"{self.trval}"
 
     def __hash__(self) -> int:
         try:
@@ -67,19 +68,19 @@ class Tag:
             self._trval = self.handles[self.handle] + self.uri_decoded_suffix
             return self._trval
         # round-trip case
-        if self.handle == '!!' and self.suffix in (
-            'null',
-            'bool',
-            'int',
-            'float',
-            'binary',
-            'timestamp',
-            'omap',
-            'pairs',
-            'set',
-            'str',
-            'seq',
-            'map',
+        if self.handle == "!!" and self.suffix in (
+            "null",
+            "bool",
+            "int",
+            "float",
+            "binary",
+            "timestamp",
+            "omap",
+            "pairs",
+            "set",
+            "str",
+            "seq",
+            "map",
         ):
             self._trval = self.handles[self.handle] + self.uri_decoded_suffix
         else:
@@ -98,16 +99,16 @@ class Tag:
         if self.suffix is None:
             self._uri_decoded_suffix: Optional[str] = None
             return None
-        res = ''
+        res = ""
         # don't have to check for scanner errors here
         idx = 0
         while idx < len(self.suffix):
             ch = self.suffix[idx]
             idx += 1
-            if ch != '%':
+            if ch != "%":
                 res += ch
             else:
-                res += chr(int(self.suffix[idx : idx + 2], 16))
+                res += chr(int(self.suffix[idx: idx + 2], 16))
                 idx += 2
         self._uri_decoded_suffix = res
         return res

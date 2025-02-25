@@ -1130,7 +1130,7 @@ class TestEggInfo:
             pkg_info_lines = fp.read().split("\n")
         assert "Metadata-Version: 2.2" in pkg_info_lines
         assert "" == pkg_info_lines[-1]  # last line should be empty
-        long_desc_lines = pkg_info_lines[pkg_info_lines.index("") :]
+        long_desc_lines = pkg_info_lines[pkg_info_lines.index(""):]
         assert "This is a long description" in long_desc_lines
         assert "over multiple lines" in long_desc_lines
 

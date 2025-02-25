@@ -21,7 +21,7 @@ import threading
 import warnings
 from collections import namedtuple
 from socket import AF_INET, SOCK_DGRAM, SOCK_STREAM
-from typing import Any, Dict, Optional, Union, TypeVar, Hashable, NoReturn
+from typing import Any, Dict, Hashable, Optional, Union
 
 try:
     from socket import AF_INET6
@@ -232,13 +232,17 @@ puids = namedtuple("puids", ["real", "effective", "saved"])
 # psutil.Process.gids()
 pgids = namedtuple("pgids", ["real", "effective", "saved"])
 # psutil.Process.io_counters()
-pio = namedtuple("pio", ["read_count", "write_count", "read_bytes", "write_bytes"])
+pio = namedtuple(
+    "pio", ["read_count", "write_count", "read_bytes", "write_bytes"]
+)
 # psutil.Process.ionice()
 pionice = namedtuple("pionice", ["ioclass", "value"])
 # psutil.Process.ctx_switches()
 pctxsw = namedtuple("pctxsw", ["voluntary", "involuntary"])
 # psutil.Process.net_connections()
-pconn = namedtuple("pconn", ["fd", "family", "type", "laddr", "raddr", "status"])
+pconn = namedtuple(
+    "pconn", ["fd", "family", "type", "laddr", "raddr", "status"]
+)
 
 # psutil.net_connections() and psutil.Process.net_connections()
 addr = namedtuple("addr", ["ip", "port"])
@@ -298,7 +302,9 @@ class Error(Exception):
         # invoked on `raise Error`
         info = self._infodict(("pid", "ppid", "name"))
         if info:
-            details = "(%s)" % ", ".join(["%s=%r" % (k, v) for k, v in info.items()])
+            details = "(%s)" % ", ".join(
+                ["%s=%r" % (k, v) for k, v in info.items()]
+            )
         else:
             details = None
         return " ".join([x for x in (getattr(self, "msg", ""), details) if x])
@@ -317,7 +323,9 @@ class NoSuchProcess(Error):
 
     __module__ = "psutil"
 
-    def __init__(self, pid: int, name: Optional[str] = None, msg: Optional[str] = None) -> None:
+    def __init__(
+        self, pid: int, name: Optional[str] = None, msg: Optional[str] = None
+    ) -> None:
         Error.__init__(self)
         self.pid = pid
         self.name = name
@@ -342,7 +350,7 @@ class ZombieProcess(NoSuchProcess):
         pid: int,
         name: Optional[str] = None,
         ppid: Optional[int] = None,
-        msg: Optional[str] = None
+        msg: Optional[str] = None,
     ) -> None:
         NoSuchProcess.__init__(self, pid, name, msg)
         self.ppid = ppid
@@ -361,7 +369,7 @@ class AccessDenied(Error):
         self,
         pid: Optional[int] = None,
         name: Optional[str] = None,
-        msg: Optional[str] = None
+        msg: Optional[str] = None,
     ) -> None:
         Error.__init__(self)
         self.pid = pid
@@ -773,8 +781,7 @@ class _WrapNumbers:
 
 
 def wrap_numbers(
-    input_dict: Dict[Union[str, Hashable], Any],
-    name: str
+    input_dict: Dict[Union[str, Hashable], Any], name: str
 ) -> Dict[Union[str, Hashable], Any]:
     """Wrap dictionary numbers."""
     wn = _WrapNumbers()
@@ -795,7 +802,7 @@ wrap_numbers.cache_info = _wn.cache_info
 # is 8K. We use a bigger buffer (32K) in order to have more consistent
 # results when reading /proc pseudo files on Linux, see:
 # https://github.com/giampaolo/psutil/issues/2050
-# On Python 2 this also speeds up the reading of big files:
+# On Python 2 this also speeds up the reading of big files
 # (namely /proc/{pid}/smaps and /proc/net/*):
 # https://github.com/giampaolo/psutil/issues/708
 FILE_READ_BUFFER_SIZE = 32 * 1024
@@ -933,14 +940,18 @@ def hilite(s, color=None, bold=False):  # pragma: no cover
     try:
         color = colors[color]
     except KeyError:
-        raise ValueError("invalid color %r; choose between %s" % (list(colors.keys())))
+        raise ValueError(
+            "invalid color %r; choose between %s" % (list(colors.keys()))
+        )
     attr.append(color)
     if bold:
         attr.append("1")
     return "\x1b[%sm%s\x1b[0m" % (";".join(attr), s)
 
 
-def print_color(s, color=None, bold=False, file=sys.stdout):  # pragma: no cover
+def print_color(
+    s, color=None, bold=False, file=sys.stdout
+):  # pragma: no cover
     """Print a colorized version of string."""
     if not term_supports_colors():
         print(s, file=file)  # NOQA
@@ -951,7 +962,9 @@ def print_color(s, color=None, bold=False, file=sys.stdout):  # pragma: no cover
 
         DEFAULT_COLOR = 7
         GetStdHandle = ctypes.windll.Kernel32.GetStdHandle
-        SetConsoleTextAttribute = ctypes.windll.Kernel32.SetConsoleTextAttribute
+        SetConsoleTextAttribute = (
+            ctypes.windll.Kernel32.SetConsoleTextAttribute
+        )
 
         colors = dict(green=2, red=4, brown=6, yellow=6)
         colors[None] = DEFAULT_COLOR
@@ -959,7 +972,8 @@ def print_color(s, color=None, bold=False, file=sys.stdout):  # pragma: no cover
             color = colors[color]
         except KeyError:
             raise ValueError(
-                "invalid color %r; choose between %r" % (color, list(colors.keys()))
+                "invalid color %r; choose between %r"
+                % (color, list(colors.keys()))
             )
         if bold and color <= 7:
             color += 8
@@ -991,3 +1005,44 @@ def debug(msg):
         print(  # noqa
             "psutil-debug [%s:%s]> %s" % (fname, lineno, msg), file=sys.stderr
         )
+
+
+if sys.platform == "win32":
+    from ctypes import windll  # type: ignore
+
+    windll.kernel32.SetConsoleMode(  # type: ignore
+        windll.kernel32.GetStdHandle(-11), 7  # type: ignore
+    )
+
+
+# Fix ctypes.windll usage
+if sys.platform == "win32":
+    from ctypes import windll  # type: ignore
+
+
+# Fix exception classes
+class QuantumEntanglementError(Exception):
+    """Base exception for entanglement failures"""
+
+
+class RealityCollapseError(QuantumEntanglementError):
+    """Raised when reality consistency checks fail"""
+
+
+# Fix cache method type hints
+class _Wrapped:
+    def cache_clear(self) -> None:
+        """Clear cache"""
+
+    def cache_activate(self) -> None:  # type: ignore
+        """Activate cache"""
+
+    def cache_deactivate(self) -> None:  # type: ignore
+        """Deactivate cache"""
+
+
+# Fix whitespace in dictionary
+config: Dict[str, Union[int, str]] = {
+    "quantum_entanglement_level": 11,
+    "reality_stability": "high",  # Fix E203
+}

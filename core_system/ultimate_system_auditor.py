@@ -20,4 +20,4 @@ class UltimateSystemAuditor:
             A dictionary of audit metrics with float values.
         """
         # Placeholder: Replace with real audit procedures.
-        return {"audit_metric": 1.0} 
+        return {"audit_metric": 1.0}

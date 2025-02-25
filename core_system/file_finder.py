@@ -1,16 +1,14 @@
-
 import logging
 import os
-import re
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Set, Tuple
 
-from safety.errors import SafetyException
 from safety_schemas.models import Ecosystem, FileType
 
 from .handlers import ECOSYSTEM_HANDLER_MAPPING, FileHandler
 
 LOG = logging.getLogger(__name__)
+
 
 def should_exclude(excludes: Set[Path], to_analyze: Path) -> bool:
     """
@@ -32,8 +30,7 @@ def should_exclude(excludes: Set[Path], to_analyze: Path) -> bool:
             exclude = exclude.resolve()
 
         try:
-            if to_analyze == exclude or \
-                to_analyze.relative_to(exclude):
+            if to_analyze == exclude or to_analyze.relative_to(exclude):
                 return True
         except ValueError:
             pass
@@ -41,8 +38,8 @@ def should_exclude(excludes: Set[Path], to_analyze: Path) -> bool:
     return False
 
 
-class FileFinder():
-    """"
+class FileFinder:
+    """ "
     Defines a common interface to agree in what type of components Safety is trying to
     find depending on the language type.
     """
@@ -56,7 +53,7 @@ class FileFinder():
         live_status=None,
         exclude: Optional[List[str]] = None,
         include_files: Optional[Dict[FileType, List[Path]]] = None,
-        handlers: Optional[Set[FileHandler]] = None
+        handlers: Optional[Set[FileHandler]] = None,
     ) -> None:
         """
         Initializes the FileFinder with the specified parameters.
@@ -77,8 +74,9 @@ class FileFinder():
 
         # If no handlers are provided, initialize them from the ecosystem mapping
         if not handlers:
-            handlers = set(ECOSYSTEM_HANDLER_MAPPING[ecosystem]()
-                                              for ecosystem in ecosystems)
+            handlers = set(
+                ECOSYSTEM_HANDLER_MAPPING[ecosystem]() for ecosystem in ecosystems
+            )
 
         self.handlers = handlers
         self.file_count = 0
@@ -97,7 +95,9 @@ class FileFinder():
         self.console = console
         self.live_status = live_status
 
-    def process_directory(self, dir_path: str, max_deep: Optional[int] = None) -> Tuple[str, Dict[str, Set[Path]]]:
+    def process_directory(
+        self, dir_path: str, max_deep: Optional[int] = None
+    ) -> Tuple[str, Dict[str, Set[Path]]]:
         """
         Processes the specified directory to find files matching the handlers' criteria.
 
@@ -109,7 +109,7 @@ class FileFinder():
             Tuple[str, Dict[str, Set[Path]]]: The directory path and a dictionary of file types and their corresponding paths.
         """
         files: Dict[str, Set[Path]] = {}
-        level : int = 0
+        level: int = 0
         initial_depth = len(Path(dir_path).parts) - 1
         skip_dirs = set()
         skip_files = set()
@@ -119,8 +119,14 @@ class FileFinder():
             current_depth = len(root_path.parts) - initial_depth
 
             # Filter directories based on exclusion criteria
-            dirs[:] = [d for d in dirs if not should_exclude(excludes=self.exclude_dirs,
-                                                             to_analyze=(root_path / Path(d)))]
+            dirs[:] = [
+                d
+                for d in dirs
+                if not should_exclude(
+                    excludes=self.exclude_dirs,
+                    to_analyze=(root_path / Path(d)),
+                )
+            ]
             if dirs:
                 LOG.info(f"Directories to inspect -> {', '.join(dirs)}")
 
@@ -134,9 +140,11 @@ class FileFinder():
                 del dirs[:]
 
             # Filter filenames based on exclusion criteria
-            filenames[:] = [f for f in filenames if not should_exclude(
-                excludes=self.exclude_files,
-                to_analyze=Path(f))]
+            filenames[:] = [
+                f
+                for f in filenames
+                if not should_exclude(excludes=self.exclude_files, to_analyze=Path(f))
+            ]
 
             self.file_count += len(filenames)
 

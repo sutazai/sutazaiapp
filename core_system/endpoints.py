@@ -25,9 +25,9 @@ class RevocationEndpoint(_RevocationEndpoint):
     def query_token(self, token, token_type_hint):
         """Query requested token from database."""
         token_model = self.server.token_model
-        if token_type_hint == 'access_token':
+        if token_type_hint == "access_token":
             rv = _query_access_token(token_model, token)
-        elif token_type_hint == 'refresh_token':
+        elif token_type_hint == "refresh_token":
             rv = _query_refresh_token(token_model, token)
         else:
             rv = _query_access_token(token_model, token)

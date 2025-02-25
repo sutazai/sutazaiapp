@@ -77,7 +77,7 @@ class TestReadAttr:
     )
     def test_read_attr_encoding_cookie(self, example, tmp_path):
         (tmp_path / "mod.py").write_bytes(example)
-        assert expand.read_attr('mod.__version__', root_dir=tmp_path) == 'é'
+        assert expand.read_attr("mod.__version__", root_dir=tmp_path) == "é"
 
     def test_read_attr(self, tmp_path, monkeypatch):
         files = {
@@ -92,20 +92,20 @@ class TestReadAttr:
         with monkeypatch.context() as m:
             m.chdir(tmp_path)
             # Make sure it can read the attr statically without evaluating the module
-            version = expand.read_attr('pkg.sub.VERSION')
-            values = expand.read_attr('lib.mod.VALUES', {'lib': 'pkg/sub'})
+            version = expand.read_attr("pkg.sub.VERSION")
+            values = expand.read_attr("lib.mod.VALUES", {"lib": "pkg/sub"})
 
-        assert version == '0.1.1'
+        assert version == "0.1.1"
         assert is_static(values)
 
-        assert values['a'] == 0
-        assert values['b'] == {42}
+        assert values["a"] == 0
+        assert values["b"] == {42}
         assert is_static(values)
 
         # Make sure the same APIs work outside cwd
-        assert expand.read_attr('pkg.sub.VERSION', root_dir=tmp_path) == '0.1.1'
-        values = expand.read_attr('lib.mod.VALUES', {'lib': 'pkg/sub'}, tmp_path)
-        assert values['c'] == (0, 1, 1)
+        assert expand.read_attr("pkg.sub.VERSION", root_dir=tmp_path) == "0.1.1"
+        values = expand.read_attr("lib.mod.VALUES", {"lib": "pkg/sub"}, tmp_path)
+        assert values["c"] == (0, 1, 1)
 
     @pytest.mark.parametrize(
         "example",
@@ -121,8 +121,8 @@ class TestReadAttr:
         }
         write_files(files, tmp_path)
         # Make sure this attribute can be read statically
-        version = expand.read_attr('pkg.sub.VERSION', root_dir=tmp_path)
-        assert version == '0.1.1'
+        version = expand.read_attr("pkg.sub.VERSION", root_dir=tmp_path)
+        assert version == "0.1.1"
         assert is_static(version)
 
     @pytest.mark.parametrize(
@@ -140,8 +140,8 @@ class TestReadAttr:
         }
         write_files(files, tmp_path)
         monkeypatch.chdir(tmp_path)
-        version = expand.read_attr('pkg.sub.VERSION')
-        assert version == '0.1.1'
+        version = expand.read_attr("pkg.sub.VERSION")
+        assert version == "0.1.1"
         assert not is_static(version)
 
     def test_import_order(self, tmp_path):
@@ -185,9 +185,15 @@ def test_resolve_class(monkeypatch, tmp_path, package_dir, file, module, return_
     ("args", "pkgs"),
     [
         ({"where": ["."], "namespaces": False}, {"pkg", "other"}),
-        ({"where": [".", "dir1"], "namespaces": False}, {"pkg", "other", "dir2"}),
+        (
+            {"where": [".", "dir1"], "namespaces": False},
+            {"pkg", "other", "dir2"},
+        ),
         ({"namespaces": True}, {"pkg", "other", "dir1", "dir1.dir2"}),
-        ({}, {"pkg", "other", "dir1", "dir1.dir2"}),  # default value for `namespaces`
+        (
+            {},
+            {"pkg", "other", "dir1", "dir1.dir2"},
+        ),  # default value for `namespaces`
     ],
 )
 def test_find_packages(tmp_path, args, pkgs):
@@ -221,7 +227,11 @@ def test_find_packages(tmp_path, args, pkgs):
         (["pkg1/__init__.py", "pkg1/other.py"], ["."], {}),
         (["pkg1/__init__.py", "pkg2/__init__.py"], ["."], {}),
         (["src/pkg1/__init__.py", "src/pkg1/other.py"], ["src"], {"": "src"}),
-        (["src/pkg1/__init__.py", "src/pkg2/__init__.py"], ["src"], {"": "src"}),
+        (
+            ["src/pkg1/__init__.py", "src/pkg2/__init__.py"],
+            ["src"],
+            {"": "src"},
+        ),
         (
             ["src1/pkg1/__init__.py", "src2/pkg2/__init__.py"],
             ["src1", "src2"],
@@ -237,7 +247,11 @@ def test_find_packages(tmp_path, args, pkgs):
 def test_fill_package_dir(tmp_path, files, where, expected_package_dir):
     write_files({k: "" for k in files}, tmp_path)
     pkg_dir = {}
-    kwargs = {"root_dir": tmp_path, "fill_package_dir": pkg_dir, "namespaces": False}
+    kwargs = {
+        "root_dir": tmp_path,
+        "fill_package_dir": pkg_dir,
+        "namespaces": False,
+    }
     pkgs = expand.find_packages(where=where, **kwargs)
     assert set(pkg_dir.items()) == set(expected_package_dir.items())
     for pkg in pkgs:

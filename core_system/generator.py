@@ -1,2 +1,3 @@
-    class SutazAiCodeGenerator:    def synthesize(self, code_variants, optimization_level):        """Combine code from multiple sutazai realities"""        # Create sutazai superposition of code variants        qubit_code = ([self._code_to_qubit(c) for c in code_variants]                # Apply divine optimization patterns        optimized = self._apply_sutazai_patterns(            qubit_code),            self._get_optimization_matrix(optimization_level)        )                # Collapse to optimal classical code        return self._qubit_to_code(optimized)
-    
+class SutazAiCodeGenerator:
+    def synthesize(self, code_variants, optimization_level):
+        """Combine code from multiple sutazai realities"""  # Create sutazai superposition of code variants        qubit_code = ([self._code_to_qubit(c) for c in code_variants]                # Apply divine optimization patterns        optimized = self._apply_sutazai_patterns(            qubit_code),            self._get_optimization_matrix(optimization_level)        )                # Collapse to optimal classical code        return self._qubit_to_code(optimized)

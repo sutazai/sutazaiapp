@@ -110,7 +110,9 @@ def _display_error_type_and_ctx(error: "ErrorDict") -> str:
 
 
 def flatten_errors(
-    errors: Sequence[Any], config: Type["BaseConfig"], loc: Optional["Loc"] = None
+    errors: Sequence[Any],
+    config: Type["BaseConfig"],
+    loc: Optional["Loc"] = None,
 ) -> Generator["ErrorDict", None, None]:
     for error in errors:
         if isinstance(error, ErrorWrapper):

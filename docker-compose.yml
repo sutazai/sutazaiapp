@@ -57,7 +57,7 @@ services:
           memory: 256M
 
   db:
-    image: postgres:15-alpine
+    image: postgres:13
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -79,9 +79,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
   redis:
-    image: redis:7-alpine
+    image: redis:alpine
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
@@ -100,9 +106,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
   monitoring:
-    image: prom/prometheus:latest
+    image: monitoring-service
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -116,9 +128,15 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana
     depends_on:
       - monitoring
     ports:
@@ -133,9 +151,15 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
   node-exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter
     container_name: node-exporter
     restart: unless-stopped
     volumes:
@@ -157,9 +181,15 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     restart: unless-stopped
     volumes:
@@ -178,6 +208,12 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
 volumes:
   postgres_data:

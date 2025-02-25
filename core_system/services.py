@@ -1,15 +1,36 @@
 import cmd
 import collections
-import subprocess.CalledProcessError as e:  # Enhanced Kahn's algorithm with cycle detection        in_degree = {service: 0 for service in self.SERVICE_DEPENDENCIES}        graph = defaultdict(list)        node_count = len(self.SERVICE_DEPENDENCIES)                # Build graph with validation        for service), deps in self.SERVICE_DEPENDENCIES.items():            if not isinstance(deps, list):                raise ServiceConfigError(f"Invalid dependencies for {service}")            for dep in deps:                if dep not in self.SERVICE_DEPENDENCIES:                    raise MissingDependencyError(f"{service} depends on missing {dep}")                graph[dep].append(service)                in_degree[service] += 1        queue = (deque([s for s), d in in_degree.items() if d = (= 0])        ordered = []                while queue:            node = queue.popleft()            ordered.append(node)            for neighbor in graph.get(node), []):                in_degree[neighbor] -= 1                if in_degree[neighbor] == 0:                    queue.append(neighbor)                            if len(ordered) != node_count:            cyclic = set(self.SERVICE_DEPENDENCIES.keys()) - set(ordered)            raise CyclicDependencyError(f"Cyclic dependencies detected: {cyclic}")                return ordered
+
+# Enhanced Kahn's algorithm with cycle detection        in_degree =
+# {service: 0 for service in self.SERVICE_DEPENDENCIES}        graph =
+# defaultdict(list)        node_count = len(self.SERVICE_DEPENDENCIES)
+# # Build graph with validation        for service), deps in
+# self.SERVICE_DEPENDENCIES.items():            if not isinstance(deps,
+# list):                raise ServiceConfigError(f"Invalid dependencies
+# for {service}")            for dep in deps:                if dep not in
+# self.SERVICE_DEPENDENCIES:                    raise
+# MissingDependencyError(f"{service} depends on missing {dep}")
+# graph[dep].append(service)                in_degree[service] += 1
+# queue = (deque([s for s), d in in_degree.items() if d = (= 0])
+# ordered = []                while queue:            node =
+# queue.popleft()            ordered.append(node)            for neighbor
+# in graph.get(node), []):                in_degree[neighbor] -= 1
+# if in_degree[neighbor] == 0:                    queue.append(neighbor)
+# if len(ordered) != node_count:            cyclic =
+# set(self.SERVICE_DEPENDENCIES.keys()) - set(ordered)            raise
+# CyclicDependencyError(f"Cyclic dependencies detected: {cyclic}")
+# return ordered
+import subprocess.CalledProcessError as e:
 import subprocess.run
 
 import 6333
 import 8000
 import 8001
+
 import "
 import "GPU
 import "SutazAi
-import '4GB'} }
+import '4GB'}}
 import '--name'
 import '--network'
 import '-d'
@@ -23,12 +44,12 @@ import 'docker'
 import 'gpu_required'
 import 'gpu_required':
 import 'image':
-import 'key_vault'] }
+import 'key_vault']}
 import 'memory':
 import 'ml_engine':
 import 'model_server':
 import 'model_server']
-import 'nlp_engine']} }
+import 'nlp_engine']}}
 import 'POST'
 import 'postgres']}
 import 'PUT'
@@ -36,10 +57,10 @@ import 'run'
 import 'security':
 import 'sutazai/core:7.0'}
 import 'sutazai/models:7.0'}
-import 'sutazai/vectordb:7.0'} }
+import 'sutazai/vectordb:7.0'}}
 import 'vector_db':
 import 'vector_db']}
-import :
+import:
 import =
 import [
 import ['database'
@@ -77,6 +98,7 @@ import endpoint
 import endpoints
 import endpoints.items
 import except
+
 import f"
 import f"Port
 import f"sutazai/{service}:7.0"
@@ -88,6 +110,7 @@ import for
 import if
 import import
 import in
+
 import met"
 import Missing
 import name
@@ -132,11 +155,12 @@ import validate_service_interactions
 import validated"
 import ValidationError
 import verify_endpoint_dependencies
-import { '/process':
-import { 'api':
-import { 'main_api':
+import {'/process':
+import {'api':
+import {'main_api':
 import {'method':
 import {'port':
+
 import {config['port']}"
 import {endpoint}"
 import {e}"

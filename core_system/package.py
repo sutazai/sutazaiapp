@@ -33,7 +33,8 @@ class Dependency:
 
     def get_unpinned_specificaitons(self):
         return filter(
-            lambda specification: not specification.is_pinned(), self.specifications
+            lambda specification: not specification.is_pinned(),
+            self.specifications,
         )
 
     @abc.abstractmethod
@@ -124,7 +125,9 @@ class PythonDependency(Dependency):
         self.update(kwargs)
 
     @staticmethod
-    def find_version(specifications: List[PythonSpecification]) -> Optional[str]:
+    def find_version(
+        specifications: List[PythonSpecification],
+    ) -> Optional[str]:
         ver = None
 
         if len(specifications) != 1:

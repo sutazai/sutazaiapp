@@ -1,4 +1,5 @@
 """Process links like https://example.org/"""
+
 import re
 
 from .state_inline import StateInline
@@ -31,7 +32,7 @@ def linkify(state: StateInline, silent: bool) -> bool:
         return False
 
     proto = match.group(1)
-    if not (link := state.md.linkify.match_at_start(state.src[pos - len(proto) :])):
+    if not (link := state.md.linkify.match_at_start(state.src[pos - len(proto):])):
         return False
     url: str = link.url
 

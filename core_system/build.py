@@ -5,7 +5,12 @@ from typing import Protocol
 
 from ..dist import Distribution
 
-_ORIGINAL_SUBCOMMANDS = {"build_py", "build_clib", "build_ext", "build_scripts"}
+_ORIGINAL_SUBCOMMANDS = {
+    "build_py",
+    "build_clib",
+    "build_ext",
+    "build_scripts",
+}
 
 
 class build(_build):

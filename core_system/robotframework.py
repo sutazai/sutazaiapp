@@ -104,7 +104,7 @@ class VariableTokenizer:
             yield "[", SYNTAX
             yield from self.tokenize(var.index, VARIABLE)
             yield "]", SYNTAX
-        yield from self.tokenize(string[var.end :], orig_token)
+        yield from self.tokenize(string[var.end:], orig_token)
 
 
 class RowTokenizer:
@@ -285,7 +285,13 @@ class TestCaseSetting(Setting):
 
 class KeywordSetting(TestCaseSetting):
     _keyword_settings = ("teardown",)
-    _other_settings = ("documentation", "arguments", "return", "timeout", "tags")
+    _other_settings = (
+        "documentation",
+        "arguments",
+        "return",
+        "timeout",
+        "tags",
+    )
 
 
 class Variable(Tokenizer):

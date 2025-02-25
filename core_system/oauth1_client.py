@@ -2,7 +2,11 @@ import typing
 
 import httpx
 from authlib.common.encoding import to_unicode
-from authlib.oauth1 import SIGNATURE_HMAC_SHA1, SIGNATURE_TYPE_HEADER, ClientAuth
+from authlib.oauth1 import (
+    SIGNATURE_HMAC_SHA1,
+    SIGNATURE_TYPE_HEADER,
+    ClientAuth,
+)
 from authlib.oauth1.client import OAuth1Client as _OAuth1Client
 from httpx import Auth, Request, Response
 

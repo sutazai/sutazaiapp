@@ -897,7 +897,7 @@ def sieve(n):
     limit = math.isqrt(n) + 1
     for p in iter_index(data, 1, start, limit):
         yield from iter_index(data, 1, start, p * p)
-        data[p * p : n : p + p] = bytes(len(range(p * p, n, p + p)))
+        data[p * p: n: p + p] = bytes(len(range(p * p, n, p + p)))
         start = p * p
     yield from iter_index(data, 1, start)
 

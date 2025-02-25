@@ -13,7 +13,7 @@ import logging
 import subprocess
 import sys
 import time
-from typing import Optional
+from contextlib import contextmanager
 
 # Import the retry decorator from our internal module.
 from SutazAI.retry import retry  # Now resolved from our local file
@@ -21,10 +21,11 @@ from SutazAI.retry import retry  # Now resolved from our local file
 # ----------------------------------------------------------------------
 # Logging configuration
 logging.basicConfig(
-    filename='healing.log',
+    filename="healing.log",
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
+
 
 # ----------------------------------------------------------------------
 # Dummy external implementations (these should be replaced with real modules)
@@ -56,11 +57,10 @@ class WorkerPool:
 worker_pool = WorkerPool()
 
 
-from contextlib import contextmanager
-
-
 @contextmanager
-def exponential_backoff(initial_delay: float, max_delay: float, max_attempts: int):
+def exponential_backoff(
+    initial_delay: float, max_delay: float, max_attempts: int
+):
     attempt = 0
     delay = initial_delay
 
@@ -85,23 +85,20 @@ def perform_self_healing():
     """
     logging.info("Performing self-healing procedure...")
     # Healing logic goes here.
-    pass
 
 
 class CriticalFailure(Exception):
     """Exception to indicate a critical failure during repair."""
-    pass
 
 
 class RepairTimeout(Exception):
     """Exception to indicate that the repair process timed out."""
-    pass
 
 
 def report_incident(e: Exception):
     """
     Dummy incident reporting.
-    
+
     Args:
         e (Exception): The exception to report.
     """
@@ -117,9 +114,10 @@ class AutoHealingEngine:
     """
     Engine for executing emergency protocols and repair sequences.
     """
+
     HEALING_ACTIONS = {
-        'high_cpu': 'scale_resources --sutazai=3',
-        'latency_spike': 'reroute_traffic --sutazai-tunnels=5'
+        "high_cpu": "scale_resources --sutazai=3",
+        "latency_spike": "reroute_traffic --sutazai-tunnels=5",
     }
 
     def execute_emergency_protocol(self, vitals: dict):
@@ -129,14 +127,14 @@ class AutoHealingEngine:
         Args:
             vitals (dict): A dictionary containing system vitals and critical issues.
         """
-        for issue in vitals.get('critical_issues', []):
-            action = self.HEALING_ACTIONS.get(issue.get('type'))
+        for issue in vitals.get("critical_issues", []):
+            action = self.HEALING_ACTIONS.get(issue.get("type"))
             if action:
                 SutazAiCLI.execute(f"{action} --force")
         # Send notification after executing emergency protocol
         SutazAiComms.send_alert(
             priority=10,
-            message=f"Emergency protocol executed: {vitals.get('summary', 'No summary provided')}"
+            message=f"Emergency protocol executed: {vitals.get('summary', 'No summary provided')}",
         )
 
     def execute_repair_sequence(self):
@@ -150,10 +148,15 @@ class AutoHealingEngine:
             return
 
         logger = logging.getLogger(__name__)
-        logger.debug("Starting repair sequence with %d available workers", worker_pool.size)
+        logger.debug(
+            "Starting repair sequence with %d available workers",
+            worker_pool.size,
+        )
 
         try:
-            with exponential_backoff(initial_delay=1.0, max_delay=60.0, max_attempts=5) as backoff:
+            with exponential_backoff(
+                initial_delay=1.0, max_delay=60.0, max_attempts=5
+            ) as backoff:
                 while True:
                     try:
                         perform_self_healing()
@@ -170,6 +173,7 @@ class AutoRepair:
     """
     Implements system repair capabilities such as auto-repair and service restart.
     """
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.max_retries = 3
@@ -189,7 +193,7 @@ class AutoRepair:
 
         Args:
             service_name (str): The name of the service to restart.
-        
+
         Returns:
             bool: True if the service restarted successfully, False otherwise.
         """
@@ -197,26 +201,32 @@ class AutoRepair:
         while retry_count < self.max_retries:
             try:
                 result = subprocess.run(
-                    ['systemctl', 'restart', service_name],
+                    ["systemctl", "restart", service_name],
                     check=True,
                     capture_output=True,
-                    text=True
+                    text=True,
                 )
                 if result.returncode == 0:
-                    self.logger.info(f"Service {service_name} restarted successfully")
+                    self.logger.info(
+                        f"Service {service_name} restarted successfully"
+                    )
                     return True
             except subprocess.CalledProcessError as e:
                 retry_count += 1
-                self.logger.warning(f"Failed to restart {service_name}, retry {retry_count}/{self.max_retries}")
+                self.logger.warning(
+                    f"Failed to restart {service_name}, retry {retry_count}/{self.max_retries}"
+                )
                 time.sleep(self.retry_delay)
-        self.logger.error(f"Failed to restart {service_name} after {self.max_retries} attempts")
+        self.logger.error(
+            f"Failed to restart {service_name} after {self.max_retries} attempts"
+        )
         return False
 
 
 # Verify healing system
 if __name__ == "__main__":
     # Verification step: Check for the presence of the term 'sutazai' in the file content.
-    with open(__file__, 'r') as f:
-        if 'sutazai' in f.read().lower():
+    with open(__file__, "r") as f:
+        if "sutazai" in f.read().lower():
             print("SutazAI found in healing/auto_repair.py")
-            sys.exit(1) 
+            sys.exit(1)

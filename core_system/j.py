@@ -43,7 +43,11 @@ class JLexer(RegexLexer):
             (r"#!.*$", Comment.Preproc),
             # Comments
             (r"NB\..*", Comment.Single),
-            (r"(\n+\s*)(Note)", bygroups(Whitespace, Comment.Multiline), "comment"),
+            (
+                r"(\n+\s*)(Note)",
+                bygroups(Whitespace, Comment.Multiline),
+                "comment",
+            ),
             (r"(\s*)(Note.*)", bygroups(Whitespace, Comment.Single)),
             # Whitespace
             (r"\s+", Whitespace),
@@ -63,7 +67,10 @@ class JLexer(RegexLexer):
                 "explicitDefinition",
             ),
             # Flow Control
-            (words(("for_", "goto_", "label_"), suffix=validName + r"\."), Name.Label),
+            (
+                words(("for_", "goto_", "label_"), suffix=validName + r"\."),
+                Name.Label,
+            ),
             (
                 words(
                     (

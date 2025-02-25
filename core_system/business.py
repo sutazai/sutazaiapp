@@ -712,17 +712,29 @@ class ABAPLexer(RegexLexer):
                 r"TRANSACTION|TRANSFORMATION))\b",
                 Keyword,
             ),
-            (r"(FORM|PERFORM)(\s+)(\w+)", bygroups(Keyword, Whitespace, Name.Function)),
+            (
+                r"(FORM|PERFORM)(\s+)(\w+)",
+                bygroups(Keyword, Whitespace, Name.Function),
+            ),
             (
                 r"(PERFORM)(\s+)(\()(\w+)(\))",
-                bygroups(Keyword, Whitespace, Punctuation, Name.Variable, Punctuation),
+                bygroups(
+                    Keyword,
+                    Whitespace,
+                    Punctuation,
+                    Name.Variable,
+                    Punctuation,
+                ),
             ),
             (
                 r"(MODULE)(\s+)(\S+)(\s+)(INPUT|OUTPUT)",
                 bygroups(Keyword, Whitespace, Name.Function, Whitespace, Keyword),
             ),
             # method implementation
-            (r"(METHOD)(\s+)([\w~]+)", bygroups(Keyword, Whitespace, Name.Function)),
+            (
+                r"(METHOD)(\s+)([\w~]+)",
+                bygroups(Keyword, Whitespace, Name.Function),
+            ),
             # method calls
             (
                 r"(\s+)([\w\-]+)([=\-]>)([\w\-~]+)",
@@ -731,8 +743,14 @@ class ABAPLexer(RegexLexer):
             # call methodnames returning style
             (r"(?<=(=|-)>)([\w\-~]+)(?=\()", Name.Function),
             # text elements
-            (r"(TEXT)(-)(\d{3})", bygroups(Keyword, Punctuation, Number.Integer)),
-            (r"(TEXT)(-)(\w{3})", bygroups(Keyword, Punctuation, Name.Variable)),
+            (
+                r"(TEXT)(-)(\d{3})",
+                bygroups(Keyword, Punctuation, Number.Integer),
+            ),
+            (
+                r"(TEXT)(-)(\w{3})",
+                bygroups(Keyword, Punctuation, Name.Variable),
+            ),
             # keywords with dashes in them.
             # these need to be first, because for instance the -ID part
             # of MESSAGE-ID wouldn't get highlighted if MESSAGE was
@@ -918,7 +936,9 @@ class OpenEdgeLexer(RegexLexer):
     )
 
     keywords = words(
-        OPENEDGEKEYWORDS, prefix=r"(?i)(^|(?<=[^\w\-]))", suffix=r"\s*($|(?=[^\w\-]))"
+        OPENEDGEKEYWORDS,
+        prefix=r"(?i)(^|(?<=[^\w\-]))",
+        suffix=r"\s*($|(?=[^\w\-]))",
     )
 
     tokens = {

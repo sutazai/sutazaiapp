@@ -147,9 +147,11 @@ class BaseAsyncFileLock(BaseFileLock, metaclass=AsyncFileLockMeta):
             "run_in_executor": run_in_executor,
             "executor": executor,
         }
-        self._context: AsyncFileLockContext = (AsyncThreadLocalFileContext if thread_local else AsyncFileLockContext)(
-            **kwargs
-        )
+        self._context: AsyncFileLockContext = (
+            AsyncThreadLocalFileContext
+            if thread_local
+            else AsyncFileLockContext
+        )(**kwargs)
 
     @property
     def run_in_executor(self) -> bool:
@@ -162,7 +164,9 @@ class BaseAsyncFileLock(BaseFileLock, metaclass=AsyncFileLockMeta):
         return self._context.executor
 
     @executor.setter
-    def executor(self, value: futures.Executor | None) -> None:  # pragma: no cover
+    def executor(
+        self, value: futures.Executor | None
+    ) -> None:  # pragma: no cover
         """
         Change the executor.
 
@@ -226,21 +230,37 @@ class BaseAsyncFileLock(BaseFileLock, metaclass=AsyncFileLockMeta):
         try:
             while True:
                 if not self.is_locked:
-                    _LOGGER.debug("Attempting to acquire lock %s on %s", lock_id, lock_filename)
+                    _LOGGER.debug(
+                        "Attempting to acquire lock %s on %s",
+                        lock_id,
+                        lock_filename,
+                    )
                     await self._run_internal_method(self._acquire)
                 if self.is_locked:
-                    _LOGGER.debug("Lock %s acquired on %s", lock_id, lock_filename)
+                    _LOGGER.debug(
+                        "Lock %s acquired on %s", lock_id, lock_filename
+                    )
                     break
                 if blocking is False:
-                    _LOGGER.debug("Failed to immediately acquire lock %s on %s", lock_id, lock_filename)
+                    _LOGGER.debug(
+                        "Failed to immediately acquire lock %s on %s",
+                        lock_id,
+                        lock_filename,
+                    )
                     raise Timeout(lock_filename)  # noqa: TRY301
                 if 0 <= timeout < time.perf_counter() - start_time:
-                    _LOGGER.debug("Timeout on acquiring lock %s on %s", lock_id, lock_filename)
+                    _LOGGER.debug(
+                        "Timeout on acquiring lock %s on %s",
+                        lock_id,
+                        lock_filename,
+                    )
                     raise Timeout(lock_filename)  # noqa: TRY301
                 msg = "Lock %s not acquired on %s, waiting %s seconds ..."
                 _LOGGER.debug(msg, lock_id, lock_filename, poll_interval)
                 await asyncio.sleep(poll_interval)
-        except BaseException:  # Something did go wrong, so decrement the counter.
+        except (
+            BaseException
+        ):  # Something did go wrong, so decrement the counter.
             self._context.lock_counter = max(0, self._context.lock_counter - 1)
             raise
         return AsyncAcquireReturnProxy(lock=self)
@@ -259,7 +279,11 @@ class BaseAsyncFileLock(BaseFileLock, metaclass=AsyncFileLockMeta):
             if self._context.lock_counter == 0 or force:
                 lock_id, lock_filename = id(self), self.lock_file
 
-                _LOGGER.debug("Attempting to release lock %s on %s", lock_id, lock_filename)
+                _LOGGER.debug(
+                    "Attempting to release lock %s on %s",
+                    lock_id,
+                    lock_filename,
+                )
                 await self._run_internal_method(self._release)
                 self._context.lock_counter = 0
                 _LOGGER.debug("Lock %s released on %s", lock_id, lock_filename)

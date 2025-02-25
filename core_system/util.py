@@ -1,4 +1,3 @@
-
 from pydantic.version import VERSION as PYDANTIC_VERSION
 
 

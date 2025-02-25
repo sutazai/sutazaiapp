@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import logging
 import os
-import shutil
 import subprocess
-from typing import List
 
 
 class AdvancedCleanupManager:
@@ -24,11 +22,11 @@ class AdvancedCleanupManager:
         """
         try:
             # List snapshots sorted by date
-            snapshots_cmd = (
-                "timeshift --list | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' | sort -r"
-            )
+            snapshots_cmd = "timeshift --list | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' | sort -r"
             snapshots = (
-                subprocess.check_output(snapshots_cmd, shell=True).decode().splitlines()
+                subprocess.check_output(snapshots_cmd, shell=True)
+                .decode()
+                .splitlines()
             )
 
             # Delete older snapshots
@@ -46,7 +44,9 @@ class AdvancedCleanupManager:
                     )
                     self.logger.info(f"Deleted Timeshift snapshot: {snapshot}")
                 except subprocess.CalledProcessError as e:
-                    self.logger.error(f"Failed to delete snapshot {snapshot}: {e}")
+                    self.logger.error(
+                        f"Failed to delete snapshot {snapshot}: {e}"
+                    )
 
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Timeshift snapshot cleanup failed: {e}")
@@ -63,7 +63,14 @@ class AdvancedCleanupManager:
             # Reduce swap size (example: set to 4GB)
             subprocess.run(["sudo", "swapoff", "-a"], check=True)
             subprocess.run(
-                ["sudo", "dd", "if=/dev/zero", "of=/swapfile", "bs=1G", "count=4"],
+                [
+                    "sudo",
+                    "dd",
+                    "if=/dev/zero",
+                    "of=/swapfile",
+                    "bs=1G",
+                    "count=4",
+                ],
                 check=True,
             )
             subprocess.run(["sudo", "mkswap", "/swapfile"], check=True)
@@ -109,7 +116,9 @@ class AdvancedCleanupManager:
                             try:
                                 os.unlink(os.path.join(root, f))
                             except Exception as e:
-                                self.logger.warning(f"Could not remove {f}: {e}")
+                                self.logger.warning(
+                                    f"Could not remove {f}: {e}"
+                                )
 
                     self.logger.info(f"Cleaned cache directory: {cache_dir}")
 

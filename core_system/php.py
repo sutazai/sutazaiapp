@@ -94,7 +94,11 @@ class ZephirLexer(RegexLexer):
                 Keyword,
                 "slashstartsregex",
             ),
-            (r"(var|let|with|function)\b", Keyword.Declaration, "slashstartsregex"),
+            (
+                r"(var|let|with|function)\b",
+                Keyword.Declaration,
+                "slashstartsregex",
+            ),
             (
                 r"(abstract|boolean|bool|char|class|const|double|enum|export|extends|final|"
                 r"native|goto|implements|import|int|string|interface|long|ulong|char|uchar|"
@@ -355,13 +359,17 @@ class PhpLexer(RegexLexer):
             (
                 r"(\{\$\{)(.*?)(\}\})",
                 bygroups(
-                    String.Interpol, using(this, _startinline=True), String.Interpol
+                    String.Interpol,
+                    using(this, _startinline=True),
+                    String.Interpol,
                 ),
             ),
             (
                 r"(\{)(\$.*?)(\})",
                 bygroups(
-                    String.Interpol, using(this, _startinline=True), String.Interpol
+                    String.Interpol,
+                    using(this, _startinline=True),
+                    String.Interpol,
                 ),
             ),
             (

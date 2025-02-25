@@ -6,7 +6,16 @@ import re
 import typing
 from contextlib import contextmanager
 from textwrap import indent, wrap
-from typing import Any, Dict, Generator, Iterator, List, Optional, Sequence, Union
+from typing import (
+    Any,
+    Dict,
+    Generator,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Union,
+)
 
 from .fastjsonschema_exceptions import JsonSchemaValueException
 
@@ -33,7 +42,15 @@ _SKIP_DETAILS = (
     "must not be there",
 )
 
-_NEED_DETAILS = {"anyOf", "oneOf", "allOf", "contains", "propertyNames", "not", "items"}
+_NEED_DETAILS = {
+    "anyOf",
+    "oneOf",
+    "allOf",
+    "contains",
+    "propertyNames",
+    "not",
+    "items",
+}
 
 _CAMEL_CASE_SPLITTER = re.compile(r"\W+|([A-Z][^A-Z\W]*)")
 _IDENTIFIER = re.compile(r"^[\w_]+$", re.I)

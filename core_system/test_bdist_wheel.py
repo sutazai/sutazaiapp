@@ -455,7 +455,14 @@ def test_unix_epoch_timestamps(dummy_dist, monkeypatch, tmp_path):
     bdist_wheel_cmd(bdist_dir=str(tmp_path), build_number="2a").run()
     with ZipFile("dist/dummy_dist-1.0-2a-py3-none-any.whl") as wf:
         for zinfo in wf.filelist:
-            assert zinfo.date_time >= (1980, 1, 1, 0, 0, 0)  # min epoch is used
+            assert zinfo.date_time >= (
+                1980,
+                1,
+                1,
+                0,
+                0,
+                0,
+            )  # min epoch is used
 
 
 def test_get_abi_tag_windows(monkeypatch):
@@ -484,7 +491,9 @@ def test_get_abi_tag_pypy_new(monkeypatch):
 
 def test_get_abi_tag_graalpy(monkeypatch):
     monkeypatch.setattr(
-        sysconfig, "get_config_var", lambda x: "graalpy231-310-native-x86_64-linux"
+        sysconfig,
+        "get_config_var",
+        lambda x: "graalpy231-310-native-x86_64-linux",
     )
     monkeypatch.setattr(tags, "interpreter_name", lambda: "graalpy")
     assert get_abi_tag() == "graalpy231_310_native"
@@ -618,4 +627,4 @@ def test_dist_info_provided(dummy_dist, monkeypatch, tmp_path):
     # Check that all expected files are there.
     assert expected - files_found == set()
     # Make sure there is no accidental egg-info bleeding into the wheel.
-    assert not [path for path in files_found if 'egg-info' in str(path)]
+    assert not [path for path in files_found if "egg-info" in str(path)]

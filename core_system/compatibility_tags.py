@@ -1,5 +1,4 @@
-"""Generate and work with PEP 425 Compatibility Tags.
-"""
+"""Generate and work with PEP 425 Compatibility Tags."""
 
 import re
 from typing import List, Optional, Tuple
@@ -34,7 +33,7 @@ def _mac_platforms(arch: str) -> List[str]:
             # actual prefix provided by the user in case they provided
             # something like "macosxcustom_". It may be good to remove
             # this as undocumented or deprecate it in the future.
-            "{}_{}".format(name, arch[len("macosx_") :])
+            "{}_{}".format(name, arch[len("macosx_"):])
             for arch in mac_platforms(mac_version, actual_arch)
         ]
     else:
@@ -75,7 +74,9 @@ def _get_custom_platforms(arch: str) -> List[str]:
     return arches
 
 
-def _expand_allowed_platforms(platforms: Optional[List[str]]) -> Optional[List[str]]:
+def _expand_allowed_platforms(
+    platforms: Optional[List[str]],
+) -> Optional[List[str]]:
     if not platforms:
         return None
 

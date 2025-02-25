@@ -16,11 +16,9 @@ Key Responsibilities:
 """
 
 import ast
-import importlib.util
 import json
 import os
 import sys
-import typing
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -73,6 +71,15 @@ class AdvancedDependencyMapper:
         self.logger = logger or AdvancedLogger()
         self.dependency_graph = nx.DiGraph()
 
+    def _get_stdlib_modules(self) -> frozenset[str]:
+        """Get Python standard library modules"""
+        if hasattr(sys, "stdlib_module_names"):
+            return sys.stdlib_module_names
+        # Convert to frozenset and use union operator
+        return frozenset(sys.builtin_module_names).union(
+            {"os", "sys", "math", "datetime", "json", "re", "ast", "types"}
+        )
+
     def _is_valid_python_module(self, file_path: str) -> bool:
         """
         Validate if a file is a valid Python module
@@ -99,27 +106,28 @@ class AdvancedDependencyMapper:
         Returns:
             Set of imported module names
         """
-        dependencies = set()
-
         try:
-            with open(file_path, "r") as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 tree = ast.parse(f.read())
 
+            imports = set()
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):
-                    dependencies.update(
-                        alias.name.split(".")[0] for alias in node.names
-                    )
+                    for alias in node.names:
+                        imports.add(alias.name.split(".")[0])
                 elif isinstance(node, ast.ImportFrom):
-                    if node.module:
-                        dependencies.add(node.module.split(".")[0])
+                    module = node.module.split(".")[0] if node.module else ""
+                    if module and module not in {"__future__", "typing"}:
+                        imports.add(module)
+
+            return {i for i in imports if i not in self._get_stdlib_modules()}
 
         except Exception as e:
             self.logger.log(
-                f"Could not extract dependencies from {file_path}: {e}", level="warning"
+                f"Could not extract dependencies from {file_path}: {e}",
+                level="warning",
             )
-
-        return dependencies
+            return set()
 
     def build_dependency_graph(self) -> Dict[str, List[str]]:
         """
@@ -200,7 +208,9 @@ class AdvancedDependencyMapper:
                 )
 
         return sorted(
-            high_coupling_modules, key=lambda x: x["total_coupling"], reverse=True
+            high_coupling_modules,
+            key=lambda x: x["total_coupling"],
+            reverse=True,
         )
 
     def calculate_dependency_health_score(self) -> float:
@@ -226,7 +236,8 @@ class AdvancedDependencyMapper:
 
         except Exception as e:
             self.logger.log(
-                f"Dependency health score calculation failed: {e}", level="error"
+                f"Dependency health score calculation failed: {e}",
+                level="error",
             )
             return 0.0
 
@@ -252,24 +263,28 @@ class AdvancedDependencyMapper:
         # Circular dependency recommendations
         for dep_pair in circular_dependencies:
             recommendations.append(
-                f"Break circular dependency between {dep_pair[0]} and {dep_pair[1]}"
+                f"Break circular dependency between " f"{dep_pair[0]} and {dep_pair[1]}"
             )
 
         # High coupling module recommendations
         for module in high_coupling_modules[:3]:  # Top 3 high-coupling modules
             recommendations.append(
-                f"Refactor module {module['module']} to reduce coupling (In: {module['in_degree']}, Out: {module['out_degree']})"
+                "Refactor module "
+                f"{module['module']} to reduce coupling "
+                f"(In: {module['in_degree']}, Out: {module['out_degree']})"
             )
 
         # General dependency optimization
         if len(dependency_graph) > 100:
             recommendations.append(
-                "Consider modularizing the project to reduce overall complexity"
+                "Consider modularizing the project " "to reduce overall complexity"
             )
 
         return recommendations
 
-    def generate_comprehensive_dependency_report(self) -> DependencyAnalysisReport:
+    def generate_comprehensive_dependency_report(
+        self,
+    ) -> DependencyAnalysisReport:
         """
         Generate a comprehensive dependency analysis report
 
@@ -291,7 +306,9 @@ class AdvancedDependencyMapper:
 
             # Generate optimization recommendations
             optimization_recommendations = self.generate_optimization_recommendations(
-                dependency_graph, circular_dependencies, high_coupling_modules
+                dependency_graph,
+                circular_dependencies,
+                high_coupling_modules,
             )
 
             # Create comprehensive dependency report
@@ -306,13 +323,18 @@ class AdvancedDependencyMapper:
             )
 
             # Persist dependency report
-            report_path = f'/opt/sutazai_project/SutazAI/logs/dependency_analysis_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            report_path = (
+                "/opt/sutazai_project/SutazAI/logs/"
+                f"dependency_analysis_report_"
+                f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            )
 
             with open(report_path, "w") as f:
                 json.dump(asdict(dependency_report), f, indent=2)
 
             self.logger.log(
-                f"Dependency analysis report generated: {report_path}", level="info"
+                f"Dependency analysis report generated: {report_path}",
+                level="info",
             )
 
             return dependency_report
@@ -334,7 +356,7 @@ def main():
             print(f"- {recommendation}")
 
         # Print dependency health score
-        print(f"\nDependency Health Score: {report.dependency_health_score}/100")
+        print(f"\nDependency Health Score: " f"{report.dependency_health_score}/100")
 
     except Exception as e:
         print(f"Dependency mapping failed: {e}")

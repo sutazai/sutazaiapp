@@ -10,7 +10,7 @@ from . import c_ast
 from .ast_transforms import fix_atomic_specifiers, fix_switch_cases
 from .c_lexer import CLexer
 from .ply import yacc
-from .plyparser import ParseError, PLYParser, parameterized, template
+from .plyparser import PLYParser, parameterized, template
 
 
 @template
@@ -145,7 +145,7 @@ class CParser(PLYParser):
         self._last_yielded_token = None
         return self.cparser.parse(input=text, lexer=self.clex, debug=debug)
 
-    ######################--   PRIVATE   --######################
+    ###################### --   PRIVATE   --######################
 
     def _push_scope(self):
         self._scope_stack.append(dict())
@@ -328,7 +328,8 @@ class CParser(PLYParser):
             # nodes. Concatenate all the names into a single list.
             #
             type.type = c_ast.IdentifierType(
-                [name for id in typename for name in id.names], coord=typename[0].coord
+                [name for id in typename for name in id.names],
+                coord=typename[0].coord,
             )
         return decl
 
@@ -461,11 +462,16 @@ class CParser(PLYParser):
             self._parse_error("Invalid typedef", decl.coord)
 
         declaration = self._build_declarations(
-            spec=spec, decls=[dict(decl=decl, init=None)], typedef_namespace=True
+            spec=spec,
+            decls=[dict(decl=decl, init=None)],
+            typedef_namespace=True,
         )[0]
 
         return c_ast.FuncDef(
-            decl=declaration, param_decls=param_decls, body=body, coord=decl.coord
+            decl=declaration,
+            param_decls=param_decls,
+            body=body,
+            coord=decl.coord,
         )
 
     def _select_struct_union_class(self, token):
@@ -478,7 +484,7 @@ class CParser(PLYParser):
             return c_ast.Union
 
     ##
-    ## Precedence and associativity of operators
+    # Precedence and associativity of operators
     ##
     # If this changes, c_generator.CGenerator.precedence_map needs to change as
     # well
@@ -496,8 +502,8 @@ class CParser(PLYParser):
     )
 
     ##
-    ## Grammar productions
-    ## Implementation of the BNF defined in K&R2 A.13
+    # Grammar productions
+    # Implementation of the BNF defined in K&R2 A.13
     ##
 
     # Wrapper around a translation unit, to allow for empty input.
@@ -1042,7 +1048,10 @@ class CParser(PLYParser):
         if len(p) > 3:
             p[0] = {"decl": p[1], "bitsize": p[3]}
         else:
-            p[0] = {"decl": c_ast.TypeDecl(None, None, None, None), "bitsize": p[2]}
+            p[0] = {
+                "decl": c_ast.TypeDecl(None, None, None, None),
+                "bitsize": p[2],
+            }
 
     def p_enum_specifier_1(self, p):
         """enum_specifier  : ENUM ID

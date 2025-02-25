@@ -69,7 +69,10 @@ class JSLTLexer(RegexLexer):
                 Keyword.Declaration,
                 combined("function", "whitespace"),
             ),
-            (words(("false", "null", "true"), suffix=_WORD_END), Keyword.Constant),
+            (
+                words(("false", "null", "true"), suffix=_WORD_END),
+                Keyword.Constant,
+            ),
             (words(("else", "for", "if"), suffix=_WORD_END), Keyword),
             (words(("and", "or"), suffix=_WORD_END), Operator.Word),
             (
@@ -129,7 +132,10 @@ class JSLTLexer(RegexLexer):
                 ),
                 Name.Builtin,
             ),
-            (r"[A-Z_a-z][0-9A-Z_a-z-]*:[A-Z_a-z][0-9A-Z_a-z-]*", Name.Function),
+            (
+                r"[A-Z_a-z][0-9A-Z_a-z-]*:[A-Z_a-z][0-9A-Z_a-z-]*",
+                Name.Function,
+            ),
             (r"[A-Z_a-z][0-9A-Z_a-z-]*", Name),
             (r"\$[A-Z_a-z][0-9A-Z_a-z-]*", Name.Variable),
         ],
@@ -144,7 +150,11 @@ class JSLTLexer(RegexLexer):
             ),
         ],
         "function-parameter-list": [
-            (r"\(", Punctuation, combined("function-parameters", "whitespace")),
+            (
+                r"\(",
+                Punctuation,
+                combined("function-parameters", "whitespace"),
+            ),
         ],
         "function-parameters": [
             (r",", Punctuation),

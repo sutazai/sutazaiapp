@@ -73,7 +73,8 @@ class Spinner:
             self.interval / 1000.0
         ) + self.frame_no_offset
         frame = Text(
-            self.frames[int(frame_no) % len(self.frames)], style=self.style or ""
+            self.frames[int(frame_no) % len(self.frames)],
+            style=self.style or "",
         )
 
         if self._update_speed:

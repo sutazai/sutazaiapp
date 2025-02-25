@@ -1,8 +1,7 @@
 import logging
 import os
-import sys
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import psutil
 
@@ -13,7 +12,7 @@ class PerformanceOptimizer:
     Analyzes and improves system performance across multiple dimensions.
     """
 
-    def __init__(self, project_root: str = '.'):
+    def __init__(self, project_root: str = "."):
         """
         Initialize the performance optimizer.
 
@@ -23,7 +22,7 @@ class PerformanceOptimizer:
         self.project_root = os.path.abspath(project_root)
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s: %(message)s'
+            format="%(asctime)s - %(levelname)s: %(message)s",
         )
         self.logger = logging.getLogger(__name__)
 
@@ -35,14 +34,18 @@ class PerformanceOptimizer:
             Dict[str, float]: Memory usage statistics
         """
         memory_info = {
-            'total_memory': psutil.virtual_memory().total / (1024 * 1024),
-            'available_memory': psutil.virtual_memory().available / (1024 * 1024),
-            'memory_percent_used': psutil.virtual_memory().percent,
-            'current_process_memory': psutil.Process().memory_info().rss / (1024 * 1024)
+            "total_memory": psutil.virtual_memory().total / (1024 * 1024),
+            "available_memory": psutil.virtual_memory().available
+            / (1024 * 1024),
+            "memory_percent_used": psutil.virtual_memory().percent,
+            "current_process_memory": psutil.Process().memory_info().rss
+            / (1024 * 1024),
         }
         return memory_info
 
-    def profile_python_files(self, directories: List[str]) -> List[Dict[str, float]]:
+    def profile_python_files(
+        self, directories: List[str]
+    ) -> List[Dict[str, float]]:
         """
         Profile Python files for performance bottlenecks.
 
@@ -61,22 +64,26 @@ class PerformanceOptimizer:
 
             for root, _, files in os.walk(full_path):
                 for file in files:
-                    if file.endswith('.py'):
+                    if file.endswith(".py"):
                         file_path = os.path.join(root, file)
                         try:
                             start_time = time.time()
                             # Placeholder for actual profiling logic
                             # In a real scenario, you'd use cProfile or similar
-                            with open(file_path, 'r') as f:
+                            with open(file_path, "r") as f:
                                 _ = f.read()
                             end_time = time.time()
 
-                            profiles.append({
-                                'file': file_path,
-                                'load_time': end_time - start_time
-                            })
+                            profiles.append(
+                                {
+                                    "file": file_path,
+                                    "load_time": end_time - start_time,
+                                }
+                            )
                         except Exception as e:
-                            self.logger.error(f"Profiling error in {file_path}: {e}")
+                            self.logger.error(
+                                f"Profiling error in {file_path}: {e}"
+                            )
         return profiles
 
     def optimize_system_resources(self) -> Dict[str, Any]:
@@ -87,15 +94,15 @@ class PerformanceOptimizer:
             Dict[str, Any]: Performance optimization results
         """
         optimization_results = {
-            'memory_usage': self.analyze_memory_usage(),
-            'file_profiles': self.profile_python_files(['sutazai', 'scripts']),
-            'recommendations': []
+            "memory_usage": self.analyze_memory_usage(),
+            "file_profiles": self.profile_python_files(["sutazai", "scripts"]),
+            "recommendations": [],
         }
 
         # Analyze memory usage and generate recommendations
-        memory_info = optimization_results['memory_usage']
-        if memory_info['memory_percent_used'] > 80:
-            optimization_results['recommendations'].append(
+        memory_info = optimization_results["memory_usage"]
+        if memory_info["memory_percent_used"] > 80:
+            optimization_results["recommendations"].append(
                 "High memory usage detected. Consider optimizing memory-intensive processes."
             )
 
@@ -107,21 +114,24 @@ class PerformanceOptimizer:
         """
         results = self.optimize_system_resources()
         report_path = os.path.join(
-            self.project_root, 
-            f'performance_report_{time.strftime("%Y%m%d_%H%M%S")}.json'
+            self.project_root,
+            f'performance_report_{time.strftime("%Y%m%d_%H%M%S")}.json',
         )
-        
+
         try:
             import json
-            with open(report_path, 'w', encoding='utf-8') as f:
+
+            with open(report_path, "w", encoding="utf-8") as f:
                 json.dump(results, f, indent=2)
             self.logger.info(f"Performance report generated: {report_path}")
         except Exception as e:
             self.logger.error(f"Error generating performance report: {e}")
 
+
 def main():
     optimizer = PerformanceOptimizer()
     optimizer.generate_performance_report()
 
-if __name__ == '__main__':
-    main() 
+
+if __name__ == "__main__":
+    main()

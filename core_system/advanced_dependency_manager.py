@@ -96,7 +96,8 @@ class AdvancedDependencyManager:
                 pkg: {
                     "version": details.get("version", "Unknown"),
                     "dependencies": [
-                        dep.project_name for dep in details.get("dependencies", [])
+                        dep.project_name
+                        for dep in details.get("dependencies", [])
                     ],
                 }
                 for pkg, details in dependency_tree.items()

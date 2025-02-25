@@ -9,10 +9,12 @@ with comprehensive import management.
 import logging
 import os
 import sys
-from typing import Any, List, Optional, Set
+from typing import Any, Optional, Set
 
 # Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 # Configure logging
 logging.basicConfig(
@@ -30,7 +32,7 @@ logger = logging.getLogger(__name__)
 try:
     from core_system.utils.import_resolver import UltraImportResolver
 
-    resolver = UltraImportResolver()
+    resolver: Optional[UltraImportResolver] = UltraImportResolver()
 except ImportError as e:
     logger.error(f"Failed to import UltraImportResolver: {e}")
     resolver = None
@@ -52,7 +54,9 @@ def safe_import(module_name: str) -> Optional[Any]:
             if not resolver._check_import(module_name):
                 package = resolver.suggest_package(module_name)
                 if package:
-                    logger.info(f"Attempting to install package for {module_name}")
+                    logger.info(
+                        f"Attempting to install package for {module_name}"
+                    )
                     resolver.install_missing_packages([package])
 
         return __import__(module_name)
@@ -63,7 +67,7 @@ def safe_import(module_name: str) -> Optional[Any]:
         return None
 
 
-def initialize_core_system():
+def initialize_core_system() -> None:
     """Initialize core system components with import validation"""
     logger.info("SutazAI Core System Initializing...")
 
@@ -73,7 +77,9 @@ def initialize_core_system():
         if issues:
             logger.warning("Found import issues in the following files:")
             for file_path, missing in issues.items():
-                logger.warning(f"{file_path}: Missing imports: {', '.join(missing)}")
+                logger.warning(
+                    f"{file_path}: Missing imports: {', '.join(missing)}"
+                )
 
             # Attempt to resolve missing packages
             all_packages: Set[str] = set()

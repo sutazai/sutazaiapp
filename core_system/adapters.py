@@ -11,7 +11,10 @@ import socket  # noqa: F401
 import typing
 import warnings
 
-from urllib3.exceptions import ClosedPoolError, ConnectTimeoutError
+from urllib3.exceptions import (
+    ClosedPoolError,
+    ConnectTimeoutError,
+)
 from urllib3.exceptions import HTTPError as _HTTPError
 from urllib3.exceptions import InvalidHeader as _InvalidHeader
 from urllib3.exceptions import (
@@ -21,7 +24,10 @@ from urllib3.exceptions import (
     ProtocolError,
 )
 from urllib3.exceptions import ProxyError as _ProxyError
-from urllib3.exceptions import ReadTimeoutError, ResponseError
+from urllib3.exceptions import (
+    ReadTimeoutError,
+    ResponseError,
+)
 from urllib3.exceptions import SSLError as _SSLError
 from urllib3.poolmanager import PoolManager, proxy_from_url
 from urllib3.util import Timeout as TimeoutSauce
@@ -33,8 +39,10 @@ from urllib3.util.ssl_ import create_urllib3_context
 try:
     from urllib3.contrib.socks import SOCKSProxyManager
 except ImportError:
+
     def SOCKSProxyManager(*args, **kwargs):
         raise InvalidSchema("Missing dependencies for SOCKS support.")
+
 
 from requests.auth import _basic_auth_str
 
@@ -65,7 +73,7 @@ from requests.utils import (
 
 # Type checking import
 if typing.TYPE_CHECKING:
-    from typing import Any, Dict, Optional, Tuple, Union
+    pass
 
 
 DEFAULT_POOLBLOCK = False
@@ -141,7 +149,13 @@ class BaseAdapter:
         super().__init__()
 
     def send(
-        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+        self,
+        request,
+        stream=False,
+        timeout=None,
+        verify=True,
+        cert=None,
+        proxies=None,
     ):
         """Sends PreparedRequest object. Returns Response object.
 
@@ -441,9 +455,13 @@ class HTTPAdapter(BaseAdapter):
             portion of the Pool Key including scheme, hostname, and port. The
             second is a dictionary of SSLContext related parameters.
         """
-        return _urllib3_request_context(request, verify, cert, self.poolmanager)
+        return _urllib3_request_context(
+            request, verify, cert, self.poolmanager
+        )
 
-    def get_connection_with_tls_context(self, request, verify, proxies=None, cert=None):
+    def get_connection_with_tls_context(
+        self, request, verify, proxies=None, cert=None
+    ):
         """Returns a urllib3 connection for the given request and TLS settings.
         This should not be called from user code, and is only exposed for use
         when subclassing the :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
@@ -465,10 +483,12 @@ class HTTPAdapter(BaseAdapter):
         """
         proxy = select_proxy(request.url, proxies)
         try:
-            host_params, pool_kwargs = self.build_connection_pool_key_attributes(
-                request,
-                verify,
-                cert,
+            host_params, pool_kwargs = (
+                self.build_connection_pool_key_attributes(
+                    request,
+                    verify,
+                    cert,
+                )
             )
         except ValueError as e:
             raise InvalidURL(e, request=request)
@@ -587,7 +607,6 @@ class HTTPAdapter(BaseAdapter):
         :param request: The :class:`PreparedRequest <PreparedRequest>` to add headers to.
         :param kwargs: The keyword arguments from the call to send().
         """
-        pass
 
     def proxy_headers(self, proxy):
         """Returns a dictionary of the headers to add to any request sent
@@ -606,12 +625,20 @@ class HTTPAdapter(BaseAdapter):
         username, password = get_auth_from_url(proxy)
 
         if username:
-            headers["Proxy-Authorization"] = _basic_auth_str(username, password)
+            headers["Proxy-Authorization"] = _basic_auth_str(
+                username, password
+            )
 
         return headers
 
     def send(
-        self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None
+        self,
+        request,
+        stream=False,
+        timeout=None,
+        verify=True,
+        cert=None,
+        proxies=None,
     ):
         """Sends PreparedRequest object. Returns Response object.
 
@@ -647,7 +674,9 @@ class HTTPAdapter(BaseAdapter):
             proxies=proxies,
         )
 
-        chunked = not (request.body is None or "Content-Length" in request.headers)
+        chunked = not (
+            request.body is None or "Content-Length" in request.headers
+        )
 
         if isinstance(timeout, tuple):
             try:

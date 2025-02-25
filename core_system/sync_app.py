@@ -5,7 +5,11 @@ from authlib.common.security import generate_token
 from authlib.common.urls import urlparse
 from authlib.consts import default_user_agent
 
-from .errors import MismatchingStateError, MissingRequestTokenError, MissingTokenError
+from .errors import (
+    MismatchingStateError,
+    MissingRequestTokenError,
+    MissingTokenError,
+)
 
 log = logging.getLogger(__name__)
 

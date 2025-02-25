@@ -247,7 +247,10 @@ class RustLexer(RegexLexer):
             (r"let\b", Keyword.Declaration),
             (r"fn\b", Keyword, "funcname"),
             (r"(struct|enum|type|union)\b", Keyword, "typename"),
-            (r"(default)(\s+)(type|fn)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"(default)(\s+)(type|fn)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             keyword_types,
             (r"[sS]elf\b", Name.Builtin.Pseudo),
             # Prelude (taken from Rust's src/libstd/prelude.rs)

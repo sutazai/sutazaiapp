@@ -1,7 +1,16 @@
 import re
 from ast import literal_eval
 from operator import attrgetter
-from typing import Callable, Iterable, List, Match, NamedTuple, Optional, Tuple, Union
+from typing import (
+    Callable,
+    Iterable,
+    List,
+    Match,
+    NamedTuple,
+    Optional,
+    Tuple,
+    Union,
+)
 
 from ._emoji_replace import _emoji_replace
 from .emoji import EmojiVariant
@@ -90,7 +99,7 @@ def _parse(markup: str) -> Iterable[Tuple[int, Optional[str], Optional[Tag]]]:
                 start += backslashes * 2
             if escaped:
                 # Escape of tag
-                yield start, full_text[len(escapes) :], None
+                yield start, full_text[len(escapes):], None
                 position = end
                 continue
         text, equals, parameters = tag_text.partition("=")
@@ -121,7 +130,7 @@ def render(
     emoji_replace = _emoji_replace
     if "[" not in markup:
         return Text(
-            emoji_replace(markup, default_variant=emoji_variant) if emoji else markup,
+            (emoji_replace(markup, default_variant=emoji_variant) if emoji else markup),
             style=style,
         )
     text = Text(style=style)
@@ -194,9 +203,11 @@ def render(
                         if handler_name:
                             meta_params = (
                                 handler_name,
-                                meta_params
-                                if isinstance(meta_params, tuple)
-                                else (meta_params,),
+                                (
+                                    meta_params
+                                    if isinstance(meta_params, tuple)
+                                    else (meta_params,)
+                                ),
                             )
 
                     else:
@@ -204,7 +215,9 @@ def render(
 
                     append_span(
                         _Span(
-                            start, len(text), Style(meta={open_tag.name: meta_params})
+                            start,
+                            len(text),
+                            Style(meta={open_tag.name: meta_params}),
                         )
                     )
                 else:

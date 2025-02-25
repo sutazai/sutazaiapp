@@ -4,8 +4,8 @@ from ..rfc7516 import JsonWebEncryption, JWEZipAlgorithm
 
 
 class DeflateZipAlgorithm(JWEZipAlgorithm):
-    name = 'DEF'
-    description = 'DEFLATE'
+    name = "DEF"
+    description = "DEFLATE"
 
     def compress(self, s):
         """Compress bytes data with DEFLATE algorithm."""

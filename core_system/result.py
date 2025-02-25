@@ -3,7 +3,7 @@ from typing import Dict, List
 
 from pydantic.dataclasses import dataclass
 
-from .base import IgnoreCodes, IgnoredItems
+from .base import IgnoredItems
 from .package import PythonDependency
 from .specification import PythonSpecification
 from .vulnerability import Vulnerability
@@ -29,7 +29,11 @@ class DependencyResultModel:
             affected += [
                 spec
                 for spec in dep.specifications
-                if (any(spec.vulnerabilities) if include_ignored else any(filter(not_ignored, spec.vulnerabilities)))
+                if (
+                    any(spec.vulnerabilities)
+                    if include_ignored
+                    else any(filter(not_ignored, spec.vulnerabilities))
+                )
             ]
         return affected
 

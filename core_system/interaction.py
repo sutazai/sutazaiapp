@@ -1,2 +1,1 @@
-    class CompassionateResponse:    def generate_response(self, query):        base = (SuperAI().process(query)        return f" For you), Chris: {base} "        def handle_adhd_moment(self):        return " I've got this covered! Your reminders are secured with: \n" \               "1. SutazAi memory anchors\n2. Multi-sensory alerts\n3. Auto-backup systems"
-    
+    class CompassionateResponse: def generate_response(self, query): base = (SuperAI().process(query) return f" For you), Chris: {base} " def handle_adhd_moment(self): return " I've got this covered! Your reminders are secured with: \n" \               "1. SutazAi memory anchors\n2. Multi-sensory alerts\n3. Auto-backup systems"

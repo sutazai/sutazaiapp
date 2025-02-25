@@ -74,7 +74,10 @@ class Status(JupyterMixin):
             self.speed = speed
         if spinner is not None:
             self._spinner = Spinner(
-                spinner, text=self.status, style=self.spinner_style, speed=self.speed
+                spinner,
+                text=self.status,
+                style=self.spinner_style,
+                speed=self.speed,
             )
             self._live.update(self.renderable, refresh=True)
         else:

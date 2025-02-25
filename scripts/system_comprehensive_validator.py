@@ -1,30 +1,20 @@
 #!/usr/bin/env python3
 # cSpell:ignore semgrep Sutaz sutazai levelname Semgrep getloadavg
 
-import ast
 import hashlib
-import importlib
-import inspect
 import json
 import logging
 import os
-import re
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
-
-import black
-import isort
-import networkx as nx
+from typing import Any, Dict
 
 # ----------------------------------------------------------------------
 # Note: The following import is for system resource monitoring.
-# psutil might not be resolved statically in some environments; hence, we add a type ignore.
+# psutil might not be resolved statically in some environments; hence, we
+# add a type ignore.
 import psutil  # type: ignore
-import safety
-import semgrep
-import yaml
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -120,9 +110,12 @@ class SystemComprehensiveValidator:
         health = {}
         health["directory_structure"] = self._validate_directory_structure()
         health["file_integrity"] = self._check_file_integrity()
-        health["environment_configuration"] = self._validate_environment_config()
+        health["environment_configuration"] = (
+            self._validate_environment_config()
+        )
 
-        # Use psutil to check system memory (psutil import handled with type ignore)
+        # Use psutil to check system memory (psutil import handled with type
+        # ignore)
         health["memory"] = {
             "available": psutil.virtual_memory().available,
             "used": psutil.virtual_memory().used,
@@ -149,7 +142,10 @@ class SystemComprehensiveValidator:
             "docs",
         ]
 
-        dir_validation = {"missing_directories": [], "unexpected_directories": []}
+        dir_validation = {
+            "missing_directories": [],
+            "unexpected_directories": [],
+        }
         for req_dir in required_dirs:
             full_path = os.path.join(self.base_path, req_dir)
             if not os.path.exists(full_path):
@@ -230,7 +226,9 @@ class SystemComprehensiveValidator:
         """
         try:
             result = subprocess.run(
-                ["black", "--check", self.base_path], capture_output=True, text=True
+                ["black", "--check", self.base_path],
+                capture_output=True,
+                text=True,
             )
             return {
                 "passed": result.returncode == 0,
@@ -286,7 +284,8 @@ class SystemComprehensiveValidator:
         """
         security_results = {}
         try:
-            # Run semgrep security scan (cSpell directives ignore "semgrep" warnings)
+            # Run semgrep security scan (cSpell directives ignore "semgrep"
+            # warnings)
             semgrep_output = subprocess.run(
                 ["semgrep", "--config", "auto", self.base_path],
                 capture_output=True,
@@ -322,7 +321,8 @@ class SystemComprehensiveValidator:
             Dictionary containing dependency analysis.
         """
         dependencies = {}
-        # Implementation of dependency analysis and cross-referencing can be added here.
+        # Implementation of dependency analysis and cross-referencing can be
+        # added here.
         return dependencies
 
     def generate_optimization_recommendations(
@@ -351,14 +351,16 @@ class SystemComprehensiveValidator:
             recommendations["system_structure"].append(
                 "Create missing directories: "
                 + ", ".join(
-                    system_scan_results["system_health"]["directory_structure"][
-                        "missing_directories"
-                    ]
+                    system_scan_results["system_health"][
+                        "directory_structure"
+                    ]["missing_directories"]
                 )
             )
 
         # Code quality recommendations
-        if not system_scan_results["code_quality"]["black_formatting"]["passed"]:
+        if not system_scan_results["code_quality"]["black_formatting"][
+            "passed"
+        ]:
             recommendations["code_quality"].append(
                 "Run Black code formatter to ensure consistent code style"
             )
@@ -369,9 +371,9 @@ class SystemComprehensiveValidator:
             )
 
         # Security recommendations
-        if not system_scan_results["security_analysis"]["dependency_vulnerabilities"][
-            "passed"
-        ]:
+        if not system_scan_results["security_analysis"][
+            "dependency_vulnerabilities"
+        ]["passed"]:
             recommendations["security"].append(
                 "Update dependencies to resolve known vulnerabilities"
             )
@@ -380,8 +382,7 @@ class SystemComprehensiveValidator:
         if system_scan_results["performance_metrics"]["cpu_usage"] > 70:
             recommendations["performance"].append(
                 f"High CPU usage detected: {system_scan_results['performance_metrics']['cpu_usage']}%. "
-                "Investigate and optimize resource-intensive processes."
-            )
+                "Investigate and optimize resource-intensive processes.")
 
         return recommendations
 
@@ -398,8 +399,8 @@ class SystemComprehensiveValidator:
         system_scan_results = self.comprehensive_system_scan()
 
         # Generate optimization recommendations
-        optimization_recommendations = self.generate_optimization_recommendations(
-            system_scan_results
+        optimization_recommendations = (
+            self.generate_optimization_recommendations(system_scan_results)
         )
 
         # Combine all results
@@ -417,7 +418,9 @@ class SystemComprehensiveValidator:
 
         return comprehensive_results
 
-    def _visualize_validation_results(self, validation_results: Dict[str, Any]):
+    def _visualize_validation_results(
+        self, validation_results: Dict[str, Any]
+    ):
         """
         Create a rich, detailed visualization of validation results
 
@@ -446,7 +449,9 @@ class SystemComprehensiveValidator:
         code_quality_checks = [
             (
                 "Black Formatting",
-                validation_results["code_quality"]["black_formatting"]["passed"],
+                validation_results["code_quality"]["black_formatting"][
+                    "passed"
+                ],
             ),
             (
                 "Import Sorting",
@@ -454,18 +459,24 @@ class SystemComprehensiveValidator:
             ),
             (
                 "Type Checking",
-                validation_results["code_quality"]["mypy_type_checking"]["passed"],
+                validation_results["code_quality"]["mypy_type_checking"][
+                    "passed"
+                ],
             ),
         ]
 
         for check, status in code_quality_checks:
-            code_quality_table.add_row(check, "✅ Passed" if status else "❌ Failed")
+            code_quality_table.add_row(
+                check, "✅ Passed" if status else "❌ Failed"
+            )
 
         self.console.print(code_quality_table)
 
         # Optimization Recommendations
         if any(validation_results["optimization_recommendations"].values()):
-            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
+            self.console.rule(
+                "[bold yellow]Optimization Recommendations[/bold yellow]"
+            )
             for category, recommendations in validation_results[
                 "optimization_recommendations"
             ].items():

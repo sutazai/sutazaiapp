@@ -19,8 +19,8 @@ log = logging.getLogger(__name__)
 
 
 class OpenIDImplicitGrant(ImplicitGrant):
-    RESPONSE_TYPES = {'id_token token', 'id_token'}
-    DEFAULT_RESPONSE_MODE = 'fragment'
+    RESPONSE_TYPES = {"id_token token", "id_token"}
+    DEFAULT_RESPONSE_MODE = "fragment"
 
     def exists_nonce(self, nonce, request):
         """Check if the given nonce is existing in your database. Developers
@@ -105,13 +105,15 @@ class OpenIDImplicitGrant(ImplicitGrant):
         if grant_user:
             params = self.create_granted_params(grant_user)
             if state:
-                params.append(('state', state))
+                params.append(("state", state))
         else:
             error = AccessDeniedError(state=state)
             params = error.get_body()
 
         # http://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#ResponseModes
-        response_mode = self.request.data.get('response_mode', self.DEFAULT_RESPONSE_MODE)
+        response_mode = self.request.data.get(
+            "response_mode", self.DEFAULT_RESPONSE_MODE
+        )
         return create_response_mode_response(
             redirect_uri=redirect_uri,
             params=params,
@@ -124,16 +126,16 @@ class OpenIDImplicitGrant(ImplicitGrant):
         token = self.generate_token(
             user=grant_user,
             scope=self.request.scope,
-            include_refresh_token=False
+            include_refresh_token=False,
         )
-        if self.request.response_type == 'id_token':
+        if self.request.response_type == "id_token":
             token = {
-                'expires_in': token['expires_in'],
-                'scope': token['scope'],
+                "expires_in": token["expires_in"],
+                "scope": token["scope"],
             }
             token = self.process_implicit_token(token)
         else:
-            log.debug('Grant token %r to %r', token, client)
+            log.debug("Grant token %r to %r", token, client)
             self.server.save_token(token, self.request)
             token = self.process_implicit_token(token)
         params = [(k, token[k]) for k in token]
@@ -141,12 +143,12 @@ class OpenIDImplicitGrant(ImplicitGrant):
 
     def process_implicit_token(self, token, code=None):
         config = self.get_jwt_config()
-        config['aud'] = self.get_audiences(self.request)
-        config['nonce'] = self.request.data.get('nonce')
+        config["aud"] = self.get_audiences(self.request)
+        config["nonce"] = self.request.data.get("nonce")
         if code is not None:
-            config['code'] = code
+            config["code"] = code
 
-        user_info = self.generate_user_info(self.request.user, token['scope'])
+        user_info = self.generate_user_info(self.request.user, token["scope"])
         id_token = generate_id_token(token, user_info, **config)
-        token['id_token'] = id_token
+        token["id_token"] = id_token
         return token

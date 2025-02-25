@@ -20,7 +20,11 @@ from pip._internal.utils.entrypoints import (
     get_best_invocation_for_this_pip,
     get_best_invocation_for_this_python,
 )
-from pip._internal.utils.filesystem import adjacent_tmp_file, check_path_owner, replace
+from pip._internal.utils.filesystem import (
+    adjacent_tmp_file,
+    check_path_owner,
+    replace,
+)
 from pip._internal.utils.misc import ensure_dir
 from pip._vendor.packaging.version import parse as parse_version
 from pip._vendor.rich.console import Group

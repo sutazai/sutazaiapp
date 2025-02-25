@@ -12,9 +12,6 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Any, Dict, List
-
-import yaml
 
 
 class ComprehensiveSystemAuditor:
@@ -65,7 +62,9 @@ class ComprehensiveSystemAuditor:
             # Generate final audit report
             self._generate_audit_report()
 
-            self.logger.info("Comprehensive System Audit Completed Successfully")
+            self.logger.info(
+                "Comprehensive System Audit Completed Successfully"
+            )
         except Exception as e:
             self.logger.error(f"Comprehensive Audit Failed: {e}")
             raise
@@ -100,7 +99,9 @@ class ComprehensiveSystemAuditor:
             structure_audit["directories"][directory] = {
                 "exists": os.path.exists(full_path),
                 "is_directory": (
-                    os.path.isdir(full_path) if os.path.exists(full_path) else False
+                    os.path.isdir(full_path)
+                    if os.path.exists(full_path)
+                    else False
                 ),
             }
 
@@ -155,7 +156,9 @@ class ComprehensiveSystemAuditor:
                     else:
                         dependency_audit["missing_dependencies"].append(dep)
                 except Exception as e:
-                    self.logger.warning(f"Dependency check failed for {dep}: {e}")
+                    self.logger.warning(
+                        f"Dependency check failed for {dep}: {e}"
+                    )
 
             self.audit_report["dependency_analysis"] = dependency_audit
         except FileNotFoundError:
@@ -186,9 +189,11 @@ class ComprehensiveSystemAuditor:
                             for node in ast.walk(tree):
                                 # Check for potential security anti-patterns
                                 if isinstance(node, ast.Call):
-                                    if (hasattr(node, 'func') and 
-                                        hasattr(node.func, 'id') and 
-                                        node.func.id in ["eval", "exec"]):
+                                    if (
+                                        hasattr(node, "func")
+                                        and hasattr(node.func, "id")
+                                        and node.func.id in ["eval", "exec"]
+                                    ):
                                         security_audit[
                                             "potential_vulnerabilities"
                                         ].append(
@@ -210,9 +215,15 @@ class ComprehensiveSystemAuditor:
         self.logger.info("Evaluating System Performance")
 
         performance_metrics = {
-            "cpu_usage": subprocess.check_output(["top", "-bn1"]).decode("utf-8"),
-            "memory_usage": subprocess.check_output(["free", "-m"]).decode("utf-8"),
-            "disk_space": subprocess.check_output(["df", "-h"]).decode("utf-8"),
+            "cpu_usage": subprocess.check_output(["top", "-bn1"]).decode(
+                "utf-8"
+            ),
+            "memory_usage": subprocess.check_output(["free", "-m"]).decode(
+                "utf-8"
+            ),
+            "disk_space": subprocess.check_output(["df", "-h"]).decode(
+                "utf-8"
+            ),
         }
 
         self.audit_report["performance_metrics"] = performance_metrics
@@ -232,8 +243,7 @@ class ComprehensiveSystemAuditor:
                 {
                     "type": "structure",
                     "recommendation": f"Create missing directories: {', '.join(self.audit_report['project_structure']['missing_directories'])}",
-                }
-            )
+                })
 
         # Check for missing dependencies
         missing_deps = self.audit_report["dependency_analysis"].get(
@@ -244,8 +254,7 @@ class ComprehensiveSystemAuditor:
                 {
                     "type": "dependencies",
                     "recommendation": f"Install missing dependencies: {', '.join(missing_deps)}",
-                }
-            )
+                })
 
         # Security vulnerability suggestions
         vulnerabilities = self.audit_report["security_checks"].get(
@@ -256,8 +265,7 @@ class ComprehensiveSystemAuditor:
                 {
                     "type": "security",
                     "recommendation": f"Review and mitigate {len(vulnerabilities)} potential security vulnerabilities",
-                }
-            )
+                })
 
         self.audit_report["optimization_suggestions"] = suggestions
         self.logger.info("Optimization Suggestions Generated")
@@ -286,14 +294,17 @@ def perform_comprehensive_audit() -> None:
     """
     Runs an audit and prints a unique identifier for a component.
     """
-    # Instead of using an undefined .id attribute, we use the built-in id() function.
+    # Instead of using an undefined .id attribute, we use the built-in id()
+    # function.
     sample_component = {"name": "ExampleComponent"}
     unique_id = id(sample_component)
     print("Component unique identifier:", unique_id)
 
 
 def main():
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    project_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
     auditor = ComprehensiveSystemAuditor(project_root)
     auditor.run_comprehensive_audit()
 

@@ -13,7 +13,13 @@ from cryptography.exceptions import (
     UnsupportedAlgorithm,
     _Reasons,
 )
-from cryptography.hazmat.primitives import ciphers, cmac, constant_time, hashes, hmac
+from cryptography.hazmat.primitives import (
+    ciphers,
+    cmac,
+    constant_time,
+    hashes,
+    hmac,
+)
 from cryptography.hazmat.primitives.kdf import KeyDerivationFunction
 
 
@@ -52,10 +58,7 @@ class _KBKDFDeriver:
         if break_location is None and location is CounterLocation.MiddleFixed:
             raise ValueError("Please specify a break_location")
 
-        if (
-            break_location is not None
-            and location != CounterLocation.MiddleFixed
-        ):
+        if break_location is not None and location != CounterLocation.MiddleFixed:
             raise ValueError(
                 "break_location is ignored when location is not"
                 " CounterLocation.MiddleFixed"
@@ -143,12 +146,12 @@ class _KBKDFDeriver:
             data_before_ctr = fixed
             data_after_ctr = b""
         else:
-            if isinstance(
-                self._break_location, int
-            ) and self._break_location > len(fixed):
+            if isinstance(self._break_location, int) and self._break_location > len(
+                fixed
+            ):
                 raise ValueError("break_location offset > len(fixed)")
             data_before_ctr = fixed[: self._break_location]
-            data_after_ctr = fixed[self._break_location :]
+            data_after_ctr = fixed[self._break_location:]
 
         for i in range(1, rounds + 1):
             h = self._prf(key_material)
@@ -193,7 +196,9 @@ class KBKDFHMAC(KeyDerivationFunction):
                 _Reasons.UNSUPPORTED_HASH,
             )
 
-        from cryptography.hazmat.backends.openssl.backend import backend as ossl
+        from cryptography.hazmat.backends.openssl.backend import (
+            backend as ossl,
+        )
 
         if not ossl.hmac_supported(algorithm):
             raise UnsupportedAlgorithm(
@@ -243,9 +248,9 @@ class KBKDFCMAC(KeyDerivationFunction):
         *,
         break_location: int | None = None,
     ):
-        if not issubclass(
-            algorithm, ciphers.BlockCipherAlgorithm
-        ) or not issubclass(algorithm, ciphers.CipherAlgorithm):
+        if not issubclass(algorithm, ciphers.BlockCipherAlgorithm) or not issubclass(
+            algorithm, ciphers.CipherAlgorithm
+        ):
             raise UnsupportedAlgorithm(
                 "Algorithm supplied is not a supported cipher algorithm.",
                 _Reasons.UNSUPPORTED_CIPHER,
@@ -277,7 +282,9 @@ class KBKDFCMAC(KeyDerivationFunction):
 
         assert self._cipher is not None
 
-        from cryptography.hazmat.backends.openssl.backend import backend as ossl
+        from cryptography.hazmat.backends.openssl.backend import (
+            backend as ossl,
+        )
 
         if not ossl.cmac_algorithm_supported(self._cipher):
             raise UnsupportedAlgorithm(

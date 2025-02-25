@@ -26,10 +26,13 @@ class ClientSecretJWT:
     :param headers: Extra JWT headers
     :param alg: ``alg`` value, default is HS256
     """
-    name = 'client_secret_jwt'
-    alg = 'HS256'
 
-    def __init__(self, token_endpoint=None, claims=None, headers=None, alg=None):
+    name = "client_secret_jwt"
+    alg = "HS256"
+
+    def __init__(
+        self, token_endpoint=None, claims=None, headers=None, alg=None
+    ):
         self.token_endpoint = token_endpoint
         self.claims = claims
         self.headers = headers
@@ -52,10 +55,13 @@ class ClientSecretJWT:
             token_endpoint = uri
 
         client_assertion = self.sign(auth, token_endpoint)
-        body = add_params_to_qs(body or '', [
-            ('client_assertion_type', ASSERTION_TYPE),
-            ('client_assertion', client_assertion)
-        ])
+        body = add_params_to_qs(
+            body or "",
+            [
+                ("client_assertion_type", ASSERTION_TYPE),
+                ("client_assertion", client_assertion),
+            ],
+        )
         return uri, headers, body
 
 
@@ -81,8 +87,9 @@ class PrivateKeyJWT(ClientSecretJWT):
     :param headers: Extra JWT headers
     :param alg: ``alg`` value, default is RS256
     """
-    name = 'private_key_jwt'
-    alg = 'RS256'
+
+    name = "private_key_jwt"
+    alg = "RS256"
 
     def sign(self, auth, token_endpoint):
         return private_key_jwt_sign(

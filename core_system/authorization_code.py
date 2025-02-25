@@ -16,7 +16,9 @@ from .base import AuthorizationEndpointMixin, BaseGrant, TokenEndpointMixin
 log = logging.getLogger(__name__)
 
 
-class AuthorizationCodeGrant(BaseGrant, AuthorizationEndpointMixin, TokenEndpointMixin):
+class AuthorizationCodeGrant(
+    BaseGrant, AuthorizationEndpointMixin, TokenEndpointMixin
+):
     """The authorization code grant type is used to obtain both access
     tokens and refresh tokens and is optimized for confidential clients.
     Since this is a redirection-based flow, the client must be capable of
@@ -150,7 +152,9 @@ class AuthorizationCodeGrant(BaseGrant, AuthorizationEndpointMixin, TokenEndpoin
         :returns: (status_code, body, headers)
         """
         if not grant_user:
-            raise AccessDeniedError(state=self.request.state, redirect_uri=redirect_uri)
+            raise AccessDeniedError(
+                state=self.request.state, redirect_uri=redirect_uri
+            )
 
         self.request.user = grant_user
 

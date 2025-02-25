@@ -31,17 +31,17 @@ from typing import (
     TypeVar,
     Union,
 )
+from unittest.mock import Mock
+from weakref import WeakKeyDictionary
+
 from typing_extensions import (
     ForwardRefPolicy,
-    TypedDict,
-    is_typeddict,
     evaluate_forwardref,
     get_stacklevel,
     get_type_name,
+    is_typeddict,
     qualified_name,
 )
-from unittest.mock import Mock
-from weakref import WeakKeyDictionary
 
 try:
     import typing_extensions
@@ -55,11 +55,12 @@ from ._utils import (
     evaluate_forwardref,
     get_stacklevel,
     get_type_name,
-    qualified_name
+    qualified_name,
 )
 
 if sys.version_info >= (3, 11):
     from typing import Annotated, NotRequired, TypeAlias, get_args, get_origin
+
     SubclassableAny = Any
 else:
     from typing_extensions import Annotated
@@ -215,7 +216,10 @@ def check_mapping(
     if origin_type is Dict or origin_type is dict:
         if not isinstance(value, dict):
             raise TypeCheckError("is not a dict")
-    if origin_type is MutableMapping or origin_type is collections.abc.MutableMapping:
+    if (
+        origin_type is MutableMapping
+        or origin_type is collections.abc.MutableMapping
+    ):
         if not isinstance(value, collections.abc.MutableMapping):
             raise TypeCheckError("is not a mutable mapping")
     elif not isinstance(value, collections.abc.Mapping):
@@ -259,7 +263,9 @@ def check_typed_dict(
     existing_keys = set(value)
     extra_keys = existing_keys - declared_keys
     if extra_keys:
-        keys_formatted = ", ".join(f'"{key}"' for key in sorted(extra_keys, key=repr))
+        keys_formatted = ", ".join(
+            f'"{key}"' for key in sorted(extra_keys, key=repr)
+        )
         raise TypeCheckError(f"has unexpected extra key(s): {keys_formatted}")
 
     # Detect NotRequired fields which are hidden by get_type_hints()
@@ -275,7 +281,9 @@ def check_typed_dict(
 
     missing_keys = required_keys - existing_keys
     if missing_keys:
-        keys_formatted = ", ".join(f'"{key}"' for key in sorted(missing_keys, key=repr))
+        keys_formatted = ", ".join(
+            f'"{key}"' for key in sorted(missing_keys, key=repr)
+        )
         raise TypeCheckError(f"is missing required key(s): {keys_formatted}")
 
     for key, argtype in type_hints.items():
@@ -426,7 +434,9 @@ def check_union(
         )
     finally:
         del errors  # avoid creating ref cycle
-    raise TypeCheckError(f"did not match any element in the union:\n{formatted_errors}")
+    raise TypeCheckError(
+        f"did not match any element in the union:\n{formatted_errors}"
+    )
 
 
 def check_uniontype(
@@ -446,7 +456,9 @@ def check_uniontype(
     formatted_errors = indent(
         "\n".join(f"{key}: {error}" for key, error in errors.items()), "  "
     )
-    raise TypeCheckError(f"did not match any element in the union:\n{formatted_errors}")
+    raise TypeCheckError(
+        f"did not match any element in the union:\n{formatted_errors}"
+    )
 
 
 def check_class(
@@ -485,13 +497,16 @@ def check_class(
                 errors[get_type_name(arg)] = exc
         else:
             formatted_errors = indent(
-                "\n".join(f"{key}: {error}" for key, error in errors.items()), "  "
+                "\n".join(f"{key}: {error}" for key, error in errors.items()),
+                "  ",
             )
             raise TypeCheckError(
                 f"did not match any element in the union:\n{formatted_errors}"
             )
     elif not issubclass(value, expected_class):  # type: ignore[arg-type]
-        raise TypeCheckError(f"is not a subclass of {qualified_name(expected_class)}")
+        raise TypeCheckError(
+            f"is not a subclass of {qualified_name(expected_class)}"
+        )
 
 
 def check_newtype(
@@ -510,7 +525,9 @@ def check_instance(
     memo: TypeCheckMemo,
 ) -> None:
     if not isinstance(value, origin_type):
-        raise TypeCheckError(f"is not an instance of {qualified_name(origin_type)}")
+        raise TypeCheckError(
+            f"is not an instance of {qualified_name(origin_type)}"
+        )
 
 
 def check_typevar(
@@ -523,7 +540,9 @@ def check_typevar(
 ) -> None:
     if origin_type.__bound__ is not None:
         annotation = (
-            Type[origin_type.__bound__] if subclass_check else origin_type.__bound__
+            Type[origin_type.__bound__]
+            if subclass_check
+            else origin_type.__bound__
         )
         check_type_internal(value, annotation, memo)
     elif origin_type.__constraints__:
@@ -537,10 +556,12 @@ def check_typevar(
                 break
         else:
             formatted_constraints = ", ".join(
-                get_type_name(constraint) for constraint in origin_type.__constraints__
+                get_type_name(constraint)
+                for constraint in origin_type.__constraints__
             )
             raise TypeCheckError(
-                f"does not match any of the constraints " f"({formatted_constraints})"
+                f"does not match any of the constraints "
+                f"({formatted_constraints})"
             )
 
 
@@ -730,7 +751,9 @@ def check_protocol(
         # Check that all required non-callable members are present
         for attrname in expected_noncallable_members:
             # TODO: implement assignability checks for non-callable members
-            if attrname not in subject_annotations and not hasattr(subject, attrname):
+            if attrname not in subject_annotations and not hasattr(
+                subject, attrname
+            ):
                 raise TypeCheckError(
                     f"is not compatible with the {origin_type.__qualname__} protocol "
                     f"because it has no attribute named {attrname!r}"
@@ -759,7 +782,9 @@ def check_self(
     memo: TypeCheckMemo,
 ) -> None:
     if memo.self_type is None:
-        raise TypeCheckError("cannot be checked against Self outside of a method call")
+        raise TypeCheckError(
+            "cannot be checked against Self outside of a method call"
+        )
 
     if isclass(value):
         if not issubclass(value, memo.self_type):
@@ -789,7 +814,9 @@ def check_instanceof(
     memo: TypeCheckMemo,
 ) -> None:
     if not isinstance(value, origin_type):
-        raise TypeCheckError(f"is not an instance of {qualified_name(origin_type)}")
+        raise TypeCheckError(
+            f"is not an instance of {qualified_name(origin_type)}"
+        )
 
 
 def check_type_internal(
@@ -824,7 +851,11 @@ def check_type_internal(
 
             return
 
-    if annotation is Any or annotation is SubclassableAny or isinstance(value, Mock):
+    if (
+        annotation is Any
+        or annotation is SubclassableAny
+        or isinstance(value, Mock)
+    ):
         return
 
     # Skip type checks if value is an instance of a class that inherits from Any
@@ -845,7 +876,11 @@ def check_type_internal(
 
         # Compatibility hack to distinguish between unparametrized and empty tuple
         # (tuple[()]), necessary due to https://github.com/python/cpython/issues/91137
-        if origin_type in (tuple, Tuple) and annotation is not Tuple and not args:
+        if (
+            origin_type in (tuple, Tuple)
+            and annotation is not Tuple
+            and not args
+        ):
             args = ((),)
     else:
         origin_type = annotation
@@ -859,7 +894,9 @@ def check_type_internal(
 
     if isclass(origin_type):
         if not isinstance(value, origin_type):
-            raise TypeCheckError(f"is not an instance of {qualified_name(origin_type)}")
+            raise TypeCheckError(
+                f"is not an instance of {qualified_name(origin_type)}"
+            )
     elif type(origin_type) is str:  # noqa: E721
         warnings.warn(
             f"Skipping type check against {origin_type!r}; this looks like a "
@@ -916,7 +953,9 @@ if typing_extensions is not None:
     # and update the dictionary on all Python versions
     # if typing_extensions is installed
     origin_type_checkers[typing_extensions.Literal] = check_literal
-    origin_type_checkers[typing_extensions.LiteralString] = check_literal_string
+    origin_type_checkers[typing_extensions.LiteralString] = (
+        check_literal_string
+    )
     origin_type_checkers[typing_extensions.Self] = check_self
     origin_type_checkers[typing_extensions.TypeGuard] = check_typeguard
 
@@ -975,14 +1014,16 @@ def load_plugins() -> None:
             plugin = ep.load()
         except Exception as exc:
             warnings.warn(
-                f"Failed to load plugin {ep.name!r}: " f"{qualified_name(exc)}: {exc}",
+                f"Failed to load plugin {ep.name!r}: "
+                f"{qualified_name(exc)}: {exc}",
                 stacklevel=2,
             )
             continue
 
         if not callable(plugin):
             warnings.warn(
-                f"Plugin {ep} returned a non-callable object: {plugin!r}", stacklevel=2
+                f"Plugin {ep} returned a non-callable object: {plugin!r}",
+                stacklevel=2,
             )
             continue
 

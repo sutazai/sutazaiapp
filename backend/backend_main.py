@@ -15,7 +15,8 @@ from loguru import logger
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 app = FastAPI(
@@ -26,13 +27,20 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Add CORS middleware
+# Define allowed origins
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Development frontend
+    "http://localhost:8000",  # Development backend
+    "https://sutazai.com",    # Production domain
+    "https://api.sutazai.com"  # Production API domain
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=ALLOWED_ORIGINS,  # Replace wildcard with specific origins
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  # Can be restricted to specific methods if needed
+    allow_headers=["*"],  # Can be restricted to specific headers if needed
 )
 
 

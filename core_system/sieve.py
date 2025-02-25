@@ -18,7 +18,15 @@ https://tools.ietf.org/html/rfc8580
 """
 
 from pygments.lexer import RegexLexer, bygroups
-from pygments.token import Comment, Keyword, Literal, Name, Punctuation, String, Text
+from pygments.token import (
+    Comment,
+    Keyword,
+    Literal,
+    Name,
+    Punctuation,
+    String,
+    Text,
+)
 
 __all__ = ["SieveLexer"]
 
@@ -59,7 +67,10 @@ class SieveLexer(RegexLexer):
             ),
             (r"(?i)set", Keyword.Declaration),
             # number:
-            (r"([0-9.]+)([kmgKMG])?", bygroups(Literal.Number, Literal.Number)),
+            (
+                r"([0-9.]+)([kmgKMG])?",
+                bygroups(Literal.Number, Literal.Number),
+            ),
             # comment:
             (r"#.*$", Comment.Single),
             (r"/\*.*\*/", Comment.Multiline),

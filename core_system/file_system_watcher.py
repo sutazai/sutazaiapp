@@ -6,7 +6,6 @@ Monitors project directory for changes and updates structure documentation.
 """
 
 import logging
-import os
 import time
 from typing import Optional
 
@@ -16,20 +15,20 @@ from watchdog.observers import Observer
 from core_system.file_structure_tracker import FileStructureTracker
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s: %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s: %(message)s"
 )
-logger = logging.getLogger('SutazAI.FileSystemWatcher')
+logger = logging.getLogger("SutazAI.FileSystemWatcher")
+
 
 class ProjectStructureHandler(FileSystemEventHandler):
     """
     Custom file system event handler for tracking project structure changes
     """
-    
+
     def __init__(self, base_dir: str):
         """
         Initialize the structure handler
-        
+
         Args:
             base_dir (str): Base directory to monitor
         """
@@ -37,11 +36,11 @@ class ProjectStructureHandler(FileSystemEventHandler):
         self.structure_tracker = FileStructureTracker(base_dir)
         self.last_update = 0
         self.update_interval = 5  # seconds
-    
+
     def _should_update(self) -> bool:
         """
         Determine if an update should be performed
-        
+
         Returns:
             bool: Whether to update the structure
         """
@@ -50,11 +49,11 @@ class ProjectStructureHandler(FileSystemEventHandler):
             self.last_update = current_time
             return True
         return False
-    
+
     def on_any_event(self, event):
         """
         Handle any file system event
-        
+
         Args:
             event: Watchdog file system event
         """
@@ -62,19 +61,20 @@ class ProjectStructureHandler(FileSystemEventHandler):
             try:
                 logger.info(f"Updating project structure after event: {event.src_path}")
                 self.structure_tracker.update_structure_files()
-                
+
                 # Update README structure
                 self.structure_tracker.update_readme_structure()
             except Exception as e:
                 logger.error(f"Error updating project structure: {e}")
 
+
 def start_file_system_watcher(base_dir: str) -> Optional[Observer]:
     """
     Start file system watcher for the project
-    
+
     Args:
         base_dir (str): Base directory to monitor
-    
+
     Returns:
         Optional[Observer]: File system observer instance
     """
@@ -89,10 +89,11 @@ def start_file_system_watcher(base_dir: str) -> Optional[Observer]:
         logger.error(f"Failed to start file system watcher: {e}")
         return None
 
+
 def stop_file_system_watcher(observer: Optional[Observer]):
     """
     Stop the file system watcher
-    
+
     Args:
         observer (Optional[Observer]): File system observer to stop
     """
@@ -104,18 +105,20 @@ def stop_file_system_watcher(observer: Optional[Observer]):
         except Exception as e:
             logger.error(f"Error stopping file system watcher: {e}")
 
+
 def main():
     """
     Main execution for file system watcher
     """
-    base_dir = '/opt/sutazai_project/SutazAI'
+    base_dir = "/opt/sutazai_project/SutazAI"
     observer = start_file_system_watcher(base_dir)
-    
+
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         stop_file_system_watcher(observer)
 
-if __name__ == '__main__':
-    main() 
+
+if __name__ == "__main__":
+    main()

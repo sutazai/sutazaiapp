@@ -156,7 +156,11 @@ class TypstLexer(RegexLexer):
             (
                 r"^(\s*)(/)(\s+)([^:]+)(:)",
                 bygroups(
-                    Whitespace, Punctuation, Whitespace, Name.Variable, Punctuation
+                    Whitespace,
+                    Punctuation,
+                    Whitespace,
+                    Name.Variable,
+                    Punctuation,
                 ),
             ),  # definitions
             (r"<[a-zA-Z_][a-zA-Z0-9_-]*>", Name.Label),  # label
@@ -215,8 +219,14 @@ class TypstLexer(RegexLexer):
             (r",|\.{1,2}", Punctuation),
             (r"=", Operator),
             (words(("and", "or", "not"), suffix=r"\b"), Operator.Word),
-            (r"=>|<=|==|!=|>|<|-=|\+=|\*=|/=|\+|-|\\|\*", Operator),  # comparisons
-            (r"([a-zA-Z_][a-zA-Z0-9_-]*)(:)", bygroups(Name.Variable, Punctuation)),
+            (
+                r"=>|<=|==|!=|>|<|-=|\+=|\*=|/=|\+|-|\\|\*",
+                Operator,
+            ),  # comparisons
+            (
+                r"([a-zA-Z_][a-zA-Z0-9_-]*)(:)",
+                bygroups(Name.Variable, Punctuation),
+            ),
             (
                 r"([a-zA-Z_][a-zA-Z0-9_-]*)(\()",
                 bygroups(Name.Function, Punctuation),
@@ -241,8 +251,14 @@ class TypstLexer(RegexLexer):
                 Keyword.Reserved,
             ),
             (words(("import", "include"), suffix=r"\b"), Keyword.Namespace),
-            (words(("auto", "none", "true", "false"), suffix=r"\b"), Keyword.Constant),
-            (r"([0-9.]+)(mm|pt|cm|in|em|fr|%)", bygroups(Number, Keyword.Reserved)),
+            (
+                words(("auto", "none", "true", "false"), suffix=r"\b"),
+                Keyword.Constant,
+            ),
+            (
+                r"([0-9.]+)(mm|pt|cm|in|em|fr|%)",
+                bygroups(Number, Keyword.Reserved),
+            ),
             (r"0x[0-9a-fA-F]+", Number.Hex),
             (r"0b[01]+", Number.Bin),
             (r"0o[0-7]+", Number.Oct),
@@ -250,8 +266,8 @@ class TypstLexer(RegexLexer):
             (r"[0-9]+", Number.Integer),
             (words(("let", "set", "show"), suffix=r"\b"), Keyword.Declaration),
             # FIXME: make this work
-            ## (r'(import|include)( *)(")([^"])(")',
-            ##  bygroups(Keyword.Reserved, Text, Punctuation, String.Double, Punctuation)),
+            # (r'(import|include)( *)(")([^"])(")',
+            # bygroups(Keyword.Reserved, Text, Punctuation, String.Double, Punctuation)),
             (r"([a-zA-Z_][a-zA-Z0-9_-]*)", Name.Variable),
             (r"[ \t\n]+", Whitespace),
             (

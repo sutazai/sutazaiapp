@@ -43,7 +43,9 @@ class AgentConfigManager:
         # Configuration cache
         self._config_cache: Dict[str, Dict[str, Any]] = {}
 
-    def load_config(self, agent_name: str, config_type: str = "json") -> Dict[str, Any]:
+    def load_config(
+        self, agent_name: str, config_type: str = "json"
+    ) -> Dict[str, Any]:
         """
         Load configuration for a specific agent
 
@@ -76,7 +78,9 @@ class AgentConfigManager:
                 elif config_type == "yaml":
                     config = yaml.safe_load(config_file)
                 else:
-                    raise ValueError(f"Unsupported configuration type: {config_type}")
+                    raise ValueError(
+                        f"Unsupported configuration type: {config_type}"
+                    )
 
             # Validate configuration
             self._validate_config(agent_name, config)
@@ -107,23 +111,34 @@ class AgentConfigManager:
         Raises:
             jsonschema.ValidationError: If configuration fails validation
         """
-        schema_path = os.path.join(self.schema_dir, f"{agent_name}_schema.json")
+        schema_path = os.path.join(
+            self.schema_dir, f"{agent_name}_schema.json"
+        )
 
         try:
             with open(schema_path, "r") as schema_file:
                 schema = json.load(schema_file)
 
             jsonschema.validate(instance=config, schema=schema)
-            logger.info(f"Configuration validated successfully for {agent_name}")
+            logger.info(
+                f"Configuration validated successfully for {agent_name}"
+            )
 
         except FileNotFoundError:
-            logger.warning(f"No schema found for {agent_name}. Skipping validation.")
+            logger.warning(
+                f"No schema found for {agent_name}. Skipping validation."
+            )
         except jsonschema.ValidationError as e:
-            logger.error(f"Configuration validation failed for {agent_name}: {e}")
+            logger.error(
+                f"Configuration validation failed for {agent_name}: {e}"
+            )
             raise
 
     def update_config(
-        self, agent_name: str, updates: Dict[str, Any], config_type: str = "json"
+        self,
+        agent_name: str,
+        updates: Dict[str, Any],
+        config_type: str = "json",
     ) -> Dict[str, Any]:
         """
         Update configuration for a specific agent
@@ -195,7 +210,9 @@ class AgentConfigManager:
         Returns:
             Optional[Dict]: JSON schema for agent configuration
         """
-        schema_path = os.path.join(self.schema_dir, f"{agent_name}_schema.json")
+        schema_path = os.path.join(
+            self.schema_dir, f"{agent_name}_schema.json"
+        )
 
         try:
             with open(schema_path, "r") as schema_file:

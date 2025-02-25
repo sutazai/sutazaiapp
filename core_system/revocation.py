@@ -14,8 +14,9 @@ class RevocationEndpoint(TokenEndpoint):
 
     .. _RFC7009: https://tools.ietf.org/html/rfc7009
     """
+
     #: Endpoint name to be registered
-    ENDPOINT_NAME = 'revocation'
+    ENDPOINT_NAME = "revocation"
 
     def authenticate_token(self, request, client):
         """The client constructs the request by including the following
@@ -30,16 +31,18 @@ class RevocationEndpoint(TokenEndpoint):
             revocation.
         """
         self.check_params(request, client)
-        token = self.query_token(request.form['token'], request.form.get('token_type_hint'))
+        token = self.query_token(
+            request.form["token"], request.form.get("token_type_hint")
+        )
         if token and not token.check_client(client):
             raise InvalidGrantError()
         return token
 
     def check_params(self, request, client):
-        if 'token' not in request.form:
+        if "token" not in request.form:
             raise InvalidRequestError()
 
-        hint = request.form.get('token_type_hint')
+        hint = request.form.get("token_type_hint")
         if hint and hint not in self.SUPPORTED_TOKEN_TYPES:
             raise UnsupportedTokenTypeError()
 
@@ -68,7 +71,7 @@ class RevocationEndpoint(TokenEndpoint):
         if token:
             self.revoke_token(token, request)
             self.server.send_signal(
-                'after_revoke_token',
+                "after_revoke_token",
                 token=token,
                 client=client,
             )

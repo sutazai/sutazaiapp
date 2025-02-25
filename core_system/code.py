@@ -1,11 +1,11 @@
 """
-    authlib.oidc.core.grants.code
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+authlib.oidc.core.grants.code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Implementation of Authentication using the Authorization Code Flow
-    per `Section 3.1`_.
+Implementation of Authentication using the Authorization Code Flow
+per `Section 3.1`_.
 
-    .. _`Section 3.1`: http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
+.. _`Section 3.1`: http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth
 """
 
 import logging
@@ -67,7 +67,7 @@ class OpenIDToken:
         return [client.get_client_id()]
 
     def process_token(self, grant, token):
-        scope = token.get('scope')
+        scope = token.get("scope")
         if not scope or not is_openid_scope(scope):
             # standard authorization code flow
             return token
@@ -76,19 +76,19 @@ class OpenIDToken:
         authorization_code = request.authorization_code
 
         config = self.get_jwt_config(grant)
-        config['aud'] = self.get_audiences(request)
+        config["aud"] = self.get_audiences(request)
 
         if authorization_code:
-            config['nonce'] = authorization_code.get_nonce()
-            config['auth_time'] = authorization_code.get_auth_time()
+            config["nonce"] = authorization_code.get_nonce()
+            config["auth_time"] = authorization_code.get_auth_time()
 
-        user_info = self.generate_user_info(request.user, token['scope'])
+        user_info = self.generate_user_info(request.user, token["scope"])
         id_token = generate_id_token(token, user_info, **config)
-        token['id_token'] = id_token
+        token["id_token"] = id_token
         return token
 
     def __call__(self, grant):
-        grant.register_hook('process_token', self.process_token)
+        grant.register_hook("process_token", self.process_token)
 
 
 class OpenIDCode(OpenIDToken):
@@ -109,6 +109,7 @@ class OpenIDCode(OpenIDToken):
 
         authorization_server.register_grant(AuthorizationCodeGrant, extensions=[MyOpenIDCode()])
     """
+
     def __init__(self, require_nonce=False):
         self.require_nonce = require_nonce
 
@@ -132,13 +133,12 @@ class OpenIDCode(OpenIDToken):
         validate_nonce(grant.request, self.exists_nonce, self.require_nonce)
 
     def __call__(self, grant):
-        grant.register_hook('process_token', self.process_token)
+        grant.register_hook("process_token", self.process_token)
         if is_openid_scope(grant.request.scope):
             grant.register_hook(
-                'after_validate_authorization_request',
-                self.validate_openid_authorization_request
+                "after_validate_authorization_request",
+                self.validate_openid_authorization_request,
             )
             grant.register_hook(
-                'after_validate_consent_request',
-                validate_request_prompt
+                "after_validate_consent_request", validate_request_prompt
             )

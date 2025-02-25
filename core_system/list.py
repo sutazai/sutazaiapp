@@ -1,7 +1,15 @@
 import json
 import logging
 from optparse import Values
-from typing import TYPE_CHECKING, Generator, List, Optional, Sequence, Tuple, cast
+from typing import (
+    TYPE_CHECKING,
+    Generator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    cast,
+)
 
 from pip._internal.cli import cmdoptions
 from pip._internal.cli.req_command import IndexGroupCommand
@@ -280,7 +288,10 @@ class ListCommand(IndexGroupCommand):
             for dist in packages:
                 if options.verbose >= 1:
                     write_output(
-                        "%s==%s (%s)", dist.raw_name, dist.version, dist.location
+                        "%s==%s (%s)",
+                        dist.raw_name,
+                        dist.version,
+                        dist.location,
                     )
                 else:
                     write_output("%s==%s", dist.raw_name, dist.version)

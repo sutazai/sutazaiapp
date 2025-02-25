@@ -5,17 +5,15 @@ import json
 import logging
 import os
 import platform
-import shutil
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import networkx as nx
 import psutil  # type: ignore
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 
 
 class SystemDiagnosticOptimizer:
@@ -33,7 +31,8 @@ class SystemDiagnosticOptimizer:
 
         # Comprehensive logging setup with consistent formatting.
         self.diagnostic_log = os.path.join(
-            self.log_dir, f"diagnostic_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            self.log_dir,
+            f"diagnostic_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
         )
 
         logging.basicConfig(
@@ -66,15 +65,21 @@ class SystemDiagnosticOptimizer:
                     "load_average": os.getloadavg(),  # using getloadavg to capture system load
                 },
                 "memory": {
-                    "total_gb": round(psutil.virtual_memory().total / (1024**3), 2),
+                    "total_gb": round(
+                        psutil.virtual_memory().total / (1024**3), 2
+                    ),
                     "available_gb": round(
                         psutil.virtual_memory().available / (1024**3), 2
                     ),
                     "usage_percent": psutil.virtual_memory().percent,
                 },
                 "disk": {
-                    "total_gb": round(psutil.disk_usage("/").total / (1024**3), 2),
-                    "free_gb": round(psutil.disk_usage("/").free / (1024**3), 2),
+                    "total_gb": round(
+                        psutil.disk_usage("/").total / (1024**3), 2
+                    ),
+                    "free_gb": round(
+                        psutil.disk_usage("/").free / (1024**3), 2
+                    ),
                     "usage_percent": psutil.disk_usage("/").percent,
                 },
             },
@@ -123,7 +128,8 @@ class SystemDiagnosticOptimizer:
                             imports = [
                                 line.split()[-1].strip()
                                 for line in content.split("\n")
-                                if line.startswith("import") or line.startswith("from")
+                                if line.startswith("import")
+                                or line.startswith("from")
                             ]
 
                             for imp in imports:
@@ -185,7 +191,9 @@ class SystemDiagnosticOptimizer:
             return {"error": str(e)}
 
     def performance_optimization_recommendations(
-        self, health_metrics: Dict[str, Any], structure_analysis: Dict[str, Any]
+        self,
+        health_metrics: Dict[str, Any],
+        structure_analysis: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Generate intelligent performance and optimization recommendations.
@@ -259,7 +267,9 @@ class SystemDiagnosticOptimizer:
 
         return diagnostic_results
 
-    def _visualize_diagnostic_results(self, diagnostic_results: Dict[str, Any]):
+    def _visualize_diagnostic_results(
+        self, diagnostic_results: Dict[str, Any]
+    ):
         """
         Create a rich, detailed visualization of diagnostic results
 
@@ -294,7 +304,9 @@ class SystemDiagnosticOptimizer:
 
         # Optimization Recommendations
         if any(diagnostic_results["optimization_recommendations"].values()):
-            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
+            self.console.rule(
+                "[bold yellow]Optimization Recommendations[/bold yellow]"
+            )
             for category, recommendations in diagnostic_results[
                 "optimization_recommendations"
             ].items():

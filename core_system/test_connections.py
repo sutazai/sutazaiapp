@@ -13,7 +13,16 @@ from contextlib import closing
 from socket import AF_INET, AF_INET6, SOCK_DGRAM, SOCK_STREAM
 
 import psutil
-from psutil import FREEBSD, LINUX, MACOS, NETBSD, OPENBSD, POSIX, SUNOS, WINDOWS
+from psutil import (
+    FREEBSD,
+    LINUX,
+    MACOS,
+    NETBSD,
+    OPENBSD,
+    POSIX,
+    SUNOS,
+    WINDOWS,
+)
 from psutil._common import supports_ipv6
 from psutil._compat import PY3
 from psutil.tests import (

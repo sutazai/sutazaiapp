@@ -8,7 +8,14 @@ Lexer for QVT Operational language.
 :license: BSD, see LICENSE for details.
 """
 
-from pygments.lexer import RegexLexer, bygroups, combined, default, include, words
+from pygments.lexer import (
+    RegexLexer,
+    bygroups,
+    combined,
+    default,
+    include,
+    words,
+)
 from pygments.token import (
     Comment,
     Keyword,
@@ -79,7 +86,10 @@ class QVToLexer(RegexLexer):
                 r"library)(\s+)(\w+)",
                 bygroups(Keyword.Word, Text, Name.Class),
             ),
-            (r"(exception)(\s+)(\w+)", bygroups(Keyword.Word, Text, Name.Exception)),
+            (
+                r"(exception)(\s+)(\w+)",
+                bygroups(Keyword.Word, Text, Name.Exception),
+            ),
             (r"(main)\b", Name.Function),
             (
                 r"(mapping|helper|query)(\s+)",

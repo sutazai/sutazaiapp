@@ -31,6 +31,7 @@ class Meta(BaseModel):
         telemetry (Telemetry): Telemetry data related to the scan.
         schema_version (str): The version of the schema used.
     """
+
     scan_type: Literal["system-scan", "scan", "check"]
     scan_location: Path
     logged_to_dashboard: bool
@@ -55,6 +56,7 @@ class Package(BaseModel):
         other_recommended_versions (List[str]): Other recommended versions of the package.
         more_info_url (Optional[HttpUrl]): URL for more information about the package.
     """
+
     requirements: ConstrainedDict[str, RequirementInfo]
     current_version: Optional[str]
     vulnerabilities_found: Optional[int]
@@ -71,6 +73,7 @@ class OSVulnerabilities(BaseModel):
         packages (ConstrainedDict[str, Package]): Packages with vulnerabilities.
         vulnerabilities (List[Vulnerability]): List of vulnerabilities.
     """
+
     packages: ConstrainedDict[str, Package]
     vulnerabilities: List[Vulnerability] = Field(..., max_items=100, unique_items=True)
 
@@ -84,6 +87,7 @@ class EnvironmentFindings(BaseModel):
         packages (ConstrainedDict[str, Package]): Packages found in the environment.
         os_vulnerabilities (OSVulnerabilities): OS vulnerabilities found.
     """
+
     configuration: ConstrainedDict
     packages: ConstrainedDict[str, Package]
     os_vulnerabilities: OSVulnerabilities
@@ -98,6 +102,7 @@ class Environment(BaseModel):
         type (Literal["environment"]): The type of the environment.
         findings (EnvironmentFindings): Findings related to the environment.
     """
+
     full_location: Path
     type: Literal["environment"]
     findings: EnvironmentFindings
@@ -111,6 +116,7 @@ class DependencyVulnerabilities(BaseModel):
         packages (List[PackageShort]): List of packages with vulnerabilities.
         vulnerabilities (List[Vulnerability]): List of vulnerabilities found.
     """
+
     packages: List[PackageShort] = Field(..., max_items=500, unique_items=True)
     vulnerabilities: List[Vulnerability] = Field(..., max_items=100, unique_items=True)
 
@@ -124,6 +130,7 @@ class FileFindings(BaseModel):
         packages (List[PackageShort]): List of packages found in the file.
         dependency_vulnerabilities (DependencyVulnerabilities): Dependency vulnerabilities found.
     """
+
     configuration: ConstrainedDict
     packages: List[PackageShort] = Field(..., max_items=500, unique_items=True)
     dependency_vulnerabilities: DependencyVulnerabilities
@@ -139,6 +146,7 @@ class Remediations(BaseModel):
         dependency_vulnerabilities (ConstrainedDict[str, Package]): Dependency vulnerabilities with remediations.
         remediations_results (RemediationsResults): Results of the remediations.
     """
+
     configuration: ConstrainedDict
     packages: ConstrainedDict[str, Package]
     dependency_vulnerabilities: ConstrainedDict[str, Package]
@@ -157,6 +165,7 @@ class File(BaseModel):
         findings (FileFindings): Findings related to the file.
         remediations (Remediations): Remediations for the file.
     """
+
     full_location: Path
     type: str
     language: Literal["python"]
@@ -173,6 +182,7 @@ class Results(BaseModel):
         environments (List[ConstrainedDict[Path, Environment]]): List of environments scanned.
         files (List[ConstrainedDict[str, File]]): List of files scanned.
     """
+
     environments: List[ConstrainedDict[Path, Environment]] = Field(
         [], max_items=100, unique_items=True
     )
@@ -192,6 +202,7 @@ class Project(Results):
         policy_source (Optional[Literal["local", "cloud"]]): The source of the policy.
         git (Union[GitInfo, NoGit]): Git information related to the project.
     """
+
     id: Optional[int]
     location: Path
     policy: Optional[Path]
@@ -208,6 +219,7 @@ class ScanReportV30(BaseModel):
         results (Union[Results, Dict]): The results of the scan.
         projects (Union[Project, Dict]): Projects involved in the scan.
     """
+
     meta: Meta
     results: Results | Dict = {}
     projects: Project | Dict = {}

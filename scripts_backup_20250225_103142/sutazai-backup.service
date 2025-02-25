@@ -1,0 +1,12 @@
+[Unit]
+Description=SutazAI GitHub Backup Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/ai/Desktop/SutazAI/v1/scripts/github_backup.sh
+User=ai
+Group=ai
+
+[Install]
+WantedBy=multi-user.target 

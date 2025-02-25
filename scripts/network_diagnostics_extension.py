@@ -14,7 +14,8 @@ from typing import Dict, List, Optional, Union
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger("NetworkDiagnostics")
 
@@ -56,13 +57,23 @@ class AdvancedNetworkDiagnostics:
             try:
                 # Platform-specific ping command
                 if platform.system().lower() == "windows":
-                    ping_cmd = ["ping", "-n", "4", "-w", str(timeout * 1000), host]
+                    ping_cmd = [
+                        "ping",
+                        "-n",
+                        "4",
+                        "-w",
+                        str(timeout * 1000),
+                        host,
+                    ]
                 else:
                     ping_cmd = ["ping", "-c", "4", "-W", str(timeout), host]
 
                 start_time = time.time()
                 result = subprocess.run(
-                    ping_cmd, capture_output=True, text=True, timeout=timeout + 2
+                    ping_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout + 2,
                 )
 
                 # Analyze ping results
@@ -72,15 +83,23 @@ class AdvancedNetworkDiagnostics:
                 }
 
             except subprocess.TimeoutExpired:
-                ping_results[host] = {"reachable": False, "response_time": timeout}
+                ping_results[host] = {
+                    "reachable": False,
+                    "response_time": timeout,
+                }
             except Exception as e:
                 logger.error(f"Ping test failed for {host}: {e}")
-                ping_results[host] = {"reachable": False, "response_time": None}
+                ping_results[host] = {
+                    "reachable": False,
+                    "response_time": None,
+                }
 
         return ping_results
 
     @staticmethod
-    def traceroute_analysis(destination: str) -> Optional[List[Dict[str, str]]]:
+    def traceroute_analysis(
+        destination: str,
+    ) -> Optional[List[Dict[str, str]]]:
         """
         Perform comprehensive traceroute analysis.
 
@@ -110,10 +129,14 @@ class AdvancedNetworkDiagnostics:
                         {
                             "hop_number": hop_details[0],
                             "ip_address": (
-                                hop_details[1] if len(hop_details) > 1 else "N/A"
+                                hop_details[1]
+                                if len(hop_details) > 1
+                                else "N/A"
                             ),
                             "response_time": (
-                                hop_details[2] if len(hop_details) > 2 else "N/A"
+                                hop_details[2]
+                                if len(hop_details) > 2
+                                else "N/A"
                             ),
                         }
                     )
@@ -152,7 +175,9 @@ def main():
     ping_results = network_diag.ping_test()
     for host, result in ping_results.items():
         status = "✅ Reachable" if result["reachable"] else "❌ Unreachable"
-        print(f"{host}: {status} (Response Time: {result['response_time']:.2f}s)")
+        print(
+            f"{host}: {status} (Response Time: {result['response_time']:.2f}s)"
+        )
 
     # Traceroute Analysis
     print("\n🛤️ Traceroute Analysis:")
@@ -164,11 +189,14 @@ def main():
                 f"Hop {hop['hop_number']}: {hop['ip_address']} (RTT: {hop['response_time']})"
             )
 
-    # Example targets; in real usage, these could be read from a config or CLI argument.
+    # Example targets; in real usage, these could be read from a config or CLI
+    # argument.
     run_diagnostics(["8.8.8.8", "google.com"])
 
 
-def perform_network_diagnostics(hosts: Optional[List[str]] = None) -> List[str]:
+def perform_network_diagnostics(
+    hosts: Optional[List[str]] = None,
+) -> List[str]:
     hosts = hosts or []  # Provide default empty list
     # Diagnostic logic
     return hosts

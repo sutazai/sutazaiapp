@@ -27,7 +27,9 @@ class Pip:
         return shutil.which("pip") is not None
 
     @classmethod
-    def configure_requirements(cls, file: Path, console: Optional[Console] = main_console) -> None:
+    def configure_requirements(
+        cls, file: Path, console: Optional[Console] = main_console
+    ) -> None:
         """
         Configures Safety index url for specified requirements file.
 
@@ -54,7 +56,16 @@ class Pip:
         Configures PIP system to use to Safety index url.
         """
         try:
-            subprocess.run([get_unwrapped_command(name="pip"), "config", "set", "global.index-url", REPOSITORY_URL], capture_output=True)
+            subprocess.run(
+                [
+                    get_unwrapped_command(name="pip"),
+                    "config",
+                    "set",
+                    "global.index-url",
+                    REPOSITORY_URL,
+                ],
+                capture_output=True,
+            )
             console.print("Configured PIP global settings")
         except Exception as e:
             console.print("Failed to configure PIP global settings.")
@@ -63,19 +74,28 @@ class Pip:
     def reset_system(cls, console: Optional[Console] = main_console):
         # TODO: Move this logic and implement it in a more robust way
         try:
-            subprocess.run([get_unwrapped_command(name="pip"), "config", "unset", "global.index-url"], capture_output=True)
+            subprocess.run(
+                [
+                    get_unwrapped_command(name="pip"),
+                    "config",
+                    "unset",
+                    "global.index-url",
+                ],
+                capture_output=True,
+            )
         except Exception as e:
             console.print("Failed to reset PIP global settings.")
-            
 
     @classmethod
     def index_credentials(cls, ctx: typer.Context):
-        auth_envelop = json.dumps({
-            "version": "1.0",
-            "access_token": ctx.obj.auth.client.token["access_token"],
-            "api_key": ctx.obj.auth.client.api_key,
-            "project_id": ctx.obj.project.id if ctx.obj.project else None,
-        })
+        auth_envelop = json.dumps(
+            {
+                "version": "1.0",
+                "access_token": ctx.obj.auth.client.token["access_token"],
+                "api_key": ctx.obj.auth.client.api_key,
+                "project_id": ctx.obj.project.id if ctx.obj.project else None,
+            }
+        )
         return base64.urlsafe_b64encode(auth_envelop.encode("utf-8")).decode("utf-8")
 
     @classmethod
@@ -90,11 +110,11 @@ class Pip:
         url = urlsplit(index_url)
 
         encoded_auth = cls.index_credentials(ctx)
-        netloc = f'user:{encoded_auth}@{url.netloc}'
+        netloc = f"user:{encoded_auth}@{url.netloc}"
 
-        if type(url.netloc) == bytes:
+        if isinstance(url.netloc, bytes):
             url = url._replace(netloc=netloc.encode("utf-8"))
-        elif type(url.netloc) == str:
+        elif isinstance(url.netloc, str):
             url = url._replace(netloc=netloc)
 
         return urlunsplit(url)

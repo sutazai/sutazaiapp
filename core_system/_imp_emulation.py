@@ -1,6 +1,6 @@
 try:
     # this works on Python < 3.12
-    from imp import *
+    pass
 
 except ImportError:
     # this is a limited emulation for Python >= 3.12.
@@ -13,7 +13,7 @@ except ImportError:
     from importlib import machinery
     from importlib._bootstrap import _load
 
-    from _imp import acquire_lock, is_builtin, is_frozen, release_lock
+    from _imp import is_builtin, is_frozen
 
     SEARCH_ERROR = 0
     PY_SOURCE = 1
@@ -27,9 +27,13 @@ except ImportError:
     IMP_HOOK = 9
 
     def get_suffixes():
-        extensions = [(s, "rb", C_EXTENSION) for s in machinery.EXTENSION_SUFFIXES]
+        extensions = [
+            (s, "rb", C_EXTENSION) for s in machinery.EXTENSION_SUFFIXES
+        ]
         source = [(s, "r", PY_SOURCE) for s in machinery.SOURCE_SUFFIXES]
-        bytecode = [(s, "rb", PY_COMPILED) for s in machinery.BYTECODE_SUFFIXES]
+        bytecode = [
+            (s, "rb", PY_COMPILED) for s in machinery.BYTECODE_SUFFIXES
+        ]
         return extensions + source + bytecode
 
     def find_module(name, path=None):

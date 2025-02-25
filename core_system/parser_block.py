@@ -1,4 +1,5 @@
 """Block-level tokenizer."""
+
 from __future__ import annotations
 
 import logging
@@ -27,7 +28,11 @@ _rules: list[tuple[str, RuleFuncBlockType, list[str]]] = [
     # which can be terminated by this one.
     ("table", rules_block.table, ["paragraph", "reference"]),
     ("code", rules_block.code, []),
-    ("fence", rules_block.fence, ["paragraph", "reference", "blockquote", "list"]),
+    (
+        "fence",
+        rules_block.fence,
+        ["paragraph", "reference", "blockquote", "list"],
+    ),
     (
         "blockquote",
         rules_block.blockquote,
@@ -36,7 +41,11 @@ _rules: list[tuple[str, RuleFuncBlockType, list[str]]] = [
     ("hr", rules_block.hr, ["paragraph", "reference", "blockquote", "list"]),
     ("list", rules_block.list_block, ["paragraph", "reference", "blockquote"]),
     ("reference", rules_block.reference, []),
-    ("html_block", rules_block.html_block, ["paragraph", "reference", "blockquote"]),
+    (
+        "html_block",
+        rules_block.html_block,
+        ["paragraph", "reference", "blockquote"],
+    ),
     ("heading", rules_block.heading, ["paragraph", "reference", "blockquote"]),
     ("lheading", rules_block.lheading, []),
     ("paragraph", rules_block.paragraph, []),

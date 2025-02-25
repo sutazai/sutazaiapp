@@ -183,7 +183,13 @@ F_OPAQUE = 0x10
 G_FLAGS = dict(
     [
         ("_CFFI_" + _key, globals()[_key])
-        for _key in ["F_UNION", "F_CHECK_FIELDS", "F_PACKED", "F_EXTERNAL", "F_OPAQUE"]
+        for _key in [
+            "F_UNION",
+            "F_CHECK_FIELDS",
+            "F_PACKED",
+            "F_EXTERNAL",
+            "F_OPAQUE",
+        ]
     ]
 )
 

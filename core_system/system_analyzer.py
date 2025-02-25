@@ -18,18 +18,15 @@ Key Responsibilities:
 """
 
 import ast
-import importlib
 import json
 import os
 import subprocess
 import sys
 import time
-import typing
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from config.config_manager import ConfigurationManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
 
 # Internal system imports
@@ -84,7 +81,11 @@ class SystemAnalyzer:
         Returns:
             Detailed project structure insights
         """
-        project_structure = {"directories": {}, "file_types": {}, "total_files": 0}
+        project_structure = {
+            "directories": {},
+            "file_types": {},
+            "total_files": 0,
+        }
 
         for root, dirs, files in os.walk(self.base_dir):
             # Skip version control and hidden directories
@@ -305,7 +306,10 @@ class SystemAnalyzer:
 
             # Generate optimization recommendations
             optimization_recommendations = self.generate_optimization_recommendations(
-                project_structure, dependency_graph, code_quality, performance_metrics
+                project_structure,
+                dependency_graph,
+                code_quality,
+                performance_metrics,
             )
 
             # Create comprehensive analysis report
@@ -326,7 +330,8 @@ class SystemAnalyzer:
                 json.dump(asdict(analysis_report), f, indent=2)
 
             self.logger.log(
-                f"System analysis report generated: {report_path}", level="info"
+                f"System analysis report generated: {report_path}",
+                level="info",
             )
 
             return analysis_report

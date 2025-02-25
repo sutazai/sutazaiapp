@@ -25,14 +25,18 @@ if _impl == "cpp":
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_distance as distance,  # pyright: ignore[reportMissingImports]
             )
-            from rapidfuzz.distance.metrics_cpp_avx2 import hamming_editops as editops
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                hamming_editops as editops,
+            )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_normalized_distance as normalized_distance,
             )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp_avx2 import hamming_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                hamming_opcodes as opcodes,
+            )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_similarity as similarity,
             )
@@ -44,14 +48,18 @@ if _impl == "cpp":
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_distance as distance,  # pyright: ignore[reportMissingImports]
             )
-            from rapidfuzz.distance.metrics_cpp_sse2 import hamming_editops as editops
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                hamming_editops as editops,
+            )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_normalized_distance as normalized_distance,
             )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp_sse2 import hamming_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                hamming_opcodes as opcodes,
+            )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_similarity as similarity,
             )
@@ -70,7 +78,9 @@ if _impl == "cpp":
             hamming_normalized_similarity as normalized_similarity,
         )
         from rapidfuzz.distance.metrics_cpp import hamming_opcodes as opcodes
-        from rapidfuzz.distance.metrics_cpp import hamming_similarity as similarity
+        from rapidfuzz.distance.metrics_cpp import (
+            hamming_similarity as similarity,
+        )
 elif _impl == "python":
     from rapidfuzz.distance.metrics_py import hamming_distance as distance
     from rapidfuzz.distance.metrics_py import hamming_editops as editops
@@ -89,14 +99,18 @@ else:
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_distance as distance,  # pyright: ignore[reportMissingImports]
             )
-            from rapidfuzz.distance.metrics_cpp_avx2 import hamming_editops as editops
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                hamming_editops as editops,
+            )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_normalized_distance as normalized_distance,
             )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp_avx2 import hamming_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_avx2 import (
+                hamming_opcodes as opcodes,
+            )
             from rapidfuzz.distance.metrics_cpp_avx2 import (
                 hamming_similarity as similarity,
             )
@@ -108,14 +122,18 @@ else:
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_distance as distance,  # pyright: ignore[reportMissingImports]
             )
-            from rapidfuzz.distance.metrics_cpp_sse2 import hamming_editops as editops
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                hamming_editops as editops,
+            )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_normalized_distance as normalized_distance,
             )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp_sse2 import hamming_opcodes as opcodes
+            from rapidfuzz.distance.metrics_cpp_sse2 import (
+                hamming_opcodes as opcodes,
+            )
             from rapidfuzz.distance.metrics_cpp_sse2 import (
                 hamming_similarity as similarity,
             )
@@ -127,15 +145,21 @@ else:
             from rapidfuzz.distance.metrics_cpp import (
                 hamming_distance as distance,  # pyright: ignore[reportMissingImports]
             )
-            from rapidfuzz.distance.metrics_cpp import hamming_editops as editops
+            from rapidfuzz.distance.metrics_cpp import (
+                hamming_editops as editops,
+            )
             from rapidfuzz.distance.metrics_cpp import (
                 hamming_normalized_distance as normalized_distance,
             )
             from rapidfuzz.distance.metrics_cpp import (
                 hamming_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp import hamming_opcodes as opcodes
-            from rapidfuzz.distance.metrics_cpp import hamming_similarity as similarity
+            from rapidfuzz.distance.metrics_cpp import (
+                hamming_opcodes as opcodes,
+            )
+            from rapidfuzz.distance.metrics_cpp import (
+                hamming_similarity as similarity,
+            )
 
             imported = True
 
@@ -149,4 +173,6 @@ else:
             hamming_normalized_similarity as normalized_similarity,
         )
         from rapidfuzz.distance.metrics_py import hamming_opcodes as opcodes
-        from rapidfuzz.distance.metrics_py import hamming_similarity as similarity
+        from rapidfuzz.distance.metrics_py import (
+            hamming_similarity as similarity,
+        )

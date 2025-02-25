@@ -46,7 +46,10 @@ def render_scope(
     items = sorted(scope.items(), key=sort_items) if sort_keys else scope.items()
     for key, value in items:
         key_text = Text.assemble(
-            (key, "scope.key.special" if key.startswith("__") else "scope.key"),
+            (
+                key,
+                "scope.key.special" if key.startswith("__") else "scope.key",
+            ),
             (" =", "scope.equals"),
         )
         items_table.add_row(

@@ -51,6 +51,7 @@ license and by oscrypto's:
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import absolute_import
 
 import contextlib
@@ -155,8 +156,14 @@ CIPHER_SUITES = [
 # TLSv1 and a high of TLSv1.2. For everything else, we pin to that version.
 # TLSv1 to 1.2 are supported on macOS 10.8+
 _protocol_to_min_max = {
-    util.PROTOCOL_TLS: (SecurityConst.kTLSProtocol1, SecurityConst.kTLSProtocol12),
-    PROTOCOL_TLS_CLIENT: (SecurityConst.kTLSProtocol1, SecurityConst.kTLSProtocol12),
+    util.PROTOCOL_TLS: (
+        SecurityConst.kTLSProtocol1,
+        SecurityConst.kTLSProtocol12,
+    ),
+    PROTOCOL_TLS_CLIENT: (
+        SecurityConst.kTLSProtocol1,
+        SecurityConst.kTLSProtocol12,
+    ),
 }
 
 if hasattr(ssl, "PROTOCOL_SSLv2"):
@@ -244,7 +251,7 @@ def _read_callback(connection_id, data_buffer, data_length_pointer):
                     if not read_count:
                         return SecurityConst.errSSLClosedGraceful
                     break
-        except (socket.error) as e:
+        except socket.error as e:
             error = e.errno
 
             if error is not None and error != errno.EAGAIN:
@@ -295,7 +302,7 @@ def _write_callback(connection_id, data_buffer, data_length_pointer):
                 # This has some needless copying here, but I'm not sure there's
                 # much value in optimising this data path.
                 data = data[chunk_sent:]
-        except (socket.error) as e:
+        except socket.error as e:
             error = e.errno
 
             if error is not None and error != errno.EAGAIN:
@@ -538,7 +545,9 @@ class WrappedSocket(object):
         # authing in that case.
         if not verify or trust_bundle is not None:
             result = Security.SSLSetSessionOption(
-                self.context, SecurityConst.kSSLSessionOptionBreakOnServerAuth, True
+                self.context,
+                SecurityConst.kSSLSessionOptionBreakOnServerAuth,
+                True,
             )
             _assert_no_error(result)
 
@@ -649,7 +658,7 @@ class WrappedSocket(object):
     def sendall(self, data):
         total_sent = 0
         while total_sent < len(data):
-            sent = self.send(data[total_sent : total_sent + SSL_WRITE_BLOCKSIZE])
+            sent = self.send(data[total_sent: total_sent + SSL_WRITE_BLOCKSIZE])
             total_sent += sent
 
     def shutdown(self):
@@ -813,7 +822,6 @@ class SecureTransportContext(object):
         SecureTransport cannot have its hostname checking disabled. For more,
         see the comment on getpeercert() in this file.
         """
-        pass
 
     @property
     def options(self):

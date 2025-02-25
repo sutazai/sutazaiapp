@@ -53,7 +53,14 @@ class Event:
         else:
             attributes = [
                 key
-                for key in ["anchor", "tag", "implicit", "value", "flow_style", "style"]
+                for key in [
+                    "anchor",
+                    "tag",
+                    "implicit",
+                    "value",
+                    "flow_style",
+                    "style",
+                ]
                 if hasattr(self, key)
             ]
             arguments = ", ".join(

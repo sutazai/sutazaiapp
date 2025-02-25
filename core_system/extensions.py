@@ -20,7 +20,9 @@ from cryptography.hazmat.primitives.asymmetric.types import (
     CertificateIssuerPublicKeyTypes,
     CertificatePublicKeyTypes,
 )
-from cryptography.x509.certificate_transparency import SignedCertificateTimestamp
+from cryptography.x509.certificate_transparency import (
+    SignedCertificateTimestamp,
+)
 from cryptography.x509.general_name import (
     DirectoryName,
     DNSName,

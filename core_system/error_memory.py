@@ -4,7 +4,7 @@ import json
 import logging
 import os
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
@@ -29,7 +29,11 @@ class ErrorClassifier:
         Initialize the error classification system.
         """
         self.error_types = {
-            "critical": ["FileNotFoundError", "ConnectionError", "SystemError"],
+            "critical": [
+                "FileNotFoundError",
+                "ConnectionError",
+                "SystemError",
+            ],
             "warning": ["RuntimeWarning", "DeprecationWarning"],
             "performance": ["TimeoutError", "ResourceWarning"],
             "security": ["PermissionError", "AuthenticationError"],
@@ -773,7 +777,10 @@ def main():
             "file": "/path/to/network/service.py",
             "line_number": 75,
             "error_message": "Failed to establish connection",
-            "context": {"function": "connect_to_server", "class": "NetworkClient"},
+            "context": {
+                "function": "connect_to_server",
+                "class": "NetworkClient",
+            },
         },
     ]
 

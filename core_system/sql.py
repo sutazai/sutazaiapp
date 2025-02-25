@@ -120,20 +120,20 @@ def language_callback(lexer, match):
     plpgsql if inside a DO statement and no LANGUAGE has been found.
     """
     lx = None
-    m = language_re.match(lexer.text[match.end() : match.end() + 100])
+    m = language_re.match(lexer.text[match.end(): match.end() + 100])
     if m is not None:
         lx = lexer._get_lexer(m.group(1))
     else:
         m = list(
             language_re.finditer(
-                lexer.text[max(0, match.start() - 100) : match.start()]
+                lexer.text[max(0, match.start() - 100): match.start()]
             )
         )
         if m:
             lx = lexer._get_lexer(m[-1].group(1))
         else:
             m = list(
-                do_re.finditer(lexer.text[max(0, match.start() - 25) : match.start()])
+                do_re.finditer(lexer.text[max(0, match.start() - 25): match.start()])
             )
             if m:
                 lx = lexer._get_lexer("plpgsql")
@@ -220,9 +220,17 @@ class PostgresLexer(PostgresBase, RegexLexer):
             (r"\$\d+", Name.Variable),
             (r"([0-9]*\.[0-9]*|[0-9]+)(e[+-]?[0-9]+)?", Number.Float),
             (r"[0-9]+", Number.Integer),
-            (r"((?:E|U&)?)(')", bygroups(String.Affix, String.Single), "string"),
+            (
+                r"((?:E|U&)?)(')",
+                bygroups(String.Affix, String.Single),
+                "string",
+            ),
             # quoted identifier
-            (r'((?:U&)?)(")', bygroups(String.Affix, String.Name), "quoted-ident"),
+            (
+                r'((?:U&)?)(")',
+                bygroups(String.Affix, String.Name),
+                "quoted-ident",
+            ),
             (r"(?s)(\$)([^$]*)(\$)(.*?)(\$)(\2)(\$)", language_callback),
             (r"[a-z_]\w*", Name),
             # psql variable in SQL
@@ -382,7 +390,7 @@ class PostgresConsoleLexer(Lexer):
                     insertions.append(
                         (len(curcode), [(0, Generic.Prompt, mprompt.group())])
                     )
-                    curcode += line[len(mprompt.group()) :]
+                    curcode += line[len(mprompt.group()):]
                 else:
                     curcode += line
 
@@ -436,7 +444,11 @@ class PostgresExplainLexer(RegexLexer):
             (r"(\s+)", Whitespace),
             # This match estimated cost and effectively measured counters with ANALYZE
             # Then, we move to instrumentation state
-            (r"(cost)(=?)", bygroups(Name.Class, Punctuation), "instrumentation"),
+            (
+                r"(cost)(=?)",
+                bygroups(Name.Class, Punctuation),
+                "instrumentation",
+            ),
             (
                 r"(actual)( )(=?)",
                 bygroups(Name.Class, Whitespace, Punctuation),
@@ -471,7 +483,11 @@ class PostgresExplainLexer(RegexLexer):
             ),
             (r"(shared|temp|local)", Keyword.Pseudo),
             # We move to sort state in order to emphasize specific keywords (especially disk access)
-            (r"(Sort Method)(: )", bygroups(Comment.Preproc, Punctuation), "sort"),
+            (
+                r"(Sort Method)(: )",
+                bygroups(Comment.Preproc, Punctuation),
+                "sort",
+            ),
             # These keywords can be followed by an object, like a table
             (
                 r"(Sort Key|Group Key|Presorted Key|Hash Key)(:)( )",
@@ -559,7 +575,10 @@ class PostgresExplainLexer(RegexLexer):
                 ),
                 Name.Exception,
             ),
-            (r"(I/O Timings)(:)( )", bygroups(Name.Exception, Punctuation, Whitespace)),
+            (
+                r"(I/O Timings)(:)( )",
+                bygroups(Name.Exception, Punctuation, Whitespace),
+            ),
             (words(EXPLAIN_KEYWORDS, suffix=r"\b"), Keyword),
             # join keywords
             (r"((Right|Left|Full|Semi|Anti) Join)", Keyword.Type),
@@ -597,7 +616,11 @@ class PostgresExplainLexer(RegexLexer):
             (
                 r"(Trigger)( )(\S*)(:)( )",
                 bygroups(
-                    Comment.Preproc, Whitespace, Name.Variable, Punctuation, Whitespace
+                    Comment.Preproc,
+                    Whitespace,
+                    Name.Variable,
+                    Punctuation,
+                    Whitespace,
                 ),
             ),
         ],
@@ -611,7 +634,11 @@ class PostgresExplainLexer(RegexLexer):
         ],
         "object_name": [
             # This is a cost or analyze measure
-            (r"(\(cost)(=?)", bygroups(Name.Class, Punctuation), "instrumentation"),
+            (
+                r"(\(cost)(=?)",
+                bygroups(Name.Class, Punctuation),
+                "instrumentation",
+            ),
             (
                 r"(\(actual)( )(=?)",
                 bygroups(Name.Class, Whitespace, Punctuation),
@@ -678,7 +705,10 @@ class PostgresExplainLexer(RegexLexer):
         ],
         "sort": [
             (r":|kB", Punctuation),
-            (r"(quicksort|top-N|heapsort|Average|Memory|Peak)", Comment.Prepoc),
+            (
+                r"(quicksort|top-N|heapsort|Average|Memory|Peak)",
+                Comment.Prepoc,
+            ),
             (r"(external|merge|Disk|sort)", Name.Exception),
             (r"(\d+)", Number.Integer),
             (r" +", Whitespace),
@@ -1255,7 +1285,10 @@ class SqlLexer(RegexLexer):
             (r"[0-9]+", Number.Integer),
             # TODO: Backslash escapes?
             (r"'(''|[^'])*'", String.Single),
-            (r'"(""|[^"])*"', String.Symbol),  # not a real string literal in ANSI SQL
+            (
+                r'"(""|[^"])*"',
+                String.Symbol,
+            ),  # not a real string literal in ANSI SQL
             (r"[a-z_][\w$]*", Name),  # allow $s in strings for Oracle
             (r"[;:()\[\],.]", Punctuation),
         ],
@@ -1294,7 +1327,10 @@ class TransactSqlLexer(RegexLexer):
             (r"--.*[$|\n]?", Comment.Single),
             (r"/\*", Comment.Multiline, "multiline-comments"),
             (words(_tsql_builtins.OPERATORS), Operator),
-            (words(_tsql_builtins.OPERATOR_WORDS, suffix=r"\b"), Operator.Word),
+            (
+                words(_tsql_builtins.OPERATOR_WORDS, suffix=r"\b"),
+                Operator.Word,
+            ),
             (words(_tsql_builtins.TYPES, suffix=r"\b"), Name.Class),
             (words(_tsql_builtins.FUNCTIONS, suffix=r"\b"), Name.Function),
             (r"(goto)(\s+)(\w+\b)", bygroups(Keyword, Whitespace, Name.Label)),
@@ -1444,9 +1480,15 @@ class MySqlLexer(RegexLexer):
             (r"[!%&*+/:<=>^|~-]+", Operator),
             # Exceptions; these words tokenize differently in different contexts.
             (r"\b(set)(?!\s*\()", Keyword),
-            (r"\b(character)(\s+)(set)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"\b(character)(\s+)(set)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             # In all other known cases, "SET" is tokenized by MYSQL_DATATYPES.
-            (words(MYSQL_CONSTANTS, prefix=r"\b", suffix=r"\b"), Name.Constant),
+            (
+                words(MYSQL_CONSTANTS, prefix=r"\b", suffix=r"\b"),
+                Name.Constant,
+            ),
             (words(MYSQL_DATATYPES, prefix=r"\b", suffix=r"\b"), Keyword.Type),
             (words(MYSQL_KEYWORDS, prefix=r"\b", suffix=r"\b"), Keyword),
             (
@@ -1621,7 +1663,10 @@ class GoogleSqlLexer(RegexLexer):
             (r"\?", Name.Variable),  # For demonstrating prepared statements
             # Exceptions; these words tokenize differently in different contexts.
             (r"\b(set)(?!\s*\()", Keyword),
-            (r"\b(character)(\s+)(set)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"\b(character)(\s+)(set)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             # Constants, types, keywords, functions, operators
             (
                 words(_googlesql_builtins.constants, prefix=r"\b", suffix=r"\b"),
@@ -1631,7 +1676,10 @@ class GoogleSqlLexer(RegexLexer):
                 words(_googlesql_builtins.types, prefix=r"\b", suffix=r"\b"),
                 Keyword.Type,
             ),
-            (words(_googlesql_builtins.keywords, prefix=r"\b", suffix=r"\b"), Keyword),
+            (
+                words(_googlesql_builtins.keywords, prefix=r"\b", suffix=r"\b"),
+                Keyword,
+            ),
             (
                 words(
                     _googlesql_builtins.functionnames,

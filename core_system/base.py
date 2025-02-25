@@ -4,7 +4,6 @@ from types import MappingProxyType
 from typing import Any, Dict, List, NewType, Optional, Set
 
 from pydantic.dataclasses import dataclass
-from typing_extensions import Self
 
 from .config_protocol import ConfigConvertible
 from .report_protocol import ReportConvertible
@@ -68,9 +67,11 @@ class ScanType(Enum):
 
     @classmethod
     def from_command(cls, command):
-        return {"project": cls.scan, "system": cls.system_scan, "check": cls.check}.get(
-            command.name, None
-        )
+        return {
+            "project": cls.scan,
+            "system": cls.system_scan,
+            "check": cls.check,
+        }.get(command.name, None)
 
 
 class Stage(str, Enum):
@@ -127,13 +128,25 @@ class FileType(Enum):
 
     def human_name(self, plural: bool = False):
         if self is FileType.POETRY_LOCK:
-            return "Python poetry lock files" if plural else "Python poetry lock file"
+            return (
+                "Python poetry lock files"
+                if plural
+                else "Python poetry lock file"
+            )
 
         if self is FileType.PIPENV_LOCK:
-            return "Python Pipfile lock files" if plural else "Python Pipfile lock file"
+            return (
+                "Python Pipfile lock files"
+                if plural
+                else "Python Pipfile lock file"
+            )
 
         if self is FileType.REQUIREMENTS_TXT:
-            return "Python requirements files" if plural else "Python requirement file"
+            return (
+                "Python requirements files"
+                if plural
+                else "Python requirement file"
+            )
 
         if self is FileType.VIRTUAL_ENVIRONMENT:
             return "Python environments" if plural else "Python environment"
@@ -142,7 +155,11 @@ class FileType(Enum):
             return "Safety projects" if plural else "Safety project"
 
         if self is FileType.PYPROJECT_TOML:
-            return "Python pyproject.toml files" if plural else "Python pyproject.toml file"
+            return (
+                "Python pyproject.toml files"
+                if plural
+                else "Python pyproject.toml file"
+            )
 
 
 class Ecosystem(Enum):

@@ -15,10 +15,10 @@ from .system_exceptions import (
 )
 
 __all__ = [
-    'SutazAIBaseException',
-    'ConfigurationError',
-    'SecurityViolationError',
-    'ResourceAllocationError',
-    'ComponentInitializationError',
-    'global_exception_handler'
-] 
+    "SutazAIBaseException",
+    "ConfigurationError",
+    "SecurityViolationError",
+    "ResourceAllocationError",
+    "ComponentInitializationError",
+    "global_exception_handler",
+]

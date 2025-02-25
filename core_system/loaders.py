@@ -178,7 +178,9 @@ class FileSystemLoader(BaseLoader):
     def __init__(
         self,
         searchpath: t.Union[
-            str, "os.PathLike[str]", t.Sequence[t.Union[str, "os.PathLike[str]"]]
+            str,
+            "os.PathLike[str]",
+            t.Sequence[t.Union[str, "os.PathLike[str]"]],
         ],
         encoding: str = "utf-8",
         followlinks: bool = False,
@@ -231,7 +233,7 @@ class FileSystemLoader(BaseLoader):
             for dirpath, _, filenames in walk_dir:
                 for filename in filenames:
                     template = (
-                        os.path.join(dirpath, filename)[len(searchpath) :]
+                        os.path.join(dirpath, filename)[len(searchpath):]
                         .strip(os.path.sep)
                         .replace(os.path.sep, "/")
                     )
@@ -253,6 +255,7 @@ if sys.version_info >= (3, 13):
                 " metadata to list templates."
             ) from e
         return get_files()
+
 else:
 
     def _get_zipimporter_files(z: t.Any) -> t.Dict[str, object]:
@@ -418,7 +421,7 @@ class PackageLoader(BaseLoader):
 
             # Package is a zip file.
             prefix = (
-                self._template_root[len(self._archive) :].lstrip(os.path.sep)
+                self._template_root[len(self._archive):].lstrip(os.path.sep)
                 + os.path.sep
             )
             offset = len(prefix)
@@ -480,7 +483,8 @@ class FunctionLoader(BaseLoader):
             [str],
             t.Optional[
                 t.Union[
-                    str, t.Tuple[str, t.Optional[str], t.Optional[t.Callable[[], bool]]]
+                    str,
+                    t.Tuple[str, t.Optional[str], t.Optional[t.Callable[[], bool]]],
                 ]
             ],
         ],
@@ -631,7 +635,9 @@ class ModuleLoader(BaseLoader):
     def __init__(
         self,
         path: t.Union[
-            str, "os.PathLike[str]", t.Sequence[t.Union[str, "os.PathLike[str]"]]
+            str,
+            "os.PathLike[str]",
+            t.Sequence[t.Union[str, "os.PathLike[str]"]],
         ],
     ) -> None:
         package_name = f"_jinja2_module_templates_{id(self):x}"

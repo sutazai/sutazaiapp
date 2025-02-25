@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from rapidfuzz._common_py import conv_sequences
 from rapidfuzz._utils import is_none, setupPandas
-from rapidfuzz.distance.LCSseq_py import _block_similarity as lcs_seq_block_similarity
+from rapidfuzz.distance.LCSseq_py import (
+    _block_similarity as lcs_seq_block_similarity,
+)
 from rapidfuzz.distance.LCSseq_py import editops as lcs_seq_editops
 from rapidfuzz.distance.LCSseq_py import opcodes as lcs_seq_opcodes
 from rapidfuzz.distance.LCSseq_py import similarity as lcs_seq_similarity
@@ -65,7 +67,11 @@ def distance(
     maximum = len(s1) + len(s2)
     lcs_sim = lcs_seq_similarity(s1, s2)
     dist = maximum - 2 * lcs_sim
-    return dist if (score_cutoff is None or dist <= score_cutoff) else score_cutoff + 1
+    return (
+        dist
+        if (score_cutoff is None or dist <= score_cutoff)
+        else score_cutoff + 1
+    )
 
 
 def _block_distance(
@@ -77,7 +83,11 @@ def _block_distance(
     maximum = len(s1) + len(s2)
     lcs_sim = lcs_seq_block_similarity(block, s1, s2)
     dist = maximum - 2 * lcs_sim
-    return dist if (score_cutoff is None or dist <= score_cutoff) else score_cutoff + 1
+    return (
+        dist
+        if (score_cutoff is None or dist <= score_cutoff)
+        else score_cutoff + 1
+    )
 
 
 def similarity(
@@ -166,7 +176,9 @@ def normalized_distance(
     maximum = len(s1) + len(s2)
     dist = distance(s1, s2)
     norm_dist = dist / maximum if maximum else 0
-    return norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    return (
+        norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    )
 
 
 def _block_normalized_distance(
@@ -178,7 +190,9 @@ def _block_normalized_distance(
     maximum = len(s1) + len(s2)
     dist = _block_distance(block, s1, s2)
     norm_dist = dist / maximum if maximum else 0
-    return norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    return (
+        norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    )
 
 
 def normalized_similarity(
@@ -242,7 +256,9 @@ def normalized_similarity(
     s1, s2 = conv_sequences(s1, s2)
     norm_dist = normalized_distance(s1, s2)
     norm_sim = 1.0 - norm_dist
-    return norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    return (
+        norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    )
 
 
 def _block_normalized_similarity(
@@ -253,7 +269,9 @@ def _block_normalized_similarity(
 ):
     norm_dist = _block_normalized_distance(block, s1, s2)
     norm_sim = 1.0 - norm_dist
-    return norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    return (
+        norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    )
 
 
 def editops(

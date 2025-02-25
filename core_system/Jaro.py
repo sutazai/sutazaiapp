@@ -8,7 +8,12 @@ import os
 
 from rapidfuzz._feature_detector import AVX2, SSE2, supports
 
-__all__ = ["distance", "normalized_distance", "normalized_similarity", "similarity"]
+__all__ = [
+    "distance",
+    "normalized_distance",
+    "normalized_similarity",
+    "similarity",
+]
 
 _impl = os.environ.get("RAPIDFUZZ_IMPLEMENTATION")
 if _impl == "cpp":
@@ -57,7 +62,9 @@ if _impl == "cpp":
         from rapidfuzz.distance.metrics_cpp import (
             jaro_normalized_similarity as normalized_similarity,
         )
-        from rapidfuzz.distance.metrics_cpp import jaro_similarity as similarity
+        from rapidfuzz.distance.metrics_cpp import (
+            jaro_similarity as similarity,
+        )
 elif _impl == "python":
     from rapidfuzz.distance.metrics_py import jaro_distance as distance
     from rapidfuzz.distance.metrics_py import (
@@ -114,7 +121,9 @@ else:
             from rapidfuzz.distance.metrics_cpp import (
                 jaro_normalized_similarity as normalized_similarity,
             )
-            from rapidfuzz.distance.metrics_cpp import jaro_similarity as similarity
+            from rapidfuzz.distance.metrics_cpp import (
+                jaro_similarity as similarity,
+            )
 
             imported = True
 

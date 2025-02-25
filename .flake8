@@ -1,0 +1,17 @@
+[flake8]
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    venv,
+    .venv,
+    env,
+    .env,
+    *.egg-info,
+    .eggs,
+    site-packages 
+max-line-length = 79
+extend-ignore = E203, W503
+per-file-ignores =
+    __init__.py: F401 

@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-import os
 
 
 def setup_logging():
@@ -12,14 +11,14 @@ def setup_logging():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
             logging.FileHandler(log_dir / "ai_system.log"),
-            logging.StreamHandler()
-        ]
+            logging.StreamHandler(),
+        ],
     )
     # Suppress noisy library logs
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("chromadb").setLevel(logging.INFO)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup_logging()
     logging.info("Logging is set up.")

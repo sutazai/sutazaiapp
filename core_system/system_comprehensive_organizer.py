@@ -14,28 +14,26 @@ Requirements:
 """
 
 import datetime
-import json
 import os
-import sys
 
 # Define base directory
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # Expected root directories in the project
 EXPECTED_DIRECTORIES = [
-    'ai_agents',
-    'backend',
-    'core_system',
-    'docs',
-    'logs',
-    'security',
-    'scripts',
-    'tests',
-    'config'
+    "ai_agents",
+    "backend",
+    "core_system",
+    "docs",
+    "logs",
+    "security",
+    "scripts",
+    "tests",
+    "config",
 ]
 
 # Directory to save organizer reports
-REPORTS_DIR = os.path.join(BASE_DIR, 'logs', 'organizer_reports')
+REPORTS_DIR = os.path.join(BASE_DIR, "logs", "organizer_reports")
 
 
 def create_missing_directories() -> list:
@@ -64,10 +62,7 @@ def scan_project_structure() -> dict:
     structure = {}
     for root, dirs, files in os.walk(BASE_DIR):
         rel_root = os.path.relpath(root, BASE_DIR)
-        structure[rel_root] = {
-            "directories": dirs,
-            "files": files
-        }
+        structure[rel_root] = {"directories": dirs, "files": files}
     return structure
 
 
@@ -97,8 +92,12 @@ def generate_markdown_report(missing_dirs: list, structure: dict) -> str:
     report_lines.append("\n## Project Structure Overview\n")
     for path, details in sorted(structure.items()):
         report_lines.append(f"### {path}")
-        report_lines.append(f"- **Directories:** {', '.join(details['directories']) if details['directories'] else 'None'}")
-        report_lines.append(f"- **Files:** {', '.join(details['files']) if details['files'] else 'None'}\n")
+        report_lines.append(
+            f"- **Directories:** {', '.join(details['directories']) if details['directories'] else 'None'}"
+        )
+        report_lines.append(
+            f"- **Files:** {', '.join(details['files']) if details['files'] else 'None'}\n"
+        )
 
     return "\n".join(report_lines)
 
@@ -130,5 +129,5 @@ def main():
     print(f"Organizer report generated at: {report_path}")
 
 
-if __name__ == '__main__':
-    main() 
+if __name__ == "__main__":
+    main()

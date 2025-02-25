@@ -200,8 +200,7 @@ class CacheablePageContent:
 
 
 class ParseLinks(Protocol):
-    def __call__(self, page: "IndexContent") -> Iterable[Link]:
-        ...
+    def __call__(self, page: "IndexContent") -> Iterable[Link]: ...
 
 
 def with_cached_index_content(fn: ParseLinks) -> ParseLinks:
@@ -399,7 +398,6 @@ class CollectedSources(NamedTuple):
 
 
 class LinkCollector:
-
     """
     Responsible for collecting Link objects from all configured locations,
     making network requests as needed.

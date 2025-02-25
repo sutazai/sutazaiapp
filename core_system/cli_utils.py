@@ -38,7 +38,11 @@ from .main import (
 LOG = logging.getLogger(__name__)
 
 
-def build_client_session(api_key: Optional[str] = None, proxies: Optional[Dict[str, str]] = None, headers: Optional[Dict[str, str]] = None) -> Tuple[SafetyAuthSession, Dict[str, Any]]:
+def build_client_session(
+    api_key: Optional[str] = None,
+    proxies: Optional[Dict[str, str]] = None,
+    headers: Optional[Dict[str, str]] = None,
+) -> Tuple[SafetyAuthSession, Dict[str, Any]]:
     """
     Builds and configures the client session for authentication.
 
@@ -61,36 +65,47 @@ def build_client_session(api_key: Optional[str] = None, proxies: Optional[Dict[s
         target_proxies = proxy_config
 
     def update_token(tokens, **kwargs):
-        save_auth_config(access_token=tokens['access_token'], id_token=tokens['id_token'],
-                    refresh_token=tokens['refresh_token'])
+        save_auth_config(
+            access_token=tokens["access_token"],
+            id_token=tokens["id_token"],
+            refresh_token=tokens["refresh_token"],
+        )
         load_auth_session(click_ctx=click.get_current_context(silent=True))
 
-    client_session = SafetyAuthSession(client_id=CLIENT_ID,
-                                       code_challenge_method='S256',
-                                       redirect_uri=get_redirect_url(),
-                                       update_token=update_token,
-                                       scope='openid email profile offline_access',
-                                       **kwargs)
+    client_session = SafetyAuthSession(
+        client_id=CLIENT_ID,
+        code_challenge_method="S256",
+        redirect_uri=get_redirect_url(),
+        update_token=update_token,
+        scope="openid email profile offline_access",
+        **kwargs,
+    )
 
     client_session.mount("https://pyup.io/static-s3/", S3PresignedAdapter())
 
     client_session.proxy_required = proxy_required
     client_session.proxy_timeout = proxy_timeout
     client_session.proxies = target_proxies
-    client_session.headers = {"Accept": "application/json", "Content-Type": "application/json"}
+    client_session.headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
 
     try:
-        openid_config = client_session.get(url=OPENID_CONFIG_URL, timeout=REQUEST_TIMEOUT).json()
+        openid_config = client_session.get(
+            url=OPENID_CONFIG_URL, timeout=REQUEST_TIMEOUT
+        ).json()
     except Exception as e:
-        LOG.debug('Unable to load the openID config: %s', e)
+        LOG.debug("Unable to load the openID config: %s", e)
         openid_config = {}
 
-    client_session.metadata["token_endpoint"] = openid_config.get("token_endpoint",
-                                                                  None)
+    client_session.metadata["token_endpoint"] = openid_config.get(
+        "token_endpoint", None
+    )
 
     if api_key:
         client_session.api_key = api_key
-        client_session.headers['X-Api-Key'] = api_key
+        client_session.headers["X-Api-Key"] = api_key
 
     if headers:
         client_session.headers.update(headers)
@@ -112,21 +127,24 @@ def load_auth_session(click_ctx: click.Context) -> None:
     client = click_ctx.obj.auth.client
     keys = click_ctx.obj.auth.keys
 
-    access_token: str = get_token(name='access_token')
-    refresh_token: str = get_token(name='refresh_token')
-    id_token: str = get_token(name='id_token')
+    access_token: str = get_token(name="access_token")
+    refresh_token: str = get_token(name="refresh_token")
+    id_token: str = get_token(name="id_token")
 
     if access_token and keys:
         try:
             token = get_token_data(access_token, keys, silent_if_expired=True)
-            client.token = {'access_token': access_token,
-                                    'refresh_token': refresh_token,
-                                    'id_token': id_token,
-                                    'token_type': 'bearer',
-                                    'expires_at': token.get('exp', None)}
+            client.token = {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "id_token": id_token,
+                "token_type": "bearer",
+                "expires_at": token.get("exp", None),
+            }
         except Exception as e:
             print(e)
             clean_session(client)
+
 
 def proxy_options(func: Callable) -> Callable:
     """
@@ -141,17 +159,33 @@ def proxy_options(func: Callable) -> Callable:
     Returns:
         Callable: The wrapped Click command function with proxy options.
     """
-    func = click.option("--proxy-protocol",
-                        type=click.Choice(['http', 'https']), default='https',
-                        cls=DependentOption, required_options=['proxy_host'],
-                        help=CLI_PROXY_PROTOCOL_HELP)(func)
-    func = click.option("--proxy-port", multiple=False, type=int, default=80,
-                        cls=DependentOption, required_options=['proxy_host'],
-                        help=CLI_PROXY_PORT_HELP)(func)
-    func = click.option("--proxy-host", multiple=False, type=str, default=None,
-                        help=CLI_PROXY_HOST_HELP)(func)
+    func = click.option(
+        "--proxy-protocol",
+        type=click.Choice(["http", "https"]),
+        default="https",
+        cls=DependentOption,
+        required_options=["proxy_host"],
+        help=CLI_PROXY_PROTOCOL_HELP,
+    )(func)
+    func = click.option(
+        "--proxy-port",
+        multiple=False,
+        type=int,
+        default=80,
+        cls=DependentOption,
+        required_options=["proxy_host"],
+        help=CLI_PROXY_PORT_HELP,
+    )(func)
+    func = click.option(
+        "--proxy-host",
+        multiple=False,
+        type=str,
+        default=None,
+        help=CLI_PROXY_HOST_HELP,
+    )(func)
 
     return func
+
 
 def auth_options(stage: bool = True) -> Callable:
     """
@@ -163,26 +197,35 @@ def auth_options(stage: bool = True) -> Callable:
     Returns:
         Callable: The decorator function.
     """
+
     def decorator(func: Callable) -> Callable:
 
-        func = click.option("--key", default=None, envvar="SAFETY_API_KEY",
-            help=CLI_KEY_HELP)(func)
+        func = click.option(
+            "--key", default=None, envvar="SAFETY_API_KEY", help=CLI_KEY_HELP
+        )(func)
 
         if stage:
-            func = click.option("--stage", default=None, envvar="SAFETY_STAGE",
-                                help=CLI_STAGE_HELP)(func)
+            func = click.option(
+                "--stage",
+                default=None,
+                envvar="SAFETY_STAGE",
+                help=CLI_STAGE_HELP,
+            )(func)
 
         return func
 
     return decorator
 
 
-def inject_session(ctx: click.Context, proxy_protocol: Optional[str] = None,
-            proxy_host: Optional[str] = None,
-            proxy_port: Optional[str] = None,
-            key: Optional[str] = None,
-            stage: Optional[Stage] = None,
-            invoked_command: str = "") -> Any:
+def inject_session(
+    ctx: click.Context,
+    proxy_protocol: Optional[str] = None,
+    proxy_host: Optional[str] = None,
+    proxy_port: Optional[str] = None,
+    key: Optional[str] = None,
+    stage: Optional[Stage] = None,
+    invoked_command: str = "",
+) -> Any:
 
     # Skip injection for specific commands that do not require authentication
     if invoked_command in ["configure"]:
@@ -194,11 +237,13 @@ def inject_session(ctx: click.Context, proxy_protocol: Optional[str] = None,
         host_stage = get_host_config(key_name="stage")
         stage = host_stage if host_stage else Stage.development
 
-    proxy_config: Optional[Dict[str, str]] = get_proxy_dict(proxy_protocol,
-                                                            proxy_host, proxy_port)
+    proxy_config: Optional[Dict[str, str]] = get_proxy_dict(
+        proxy_protocol, proxy_host, proxy_port
+    )
 
-    client_session, openid_config = build_client_session(api_key=key,
-                                                            proxies=proxy_config)
+    client_session, openid_config = build_client_session(
+        api_key=key, proxies=proxy_config
+    )
     keys = get_keys(client_session, openid_config)
 
     auth = Auth(
@@ -207,10 +252,10 @@ def inject_session(ctx: click.Context, proxy_protocol: Optional[str] = None,
         org=org,
         client_id=CLIENT_ID,
         client=client_session,
-        code_verifier=generate_token(48)
+        code_verifier=generate_token(48),
     )
 
-    if not ctx.obj:        
+    if not ctx.obj:
         ctx.obj = SafetyCLI()
 
     ctx.obj.auth = auth
@@ -229,5 +274,5 @@ def inject_session(ctx: click.Context, proxy_protocol: Optional[str] = None,
 
     @ctx.call_on_close
     def clean_up_on_close():
-        LOG.debug('Closing requests session.')
+        LOG.debug("Closing requests session.")
         ctx.obj.auth.client.close()

@@ -59,7 +59,10 @@ class CypherLexer(RegexLexer):
         ],
         "clauses": [
             # based on https://neo4j.com/docs/cypher-refcard/3.3/
-            (r"(create)(\s+)(index|unique)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"(create)(\s+)(index|unique)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             (
                 r"(drop)(\s+)(contraint|index)(\s+)(on)\b",
                 bygroups(Keyword, Whitespace, Keyword, Whitespace, Keyword),
@@ -69,13 +72,22 @@ class CypherLexer(RegexLexer):
                 r"(is)(\s+)(node)(\s+)(key)\b",
                 bygroups(Keyword, Whitespace, Keyword, Whitespace, Keyword),
             ),
-            (r"(is)(\s+)(null|unique)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"(is)(\s+)(null|unique)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             (
                 r"(load)(\s+)(csv)(\s+)(from)\b",
                 bygroups(Keyword, Whitespace, Keyword, Whitespace, Keyword),
             ),
-            (r"(on)(\s+)(match|create)\b", bygroups(Keyword, Whitespace, Keyword)),
-            (r"(optional)(\s+)(match)\b", bygroups(Keyword, Whitespace, Keyword)),
+            (
+                r"(on)(\s+)(match|create)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
+            (
+                r"(optional)(\s+)(match)\b",
+                bygroups(Keyword, Whitespace, Keyword),
+            ),
             (r"(order)(\s+)(by)\b", bygroups(Keyword, Whitespace, Keyword)),
             (r"(starts)(\s+)(with)\b", bygroups(Keyword, Whitespace, Keyword)),
             (r"(union)(\s+)(all)\b", bygroups(Keyword, Whitespace, Keyword)),

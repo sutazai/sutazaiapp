@@ -1,5 +1,6 @@
 """
-FounderProtectionSystem - Implements security protocols to authorize new skill acquisition.
+FounderProtectionSystem - Implements security protocols to authorize new skill
+acquisition.
 """
 
 
@@ -9,7 +10,8 @@ class FounderProtectionSystem:
         Determine if learning a particular skill is authorized.
 
         Args:
-            skill (dict): A dictionary expected to contain a 'name' and an 'impact' key.
+            skill (dict): A dictionary expected to contain a 'name' and an
+                'impact' key.
 
         Returns:
             bool: True if skill acquisition is authorized; otherwise, False.

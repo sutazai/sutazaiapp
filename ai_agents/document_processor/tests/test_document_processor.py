@@ -27,7 +27,9 @@ class TestDocumentProcessorAgent:
         import fitz
 
         # Create a temporary PDF
-        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_pdf:
+        with tempfile.NamedTemporaryFile(
+            suffix=".pdf", delete=False
+        ) as temp_pdf:
             doc = fitz.open()
             page = doc.new_page()
             page.insert_text((50, 50), "SutazAI Document Processing Test")
@@ -50,7 +52,9 @@ class TestDocumentProcessorAgent:
         import cv2
 
         # Create a temporary image
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_img:
+        with tempfile.NamedTemporaryFile(
+            suffix=".png", delete=False
+        ) as temp_img:
             image = np.zeros((200, 200), dtype=np.uint8)
             cv2.putText(
                 image,
@@ -74,7 +78,11 @@ class TestDocumentProcessorAgent:
         """
         agent = DocumentProcessorAgent()
 
-        task = {"type": "extract_text", "document": sample_pdf_path, "params": {}}
+        task = {
+            "type": "extract_text",
+            "document": sample_pdf_path,
+            "params": {},
+        }
 
         result = agent.execute(task)
 
@@ -106,7 +114,11 @@ class TestDocumentProcessorAgent:
         """
         agent = DocumentProcessorAgent()
 
-        task = {"type": "document_analysis", "document": sample_pdf_path, "params": {}}
+        task = {
+            "type": "document_analysis",
+            "document": sample_pdf_path,
+            "params": {},
+        }
 
         result = agent.execute(task)
 
@@ -137,7 +149,11 @@ class TestDocumentProcessorAgent:
         """
         agent = DocumentProcessorAgent()
 
-        task = {"type": "unsupported_task", "document": sample_pdf_path, "params": {}}
+        task = {
+            "type": "unsupported_task",
+            "document": sample_pdf_path,
+            "params": {},
+        }
 
         with pytest.raises(Exception) as excinfo:
             agent.execute(task)
@@ -161,7 +177,9 @@ class TestDocumentProcessorAgent:
         """
         Test document metadata extraction utility
         """
-        metadata_result = DocumentUtils.extract_document_metadata(sample_pdf_path)
+        metadata_result = DocumentUtils.extract_document_metadata(
+            sample_pdf_path
+        )
 
         assert metadata_result["status"] == "success"
         assert "metadata" in metadata_result
@@ -184,7 +202,8 @@ def pytest_configure(config):
     Configure pytest for comprehensive reporting
     """
     config.addinivalue_line(
-        "markers", "document_processor: mark test as a document processor agent test"
+        "markers",
+        "document_processor: mark test as a document processor agent test",
     )
 
 

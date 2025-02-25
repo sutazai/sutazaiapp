@@ -1,2 +1,7 @@
-    class ChatGPTIntegration:    def generate(self, text):        return {            'creative_response': self._creative_writing(text),            'conversational_flow': self._dialog_management(text),            'context_handling': self._maintain_context(text)        }
-    
+class ChatGPTIntegration:
+    def generate(self, text):
+        return {
+            "creative_response": self._creative_writing(text),
+            "conversational_flow": self._dialog_management(text),
+            "context_handling": self._maintain_context(text),
+        }

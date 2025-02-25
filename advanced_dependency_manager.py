@@ -76,18 +76,19 @@ class SutazAIDependencyManager:
                 check=True,
             )
 
-            # Activate virtual environment and upgrade core packages
-            activate_script = os.path.join(venv_path, "bin", "activate")
-            upgrade_cmd = f"""
-            source {activate_script} && 
-            pip install --upgrade pip setuptools wheel && 
-            pip install --upgrade \
-                cython numpy numba psutil py-spy memory_profiler \
-                pylint black isort flake8 mypy bandit safety \
-                pipdeptree
-            """
-
-            subprocess.run(upgrade_cmd, shell=True, executable="/bin/bash", check=True)
+            # Get pip path
+            pip_path = os.path.join(venv_path, "bin", "pip")
+            
+            # Upgrade core packages
+            subprocess.run([pip_path, "install", "--upgrade", "pip", "setuptools", "wheel"], check=True)
+            
+            # Install development tools
+            dev_packages = [
+                "cython", "numpy", "numba", "psutil", "py-spy", "memory_profiler",
+                "pylint", "black", "isort", "flake8", "mypy", "bandit", "safety",
+                "pipdeptree"
+            ]
+            subprocess.run([pip_path, "install", "--upgrade"] + dev_packages, check=True)
 
             self.dependency_report["virtual_environments"][env_name] = {
                 "path": venv_path,
@@ -108,7 +109,9 @@ class SutazAIDependencyManager:
         try:
             # Get installed packages
             pip_list = subprocess.run(
-                ["pip", "list", "--format=json"], capture_output=True, text=True
+                ["pip", "list", "--format=json"],
+                capture_output=True,
+                text=True,
             )
             installed_packages = json.loads(pip_list.stdout)
 
@@ -155,15 +158,14 @@ class SutazAIDependencyManager:
         logger.info("📦 Generating Requirements File...")
 
         if not output_path:
-            output_path = os.path.join(
-                self.project_root, "requirements_comprehensive.txt"
-            )
+            output_path = os.path.join(self.project_root, "requirements_comprehensive.txt")
 
         try:
             # Generate requirements with specific versions
-            subprocess.run(["pip", "freeze", ">", output_path], shell=True, check=True)
+            with open(output_path, 'w') as f:
+                subprocess.run(["pip", "freeze"], check=True, stdout=f)
 
-            # Add some recommended configurations
+            # Add recommended configurations
             with open(output_path, "a") as f:
                 f.write("\n# Recommended Configurations\n")
                 f.write("--upgrade\n")
@@ -229,6 +231,26 @@ class SutazAIDependencyManager:
 
         except Exception as e:
             logger.error(f"❌ Dependency Management Process Failed: {e}")
+
+    def upgrade_dependencies(self):
+        """Upgrade all dependencies to their latest versions."""
+        try:
+            upgrade_cmd = ["pip", "install", "--upgrade", "-r", "requirements.txt"]
+            subprocess.run(upgrade_cmd, check=True)
+
+            logger.info("✅ All dependencies upgraded successfully")
+        except Exception as e:
+            logger.error(f"❌ Dependency upgrade failed: {e}")
+
+    def save_requirements(self, output_path="requirements.txt"):
+        """Save current dependencies to requirements file."""
+        try:
+            with open(output_path, 'w') as f:
+                subprocess.run(["pip", "freeze"], check=True, stdout=f)
+
+            logger.info(f"✅ Dependencies saved to {output_path}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save dependencies: {e}")
 
 
 def main():

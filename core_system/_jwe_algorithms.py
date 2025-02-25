@@ -1,6 +1,8 @@
 import struct
 
-from authlib.jose.errors import InvalidEncryptionAlgorithmForECDH1PUWithKeyWrappingError
+from authlib.jose.errors import (
+    InvalidEncryptionAlgorithmForECDH1PUWithKeyWrappingError,
+)
 from authlib.jose.rfc7516 import JWEAlgorithmWithTagAwareKeyAgreement
 from authlib.jose.rfc7518 import (
     AESAlgorithm,
@@ -90,7 +92,9 @@ class ECDH1PUAlgorithm(JWEAlgorithmWithTagAwareKeyAgreement):
         tag,
     ):
         shared_key_s = sender_static_key.exchange_shared_key(recipient_pubkey)
-        shared_key_e = sender_ephemeral_key.exchange_shared_key(recipient_pubkey)
+        shared_key_e = sender_ephemeral_key.exchange_shared_key(
+            recipient_pubkey
+        )
         shared_key = self.compute_shared_key(shared_key_e, shared_key_s)
 
         fixed_info = self.compute_fixed_info(headers, bit_size, tag)
@@ -107,7 +111,9 @@ class ECDH1PUAlgorithm(JWEAlgorithmWithTagAwareKeyAgreement):
         tag,
     ):
         shared_key_s = recipient_key.exchange_shared_key(sender_static_pubkey)
-        shared_key_e = recipient_key.exchange_shared_key(sender_ephemeral_pubkey)
+        shared_key_e = recipient_key.exchange_shared_key(
+            sender_ephemeral_pubkey
+        )
         shared_key = self.compute_shared_key(shared_key_e, shared_key_s)
 
         fixed_info = self.compute_fixed_info(headers, bit_size, tag)
@@ -123,7 +129,9 @@ class ECDH1PUAlgorithm(JWEAlgorithmWithTagAwareKeyAgreement):
         pub_epk["kty"] = epk.kty
         return {"epk": pub_epk}
 
-    def generate_keys_and_prepare_headers(self, enc_alg, key, sender_key, preset=None):
+    def generate_keys_and_prepare_headers(
+        self, enc_alg, key, sender_key, preset=None
+    ):
         if not isinstance(enc_alg, CBCHS2EncAlgorithm):
             raise InvalidEncryptionAlgorithmForECDH1PUWithKeyWrappingError()
 
@@ -162,7 +170,9 @@ class ECDH1PUAlgorithm(JWEAlgorithmWithTagAwareKeyAgreement):
     def agree_upon_key_and_wrap_cek(
         self, enc_alg, headers, key, sender_key, epk, cek, tag
     ):
-        dk = self._agree_upon_key_at_sender(enc_alg, headers, key, sender_key, epk, tag)
+        dk = self._agree_upon_key_at_sender(
+            enc_alg, headers, key, sender_key, epk, tag
+        )
         return self._wrap_cek(cek, dk)
 
     def wrap(self, enc_alg, headers, key, sender_key, preset=None):
@@ -177,7 +187,9 @@ class ECDH1PUAlgorithm(JWEAlgorithmWithTagAwareKeyAgreement):
             epk = self._generate_ephemeral_key(key)
             h = self._prepare_headers(epk)
 
-        dk = self._agree_upon_key_at_sender(enc_alg, headers, key, sender_key, epk)
+        dk = self._agree_upon_key_at_sender(
+            enc_alg, headers, key, sender_key, epk
+        )
 
         return {"ek": b"", "cek": dk, "header": h}
 

@@ -11,6 +11,7 @@ class BaseModel(PydanticBaseModel):
     """
     Base model that extends Pydantic's BaseModel with additional configurations.
     """
+
     class Config:
         arbitrary_types_allowed: bool = True
         max_anystr_length: int = 50
@@ -26,6 +27,7 @@ class ConstrainedDict(Generic[KeyType, ValueType]):
     """
     A constrained dictionary that validates its length based on a specified limit.
     """
+
     def __init__(self, v: Dict[KeyType, ValueType]) -> None:
         """
         Initialize the ConstrainedDict.
@@ -40,7 +42,9 @@ class ConstrainedDict(Generic[KeyType, ValueType]):
         yield cls.dict_length_validator
 
     @classmethod
-    def dict_length_validator(cls, v: Dict[KeyType, ValueType]) -> Dict[KeyType, ValueType]:
+    def dict_length_validator(
+        cls, v: Dict[KeyType, ValueType]
+    ) -> Dict[KeyType, ValueType]:
         """
         Validate the length of the dictionary.
 

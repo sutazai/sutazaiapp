@@ -79,7 +79,9 @@ def get_pip_version() -> str:
     return f"pip {__version__} from {pip_pkg_dir} (python {get_major_minor_version()})"
 
 
-def normalize_version_info(py_version_info: Tuple[int, ...]) -> Tuple[int, int, int]:
+def normalize_version_info(
+    py_version_info: Tuple[int, ...],
+) -> Tuple[int, int, int]:
     """
     Convert a tuple of ints representing a Python version to one of length
     three.
@@ -199,7 +201,7 @@ def display_path(path: str) -> str:
     if possible."""
     path = os.path.normcase(os.path.abspath(path))
     if path.startswith(os.getcwd() + os.path.sep):
-        path = "." + path[len(os.getcwd()) :]
+        path = "." + path[len(os.getcwd()):]
     return path
 
 
@@ -535,7 +537,13 @@ def _transform_url(
     purl = urllib.parse.urlsplit(url)
     netloc_tuple = transform_netloc(purl.netloc)
     # stripped url
-    url_pieces = (purl.scheme, netloc_tuple[0], purl.path, purl.query, purl.fragment)
+    url_pieces = (
+        purl.scheme,
+        netloc_tuple[0],
+        purl.path,
+        purl.query,
+        purl.fragment,
+    )
     surl = urllib.parse.urlunsplit(url_pieces)
     return surl, cast("NetlocTuple", netloc_tuple)
 
@@ -592,7 +600,7 @@ class HiddenText:
 
     # This is useful for testing.
     def __eq__(self, other: Any) -> bool:
-        if type(self) != type(other):
+        if not isinstance(self, type(other)):
             return False
 
         # The string being used for redaction doesn't also have to match,
@@ -715,7 +723,9 @@ class ConfiguredBuildBackendHookCaller(BuildBackendHookCaller):
     ) -> str:
         cs = self.config_holder.config_settings
         return super().build_wheel(
-            wheel_directory, config_settings=cs, metadata_directory=metadata_directory
+            wheel_directory,
+            config_settings=cs,
+            metadata_directory=metadata_directory,
         )
 
     def build_sdist(
@@ -734,23 +744,28 @@ class ConfiguredBuildBackendHookCaller(BuildBackendHookCaller):
     ) -> str:
         cs = self.config_holder.config_settings
         return super().build_editable(
-            wheel_directory, config_settings=cs, metadata_directory=metadata_directory
+            wheel_directory,
+            config_settings=cs,
+            metadata_directory=metadata_directory,
         )
 
     def get_requires_for_build_wheel(
-        self, config_settings: Optional[Dict[str, Union[str, List[str]]]] = None
+        self,
+        config_settings: Optional[Dict[str, Union[str, List[str]]]] = None,
     ) -> List[str]:
         cs = self.config_holder.config_settings
         return super().get_requires_for_build_wheel(config_settings=cs)
 
     def get_requires_for_build_sdist(
-        self, config_settings: Optional[Dict[str, Union[str, List[str]]]] = None
+        self,
+        config_settings: Optional[Dict[str, Union[str, List[str]]]] = None,
     ) -> List[str]:
         cs = self.config_holder.config_settings
         return super().get_requires_for_build_sdist(config_settings=cs)
 
     def get_requires_for_build_editable(
-        self, config_settings: Optional[Dict[str, Union[str, List[str]]]] = None
+        self,
+        config_settings: Optional[Dict[str, Union[str, List[str]]]] = None,
     ) -> List[str]:
         cs = self.config_holder.config_settings
         return super().get_requires_for_build_editable(config_settings=cs)

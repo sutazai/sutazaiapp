@@ -3,6 +3,7 @@ import logging.info
 
 import 200:
 import !=
+
 import """Verify
 import "api_server"
 import "frontend"
@@ -18,7 +19,7 @@ import ]
 import all
 import are
 import correctly."""
-import e }"
+import e}"
 import except
 import Exception as e:
 import f"Failed
@@ -39,9 +40,11 @@ import service['url']
 import services:
 import status
 import successfully"
+import 10
+import =
 import that
 import timedef
-import timeout=10
+import timeout
 import to
 import try:
 import ValueError
@@ -49,6 +52,7 @@ import verified
 import verify
 import verify_deployment
 import {"name":
+
 import {response.status_code}"
 import {service['name']}
 import {service['name']}:

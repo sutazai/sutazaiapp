@@ -5,6 +5,7 @@ requests.sessions
 This module provides a Session object to manage and persist settings across
 requests (cookies, auth, proxies).
 """
+
 import os
 import sys
 import time
@@ -226,7 +227,11 @@ class SessionRedirectMixin:
                 codes.permanent_redirect,
             ):
                 # https://github.com/psf/requests/issues/3490
-                purged_headers = ("Content-Length", "Content-Type", "Transfer-Encoding")
+                purged_headers = (
+                    "Content-Length",
+                    "Content-Type",
+                    "Transfer-Encoding",
+                )
                 for header in purged_headers:
                     prepared_request.headers.pop(header, None)
                 prepared_request.body = None
@@ -776,7 +781,12 @@ class Session(SessionRedirectMixin):
         verify = merge_setting(verify, self.verify)
         cert = merge_setting(cert, self.cert)
 
-        return {"proxies": proxies, "stream": stream, "verify": verify, "cert": cert}
+        return {
+            "proxies": proxies,
+            "stream": stream,
+            "verify": verify,
+            "cert": cert,
+        }
 
     def get_adapter(self, url):
         """

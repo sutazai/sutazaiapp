@@ -106,7 +106,9 @@ class MetadataFile:
             assert all(name in _SUPPORTED_HASHES for name in self.hashes)
 
 
-def supported_hashes(hashes: Optional[Dict[str, str]]) -> Optional[Dict[str, str]]:
+def supported_hashes(
+    hashes: Optional[Dict[str, str]],
+) -> Optional[Dict[str, str]]:
     # Remove any unsupported hash types from the mapping. If this leaves no
     # supported hashes, return None
     if hashes is None:

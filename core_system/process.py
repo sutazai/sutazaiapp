@@ -46,7 +46,13 @@ if _impl == "cpp":
             extractOne,
         )
 elif _impl == "python":
-    from rapidfuzz.process_py import cdist, cpdist, extract, extract_iter, extractOne
+    from rapidfuzz.process_py import (
+        cdist,
+        cpdist,
+        extract,
+        extract_iter,
+        extractOne,
+    )
 else:
     imported = False
     if supports(AVX2):

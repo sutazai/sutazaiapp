@@ -1,15 +1,15 @@
 """
-    pygments.lexers.graphql
-    ~~~~~~~~~~~~~~~~~~~~~~~
+pygments.lexers.graphql
+~~~~~~~~~~~~~~~~~~~~~~~
 
-    Lexer for GraphQL, an open-source data query and manipulation
-    language for APIs.
+Lexer for GraphQL, an open-source data query and manipulation
+language for APIs.
 
-    More information:
-    https://graphql.org/
+More information:
+https://graphql.org/
 
-    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+:license: BSD, see LICENSE for details.
 """
 
 from pygments.lexer import RegexLexer, bygroups, default, include, words
@@ -64,11 +64,12 @@ class GraphQLLexer(RegexLexer):
     """
     Lexer for GraphQL syntax
     """
+
     name = "GraphQL"
     aliases = ["graphql"]
     filenames = ["*.graphql"]
     url = "https://graphql.org"
-    version_added = '2.16'
+    version_added = "2.16"
 
     tokens = {
         "ignored_tokens": [
@@ -136,7 +137,10 @@ class GraphQLLexer(RegexLexer):
         ],
         "selection_set": [
             include("ignored_tokens"),
-            (r"([a-zA-Z_]\w*)(\s*)(:)", bygroups(Name.Label, Whitespace, Punctuation)),
+            (
+                r"([a-zA-Z_]\w*)(\s*)(:)",
+                bygroups(Name.Label, Whitespace, Punctuation),
+            ),
             (r"[a-zA-Z_]\w*", Name),  # Field
             (
                 r"(\.\.\.)(\s+)(on)\b",

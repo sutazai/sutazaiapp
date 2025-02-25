@@ -1,14 +1,14 @@
 """
-    pygments.styles.dracula
-    ~~~~~~~~~~~~~~~~~~~~~~~
+pygments.styles.dracula
+~~~~~~~~~~~~~~~~~~~~~~~
 
-    Pygments version of `Dracula` from https://github.com/dracula/dracula-theme.
+Pygments version of `Dracula` from https://github.com/dracula/dracula-theme.
 
-    Based on the Dracula Theme for pygments by Chris Bracco.
-    See https://github.com/dracula/pygments/tree/fee9ed5613d1086bc01b9d0a5a0e9867a009f571
+Based on the Dracula Theme for pygments by Chris Bracco.
+See https://github.com/dracula/pygments/tree/fee9ed5613d1086bc01b9d0a5a0e9867a009f571
 
-    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+:license: BSD, see LICENSE for details.
 """
 
 from pygments.style import Style
@@ -28,7 +28,7 @@ from pygments.token import (
     Whitespace,
 )
 
-__all__ = ['DraculaStyle']
+__all__ = ["DraculaStyle"]
 
 background = "#282a36"
 foreground = "#f8f8f2"
@@ -44,8 +44,9 @@ yellow = "#f1fa8c"
 
 deletion = "#8b080b"
 
+
 class DraculaStyle(Style):
-    name = 'dracula'
+    name = "dracula"
 
     background_color = background
     highlight_color = selection
@@ -56,10 +57,8 @@ class DraculaStyle(Style):
 
     styles = {
         Whitespace: foreground,
-
         Comment: comment,
         Comment.Preproc: pink,
-
         Generic: foreground,
         Generic.Deleted: deletion,
         Generic.Emph: "underline",
@@ -68,16 +67,12 @@ class DraculaStyle(Style):
         Generic.Output: selection,
         Generic.EmphStrong: "underline",
         Generic.Subheading: "bold",
-
         Error: foreground,
-
         Keyword: pink,
         Keyword.Constant: pink,
         Keyword.Declaration: cyan + " italic",
         Keyword.Type: cyan,
-
         Literal: foreground,
-
         Name: foreground,
         Name.Attribute: green,
         Name.Builtin: cyan + " italic",
@@ -87,16 +82,10 @@ class DraculaStyle(Style):
         Name.Label: cyan + " italic",
         Name.Tag: pink,
         Name.Variable: cyan + " italic",
-
         Number: orange,
-
         Operator: pink,
-
         Other: foreground,
-
         Punctuation: foreground,
-
         String: purple,
-
         Text: foreground,
     }

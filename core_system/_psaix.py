@@ -29,7 +29,12 @@ from ._common import (
     memoize_when_activated,
     usage_percent,
 )
-from ._compat import PY3, FileNotFoundError, PermissionError, ProcessLookupError
+from ._compat import (
+    PY3,
+    FileNotFoundError,
+    PermissionError,
+    ProcessLookupError,
+)
 
 __extra__all__ = ["PROCFS_PATH"]
 
@@ -87,13 +92,13 @@ proc_info_map = dict(
 
 
 # psutil.Process.memory_info()
-pmem = namedtuple('pmem', ['rss', 'vms'])
+pmem = namedtuple("pmem", ["rss", "vms"])
 # psutil.Process.memory_full_info()
 pfullmem = pmem
 # psutil.Process.cpu_times()
-scputimes = namedtuple('scputimes', ['user', 'system', 'idle', 'iowait'])
+scputimes = namedtuple("scputimes", ["user", "system", "idle", "iowait"])
 # psutil.virtual_memory()
-svmem = namedtuple('svmem', ['total', 'available', 'percent', 'used', 'free'])
+svmem = namedtuple("svmem", ["total", "available", "percent", "used", "free"])
 
 
 # =====================================================================
@@ -180,8 +185,8 @@ def disk_partitions(all=False):
     partitions = cext.disk_partitions()
     for partition in partitions:
         device, mountpoint, fstype, opts = partition
-        if device == 'none':
-            device = ''
+        if device == "none":
+            device = ""
         if not all:
             # Differently from, say, Linux, we don't have a list of
             # common fs types so the best we can do, AFAIK, is to
@@ -212,7 +217,7 @@ def net_connections(kind, _pid=-1):
     if kind not in cmap:
         raise ValueError(
             "invalid %r kind argument; choose between %s"
-            % (kind, ', '.join([repr(x) for x in cmap]))
+            % (kind, ", ".join([repr(x) for x in cmap]))
         )
     families, types = _common.conn_tmap[kind]
     rawlist = cext.net_connections(_pid)
@@ -269,8 +274,8 @@ def net_if_stats():
                 speed = int(re_result.group(1))
                 duplex = re_result.group(2)
 
-        output_flags = ','.join(flags)
-        isup = 'running' in flags
+        output_flags = ",".join(flags)
+        isup = "running" in flags
         duplex = duplex_map.get(duplex, NIC_DUPLEX_UNKNOWN)
         ret[name] = _common.snicstats(isup, duplex, speed, mtu, output_flags)
     return ret
@@ -290,7 +295,7 @@ def users():
     """Return currently connected users as a list of namedtuples."""
     retlist = []
     rawlist = cext.users()
-    localhost = (':0.0', ':0')
+    localhost = (":0.0", ":0")
     for item in rawlist:
         user, tty, hostname, tstamp, user_process, pid = item
         # note: the underlying C function includes entries about
@@ -299,7 +304,7 @@ def users():
         if not user_process:
             continue
         if hostname in localhost:
-            hostname = 'localhost'
+            hostname = "localhost"
         nt = _common.suser(user, tty, hostname, tstamp, pid)
         retlist.append(nt)
     return retlist
@@ -385,7 +390,7 @@ class Process:
         # and guessing is more complex than what's in the wrapping class
         cmdline = self.cmdline()
         if not cmdline:
-            return ''
+            return ""
         exe = cmdline[0]
         if os.path.sep in exe:
             # relative or absolute path
@@ -407,7 +412,7 @@ class Process:
                 possible_exe, os.X_OK
             ):
                 return possible_exe
-        return ''
+        return ""
 
     @wrap_exceptions
     def cmdline(self):
@@ -419,11 +424,11 @@ class Process:
 
     @wrap_exceptions
     def create_time(self):
-        return self._proc_basic_info()[proc_info_map['create_time']]
+        return self._proc_basic_info()[proc_info_map["create_time"]]
 
     @wrap_exceptions
     def num_threads(self):
-        return self._proc_basic_info()[proc_info_map['num_threads']]
+        return self._proc_basic_info()[proc_info_map["num_threads"]]
 
     if HAS_THREADS:
 
@@ -441,11 +446,11 @@ class Process:
             # is no longer there.
             if not retlist:
                 # will raise NSP if process is gone
-                os.stat('%s/%s' % (self._procfs_path, self.pid))
+                os.stat("%s/%s" % (self._procfs_path, self.pid))
             return retlist
 
     @wrap_exceptions
-    def net_connections(self, kind='inet'):
+    def net_connections(self, kind="inet"):
         ret = net_connections(kind, _pid=self.pid)
         # The underlying C implementation retrieves all OS connections
         # and filters them by PID.  At this point we can't tell whether
@@ -454,7 +459,7 @@ class Process:
         # is no longer there.
         if not ret:
             # will raise NSP if process is gone
-            os.stat('%s/%s' % (self._procfs_path, self.pid))
+            os.stat("%s/%s" % (self._procfs_path, self.pid))
         return ret
 
     @wrap_exceptions
@@ -467,7 +472,7 @@ class Process:
 
     @wrap_exceptions
     def ppid(self):
-        self._ppid = self._proc_basic_info()[proc_info_map['ppid']]
+        self._ppid = self._proc_basic_info()[proc_info_map["ppid"]]
         return self._ppid
 
     @wrap_exceptions
@@ -487,7 +492,7 @@ class Process:
 
     @wrap_exceptions
     def terminal(self):
-        ttydev = self._proc_basic_info()[proc_info_map['ttynr']]
+        ttydev = self._proc_basic_info()[proc_info_map["ttynr"]]
         # convert from 64-bit dev_t to 32-bit dev_t and then map the device
         ttydev = ((ttydev & 0x0000FFFF00000000) >> 16) | (ttydev & 0xFFFF)
         # try to match rdev of /dev/pts/* files ttydev
@@ -501,7 +506,7 @@ class Process:
         procfs_path = self._procfs_path
         try:
             result = os.readlink("%s/%s/cwd" % (procfs_path, self.pid))
-            return result.rstrip('/')
+            return result.rstrip("/")
         except FileNotFoundError:
             os.stat("%s/%s" % (procfs_path, self.pid))  # raise NSP or AD
             return ""
@@ -509,17 +514,17 @@ class Process:
     @wrap_exceptions
     def memory_info(self):
         ret = self._proc_basic_info()
-        rss = ret[proc_info_map['rss']] * 1024
-        vms = ret[proc_info_map['vms']] * 1024
+        rss = ret[proc_info_map["rss"]] * 1024
+        vms = ret[proc_info_map["vms"]] * 1024
         return pmem(rss, vms)
 
     memory_full_info = memory_info
 
     @wrap_exceptions
     def status(self):
-        code = self._proc_basic_info()[proc_info_map['status']]
+        code = self._proc_basic_info()[proc_info_map["status"]]
         # XXX is '?' legit? (we're not supposed to return it anyway)
-        return PROC_STATUSES.get(code, '?')
+        return PROC_STATUSES.get(code, "?")
 
     def open_files(self):
         # TODO rewrite without using procfiles (stat /proc/pid/fd/* and then

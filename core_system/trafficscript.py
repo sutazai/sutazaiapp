@@ -9,7 +9,15 @@ Lexer for RiverBed's TrafficScript (RTS) language.
 """
 
 from pygments.lexer import RegexLexer
-from pygments.token import Comment, Keyword, Name, Number, Operator, String, Text
+from pygments.token import (
+    Comment,
+    Keyword,
+    Name,
+    Number,
+    Operator,
+    String,
+    Text,
+)
 
 __all__ = ["RtsLexer"]
 
@@ -32,7 +40,10 @@ class RtsLexer(RegexLexer):
             (r"(0x[0-9a-fA-F]+|\d+)", Number),
             (r"\d+\.\d+", Number.Float),
             (r"\$[a-zA-Z](\w|_)*", Name.Variable),
-            (r"(if|else|for(each)?|in|while|do|break|sub|return|import)", Keyword),
+            (
+                r"(if|else|for(each)?|in|while|do|break|sub|return|import)",
+                Keyword,
+            ),
             (r"[a-zA-Z][\w.]*", Name.Function),
             (r"[-+*/%=,;(){}<>^.!~|&\[\]\?\:]", Operator),
             (

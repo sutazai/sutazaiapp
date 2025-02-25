@@ -234,7 +234,11 @@ class _StreamingFetcher:
         }
 
         body = request.body
-        fetch_data = {"headers": headers, "body": to_js(body), "method": request.method}
+        fetch_data = {
+            "headers": headers,
+            "body": to_js(body),
+            "method": request.method,
+        }
         # start the request off in the worker
         timeout = int(1000 * request.timeout) if request.timeout > 0 else None
         js_shared_buffer = js.SharedArrayBuffer.new(1048576)
@@ -291,7 +295,9 @@ class _StreamingFetcher:
             js_decoder = js.TextDecoder.new()
             json_str = js_decoder.decode(js_byte_buffer.slice(0, string_len))
             raise _StreamingError(
-                f"Exception thrown in fetch: {json_str}", request=request, response=None
+                f"Exception thrown in fetch: {json_str}",
+                request=request,
+                response=None,
             )
         else:
             raise _StreamingError(
@@ -400,7 +406,7 @@ class _JSPIReadStream(io.RawIOBase):
             len(byte_obj), len(self.current_buffer) - self.current_buffer_pos
         )
         byte_obj[0:ret_length] = self.current_buffer[
-            self.current_buffer_pos : self.current_buffer_pos + ret_length
+            self.current_buffer_pos: self.current_buffer_pos + ret_length
         ]
         self.current_buffer_pos += ret_length
         if self.current_buffer_pos == len(self.current_buffer):
@@ -448,7 +454,9 @@ NODE_JSPI_ERROR = (
 )
 
 
-def send_streaming_request(request: EmscriptenRequest) -> EmscriptenResponse | None:
+def send_streaming_request(
+    request: EmscriptenRequest,
+) -> EmscriptenResponse | None:
     if has_jspi():
         return send_jspi_request(request, True)
     elif is_in_node():
@@ -489,7 +497,8 @@ def _show_streaming_warning() -> None:
         if is_in_browser_main_thread():
             message += "  Python is running in main browser thread\n"
         if not is_worker_available():
-            message += " Worker or Blob classes are not available in this environment."  # Defensive: this is always False in browsers that we test in
+            # Defensive: this is always False in browsers that we test in
+            message += " Worker or Blob classes are not available in this environment."
         if streaming_ready() is False:
             message += """ Streaming fetch worker isn't ready. If you want to be sure that streaming fetch
 is working, you need to call: 'await urllib3.contrib.emscripten.fetch.wait_for_streaming_ready()`"""
@@ -535,7 +544,10 @@ def send_request(request: EmscriptenRequest) -> EmscriptenResponse:
         else:
             body = js_xhr.response.encode("ISO-8859-15")
         return EmscriptenResponse(
-            status_code=js_xhr.status, headers=headers, body=body, request=request
+            status_code=js_xhr.status,
+            headers=headers,
+            body=body,
+            request=request,
         )
     except JsException as err:
         if err.name == "TimeoutError":
@@ -654,7 +666,8 @@ def _run_sync_with_timeout(
     timer_id = None
     if timeout > 0:
         timer_id = js.setTimeout(
-            js_abort_controller.abort.bind(js_abort_controller), int(timeout * 1000)
+            js_abort_controller.abort.bind(js_abort_controller),
+            int(timeout * 1000),
         )
     try:
         from pyodide.ffi import run_sync

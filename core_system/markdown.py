@@ -385,7 +385,11 @@ class ListItem(TextElement):
             yield new_line
 
     def render_number(
-        self, console: Console, options: ConsoleOptions, number: int, last_number: int
+        self,
+        console: Console,
+        options: ConsoleOptions,
+        number: int,
+        last_number: int,
     ) -> RenderResult:
         number_width = len(str(last_number)) + 2
         render_options = options.update(width=options.max_width - number_width)
@@ -483,7 +487,8 @@ class MarkdownContext:
             highlight_text = self._syntax.highlight(text)
             highlight_text.rstrip()
             self.stack.top.on_text(
-                self, Text.assemble(highlight_text, style=self.style_stack.current)
+                self,
+                Text.assemble(highlight_text, style=self.style_stack.current),
             )
         else:
             self.stack.top.on_text(self, text)

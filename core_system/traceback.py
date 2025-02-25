@@ -21,15 +21,30 @@ from typing import (
 )
 
 from pip._vendor.pygments.lexers import guess_lexer_for_filename
-from pip._vendor.pygments.token import Comment, Keyword, Name, Number, Operator, String
+from pip._vendor.pygments.token import (
+    Comment,
+    Keyword,
+    Name,
+    Number,
+    Operator,
+    String,
+)
 from pip._vendor.pygments.token import Text as TextToken
-from pip._vendor.pygments.token import Token
+from pip._vendor.pygments.token import (
+    Token,
+)
 from pip._vendor.pygments.util import ClassNotFound
 
 from . import pretty
 from ._loop import loop_last
 from .columns import Columns
-from .console import Console, ConsoleOptions, ConsoleRenderable, RenderResult, group
+from .console import (
+    Console,
+    ConsoleOptions,
+    ConsoleRenderable,
+    RenderResult,
+    group,
+)
 from .constrain import Constrain
 from .highlighter import RegexHighlighter, ReprHighlighter
 from .panel import Panel
@@ -421,7 +436,7 @@ class Traceback:
             append = stack.frames.append
 
             def get_locals(
-                iter_locals: Iterable[Tuple[str, object]]
+                iter_locals: Iterable[Tuple[str, object]],
             ) -> Iterable[Tuple[str, object]]:
                 """Extract locals from an iterator of key pairs."""
                 if not (locals_hide_dunder or locals_hide_sunder):
@@ -446,16 +461,18 @@ class Traceback:
                     filename=filename or "?",
                     lineno=line_no,
                     name=frame_summary.f_code.co_name,
-                    locals={
-                        key: pretty.traverse(
-                            value,
-                            max_length=locals_max_length,
-                            max_string=locals_max_string,
-                        )
-                        for key, value in get_locals(frame_summary.f_locals.items())
-                    }
-                    if show_locals
-                    else None,
+                    locals=(
+                        {
+                            key: pretty.traverse(
+                                value,
+                                max_length=locals_max_length,
+                                max_string=locals_max_string,
+                            )
+                            for key, value in get_locals(frame_summary.f_locals.items())
+                        }
+                        if show_locals
+                        else None
+                    ),
                 )
                 append(frame)
                 if frame_summary.f_locals.get("_rich_traceback_guard", False):
@@ -726,7 +743,9 @@ if __name__ == "__main__":  # pragma: no cover
     console = Console()
     import sys
 
-    def bar(a: Any) -> None:  # 这是对亚洲语言支持的测试。面对模棱两可的想法，拒绝猜测的诱惑
+    def bar(
+        a: Any,
+    ) -> None:  # 这是对亚洲语言支持的测试。面对模棱两可的想法，拒绝猜测的诱惑
         one = 1
         print(one / a)
 
@@ -748,9 +767,9 @@ if __name__ == "__main__":  # pragma: no cover
         try:
             try:
                 foo(0)
-            except:
+            except BaseException:
                 slfkjsldkfj  # type: ignore[name-defined]
-        except:
+        except BaseException:
             console.print_exception(show_locals=True)
 
     error()

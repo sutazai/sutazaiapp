@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import logging
-import os
 import threading
 import time
 
@@ -34,7 +33,9 @@ class ClipboardGuard:
             try:
                 current_content = pyperclip.paste()
 
-                if current_content and self.is_suspicious_content(current_content):
+                if current_content and self.is_suspicious_content(
+                    current_content
+                ):
                     self.logger.warning(
                         f"Blocked suspicious clipboard content: {current_content}"
                     )

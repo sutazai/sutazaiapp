@@ -8,7 +8,14 @@ Lexers for the Julia language.
 :license: BSD, see LICENSE for details.
 """
 
-from pygments.lexer import Lexer, RegexLexer, bygroups, do_insertions, include, words
+from pygments.lexer import (
+    Lexer,
+    RegexLexer,
+    bygroups,
+    do_insertions,
+    include,
+    words,
+)
 from pygments.lexers._julia_builtins import (
     BUILTIN_LIST,
     DOTTED_OPERATORS_LIST,
@@ -79,7 +86,13 @@ class JuliaLexer(RegexLexer):
                 + r")(\s*)([<>]:)(\s*)("
                 + allowed_variable
                 + r")\b(?![(\[])",
-                bygroups(Keyword.Type, Whitespace, Operator, Whitespace, Keyword.Type),
+                bygroups(
+                    Keyword.Type,
+                    Whitespace,
+                    Operator,
+                    Whitespace,
+                    Keyword.Type,
+                ),
             ),
             # - <: B or >: B
             (
@@ -96,13 +109,15 @@ class JuliaLexer(RegexLexer):
             # since those cases are invalid Julia code.
             (
                 words(
-                    [*OPERATORS_LIST, *DOTTED_OPERATORS_LIST], suffix=operator_suffixes
+                    [*OPERATORS_LIST, *DOTTED_OPERATORS_LIST],
+                    suffix=operator_suffixes,
                 ),
                 Operator,
             ),
             (
                 words(
-                    ["." + o for o in DOTTED_OPERATORS_LIST], suffix=operator_suffixes
+                    ["." + o for o in DOTTED_OPERATORS_LIST],
+                    suffix=operator_suffixes,
                 ),
                 Operator,
             ),
@@ -278,7 +293,11 @@ class JuliaLexer(RegexLexer):
             (r'[^\\"]+', String.Regex),
         ],
         "tqregex": [
-            (r'(""")([imsxa]*)?', bygroups(String.Regex, String.Affix), "#pop"),
+            (
+                r'(""")([imsxa]*)?',
+                bygroups(String.Regex, String.Affix),
+                "#pop",
+            ),
             (r'[^"]+', String.Regex),
         ],
         "command": [

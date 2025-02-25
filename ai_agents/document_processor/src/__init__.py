@@ -23,7 +23,9 @@ class DocumentProcessorAgent(BaseAgent):
     """
 
     def __init__(
-        self, temp_dir: str = "/opt/sutazai_project/SutazAI/doc_data/temp", **kwargs
+        self,
+        temp_dir: str = "/opt/sutazai_project/SutazAI/doc_data/temp",
+        **kwargs,
     ):
         """
         Initialize Document Processor Agent
@@ -39,7 +41,7 @@ class DocumentProcessorAgent(BaseAgent):
         os.makedirs(temp_dir, exist_ok=True)
 
         # Logging configuration
-        logger.info(f"📄 Document Processor Agent initialized")
+        logger.info("📄 Document Processor Agent initialized")
 
     def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -142,7 +144,9 @@ class DocumentProcessorAgent(BaseAgent):
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
             # OCR processing
-            ocr_result = pytesseract.image_to_string(gray, lang="+".join(languages))
+            ocr_result = pytesseract.image_to_string(
+                gray, lang="+".join(languages)
+            )
 
             return {
                 "status": "success",
@@ -184,7 +188,10 @@ class DocumentProcessorAgent(BaseAgent):
                 blocks = page.get_text("dict")["blocks"]
                 analysis_results["text_blocks"].extend(
                     [
-                        {"text": block.get("lines", []), "bbox": block.get("bbox")}
+                        {
+                            "text": block.get("lines", []),
+                            "bbox": block.get("bbox"),
+                        }
                         for block in blocks
                         if block["type"] == 0
                     ]

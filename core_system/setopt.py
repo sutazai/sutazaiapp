@@ -53,12 +53,18 @@ def edit_config(filename, settings, dry_run=False):
                     opts.remove_option(section, option)
                     if not opts.options(section):
                         log.info(
-                            "Deleting empty [%s] section from %s", section, filename
+                            "Deleting empty [%s] section from %s",
+                            section,
+                            filename,
                         )
                         opts.remove_section(section)
                 else:
                     log.debug(
-                        "Setting %s.%s to %r in %s", section, option, value, filename
+                        "Setting %s.%s to %r in %s",
+                        section,
+                        option,
+                        value,
+                        filename,
                     )
                     opts.set(section, option, value)
 
@@ -72,8 +78,16 @@ class option_base(Command):
     """Abstract base class for commands that mess with config files"""
 
     user_options = [
-        ("global-config", "g", "save options to the site-wide distutils.cfg file"),
-        ("user-config", "u", "save options to the current user's pydistutils.cfg file"),
+        (
+            "global-config",
+            "g",
+            "save options to the site-wide distutils.cfg file",
+        ),
+        (
+            "user-config",
+            "u",
+            "save options to the current user's pydistutils.cfg file",
+        ),
         ("filename=", "f", "configuration file to use (default=setup.cfg)"),
     ]
 

@@ -240,7 +240,7 @@ class VGenericEngine(object):
         else:
 
             def newfunc(*args):
-                args = args[:i] + (backend.newp(BType, args[i]),) + args[i + 1 :]
+                args = args[:i] + (backend.newp(BType, args[i]),) + args[i + 1:]
                 return oldfunc(*args)
 
         newfunc._cffi_base_type = base_tp

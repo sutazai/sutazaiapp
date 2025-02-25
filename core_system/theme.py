@@ -16,13 +16,15 @@ class Theme:
     styles: Dict[str, Style]
 
     def __init__(
-        self, styles: Optional[Mapping[str, StyleType]] = None, inherit: bool = True
+        self,
+        styles: Optional[Mapping[str, StyleType]] = None,
+        inherit: bool = True,
     ):
         self.styles = DEFAULT_STYLES.copy() if inherit else {}
         if styles is not None:
             self.styles.update(
                 {
-                    name: style if isinstance(style, Style) else Style.parse(style)
+                    name: (style if isinstance(style, Style) else Style.parse(style))
                     for name, style in styles.items()
                 }
             )
@@ -37,7 +39,10 @@ class Theme:
 
     @classmethod
     def from_file(
-        cls, config_file: IO[str], source: Optional[str] = None, inherit: bool = True
+        cls,
+        config_file: IO[str],
+        source: Optional[str] = None,
+        inherit: bool = True,
     ) -> "Theme":
         """Load a theme from a text mode file.
 

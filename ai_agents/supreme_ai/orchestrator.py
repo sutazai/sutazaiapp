@@ -77,9 +77,7 @@ class SupremeAIOrchestrator:
                             f"ai_agents.{agent_name}"
                         )
                         agent_class = getattr(
-                            module, 
-                            f"{agent_name.capitalize()}Agent", 
-                            None
+                            module, f"{agent_name.capitalize()}Agent", None
                         )
 
                         if agent_class:
@@ -88,12 +86,16 @@ class SupremeAIOrchestrator:
                             logger.info(f"✅ Loaded Agent: {agent_name}")
 
                     except Exception as e:
-                        logger.error(f"❌ Failed to load agent {agent_name}: {e}")
+                        logger.error(
+                            f"❌ Failed to load agent {agent_name}: {e}"
+                        )
 
         except Exception as e:
             logger.critical(f"Agent discovery failed: {e}")
 
-    def execute_collaborative_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_collaborative_task(
+        self, task: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Execute a collaborative task across multiple agents
 
@@ -120,12 +122,16 @@ class SupremeAIOrchestrator:
                     self._track_agent_performance(agent_name, agent_result)
 
                 except Exception as e:
-                    logger.error(f"Agent {agent_name} task execution failed: {e}")
+                    logger.error(
+                        f"Agent {agent_name} task execution failed: {e}"
+                    )
                     results[agent_name] = {"status": "failed", "error": str(e)}
 
         return results
 
-    def _track_agent_performance(self, agent_name: str, result: Dict[str, Any]):
+    def _track_agent_performance(
+        self, agent_name: str, result: Dict[str, Any]
+    ):
         """
         Track and analyze agent performance for potential self-improvement
 
@@ -160,9 +166,7 @@ class SupremeAIOrchestrator:
         )
 
         # Analyze performance history
-        performance_data = self.agent_performance_history.get(
-            agent_name, []
-        )
+        performance_data = self.agent_performance_history.get(agent_name, [])
 
         improvement_strategy = {
             "analyze_failures": self._analyze_failure_patterns(
@@ -175,8 +179,7 @@ class SupremeAIOrchestrator:
 
         # Log improvement strategy
         improvement_log_path = os.path.join(
-            self.log_dir, 
-            f"{agent_name}_improvement.json"
+            self.log_dir, f"{agent_name}_improvement.json"
         )
         with open(improvement_log_path, "w") as f:
             json.dump(improvement_strategy, f, indent=2)
@@ -194,15 +197,19 @@ class SupremeAIOrchestrator:
         failure_analysis = {
             "total_attempts": len(performance_data),
             "failure_rate": sum(
-                1 for record in performance_data 
+                1
+                for record in performance_data
                 if record["success_rate"] < 0.5
-            ) / len(performance_data),
+            )
+            / len(performance_data),
             "common_failure_reasons": {},
         }
 
         return failure_analysis
 
-    def _generate_improvement_recommendations(self, agent_name: str) -> List[str]:
+    def _generate_improvement_recommendations(
+        self, agent_name: str
+    ) -> List[str]:
         """
         Generate improvement recommendations for a specific agent
 
@@ -230,7 +237,10 @@ def main():
         "name": "Document Processing Workflow",
         "agent_tasks": {
             "auto_gpt": {"task": "extract_text", "document": "sample.pdf"},
-            "gpt_engineer": {"task": "analyze_code", "source": "project_codebase"},
+            "gpt_engineer": {
+                "task": "analyze_code",
+                "source": "project_codebase",
+            },
         },
     }
 

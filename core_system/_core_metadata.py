@@ -8,7 +8,10 @@ import typing_extensions
 if typing.TYPE_CHECKING:
     from pydantic_core import CoreSchema
 
-    from ._schema_generation_shared import CoreSchemaOrField, GetJsonSchemaFunction
+    from ._schema_generation_shared import (
+        CoreSchemaOrField,
+        GetJsonSchemaFunction,
+    )
 
 
 class CoreMetadata(typing_extensions.TypedDict, total=False):
@@ -49,7 +52,9 @@ class CoreMetadataHandler:
         if metadata is None:
             schema["metadata"] = CoreMetadata()  # type: ignore
         elif not isinstance(metadata, dict):
-            raise TypeError(f"CoreSchema metadata should be a dict; got {metadata!r}.")
+            raise TypeError(
+                f"CoreSchema metadata should be a dict; got {metadata!r}."
+            )
 
     @property
     def metadata(self) -> CoreMetadata:
@@ -60,7 +65,9 @@ class CoreMetadataHandler:
         if metadata is None:
             self._schema["metadata"] = metadata = CoreMetadata()  # type: ignore
         if not isinstance(metadata, dict):
-            raise TypeError(f"CoreSchema metadata should be a dict; got {metadata!r}.")
+            raise TypeError(
+                f"CoreSchema metadata should be a dict; got {metadata!r}."
+            )
         return cast(CoreMetadata, metadata)
 
 

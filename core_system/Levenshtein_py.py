@@ -34,7 +34,9 @@ def _uniform_generic(s1, s2, weights):
         for i in range(len1):
             x = temp
             if s1[i] != ch2:
-                x = min(cache[i] + delete, cache[i + 1] + insert, temp + replace)
+                x = min(
+                    cache[i] + delete, cache[i + 1] + insert, temp + replace
+                )
             temp = cache[i + 1]
             cache[i + 1] = x
 
@@ -156,7 +158,11 @@ def distance(
     else:
         dist = _uniform_generic(s1, s2, weights)
 
-    return dist if (score_cutoff is None or dist <= score_cutoff) else score_cutoff + 1
+    return (
+        dist
+        if (score_cutoff is None or dist <= score_cutoff)
+        else score_cutoff + 1
+    )
 
 
 def similarity(
@@ -281,7 +287,9 @@ def normalized_distance(
     maximum = _levenshtein_maximum(s1, s2, weights)
     dist = distance(s1, s2, weights=weights)
     norm_dist = dist / maximum if maximum else 0
-    return norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    return (
+        norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1
+    )
 
 
 def normalized_similarity(
@@ -368,7 +376,9 @@ def normalized_similarity(
     weights = weights or (1, 1, 1)
     norm_dist = normalized_distance(s1, s2, weights=weights)
     norm_sim = 1.0 - norm_dist
-    return norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    return (
+        norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0
+    )
 
 
 def _matrix(s1, s2):
@@ -485,14 +495,18 @@ def editops(
         if VP[row - 1] & (1 << (col - 1)):
             dist -= 1
             col -= 1
-            editop_list[dist] = Editop("delete", col + prefix_len, row + prefix_len)
+            editop_list[dist] = Editop(
+                "delete", col + prefix_len, row + prefix_len
+            )
         else:
             row -= 1
 
             # insertion
             if row and (VN[row - 1] & (1 << (col - 1))):
                 dist -= 1
-                editop_list[dist] = Editop("insert", col + prefix_len, row + prefix_len)
+                editop_list[dist] = Editop(
+                    "insert", col + prefix_len, row + prefix_len
+                )
             else:
                 col -= 1
 
@@ -506,12 +520,16 @@ def editops(
     while col != 0:
         dist -= 1
         col -= 1
-        editop_list[dist] = Editop("delete", col + prefix_len, row + prefix_len)
+        editop_list[dist] = Editop(
+            "delete", col + prefix_len, row + prefix_len
+        )
 
     while row != 0:
         dist -= 1
         row -= 1
-        editop_list[dist] = Editop("insert", col + prefix_len, row + prefix_len)
+        editop_list[dist] = Editop(
+            "insert", col + prefix_len, row + prefix_len
+        )
 
     editops._editops = editop_list
     return editops
@@ -570,4 +588,6 @@ def opcodes(
       equal a[4:6] (cd) b[3:5] (cd)
      insert a[6:6] () b[5:6] (f)
     """
-    return editops(s1, s2, processor=processor, score_hint=score_hint).as_opcodes()
+    return editops(
+        s1, s2, processor=processor, score_hint=score_hint
+    ).as_opcodes()

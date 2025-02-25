@@ -8,7 +8,14 @@ import os
 
 from rapidfuzz._feature_detector import AVX2, SSE2, supports
 
-__all__ = ["Editop", "Editops", "MatchingBlock", "Opcode", "Opcodes", "ScoreAlignment"]
+__all__ = [
+    "Editop",
+    "Editops",
+    "MatchingBlock",
+    "Opcode",
+    "Opcodes",
+    "ScoreAlignment",
+]
 
 _impl = os.environ.get("RAPIDFUZZ_IMPLEMENTATION")
 if _impl == "cpp":

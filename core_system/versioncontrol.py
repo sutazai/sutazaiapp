@@ -122,7 +122,6 @@ class RemoteNotValidError(Exception):
 
 
 class RevOptions:
-
     """
     Encapsulates a VCS-specific revision to install, along with any VCS
     install options.
@@ -353,7 +352,9 @@ class VersionControl:
 
     @classmethod
     def make_rev_options(
-        cls, rev: Optional[str] = None, extra_args: Optional[CommandArgs] = None
+        cls,
+        rev: Optional[str] = None,
+        extra_args: Optional[CommandArgs] = None,
     ) -> RevOptions:
         """
         Return a RevOptions object.
@@ -464,7 +465,11 @@ class VersionControl:
         return cls.normalize_url(url1) == cls.normalize_url(url2)
 
     def fetch_new(
-        self, dest: str, url: HiddenText, rev_options: RevOptions, verbosity: int
+        self,
+        dest: str,
+        url: HiddenText,
+        rev_options: RevOptions,
+        verbosity: int,
     ) -> None:
         """
         Fetch a revision from a repository, in the case that this is the
@@ -550,7 +555,10 @@ class VersionControl:
                 display_path(dest),
                 existing_url,
             )
-            prompt = ("(s)witch, (i)gnore, (w)ipe, (b)ackup ", ("s", "i", "w", "b"))
+            prompt = (
+                "(s)witch, (i)gnore, (w)ipe, (b)ackup ",
+                ("s", "i", "w", "b"),
+            )
         else:
             logger.warning(
                 "Directory %s already exists, and is not a %s %s.",

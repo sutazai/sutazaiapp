@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import warnings
@@ -20,7 +19,7 @@ from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode
 if False:  # MYPY
     from typing import Any, Dict, List, Optional  # NOQA
 
-__all__ = ['Composer', 'ComposerError']
+__all__ = ["Composer", "ComposerError"]
 
 
 class ComposerError(MarkedYAMLError):
@@ -30,21 +29,21 @@ class ComposerError(MarkedYAMLError):
 class Composer:
     def __init__(self, loader: Any = None) -> None:
         self.loader = loader
-        if self.loader is not None and getattr(self.loader, '_composer', None) is None:
+        if self.loader is not None and getattr(self.loader, "_composer", None) is None:
             self.loader._composer = self
         self.anchors: Dict[Any, Any] = {}
         self.warn_double_anchors = True
 
     @property
     def parser(self) -> Any:
-        if hasattr(self.loader, 'typ'):
+        if hasattr(self.loader, "typ"):
             self.loader.parser
         return self.loader._parser
 
     @property
     def resolver(self) -> Any:
         # assert self.loader._resolver is not None
-        if hasattr(self.loader, 'typ'):
+        if hasattr(self.loader, "typ"):
             self.loader.resolver
         return self.loader._resolver
 
@@ -74,9 +73,9 @@ class Composer:
         if not self.parser.check_event(StreamEndEvent):
             event = self.parser.get_event()
             raise ComposerError(
-                'expected a single document in the stream',
+                "expected a single document in the stream",
                 document.start_mark,
-                'but found another document',
+                "but found another document",
                 event.start_mark,
             )
 
@@ -107,7 +106,10 @@ class Composer:
             alias = event.anchor
             if alias not in self.anchors:
                 raise ComposerError(
-                    None, None, f'found undefined alias {alias!r}', event.start_mark,
+                    None,
+                    None,
+                    f"found undefined alias {alias!r}",
+                    event.start_mark,
                 )
             return self.return_alias(self.anchors[alias])
         event = self.parser.peek_event()
@@ -115,9 +117,9 @@ class Composer:
         if anchor is not None:  # have an anchor
             if self.warn_double_anchors and anchor in self.anchors:
                 ws = (
-                    f'\nfound duplicate anchor {anchor!r}\n'
-                    f'first occurrence {self.anchors[anchor].start_mark}\n'
-                    f'second occurrence {event.start_mark}'
+                    f"\nfound duplicate anchor {anchor!r}\n"
+                    f"first occurrence {self.anchors[anchor].start_mark}\n"
+                    f"second occurrence {event.start_mark}"
                 )
                 warnings.warn(ws, ReusedAnchorWarning, stacklevel=2)
         self.resolver.descend_resolver(parent, index)
@@ -133,7 +135,7 @@ class Composer:
     def compose_scalar_node(self, anchor: Any) -> Any:
         event = self.parser.get_event()
         tag = event.ctag
-        if tag is None or str(tag) == '!':
+        if tag is None or str(tag) == "!":
             tag = self.resolver.resolve(ScalarNode, event.value, event.implicit)
             assert not isinstance(tag, str)
             # e.g tag.yaml.org,2002:str
@@ -153,7 +155,7 @@ class Composer:
     def compose_sequence_node(self, anchor: Any) -> Any:
         start_event = self.parser.get_event()
         tag = start_event.ctag
-        if tag is None or str(tag) == '!':
+        if tag is None or str(tag) == "!":
             tag = self.resolver.resolve(SequenceNode, None, start_event.implicit)
             assert not isinstance(tag, str)
         node = SequenceNode(
@@ -176,7 +178,7 @@ class Composer:
             if node.comment is not None:
                 x = node.flow_style
                 nprint(
-                    f'Warning: unexpected end_event commment in sequence node {x}',
+                    f"Warning: unexpected end_event commment in sequence node {x}",
                 )
             node.comment = end_event.comment
         node.end_mark = end_event.end_mark
@@ -186,7 +188,7 @@ class Composer:
     def compose_mapping_node(self, anchor: Any) -> Any:
         start_event = self.parser.get_event()
         tag = start_event.ctag
-        if tag is None or str(tag) == '!':
+        if tag is None or str(tag) == "!":
             tag = self.resolver.resolve(MappingNode, None, start_event.implicit)
             assert not isinstance(tag, str)
         node = MappingNode(

@@ -5,17 +5,16 @@ Manages log files to prevent disk space issues.
 """
 
 import gzip
-import shutil
 import logging
+import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List
 
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -23,9 +22,9 @@ logger = logging.getLogger(__name__)
 class LogRotator:
     def __init__(
         self,
-        log_dir: str = '/opt/sutazai/logs',
+        log_dir: str = "/opt/sutazai/logs",
         max_size_mb: int = 100,
-        retention_days: int = 30
+        retention_days: int = 30,
     ):
         self.log_dir = Path(log_dir)
         self.max_size = max_size_mb * 1024 * 1024  # Convert MB to bytes
@@ -33,20 +32,20 @@ class LogRotator:
 
     def get_log_files(self) -> List[Path]:
         """Get all log files in the directory."""
-        return [f for f in self.log_dir.glob('**/*.log') if f.is_file()]
+        return [f for f in self.log_dir.glob("**/*.log") if f.is_file()]
 
     def compress_file(self, file_path: Path) -> None:
         """Compress a log file using gzip."""
         try:
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            compressed_path = file_path.with_suffix(f'.{timestamp}.log.gz')
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            compressed_path = file_path.with_suffix(f".{timestamp}.log.gz")
 
-            with open(file_path, 'rb') as f_in:
-                with gzip.open(compressed_path, 'wb') as f_out:
+            with open(file_path, "rb") as f_in:
+                with gzip.open(compressed_path, "wb") as f_out:
                     shutil.copyfileobj(f_in, f_out)
 
             # Truncate original file
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.truncate(0)
 
             logger.info(f"Compressed {file_path} to {compressed_path}")
@@ -57,7 +56,7 @@ class LogRotator:
         """Remove log files older than retention period."""
         cutoff_date = datetime.now() - timedelta(days=self.retention_days)
 
-        for file in self.log_dir.glob('**/*.log.gz'):
+        for file in self.log_dir.glob("**/*.log.gz"):
             try:
                 if file.stat().st_mtime < cutoff_date.timestamp():
                     file.unlink()

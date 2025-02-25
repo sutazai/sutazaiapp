@@ -51,7 +51,7 @@ def aes_key_wrap(
         raise ValueError("The key to wrap must be a multiple of 8 bytes")
 
     a = b"\xa6\xa6\xa6\xa6\xa6\xa6\xa6\xa6"
-    r = [key_to_wrap[i : i + 8] for i in range(0, len(key_to_wrap), 8)]
+    r = [key_to_wrap[i: i + 8] for i in range(0, len(key_to_wrap), 8)]
     return _wrap_core(wrapping_key, a, r)
 
 
@@ -97,7 +97,7 @@ def aes_key_wrap_with_padding(
         assert encryptor.finalize() == b""
         return b
     else:
-        r = [key_to_wrap[i : i + 8] for i in range(0, len(key_to_wrap), 8)]
+        r = [key_to_wrap[i: i + 8] for i in range(0, len(key_to_wrap), 8)]
         return _wrap_core(wrapping_key, aiv, r)
 
 
@@ -121,7 +121,7 @@ def aes_key_unwrap_with_padding(
         data = out[8:]
         n = 1
     else:
-        r = [wrapped_key[i : i + 8] for i in range(0, len(wrapped_key), 8)]
+        r = [wrapped_key[i: i + 8] for i in range(0, len(wrapped_key), 8)]
         encrypted_aiv = r.pop(0)
         n = len(r)
         a, r = _unwrap_core(wrapping_key, encrypted_aiv, r)
@@ -162,7 +162,7 @@ def aes_key_unwrap(
         raise ValueError("The wrapping key must be a valid AES key length")
 
     aiv = b"\xa6\xa6\xa6\xa6\xa6\xa6\xa6\xa6"
-    r = [wrapped_key[i : i + 8] for i in range(0, len(wrapped_key), 8)]
+    r = [wrapped_key[i: i + 8] for i in range(0, len(wrapped_key), 8)]
     a = r.pop(0)
     a, r = _unwrap_core(wrapping_key, a, r)
     if not bytes_eq(a, aiv):

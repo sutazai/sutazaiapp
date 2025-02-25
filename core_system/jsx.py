@@ -12,14 +12,25 @@ import re
 
 from pygments.lexer import bygroups, default, include, inherit
 from pygments.lexers.javascript import JavascriptLexer, TypeScriptLexer
-from pygments.token import Name, Operator, Punctuation, String, Text, Whitespace
+from pygments.token import (
+    Name,
+    Operator,
+    Punctuation,
+    String,
+    Text,
+    Whitespace,
+)
 
 __all__ = ["JsxLexer", "TsxLexer"]
 
 _JSX_RULES = {
     "jsx": [
         (r"</?>", Punctuation),  # JSXFragment <>|</>
-        (r"(<)(\w+)(\.?)", bygroups(Punctuation, Name.Tag, Punctuation), "tag"),
+        (
+            r"(<)(\w+)(\.?)",
+            bygroups(Punctuation, Name.Tag, Punctuation),
+            "tag",
+        ),
         (
             r"(</)(\w+)(>)",
             bygroups(Punctuation, Name.Tag, Punctuation),

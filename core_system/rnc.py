@@ -9,7 +9,15 @@ Lexer for Relax-NG Compact syntax
 """
 
 from pygments.lexer import RegexLexer
-from pygments.token import Comment, Keyword, Name, Operator, Punctuation, String, Text
+from pygments.token import (
+    Comment,
+    Keyword,
+    Name,
+    Operator,
+    Punctuation,
+    String,
+    Text,
+)
 
 __all__ = ["RNCCompactLexer"]
 
@@ -34,7 +42,11 @@ class RNCCompactLexer(RegexLexer):
             (r'"[^"]*"', String.Double),
             # TODO single quoted strings and escape sequences outside of
             # double-quoted strings
-            (r"(?:element|attribute|mixed)\b", Keyword.Declaration, "variable"),
+            (
+                r"(?:element|attribute|mixed)\b",
+                Keyword.Declaration,
+                "variable",
+            ),
             (r"(text\b|xsd:[^ ]+)", Keyword.Type, "maybe_xsdattributes"),
             (r"[,?&*=|~]|>>", Operator),
             (r"[(){}]", Punctuation),

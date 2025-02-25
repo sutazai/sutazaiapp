@@ -32,7 +32,11 @@ from .._path import StrPath
 from ..compat import py312
 from ..discovery import find_package_path
 from ..dist import Distribution
-from ..warnings import InformationOnly, SetuptoolsDeprecationWarning, SetuptoolsWarning
+from ..warnings import (
+    InformationOnly,
+    SetuptoolsDeprecationWarning,
+    SetuptoolsWarning,
+)
 from .build import build as build_cls
 from .build_py import build_py as build_py_cls
 from .dist_info import dist_info as dist_info_cls
@@ -170,7 +174,11 @@ class editable_wheel(Command):
         return next(candidates, None)
 
     def _configure_build(
-        self, name: str, unpacked_wheel: StrPath, build_lib: StrPath, tmp_dir: StrPath
+        self,
+        name: str,
+        unpacked_wheel: StrPath,
+        build_lib: StrPath,
+        tmp_dir: StrPath,
     ):
         """Configure commands to behave in the following ways:
 
@@ -193,16 +201,19 @@ class editable_wheel(Command):
 
         # egg-info may be generated again to create a manifest (used for package data)
         egg_info = cast(
-            egg_info_cls, dist.reinitialize_command("egg_info", reinit_subcommands=True)
+            egg_info_cls,
+            dist.reinitialize_command("egg_info", reinit_subcommands=True),
         )
         egg_info.egg_base = str(tmp_dir)
         egg_info.ignore_egg_info_in_manifest = True
 
         build = cast(
-            build_cls, dist.reinitialize_command("build", reinit_subcommands=True)
+            build_cls,
+            dist.reinitialize_command("build", reinit_subcommands=True),
         )
         install = cast(
-            install_cls, dist.reinitialize_command("install", reinit_subcommands=True)
+            install_cls,
+            dist.reinitialize_command("install", reinit_subcommands=True),
         )
 
         build.build_platlib = build.build_purelib = build.build_lib = build_lib
@@ -383,6 +394,7 @@ class EditableStrategy(Protocol):
         self, wheel: WheelFile, files: list[str], mapping: Mapping[str, str]
     ) -> object: ...
     def __enter__(self) -> Self: ...
+
     def __exit__(
         self,
         _exc_type: type[BaseException] | None,
@@ -500,7 +512,9 @@ class _TopLevelFinder:
         self.dist = dist
         self.name = name
 
-    def template_vars(self) -> tuple[str, str, dict[str, str], dict[str, list[str]]]:
+    def template_vars(
+        self,
+    ) -> tuple[str, str, dict[str, str], dict[str, list[str]]]:
         src_root = self.dist.src_root or os.curdir
         top_level = chain(_find_packages(self.dist), _find_top_level_modules(self.dist))
         package_dir = self.dist.package_dir or {}

@@ -2,9 +2,7 @@
 # cSpell:ignore sutazai Sutaz maxfail
 
 import json
-import logging
 import subprocess
-import sys
 from datetime import datetime
 from typing import Tuple
 
@@ -28,26 +26,24 @@ def run_command(command: str) -> Tuple[bool, str]:
 
 def main():
     console = Console()
-    console.rule("[bold blue]Final System Test: Comprehensive Audit[/bold blue]")
+    console.rule(
+        "[bold blue]Final System Test: Comprehensive Audit[/bold blue]"
+    )
 
     summary = {}
     tasks = [
-        (
-            "System Validation",
-            "python3 /opt/sutazai_project/SutazAI/scripts/system_comprehensive_validator.py",
-        ),
-        (
-            "Project Analysis",
-            "python3 /opt/sutazai_project/SutazAI/scripts/project_analyzer.py",
-        ),
-        (
-            "Documentation Generation",
-            "python3 /opt/sutazai_project/SutazAI/scripts/documentation_generator.py",
-        ),
-        (
-            "Spell Checking",
-            "python3 /opt/sutazai_project/SutazAI/scripts/spell_checker.py",
-        ),
+        ("System Validation",
+         "python3 /opt/sutazai_project/SutazAI/scripts/system_comprehensive_validator.py",
+         ),
+        ("Project Analysis",
+         "python3 /opt/sutazai_project/SutazAI/scripts/project_analyzer.py",
+         ),
+        ("Documentation Generation",
+         "python3 /opt/sutazai_project/SutazAI/scripts/documentation_generator.py",
+         ),
+        ("Spell Checking",
+         "python3 /opt/sutazai_project/SutazAI/scripts/spell_checker.py",
+         ),
     ]
 
     for task_name, command in tasks:
@@ -79,9 +75,7 @@ def main():
 
     # Save JSON summary
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    summary_file = (
-        f"/opt/sutazai_project/SutazAI/logs/final_system_test_summary_{timestamp}.json"
-    )
+    summary_file = f"/opt/sutazai_project/SutazAI/logs/final_system_test_summary_{timestamp}.json"
     with open(summary_file, "w") as f:
         json.dump(summary, f, indent=4)
     console.print(

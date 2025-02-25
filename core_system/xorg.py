@@ -33,6 +33,9 @@ class XorgLexer(RegexLexer):
                 bygroups(String.Escape, Text, String.Escape),
             ),
             (r"(End(?:Sub)?Section)", String.Escape),
-            (r"(\w+)(\s+)([^\n#]+)", bygroups(Name.Builtin, Text, Name.Constant)),
+            (
+                r"(\w+)(\s+)([^\n#]+)",
+                bygroups(Name.Builtin, Text, Name.Constant),
+            ),
         ],
     }

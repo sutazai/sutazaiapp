@@ -3,14 +3,17 @@ from pathlib import Path
 from typing import List
 
 from pydantic.dataclasses import dataclass
-from typing_extensions import Self
 
 from ..report.schemas.v3_0 import main as v3_0
 from .base import FileType, SafetyBaseModel
 from .package import PythonDependency, PythonSpecification
 from .result import DependencyResultModel
 from .util import dict_dump
-from .vulnerability import ClosestSecureVersion, RemediationModel, Vulnerability
+from .vulnerability import (
+    ClosestSecureVersion,
+    RemediationModel,
+    Vulnerability,
+)
 
 
 @dataclass
@@ -35,7 +38,9 @@ class FileModel(SafetyBaseModel):
                         closest_kwargs = asdict(
                             specification.remediation.closest_secure
                         )
-                        closest = v3_0.ClosestSecureSpecification(**closest_kwargs)
+                        closest = v3_0.ClosestSecureSpecification(
+                            **closest_kwargs
+                        )
 
                     rem = v3_0.Remediation(
                         vulnerabilities_found=specification.remediation.vulnerabilities_found,
@@ -65,11 +70,11 @@ class FileModel(SafetyBaseModel):
             categories=[self.file_type.ecosystem.value],
             results=v3_0.Results(dependencies=dependencies_output),
         )
-        
+
     @classmethod
-    def from_v30(cls, obj: v3_0.SchemaModelV30) -> 'FileModel':
+    def from_v30(cls, obj: v3_0.SchemaModelV30) -> "FileModel":
         if not isinstance(obj, v3_0.File):
-            raise TypeError('Expected instance of v3_0.File')
+            raise TypeError("Expected instance of v3_0.File")
 
         location = Path(obj.location)
 
@@ -98,9 +103,13 @@ class FileModel(SafetyBaseModel):
 
                 vulns: List[Vulnerability] = []
 
-                py_spec = PythonSpecification(specification.raw, found=location)
+                py_spec = PythonSpecification(
+                    specification.raw, found=location
+                )
 
-                for vuln in specification.vulnerabilities.known_vulnerabilities:
+                for (
+                    vuln
+                ) in specification.vulnerabilities.known_vulnerabilities:
                     ignored = False
                     ignored_expires = None
                     ignored_reason = None
@@ -131,7 +140,10 @@ class FileModel(SafetyBaseModel):
             version = PythonDependency.find_version(specifications=specs)
             dependencies.append(
                 PythonDependency(
-                    name=dep.name, version=version, specifications=specs, found=location
+                    name=dep.name,
+                    version=version,
+                    specifications=specs,
+                    found=location,
                 )
             )
 

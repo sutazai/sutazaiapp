@@ -1,5 +1,4 @@
 import ast
-import os
 
 
 def analyze_code_quality(code: str) -> dict:
@@ -10,11 +9,11 @@ def analyze_code_quality(code: str) -> dict:
         # Placeholder analysis
         return {
             "syntax_valid": True,
-            "analysis": "Placeholder code quality analysis. No detailed insights available."
+            "analysis": "Placeholder code quality analysis. No detailed insights available.",
         }
     except SyntaxError as e:
         return {
             "syntax_valid": False,
             "error": str(e),
-            "analysis": "Invalid syntax - cannot perform analysis"
+            "analysis": "Invalid syntax - cannot perform analysis",
         }

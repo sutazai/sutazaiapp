@@ -1,17 +1,35 @@
-
 from __future__ import annotations
 
 from _ruamel_yaml import CEmitter, CParser  # type: ignore
-from ruamel.yaml.constructor import BaseConstructor, Constructor, SafeConstructor
-from ruamel.yaml.representer import BaseRepresenter, Representer, SafeRepresenter
+from ruamel.yaml.constructor import (
+    BaseConstructor,
+    Constructor,
+    SafeConstructor,
+)
+from ruamel.yaml.representer import (
+    BaseRepresenter,
+    Representer,
+    SafeRepresenter,
+)
 from ruamel.yaml.resolver import BaseResolver, Resolver
 
 if False:  # MYPY
     from typing import Any, Optional, Union  # NOQA
 
-    from ruamel.yaml.compat import StreamTextType, StreamType, VersionType  # NOQA
+    from ruamel.yaml.compat import (  # NOQA
+        StreamTextType,
+        StreamType,
+        VersionType,
+    )
 
-__all__ = ['CBaseLoader', 'CSafeLoader', 'CLoader', 'CBaseDumper', 'CSafeDumper', 'CDumper']
+__all__ = [
+    "CBaseLoader",
+    "CSafeLoader",
+    "CLoader",
+    "CBaseDumper",
+    "CSafeDumper",
+    "CDumper",
+]
 
 
 # this includes some hacks to solve the  usage of resolver by lower level
@@ -149,7 +167,9 @@ class CSafeDumper(CEmitter, SafeRepresenter, Resolver):  # type: ignore
         )
         self._emitter = self._serializer = self._representer = self
         SafeRepresenter.__init__(
-            self, default_style=default_style, default_flow_style=default_flow_style,
+            self,
+            default_style=default_style,
+            default_flow_style=default_flow_style,
         )
         Resolver.__init__(self)
 
@@ -191,6 +211,8 @@ class CDumper(CEmitter, Representer, Resolver):  # type: ignore
         )
         self._emitter = self._serializer = self._representer = self
         Representer.__init__(
-            self, default_style=default_style, default_flow_style=default_flow_style,
+            self,
+            default_style=default_style,
+            default_flow_style=default_flow_style,
         )
         Resolver.__init__(self)

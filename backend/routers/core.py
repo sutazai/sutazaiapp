@@ -42,18 +42,16 @@ class SystemStatus(BaseModel):
     """
 
     status: str = Field(
-        ...,
-        description="Overall system status",
-        min_length=1,
-        max_length=50
+        ..., description="Overall system status", min_length=1, max_length=50
     )
 
     class Config:
         """Pydantic configuration class for SystemStatus."""
+
         # For pydantic v2 use model_config
         model_config = {
             "json_schema_extra": {"example": {"status": "ok"}},
-            "extra": "forbid"  # Prevent additional fields
+            "extra": "forbid",  # Prevent additional fields
         }
 
     def model_dump(self, *args, **kwargs) -> Dict[str, Any]:
@@ -65,10 +63,9 @@ class SystemStatus(BaseModel):
         Returns:
             Dict[str, Any]: Dictionary representation of the model
         """
-        if hasattr(self, 'dict'):
+        if hasattr(self, "dict"):
             return self.dict(*args, **kwargs)
-        else:
-            return super().model_dump(*args, **kwargs)
+        return super().model_dump(*args, **kwargs)
 
 
 def validate_system_status(status_data: Any) -> SystemStatus:
@@ -90,7 +87,7 @@ def validate_system_status(status_data: Any) -> SystemStatus:
         logger.warning("Invalid status format: %s", type(status_data))
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
-            detail="Invalid status format. Must be a dictionary or string."
+            detail="Invalid status format. Must be a dictionary or string.",
         )
 
     try:
@@ -101,13 +98,13 @@ def validate_system_status(status_data: Any) -> SystemStatus:
         logger.error("Status validation error: %s", e)
         raise HTTPException(
             status_code=HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Validation failed: {str(e)}"
+            detail=f"Validation failed: {str(e)}",
         ) from e
     except Exception as e:
         logger.exception("Unexpected error during status validation")
         raise HTTPException(
             status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"System status validation failed: {str(e)}"
+            detail=f"System status validation failed: {str(e)}",
         ) from e
 
 
@@ -121,8 +118,8 @@ def validate_system_status(status_data: Any) -> SystemStatus:
         200: {"description": "Successful response"},
         400: {"description": "Bad request"},
         422: {"description": "Validation error"},
-        500: {"description": "Internal server error"}
-    }
+        500: {"description": "Internal server error"},
+    },
 )
 async def get_status(_: Request) -> Dict[str, Any]:
     """
@@ -150,14 +147,11 @@ async def get_status(_: Request) -> Dict[str, Any]:
         logger.exception("Unexpected error in get_status")
         raise HTTPException(
             status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unexpected error: {str(e)}"
+            detail=f"Unexpected error: {str(e)}",
         ) from e
 
 
-async def custom_exception_handler(
-    _: Request,
-    exc: HTTPException
-) -> JSONResponse:
+async def custom_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
     """
     Returns a custom JSON response for HTTP exceptions.
 
@@ -170,18 +164,14 @@ async def custom_exception_handler(
     Returns:
         JSONResponse: A formatted error response
     """
-    logger.warning(
-        "HTTP Exception: %s - %s",
-        exc.status_code,
-        exc.detail
-    )
+    logger.warning("HTTP Exception: %s - %s", exc.status_code, exc.detail)
     return JSONResponse(
         status_code=exc.status_code,
         content={
             "error": "Request processing error",
             "detail": str(exc.detail),
-            "status_code": exc.status_code
-        }
+            "status_code": exc.status_code,
+        },
     )
 
 
@@ -225,13 +215,9 @@ class RouterHandler(Generic[T]):
     def add_exception_handler(
         self,
         exception_class: Type[Exception],
-        handler: Callable[
-            [Request, Exception],
-            JSONResponse
-        ]
+        handler: Callable[[Request, Exception], JSONResponse],
     ) -> None:
         """Stub method.
 
         APIRouter does not support setting an exception handler.
         """
-        pass

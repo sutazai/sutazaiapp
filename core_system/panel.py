@@ -210,7 +210,8 @@ class Panel(JupyterMixin):
             child_height -= 2
         if title_text is not None:
             child_width = min(
-                options.max_width - 2, max(child_width, title_text.cell_len + 2)
+                options.max_width - 2,
+                max(child_width, title_text.cell_len + 2),
             )
 
         width = child_width + 2

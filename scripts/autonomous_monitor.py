@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 
 import hashlib
-import json
-import logging
-import multiprocessing
 import os
 import subprocess
 import sys
-import threading
 import time
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from datetime import datetime
+from typing import Any, Dict
 
 import networkx as nx
 import psutil
@@ -33,12 +29,15 @@ class AutonomousMonitor:
         """
         self.config = self._load_configuration(config_path)
         self.base_path = "/opt/sutazai_project/SutazAI"
-        self.log_dir = os.path.join(self.base_path, "logs", "autonomous_monitor")
+        self.log_dir = os.path.join(
+            self.base_path, "logs", "autonomous_monitor"
+        )
 
         # Advanced logging setup
         os.makedirs(self.log_dir, exist_ok=True)
         log_file = os.path.join(
-            self.log_dir, f"monitor_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            self.log_dir,
+            f"monitor_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log",
         )
         logger.add(log_file, rotation="10 MB", level="INFO")
 
@@ -129,7 +128,9 @@ class AutonomousMonitor:
 
             # Function count and basic complexity estimation
             function_lines = [
-                line for line in content.split("\n") if line.strip().startswith("def ")
+                line
+                for line in content.split("\n")
+                if line.strip().startswith("def ")
             ]
             analysis["function_count"] = len(function_lines)
             analysis["complexity"] = len(content.split("\n"))
@@ -179,7 +180,9 @@ class AutonomousMonitor:
                 stdout, stderr = process.communicate(timeout=timeout)
                 result["output"] = stdout
                 result["error"] = stderr
-                result["status"] = "completed" if process.returncode == 0 else "failed"
+                result["status"] = (
+                    "completed" if process.returncode == 0 else "failed"
+                )
             except subprocess.TimeoutExpired:
                 process.kill()
                 result["status"] = "timeout"
@@ -188,9 +191,9 @@ class AutonomousMonitor:
 
             # Memory tracking
             try:
-                process_memory = psutil.Process(process.pid).memory_info().rss / (
-                    1024 * 1024
-                )
+                process_memory = psutil.Process(
+                    process.pid
+                ).memory_info().rss / (1024 * 1024)
                 result["memory_usage"] = process_memory
             except Exception:
                 pass
@@ -200,9 +203,9 @@ class AutonomousMonitor:
             result["error"] = str(e)
 
         # Performance history tracking
-        self.performance_history["script_execution_times"][script_path] = result[
-            "execution_time"
-        ]
+        self.performance_history["script_execution_times"][script_path] = (
+            result["execution_time"]
+        )
 
         return result
 
@@ -234,12 +237,15 @@ class AutonomousMonitor:
                     current_checksum = self._compute_file_checksum(script_path)
                     if (
                         script_path not in self.script_checksums
-                        or self.script_checksums[script_path] != current_checksum
+                        or self.script_checksums[script_path]
+                        != current_checksum
                     ):
                         self.script_checksums[script_path] = current_checksum
 
                         # Analyze script
-                        script_analysis = self.analyze_script_dependencies(script_path)
+                        script_analysis = self.analyze_script_dependencies(
+                            script_path
+                        )
                         scan_results["scripts"][script_path] = script_analysis
 
         # Convert dependency graph to serializable format
@@ -250,7 +256,9 @@ class AutonomousMonitor:
 
         return scan_results
 
-    def autonomous_optimization(self, scan_results: Dict[str, Any]) -> Dict[str, Any]:
+    def autonomous_optimization(
+        self, scan_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Perform autonomous system optimization based on scan results
 
@@ -276,7 +284,9 @@ class AutonomousMonitor:
 
             # Identify and terminate resource-intensive scripts
             for script_path, script_data in scan_results["scripts"].items():
-                if script_data["complexity"] > 1000:  # Arbitrary complexity threshold
+                if (
+                    script_data["complexity"] > 1000
+                ):  # Arbitrary complexity threshold
                     optimization_report["recommendations"].append(
                         f"Optimize script: {script_path}"
                     )
@@ -295,7 +305,9 @@ class AutonomousMonitor:
                 scan_results = self.comprehensive_system_scan()
 
                 # Autonomous optimization
-                optimization_results = self.autonomous_optimization(scan_results)
+                optimization_results = self.autonomous_optimization(
+                    scan_results
+                )
 
                 # Visualization of results
                 self._visualize_results(scan_results, optimization_results)
@@ -308,7 +320,9 @@ class AutonomousMonitor:
                 time.sleep(30)  # Backoff and retry
 
     def _visualize_results(
-        self, scan_results: Dict[str, Any], optimization_results: Dict[str, Any]
+        self,
+        scan_results: Dict[str, Any],
+        optimization_results: Dict[str, Any],
     ):
         """
         Create a rich, detailed visualization of monitoring results
@@ -317,7 +331,9 @@ class AutonomousMonitor:
             scan_results (Dict): Comprehensive system scan results
             optimization_results (Dict): Optimization recommendations
         """
-        self.console.rule("[bold blue]SutazAI Autonomous Monitoring System[/bold blue]")
+        self.console.rule(
+            "[bold blue]SutazAI Autonomous Monitoring System[/bold blue]"
+        )
 
         # System Resources Table
         resources_table = Table(title="System Resources")
@@ -331,7 +347,9 @@ class AutonomousMonitor:
 
         # Recommendations
         if optimization_results["recommendations"]:
-            self.console.rule("[bold red]Optimization Recommendations[/bold red]")
+            self.console.rule(
+                "[bold red]Optimization Recommendations[/bold red]"
+            )
             for recommendation in optimization_results["recommendations"]:
                 self.console.print(f"[yellow]➤[/yellow] {recommendation}")
 

@@ -53,7 +53,8 @@ class StaticModule:
     """Proxy to a module object that avoids executing arbitrary code."""
 
     def __init__(self, name: str, spec: ModuleSpec) -> None:
-        module = ast.parse(pathlib.Path(spec.origin).read_bytes())  # type: ignore[arg-type] # Let it raise an error on None
+        # type: ignore[arg-type] # Let it raise an error on None
+        module = ast.parse(pathlib.Path(spec.origin).read_bytes())
         vars(self).update(locals())
         del self.self
 
@@ -242,7 +243,7 @@ def resolve_class(
     """Given a qualified class name, return the associated class object"""
     root_dir = root_dir or os.getcwd()
     idx = qualified_class_name.rfind(".")
-    class_name = qualified_class_name[idx + 1 :]
+    class_name = qualified_class_name[idx + 1:]
     pkg_name = qualified_class_name[:idx]
 
     path = _find_module(pkg_name, package_dir, root_dir)

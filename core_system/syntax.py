@@ -20,7 +20,10 @@ from typing import (
 )
 
 from pip._vendor.pygments.lexer import Lexer
-from pip._vendor.pygments.lexers import get_lexer_by_name, guess_lexer_for_filename
+from pip._vendor.pygments.lexers import (
+    get_lexer_by_name,
+    guess_lexer_for_filename,
+)
 from pip._vendor.pygments.style import Style as PygmentsStyle
 from pip._vendor.pygments.styles import get_style_by_name
 from pip._vendor.pygments.token import (
@@ -163,7 +166,7 @@ class PygmentsSyntaxTheme(SyntaxTheme):
                 bgcolor = pygments_style["bgcolor"]
                 style = Style(
                     color="#" + color if color else "#000000",
-                    bgcolor="#" + bgcolor if bgcolor else self._background_color,
+                    bgcolor=("#" + bgcolor if bgcolor else self._background_color),
                     bold=pygments_style["bold"],
                     italic=pygments_style["italic"],
                     underline=pygments_style["underline"],
@@ -610,7 +613,9 @@ class Syntax(JupyterMixin):
         segments = Segments(self._get_syntax(console, options))
         if self.padding:
             yield Padding(
-                segments, style=self._theme.get_background_style(), pad=self.padding
+                segments,
+                style=self._theme.get_background_style(),
+                pad=self.padding,
             )
         else:
             yield segments

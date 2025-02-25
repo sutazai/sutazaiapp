@@ -1,5 +1,5 @@
 import abc
-from dataclasses import InitVar, field
+from dataclasses import field
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -11,7 +11,7 @@ from packaging.specifiers import SpecifierSet
 from pydantic import VERSION as pydantic_version
 from pydantic import Field
 from pydantic.dataclasses import dataclass
-from typing_extensions import Annotated, ClassVar
+from typing_extensions import ClassVar
 
 try:
     from pydantic_core import ArgsKwargs
@@ -89,24 +89,35 @@ class PythonSpecification(Requirement, Specification):
     if not pydantic_version.startswith("1."):
         from pydantic import model_validator
 
-        @model_validator(mode='before')
+        @model_validator(mode="before")
         def pre_root(cls, values):
             args, kwargs = values.args, values.kwargs
 
             try:
                 specification = args[0]
             except IndexError:
-                raise ValueError('Specification is required')
+                raise ValueError("Specification is required")
 
             _dep = get_dep(specification)
 
-            return ArgsKwargs((), {'raw': _dep.line, 'found': None if not kwargs else kwargs.get('found', None), 'dep': _dep})
+            return ArgsKwargs(
+                (),
+                {
+                    "raw": _dep.line,
+                    "found": None if not kwargs else kwargs.get("found", None),
+                    "dep": _dep,
+                },
+            )
 
         def __post_init__(self):
             self.__load_req(specification=self.raw)
+
     else:
+
         def __init__(
-            self, specification: Union[str, ParsedDependency], found: Optional[Path] = None
+            self,
+            specification: Union[str, ParsedDependency],
+            found: Optional[Path] = None,
         ) -> None:
             self.__load_req(specification=specification)
             self.raw = self.dep.line
@@ -130,7 +141,9 @@ class PythonSpecification(Requirement, Specification):
     ):
         if self.is_pinned():
             try:
-                return vulnerable_spec.contains(next(iter(self.specifier)).version, prereleases=True)
+                return vulnerable_spec.contains(
+                    next(iter(self.specifier)).version, prereleases=True
+                )
             except Exception:
                 # Ugly for now...
                 return False

@@ -5,7 +5,11 @@ import functools
 import logging
 
 from ._collections import RecentlyUsedContainer
-from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, port_by_scheme
+from .connectionpool import (
+    HTTPConnectionPool,
+    HTTPSConnectionPool,
+    port_by_scheme,
+)
 from .exceptions import (
     LocationValueError,
     MaxRetryError,
@@ -134,7 +138,10 @@ key_fn_by_scheme = {
     "https": functools.partial(_default_key_normalizer, PoolKey),
 }
 
-pool_classes_by_scheme = {"http": HTTPConnectionPool, "https": HTTPSConnectionPool}
+pool_classes_by_scheme = {
+    "http": HTTPConnectionPool,
+    "https": HTTPSConnectionPool,
+}
 
 
 class PoolManager(RequestMethods):
@@ -502,7 +509,10 @@ class ProxyManager(PoolManager):
             )
 
         return super(ProxyManager, self).connection_from_host(
-            self.proxy.host, self.proxy.port, self.proxy.scheme, pool_kwargs=pool_kwargs
+            self.proxy.host,
+            self.proxy.port,
+            self.proxy.scheme,
+            pool_kwargs=pool_kwargs,
         )
 
     def _set_proxy_headers(self, url, headers=None):

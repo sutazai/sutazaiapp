@@ -654,7 +654,9 @@ if __name__ == "__main__":  # pragma: no cover
     DATATYPES_URL = SOURCE_URL + "/doc/src/sgml/datatype.sgml"
 
     def update_myself():
-        content = urlopen(DATATYPES_URL).read().decode("utf-8", errors="ignore")
+        content = (
+            urlopen(DATATYPES_URL).read().decode("utf-8", errors="ignore")
+        )
         data_file = list(content.splitlines())
         datatypes = parse_datatypes(data_file)
         pseudos = parse_pseudos(data_file)
@@ -695,7 +697,10 @@ if __name__ == "__main__":  # pragma: no cover
 
             # Drop the parts containing braces
             for tmp in [
-                t for tmp in line.split("[") for t in tmp.split("]") if "(" not in t
+                t
+                for tmp in line.split("[")
+                for t in tmp.split("]")
+                if "(" not in t
             ]:
                 for t in tmp.split(","):
                     t = t.strip()
@@ -741,10 +746,14 @@ if __name__ == "__main__":  # pragma: no cover
             data = f.read()
 
         # Line to start/end inserting
-        re_match = re.compile(rf"^{constname}\s*=\s*\($.*?^\s*\)$", re.M | re.S)
+        re_match = re.compile(
+            rf"^{constname}\s*=\s*\($.*?^\s*\)$", re.M | re.S
+        )
         m = re_match.search(data)
         if not m:
-            raise ValueError(f"Could not find existing definition for {constname}")
+            raise ValueError(
+                f"Could not find existing definition for {constname}"
+            )
 
         new_block = format_lines(constname, content)
         data = data[: m.start()] + new_block + data[m.end() :]

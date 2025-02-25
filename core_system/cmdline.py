@@ -23,7 +23,10 @@ from pip._vendor.pygments.formatters import (
     get_formatter_for_filename,
     load_formatter_from_file,
 )
-from pip._vendor.pygments.formatters.latex import LatexEmbeddedLexer, LatexFormatter
+from pip._vendor.pygments.formatters.latex import (
+    LatexEmbeddedLexer,
+    LatexFormatter,
+)
 from pip._vendor.pygments.formatters.terminal import TerminalFormatter
 from pip._vendor.pygments.formatters.terminal256 import (
     Terminal256Formatter,
@@ -368,7 +371,8 @@ def main_inner(parser, argns):
     if argns.INPUTFILE:
         if argns.s:
             print(
-                "Error: -s option not usable when input file specified", file=sys.stderr
+                "Error: -s option not usable when input file specified",
+                file=sys.stderr,
             )
             return 2
 
@@ -722,13 +726,17 @@ def main(args=sys.argv):
             print(file=sys.stderr)
             print("*" * 65, file=sys.stderr)
             print(
-                "An unhandled exception occurred while highlighting.", file=sys.stderr
+                "An unhandled exception occurred while highlighting.",
+                file=sys.stderr,
             )
             print(
                 "Please report the whole traceback to the issue tracker at",
                 file=sys.stderr,
             )
-            print("<https://github.com/pygments/pygments/issues>.", file=sys.stderr)
+            print(
+                "<https://github.com/pygments/pygments/issues>.",
+                file=sys.stderr,
+            )
             print("*" * 65, file=sys.stderr)
             print(file=sys.stderr)
             raise

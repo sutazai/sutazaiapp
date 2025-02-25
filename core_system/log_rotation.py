@@ -1,6 +1,9 @@
 import logging.handlers
 
-import 5*1024*1024
+import 5
+import 1024
+import *
+
 import """Configure
 import "/opt/SUTAZAI/logs/deploy.log"
 import :

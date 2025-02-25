@@ -56,7 +56,8 @@ class Command:
 
     user_options: ClassVar[
         # Specifying both because list is invariant. Avoids mypy override assignment issues
-        list[tuple[str, str, str]] | list[tuple[str, str | None, str]]
+        list[tuple[str, str, str]]
+        | list[tuple[str, str | None, str]]
     ] = []
 
     # -- Creation/initialization methods -------------------------------
@@ -110,7 +111,7 @@ class Command:
 
     # XXX A more explicit way to customize dry_run would be better.
     def __getattr__(self, attr):
-        if attr == 'dry_run':
+        if attr == "dry_run":
             myval = getattr(self, "_" + attr)
             if myval is None:
                 return getattr(self.distribution, attr)
@@ -245,7 +246,7 @@ class Command:
         if val is None:
             return
         elif isinstance(val, str):
-            setattr(self, option, re.split(r',\s*|\s+', val))
+            setattr(self, option, re.split(r",\s*|\s+", val))
         else:
             if isinstance(val, list):
                 ok = all(isinstance(v, str) for v in val)
@@ -266,7 +267,10 @@ class Command:
     def ensure_filename(self, option):
         """Ensure that 'option' is the name of an existing file."""
         self._ensure_tested_string(
-            option, os.path.isfile, "filename", "'%s' does not exist or is not a file"
+            option,
+            os.path.isfile,
+            "filename",
+            "'%s' does not exist or is not a file",
         )
 
     def ensure_dirname(self, option):
@@ -280,7 +284,7 @@ class Command:
     # -- Convenience methods for commands ------------------------------
 
     def get_command_name(self):
-        if hasattr(self, 'command_name'):
+        if hasattr(self, "command_name"):
             return self.command_name
         else:
             return self.__class__.__name__
@@ -322,10 +326,12 @@ class Command:
     def reinitialize_command(
         self, command: str, reinit_subcommands: bool = False
     ) -> Command: ...
+
     @overload
     def reinitialize_command(
         self, command: _CommandT, reinit_subcommands: bool = False
     ) -> _CommandT: ...
+
     def reinitialize_command(
         self, command: str | Command, reinit_subcommands=False
     ) -> Command:
@@ -417,7 +423,13 @@ class Command:
         spawn(cmd, search_path, dry_run=self.dry_run)
 
     def make_archive(
-        self, base_name, format, root_dir=None, base_dir=None, owner=None, group=None
+        self,
+        base_name,
+        format,
+        root_dir=None,
+        base_dir=None,
+        owner=None,
+        group=None,
     ):
         return archive_util.make_archive(
             base_name,
@@ -430,7 +442,14 @@ class Command:
         )
 
     def make_file(
-        self, infiles, outfile, func, args, exec_msg=None, skip_msg=None, level=1
+        self,
+        infiles,
+        outfile,
+        func,
+        args,
+        exec_msg=None,
+        skip_msg=None,
+        level=1,
     ):
         """Special case of 'execute()' for operations that process one or
         more input files and generate one output file.  Works just like
@@ -450,7 +469,7 @@ class Command:
             raise TypeError("'infiles' must be a string, or a list or tuple of strings")
 
         if exec_msg is None:
-            exec_msg = "generating {} from {}".format(outfile, ', '.join(infiles))
+            exec_msg = "generating {} from {}".format(outfile, ", ".join(infiles))
 
         # If 'outfile' must be regenerated (either because it doesn't
         # exist, is out-of-date, or the 'force' flag is true) then

@@ -130,17 +130,19 @@ def _ipy_display_hook(
         if _safe_isinstance(value, ConsoleRenderable):
             console.line()
         console.print(
-            value
-            if _safe_isinstance(value, RichRenderable)
-            else Pretty(
-                value,
-                overflow=overflow,
-                indent_guides=indent_guides,
-                max_length=max_length,
-                max_string=max_string,
-                max_depth=max_depth,
-                expand_all=expand_all,
-                margin=12,
+            (
+                value
+                if _safe_isinstance(value, RichRenderable)
+                else Pretty(
+                    value,
+                    overflow=overflow,
+                    indent_guides=indent_guides,
+                    max_length=max_length,
+                    max_string=max_string,
+                    max_depth=max_depth,
+                    expand_all=expand_all,
+                    margin=12,
+                )
             ),
             crop=crop,
             new_line_start=True,
@@ -196,16 +198,18 @@ def install(
             assert console is not None
             builtins._ = None  # type: ignore[attr-defined]
             console.print(
-                value
-                if _safe_isinstance(value, RichRenderable)
-                else Pretty(
-                    value,
-                    overflow=overflow,
-                    indent_guides=indent_guides,
-                    max_length=max_length,
-                    max_string=max_string,
-                    max_depth=max_depth,
-                    expand_all=expand_all,
+                (
+                    value
+                    if _safe_isinstance(value, RichRenderable)
+                    else Pretty(
+                        value,
+                        overflow=overflow,
+                        indent_guides=indent_guides,
+                        max_length=max_length,
+                        max_string=max_string,
+                        max_depth=max_depth,
+                        expand_all=expand_all,
+                    )
                 ),
                 crop=crop,
             )
@@ -344,7 +348,9 @@ class Pretty(JupyterMixin):
         return Measurement(text_width, text_width)
 
 
-def _get_braces_for_defaultdict(_object: DefaultDict[Any, Any]) -> Tuple[str, str, str]:
+def _get_braces_for_defaultdict(
+    _object: DefaultDict[Any, Any],
+) -> Tuple[str, str, str]:
     return (
         f"defaultdict({_object.default_factory!r}, {{",
         "})",
@@ -353,7 +359,11 @@ def _get_braces_for_defaultdict(_object: DefaultDict[Any, Any]) -> Tuple[str, st
 
 
 def _get_braces_for_array(_object: "array[Any]") -> Tuple[str, str, str]:
-    return (f"array({_object.typecode!r}, [", "])", f"array({_object.typecode!r})")
+    return (
+        f"array({_object.typecode!r}, [",
+        "])",
+        f"array({_object.typecode!r})",
+    )
 
 
 _BRACES: Dict[type, Callable[[Any], Tuple[str, str, str]]] = {
@@ -369,7 +379,11 @@ _BRACES: Dict[type, Callable[[Any], Tuple[str, str, str]]] = {
     UserList: lambda _object: ("[", "]", "[]"),
     set: lambda _object: ("{", "}", "set()"),
     tuple: lambda _object: ("(", ")", "()"),
-    MappingProxyType: lambda _object: ("mappingproxy({", "})", "mappingproxy({})"),
+    MappingProxyType: lambda _object: (
+        "mappingproxy({",
+        "})",
+        "mappingproxy({})",
+    ),
 }
 _CONTAINERS = tuple(_BRACES.keys())
 _MAPPING_CONTAINERS = (dict, os._Environ, MappingProxyType, UserDict)
@@ -445,7 +459,10 @@ class Node:
         return repr_text
 
     def render(
-        self, max_width: int = 80, indent_size: int = 4, expand_all: bool = False
+        self,
+        max_width: int = 80,
+        indent_size: int = 4,
+        expand_all: bool = False,
     ) -> str:
         """Render the node to a pretty repr.
 
@@ -463,7 +480,7 @@ class Node:
             line = lines[line_no]
             if line.expandable and not line.expanded:
                 if expand_all or not line.check_length(max_width):
-                    lines[line_no : line_no + 1] = line.expand(indent_size)
+                    lines[line_no: line_no + 1] = line.expand(indent_size)
             line_no += 1
 
         repr_str = "\n".join(str(line) for line in lines)
@@ -610,7 +627,9 @@ def traverse(
         children: List[Node]
         reached_max_depth = max_depth is not None and depth >= max_depth
 
-        def iter_rich_args(rich_args: Any) -> Iterable[Union[Any, Tuple[str, Any]]]:
+        def iter_rich_args(
+            rich_args: Any,
+        ) -> Iterable[Union[Any, Tuple[str, Any]]]:
             for arg in rich_args:
                 if _safe_isinstance(arg, tuple):
                     if len(arg) == 3:
@@ -686,7 +705,7 @@ def traverse(
                             append(child_node)
             else:
                 node = Node(
-                    value_repr=f"<{class_name}>" if angular else f"{class_name}()",
+                    value_repr=(f"<{class_name}>" if angular else f"{class_name}()"),
                     children=[],
                     last=root,
                 )
@@ -708,9 +727,9 @@ def traverse(
                         last=root,
                     )
 
-                    def iter_attrs() -> Iterable[
-                        Tuple[str, Any, Optional[Callable[[Any], str]]]
-                    ]:
+                    def iter_attrs() -> (
+                        Iterable[Tuple[str, Any, Optional[Callable[[Any], str]]]]
+                    ):
                         """Iterate over attr fields and values."""
                         for attr in attr_fields:
                             if attr.repr:
@@ -723,7 +742,7 @@ def traverse(
                                     yield (
                                         attr.name,
                                         value,
-                                        attr.repr if callable(attr.repr) else None,
+                                        (attr.repr if callable(attr.repr) else None),
                                     )
 
                     for last, (name, value, repr_callable) in loop_last(iter_attrs()):
@@ -737,7 +756,9 @@ def traverse(
                         append(child_node)
             else:
                 node = Node(
-                    value_repr=f"{obj.__class__.__name__}()", children=[], last=root
+                    value_repr=f"{obj.__class__.__name__}()",
+                    children=[],
+                    last=root,
                 )
             pop_visited(obj_id)
         elif (
@@ -838,7 +859,12 @@ def traverse(
                         child_node.last = index == last_item_index
                         append(child_node)
                 if max_length is not None and num_items > max_length:
-                    append(Node(value_repr=f"... +{num_items - max_length}", last=True))
+                    append(
+                        Node(
+                            value_repr=f"... +{num_items - max_length}",
+                            last=True,
+                        )
+                    )
             else:
                 node = Node(empty=empty, children=[], last=root)
 
@@ -885,7 +911,10 @@ def pretty_repr(
         node = _object
     else:
         node = traverse(
-            _object, max_length=max_length, max_string=max_string, max_depth=max_depth
+            _object,
+            max_length=max_length,
+            max_string=max_string,
+            max_depth=max_depth,
         )
     repr_str: str = node.render(
         max_width=max_width, indent_size=indent_size, expand_all=expand_all

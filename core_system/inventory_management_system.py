@@ -17,7 +17,7 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -316,7 +316,10 @@ class InventoryManagementSystem:
                             item_name=node.name,
                             check_type="Class Documentation",
                             status="Missing",
-                            details={"file": file_path, "class_name": node.name},
+                            details={
+                                "file": file_path,
+                                "class_name": node.name,
+                            },
                             recommendations=[
                                 f"Add a docstring to class {node.name}",
                                 "Describe the class's purpose, attributes, and methods",

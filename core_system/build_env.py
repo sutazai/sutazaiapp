@@ -1,5 +1,4 @@
-"""Build Environment used for isolation during sdist building
-"""
+"""Build Environment used for isolation during sdist building"""
 
 import logging
 import os
@@ -9,7 +8,16 @@ import sys
 import textwrap
 from collections import OrderedDict
 from types import TracebackType
-from typing import TYPE_CHECKING, Iterable, List, Optional, Set, Tuple, Type, Union
+from typing import (
+    TYPE_CHECKING,
+    Iterable,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
 from pip import __file__ as pip_location
 from pip._internal.cli.spinners import open_spinner
@@ -102,7 +110,9 @@ class BuildEnvironment:
         if not os.path.exists(self._site_dir):
             os.mkdir(self._site_dir)
         with open(
-            os.path.join(self._site_dir, "sitecustomize.py"), "w", encoding="utf-8"
+            os.path.join(self._site_dir, "sitecustomize.py"),
+            "w",
+            encoding="utf-8",
         ) as fp:
             fp.write(
                 textwrap.dedent(

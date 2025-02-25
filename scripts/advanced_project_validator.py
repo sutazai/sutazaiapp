@@ -11,21 +11,19 @@ Provides an autonomous, multi-dimensional approach to:
 - Architectural compliance validation
 """
 
+import networkx as nx
 import ast
-import hashlib
 import json
 import logging
 import os
 import re
 import sys
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Advanced analysis libraries
-import networkx as nx
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class UltraComprehensiveProjectValidator:
@@ -54,7 +52,9 @@ class UltraComprehensiveProjectValidator:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "project_validation")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "project_validation"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -142,7 +142,9 @@ class UltraComprehensiveProjectValidator:
                 directory_analysis["total_directories"] += 1
 
                 # Add to project structure graph
-                self.project_structure_graph.add_node(relative_path, type=dir_type)
+                self.project_structure_graph.add_node(
+                    relative_path, type=dir_type
+                )
 
         # Identify potential directory structure issues
         if len(directory_analysis["directory_types"]) < 5:
@@ -206,10 +208,14 @@ class UltraComprehensiveProjectValidator:
 
                         # Complexity analysis
                         complexity = self._calculate_code_complexity(tree)
-                        code_quality["complexity_metrics"][file_path] = complexity
+                        code_quality["complexity_metrics"][
+                            file_path
+                        ] = complexity
 
                         # Type hint coverage
-                        type_hint_coverage = self._analyze_type_hint_coverage(tree)
+                        type_hint_coverage = self._analyze_type_hint_coverage(
+                            tree
+                        )
                         code_quality["type_hint_coverage"][
                             file_path
                         ] = type_hint_coverage
@@ -256,7 +262,11 @@ class UltraComprehensiveProjectValidator:
         Returns:
             Code complexity metrics
         """
-        complexity = {"cyclomatic_complexity": 1, "function_count": 0, "class_count": 0}
+        complexity = {
+            "cyclomatic_complexity": 1,
+            "function_count": 0,
+            "class_count": 0,
+        }
 
         for node in ast.walk(tree):
             # Cyclomatic complexity calculation
@@ -345,7 +355,9 @@ class UltraComprehensiveProjectValidator:
 
                         # Check for sensitive information
                         for pattern in sensitive_patterns:
-                            matches = re.findall(pattern, content, re.IGNORECASE)
+                            matches = re.findall(
+                                pattern, content, re.IGNORECASE
+                            )
                             if matches:
                                 security_issues.append(
                                     {
@@ -473,7 +485,9 @@ class UltraComprehensiveProjectValidator:
                         ] = dependencies
 
                         # Build import graph
-                        dependency_analysis["import_graph"].add_node(relative_path)
+                        dependency_analysis["import_graph"].add_node(
+                            relative_path
+                        )
                         for dep in dependencies:
                             dependency_analysis["import_graph"].add_edge(
                                 relative_path, dep
@@ -498,9 +512,13 @@ class UltraComprehensiveProjectValidator:
         recommendations = []
 
         # Directory structure recommendations
-        if self.validation_report["directory_structure"].get("potential_issues"):
+        if self.validation_report["directory_structure"].get(
+            "potential_issues"
+        ):
             recommendations.extend(
-                self.validation_report["directory_structure"]["potential_issues"]
+                self.validation_report["directory_structure"][
+                    "potential_issues"
+                ]
             )
 
         # Code quality recommendations
@@ -527,7 +545,9 @@ class UltraComprehensiveProjectValidator:
                 f"Resolve {len(dependency_analysis['circular_dependencies'])} circular dependencies"
             )
 
-        self.validation_report["optimization_recommendations"] = recommendations
+        self.validation_report["optimization_recommendations"] = (
+            recommendations
+        )
 
     def _persist_validation_report(self):
         """
@@ -542,7 +562,9 @@ class UltraComprehensiveProjectValidator:
             with open(report_path, "w") as f:
                 json.dump(self.validation_report, f, indent=2)
 
-            self.logger.info(f"Project validation report persisted: {report_path}")
+            self.logger.info(
+                f"Project validation report persisted: {report_path}"
+            )
 
         except Exception as e:
             self.logger.error(f"Validation report persistence failed: {e}")
@@ -562,7 +584,9 @@ def main():
         print("\n🔍 Ultra-Comprehensive Project Validation Results 🔍")
 
         print("\nOptimization Recommendations:")
-        for recommendation in validation_report.get("optimization_recommendations", []):
+        for recommendation in validation_report.get(
+            "optimization_recommendations", []
+        ):
             print(f"- {recommendation}")
 
         print("\nDetailed Insights:")
@@ -572,7 +596,9 @@ def main():
         print(
             f"Total Python Files: {validation_report['code_quality'].get('total_files', 0)}"
         )
-        print(f"Security Issues: {len(validation_report.get('security_issues', []))}")
+        print(
+            f"Security Issues: {len(validation_report.get('security_issues', []))}"
+        )
         print(
             f"Documentation Gaps: {len(validation_report.get('documentation_gaps', []))}"
         )

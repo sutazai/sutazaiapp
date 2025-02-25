@@ -24,9 +24,10 @@ from packaging import tags
 from packaging import version as _packaging_version
 from wheel.wheelfile import WheelFile
 
-from .. import Command, __version__, _shutil
-from ..warnings import SetuptoolsDeprecationWarning
-from .egg_info import egg_info as egg_info_cls
+import core_system.command as command_module
+from core_system import __version__, _shutil
+from core_system.warnings import SetuptoolsDeprecationWarning
+from core_system.egg_info import egg_info as egg_info_cls
 
 
 def safe_name(name: str) -> str:
@@ -138,10 +139,11 @@ def safer_name(name: str) -> str:
 
 
 def safer_version(version: str) -> str:
-    return safe_version(version).replace("-", "_")
+    """Like safe_version, but with additional replacements."""
+    return safe_version(version).replace('-', '_')
 
 
-class bdist_wheel(Command):
+class bdist_wheel(command_module.Command):
     description = "create a wheel distribution"
 
     supported_compressions = {
@@ -150,7 +152,11 @@ class bdist_wheel(Command):
     }
 
     user_options = [
-        ("bdist-dir=", "b", "temporary directory for creating the distribution"),
+        (
+            "bdist-dir=",
+            "b",
+            "temporary directory for creating the distribution",
+        ),
         (
             "plat-name=",
             "p",
@@ -164,7 +170,11 @@ class bdist_wheel(Command):
             "creating the distribution archive",
         ),
         ("dist-dir=", "d", "directory to put final built distributions in"),
-        ("skip-build", None, "skip rebuilding everything (for testing/debugging)"),
+        (
+            "skip-build",
+            None,
+            "skip rebuilding everything (for testing/debugging)",
+        ),
         (
             "relative",
             None,
@@ -180,7 +190,11 @@ class bdist_wheel(Command):
             "g",
             "Group name used when creating a tar file [default: current group]",
         ),
-        ("universal", None, "*DEPRECATED* make a universal wheel [default: false]"),
+        (
+            "universal",
+            None,
+            "*DEPRECATED* make a universal wheel [default: false]",
+        ),
         (
             "compression=",
             None,
@@ -362,9 +376,9 @@ class bdist_wheel(Command):
             supported_tags = [
                 (t.interpreter, t.abi, plat_name) for t in tags.sys_tags()
             ]
-            assert tag in supported_tags, (
-                f"would build wheel with unsupported tag {tag}"
-            )
+            assert (
+                tag in supported_tags
+            ), f"would build wheel with unsupported tag {tag}"
         return tag
 
     def run(self):
@@ -450,11 +464,13 @@ class bdist_wheel(Command):
             wf.write_files(archive_root)
 
         # Add to 'Distribution.dist_files' so that the "upload" command works
-        getattr(self.distribution, "dist_files", []).append((
-            "bdist_wheel",
-            f"{sys.version_info.major}.{sys.version_info.minor}",
-            wheel_path,
-        ))
+        getattr(self.distribution, "dist_files", []).append(
+            (
+                "bdist_wheel",
+                f"{sys.version_info.major}.{sys.version_info.minor}",
+                wheel_path,
+            )
+        )
 
         if not self.keep_temp:
             log.info(f"removing {self.bdist_dir}")
@@ -462,7 +478,9 @@ class bdist_wheel(Command):
                 _shutil.rmtree(self.bdist_dir)
 
     def write_wheelfile(
-        self, wheelfile_base: str, generator: str = f"setuptools ({__version__})"
+        self,
+        wheelfile_base: str,
+        generator: str = f"setuptools ({__version__})",
     ) -> None:
         from email.message import Message
 

@@ -17,13 +17,13 @@ class LogManager:
 
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    os.path.join(self.log_dir, 'sutazai.log'),
+                    os.path.join(self.log_dir, "sutazai.log"),
                     maxBytes=self.max_size,
-                    backupCount=self.backup_count
+                    backupCount=self.backup_count,
                 ),
-                logging.StreamHandler()
-            ]
+                logging.StreamHandler(),
+            ],
         )

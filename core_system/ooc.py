@@ -99,7 +99,10 @@ class OocLexer(RegexLexer):
                 r"&&?|\|\|?|\^=?)",
                 Operator,
             ),
-            (r"(\.)([ \t]*)([a-z]\w*)", bygroups(Operator, Text, Name.Function)),
+            (
+                r"(\.)([ \t]*)([a-z]\w*)",
+                bygroups(Operator, Text, Name.Function),
+            ),
             (r"[A-Z][A-Z0-9_]+", Name.Constant),
             (r"[A-Z]\w*([@*]|\[[ \t]*\])?", Name.Class),
             (
@@ -114,8 +117,14 @@ class OocLexer(RegexLexer):
             (r"0b[01]+", Number.Bin),
             (r"[0-9_]\.[0-9_]*(?!\.)", Number.Float),
             (r"[0-9_]+", Number.Decimal),
-            (r'"(?:\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\"])*"', String.Double),
-            (r"'(?:\\.|\\[0-9]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'", String.Char),
+            (
+                r'"(?:\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\"])*"',
+                String.Double,
+            ),
+            (
+                r"'(?:\\.|\\[0-9]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'",
+                String.Char,
+            ),
             (r"@", Punctuation),  # pointer dereference
             (r"\.", Punctuation),  # imports or chain operator
             (r"\\[ \t\n]", Text),

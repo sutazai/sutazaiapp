@@ -104,7 +104,10 @@ class FileLockMeta(ABCMeta):
 
                 non_matching_params = {
                     name: (passed_param, set_param)
-                    for name, (passed_param, set_param) in params_to_check.items()
+                    for name, (
+                        passed_param,
+                        set_param,
+                    ) in params_to_check.items()
                     if passed_param != set_param
                 }
                 if not non_matching_params:
@@ -135,7 +138,9 @@ class FileLockMeta(ABCMeta):
 
         present_params = inspect.signature(cls.__init__).parameters  # type: ignore[misc]
         init_params = {
-            key: value for key, value in all_params.items() if key in present_params
+            key: value
+            for key, value in all_params.items()
+            if key in present_params
         }
 
         instance = super().__call__(lock_file, **init_params)
@@ -338,11 +343,15 @@ class BaseFileLock(contextlib.ContextDecorator, metaclass=FileLockMeta):
             while True:
                 if not self.is_locked:
                     _LOGGER.debug(
-                        "Attempting to acquire lock %s on %s", lock_id, lock_filename
+                        "Attempting to acquire lock %s on %s",
+                        lock_id,
+                        lock_filename,
                     )
                     self._acquire()
                 if self.is_locked:
-                    _LOGGER.debug("Lock %s acquired on %s", lock_id, lock_filename)
+                    _LOGGER.debug(
+                        "Lock %s acquired on %s", lock_id, lock_filename
+                    )
                     break
                 if blocking is False:
                     _LOGGER.debug(
@@ -353,13 +362,17 @@ class BaseFileLock(contextlib.ContextDecorator, metaclass=FileLockMeta):
                     raise Timeout(lock_filename)  # noqa: TRY301
                 if 0 <= timeout < time.perf_counter() - start_time:
                     _LOGGER.debug(
-                        "Timeout on acquiring lock %s on %s", lock_id, lock_filename
+                        "Timeout on acquiring lock %s on %s",
+                        lock_id,
+                        lock_filename,
                     )
                     raise Timeout(lock_filename)  # noqa: TRY301
                 msg = "Lock %s not acquired on %s, waiting %s seconds ..."
                 _LOGGER.debug(msg, lock_id, lock_filename, poll_interval)
                 time.sleep(poll_interval)
-        except BaseException:  # Something did go wrong, so decrement the counter.
+        except (
+            BaseException
+        ):  # Something did go wrong, so decrement the counter.
             self._context.lock_counter = max(0, self._context.lock_counter - 1)
             raise
         return AcquireReturnProxy(lock=self)
@@ -379,7 +392,9 @@ class BaseFileLock(contextlib.ContextDecorator, metaclass=FileLockMeta):
                 lock_id, lock_filename = id(self), self.lock_file
 
                 _LOGGER.debug(
-                    "Attempting to release lock %s on %s", lock_id, lock_filename
+                    "Attempting to release lock %s on %s",
+                    lock_id,
+                    lock_filename,
                 )
                 self._release()
                 self._context.lock_counter = 0

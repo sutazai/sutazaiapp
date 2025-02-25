@@ -2,7 +2,7 @@ import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 from types import MappingProxyType
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from safety_schemas.models import Ecosystem, FileType
 
@@ -19,7 +19,10 @@ class FileHandler(ABC):
         self.ecosystem: Optional[Ecosystem] = None
 
     def can_handle(
-        self, root: str, file_name: str, include_files: Dict[FileType, List[Path]]
+        self,
+        root: str,
+        file_name: str,
+        include_files: Dict[FileType, List[Path]],
     ) -> Optional[FileType]:
         """
         Determines if the handler can handle the given file based on its type and inclusion criteria.
@@ -132,7 +135,6 @@ class SafetyProjectFileHandler(FileHandler):
         """
         No required assets to download for Safety project files.
         """
-        pass
 
 
 # Mapping of ecosystems to their corresponding file handlers

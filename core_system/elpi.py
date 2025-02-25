@@ -129,7 +129,10 @@ class ElpiLexer(RegexLexer):
         ],
         "_elpi-comment": [
             (r"%[^\n]*\n", Comment),
-            (r"/(?:\\\n)?[*](?:[^*]|[*](?!(?:\\\n)?/))*[*](?:\\\n)?/", Comment),
+            (
+                r"/(?:\\\n)?[*](?:[^*]|[*](?!(?:\\\n)?/))*[*](?:\\\n)?/",
+                Comment,
+            ),
             (r"\s+", Text.Whitespace),
         ],
         "elpi-indexing-expr": [
@@ -137,7 +140,11 @@ class ElpiLexer(RegexLexer):
             (r"\)", Punctuation, "#pop"),
         ],
         "elpi-type": [
-            (r"(ctype\s+)(\")", bygroups(Keyword.Type, String.Double), "elpi-string"),
+            (
+                r"(ctype\s+)(\")",
+                bygroups(Keyword.Type, String.Double),
+                "elpi-string",
+            ),
             (r"->", Keyword.Type),
             (constant_re, Keyword.Type),
             (r"\(|\)", Keyword.Type),
@@ -160,7 +167,11 @@ class ElpiLexer(RegexLexer):
             include("_elpi-comment"),
         ],
         "elpi-ctype": [
-            (r"(ctype\s+)(\")", bygroups(Keyword.Type, String.Double), "elpi-string"),
+            (
+                r"(ctype\s+)(\")",
+                bygroups(Keyword.Type, String.Double),
+                "elpi-string",
+            ),
             (r"->", Keyword.Type),
             (constant_re, Keyword.Type),
             (r"\(|\)", Keyword.Type),
@@ -184,7 +195,10 @@ class ElpiLexer(RegexLexer):
             (r"\}\}", Punctuation, "#pop"),
             (r"\s+", Text.Whitespace),
             (r"(lp:)(\{\{)", bygroups(Number, Punctuation), "elpi-quote-exit"),
-            (rf"(lp:)((?=[A-Z_]){constant_re})", bygroups(Number, Name.Variable)),
+            (
+                rf"(lp:)((?=[A-Z_]){constant_re})",
+                bygroups(Number, Name.Variable),
+            ),
             (r"((?!lp:|\}\}).)+", using(CoqLexer)),
         ],
         "elpi-quote-exit": [

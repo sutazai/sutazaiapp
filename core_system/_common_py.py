@@ -69,7 +69,9 @@ def common_suffix(s1: Sequence[Hashable], s2: Sequence[Hashable]) -> int:
     return suffix_len
 
 
-def common_affix(s1: Sequence[Hashable], s2: Sequence[Hashable]) -> tuple[int, int]:
+def common_affix(
+    s1: Sequence[Hashable], s2: Sequence[Hashable]
+) -> tuple[int, int]:
     prefix_len = common_prefix(s1, s2)
     suffix_len = common_suffix(s1[prefix_len:], s2[prefix_len:])
     return (prefix_len, suffix_len)

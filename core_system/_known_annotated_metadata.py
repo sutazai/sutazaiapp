@@ -72,7 +72,14 @@ SEQUENCE_SCHEMA_TYPES = (
     "generator",
     *TEXT_SCHEMA_TYPES,
 )
-NUMERIC_SCHEMA_TYPES = ("float", "int", "date", "time", "timedelta", "datetime")
+NUMERIC_SCHEMA_TYPES = (
+    "float",
+    "int",
+    "date",
+    "time",
+    "timedelta",
+    "datetime",
+)
 
 CONSTRAINTS_TO_ALLOWED_SCHEMAS: dict[str, set[str]] = defaultdict(set)
 
@@ -113,7 +120,9 @@ for constraints, schemas in constraint_schema_pairings:
         CONSTRAINTS_TO_ALLOWED_SCHEMAS[c].update(schemas)
 
 
-def add_js_update_schema(s: cs.CoreSchema, f: Callable[[], dict[str, Any]]) -> None:
+def add_js_update_schema(
+    s: cs.CoreSchema, f: Callable[[], dict[str, Any]]
+) -> None:
     def update_js_schema(
         s: cs.CoreSchema, handler: GetJsonSchemaHandler
     ) -> dict[str, Any]:
@@ -247,10 +256,13 @@ def apply_known_metadata(
         # this is a bit challenging because we sometimes want to apply constraints to the inner schema,
         # whereas other times we want to wrap the existing schema with a new one that enforces a new constraint.
         if (
-            schema_type in {"function-before", "function-wrap", "function-after"}
+            schema_type
+            in {"function-before", "function-wrap", "function-after"}
             and constraint == "strict"
         ):
-            schema["schema"] = apply_known_metadata(annotation, schema["schema"])  # type: ignore  # schema is function schema
+            schema["schema"] = apply_known_metadata(
+                annotation, schema["schema"]
+            )  # type: ignore  # schema is function schema
             return schema
 
         # if we're allowed to apply constraint directly to the schema, like le to int, do that
@@ -301,24 +313,32 @@ def apply_known_metadata(
                     inner_schema = inner_schema["schema"]  # type: ignore
                 inner_schema_type = inner_schema["type"]
                 if inner_schema_type == "list" or (
-                    inner_schema_type == "json-or-python" and inner_schema["json_schema"]["type"] == "list"  # type: ignore
+                    # type: ignore
+                    inner_schema_type == "json-or-python"
+                    and inner_schema["json_schema"]["type"] == "list"
                 ):
                     json_schema_constraint = (
-                        "minItems" if constraint == "min_length" else "maxItems"
+                        "minItems"
+                        if constraint == "min_length"
+                        else "maxItems"
                     )
                 else:
                     json_schema_constraint = (
-                        "minLength" if constraint == "min_length" else "maxLength"
+                        "minLength"
+                        if constraint == "min_length"
+                        else "maxLength"
                     )
 
             schema = cs.no_info_after_validator_function(
                 partial(
-                    get_constraint_validator(constraint), **{"constraint_value": value}
+                    get_constraint_validator(constraint),
+                    **{"constraint_value": value},
                 ),
                 schema,
             )
             add_js_update_schema(
-                schema, lambda: {json_schema_constraint: as_jsonable_value(value)}
+                schema,
+                lambda: {json_schema_constraint: as_jsonable_value(value)},
             )  # noqa: B023
         elif constraint == "allow_inf_nan" and value is False:
             schema = cs.no_info_after_validator_function(
@@ -419,11 +439,17 @@ def collect_known_metadata(
         ):
             constraint = at_to_constraint_map[annotation_type]
             res[constraint] = getattr(annotation, constraint)
-        elif isinstance(annotation, type) and issubclass(annotation, PydanticMetadata):
+        elif isinstance(annotation, type) and issubclass(
+            annotation, PydanticMetadata
+        ):
             # also support PydanticMetadata classes being used without initialisation,
             # e.g. `Annotated[int, Strict]` as well as `Annotated[int, Strict()]`
             res.update(
-                {k: v for k, v in vars(annotation).items() if not k.startswith("_")}
+                {
+                    k: v
+                    for k, v in vars(annotation).items()
+                    if not k.startswith("_")
+                }
             )
         else:
             remaining.append(annotation)

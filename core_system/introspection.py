@@ -1,6 +1,10 @@
 from authlib.consts import default_json_headers
 
-from ..rfc6749 import InvalidRequestError, TokenEndpoint, UnsupportedTokenTypeError
+from ..rfc6749 import (
+    InvalidRequestError,
+    TokenEndpoint,
+    UnsupportedTokenTypeError,
+)
 
 
 class IntrospectionEndpoint(TokenEndpoint):
@@ -9,8 +13,9 @@ class IntrospectionEndpoint(TokenEndpoint):
 
     .. _RFC7662: https://tools.ietf.org/html/rfc7662
     """
+
     #: Endpoint name to be registered
-    ENDPOINT_NAME = 'introspection'
+    ENDPOINT_NAME = "introspection"
 
     def authenticate_token(self, request, client):
         """The protected resource calls the introspection endpoint using an HTTP
@@ -33,16 +38,18 @@ class IntrospectionEndpoint(TokenEndpoint):
         """
 
         self.check_params(request, client)
-        token = self.query_token(request.form['token'], request.form.get('token_type_hint'))
+        token = self.query_token(
+            request.form["token"], request.form.get("token_type_hint")
+        )
         if token and self.check_permission(token, client, request):
             return token
 
     def check_params(self, request, client):
         params = request.form
-        if 'token' not in params:
+        if "token" not in params:
             raise InvalidRequestError()
 
-        hint = params.get('token_type_hint')
+        hint = params.get("token_type_hint")
         if hint and hint not in self.SUPPORTED_TOKEN_TYPES:
             raise UnsupportedTokenTypeError()
 
@@ -68,12 +75,12 @@ class IntrospectionEndpoint(TokenEndpoint):
         # token, then the authorization server MUST return an introspection
         # response with the "active" field set to "false"
         if not token:
-            return {'active': False}
+            return {"active": False}
         if token.is_expired() or token.is_revoked():
-            return {'active': False}
+            return {"active": False}
         payload = self.introspect_token(token)
-        if 'active' not in payload:
-            payload['active'] = True
+        if "active" not in payload:
+            payload["active"] = True
         return payload
 
     def check_permission(self, token, client, request):

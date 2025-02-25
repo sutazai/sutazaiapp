@@ -62,7 +62,7 @@ class Tree(JupyterMixin):
         node = Tree(
             label,
             style=self.style if style is None else style,
-            guide_style=self.guide_style if guide_style is None else guide_style,
+            guide_style=(self.guide_style if guide_style is None else guide_style),
             expanded=expanded,
             highlight=self.highlight if highlight is None else highlight,
         )
@@ -127,7 +127,7 @@ class Tree(JupyterMixin):
 
             guide_style = guide_style_stack.current + get_style(node.guide_style)
             style = style_stack.current + get_style(node.style)
-            prefix = levels[(2 if self.hide_root else 1) :]
+            prefix = levels[(2 if self.hide_root else 1):]
             renderable_lines = console.render_lines(
                 Styled(node.label, style),
                 options.update(
@@ -151,7 +151,8 @@ class Tree(JupyterMixin):
                     yield new_line
                     if first and prefix:
                         prefix[-1] = make_guide(
-                            SPACE if last else CONTINUE, prefix[-1].style or null_style
+                            SPACE if last else CONTINUE,
+                            prefix[-1].style or null_style,
                         )
 
             if node.expanded and node.children:

@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 import sys
-from typing import Any, Dict, List
+from typing import List
 
 
 class SutazAiOptimizationManager:

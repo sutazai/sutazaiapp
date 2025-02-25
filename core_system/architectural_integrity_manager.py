@@ -10,8 +10,6 @@ Provides advanced capabilities for:
 """
 
 import ast
-import importlib
-import inspect
 import json
 import logging
 import os
@@ -19,15 +17,18 @@ import re
 import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional
 
 import networkx as nx
+
+from core_system.comprehensive_dependency_manager import (
+    ComprehensiveDependencyManager,
+)
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Internal system imports
-from core_system.comprehensive_dependency_manager import ComprehensiveDependencyManager
 
 
 @dataclass
@@ -80,16 +81,22 @@ class ArchitecturalIntegrityManager:
                 logging.StreamHandler(sys.stdout),
             ],
         )
-        self.logger = logging.getLogger("SutazAI.ArchitecturalIntegrityManager")
+        self.logger = logging.getLogger(
+            "SutazAI.ArchitecturalIntegrityManager"
+        )
 
         # Initialize dependency manager
-        self.dependency_manager = ComprehensiveDependencyManager(base_dir, log_dir)
+        self.dependency_manager = ComprehensiveDependencyManager(
+            base_dir, log_dir
+        )
 
         # Tracking and analysis
         self.architectural_graph = nx.DiGraph()
         self.cross_reference_map = {}
 
-    def perform_architectural_integrity_analysis(self) -> ArchitecturalIntegrityReport:
+    def perform_architectural_integrity_analysis(
+        self,
+    ) -> ArchitecturalIntegrityReport:
         """
         Perform comprehensive architectural integrity analysis
 
@@ -117,8 +124,10 @@ class ArchitecturalIntegrityManager:
             cross_reference_map = self._generate_cross_reference_map()
 
             # Generate optimization recommendations
-            optimization_recommendations = self._generate_optimization_recommendations(
-                structural_analysis, code_quality_metrics, integrity_issues
+            optimization_recommendations = (
+                self._generate_optimization_recommendations(
+                    structural_analysis, code_quality_metrics, integrity_issues
+                )
             )
 
             # Create comprehensive architectural integrity report
@@ -176,12 +185,12 @@ class ArchitecturalIntegrityManager:
             # File type distribution
             for file in files:
                 file_ext = os.path.splitext(file)[1]
-                structural_analysis["directories"][relative_path]["file_types"][
-                    file_ext
-                ] = (
-                    structural_analysis["directories"][relative_path]["file_types"].get(
-                        file_ext, 0
-                    )
+                structural_analysis["directories"][relative_path][
+                    "file_types"
+                ][file_ext] = (
+                    structural_analysis["directories"][relative_path][
+                        "file_types"
+                    ].get(file_ext, 0)
                     + 1
                 )
 
@@ -229,7 +238,9 @@ class ArchitecturalIntegrityManager:
                         ] = complexity
 
                         # Documentation coverage
-                        doc_coverage = self._calculate_documentation_coverage(tree)
+                        doc_coverage = self._calculate_documentation_coverage(
+                            tree
+                        )
                         code_quality_metrics["documentation_coverage"][
                             relative_path
                         ] = doc_coverage
@@ -264,18 +275,23 @@ class ArchitecturalIntegrityManager:
                 1
                 for node in ast.walk(tree)
                 if isinstance(
-                    node, (ast.If, ast.While, ast.For, ast.Try, ast.ExceptHandler)
+                    node,
+                    (ast.If, ast.While, ast.For, ast.Try, ast.ExceptHandler),
                 )
             ),
             "function_count": sum(
-                1 for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+                1
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
             ),
             "class_count": sum(
                 1 for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
             ),
         }
 
-    def _calculate_documentation_coverage(self, tree: ast.AST) -> Dict[str, float]:
+    def _calculate_documentation_coverage(
+        self, tree: ast.AST
+    ) -> Dict[str, float]:
         """
         Calculate documentation coverage
 
@@ -371,15 +387,25 @@ class ArchitecturalIntegrityManager:
 
                     # Categorize modules
                     if "core_system" in file_path:
-                        architectural_patterns["module_categories"]["core_system"] += 1
+                        architectural_patterns["module_categories"][
+                            "core_system"
+                        ] += 1
                     elif "workers" in file_path:
-                        architectural_patterns["module_categories"]["workers"] += 1
+                        architectural_patterns["module_categories"][
+                            "workers"
+                        ] += 1
                     elif "services" in file_path:
-                        architectural_patterns["module_categories"]["services"] += 1
+                        architectural_patterns["module_categories"][
+                            "services"
+                        ] += 1
                     elif "utils" in file_path:
-                        architectural_patterns["module_categories"]["utils"] += 1
+                        architectural_patterns["module_categories"][
+                            "utils"
+                        ] += 1
                     else:
-                        architectural_patterns["module_categories"]["external"] += 1
+                        architectural_patterns["module_categories"][
+                            "external"
+                        ] += 1
 
                     # Detect design patterns
                     try:
@@ -387,17 +413,27 @@ class ArchitecturalIntegrityManager:
                             content = f.read()
 
                         # Simple pattern detection (can be expanded)
-                        if re.search(r"@classmethod\s+def\s+getInstance", content):
-                            architectural_patterns["design_patterns"]["singleton"] += 1
+                        if re.search(
+                            r"@classmethod\s+def\s+getInstance", content
+                        ):
+                            architectural_patterns["design_patterns"][
+                                "singleton"
+                            ] += 1
 
                         if re.search(r"def\s+create_", content):
-                            architectural_patterns["design_patterns"]["factory"] += 1
+                            architectural_patterns["design_patterns"][
+                                "factory"
+                            ] += 1
 
                         if re.search(r"def\s+execute\s*\(", content):
-                            architectural_patterns["design_patterns"]["strategy"] += 1
+                            architectural_patterns["design_patterns"][
+                                "strategy"
+                            ] += 1
 
                         if re.search(r"@\w+\s*def\s+\w+\s*\(", content):
-                            architectural_patterns["design_patterns"]["decorator"] += 1
+                            architectural_patterns["design_patterns"][
+                                "decorator"
+                            ] += 1
 
                     except Exception as e:
                         self.logger.warning(
@@ -416,12 +452,18 @@ class ArchitecturalIntegrityManager:
         integrity_issues = []
 
         # Dependency analysis
-        dependency_report = self.dependency_manager.analyze_project_dependencies()
+        dependency_report = (
+            self.dependency_manager.analyze_project_dependencies()
+        )
 
         # Circular dependencies
         for cycle in dependency_report.circular_dependencies:
             integrity_issues.append(
-                {"type": "circular_dependency", "modules": cycle, "severity": "high"}
+                {
+                    "type": "circular_dependency",
+                    "modules": cycle,
+                    "severity": "high",
+                }
             )
 
         # High coupling detection
@@ -467,7 +509,9 @@ class ArchitecturalIntegrityManager:
                         tree = ast.parse(content)
 
                         # Module imports
-                        cross_reference_map["module_imports"][relative_path] = [
+                        cross_reference_map["module_imports"][
+                            relative_path
+                        ] = [
                             node.names[0].name
                             for node in ast.walk(tree)
                             if isinstance(node, (ast.Import, ast.ImportFrom))
@@ -490,7 +534,9 @@ class ArchitecturalIntegrityManager:
                         ]
 
                         # Function calls
-                        cross_reference_map["function_calls"][relative_path] = [
+                        cross_reference_map["function_calls"][
+                            relative_path
+                        ] = [
                             {
                                 "function": (
                                     node.func.id
@@ -534,7 +580,9 @@ class ArchitecturalIntegrityManager:
         recommendations = []
 
         # Structural recommendations
-        for dir_path, dir_info in structural_analysis.get("directories", {}).items():
+        for dir_path, dir_info in structural_analysis.get(
+            "directories", {}
+        ).items():
             if dir_info.get("total_files", 0) > 50:
                 recommendations.append(
                     f"Refactor directory {dir_path} with high file count: {dir_info['total_files']} files"
@@ -563,7 +611,9 @@ class ArchitecturalIntegrityManager:
 
         return recommendations
 
-    def _persist_architectural_report(self, report: ArchitecturalIntegrityReport):
+    def _persist_architectural_report(
+        self, report: ArchitecturalIntegrityReport
+    ):
         """
         Persist architectural integrity analysis report
 
@@ -579,7 +629,9 @@ class ArchitecturalIntegrityManager:
             with open(output_file, "w") as f:
                 json.dump(asdict(report), f, indent=2)
 
-            self.logger.info(f"Architectural integrity report persisted: {output_file}")
+            self.logger.info(
+                f"Architectural integrity report persisted: {output_file}"
+            )
 
         except Exception as e:
             self.logger.error(f"Architectural report persistence failed: {e}")
@@ -602,7 +654,9 @@ class ArchitecturalIntegrityManager:
                     self.architectural_graph.add_edge(module, imported_module)
 
             plt.figure(figsize=(20, 20))
-            pos = nx.spring_layout(self.architectural_graph, k=0.5, iterations=50)
+            pos = nx.spring_layout(
+                self.architectural_graph, k=0.5, iterations=50
+            )
             nx.draw(
                 self.architectural_graph,
                 pos,
@@ -624,7 +678,9 @@ class ArchitecturalIntegrityManager:
             plt.savefig(output_file, dpi=300)
             plt.close()
 
-            self.logger.info(f"Architectural graph visualization saved: {output_file}")
+            self.logger.info(
+                f"Architectural graph visualization saved: {output_file}"
+            )
 
         except Exception as e:
             self.logger.error(f"Architectural graph visualization failed: {e}")

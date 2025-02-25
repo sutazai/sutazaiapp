@@ -5,6 +5,7 @@ Generates HTML from parsed token stream. Each instance has independent
 copy of rules. Those can be rewritten with ease. Also, you can add new
 rules if you create plugin and adds new token types.
 """
+
 from __future__ import annotations
 
 import inspect
@@ -21,8 +22,7 @@ class RendererProtocol(Protocol):
 
     def render(
         self, tokens: Sequence[Token], options: OptionsDict, env: EnvType
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
 
 class RendererHTML(RendererProtocol):
@@ -210,7 +210,11 @@ class RendererHTML(RendererProtocol):
     ###################################################
 
     def code_inline(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         token = tokens[idx]
         return (
@@ -309,28 +313,48 @@ class RendererHTML(RendererProtocol):
         return self.renderToken(tokens, idx, options, env)
 
     def hardbreak(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         return "<br />\n" if options.xhtmlOut else "<br>\n"
 
     def softbreak(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         return (
             ("<br />\n" if options.xhtmlOut else "<br>\n") if options.breaks else "\n"
         )
 
     def text(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         return escapeHtml(tokens[idx].content)
 
     def html_block(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         return tokens[idx].content
 
     def html_inline(
-        self, tokens: Sequence[Token], idx: int, options: OptionsDict, env: EnvType
+        self,
+        tokens: Sequence[Token],
+        idx: int,
+        options: OptionsDict,
+        env: EnvType,
     ) -> str:
         return tokens[idx].content

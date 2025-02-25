@@ -73,14 +73,19 @@ def _list_to_opcodes(
             raise ValueError(msg)
 
         if edit_type in {"equal", "replace"} and (
-            src_end - src_start != dest_end - dest_start or src_start == src_end
+            src_end - src_start != dest_end - dest_start
+            or src_start == src_end
         ):
             msg = "List of edit operations invalid"
             raise ValueError(msg)
-        if edit_type == "insert" and (src_start != src_end or dest_start == dest_end):
+        if edit_type == "insert" and (
+            src_start != src_end or dest_start == dest_end
+        ):
             msg = "List of edit operations invalid"
             raise ValueError(msg)
-        if edit_type == "delete" and (src_start == src_end or dest_start != dest_end):
+        if edit_type == "delete" and (
+            src_start == src_end or dest_start != dest_end
+        ):
             msg = "List of edit operations invalid"
             raise ValueError(msg)
 
@@ -94,7 +99,9 @@ def _list_to_opcodes(
             blocks[-1].dest_end = dest_end
             continue
 
-        blocks.append(Opcode(edit_type, src_start, src_end, dest_start, dest_end))
+        blocks.append(
+            Opcode(edit_type, src_start, src_end, dest_start, dest_end)
+        )
 
     # check if edit operations span the complete string
     if blocks[0].src_start != 0 or blocks[0].dest_start != 0:
@@ -133,7 +140,9 @@ class MatchingBlock:
                 return False
 
             return bool(
-                other[0] == self.a and other[1] == self.b and other[2] == self.size
+                other[0] == self.a
+                and other[1] == self.b
+                and other[2] == self.size
             )
         except TypeError:
             return False
@@ -299,7 +308,9 @@ class Editops:
 
                 i += 1
 
-            blocks.append(Opcode(tag, src_begin, src_pos, dest_begin, dest_pos))
+            blocks.append(
+                Opcode(tag, src_begin, src_pos, dest_begin, dest_pos)
+            )
 
         if src_pos < self.src_len or dest_pos < self.dest_len:
             blocks.append(
@@ -694,10 +705,14 @@ class Opcodes:
                     )
             elif op.tag == "insert":
                 for j in range(op.dest_end - op.dest_start):
-                    blocks.append(Editop("insert", op.src_start, op.dest_start + j))
+                    blocks.append(
+                        Editop("insert", op.src_start, op.dest_start + j)
+                    )
             elif op.tag == "delete":
                 for j in range(op.src_end - op.src_start):
-                    blocks.append(Editop("delete", op.src_start + j, op.dest_start))
+                    blocks.append(
+                        Editop("delete", op.src_start + j, op.dest_start)
+                    )
 
         x._editops = blocks
         return x
@@ -714,9 +729,13 @@ class Opcodes:
         blocks = []
         for op in self:
             if op.tag == "equal":
-                length = min(op.src_end - op.src_start, op.dest_end - op.dest_start)
+                length = min(
+                    op.src_end - op.src_start, op.dest_end - op.dest_start
+                )
                 if length > 0:
-                    blocks.append(MatchingBlock(op.src_start, op.dest_start, length))
+                    blocks.append(
+                        MatchingBlock(op.src_start, op.dest_start, length)
+                    )
 
         blocks.append(MatchingBlock(self.src_len, self.dest_len, 0))
         return blocks
@@ -774,7 +793,9 @@ class Opcodes:
                 tag = "delete"
 
             blocks.append(
-                Opcode(tag, op.dest_start, op.dest_end, op.src_start, op.src_end)
+                Opcode(
+                    tag, op.dest_start, op.dest_end, op.src_start, op.src_end
+                )
             )
 
         x = Opcodes.__new__(Opcodes)

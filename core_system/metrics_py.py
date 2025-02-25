@@ -5,10 +5,17 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from rapidfuzz._utils import ScorerFlag, add_scorer_attrs
+from rapidfuzz._utils import (
+    ScorerFlag,
+    add_scorer_attrs,
+)
 from rapidfuzz._utils import default_distance_attribute as dist_attr
-from rapidfuzz._utils import default_normalized_distance_attribute as norm_dist_attr
-from rapidfuzz._utils import default_normalized_similarity_attribute as norm_sim_attr
+from rapidfuzz._utils import (
+    default_normalized_distance_attribute as norm_dist_attr,
+)
+from rapidfuzz._utils import (
+    default_normalized_similarity_attribute as norm_sim_attr,
+)
 from rapidfuzz._utils import default_similarity_attribute as sim_attr
 
 # DamerauLevenshtein
@@ -40,7 +47,9 @@ from rapidfuzz.distance.Hamming_py import similarity as hamming_similarity
 # Indel
 from rapidfuzz.distance.Indel_py import distance as indel_distance
 from rapidfuzz.distance.Indel_py import editops as indel_editops
-from rapidfuzz.distance.Indel_py import normalized_distance as indel_normalized_distance
+from rapidfuzz.distance.Indel_py import (
+    normalized_distance as indel_normalized_distance,
+)
 from rapidfuzz.distance.Indel_py import (
     normalized_similarity as indel_normalized_similarity,
 )
@@ -49,7 +58,9 @@ from rapidfuzz.distance.Indel_py import similarity as indel_similarity
 
 # Jaro
 from rapidfuzz.distance.Jaro_py import distance as jaro_distance
-from rapidfuzz.distance.Jaro_py import normalized_distance as jaro_normalized_distance
+from rapidfuzz.distance.Jaro_py import (
+    normalized_distance as jaro_normalized_distance,
+)
 from rapidfuzz.distance.Jaro_py import (
     normalized_similarity as jaro_normalized_similarity,
 )
@@ -63,7 +74,9 @@ from rapidfuzz.distance.JaroWinkler_py import (
 from rapidfuzz.distance.JaroWinkler_py import (
     normalized_similarity as jaro_winkler_normalized_similarity,
 )
-from rapidfuzz.distance.JaroWinkler_py import similarity as jaro_winkler_similarity
+from rapidfuzz.distance.JaroWinkler_py import (
+    similarity as jaro_winkler_similarity,
+)
 
 # LCSseq
 from rapidfuzz.distance.LCSseq_py import distance as lcs_seq_distance
@@ -87,12 +100,18 @@ from rapidfuzz.distance.Levenshtein_py import (
     normalized_similarity as levenshtein_normalized_similarity,
 )
 from rapidfuzz.distance.Levenshtein_py import opcodes as levenshtein_opcodes
-from rapidfuzz.distance.Levenshtein_py import similarity as levenshtein_similarity
+from rapidfuzz.distance.Levenshtein_py import (
+    similarity as levenshtein_similarity,
+)
 
 # OSA
 from rapidfuzz.distance.OSA_py import distance as osa_distance
-from rapidfuzz.distance.OSA_py import normalized_distance as osa_normalized_distance
-from rapidfuzz.distance.OSA_py import normalized_similarity as osa_normalized_similarity
+from rapidfuzz.distance.OSA_py import (
+    normalized_distance as osa_normalized_distance,
+)
+from rapidfuzz.distance.OSA_py import (
+    normalized_similarity as osa_normalized_similarity,
+)
 from rapidfuzz.distance.OSA_py import similarity as osa_similarity
 
 # Postfix

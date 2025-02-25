@@ -64,7 +64,7 @@ class Columns(JupyterMixin):
     ) -> RenderResult:
         render_str = console.render_str
         renderables = [
-            render_str(renderable) if isinstance(renderable, str) else renderable
+            (render_str(renderable) if isinstance(renderable, str) else renderable)
             for renderable in self.renderables
         ]
         if not renderables:
@@ -148,9 +148,11 @@ class Columns(JupyterMixin):
         ]
         if self.equal:
             _renderables = [
-                None
-                if renderable is None
-                else Constrain(renderable, renderable_widths[0])
+                (
+                    None
+                    if renderable is None
+                    else Constrain(renderable, renderable_widths[0])
+                )
                 for renderable in _renderables
             ]
         if self.align:
@@ -164,7 +166,7 @@ class Columns(JupyterMixin):
         right_to_left = self.right_to_left
         add_row = table.add_row
         for start in range(0, len(_renderables), column_count):
-            row = _renderables[start : start + column_count]
+            row = _renderables[start: start + column_count]
             if right_to_left:
                 row = row[::-1]
             add_row(*row)

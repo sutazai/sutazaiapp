@@ -8,9 +8,10 @@ from rich.text import Text
 # Celebration Effects
 # -----------------------------
 
+
 def show_confetti(console):
     # Characters to use as confetti
-    chars = ['*', 'o', '+', '~']
+    chars = ["*", "o", "+", "~"]
     width = console.size.width
     height = console.size.height
 
@@ -22,16 +23,29 @@ def show_confetti(console):
             y = random.randint(0, max(0, height - 2))
             char = random.choice(chars)
             color = random.choice(["red", "green", "yellow", "blue", "magenta", "cyan"])
-            console.print(Text(char, style=Style(color=color)), end='', style=color, justify="left", overflow="ignore", no_wrap=True, soft_wrap=False)
+            console.print(
+                Text(char, style=Style(color=color)),
+                end="",
+                style=color,
+                justify="left",
+                overflow="ignore",
+                no_wrap=True,
+                soft_wrap=False,
+            )
             console.file.write(f"\x1b[{y};{x}H")  # Move cursor to position
         console.file.flush()
         time.sleep(0.3)
     console.clear()
-    console.print("The confetti has settled! Congrats on a clean scan!", style="bold green")
+    console.print(
+        "The confetti has settled! Congrats on a clean scan!",
+        style="bold green",
+    )
+
 
 def show_trophy(console):
     """Displays a celebratory trophy with sparkles."""
-    trophy = r"""
+    trophy = (
+        r"""
        ___________
       '._==_==_=_.'
       .-\:      /-.
@@ -41,13 +55,19 @@ def show_trophy(console):
          '::. .'
            ) (
          _.' '._
-        `"""""""`
+        `"""
+        """"`
     """
+    )
     for _ in range(5):  # Trophy animation
         console.clear()
         sparkles = random.choice(["✨", "🌟", "💫", "🎉"])
         console.print(trophy, style="bold yellow")
-        console.print(f"{sparkles} Scan Complete! No vulnerabilities found! {sparkles}", style="bold green", justify="center")
+        console.print(
+            f"{sparkles} Scan Complete! No vulnerabilities found! {sparkles}",
+            style="bold green",
+            justify="center",
+        )
         time.sleep(0.5)
     console.print("Your code is SAFE and SOUND! 🏆", style="bold yellow")
 
@@ -62,7 +82,11 @@ def show_balloons(console):
         for __ in range(random.randint(5, 10)):  # Balloons per frame
             x = random.randint(0, width - 1)
             balloon = random.choice(balloons)
-            console.print(Text(balloon, style=Style(color="yellow")), end='', overflow="ignore")
+            console.print(
+                Text(balloon, style=Style(color="yellow")),
+                end="",
+                overflow="ignore",
+            )
             console.file.write(f"\x1b[{random.randint(1, 10)};{x}H")
         console.file.flush()
         time.sleep(0.5)
@@ -94,12 +118,17 @@ def show_confetti_rain(console):
             x = random.randint(0, width - 1)
             char = random.choice(["*", "+", "~", "✨", "o"])
             color = random.choice(colors)
-            console.print(Text(char, style=Style(color=color)), end='', overflow="ignore")
+            console.print(
+                Text(char, style=Style(color=color)), end="", overflow="ignore"
+            )
             console.file.write(f"\x1b[{random.randint(1, 10)};{x}H")
         console.file.flush()
         time.sleep(0.3)
 
-    console.print("🎉 Confetti celebration complete! You're vulnerability-free! 🎉", style="bold cyan")
+    console.print(
+        "🎉 Confetti celebration complete! You're vulnerability-free! 🎉",
+        style="bold cyan",
+    )
 
 
 def show_fireworks_display(console):
@@ -112,12 +141,17 @@ def show_fireworks_display(console):
         y = random.randint(2, 8)
         firework = random.choice(fireworks)
         color = random.choice(["red", "yellow", "green", "blue", "magenta"])
-        console.print(Text(firework, style=Style(color=color)), end='', overflow="ignore")
+        console.print(
+            Text(firework, style=Style(color=color)), end="", overflow="ignore"
+        )
         console.file.write(f"\x1b[{y};{x}H")  # Position fireworks
         console.file.flush()
         time.sleep(0.3)
 
-    console.print("🎆 Fireworks display finished! Code is secure! 🎆", style="bold magenta")
+    console.print(
+        "🎆 Fireworks display finished! Code is secure! 🎆",
+        style="bold magenta",
+    )
 
 
 def show_star_trail(console):
@@ -132,7 +166,10 @@ def show_star_trail(console):
         console.print(f"{' ' * start_x}{trail}", style="bold yellow", justify="left")
         time.sleep(0.3)
 
-    console.print("✨ Your code shines bright with no vulnerabilities! ✨", style="bold cyan")
+    console.print(
+        "✨ Your code shines bright with no vulnerabilities! ✨",
+        style="bold cyan",
+    )
 
 
 def show_celebration_wave(console):
@@ -148,7 +185,9 @@ def show_celebration_wave(console):
         wave.insert(0, wave.pop())  # Shift wave
         time.sleep(0.3)
 
-    console.print("🌊 Celebration wave ends! Your scan is clean! 🌟", style="bold green")
+    console.print(
+        "🌊 Celebration wave ends! Your scan is clean! 🌟", style="bold green"
+    )
 
 
 # List of all celebratory effects

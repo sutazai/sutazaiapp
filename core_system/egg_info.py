@@ -91,7 +91,7 @@ def translate_pattern(glob):  # noqa: C901  # is too complex (14)  # FIXME
                     pat += re.escape(char)
                 else:
                     # Grab the insides of the [brackets]
-                    inner = chunk[i + 1 : inner_i]
+                    inner = chunk[i + 1: inner_i]
                     char_class = ""
 
                     # Class negation

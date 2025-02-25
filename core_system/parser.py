@@ -27,7 +27,12 @@ from collections import deque
 from gettext import gettext as _
 from gettext import ngettext
 
-from .exceptions import BadArgumentUsage, BadOptionUsage, NoSuchOption, UsageError
+from .exceptions import (
+    BadArgumentUsage,
+    BadOptionUsage,
+    NoSuchOption,
+    UsageError,
+)
 
 if t.TYPE_CHECKING:
     import typing_extensions as te
@@ -100,7 +105,7 @@ def _unpack_args(
     if spos is not None:
         rv[spos] = tuple(args)
         args = []
-        rv[spos + 1 :] = reversed(rv[spos + 1 :])
+        rv[spos + 1:] = reversed(rv[spos + 1:])
 
     return tuple(rv), list(args)
 
@@ -409,7 +414,8 @@ class OptionParser:
 
         elif explicit_value is not None:
             raise BadOptionUsage(
-                opt, _("Option {name!r} does not take a value.").format(name=opt)
+                opt,
+                _("Option {name!r} does not take a value.").format(name=opt),
             )
 
         else:

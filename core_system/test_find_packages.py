@@ -138,7 +138,13 @@ class TestFindPackages:
 
     def test_pep420_ns_package_no_includes_or_excludes(self):
         packages = find_namespace_packages(self.dist_dir)
-        expected = ["docs", "pkg", "pkg.nspkg", "pkg.subpkg", "pkg.subpkg.assets"]
+        expected = [
+            "docs",
+            "pkg",
+            "pkg.nspkg",
+            "pkg.subpkg",
+            "pkg.subpkg.assets",
+        ]
         self._assert_packages(packages, expected)
 
     def test_regular_package_with_nested_pep420_ns_packages(self):
@@ -166,10 +172,17 @@ class TestFlatLayoutPackageFinder:
             ["pkg", "pkg._private"],
         ),
         "invalid-name": (
-            ["invalid-pkg/__init__.py", "other.pkg/__init__.py", "yet,another/file.py"],
+            [
+                "invalid-pkg/__init__.py",
+                "other.pkg/__init__.py",
+                "yet,another/file.py",
+            ],
             [],
         ),
-        "docs": (["pkg/__init__.py", "docs/conf.py", "docs/readme.rst"], ["pkg"]),
+        "docs": (
+            ["pkg/__init__.py", "docs/conf.py", "docs/readme.rst"],
+            ["pkg"],
+        ),
         "tests": (
             ["pkg/__init__.py", "tests/test_pkg.py", "tests/__init__.py"],
             ["pkg"],

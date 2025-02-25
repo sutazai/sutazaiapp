@@ -26,7 +26,9 @@ class ASTCodeGenerator(object):
 
     def generate(self, file=None):
         """Generates the code into file, an open file buffer."""
-        src = Template(_PROLOGUE_COMMENT).substitute(cfg_filename=self.cfg_filename)
+        src = Template(_PROLOGUE_COMMENT).substitute(
+            cfg_filename=self.cfg_filename
+        )
 
         src += _PROLOGUE_CODE
         for node_cfg in self.node_cfg:
@@ -46,8 +48,14 @@ class ASTCodeGenerator(object):
                 colon_i = line.find(":")
                 lbracket_i = line.find("[")
                 rbracket_i = line.find("]")
-                if colon_i < 1 or lbracket_i <= colon_i or rbracket_i <= lbracket_i:
-                    raise RuntimeError("Invalid line in %s:\n%s\n" % (filename, line))
+                if (
+                    colon_i < 1
+                    or lbracket_i <= colon_i
+                    or rbracket_i <= lbracket_i
+                ):
+                    raise RuntimeError(
+                        "Invalid line in %s:\n%s\n" % (filename, line)
+                    )
 
                 name = line[:colon_i]
                 val = line[lbracket_i + 1 : rbracket_i]
@@ -158,7 +166,11 @@ class NodeCfg(object):
         return src
 
     def _gen_attr_names(self):
-        src = "    attr_names = (" + "".join("%r, " % nm for nm in self.attr) + ")"
+        src = (
+            "    attr_names = ("
+            + "".join("%r, " % nm for nm in self.attr)
+            + ")"
+        )
         return src
 
 

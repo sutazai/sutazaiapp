@@ -185,9 +185,7 @@ def main():
             print(f"  - {file_result['file_path']}")
             for fix_type, count in file_result["fixes_applied"].items():
                 if count > 0:
-                    print(
-                        f"    • {fix_type.replace('_', ' ').title()}: {count}"
-                    )
+                    print(f"    • {fix_type.replace('_', ' ').title()}: {count}")
     else:
         print("✅ No markdown formatting issues found.")
 

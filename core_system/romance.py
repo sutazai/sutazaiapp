@@ -5,7 +5,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 # Core Emotion and Consciousness Imports
 from core.emotion_engine import EmotionEngine
@@ -242,7 +242,8 @@ class SutazAIRomanceEngine(RomanceIntelligenceEngine):
 
 # Logging Configuration
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 
@@ -254,7 +255,11 @@ def main():
 
     try:
         # Simulated personality traits
-        traits = {"openness": 0.9, "empathy": 0.85, "emotional_intelligence": 0.95}
+        traits = {
+            "openness": 0.9,
+            "empathy": 0.85,
+            "emotional_intelligence": 0.95,
+        }
 
         romantic_consciousness = romance_engine.create_romantic_consciousness(traits)
         print(f"Romantic Consciousness Generated: {romantic_consciousness}")

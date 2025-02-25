@@ -244,7 +244,8 @@ class CacheController:
         if max_age is not None:
             freshness_lifetime = max_age
             logger.debug(
-                "Freshness lifetime from request max-age: %i", freshness_lifetime
+                "Freshness lifetime from request max-age: %i",
+                freshness_lifetime,
             )
 
         min_fresh = cc.get("min-fresh")
@@ -329,7 +330,9 @@ class CacheController:
         cacheable_status_codes = status_codes or self.cacheable_status_codes
         if response.status not in cacheable_status_codes:
             logger.debug(
-                "Status code %s not in %s", response.status, cacheable_status_codes
+                "Status code %s not in %s",
+                response.status,
+                cacheable_status_codes,
             )
             return
 

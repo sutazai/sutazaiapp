@@ -60,9 +60,12 @@ class Box:
         # foot
         self.foot_left, _, self.foot_vertical, self.foot_right = iter(line7)
         # bottom
-        self.bottom_left, self.bottom, self.bottom_divider, self.bottom_right = iter(
-            line8
-        )
+        (
+            self.bottom_left,
+            self.bottom,
+            self.bottom_divider,
+            self.bottom_right,
+        ) = iter(line8)
 
     def __repr__(self) -> str:
         return "Box(...)"
@@ -258,96 +261,96 @@ SQUARE_DOUBLE_HEAD: Box = Box(
 
 MINIMAL: Box = Box(
     """\
-  ╷ 
-  │ 
+  ╷
+  │
 ╶─┼╴
-  │ 
+  │
 ╶─┼╴
 ╶─┼╴
-  │ 
-  ╵ 
+  │
+  ╵
 """
 )
 
 
 MINIMAL_HEAVY_HEAD: Box = Box(
     """\
-  ╷ 
-  │ 
+  ╷
+  │
 ╺━┿╸
-  │ 
+  │
 ╶─┼╴
 ╶─┼╴
-  │ 
-  ╵ 
+  │
+  ╵
 """
 )
 
 MINIMAL_DOUBLE_HEAD: Box = Box(
     """\
-  ╷ 
-  │ 
- ═╪ 
-  │ 
- ─┼ 
- ─┼ 
-  │ 
-  ╵ 
+  ╷
+  │
+ ═╪
+  │
+ ─┼
+ ─┼
+  │
+  ╵
 """
 )
 
 
 SIMPLE: Box = Box(
     """\
-    
-    
- ── 
-    
-    
- ── 
-    
-    
+
+
+ ──
+
+
+ ──
+
+
 """
 )
 
 SIMPLE_HEAD: Box = Box(
     """\
-    
-    
- ── 
-    
-    
-    
-    
-    
+
+
+ ──
+
+
+
+
+
 """
 )
 
 
 SIMPLE_HEAVY: Box = Box(
     """\
-    
-    
- ━━ 
-    
-    
- ━━ 
-    
-    
+
+
+ ━━
+
+
+ ━━
+
+
 """
 )
 
 
 HORIZONTALS: Box = Box(
     """\
- ── 
-    
- ── 
-    
- ── 
- ── 
-    
- ── 
+ ──
+
+ ──
+
+ ──
+ ──
+
+ ──
 """
 )
 
@@ -431,14 +434,14 @@ DOUBLE_EDGE: Box = Box(
 
 MARKDOWN: Box = Box(
     """\
-    
+
 | ||
 |-||
 | ||
 |-||
 |-||
 | ||
-    
+
 """,
     ascii=True,
 )

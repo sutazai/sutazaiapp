@@ -1,6 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 NOT_IMPLEMENTED = "You should implement this."
 
@@ -18,10 +18,17 @@ class FormatterAPI:
         """
         Dummy initializer for the FormatterAPI class.
         """
-        pass
 
     @abstractmethod
-    def render_vulnerabilities(self, announcements: List[Dict[str, Any]], vulnerabilities: List[Dict[str, Any]], remediations: Dict[str, Any], full: bool, packages: List[Dict[str, Any]], fixes: Tuple = ()) -> Optional[str]:
+    def render_vulnerabilities(
+        self,
+        announcements: List[Dict[str, Any]],
+        vulnerabilities: List[Dict[str, Any]],
+        remediations: Dict[str, Any],
+        full: bool,
+        packages: List[Dict[str, Any]],
+        fixes: Tuple = (),
+    ) -> Optional[str]:
         """
         Render the vulnerabilities report.
 
@@ -39,7 +46,11 @@ class FormatterAPI:
         raise NotImplementedError(NOT_IMPLEMENTED)  # pragma: no cover
 
     @abstractmethod
-    def render_licenses(self, announcements: List[Dict[str, Any]], licenses: List[Dict[str, Any]]) -> Optional[str]:
+    def render_licenses(
+        self,
+        announcements: List[Dict[str, Any]],
+        licenses: List[Dict[str, Any]],
+    ) -> Optional[str]:
         """
         Render the licenses report.
 
@@ -53,7 +64,9 @@ class FormatterAPI:
         raise NotImplementedError(NOT_IMPLEMENTED)  # pragma: no cover
 
     @abstractmethod
-    def render_announcements(self, announcements: List[Dict[str, Any]]) -> Optional[str]:
+    def render_announcements(
+        self, announcements: List[Dict[str, Any]]
+    ) -> Optional[str]:
         """
         Render the announcements.
 
@@ -70,6 +83,7 @@ class SafetyFormatter(FormatterAPI):
     """
     Formatter class that implements the FormatterAPI to render reports in various formats.
     """
+
     def __init__(self, output: str, **kwargs: Any) -> None:
         """
         Initialize the SafetyFormatter with the specified output format.
@@ -86,16 +100,24 @@ class SafetyFormatter(FormatterAPI):
 
         self.format = ScreenReport(**kwargs)
 
-        if output == 'json':
+        if output == "json":
             self.format = JsonReport(**kwargs)
-        elif output == 'html':
+        elif output == "html":
             self.format = HTMLReport(**kwargs)
-        elif output == 'bare':
+        elif output == "bare":
             self.format = BareReport(**kwargs)
-        elif output == 'text':
+        elif output == "text":
             self.format = TextReport(**kwargs)
 
-    def render_vulnerabilities(self, announcements: List[Dict[str, Any]], vulnerabilities: List[Dict[str, Any]], remediations: Dict[str, Any], full: bool, packages: List[Dict[str, Any]], fixes: Tuple = ()) -> Optional[str]:
+    def render_vulnerabilities(
+        self,
+        announcements: List[Dict[str, Any]],
+        vulnerabilities: List[Dict[str, Any]],
+        remediations: Dict[str, Any],
+        full: bool,
+        packages: List[Dict[str, Any]],
+        fixes: Tuple = (),
+    ) -> Optional[str]:
         """
         Render the vulnerabilities report.
 
@@ -110,10 +132,19 @@ class SafetyFormatter(FormatterAPI):
         Returns:
             Optional[str]: Rendered vulnerabilities report.
         """
-        LOG.info('Safety is going to render_vulnerabilities with format: %s', self.format)
-        return self.format.render_vulnerabilities(announcements, vulnerabilities, remediations, full, packages, fixes)
+        LOG.info(
+            "Safety is going to render_vulnerabilities with format: %s",
+            self.format,
+        )
+        return self.format.render_vulnerabilities(
+            announcements, vulnerabilities, remediations, full, packages, fixes
+        )
 
-    def render_licenses(self, announcements: List[Dict[str, Any]], licenses: List[Dict[str, Any]]) -> Optional[str]:
+    def render_licenses(
+        self,
+        announcements: List[Dict[str, Any]],
+        licenses: List[Dict[str, Any]],
+    ) -> Optional[str]:
         """
         Render the licenses report.
 
@@ -124,7 +155,7 @@ class SafetyFormatter(FormatterAPI):
         Returns:
             Optional[str]: Rendered licenses report.
         """
-        LOG.info('Safety is going to render_licenses with format: %s', self.format)
+        LOG.info("Safety is going to render_licenses with format: %s", self.format)
         return self.format.render_licenses(announcements, licenses)
 
     def render_announcements(self, announcements: List[Dict[str, Any]]):
@@ -137,5 +168,8 @@ class SafetyFormatter(FormatterAPI):
         Returns:
             Optional[str]: Rendered announcements.
         """
-        LOG.info('Safety is going to render_announcements with format: %s', self.format)
+        LOG.info(
+            "Safety is going to render_announcements with format: %s",
+            self.format,
+        )
         return self.format.render_announcements(announcements)

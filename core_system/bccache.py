@@ -6,16 +6,17 @@ Situations where this is useful are often forking web applications that
 are initialized on the first request.
 """
 
+import base64
 import errno
 import fnmatch
+import json
 import marshal
 import os
-import pickle
 import stat
 import sys
 import tempfile
 import typing as t
-from hashlib import sha1
+from hashlib import sha256 as secure_hash
 from io import BytesIO
 from types import CodeType
 
@@ -38,8 +39,8 @@ bc_version = 5
 # if a project upgrades its Python version.
 bc_magic = (
     b"j2"
-    + pickle.dumps(bc_version, 2)
-    + pickle.dumps((sys.version_info[0] << 24) | sys.version_info[1], 2)
+    + json.dumps(bc_version).encode()
+    + json.dumps((sys.version_info[0] << 24) | sys.version_info[1]).encode()
 )
 
 
@@ -52,7 +53,9 @@ class Bucket:
     cache subclasses don't have to care about cache invalidation.
     """
 
-    def __init__(self, environment: "Environment", key: str, checksum: str) -> None:
+    def __init__(
+        self, environment: "Environment", key: str, checksum: str
+    ) -> None:
         self.environment = environment
         self.key = key
         self.checksum = checksum
@@ -64,20 +67,23 @@ class Bucket:
 
     def load_bytecode(self, f: t.BinaryIO) -> None:
         """Loads bytecode from a file or file like object."""
-        # make sure the magic header is correct
-        magic = f.read(len(bc_magic))
-        if magic != bc_magic:
-            self.reset()
-            return
-        # the source code of the file changed, we need to reload
-        checksum = pickle.load(f)
-        if self.checksum != checksum:
-            self.reset()
-            return
-        # if marshal_load fails then we need to reload
         try:
-            self.code = marshal.load(f)
-        except (EOFError, ValueError, TypeError):
+            # Read and verify magic header
+            magic = f.read(len(bc_magic))
+            if magic != bc_magic:
+                self.reset()
+                return
+
+            # Load data using JSON
+            data = json.load(f)
+            if self.checksum != data["checksum"]:
+                self.reset()
+                return
+
+            # Decode code from base64
+            code_bytes = base64.b64decode(data["code"])
+            self.code = marshal.loads(code_bytes)
+        except (EOFError, ValueError, TypeError, json.JSONDecodeError):
             self.reset()
             return
 
@@ -85,9 +91,16 @@ class Bucket:
         """Dump the bytecode into the file or file like object passed."""
         if self.code is None:
             raise TypeError("can't write empty bucket")
+
+        # Write magic header
         f.write(bc_magic)
-        pickle.dump(self.checksum, f, 2)
-        marshal.dump(self.code, f)
+
+        # Convert code to base64 for JSON serialization
+        code_bytes = marshal.dumps(self.code)
+        code_b64 = base64.b64encode(code_bytes).decode("utf-8")
+
+        # Save data as JSON
+        json.dump({"checksum": self.checksum, "code": code_b64}, f)
 
     def bytecode_from_string(self, string: bytes) -> None:
         """Load bytecode from bytes."""
@@ -129,6 +142,49 @@ class BytecodeCache:
     Jinja.
     """
 
+    def __init__(self):
+        self.checksum = None
+        self.code = None
+
+    def dump(self, filename):
+        """
+        Safely dump cache information using JSON
+
+        Args:
+            filename (str): Path to save cache file
+        """
+        cache_data = {
+            "version": sys.version_info[:2],
+            "checksum": self.checksum.hex() if self.checksum else None,
+            "code": self.code.hex() if self.code else None,
+        }
+
+        with open(filename, "w") as f:
+            json.dump(cache_data, f)
+
+    def load(self, filename):
+        """
+        Safely load cache information using JSON
+
+        Args:
+            filename (str): Path to load cache file
+        """
+        with open(filename, "r") as f:
+            cache_data = json.load(f)
+
+        # Validate version compatibility
+        if cache_data["version"] != sys.version_info[:2]:
+            raise ValueError("Incompatible Python version")
+
+        self.checksum = (
+            bytes.fromhex(cache_data["checksum"])
+            if cache_data["checksum"]
+            else None
+        )
+        self.code = (
+            bytes.fromhex(cache_data["code"]) if cache_data["code"] else None
+        )
+
     def load_bytecode(self, bucket: Bucket) -> None:
         """Subclasses have to override this method to load bytecode into a
         bucket.  If they are not able to find code in the cache for the
@@ -153,7 +209,7 @@ class BytecodeCache:
         self, name: str, filename: t.Optional[t.Union[str]] = None
     ) -> str:
         """Returns the unique hash key for this template name."""
-        hash = sha1(name.encode("utf-8"))
+        hash = secure_hash(name.encode("utf-8"))
 
         if filename is not None:
             hash.update(f"|{filename}".encode())
@@ -162,7 +218,7 @@ class BytecodeCache:
 
     def get_source_checksum(self, source: str) -> str:
         """Returns a checksum for the source."""
-        return sha1(source.encode("utf-8")).hexdigest()
+        return secure_hash(source.encode("utf-8")).hexdigest()
 
     def get_bucket(
         self,
@@ -204,7 +260,9 @@ class FileSystemBytecodeCache(BytecodeCache):
     """
 
     def __init__(
-        self, directory: t.Optional[str] = None, pattern: str = "__jinja2_%s.cache"
+        self,
+        directory: t.Optional[str] = None,
+        pattern: str = "__jinja2_%s.cache",
     ) -> None:
         if directory is None:
             directory = self._get_default_cache_dir()
@@ -320,7 +378,9 @@ class FileSystemBytecodeCache(BytecodeCache):
         # normally.
         from os import remove
 
-        files = fnmatch.filter(os.listdir(self.directory), self.pattern % ("*",))
+        files = fnmatch.filter(
+            os.listdir(self.directory), self.pattern % ("*",)
+        )
         for filename in files:
             try:
                 remove(os.path.join(self.directory, filename))

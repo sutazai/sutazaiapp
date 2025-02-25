@@ -1,5 +1,5 @@
-"""Parse link title
-"""
+"""Parse link title"""
+
 from ..common.utils import charCodeAt, unescapeAll
 
 
@@ -39,7 +39,7 @@ def parseLinkTitle(string: str, pos: int, maximum: int) -> _Result:
     while pos < maximum:
         code = charCodeAt(string, pos)
         if code == marker:
-            title = string[start + 1 : pos]
+            title = string[start + 1: pos]
             title = unescapeAll(title)
             result.pos = pos + 1
             result.lines = lines

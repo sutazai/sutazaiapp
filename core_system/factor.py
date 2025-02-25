@@ -745,7 +745,14 @@ class FactorLexer(RegexLexer):
     )
 
     builtin_strings = words(
-        ("1string", "<string>", ">string", "resize-string", "string", "string?"),
+        (
+            "1string",
+            "<string>",
+            ">string",
+            "resize-string",
+            "string",
+            "string?",
+        ),
         suffix=r"(\s+)",
     )
 
@@ -821,15 +828,28 @@ class FactorLexer(RegexLexer):
                 r"(C:)(\s+)(\S+)(\s+)(\S+)",
                 bygroups(Keyword, Whitespace, Name.Function, Whitespace, Name.Class),
             ),
-            (r"(GENERIC:)(\s+)(\S+)", bygroups(Keyword, Whitespace, Name.Function)),
+            (
+                r"(GENERIC:)(\s+)(\S+)",
+                bygroups(Keyword, Whitespace, Name.Function),
+            ),
             (
                 r"(HOOK:|GENERIC#)(\s+)(\S+)(\s+)(\S+)",
-                bygroups(Keyword, Whitespace, Name.Function, Whitespace, Name.Function),
+                bygroups(
+                    Keyword,
+                    Whitespace,
+                    Name.Function,
+                    Whitespace,
+                    Name.Function,
+                ),
             ),
             (r"(\()(\s)", bygroups(Name.Function, Whitespace), "stackeffect"),
             (r"(;)(\s)", bygroups(Keyword, Whitespace)),
             # imports and namespaces
-            (r"(USING:)(\s+)", bygroups(Keyword.Namespace, Whitespace), "vocabs"),
+            (
+                r"(USING:)(\s+)",
+                bygroups(Keyword.Namespace, Whitespace),
+                "vocabs",
+            ),
             (
                 r"(USE:|UNUSE:|IN:|QUALIFIED:)(\s+)(\S+)",
                 bygroups(Keyword.Namespace, Whitespace, Name.Namespace),
@@ -920,8 +940,14 @@ class FactorLexer(RegexLexer):
                 r"(INSTANCE:)(\s+)(\S+)(\s+)(\S+)",
                 bygroups(Keyword, Whitespace, Name.Class, Whitespace, Name.Class),
             ),
-            (r"(SLOT:)(\s+)(\S+)", bygroups(Keyword, Whitespace, Name.Function)),
-            (r"(SINGLETON:)(\s+)(\S+)", bygroups(Keyword, Whitespace, Name.Class)),
+            (
+                r"(SLOT:)(\s+)(\S+)",
+                bygroups(Keyword, Whitespace, Name.Function),
+            ),
+            (
+                r"(SINGLETON:)(\s+)(\S+)",
+                bygroups(Keyword, Whitespace, Name.Class),
+            ),
             (r"SINGLETONS:", Keyword, "classes"),
             # other syntax
             (
@@ -931,7 +957,10 @@ class FactorLexer(RegexLexer):
             (r"(SYMBOLS:)(\s+)", bygroups(Keyword, Whitespace), "words"),
             (r"(SYNTAX:)(\s+)", bygroups(Keyword, Whitespace)),
             (r"(ALIEN:)(\s+)", bygroups(Keyword, Whitespace)),
-            (r"(STRUCT:)(\s+)(\S+)", bygroups(Keyword, Whitespace, Name.Class)),
+            (
+                r"(STRUCT:)(\s+)(\S+)",
+                bygroups(Keyword, Whitespace, Name.Class),
+            ),
             (
                 r"(FUNCTION:)(\s+)" r"(\S+)(\s+)(\S+)(\s+)" r"(\()(\s+)([^)]+)(\))(\s)",
                 bygroups(
@@ -970,11 +999,17 @@ class FactorLexer(RegexLexer):
                 ),
             ),
             # vocab.private
-            (r"(<PRIVATE|PRIVATE>)(\s)", bygroups(Keyword.Namespace, Whitespace)),
+            (
+                r"(<PRIVATE|PRIVATE>)(\s)",
+                bygroups(Keyword.Namespace, Whitespace),
+            ),
             # strings
             (r'"""\s(?:.|\n)*?\s"""', String),
             (r'"(?:\\\\|\\"|[^"])*"', String),
-            (r'(\S+")(\s+)((?:\\\\|\\"|[^"])*")', bygroups(String, Whitespace, String)),
+            (
+                r'(\S+")(\s+)((?:\\\\|\\"|[^"])*")',
+                bygroups(String, Whitespace, String),
+            ),
             (
                 r"(CHAR:)(\s+)(\\[\\abfnrstv]|[^\\]\S*)(\s)",
                 bygroups(String.Char, Whitespace, String.Char, Whitespace),
@@ -989,9 +1024,15 @@ class FactorLexer(RegexLexer):
             (r"[\\$]\s+\S+", Name.Constant),
             (r"M\\\s+\S+\s+\S+", Name.Constant),
             # numbers
-            (r"[+-]?(?:[\d,]*\d)?\.(?:\d([\d,]*\d)?)?(?:[eE][+-]?\d+)?\s", Number),
+            (
+                r"[+-]?(?:[\d,]*\d)?\.(?:\d([\d,]*\d)?)?(?:[eE][+-]?\d+)?\s",
+                Number,
+            ),
             (r"[+-]?\d(?:[\d,]*\d)?(?:[eE][+-]?\d+)?\s", Number),
-            (r"0x[a-fA-F\d](?:[a-fA-F\d,]*[a-fA-F\d])?(?:p\d([\d,]*\d)?)?\s", Number),
+            (
+                r"0x[a-fA-F\d](?:[a-fA-F\d,]*[a-fA-F\d])?(?:p\d([\d,]*\d)?)?\s",
+                Number,
+            ),
             (
                 r"NAN:\s+[a-fA-F\d](?:[a-fA-F\d,]*[a-fA-F\d])?(?:p\d([\d,]*\d)?)?\s",
                 Number,
@@ -999,9 +1040,15 @@ class FactorLexer(RegexLexer):
             (r"0b[01]+\s", Number.Bin),
             (r"0o[0-7]+\s", Number.Oct),
             (r"(?:\d([\d,]*\d)?)?\+\d(?:[\d,]*\d)?/\d(?:[\d,]*\d)?\s", Number),
-            (r"(?:\-\d([\d,]*\d)?)?\-\d(?:[\d,]*\d)?/\d(?:[\d,]*\d)?\s", Number),
+            (
+                r"(?:\-\d([\d,]*\d)?)?\-\d(?:[\d,]*\d)?/\d(?:[\d,]*\d)?\s",
+                Number,
+            ),
             # keywords
-            (r"(?:deprecated|final|foldable|flushable|inline|recursive)\s", Keyword),
+            (
+                r"(?:deprecated|final|foldable|flushable|inline|recursive)\s",
+                Keyword,
+            ),
             # builtins
             (builtin_kernel, bygroups(Name.Builtin, Whitespace)),
             (builtin_assocs, bygroups(Name.Builtin, Whitespace)),

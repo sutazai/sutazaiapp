@@ -361,7 +361,10 @@ class Retry(object):
         # We want to consider only the last consecutive errors sequence (Ignore redirects).
         consecutive_errors_len = len(
             list(
-                takewhile(lambda x: x.redirect_location is None, reversed(self.history))
+                takewhile(
+                    lambda x: x.redirect_location is None,
+                    reversed(self.history),
+                )
             )
         )
         if consecutive_errors_len <= 1:

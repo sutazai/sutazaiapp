@@ -228,7 +228,9 @@ def with_cleanup(func: Any) -> Any:
     directories.
     """
 
-    def configure_tempdir_registry(registry: TempDirectoryTypeRegistry) -> None:
+    def configure_tempdir_registry(
+        registry: TempDirectoryTypeRegistry,
+    ) -> None:
         for t in KEEPABLE_TEMPDIR_TYPES:
             registry.set_delete(t, False)
 

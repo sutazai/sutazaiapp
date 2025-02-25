@@ -11,29 +11,27 @@ Provides an autonomous, intelligent system for:
 """
 
 import ast
-import importlib
-import inspect
 import json
 import logging
 import os
-import re
 import sys
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import networkx as nx
 
-# Add project root to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Internal system imports
 from core_system.dependency_mapper import AdvancedDependencyMapper
 from core_system.system_integration_framework import (
     UltraComprehensiveSystemIntegrationFramework,
 )
 from scripts.comprehensive_system_audit import UltraComprehensiveSystemAuditor
 from scripts.system_optimizer import AdvancedSystemOptimizer
+
+# Add project root to Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Internal system imports
 
 
 class ComprehensiveSystemChecker:
@@ -303,7 +301,14 @@ class ComprehensiveSystemChecker:
                     1
                     for node in ast.walk(tree)
                     if isinstance(
-                        node, (ast.If, ast.While, ast.For, ast.Try, ast.ExceptHandler)
+                        node,
+                        (
+                            ast.If,
+                            ast.While,
+                            ast.For,
+                            ast.Try,
+                            ast.ExceptHandler,
+                        ),
                     )
                 ),
                 "function_count": sum(
@@ -343,7 +348,11 @@ class ComprehensiveSystemChecker:
         circular_deps = list(nx.simple_cycles(self.system_dependency_graph))
         for cycle in circular_deps:
             potential_issues.append(
-                {"type": "circular_dependency", "modules": cycle, "severity": "high"}
+                {
+                    "type": "circular_dependency",
+                    "modules": cycle,
+                    "severity": "high",
+                }
             )
 
         # Analyze code complexity

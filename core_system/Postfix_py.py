@@ -45,7 +45,11 @@ def distance(
     sim = similarity(s1, s2)
     dist = maximum - sim
 
-    return dist if (score_cutoff is None or dist <= score_cutoff) else score_cutoff + 1
+    return (
+        dist
+        if (score_cutoff is None or dist <= score_cutoff)
+        else score_cutoff + 1
+    )
 
 
 def similarity(
@@ -132,7 +136,11 @@ def normalized_distance(
     norm_sim = normalized_similarity(s1, s2, processor=processor)
     norm_dist = 1.0 - norm_sim
 
-    return norm_dist if (score_cutoff is None or norm_dist <= score_cutoff) else 1.0
+    return (
+        norm_dist
+        if (score_cutoff is None or norm_dist <= score_cutoff)
+        else 1.0
+    )
 
 
 def normalized_similarity(
@@ -179,4 +187,6 @@ def normalized_similarity(
     sim = similarity(s1, s2)
     norm_sim = sim / maximum if maximum else 1.0
 
-    return norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0.0
+    return (
+        norm_sim if (score_cutoff is None or norm_sim >= score_cutoff) else 0.0
+    )

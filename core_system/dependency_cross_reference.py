@@ -11,12 +11,10 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 import networkx as nx
 import pkg_resources
-import yaml
-from packaging import version
 
 
 class DependencyCrossReferencer:

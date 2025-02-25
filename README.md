@@ -30,6 +30,13 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 - Intelligent bottleneck detection
 - Autonomous performance tuning
 
+### 5. System Maintenance & Self-Repair
+- Comprehensive system checkup
+- Automatic syntax error fixing
+- Dependency resolution
+- Empty file detection
+- Duplicate code identification
+
 ## 🏗️ System Architecture
 
 ### Core Components
@@ -66,6 +73,7 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 │   ├── deploy.sh
 │   ├── trigger_deploy.sh
 │   ├── otp_override.py
+│   ├── syntax_fixer.py
 │   └── ...
 ├── packages/
 │   ├── wheels/  (offline .whl files)
@@ -178,3 +186,39 @@ Proprietary - All Rights Reserved
 ---
 
 *Empowering Autonomous Intelligence*
+
+## 🛠️ System Maintenance Tools
+
+SutazAI includes powerful self-maintenance tools to ensure optimal system health:
+
+### System Checkup
+Run a comprehensive system checkup to identify issues:
+```bash
+python system_checkup.py
+```
+
+This tool checks for:
+- Syntax errors in Python files
+- Import errors and missing dependencies
+- Empty files
+- Duplicate code
+- Uninstalled required packages
+
+### Syntax Fixer
+Automatically fix syntax errors in Python files:
+```bash
+python scripts/syntax_fixer.py <directory>
+```
+
+### Fix All Issues
+To run a complete system repair that addresses all detected issues:
+```bash
+python fix_all_issues.py
+```
+
+This script orchestrates multiple repair tools to fix:
+- Syntax errors
+- Import problems
+- Dependency issues
+- System configuration problems
+- Performance bottlenecks

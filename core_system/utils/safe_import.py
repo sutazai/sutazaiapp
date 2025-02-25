@@ -13,48 +13,54 @@ from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
+ALLOWED_MODULES = {
+    'ai_agents': ['supreme_ai', 'agent_factory'],
+    'core_system': [
+        'DamerauLevenshtein', 'appearance', 'dependency_management',
+        'system_architecture_analyzer', 'system_integrator'
+    ],
+    'security': ['advanced_security_manager'],
+}
+
+
 def safe_import(module_name: str, package: Optional[str] = None) -> Any:
     """
-    Safely import a module with comprehensive error handling
-    
+    Safely import modules with strict whitelisting
+
     Args:
         module_name (str): Name of the module to import
-        package (Optional[str]): Optional package context for relative imports
-    
+        package (Optional[str]): Optional package name
+
     Returns:
-        Imported module or None if import fails
+        Imported module or raises ImportError
     """
+    parts = module_name.split('.')
+    root_module = parts[0]
+
+    if root_module not in ALLOWED_MODULES:
+        raise ImportError(f"Module {root_module} is not in the allowed list")
+
+    if len(parts) > 1 and parts[1] not in ALLOWED_MODULES[root_module]:
+        raise ImportError(f"Submodule {parts[1]} is not in the allowed list")
+
     try:
-        # Attempt standard import
-        module = importlib.import_module(module_name, package)
-        return module
+        return importlib.import_module(module_name, package)
     except ImportError as e:
-        logger.warning(f"Import failed for {module_name}: {e}")
-        
-        # Attempt alternative import strategies
-        try:
-            # Try importing from sys.path
-            spec = importlib.util.find_spec(module_name)
-            if spec is not None:
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                return module
-        except Exception as alt_error:
-            logger.error(f"Alternative import failed for {module_name}: {alt_error}")
-        
-        return None
+        print(f"Import Error: {e}", file=sys.stderr)
+        raise
+
 
 def get_module_version(module: Any) -> str:
     """
     Retrieve module version safely
-    
+
     Args:
         module (Any): Imported module
-    
+
     Returns:
         Module version as string or 'Unknown'
     """
     try:
-        return getattr(module, '__version__', 'Unknown')
+        return getattr(module, "__version__", "Unknown")
     except Exception:
-        return 'Unknown'
+        return "Unknown"

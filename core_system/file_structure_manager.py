@@ -11,12 +11,11 @@ import hashlib
 import json
 import logging
 import os
-import re
 import shutil
 import sys
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 # Advanced machine learning and analysis libraries
 import networkx as nx
@@ -50,11 +49,20 @@ class UltraComprehensiveFileManager:
         # Predefined directory structure with semantic categories
         self.directory_structure = {
             "core_system": {
-                "subdirs": ["architectural_components", "integrations", "optimization"],
+                "subdirs": [
+                    "architectural_components",
+                    "integrations",
+                    "optimization",
+                ],
                 "semantic_tags": ["core", "system", "architecture"],
             },
             "ai_agents": {
-                "subdirs": ["nlp", "vision", "decision_making", "learning_models"],
+                "subdirs": [
+                    "nlp",
+                    "vision",
+                    "decision_making",
+                    "learning_models",
+                ],
                 "semantic_tags": ["ai", "machine_learning", "intelligent"],
             },
             "backend": {
@@ -71,7 +79,12 @@ class UltraComprehensiveFileManager:
             },
             "tests": {
                 "subdirs": ["unit", "integration", "performance", "security"],
-                "semantic_tags": ["test", "verification", "performance", "security"],
+                "semantic_tags": [
+                    "test",
+                    "verification",
+                    "performance",
+                    "security",
+                ],
             },
             "docs": {
                 "subdirs": ["api_docs", "user_guides", "technical_specs"],
@@ -91,7 +104,12 @@ class UltraComprehensiveFileManager:
             },
             "utils": {
                 "subdirs": ["helpers", "validators", "converters"],
-                "semantic_tags": ["utility", "helper", "validator", "converter"],
+                "semantic_tags": [
+                    "utility",
+                    "helper",
+                    "validator",
+                    "converter",
+                ],
             },
             "workers": {
                 "subdirs": ["task_queues", "background_jobs"],
@@ -177,7 +195,10 @@ class UltraComprehensiveFileManager:
             current_signature = self._extract_file_semantic_signature(file_path)
 
             duplicates = []
-            for existing_path, existing_signature in self.semantic_file_map.items():
+            for (
+                existing_path,
+                existing_signature,
+            ) in self.semantic_file_map.items():
                 if existing_path == file_path:
                     continue
 
@@ -211,9 +232,10 @@ class UltraComprehensiveFileManager:
         for duplicate_path, similarity in duplicates:
             # Intelligent merge strategy
             try:
-                with open(file_path, "r") as current_file, open(
-                    duplicate_path, "r"
-                ) as duplicate_file:
+                with (
+                    open(file_path, "r") as current_file,
+                    open(duplicate_path, "r") as duplicate_file,
+                ):
                     current_content = current_file.read()
                     duplicate_content = duplicate_file.read()
 
@@ -223,7 +245,7 @@ class UltraComprehensiveFileManager:
                 )
                 merged_content = "".join(
                     [
-                        current_content[block[0] : block[0] + block[2]]
+                        current_content[block[0]: block[0] + block[2]]
                         for block in merger.get_matching_blocks()
                         if block[2] > 0
                     ]
@@ -334,7 +356,7 @@ class UltraComprehensiveFileManager:
                 json.dump(
                     {
                         k: {
-                            sk: str(v) if not isinstance(v, (int, float, str)) else v
+                            sk: (str(v) if not isinstance(v, (int, float, str)) else v)
                             for sk, v in sig.items()
                         }
                         for k, sig in self.semantic_file_map.items()

@@ -77,7 +77,11 @@ class BashLexer(RegexLexer):
         "kshrc",
         "PKGBUILD",
     ]
-    mimetypes = ["application/x-sh", "application/x-shellscript", "text/x-shellscript"]
+    mimetypes = [
+        "application/x-sh",
+        "application/x-shellscript",
+        "text/x-shellscript",
+    ]
     url = "https://en.wikipedia.org/wiki/Unix_shell"
     version_added = "0.6"
 
@@ -114,7 +118,10 @@ class BashLexer(RegexLexer):
             (r"\A#!.+\n", Comment.Hashbang),
             (r"#.*\n", Comment.Single),
             (r"\\[\w\W]", String.Escape),
-            (r"(\b\w+)(\s*)(\+?=)", bygroups(Name.Variable, Whitespace, Operator)),
+            (
+                r"(\b\w+)(\s*)(\+?=)",
+                bygroups(Name.Variable, Whitespace, Operator),
+            ),
             (r"[\[\]{}()=]", Operator),
             (r"<<<", Operator),  # here-string
             (r"<<-?\s*(\'?)\\?(\w+)[\w\W]+?\2", String),
@@ -225,7 +232,7 @@ class ShellSessionBaseLexer(Lexer):
                 )
                 if venv_whitespace:
                     insertions.append((len(curcode), [(0, Text, venv_whitespace)]))
-                line = line[venv_match.end() :]
+                line = line[venv_match.end():]
 
             m = self._ps1rgx.match(line)
             if m:
@@ -241,17 +248,23 @@ class ShellSessionBaseLexer(Lexer):
             elif backslash_continuation:
                 if line.startswith(self._ps2):
                     insertions.append(
-                        (len(curcode), [(0, Generic.Prompt, line[: len(self._ps2)])])
+                        (
+                            len(curcode),
+                            [(0, Generic.Prompt, line[: len(self._ps2)])],
+                        )
                     )
-                    curcode += line[len(self._ps2) :]
+                    curcode += line[len(self._ps2):]
                 else:
                     curcode += line
                 backslash_continuation = curcode.endswith("\\\n")
             elif self._bare_continuation and line.startswith(self._ps2):
                 insertions.append(
-                    (len(curcode), [(0, Generic.Prompt, line[: len(self._ps2)])])
+                    (
+                        len(curcode),
+                        [(0, Generic.Prompt, line[: len(self._ps2)])],
+                    )
                 )
-                curcode += line[len(self._ps2) :]
+                curcode += line[len(self._ps2):]
             else:
                 if insertions:
                     toks = innerlexer.get_tokens_unprocessed(curcode)
@@ -359,7 +372,10 @@ class BatchLexer(RegexLexer):
             (
                 (r"\)", Punctuation, "#pop")
                 if compound
-                else (rf"\)((?=\()|{_token_terminator}){rest_of_line}", Comment.Single)
+                else (
+                    rf"\)((?=\()|{_token_terminator}){rest_of_line}",
+                    Comment.Single,
+                )
             ),
             (rf"(?={_start_label})", Text, f"follow{suffix}"),
             (_space, using(this, state="text")),
@@ -652,8 +668,14 @@ class BatchLexer(RegexLexer):
             (rf'[^"%^{_nl}]+|[%^]', String.Double),
             default("#pop"),
         ],
-        "sqstring": [include("variable-or-escape"), (r"[^%]+|%", String.Single)],
-        "bqstring": [include("variable-or-escape"), (r"[^%]+|%", String.Backtick)],
+        "sqstring": [
+            include("variable-or-escape"),
+            (r"[^%]+|%", String.Single),
+        ],
+        "bqstring": [
+            include("variable-or-escape"),
+            (r"[^%]+|%", String.Backtick),
+        ],
         "text": [
             (r'"', String.Double, "string"),
             include("variable-or-escape"),
@@ -690,7 +712,12 @@ class BatchLexer(RegexLexer):
         "for/f": [
             (
                 rf'(")((?:{_variable}|[^"])*?")([{_nlws}]*)(\))',
-                bygroups(String.Double, using(this, state="string"), Text, Punctuation),
+                bygroups(
+                    String.Double,
+                    using(this, state="string"),
+                    Text,
+                    Punctuation,
+                ),
             ),
             (r'"', String.Double, ("#pop", "for2", "string")),
             (
@@ -713,7 +740,9 @@ class BatchLexer(RegexLexer):
             (
                 rf"(defined{_token_terminator})({_space})({_stoken})",
                 bygroups(
-                    Keyword, using(this, state="text"), using(this, state="variable")
+                    Keyword,
+                    using(this, state="text"),
+                    using(this, state="variable"),
                 ),
                 "#pop",
             ),
@@ -737,14 +766,18 @@ class BatchLexer(RegexLexer):
             (
                 rf"({_space}?)(==)({_space}?{_stoken})",
                 bygroups(
-                    using(this, state="text"), Operator, using(this, state="text")
+                    using(this, state="text"),
+                    Operator,
+                    using(this, state="text"),
                 ),
                 "#pop",
             ),
             (
                 rf"({_space})({_opword})({_space}{_stoken})",
                 bygroups(
-                    using(this, state="text"), Operator.Word, using(this, state="text")
+                    using(this, state="text"),
+                    Operator.Word,
+                    using(this, state="text"),
                 ),
                 "#pop",
             ),
@@ -1055,7 +1088,10 @@ class FishShellLexer(RegexLexer):
             ),
             (r"#.*\n", Comment),
             (r"\\[\w\W]", String.Escape),
-            (r"(\b\w+)(\s*)(=)", bygroups(Name.Variable, Whitespace, Operator)),
+            (
+                r"(\b\w+)(\s*)(=)",
+                bygroups(Name.Variable, Whitespace, Operator),
+            ),
             (r"[\[\]()=]", Operator),
             (r"<<-?\s*(\'?)\\?(\w+)[\w\W]+?\2", String),
         ],

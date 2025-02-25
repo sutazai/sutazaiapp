@@ -13,7 +13,7 @@ import os
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 import psutil
 
@@ -133,7 +133,9 @@ class UltraComprehensiveSystemAnalyzer:
             security_insights["bandit_results"] = json.loads(bandit_output)
 
             # Safety dependency check
-            safety_output = subprocess.check_output(["safety", "check", "--json"]).decode()
+            safety_output = subprocess.check_output(
+                ["safety", "check", "--json"]
+            ).decode()
             security_insights["safety_check"] = json.loads(safety_output)
 
         except Exception as e:
@@ -148,7 +150,11 @@ class UltraComprehensiveSystemAnalyzer:
         Returns:
             Dict[str, Any]: Performance and resource utilization metrics
         """
-        performance_metrics = {"cpu_usage": {}, "memory_usage": {}, "disk_io": {}}
+        performance_metrics = {
+            "cpu_usage": {},
+            "memory_usage": {},
+            "disk_io": {},
+        }
 
         try:
             # CPU Usage
@@ -166,7 +172,9 @@ class UltraComprehensiveSystemAnalyzer:
             }
 
         except ImportError:
-            logger.warning("psutil not available for detailed performance analysis")
+            logger.warning(
+                "psutil not available for detailed performance analysis"
+            )
 
         return performance_metrics
 
@@ -189,14 +197,18 @@ class UltraComprehensiveSystemAnalyzer:
         # Parallel execution of analysis methods
         with ThreadPoolExecutor() as executor:
             futures = {
-                executor.submit(self.deep_code_structure_analysis): "code_structure",
+                executor.submit(
+                    self.deep_code_structure_analysis
+                ): "code_structure",
                 executor.submit(
                     self.comprehensive_dependency_check
                 ): "dependency_analysis",
                 executor.submit(
                     self.security_vulnerability_scan
                 ): "security_assessment",
-                executor.submit(self.performance_profiling): "performance_metrics",
+                executor.submit(
+                    self.performance_profiling
+                ): "performance_metrics",
             }
 
             for future in as_completed(futures):
@@ -213,7 +225,9 @@ class UltraComprehensiveSystemAnalyzer:
         with open(report_path, "w") as f:
             json.dump(self.analysis_results, f, indent=2)
 
-        logger.info(f"Comprehensive system analysis report generated: {report_path}")
+        logger.info(
+            f"Comprehensive system analysis report generated: {report_path}"
+        )
 
     def auto_optimization_suggestions(self) -> List[str]:
         """
@@ -243,10 +257,14 @@ class UltraComprehensiveSystemAnalyzer:
         # Security recommendations
         security_results = self.analysis_results.get("security_assessment", {})
         if security_results.get("bandit_results", {}).get("results"):
-            suggestions.append("Address security vulnerabilities detected by Bandit")
+            suggestions.append(
+                "Address security vulnerabilities detected by Bandit"
+            )
 
         # Performance optimization
-        performance_metrics = self.analysis_results.get("performance_metrics", {})
+        performance_metrics = self.analysis_results.get(
+            "performance_metrics", {}
+        )
         cpu_usage = performance_metrics.get("cpu_usage", {}).get("total", 0)
         if cpu_usage > 80:
             suggestions.append(
@@ -263,13 +281,17 @@ class UltraComprehensiveSystemAnalyzer:
 
         # Monitor resources before starting
         initial_resources = self.monitor_resources()
-        logger.info(f"Initial Resources - CPU: {initial_resources['cpu_usage']}%, Memory: {initial_resources['memory_usage']}%")
+        logger.info(
+            f"Initial Resources - CPU: {initial_resources['cpu_usage']}%, Memory: {initial_resources['memory_usage']}%"
+        )
 
         self.generate_comprehensive_report()
 
         # Monitor resources after analysis
         final_resources = self.monitor_resources()
-        logger.info(f"Final Resources - CPU: {final_resources['cpu_usage']}%, Memory: {final_resources['memory_usage']}%")
+        logger.info(
+            f"Final Resources - CPU: {final_resources['cpu_usage']}%, Memory: {final_resources['memory_usage']}%"
+        )
 
         optimization_suggestions = self.auto_optimization_suggestions()
 

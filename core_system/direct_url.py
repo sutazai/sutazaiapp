@@ -1,4 +1,5 @@
-""" PEP 610 """
+"""PEP 610"""
+
 import json
 import re
 import urllib.parse
@@ -23,7 +24,10 @@ class DirectUrlValidationError(Exception):
 
 
 def _get(
-    d: Dict[str, Any], expected_type: Type[T], key: str, default: Optional[T] = None
+    d: Dict[str, Any],
+    expected_type: Type[T],
+    key: str,
+    default: Optional[T] = None,
 ) -> Optional[T]:
     """Get value from dictionary and verify expected type."""
     if key not in d:
@@ -37,7 +41,10 @@ def _get(
 
 
 def _get_required(
-    d: Dict[str, Any], expected_type: Type[T], key: str, default: Optional[T] = None
+    d: Dict[str, Any],
+    expected_type: Type[T],
+    key: str,
+    default: Optional[T] = None,
 ) -> T:
     value = _get(d, expected_type, key, default)
     if value is None:

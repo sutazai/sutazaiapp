@@ -46,9 +46,9 @@ def sysctl(cmdline):
     """
     result = sh("sysctl " + cmdline)
     if FREEBSD:
-        result = result[result.find(": ") + 2 :]
+        result = result[result.find(": ") + 2:]
     elif OPENBSD or NETBSD:
-        result = result[result.find("=") + 1 :]
+        result = result[result.find("=") + 1:]
     try:
         return int(result)
     except ValueError:
@@ -391,7 +391,7 @@ class FreeBSDSystemTestCase(PsutilTestCase):
 
     def test_boot_time(self):
         s = sysctl("sysctl kern.boottime")
-        s = s[s.find(" sec = ") + 7 :]
+        s = s[s.find(" sec = ") + 7:]
         s = s[: s.find(",")]
         btime = int(s)
         assert btime == psutil.boot_time()

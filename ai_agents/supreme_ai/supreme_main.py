@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Supreme AI Orchestrator for SutazAI
 
-This script is responsible for coordinating various AI sub-agents, handling automatic code fixes, and managing workflow orchestration within the SutazAI platform.
+This script is responsible for coordinating various AI sub-agents, handling automatic
+code fixes, and managing workflow orchestration within the SutazAI platform.
 
-In a full implementation, it would trigger agents like AutoGPT, SuperAGI, LangChain modules, and more.
+In a full implementation, it would trigger agents like AutoGPT, SuperAGI, LangChain
+modules, and more.
 """
 
 import logging

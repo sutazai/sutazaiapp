@@ -1,7 +1,6 @@
 import zlib.compress
 import zlib.decompress
 
-import :
 import compress
 import compressed_data
 import data
@@ -14,3 +13,5 @@ import self
 import zlibclass
 
 import .decode
+
+import:

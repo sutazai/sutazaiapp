@@ -1,12 +1,16 @@
 # helpers.py
 import html.entities
 import re
-import sys
 import typing
 
 from . import __diag__
 from .core import *
-from .util import _bslash, _escape_regex_range_chars, _flatten, replaced_by_pep8
+from .util import (
+    _bslash,
+    _escape_regex_range_chars,
+    _flatten,
+    replaced_by_pep8,
+)
 
 
 #
@@ -196,12 +200,22 @@ def one_of(
         )
 
     if caseless:
-        isequal = lambda a, b: a.upper() == b.upper()
-        masks = lambda a, b: b.upper().startswith(a.upper())
+
+        def isequal(a, b):
+            return a.upper() == b.upper()
+
+        def masks(a, b):
+            return b.upper().startswith(a.upper())
+
         parseElementClass = CaselessKeyword if asKeyword else CaselessLiteral
     else:
-        isequal = lambda a, b: a == b
-        masks = lambda a, b: b.startswith(a)
+
+        def isequal(a, b):
+            return a == b
+
+        def masks(a, b):
+            return b.startswith(a)
+
         parseElementClass = Keyword if asKeyword else Literal
 
     symbols: List[str] = []
@@ -221,7 +235,7 @@ def one_of(
         i = 0
         while i < len(symbols) - 1:
             cur = symbols[i]
-            for j, other in enumerate(symbols[i + 1 :]):
+            for j, other in enumerate(symbols[i + 1:]):
                 if isequal(other, cur):
                     del symbols[i + j + 1]
                     break
@@ -258,7 +272,8 @@ def one_of(
 
         except re.error:
             warnings.warn(
-                "Exception creating Regex for one_of, building MatchFirst", stacklevel=2
+                "Exception creating Regex for one_of, building MatchFirst",
+                stacklevel=2,
             )
 
     # last resort, just use MatchFirst
@@ -348,11 +363,14 @@ def original_text_for(
     endlocMarker.callPreparse = False
     matchExpr = locMarker("_original_start") + expr + endlocMarker("_original_end")
     if asString:
-        extractText = lambda s, l, t: s[t._original_start : t._original_end]
+
+        def extractText(s, l, t):
+            return s[t._original_start: t._original_end]
+
     else:
 
         def extractText(s, l, t):
-            t[:] = [s[t.pop("_original_start") : t.pop("_original_end")]]
+            t[:] = [s[t.pop("_original_start"): t.pop("_original_end")]]
 
     matchExpr.set_parse_action(extractText)
     matchExpr.ignoreExprs = expr.ignoreExprs
@@ -579,7 +597,8 @@ def _makeTags(tagStr, xml, suppress_LT=Suppress("<"), suppress_GT=Suppress(">"))
     # add start<tagname> results name in parse action now that ungrouped names are not reported at two levels
     openTag.add_parse_action(
         lambda t: t.__setitem__(
-            "start" + "".join(resname.replace(":", " ").title().split()), t.copy()
+            "start" + "".join(resname.replace(":", " ").title().split()),
+            t.copy(),
         )
     )
     closeTag = closeTag(
@@ -592,7 +611,7 @@ def _makeTags(tagStr, xml, suppress_LT=Suppress("<"), suppress_GT=Suppress(">"))
 
 
 def make_html_tags(
-    tag_str: Union[str, ParserElement]
+    tag_str: Union[str, ParserElement],
 ) -> Tuple[ParserElement, ParserElement]:
     """Helper to construct opening and closing tag expressions for HTML,
     given a tag name. Matches tags in either upper or lower case,
@@ -619,7 +638,7 @@ def make_html_tags(
 
 
 def make_xml_tags(
-    tag_str: Union[str, ParserElement]
+    tag_str: Union[str, ParserElement],
 ) -> Tuple[ParserElement, ParserElement]:
     """Helper to construct opening and closing tag expressions for XML,
     given a tag name. Matches tags only in the given upper/lower case.
@@ -648,14 +667,17 @@ def replace_html_entity(s, l, t):
 
 class OpAssoc(Enum):
     """Enumeration of operator associativity
-    - used in constructing InfixNotationOperatorSpec for :class:`infix_notation`"""
+    - used in constructing InfixNotationOperatorSpec for :class:`infix_notation`
+    """
 
     LEFT = 1
     RIGHT = 2
 
 
 InfixNotationOperatorArgType = Union[
-    ParserElement, str, Tuple[Union[ParserElement, str], Union[ParserElement, str]]
+    ParserElement,
+    str,
+    Tuple[Union[ParserElement, str], Union[ParserElement, str]],
 ]
 InfixNotationOperatorSpec = Union[
     Tuple[
@@ -1036,7 +1058,12 @@ def delimited_list(
 ) -> ParserElement:
     """(DEPRECATED - use :class:`DelimitedList` class)"""
     return DelimitedList(
-        expr, delim, combine, min, max, allow_trailing_delim=allow_trailing_delim
+        expr,
+        delim,
+        combine,
+        min,
+        max,
+        allow_trailing_delim=allow_trailing_delim,
     )
 
 

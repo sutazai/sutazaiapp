@@ -288,7 +288,9 @@ def alpha_unicode_split(decoded_sequence: str) -> list[str]:
     return list(layers.values())
 
 
-def merge_coherence_ratios(results: list[CoherenceMatches]) -> CoherenceMatches:
+def merge_coherence_ratios(
+    results: list[CoherenceMatches],
+) -> CoherenceMatches:
     """
     This function merge results previously given by the function coherence_ratio.
     The return type is the same as coherence_ratio.
@@ -316,7 +318,9 @@ def merge_coherence_ratios(results: list[CoherenceMatches]) -> CoherenceMatches:
     return sorted(merge, key=lambda x: x[1], reverse=True)
 
 
-def filter_alt_coherence_matches(results: CoherenceMatches) -> CoherenceMatches:
+def filter_alt_coherence_matches(
+    results: CoherenceMatches,
+) -> CoherenceMatches:
     """
     We shall NOT return "English—" in CoherenceMatches because it is an alternative
     of "English". This function only keeps the best match and remove the em-dash in it.
@@ -345,7 +349,9 @@ def filter_alt_coherence_matches(results: CoherenceMatches) -> CoherenceMatches:
 
 @lru_cache(maxsize=2048)
 def coherence_ratio(
-    decoded_sequence: str, threshold: float = 0.1, lg_inclusion: str | None = None
+    decoded_sequence: str,
+    threshold: float = 0.1,
+    lg_inclusion: str | None = None,
 ) -> CoherenceMatches:
     """
     Detect ANY language that can be identified in given sequence. The sequence will be analysed by layers.

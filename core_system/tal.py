@@ -78,7 +78,11 @@ class TalLexer(RegexLexer):
         # this means ( foo ) is a valid comment but (foo) is not. this also
         # applies to nested comments.
         "comment": [
-            (r"(?<!\S)\((?!\S)", Comment.Multiline, "#push"),  # nested comments
+            (
+                r"(?<!\S)\((?!\S)",
+                Comment.Multiline,
+                "#push",
+            ),  # nested comments
             (r"(?<!\S)\)(?!\S)", Comment.Multiline, "#pop"),  # nested comments
             (r"[^()]+", Comment.Multiline),  # comments
             (r"[()]+", Comment.Multiline),  # comments

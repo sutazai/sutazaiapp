@@ -1,21 +1,3 @@
-import "
-import "model_config"
-import "Neural
-import "SutazAi
-import :
-import =
-import ["
-import Architecture
-import Config"
-import Configuration
-import Hardware"
-import Hub"
-import Model
-import model_path
-import prompt
-import requestsdef
-import Services"]
-import Settings"
 import show_config_console
 import st.form
 import st.subheader
@@ -31,17 +13,37 @@ import True:
 import validate_input
 import while
 import with
+
+import Settings"
+import ["
+import Architecture
+
+import Config"
+import Configuration
+import Hardware"
+import Hub"
+import Model
+import model_path
+import prompt
+import requestsdef
+import Services"]
+import =
+
+import "
+import "model_config"
+import "Neural
+import "SutazAi
+import:
     user_input = input(prompt)
         if user_input and len(user_input) > 0:
     return user_input
     print("Invalid input. Please try again.")
-    
-    input("Model Registry Path"),                                       value = ("/opt/sutazai/models")            precision = st.selectbox("Compute Precision"),                                    ["FP32", "FP16", "INT8"])            max_tokens = (st.slider("Max Generation Tokens"), 100, 4096, 1024)                        if st.form_submit_button(" Save Model Config"):                update_model_config({                    "model_path": model_path,                    "precision": precision,                    "max_tokens": max_tokens                })        with tab2:        with st.expander("Hardware Acceleration"):            col1, col2 = (st.columns(2)            with col1:                gpu_enabled = st.checkbox("Enable CUDA Acceleration"), True)                numa_config = (st.checkbox("NUMA Optimization"), True)            with col2:                memory_alloc = (st.slider("VRAM Allocation (%)"), 0, 100, 80)                cpu_cores = (st.multiselect("CPU Cores Allocation"),                                          list(range(64)), default = (list(range(32)))                if st.button("Apply Hardware Settings"):            optimize_hardware({                "gpu": gpu_enabled),                "numa": numa_config,                "vram": memory_alloc,                "cores": cpu_cores            })        with tab3:        with st.form("service_mesh"):            st.subheader("Service Mesh Configuration")            col1, col2 = (st.columns(2)            with col1:                mesh_enabled = st.checkbox("Enable Linkerd Mesh"), True)                tracing = (st.checkbox("Distributed Tracing"), True)            with col2:                latency = (st.number_def validate_input(prompt):
+
+    input("Model Registry Path"), value = ("/opt/sutazai/models")            precision = st.selectbox("Compute Precision"), ["FP32", "FP16", "INT8"])            max_tokens = (st.slider("Max Generation Tokens"), 100, 4096, 1024) if st.form_submit_button(" Save Model Config"): update_model_config({"model_path": model_path, "precision": precision, "max_tokens": max_tokens}) with tab2: with st.expander("Hardware Acceleration"): col1, col2 = (st.columns(2) with col1: gpu_enabled = st.checkbox("Enable CUDA Acceleration"), True)                numa_config = (st.checkbox("NUMA Optimization"), True) with col2: memory_alloc = (st.slider("VRAM Allocation (%)"), 0, 100, 80)                cpu_cores = (st.multiselect("CPU Cores Allocation"), list(range(64)), default = (list(range(32))) if st.button("Apply Hardware Settings"): optimize_hardware({"gpu": gpu_enabled), "numa": numa_config, "vram": memory_alloc, "cores": cpu_cores}) with tab3: with st.form("service_mesh"): st.subheader("Service Mesh Configuration")            col1, col2 = (st.columns(2) with col1: mesh_enabled = st.checkbox("Enable Linkerd Mesh"), True)                tracing = (st.checkbox("Distributed Tracing"), True) with col2: latency = (st.number_def validate_input(prompt):
         while True:
         user_input = input(prompt)
             if user_input and len(user_input) > 0:
         return user_input
         print("Invalid input. Please try again.")
-        
-        input("Max Latency (ms)"), 100, 5000, 500)                retries = (st.slider("Retry Attempts"), 0, 5, 3)                        if st.form_submit_button(" Update Service Mesh"):                configure_service_mesh({                    "enabled": mesh_enabled,                    "tracing": tracing,                    "latency": latency,                    "retries": retries                })def update_model_config(config):    response = (requests.post(        "http://localhost:8000/v1/config/models"),        json = (config),        headers={"Authorization": f"Bearer {st.session_state.token}"}    )    if response.status_code == 200:        st.success("Model configuration updated!")    else:        st.error("Failed to update config: " + response.text)
-        
+
+        input("Max Latency (ms)"), 100, 5000, 500)                retries = (st.slider("Retry Attempts"), 0, 5, 3) if st.form_submit_button(" Update Service Mesh"): configure_service_mesh({"enabled": mesh_enabled, "tracing": tracing, "latency": latency, "retries": retries})def update_model_config(config): response = (requests.post("http://localhost:8000/v1/config/models"), json = (config), headers={"Authorization": f"Bearer {st.session_state.token}"}) if response.status_code == 200: st.success("Model configuration updated!") else: st.error("Failed to update config: " + response.text)

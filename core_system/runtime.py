@@ -729,7 +729,7 @@ class Macro:
         # arguments expected we start filling in keyword arguments
         # and defaults.
         if off != self._argument_count:
-            for name in self.arguments[len(arguments) :]:
+            for name in self.arguments[len(arguments):]:
                 try:
                     value = kwargs.pop(name)
                 except KeyError:
@@ -761,7 +761,7 @@ class Macro:
                 f"macro {self.name!r} takes no keyword argument {next(iter(kwargs))!r}"
             )
         if self.catch_varargs:
-            arguments.append(args[self._argument_count :])
+            arguments.append(args[self._argument_count:])
         elif len(args) > self._argument_count:
             raise TypeError(
                 f"macro {self.name!r} takes not more than"
@@ -911,7 +911,8 @@ class Undefined:
 
 
 def make_logging_undefined(
-    logger: t.Optional["logging.Logger"] = None, base: t.Type[Undefined] = Undefined
+    logger: t.Optional["logging.Logger"] = None,
+    base: t.Type[Undefined] = Undefined,
 ) -> t.Type[Undefined]:
     """Given a logger object this returns a new undefined class that will
     log certain failures.  It will log iterations and printing.  If no

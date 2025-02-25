@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# cSpell:ignore sutazai Sutaz levelname automac ctaches semgrep deepseek docstrings
+# cSpell:ignore sutazai Sutaz levelname automac ctaches semgrep deepseek
+# docstrings
 
 import ast
-import difflib
 import json
 import logging
 import os
@@ -10,7 +10,7 @@ import re
 import sys
 import tokenize
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import spellchecker
 from rich.console import Console
@@ -34,7 +34,8 @@ class SpellCheckManager:
         os.makedirs(self.log_dir, exist_ok=True)
 
         self.log_file = os.path.join(
-            self.log_dir, f"spell_check_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            self.log_dir,
+            f"spell_check_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
         )
 
         logging.basicConfig(
@@ -90,7 +91,9 @@ class SpellCheckManager:
         except SyntaxError:
             return False
 
-    def check_file_spelling(self, file_path: str) -> Dict[str, List[Tuple[str, str]]]:
+    def check_file_spelling(
+        self, file_path: str
+    ) -> Dict[str, List[Tuple[str, str]]]:
         """
         Perform comprehensive spell checking on a file
 
@@ -100,7 +103,11 @@ class SpellCheckManager:
         Returns:
             Dictionary of spelling errors with suggested corrections
         """
-        spelling_errors = {"comments": [], "docstrings": [], "string_literals": []}
+        spelling_errors = {
+            "comments": [],
+            "docstrings": [],
+            "string_literals": [],
+        }
 
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -112,13 +119,18 @@ class SpellCheckManager:
             # Extract comments, docstrings, and string literals
             for node in ast.walk(tree):
                 # Check docstrings
-                if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
+                if isinstance(
+                    node, (ast.FunctionDef, ast.ClassDef, ast.Module)
+                ):
                     docstring = ast.get_docstring(node)
                     if docstring:
                         doc_errors = self._check_text_spelling(docstring)
                         if doc_errors:
                             spelling_errors["docstrings"].extend(
-                                [(word, correction) for word, correction in doc_errors]
+                                [
+                                    (word, correction)
+                                    for word, correction in doc_errors
+                                ]
                             )
 
                 # Check string literals
@@ -126,21 +138,29 @@ class SpellCheckManager:
                     str_errors = self._check_text_spelling(node.s)
                     if str_errors:
                         spelling_errors["string_literals"].extend(
-                            [(word, correction) for word, correction in str_errors]
+                            [
+                                (word, correction)
+                                for word, correction in str_errors
+                            ]
                         )
 
             # Extract comments using tokenize
             with open(file_path, "rb") as f:
                 tokens = list(tokenize.tokenize(f.readline))
                 comments = [
-                    token.string for token in tokens if token.type == tokenize.COMMENT
+                    token.string
+                    for token in tokens
+                    if token.type == tokenize.COMMENT
                 ]
 
                 for comment in comments:
                     comment_errors = self._check_text_spelling(comment)
                     if comment_errors:
                         spelling_errors["comments"].extend(
-                            [(word, correction) for word, correction in comment_errors]
+                            [
+                                (word, correction)
+                                for word, correction in comment_errors
+                            ]
                         )
 
         except Exception as e:
@@ -217,7 +237,9 @@ class SpellCheckManager:
 
             # Log corrections
             if any(spelling_errors.values()):
-                logging.info(f"Corrected spelling in {file_path}: {spelling_errors}")
+                logging.info(
+                    f"Corrected spelling in {file_path}: {spelling_errors}"
+                )
                 return True
 
             return False

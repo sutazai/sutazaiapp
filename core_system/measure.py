@@ -77,7 +77,10 @@ class Measurement(NamedTuple):
 
     @classmethod
     def get(
-        cls, console: "Console", options: "ConsoleOptions", renderable: "RenderableType"
+        cls,
+        console: "Console",
+        options: "ConsoleOptions",
+        renderable: "RenderableType",
     ) -> "Measurement":
         """Get a measurement for a renderable.
 

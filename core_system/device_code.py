@@ -58,7 +58,11 @@ class DeviceCodeGrant(BaseGrant, TokenEndpointMixin):
     """
 
     GRANT_TYPE = DEVICE_CODE_GRANT_TYPE
-    TOKEN_ENDPOINT_AUTH_METHODS = ["client_secret_basic", "client_secret_post", "none"]
+    TOKEN_ENDPOINT_AUTH_METHODS = [
+        "client_secret_basic",
+        "client_secret_post",
+        "none",
+    ]
 
     def validate_token_request(self):
         """After displaying instructions to the user, the client creates an

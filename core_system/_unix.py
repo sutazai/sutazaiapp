@@ -40,7 +40,9 @@ else:  # pragma: win32 no cover
             if not Path(self.lock_file).exists():
                 open_flags |= os.O_CREAT
             fd = os.open(self.lock_file, open_flags, self._context.mode)
-            with suppress(PermissionError):  # This locked is not owned by this UID
+            with suppress(
+                PermissionError
+            ):  # This locked is not owned by this UID
                 os.fchmod(fd, self._context.mode)
             try:
                 fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)

@@ -2,8 +2,15 @@ from urllib.request import parse_http_list, parse_keqv_list
 
 from authlib.common.urls import extract_params, url_decode, urlparse
 
-from .errors import DuplicatedOAuthProtocolParameterError, InsecureTransportError
-from .signature import SIGNATURE_TYPE_BODY, SIGNATURE_TYPE_HEADER, SIGNATURE_TYPE_QUERY
+from .errors import (
+    DuplicatedOAuthProtocolParameterError,
+    InsecureTransportError,
+)
+from .signature import (
+    SIGNATURE_TYPE_BODY,
+    SIGNATURE_TYPE_HEADER,
+    SIGNATURE_TYPE_QUERY,
+)
 from .util import unescape
 
 
@@ -89,7 +96,7 @@ def _parse_authorization_header(headers):
 
     auth_scheme = "oauth "
     if authorization_header.lower().startswith(auth_scheme):
-        items = parse_http_list(authorization_header[len(auth_scheme) :])
+        items = parse_http_list(authorization_header[len(auth_scheme):])
         try:
             items = parse_keqv_list(items).items()
             auth_params = [(unescape(k), unescape(v)) for k, v in items]

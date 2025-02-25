@@ -420,8 +420,14 @@ class WgslLexer(RegexLexer):
             (r"[0-9]+[eE][+-]?[0-9]+[fh]?", Number.Float),
             # Hex float literals
             # https://www.w3.org/TR/WGSL/#syntax-hex_float_literal
-            (r"0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+([pP][+-]?[0-9]+[fh]?)?", Number.Float),
-            (r"0[xX][0-9a-fA-F]+\.[0-9a-fA-F]*([pP][+-]?[0-9]+[fh]?)?", Number.Float),
+            (
+                r"0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+([pP][+-]?[0-9]+[fh]?)?",
+                Number.Float,
+            ),
+            (
+                r"0[xX][0-9a-fA-F]+\.[0-9a-fA-F]*([pP][+-]?[0-9]+[fh]?)?",
+                Number.Float,
+            ),
             (r"0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+[fh]?", Number.Float),
             # Hexadecimal integer literals
             # https://www.w3.org/TR/WGSL/#syntax-hex_int_literal

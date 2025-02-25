@@ -49,7 +49,8 @@ def maybe_update_state(ctx: click.Context) -> None:
         else:
             if not re.fullmatch(r"[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*", path_or_module):
                 typer.echo(
-                    f"Not a valid file or Python module: {path_or_module}", err=True
+                    f"Not a valid file or Python module: {path_or_module}",
+                    err=True,
                 )
                 sys.exit(1)
             state.module = path_or_module
@@ -267,7 +268,10 @@ def get_docs_for_click(
             if command_name:
                 use_prefix += f"{command_name}"
             docs += get_docs_for_click(
-                obj=command_obj, ctx=ctx, indent=indent + 1, call_prefix=use_prefix
+                obj=command_obj,
+                ctx=ctx,
+                indent=indent + 1,
+                call_prefix=use_prefix,
             )
     return docs
 

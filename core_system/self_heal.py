@@ -11,7 +11,6 @@ It leverages a knowledge base of known errors and associated solutions to achiev
 import logging
 import os
 import subprocess
-from inspect import isclass
 from typing import Any, Dict, Optional
 
 from .knowledge_graph import ErrorKnowledge
@@ -30,7 +29,7 @@ class SutazAIHealer:
         self.error_handlers = {
             "python_version": self._handle_python,
             "gpu_error": self._handle_gpu,
-            "credential_error": self._handle_creds
+            "credential_error": self._handle_creds,
         }
 
     def diagnose_and_repair(self, error_type: str, context: dict) -> bool:
@@ -64,7 +63,7 @@ class SutazAIHealer:
                 self.knowledge.record_error(
                     error_type,
                     context,
-                    self._get_solution_description(context)
+                    self._get_solution_description(context),
                 )
             return success
 
@@ -83,16 +82,30 @@ class SutazAIHealer:
         """
         required = context.get("required_version", "3.9")
         try:
-            subprocess.run([
-                "sudo", "apt-get", "install", "-y",
-                f"python{required}",
-                f"python{required}-dev",
-                f"python{required}-venv"
-            ], check=True)
-            subprocess.run([
-                "sudo", "update-alternatives", "--install",
-                "/usr/bin/python3", "python3", f"/usr/bin/python{required}", "1"
-            ], check=True)
+            subprocess.run(
+                [
+                    "sudo",
+                    "apt-get",
+                    "install",
+                    "-y",
+                    f"python{required}",
+                    f"python{required}-dev",
+                    f"python{required}-venv",
+                ],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "sudo",
+                    "update-alternatives",
+                    "--install",
+                    "/usr/bin/python3",
+                    "python3",
+                    f"/usr/bin/python{required}",
+                    "1",
+                ],
+                check=True,
+            )
             return True
         except subprocess.CalledProcessError:
             return False
@@ -108,13 +121,18 @@ class SutazAIHealer:
             bool: True if repair succeeded, else False.
         """
         try:
-            subprocess.run([
-                "sudo", "apt-get", "install", "-y",
-                "nvidia-driver-535", "nvidia-container-toolkit"
-            ], check=True)
-            subprocess.run([
-                "sudo", "systemctl", "restart", "docker"
-            ], check=True)
+            subprocess.run(
+                [
+                    "sudo",
+                    "apt-get",
+                    "install",
+                    "-y",
+                    "nvidia-driver-535",
+                    "nvidia-container-toolkit",
+                ],
+                check=True,
+            )
+            subprocess.run(["sudo", "systemctl", "restart", "docker"], check=True)
             return True
         except subprocess.CalledProcessError:
             return False
@@ -130,10 +148,14 @@ class SutazAIHealer:
             bool: True if credential regeneration succeeded, else False.
         """
         try:
-            subprocess.run([
-                "./scripts/generate_credentials.sh",
-                "--passphrase", os.environ["DOCKER_CREDS_PASSPHRASE"]
-            ], check=True)
+            subprocess.run(
+                [
+                    "./scripts/generate_credentials.sh",
+                    "--passphrase",
+                    os.environ["DOCKER_CREDS_PASSPHRASE"],
+                ],
+                check=True,
+            )
             return True
         except (subprocess.CalledProcessError, KeyError):
             return False
@@ -150,7 +172,6 @@ class SutazAIHealer:
         """
         logging.info("Executing solution: " + solution)
         # Implementation for executing stored solutions (e.g., running a command or script)
-        pass
 
     def _get_solution_description(self, context: dict) -> str:
         """
@@ -170,7 +191,7 @@ def perform_self_healing(diagnostics: Optional[Dict[str, Any]] = None) -> bool:
         # Comprehensive self-healing logic
         if diagnostics is None:
             diagnostics = {}
-        
+
         # Implement healing strategies
         return True
     except Exception:
@@ -179,4 +200,4 @@ def perform_self_healing(diagnostics: Optional[Dict[str, Any]] = None) -> bool:
 
 if __name__ == "__main__":
     result = perform_self_healing()
-    print("Self-heal successful:", result) 
+    print("Self-heal successful:", result)

@@ -13,7 +13,8 @@ try:
     # Losing type-safety w/ pyright, but that's ok
 except ImportError:  # pragma: no cover
     # Jython compatibility
-    def chmod(*args: object, **kwargs: object) -> None:  # type: ignore[misc] # Mypy reuses the imported definition anyway
+    # type: ignore[misc] # Mypy reuses the imported definition anyway
+    def chmod(*args: object, **kwargs: object) -> None:
         pass
 
 

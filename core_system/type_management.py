@@ -6,9 +6,7 @@ from typing import (
     Callable,
     Dict,
     Generic,
-    List,
     Optional,
-    Tuple,
     Type,
     TypeVar,
     Union,
@@ -134,7 +132,10 @@ def type_validated(
 
 
 def safe_type_conversion(
-    value: Any, target_type: Type[T], default: Optional[T] = None, strict: bool = False
+    value: Any,
+    target_type: Type[T],
+    default: Optional[T] = None,
+    strict: bool = False,
 ) -> Optional[T]:
     """
     Safely convert value to target type with comprehensive error handling.
@@ -184,7 +185,9 @@ def safe_type_conversion(
 
 
 def validate_nested_structure(
-    data: Any, expected_structure: Dict[str, Type[Any]], allow_extra_keys: bool = False
+    data: Any,
+    expected_structure: Dict[str, Type[Any]],
+    allow_extra_keys: bool = False,
 ) -> bool:
     """
     Validate complex nested data structures with comprehensive type checking.

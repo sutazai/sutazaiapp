@@ -3,7 +3,17 @@ import os
 import sys
 import sysconfig
 from importlib.util import cache_from_source
-from typing import Any, Callable, Dict, Generator, Iterable, List, Optional, Set, Tuple
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generator,
+    Iterable,
+    List,
+    Optional,
+    Set,
+    Tuple,
+)
 
 from pip._internal.exceptions import UninstallationError
 from pip._internal.locations import get_bin_prefix, get_bin_user
@@ -38,7 +48,7 @@ def _script_names(
 
 
 def _unique(
-    fn: Callable[..., Generator[Any, None, None]]
+    fn: Callable[..., Generator[Any, None, None]],
 ) -> Callable[..., Generator[Any, None, None]]:
     @functools.wraps(fn)
     def unique(*args: Any, **kw: Any) -> Generator[Any, None, None]:
@@ -148,7 +158,9 @@ def compress_for_rename(paths: Iterable[str]) -> Set[str]:
     return set(map(case_map.__getitem__, remaining)) | wildcards
 
 
-def compress_for_output_listing(paths: Iterable[str]) -> Tuple[Set[str], Set[str]]:
+def compress_for_output_listing(
+    paths: Iterable[str],
+) -> Tuple[Set[str], Set[str]]:
     """Returns a tuple of 2 sets of which paths to display to user
 
     The first set contains paths that would be deleted. Files of a package
@@ -453,7 +465,10 @@ class UninstallPathSet:
 
         if normalized_dist_location in {
             p
-            for p in {sysconfig.get_path("stdlib"), sysconfig.get_path("platstdlib")}
+            for p in {
+                sysconfig.get_path("stdlib"),
+                sysconfig.get_path("platstdlib"),
+            }
             if p
         }:
             logger.info(

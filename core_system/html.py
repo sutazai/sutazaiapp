@@ -3,8 +3,7 @@ from typing import Dict, List, Optional, Tuple
 
 from safety.formatter import FormatterAPI
 from safety.formatters.json import build_json_report
-from safety.output_utils import get_report_brief_info, parse_html
-from safety.util import get_basic_announcements
+from safety.output_utils import parse_html
 
 LOG = logging.getLogger(__name__)
 
@@ -55,7 +54,6 @@ class HTMLReport(FormatterAPI):
             announcements (List[Dict]): List of announcements.
             licenses (List[Dict]): List of licenses.
         """
-        pass
 
     def render_announcements(self, announcements: List[Dict]) -> None:
         """
@@ -64,4 +62,3 @@ class HTMLReport(FormatterAPI):
         Args:
             announcements (List[Dict]): List of announcements.
         """
-        pass

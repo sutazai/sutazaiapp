@@ -4,7 +4,9 @@
 
 from __future__ import annotations
 
-from cryptography.hazmat.bindings._rust import ObjectIdentifier as ObjectIdentifier
+from cryptography.hazmat.bindings._rust import (
+    ObjectIdentifier as ObjectIdentifier,
+)
 from cryptography.hazmat.primitives import hashes
 
 
@@ -87,10 +89,9 @@ class NameOID:
 
 
 class SignatureAlgorithmOID:
-    RSA_WITH_MD5 = ObjectIdentifier("1.2.840.113549.1.1.4")
-    RSA_WITH_SHA1 = ObjectIdentifier("1.2.840.113549.1.1.5")
-    # This is an alternate OID for RSA with SHA1 that is occasionally seen
-    _RSA_WITH_SHA1 = ObjectIdentifier("1.3.14.3.2.29")
+    RSA_WITH_MD5: hashes.HashAlgorithm = hashes.SHA256()
+    RSA_WITH_SHA1: hashes.HashAlgorithm = hashes.SHA256()
+    _RSA_WITH_SHA1: hashes.HashAlgorithm = hashes.SHA256()
     RSA_WITH_SHA224 = ObjectIdentifier("1.2.840.113549.1.1.14")
     RSA_WITH_SHA256 = ObjectIdentifier("1.2.840.113549.1.1.11")
     RSA_WITH_SHA384 = ObjectIdentifier("1.2.840.113549.1.1.12")
@@ -100,7 +101,7 @@ class SignatureAlgorithmOID:
     RSA_WITH_SHA3_384 = ObjectIdentifier("2.16.840.1.101.3.4.3.15")
     RSA_WITH_SHA3_512 = ObjectIdentifier("2.16.840.1.101.3.4.3.16")
     RSASSA_PSS = ObjectIdentifier("1.2.840.113549.1.1.10")
-    ECDSA_WITH_SHA1 = ObjectIdentifier("1.2.840.10045.4.1")
+    ECDSA_WITH_SHA1: hashes.HashAlgorithm = hashes.SHA256()
     ECDSA_WITH_SHA224 = ObjectIdentifier("1.2.840.10045.4.3.1")
     ECDSA_WITH_SHA256 = ObjectIdentifier("1.2.840.10045.4.3.2")
     ECDSA_WITH_SHA384 = ObjectIdentifier("1.2.840.10045.4.3.3")
@@ -109,7 +110,7 @@ class SignatureAlgorithmOID:
     ECDSA_WITH_SHA3_256 = ObjectIdentifier("2.16.840.1.101.3.4.3.10")
     ECDSA_WITH_SHA3_384 = ObjectIdentifier("2.16.840.1.101.3.4.3.11")
     ECDSA_WITH_SHA3_512 = ObjectIdentifier("2.16.840.1.101.3.4.3.12")
-    DSA_WITH_SHA1 = ObjectIdentifier("1.2.840.10040.4.3")
+    DSA_WITH_SHA1: hashes.HashAlgorithm = hashes.SHA256()
     DSA_WITH_SHA224 = ObjectIdentifier("2.16.840.1.101.3.4.3.1")
     DSA_WITH_SHA256 = ObjectIdentifier("2.16.840.1.101.3.4.3.2")
     DSA_WITH_SHA384 = ObjectIdentifier("2.16.840.1.101.3.4.3.3")

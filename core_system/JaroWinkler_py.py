@@ -185,9 +185,13 @@ def distance(
         s2 = processor(s2)
 
     cutoff_distance = (
-        None if (score_cutoff is None or score_cutoff > 1.0) else 1.0 - score_cutoff
+        None
+        if (score_cutoff is None or score_cutoff > 1.0)
+        else 1.0 - score_cutoff
     )
-    sim = similarity(s1, s2, prefix_weight=prefix_weight, score_cutoff=cutoff_distance)
+    sim = similarity(
+        s1, s2, prefix_weight=prefix_weight, score_cutoff=cutoff_distance
+    )
     dist = 1.0 - sim
     return dist if (score_cutoff is None or dist <= score_cutoff) else 1.0
 

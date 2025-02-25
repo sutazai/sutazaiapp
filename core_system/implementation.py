@@ -1,2 +1,2 @@
-    class ImprovementExecutor:    def execute_approved(self, suggestion):        """Secure implementation of approved improvements"""        if suggestion['approval_status'] == 'approved':            SutazAICLI.execute(                f"implement-improvement {suggestion['id']} "                f"--security-token {self._get_approval_token(suggestion)}"            )
-    
+class ImprovementExecutor:
+    def execute_approved(self, suggestion): """Secure implementation of approved improvements""" if suggestion['approval_status'] == 'approved': SutazAICLI.execute(f"implement-improvement {suggestion['id']} "                f"--security-token {self._get_approval_token(suggestion)}")

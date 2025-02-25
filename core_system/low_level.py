@@ -237,7 +237,12 @@ def _temporary_keychain():
     # We now want to create the keychain itself.
     keychain = Security.SecKeychainRef()
     status = Security.SecKeychainCreate(
-        keychain_path, len(password), password, False, None, ctypes.byref(keychain)
+        keychain_path,
+        len(password),
+        password,
+        False,
+        None,
+        ctypes.byref(keychain),
     )
     _assert_no_error(status)
 

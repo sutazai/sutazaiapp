@@ -24,12 +24,14 @@ SAFETY_THEME = {
     "vulns_found_number": "red on default",
 }
 
-non_interactive = os.getenv('NON_INTERACTIVE') == '1'
+non_interactive = os.getenv("NON_INTERACTIVE") == "1"
 
 console_kwargs = {"theme": Theme(SAFETY_THEME, inherit=False)}
 
 if non_interactive:
-    LOG.info("NON_INTERACTIVE environment variable is set, forcing non-interactive mode")
+    LOG.info(
+        "NON_INTERACTIVE environment variable is set, forcing non-interactive mode"
+    )
     console_kwargs.update({"force_terminal": True, "force_interactive": False})
 
 

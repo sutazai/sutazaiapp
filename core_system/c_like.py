@@ -10,7 +10,14 @@ Lexers for other C-like languages.
 
 import re
 
-from pygments.lexer import RegexLexer, bygroups, default, include, inherit, words
+from pygments.lexer import (
+    RegexLexer,
+    bygroups,
+    default,
+    include,
+    inherit,
+    words,
+)
 from pygments.lexers import _mql_builtins
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.token import (
@@ -376,7 +383,10 @@ class ValaLexer(RegexLexer):
         ],
         "statements": [
             (r'[L@]?"', String, "string"),
-            (r"L?'(\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'", String.Char),
+            (
+                r"L?'(\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'",
+                String.Char,
+            ),
             (r'(?s)""".*?"""', String),  # verbatim strings
             (r"(\d+\.\d*|\.\d+|\d+)[eE][+-]?\d+[lL]?", Number.Float),
             (r"(\d+\.\d*|\.\d+|\d+[fF])[fF]?", Number.Float),
@@ -527,7 +537,10 @@ class ValaLexer(RegexLexer):
         ],
         "string": [
             (r'"', String, "#pop"),
-            (r'\\([\\abfnrtv"\']|x[a-fA-F0-9]{2,4}|[0-7]{1,3})', String.Escape),
+            (
+                r'\\([\\abfnrtv"\']|x[a-fA-F0-9]{2,4}|[0-7]{1,3})',
+                String.Escape,
+            ),
             (r'[^\\"\n]+', String),  # all other characters
             (r"\\\n", String),  # line continuation
             (r"\\", String),  # stray backslash
@@ -562,7 +575,12 @@ class CudaLexer(CLexer):
         "__noinline__",
         "__forceinline__",
     }
-    variable_qualifiers = {"__device__", "__constant__", "__shared__", "__restrict__"}
+    variable_qualifiers = {
+        "__device__",
+        "__constant__",
+        "__shared__",
+        "__restrict__",
+    }
     vector_types = {
         "char1",
         "uchar1",
@@ -788,7 +806,10 @@ class MqlLexer(CppLexer):
             (words(_mql_builtins.c_types, suffix=r"\b"), Keyword.Type),
             (words(_mql_builtins.types, suffix=r"\b"), Name.Function),
             (words(_mql_builtins.constants, suffix=r"\b"), Name.Constant),
-            (words(_mql_builtins.colors, prefix="(clr)?", suffix=r"\b"), Name.Constant),
+            (
+                words(_mql_builtins.colors, prefix="(clr)?", suffix=r"\b"),
+                Name.Constant,
+            ),
             inherit,
         ],
     }
@@ -1632,7 +1653,13 @@ class PromelaLexer(CLexer):
             # BasicStatements
             (
                 words(
-                    ("assert", "get_priority", "printf", "printm", "set_priority"),
+                    (
+                        "assert",
+                        "get_priority",
+                        "printf",
+                        "printm",
+                        "set_priority",
+                    ),
                     suffix=r"\b",
                 ),
                 Name.Function,
@@ -1640,7 +1667,8 @@ class PromelaLexer(CLexer):
             # Embedded C Code
             (
                 words(
-                    ("c_code", "c_decl", "c_expr", "c_state", "c_track"), suffix=r"\b"
+                    ("c_code", "c_decl", "c_expr", "c_state", "c_track"),
+                    suffix=r"\b",
                 ),
                 Keyword,
             ),
@@ -1707,7 +1735,10 @@ class PromelaLexer(CLexer):
             # Declarators (suffixes)
             (words(("priority", "provided"), suffix=r"\b"), Keyword),
             # MetaTerms (declarators)
-            (words(("inline", "ltl", "select"), suffix=r"\b"), Keyword.Declaration),
+            (
+                words(("inline", "ltl", "select"), suffix=r"\b"),
+                Keyword.Declaration,
+            ),
             # MetaTerms (keywords)
             (r"skip\b", Keyword),
         ],

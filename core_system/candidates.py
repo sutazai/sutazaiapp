@@ -1,6 +1,15 @@
 import logging
 import sys
-from typing import TYPE_CHECKING, Any, FrozenSet, Iterable, Optional, Tuple, Union, cast
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    FrozenSet,
+    Iterable,
+    Optional,
+    Tuple,
+    Union,
+    cast,
+)
 
 from pip._internal.exceptions import (
     HashError,

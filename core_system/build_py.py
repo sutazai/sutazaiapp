@@ -19,7 +19,7 @@ from .._path import StrPath, StrPathT
 from ..dist import Distribution
 from ..warnings import SetuptoolsDeprecationWarning
 
-_IMPLICIT_DATA_FILES = ('*.pyi', 'py.typed')
+_IMPLICIT_DATA_FILES = ("*.pyi", "py.typed")
 
 
 def make_writable(target) -> None:
@@ -44,8 +44,8 @@ class build_py(orig.build_py):
         orig.build_py.finalize_options(self)
         self.package_data = self.distribution.package_data
         self.exclude_package_data = self.distribution.exclude_package_data or {}
-        if 'data_files' in self.__dict__:
-            del self.__dict__['data_files']
+        if "data_files" in self.__dict__:
+            del self.__dict__["data_files"]
 
     def copy_file(  # type: ignore[override] # No overload, no bytes support
         self,
@@ -59,9 +59,12 @@ class build_py(orig.build_py):
         # Overwrite base class to allow using links
         if link:
             infile = str(Path(infile).resolve())
-            outfile = str(Path(outfile).resolve())  # type: ignore[assignment] # Re-assigning a str when outfile is StrPath is ok
-        return super().copy_file(  # pyright: ignore[reportReturnType] # pypa/distutils#309
-            infile, outfile, preserve_mode, preserve_times, link, level
+            # type: ignore[assignment] # Re-assigning a str when outfile is StrPath is ok
+            outfile = str(Path(outfile).resolve())
+        return (
+            super().copy_file(  # pyright: ignore[reportReturnType] # pypa/distutils#309
+                infile, outfile, preserve_mode, preserve_times, link, level
+            )
         )
 
     def run(self) -> None:
@@ -82,7 +85,7 @@ class build_py(orig.build_py):
 
     def __getattr__(self, attr: str):
         "lazily compute data files"
-        if attr == 'data_files':
+        if attr == "data_files":
             self.data_files = self._get_data_files()
             return self.data_files
         return orig.build_py.__getattr__(self, attr)
@@ -99,7 +102,7 @@ class build_py(orig.build_py):
         """
         # Prevent eventual errors from unset `manifest_files`
         # (that would otherwise be set by `analyze_manifest`)
-        self.__dict__.setdefault('manifest_files', {})
+        self.__dict__.setdefault("manifest_files", {})
         return list(map(self._get_pkg_data_files, self.packages or ()))
 
     def _get_pkg_data_files(self, package):
@@ -107,7 +110,7 @@ class build_py(orig.build_py):
         src_dir = self.get_package_dir(package)
 
         # Compute package build directory
-        build_dir = os.path.join(*([self.build_lib] + package.split('.')))
+        build_dir = os.path.join(*([self.build_lib] + package.split(".")))
 
         # Strip directory from globbed filenames
         filenames = [
@@ -134,7 +137,8 @@ class build_py(orig.build_py):
         )
         return self.exclude_data_files(package, src_dir, files)
 
-    def get_outputs(self, include_bytecode: bool = True) -> list[str]:  # type: ignore[override] # Using a real boolean instead of 0|1
+    # type: ignore[override] # Using a real boolean instead of 0|1
+    def get_outputs(self, include_bytecode: bool = True) -> list[str]:
         """See :class:`setuptools.commands.build.SubCommand`"""
         if self.editable_mode:
             return list(self.get_output_mapping().keys())
@@ -151,7 +155,7 @@ class build_py(orig.build_py):
     def _get_module_mapping(self) -> Iterator[tuple[str, str]]:
         """Iterate over all modules producing (dest, src) pairs."""
         for package, module, module_file in self.find_all_modules():
-            package = package.split('.')
+            package = package.split(".")
             filename = self.get_module_outfile(self.build_lib, package, module)
             yield (filename, module_file)
 
@@ -187,8 +191,8 @@ class build_py(orig.build_py):
             manifest = Path(egg_info_dir, "SOURCES.txt")
             files = manifest.read_text(encoding="utf-8").splitlines()
         else:
-            self.run_command('egg_info')
-            ei_cmd = self.get_finalized_command('egg_info')
+            self.run_command("egg_info")
+            ei_cmd = self.get_finalized_command("egg_info")
             egg_info_dir = ei_cmd.egg_info
             files = ei_cmd.filelist.files
 
@@ -224,7 +228,12 @@ class build_py(orig.build_py):
         This function should filter this case of invalid files out.
         """
         build = self.get_finalized_command("build")
-        build_dirs = (egg_info, self.build_lib, build.build_temp, build.build_base)
+        build_dirs = (
+            egg_info,
+            self.build_lib,
+            build.build_temp,
+            build.build_base,
+        )
         norm_dirs = [os.path.normpath(p) for p in build_dirs if p]
 
         for file in files:
@@ -249,18 +258,18 @@ class build_py(orig.build_py):
             return init_py
 
         for pkg in self.distribution.namespace_packages:
-            if pkg == package or pkg.startswith(package + '.'):
+            if pkg == package or pkg.startswith(package + "."):
                 break
         else:
             return init_py
 
-        with open(init_py, 'rb') as f:
+        with open(init_py, "rb") as f:
             contents = f.read()
-        if b'declare_namespace' not in contents:
+        if b"declare_namespace" not in contents:
             raise distutils.errors.DistutilsError(
                 f"Namespace package problem: {package} is a namespace package, but "
                 "its\n__init__.py does not call declare_namespace()! Please "
-                'fix it.\n(See the setuptools manual under '
+                "fix it.\n(See the setuptools manual under "
                 '"Namespace Packages" for details.)\n"'
             )
         return init_py
@@ -303,7 +312,7 @@ class build_py(orig.build_py):
         """
         raw_patterns = itertools.chain(
             extra_patterns,
-            spec.get('', []),
+            spec.get("", []),
             spec.get(package, []),
         )
         return (

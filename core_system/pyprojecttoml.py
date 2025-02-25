@@ -136,7 +136,10 @@ def read_configuration(
 
     with _ignore_errors(ignore_option_errors):
         # Don't complain about unrelated errors (e.g. tools not using the "tool" table)
-        subset = {"project": project_table, "tool": {"setuptools": setuptools_table}}
+        subset = {
+            "project": project_table,
+            "tool": {"setuptools": setuptools_table},
+        }
         validate(subset, filepath)
 
     if expand:
@@ -190,7 +193,10 @@ class _ConfigExpander:
     def _ensure_dist(self) -> Distribution:
         from setuptools.dist import Distribution
 
-        attrs = {"src_root": self.root_dir, "name": self.project_cfg.get("name", None)}
+        attrs = {
+            "src_root": self.root_dir,
+            "name": self.project_cfg.get("name", None),
+        }
         return self._dist or Distribution(attrs)
 
     def _process_field(self, container: dict, field: str, fn: Callable):
@@ -310,7 +316,9 @@ class _ConfigExpander:
         if "version" in self.dynamic and "version" in self.dynamic_cfg:
             return _expand.version(
                 # We already do an early check for the presence of "version"
-                self._obtain(dist, "version", package_dir)  # pyright: ignore[reportArgumentType]
+                self._obtain(
+                    dist, "version", package_dir
+                )  # pyright: ignore[reportArgumentType]
             )
         return None
 
@@ -412,7 +420,10 @@ def _ignore_errors(ignore_option_errors: bool):
 
 class _EnsurePackagesDiscovered(_expand.EnsurePackagesDiscovered):
     def __init__(
-        self, distribution: Distribution, project_cfg: dict, setuptools_cfg: dict
+        self,
+        distribution: Distribution,
+        project_cfg: dict,
+        setuptools_cfg: dict,
     ) -> None:
         super().__init__(distribution)
         self._project_cfg = project_cfg

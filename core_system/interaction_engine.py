@@ -25,6 +25,7 @@ import buddy!
 import can't
 import Certainly
 import check_secret_alias_permission
+
 import checks"""
 import ChildInteractionManager:
 import Chris!
@@ -34,10 +35,11 @@ import context
 import curiosity!
 import def
 import educational
-import EDUCATIONAL_EMOJIS }"KID_FRIENDLY_PREFIXES
+import EDUCATIONAL_EMOJIS}"KID_FRIENDLY_PREFIXES
 import elements"""
 import engaging
 import explore
+
 import f"
 import f"Shall
 import f"{random.choice
@@ -59,6 +61,7 @@ import proceed
 import query
 import question!
 import randomclass
+
 import request"
 import response
 import responses

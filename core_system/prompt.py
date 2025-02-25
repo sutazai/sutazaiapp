@@ -1,4 +1,13 @@
-from typing import Any, Generic, List, Optional, TextIO, TypeVar, Union, overload
+from typing import (
+    Any,
+    Generic,
+    List,
+    Optional,
+    TextIO,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from . import get_console
 from .console import Console
@@ -85,8 +94,7 @@ class PromptBase(Generic[PromptType]):
         show_choices: bool = True,
         default: DefaultType,
         stream: Optional[TextIO] = None,
-    ) -> Union[DefaultType, PromptType]:
-        ...
+    ) -> Union[DefaultType, PromptType]: ...
 
     @classmethod
     @overload
@@ -100,8 +108,7 @@ class PromptBase(Generic[PromptType]):
         show_default: bool = True,
         show_choices: bool = True,
         stream: Optional[TextIO] = None,
-    ) -> PromptType:
-        ...
+    ) -> PromptType: ...
 
     @classmethod
     def ask(
@@ -250,14 +257,12 @@ class PromptBase(Generic[PromptType]):
         """Hook to display something before the prompt."""
 
     @overload
-    def __call__(self, *, stream: Optional[TextIO] = None) -> PromptType:
-        ...
+    def __call__(self, *, stream: Optional[TextIO] = None) -> PromptType: ...
 
     @overload
     def __call__(
         self, *, default: DefaultType, stream: Optional[TextIO] = None
-    ) -> Union[PromptType, DefaultType]:
-        ...
+    ) -> Union[PromptType, DefaultType]: ...
 
     def __call__(self, *, default: Any = ..., stream: Optional[TextIO] = None) -> Any:
         """Run the prompt loop.
@@ -352,7 +357,8 @@ if __name__ == "__main__":  # pragma: no cover
     if Confirm.ask("Run [i]prompt[/i] tests?", default=True):
         while True:
             result = IntPrompt.ask(
-                ":rocket: Enter a number between [b]1[/b] and [b]10[/b]", default=5
+                ":rocket: Enter a number between [b]1[/b] and [b]10[/b]",
+                default=5,
             )
             if result >= 1 and result <= 10:
                 break

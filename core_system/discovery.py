@@ -89,9 +89,9 @@ class _Finder:
     @classmethod
     def find(
         cls,
-        where: StrPath = '.',
+        where: StrPath = ".",
         exclude: Iterable[str] = (),
-        include: Iterable[str] = ('*',),
+        include: Iterable[str] = ("*",),
     ) -> list[str]:
         """Return a list of all Python items (packages or modules, depending on
         the finder implementation) found within directory 'where'.
@@ -151,10 +151,10 @@ class PackageFinder(_Finder):
             for dir in all_dirs:
                 full_path = os.path.join(root, dir)
                 rel_path = os.path.relpath(full_path, where)
-                package = rel_path.replace(os.path.sep, '.')
+                package = rel_path.replace(os.path.sep, ".")
 
                 # Skip directory trees that are not valid packages
-                if '.' in dir or not cls._looks_like_package(full_path, package):
+                if "." in dir or not cls._looks_like_package(full_path, package):
                     continue
 
                 # Should this package be included?
@@ -172,7 +172,7 @@ class PackageFinder(_Finder):
     @staticmethod
     def _looks_like_package(path: StrPath, _package_name: str) -> bool:
         """Does a directory look like a package?"""
-        return os.path.isfile(os.path.join(path, '__init__.py'))
+        return os.path.isfile(os.path.join(path, "__init__.py"))
 
 
 class PEP420PackageFinder(PackageFinder):
@@ -253,7 +253,7 @@ class FlatLayoutPackageFinder(PEP420PackageFinder):
 
     @staticmethod
     def _looks_like_package(_path: StrPath, package_name: str) -> bool:
-        names = package_name.split('.')
+        names = package_name.split(".")
         # Consider PEP 561
         root_pkg_is_valid = names[0].isidentifier() or names[0].endswith("-stubs")
         return root_pkg_is_valid and all(name.isidentifier() for name in names[1:])
@@ -333,7 +333,10 @@ class ConfigDiscovery:
         return self.dist.package_dir
 
     def __call__(
-        self, force: bool = False, name: bool = True, ignore_ext_modules: bool = False
+        self,
+        force: bool = False,
+        name: bool = True,
+        ignore_ext_modules: bool = False,
     ):
         """Automatically discover missing configuration fields
         and modifies the given ``distribution`` object in-place.
@@ -497,7 +500,7 @@ class ConfigDiscovery:
 
     def _find_name_single_package_or_module(self) -> str | None:
         """Exactly one module or package"""
-        for field in ('packages', 'py_modules'):
+        for field in ("packages", "py_modules"):
             items = getattr(self.dist, field, None) or []
             if items and len(items) == 1:
                 log.debug(f"Single module/package detected, name: {items[0]}")
@@ -556,7 +559,7 @@ def find_parent_package(
     packages = sorted(packages, key=len)
     common_ancestors = []
     for i, name in enumerate(packages):
-        if not all(n.startswith(f"{name}.") for n in packages[i + 1 :]):
+        if not all(n.startswith(f"{name}.") for n in packages[i + 1:]):
             # Since packages are sorted by length, this condition is able
             # to find a list of all common ancestors.
             # When there is divergence (e.g. multiple root packages)

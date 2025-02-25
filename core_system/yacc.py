@@ -59,7 +59,6 @@
 # own risk!
 # ----------------------------------------------------------------------------
 
-import base64
 import inspect
 import os.path
 import re
@@ -337,7 +336,12 @@ class LRParser:
         self.defaulted_states = {}
 
     def parse(
-        self, input=None, lexer=None, debug=False, tracking=False, tokenfunc=None
+        self,
+        input=None,
+        lexer=None,
+        debug=False,
+        tracking=False,
+        tokenfunc=None,
     ):
         if debug or yaccdevel:
             if isinstance(debug, int):
@@ -363,7 +367,12 @@ class LRParser:
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def parsedebug(
-        self, input=None, lexer=None, debug=False, tracking=False, tokenfunc=None
+        self,
+        input=None,
+        lexer=None,
+        debug=False,
+        tracking=False,
+        tokenfunc=None,
     ):
         # --! parsedebug-start
         lookahead = None  # Current lookahead symbol
@@ -457,7 +466,10 @@ class LRParser:
                 "Stack  : %s",
                 (
                     "%s . %s"
-                    % (" ".join([xx.type for xx in symstack][1:]), str(lookahead))
+                    % (
+                        " ".join([xx.type for xx in symstack][1:]),
+                        str(lookahead),
+                    )
                 ).lstrip(),
             )
             # --! DEBUG
@@ -517,7 +529,7 @@ class LRParser:
                     # --! DEBUG
 
                     if plen:
-                        targ = symstack[-plen - 1 :]
+                        targ = symstack[-plen - 1:]
                         targ[0] = sym
 
                         # --! TRACKING
@@ -627,7 +639,10 @@ class LRParser:
                     "Error  : %s",
                     (
                         "%s . %s"
-                        % (" ".join([xx.type for xx in symstack][1:]), str(lookahead))
+                        % (
+                            " ".join([xx.type for xx in symstack][1:]),
+                            str(lookahead),
+                        )
                     ).lstrip(),
                 )
                 # --! DEBUG
@@ -752,7 +767,12 @@ class LRParser:
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def parseopt(
-        self, input=None, lexer=None, debug=False, tracking=False, tokenfunc=None
+        self,
+        input=None,
+        lexer=None,
+        debug=False,
+        tracking=False,
+        tokenfunc=None,
     ):
         # --! parseopt-start
         lookahead = None  # Current lookahead symbol
@@ -855,7 +875,7 @@ class LRParser:
                     sym.value = None
 
                     if plen:
-                        targ = symstack[-plen - 1 :]
+                        targ = symstack[-plen - 1:]
                         targ[0] = sym
 
                         # --! TRACKING
@@ -1070,7 +1090,12 @@ class LRParser:
     # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     def parseopt_notrack(
-        self, input=None, lexer=None, debug=False, tracking=False, tokenfunc=None
+        self,
+        input=None,
+        lexer=None,
+        debug=False,
+        tracking=False,
+        tokenfunc=None,
     ):
         # --! parseopt-notrack-start
         lookahead = None  # Current lookahead symbol
@@ -1173,7 +1198,7 @@ class LRParser:
                     sym.value = None
 
                     if plen:
-                        targ = symstack[-plen - 1 :]
+                        targ = symstack[-plen - 1:]
                         targ[0] = sym
 
                         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1393,7 +1418,14 @@ class Production(object):
     reduced = 0
 
     def __init__(
-        self, number, name, prod, precedence=("right", 0), func=None, file="", line=0
+        self,
+        number,
+        name,
+        prod,
+        precedence=("right", 0),
+        func=None,
+        file="",
+        line=0,
     ):
         self.name = name
         self.prod = tuple(prod)
@@ -2015,7 +2047,7 @@ class Grammar(object):
                 for i, B in enumerate(p.prod):
                     if B in self.Nonterminals:
                         # Okay. We got a non-terminal in a production
-                        fst = self._first(p.prod[i + 1 :])
+                        fst = self._first(p.prod[i + 1:])
                         hasempty = False
                         for f in fst:
                             if f != "<empty>" and f not in self.Follow[B]:
@@ -2576,8 +2608,12 @@ class LRGeneratedTable(LRTable):
     # -----------------------------------------------------------------------------
 
     def compute_read_sets(self, C, ntrans, nullable):
-        FP = lambda x: self.dr_relation(C, x, nullable)
-        R = lambda x: self.reads_relation(C, x, nullable)
+        def FP(x):
+            return self.dr_relation(C, x, nullable)
+
+        def R(x):
+            return self.reads_relation(C, x, nullable)
+
         F = digraph(ntrans, R, FP)
         return F
 
@@ -2598,8 +2634,12 @@ class LRGeneratedTable(LRTable):
     # -----------------------------------------------------------------------------
 
     def compute_follow_sets(self, ntrans, readsets, inclsets):
-        FP = lambda x: readsets[x]
-        R = lambda x: inclsets.get(x, [])
+        def FP(x):
+            return readsets[x]
+
+        def R(x):
+            return inclsets.get(x, [])
+
         F = digraph(ntrans, R, FP)
         return F
 
@@ -2705,7 +2745,11 @@ class LRGeneratedTable(LRTable):
                             laheads = self.grammar.Follow[p.name]
                         for a in laheads:
                             actlist.append(
-                                (a, p, "reduce using rule %d (%s)" % (p.number, p))
+                                (
+                                    a,
+                                    p,
+                                    "reduce using rule %d (%s)" % (p.number, p),
+                                )
                             )
                             r = st_action.get(a)
                             if r is not None:
@@ -3034,7 +3078,14 @@ del _lr_goto_items
             for p in self.lr_productions:
                 if p.func:
                     outp.append(
-                        (p.str, p.name, p.len, p.func, os.path.basename(p.file), p.line)
+                        (
+                            p.str,
+                            p.name,
+                            p.len,
+                            p.func,
+                            os.path.basename(p.file),
+                            p.line,
+                        )
                     )
                 else:
                     outp.append((str(p), p.name, p.len, None, None, None))
@@ -3356,12 +3407,18 @@ class ParserReflect(object):
                 reqargs = 1
             if func.__code__.co_argcount > reqargs:
                 self.log.error(
-                    "%s:%d: Rule %r has too many arguments", file, line, func.__name__
+                    "%s:%d: Rule %r has too many arguments",
+                    file,
+                    line,
+                    func.__name__,
                 )
                 self.error = True
             elif func.__code__.co_argcount < reqargs:
                 self.log.error(
-                    "%s:%d: Rule %r requires an argument", file, line, func.__name__
+                    "%s:%d: Rule %r requires an argument",
+                    file,
+                    line,
+                    func.__name__,
                 )
                 self.error = True
             elif not func.__doc__:
@@ -3604,7 +3661,10 @@ def yacc(
     unused_rules = grammar.unused_rules()
     for prod in unused_rules:
         errorlog.warning(
-            "%s:%d: Rule %r defined, but not used", prod.file, prod.line, prod.name
+            "%s:%d: Rule %r defined, but not used",
+            prod.file,
+            prod.line,
+            prod.name,
         )
 
     if len(unused_terminals) == 1:
@@ -3625,7 +3685,9 @@ def yacc(
         terms.sort()
         for term in terms:
             debuglog.info(
-                "%-20s : %s", term, " ".join([str(s) for s in grammar.Terminals[term]])
+                "%-20s : %s",
+                term,
+                " ".join([str(s) for s in grammar.Terminals[term]]),
             )
 
         debuglog.info("")

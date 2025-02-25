@@ -8,7 +8,13 @@ Lexers for data file format.
 :license: BSD, see LICENSE for details.
 """
 
-from pygments.lexer import ExtendedRegexLexer, Lexer, LexerContext, bygroups, include
+from pygments.lexer import (
+    ExtendedRegexLexer,
+    Lexer,
+    LexerContext,
+    bygroups,
+    include,
+)
 from pygments.token import (
     Comment,
     Error,
@@ -86,7 +92,7 @@ class YamlLexer(ExtendedRegexLexer):
                     while context.next_indent < context.indent:
                         context.indent = context.indent_stack.pop()
                     if context.next_indent > context.indent:
-                        extra = text[context.indent :]
+                        extra = text[context.indent:]
                         text = text[: context.indent]
             else:
                 context.next_indent += len(text)
@@ -145,7 +151,7 @@ class YamlLexer(ExtendedRegexLexer):
                     yield match.start(), indent_token_class, text
             else:
                 indentation = text[: context.block_scalar_indent]
-                content = text[context.block_scalar_indent :]
+                content = text[context.block_scalar_indent:]
                 yield match.start(), indent_token_class, indentation
                 yield (
                     match.start() + context.block_scalar_indent,
@@ -207,7 +213,11 @@ class YamlLexer(ExtendedRegexLexer):
             # the %TAG directive
             (r"^%TAG(?=[ ]|$)", reset_indent(Name.Tag), "tag-directive"),
             # document start and document end indicators
-            (r"^(?:---|\.\.\.)(?=[ ]|$)", reset_indent(Name.Namespace), "block-line"),
+            (
+                r"^(?:---|\.\.\.)(?=[ ]|$)",
+                reset_indent(Name.Namespace),
+                "block-line",
+            ),
             # indentation spaces
             (
                 r"[ ]*(?!\s|$)",
@@ -227,7 +237,11 @@ class YamlLexer(ExtendedRegexLexer):
         # the %YAML directive
         "yaml-directive": [
             # the version number
-            (r"([ ]+)([0-9]+\.[0-9]+)", bygroups(Whitespace, Number), "ignored-line"),
+            (
+                r"([ ]+)([0-9]+\.[0-9]+)",
+                bygroups(Whitespace, Number),
+                "ignored-line",
+            ),
         ],
         # the %TAG directive
         "tag-directive": [
@@ -337,7 +351,10 @@ class YamlLexer(ExtendedRegexLexer):
         # a flow mapping indicated by '{' and '}'
         "flow-mapping": [
             # key with colon
-            (r"""([^,:?\[\]{}"'\n]+)(:)(?=[ ]|$)""", bygroups(Name.Tag, Punctuation)),
+            (
+                r"""([^,:?\[\]{}"'\n]+)(:)(?=[ ]|$)""",
+                bygroups(Name.Tag, Punctuation),
+            ),
             # include flow collection rules
             include("flow-collection"),
             # the closing indicator
@@ -348,7 +365,10 @@ class YamlLexer(ExtendedRegexLexer):
             # line break
             (r"\n", Whitespace),
             # empty line
-            (r"^[ ]+$", parse_block_scalar_empty_line(Whitespace, Name.Constant)),
+            (
+                r"^[ ]+$",
+                parse_block_scalar_empty_line(Whitespace, Name.Constant),
+            ),
             # indentation spaces (we may leave the state here)
             (r"^[ ]*", parse_block_scalar_indent(Whitespace)),
             # line content
@@ -397,7 +417,10 @@ class YamlLexer(ExtendedRegexLexer):
             # escaping of special characters
             (r'\\[0abt\tn\nvfre "\\N_LP]', String),
             # escape codes
-            (r"\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})", String.Escape),
+            (
+                r"\\(?:x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+                String.Escape,
+            ),
             # regular non-whitespace characters
             (r'[^\s"\\]+', String),
             # the closing quote
@@ -551,7 +574,7 @@ class JsonLexer(Lexer):
                     in_escape = True
 
                 elif character == '"':
-                    queue.append((start, String.Double, text[start : stop + 1]))
+                    queue.append((start, String.Double, text[start: stop + 1]))
                     in_string = False
                     in_escape = False
                     in_unicode_escape = 0
@@ -620,10 +643,14 @@ class JsonLexer(Lexer):
                     if character == "/":
                         if queue:
                             queue.append(
-                                (start, Comment.Multiline, text[start : stop + 1])
+                                (
+                                    start,
+                                    Comment.Multiline,
+                                    text[start: stop + 1],
+                                )
                             )
                         else:
-                            yield start, Comment.Multiline, text[start : stop + 1]
+                            yield start, Comment.Multiline, text[start: stop + 1]
 
                         in_comment_multiline = False
 
@@ -653,7 +680,11 @@ class JsonLexer(Lexer):
             elif character in self.whitespaces:
                 in_whitespace = True
 
-            elif character in {"f", "n", "t"}:  # The first letters of true|false|null
+            elif character in {
+                "f",
+                "n",
+                "t",
+            }:  # The first letters of true|false|null
                 # Exhaust the queue. Accept the existing token types.
                 yield from queue
                 queue.clear()

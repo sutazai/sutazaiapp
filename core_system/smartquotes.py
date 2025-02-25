@@ -1,11 +1,16 @@
-"""Convert straight quotation marks to typographic ones
-"""
+"""Convert straight quotation marks to typographic ones"""
+
 from __future__ import annotations
 
 import re
 from typing import Any
 
-from ..common.utils import charCodeAt, isMdAsciiPunct, isPunctChar, isWhiteSpace
+from ..common.utils import (
+    charCodeAt,
+    isMdAsciiPunct,
+    isPunctChar,
+    isWhiteSpace,
+)
 from ..token import Token
 from .state_core import StateCore
 
@@ -18,7 +23,7 @@ def replaceAt(string: str, index: int, ch: str) -> str:
     # When the index is negative, the behavior is different from the js version.
     # But basically, the index will not be negative.
     assert index >= 0
-    return string[:index] + ch + string[index + 1 :]
+    return string[:index] + ch + string[index + 1:]
 
 
 def process_inlines(tokens: list[Token], state: StateCore) -> None:
@@ -159,7 +164,9 @@ def process_inlines(tokens: list[Token], state: StateCore) -> None:
                             token.content, t.start(0) + lastIndex, closeQuote
                         )
                         tokens[item["token"]].content = replaceAt(
-                            tokens[item["token"]].content, item["pos"], openQuote
+                            tokens[item["token"]].content,
+                            item["pos"],
+                            openQuote,
                         )
 
                         pos += len(closeQuote) - 1

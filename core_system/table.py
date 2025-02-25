@@ -491,7 +491,9 @@ class Table(JupyterMixin):
         )
 
         def render_annotation(
-            text: TextType, style: StyleType, justify: "JustifyMethod" = "center"
+            text: TextType,
+            style: StyleType,
+            justify: "JustifyMethod" = "center",
         ) -> "RenderResult":
             render_text = (
                 console.render_str(text, style=style, highlight=False)
@@ -685,7 +687,7 @@ class Table(JupyterMixin):
                     getattr(renderable, "vertical", None) or column.vertical,
                 )
         else:
-            for (style, renderable) in raw_cells:
+            for style, renderable in raw_cells:
                 yield _Cell(
                     style,
                     renderable,
@@ -735,8 +737,8 @@ class Table(JupyterMixin):
             max(max_widths) if max_widths else max_width,
         ).with_maximum(max_width)
         measurement = measurement.clamp(
-            None if column.min_width is None else column.min_width + padding_width,
-            None if column.max_width is None else column.max_width + padding_width,
+            (None if column.min_width is None else column.min_width + padding_width),
+            (None if column.max_width is None else column.max_width + padding_width),
         )
         return measurement
 
@@ -865,7 +867,8 @@ class Table(JupyterMixin):
             if _box:
                 if last and show_footer:
                     yield _Segment(
-                        _box.get_row(widths, "foot", edge=show_edge), border_style
+                        _box.get_row(widths, "foot", edge=show_edge),
+                        border_style,
                     )
                     yield new_line
                 left, right, _divider = box_segments[0 if first else (2 if last else 1)]
@@ -875,7 +878,8 @@ class Table(JupyterMixin):
                     _divider
                     if _divider.text.strip()
                     else _Segment(
-                        _divider.text, row_style.background_style + _divider.style
+                        _divider.text,
+                        row_style.background_style + _divider.style,
                     )
                 )
                 for line_no in range(max_height):
@@ -912,7 +916,8 @@ class Table(JupyterMixin):
                         )
                     else:
                         yield _Segment(
-                            _box.get_row(widths, "row", edge=show_edge), border_style
+                            _box.get_row(widths, "row", edge=show_edge),
+                            border_style,
                         )
                     yield new_line
 

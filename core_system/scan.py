@@ -6,7 +6,6 @@ from typing import List, Union
 from pydantic import ValidationError
 from pydantic.dataclasses import dataclass
 from pydantic.version import VERSION as PYDANTIC_VERSION
-from typing_extensions import Self
 
 from ..report.schemas.v3_0 import main as v3_0
 from .base import ReportSchemaVersion, SafetyBaseModel, ScanType
@@ -19,10 +18,13 @@ from .telemetry import TelemetryModel
 def version_validator(func):
     if PYDANTIC_VERSION.startswith("1."):
         from pydantic import validator
-        return validator('verison', pre=True, always=True)
+
+        return validator("verison", pre=True, always=True)
     else:
         from pydantic import field_validator
-        return field_validator('verison', mode='before')
+
+        return field_validator("verison", mode="before")
+
 
 @dataclass
 class ReportModel(SafetyBaseModel):
@@ -45,7 +47,7 @@ class ReportModel(SafetyBaseModel):
         if version not in (versions):
             raise ValueError(f"Invalid version, allowed versions are {versions}")
         return version
-    
+
     def as_v30(self) -> v3_0.Report:
         full = self.metadata.scan_type is ScanType.scan
 
@@ -56,12 +58,14 @@ class ReportModel(SafetyBaseModel):
 
         results = v3_0.ScanResults(
             files=[f.as_v30() for f in self.files],
-            projects=projects_data, # type: ignore
-        ) 
+            projects=projects_data,  # type: ignore
+        )
 
         meta_data = self.metadata.as_v30()
 
-        if not isinstance(meta_data, v3_0.Meta) or not isinstance(results, v3_0.ScanResults):
+        if not isinstance(meta_data, v3_0.Meta) or not isinstance(
+            results, v3_0.ScanResults
+        ):
             raise TypeError("Expected instance of v3_0.Meta and v3_0.ScanResults")
 
         report = v3_0.Report(meta=meta_data, scan_results=results)
@@ -69,10 +73,10 @@ class ReportModel(SafetyBaseModel):
         return report
 
     @classmethod
-    def from_v30(cls, obj: v3_0.SchemaModelV30) -> 'ReportModel':
+    def from_v30(cls, obj: v3_0.SchemaModelV30) -> "ReportModel":
 
         if not isinstance(obj, v3_0.Report):
-            raise TypeError('Expected instance of v3_0.Report')
+            raise TypeError("Expected instance of v3_0.Report")
 
         return ReportModel(
             version=ReportSchemaVersion(obj.meta.schema_version),
@@ -85,7 +89,7 @@ class ReportModel(SafetyBaseModel):
     @classmethod
     def parse_report(
         cls, raw_report: Union[str, Path], schema: ReportSchemaVersion
-    ) -> Union['ReportModel', ValidationError]:
+    ) -> Union["ReportModel", ValidationError]:
         parse = "parse_raw"
 
         if isinstance(raw_report, Path):

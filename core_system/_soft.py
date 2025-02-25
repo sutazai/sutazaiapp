@@ -28,7 +28,9 @@ class SoftFileLock(BaseFileLock):
         except OSError as exception:  # re-raise unless expected exception
             if not (
                 exception.errno == EEXIST  # lock already exist
-                or (exception.errno == EACCES and sys.platform == "win32")  # has no access to this lock
+                or (
+                    exception.errno == EACCES and sys.platform == "win32"
+                )  # has no access to this lock
             ):  # pragma: win32 no cover
                 raise
         else:
@@ -36,9 +38,13 @@ class SoftFileLock(BaseFileLock):
 
     def _release(self) -> None:
         assert self._context.lock_file_fd is not None  # noqa: S101
-        os.close(self._context.lock_file_fd)  # the lock file is definitely not None
+        os.close(
+            self._context.lock_file_fd
+        )  # the lock file is definitely not None
         self._context.lock_file_fd = None
-        with suppress(OSError):  # the file is already deleted and that's what we want
+        with suppress(
+            OSError
+        ):  # the file is already deleted and that's what we want
             Path(self.lock_file).unlink()
 
 

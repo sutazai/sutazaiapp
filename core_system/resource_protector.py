@@ -39,8 +39,10 @@ class ResourceProtector(_ResourceProtector):
             query_token=query_token, exists_nonce=exists_nonce,
         )
     """
-    def __init__(self, app=None, query_client=None,
-                 query_token=None, exists_nonce=None):
+
+    def __init__(
+        self, app=None, query_client=None, query_token=None, exists_nonce=None
+    ):
         self.query_client = query_client
         self.query_token = query_token
         self._exists_nonce = exists_nonce
@@ -49,8 +51,7 @@ class ResourceProtector(_ResourceProtector):
         if app:
             self.init_app(app)
 
-    def init_app(self, app, query_client=None, query_token=None,
-                 exists_nonce=None):
+    def init_app(self, app, query_client=None, query_token=None, exists_nonce=None):
         if query_client is not None:
             self.query_client = query_client
         if query_token is not None:
@@ -58,7 +59,7 @@ class ResourceProtector(_ResourceProtector):
         if exists_nonce is not None:
             self._exists_nonce = exists_nonce
 
-        methods = app.config.get('OAUTH1_SUPPORTED_SIGNATURE_METHODS')
+        methods = app.config.get("OAUTH1_SUPPORTED_SIGNATURE_METHODS")
         if methods and isinstance(methods, (list, tuple)):
             self.SUPPORTED_SIGNATURE_METHODS = methods
 
@@ -81,10 +82,7 @@ class ResourceProtector(_ResourceProtector):
 
     def acquire_credential(self):
         req = self.validate_request(
-            _req.method,
-            _req.url,
-            _req.form.to_dict(flat=True),
-            _req.headers
+            _req.method, _req.url, _req.form.to_dict(flat=True), _req.headers
         )
         g.authlib_server_oauth1_credential = req.credential
         return req.credential
@@ -103,12 +101,14 @@ class ResourceProtector(_ResourceProtector):
                         headers=default_json_headers,
                     )
                 return f(*args, **kwargs)
+
             return decorated
+
         return wrapper
 
 
 def _get_current_credential():
-    return g.get('authlib_server_oauth1_credential')
+    return g.get("authlib_server_oauth1_credential")
 
 
 current_credential = LocalProxy(_get_current_credential)

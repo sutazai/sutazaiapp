@@ -55,7 +55,7 @@ def format_command_args(args: Union[List[str], CommandArgs]) -> str:
     # has type unicode and includes a non-ascii character.  (The type
     # checker doesn't ensure the annotations are correct in all cases.)
     return " ".join(
-        shlex.quote(str(arg)) if isinstance(arg, HiddenText) else shlex.quote(arg)
+        (shlex.quote(str(arg)) if isinstance(arg, HiddenText) else shlex.quote(arg))
         for arg in args
     )
 

@@ -42,7 +42,11 @@ class SSLTransport:
                 )
 
     def __init__(
-        self, socket, ssl_context, server_hostname=None, suppress_ragged_eofs=True
+        self,
+        socket,
+        ssl_context,
+        server_hostname=None,
+        suppress_ragged_eofs=True,
     ):
         """
         Create an SSLTransport around socket using the provided ssl_context.
@@ -103,7 +107,12 @@ class SSLTransport:
         return response
 
     def makefile(
-        self, mode="r", buffering=None, encoding=None, errors=None, newline=None
+        self,
+        mode="r",
+        buffering=None,
+        encoding=None,
+        errors=None,
+        newline=None,
     ):
         """
         Python's httpclient uses makefile and buffered io when reading HTTP
@@ -202,7 +211,10 @@ class SSLTransport:
             try:
                 ret = func(*args)
             except ssl.SSLError as e:
-                if e.errno not in (ssl.SSL_ERROR_WANT_READ, ssl.SSL_ERROR_WANT_WRITE):
+                if e.errno not in (
+                    ssl.SSL_ERROR_WANT_READ,
+                    ssl.SSL_ERROR_WANT_WRITE,
+                ):
                     # WANT_READ, and WANT_WRITE are expected, others are not.
                     raise e
                 errno = e.errno

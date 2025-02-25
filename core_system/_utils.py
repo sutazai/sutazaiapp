@@ -70,19 +70,23 @@ def is_none(s: Any) -> bool:
     return False
 
 
-def add_scorer_attrs(func: Any, cached_scorer_call: dict[str, Callable[..., dict[str, Any]]]):
+def add_scorer_attrs(
+    func: Any, cached_scorer_call: dict[str, Callable[..., dict[str, Any]]]
+):
     func._RF_ScorerPy = cached_scorer_call
     # used to detect the function hasn't been wrapped afterwards
     func._RF_OriginalScorer = func
 
 
-default_distance_attribute: dict[str, Callable[..., dict[str, Any]]] = {"get_scorer_flags": _get_scorer_flags_distance}
+default_distance_attribute: dict[str, Callable[..., dict[str, Any]]] = {
+    "get_scorer_flags": _get_scorer_flags_distance
+}
 default_similarity_attribute: dict[str, Callable[..., dict[str, Any]]] = {
     "get_scorer_flags": _get_scorer_flags_similarity
 }
-default_normalized_distance_attribute: dict[str, Callable[..., dict[str, Any]]] = {
-    "get_scorer_flags": _get_scorer_flags_normalized_distance
-}
-default_normalized_similarity_attribute: dict[str, Callable[..., dict[str, Any]]] = {
-    "get_scorer_flags": _get_scorer_flags_normalized_similarity
-}
+default_normalized_distance_attribute: dict[
+    str, Callable[..., dict[str, Any]]
+] = {"get_scorer_flags": _get_scorer_flags_normalized_distance}
+default_normalized_similarity_attribute: dict[
+    str, Callable[..., dict[str, Any]]
+] = {"get_scorer_flags": _get_scorer_flags_normalized_similarity}

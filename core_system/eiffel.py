@@ -41,7 +41,10 @@ class EiffelLexer(RegexLexer):
             (r"--.*?$", Comment.Single),
             (r"[^\S\n]+", Whitespace),
             # Please note that keyword and operator are case insensitive.
-            (r"(?i)(true|false|void|current|result|precursor)\b", Keyword.Constant),
+            (
+                r"(?i)(true|false|void|current|result|precursor)\b",
+                Keyword.Constant,
+            ),
             (r"(?i)(not|xor|implies|or)\b", Operator.Word),
             (
                 r"(?i)(and)(?:(\s+)(then))?\b",
@@ -115,7 +118,10 @@ class EiffelLexer(RegexLexer):
             (r'"([^"%\n]|%.)*?"', String),
             include("numbers"),
             (r"'([^'%]|%'|%%)'", String.Char),
-            (r"(//|\\\\|>=|<=|:=|/=|~|/~|[\\?!#%&@|+/\-=>*$<^\[\]])", Operator),
+            (
+                r"(//|\\\\|>=|<=|:=|/=|~|/~|[\\?!#%&@|+/\-=>*$<^\[\]])",
+                Operator,
+            ),
             (r"([{}():;,.])", Punctuation),
             (r"([a-z]\w*)|([A-Z][A-Z0-9_]*[a-z]\w*)", Name),
             (r"([A-Z][A-Z0-9_]*)", Name.Class),

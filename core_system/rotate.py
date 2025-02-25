@@ -54,7 +54,7 @@ class rotate(Command):
             files.reverse()
 
             log.info("%d file(s) matching %s", len(files), pattern)
-            files = files[self.keep :]
+            files = files[self.keep:]
             for t, f in files:
                 log.info("Deleting %s", f)
                 if not self.dry_run:

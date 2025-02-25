@@ -93,7 +93,9 @@ class AdvancedClipboardGuard:
                     self.logger.error(f"Clipboard monitoring error: {e}")
                     time.sleep(1)
 
-        self.monitoring_thread = threading.Thread(target=monitor_worker, daemon=True)
+        self.monitoring_thread = threading.Thread(
+            target=monitor_worker, daemon=True
+        )
         self.monitoring_thread.start()
         self.logger.info("Advanced Clipboard Guard started")
 

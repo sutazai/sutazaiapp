@@ -1,11 +1,11 @@
 """
-    pygments.lexers.qlik
-    ~~~~~~~~~~~~~~~~~~~~
+pygments.lexers.qlik
+~~~~~~~~~~~~~~~~~~~~
 
-    Lexer for the qlik scripting language
+Lexer for the qlik scripting language
 
-    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+:license: BSD, see LICENSE for details.
 """
 
 import re
@@ -40,7 +40,7 @@ class QlikLexer(RegexLexer):
     aliases = ["qlik", "qlikview", "qliksense", "qlikscript"]
     filenames = ["*.qvs", "*.qvw"]
     url = "https://qlik.com"
-    version_added = '2.12'
+    version_added = "2.12"
 
     flags = re.IGNORECASE
 
@@ -93,11 +93,16 @@ class QlikLexer(RegexLexer):
             (r"/\*", Comment.Multiline, "comment"),
             (r"//.*\n", Comment.Single),
             # variable assignment
-            (r"(let|set)(\s+)", bygroups(Keyword.Declaration, Text.Whitespace),
-             "assignment"),
+            (
+                r"(let|set)(\s+)",
+                bygroups(Keyword.Declaration, Text.Whitespace),
+                "assignment",
+            ),
             # Word operators
-            (words(OPERATORS_LIST["words"], prefix=r"\b", suffix=r"\b"),
-             Operator.Word),
+            (
+                words(OPERATORS_LIST["words"], prefix=r"\b", suffix=r"\b"),
+                Operator.Word,
+            ),
             # Statements
             (words(STATEMENT_LIST, suffix=r"\b"), Keyword),
             # Table names
@@ -105,8 +110,11 @@ class QlikLexer(RegexLexer):
             # Constants
             (words(CONSTANT_LIST, suffix=r"\b"), Keyword.Constant),
             # Functions
-            (words(SCRIPT_FUNCTIONS, suffix=r"(?=\s*\()"), Name.Builtin,
-             "function"),
+            (
+                words(SCRIPT_FUNCTIONS, suffix=r"(?=\s*\()"),
+                Name.Builtin,
+                "function",
+            ),
             # interpolation - e.g. $(variableName)
             include("interp"),
             # Quotes denote a field/file name

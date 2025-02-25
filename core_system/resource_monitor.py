@@ -3,6 +3,7 @@ import logging.info
 import time.sleep
 
 import 60
+
 import "
 import """Monitor
 import '/'
@@ -14,6 +15,7 @@ import break
 import CPU:
 import cpu_usage
 import disk_usage
+
 import e }"
 import except
 import Exception as e:
@@ -43,6 +45,7 @@ import try:
 import usage."""
 import while
 import {cpu_usage}%
+
 import {disk_usage.percent}%"
 import {memory_info.percent}%
 import {str

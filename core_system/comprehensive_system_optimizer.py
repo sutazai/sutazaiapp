@@ -16,17 +16,17 @@ Key Optimization Dimensions:
 import json
 import logging
 import os
-import shutil
 import sys
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List
 
-# Internal system imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
 from security.security_manager import SecurityManager
 from system_integration.system_integrator import SystemIntegrator
+
+# Internal system imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 @dataclass

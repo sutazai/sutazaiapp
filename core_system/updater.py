@@ -21,24 +21,30 @@ class RequirementsTXTUpdater:
         :param content: str, content
         :return: str, updated content
         """
-        new_line = "{name}{spec}{version}".format(name=dependency.full_name,
-                                                  spec=spec, version=version)
-        appendix = ''
+        new_line = "{name}{spec}{version}".format(
+            name=dependency.full_name, spec=spec, version=version
+        )
+        appendix = ""
         # leave environment markers intact
         if ";" in dependency.line:
             # condense multiline, split out the env marker, strip comments
             # and --hashes
-            new_line += ";" + \
-                        dependency.line.splitlines()[0].split(";", 1)[1] \
-                            .split("#")[0].split("--hash")[0].rstrip()
+            new_line += (
+                ";"
+                + dependency.line.splitlines()[0]
+                .split(";", 1)[1]
+                .split("#")[0]
+                .split("--hash")[0]
+                .rstrip()
+            )
         # add the comment
         if "#" in dependency.line:
             # split the line into parts: requirement and comment
             parts = dependency.line.split("#")
             requirement, comment = parts[0], "#".join(parts[1:])
             # find all whitespaces between the requirement and the comment
-            whitespaces = (hex(ord('\t')), hex(ord(' ')))
-            trailing_whitespace = ''
+            whitespaces = (hex(ord("\t")), hex(ord(" ")))
+            trailing_whitespace = ""
             for c in requirement[::-1]:
                 if hex(ord(c)) in whitespaces:
                     trailing_whitespace += c
@@ -53,8 +59,7 @@ class RequirementsTXTUpdater:
         if hashes:
             for n, new_hash in enumerate(hashes):
                 new_line += "\n    --hash={method}:{hash}".format(
-                    method=new_hash['method'],
-                    hash=new_hash['hash']
+                    method=new_hash["method"], hash=new_hash["hash"]
                 )
                 # append a new multiline break if this is not the last line
                 if len(hashes) > n + 1:
@@ -84,19 +89,19 @@ class PipfileUpdater:
     def update(cls, content, dependency, version, spec="==", hashes=()):
         data = tomllib.loads(content)
         if data:
-            for package_type in ['packages', 'dev-packages']:
+            for package_type in ["packages", "dev-packages"]:
                 if package_type in data:
                     if dependency.full_name in data[package_type]:
-                        data[package_type][
-                            dependency.full_name] = "{spec}{version}".format(
-                            spec=spec, version=version
+                        data[package_type][dependency.full_name] = (
+                            "{spec}{version}".format(spec=spec, version=version)
                         )
         try:
             from pipenv.project import Project
         except ImportError:
             raise ImportError(
                 "Updating a Pipfile requires the pipenv extra to be installed."
-                " Install it with pip install dparse[pipenv]")
+                " Install it with pip install dparse[pipenv]"
+            )
         pipfile = tempfile.NamedTemporaryFile(delete=False)
         pipfile.close()
         p = Project(chdir=False)
@@ -111,18 +116,18 @@ class PipfileLockUpdater:
     def update(cls, content, dependency, version, spec="==", hashes=()):
         data = json.loads(content)
         if data:
-            for package_type in ['default', 'develop']:
+            for package_type in ["default", "develop"]:
                 if package_type in data:
                     if dependency.full_name in data[package_type]:
                         data[package_type][dependency.full_name] = {
-                            'hashes': [
+                            "hashes": [
                                 "{method}:{hash}".format(
-                                    hash=h['hash'],
-                                    method=h['method']
-                                ) for h in hashes
+                                    hash=h["hash"], method=h["method"]
+                                )
+                                for h in hashes
                             ],
-                            'version': "{spec}{version}".format(
+                            "version": "{spec}{version}".format(
                                 spec=spec, version=version
-                            )
+                            ),
                         }
-        return json.dumps(data, indent=4, separators=(',', ': ')) + "\n"
+        return json.dumps(data, indent=4, separators=(",", ": ")) + "\n"

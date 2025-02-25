@@ -1,5 +1,4 @@
 import json
-import logging
 import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -20,7 +19,9 @@ class BaseAgent(ABC):
     """
 
     def __init__(
-        self, agent_name: str = None, log_dir: str = "/opt/sutazai_project/SutazAI/logs"
+        self,
+        agent_name: str = None,
+        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
     ):
         """
         Initialize base agent with unique identifier and logging
@@ -35,13 +36,17 @@ class BaseAgent(ABC):
 
         # Comprehensive logging setup
         logger.add(
-            f"{log_dir}/{self.agent_name}_agent.log", rotation="10 MB", level="INFO"
+            f"{log_dir}/{self.agent_name}_agent.log",
+            rotation="10 MB",
+            level="INFO",
         )
 
         # Performance tracking
         self.performance_history = []
 
-        logger.info(f"🤖 Agent {self.agent_name} (ID: {self.agent_id}) initialized")
+        logger.info(
+            f"🤖 Agent {self.agent_name} (ID: {self.agent_id}) initialized"
+        )
 
     @abstractmethod
     def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
@@ -87,7 +92,9 @@ class BaseAgent(ABC):
             max_records (int): Maximum number of performance records to keep
         """
         try:
-            history_file = f"{self.log_dir}/{self.agent_name}_performance_history.json"
+            history_file = (
+                f"{self.log_dir}/{self.agent_name}_performance_history.json"
+            )
 
             # Trim history if exceeding max records
             trimmed_history = self.performance_history[-max_records:]
@@ -127,7 +134,9 @@ class AgentError(Exception):
     Provides detailed error information for agent execution
     """
 
-    def __init__(self, message: str, agent_id: str = None, task: Dict[str, Any] = None):
+    def __init__(
+        self, message: str, agent_id: str = None, task: Dict[str, Any] = None
+    ):
         """
         Initialize agent-specific error
 

@@ -133,7 +133,10 @@ class CAmkESLexer(RegexLexer):
     tokens = {
         "root": [
             # C pre-processor directive
-            (r"^(\s*)(#.*)(\n)", bygroups(Whitespace, Comment.Preproc, Whitespace)),
+            (
+                r"^(\s*)(#.*)(\n)",
+                bygroups(Whitespace, Comment.Preproc, Whitespace),
+            ),
             # Whitespace, comments
             (r"\s+", Whitespace),
             (r"/\*(.|\n)*?\*/", Comment),
@@ -271,7 +274,10 @@ class CapDLLexer(RegexLexer):
     tokens = {
         "root": [
             # C pre-processor directive
-            (r"^(\s*)(#.*)(\n)", bygroups(Whitespace, Comment.Preproc, Whitespace)),
+            (
+                r"^(\s*)(#.*)(\n)",
+                bygroups(Whitespace, Comment.Preproc, Whitespace),
+            ),
             # Whitespace, comments
             (r"\s+", Whitespace),
             (r"/\*(.|\n)*?\*/", Comment),

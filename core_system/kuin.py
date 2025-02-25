@@ -214,7 +214,11 @@ class KuinLexer(RegexLexer):
                 bygroups(Keyword, using(this), Keyword),
                 "#pop:2",
             ),
-            (words(("elif", "else"), prefix=r"\b", suffix=r"\b"), Keyword, "if_sp"),
+            (
+                words(("elif", "else"), prefix=r"\b", suffix=r"\b"),
+                Keyword,
+                "if_sp",
+            ),
             include("statement"),
             include("break"),
             include("skip"),
@@ -379,7 +383,11 @@ class KuinLexer(RegexLexer):
             (r",", Punctuation),
             # Keyword
             (
-                words(("true", "false", "null", "inf"), prefix=r"\b", suffix=r"\b"),
+                words(
+                    ("true", "false", "null", "inf"),
+                    prefix=r"\b",
+                    suffix=r"\b",
+                ),
                 Keyword.Constant,
             ),
             (words(("me"), prefix=r"\b", suffix=r"\b"), Keyword),
@@ -429,7 +437,10 @@ class KuinLexer(RegexLexer):
             (r"(?::(?::|\+|-|\*|/|%|\^|~)?)", Operator),
             # Identifier
             (r"\b([a-zA-Z_][0-9a-zA-Z_]*)(?=@)\b", Name),
-            (r"(@)?\b([a-zA-Z_][0-9a-zA-Z_]*)\b", bygroups(Name.Other, Name.Variable)),
+            (
+                r"(@)?\b([a-zA-Z_][0-9a-zA-Z_]*)\b",
+                bygroups(Name.Other, Name.Variable),
+            ),
         ],
         # String
         "string": [

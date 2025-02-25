@@ -154,7 +154,9 @@ _DISTRO_RELEASE_IGNORE_BASENAMES = (
 )
 
 
-def linux_distribution(full_distribution_name: bool = True) -> Tuple[str, str, str]:
+def linux_distribution(
+    full_distribution_name: bool = True,
+) -> Tuple[str, str, str]:
     """
     .. deprecated:: 1.6.0
 
@@ -1362,7 +1364,10 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="OS distro info tool")
     parser.add_argument(
-        "--json", "-j", help="Output in machine readable format", action="store_true"
+        "--json",
+        "-j",
+        help="Output in machine readable format",
+        action="store_true",
     )
 
     parser.add_argument(

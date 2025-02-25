@@ -6,7 +6,6 @@ from collections.abc import (
     Mapping,
     MutableMapping,
     MutableSequence,
-    Sequence,
 )
 from typing import Any, Dict, List, Set, Tuple
 
@@ -169,7 +168,12 @@ class ParseResults:
     # Performance tuning: we construct a *lot* of these, so keep this
     # constructor as small and fast as possible
     def __init__(
-        self, toklist=None, name=None, asList=True, modal=True, isinstance=isinstance
+        self,
+        toklist=None,
+        name=None,
+        asList=True,
+        modal=True,
+        isinstance=isinstance,
     ):
         self._tokdict: Dict[str, _ParseResultsWithOffset]
         self._modal = modal
@@ -445,7 +449,10 @@ class ParseResults:
 
         if other._tokdict:
             offset = len(self._toklist)
-            addoffset = lambda a: offset if a < 0 else a + offset
+
+            def addoffset(a):
+                return offset if a < 0 else a + offset
+
             otheritems = other._tokdict.items()
             otherdictitems = [
                 (k, _ParseResultsWithOffset(v[0], addoffset(v[1])))

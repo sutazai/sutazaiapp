@@ -52,9 +52,11 @@ class CacheControlAdapter(HTTPAdapter):
         self,
         request: PreparedRequest,
         stream: bool = False,
-        timeout: None | float | tuple[float, float] | tuple[float, None] = None,
+        timeout: (
+            None | float | tuple[float, float] | tuple[float, None]
+        ) = None,
         verify: bool | str = True,
-        cert: (None | bytes | str | tuple[bytes | str, bytes | str]) = None,
+        cert: None | bytes | str | tuple[bytes | str, bytes | str] = None,
         proxies: Mapping[str, str] | None = None,
         cacheable_methods: Collection[str] | None = None,
     ) -> Response:
@@ -69,10 +71,14 @@ class CacheControlAdapter(HTTPAdapter):
             except zlib.error:
                 cached_response = None
             if cached_response:
-                return self.build_response(request, cached_response, from_cache=True)
+                return self.build_response(
+                    request, cached_response, from_cache=True
+                )
 
             # check for etags and add headers if appropriate
-            request.headers.update(self.controller.conditional_headers(request))
+            request.headers.update(
+                self.controller.conditional_headers(request)
+            )
 
         resp = super().send(request, stream, timeout, verify, cert, proxies)
 

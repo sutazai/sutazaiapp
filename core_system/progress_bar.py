@@ -142,7 +142,11 @@ class ProgressBar(JupyterMixin):
         back_style = console.get_style(self.style, default="black")
 
         pulse_segments = self._get_pulse_segments(
-            fore_style, back_style, console.color_system, console.no_color, ascii=ascii
+            fore_style,
+            back_style,
+            console.color_system,
+            console.no_color,
+            ascii=ascii,
         )
         segment_count = len(pulse_segments)
         current_time = (
@@ -150,7 +154,7 @@ class ProgressBar(JupyterMixin):
         )
         segments = pulse_segments * (int(width / segment_count) + 2)
         offset = int(-current_time * 15) % segment_count
-        segments = segments[offset : offset + width]
+        segments = segments[offset: offset + width]
         yield from segments
 
     def __rich_console__(

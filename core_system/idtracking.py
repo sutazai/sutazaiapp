@@ -32,7 +32,9 @@ def symbols_for_node(
 
 class Symbols:
     def __init__(
-        self, parent: t.Optional["Symbols"] = None, level: t.Optional[int] = None
+        self,
+        parent: t.Optional["Symbols"] = None,
+        level: t.Optional[int] = None,
     ) -> None:
         if level is None:
             if parent is None:

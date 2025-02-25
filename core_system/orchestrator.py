@@ -1,8 +1,6 @@
 import importlib
 import json
-import logging
 import os
-import sys
 from datetime import datetime
 from typing import Any, Dict, List
 
@@ -217,7 +215,10 @@ def main():
         "name": "Document Processing Workflow",
         "agent_tasks": {
             "auto_gpt": {"task": "extract_text", "document": "sample.pdf"},
-            "gpt_engineer": {"task": "analyze_code", "source": "project_codebase"},
+            "gpt_engineer": {
+                "task": "analyze_code",
+                "source": "project_codebase",
+            },
         },
     }
 

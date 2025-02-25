@@ -77,7 +77,9 @@ def is_function_with_inner_schema(
 def is_list_like_schema_with_items_schema(
     schema: CoreSchema,
 ) -> TypeGuard[
-    core_schema.ListSchema | core_schema.SetSchema | core_schema.FrozenSetSchema
+    core_schema.ListSchema
+    | core_schema.SetSchema
+    | core_schema.FrozenSetSchema
 ]:
     return schema["type"] in _LIST_LIKE_SCHEMA_WITH_ITEMS_TYPES
 
@@ -92,7 +94,9 @@ def get_type_ref(
     """
     origin = get_origin(type_) or type_
 
-    args = get_args(type_) if is_generic_alias(type_) else (args_override or ())
+    args = (
+        get_args(type_) if is_generic_alias(type_) else (args_override or ())
+    )
     generic_metadata = getattr(type_, "__pydantic_generic_metadata__", None)
     if generic_metadata:
         origin = generic_metadata["origin"] or origin
@@ -103,7 +107,9 @@ def get_type_ref(
         type_ref = f"{module_name}.{origin.__name__}:{id(origin)}"
     else:
         try:
-            qualname = getattr(origin, "__qualname__", f"<No __qualname__: {origin}>")
+            qualname = getattr(
+                origin, "__qualname__", f"<No __qualname__: {origin}>"
+            )
         except Exception:
             qualname = getattr(origin, "__qualname__", "<No __qualname__>")
         type_ref = f"{module_name}.{qualname}:{id(origin)}"
@@ -203,18 +209,26 @@ class _WalkCoreSchema:
     def __init__(self):
         self._schema_type_to_method = self._build_schema_type_to_method()
 
-    def _build_schema_type_to_method(self) -> dict[core_schema.CoreSchemaType, Recurse]:
+    def _build_schema_type_to_method(
+        self,
+    ) -> dict[core_schema.CoreSchemaType, Recurse]:
         mapping: dict[core_schema.CoreSchemaType, Recurse] = {}
         key: core_schema.CoreSchemaType
         for key in get_args(core_schema.CoreSchemaType):
             method_name = f"handle_{key.replace('-', '_')}_schema"
-            mapping[key] = getattr(self, method_name, self._handle_other_schemas)
+            mapping[key] = getattr(
+                self, method_name, self._handle_other_schemas
+            )
         return mapping
 
-    def walk(self, schema: core_schema.CoreSchema, f: Walk) -> core_schema.CoreSchema:
+    def walk(
+        self, schema: core_schema.CoreSchema, f: Walk
+    ) -> core_schema.CoreSchema:
         return f(schema, self._walk)
 
-    def _walk(self, schema: core_schema.CoreSchema, f: Walk) -> core_schema.CoreSchema:
+    def _walk(
+        self, schema: core_schema.CoreSchema, f: Walk
+    ) -> core_schema.CoreSchema:
         schema = self._schema_type_to_method[schema["type"]](schema.copy(), f)
         ser_schema: core_schema.SerSchema | None = schema.get("serialization")  # type: ignore
         if ser_schema:
@@ -309,7 +323,9 @@ class _WalkCoreSchema:
     def handle_tuple_schema(
         self, schema: core_schema.TupleSchema, f: Walk
     ) -> core_schema.CoreSchema:
-        schema["items_schema"] = [self.walk(v, f) for v in schema["items_schema"]]
+        schema["items_schema"] = [
+            self.walk(v, f) for v in schema["items_schema"]
+        ]
         return schema
 
     def handle_dict_schema(
@@ -348,7 +364,9 @@ class _WalkCoreSchema:
     ) -> core_schema.CoreSchema:
         new_choices: dict[Hashable, core_schema.CoreSchema] = {}
         for k, v in schema["choices"].items():
-            new_choices[k] = v if isinstance(v, (str, int)) else self.walk(v, f)
+            new_choices[k] = (
+                v if isinstance(v, (str, int)) else self.walk(v, f)
+            )
         schema["choices"] = new_choices
         return schema
 
@@ -450,7 +468,9 @@ class _WalkCoreSchema:
         if "var_args_schema" in schema:
             schema["var_args_schema"] = self.walk(schema["var_args_schema"], f)
         if "var_kwargs_schema" in schema:
-            schema["var_kwargs_schema"] = self.walk(schema["var_kwargs_schema"], f)
+            schema["var_kwargs_schema"] = self.walk(
+                schema["var_kwargs_schema"], f
+            )
         return schema
 
     def handle_call_schema(
@@ -465,7 +485,9 @@ class _WalkCoreSchema:
 _dispatch = _WalkCoreSchema().walk
 
 
-def walk_core_schema(schema: core_schema.CoreSchema, f: Walk) -> core_schema.CoreSchema:
+def walk_core_schema(
+    schema: core_schema.CoreSchema, f: Walk
+) -> core_schema.CoreSchema:
     """Recursively traverse a CoreSchema.
 
     Args:
@@ -540,7 +562,9 @@ def simplify_schema_references(
         c == 0 for c in current_recursion_ref_count.values()
     ), "this is a bug! please report it"
 
-    def can_be_inlined(s: core_schema.DefinitionReferenceSchema, ref: str) -> bool:
+    def can_be_inlined(
+        s: core_schema.DefinitionReferenceSchema, ref: str
+    ) -> bool:
         if ref_counts[ref] > 1:
             return False
         if involved_in_recursion.get(ref, False):
@@ -586,7 +610,9 @@ def simplify_schema_references(
     def_values = [v for v in definitions.values() if ref_counts[v["ref"]] > 0]  # type: ignore
 
     if def_values:
-        schema = core_schema.definitions_schema(schema=schema, definitions=def_values)
+        schema = core_schema.definitions_schema(
+            schema=schema, definitions=def_values
+        )
     return schema
 
 
@@ -632,7 +658,9 @@ def pretty_print_core_schema(
         schema: The CoreSchema to print.
         include_metadata: Whether to include metadata in the output. Defaults to `False`.
     """
-    from rich import print  # type: ignore  # install it manually in your dev env
+    from rich import (
+        print,  # type: ignore  # install it manually in your dev env
+    )
 
     if not include_metadata:
         schema = _strip_metadata(schema)

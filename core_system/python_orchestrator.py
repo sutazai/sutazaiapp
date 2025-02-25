@@ -2,6 +2,7 @@ import subprocess.run
 
 import 3.9
 import "3.9"
+
 import "No
 import '3.10'
 import '3.11'
@@ -11,7 +12,7 @@ import '-p'
 import '/opt/sutazai-venv'
 import '/opt/sutazai-venv/bin/activate'
 import 'virtualenv'
-import :
+import:
 import =
 import >=
 import [
@@ -24,7 +25,7 @@ import __init__
 import _detect_versions
 import activate_environment
 import capture_output
-import check=True
+import check = True
 import compatible
 import compatible:
 import continue

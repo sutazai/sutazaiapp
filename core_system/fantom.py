@@ -10,7 +10,15 @@ Lexer for the Fantom language.
 
 from string import Template
 
-from pygments.lexer import RegexLexer, bygroups, default, include, this, using, words
+from pygments.lexer import (
+    RegexLexer,
+    bygroups,
+    default,
+    include,
+    this,
+    using,
+    words,
+)
 from pygments.token import (
     Comment,
     Keyword,
@@ -62,7 +70,10 @@ class FantomLexer(RegexLexer):
         ],
         "literals": [
             (r"\b-?[\d_]+(ns|ms|sec|min|hr|day)", Number),  # Duration
-            (r"\b-?[\d_]*\.[\d_]+(ns|ms|sec|min|hr|day)", Number),  # Duration with dot
+            (
+                r"\b-?[\d_]*\.[\d_]+(ns|ms|sec|min|hr|day)",
+                Number,
+            ),  # Duration with dot
             (r"\b-?(\d+)?\.\d+(f|F|d|D)?", Number.Float),  # Float/Decimal
             (r"\b-?0x[0-9a-fA-F_]+", Number.Hex),  # Hex
             (r"\b-?[\d_]+", Number.Integer),  # Int
@@ -84,7 +95,11 @@ class FantomLexer(RegexLexer):
             (
                 r"(?:(\w+)(::))?(\w+)?(#)(\w+)?",  # Type/slot literal
                 bygroups(
-                    Name.Namespace, Punctuation, Name.Class, Punctuation, Name.Function
+                    Name.Namespace,
+                    Punctuation,
+                    Name.Class,
+                    Punctuation,
+                    Name.Function,
                 ),
             ),
             (r"\[,\]", Literal),  # Empty list
@@ -93,7 +108,10 @@ class FantomLexer(RegexLexer):
                 bygroups(using(this, state="inType"), Literal),
             ),
             (r"\[:\]", Literal),  # Empty Map
-            (s(r"($type)(\[:\])"), bygroups(using(this, state="inType"), Literal)),
+            (
+                s(r"($type)(\[:\])"),
+                bygroups(using(this, state="inType"), Literal),
+            ),
         ],
         "insideStr": [
             (r"\\\\", String.Escape),  # Escaped backslash
@@ -120,7 +138,10 @@ class FantomLexer(RegexLexer):
             (r"\b(abstract|final|const|native|facet|enum)\b", Keyword),
         ],
         "methodKeywords": [
-            (r"\b(abstract|native|once|override|static|virtual|final)\b", Keyword),
+            (
+                r"\b(abstract|native|once|override|static|virtual|final)\b",
+                Keyword,
+            ),
         ],
         "fieldKeywords": [
             (
@@ -197,7 +218,10 @@ class FantomLexer(RegexLexer):
                 ),
             ),
             # var := val
-            (s(r"($id)(\s*)(:=)"), bygroups(Name.Variable, Whitespace, Operator)),
+            (
+                s(r"($id)(\s*)(:=)"),
+                bygroups(Name.Variable, Whitespace, Operator),
+            ),
             # .someId( or ->someId( ###
             (
                 s(r"(\.|(?:\->))($id)(\s*)(\()"),
@@ -301,7 +325,10 @@ class FantomLexer(RegexLexer):
         "inheritance": [
             (r"\s+", Whitespace),  # Whitespace
             (r":|,", Punctuation),
-            (r"(?:(\w+)(::))?(\w+)", bygroups(Name.Namespace, Punctuation, Name.Class)),
+            (
+                r"(?:(\w+)(::))?(\w+)",
+                bygroups(Name.Namespace, Punctuation, Name.Class),
+            ),
             (r"\{", Punctuation, "#pop"),
         ],
         "using": [
@@ -337,7 +364,10 @@ class FantomLexer(RegexLexer):
             include("literals"),
             include("operators"),
             (r"\s+", Whitespace),
-            (r"(\s*)(\w+)(\s*)(=)", bygroups(Whitespace, Name, Whitespace, Operator)),
+            (
+                r"(\s*)(\w+)(\s*)(=)",
+                bygroups(Whitespace, Name, Whitespace, Operator),
+            ),
             (r"\}", Punctuation, "#pop"),
             (r"\s+", Whitespace),
             (r".", Text),

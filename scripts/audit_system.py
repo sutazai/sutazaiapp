@@ -104,14 +104,18 @@ def check_virtualenv():
 
 
 def check_requirements_vs_wheels():
-    logging.info("Checking requirements.txt dependencies against packages/wheels...")
+    logging.info(
+        "Checking requirements.txt dependencies against packages/wheels..."
+    )
     if not os.path.isfile("requirements.txt"):
         logging.error("No requirements.txt file found!")
         return []
     try:
         with open("requirements.txt", "r") as f:
             requirements = [
-                line.strip() for line in f if line.strip() and not line.startswith("#")
+                line.strip()
+                for line in f
+                if line.strip() and not line.startswith("#")
             ]
     except Exception as e:
         logging.error(f"Error reading requirements.txt: {e}")
@@ -154,7 +158,9 @@ def search_for_sensitive_keywords():
             if file.endswith((".py", ".js", ".ts", ".txt", ".sh", ".md")):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                    with open(
+                        file_path, "r", encoding="utf-8", errors="ignore"
+                    ) as f:
                         content = f.read()
                         for keyword in sensitive_keywords:
                             if keyword in content:
@@ -179,7 +185,9 @@ def syntax_check():
             if file.endswith(".py"):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                    with open(
+                        file_path, "r", encoding="utf-8", errors="ignore"
+                    ) as f:
                         source = f.read()
                     compile(source, file_path, "exec")
                     logging.info(f"Syntax OK: {file_path}")
@@ -222,10 +230,14 @@ def main():
         or sensitive_issues
         or syntax_issues
     ):
-        logging.error("Audit completed with issues. Please address the above errors.")
+        logging.error(
+            "Audit completed with issues. Please address the above errors."
+        )
         sys.exit(1)
     else:
-        logging.info("Audit completed successfully. System integrity verified.")
+        logging.info(
+            "Audit completed successfully. System integrity verified."
+        )
         sys.exit(0)
 
 

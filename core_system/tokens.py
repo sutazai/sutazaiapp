@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from ruamel.yaml.compat import nprintf  # NOQA
@@ -11,7 +10,7 @@ SHOW_LINES = True
 
 
 class Token:
-    __slots__ = 'start_mark', 'end_mark', '_comment'
+    __slots__ = "start_mark", "end_mark", "_comment"
 
     def __init__(self, start_mark: StreamMark, end_mark: StreamMark) -> None:
         self.start_mark = start_mark
@@ -20,19 +19,19 @@ class Token:
     def __repr__(self) -> Any:
         # attributes = [key for key in self.__slots__ if not key.endswith('_mark') and
         #               hasattr('self', key)]
-        attributes = [key for key in self.__slots__ if not key.endswith('_mark')]
+        attributes = [key for key in self.__slots__ if not key.endswith("_mark")]
         attributes.sort()
         # arguments = ', '.join(
         #  [f'{key!s}={getattr(self, key)!r})' for key in attributes]
         # )
-        arguments = [f'{key!s}={getattr(self, key)!r}' for key in attributes]
+        arguments = [f"{key!s}={getattr(self, key)!r}" for key in attributes]
         if SHOW_LINES:
             try:
-                arguments.append('line: ' + str(self.start_mark.line))
+                arguments.append("line: " + str(self.start_mark.line))
             except:  # NOQA
                 pass
         try:
-            arguments.append('comment: ' + str(self._comment))
+            arguments.append("comment: " + str(self._comment))
         except:  # NOQA
             pass
         return f'{self.__class__.__name__}({", ".join(arguments)})'
@@ -57,7 +56,7 @@ class Token:
 
     # going to be deprecated in favour of add_comment_eol/post
     def add_post_comment(self, comment: Any) -> None:
-        if not hasattr(self, '_comment'):
+        if not hasattr(self, "_comment"):
             self._comment = [None, None]
         else:
             assert len(self._comment) in [2, 5]  # make sure it is version 0
@@ -68,7 +67,7 @@ class Token:
 
     # going to be deprecated in favour of add_comment_pre
     def add_pre_comments(self, comments: Any) -> None:
-        if not hasattr(self, '_comment'):
+        if not hasattr(self, "_comment"):
             self._comment = [None, None]
         else:
             assert len(self._comment) == 2  # make sure it is version 0
@@ -78,7 +77,7 @@ class Token:
 
     # new style
     def add_comment_pre(self, comment: Any) -> None:
-        if not hasattr(self, '_comment'):
+        if not hasattr(self, "_comment"):
             self._comment = [[], None, None]  # type: ignore
         else:
             assert len(self._comment) == 3
@@ -87,7 +86,7 @@ class Token:
         self._comment[0].append(comment)  # type: ignore
 
     def add_comment_eol(self, comment: Any, comment_type: Any) -> None:
-        if not hasattr(self, '_comment'):
+        if not hasattr(self, "_comment"):
             self._comment = [None, None, None]
         else:
             assert len(self._comment) == 3
@@ -99,7 +98,7 @@ class Token:
         self._comment[1][comment_type] = comment  # type: ignore
 
     def add_comment_post(self, comment: Any) -> None:
-        if not hasattr(self, '_comment'):
+        if not hasattr(self, "_comment"):
             self._comment = [None, None, []]  # type: ignore
         else:
             assert len(self._comment) == 3
@@ -112,7 +111,7 @@ class Token:
 
     @property
     def comment(self) -> Any:
-        return getattr(self, '_comment', None)
+        return getattr(self, "_comment", None)
 
     def move_old_comment(self, target: Any, empty: bool = False) -> Any:
         """move a comment from this token to target (normally next token)
@@ -126,7 +125,7 @@ class Token:
         # don't push beyond last element
         if isinstance(target, (StreamEndToken, DocumentStartToken)):
             return
-        delattr(self, '_comment')
+        delattr(self, "_comment")
         tc = target.comment
         if not tc:  # target comment, just insert
             # special for empty value in key: value issue 25
@@ -136,7 +135,7 @@ class Token:
             # nprint('mco2:', self, target, target.comment, empty)
             return self
         if c[0] and tc[0] or c[1] and tc[1]:
-            raise NotImplementedError(f'overlap in comment {c!r} {tc!r}')
+            raise NotImplementedError(f"overlap in comment {c!r} {tc!r}")
         if c[0]:
             tc[0] = c[0]
         if c[1]:
@@ -144,7 +143,7 @@ class Token:
         return self
 
     def split_old_comment(self) -> Any:
-        """ split the post part of a comment, and return it
+        """split the post part of a comment, and return it
         as comment to be added. Delete second part if [None, None]
          abc:  # this goes to sequence
            # this goes to first element
@@ -155,7 +154,7 @@ class Token:
             return None  # nothing to do
         ret_val = [comment[0], None]
         if comment[1] is None:
-            delattr(self, '_comment')
+            delattr(self, "_comment")
         return ret_val
 
     def move_new_comment(self, target: Any, empty: bool = False) -> Any:
@@ -170,7 +169,7 @@ class Token:
         # don't push beyond last element
         if isinstance(target, (StreamEndToken, DocumentStartToken)):
             return
-        delattr(self, '_comment')
+        delattr(self, "_comment")
         tc = target.comment
         if not tc:  # target comment, just insert
             # special for empty value in key: value issue 25
@@ -182,7 +181,7 @@ class Token:
         # if self and target have both pre, eol or post comments, something seems wrong
         for idx in range(3):
             if c[idx] is not None and tc[idx] is not None:
-                raise NotImplementedError(f'overlap in comment {c!r} {tc!r}')
+                raise NotImplementedError(f"overlap in comment {c!r} {tc!r}")
         # move the comment parts
         for idx in range(3):
             if c[idx]:
@@ -195,8 +194,8 @@ class Token:
 
 
 class DirectiveToken(Token):
-    __slots__ = 'name', 'value'
-    id = '<directive>'
+    __slots__ = "name", "value"
+    id = "<directive>"
 
     def __init__(self, name: Any, value: Any, start_mark: Any, end_mark: Any) -> None:
         Token.__init__(self, start_mark, end_mark)
@@ -206,20 +205,23 @@ class DirectiveToken(Token):
 
 class DocumentStartToken(Token):
     __slots__ = ()
-    id = '<document start>'
+    id = "<document start>"
 
 
 class DocumentEndToken(Token):
     __slots__ = ()
-    id = '<document end>'
+    id = "<document end>"
 
 
 class StreamStartToken(Token):
-    __slots__ = ('encoding',)
-    id = '<stream start>'
+    __slots__ = ("encoding",)
+    id = "<stream start>"
 
     def __init__(
-        self, start_mark: Any = None, end_mark: Any = None, encoding: Any = None,
+        self,
+        start_mark: Any = None,
+        end_mark: Any = None,
+        encoding: Any = None,
     ) -> None:
         Token.__init__(self, start_mark, end_mark)
         self.encoding = encoding
@@ -227,47 +229,48 @@ class StreamStartToken(Token):
 
 class StreamEndToken(Token):
     __slots__ = ()
-    id = '<stream end>'
+    id = "<stream end>"
 
 
 class BlockSequenceStartToken(Token):
     __slots__ = ()
-    id = '<block sequence start>'
+    id = "<block sequence start>"
 
 
 class BlockMappingStartToken(Token):
     __slots__ = ()
-    id = '<block mapping start>'
+    id = "<block mapping start>"
 
 
 class BlockEndToken(Token):
     __slots__ = ()
-    id = '<block end>'
+    id = "<block end>"
 
 
 class FlowSequenceStartToken(Token):
     __slots__ = ()
-    id = '['
+    id = "["
 
 
 class FlowMappingStartToken(Token):
     __slots__ = ()
-    id = '{'
+    id = "{"
 
 
 class FlowSequenceEndToken(Token):
     __slots__ = ()
-    id = ']'
+    id = "]"
 
 
 class FlowMappingEndToken(Token):
     __slots__ = ()
-    id = '}'
+    id = "}"
 
 
 class KeyToken(Token):
     __slots__ = ()
-    id = '?'
+    id = "?"
+
 
 #   def x__repr__(self):
 #       return f'KeyToken({self.start_mark.buffer[self.start_mark.index:].split(None, 1)[0]})'
@@ -275,22 +278,22 @@ class KeyToken(Token):
 
 class ValueToken(Token):
     __slots__ = ()
-    id = ':'
+    id = ":"
 
 
 class BlockEntryToken(Token):
     __slots__ = ()
-    id = '-'
+    id = "-"
 
 
 class FlowEntryToken(Token):
     __slots__ = ()
-    id = ','
+    id = ","
 
 
 class AliasToken(Token):
-    __slots__ = ('value',)
-    id = '<alias>'
+    __slots__ = ("value",)
+    id = "<alias>"
 
     def __init__(self, value: Any, start_mark: Any, end_mark: Any) -> None:
         Token.__init__(self, start_mark, end_mark)
@@ -298,8 +301,8 @@ class AliasToken(Token):
 
 
 class AnchorToken(Token):
-    __slots__ = ('value',)
-    id = '<anchor>'
+    __slots__ = ("value",)
+    id = "<anchor>"
 
     def __init__(self, value: Any, start_mark: Any, end_mark: Any) -> None:
         Token.__init__(self, start_mark, end_mark)
@@ -307,8 +310,8 @@ class AnchorToken(Token):
 
 
 class TagToken(Token):
-    __slots__ = ('value',)
-    id = '<tag>'
+    __slots__ = ("value",)
+    id = "<tag>"
 
     def __init__(self, value: Any, start_mark: Any, end_mark: Any) -> None:
         Token.__init__(self, start_mark, end_mark)
@@ -316,11 +319,16 @@ class TagToken(Token):
 
 
 class ScalarToken(Token):
-    __slots__ = 'value', 'plain', 'style'
-    id = '<scalar>'
+    __slots__ = "value", "plain", "style"
+    id = "<scalar>"
 
     def __init__(
-        self, value: Any, plain: Any, start_mark: Any, end_mark: Any, style: Any = None,
+        self,
+        value: Any,
+        plain: Any,
+        start_mark: Any,
+        end_mark: Any,
+        style: Any = None,
     ) -> None:
         Token.__init__(self, start_mark, end_mark)
         self.value = value
@@ -329,11 +337,15 @@ class ScalarToken(Token):
 
 
 class CommentToken(Token):
-    __slots__ = '_value', '_column', 'pre_done'
-    id = '<comment>'
+    __slots__ = "_value", "_column", "pre_done"
+    id = "<comment>"
 
     def __init__(
-        self, value: Any, start_mark: Any = None, end_mark: Any = None, column: Any = None,
+        self,
+        value: Any,
+        start_mark: Any = None,
+        end_mark: Any = None,
+        column: Any = None,
     ) -> None:
         if start_mark is None:
             assert column is not None
@@ -352,21 +364,21 @@ class CommentToken(Token):
         self._value = val
 
     def reset(self) -> None:
-        if hasattr(self, 'pre_done'):
-            delattr(self, 'pre_done')
+        if hasattr(self, "pre_done"):
+            delattr(self, "pre_done")
 
     def __repr__(self) -> Any:
-        v = f'{self.value!r}'
+        v = f"{self.value!r}"
         if SHOW_LINES:
             try:
-                v += ', line: ' + str(self.start_mark.line)
+                v += ", line: " + str(self.start_mark.line)
             except:  # NOQA
                 pass
             try:
-                v += ', col: ' + str(self.start_mark.column)
+                v += ", col: " + str(self.start_mark.column)
             except:  # NOQA
                 pass
-        return f'CommentToken({v})'
+        return f"CommentToken({v})"
 
     def __eq__(self, other: Any) -> bool:
         if self.start_mark != other.start_mark:

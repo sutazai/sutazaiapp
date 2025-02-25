@@ -82,7 +82,8 @@ class RSAKey(AsymmetricKey):
 
     def load_public_key(self):
         numbers = RSAPublicNumbers(
-            base64_to_int(self._dict_data["e"]), base64_to_int(self._dict_data["n"])
+            base64_to_int(self._dict_data["e"]),
+            base64_to_int(self._dict_data["n"]),
         )
         return numbers.public_key(default_backend())
 

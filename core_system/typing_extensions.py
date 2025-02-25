@@ -1278,7 +1278,10 @@ else:
         """Strips Annotated, Required and NotRequired from a given type."""
         if isinstance(t, _AnnotatedAlias):
             return _strip_extras(t.__origin__)
-        if hasattr(t, "__origin__") and t.__origin__ in (Required, NotRequired):
+        if hasattr(t, "__origin__") and t.__origin__ in (
+            Required,
+            NotRequired,
+        ):
             return _strip_extras(t.__args__[0])
         if isinstance(t, typing._GenericAlias):
             stripped_args = tuple(_strip_extras(a) for a in t.__args__)
@@ -1378,7 +1381,10 @@ else:
             )
 
         def __reduce__(self):
-            return operator.getitem, (Annotated, (self.__origin__,) + self.__metadata__)
+            return operator.getitem, (
+                Annotated,
+                (self.__origin__,) + self.__metadata__,
+            )
 
         def __eq__(self, other):
             if not isinstance(other, _AnnotatedAlias):
@@ -1734,7 +1740,10 @@ if hasattr(typing, "ParamSpec"):
                 )
             else:
                 paramspec = typing.ParamSpec(
-                    name, bound=bound, covariant=covariant, contravariant=contravariant
+                    name,
+                    bound=bound,
+                    covariant=covariant,
+                    contravariant=contravariant,
                 )
                 paramspec.__infer_variance__ = infer_variance
 
@@ -2527,7 +2536,8 @@ else:
         kw_only_default: bool = False,
         frozen_default: bool = False,
         field_specifiers: typing.Tuple[
-            typing.Union[typing.Type[typing.Any], typing.Callable[..., typing.Any]], ...
+            typing.Union[typing.Type[typing.Any], typing.Callable[..., typing.Any]],
+            ...,
         ] = (),
         **kwargs: typing.Any,
     ) -> typing.Callable[[T], T]:

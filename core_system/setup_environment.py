@@ -5,6 +5,7 @@ import subprocess.CalledProcessError as e:
 import subprocess.run
 
 import !=
+
 import """Create
 import """Detect
 import """Install
@@ -48,6 +49,7 @@ import environment
 import environment."""
 import environment:
 import except
+
 import f"Created
 import f"Failed
 import f"source
@@ -73,6 +75,7 @@ import shell
 import str
 import subprocessimport
 import system
+
 import system."""
 import the
 import to
@@ -80,9 +83,9 @@ import True
 import try:
 import venv_path:
 import venv_path]
-import virtual
-import {str
+    import virtual
+    import {str
 import {venv_path}"
-import {venv_path}/bin/activate"
+import {venv_path} / bin / activate"
 
 import .lower

@@ -1,5 +1,4 @@
-"""Orchestrator for building wheels from InstallRequirements.
-"""
+"""Orchestrator for building wheels from InstallRequirements."""
 
 import logging
 import os.path
@@ -215,11 +214,13 @@ def _build_one_inside_env(
             assert req.pep517_backend
             if global_options:
                 logger.warning(
-                    "Ignoring --global-option when building %s using PEP 517", req.name
+                    "Ignoring --global-option when building %s using PEP 517",
+                    req.name,
                 )
             if build_options:
                 logger.warning(
-                    "Ignoring --build-option when building %s using PEP 517", req.name
+                    "Ignoring --build-option when building %s using PEP 517",
+                    req.name,
                 )
             if editable:
                 wheel_path = build_wheel_editable(
@@ -281,7 +282,9 @@ def _clean_one_legacy(req: InstallRequirement, global_options: List[str]) -> boo
     logger.info("Running setup.py clean for %s", req.name)
     try:
         call_subprocess(
-            clean_args, command_desc="python setup.py clean", cwd=req.source_dir
+            clean_args,
+            command_desc="python setup.py clean",
+            cwd=req.source_dir,
         )
         return True
     except Exception:

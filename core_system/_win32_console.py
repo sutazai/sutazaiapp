@@ -2,9 +2,15 @@
 
 The API that this module wraps is documented at https://docs.microsoft.com/en-us/windows/console/console-functions
 """
+
 import ctypes
 import sys
-from typing import Any
+import time
+from ctypes import Structure, byref, wintypes
+from typing import IO, Any, NamedTuple, Type, cast
+
+from pip._vendor.rich.color import ColorSystem
+from pip._vendor.rich.style import Style
 
 windll: Any = None
 if sys.platform == "win32":
@@ -12,12 +18,6 @@ if sys.platform == "win32":
 else:
     raise ImportError(f"{__name__} can only be imported on Windows")
 
-import time
-from ctypes import Structure, byref, wintypes
-from typing import IO, NamedTuple, Type, cast
-
-from pip._vendor.rich.color import ColorSystem
-from pip._vendor.rich.style import Style
 
 STDOUT = -11
 ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4
@@ -379,8 +379,12 @@ class LegacyWindowsTerm:
         Returns:
             WindowsCoordinates: The current cursor position.
         """
-        coord: COORD = GetConsoleScreenBufferInfo(self._handle).dwCursorPosition
-        return WindowsCoordinates(row=cast(int, coord.Y), col=cast(int, coord.X))
+        coord: COORD = GetConsoleScreenBufferInfo(
+            self._handle
+        ).dwCursorPosition
+        return WindowsCoordinates(
+            row=cast(int, coord.Y), col=cast(int, coord.X)
+        )
 
     @property
     def screen_size(self) -> WindowsCoordinates:
@@ -531,7 +535,9 @@ class LegacyWindowsTerm:
             column (int): The zero-based column index to move the cursor to.
         """
         row, _ = self.cursor_position
-        SetConsoleCursorPosition(self._handle, coords=WindowsCoordinates(row, column))
+        SetConsoleCursorPosition(
+            self._handle, coords=WindowsCoordinates(row, column)
+        )
 
     def move_cursor_backward(self) -> None:
         """Move the cursor backward a single cell. Wrap to the previous line if required."""
@@ -548,13 +554,17 @@ class LegacyWindowsTerm:
     def hide_cursor(self) -> None:
         """Hide the cursor"""
         current_cursor_size = self._get_cursor_size()
-        invisible_cursor = CONSOLE_CURSOR_INFO(dwSize=current_cursor_size, bVisible=0)
+        invisible_cursor = CONSOLE_CURSOR_INFO(
+            dwSize=current_cursor_size, bVisible=0
+        )
         SetConsoleCursorInfo(self._handle, cursor_info=invisible_cursor)
 
     def show_cursor(self) -> None:
         """Show the cursor"""
         current_cursor_size = self._get_cursor_size()
-        visible_cursor = CONSOLE_CURSOR_INFO(dwSize=current_cursor_size, bVisible=1)
+        visible_cursor = CONSOLE_CURSOR_INFO(
+            dwSize=current_cursor_size, bVisible=1
+        )
         SetConsoleCursorInfo(self._handle, cursor_info=visible_cursor)
 
     def set_title(self, title: str) -> None:
@@ -563,7 +573,9 @@ class LegacyWindowsTerm:
         Args:
             title (str): The new title of the console window
         """
-        assert len(title) < 255, "Console title must be less than 255 characters"
+        assert (
+            len(title) < 255
+        ), "Console title must be less than 255 characters"
         SetConsoleTitle(title)
 
     def _get_cursor_size(self) -> int:
@@ -634,7 +646,9 @@ if __name__ == "__main__":
     console.print()
     console.rule("Checking line erasing")
     console.print("\n...Deleting to the start of the line...")
-    term.write_text("The red arrow shows the cursor location, and direction of erase")
+    term.write_text(
+        "The red arrow shows the cursor location, and direction of erase"
+    )
     time.sleep(1)
     term.move_cursor_to_column(16)
     term.write_styled("<", Style.parse("black on red"))
@@ -644,7 +658,9 @@ if __name__ == "__main__":
     time.sleep(1)
 
     console.print("\n\n...And to the end of the line...")
-    term.write_text("The red arrow shows the cursor location, and direction of erase")
+    term.write_text(
+        "The red arrow shows the cursor location, and direction of erase"
+    )
     time.sleep(1)
 
     term.move_cursor_to_column(16)
@@ -654,7 +670,9 @@ if __name__ == "__main__":
     time.sleep(1)
 
     console.print("\n\n...Now the whole line will be erased...")
-    term.write_styled("I'm going to disappear!", style=Style.parse("black on cyan"))
+    term.write_styled(
+        "I'm going to disappear!", style=Style.parse("black on cyan")
+    )
     time.sleep(1)
     term.erase_line()
 

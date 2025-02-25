@@ -79,7 +79,9 @@ class BaseSpecifier(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def filter(
-        self, iterable: Iterable[VersionTypeVar], prereleases: Optional[bool] = None
+        self,
+        iterable: Iterable[VersionTypeVar],
+        prereleases: Optional[bool] = None,
     ) -> Iterable[VersionTypeVar]:
         """
         Takes an iterable of items and filters them so that only items which
@@ -189,7 +191,9 @@ class _IndividualSpecifier(BaseSpecifier):
         return operator_callable(normalized_item, self.version)
 
     def filter(
-        self, iterable: Iterable[VersionTypeVar], prereleases: Optional[bool] = None
+        self,
+        iterable: Iterable[VersionTypeVar],
+        prereleases: Optional[bool] = None,
     ) -> Iterable[VersionTypeVar]:
 
         yielded = False
@@ -285,7 +289,7 @@ class LegacySpecifier(_IndividualSpecifier):
 
 
 def _require_version_compare(
-    fn: Callable[["Specifier", ParsedVersion, str], bool]
+    fn: Callable[["Specifier", ParsedVersion, str], bool],
 ) -> Callable[["Specifier", ParsedVersion, str], bool]:
     @functools.wraps(fn)
     def wrapped(self: "Specifier", prospective: ParsedVersion, spec: str) -> bool:
@@ -607,14 +611,17 @@ def _pad_version(left: List[str], right: List[str]) -> Tuple[List[str], List[str
     right_split.append(list(itertools.takewhile(lambda x: x.isdigit(), right)))
 
     # Get the rest of our versions
-    left_split.append(left[len(left_split[0]) :])
-    right_split.append(right[len(right_split[0]) :])
+    left_split.append(left[len(left_split[0]):])
+    right_split.append(right[len(right_split[0]):])
 
     # Insert our padding
     left_split.insert(1, ["0"] * max(0, len(right_split[0]) - len(left_split[0])))
     right_split.insert(1, ["0"] * max(0, len(left_split[0]) - len(right_split[0])))
 
-    return (list(itertools.chain(*left_split)), list(itertools.chain(*right_split)))
+    return (
+        list(itertools.chain(*left_split)),
+        list(itertools.chain(*right_split)),
+    )
 
 
 class SpecifierSet(BaseSpecifier):
@@ -749,7 +756,9 @@ class SpecifierSet(BaseSpecifier):
         return all(s.contains(item, prereleases=prereleases) for s in self._specs)
 
     def filter(
-        self, iterable: Iterable[VersionTypeVar], prereleases: Optional[bool] = None
+        self,
+        iterable: Iterable[VersionTypeVar],
+        prereleases: Optional[bool] = None,
     ) -> Iterable[VersionTypeVar]:
 
         # Determine if we're forcing a prerelease or not, if we're not forcing

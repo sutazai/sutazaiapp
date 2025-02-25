@@ -12,7 +12,8 @@ class AdvancedDependencyManager:
 
     def _setup_logger(self):
         logging.basicConfig(
-            level=logging.INFO, format="%(asctime)s - %(levelname)s: %(message)s"
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s: %(message)s",
         )
         return logging.getLogger(__name__)
 
@@ -36,7 +37,14 @@ class AdvancedDependencyManager:
         for package in packages:
             try:
                 subprocess.check_call(
-                    [sys.executable, "-m", "pip", "install", "--upgrade", package]
+                    [
+                        sys.executable,
+                        "-m",
+                        "pip",
+                        "install",
+                        "--upgrade",
+                        package,
+                    ]
                 )
                 self.logger.info(f"Upgraded {package}")
             except subprocess.CalledProcessError:
@@ -52,7 +60,8 @@ def main():
     # Check critical packages
     critical_packages = ["pydantic", "safety", "fastapi", "sqlalchemy"]
     compatibility_check = all(
-        dependency_manager.check_package_compatibility(pkg) for pkg in critical_packages
+        dependency_manager.check_package_compatibility(pkg)
+        for pkg in critical_packages
     )
 
     if not compatibility_check:

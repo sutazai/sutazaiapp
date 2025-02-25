@@ -16,9 +16,7 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
-
-import pkg_resources
+from typing import Dict, List, Optional, Set
 
 
 class UltraImportResolver:
@@ -144,7 +142,9 @@ class UltraImportResolver:
 
         return None
 
-    def install_missing_packages(self, missing_imports: Set[str]) -> Dict[str, bool]:
+    def install_missing_packages(
+        self, missing_imports: Set[str]
+    ) -> Dict[str, bool]:
         """
         Intelligent package installation with advanced error handling.
 
@@ -173,7 +173,9 @@ class UltraImportResolver:
                         ]
                     )
                     installation_results[import_name] = True
-                    print(f"✅ Successfully installed {package_name} for {import_name}")
+                    print(
+                        f"✅ Successfully installed {package_name} for {import_name}"
+                    )
                 except subprocess.CalledProcessError:
                     installation_results[import_name] = False
                     unresolved_imports.append(import_name)
@@ -195,7 +197,9 @@ class UltraImportResolver:
         Args:
             unresolved_imports (List[str]): List of imports that couldn't be resolved
         """
-        os.makedirs(os.path.dirname(self.unresolved_imports_log), exist_ok=True)
+        os.makedirs(
+            os.path.dirname(self.unresolved_imports_log), exist_ok=True
+        )
 
         try:
             existing_log = {}
@@ -251,11 +255,15 @@ class UltraImportResolver:
                     all_missing_imports.add(import_name)
 
             # Install missing packages
-            installation_results = self.install_missing_packages(all_missing_imports)
+            installation_results = self.install_missing_packages(
+                all_missing_imports
+            )
 
             print("\n📊 Installation Summary:")
             for import_name, status in installation_results.items():
-                print(f"{import_name}: {'✅ Installed' if status else '❌ Failed'}")
+                print(
+                    f"{import_name}: {'✅ Installed' if status else '❌ Failed'}"
+                )
         else:
             print("✨ No missing imports found!")
 

@@ -1,6 +1,9 @@
 from __future__ import absolute_import
 
-from email.errors import MultipartInvariantViolationDefect, StartBoundaryNotFoundDefect
+from email.errors import (
+    MultipartInvariantViolationDefect,
+    StartBoundaryNotFoundDefect,
+)
 
 from ..exceptions import HeaderParsingError
 from ..packages.six.moves import http_client as httplib
@@ -83,7 +86,11 @@ def assert_header_parsing(headers):
             defect
             for defect in defects
             if not isinstance(
-                defect, (StartBoundaryNotFoundDefect, MultipartInvariantViolationDefect)
+                defect,
+                (
+                    StartBoundaryNotFoundDefect,
+                    MultipartInvariantViolationDefect,
+                ),
             )
         ]
 

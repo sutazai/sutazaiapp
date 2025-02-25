@@ -6,10 +6,9 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import networkx as nx
-import yaml
 from rich.console import Console
 from rich.table import Table
 
@@ -98,7 +97,8 @@ class SystemComprehensiveReview:
                             imports = [
                                 line.split()[-1].strip()
                                 for line in content.split("\n")
-                                if line.startswith("import") or line.startswith("from")
+                                if line.startswith("import")
+                                or line.startswith("from")
                             ]
 
                             for imp in imports:
@@ -156,7 +156,9 @@ class SystemComprehensiveReview:
             return {"error": str(e)}
 
     def performance_optimization_recommendations(
-        self, structure_analysis: Dict[str, Any], dependency_graph: Dict[str, Any]
+        self,
+        structure_analysis: Dict[str, Any],
+        dependency_graph: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Generate performance and optimization recommendations
@@ -211,7 +213,8 @@ class SystemComprehensiveReview:
         # Performance optimization recommendations
         review_results["optimization_recommendations"] = (
             self.performance_optimization_recommendations(
-                review_results["project_structure"], review_results["dependency_graph"]
+                review_results["project_structure"],
+                review_results["dependency_graph"],
             )
         )
 
@@ -231,7 +234,9 @@ class SystemComprehensiveReview:
         Args:
             review_results (Dict): Comprehensive review results
         """
-        self.console.rule("[bold blue]SutazAI Comprehensive System Review[/bold blue]")
+        self.console.rule(
+            "[bold blue]SutazAI Comprehensive System Review[/bold blue]"
+        )
 
         # Project Structure Overview
         structure_table = Table(title="Project Structure")
@@ -243,7 +248,8 @@ class SystemComprehensiveReview:
             str(review_results["project_structure"]["total_directories"]),
         )
         structure_table.add_row(
-            "Total Files", str(review_results["project_structure"]["total_files"])
+            "Total Files",
+            str(review_results["project_structure"]["total_files"]),
         )
 
         self.console.print(structure_table)
@@ -262,8 +268,12 @@ class SystemComprehensiveReview:
 
         # Optimization Recommendations
         if review_results["optimization_recommendations"]["code_structure"]:
-            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
-            for rec in review_results["optimization_recommendations"]["code_structure"]:
+            self.console.rule(
+                "[bold yellow]Optimization Recommendations[/bold yellow]"
+            )
+            for rec in review_results["optimization_recommendations"][
+                "code_structure"
+            ]:
                 self.console.print(f"[red]➤[/red] {rec}")
 
 

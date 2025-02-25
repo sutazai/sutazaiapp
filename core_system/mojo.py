@@ -1,11 +1,11 @@
 """
-    pygments.lexers.mojo
-    ~~~~~~~~~~~~~~~~~~~~
+pygments.lexers.mojo
+~~~~~~~~~~~~~~~~~~~~
 
-    Lexers for Mojo and related languages.
+Lexers for Mojo and related languages.
 
-    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
+:license: BSD, see LICENSE for details.
 """
 
 import keyword
@@ -131,8 +131,16 @@ class MojoLexer(RegexLexer):
             ),  # not implemented yet
             (r"(struct)(\s+)", bygroups(Keyword, Whitespace), "structname"),
             (r"(trait)(\s+)", bygroups(Keyword, Whitespace), "structname"),
-            (r"(from)(\s+)", bygroups(Keyword.Namespace, Whitespace), "fromimport"),
-            (r"(import)(\s+)", bygroups(Keyword.Namespace, Whitespace), "import"),
+            (
+                r"(from)(\s+)",
+                bygroups(Keyword.Namespace, Whitespace),
+                "fromimport",
+            ),
+            (
+                r"(import)(\s+)",
+                bygroups(Keyword.Namespace, Whitespace),
+                "import",
+            ),
             include("expr"),
         ],
         "expr": [
@@ -179,8 +187,16 @@ class MojoLexer(RegexLexer):
                 combined("fstringescape", "sqf"),
             ),
             # raw bytes and strings
-            ('(?i)(rb|br|r)(""")', bygroups(String.Affix, String.Double), "tdqs"),
-            ("(?i)(rb|br|r)(''')", bygroups(String.Affix, String.Single), "tsqs"),
+            (
+                '(?i)(rb|br|r)(""")',
+                bygroups(String.Affix, String.Double),
+                "tdqs",
+            ),
+            (
+                "(?i)(rb|br|r)(''')",
+                bygroups(String.Affix, String.Single),
+                "tsqs",
+            ),
             ('(?i)(rb|br|r)(")', bygroups(String.Affix, String.Double), "dqs"),
             ("(?i)(rb|br|r)(')", bygroups(String.Affix, String.Single), "sqs"),
             # non-raw strings
@@ -329,15 +345,17 @@ class MojoLexer(RegexLexer):
                 r"(?![ \t]*(?:"  # not followed by...
                 r"[:,;=^&|@~)\]}]|(?:" +  # characters and keywords that mean this isn't
                 # pattern matching (but None/True/False is ok)
-                r"|".join(k for k in keyword.kwlist if k[0].islower())
-                + r")\b))",
+                r"|".join(k for k in keyword.kwlist if k[0].islower()) + r")\b))",
                 bygroups(Whitespace, Keyword),
                 "soft-keywords-inner",
             ),
         ],
         "soft-keywords-inner": [
             # optional `_` keyword
-            (r"(\s+)([^\n_]*)(_\b)", bygroups(Whitespace, using(this), Keyword)),
+            (
+                r"(\s+)([^\n_]*)(_\b)",
+                bygroups(Whitespace, using(this), Keyword),
+            ),
             default("#pop"),
         ],
         "builtins": [
@@ -445,7 +463,10 @@ class MojoLexer(RegexLexer):
                 ),
                 Name.Builtin,
             ),
-            (r"(?<!\.)(self|Ellipsis|NotImplemented|cls)\b", Name.Builtin.Pseudo),
+            (
+                r"(?<!\.)(self|Ellipsis|NotImplemented|cls)\b",
+                Name.Builtin.Pseudo,
+            ),
             (
                 words(
                     ("Error",),
@@ -628,7 +649,11 @@ class MojoLexer(RegexLexer):
             default("#pop"),  # all else: go back
         ],
         "fromimport": [
-            (r"(\s+)(import)\b", bygroups(Whitespace, Keyword.Namespace), "#pop"),
+            (
+                r"(\s+)(import)\b",
+                bygroups(Whitespace, Keyword.Namespace),
+                "#pop",
+            ),
             (r"\.", Name.Namespace),
             # if None occurs here, it's "raise x from None", since None can
             # never be a module name
@@ -645,7 +670,10 @@ class MojoLexer(RegexLexer):
             include("stringescape"),
         ],
         "bytesescape": [
-            (r'\\([\\abfnrtv"\']|\n|x[a-fA-F0-9]{2}|[0-7]{1,3})', String.Escape)
+            (
+                r'\\([\\abfnrtv"\']|\n|x[a-fA-F0-9]{2}|[0-7]{1,3})',
+                String.Escape,
+            )
         ],
         "stringescape": [
             (r"\\(N\{.*?\}|u[a-fA-F0-9]{4}|U[a-fA-F0-9]{8})", String.Escape),

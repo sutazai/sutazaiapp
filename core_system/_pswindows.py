@@ -85,12 +85,12 @@ __extra__all__ = [
 
 CONN_DELETE_TCB = "DELETE_TCB"
 ERROR_PARTIAL_COPY = 299
-PYPY = '__pypy__' in sys.builtin_module_names
+PYPY = "__pypy__" in sys.builtin_module_names
 
 if enum is None:
     AF_LINK = -1
 else:
-    AddressFamily = enum.IntEnum('AddressFamily', {'AF_LINK': -1})
+    AddressFamily = enum.IntEnum("AddressFamily", {"AF_LINK": -1})
     AF_LINK = AddressFamily.AF_LINK
 
 TCP_STATUSES = {
@@ -205,7 +205,7 @@ def convert_dos_path(s):
     into:
         "C:\Windows\systemew\file.txt".
     """
-    rawdrive = '\\'.join(s.split('\\')[:3])
+    rawdrive = "\\".join(s.split("\\")[:3])
     driveletter = cext.QueryDosDevice(rawdrive)
     remainder = s[len(rawdrive) :]
     return os.path.join(driveletter, remainder)
@@ -381,7 +381,7 @@ def net_connections(kind, _pid=-1):
     if kind not in conn_tmap:
         raise ValueError(
             "invalid %r kind argument; choose between %s"
-            % (kind, ', '.join([repr(x) for x in conn_tmap]))
+            % (kind, ", ".join([repr(x) for x in conn_tmap]))
         )
     families, types = conn_tmap[kind]
     rawlist = cext.net_connections(_pid, families, types)
@@ -411,9 +411,9 @@ def net_if_stats():
             assert isinstance(name, unicode), type(name)
             name = py2_strencode(name)
         isup, duplex, speed, mtu = items
-        if hasattr(_common, 'NicDuplex'):
+        if hasattr(_common, "NicDuplex"):
             duplex = _common.NicDuplex(duplex)
-        ret[name] = _common.snicstats(isup, duplex, speed, mtu, '')
+        ret[name] = _common.snicstats(isup, duplex, speed, mtu, "")
     return ret
 
 
@@ -508,7 +508,7 @@ def win_service_iter():
 def win_service_get(name):
     """Open a Windows service and return it as a WindowsService instance."""
     service = WindowsService(name, None)
-    service._display_name = service._query_config()['display_name']
+    service._display_name = service._query_config()["display_name"]
     return service
 
 
@@ -601,17 +601,17 @@ class WindowsService:  # noqa: PLW1641
         """The fully qualified path to the service binary/exe file as
         a string, including command line arguments.
         """
-        return self._query_config()['binpath']
+        return self._query_config()["binpath"]
 
     def username(self):
         """The name of the user that owns this service."""
-        return self._query_config()['username']
+        return self._query_config()["username"]
 
     def start_type(self):
         """A string which can either be "automatic", "manual" or
         "disabled".
         """
-        return self._query_config()['start_type']
+        return self._query_config()["start_type"]
 
     # status query
 
@@ -619,11 +619,11 @@ class WindowsService:  # noqa: PLW1641
         """The process PID, if any, else None. This can be passed
         to Process class to control the service's process.
         """
-        return self._query_status()['pid']
+        return self._query_status()["pid"]
 
     def status(self):
         """Service status as a string."""
-        return self._query_status()['status']
+        return self._query_status()["status"]
 
     def description(self):
         """Service long description."""
@@ -637,9 +637,9 @@ class WindowsService:  # noqa: PLW1641
         """
         d = self._query_config()
         d.update(self._query_status())
-        d['name'] = self.name()
-        d['display_name'] = self.display_name()
-        d['description'] = self.description()
+        d["name"] = self.name()
+        d["display_name"] = self.display_name()
+        d["description"] = self.description()
         return d
 
     # actions
@@ -815,7 +815,7 @@ class Process:
             exe = cext.proc_exe(self.pid)
         if not PY3:
             exe = py2_strencode(exe)
-        if exe.startswith('\\'):
+        if exe.startswith("\\"):
             return convert_dos_path(exe)
         return exe  # May be "Registry", "MemCompression", ...
 
@@ -863,16 +863,16 @@ class Process:
                 debug("attempting memory_info() fallback (slower)")
                 info = self._proc_info()
                 return (
-                    info[pinfo_map['num_page_faults']],
-                    info[pinfo_map['peak_wset']],
-                    info[pinfo_map['wset']],
-                    info[pinfo_map['peak_paged_pool']],
-                    info[pinfo_map['paged_pool']],
-                    info[pinfo_map['peak_non_paged_pool']],
-                    info[pinfo_map['non_paged_pool']],
-                    info[pinfo_map['pagefile']],
-                    info[pinfo_map['peak_pagefile']],
-                    info[pinfo_map['mem_private']],
+                    info[pinfo_map["num_page_faults"]],
+                    info[pinfo_map["peak_wset"]],
+                    info[pinfo_map["wset"]],
+                    info[pinfo_map["peak_paged_pool"]],
+                    info[pinfo_map["paged_pool"]],
+                    info[pinfo_map["peak_non_paged_pool"]],
+                    info[pinfo_map["non_paged_pool"]],
+                    info[pinfo_map["pagefile"]],
+                    info[pinfo_map["peak_pagefile"]],
+                    info[pinfo_map["mem_private"]],
                 )
             raise
 
@@ -937,7 +937,7 @@ class Process:
             # WaitForSingleObject() expects time in milliseconds.
             cext_timeout = int(timeout * 1000)
 
-        timer = getattr(time, 'monotonic', time.time)
+        timer = getattr(time, "monotonic", time.time)
         stop_at = timer() + timeout if timeout is not None else None
 
         try:
@@ -975,9 +975,9 @@ class Process:
     @wrap_exceptions
     def username(self):
         if self.pid in {0, 4}:
-            return 'NT AUTHORITY\\SYSTEM'
+            return "NT AUTHORITY\\SYSTEM"
         domain, user = cext.proc_username(self.pid)
-        return py2_strencode(domain) + '\\' + py2_strencode(user)
+        return py2_strencode(domain) + "\\" + py2_strencode(user)
 
     @wrap_exceptions
     def create_time(self, fast_only=False):
@@ -991,12 +991,12 @@ class Process:
                 if fast_only:
                     raise
                 debug("attempting create_time() fallback (slower)")
-                return self._proc_info()[pinfo_map['create_time']]
+                return self._proc_info()[pinfo_map["create_time"]]
             raise
 
     @wrap_exceptions
     def num_threads(self):
-        return self._proc_info()[pinfo_map['num_threads']]
+        return self._proc_info()[pinfo_map["num_threads"]]
 
     @wrap_exceptions
     def threads(self):
@@ -1016,8 +1016,8 @@ class Process:
                 raise
             debug("attempting cpu_times() fallback (slower)")
             info = self._proc_info()
-            user = info[pinfo_map['user_time']]
-            system = info[pinfo_map['kernel_time']]
+            user = info[pinfo_map["user_time"]]
+            system = info[pinfo_map["kernel_time"]]
         # Children user/system times are not retrievable (set to 0).
         return _common.pcputimes(user, system, 0.0, 0.0)
 
@@ -1059,7 +1059,7 @@ class Process:
         return list(ret)
 
     @wrap_exceptions
-    def net_connections(self, kind='inet'):
+    def net_connections(self, kind="inet"):
         return net_connections(kind, _pid=self.pid)
 
     @wrap_exceptions
@@ -1104,12 +1104,12 @@ class Process:
             debug("attempting io_counters() fallback (slower)")
             info = self._proc_info()
             ret = (
-                info[pinfo_map['io_rcount']],
-                info[pinfo_map['io_wcount']],
-                info[pinfo_map['io_rbytes']],
-                info[pinfo_map['io_wbytes']],
-                info[pinfo_map['io_count_others']],
-                info[pinfo_map['io_bytes_others']],
+                info[pinfo_map["io_rcount"]],
+                info[pinfo_map["io_wcount"]],
+                info[pinfo_map["io_rbytes"]],
+                info[pinfo_map["io_wbytes"]],
+                info[pinfo_map["io_count_others"]],
+                info[pinfo_map["io_bytes_others"]],
             )
         return pio(*ret)
 
@@ -1162,11 +1162,11 @@ class Process:
         except OSError as err:
             if is_permission_err(err):
                 debug("attempting num_handles() fallback (slower)")
-                return self._proc_info()[pinfo_map['num_handles']]
+                return self._proc_info()[pinfo_map["num_handles"]]
             raise
 
     @wrap_exceptions
     def num_ctx_switches(self):
-        ctx_switches = self._proc_info()[pinfo_map['ctx_switches']]
+        ctx_switches = self._proc_info()[pinfo_map["ctx_switches"]]
         # only voluntary ctx switches are supported
         return _common.pctxsw(ctx_switches, 0)

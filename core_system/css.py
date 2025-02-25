@@ -681,7 +681,11 @@ _time_units = (
     "ms",
 )
 _all_units = (
-    _angle_units + _frequency_units + _length_units + _resolution_units + _time_units
+    _angle_units
+    + _frequency_units
+    + _length_units
+    + _resolution_units
+    + _time_units
 )
 
 
@@ -761,7 +765,9 @@ class CssLexer(RegexLexer):
             ),
             include("urls"),
             (
-                r"(" + r"|".join(_functional_notation_keyword_values) + r")(\()",
+                r"("
+                + r"|".join(_functional_notation_keyword_values)
+                + r")(\()",
                 bygroups(Name.Builtin, Punctuation),
                 "function-start",
             ),
@@ -801,7 +807,9 @@ class CssLexer(RegexLexer):
             (words(_color_keywords, suffix=r"\b"), Keyword.Constant),
             # function-start may be entered recursively
             (
-                r"(" + r"|".join(_functional_notation_keyword_values) + r")(\()",
+                r"("
+                + r"|".join(_functional_notation_keyword_values)
+                + r")(\()",
                 bygroups(Name.Builtin, Punctuation),
                 "function-start",
             ),
@@ -822,11 +830,15 @@ class CssLexer(RegexLexer):
         "urls": [
             (
                 r'(url)(\()(".*?")(\))',
-                bygroups(Name.Builtin, Punctuation, String.Double, Punctuation),
+                bygroups(
+                    Name.Builtin, Punctuation, String.Double, Punctuation
+                ),
             ),
             (
                 r"(url)(\()('.*?')(\))",
-                bygroups(Name.Builtin, Punctuation, String.Single, Punctuation),
+                bygroups(
+                    Name.Builtin, Punctuation, String.Single, Punctuation
+                ),
             ),
             (
                 r"(url)(\()(.*?)(\))",
@@ -1185,8 +1197,16 @@ class SassLexer(ExtendedRegexLexer):
             (r"[ \t]*", _indentation),
         ],
         "content": [
-            (r"//[^\n]*", _starts_block(Comment.Single, "single-comment"), "root"),
-            (r"/\*[^\n]*", _starts_block(Comment.Multiline, "multi-comment"), "root"),
+            (
+                r"//[^\n]*",
+                _starts_block(Comment.Single, "single-comment"),
+                "root",
+            ),
+            (
+                r"/\*[^\n]*",
+                _starts_block(Comment.Multiline, "multi-comment"),
+                "root",
+            ),
             (r"@import", Keyword, "import"),
             (r"@for", Keyword, "for"),
             (r"@(debug|warn|if|while)", Keyword, "value"),
@@ -1271,11 +1291,19 @@ class ScssLexer(RegexLexer):
             (r"@for", Keyword, "for"),
             (r"@(debug|warn|if|while)", Keyword, "value"),
             (r"(@mixin)( [\w-]+)", bygroups(Keyword, Name.Function), "value"),
-            (r"(@include)( [\w-]+)", bygroups(Keyword, Name.Decorator), "value"),
+            (
+                r"(@include)( [\w-]+)",
+                bygroups(Keyword, Name.Decorator),
+                "value",
+            ),
             (r"@extend", Keyword, "selector"),
             (r"(@media)(\s+)", bygroups(Keyword, Whitespace), "value"),
             (r"@[\w-]+", Keyword, "selector"),
-            (r"(\$[\w-]*\w)([ \t]*:)", bygroups(Name.Variable, Operator), "value"),
+            (
+                r"(\$[\w-]*\w)([ \t]*:)",
+                bygroups(Name.Variable, Operator),
+                "value",
+            ),
             # TODO: broken, and prone to infinite loops.
             # (r'(?=[^;{}][;}])', Name.Attribute, 'attr'),
             # (r'(?=[^;{}:]+:[^a-z])', Name.Attribute, 'attr'),
@@ -1295,8 +1323,12 @@ class ScssLexer(RegexLexer):
     }
     for group, common in common_sass_tokens.items():
         tokens[group] = copy.copy(common)
-    tokens["value"].extend([(r"\n", Whitespace), (r"[;{}]", Punctuation, "#pop")])
-    tokens["selector"].extend([(r"\n", Whitespace), (r"[;{}]", Punctuation, "#pop")])
+    tokens["value"].extend(
+        [(r"\n", Whitespace), (r"[;{}]", Punctuation, "#pop")]
+    )
+    tokens["selector"].extend(
+        [(r"\n", Whitespace), (r"[;{}]", Punctuation, "#pop")]
+    )
 
 
 class LessCssLexer(CssLexer):

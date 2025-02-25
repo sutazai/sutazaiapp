@@ -14,6 +14,7 @@ from cachecontrol.controller import logger
 
 if TYPE_CHECKING:
     from argparse import Namespace
+
     from cachecontrol.controller import CacheController
 
 

@@ -11,16 +11,13 @@ Provides an autonomous, multi-dimensional approach to:
 """
 
 import ast
-import importlib
-import inspect
 import json
 import logging
 import os
 import re
 import sys
-import threading
 import time
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional
 
 import matplotlib.pyplot as plt
 
@@ -141,14 +138,18 @@ class UltraComprehensiveArchitectureManager:
 
             # 6. Generate Optimization Recommendations
             architectural_report["optimization_recommendations"] = (
-                self._generate_architectural_recommendations(architectural_report)
+                self._generate_architectural_recommendations(
+                    architectural_report
+                )
             )
 
             # Persist architectural report
             self._persist_architectural_report(architectural_report)
 
         except Exception as e:
-            self.logger.error(f"Comprehensive architectural analysis failed: {e}")
+            self.logger.error(
+                f"Comprehensive architectural analysis failed: {e}"
+            )
 
         return architectural_report
 
@@ -179,15 +180,23 @@ class UltraComprehensiveArchitectureManager:
                         tree = ast.parse(content)
 
                         # Extract module details
-                        module_details = self._extract_module_details(tree, file_path)
+                        module_details = self._extract_module_details(
+                            tree, file_path
+                        )
                         module_analysis["module_details"][
                             relative_path
                         ] = module_details
 
                         # Categorize module
-                        module_category = self._categorize_module(relative_path)
-                        module_analysis["module_categories"][module_category] = (
-                            module_analysis["module_categories"].get(module_category, 0)
+                        module_category = self._categorize_module(
+                            relative_path
+                        )
+                        module_analysis["module_categories"][
+                            module_category
+                        ] = (
+                            module_analysis["module_categories"].get(
+                                module_category, 0
+                            )
                             + 1
                         )
 
@@ -205,7 +214,9 @@ class UltraComprehensiveArchitectureManager:
 
         return module_analysis
 
-    def _extract_module_details(self, tree: ast.AST, file_path: str) -> Dict[str, Any]:
+    def _extract_module_details(
+        self, tree: ast.AST, file_path: str
+    ) -> Dict[str, Any]:
         """
         Extract comprehensive details about a module
 
@@ -231,12 +242,18 @@ class UltraComprehensiveArchitectureManager:
         for node in ast.walk(tree):
             # Import tracking
             if isinstance(node, ast.Import):
-                module_details["imports"].extend([alias.name for alias in node.names])
+                module_details["imports"].extend(
+                    [alias.name for alias in node.names]
+                )
             elif isinstance(node, ast.ImportFrom):
                 base_module = node.module or ""
                 module_details["imports"].extend(
                     [
-                        f"{base_module}.{alias.name}" if base_module else alias.name
+                        (
+                            f"{base_module}.{alias.name}"
+                            if base_module
+                            else alias.name
+                        )
                         for alias in node.names
                     ]
                 )
@@ -252,7 +269,9 @@ class UltraComprehensiveArchitectureManager:
                         if isinstance(method, ast.FunctionDef)
                     ],
                     "base_classes": [
-                        base.id for base in node.bases if isinstance(base, ast.Name)
+                        base.id
+                        for base in node.bases
+                        if isinstance(base, ast.Name)
                     ],
                 }
                 module_details["classes"].append(class_info)
@@ -309,7 +328,9 @@ class UltraComprehensiveArchitectureManager:
 
         return "uncategorized"
 
-    def _build_semantic_module_representation(self, module_path: str, content: str):
+    def _build_semantic_module_representation(
+        self, module_path: str, content: str
+    ):
         """
         Build semantic representation of a module
 
@@ -319,7 +340,9 @@ class UltraComprehensiveArchitectureManager:
         """
         try:
             # TF-IDF vectorization
-            vectorizer = TfidfVectorizer(stop_words="english", max_features=100)
+            vectorizer = TfidfVectorizer(
+                stop_words="english", max_features=100
+            )
             tfidf_matrix = vectorizer.fit_transform([content])
 
             self.semantic_module_map[module_path] = {
@@ -347,13 +370,16 @@ class UltraComprehensiveArchitectureManager:
         }
 
         # Build import graph
-        for module_path, module_details in self._discover_and_analyze_modules()[
-            "module_details"
-        ].items():
+        for (
+            module_path,
+            module_details,
+        ) in self._discover_and_analyze_modules()["module_details"].items():
             dependency_graph["import_graph"].add_node(module_path)
 
             for imported_module in module_details.get("imports", []):
-                dependency_graph["import_graph"].add_edge(module_path, imported_module)
+                dependency_graph["import_graph"].add_edge(
+                    module_path, imported_module
+                )
 
         # Detect circular dependencies
         dependency_graph["circular_dependencies"] = list(
@@ -370,8 +396,16 @@ class UltraComprehensiveArchitectureManager:
                         and module2 in self.semantic_module_map
                     ):
                         similarity = cosine_similarity(
-                            [self.semantic_module_map[module1]["semantic_vector"]],
-                            [self.semantic_module_map[module2]["semantic_vector"]],
+                            [
+                                self.semantic_module_map[module1][
+                                    "semantic_vector"
+                                ]
+                            ],
+                            [
+                                self.semantic_module_map[module2][
+                                    "semantic_vector"
+                                ]
+                            ],
                         )[0][0]
 
                         if (
@@ -409,7 +443,9 @@ class UltraComprehensiveArchitectureManager:
         for name, detector in pattern_detectors.items():
             detected_instances = detector()
             if detected_instances:
-                architectural_patterns["design_patterns"][name] = detected_instances
+                architectural_patterns["design_patterns"][
+                    name
+                ] = detected_instances
 
         # Detect potential anti-patterns
         architectural_patterns["anti_patterns"] = self._detect_anti_patterns()
@@ -425,13 +461,15 @@ class UltraComprehensiveArchitectureManager:
         """
         singleton_modules = []
 
-        for module_path, module_details in self._discover_and_analyze_modules()[
-            "module_details"
-        ].items():
+        for (
+            module_path,
+            module_details,
+        ) in self._discover_and_analyze_modules()["module_details"].items():
             for cls in module_details.get("classes", []):
                 # Simple Singleton detection heuristics
                 if any(
-                    "instance" in method.lower() for method in cls.get("methods", [])
+                    "instance" in method.lower()
+                    for method in cls.get("methods", [])
                 ):
                     singleton_modules.append(f"{module_path}:{cls['name']}")
 
@@ -446,12 +484,16 @@ class UltraComprehensiveArchitectureManager:
         """
         factory_modules = []
 
-        for module_path, module_details in self._discover_and_analyze_modules()[
-            "module_details"
-        ].items():
+        for (
+            module_path,
+            module_details,
+        ) in self._discover_and_analyze_modules()["module_details"].items():
             for cls in module_details.get("classes", []):
                 # Simple Factory detection heuristics
-                if any("create" in method.lower() for method in cls.get("methods", [])):
+                if any(
+                    "create" in method.lower()
+                    for method in cls.get("methods", [])
+                ):
                     factory_modules.append(f"{module_path}:{cls['name']}")
 
         return factory_modules
@@ -465,9 +507,10 @@ class UltraComprehensiveArchitectureManager:
         """
         strategy_modules = []
 
-        for module_path, module_details in self._discover_and_analyze_modules()[
-            "module_details"
-        ].items():
+        for (
+            module_path,
+            module_details,
+        ) in self._discover_and_analyze_modules()["module_details"].items():
             for cls in module_details.get("classes", []):
                 # Simple Strategy detection heuristics
                 if len(cls.get("base_classes", [])) > 1:
@@ -486,11 +529,15 @@ class UltraComprehensiveArchitectureManager:
 
         module_analysis = self._discover_and_analyze_modules()
 
-        for module_path, module_details in module_analysis["module_details"].items():
+        for module_path, module_details in module_analysis[
+            "module_details"
+        ].items():
             # God Class detection
             for cls in module_details.get("classes", []):
                 if len(cls.get("methods", [])) > 20:
-                    anti_patterns.append(f"God Class: {module_path}:{cls['name']}")
+                    anti_patterns.append(
+                        f"God Class: {module_path}:{cls['name']}"
+                    )
 
             # Spaghetti Code detection
             complexity = module_details.get("complexity", {})
@@ -519,12 +566,18 @@ class UltraComprehensiveArchitectureManager:
 
         module_analysis = self._discover_and_analyze_modules()
 
-        for module_path, module_details in module_analysis["module_details"].items():
+        for module_path, module_details in module_analysis[
+            "module_details"
+        ].items():
             complexity = module_details.get("complexity", {})
 
             complexity_metrics["total_modules"] += 1
-            complexity_metrics["total_classes"] += complexity.get("class_count", 0)
-            complexity_metrics["total_functions"] += complexity.get("function_count", 0)
+            complexity_metrics["total_classes"] += complexity.get(
+                "class_count", 0
+            )
+            complexity_metrics["total_functions"] += complexity.get(
+                "function_count", 0
+            )
 
             # Complexity distribution
             cyclomatic_complexity = complexity.get("cyclomatic_complexity", 0)
@@ -540,7 +593,10 @@ class UltraComprehensiveArchitectureManager:
                 ]
             ):
                 complexity_metrics["potential_complexity_issues"].append(
-                    {"module": module_path, "complexity": cyclomatic_complexity}
+                    {
+                        "module": module_path,
+                        "complexity": cyclomatic_complexity,
+                    }
                 )
 
         return complexity_metrics
@@ -567,9 +623,10 @@ class UltraComprehensiveArchitectureManager:
             r"subprocess\.(?:call|run|Popen)",
         ]
 
-        for module_path, module_details in self._discover_and_analyze_modules()[
-            "module_details"
-        ].items():
+        for (
+            module_path,
+            module_details,
+        ) in self._discover_and_analyze_modules()["module_details"].items():
             try:
                 with open(os.path.join(self.base_dir, module_path), "r") as f:
                     content = f.read()
@@ -587,7 +644,9 @@ class UltraComprehensiveArchitectureManager:
                         )
 
             except Exception as e:
-                self.logger.warning(f"Security analysis failed for {module_path}: {e}")
+                self.logger.warning(
+                    f"Security analysis failed for {module_path}: {e}"
+                )
 
         return security_insights
 
@@ -606,9 +665,9 @@ class UltraComprehensiveArchitectureManager:
         recommendations = []
 
         # Circular dependency recommendations
-        circular_dependencies = architectural_report.get("dependency_graph", {}).get(
-            "circular_dependencies", []
-        )
+        circular_dependencies = architectural_report.get(
+            "dependency_graph", {}
+        ).get("circular_dependencies", [])
         if circular_dependencies:
             recommendations.append(
                 f"Resolve {len(circular_dependencies)} circular dependencies"
@@ -629,7 +688,9 @@ class UltraComprehensiveArchitectureManager:
             )
 
         # Anti-pattern recommendations
-        architectural_patterns = architectural_report.get("architectural_patterns", {})
+        architectural_patterns = architectural_report.get(
+            "architectural_patterns", {}
+        )
         if architectural_patterns.get("anti_patterns"):
             recommendations.append(
                 f"Resolve {len(architectural_patterns['anti_patterns'])} architectural anti-patterns"
@@ -637,7 +698,9 @@ class UltraComprehensiveArchitectureManager:
 
         return recommendations
 
-    def _persist_architectural_report(self, architectural_report: Dict[str, Any]):
+    def _persist_architectural_report(
+        self, architectural_report: Dict[str, Any]
+    ):
         """
         Persist comprehensive architectural analysis report
 
@@ -661,7 +724,9 @@ class UltraComprehensiveArchitectureManager:
         except Exception as e:
             self.logger.error(f"Architectural report persistence failed: {e}")
 
-    def _visualize_architectural_graph(self, architectural_report: Dict[str, Any]):
+    def _visualize_architectural_graph(
+        self, architectural_report: Dict[str, Any]
+    ):
         """
         Visualize architectural dependency graph
 
@@ -669,9 +734,9 @@ class UltraComprehensiveArchitectureManager:
             architectural_report (Dict): Comprehensive architectural analysis report
         """
         try:
-            dependency_graph = architectural_report.get("dependency_graph", {}).get(
-                "import_graph"
-            )
+            dependency_graph = architectural_report.get(
+                "dependency_graph", {}
+            ).get("import_graph")
 
             if not dependency_graph:
                 return

@@ -1,70 +1,70 @@
-FROM nvidia/cuda:12.1.1-base-ubuntu22.04 as builder
+FROM ubuntu:22.04
 
 # System optimizations
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=UTC \
-    NCCL_VERSION=2.18.1-1 \
-    CUBLAS_WORKSPACE_CONFIG=:4096:8 \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME=/opt/poetry \
+    POETRY_VENV=/opt/poetry-venv \
+    POETRY_CACHE_DIR=/opt/.cache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    software-properties-common \
+    git \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update \
+    && apt-get install -y \
     python3.11 \
     python3.11-dev \
-    python3.11-distutils \
     python3.11-venv \
-    build-essential \
-    cmake \
-    ninja-build \
-    git \
-    libopenblas-dev \
-    libomp-dev \
-    ocl-icd-opencl-dev \
-    opencl-headers \
-    curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    python3.11-distutils \
+    && rm -rf /var/lib/apt/lists/*
 
-# Configure Python 3.11
-RUN ln -sf /usr/bin/python3.11 /usr/bin/python3 && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
-    curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
+# Set Python 3.11 as default
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python3 \
+    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
 
-# Create and activate virtual environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+# Install Poetry
+RUN python3.11 -m venv $POETRY_VENV \
+    && $POETRY_VENV/bin/pip install -U pip setuptools \
+    && $POETRY_VENV/bin/pip install poetry==$POETRY_VERSION \
+    && ln -s $POETRY_VENV/bin/poetry /usr/local/bin/poetry
 
 # Set working directory
-WORKDIR /app
+WORKDIR /opt/SutazAI
 
 # Copy project files
-COPY . /app
+COPY pyproject.toml poetry.lock* ./
+
+# Configure Poetry
+RUN poetry config virtualenvs.create false
 
 # Install dependencies
-RUN pip install --no-cache-dir -U pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
+RUN poetry install --no-interaction --no-ansi
 
-# Expose ports
-EXPOSE 8000 8501
-
-# Set environment variables
-ENV OMP_NUM_THREADS=4 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+# Copy the rest of the application
+COPY . .
 
 # Create non-root user
-RUN useradd -m -s /bin/bash sutazai && \
-    chown -R sutazai:sutazai /app
+RUN useradd -m -s /bin/bash sutazai \
+    && chown -R sutazai:sutazai /opt/SutazAI
 
 # Switch to non-root user
 USER sutazai
+
+# Expose ports
+EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Default command
-CMD ["/bin/bash", "./deploy_all.sh"]
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

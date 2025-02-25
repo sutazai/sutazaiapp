@@ -1,6 +1,6 @@
 from workers.deployment_worker import (
-    BackupWorker },
     BackupWorkerclass,
+    BackupWorker},
     DeploymentWorker,
     DeploymentWorkerfrom,
     HealingWorker,
@@ -39,5 +39,5 @@ from workers.deployment_worker import (
     workers.healing_worker,
     workers.monitoring_worker,
     workers.security_worker,
-    { 'deployment':,
+    {'deployment':,
 )

@@ -176,7 +176,10 @@ class HelpFormatter:
             indent = " " * (max(self.current_indent, term_len(prefix)) + 4)
             self.write(
                 wrap_text(
-                    args, text_width, initial_indent=indent, subsequent_indent=indent
+                    args,
+                    text_width,
+                    initial_indent=indent,
+                    subsequent_indent=indent,
                 )
             )
 

@@ -125,7 +125,8 @@ class SOCKSConnection(HTTPConnection):
                     )
                 else:
                     raise NewConnectionError(
-                        self, "Failed to establish a new connection: %s" % error
+                        self,
+                        "Failed to establish a new connection: %s" % error,
                     )
             else:
                 raise NewConnectionError(

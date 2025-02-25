@@ -2,24 +2,26 @@ import logging
 import traceback
 from typing import Any, Dict, Generic, Optional, Type, TypeVar
 
-ExceptionT = TypeVar('ExceptionT', bound=BaseException)
+ExceptionT = TypeVar("ExceptionT", bound=BaseException)
+
 
 class AdvancedSystemException(Exception):
     """Base exception for system-wide error handling"""
+
     def __init__(
-        self, 
-        message: str, 
+        self,
+        message: str,
         error_code: Optional[str] = None,
-        original_exception: Optional[Exception] = None
+        original_exception: Optional[Exception] = None,
     ):
         self.message = message
         self.error_code = error_code
         self.original_exception = original_exception
         self.traceback = traceback.format_exc() if original_exception else None
-        
+
         super().__init__(self.message)
         self._log_exception()
-    
+
     def _log_exception(self):
         logging.critical(
             f"System Exception: {self.message}\n"
@@ -27,26 +29,27 @@ class AdvancedSystemException(Exception):
             f"Traceback: {self.traceback}"
         )
 
+
 class ExceptionHandler(Generic[ExceptionT]):
     """Advanced exception handling and management"""
+
     @classmethod
     def handle(
-        cls, 
-        exception_type: Type[ExceptionT], 
-        message: Optional[str] = None
+        cls, exception_type: Type[ExceptionT], message: Optional[str] = None
     ) -> AdvancedSystemException:
         """Standardized exception handling"""
         return AdvancedSystemException(
             message or f"Unhandled {exception_type.__name__}",
-            error_code=exception_type.__name__
+            error_code=exception_type.__name__,
         )
+
 
 class ComprehensiveException(Exception):
     def __init__(
-        self, 
-        message: str, 
+        self,
+        message: str,
         error_code: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ):
         super().__init__(message)
         self.error_code = error_code
@@ -59,4 +62,4 @@ class ComprehensiveException(Exception):
             f"Message: {str(self)}\n"
             f"Context: {self.context}\n"
             f"Traceback: {traceback.format_exc()}"
-        ) 
+        )

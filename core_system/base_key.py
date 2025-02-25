@@ -1,7 +1,12 @@
 import hashlib
 from collections import OrderedDict
 
-from authlib.common.encoding import json_dumps, to_bytes, to_unicode, urlsafe_b64encode
+from authlib.common.encoding import (
+    json_dumps,
+    to_bytes,
+    to_unicode,
+    urlsafe_b64encode,
+)
 
 from ..errors import InvalidUseError
 
@@ -11,7 +16,16 @@ class Key:
 
     kty = "_"
 
-    ALLOWED_PARAMS = ["use", "key_ops", "alg", "kid", "x5u", "x5c", "x5t", "x5t#S256"]
+    ALLOWED_PARAMS = [
+        "use",
+        "key_ops",
+        "alg",
+        "kid",
+        "x5u",
+        "x5c",
+        "x5t",
+        "x5t#S256",
+    ]
 
     PRIVATE_KEY_OPS = [
         "sign",

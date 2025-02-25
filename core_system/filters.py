@@ -172,7 +172,11 @@ def do_urlencode(
 
 @pass_eval_context
 def do_replace(
-    eval_ctx: "EvalContext", s: str, old: str, new: str, count: t.Optional[int] = None
+    eval_ctx: "EvalContext",
+    s: str,
+    old: str,
+    new: str,
+    count: t.Optional[int] = None,
 ) -> str:
     """Return a copy of the value with all occurrences of a substring
     replaced with a new one. The first argument is the substring
@@ -216,7 +220,9 @@ def do_lower(s: str) -> str:
     return soft_str(s).lower()
 
 
-def do_items(value: t.Union[t.Mapping[K, V], Undefined]) -> t.Iterator[t.Tuple[K, V]]:
+def do_items(
+    value: t.Union[t.Mapping[K, V], Undefined],
+) -> t.Iterator[t.Tuple[K, V]]:
     """Return an iterator over the ``(key, value)`` items of a mapping.
 
     ``x|items`` is the same as ``x.items()``, except if ``x`` is
@@ -428,7 +434,9 @@ def do_sort(
        The ``attribute`` parameter was added.
     """
     key_func = make_multi_attrgetter(
-        environment, attribute, postprocess=ignore_case if not case_sensitive else None
+        environment,
+        attribute,
+        postprocess=ignore_case if not case_sensitive else None,
     )
     return sorted(value, key=key_func, reverse=reverse)
 
@@ -454,7 +462,9 @@ def sync_do_unique(
     :param attribute: Filter objects with unique values for this attribute.
     """
     getter = make_attrgetter(
-        environment, attribute, postprocess=ignore_case if not case_sensitive else None
+        environment,
+        attribute,
+        postprocess=ignore_case if not case_sensitive else None,
     )
     seen = set()
 
@@ -493,7 +503,9 @@ def _min_or_max(
         return environment.undefined("No aggregated item, sequence was empty.")
 
     key_func = make_attrgetter(
-        environment, attribute, postprocess=ignore_case if not case_sensitive else None
+        environment,
+        attribute,
+        postprocess=ignore_case if not case_sensitive else None,
     )
     return func(chain([first], it), key=key_func)
 
@@ -657,7 +669,8 @@ def sync_do_first(
 
 @async_variant(sync_do_first)  # type: ignore
 async def do_first(
-    environment: "Environment", seq: "t.Union[t.AsyncIterable[V], t.Iterable[V]]"
+    environment: "Environment",
+    seq: "t.Union[t.AsyncIterable[V], t.Iterable[V]]",
 ) -> "t.Union[V, Undefined]":
     try:
         return await auto_aiter(seq).__anext__()
@@ -818,7 +831,10 @@ def do_urlize(
 
 
 def do_indent(
-    s: str, width: t.Union[int, str] = 4, first: bool = False, blank: bool = False
+    s: str,
+    width: t.Union[int, str] = 4,
+    first: bool = False,
+    blank: bool = False,
 ) -> str:
     """Return a copy of the string with each line indented by 4 spaces. The
     first line and blank lines are not indented by default.
@@ -1361,7 +1377,9 @@ def sync_do_list(value: "t.Iterable[V]") -> "t.List[V]":
 
 
 @async_variant(sync_do_list)  # type: ignore
-async def do_list(value: "t.Union[t.AsyncIterable[V], t.Iterable[V]]") -> "t.List[V]":
+async def do_list(
+    value: "t.Union[t.AsyncIterable[V], t.Iterable[V]]",
+) -> "t.List[V]":
     return await auto_to_list(value)
 
 
@@ -1385,7 +1403,9 @@ def do_reverse(value: str) -> str: ...
 def do_reverse(value: "t.Iterable[V]") -> "t.Iterable[V]": ...
 
 
-def do_reverse(value: t.Union[str, t.Iterable[V]]) -> t.Union[str, t.Iterable[V]]:
+def do_reverse(
+    value: t.Union[str, t.Iterable[V]],
+) -> t.Union[str, t.Iterable[V]]:
     """Reverse the object or return an iterator that iterates over it the other
     way round.
     """
@@ -1773,7 +1793,7 @@ def prepare_select_or_reject(
 
     try:
         name = args[off]
-        args = args[1 + off :]
+        args = args[1 + off:]
 
         def func(item: t.Any) -> t.Any:
             return context.environment.call_test(name, item, args, kwargs, context)

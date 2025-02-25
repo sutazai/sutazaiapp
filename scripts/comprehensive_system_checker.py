@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import bandit.cli.main as bandit_main
 import pylint.lint
@@ -13,7 +13,7 @@ class ComprehensiveSystemChecker:
     Performs code quality, security, and performance analysis.
     """
 
-    def __init__(self, project_root: str = '.'):
+    def __init__(self, project_root: str = "."):
         """
         Initialize the system checker with project root.
 
@@ -23,7 +23,7 @@ class ComprehensiveSystemChecker:
         self.project_root = os.path.abspath(project_root)
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s: %(message)s'
+            format="%(asctime)s - %(levelname)s: %(message)s",
         )
         self.logger = logging.getLogger(__name__)
 
@@ -45,10 +45,7 @@ class ComprehensiveSystemChecker:
                     self.logger.warning(f"Directory not found: {full_path}")
                     continue
 
-                pylint_output = pylint.lint.Run(
-                    [full_path], 
-                    do_exit=False
-                )
+                pylint_output = pylint.lint.Run([full_path], do_exit=False)
                 results[directory] = pylint_output.linter.stats.global_note
             except Exception as e:
                 self.logger.error(f"Pylint error in {directory}: {e}")
@@ -72,13 +69,7 @@ class ComprehensiveSystemChecker:
                     self.logger.warning(f"Directory not found: {full_path}")
                     continue
 
-                sys.argv = [
-                    'bandit', 
-                    '-r', 
-                    full_path, 
-                    '-f', 
-                    'custom'
-                ]
+                sys.argv = ["bandit", "-r", full_path, "-f", "custom"]
                 bandit_main.main()
             except Exception as e:
                 self.logger.error(f"Bandit scan error in {directory}: {e}")
@@ -92,16 +83,16 @@ class ComprehensiveSystemChecker:
             file_path (str): Path to the file
         """
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            
+
             # Placeholder for import optimization logic
             # This would involve sorting imports, removing unused imports
             # Actual implementation would be more complex
-            
-            with open(file_path, 'w', encoding='utf-8') as f:
+
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
-            
+
             self.logger.info(f"Imports optimized in {file_path}")
         except Exception as e:
             self.logger.error(f"Import optimization error in {file_path}: {e}")
@@ -114,18 +105,20 @@ class ComprehensiveSystemChecker:
             Dict[str, Any]: Comprehensive check results
         """
         check_results = {
-            'pylint_scores': self.run_pylint(['sutazai', 'scripts']),
-            'security_issues': self.run_bandit(['sutazai', 'scripts']),
-            'import_optimization': []
+            "pylint_scores": self.run_pylint(["sutazai", "scripts"]),
+            "security_issues": self.run_bandit(["sutazai", "scripts"]),
+            "import_optimization": [],
         }
 
         # Add additional checks and optimizations
         return check_results
+
 
 def main():
     checker = ComprehensiveSystemChecker()
     results = checker.comprehensive_check()
     print(results)
 
-if __name__ == '__main__':
-    main() 
+
+if __name__ == "__main__":
+    main()

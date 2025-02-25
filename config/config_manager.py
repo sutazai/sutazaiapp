@@ -55,7 +55,9 @@ class ConfigurationManager:
     }
 
     def __init__(
-        self, environment: str = "development", config_dir: Optional[str] = None
+        self,
+        environment: str = "development",
+        config_dir: Optional[str] = None,
     ):
         """
         Initialize configuration manager with environment-specific settings.

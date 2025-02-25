@@ -73,7 +73,10 @@ class RotationGate(SutazAiGate):
             return np.array([[cos_half, -sin_half], [sin_half, cos_half]])
         elif self.gate_type == GateType.ROTATION_Z:
             return np.array(
-                [[np.exp(-1j * self.angle / 2), 0], [0, np.exp(1j * self.angle / 2)]]
+                [
+                    [np.exp(-1j * self.angle / 2), 0],
+                    [0, np.exp(1j * self.angle / 2)],
+                ]
             )
         else:
             raise ValueError(f"Unsupported rotation gate type: {self.gate_type}")
@@ -110,7 +113,11 @@ class SutazAiGateLibrary:
         self, gate_type: GateType, angle: Optional[float] = None
     ) -> SutazAiGate:
         """Retrieve a specific gate from the library"""
-        if gate_type in [GateType.ROTATION_X, GateType.ROTATION_Y, GateType.ROTATION_Z]:
+        if gate_type in [
+            GateType.ROTATION_X,
+            GateType.ROTATION_Y,
+            GateType.ROTATION_Z,
+        ]:
             if angle is None:
                 raise ValueError(f"Angle required for rotation gate: {gate_type}")
             return RotationGate(gate_type, angle)

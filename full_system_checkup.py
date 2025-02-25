@@ -97,17 +97,13 @@ def scan_python_files(
     for root, dirs, files in os.walk(base_dir):
         # Remove excluded directories
         dirs[:] = [
-            d
-            for d in dirs
-            if not any(pattern in d for pattern in exclude_patterns)
+            d for d in dirs if not any(pattern in d for pattern in exclude_patterns)
         ]
 
         for file in files:
             if file.endswith(".py"):
                 full_path = os.path.join(root, file)
-                if not any(
-                    pattern in full_path for pattern in exclude_patterns
-                ):
+                if not any(pattern in full_path for pattern in exclude_patterns):
                     py_files.append(full_path)
 
     return py_files
@@ -204,9 +200,9 @@ def check_markdown_quality(base_dir: str) -> Dict[str, List[str]]:
                 full_path = os.path.join(root, file)
                 markdownlint_result = run_command(["markdownlint", full_path])
                 if not markdownlint_result["success"]:
-                    markdown_issues[full_path] = markdownlint_result[
-                        "stderr"
-                    ].split("\n")
+                    markdown_issues[full_path] = markdownlint_result["stderr"].split(
+                        "\n"
+                    )
 
     return markdown_issues
 

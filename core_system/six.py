@@ -259,7 +259,10 @@ _moved_attributes = [
     MovedAttribute("getoutput", "commands", "subprocess"),
     MovedAttribute("range", "__builtin__", "builtins", "xrange", "range"),
     MovedAttribute(
-        "reload_module", "__builtin__", "importlib" if PY34 else "imp", "reload"
+        "reload_module",
+        "__builtin__",
+        "importlib" if PY34 else "imp",
+        "reload",
     ),
     MovedAttribute("reduce", "__builtin__", "functools"),
     MovedAttribute("shlex_quote", "pipes", "shlex", "quote"),
@@ -296,7 +299,9 @@ _moved_attributes = [
     MovedModule("email_mime_image", "email.MIMEImage", "email.mime.image"),
     MovedModule("email_mime_multipart", "email.MIMEMultipart", "email.mime.multipart"),
     MovedModule(
-        "email_mime_nonmultipart", "email.MIMENonMultipart", "email.mime.nonmultipart"
+        "email_mime_nonmultipart",
+        "email.MIMENonMultipart",
+        "email.mime.nonmultipart",
     ),
     MovedModule("email_mime_text", "email.MIMEText", "email.mime.text"),
     MovedModule("BaseHTTPServer", "BaseHTTPServer", "http.server"),
@@ -367,7 +372,11 @@ _urllib_parse_moved_attributes = [
     MovedAttribute("unquote", "urllib", "urllib.parse"),
     MovedAttribute("unquote_plus", "urllib", "urllib.parse"),
     MovedAttribute(
-        "unquote_to_bytes", "urllib", "urllib.parse", "unquote", "unquote_to_bytes"
+        "unquote_to_bytes",
+        "urllib",
+        "urllib.parse",
+        "unquote",
+        "unquote_to_bytes",
     ),
     MovedAttribute("urlencode", "urllib", "urllib.parse"),
     MovedAttribute("splitquery", "urllib", "urllib.parse"),
@@ -614,7 +623,8 @@ else:
 
     callable = callable
 _add_doc(
-    get_unbound_function, """Get the function out of a possibly unbound function"""
+    get_unbound_function,
+    """Get the function out of a possibly unbound function""",
 )
 
 
@@ -667,9 +677,13 @@ else:
 
 _add_doc(iterkeys, "Return an iterator over the keys of a dictionary.")
 _add_doc(itervalues, "Return an iterator over the values of a dictionary.")
-_add_doc(iteritems, "Return an iterator over the (key, value) pairs of a dictionary.")
 _add_doc(
-    iterlists, "Return an iterator over the (key, [values]) pairs of a dictionary."
+    iteritems,
+    "Return an iterator over the (key, value) pairs of a dictionary.",
+)
+_add_doc(
+    iterlists,
+    "Return an iterator over the (key, [values]) pairs of a dictionary.",
 )
 
 
@@ -909,7 +923,10 @@ if sys.version_info[0:2] < (3, 4):
         updated=functools.WRAPPER_UPDATES,
     ):
         return functools.partial(
-            _update_wrapper, wrapped=wrapped, assigned=assigned, updated=updated
+            _update_wrapper,
+            wrapped=wrapped,
+            assigned=assigned,
+            updated=updated,
         )
 
     wraps.__doc__ = functools.wraps.__doc__

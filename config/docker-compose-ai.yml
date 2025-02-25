@@ -2,28 +2,37 @@ version: '3.8'
 
 services:
   ai_service:
-    image: ai_service:latest
-    deploy:
-      replicas: 3
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+    environment:
+      - MODEL_PATH=/app/models
+      - DATA_PATH=/app/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-    environment:
-      - AUTO_SCALING=true
-      - MAX_INSTANCES=10
-      - MIN_INSTANCES=3
 
   redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
+    image: redis:alpine
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /data
+      - /tmp
+    volumes:
+      - redis_data:/data:rw
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -32,11 +41,23 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./alerts.yml:/etc/prometheus/alerts.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus:rw
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+
+volumes:
+  redis_data:
+  prometheus_data:
 
 networks:
   sutazai_net:

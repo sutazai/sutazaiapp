@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import copy
@@ -21,7 +20,14 @@ class TimeStamp(datetime.datetime):
         return datetime.datetime.__new__(cls, *args, **kw)
 
     def __deepcopy__(self, memo: Any) -> Any:
-        ts = TimeStamp(self.year, self.month, self.day, self.hour, self.minute, self.second)
+        ts = TimeStamp(
+            self.year,
+            self.month,
+            self.day,
+            self.hour,
+            self.minute,
+            self.second,
+        )
         ts._yaml = copy.deepcopy(self._yaml)
         return ts
 
@@ -55,6 +61,16 @@ class TimeStamp(datetime.datetime):
             tzinfo = self.tzinfo
         if fold is None:
             fold = self.fold
-        ts = type(self)(year, month, day, hour, minute, second, microsecond, tzinfo, fold=fold)
+        ts = type(self)(
+            year,
+            month,
+            day,
+            hour,
+            minute,
+            second,
+            microsecond,
+            tzinfo,
+            fold=fold,
+        )
         ts._yaml = copy.deepcopy(self._yaml)
         return ts

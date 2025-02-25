@@ -53,7 +53,7 @@ else:
         PydanticUndefined = object()
 
 
-ExtraBehavior = Literal['allow', 'forbid', 'ignore']
+ExtraBehavior = Literal["allow", "forbid", "ignore"]
 
 
 class CoreConfig(TypedDict, total=False):
@@ -103,7 +103,7 @@ class CoreConfig(TypedDict, total=False):
     # to construct error `loc`s, default True
     loc_by_alias: bool
     # whether instances of models and dataclasses (including subclass instances) should re-validate, default 'never'
-    revalidate_instances: Literal['always', 'never', 'subclass-instances']
+    revalidate_instances: Literal["always", "never", "subclass-instances"]
     # whether to validate default values during validation, default False
     validate_default: bool
     # used on typed-dicts and arguments
@@ -117,19 +117,19 @@ class CoreConfig(TypedDict, total=False):
     # fields related to float fields only
     allow_inf_nan: bool  # default: True
     # the config options are used to customise serialization to JSON
-    ser_json_timedelta: Literal['iso8601', 'float']  # default: 'iso8601'
-    ser_json_bytes: Literal['utf8', 'base64', 'hex']  # default: 'utf8'
-    ser_json_inf_nan: Literal['null', 'constants', 'strings']  # default: 'null'
-    val_json_bytes: Literal['utf8', 'base64', 'hex']  # default: 'utf8'
+    ser_json_timedelta: Literal["iso8601", "float"]  # default: 'iso8601'
+    ser_json_bytes: Literal["utf8", "base64", "hex"]  # default: 'utf8'
+    ser_json_inf_nan: Literal["null", "constants", "strings"]  # default: 'null'
+    val_json_bytes: Literal["utf8", "base64", "hex"]  # default: 'utf8'
     # used to hide input data from ValidationError repr
     hide_input_in_errors: bool
     validation_error_cause: bool  # default: False
     coerce_numbers_to_str: bool  # default: False
-    regex_engine: Literal['rust-regex', 'python-re']  # default: 'rust-regex'
-    cache_strings: Union[bool, Literal['all', 'keys', 'none']]  # default: 'True'
+    regex_engine: Literal["rust-regex", "python-re"]  # default: 'rust-regex'
+    cache_strings: Union[bool, Literal["all", "keys", "none"]]  # default: 'True'
 
 
-IncExCall: TypeAlias = 'set[int | str] | dict[int | str, IncExCall] | None'
+IncExCall: TypeAlias = "set[int | str] | dict[int | str, IncExCall] | None"
 
 
 class SerializationInfo(Protocol):
@@ -191,7 +191,7 @@ class ValidationInfo(Protocol):
         ...
 
     @property
-    def mode(self) -> Literal['python', 'json']:
+    def mode(self) -> Literal["python", "json"]:
         """The type of input data we are currently validating"""
         ...
 
@@ -210,28 +210,28 @@ class ValidationInfo(Protocol):
 
 
 ExpectedSerializationTypes = Literal[
-    'none',
-    'int',
-    'bool',
-    'float',
-    'str',
-    'bytes',
-    'bytearray',
-    'list',
-    'tuple',
-    'set',
-    'frozenset',
-    'generator',
-    'dict',
-    'datetime',
-    'date',
-    'time',
-    'timedelta',
-    'url',
-    'multi-host-url',
-    'json',
-    'uuid',
-    'any',
+    "none",
+    "int",
+    "bool",
+    "float",
+    "str",
+    "bytes",
+    "bytearray",
+    "list",
+    "tuple",
+    "set",
+    "frozenset",
+    "generator",
+    "dict",
+    "datetime",
+    "date",
+    "time",
+    "timedelta",
+    "url",
+    "multi-host-url",
+    "json",
+    "uuid",
+    "any",
 ]
 
 
@@ -264,7 +264,7 @@ SerializerFunction = Union[
     FieldPlainInfoSerializerFunction,
 ]
 
-WhenUsed = Literal['always', 'unless-none', 'json', 'json-unless-none']
+WhenUsed = Literal["always", "unless-none", "json", "json-unless-none"]
 """
 Values have the following meanings:
 
@@ -276,7 +276,7 @@ Values have the following meanings:
 
 
 class PlainSerializerFunctionSerSchema(TypedDict, total=False):
-    type: Required[Literal['function-plain']]
+    type: Required[Literal["function-plain"]]
     function: Required[SerializerFunction]
     is_field_serializer: bool  # default False
     info_arg: bool  # default False
@@ -290,7 +290,7 @@ def plain_serializer_function_ser_schema(
     is_field_serializer: bool | None = None,
     info_arg: bool | None = None,
     return_schema: CoreSchema | None = None,
-    when_used: WhenUsed = 'always',
+    when_used: WhenUsed = "always",
 ) -> PlainSerializerFunctionSerSchema:
     """
     Returns a schema for serialization with a function, can be either a "general" or "field" function.
@@ -303,11 +303,11 @@ def plain_serializer_function_ser_schema(
         return_schema: Schema to use for serializing return value
         when_used: When the function should be called
     """
-    if when_used == 'always':
+    if when_used == "always":
         # just to avoid extra elements in schema, and to use the actual default defined in rust
         when_used = None  # type: ignore
     return _dict_not_none(
-        type='function-plain',
+        type="function-plain",
         function=function,
         is_field_serializer=is_field_serializer,
         info_arg=info_arg,
@@ -317,17 +317,27 @@ def plain_serializer_function_ser_schema(
 
 
 class SerializerFunctionWrapHandler(Protocol):  # pragma: no cover
-    def __call__(self, input_value: Any, index_key: int | str | None = None, /) -> Any: ...
+    def __call__(
+        self, input_value: Any, index_key: int | str | None = None, /
+    ) -> Any: ...
 
 
 # (input_value: Any, serializer: SerializerFunctionWrapHandler, /) -> Any
-GeneralWrapNoInfoSerializerFunction = Callable[[Any, SerializerFunctionWrapHandler], Any]
+GeneralWrapNoInfoSerializerFunction = Callable[
+    [Any, SerializerFunctionWrapHandler], Any
+]
 # (input_value: Any, serializer: SerializerFunctionWrapHandler, info: SerializationInfo, /) -> Any
-GeneralWrapInfoSerializerFunction = Callable[[Any, SerializerFunctionWrapHandler, SerializationInfo], Any]
+GeneralWrapInfoSerializerFunction = Callable[
+    [Any, SerializerFunctionWrapHandler, SerializationInfo], Any
+]
 # (model: Any, input_value: Any, serializer: SerializerFunctionWrapHandler, /) -> Any
-FieldWrapNoInfoSerializerFunction = Callable[[Any, Any, SerializerFunctionWrapHandler], Any]
+FieldWrapNoInfoSerializerFunction = Callable[
+    [Any, Any, SerializerFunctionWrapHandler], Any
+]
 # (model: Any, input_value: Any, serializer: SerializerFunctionWrapHandler, info: FieldSerializationInfo, /) -> Any
-FieldWrapInfoSerializerFunction = Callable[[Any, Any, SerializerFunctionWrapHandler, FieldSerializationInfo], Any]
+FieldWrapInfoSerializerFunction = Callable[
+    [Any, Any, SerializerFunctionWrapHandler, FieldSerializationInfo], Any
+]
 WrapSerializerFunction = Union[
     GeneralWrapNoInfoSerializerFunction,
     GeneralWrapInfoSerializerFunction,
@@ -337,11 +347,13 @@ WrapSerializerFunction = Union[
 
 
 class WrapSerializerFunctionSerSchema(TypedDict, total=False):
-    type: Required[Literal['function-wrap']]
+    type: Required[Literal["function-wrap"]]
     function: Required[WrapSerializerFunction]
     is_field_serializer: bool  # default False
     info_arg: bool  # default False
-    schema: CoreSchema  # if omitted, the schema on which this serializer is defined is used
+    schema: (
+        CoreSchema  # if omitted, the schema on which this serializer is defined is used
+    )
     return_schema: CoreSchema  # if omitted, AnySchema is used
     when_used: WhenUsed  # default: 'always'
 
@@ -353,7 +365,7 @@ def wrap_serializer_function_ser_schema(
     info_arg: bool | None = None,
     schema: CoreSchema | None = None,
     return_schema: CoreSchema | None = None,
-    when_used: WhenUsed = 'always',
+    when_used: WhenUsed = "always",
 ) -> WrapSerializerFunctionSerSchema:
     """
     Returns a schema for serialization with a wrap function, can be either a "general" or "field" function.
@@ -367,11 +379,11 @@ def wrap_serializer_function_ser_schema(
         return_schema: Schema to use for serializing return value
         when_used: When the function should be called
     """
-    if when_used == 'always':
+    if when_used == "always":
         # just to avoid extra elements in schema, and to use the actual default defined in rust
         when_used = None  # type: ignore
     return _dict_not_none(
-        type='function-wrap',
+        type="function-wrap",
         function=function,
         is_field_serializer=is_field_serializer,
         info_arg=info_arg,
@@ -382,12 +394,14 @@ def wrap_serializer_function_ser_schema(
 
 
 class FormatSerSchema(TypedDict, total=False):
-    type: Required[Literal['format']]
+    type: Required[Literal["format"]]
     formatting_string: Required[str]
     when_used: WhenUsed  # default: 'json-unless-none'
 
 
-def format_ser_schema(formatting_string: str, *, when_used: WhenUsed = 'json-unless-none') -> FormatSerSchema:
+def format_ser_schema(
+    formatting_string: str, *, when_used: WhenUsed = "json-unless-none"
+) -> FormatSerSchema:
     """
     Returns a schema for serialization using python's `format` method.
 
@@ -395,33 +409,37 @@ def format_ser_schema(formatting_string: str, *, when_used: WhenUsed = 'json-unl
         formatting_string: String defining the format to use
         when_used: Same meaning as for [general_function_plain_ser_schema], but with a different default
     """
-    if when_used == 'json-unless-none':
+    if when_used == "json-unless-none":
         # just to avoid extra elements in schema, and to use the actual default defined in rust
         when_used = None  # type: ignore
-    return _dict_not_none(type='format', formatting_string=formatting_string, when_used=when_used)
+    return _dict_not_none(
+        type="format", formatting_string=formatting_string, when_used=when_used
+    )
 
 
 class ToStringSerSchema(TypedDict, total=False):
-    type: Required[Literal['to-string']]
+    type: Required[Literal["to-string"]]
     when_used: WhenUsed  # default: 'json-unless-none'
 
 
-def to_string_ser_schema(*, when_used: WhenUsed = 'json-unless-none') -> ToStringSerSchema:
+def to_string_ser_schema(
+    *, when_used: WhenUsed = "json-unless-none"
+) -> ToStringSerSchema:
     """
     Returns a schema for serialization using python's `str()` / `__str__` method.
 
     Args:
         when_used: Same meaning as for [general_function_plain_ser_schema], but with a different default
     """
-    s = dict(type='to-string')
-    if when_used != 'json-unless-none':
+    s = dict(type="to-string")
+    if when_used != "json-unless-none":
         # just to avoid extra elements in schema, and to use the actual default defined in rust
-        s['when_used'] = when_used
+        s["when_used"] = when_used
     return s  # type: ignore
 
 
 class ModelSerSchema(TypedDict, total=False):
-    type: Required[Literal['model']]
+    type: Required[Literal["model"]]
     cls: Required[Type[Any]]
     schema: Required[CoreSchema]
 
@@ -434,7 +452,7 @@ def model_ser_schema(cls: Type[Any], schema: CoreSchema) -> ModelSerSchema:
         cls: The expected class type, used to generate warnings if the wrong type is passed
         schema: Internal schema to use to serialize the model dict
     """
-    return ModelSerSchema(type='model', cls=cls, schema=schema)
+    return ModelSerSchema(type="model", cls=cls, schema=schema)
 
 
 SerSchema = Union[
@@ -448,7 +466,7 @@ SerSchema = Union[
 
 
 class ComputedField(TypedDict, total=False):
-    type: Required[Literal['computed-field']]
+    type: Required[Literal["computed-field"]]
     property_name: Required[str]
     return_schema: Required[CoreSchema]
     alias: str
@@ -456,7 +474,11 @@ class ComputedField(TypedDict, total=False):
 
 
 def computed_field(
-    property_name: str, return_schema: CoreSchema, *, alias: str | None = None, metadata: Dict[str, Any] | None = None
+    property_name: str,
+    return_schema: CoreSchema,
+    *,
+    alias: str | None = None,
+    metadata: Dict[str, Any] | None = None,
 ) -> ComputedField:
     """
     ComputedFields are properties of a model or dataclass that are included in serialization.
@@ -468,19 +490,26 @@ def computed_field(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
     """
     return _dict_not_none(
-        type='computed-field', property_name=property_name, return_schema=return_schema, alias=alias, metadata=metadata
+        type="computed-field",
+        property_name=property_name,
+        return_schema=return_schema,
+        alias=alias,
+        metadata=metadata,
     )
 
 
 class AnySchema(TypedDict, total=False):
-    type: Required[Literal['any']]
+    type: Required[Literal["any"]]
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
 
 
 def any_schema(
-    *, ref: str | None = None, metadata: Dict[str, Any] | None = None, serialization: SerSchema | None = None
+    *,
+    ref: str | None = None,
+    metadata: Dict[str, Any] | None = None,
+    serialization: SerSchema | None = None,
 ) -> AnySchema:
     """
     Returns a schema that matches any value, e.g.:
@@ -498,18 +527,23 @@ def any_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='any', ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="any", ref=ref, metadata=metadata, serialization=serialization
+    )
 
 
 class NoneSchema(TypedDict, total=False):
-    type: Required[Literal['none']]
+    type: Required[Literal["none"]]
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
 
 
 def none_schema(
-    *, ref: str | None = None, metadata: Dict[str, Any] | None = None, serialization: SerSchema | None = None
+    *,
+    ref: str | None = None,
+    metadata: Dict[str, Any] | None = None,
+    serialization: SerSchema | None = None,
 ) -> NoneSchema:
     """
     Returns a schema that matches a None value, e.g.:
@@ -527,11 +561,13 @@ def none_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='none', ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="none", ref=ref, metadata=metadata, serialization=serialization
+    )
 
 
 class BoolSchema(TypedDict, total=False):
-    type: Required[Literal['bool']]
+    type: Required[Literal["bool"]]
     strict: bool
     ref: str
     metadata: Dict[str, Any]
@@ -561,11 +597,17 @@ def bool_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='bool', strict=strict, ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="bool",
+        strict=strict,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
+    )
 
 
 class IntSchema(TypedDict, total=False):
-    type: Required[Literal['int']]
+    type: Required[Literal["int"]]
     multiple_of: int
     le: int
     ge: int
@@ -612,7 +654,7 @@ def int_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='int',
+        type="int",
         multiple_of=multiple_of,
         le=le,
         ge=ge,
@@ -626,8 +668,10 @@ def int_schema(
 
 
 class FloatSchema(TypedDict, total=False):
-    type: Required[Literal['float']]
-    allow_inf_nan: bool  # whether 'NaN', '+inf', '-inf' should be forbidden. default: True
+    type: Required[Literal["float"]]
+    allow_inf_nan: (
+        bool  # whether 'NaN', '+inf', '-inf' should be forbidden. default: True
+    )
     multiple_of: float
     le: float
     ge: float
@@ -676,7 +720,7 @@ def float_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='float',
+        type="float",
         allow_inf_nan=allow_inf_nan,
         multiple_of=multiple_of,
         le=le,
@@ -691,8 +735,10 @@ def float_schema(
 
 
 class DecimalSchema(TypedDict, total=False):
-    type: Required[Literal['decimal']]
-    allow_inf_nan: bool  # whether 'NaN', '+inf', '-inf' should be forbidden. default: False
+    type: Required[Literal["decimal"]]
+    allow_inf_nan: (
+        bool  # whether 'NaN', '+inf', '-inf' should be forbidden. default: False
+    )
     multiple_of: Decimal
     le: Decimal
     ge: Decimal
@@ -748,7 +794,7 @@ def decimal_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='decimal',
+        type="decimal",
         gt=gt,
         ge=ge,
         lt=lt,
@@ -765,7 +811,7 @@ def decimal_schema(
 
 
 class ComplexSchema(TypedDict, total=False):
-    type: Required[Literal['complex']]
+    type: Required[Literal["complex"]]
     strict: bool
     ref: str
     metadata: Dict[str, Any]
@@ -798,7 +844,7 @@ def complex_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='complex',
+        type="complex",
         strict=strict,
         ref=ref,
         metadata=metadata,
@@ -807,14 +853,14 @@ def complex_schema(
 
 
 class StringSchema(TypedDict, total=False):
-    type: Required[Literal['str']]
+    type: Required[Literal["str"]]
     pattern: Union[str, Pattern[str]]
     max_length: int
     min_length: int
     strip_whitespace: bool
     to_lower: bool
     to_upper: bool
-    regex_engine: Literal['rust-regex', 'python-re']  # default: 'rust-regex'
+    regex_engine: Literal["rust-regex", "python-re"]  # default: 'rust-regex'
     strict: bool
     coerce_numbers_to_str: bool
     ref: str
@@ -830,7 +876,7 @@ def str_schema(
     strip_whitespace: bool | None = None,
     to_lower: bool | None = None,
     to_upper: bool | None = None,
-    regex_engine: Literal['rust-regex', 'python-re'] | None = None,
+    regex_engine: Literal["rust-regex", "python-re"] | None = None,
     strict: bool | None = None,
     coerce_numbers_to_str: bool | None = None,
     ref: str | None = None,
@@ -868,7 +914,7 @@ def str_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='str',
+        type="str",
         pattern=pattern,
         max_length=max_length,
         min_length=min_length,
@@ -885,7 +931,7 @@ def str_schema(
 
 
 class BytesSchema(TypedDict, total=False):
-    type: Required[Literal['bytes']]
+    type: Required[Literal["bytes"]]
     max_length: int
     min_length: int
     strict: bool
@@ -923,7 +969,7 @@ def bytes_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='bytes',
+        type="bytes",
         max_length=max_length,
         min_length=min_length,
         strict=strict,
@@ -934,13 +980,13 @@ def bytes_schema(
 
 
 class DateSchema(TypedDict, total=False):
-    type: Required[Literal['date']]
+    type: Required[Literal["date"]]
     strict: bool
     le: date
     ge: date
     lt: date
     gt: date
-    now_op: Literal['past', 'future']
+    now_op: Literal["past", "future"]
     # defaults to current local utc offset from `time.localtime().tm_gmtoff`
     # value is restricted to -86_400 < offset < 86_400 by bounds in generate_self_schema.py
     now_utc_offset: int
@@ -956,7 +1002,7 @@ def date_schema(
     ge: date | None = None,
     lt: date | None = None,
     gt: date | None = None,
-    now_op: Literal['past', 'future'] | None = None,
+    now_op: Literal["past", "future"] | None = None,
     now_utc_offset: int | None = None,
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
@@ -987,7 +1033,7 @@ def date_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='date',
+        type="date",
         strict=strict,
         le=le,
         ge=ge,
@@ -1002,14 +1048,14 @@ def date_schema(
 
 
 class TimeSchema(TypedDict, total=False):
-    type: Required[Literal['time']]
+    type: Required[Literal["time"]]
     strict: bool
     le: time
     ge: time
     lt: time
     gt: time
-    tz_constraint: Union[Literal['aware', 'naive'], int]
-    microseconds_precision: Literal['truncate', 'error']
+    tz_constraint: Union[Literal["aware", "naive"], int]
+    microseconds_precision: Literal["truncate", "error"]
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
@@ -1022,8 +1068,8 @@ def time_schema(
     ge: time | None = None,
     lt: time | None = None,
     gt: time | None = None,
-    tz_constraint: Literal['aware', 'naive'] | int | None = None,
-    microseconds_precision: Literal['truncate', 'error'] = 'truncate',
+    tz_constraint: Literal["aware", "naive"] | int | None = None,
+    microseconds_precision: Literal["truncate", "error"] = "truncate",
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
     serialization: SerSchema | None = None,
@@ -1053,7 +1099,7 @@ def time_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='time',
+        type="time",
         strict=strict,
         le=le,
         ge=ge,
@@ -1068,18 +1114,18 @@ def time_schema(
 
 
 class DatetimeSchema(TypedDict, total=False):
-    type: Required[Literal['datetime']]
+    type: Required[Literal["datetime"]]
     strict: bool
     le: datetime
     ge: datetime
     lt: datetime
     gt: datetime
-    now_op: Literal['past', 'future']
-    tz_constraint: Union[Literal['aware', 'naive'], int]
+    now_op: Literal["past", "future"]
+    tz_constraint: Union[Literal["aware", "naive"], int]
     # defaults to current local utc offset from `time.localtime().tm_gmtoff`
     # value is restricted to -86_400 < offset < 86_400 by bounds in generate_self_schema.py
     now_utc_offset: int
-    microseconds_precision: Literal['truncate', 'error']  # default: 'truncate'
+    microseconds_precision: Literal["truncate", "error"]  # default: 'truncate'
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
@@ -1092,10 +1138,10 @@ def datetime_schema(
     ge: datetime | None = None,
     lt: datetime | None = None,
     gt: datetime | None = None,
-    now_op: Literal['past', 'future'] | None = None,
-    tz_constraint: Literal['aware', 'naive'] | int | None = None,
+    now_op: Literal["past", "future"] | None = None,
+    tz_constraint: Literal["aware", "naive"] | int | None = None,
     now_utc_offset: int | None = None,
-    microseconds_precision: Literal['truncate', 'error'] = 'truncate',
+    microseconds_precision: Literal["truncate", "error"] = "truncate",
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
     serialization: SerSchema | None = None,
@@ -1129,7 +1175,7 @@ def datetime_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='datetime',
+        type="datetime",
         strict=strict,
         le=le,
         ge=ge,
@@ -1146,13 +1192,13 @@ def datetime_schema(
 
 
 class TimedeltaSchema(TypedDict, total=False):
-    type: Required[Literal['timedelta']]
+    type: Required[Literal["timedelta"]]
     strict: bool
     le: timedelta
     ge: timedelta
     lt: timedelta
     gt: timedelta
-    microseconds_precision: Literal['truncate', 'error']
+    microseconds_precision: Literal["truncate", "error"]
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
@@ -1165,7 +1211,7 @@ def timedelta_schema(
     ge: timedelta | None = None,
     lt: timedelta | None = None,
     gt: timedelta | None = None,
-    microseconds_precision: Literal['truncate', 'error'] = 'truncate',
+    microseconds_precision: Literal["truncate", "error"] = "truncate",
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
     serialization: SerSchema | None = None,
@@ -1194,7 +1240,7 @@ def timedelta_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='timedelta',
+        type="timedelta",
         strict=strict,
         le=le,
         ge=ge,
@@ -1208,7 +1254,7 @@ def timedelta_schema(
 
 
 class LiteralSchema(TypedDict, total=False):
-    type: Required[Literal['literal']]
+    type: Required[Literal["literal"]]
     expected: Required[List[Any]]
     ref: str
     metadata: Dict[str, Any]
@@ -1239,14 +1285,20 @@ def literal_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='literal', expected=expected, ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="literal",
+        expected=expected,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
+    )
 
 
 class EnumSchema(TypedDict, total=False):
-    type: Required[Literal['enum']]
+    type: Required[Literal["enum"]]
     cls: Required[Any]
     members: Required[List[Any]]
-    sub_type: Literal['str', 'int', 'float']
+    sub_type: Literal["str", "int", "float"]
     missing: Callable[[Any], Any]
     strict: bool
     ref: str
@@ -1258,7 +1310,7 @@ def enum_schema(
     cls: Any,
     members: list[Any],
     *,
-    sub_type: Literal['str', 'int', 'float'] | None = None,
+    sub_type: Literal["str", "int", "float"] | None = None,
     missing: Callable[[Any], Any] | None = None,
     strict: bool | None = None,
     ref: str | None = None,
@@ -1293,7 +1345,7 @@ def enum_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='enum',
+        type="enum",
         cls=cls,
         members=members,
         sub_type=sub_type,
@@ -1306,11 +1358,11 @@ def enum_schema(
 
 
 # must match input/parse_json.rs::JsonType::try_from
-JsonType = Literal['null', 'bool', 'int', 'float', 'str', 'list', 'dict']
+JsonType = Literal["null", "bool", "int", "float", "str", "list", "dict"]
 
 
 class IsInstanceSchema(TypedDict, total=False):
-    type: Required[Literal['is-instance']]
+    type: Required[Literal["is-instance"]]
     cls: Required[Any]
     cls_repr: str
     ref: str
@@ -1348,12 +1400,17 @@ def is_instance_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='is-instance', cls=cls, cls_repr=cls_repr, ref=ref, metadata=metadata, serialization=serialization
+        type="is-instance",
+        cls=cls,
+        cls_repr=cls_repr,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
     )
 
 
 class IsSubclassSchema(TypedDict, total=False):
-    type: Required[Literal['is-subclass']]
+    type: Required[Literal["is-subclass"]]
     cls: Required[Type[Any]]
     cls_repr: str
     ref: str
@@ -1394,19 +1451,27 @@ def is_subclass_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='is-subclass', cls=cls, cls_repr=cls_repr, ref=ref, metadata=metadata, serialization=serialization
+        type="is-subclass",
+        cls=cls,
+        cls_repr=cls_repr,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
     )
 
 
 class CallableSchema(TypedDict, total=False):
-    type: Required[Literal['callable']]
+    type: Required[Literal["callable"]]
     ref: str
     metadata: Dict[str, Any]
     serialization: SerSchema
 
 
 def callable_schema(
-    *, ref: str | None = None, metadata: Dict[str, Any] | None = None, serialization: SerSchema | None = None
+    *,
+    ref: str | None = None,
+    metadata: Dict[str, Any] | None = None,
+    serialization: SerSchema | None = None,
 ) -> CallableSchema:
     """
     Returns a schema that checks if a value is callable, equivalent to python's `callable` method, e.g.:
@@ -1424,11 +1489,16 @@ def callable_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='callable', ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="callable",
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
+    )
 
 
 class UuidSchema(TypedDict, total=False):
-    type: Required[Literal['uuid']]
+    type: Required[Literal["uuid"]]
     version: Literal[1, 3, 4, 5]
     strict: bool
     ref: str
@@ -1445,25 +1515,34 @@ def uuid_schema(
     serialization: SerSchema | None = None,
 ) -> UuidSchema:
     return _dict_not_none(
-        type='uuid', version=version, strict=strict, ref=ref, metadata=metadata, serialization=serialization
+        type="uuid",
+        version=version,
+        strict=strict,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
     )
 
 
 class IncExSeqSerSchema(TypedDict, total=False):
-    type: Required[Literal['include-exclude-sequence']]
+    type: Required[Literal["include-exclude-sequence"]]
     include: Set[int]
     exclude: Set[int]
 
 
-def filter_seq_schema(*, include: Set[int] | None = None, exclude: Set[int] | None = None) -> IncExSeqSerSchema:
-    return _dict_not_none(type='include-exclude-sequence', include=include, exclude=exclude)
+def filter_seq_schema(
+    *, include: Set[int] | None = None, exclude: Set[int] | None = None
+) -> IncExSeqSerSchema:
+    return _dict_not_none(
+        type="include-exclude-sequence", include=include, exclude=exclude
+    )
 
 
 IncExSeqOrElseSerSchema = Union[IncExSeqSerSchema, SerSchema]
 
 
 class ListSchema(TypedDict, total=False):
-    type: Required[Literal['list']]
+    type: Required[Literal["list"]]
     items_schema: CoreSchema
     min_length: int
     max_length: int
@@ -1507,7 +1586,7 @@ def list_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='list',
+        type="list",
         items_schema=items_schema,
         min_length=min_length,
         max_length=max_length,
@@ -1614,7 +1693,7 @@ def tuple_variable_schema(
 
 
 class TupleSchema(TypedDict, total=False):
-    type: Required[Literal['tuple']]
+    type: Required[Literal["tuple"]]
     items_schema: Required[List[CoreSchema]]
     variadic_item_index: int
     min_length: int
@@ -1664,7 +1743,7 @@ def tuple_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='tuple',
+        type="tuple",
         items_schema=items_schema,
         variadic_item_index=variadic_item_index,
         min_length=min_length,
@@ -1678,7 +1757,7 @@ def tuple_schema(
 
 
 class SetSchema(TypedDict, total=False):
-    type: Required[Literal['set']]
+    type: Required[Literal["set"]]
     items_schema: CoreSchema
     min_length: int
     max_length: int
@@ -1724,7 +1803,7 @@ def set_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='set',
+        type="set",
         items_schema=items_schema,
         min_length=min_length,
         max_length=max_length,
@@ -1737,7 +1816,7 @@ def set_schema(
 
 
 class FrozenSetSchema(TypedDict, total=False):
-    type: Required[Literal['frozenset']]
+    type: Required[Literal["frozenset"]]
     items_schema: CoreSchema
     min_length: int
     max_length: int
@@ -1783,7 +1862,7 @@ def frozenset_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='frozenset',
+        type="frozenset",
         items_schema=items_schema,
         min_length=min_length,
         max_length=max_length,
@@ -1796,7 +1875,7 @@ def frozenset_schema(
 
 
 class GeneratorSchema(TypedDict, total=False):
-    type: Required[Literal['generator']]
+    type: Required[Literal["generator"]]
     items_schema: CoreSchema
     min_length: int
     max_length: int
@@ -1842,7 +1921,7 @@ def generator_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='generator',
+        type="generator",
         items_schema=items_schema,
         min_length=min_length,
         max_length=max_length,
@@ -1856,20 +1935,22 @@ IncExDict = Set[Union[int, str]]
 
 
 class IncExDictSerSchema(TypedDict, total=False):
-    type: Required[Literal['include-exclude-dict']]
+    type: Required[Literal["include-exclude-dict"]]
     include: IncExDict
     exclude: IncExDict
 
 
-def filter_dict_schema(*, include: IncExDict | None = None, exclude: IncExDict | None = None) -> IncExDictSerSchema:
-    return _dict_not_none(type='include-exclude-dict', include=include, exclude=exclude)
+def filter_dict_schema(
+    *, include: IncExDict | None = None, exclude: IncExDict | None = None
+) -> IncExDictSerSchema:
+    return _dict_not_none(type="include-exclude-dict", include=include, exclude=exclude)
 
 
 IncExDictOrElseSerSchema = Union[IncExDictSerSchema, SerSchema]
 
 
 class DictSchema(TypedDict, total=False):
-    type: Required[Literal['dict']]
+    type: Required[Literal["dict"]]
     keys_schema: CoreSchema  # default: AnySchema
     values_schema: CoreSchema  # default: AnySchema
     min_length: int
@@ -1915,7 +1996,7 @@ def dict_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='dict',
+        type="dict",
         keys_schema=keys_schema,
         values_schema=values_schema,
         min_length=min_length,
@@ -1932,7 +2013,7 @@ NoInfoValidatorFunction = Callable[[Any], Any]
 
 
 class NoInfoValidatorFunctionSchema(TypedDict):
-    type: Literal['no-info']
+    type: Literal["no-info"]
     function: NoInfoValidatorFunction
 
 
@@ -1941,12 +2022,14 @@ WithInfoValidatorFunction = Callable[[Any, ValidationInfo], Any]
 
 
 class WithInfoValidatorFunctionSchema(TypedDict, total=False):
-    type: Required[Literal['with-info']]
+    type: Required[Literal["with-info"]]
     function: Required[WithInfoValidatorFunction]
     field_name: str
 
 
-ValidationFunction = Union[NoInfoValidatorFunctionSchema, WithInfoValidatorFunctionSchema]
+ValidationFunction = Union[
+    NoInfoValidatorFunctionSchema, WithInfoValidatorFunctionSchema
+]
 
 
 class _ValidatorFunctionSchema(TypedDict, total=False):
@@ -1958,7 +2041,7 @@ class _ValidatorFunctionSchema(TypedDict, total=False):
 
 
 class BeforeValidatorFunctionSchema(_ValidatorFunctionSchema, total=False):
-    type: Required[Literal['function-before']]
+    type: Required[Literal["function-before"]]
 
 
 def no_info_before_validator_function(
@@ -1995,8 +2078,8 @@ def no_info_before_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-before',
-        function={'type': 'no-info', 'function': function},
+        type="function-before",
+        function={"type": "no-info", "function": function},
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2043,8 +2126,10 @@ def with_info_before_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-before',
-        function=_dict_not_none(type='with-info', function=function, field_name=field_name),
+        type="function-before",
+        function=_dict_not_none(
+            type="with-info", function=function, field_name=field_name
+        ),
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2053,7 +2138,7 @@ def with_info_before_validator_function(
 
 
 class AfterValidatorFunctionSchema(_ValidatorFunctionSchema, total=False):
-    type: Required[Literal['function-after']]
+    type: Required[Literal["function-after"]]
 
 
 def no_info_after_validator_function(
@@ -2088,8 +2173,8 @@ def no_info_after_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-after',
-        function={'type': 'no-info', 'function': function},
+        type="function-after",
+        function={"type": "no-info", "function": function},
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2136,8 +2221,10 @@ def with_info_after_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-after',
-        function=_dict_not_none(type='with-info', function=function, field_name=field_name),
+        type="function-after",
+        function=_dict_not_none(
+            type="with-info", function=function, field_name=field_name
+        ),
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2146,7 +2233,9 @@ def with_info_after_validator_function(
 
 
 class ValidatorFunctionWrapHandler(Protocol):
-    def __call__(self, input_value: Any, outer_location: str | int | None = None, /) -> Any:  # pragma: no cover
+    def __call__(
+        self, input_value: Any, outer_location: str | int | None = None, /
+    ) -> Any:  # pragma: no cover
         ...
 
 
@@ -2155,25 +2244,29 @@ NoInfoWrapValidatorFunction = Callable[[Any, ValidatorFunctionWrapHandler], Any]
 
 
 class NoInfoWrapValidatorFunctionSchema(TypedDict):
-    type: Literal['no-info']
+    type: Literal["no-info"]
     function: NoInfoWrapValidatorFunction
 
 
 # (input_value: Any, validator: ValidatorFunctionWrapHandler, info: ValidationInfo, /) -> Any
-WithInfoWrapValidatorFunction = Callable[[Any, ValidatorFunctionWrapHandler, ValidationInfo], Any]
+WithInfoWrapValidatorFunction = Callable[
+    [Any, ValidatorFunctionWrapHandler, ValidationInfo], Any
+]
 
 
 class WithInfoWrapValidatorFunctionSchema(TypedDict, total=False):
-    type: Required[Literal['with-info']]
+    type: Required[Literal["with-info"]]
     function: Required[WithInfoWrapValidatorFunction]
     field_name: str
 
 
-WrapValidatorFunction = Union[NoInfoWrapValidatorFunctionSchema, WithInfoWrapValidatorFunctionSchema]
+WrapValidatorFunction = Union[
+    NoInfoWrapValidatorFunctionSchema, WithInfoWrapValidatorFunctionSchema
+]
 
 
 class WrapValidatorFunctionSchema(TypedDict, total=False):
-    type: Required[Literal['function-wrap']]
+    type: Required[Literal["function-wrap"]]
     function: Required[WrapValidatorFunction]
     schema: Required[CoreSchema]
     ref: str
@@ -2218,8 +2311,8 @@ def no_info_wrap_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-wrap',
-        function={'type': 'no-info', 'function': function},
+        type="function-wrap",
+        function={"type": "no-info", "function": function},
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2267,8 +2360,10 @@ def with_info_wrap_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-wrap',
-        function=_dict_not_none(type='with-info', function=function, field_name=field_name),
+        type="function-wrap",
+        function=_dict_not_none(
+            type="with-info", function=function, field_name=field_name
+        ),
         schema=schema,
         ref=ref,
         metadata=metadata,
@@ -2277,7 +2372,7 @@ def with_info_wrap_validator_function(
 
 
 class PlainValidatorFunctionSchema(TypedDict, total=False):
-    type: Required[Literal['function-plain']]
+    type: Required[Literal["function-plain"]]
     function: Required[ValidationFunction]
     ref: str
     metadata: Dict[str, Any]
@@ -2313,8 +2408,8 @@ def no_info_plain_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-plain',
-        function={'type': 'no-info', 'function': function},
+        type="function-plain",
+        function={"type": "no-info", "function": function},
         ref=ref,
         metadata=metadata,
         serialization=serialization,
@@ -2352,8 +2447,10 @@ def with_info_plain_validator_function(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='function-plain',
-        function=_dict_not_none(type='with-info', function=function, field_name=field_name),
+        type="function-plain",
+        function=_dict_not_none(
+            type="with-info", function=function, field_name=field_name
+        ),
         ref=ref,
         metadata=metadata,
         serialization=serialization,
@@ -2361,11 +2458,11 @@ def with_info_plain_validator_function(
 
 
 class WithDefaultSchema(TypedDict, total=False):
-    type: Required[Literal['default']]
+    type: Required[Literal["default"]]
     schema: Required[CoreSchema]
     default: Any
     default_factory: Callable[[], Any]
-    on_error: Literal['raise', 'omit', 'default']  # default: 'raise'
+    on_error: Literal["raise", "omit", "default"]  # default: 'raise'
     validate_default: bool  # default: False
     strict: bool
     ref: str
@@ -2378,7 +2475,7 @@ def with_default_schema(
     *,
     default: Any = PydanticUndefined,
     default_factory: Callable[[], Any] | None = None,
-    on_error: Literal['raise', 'omit', 'default'] | None = None,
+    on_error: Literal["raise", "omit", "default"] | None = None,
     validate_default: bool | None = None,
     strict: bool | None = None,
     ref: str | None = None,
@@ -2411,7 +2508,7 @@ def with_default_schema(
         serialization: Custom serialization schema
     """
     s = _dict_not_none(
-        type='default',
+        type="default",
         schema=schema,
         default_factory=default_factory,
         on_error=on_error,
@@ -2422,12 +2519,12 @@ def with_default_schema(
         serialization=serialization,
     )
     if default is not PydanticUndefined:
-        s['default'] = default
+        s["default"] = default
     return s
 
 
 class NullableSchema(TypedDict, total=False):
-    type: Required[Literal['nullable']]
+    type: Required[Literal["nullable"]]
     schema: Required[CoreSchema]
     strict: bool
     ref: str
@@ -2462,19 +2559,24 @@ def nullable_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='nullable', schema=schema, strict=strict, ref=ref, metadata=metadata, serialization=serialization
+        type="nullable",
+        schema=schema,
+        strict=strict,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
     )
 
 
 class UnionSchema(TypedDict, total=False):
-    type: Required[Literal['union']]
+    type: Required[Literal["union"]]
     choices: Required[List[Union[CoreSchema, Tuple[CoreSchema, str]]]]
     # default true, whether to automatically collapse unions with one element to the inner validator
     auto_collapse: bool
     custom_error_type: str
     custom_error_message: str
     custom_error_context: Dict[str, Union[str, int, float]]
-    mode: Literal['smart', 'left_to_right']  # default: 'smart'
+    mode: Literal["smart", "left_to_right"]  # default: 'smart'
     strict: bool
     ref: str
     metadata: Dict[str, Any]
@@ -2488,7 +2590,7 @@ def union_schema(
     custom_error_type: str | None = None,
     custom_error_message: str | None = None,
     custom_error_context: dict[str, str | int] | None = None,
-    mode: Literal['smart', 'left_to_right'] | None = None,
+    mode: Literal["smart", "left_to_right"] | None = None,
     strict: bool | None = None,
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
@@ -2521,7 +2623,7 @@ def union_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='union',
+        type="union",
         choices=choices,
         auto_collapse=auto_collapse,
         custom_error_type=custom_error_type,
@@ -2536,9 +2638,16 @@ def union_schema(
 
 
 class TaggedUnionSchema(TypedDict, total=False):
-    type: Required[Literal['tagged-union']]
+    type: Required[Literal["tagged-union"]]
     choices: Required[Dict[Hashable, CoreSchema]]
-    discriminator: Required[Union[str, List[Union[str, int]], List[List[Union[str, int]]], Callable[[Any], Hashable]]]
+    discriminator: Required[
+        Union[
+            str,
+            List[Union[str, int]],
+            List[List[Union[str, int]]],
+            Callable[[Any], Hashable],
+        ]
+    ]
     custom_error_type: str
     custom_error_message: str
     custom_error_context: Dict[str, Union[str, int, float]]
@@ -2618,7 +2727,7 @@ def tagged_union_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='tagged-union',
+        type="tagged-union",
         choices=choices,
         discriminator=discriminator,
         custom_error_type=custom_error_type,
@@ -2633,7 +2742,7 @@ def tagged_union_schema(
 
 
 class ChainSchema(TypedDict, total=False):
-    type: Required[Literal['chain']]
+    type: Required[Literal["chain"]]
     steps: Required[List[CoreSchema]]
     ref: str
     metadata: Dict[str, Any]
@@ -2671,11 +2780,17 @@ def chain_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='chain', steps=steps, ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="chain",
+        steps=steps,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
+    )
 
 
 class LaxOrStrictSchema(TypedDict, total=False):
-    type: Required[Literal['lax-or-strict']]
+    type: Required[Literal["lax-or-strict"]]
     lax_schema: Required[CoreSchema]
     strict_schema: Required[CoreSchema]
     strict: bool
@@ -2728,7 +2843,7 @@ def lax_or_strict_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='lax-or-strict',
+        type="lax-or-strict",
         lax_schema=lax_schema,
         strict_schema=strict_schema,
         strict=strict,
@@ -2739,7 +2854,7 @@ def lax_or_strict_schema(
 
 
 class JsonOrPythonSchema(TypedDict, total=False):
-    type: Required[Literal['json-or-python']]
+    type: Required[Literal["json-or-python"]]
     json_schema: Required[CoreSchema]
     python_schema: Required[CoreSchema]
     ref: str
@@ -2786,7 +2901,7 @@ def json_or_python_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='json-or-python',
+        type="json-or-python",
         json_schema=json_schema,
         python_schema=python_schema,
         ref=ref,
@@ -2796,7 +2911,7 @@ def json_or_python_schema(
 
 
 class TypedDictField(TypedDict, total=False):
-    type: Required[Literal['typed-dict-field']]
+    type: Required[Literal["typed-dict-field"]]
     schema: Required[CoreSchema]
     required: bool
     validation_alias: Union[str, List[Union[str, int]], List[List[Union[str, int]]]]
@@ -2832,7 +2947,7 @@ def typed_dict_field(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
     """
     return _dict_not_none(
-        type='typed-dict-field',
+        type="typed-dict-field",
         schema=schema,
         required=required,
         validation_alias=validation_alias,
@@ -2843,7 +2958,7 @@ def typed_dict_field(
 
 
 class TypedDictSchema(TypedDict, total=False):
-    type: Required[Literal['typed-dict']]
+    type: Required[Literal["typed-dict"]]
     fields: Required[Dict[str, TypedDictField]]
     cls: Type[TypedDict]
     computed_fields: List[ComputedField]
@@ -2906,7 +3021,7 @@ def typed_dict_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='typed-dict',
+        type="typed-dict",
         fields=fields,
         cls=cls,
         computed_fields=computed_fields,
@@ -2923,7 +3038,7 @@ def typed_dict_schema(
 
 
 class ModelField(TypedDict, total=False):
-    type: Required[Literal['model-field']]
+    type: Required[Literal["model-field"]]
     schema: Required[CoreSchema]
     validation_alias: Union[str, List[Union[str, int]], List[List[Union[str, int]]]]
     serialization_alias: str
@@ -2959,7 +3074,7 @@ def model_field(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
     """
     return _dict_not_none(
-        type='model-field',
+        type="model-field",
         schema=schema,
         validation_alias=validation_alias,
         serialization_alias=serialization_alias,
@@ -2970,7 +3085,7 @@ def model_field(
 
 
 class ModelFieldsSchema(TypedDict, total=False):
-    type: Required[Literal['model-fields']]
+    type: Required[Literal["model-fields"]]
     fields: Required[Dict[str, ModelField]]
     model_name: str
     computed_fields: List[ComputedField]
@@ -3027,7 +3142,7 @@ def model_fields_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='model-fields',
+        type="model-fields",
         fields=fields,
         model_name=model_name,
         computed_fields=computed_fields,
@@ -3043,13 +3158,15 @@ def model_fields_schema(
 
 
 class ModelSchema(TypedDict, total=False):
-    type: Required[Literal['model']]
+    type: Required[Literal["model"]]
     cls: Required[Type[Any]]
     schema: Required[CoreSchema]
     custom_init: bool
     root_model: bool
     post_init: str
-    revalidate_instances: Literal['always', 'never', 'subclass-instances']  # default: 'never'
+    revalidate_instances: Literal[
+        "always", "never", "subclass-instances"
+    ]  # default: 'never'
     strict: bool
     frozen: bool
     extra_behavior: ExtraBehavior
@@ -3066,7 +3183,9 @@ def model_schema(
     custom_init: bool | None = None,
     root_model: bool | None = None,
     post_init: str | None = None,
-    revalidate_instances: Literal['always', 'never', 'subclass-instances'] | None = None,
+    revalidate_instances: (
+        Literal["always", "never", "subclass-instances"] | None
+    ) = None,
     strict: bool | None = None,
     frozen: bool | None = None,
     extra_behavior: ExtraBehavior | None = None,
@@ -3123,7 +3242,7 @@ def model_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='model',
+        type="model",
         cls=cls,
         schema=schema,
         custom_init=custom_init,
@@ -3141,7 +3260,7 @@ def model_schema(
 
 
 class DataclassField(TypedDict, total=False):
-    type: Required[Literal['dataclass-field']]
+    type: Required[Literal["dataclass-field"]]
     name: Required[str]
     schema: Required[CoreSchema]
     kw_only: bool  # default: True
@@ -3194,7 +3313,7 @@ def dataclass_field(
         frozen: Whether the field is frozen
     """
     return _dict_not_none(
-        type='dataclass-field',
+        type="dataclass-field",
         name=name,
         schema=schema,
         kw_only=kw_only,
@@ -3209,7 +3328,7 @@ def dataclass_field(
 
 
 class DataclassArgsSchema(TypedDict, total=False):
-    type: Required[Literal['dataclass-args']]
+    type: Required[Literal["dataclass-args"]]
     dataclass_name: Required[str]
     fields: Required[List[DataclassField]]
     computed_fields: List[ComputedField]
@@ -3262,7 +3381,7 @@ def dataclass_args_schema(
         extra_behavior: How to handle extra fields
     """
     return _dict_not_none(
-        type='dataclass-args',
+        type="dataclass-args",
         dataclass_name=dataclass_name,
         fields=fields,
         computed_fields=computed_fields,
@@ -3276,13 +3395,15 @@ def dataclass_args_schema(
 
 
 class DataclassSchema(TypedDict, total=False):
-    type: Required[Literal['dataclass']]
+    type: Required[Literal["dataclass"]]
     cls: Required[Type[Any]]
     schema: Required[CoreSchema]
     fields: Required[List[str]]
     cls_name: str
     post_init: bool  # default: False
-    revalidate_instances: Literal['always', 'never', 'subclass-instances']  # default: 'never'
+    revalidate_instances: Literal[
+        "always", "never", "subclass-instances"
+    ]  # default: 'never'
     strict: bool  # default: False
     frozen: bool  # default False
     ref: str
@@ -3299,7 +3420,9 @@ def dataclass_schema(
     *,
     cls_name: str | None = None,
     post_init: bool | None = None,
-    revalidate_instances: Literal['always', 'never', 'subclass-instances'] | None = None,
+    revalidate_instances: (
+        Literal["always", "never", "subclass-instances"] | None
+    ) = None,
     strict: bool | None = None,
     ref: str | None = None,
     metadata: Dict[str, Any] | None = None,
@@ -3330,7 +3453,7 @@ def dataclass_schema(
             simply setting `__dict__`, default false
     """
     return _dict_not_none(
-        type='dataclass',
+        type="dataclass",
         cls=cls,
         fields=fields,
         cls_name=cls_name,
@@ -3350,7 +3473,9 @@ def dataclass_schema(
 class ArgumentsParameter(TypedDict, total=False):
     name: Required[str]
     schema: Required[CoreSchema]
-    mode: Literal['positional_only', 'positional_or_keyword', 'keyword_only']  # default positional_or_keyword
+    mode: Literal[
+        "positional_only", "positional_or_keyword", "keyword_only"
+    ]  # default positional_or_keyword
     alias: Union[str, List[Union[str, int]], List[List[Union[str, int]]]]
 
 
@@ -3358,7 +3483,9 @@ def arguments_parameter(
     name: str,
     schema: CoreSchema,
     *,
-    mode: Literal['positional_only', 'positional_or_keyword', 'keyword_only'] | None = None,
+    mode: (
+        Literal["positional_only", "positional_or_keyword", "keyword_only"] | None
+    ) = None,
     alias: str | list[str | int] | list[list[str | int]] | None = None,
 ) -> ArgumentsParameter:
     """
@@ -3385,7 +3512,7 @@ def arguments_parameter(
 
 
 class ArgumentsSchema(TypedDict, total=False):
-    type: Required[Literal['arguments']]
+    type: Required[Literal["arguments"]]
     arguments_schema: Required[List[ArgumentsParameter]]
     populate_by_name: bool
     var_args_schema: CoreSchema
@@ -3432,7 +3559,7 @@ def arguments_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='arguments',
+        type="arguments",
         arguments_schema=arguments,
         populate_by_name=populate_by_name,
         var_args_schema=var_args_schema,
@@ -3444,7 +3571,7 @@ def arguments_schema(
 
 
 class CallSchema(TypedDict, total=False):
-    type: Required[Literal['call']]
+    type: Required[Literal["call"]]
     arguments_schema: Required[CoreSchema]
     function: Required[Callable[..., Any]]
     function_name: str  # default function.__name__
@@ -3497,7 +3624,7 @@ def call_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='call',
+        type="call",
         arguments_schema=arguments,
         function=function,
         function_name=function_name,
@@ -3509,7 +3636,7 @@ def call_schema(
 
 
 class CustomErrorSchema(TypedDict, total=False):
-    type: Required[Literal['custom-error']]
+    type: Required[Literal["custom-error"]]
     schema: Required[CoreSchema]
     custom_error_type: Required[str]
     custom_error_message: str
@@ -3554,7 +3681,7 @@ def custom_error_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='custom-error',
+        type="custom-error",
         schema=schema,
         custom_error_type=custom_error_type,
         custom_error_message=custom_error_message,
@@ -3566,7 +3693,7 @@ def custom_error_schema(
 
 
 class JsonSchema(TypedDict, total=False):
-    type: Required[Literal['json']]
+    type: Required[Literal["json"]]
     schema: CoreSchema
     ref: str
     metadata: Dict[str, Any]
@@ -3616,11 +3743,17 @@ def json_schema(
         metadata: Any other information you want to include with the schema, not used by pydantic-core
         serialization: Custom serialization schema
     """
-    return _dict_not_none(type='json', schema=schema, ref=ref, metadata=metadata, serialization=serialization)
+    return _dict_not_none(
+        type="json",
+        schema=schema,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
+    )
 
 
 class UrlSchema(TypedDict, total=False):
-    type: Required[Literal['url']]
+    type: Required[Literal["url"]]
     max_length: int
     allowed_schemes: List[str]
     host_required: bool  # default False
@@ -3671,7 +3804,7 @@ def url_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='url',
+        type="url",
         max_length=max_length,
         allowed_schemes=allowed_schemes,
         host_required=host_required,
@@ -3686,7 +3819,7 @@ def url_schema(
 
 
 class MultiHostUrlSchema(TypedDict, total=False):
-    type: Required[Literal['multi-host-url']]
+    type: Required[Literal["multi-host-url"]]
     max_length: int
     allowed_schemes: List[str]
     host_required: bool  # default False
@@ -3737,7 +3870,7 @@ def multi_host_url_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='multi-host-url',
+        type="multi-host-url",
         max_length=max_length,
         allowed_schemes=allowed_schemes,
         host_required=host_required,
@@ -3752,14 +3885,16 @@ def multi_host_url_schema(
 
 
 class DefinitionsSchema(TypedDict, total=False):
-    type: Required[Literal['definitions']]
+    type: Required[Literal["definitions"]]
     schema: Required[CoreSchema]
     definitions: Required[List[CoreSchema]]
     metadata: Dict[str, Any]
     serialization: SerSchema
 
 
-def definitions_schema(schema: CoreSchema, definitions: list[CoreSchema]) -> DefinitionsSchema:
+def definitions_schema(
+    schema: CoreSchema, definitions: list[CoreSchema]
+) -> DefinitionsSchema:
     """
     Build a schema that contains both an inner schema and a list of definitions which can be used
     within the inner schema.
@@ -3779,11 +3914,11 @@ def definitions_schema(schema: CoreSchema, definitions: list[CoreSchema]) -> Def
         schema: The inner schema
         definitions: List of definitions which can be referenced within inner schema
     """
-    return DefinitionsSchema(type='definitions', schema=schema, definitions=definitions)
+    return DefinitionsSchema(type="definitions", schema=schema, definitions=definitions)
 
 
 class DefinitionReferenceSchema(TypedDict, total=False):
-    type: Required[Literal['definition-ref']]
+    type: Required[Literal["definition-ref"]]
     schema_ref: Required[str]
     ref: str
     metadata: Dict[str, Any]
@@ -3820,7 +3955,11 @@ def definition_reference_schema(
         serialization: Custom serialization schema
     """
     return _dict_not_none(
-        type='definition-ref', schema_ref=schema_ref, ref=ref, metadata=metadata, serialization=serialization
+        type="definition-ref",
+        schema_ref=schema_ref,
+        ref=ref,
+        metadata=metadata,
+        serialization=serialization,
     )
 
 
@@ -3885,162 +4024,164 @@ elif False:
 
 # to update this, call `pytest -k test_core_schema_type_literal` and copy the output
 CoreSchemaType = Literal[
-    'any',
-    'none',
-    'bool',
-    'int',
-    'float',
-    'decimal',
-    'str',
-    'bytes',
-    'date',
-    'time',
-    'datetime',
-    'timedelta',
-    'literal',
-    'enum',
-    'is-instance',
-    'is-subclass',
-    'callable',
-    'list',
-    'tuple',
-    'set',
-    'frozenset',
-    'generator',
-    'dict',
-    'function-after',
-    'function-before',
-    'function-wrap',
-    'function-plain',
-    'default',
-    'nullable',
-    'union',
-    'tagged-union',
-    'chain',
-    'lax-or-strict',
-    'json-or-python',
-    'typed-dict',
-    'model-fields',
-    'model',
-    'dataclass-args',
-    'dataclass',
-    'arguments',
-    'call',
-    'custom-error',
-    'json',
-    'url',
-    'multi-host-url',
-    'definitions',
-    'definition-ref',
-    'uuid',
-    'complex',
+    "any",
+    "none",
+    "bool",
+    "int",
+    "float",
+    "decimal",
+    "str",
+    "bytes",
+    "date",
+    "time",
+    "datetime",
+    "timedelta",
+    "literal",
+    "enum",
+    "is-instance",
+    "is-subclass",
+    "callable",
+    "list",
+    "tuple",
+    "set",
+    "frozenset",
+    "generator",
+    "dict",
+    "function-after",
+    "function-before",
+    "function-wrap",
+    "function-plain",
+    "default",
+    "nullable",
+    "union",
+    "tagged-union",
+    "chain",
+    "lax-or-strict",
+    "json-or-python",
+    "typed-dict",
+    "model-fields",
+    "model",
+    "dataclass-args",
+    "dataclass",
+    "arguments",
+    "call",
+    "custom-error",
+    "json",
+    "url",
+    "multi-host-url",
+    "definitions",
+    "definition-ref",
+    "uuid",
+    "complex",
 ]
 
-CoreSchemaFieldType = Literal['model-field', 'dataclass-field', 'typed-dict-field', 'computed-field']
+CoreSchemaFieldType = Literal[
+    "model-field", "dataclass-field", "typed-dict-field", "computed-field"
+]
 
 
 # used in _pydantic_core.pyi::PydanticKnownError
 # to update this, call `pytest -k test_all_errors` and copy the output
 ErrorType = Literal[
-    'no_such_attribute',
-    'json_invalid',
-    'json_type',
-    'recursion_loop',
-    'missing',
-    'frozen_field',
-    'frozen_instance',
-    'extra_forbidden',
-    'invalid_key',
-    'get_attribute_error',
-    'model_type',
-    'model_attributes_type',
-    'dataclass_type',
-    'dataclass_exact_type',
-    'none_required',
-    'greater_than',
-    'greater_than_equal',
-    'less_than',
-    'less_than_equal',
-    'multiple_of',
-    'finite_number',
-    'too_short',
-    'too_long',
-    'iterable_type',
-    'iteration_error',
-    'string_type',
-    'string_sub_type',
-    'string_unicode',
-    'string_too_short',
-    'string_too_long',
-    'string_pattern_mismatch',
-    'enum',
-    'dict_type',
-    'mapping_type',
-    'list_type',
-    'tuple_type',
-    'set_type',
-    'bool_type',
-    'bool_parsing',
-    'int_type',
-    'int_parsing',
-    'int_parsing_size',
-    'int_from_float',
-    'float_type',
-    'float_parsing',
-    'bytes_type',
-    'bytes_too_short',
-    'bytes_too_long',
-    'bytes_invalid_encoding',
-    'value_error',
-    'assertion_error',
-    'literal_error',
-    'date_type',
-    'date_parsing',
-    'date_from_datetime_parsing',
-    'date_from_datetime_inexact',
-    'date_past',
-    'date_future',
-    'time_type',
-    'time_parsing',
-    'datetime_type',
-    'datetime_parsing',
-    'datetime_object_invalid',
-    'datetime_from_date_parsing',
-    'datetime_past',
-    'datetime_future',
-    'timezone_naive',
-    'timezone_aware',
-    'timezone_offset',
-    'time_delta_type',
-    'time_delta_parsing',
-    'frozen_set_type',
-    'is_instance_of',
-    'is_subclass_of',
-    'callable_type',
-    'union_tag_invalid',
-    'union_tag_not_found',
-    'arguments_type',
-    'missing_argument',
-    'unexpected_keyword_argument',
-    'missing_keyword_only_argument',
-    'unexpected_positional_argument',
-    'missing_positional_only_argument',
-    'multiple_argument_values',
-    'url_type',
-    'url_parsing',
-    'url_syntax_violation',
-    'url_too_long',
-    'url_scheme',
-    'uuid_type',
-    'uuid_parsing',
-    'uuid_version',
-    'decimal_type',
-    'decimal_parsing',
-    'decimal_max_digits',
-    'decimal_max_places',
-    'decimal_whole_digits',
-    'complex_type',
-    'complex_str_parsing',
+    "no_such_attribute",
+    "json_invalid",
+    "json_type",
+    "recursion_loop",
+    "missing",
+    "frozen_field",
+    "frozen_instance",
+    "extra_forbidden",
+    "invalid_key",
+    "get_attribute_error",
+    "model_type",
+    "model_attributes_type",
+    "dataclass_type",
+    "dataclass_exact_type",
+    "none_required",
+    "greater_than",
+    "greater_than_equal",
+    "less_than",
+    "less_than_equal",
+    "multiple_of",
+    "finite_number",
+    "too_short",
+    "too_long",
+    "iterable_type",
+    "iteration_error",
+    "string_type",
+    "string_sub_type",
+    "string_unicode",
+    "string_too_short",
+    "string_too_long",
+    "string_pattern_mismatch",
+    "enum",
+    "dict_type",
+    "mapping_type",
+    "list_type",
+    "tuple_type",
+    "set_type",
+    "bool_type",
+    "bool_parsing",
+    "int_type",
+    "int_parsing",
+    "int_parsing_size",
+    "int_from_float",
+    "float_type",
+    "float_parsing",
+    "bytes_type",
+    "bytes_too_short",
+    "bytes_too_long",
+    "bytes_invalid_encoding",
+    "value_error",
+    "assertion_error",
+    "literal_error",
+    "date_type",
+    "date_parsing",
+    "date_from_datetime_parsing",
+    "date_from_datetime_inexact",
+    "date_past",
+    "date_future",
+    "time_type",
+    "time_parsing",
+    "datetime_type",
+    "datetime_parsing",
+    "datetime_object_invalid",
+    "datetime_from_date_parsing",
+    "datetime_past",
+    "datetime_future",
+    "timezone_naive",
+    "timezone_aware",
+    "timezone_offset",
+    "time_delta_type",
+    "time_delta_parsing",
+    "frozen_set_type",
+    "is_instance_of",
+    "is_subclass_of",
+    "callable_type",
+    "union_tag_invalid",
+    "union_tag_not_found",
+    "arguments_type",
+    "missing_argument",
+    "unexpected_keyword_argument",
+    "missing_keyword_only_argument",
+    "unexpected_positional_argument",
+    "missing_positional_only_argument",
+    "multiple_argument_values",
+    "url_type",
+    "url_parsing",
+    "url_syntax_violation",
+    "url_too_long",
+    "url_scheme",
+    "uuid_type",
+    "uuid_parsing",
+    "uuid_version",
+    "decimal_type",
+    "decimal_parsing",
+    "decimal_max_digits",
+    "decimal_max_places",
+    "decimal_whole_digits",
+    "complex_type",
+    "complex_str_parsing",
 ]
 
 
@@ -4053,85 +4194,122 @@ def _dict_not_none(**kwargs: Any) -> Any:
 # They're kept because some code external code will be using them
 
 
-@deprecated('`field_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.')
-def field_before_validator_function(function: WithInfoValidatorFunction, field_name: str, schema: CoreSchema, **kwargs):
+@deprecated(
+    "`field_before_validator_function` is deprecated, use `with_info_before_validator_function` instead."
+)
+def field_before_validator_function(
+    function: WithInfoValidatorFunction,
+    field_name: str,
+    schema: CoreSchema,
+    **kwargs,
+):
     warnings.warn(
-        '`field_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.',
+        "`field_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.",
         DeprecationWarning,
     )
-    return with_info_before_validator_function(function, schema, field_name=field_name, **kwargs)
+    return with_info_before_validator_function(
+        function, schema, field_name=field_name, **kwargs
+    )
 
 
-@deprecated('`general_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.')
+@deprecated(
+    "`general_before_validator_function` is deprecated, use `with_info_before_validator_function` instead."
+)
 def general_before_validator_function(*args, **kwargs):
     warnings.warn(
-        '`general_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.',
+        "`general_before_validator_function` is deprecated, use `with_info_before_validator_function` instead.",
         DeprecationWarning,
     )
     return with_info_before_validator_function(*args, **kwargs)
 
 
-@deprecated('`field_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.')
-def field_after_validator_function(function: WithInfoValidatorFunction, field_name: str, schema: CoreSchema, **kwargs):
+@deprecated(
+    "`field_after_validator_function` is deprecated, use `with_info_after_validator_function` instead."
+)
+def field_after_validator_function(
+    function: WithInfoValidatorFunction,
+    field_name: str,
+    schema: CoreSchema,
+    **kwargs,
+):
     warnings.warn(
-        '`field_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.',
+        "`field_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.",
         DeprecationWarning,
     )
-    return with_info_after_validator_function(function, schema, field_name=field_name, **kwargs)
+    return with_info_after_validator_function(
+        function, schema, field_name=field_name, **kwargs
+    )
 
 
-@deprecated('`general_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.')
+@deprecated(
+    "`general_after_validator_function` is deprecated, use `with_info_after_validator_function` instead."
+)
 def general_after_validator_function(*args, **kwargs):
     warnings.warn(
-        '`general_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.',
+        "`general_after_validator_function` is deprecated, use `with_info_after_validator_function` instead.",
         DeprecationWarning,
     )
     return with_info_after_validator_function(*args, **kwargs)
 
 
-@deprecated('`field_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.')
+@deprecated(
+    "`field_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead."
+)
 def field_wrap_validator_function(
-    function: WithInfoWrapValidatorFunction, field_name: str, schema: CoreSchema, **kwargs
+    function: WithInfoWrapValidatorFunction,
+    field_name: str,
+    schema: CoreSchema,
+    **kwargs,
 ):
     warnings.warn(
-        '`field_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.',
+        "`field_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.",
         DeprecationWarning,
     )
-    return with_info_wrap_validator_function(function, schema, field_name=field_name, **kwargs)
+    return with_info_wrap_validator_function(
+        function, schema, field_name=field_name, **kwargs
+    )
 
 
-@deprecated('`general_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.')
+@deprecated(
+    "`general_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead."
+)
 def general_wrap_validator_function(*args, **kwargs):
     warnings.warn(
-        '`general_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.',
+        "`general_wrap_validator_function` is deprecated, use `with_info_wrap_validator_function` instead.",
         DeprecationWarning,
     )
     return with_info_wrap_validator_function(*args, **kwargs)
 
 
-@deprecated('`field_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.')
-def field_plain_validator_function(function: WithInfoValidatorFunction, field_name: str, **kwargs):
+@deprecated(
+    "`field_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead."
+)
+def field_plain_validator_function(
+    function: WithInfoValidatorFunction, field_name: str, **kwargs
+):
     warnings.warn(
-        '`field_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.',
+        "`field_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.",
         DeprecationWarning,
     )
     return with_info_plain_validator_function(function, field_name=field_name, **kwargs)
 
 
-@deprecated('`general_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.')
+@deprecated(
+    "`general_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead."
+)
 def general_plain_validator_function(*args, **kwargs):
     warnings.warn(
-        '`general_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.',
+        "`general_plain_validator_function` is deprecated, use `with_info_plain_validator_function` instead.",
         DeprecationWarning,
     )
     return with_info_plain_validator_function(*args, **kwargs)
 
 
 _deprecated_import_lookup = {
-    'FieldValidationInfo': ValidationInfo,
-    'FieldValidatorFunction': WithInfoValidatorFunction,
-    'GeneralValidatorFunction': WithInfoValidatorFunction,
-    'FieldWrapValidatorFunction': WithInfoWrapValidatorFunction,
+    "FieldValidationInfo": ValidationInfo,
+    "FieldValidatorFunction": WithInfoValidatorFunction,
+    "GeneralValidatorFunction": WithInfoValidatorFunction,
+    "FieldWrapValidatorFunction": WithInfoWrapValidatorFunction,
 }
 
 if TYPE_CHECKING:
@@ -4145,6 +4323,6 @@ def __getattr__(attr_name: str) -> object:
     else:
         import warnings
 
-        msg = f'`{attr_name}` is deprecated, use `{new_attr.__name__}` instead.'
+        msg = f"`{attr_name}` is deprecated, use `{new_attr.__name__}` instead."
         warnings.warn(msg, DeprecationWarning, stacklevel=1)
         return new_attr

@@ -175,7 +175,9 @@ class URL(Validator):
             key = (relative, absolute, require_tld)
             if key not in self._memoized:
                 self._memoized[key] = self._regex_generator(
-                    relative=relative, absolute=absolute, require_tld=require_tld
+                    relative=relative,
+                    absolute=absolute,
+                    require_tld=require_tld,
                 )
 
             return self._memoized[key]
@@ -223,7 +225,9 @@ class URL(Validator):
                 raise ValidationError(message)
 
         regex = self._regex(
-            relative=self.relative, absolute=self.absolute, require_tld=self.require_tld
+            relative=self.relative,
+            absolute=self.absolute,
+            require_tld=self.require_tld,
         )
 
         # Hostname is optional for file URLS. If absent it means `localhost`.
@@ -256,8 +260,7 @@ class Email(Validator):
 
     DOMAIN_REGEX = re.compile(
         # domain
-        r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+"
-        r"(?:[A-Z]{2,6}|[A-Z0-9-]{2,})\Z"
+        r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+" r"(?:[A-Z]{2,6}|[A-Z0-9-]{2,})\Z"
         # literal form, ipv4 address (SMTP 4.1.3)
         r"|^\[(25[0-5]|2[0-4]\d|[0-1]?\d?\d)"
         r"(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\]\Z",

@@ -6,13 +6,10 @@ Comprehensive script to set up the entire project structure,
 create necessary directories, and perform initial configuration.
 """
 
-import json
 import logging
 import os
-import shutil
 import subprocess
 import sys
-from typing import Any, Dict, List
 
 import yaml
 
@@ -73,9 +70,18 @@ class ProjectInitializer:
             ],
             "backend_subdirs": ["services", "config", "tests", "middleware"],
             "web_ui_subdirs": ["src", "public", "components", "styles"],
-            "model_management_subdirs": ["gpt4all", "deepseek", "llama2", "molmo"],
+            "model_management_subdirs": [
+                "gpt4all",
+                "deepseek",
+                "llama2",
+                "molmo",
+            ],
             "packages_subdirs": ["wheels", "node"],
-            "security_subdirs": ["authentication", "encryption", "access_control"],
+            "security_subdirs": [
+                "authentication",
+                "encryption",
+                "access_control",
+            ],
         }
 
         # Create root directories
@@ -89,7 +95,9 @@ class ProjectInitializer:
             if parent_dir.endswith("_subdirs"):
                 parent = parent_dir.replace("_subdirs", "")
                 for subdir in subdirs:
-                    subdir_path = os.path.join(self.project_root, parent, subdir)
+                    subdir_path = os.path.join(
+                        self.project_root, parent, subdir
+                    )
                     os.makedirs(subdir_path, exist_ok=True)
                     self.logger.info(f"Created subdirectory: {subdir_path}")
 
@@ -116,11 +124,15 @@ class ProjectInitializer:
 
         try:
             # Create virtual environment
-            subprocess.run([sys.executable, "-m", "venv", venv_path], check=True)
+            subprocess.run(
+                [sys.executable, "-m", "venv", venv_path], check=True
+            )
 
             # Activate virtual environment and upgrade pip
             pip_path = os.path.join(venv_path, "bin", "pip")
-            subprocess.run([pip_path, "install", "--upgrade", "pip"], check=True)
+            subprocess.run(
+                [pip_path, "install", "--upgrade", "pip"], check=True
+            )
 
             self.logger.info("Virtual Environment Created Successfully")
         except subprocess.CalledProcessError as e:
@@ -138,7 +150,9 @@ class ProjectInitializer:
 
         try:
             # Install dependencies
-            subprocess.run([pip_path, "install", "-r", requirements_path], check=True)
+            subprocess.run(
+                [pip_path, "install", "-r", requirements_path], check=True
+            )
 
             self.logger.info("Dependencies Installed Successfully")
         except subprocess.CalledProcessError as e:
@@ -232,7 +246,9 @@ node_modules/
             self.create_configuration_files()
             self.initialize_git_repository()
 
-            self.logger.info("SutazAI Project Initialization Completed Successfully")
+            self.logger.info(
+                "SutazAI Project Initialization Completed Successfully"
+            )
         except Exception as e:
             self.logger.critical(f"Project Initialization Failed: {e}")
             raise
@@ -240,7 +256,9 @@ node_modules/
 
 def main():
     # Determine project root (one directory up from the script)
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    project_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
 
     initializer = ProjectInitializer(project_root)
     initializer.run_initialization()

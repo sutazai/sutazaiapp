@@ -97,7 +97,10 @@ struct mach_header_64 {
 };
 """
 
-fat_header_fields = [("magic", ctypes.c_uint32), ("nfat_arch", ctypes.c_uint32)]
+fat_header_fields = [
+    ("magic", ctypes.c_uint32),
+    ("nfat_arch", ctypes.c_uint32),
+]
 """
 struct fat_header {
     uint32_t	magic;		/* FAT_MAGIC or FAT_MAGIC_64 */
@@ -278,7 +281,12 @@ def read_data(struct_class, lib_file):
 def extract_macosx_min_system_version(path_to_lib):
     with open(path_to_lib, "rb") as lib_file:
         BaseClass, magic_number = get_base_class_and_magic_number(lib_file, 0)
-        if magic_number not in [FAT_MAGIC, FAT_MAGIC_64, MH_MAGIC, MH_MAGIC_64]:
+        if magic_number not in [
+            FAT_MAGIC,
+            FAT_MAGIC_64,
+            MH_MAGIC,
+            MH_MAGIC_64,
+        ]:
             return
 
         if magic_number in [FAT_MAGIC, FAT_CIGAM_64]:

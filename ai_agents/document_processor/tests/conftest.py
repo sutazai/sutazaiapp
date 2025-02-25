@@ -27,7 +27,8 @@ def pytest_configure(config):
 
     # Add custom markers
     config.addinivalue_line(
-        "markers", "document_processor: mark test as a document processor agent test"
+        "markers",
+        "document_processor: mark test as a document processor agent test",
     )
 
 
@@ -39,7 +40,10 @@ def pytest_addoption(parser):
         parser (pytest.Parser): Pytest argument parser
     """
     parser.addoption(
-        "--env", action="store", default="test", help="Specify test environment"
+        "--env",
+        action="store",
+        default="test",
+        help="Specify test environment",
     )
     parser.addoption(
         "--log-level", action="store", default="INFO", help="Set logging level"
@@ -67,7 +71,11 @@ def test_environment(request):
             "log_level": log_level,
             "temp_dir": "/tmp/sutazai_test",
         },
-        "dev": {"debug": True, "log_level": "DEBUG", "temp_dir": "/tmp/sutazai_dev"},
+        "dev": {
+            "debug": True,
+            "log_level": "DEBUG",
+            "temp_dir": "/tmp/sutazai_dev",
+        },
     }
 
     # Create temp directory if not exists

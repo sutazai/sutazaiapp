@@ -54,7 +54,10 @@ class AtomsLexer(RegexLexer):
         ],
         "date_constraints": [
             # ISO 8601-based date/time constraints
-            (r"[Xx?YyMmDdHhSs\d]{2,4}([:-][Xx?YyMmDdHhSs\d]{2}){2}", Literal.Date),
+            (
+                r"[Xx?YyMmDdHhSs\d]{2,4}([:-][Xx?YyMmDdHhSs\d]{2}){2}",
+                Literal.Date,
+            ),
             # ISO 8601-based duration constraints + optional trailing slash
             (r"(P[YyMmWwDd]+(T[HhMmSs]+)?|PT[HhMmSs]+)/?", Literal.Date),
         ],
@@ -78,7 +81,10 @@ class AtomsLexer(RegexLexer):
             include("ordered_values"),
             (r"([Tt]rue|[Ff]alse)", Literal),
             (r'"', String, "string"),
-            (r"'(\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'", String.Char),
+            (
+                r"'(\\.|\\[0-7]{1,3}|\\x[a-fA-F0-9]{1,2}|[^\\\'\n])'",
+                String.Char,
+            ),
             (r"[a-z][a-z0-9+.-]*:", Literal, "uri"),
             # term code
             (
@@ -181,7 +187,11 @@ class OdinLexer(AtomsLexer):
             (r"[a-z_]\w*", Name.Class),
             (r"/", Punctuation),
             (r"\[", Punctuation, "key"),
-            (r"(\s*)(,)(\s*)", bygroups(Whitespace, Punctuation, Whitespace), "#pop"),
+            (
+                r"(\s*)(,)(\s*)",
+                bygroups(Whitespace, Punctuation, Whitespace),
+                "#pop",
+            ),
             (r"\s+", Whitespace, "#pop"),
         ],
         "key": [
@@ -250,14 +260,22 @@ class CadlLexer(AtomsLexer):
             (
                 r"(\{)(\s*)(/[^}]+/)(\s*)(\})",
                 bygroups(
-                    Punctuation, Whitespace, String.Regex, Whitespace, Punctuation
+                    Punctuation,
+                    Whitespace,
+                    String.Regex,
+                    Whitespace,
+                    Punctuation,
                 ),
             ),
             # regex in slot or as string constraint
             (
                 r"(\{)(\s*)(\^[^}]+\^)(\s*)(\})",
                 bygroups(
-                    Punctuation, Whitespace, String.Regex, Whitespace, Punctuation
+                    Punctuation,
+                    Whitespace,
+                    String.Regex,
+                    Whitespace,
+                    Punctuation,
                 ),
             ),
             (r"/", Punctuation, "path"),

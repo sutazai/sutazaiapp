@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from ruamel.yaml.composer import Composer
@@ -18,7 +17,7 @@ if False:  # MYPY
 
     from ruamel.yaml.compat import StreamTextType, VersionType  # NOQA
 
-__all__ = ['BaseLoader', 'SafeLoader', 'Loader', 'RoundTripLoader']
+__all__ = ["BaseLoader", "SafeLoader", "Loader", "RoundTripLoader"]
 
 
 class BaseLoader(Reader, Scanner, Parser, Composer, BaseConstructor, VersionedResolver):
@@ -89,5 +88,7 @@ class RoundTripLoader(
         RoundTripScanner.__init__(self, loader=self)
         RoundTripParser.__init__(self, loader=self)
         Composer.__init__(self, loader=self)
-        RoundTripConstructor.__init__(self, preserve_quotes=preserve_quotes, loader=self)
+        RoundTripConstructor.__init__(
+            self, preserve_quotes=preserve_quotes, loader=self
+        )
         VersionedResolver.__init__(self, version, loader=self)

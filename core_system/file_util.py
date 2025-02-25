@@ -9,7 +9,11 @@ from ._log import log
 from .errors import DistutilsFileError
 
 # for generating verbose output in 'copy_file()'
-_copy_action = {None: "copying", "hard": "hard linking", "sym": "symbolically linking"}
+_copy_action = {
+    None: "copying",
+    "hard": "hard linking",
+    "sym": "symbolically linking",
+}
 
 
 def _copy_file_contents(src, dst, buffer_size=16 * 1024):  # noqa: C901

@@ -1,2 +1,2 @@
-    class DatabaseIndexing:    def __init__(self, db_url):        self.db_url = (db_url    def create_index(self), table, column):        with self.db_url.connect() as conn:            conn.execute(f"CREATE INDEX idx_{table}_{column} ON {table}({column})")
-    
+class DatabaseIndexing:
+    def __init__(self, db_url): self.db_url = (db_url def create_index(self), table, column): with self.db_url.connect() as conn: conn.execute(f"CREATE INDEX idx_{table}_{column} ON {table}({column})")

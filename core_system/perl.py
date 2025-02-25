@@ -103,7 +103,12 @@ class PerlLexer(RegexLexer):
             (
                 r"(format)(\s+)(\w+)(\s*)(=)(\s*\n)",
                 bygroups(
-                    Keyword, Whitespace, Name, Whitespace, Punctuation, Whitespace
+                    Keyword,
+                    Whitespace,
+                    Name,
+                    Whitespace,
+                    Punctuation,
+                    Whitespace,
                 ),
                 "format",
             ),
@@ -124,13 +129,28 @@ class PerlLexer(RegexLexer):
                 String.Regex,
             ),
             # balanced delimiters
-            (r"s\{(\\\\|\\[^\\]|[^\\}])*\}\s*", String.Regex, "balanced-regex"),
+            (
+                r"s\{(\\\\|\\[^\\]|[^\\}])*\}\s*",
+                String.Regex,
+                "balanced-regex",
+            ),
             (r"s<(\\\\|\\[^\\]|[^\\>])*>\s*", String.Regex, "balanced-regex"),
-            (r"s\[(\\\\|\\[^\\]|[^\\\]])*\]\s*", String.Regex, "balanced-regex"),
-            (r"s\((\\\\|\\[^\\]|[^\\)])*\)\s*", String.Regex, "balanced-regex"),
+            (
+                r"s\[(\\\\|\\[^\\]|[^\\\]])*\]\s*",
+                String.Regex,
+                "balanced-regex",
+            ),
+            (
+                r"s\((\\\\|\\[^\\]|[^\\)])*\)\s*",
+                String.Regex,
+                "balanced-regex",
+            ),
             (r"m?/(\\\\|\\[^\\]|[^\\/\n])*/[gcimosx]*", String.Regex),
             (r"m(?=[/!\\{<\[(@%$])", String.Regex, "balanced-regex"),
-            (r"((?<==~)|(?<=\())\s*/(\\\\|\\[^\\]|[^\\/])*/[gcimosx]*", String.Regex),
+            (
+                r"((?<==~)|(?<=\())\s*/(\\\\|\\[^\\]|[^\\/])*/[gcimosx]*",
+                String.Regex,
+            ),
             (r"\s+", Whitespace),
             (
                 words(
@@ -336,7 +356,10 @@ class PerlLexer(RegexLexer):
                 ),
                 Name.Builtin,
             ),
-            (r"((__(DATA|DIE|WARN)__)|(STD(IN|OUT|ERR)))\b", Name.Builtin.Pseudo),
+            (
+                r"((__(DATA|DIE|WARN)__)|(STD(IN|OUT|ERR)))\b",
+                Name.Builtin.Pseudo,
+            ),
             (
                 r'(<<)([\'"]?)([a-zA-Z_]\w*)(\2;?\n.*?\n)(\3)(\n)',
                 bygroups(
@@ -350,7 +373,10 @@ class PerlLexer(RegexLexer):
             ),
             (r"__END__", Comment.Preproc, "end-part"),
             (r"\$\^[ADEFHILMOPSTWX]", Name.Variable.Global),
-            (r"\$[\\\"\[\]'&`+*.,;=%~?@$!<>(^|/-](?!\w)", Name.Variable.Global),
+            (
+                r"\$[\\\"\[\]'&`+*.,;=%~?@$!<>(^|/-](?!\w)",
+                Name.Variable.Global,
+            ),
             (r"[$@%#]+", Name.Variable, "varname"),
             (r"0_?[0-7]+(_[0-7]+)*", Number.Oct),
             (r"0x[0-9A-Fa-f]+(_[0-9A-Fa-f]+)*", Number.Hex),
@@ -379,7 +405,10 @@ class PerlLexer(RegexLexer):
                 bygroups(Keyword, Whitespace, Name.Namespace),
             ),
             (r"(sub)(\s+)", bygroups(Keyword, Whitespace), "funcname"),
-            (words(("no", "package", "require", "use"), suffix=r"\b"), Keyword),
+            (
+                words(("no", "package", "require", "use"), suffix=r"\b"),
+                Keyword,
+            ),
             (
                 r"(\[\]|\*\*|::|<<|>>|>=|<=>|<=|={3}|!=|=~|" r"!~|&&?|\|\||\.{1,3})",
                 Operator,
@@ -401,7 +430,11 @@ class PerlLexer(RegexLexer):
             (r"[\w:]+", Name.Variable, "#pop"),
         ],
         "name": [
-            (r"[a-zA-Z_]\w*(::[a-zA-Z_]\w*)*(::)?(?=\s*->)", Name.Namespace, "#pop"),
+            (
+                r"[a-zA-Z_]\w*(::[a-zA-Z_]\w*)*(::)?(?=\s*->)",
+                Name.Namespace,
+                "#pop",
+            ),
             (r"[a-zA-Z_]\w*(::[a-zA-Z_]\w*)*::", Name.Namespace, "#pop"),
             (r"[\w:]+", Name, "#pop"),
             (r"[A-Z_]+(?=\W)", Name.Constant, "#pop"),
@@ -1911,7 +1944,7 @@ class Perl6Lexer(ExtendedRegexLexer):
                 end_pos = len(text)
 
             if adverbs is not None and re.search(r":to\b", adverbs):
-                heredoc_terminator = text[match.start("delimiter") + n_chars : end_pos]
+                heredoc_terminator = text[match.start("delimiter") + n_chars: end_pos]
                 end_heredoc = re.search(
                     r"^\s*" + re.escape(heredoc_terminator) + r"\s*$",
                     text[end_pos:],
@@ -1923,7 +1956,7 @@ class Perl6Lexer(ExtendedRegexLexer):
                 else:
                     end_pos = len(text)
 
-            yield match.start(), token_class, text[match.start() : end_pos + n_chars]
+            yield match.start(), token_class, text[match.start(): end_pos + n_chars]
             context.pos = end_pos + n_chars
 
         return callback
@@ -1931,7 +1964,7 @@ class Perl6Lexer(ExtendedRegexLexer):
     def opening_brace_callback(lexer, match, context):
         stack = context.stack
 
-        yield match.start(), Text, context.text[match.start() : match.end()]
+        yield match.start(), Text, context.text[match.start(): match.end()]
         context.pos = match.end()
 
         # if we encounter an opening brace and we're one level
@@ -1944,7 +1977,7 @@ class Perl6Lexer(ExtendedRegexLexer):
     def closing_brace_callback(lexer, match, context):
         stack = context.stack
 
-        yield match.start(), Text, context.text[match.start() : match.end()]
+        yield match.start(), Text, context.text[match.start(): match.end()]
         context.pos = match.end()
 
         # if we encounter a free closing brace and we're one level
@@ -1957,7 +1990,7 @@ class Perl6Lexer(ExtendedRegexLexer):
 
     def embedded_perl6_callback(lexer, match, context):
         context.perl6_token_nesting_level = 1
-        yield match.start(), Text, context.text[match.start() : match.end()]
+        yield match.start(), Text, context.text[match.start(): match.end()]
         context.pos = match.end()
         context.stack.append("root")
 
@@ -1992,15 +2025,26 @@ class Perl6Lexer(ExtendedRegexLexer):
                 "pre-token",
             ),
             # deal with a special case in the Perl 6 grammar (role q { ... })
-            (r"(role)(\s+)(q)(\s*)", bygroups(Keyword, Whitespace, Name, Whitespace)),
-            (_build_word_match(PERL6_KEYWORDS, PERL6_IDENTIFIER_RANGE), Keyword),
+            (
+                r"(role)(\s+)(q)(\s*)",
+                bygroups(Keyword, Whitespace, Name, Whitespace),
+            ),
+            (
+                _build_word_match(PERL6_KEYWORDS, PERL6_IDENTIFIER_RANGE),
+                Keyword,
+            ),
             (
                 _build_word_match(
-                    PERL6_BUILTIN_CLASSES, PERL6_IDENTIFIER_RANGE, suffix="(?::[UD])?"
+                    PERL6_BUILTIN_CLASSES,
+                    PERL6_IDENTIFIER_RANGE,
+                    suffix="(?::[UD])?",
                 ),
                 Name.Builtin,
             ),
-            (_build_word_match(PERL6_BUILTINS, PERL6_IDENTIFIER_RANGE), Name.Builtin),
+            (
+                _build_word_match(PERL6_BUILTINS, PERL6_IDENTIFIER_RANGE),
+                Name.Builtin,
+            ),
             # copied from PerlLexer
             (
                 r"[$@%&][.^:?=!~]?"
@@ -2129,7 +2173,8 @@ class Perl6Lexer(ExtendedRegexLexer):
                 return True
             # match class, module, role, enum, grammar declarations
             class_decl = re.match(
-                r"^\s*(?:(?P<scope>my|our)\s+)?(?:module|class|role|enum|grammar)", line
+                r"^\s*(?:(?P<scope>my|our)\s+)?(?:module|class|role|enum|grammar)",
+                line,
             )
             if class_decl:
                 if saw_perl_decl or class_decl.group("scope") is not None:

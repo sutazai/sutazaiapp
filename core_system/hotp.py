@@ -33,11 +33,7 @@ def _generate_uri(
 
     parameters.extend(extra_parameters)
 
-    label = (
-        f"{quote(issuer)}:{quote(account_name)}"
-        if issuer
-        else quote(account_name)
-    )
+    label = f"{quote(issuer)}:{quote(account_name)}" if issuer else quote(account_name)
     return f"otpauth://{type_name}/{label}?{urlencode(parameters)}"
 
 
@@ -89,7 +85,7 @@ class HOTP:
         hmac_value = ctx.finalize()
 
         offset = hmac_value[len(hmac_value) - 1] & 0b1111
-        p = hmac_value[offset : offset + 4]
+        p = hmac_value[offset: offset + 4]
         return int.from_bytes(p, byteorder="big") & 0x7FFFFFFF
 
     def get_provisioning_uri(

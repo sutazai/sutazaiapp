@@ -7,7 +7,16 @@ import uuid
 import zipfile
 from optparse import Values
 from pathlib import Path
-from typing import Any, Collection, Dict, Iterable, List, Optional, Sequence, Union
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Union,
+)
 
 from pip._internal.build_env import BuildEnvironment, NoOpBuildEnvironment
 from pip._internal.exceptions import InstallationError, PreviousBuildDirError
@@ -22,7 +31,9 @@ from pip._internal.metadata.base import FilesystemWheel
 from pip._internal.models.direct_url import DirectUrl
 from pip._internal.models.link import Link
 from pip._internal.operations.build.metadata import generate_metadata
-from pip._internal.operations.build.metadata_editable import generate_editable_metadata
+from pip._internal.operations.build.metadata_editable import (
+    generate_editable_metadata,
+)
 from pip._internal.operations.build.metadata_legacy import (
     generate_metadata as generate_metadata_legacy,
 )
@@ -273,7 +284,10 @@ class InstallRequirement:
         """
         assert self.req is not None
         specifiers = self.req.specifier
-        return len(specifiers) == 1 and next(iter(specifiers)).operator in {"==", "==="}
+        return len(specifiers) == 1 and next(iter(specifiers)).operator in {
+            "==",
+            "===",
+        }
 
     def match_markers(self, extras_requested: Optional[Iterable[str]] = None) -> bool:
         if not extras_requested:
@@ -482,7 +496,8 @@ class InstallRequirement:
     def unpacked_source_directory(self) -> str:
         assert self.source_dir, f"No source dir for {self}"
         return os.path.join(
-            self.source_dir, self.link and self.link.subdirectory_fragment or ""
+            self.source_dir,
+            self.link and self.link.subdirectory_fragment or "",
         )
 
     @property
@@ -513,7 +528,10 @@ class InstallRequirement:
         follow the PEP 517 or legacy (setup.py) code path.
         """
         pyproject_toml_data = load_pyproject_toml(
-            self.use_pep517, self.pyproject_toml_path, self.setup_py_path, str(self)
+            self.use_pep517,
+            self.pyproject_toml_path,
+            self.setup_py_path,
+            str(self),
         )
 
         if pyproject_toml_data is None:
@@ -731,7 +749,7 @@ class InstallRequirement:
             assert name.startswith(
                 prefix + os.path.sep
             ), f"name {name!r} doesn't start with prefix {prefix!r}"
-            name = name[len(prefix) + 1 :]
+            name = name[len(prefix) + 1:]
             name = name.replace(os.path.sep, "/")
             return name
 
@@ -836,7 +854,7 @@ class InstallRequirement:
                     self,
                 )
             install_editable_legacy(
-                global_options=global_options if global_options is not None else [],
+                global_options=(global_options if global_options is not None else []),
                 prefix=prefix,
                 home=home,
                 use_user_site=use_user_site,

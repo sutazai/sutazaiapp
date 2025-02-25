@@ -16,7 +16,13 @@ from dataclasses import dataclass
 from cryptography import utils
 from cryptography.exceptions import UnsupportedAlgorithm
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import dsa, ec, ed25519, padding, rsa
+from cryptography.hazmat.primitives.asymmetric import (
+    dsa,
+    ec,
+    ed25519,
+    padding,
+    rsa,
+)
 from cryptography.hazmat.primitives.asymmetric import utils as asym_utils
 from cryptography.hazmat.primitives.ciphers import (
     AEADDecryptionContext,
@@ -192,7 +198,7 @@ def _init_cipher(
     seed = _bcrypt_kdf(password, salt, ciph.key_len + ciph.iv_len, rounds, True)
     return Cipher(
         ciph.alg(seed[: ciph.key_len]),
-        ciph.mode(seed[ciph.key_len :]),
+        ciph.mode(seed[ciph.key_len:]),
     )
 
 
@@ -642,7 +648,7 @@ def load_ssh_private_key(
     data = binascii.a2b_base64(memoryview(data)[p1:p2])
     if not data.startswith(_SK_MAGIC):
         raise ValueError("Not OpenSSH private key format")
-    data = memoryview(data)[len(_SK_MAGIC) :]
+    data = memoryview(data)[len(_SK_MAGIC):]
 
     # parse header
     ciphername, data = _get_sshstr(data)

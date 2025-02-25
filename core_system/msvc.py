@@ -62,7 +62,7 @@ class PlatformInfo:
         str
             Target CPU
         """
-        return self.arch[self.arch.find("_") + 1 :]
+        return self.arch[self.arch.find("_") + 1:]
 
     def target_is_x86(self):
         """
@@ -611,7 +611,9 @@ class SystemInfo:
         return self._use_last_dir_name(os.path.join(self.WindowsSdkDir, "lib"))
 
     @property
-    def WindowsSdkDir(self) -> str | None:  # noqa: C901  # is too complex (12)  # FIXME
+    def WindowsSdkDir(
+        self,
+    ) -> str | None:  # noqa: C901  # is too complex (12)  # FIXME
         """
         Microsoft Windows SDK directory.
 
@@ -748,7 +750,17 @@ class SystemInfo:
         """
         # Set FxSdk versions for specified VS version
         return (
-            ("4.7.2", "4.7.1", "4.7", "4.6.2", "4.6.1", "4.6", "4.5.2", "4.5.1", "4.5")
+            (
+                "4.7.2",
+                "4.7.1",
+                "4.7",
+                "4.6.2",
+                "4.6.1",
+                "4.6",
+                "4.5.2",
+                "4.5.1",
+                "4.5",
+            )
             if self.vs_ver >= 14.0
             else ()
         )
@@ -1051,7 +1063,8 @@ class EnvironmentInfo:
             if self.pi.current_cpu != self.pi.target_cpu:
                 tools += [
                     os.path.join(
-                        si.VCInstallDir, host_dir % self.pi.current_dir(x64=True)
+                        si.VCInstallDir,
+                        host_dir % self.pi.current_dir(x64=True),
                     )
                 ]
 
@@ -1132,7 +1145,9 @@ class EnvironmentInfo:
                 os.path.join(ref, "Windows.Foundation.UniversalApiContract", "1.0.0.0"),
                 os.path.join(ref, "Windows.Foundation.FoundationContract", "1.0.0.0"),
                 os.path.join(
-                    ref, "Windows.Networking.Connectivity.WwanContract", "1.0.0.0"
+                    ref,
+                    "Windows.Networking.Connectivity.WwanContract",
+                    "1.0.0.0",
                 ),
                 os.path.join(
                     self.si.WindowsSdkDir,
@@ -1473,7 +1488,12 @@ class EnvironmentInfo:
             ),
             libpath=self._build_paths(
                 "libpath",
-                [self.VCLibraries, self.FxTools, self.VCStoreRefs, self.OSLibpath],
+                [
+                    self.VCLibraries,
+                    self.FxTools,
+                    self.VCStoreRefs,
+                    self.OSLibpath,
+                ],
                 exists,
             ),
             path=self._build_paths(

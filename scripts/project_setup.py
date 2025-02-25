@@ -9,10 +9,8 @@ for the entire SutazAI project ecosystem.
 import json
 import logging
 import os
-import shutil
 import subprocess
 import sys
-from typing import Any, Dict, List
 
 import yaml
 from ultimate_system_audit import SystemAuditManager as UltimateSystemAuditor
@@ -40,7 +38,9 @@ class ProjectSetup:
             level=logging.INFO,
             format="%(asctime)s | %(levelname)8s | %(message)s",
             handlers=[
-                logging.FileHandler(os.path.join(logs_dir, "project_setup.log")),
+                logging.FileHandler(
+                    os.path.join(logs_dir, "project_setup.log")
+                ),
                 logging.StreamHandler(sys.stdout),
             ],
         )
@@ -118,16 +118,27 @@ class ProjectSetup:
             ],
             "backend_subdirs": ["services", "config", "tests", "middleware"],
             "web_ui_subdirs": ["src", "public", "components", "styles"],
-            "model_management_subdirs": ["gpt4all", "deepseek", "llama2", "molmo"],
+            "model_management_subdirs": [
+                "gpt4all",
+                "deepseek",
+                "llama2",
+                "molmo",
+            ],
             "packages_subdirs": ["wheels", "node"],
-            "security_subdirs": ["authentication", "encryption", "access_control"],
+            "security_subdirs": [
+                "authentication",
+                "encryption",
+                "access_control",
+            ],
         }
 
         for category, directories in project_structure.items():
             if category.endswith("_subdirs"):
                 parent_dir = category.replace("_subdirs", "")
                 for subdir in directories:
-                    full_path = os.path.join(self.project_root, parent_dir, subdir)
+                    full_path = os.path.join(
+                        self.project_root, parent_dir, subdir
+                    )
                     os.makedirs(full_path, exist_ok=True)
                     self.logger.info(f"Created directory: {full_path}")
 
@@ -141,17 +152,27 @@ class ProjectSetup:
 
         try:
             # Create virtual environment
-            subprocess.run([sys.executable, "-m", "venv", venv_path], check=True)
+            subprocess.run(
+                [sys.executable, "-m", "venv", venv_path], check=True
+            )
 
             # Activate virtual environment and upgrade pip
             pip_path = os.path.join(venv_path, "bin", "pip")
-            subprocess.run([pip_path, "install", "--upgrade", "pip"], check=True)
+            subprocess.run(
+                [pip_path, "install", "--upgrade", "pip"], check=True
+            )
 
             # Install requirements
-            requirements_path = os.path.join(self.project_root, "requirements.txt")
-            subprocess.run([pip_path, "install", "-r", requirements_path], check=True)
+            requirements_path = os.path.join(
+                self.project_root, "requirements.txt"
+            )
+            subprocess.run(
+                [pip_path, "install", "-r", requirements_path], check=True
+            )
 
-            self.logger.info("Virtual Environment Created and Dependencies Installed")
+            self.logger.info(
+                "Virtual Environment Created and Dependencies Installed"
+            )
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Virtual Environment Setup Failed: {e}")
             raise
@@ -167,14 +188,18 @@ class ProjectSetup:
 
         # Project Configuration
         project_config = {
-            "project": {"name": "SutazAI", "version": "20.1.0"},
+            "project": {
+                "name": "SutazAI",
+                "version": "20.1.0"},
             "system_configuration": {
                 "python_version": f"{sys.version_info.major}.{sys.version_info.minor}",
                 "environment": "development",
             },
             "security": {
-                "authentication": {"method": "otp", "root_user": "Florin Cristian Suta"}
-            },
+                "authentication": {
+                    "method": "otp",
+                    "root_user": "Florin Cristian Suta",
+                }},
         }
 
         # Write project configuration
@@ -256,7 +281,9 @@ htmlcov/
             with open(os.path.join(self.project_root, ".gitignore"), "w") as f:
                 f.write(gitignore_content)
 
-            self.logger.info("Git repository initialized with comprehensive .gitignore")
+            self.logger.info(
+                "Git repository initialized with comprehensive .gitignore"
+            )
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Git repository initialization failed: {e}")
 
@@ -295,14 +322,18 @@ htmlcov/
             self.initialize_git_repository()
             self.run_initial_audit()
 
-            self.logger.info("🎉 SutazAI Project Setup Completed Successfully! 🎉")
+            self.logger.info(
+                "🎉 SutazAI Project Setup Completed Successfully! 🎉"
+            )
         except Exception as e:
             self.logger.critical(f"Project Setup Failed: {e}")
             raise
 
 
 def main():
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    project_root = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
     setup = ProjectSetup(project_root)
     setup.run_setup()
 

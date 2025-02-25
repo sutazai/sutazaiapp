@@ -10,7 +10,14 @@ Lexers for the Dylan language.
 
 import re
 
-from pygments.lexer import Lexer, RegexLexer, bygroups, default, do_insertions, line_re
+from pygments.lexer import (
+    Lexer,
+    RegexLexer,
+    bygroups,
+    default,
+    do_insertions,
+    line_re,
+)
 from pygments.token import (
     Comment,
     Generic,
@@ -343,7 +350,10 @@ class DylanLexer(RegexLexer):
             # octal integer
             (r"#o[0-7]+", Number.Oct),
             # floating point
-            (r"[-+]?(\d*\.\d+(e[-+]?\d+)?|\d+(\.\d*)?e[-+]?\d+)", Number.Float),
+            (
+                r"[-+]?(\d*\.\d+(e[-+]?\d+)?|\d+(\.\d*)?e[-+]?\d+)",
+                Number.Float,
+            ),
             # decimal integer
             (r"[-+]?\d+", Number.Integer),
             # hex integer

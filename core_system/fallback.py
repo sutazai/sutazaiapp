@@ -4,6 +4,15 @@ import struct
 import sys
 from datetime import datetime as _DateTime
 
+from .exceptions import (
+    BufferFull,
+    ExtraData,
+    FormatError,
+    OutOfData,
+    StackError,
+)
+from .ext import ExtType, Timestamp
+
 PY2 = sys.version_info[0] == 2
 if PY2:
     int_types = (int, long)
@@ -70,11 +79,9 @@ else:
     USING_STRINGBUILDER = False
     from io import BytesIO as StringIO
 
-    newlist_hint = lambda size: []
+    def newlist_hint(size):
+        return []
 
-
-from .exceptions import BufferFull, ExtraData, FormatError, OutOfData, StackError
-from .ext import ExtType, Timestamp
 
 EX_SKIP = 0
 EX_CONSTRUCT = 1
@@ -387,7 +394,7 @@ class Unpacker(object):
         return self._buff_i < len(self._buffer)
 
     def _get_extradata(self):
-        return self._buffer[self._buff_i :]
+        return self._buffer[self._buff_i:]
 
     def read_bytes(self, n):
         ret = self._read(n, raise_outofdata=False)
@@ -398,7 +405,7 @@ class Unpacker(object):
         # (int) -> bytearray
         self._reserve(n, raise_outofdata=raise_outofdata)
         i = self._buff_i
-        ret = self._buffer[i : i + n]
+        ret = self._buffer[i: i + n]
         self._buff_i = i + len(ret)
         return ret
 
@@ -579,7 +586,10 @@ class Unpacker(object):
                 ret = {}
                 for _ in xrange(n):
                     key = self._unpack(EX_CONSTRUCT)
-                    if self._strict_map_key and type(key) not in (unicode, bytes):
+                    if self._strict_map_key and type(key) not in (
+                        unicode,
+                        bytes,
+                    ):
                         raise ValueError(
                             "%s is not allowed for map key" % str(type(key))
                         )
@@ -879,7 +889,7 @@ class Packer(object):
     def pack(self, obj):
         try:
             self._pack(obj)
-        except:
+        except BaseException:
             self._buffer = StringIO()  # force reset
             raise
         if self._autoreset:
