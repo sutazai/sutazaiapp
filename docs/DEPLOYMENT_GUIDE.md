@@ -43,8 +43,8 @@ sudo usermod -aG sudo sutazai_dev
 
 # Set permissions
 cd /opt
-sudo mkdir -p SutazAI
-sudo chown -R sutazai_dev:sutazai_dev SutazAI
+sudo mkdir -p sutazaiapp
+sudo chown -R sutazai_dev:sutazai_dev sutazaiapp
 ```
 
 #### 2.2 Clone Repository
@@ -99,9 +99,9 @@ ssh-copy-id -i ~/.ssh/sutazai_deploy.pub root@192.168.100.100
 
 Set up Git hook for automatic deployment:
 ```bash
-# In /opt/SutazAI/.git/hooks/post-commit
+# In /opt/sutazaiapp/.git/hooks/post-commit
 #!/bin/bash
-ssh root@192.168.100.100 "cd /opt/SutazAI && ./scripts/trigger_deploy.sh"
+ssh root@192.168.100.100 "cd /opt/sutazaiapp && ./scripts/trigger_deploy.sh"
 
 chmod +x .git/hooks/post-commit
 ```
@@ -178,7 +178,7 @@ If deployment fails or causes issues:
 - Quarterly comprehensive system audit
 
 ### Monitoring
-- Check logs in `/opt/SutazAI/logs/`
+- Check logs in `/opt/sutazaiapp/logs/`
 - Monitor system performance via Prometheus/Grafana (if configured)
 
 ## Contact Support

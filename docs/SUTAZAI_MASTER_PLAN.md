@@ -42,12 +42,12 @@ Before starting Phase 1, you may encounter:
 3. Re‑run chown:
    ```bash
    cd /opt
-   sudo chown -R sutazai_dev:sutazai_dev SutazAI
+   sudo chown -R sutazai_dev:sutazai_dev sutazaiapp
    ```
 
 4. Verify:
    ```bash
-   ls -l /opt | grep SutazAI
+   ls -l /opt | grep sutazaiapp
    ```
    Should list `sutazai_dev sutazai_dev` as owner/group.
 
@@ -98,9 +98,9 @@ Before starting Phase 1, you may encounter:
 **Code Server (192.168.100.28)**:
 ```bash
 cd /opt
-sudo mkdir SutazAI
-sudo chown -R sutazai_dev:sutazai_dev SutazAI
-cd SutazAI
+sudo mkdir sutazaiapp
+sudo chown -R sutazai_dev:sutazai_dev sutazaiapp
+cd sutazaiapp
 git clone https://github.com/sutazai/sutazaiapp.git .
 git config pull.rebase false  # Choose your preferred strategy
 git pull origin master
@@ -112,7 +112,7 @@ git pull origin master
 
 **Ideal layout**:
 ```
-/opt/SutazAI/
+/opt/sutazaiapp/
 ├── ai_agents/
 ├── model_management/
 ├── backend/
@@ -126,8 +126,8 @@ git pull origin master
 
 **Permissions**:
 ```bash
-sudo chown -R sutazai_dev:sutazai_dev /opt/SutazAI/
-chmod -R 750 /opt/SutazAI/
+sudo chown -R sutazai_dev:sutazai_dev /opt/sutazaiapp/
+chmod -R 750 /opt/sutazaiapp/
 ```
 
 Document in `/docs/DIRECTORY_STRUCTURE.md`.
@@ -135,7 +135,7 @@ Document in `/docs/DIRECTORY_STRUCTURE.md`.
 #### Virtual Environment & Dependencies
 
 ```bash
-cd /opt/SutazAI
+cd /opt/sutazaiapp
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip setuptools wheel
@@ -179,10 +179,10 @@ Document in `/docs/REPO_SYNC.md`.
 
 #### Git Hook: Post‑Commit
 
-`/opt/SutazAI/.git/hooks/post-commit`:
+`/opt/sutazaiapp/.git/hooks/post-commit`:
 ```bash
 #!/bin/bash
-ssh root@192.168.100.100 "cd /opt/SutazAI && ./scripts/trigger_deploy.sh"
+ssh root@192.168.100.100 "cd /opt/sutazaiapp && ./scripts/trigger_deploy.sh"
 ```
 ```bash
 chmod +x .git/hooks/post-commit
@@ -191,7 +191,7 @@ chmod +x .git/hooks/post-commit
 **Fallback**: `scripts/setup_repos.sh`:
 ```bash
 #!/bin/bash
-cd /opt/SutazAI
+cd /opt/sutazaiapp
 git fetch --all
 git reset --hard origin/master
 ```
@@ -212,14 +212,14 @@ phone = "+48517716005"
 **Start Script**: `scripts/start_superagi.sh`:
 ```bash
 #!/bin/bash
-cd /opt/SutazAI/ai_agents/superagi
-nohup python3 supreme_agent.py >> /opt/SutazAI/logs/agent.log 2>&1 &
+cd /opt/sutazaiapp/ai_agents/superagi
+nohup python3 supreme_agent.py >> /opt/sutazaiapp/logs/agent.log 2>&1 &
 ```
 ```bash
 chmod +x scripts/start_superagi.sh
 ```
 
-Test by running it on Deployment Server, watch `/opt/SutazAI/logs/agent.log`.
+Test by running it on Deployment Server, watch `/opt/sutazaiapp/logs/agent.log`.
 
 #### Basic Logging
 
@@ -246,14 +246,14 @@ logger.info(json.dumps({"event": "orchestrator_start", "owner": "Florin Cristian
 - Install dependencies
 - Verify model files
 - Start backend + web UI, run health checks
-- Log to `/opt/SutazAI/logs/deploy.log`
+- Log to `/opt/sutazaiapp/logs/deploy.log`
 - Rollback on errors
 
 **Sample**:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-DEPLOY_LOG="/opt/SutazAI/logs/deploy.log"
+DEPLOY_LOG="/opt/sutazaiapp/logs/deploy.log"
 exec > >(tee -a "$DEPLOY_LOG") 2>&1
 
 git pull origin master || echo "Warning: can't pull"
@@ -351,7 +351,7 @@ def local_llm_generate(spec_text: str, model: str) -> str: ...
 #### Multi-Agent Orchestrator
 
 - Orchestrator calls AutoGPT, Semgrep, TabbyML for refinement
-- Logs attempts in `/opt/SutazAI/logs/agent.log`
+- Logs attempts in `/opt/sutazaiapp/logs/agent.log`
 - API Endpoint (`/code/generate`)
 - UI (`CodeGeneration.jsx`)
 - Testing & Performance
@@ -414,7 +414,7 @@ Summarize in `/docs/audit/Audit_Report_vFinal.md`.
 #### Handoff Archive
 
 ```bash
-tar -czvf sutazai_handoff.tar.gz /opt/SutazAI --exclude=venv
+tar -czvf sutazai_handoff.tar.gz /opt/sutazaiapp --exclude=venv
 ```
 
 Document in `/docs/Handoff.md`.
@@ -438,7 +438,7 @@ Document in `/docs/Handoff.md`.
 
 #### Advanced Logging & Alerting
 
-- Structured JSON logs, logrotate for `/opt/SutazAI/logs/*.log`
+- Structured JSON logs, logrotate for `/opt/sutazaiapp/logs/*.log`
 - Slack/email notifications on repeated rollbacks, OTP errors, or CPU > 90%
 
 #### CI/CD Pipeline
@@ -469,7 +469,7 @@ Document in `/docs/CI_CD.md`.
 
 ```bash
 git pull origin master
-tar -czvf sutazai_final_handoff.tar.gz /opt/SutazAI --exclude=venv
+tar -czvf sutazai_final_handoff.tar.gz /opt/sutazaiapp --exclude=venv
 ```
 
 Document in `/docs/Handoff.md`.

@@ -35,8 +35,8 @@ sudo usermod -aG sudo sutazai_dev
 
 # Set up directory permissions
 cd /opt
-sudo mkdir -p SutazAI
-sudo chown -R sutazai_dev:sutazai_dev SutazAI
+sudo mkdir -p sutazaiapp
+sudo chown -R sutazai_dev:sutazai_dev sutazaiapp
 ```
 
 ### 2. Repository Setup
@@ -178,8 +178,8 @@ cd ..
 - Check for specific package errors in the output
 
 #### Permission Issues
-- Ensure proper ownership: `sudo chown -R sutazai_dev:sutazai_dev /opt/SutazAI`
-- Set correct permissions: `chmod -R 750 /opt/SutazAI`
+- Ensure proper ownership: `sudo chown -R sutazai_dev:sutazai_dev /opt/sutazaiapp`
+- Set correct permissions: `chmod -R 750 /opt/sutazaiapp`
 
 #### Git Issues
 - If branches have diverged: `git config pull.rebase false && git pull origin master`
