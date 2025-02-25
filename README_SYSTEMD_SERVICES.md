@@ -51,7 +51,7 @@ sudo systemctl status sutazai-file-structure-manager.service
 ## Logs
 
 Service logs are stored in:
-- `/opt/sutazai_project/SutazAI/logs/`
+- `/opt/SutazAI/logs/`
 
 You can view logs using:
 ```bash
@@ -63,7 +63,7 @@ journalctl -u sutazai-master.service
 1. If services fail to start, check logs for specific errors
 2. Ensure all dependencies are installed
 3. Verify Python script permissions
-4. Run the setup script again: `/opt/sutazai_project/SutazAI/scripts/setup_systemd_services.sh`
+4. Run the setup script again: `/opt/SutazAI/scripts/setup_systemd_services.sh`
 
 ## Reload Systemd Configuration
 If you modify service files:

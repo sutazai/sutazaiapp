@@ -21,7 +21,7 @@ from typing import Any, Dict, List
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/project_organizer.log",
+    filename="/opt/SutazAI/logs/project_organizer.log",
 )
 logger = logging.getLogger("SutazAI.ProjectOrganizer")
 
@@ -68,7 +68,7 @@ class ProjectOrganizer:
         "docs": [],
     }
 
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/SutazAI"):
         """
         Initialize project organizer
 

@@ -13,6 +13,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from loguru import logger
 
+from backend.routers import core_router
+from backend.routers.health import health_router
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -31,17 +34,21 @@ app = FastAPI(
 ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Development frontend
     "http://localhost:8000",  # Development backend
-    "https://sutazai.com",    # Production domain
-    "https://api.sutazai.com"  # Production API domain
+    "https://sutazai.com",  # Production domain
+    "https://api.sutazai.com",  # Production API domain
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,  # Replace wildcard with specific origins
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],  # Can be restricted to specific methods if needed
     allow_headers=["*"],  # Can be restricted to specific headers if needed
 )
+
+# Include routers
+app.include_router(core_router, prefix="/api", tags=["core"])
+app.include_router(health_router, prefix="/api", tags=["health"])
 
 
 @app.middleware("http")
@@ -103,9 +110,12 @@ async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
 
 
 if __name__ == "__main__":
+    # Use 127.0.0.1 instead of 0.0.0.0 for development to avoid exposing
+    # the server to all network interfaces (better security practice)
+    # In production, this should be controlled by environment variables
     uvicorn.run(
         "backend.backend_main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",  # Localhost only, more secure than 0.0.0.0
         port=8000,
         reload=True,
         log_level="info",

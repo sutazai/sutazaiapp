@@ -28,7 +28,7 @@ import textstat
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/advanced_documentation_analyzer.log",
+    filename="/opt/SutazAI/logs/advanced_documentation_analyzer.log",
 )
 logger = logging.getLogger("SutazAI.AdvancedDocumentationAnalyzer")
 
@@ -46,7 +46,7 @@ class AdvancedDocumentationAnalyzer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         exclude_dirs: List[str] = None,
     ):
         """

@@ -57,7 +57,7 @@ class AdvancedDependencyMapper:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         logger: Optional[AdvancedLogger] = None,
     ):
         """
@@ -312,7 +312,7 @@ class AdvancedDependencyMapper:
             )
 
             # Persist dependency report
-            report_path = f'/opt/sutazai_project/SutazAI/logs/dependency_analysis_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            report_path = f'/opt/SutazAI/logs/dependency_analysis_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
 
             with open(report_path, "w") as f:
                 json.dump(asdict(dependency_report), f, indent=2)

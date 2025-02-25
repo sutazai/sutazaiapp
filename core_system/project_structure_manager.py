@@ -73,8 +73,8 @@ class AdvancedProjectStructureManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        base_dir: str = "/opt/SutazAI",
+        log_dir: str = "/opt/SutazAI/logs",
     ):
         """
         Initialize advanced project structure manager

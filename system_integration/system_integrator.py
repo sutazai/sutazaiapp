@@ -366,7 +366,7 @@ class SystemIntegrator:
 
     def discover_system_components(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI"
+        base_dir: str = "/opt/SutazAI"
     ) -> Dict[str, Dict[str, Any]]:
         """
         Dynamically discover and analyze system components.

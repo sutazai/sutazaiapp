@@ -34,7 +34,6 @@ core_router: APIRouter = APIRouter()
 # -----------------------------------------------------------------------------
 # Pydantic Model Definitions and Helpers
 # -----------------------------------------------------------------------------
-# pylint: disable=too-few-public-methods
 class SystemStatus(BaseModel):
     """
     Pydantic model representing the system status.
@@ -45,20 +44,20 @@ class SystemStatus(BaseModel):
         ..., description="Overall system status", min_length=1, max_length=50
     )
 
-    class Config:
-        """Pydantic configuration class for SystemStatus."""
+    model_config = {
+        "json_schema_extra": {"example": {"status": "ok"}},
+        "extra": "forbid",  # Prevent additional fields
+    }
 
-        # For pydantic v2 use model_config
-        model_config = {
-            "json_schema_extra": {"example": {"status": "ok"}},
-            "extra": "forbid",  # Prevent additional fields
-        }
-
-    def model_dump(self, *args, **kwargs) -> Dict[str, Any]:
+    def model_dump(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """
         Return the dictionary representation of the model.
 
         Provides backward compatibility for different Pydantic versions.
+
+        Args:
+            *args: Variable length argument list
+            **kwargs: Arbitrary keyword arguments
 
         Returns:
             Dict[str, Any]: Dictionary representation of the model
@@ -75,7 +74,7 @@ def validate_system_status(status_data: Any) -> SystemStatus:
     Performs comprehensive validation with detailed error handling.
 
     Args:
-        status_data (Any): The raw status data.
+        status_data: The raw status data.
 
     Returns:
         SystemStatus: A validated SystemStatus instance.
@@ -93,7 +92,11 @@ def validate_system_status(status_data: Any) -> SystemStatus:
     try:
         if isinstance(status_data, dict):
             return SystemStatus(**status_data)
-        return SystemStatus.model_validate(status_data)
+        # Use model_validate_json for string input
+        if hasattr(SystemStatus, "model_validate_json"):
+            return SystemStatus.model_validate_json(status_data)
+        # Fallback for older Pydantic versions
+        return SystemStatus.parse_raw(status_data)
     except ValidationError as e:
         logger.error("Status validation error: %s", e)
         raise HTTPException(
@@ -151,7 +154,9 @@ async def get_status(_: Request) -> Dict[str, Any]:
         ) from e
 
 
-async def custom_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
+async def custom_exception_handler(
+    _: Request, exc: HTTPException
+) -> JSONResponse:
     """
     Returns a custom JSON response for HTTP exceptions.
 
@@ -193,7 +198,6 @@ def create_core_router() -> APIRouter:
 T = TypeVar("T", bound=BaseModel)
 
 
-# pylint: disable=too-few-public-methods
 class RouterHandler(Generic[T]):
     """
     Generic router handler for type-safe request processing.
@@ -217,7 +221,14 @@ class RouterHandler(Generic[T]):
         exception_class: Type[Exception],
         handler: Callable[[Request, Exception], JSONResponse],
     ) -> None:
-        """Stub method.
+        """
+        Stub method for adding exception handlers.
 
         APIRouter does not support setting an exception handler.
+
+        Args:
+            exception_class: The exception class to handle
+            handler: The handler function
         """
+        # This is a stub - APIRouter doesn't support exception handlers
+        pass

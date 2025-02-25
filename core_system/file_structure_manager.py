@@ -26,7 +26,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 class UltraComprehensiveFileManager:
     def __init__(
         self,
-        project_root: str = "/opt/sutazai_project/SutazAI",
+        project_root: str = "/opt/SutazAI",
         interval: int = 300,  # 5 minutes
     ):
         """

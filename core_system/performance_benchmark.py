@@ -226,7 +226,7 @@ def main():
 
     # Generate performance report
     report_path = (
-        "/opt/sutazai_project/SutazAI/logs/document_processor_performance.json"
+        "/opt/SutazAI/logs/document_processor_performance.json"
     )
     with open(report_path, "w") as report_file:
         json.dump(benchmark_results, report_file, indent=2)

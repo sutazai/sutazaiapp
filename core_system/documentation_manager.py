@@ -26,7 +26,7 @@ import pdoc
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/documentation_manager.log",
+    filename="/opt/SutazAI/logs/documentation_manager.log",
 )
 logger = logging.getLogger("SutazAI.DocumentationManager")
 
@@ -45,8 +45,8 @@ class DocumentationManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        docs_dir: str = "/opt/sutazai_project/SutazAI/docs",
+        base_dir: str = "/opt/SutazAI",
+        docs_dir: str = "/opt/SutazAI/docs",
     ):
         """
         Initialize documentation management system

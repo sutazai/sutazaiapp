@@ -45,7 +45,7 @@ class OptimizationReport:
 
 
 class ComprehensiveSystemOptimizer:
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/SutazAI"):
         """
         Initialize system optimization framework
 

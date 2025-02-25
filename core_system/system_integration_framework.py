@@ -59,7 +59,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
         logging.FileHandler(
-            "/opt/sutazai_project/SutazAI/logs/system_integration_framework.log"
+            "/opt/SutazAI/logs/system_integration_framework.log"
         ),
         logging.StreamHandler(sys.stdout),
     ],
@@ -142,7 +142,7 @@ class UltraComprehensiveSystemIntegrationFramework:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         log_dir: Optional[str] = None,
         config_path: Optional[str] = None,
         disable_autonomous_features: Optional[bool] = True,  # Change default to True

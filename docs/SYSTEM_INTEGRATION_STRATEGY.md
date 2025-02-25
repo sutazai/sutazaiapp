@@ -409,7 +409,7 @@ The `AutonomousFileStructureManager` provides intelligent, self-organizing file 
 
 #### Directory Structure
 ```
-/opt/sutazai_project/SutazAI/
+/opt/SutazAI/
 │
 ├── core_system/
 │   ├── system_components/

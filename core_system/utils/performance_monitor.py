@@ -20,7 +20,7 @@ class PerformanceMonitor:
         self,
         log_interval: int = 60,
         logger: Optional[logging.Logger] = None,
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs/performance",
+        log_dir: str = "/opt/SutazAI/logs/performance",
     ):
         """
         Initialize advanced performance monitor.

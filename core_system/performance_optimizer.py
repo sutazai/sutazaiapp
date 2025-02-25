@@ -32,7 +32,7 @@ class UltraPerformanceOptimizer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         monitoring_interval: int = 30,
         optimization_threshold: float = 0.8,
     ):

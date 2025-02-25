@@ -58,7 +58,7 @@ class InventoryManagementSystem:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         log_dir: Optional[str] = None,
     ):
         """

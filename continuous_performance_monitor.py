@@ -37,7 +37,7 @@ logger = logging.getLogger("ContinuousPerformanceMonitor")
 
 
 class SutazAIPerformanceMonitor:
-    def __init__(self, project_root: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, project_root: str = "/opt/SutazAI"):
         self.project_root = project_root
         self.performance_history = {
             "timestamps": [],

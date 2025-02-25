@@ -26,7 +26,7 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Set up test environment and initialize system checker
         """
-        cls.base_dir = "/opt/sutazai_project/SutazAI"
+        cls.base_dir = "/opt/SutazAI"
         cls.system_checker = ComprehensiveSystemChecker(base_dir=cls.base_dir)
 
     def test_system_check_initialization(self):

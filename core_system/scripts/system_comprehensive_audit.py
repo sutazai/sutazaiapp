@@ -22,7 +22,7 @@ import psutil
 
 
 class SystemAudit:
-    def __init__(self, output_dir: str = "/opt/sutazai_project/SutazAI/logs/audits"):
+    def __init__(self, output_dir: str = "/opt/SutazAI/logs/audits"):
         """
         Initialize the system audit with configuration and output directory
 

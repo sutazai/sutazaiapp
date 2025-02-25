@@ -38,7 +38,7 @@ class AdvancedSystemOptimizer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         config_manager: ConfigurationManager = None,
         logger: AdvancedLogger = None,
         security_manager: SecurityManager = None,

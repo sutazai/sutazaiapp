@@ -51,7 +51,7 @@ class ExceptionTracker:
         cls._exceptions_log.append(exception_details)
 
         # Log to file
-        log_dir = "/opt/sutazai_project/SutazAI/logs/exceptions"
+        log_dir = "/opt/SutazAI/logs/exceptions"
         os.makedirs(log_dir, exist_ok=True)
         log_file = os.path.join(log_dir, f"{exception_details['unique_id']}.json")
 

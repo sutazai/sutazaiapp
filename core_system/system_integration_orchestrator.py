@@ -55,7 +55,7 @@ class SystemIntegrationOrchestrator:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         log_dir: Optional[str] = None,
         config_path: Optional[str] = None,
     ):

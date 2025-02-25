@@ -41,7 +41,7 @@ class UltraComprehensiveFileExplorer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         config_path: Optional[str] = None,
     ):
         """

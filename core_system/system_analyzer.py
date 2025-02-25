@@ -60,7 +60,7 @@ class SystemAnalyzer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         logger: Optional[AdvancedLogger] = None,
     ):
         """
@@ -324,7 +324,7 @@ class SystemAnalyzer:
             )
 
             # Persist analysis report
-            report_path = f'/opt/sutazai_project/SutazAI/logs/system_analysis_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+            report_path = f'/opt/SutazAI/logs/system_analysis_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
 
             with open(report_path, "w") as f:
                 json.dump(asdict(analysis_report), f, indent=2)

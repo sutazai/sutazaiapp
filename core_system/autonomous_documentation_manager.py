@@ -23,7 +23,7 @@ import networkx as nx
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/autonomous_documentation.log",
+    filename="/opt/SutazAI/logs/autonomous_documentation.log",
 )
 logger = logging.getLogger("SutazAI.AutonomousDocumentationManager")
 
@@ -41,8 +41,8 @@ class AutonomousDocumentationManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        docs_dir: str = "/opt/sutazai_project/SutazAI/docs",
+        base_dir: str = "/opt/SutazAI",
+        docs_dir: str = "/opt/SutazAI/docs",
     ):
         """
         Initialize autonomous documentation manager

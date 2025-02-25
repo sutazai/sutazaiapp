@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazai_project/SutazAI/logs/system_validation.log"),
+        logging.FileHandler("/opt/SutazAI/logs/system_validation.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -23,10 +23,10 @@ class SystemValidator:
     def __init__(self):
         """Initialize comprehensive system validation framework"""
         self.critical_dirs = [
-            "/opt/sutazai_project/SutazAI/ai_agents",
-            "/opt/sutazai_project/SutazAI/model_management",
-            "/opt/sutazai_project/SutazAI/backend",
-            "/opt/sutazai_project/SutazAI/scripts",
+            "/opt/SutazAI/ai_agents",
+            "/opt/SutazAI/model_management",
+            "/opt/SutazAI/backend",
+            "/opt/SutazAI/scripts",
         ]
 
         self.required_models = ["gpt4all", "deepseek-coder", "llama2"]
@@ -110,7 +110,7 @@ class SystemValidator:
                 [
                     "-v",
                     "--tb=short",
-                    "/opt/sutazai_project/SutazAI/backend/tests",
+                    "/opt/SutazAI/backend/tests",
                 ]
             )
 

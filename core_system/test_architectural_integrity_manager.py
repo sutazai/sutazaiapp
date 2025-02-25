@@ -29,7 +29,7 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
         """
         Set up test environment and initialize architectural integrity manager
         """
-        cls.base_dir = "/opt/sutazai_project/SutazAI"
+        cls.base_dir = "/opt/SutazAI"
         cls.architectural_manager = ArchitecturalIntegrityManager(base_dir=cls.base_dir)
 
     def test_architectural_manager_initialization(self):

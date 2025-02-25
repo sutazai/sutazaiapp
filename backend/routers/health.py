@@ -11,7 +11,6 @@ from pydantic import BaseModel, Field
 health_router: APIRouter = APIRouter()
 
 
-# pylint: disable=too-few-public-methods
 class HealthStatus(BaseModel):
     """
     Pydantic model representing the health status.
@@ -21,6 +20,10 @@ class HealthStatus(BaseModel):
     """
 
     status: str = Field(..., description="Current health status")
+
+    model_config = {
+        "json_schema_extra": {"example": {"status": "healthy"}},
+    }
 
     def check_health(self) -> bool:
         """

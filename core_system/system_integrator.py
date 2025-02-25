@@ -26,7 +26,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazai_project/SutazAI/logs/system_integration.log"),
+        logging.FileHandler("/opt/SutazAI/logs/system_integration.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -43,8 +43,8 @@ class AdvancedSystemIntegrator:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        output_dir: str = "/opt/sutazai_project/SutazAI/system_topology",
+        base_dir: str = "/opt/SutazAI",
+        output_dir: str = "/opt/SutazAI/system_topology",
     ):
         """
         Initialize system integrator

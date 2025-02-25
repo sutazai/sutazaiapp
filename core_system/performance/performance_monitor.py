@@ -18,7 +18,7 @@ import psutil
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/performance_monitor.log",
+    filename="/opt/SutazAI/logs/performance_monitor.log",
 )
 logger = logging.getLogger("SutazAI_Performance")
 
@@ -38,7 +38,7 @@ class PerformanceMonitor:
     def __init__(
         self,
         sample_interval: int = 5,
-        log_directory: str = "/opt/sutazai_project/SutazAI/logs/performance",
+        log_directory: str = "/opt/SutazAI/logs/performance",
     ):
         self.sample_interval = sample_interval
         self.log_directory = log_directory

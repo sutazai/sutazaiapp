@@ -37,7 +37,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazai_project/SutazAI/logs/system_integration.log"),
+        logging.FileHandler("/opt/SutazAI/logs/system_integration.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -54,16 +54,16 @@ class AdvancedSystemIntegrator:
     """
 
     CRITICAL_PATHS = [
-        "/opt/sutazai_project/SutazAI/core_system",
-        "/opt/sutazai_project/SutazAI/scripts",
-        "/opt/sutazai_project/SutazAI/ai_agents",
-        "/opt/sutazai_project/SutazAI/advanced_system_tools",
+        "/opt/SutazAI/core_system",
+        "/opt/SutazAI/scripts",
+        "/opt/SutazAI/ai_agents",
+        "/opt/SutazAI/advanced_system_tools",
     ]
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        output_dir: str = "/opt/sutazai_project/SutazAI/system_topology",
+        base_dir: str = "/opt/SutazAI",
+        output_dir: str = "/opt/SutazAI/system_topology",
     ):
         """
         Initialize advanced system integrator

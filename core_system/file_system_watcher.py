@@ -110,7 +110,7 @@ def main():
     """
     Main execution for file system watcher
     """
-    base_dir = "/opt/sutazai_project/SutazAI"
+    base_dir = "/opt/SutazAI"
     observer = start_file_system_watcher(base_dir)
 
     try:

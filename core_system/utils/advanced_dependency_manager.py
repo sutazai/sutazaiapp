@@ -29,7 +29,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(
-            "/opt/sutazai_project/SutazAI/logs/advanced_dependency_management.log"
+            "/opt/SutazAI/logs/advanced_dependency_management.log"
         ),
         logging.StreamHandler(sys.stdout),
     ],
@@ -47,7 +47,7 @@ class ComprehensiveDependencyManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         requirements_path: Optional[str] = None,
     ):
         """

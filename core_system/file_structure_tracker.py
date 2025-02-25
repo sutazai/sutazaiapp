@@ -83,8 +83,8 @@ class UltraComprehensiveStructureTracker:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        base_dir: str = "/opt/SutazAI",
+        log_dir: str = "/opt/SutazAI/logs",
     ):
         """
         Initialize Ultra-Comprehensive Structure Tracker
@@ -296,7 +296,7 @@ def main():
     logging.basicConfig(
         level=logging.DEBUG,
         format="%(asctime)s - %(levelname)s: %(message)s",
-        filename="/opt/sutazai_project/SutazAI/logs/structure_tracker_debug.log",
+        filename="/opt/SutazAI/logs/structure_tracker_debug.log",
         filemode="a",
     )
     logger = logging.getLogger("SutazAI.StructureTrackerMain")
@@ -313,7 +313,7 @@ def main():
         logger.info(f"Current Working Directory: {os.getcwd()}")
 
         # Ensure base directory exists
-        base_dir = "/opt/sutazai_project/SutazAI"
+        base_dir = "/opt/SutazAI"
         if not os.path.exists(base_dir):
             logger.critical(f"Base directory does not exist: {base_dir}")
             print(f"Critical Error: Base directory {base_dir} does not exist")

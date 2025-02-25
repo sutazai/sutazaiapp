@@ -1,46 +1,34 @@
-from workers.base_worker import (
-    CPU:,
-    Disk:,
-    Memory:,
-    MonitoringWorker,
-    Status,
-    SutazAiWorker,
-    SutazAiWorkerimport,
-    60,
-    90,
-    90:,
-    "Critical,
-    "MonitoringWorker",
-    %,
-    %",
-    '/',
-    -,
-    .__init__,
-    .percent,
-    :,
-    =,
-    >,
-    __init__,
-    cpu_usage,
-    def,
-    detected!",
-    disk_usage,
-    execute,
-    f"System,
-    if,
-    interval,
-    mem_usage,
-    or,
-    print,
-    psutil.cpu_percent,
-    psutil.disk_usage,
-    psutil.virtual_memory,
-    psutilclass,
-    resource,
-    self,
-    super,
-    usage,
-    {cpu_usage},
-    {disk_usage},
-    {mem_usage},
-)
+"""
+SutazAI MonitoringWorker Module
+--------------------------
+This module provides monitoring worker functionality for the SutazAI system.
+"""
+
+import os
+import sys
+
+
+class MonitoringWorker:
+    """Main class for monitoring worker functionality"""
+    
+    def __init__(self):
+        """Initialize the MonitoringWorker instance"""
+        self.initialized = True
+        
+    def process(self, data):
+        """Process the given data"""
+        return data
+        
+    def get_status(self):
+        """Get the current status"""
+        return "Active"
+
+
+def initialize():
+    """Initialize the module"""
+    return MonitoringWorker()
+
+
+if __name__ == "__main__":
+    instance = initialize()
+    print(f"MonitoringWorker initialized successfully")

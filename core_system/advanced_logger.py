@@ -29,7 +29,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(
-            "/opt/sutazai_project/SutazAI/logs/system_monitoring.log"
+            "/opt/SutazAI/logs/system_monitoring.log"
         ),
         logging.StreamHandler(sys.stdout),
     ],
@@ -85,7 +85,7 @@ class AdvancedLogger:
 
     def __init__(
         self,
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        log_dir: str = "/opt/SutazAI/logs",
         service_name: str = "SutazAI",
     ):
         """

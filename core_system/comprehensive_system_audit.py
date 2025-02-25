@@ -41,7 +41,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
         logging.FileHandler(
-            "/opt/sutazai_project/SutazAI/logs/comprehensive_system_audit.log"
+            "/opt/SutazAI/logs/comprehensive_system_audit.log"
         ),
         logging.StreamHandler(sys.stdout),
     ],
@@ -73,7 +73,7 @@ class UltraComprehensiveSystemAuditor:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/SutazAI",
         log_dir: Optional[str] = None,
     ):
         """

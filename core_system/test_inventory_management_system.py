@@ -31,7 +31,7 @@ class TestInventoryManagementSystem(unittest.TestCase):
         """
         Set up test environment and initialize inventory management system
         """
-        cls.base_dir = "/opt/sutazai_project/SutazAI"
+        cls.base_dir = "/opt/SutazAI"
         cls.inventory_manager = InventoryManagementSystem(base_dir=cls.base_dir)
 
     def test_inventory_manager_initialization(self):

@@ -33,7 +33,7 @@ logger = logging.getLogger("DependencyManager")
 
 
 class SutazAIDependencyManager:
-    def __init__(self, project_root: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, project_root: str = "/opt/SutazAI"):
         self.project_root = project_root
         self.dependency_report = {
             "timestamp": datetime.now().isoformat(),

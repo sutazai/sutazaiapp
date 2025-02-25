@@ -42,7 +42,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazai_project/SutazAI/logs/system_management.log"),
+        logging.FileHandler("/opt/SutazAI/logs/system_management.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -61,9 +61,9 @@ class AdvancedSystemManager:
     """
 
     CRITICAL_SYSTEM_PATHS = [
-        "/opt/sutazai_project/SutazAI/core_system",
-        "/opt/sutazai_project/SutazAI/scripts",
-        "/opt/sutazai_project/SutazAI/ai_agents",
+        "/opt/SutazAI/core_system",
+        "/opt/SutazAI/scripts",
+        "/opt/SutazAI/ai_agents",
     ]
 
     SECURITY_PATTERNS = [
@@ -76,8 +76,8 @@ class AdvancedSystemManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        output_dir: str = "/opt/sutazai_project/SutazAI/logs/system_analysis",
+        base_dir: str = "/opt/SutazAI",
+        output_dir: str = "/opt/SutazAI/logs/system_analysis",
     ):
         """
         Initialize advanced system manager with comprehensive tracking
