@@ -30,8 +30,8 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 1. Fork the repository
 2. Clone your fork
 ```bash
-git clone https://github.com/your-username/SutazAI.git
-cd SutazAI
+git clone https://github.com/your-username/sutazaiapp.git
+cd sutazaiapp
 ```
 
 3. Create a virtual environment

@@ -12,8 +12,8 @@ This document provides instructions for installing dependencies and setting up t
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://your.repo.url/SutazAI.git
-   cd SutazAI
+   git clone https://github.com/sutazai/sutazaiapp.git
+   cd sutazaiapp
    ```
 
 2. **Create a Virtual Environment (Recommended):**
