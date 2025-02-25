@@ -30,7 +30,7 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 1. Fork the repository
 2. Clone your fork
 ```bash
-git clone https://github.com/your-username/sutazaiapp.git
+git clone https://github.com/sutazai/sutazaiapp.git
 cd sutazaiapp
 ```
 
@@ -42,11 +42,30 @@ source venv/bin/activate
 
 4. Install development dependencies
 ```bash
+pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
+5. Configure Git for the two-server architecture (if applicable)
+```bash
+# Set up Git pull strategy
+git config pull.rebase false  # or choose another strategy
+
+# If you're working on the Code Server (192.168.100.28)
+# Set up SSH key for deployment server sync
+ssh-keygen -t ed25519 -C "sutazai_deploy" -f ~/.ssh/sutazai_deploy -N ""
+ssh-copy-id -i ~/.ssh/sutazai_deploy.pub root@192.168.100.100
+```
+
 ## 🔧 Development Workflow
+
+### Project Architecture
+SutazAI follows a comprehensive development plan outlined in the [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md). Please familiarize yourself with this document to understand the project's phases and architecture.
+
+### Two-Server Architecture
+- **Code Server (192.168.100.28)**: Development and code management
+- **Deployment Server (192.168.100.100)**: Production environment
 
 ### Branch Strategy
 - `main`: Stable release branch
@@ -58,6 +77,17 @@ pip install -r requirements-dev.txt
 ```bash
 git checkout -b feature/your-feature-name develop
 ```
+
+### OTP Security
+External operations (network access, package installations) require OTP validation. When developing features that require external access:
+
+1. Request an OTP token from the project maintainer
+2. Use the token when running scripts that require external access:
+```bash
+OTP_TOKEN=123456 ./scripts/your_script.py
+```
+
+3. For testing, you can use the development OTP secret in your local environment
 
 ## 📝 Coding Standards
 
@@ -154,6 +184,34 @@ Steps to reproduce the behavior:
 - Email security concerns to: chrissuta01@gmail.com
 - Include detailed information about the vulnerability
 - Provide steps to reproduce (if possible)
+
+## CI/CD Pipeline
+
+SutazAI uses a comprehensive CI/CD pipeline for continuous testing and deployment:
+
+### Pipeline Stages
+1. **Static Analysis**: Code is analyzed using Semgrep, Bandit, and other tools
+2. **Unit/Integration Tests**: Automated tests are run using Pytest
+3. **Performance Tests**: Performance benchmarks are executed
+4. **Security Scans**: Code is scanned for security vulnerabilities
+5. **Deployment**: If all tests pass, code is deployed to the Deployment Server
+
+### Monitoring Your PR
+After submitting a PR, you can monitor its progress through the CI/CD pipeline. The pipeline will:
+- Run automated tests
+- Check code quality
+- Verify security
+- Test performance
+- Deploy to staging (if applicable)
+
+### Deployment
+Deployment is handled automatically through the CI/CD pipeline. The `deploy.sh` script:
+- Pulls the latest code
+- Validates OTP for external operations
+- Sets up the environment
+- Installs dependencies
+- Verifies system health
+- Starts services
 
 ## 📊 Contribution Statistics
 

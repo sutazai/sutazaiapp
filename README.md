@@ -166,8 +166,9 @@ pytest tests/
 4. Push to branch
 5. Create pull request
 
-## 📄 Documentation
+## �� Documentation
 
+- [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md)
 - [System Architecture](/docs/SYSTEM_ARCHITECTURE.md)
 - [Dependency Management](/docs/DEPENDENCY_MANAGEMENT.md)
 - [Security Policy](/security/SECURITY_POLICY.md)
