@@ -6,6 +6,7 @@
 pip>=23.1.0; python_version == '3.11'
 setuptools>=68.0.0; python_version == '3.11'
 wheel>=0.40.0; python_version == '3.11'
+aria2c; python_version == '3.11'  # Added aria2c dependency
 
 accelerate>=0.25.0; python_version == '3.11'
 aiohttp>=3.8.5; python_version == '3.11'  # Version >=3.8.5 required for Python 3.11
@@ -247,4 +248,5 @@ wcmatch>=8.5.2; python_version == '3.11'
 weasel>=0.1.0, <0.5.0; python_version == '3.11'
 wheel>=0.45.1; python_version == '3.11'
 wrapt>=1.17.2; python_version == '3.11'
+zipp>=3.21.0; python_version == '3.11'
 zipp>=3.21.0; python_version == '3.11'

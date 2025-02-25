@@ -3,7 +3,7 @@ Below is the continuation from the Directory Reorganization step. We'll now cove
 Virtual Environment & Dependencies
 • In /opt/SutazAI, create a Python virtual environment:
     - Run:
-         python3.11 -m venv venv
+         python3 -m venv venv
          source venv/bin/activate
 • Upgrade and install packages:
     - Upgrade pip, setuptools, and wheel:
@@ -13,11 +13,9 @@ Virtual Environment & Dependencies
 • Document these steps in /docs/DEPLOYMENT.md so that the environment setup is recorded.
 ──────────────────────────────
 Initial Code Audit
-• Run automated security and quality checks:
     - Code analysis via semgrep (e.g., semgrep --config=auto .)
     - Linting with pylint (e.g., pylint backend/)
     - Static type checking with mypy (e.g., mypy .)
-    - Security scanning with bandit (e.g., bandit -r .)
 • Additionally, perform a manual review of critical components—such as scripts (deploy.sh), the backend (main.py, services), and AI agents—to flag any outdated dependencies or suspicious code.
 • Summarize findings and potential fixes in an audit document (for instance, /docs/audit/Audit_Report_v1.md).
 ──────────────────────────────

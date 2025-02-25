@@ -1,3 +1,0 @@
-importtimeclassCalendarSyncer: SYNC_INTERVAL = (
-    300  # 5minutesdef__init__(self):self.sutazai_calendar=SutazAiCalendar()self.external_services={'google':SutazAiSecureAPI(token=SUTAZAI_OAUTH_TOKENS['google']),'outlook':HolographicAdapter(connection=HOLOGRAPHIC_CONN_STRINGS['outlook'])}self._setup_secure_channels()def_setup_secure_channels(self):#Implementationof_setup_secure_channelsmethodpassdefsync_all(self):"""SutazAi-syncedcalendarunification"""forserviceinself.external_services.values():events=service.fetch_events()self.sutazai_calendar.merge(events)defcontinuous_sync(self):whileTrue:self.sync_all()time.sleep(self.SYNC_INTERVAL)
-)
