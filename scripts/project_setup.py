@@ -54,9 +54,9 @@ class ProjectSetup:
 
         # Python version check
         python_version = f"{sys.version_info.major}.{sys.version_info.minor}"
-        required_version = "3.8"
+        required_version = "3.11"
 
-        if sys.version_info.major < 3 or sys.version_info.minor < 8:
+        if sys.version_info.major < 3 or sys.version_info.minor < 11:
             self.logger.critical(
                 f"Unsupported Python version. Required: {required_version}+, Current: {python_version}"
             )
@@ -124,6 +124,7 @@ class ProjectSetup:
                 "molmo",
             ],
             "packages_subdirs": ["wheels", "node"],
+            "security_features_subdirs": [
                 "authentication",
                 "encryption",
                 "access_control",
@@ -191,6 +192,7 @@ class ProjectSetup:
                 "python_version": f"{sys.version_info.major}.{sys.version_info.minor}",
                 "environment": "development",
             },
+            "security": {
                 "authentication": {
                     "method": "otp",
                     "root_user": "Florin Cristian Suta",
