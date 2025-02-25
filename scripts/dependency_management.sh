@@ -11,7 +11,7 @@ source sutazai_env/bin/activate
 pip cache purge || true
 
 # Remove existing package index (with error suppression)
-rm -rf sutazai_env/lib/python3.12/site-packages/pip/_internal/index-url || true
+rm -rf sutazai_env/lib/python3.11/site-packages/pip/_internal/index-url || true
 
 # Upgrade pip and setuptools with verbose output
 python -m pip install --upgrade pip setuptools wheel --verbose

@@ -26,8 +26,8 @@ validate_python_env() {
     
     # Check Python version
     PYTHON_VERSION=$(python3 --version)
-    if [[ $PYTHON_VERSION != *"3.10"* ]]; then
-        log_message "${RED}Error: Python 3.10 is required. Current version: $PYTHON_VERSION${NC}"
+    if [[ $PYTHON_VERSION != *"3.11"* ]]; then
+        log_message "${RED}Error: Python 3.11 is required. Current version: $PYTHON_VERSION${NC}"
         return 1
     fi
     

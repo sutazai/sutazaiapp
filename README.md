@@ -99,7 +99,7 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 - **OS**: Ubuntu 20.04+ LTS
 
 ### Software Requirements
-- Python 3.10+
+- Python 3.11
 - pip 23.3+
 - Node.js 16+
 
@@ -161,7 +161,7 @@ pytest tests/
 4. Push to branch
 5. Create pull request
 
-## �� Documentation
+## 📜 Documentation
 
 - [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md)
 - [System Architecture](/docs/SYSTEM_ARCHITECTURE.md)

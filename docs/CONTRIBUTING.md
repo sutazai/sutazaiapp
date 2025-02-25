@@ -21,7 +21,7 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.10 - 3.12
+- Python 3.11
 - Git
 - Virtual environment tool (venv/conda)
 

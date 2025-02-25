@@ -3,7 +3,7 @@
   "system_info": {
     "os": "Linux",
     "os_release": "6.11.0-18-generic",
-    "python_version": "3.12.3",
+    "python_version": "3.11",
     "architecture": "x86_64"
   },
   "actions_taken": [

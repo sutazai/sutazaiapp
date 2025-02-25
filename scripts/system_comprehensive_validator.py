@@ -194,8 +194,8 @@ class SystemComprehensiveValidator:
 
         env_config = {
             "python_version": platform.python_version(),
-            "required_version": "3.10.12",
-            "is_compatible": platform.python_version().startswith("3.10"),
+            "required_version": "3.11.0",
+            "is_compatible": platform.python_version().startswith("3.11"),
         }
         return env_config
 

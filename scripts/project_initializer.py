@@ -168,7 +168,7 @@ class ProjectInitializer:
             "project_config.yaml": {
                 "project": {"name": "SutazAI", "version": "2.0.0"},
                 "system_configuration": {
-                    "python_version": "3.12+",
+                    "python_version": "3.11",
                     "environment": "development",
                 },
             },

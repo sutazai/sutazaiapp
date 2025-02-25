@@ -175,7 +175,7 @@ EOF
     cat > "${BASE_DIR}/sutazai.env" <<EOF
 # SutazAI Environment Variables
 SUTAZAI_ROOT=${BASE_DIR}
-PYTHON_VERSION=3.9
+PYTHON_VERSION=3.11
 GPU_ENABLED=true
 DOCKER_NETWORK=sutazai-net
 MODEL_REGISTRY=/opt/sutazai/models

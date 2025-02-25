@@ -15,7 +15,7 @@ echo -e "\033[0m"
 
 # Configuration
 BASE_DIR="/root/sutazai/v1"
-REQUIRED_PYTHON="3.9"
+REQUIRED_PYTHON="3.11"
 
 verify_selinux() {
     if command -v sestatus >/dev/null; then
@@ -66,8 +66,8 @@ verify_deployment() {
     
     # Check Python version
     py_version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
-    if [ "$py_version" != "3.9" ]; then
-        echo "❌ Python 3.9 required, found $py_version"
+    if [ "$py_version" != "3.11" ]; then
+        echo "❌ Python 3.11 required, found $py_version"
         exit 1
     fi
 

@@ -5,7 +5,7 @@
     "os_release": "6.11.0-18-generic",
     "machine": "x86_64",
     "processor": "x86_64",
-    "python_version": "3.12.3",
+    "python_version": "3.11",
     "cpu_cores": 20,
     "total_memory_gb": 46.67255783081055
   },

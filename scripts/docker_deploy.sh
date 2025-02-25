@@ -2,6 +2,7 @@
 
 # SutazAI Docker Deployment Script
 # Advanced deployment with pre-checks, rollback, and monitoring
+# Updated for Python 3.11 compatibility
 
 # Color codes
 GREEN='\033[0;32m'
@@ -65,10 +66,15 @@ rollback_deployment() {
 
 # Pre-deployment checks
 pre_deployment_checks() {
-    log_message "INFO" "Running pre-deployment system checks..."
+    log_message "INFO" "Running pre-deployment system checks for Python 3.11..."
+    
+    # Check Python 3.11 is installed
+    if ! command -v python3.11 &> /dev/null; then
+        handle_error "Python 3.11 is not installed. Please install Python 3.11 to continue."
+    fi
     
     # Run system verification script
-    python3 "$PROJECT_ROOT/system_verify.py" || handle_error "System verification failed"
+    python3.11 "$PROJECT_ROOT/system_verify.py" || handle_error "System verification failed"
     
     # Check Docker and Docker Compose
     docker --version || handle_error "Docker is not installed"
@@ -80,7 +86,7 @@ pre_deployment_checks() {
 
 # Pull latest images
 pull_images() {
-    log_message "INFO" "Pulling latest Docker images..."
+    log_message "INFO" "Pulling latest Docker images with Python 3.11..."
     
     # Backup current .env file
     cp "$PROJECT_ROOT/.env" "$PROJECT_ROOT/.env.backup"
@@ -91,7 +97,7 @@ pull_images() {
 
 # Deploy services
 deploy_services() {
-    log_message "INFO" "Deploying SutazAI services..."
+    log_message "INFO" "Deploying SutazAI services with Python 3.11..."
     
     # Stop existing containers
     docker-compose -f "$PROJECT_ROOT/docker-compose.yml" down
@@ -119,12 +125,12 @@ post_deployment_checks() {
     done
     
     # Run performance monitoring
-    python3 "$PROJECT_ROOT/performance_monitor.py" --duration 5 &
+    python3.11 "$PROJECT_ROOT/performance_monitor.py" --duration 5 &
 }
 
 # Main deployment function
 main() {
-    log_message "INFO" "Starting SutazAI Docker Deployment"
+    log_message "INFO" "Starting SutazAI Docker Deployment with Python 3.11"
     
     # Change to project root
     cd "$PROJECT_ROOT"
@@ -138,7 +144,7 @@ main() {
     deploy_services
     post_deployment_checks
     
-    log_message "SUCCESS" "Docker Deployment Completed Successfully!"
+    log_message "SUCCESS" "Docker Deployment with Python 3.11 Completed Successfully!"
 }
 
 # Execute main deployment function

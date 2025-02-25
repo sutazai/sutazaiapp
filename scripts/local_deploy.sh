@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Enhanced Local Deployment Script for SutazAI
+# Updated for Python 3.11 compatibility
 
 # Exit on any error
 set -e
@@ -81,14 +82,14 @@ rollback_deployment() {
 trap 'handle_error "Deployment failed unexpectedly"' ERR
 
 deploy_system_checks() {
-    log_message "INFO" "Running system compatibility checks..."
+    log_message "INFO" "Running system compatibility checks for Python 3.11..."
     
     # Run pre-deployment checklist
     "$PROJECT_ROOT/pre_deploy_checklist.sh" || handle_error "System compatibility checks failed"
 }
 
 setup_virtual_environment() {
-    log_message "INFO" "Setting up virtual environment..."
+    log_message "INFO" "Setting up Python 3.11 virtual environment..."
     
     # Backup current .env file
     if [ -f "$PROJECT_ROOT/.env" ]; then
@@ -96,18 +97,18 @@ setup_virtual_environment() {
     fi
     
     # Check if venv exists
-    if [ ! -d "$PROJECT_ROOT/venv" ]; then
-        python3 -m venv "$PROJECT_ROOT/venv"
+    if [ ! -d "$PROJECT_ROOT/venv-3.11" ]; then
+        python3.11 -m venv "$PROJECT_ROOT/venv-3.11"
     fi
     
     # Activate virtual environment
-    source "$PROJECT_ROOT/venv/bin/activate"
+    source "$PROJECT_ROOT/venv-3.11/bin/activate"
     
     # Upgrade pip and setuptools
-    pip install --upgrade pip setuptools
+    python3.11 -m pip install --upgrade pip setuptools wheel
     
     # Install production requirements
-    pip install -r "$PROJECT_ROOT/requirements-prod.txt" || handle_error "Failed to install dependencies"
+    python3.11 -m pip install -r "$PROJECT_ROOT/requirements-prod.txt" || handle_error "Failed to install dependencies"
 }
 
 configure_environment() {
@@ -119,7 +120,7 @@ configure_environment() {
     fi
     
     # Generate or update secrets
-    python3 "$PROJECT_ROOT/config.py" --generate-secrets || handle_error "Failed to generate secrets"
+    python3.11 "$PROJECT_ROOT/config.py" --generate-secrets || handle_error "Failed to generate secrets"
 }
 
 start_services() {
@@ -142,7 +143,7 @@ start_services() {
 run_system_optimization() {
     log_message "INFO" "Optimizing system..."
     
-    python3 "$PROJECT_ROOT/system_optimizer.py" || log_message "WARN" "System optimization script encountered issues"
+    python3.11 "$PROJECT_ROOT/system_optimizer.py" || log_message "WARN" "System optimization script encountered issues"
 }
 
 run_database_migrations() {
@@ -150,15 +151,15 @@ run_database_migrations() {
     
     # Activate virtual environment if not already active
     if [ -z "$VIRTUAL_ENV" ]; then
-        source "$PROJECT_ROOT/venv/bin/activate"
+        source "$PROJECT_ROOT/venv-3.11/bin/activate"
     fi
     
     # Run database migrations
-    python3 -m alembic upgrade head || handle_error "Database migration failed"
+    python3.11 -m alembic upgrade head || handle_error "Database migration failed"
 }
 
 main() {
-    log_message "INFO" "Starting SutazAI Local Deployment"
+    log_message "INFO" "Starting SutazAI Local Deployment with Python 3.11"
     
     # Change to project root
     cd "$PROJECT_ROOT"
@@ -171,10 +172,10 @@ main() {
     run_database_migrations
     run_system_optimization
     
-    log_message "SUCCESS" "Deployment Completed Successfully!"
+    log_message "SUCCESS" "Deployment Completed Successfully with Python 3.11!"
     
     # Optional: Run performance monitor
-    python3 "$PROJECT_ROOT/performance_monitor.py" &
+    python3.11 "$PROJECT_ROOT/performance_monitor.py" &
 }
 
 # Run main deployment function
