@@ -58,7 +58,9 @@ cext = psutil._psplatform.cext
 @pytest.mark.skipif(not WINDOWS, reason="WINDOWS only")
 @pytest.mark.skipif(PYPY, reason="pywin32 not available on PYPY")
 # https://github.com/giampaolo/psutil/pull/1762#issuecomment-632892692
-@pytest.mark.skipif(GITHUB_ACTIONS and not PY3, reason="pywin32 broken on GITHUB + PY2")
+@pytest.mark.skipif(
+    GITHUB_ACTIONS and not PY3, reason="pywin32 broken on GITHUB + PY2"
+)
 class WindowsTestCase(PsutilTestCase):
     pass
 
@@ -120,7 +122,9 @@ class TestCpuAPIs(WindowsTestCase):
 
     def test_cpu_count_logical_vs_wmi(self):
         w = wmi.WMI()
-        procs = sum(proc.NumberOfLogicalProcessors for proc in w.Win32_Processor())
+        procs = sum(
+            proc.NumberOfLogicalProcessors for proc in w.Win32_Processor()
+        )
         assert psutil.cpu_count() == procs
 
     def test_cpu_count_cores_vs_wmi(self):
@@ -146,7 +150,9 @@ class TestSystemAPIs(WindowsTestCase):
             if "pseudo-interface" in nic.replace(" ", "-").lower():
                 continue
             if nic not in out:
-                raise self.fail("%r nic wasn't found in 'ipconfig /all' output" % nic)
+                raise self.fail(
+                    "%r nic wasn't found in 'ipconfig /all' output" % nic
+                )
 
     def test_total_phymem(self):
         w = wmi.WMI().Win32_ComputerSystem()[0]
@@ -226,7 +232,9 @@ class TestSystemAPIs(WindowsTestCase):
                     assert usage.free == wmi_free
                     # 10 MB tolerance
                     if abs(usage.free - wmi_free) > 10 * 1024 * 1024:
-                        raise self.fail("psutil=%s, wmi=%s" % (usage.free, wmi_free))
+                        raise self.fail(
+                            "psutil=%s, wmi=%s" % (usage.free, wmi_free)
+                        )
                     break
             else:
                 raise self.fail("can't find partition %s" % repr(ps_part))
@@ -239,7 +247,9 @@ class TestSystemAPIs(WindowsTestCase):
             sys_value = win32api.GetDiskFreeSpaceEx(disk.mountpoint)
             psutil_value = psutil.disk_usage(disk.mountpoint)
             assert abs(sys_value[0] - psutil_value.free) < TOLERANCE_DISK_USAGE
-            assert abs(sys_value[1] - psutil_value.total) < TOLERANCE_DISK_USAGE
+            assert (
+                abs(sys_value[1] - psutil_value.total) < TOLERANCE_DISK_USAGE
+            )
             assert psutil_value.used == psutil_value.total - psutil_value.free
 
     def test_disk_partitions(self):
@@ -270,7 +280,9 @@ class TestSystemAPIs(WindowsTestCase):
     def test_boot_time(self):
         wmi_os = wmi.WMI().Win32_OperatingSystem()
         wmi_btime_str = wmi_os[0].LastBootUpTime.split(".")[0]
-        wmi_btime_dt = datetime.datetime.strptime(wmi_btime_str, "%Y%m%d%H%M%S")
+        wmi_btime_dt = datetime.datetime.strptime(
+            wmi_btime_str, "%Y%m%d%H%M%S"
+        )
         psutil_dt = datetime.datetime.fromtimestamp(psutil.boot_time())
         diff = abs((wmi_btime_dt - psutil_dt).total_seconds())
         assert diff <= 5
@@ -304,7 +316,10 @@ class TestSensorsBattery(WindowsTestCase):
         w = wmi.WMI()
         battery_wmi = w.query("select * from Win32_Battery")[0]
         battery_psutil = psutil.sensors_battery()
-        assert abs(battery_psutil.percent - battery_wmi.EstimatedChargeRemaining) < 1
+        assert (
+            abs(battery_psutil.percent - battery_wmi.EstimatedChargeRemaining)
+            < 1
+        )
 
     @pytest.mark.skipif(not HAS_BATTERY, reason="no battery")
     def test_power_plugged(self):
@@ -327,14 +342,20 @@ class TestSensorsBattery(WindowsTestCase):
         with mock.patch(
             "psutil._pswindows.cext.sensors_battery", return_value=(1, 0, 0, 0)
         ) as m:
-            assert psutil.sensors_battery().secsleft == psutil.POWER_TIME_UNLIMITED
+            assert (
+                psutil.sensors_battery().secsleft
+                == psutil.POWER_TIME_UNLIMITED
+            )
             assert m.called
 
     def test_emulate_power_charging(self):
         with mock.patch(
             "psutil._pswindows.cext.sensors_battery", return_value=(0, 8, 0, 0)
         ) as m:
-            assert psutil.sensors_battery().secsleft == psutil.POWER_TIME_UNLIMITED
+            assert (
+                psutil.sensors_battery().secsleft
+                == psutil.POWER_TIME_UNLIMITED
+            )
             assert m.called
 
     def test_emulate_secs_left_unknown(self):
@@ -342,7 +363,9 @@ class TestSensorsBattery(WindowsTestCase):
             "psutil._pswindows.cext.sensors_battery",
             return_value=(0, 0, 0, -1),
         ) as m:
-            assert psutil.sensors_battery().secsleft == psutil.POWER_TIME_UNKNOWN
+            assert (
+                psutil.sensors_battery().secsleft == psutil.POWER_TIME_UNKNOWN
+            )
             assert m.called
 
 
@@ -462,12 +485,18 @@ class TestProcess(WindowsTestCase):
         psutil_value = psutil.Process(self.pid).memory_info()
         assert sys_value["PeakWorkingSetSize"] == psutil_value.peak_wset
         assert sys_value["WorkingSetSize"] == psutil_value.wset
-        assert sys_value["QuotaPeakPagedPoolUsage"] == psutil_value.peak_paged_pool
+        assert (
+            sys_value["QuotaPeakPagedPoolUsage"]
+            == psutil_value.peak_paged_pool
+        )
         assert sys_value["QuotaPagedPoolUsage"] == psutil_value.paged_pool
         assert (
-            sys_value["QuotaPeakNonPagedPoolUsage"] == psutil_value.peak_nonpaged_pool
+            sys_value["QuotaPeakNonPagedPoolUsage"]
+            == psutil_value.peak_nonpaged_pool
         )
-        assert sys_value["QuotaNonPagedPoolUsage"] == psutil_value.nonpaged_pool
+        assert (
+            sys_value["QuotaNonPagedPoolUsage"] == psutil_value.nonpaged_pool
+        )
         assert sys_value["PagefileUsage"] == psutil_value.pagefile
         assert sys_value["PeakPagefileUsage"] == psutil_value.peak_pagefile
 
@@ -493,7 +522,9 @@ class TestProcess(WindowsTestCase):
             win32con.PROCESS_QUERY_INFORMATION, win32con.FALSE, self.pid
         )
         self.addCleanup(win32api.CloseHandle, handle)
-        sys_value = from_bitmask(win32process.GetProcessAffinityMask(handle)[0])
+        sys_value = from_bitmask(
+            win32process.GetProcessAffinityMask(handle)[0]
+        )
         psutil_value = psutil.Process(self.pid).cpu_affinity()
         assert psutil_value == sys_value
 
@@ -522,7 +553,9 @@ class TestProcess(WindowsTestCase):
         self.addCleanup(ctypes.windll.kernel32.CloseHandle, handle)
 
         hndcnt = ctypes.wintypes.DWORD()
-        ctypes.windll.kernel32.GetProcessHandleCount(handle, ctypes.byref(hndcnt))
+        ctypes.windll.kernel32.GetProcessHandleCount(
+            handle, ctypes.byref(hndcnt)
+        )
         sys_value = hndcnt.value
         psutil_value = psutil.Process(self.pid).num_handles()
         assert psutil_value == sys_value
@@ -564,7 +597,9 @@ class TestProcessWMI(WindowsTestCase):
         assert p.name() == w.Caption
 
     # This fail on github because using virtualenv for test environment
-    @pytest.mark.skipif(GITHUB_ACTIONS, reason="unreliable path on GITHUB_ACTIONS")
+    @pytest.mark.skipif(
+        GITHUB_ACTIONS, reason="unreliable path on GITHUB_ACTIONS"
+    )
     def test_exe(self):
         w = wmi.WMI().Win32_Process(ProcessId=self.pid)[0]
         p = psutil.Process(self.pid)
@@ -608,7 +643,9 @@ class TestProcessWMI(WindowsTestCase):
         w = wmi.WMI().Win32_Process(ProcessId=self.pid)[0]
         p = psutil.Process(self.pid)
         wmic_create = str(w.CreationDate.split(".")[0])
-        psutil_create = time.strftime("%Y%m%d%H%M%S", time.localtime(p.create_time()))
+        psutil_create = time.strftime(
+            "%Y%m%d%H%M%S", time.localtime(p.create_time())
+        )
         assert wmic_create == psutil_create
 
 
@@ -695,7 +732,9 @@ class TestDualProcessImplementation(PsutilTestCase):
                 b = cext.proc_cmdline(pid, use_peb=False)
             except OSError as err:
                 err = convert_oserror(err)
-                if not isinstance(err, (psutil.AccessDenied, psutil.NoSuchProcess)):
+                if not isinstance(
+                    err, (psutil.AccessDenied, psutil.NoSuchProcess)
+                ):
                     raise
             else:
                 assert a == b
@@ -734,7 +773,9 @@ class RemoteProcessTestCase(PsutilTestCase):
 
         other_python = self.find_other_interpreter()
         if other_python is None:
-            raise pytest.skip("could not find interpreter with opposite bitness")
+            raise pytest.skip(
+                "could not find interpreter with opposite bitness"
+            )
         if IS_64BIT:
             self.python64 = sys.executable
             self.python32 = other_python

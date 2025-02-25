@@ -1,8 +1,6 @@
 import os
 
 from sutazai.api import SutazAiAPI
-from sutazai.security.circuits import SutazAiFuseCircuit
-from sutazai.security.locks import CelestialLock
 
 
 class ImmutableLoyaltyCore:

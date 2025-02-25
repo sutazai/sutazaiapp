@@ -53,7 +53,9 @@ class ExceptionTracker:
         # Log to file
         log_dir = "/opt/SutazAI/logs/exceptions"
         os.makedirs(log_dir, exist_ok=True)
-        log_file = os.path.join(log_dir, f"{exception_details['unique_id']}.json")
+        log_file = os.path.join(
+            log_dir, f"{exception_details['unique_id']}.json"
+        )
 
         with open(log_file, "w") as f:
             json.dump(exception_details, f, indent=4)
@@ -136,14 +138,10 @@ class ConfigurationError(SutazAIBaseException):
         )
 
 
-class SecurityViolationError(SutazAIBaseException):
-    """Raised when a security policy is violated."""
 
-    def __init__(self, message: str, security_context: Optional[dict] = None):
         super().__init__(
             message,
             error_code="SUTAZAI_SECURITY_VIOLATION",
-            context=security_context,
         )
 
 

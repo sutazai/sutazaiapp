@@ -92,9 +92,12 @@ class PythonDependency(Dependency):
         return allowed
 
     def get_versions(self, db_full):
-        pkg_meta = db_full.get("meta", {}).get("packages", {}).get(self.name, {})
+        pkg_meta = (
+            db_full.get("meta", {}).get("packages", {}).get(self.name, {})
+        )
         versions = self.filter_by_supported_versions(
-            pkg_meta.get("insecure_versions", []) + pkg_meta.get("secure_versions", [])
+            pkg_meta.get("insecure_versions", [])
+            + pkg_meta.get("secure_versions", [])
         )
         return set(versions)
 

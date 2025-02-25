@@ -99,7 +99,6 @@ DEFAULT_NET_ACCESS=disabled
 ```
 
 #### 4.2 OTP Setup (for External Operations)
-The system uses OTP for security when accessing external resources:
 ```bash
 # Generate a new OTP secret (if needed)
 python -c "import pyotp; print(pyotp.random_base32())"
@@ -189,4 +188,3 @@ cd ..
 - [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md)
 - [Deployment Guide](/docs/DEPLOYMENT_GUIDE.md)
 - [System Architecture](/docs/SYSTEM_ARCHITECTURE.md)
-- [Security Policy](/docs/SECURITY_POLICY.md)

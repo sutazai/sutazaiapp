@@ -17,29 +17,28 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-# Apply security patch to xmlrpc
 defusedxml.xmlrpc.monkey_patch()
 
+
 class SecureXMLRPCError(Exception):
-    """Custom exception for XML-RPC security issues."""
+
 
 class PipXmlrpcTransport(xmlrpc.client.Transport):
-    """Enhanced XML-RPC Transport with comprehensive security features."""
 
     MAX_REQUEST_SIZE = 10 * 1024 * 1024  # 10MB limit
-    ALLOWED_CONTENT_TYPES = {'text/xml', 'application/xml'}
+    ALLOWED_CONTENT_TYPES = {"text/xml", "application/xml"}
     MAX_RETRY_COUNT = 3
 
     def __init__(
-        self, 
-        index_url: str, 
-        session: PipSession, 
+        self,
+        index_url: str,
+        session: PipSession,
         use_datetime: bool = False,
         timeout: int = 30,
-        verify_ssl: bool = True
+        verify_ssl: bool = True,
     ) -> None:
         """Initialize secure transport with enhanced parameters.
-        
+
         Args:
             index_url: Base URL for the XML-RPC server
             session: PipSession instance for requests
@@ -57,39 +56,35 @@ class PipXmlrpcTransport(xmlrpc.client.Transport):
     @staticmethod
     def _parse_url(url: str) -> Tuple[str, str]:
         """Safely parse URL components.
-        
+
         Args:
             url: URL to parse
-            
+
         Returns:
             Tuple of scheme and netloc
-            
+
         Raises:
             SecureXMLRPCError: If URL is invalid or uses insecure protocol
         """
         parsed = urllib.parse.urlparse(url)
-        if parsed.scheme not in ('https', 'http'):
+        if parsed.scheme not in ("https", "http"):
             raise SecureXMLRPCError(f"Invalid URL scheme: {parsed.scheme}")
-        if parsed.scheme == 'http':
+        if parsed.scheme == "http":
             logger.warning("Using insecure HTTP connection")
         return parsed.scheme, parsed.netloc
 
     @lru_cache(maxsize=128)
     def _validate_request(
-        self,
-        host: str,
-        handler: str,
-        request_size: int,
-        content_type: str
+        self, host: str, handler: str, request_size: int, content_type: str
     ) -> None:
         """Validate request parameters.
-        
+
         Args:
             host: Target host
             handler: Request handler
             request_size: Size of request body
             content_type: Content type header
-            
+
         Raises:
             SecureXMLRPCError: If validation fails
         """
@@ -108,31 +103,30 @@ class PipXmlrpcTransport(xmlrpc.client.Transport):
         verbose: bool = False,
     ) -> _Marshallable:
         """Make a secure XML-RPC request with comprehensive validation.
-        
+
         Args:
             host: Target host
             handler: Request handler
             request_body: Request data
             verbose: Enable verbose logging
-            
+
         Returns:
             Parsed response data
-            
+
         Raises:
             SecureXMLRPCError: If request fails validation or execution
         """
         try:
             assert host == self._netloc, "Host mismatch"
-            
+
             # Validate request parameters
             self._validate_request(
                 host=host,
                 handler=handler,
                 request_size=len(request_body),
-                content_type='text/xml'
+                content_type="text/xml",
             )
 
-            # Prepare headers with security measures
             headers = {
                 "Content-Type": "text/xml",
                 "X-Request-ID": self._generate_request_id(),
@@ -148,20 +142,23 @@ class PipXmlrpcTransport(xmlrpc.client.Transport):
                         headers=headers,
                         stream=True,
                         timeout=self._timeout,
-                        verify=self._verify_ssl
+                        verify=self._verify_ssl,
                     )
                     response.raise_for_status()
                     self.verbose = verbose
                     return self.parse_response(response.raw)
-                
+
                 except Exception as e:
                     self._retry_count += 1
                     if self._retry_count >= self.MAX_RETRY_COUNT:
-                        raise SecureXMLRPCError(f"Request failed after {self.MAX_RETRY_COUNT} retries: {str(e)}")
-                    logger.warning(f"Request failed, attempt {self._retry_count} of {self.MAX_RETRY_COUNT}")
+                        raise SecureXMLRPCError(
+                            f"Request failed after {self.MAX_RETRY_COUNT} retries: {str(e)}"
+                        )
+                    logger.warning(
+                        f"Request failed, attempt {self._retry_count} of {self.MAX_RETRY_COUNT}"
+                    )
 
         except AssertionError as e:
-            raise SecureXMLRPCError(f"Security assertion failed: {str(e)}")
         except Exception as e:
             raise SecureXMLRPCError(f"Request failed: {str(e)}")
         finally:

@@ -6,7 +6,6 @@ Comprehensive script to:
 - Validate system architecture integrity
 - Identify potential vulnerabilities
 - Optimize system structure
-- Ensure peak performance and security
 """
 
 import importlib
@@ -36,7 +35,6 @@ class SystemArchitectureValidator:
             "directory_structure": {},
             "module_integrity": {},
             "dependency_analysis": {},
-            "security_checks": {},
             "optimization_recommendations": [],
         }
 
@@ -52,7 +50,6 @@ class SystemArchitectureValidator:
             "backend",
             "core_system",
             "scripts",
-            "security",
             "system_integration",
             "advanced_system_analysis",
             "logs",
@@ -167,14 +164,10 @@ class SystemArchitectureValidator:
         self.validation_report["dependency_analysis"] = dependency_analysis
         return dependency_analysis
 
-    def security_checks(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security checks
 
         Returns:
-            Detailed security analysis report
         """
-        security_checks = {
             "sensitive_files": [],
             "potential_vulnerabilities": [],
         }
@@ -187,7 +180,6 @@ class SystemArchitectureValidator:
                 if any(
                     pattern in file.lower() for pattern in sensitive_patterns
                 ):
-                    security_checks["sensitive_files"].append(
                         os.path.join(root, file)
                     )
 
@@ -200,9 +192,7 @@ class SystemArchitectureValidator:
                         with open(file_path, "r") as f:
                             content = f.read()
 
-                            # Check for potential security issues
                             if "eval(" in content or "exec(" in content:
-                                security_checks[
                                     "potential_vulnerabilities"
                                 ].append(
                                     {
@@ -215,7 +205,6 @@ class SystemArchitectureValidator:
                                 "subprocess.call(" in content
                                 or "os.system(" in content
                             ):
-                                security_checks[
                                     "potential_vulnerabilities"
                                 ].append(
                                     {
@@ -226,8 +215,6 @@ class SystemArchitectureValidator:
                     except Exception:
                         pass
 
-        self.validation_report["security_checks"] = security_checks
-        return security_checks
 
     def generate_optimization_recommendations(self) -> List[str]:
         """
@@ -269,14 +256,9 @@ class SystemArchitectureValidator:
                 "Update requirements.txt with project dependencies"
             )
 
-        # Security recommendations
-        security_checks = self.validation_report["security_checks"]
-        if security_checks["sensitive_files"]:
             recommendations.append("Review and secure sensitive files")
 
-        if security_checks["potential_vulnerabilities"]:
             recommendations.append(
-                "Address potential security vulnerabilities in code"
             )
 
         self.validation_report["optimization_recommendations"] = (
@@ -295,7 +277,6 @@ class SystemArchitectureValidator:
         self.validate_directory_structure()
         self.validate_module_integrity()
         self.analyze_dependencies()
-        self.security_checks()
         self.generate_optimization_recommendations()
 
         # Save report

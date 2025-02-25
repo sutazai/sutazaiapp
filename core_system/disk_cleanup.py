@@ -87,7 +87,9 @@ class DiskCleanupManager:
                     ],
                     check=True,
                 )
-                self.logger.info(f"Cleaned up files older than {days} days in {path}")
+                self.logger.info(
+                    f"Cleaned up files older than {days} days in {path}"
+                )
             except subprocess.CalledProcessError as e:
                 self.logger.error(f"Error cleaning {path}: {e}")
 
@@ -114,7 +116,9 @@ class DiskCleanupManager:
                     )
                     self.logger.info(f"Cleaned up {ext} files in {path}")
                 except subprocess.CalledProcessError as e:
-                    self.logger.error(f"Error cleaning {ext} files in {path}: {e}")
+                    self.logger.error(
+                        f"Error cleaning {ext} files in {path}: {e}"
+                    )
 
     def docker_cleanup(self):
         """Clean up Docker resources."""

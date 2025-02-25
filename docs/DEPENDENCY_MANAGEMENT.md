@@ -2,18 +2,14 @@
 
 ## Overview
 
-This document provides a comprehensive guide to dependency management in the SutazAI project, focusing on security, performance, and maintainability.
 
 ## Key Principles
 
-1. **Version Pinning**: All dependencies are pinned to specific versions to ensure reproducibility and security.
-2. **Security First**: Regular vulnerability scanning and proactive updates.
 3. **Minimal Dependencies**: Only essential packages are included.
 
 ## Dependency Management Tools
 
 ### 1. Safety
-- Scans dependencies for known security vulnerabilities
 - Integrated into our dependency management workflow
 - Configured to block updates with critical vulnerabilities
 
@@ -23,7 +19,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 
 ## Dependency Update Strategy
 
-### Security Levels
 - **Critical**: Monthly updates, automatic patching
 - **High**: Quarterly updates, manual review required
 - **Medium**: Semi-annual updates, optional
@@ -32,7 +27,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 1. Run vulnerability scan
 2. Check for outdated packages
 3. Validate dependency tree
-4. Apply updates based on security level
 5. Run comprehensive test suite
 
 ## Configuration Files
@@ -44,7 +38,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 
 ### `dependency_policy.yml`
 - Defines update frequencies
-- Specifies security thresholds
 - Configures compliance checks
 
 ## Best Practices
@@ -61,7 +54,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 - Performs comprehensive dependency checks
 - Logs all actions and findings
 
-## Security Considerations
 
 - Block packages from unverified sources
 - Require package signature verification
@@ -73,7 +65,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 ### Common Issues
 - Version conflicts
 - Outdated packages
-- Security vulnerabilities
 
 ### Resolution Steps
 1. Check `dependency_manager.log`
@@ -84,7 +75,6 @@ This document provides a comprehensive guide to dependency management in the Sut
 
 When adding new dependencies:
 1. Justify the package's necessity
-2. Check security ratings
 3. Verify minimal version requirements
 4. Update documentation
 
@@ -97,7 +87,6 @@ When adding new dependencies:
 ## Future Improvements
 
 - Machine learning-based dependency recommendation
-- Automated security patch integration
 - Enhanced compliance reporting
 
 ## References

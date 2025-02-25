@@ -308,7 +308,9 @@ class Context:
                 " StopIteration exception"
             )
 
-    def derived(self, locals: t.Optional[t.Dict[str, t.Any]] = None) -> "Context":
+    def derived(
+        self, locals: t.Optional[t.Dict[str, t.Any]] = None
+    ) -> "Context":
         """Internal helper function to create a derived context.  This is
         used in situations where the system needs a new context in the same
         template that is independent.
@@ -364,7 +366,9 @@ class BlockReference:
             return self._context.environment.undefined(
                 f"there is no parent block called {self.name!r}.", name="super"
             )
-        return BlockReference(self.name, self._context, self._stack, self._depth + 1)
+        return BlockReference(
+            self.name, self._context, self._stack, self._depth + 1
+        )
 
     @internalcode
     async def _async_call(self) -> str:
@@ -447,7 +451,9 @@ class LoopContext:
         except TypeError:
             iterable = list(self._iterator)
             self._iterator = self._to_iterator(iterable)
-            self._length = len(iterable) + self.index + (self._after is not missing)
+            self._length = (
+                len(iterable) + self.index + (self._after is not missing)
+            )
 
         return self._length
 
@@ -608,7 +614,9 @@ class AsyncLoopContext(LoopContext):
         except TypeError:
             iterable = [x async for x in self._iterator]
             self._iterator = self._to_iterator(iterable)
-            self._length = len(iterable) + self.index + (self._after is not missing)
+            self._length = (
+                len(iterable) + self.index + (self._after is not missing)
+            )
 
         return self._length
 
@@ -729,7 +737,7 @@ class Macro:
         # arguments expected we start filling in keyword arguments
         # and defaults.
         if off != self._argument_count:
-            for name in self.arguments[len(arguments):]:
+            for name in self.arguments[len(arguments) :]:
                 try:
                     value = kwargs.pop(name)
                 except KeyError:
@@ -746,7 +754,9 @@ class Macro:
         if self.caller and not found_caller:
             caller = kwargs.pop("caller", None)
             if caller is None:
-                caller = self._environment.undefined("No caller defined", name="caller")
+                caller = self._environment.undefined(
+                    "No caller defined", name="caller"
+                )
             arguments.append(caller)
 
         if self.catch_kwargs:
@@ -761,7 +771,7 @@ class Macro:
                 f"macro {self.name!r} takes no keyword argument {next(iter(kwargs))!r}"
             )
         if self.catch_varargs:
-            arguments.append(args[self._argument_count:])
+            arguments.append(args[self._argument_count :])
         elif len(args) > self._argument_count:
             raise TypeError(
                 f"macro {self.name!r} takes not more than"
@@ -770,7 +780,9 @@ class Macro:
 
         return self._invoke(arguments, autoescape)
 
-    async def _async_invoke(self, arguments: t.List[t.Any], autoescape: bool) -> str:
+    async def _async_invoke(
+        self, arguments: t.List[t.Any], autoescape: bool
+    ) -> str:
         rv = await self._func(*arguments)  # type: ignore
 
         if autoescape:
@@ -940,7 +952,9 @@ def make_logging_undefined(
         logger.addHandler(logging.StreamHandler(sys.stderr))
 
     def _log_message(undef: Undefined) -> None:
-        logger.warning("Template variable warning: %s", undef._undefined_message)
+        logger.warning(
+            "Template variable warning: %s", undef._undefined_message
+        )
 
     class LoggingUndefined(base):  # type: ignore
         __slots__ = ()
@@ -1060,5 +1074,7 @@ class StrictUndefined(Undefined):
 
     __slots__ = ()
     __iter__ = __str__ = __len__ = Undefined._fail_with_undefined_error
-    __eq__ = __ne__ = __bool__ = __hash__ = Undefined._fail_with_undefined_error
+    __eq__ = __ne__ = __bool__ = __hash__ = (
+        Undefined._fail_with_undefined_error
+    )
     __contains__ = Undefined._fail_with_undefined_error

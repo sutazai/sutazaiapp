@@ -381,12 +381,18 @@ class InstallCommand(RequirementCommand):
             )
 
             if options.json_report_file:
-                report = InstallationReport(requirement_set.requirements_to_install)
+                report = InstallationReport(
+                    requirement_set.requirements_to_install
+                )
                 if options.json_report_file == "-":
                     print_json(data=report.to_dict())
                 else:
-                    with open(options.json_report_file, "w", encoding="utf-8") as f:
-                        json.dump(report.to_dict(), f, indent=2, ensure_ascii=False)
+                    with open(
+                        options.json_report_file, "w", encoding="utf-8"
+                    ) as f:
+                        json.dump(
+                            report.to_dict(), f, indent=2, ensure_ascii=False
+                        )
 
             if options.dry_run:
                 # In non dry-run mode, the legacy versions and specifiers check
@@ -399,7 +405,9 @@ class InstallCommand(RequirementCommand):
                 if would_install_items:
                     write_output(
                         "Would install %s",
-                        " ".join("-".join(item) for item in would_install_items),
+                        " ".join(
+                            "-".join(item) for item in would_install_items
+                        ),
                     )
                 return SUCCESS
 
@@ -411,7 +419,9 @@ class InstallCommand(RequirementCommand):
                 # If we're not replacing an already installed pip,
                 # we're not modifying it.
                 modifying_pip = pip_req.satisfied_by is None
-            protect_pip_from_modification_on_windows(modifying_pip=modifying_pip)
+            protect_pip_from_modification_on_windows(
+                modifying_pip=modifying_pip
+            )
 
             reqs_to_build = [
                 r
@@ -440,7 +450,8 @@ class InstallCommand(RequirementCommand):
             # Check for conflicts in the package set we're installing.
             conflicts: Optional[ConflictDetails] = None
             should_warn_about_conflicts = (
-                not options.ignore_dependencies and options.warn_about_conflicts
+                not options.ignore_dependencies
+                and options.warn_about_conflicts
             )
             if should_warn_about_conflicts:
                 conflicts = self._determine_conflicts(to_install)
@@ -626,7 +637,9 @@ class InstallCommand(RequirementCommand):
                     requirement=req,
                     dep_name=dep_name,
                     dep_version=dep_version,
-                    you=("you" if resolver_variant == "resolvelib" else "you'll"),
+                    you=(
+                        "you" if resolver_variant == "resolvelib" else "you'll"
+                    ),
                 )
                 parts.append(message)
 

@@ -321,7 +321,9 @@ class CommonLispLexer(RegexLexer):
     # characters that are not macro-characters and can be used to begin a symbol
     nonmacro = r"\\.|[\w!$%&*+-/<=>?@\[\]^{}~]"
     constituent = nonmacro + "|[#.:]"
-    terminated = r'(?=[ "()\'\n,;`])'  # whitespace or terminating macro characters
+    terminated = (
+        r'(?=[ "()\'\n,;`])'  # whitespace or terminating macro characters
+    )
 
     # symbol token, reverse-engineered from hyperspec
     # Take a deep breath...
@@ -349,7 +351,9 @@ class CommonLispLexer(RegexLexer):
 
     def get_tokens_unprocessed(self, text):
         stack = ["root"]
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name.Variable:
                 if value in self.builtin_function:
                     yield index, Name.Builtin, value
@@ -1429,7 +1433,6 @@ class RacketLexer(RegexLexer):
         "current-reader-guard",
         "current-readtable",
         "current-seconds",
-        "current-security-guard",
         "current-subprocess-custodian-mode",
         "current-thread",
         "current-thread-group",
@@ -2073,7 +2076,6 @@ class RacketLexer(RegexLexer):
         "make-rectangular",
         "make-rename-transformer",
         "make-resolved-module-path",
-        "make-security-guard",
         "make-semaphore",
         "make-set!-transformer",
         "make-shared-bytes",
@@ -2555,7 +2557,6 @@ class RacketLexer(RegexLexer):
         "round",
         "second",
         "seconds->date",
-        "security-guard?",
         "semaphore-peek-evt",
         "semaphore-peek-evt?",
         "semaphore-post",
@@ -3700,7 +3701,9 @@ class EmacsLispLexer(RegexLexer):
     # characters that are not macro-characters and can be used to begin a symbol
     nonmacro = r"\\.|[\w!$%&*+-/<=>?@^{}~|]"
     constituent = nonmacro + "|[#.:]"
-    terminated = r'(?=[ "()\]\'\n,;`])'  # whitespace or terminating macro characters
+    terminated = (
+        r'(?=[ "()\]\'\n,;`])'  # whitespace or terminating macro characters
+    )
 
     # symbol token, reverse-engineered from hyperspec
     # Take a deep breath...
@@ -5241,7 +5244,9 @@ class EmacsLispLexer(RegexLexer):
 
     def get_tokens_unprocessed(self, text):
         stack = ["root"]
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name.Variable:
                 if value in EmacsLispLexer.builtin_function:
                     yield index, Name.Function, value
@@ -5601,7 +5606,11 @@ class ShenLexer(RegexLexer):
         for index, token, value in tokens:
             yield index, token, value
             if self._relevant(token):
-                if opening_paren and token == Keyword and value in self.DECLARATIONS:
+                if (
+                    opening_paren
+                    and token == Keyword
+                    and value in self.DECLARATIONS
+                ):
                     declaration = value
                     yield from self._process_declaration(declaration, tokens)
                 opening_paren = value == "(" and token == Punctuation

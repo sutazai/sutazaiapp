@@ -265,7 +265,8 @@ class SmartyLexer(RegexLexer):
             (r"[~!%^&*()+=|\[\]:;,.<>/?@-]", Operator),
             (r"(true|false|null)\b", Keyword.Constant),
             (
-                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
             (r'"(\\\\|\\[^\\]|[^"\\])*"', String.Double),
@@ -523,7 +524,8 @@ class DjangoLexer(RegexLexer):
             (r":?'(\\\\|\\[^\\]|[^'\\])*'", String.Single),
             (r"([{}()\[\]+\-*/%,:~]|[><=]=?|!=)", Operator),
             (
-                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
         ],
@@ -590,11 +592,15 @@ class MyghtyLexer(RegexLexer):
             ),
             (
                 r"(<&[^|])(.*?)(,.*?)?(&>)",
-                bygroups(Name.Tag, Name.Function, using(PythonLexer), Name.Tag),
+                bygroups(
+                    Name.Tag, Name.Function, using(PythonLexer), Name.Tag
+                ),
             ),
             (
                 r"(?s)(<&\|)(.*?)(,.*?)?(&>)",
-                bygroups(Name.Tag, Name.Function, using(PythonLexer), Name.Tag),
+                bygroups(
+                    Name.Tag, Name.Function, using(PythonLexer), Name.Tag
+                ),
             ),
             (r"</&>", Name.Tag),
             (
@@ -724,7 +730,9 @@ class MasonLexer(RegexLexer):
             ),
             (
                 r"(?s)(<%(\w+)(.*?)(>))(.*?)(</%\2\s*>)",
-                bygroups(Name.Tag, None, None, None, using(PerlLexer), Name.Tag),
+                bygroups(
+                    Name.Tag, None, None, None, using(PerlLexer), Name.Tag
+                ),
             ),
             (
                 r"(?s)(<&[^|])(.*?)(,.*?)?(&>)",
@@ -790,7 +798,9 @@ class MakoLexer(RegexLexer):
             ),
             (
                 r"(\s*)(%)([^\n]*)(\n|\Z)",
-                bygroups(Text.Whitespace, Comment.Preproc, using(PythonLexer), Other),
+                bygroups(
+                    Text.Whitespace, Comment.Preproc, using(PythonLexer), Other
+                ),
             ),
             (
                 r"(\s*)(##[^\n]*)(\n|\Z)",
@@ -974,7 +984,9 @@ class CheetahLexer(RegexLexer):
             ),
             (
                 r"(?s)(\$\{!?)(.*?)(\})",
-                bygroups(Comment.Preproc, using(CheetahPythonLexer), Comment.Preproc),
+                bygroups(
+                    Comment.Preproc, using(CheetahPythonLexer), Comment.Preproc
+                ),
             ),
             (
                 r"""(?sx)
@@ -1747,7 +1759,8 @@ class EvoqueLexer(RegexLexer):
             # + minor inconsistency: the "name" in e.g. $overlay{name=site_base}
             # should be using(PythonLexer), not passed out as String
             (
-                r'(\$)(evoque|overlay)(\{(%)?)(\s*[#\w\-"\'.]+)?' r"(.*?)((?(4)%)\})",
+                r'(\$)(evoque|overlay)(\{(%)?)(\s*[#\w\-"\'.]+)?'
+                r"(.*?)((?(4)%)\})",
                 bygroups(
                     Punctuation,
                     Name.Builtin,
@@ -2249,7 +2262,8 @@ class HandlebarsLexer(RegexLexer):
             (r':?"(\\\\|\\[^\\]|[^"\\])*"', String.Double),
             (r":?'(\\\\|\\[^\\]|[^'\\])*'", String.Single),
             (
-                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
         ],
@@ -2317,7 +2331,9 @@ class LiquidLexer(RegexLexer):
             # output tags
             (
                 r"(\{\{)(\s*)([^\s}]+)",
-                bygroups(Punctuation, Whitespace, using(this, state="generic")),
+                bygroups(
+                    Punctuation, Whitespace, using(this, state="generic")
+                ),
                 "output",
             ),
             (r"\{", Text),
@@ -2515,7 +2531,9 @@ class LiquidLexer(RegexLexer):
         "comment": [
             (
                 r"(\{%)(\s*)(endcomment)(\s*)(%\})",
-                bygroups(Punctuation, Whitespace, Name.Tag, Whitespace, Punctuation),
+                bygroups(
+                    Punctuation, Whitespace, Name.Tag, Whitespace, Punctuation
+                ),
                 ("#pop", "#pop"),
             ),
             (r".", Comment),
@@ -2524,7 +2542,9 @@ class LiquidLexer(RegexLexer):
             (r"[^{]+", Text),
             (
                 r"(\{%)(\s*)(endraw)(\s*)(%\})",
-                bygroups(Punctuation, Whitespace, Name.Tag, Whitespace, Punctuation),
+                bygroups(
+                    Punctuation, Whitespace, Name.Tag, Whitespace, Punctuation
+                ),
                 "#pop",
             ),
             (r"\{", Text),
@@ -2637,7 +2657,8 @@ class TwigLexer(RegexLexer):
                 Operator,
             ),
             (
-                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
         ],
@@ -2727,7 +2748,8 @@ class Angular2Lexer(RegexLexer):
             (r':?"(\\\\|\\[^\\]|[^"\\])*"', String.Double),
             (r":?'(\\\\|\\[^\\]|[^'\\])*'", String.Single),
             (
-                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?(eE[+-][0-9])?[flFLdD]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
             # Variabletext
@@ -2736,7 +2758,9 @@ class Angular2Lexer(RegexLexer):
             # inline If
             (
                 r"(\?)(\s*)([^}\s]+)(\s*)(:)(\s*)([^}\s]+)(\s*)",
-                bygroups(Operator, Text, String, Text, Operator, Text, String, Text),
+                bygroups(
+                    Operator, Text, String, Text, Operator, Text, String, Text
+                ),
             ),
         ],
         "attr": [

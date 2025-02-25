@@ -153,7 +153,9 @@ class PsyshConsoleLexer(Lexer):
         for match in line_re.finditer(text):
             line = match.group()
             if line.startswith(">>> ") or line.startswith("... "):
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:4])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:4])])
+                )
                 curcode += line[4:]
             elif line.rstrip() == "...":
                 insertions.append((len(curcode), [(0, Generic.Prompt, "...")]))
@@ -228,7 +230,9 @@ class PhpLexer(RegexLexer):
         "php": [
             (r"\?>", Comment.Preproc, "#pop"),
             (
-                r'(<<<)([\'"]?)(' + _ident_nons + r")(\2\n.*?\n\s*)(\3)(;?)(\n)",
+                r'(<<<)([\'"]?)('
+                + _ident_nons
+                + r")(\2\n.*?\n\s*)(\3)(;?)(\n)",
                 bygroups(
                     String,
                     String,
@@ -388,8 +392,12 @@ class PhpLexer(RegexLexer):
     }
 
     def __init__(self, **options):
-        self.funcnamehighlighting = get_bool_opt(options, "funcnamehighlighting", True)
-        self.disabledmodules = get_list_opt(options, "disabledmodules", ["unknown"])
+        self.funcnamehighlighting = get_bool_opt(
+            options, "funcnamehighlighting", True
+        )
+        self.disabledmodules = get_list_opt(
+            options, "disabledmodules", ["unknown"]
+        )
         self.startinline = get_bool_opt(options, "startinline", False)
 
         # private option argument for the lexer itself
@@ -410,7 +418,9 @@ class PhpLexer(RegexLexer):
         stack = ["root"]
         if self.startinline:
             stack.append("php")
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name.Other:
                 if value in self._functions:
                     yield index, Name.Builtin, value

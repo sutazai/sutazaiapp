@@ -207,7 +207,9 @@ class Serializer:
                 for item in node.value:
                     self.serialize_node(item, node, index)
                     index += 1
-                self.emitter.emit(SequenceEndEvent(comment=[seq_comment, end_comment]))
+                self.emitter.emit(
+                    SequenceEndEvent(comment=[seq_comment, end_comment])
+                )
             elif isinstance(node, MappingNode):
                 implicit = node.ctag == self.resolver.resolve(
                     MappingNode, node.value, True
@@ -234,7 +236,9 @@ class Serializer:
                 for key, value in node.value:
                     self.serialize_node(key, node, None)
                     self.serialize_node(value, node, key)
-                self.emitter.emit(MappingEndEvent(comment=[map_comment, end_comment]))
+                self.emitter.emit(
+                    MappingEndEvent(comment=[map_comment, end_comment])
+                )
             self.resolver.ascend_resolver()
 
 

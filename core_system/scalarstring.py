@@ -30,7 +30,9 @@ class ScalarString(str):
             ret_val.yaml_set_anchor(anchor, always_dump=True)
         return ret_val
 
-    def replace(self, old: Any, new: Any, maxreplace: SupportsIndex = -1) -> Any:
+    def replace(
+        self, old: Any, new: Any, maxreplace: SupportsIndex = -1
+    ) -> Any:
         return type(self)((str.replace(self, old, new, maxreplace)))
 
     @property

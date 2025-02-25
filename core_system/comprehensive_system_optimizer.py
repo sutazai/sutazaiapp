@@ -3,13 +3,11 @@
 SutazAI Comprehensive System Optimizer
 
 This script provides a holistic approach to system optimization,
-covering multiple dimensions of system health, performance, and security.
 
 Key Optimization Dimensions:
 - Structural Analysis
 - Dependency Management
 - Performance Tuning
-- Security Hardening
 - Code Quality Improvement
 """
 
@@ -22,7 +20,6 @@ from typing import Any, Dict, List
 
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
-from security.security_manager import SecurityManager
 from system_integration.system_integrator import SystemIntegrator
 
 # Internal system imports
@@ -39,7 +36,6 @@ class OptimizationReport:
     structural_analysis: Dict[str, Any]
     dependency_health: Dict[str, Any]
     performance_metrics: Dict[str, Any]
-    security_assessment: Dict[str, Any]
     code_quality_metrics: Dict[str, Any]
     optimization_recommendations: List[str]
 
@@ -58,7 +54,6 @@ class ComprehensiveSystemOptimizer:
 
         # Initialize core system components
         self.system_integrator = SystemIntegrator()
-        self.security_manager = SecurityManager()
         self.system_optimizer = SystemOptimizer()
         self.dependency_manager = DependencyManager()
 
@@ -109,14 +104,10 @@ class ComprehensiveSystemOptimizer:
         """
         return self.dependency_manager.comprehensive_dependency_analysis()
 
-    def security_hardening(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security hardening
 
         Returns:
-            Security assessment report
         """
-        return self.security_manager.comprehensive_security_scan()
 
     def generate_comprehensive_optimization_report(self) -> OptimizationReport:
         """
@@ -132,7 +123,6 @@ class ComprehensiveSystemOptimizer:
             structural_analysis=self.perform_structural_analysis(),
             dependency_health=self.optimize_dependencies(),
             performance_metrics=self.system_optimizer.generate_performance_metrics(),
-            security_assessment=self.security_hardening(),
             code_quality_metrics=self.system_optimizer.assess_code_quality(),
             optimization_recommendations=[],
         )
@@ -159,12 +149,11 @@ class ComprehensiveSystemOptimizer:
 
         # Dependency recommendations
         if report.dependency_health.get("outdated_dependencies", 0) > 5:
-            recommendations.append("Update dependencies to latest stable versions")
-
-        # Security recommendations
-        if report.security_assessment.get("vulnerability_count", 0) > 0:
             recommendations.append(
-                "Address identified security vulnerabilities immediately"
+                "Update dependencies to latest stable versions"
+            )
+
+            recommendations.append(
             )
 
         # Performance recommendations
@@ -182,10 +171,14 @@ class ComprehensiveSystemOptimizer:
         report = self.generate_comprehensive_optimization_report()
 
         # Log optimization report
-        with open(os.path.join(self.base_dir, "optimization_report.json"), "w") as f:
+        with open(
+            os.path.join(self.base_dir, "optimization_report.json"), "w"
+        ) as f:
             json.dump(asdict(report), f, indent=2)
 
-        self.logger.info("Comprehensive system optimization completed successfully")
+        self.logger.info(
+            "Comprehensive system optimization completed successfully"
+        )
 
 
 def main():

@@ -9,7 +9,6 @@ from .system_exceptions import (
     ComponentInitializationError,
     ConfigurationError,
     ResourceAllocationError,
-    SecurityViolationError,
     SutazAIBaseException,
     global_exception_handler,
 )
@@ -17,7 +16,6 @@ from .system_exceptions import (
 __all__ = [
     "SutazAIBaseException",
     "ConfigurationError",
-    "SecurityViolationError",
     "ResourceAllocationError",
     "ComponentInitializationError",
     "global_exception_handler",

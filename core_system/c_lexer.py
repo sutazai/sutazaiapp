@@ -22,7 +22,9 @@ class CLexer(object):
     directives.
     """
 
-    def __init__(self, error_func, on_lbrace_func, on_rbrace_func, type_lookup_func):
+    def __init__(
+        self, error_func, on_lbrace_func, on_rbrace_func, type_lookup_func
+    ):
         """Create a new Lexer.
 
         error_func:
@@ -304,7 +306,13 @@ class CLexer(object):
     bad_escape = r"""([\\][^a-zA-Z._~^!=&\^\-\\?'"x0-9])"""
 
     escape_sequence = (
-        r"""(\\(""" + simple_escape + "|" + decimal_escape + "|" + hex_escape + "))"
+        r"""(\\("""
+        + simple_escape
+        + "|"
+        + decimal_escape
+        + "|"
+        + hex_escape
+        + "))"
     )
 
     # This complicated regex with lookahead might be slow for strings, so because all of the valid escapes (including \x) allowed
@@ -336,7 +344,9 @@ class CLexer(object):
     u8string_literal = "u8" + string_literal
     u16string_literal = "u" + string_literal
     u32string_literal = "U" + string_literal
-    bad_string_literal = '"' + string_char + "*" + bad_escape + string_char + '*"'
+    bad_string_literal = (
+        '"' + string_char + "*" + bad_escape + string_char + '*"'
+    )
 
     # floating constants (K&R2: A.2.5.3)
     exponent_part = r"""([eE][-+]?[0-9]+)"""
@@ -352,7 +362,13 @@ class CLexer(object):
     )
     binary_exponent_part = r"""([pP][+-]?[0-9]+)"""
     hex_fractional_constant = (
-        "(((" + hex_digits + r""")?\.""" + hex_digits + ")|(" + hex_digits + r"""\.))"""
+        "((("
+        + hex_digits
+        + r""")?\."""
+        + hex_digits
+        + ")|("
+        + hex_digits
+        + r"""\.))"""
     )
     hex_floating_constant = (
         "("

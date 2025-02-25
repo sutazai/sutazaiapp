@@ -52,7 +52,9 @@ class UltraPerformanceOptimizer:
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
-            filename=os.path.join(base_dir, "logs/ultra_performance_optimizer.log"),
+            filename=os.path.join(
+                base_dir, "logs/ultra_performance_optimizer.log"
+            ),
         )
         self.logger = logging.getLogger("SutazAI.UltraPerformanceOptimizer")
 
@@ -191,7 +193,9 @@ class UltraPerformanceOptimizer:
             self.logger.error(f"Code performance profiling failed: {e}")
             return {}
 
-    def detect_performance_bottlenecks(self, metrics: Dict[str, Any]) -> List[str]:
+    def detect_performance_bottlenecks(
+        self, metrics: Dict[str, Any]
+    ) -> List[str]:
         """
         Intelligent performance bottleneck detection
 
@@ -264,9 +268,13 @@ class UltraPerformanceOptimizer:
                     try:
                         pid = proc.info["pid"]
                         os.nice(pid, 10)  # Reduce priority
-                        self.logger.info(f"Reduced priority for {proc.info['name']}")
+                        self.logger.info(
+                            f"Reduced priority for {proc.info['name']}"
+                        )
                     except Exception as e:
-                        self.logger.warning(f"Could not adjust process priority: {e}")
+                        self.logger.warning(
+                            f"Could not adjust process priority: {e}"
+                        )
         except Exception as e:
             self.logger.error(f"CPU optimization failed: {e}")
 
@@ -287,7 +295,9 @@ class UltraPerformanceOptimizer:
             except Exception:
                 pass
 
-            self.logger.info("Memory optimization through garbage collection completed")
+            self.logger.info(
+                "Memory optimization through garbage collection completed"
+            )
         except Exception as e:
             self.logger.error(f"Memory optimization failed: {e}")
 
@@ -314,7 +324,9 @@ class UltraPerformanceOptimizer:
                 if proc.info["status"] == psutil.STATUS_ZOMBIE:
                     try:
                         os.waitpid(proc.info["pid"], os.WNOHANG)
-                        self.logger.info(f"Cleaned zombie process: {proc.info['pid']}")
+                        self.logger.info(
+                            f"Cleaned zombie process: {proc.info['pid']}"
+                        )
                     except Exception:
                         pass
         except Exception as e:
@@ -389,7 +401,9 @@ class UltraPerformanceOptimizer:
             # Generate recommendations from performance history
             if self.performance_history:
                 latest_metrics = self.performance_history[-1]
-                bottlenecks = self.detect_performance_bottlenecks(latest_metrics)
+                bottlenecks = self.detect_performance_bottlenecks(
+                    latest_metrics
+                )
 
                 performance_report["bottleneck_recommendations"] = bottlenecks
                 performance_report["optimization_strategies"] = [
@@ -408,7 +422,9 @@ class UltraPerformanceOptimizer:
             with open(report_path, "w") as f:
                 json.dump(performance_report, f, indent=2)
 
-            self.logger.info(f"Ultra Performance Report Generated: {report_path}")
+            self.logger.info(
+                f"Ultra Performance Report Generated: {report_path}"
+            )
 
             return performance_report
 

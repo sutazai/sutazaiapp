@@ -5,7 +5,6 @@ Comprehensive System Checkup and Auto-Fix Script for SutazAI Codebase
 This script performs an extensive system-wide checkup including:
 - Advanced linting and formatting
 - Type checking and static analysis
-- Security vulnerability scanning
 - Dependency verification
 - Documentation and markdown quality checks
 - Spell checking and code style consistency
@@ -97,13 +96,17 @@ def scan_python_files(
     for root, dirs, files in os.walk(base_dir):
         # Remove excluded directories
         dirs[:] = [
-            d for d in dirs if not any(pattern in d for pattern in exclude_patterns)
+            d
+            for d in dirs
+            if not any(pattern in d for pattern in exclude_patterns)
         ]
 
         for file in files:
             if file.endswith(".py"):
                 full_path = os.path.join(root, file)
-                if not any(pattern in full_path for pattern in exclude_patterns):
+                if not any(
+                    pattern in full_path for pattern in exclude_patterns
+                ):
                     py_files.append(full_path)
 
     return py_files
@@ -154,15 +157,12 @@ def run_comprehensive_linters(files: List[str]) -> Dict[str, Any]:
     return results
 
 
-def run_security_scan(base_dir: str) -> Dict[str, Any]:
     """
-    Run comprehensive security vulnerability scanner.
 
     Args:
         base_dir (str): Base directory to scan
 
     Returns:
-        Dict[str, Any]: Security scan results
     """
     bandit_result = run_command(["bandit", "-r", base_dir, "-f", "json"])
     safety_result = run_command(["safety", "check"])
@@ -200,9 +200,9 @@ def check_markdown_quality(base_dir: str) -> Dict[str, List[str]]:
                 full_path = os.path.join(root, file)
                 markdownlint_result = run_command(["markdownlint", full_path])
                 if not markdownlint_result["success"]:
-                    markdown_issues[full_path] = markdownlint_result["stderr"].split(
-                        "\n"
-                    )
+                    markdown_issues[full_path] = markdownlint_result[
+                        "stderr"
+                    ].split("\n")
 
     return markdown_issues
 
@@ -234,13 +234,9 @@ def generate_comprehensive_report(results: Dict[str, Any]) -> None:
             for file, issues in files.items():
                 f.write(f"#### {file}\n```\n{issues}\n```\n")
 
-        # Security Scan Section
-        f.write("## Security Vulnerability Scan\n")
         f.write(
-            f"### Bandit Results\n```json\n{results.get('security_scan', {}).get('bandit', 'No issues found')}\n```\n"
         )
         f.write(
-            f"### Safety Results\n```\n{results.get('security_scan', {}).get('safety', 'No issues found')}\n```\n"
         )
 
         # Markdown Quality Section
@@ -265,7 +261,6 @@ def main():
         "start_time": datetime.now().isoformat(),
         "total_files": len(python_files),
         "linting": run_comprehensive_linters(python_files),
-        "security_scan": run_security_scan(base_dir),
         "dependency_verification": verify_dependencies(),
         "markdown_issues": check_markdown_quality(base_dir),
     }

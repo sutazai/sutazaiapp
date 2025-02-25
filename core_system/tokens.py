@@ -19,7 +19,9 @@ class Token:
     def __repr__(self) -> Any:
         # attributes = [key for key in self.__slots__ if not key.endswith('_mark') and
         #               hasattr('self', key)]
-        attributes = [key for key in self.__slots__ if not key.endswith("_mark")]
+        attributes = [
+            key for key in self.__slots__ if not key.endswith("_mark")
+        ]
         attributes.sort()
         # arguments = ', '.join(
         #  [f'{key!s}={getattr(self, key)!r})' for key in attributes]
@@ -197,7 +199,9 @@ class DirectiveToken(Token):
     __slots__ = "name", "value"
     id = "<directive>"
 
-    def __init__(self, name: Any, value: Any, start_mark: Any, end_mark: Any) -> None:
+    def __init__(
+        self, name: Any, value: Any, start_mark: Any, end_mark: Any
+    ) -> None:
         Token.__init__(self, start_mark, end_mark)
         self.name = name
         self.value = value

@@ -14,12 +14,14 @@ from typing import Any, Optional
 logger = logging.getLogger(__name__)
 
 ALLOWED_MODULES = {
-    'ai_agents': ['supreme_ai', 'agent_factory'],
-    'core_system': [
-        'DamerauLevenshtein', 'appearance', 'dependency_management',
-        'system_architecture_analyzer', 'system_integrator'
+    "ai_agents": ["supreme_ai", "agent_factory"],
+    "core_system": [
+        "DamerauLevenshtein",
+        "appearance",
+        "dependency_management",
+        "system_architecture_analyzer",
+        "system_integrator",
     ],
-    'security': ['advanced_security_manager'],
 }
 
 
@@ -34,7 +36,7 @@ def safe_import(module_name: str, package: Optional[str] = None) -> Any:
     Returns:
         Imported module or raises ImportError
     """
-    parts = module_name.split('.')
+    parts = module_name.split(".")
     root_module = parts[0]
 
     if root_module not in ALLOWED_MODULES:

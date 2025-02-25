@@ -42,7 +42,9 @@ class Testmsvccompiler(support.TempdirManager):
             (None, get_platform()),
         ],
     )
-    def test_cross_platform_compilation_paths(self, monkeypatch, plat_name, expected):
+    def test_cross_platform_compilation_paths(
+        self, monkeypatch, plat_name, expected
+    ):
         """
         Ensure a specified target platform is passed to _get_vcvars_spec.
         """
@@ -51,7 +53,9 @@ class Testmsvccompiler(support.TempdirManager):
         def _get_vcvars_spec(host_platform, platform):
             assert platform == expected
 
-        monkeypatch.setattr(_msvccompiler, "_get_vcvars_spec", _get_vcvars_spec)
+        monkeypatch.setattr(
+            _msvccompiler, "_get_vcvars_spec", _get_vcvars_spec
+        )
         compiler.initialize(plat_name)
 
     @needs_winreg
@@ -109,7 +113,8 @@ class TestSpawn:
         command = [sys.executable, "-c", inner_cmd]
 
         threads = [
-            CheckThread(target=compiler.spawn, args=[command]) for n in range(100)
+            CheckThread(target=compiler.spawn, args=[command])
+            for n in range(100)
         ]
         for thread in threads:
             thread.start()

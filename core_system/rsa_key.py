@@ -67,7 +67,9 @@ class RSAKey(AsymmetricKey):
             )
         else:
             d = base64_to_int(obj["d"])
-            p, q = rsa_recover_prime_factors(public_numbers.n, d, public_numbers.e)
+            p, q = rsa_recover_prime_factors(
+                public_numbers.n, d, public_numbers.e
+            )
             numbers = RSAPrivateNumbers(
                 d=d,
                 p=p,
@@ -88,7 +90,9 @@ class RSAKey(AsymmetricKey):
         return numbers.public_key(default_backend())
 
     @classmethod
-    def generate_key(cls, key_size=2048, options=None, is_private=False) -> "RSAKey":
+    def generate_key(
+        cls, key_size=2048, options=None, is_private=False
+    ) -> "RSAKey":
         if key_size < 512:
             raise ValueError("key_size must not be less than 512")
         if key_size % 8 != 0:
@@ -122,7 +126,8 @@ def has_all_prime_factors(obj):
 
     if any(props_found):
         raise ValueError(
-            "RSA key must include all parameters " "if any are present besides d"
+            "RSA key must include all parameters "
+            "if any are present besides d"
         )
 
     return False

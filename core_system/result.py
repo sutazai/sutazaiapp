@@ -16,8 +16,12 @@ def not_ignored(vuln):
 @dataclass
 class DependencyResultModel:
     dependencies: List[PythonDependency]
-    ignored_vulns: IgnoredItems = field(default_factory=lambda: IgnoredItems({}))
-    ignored_vulns_data: Dict[str, Vulnerability] = field(default_factory=lambda: {})
+    ignored_vulns: IgnoredItems = field(
+        default_factory=lambda: IgnoredItems({})
+    )
+    ignored_vulns_data: Dict[str, Vulnerability] = field(
+        default_factory=lambda: {}
+    )
 
     failed: bool = False
 

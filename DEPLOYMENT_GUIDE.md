@@ -108,7 +108,6 @@ python scripts/test_pipeline.py
 
 ### Regular Tasks
 - Weekly dependency updates
-- Monthly security scans
 - Quarterly comprehensive system audit
 
 ## Rollback Procedure

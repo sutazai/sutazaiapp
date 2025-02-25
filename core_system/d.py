@@ -264,7 +264,9 @@ class DLexer(RegexLexer):
             # Line
             (
                 r"(#line)(\s)(.*)(\n)",
-                bygroups(Comment.Special, Whitespace, Comment.Special, Whitespace),
+                bygroups(
+                    Comment.Special, Whitespace, Comment.Special, Whitespace
+                ),
             ),
         ],
         "nested_comment": [

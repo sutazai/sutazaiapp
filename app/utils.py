@@ -77,7 +77,9 @@ def retry(
                     if attempt == max_attempts - 1:
                         if last_exception is not None:
                             raise last_exception
-                        raise RuntimeError("Unexpected error in retry mechanism")
+                        raise RuntimeError(
+                            "Unexpected error in retry mechanism"
+                        )
 
                     logger.warning(
                         f"Attempt {attempt + 1}/{max_attempts} failed: {str(e)}. "

@@ -48,7 +48,9 @@ class MatlabLexer(RegexLexer):
     url = "https://www.mathworks.com/products/matlab.html"
     version_added = "0.10"
 
-    _operators = r"-|==|~=|<=|>=|<|>|&&|&|~|\|\|?|\.\*|\*|\+|\.\^|\^|\.\\|\./|/|\\"
+    _operators = (
+        r"-|==|~=|<=|>=|<|>|&&|&|~|\|\|?|\.\*|\*|\+|\.\^|\^|\.\\|\./|/|\\"
+    )
 
     tokens = {
         "expressions": [
@@ -2748,11 +2750,15 @@ class MatlabLexer(RegexLexer):
         "propattrs": [
             (
                 r"(\w+)(\s*)(=)(\s*)(\d+)",
-                bygroups(Name.Builtin, Whitespace, Punctuation, Whitespace, Number),
+                bygroups(
+                    Name.Builtin, Whitespace, Punctuation, Whitespace, Number
+                ),
             ),
             (
                 r"(\w+)(\s*)(=)(\s*)([a-zA-Z]\w*)",
-                bygroups(Name.Builtin, Whitespace, Punctuation, Whitespace, Keyword),
+                bygroups(
+                    Name.Builtin, Whitespace, Punctuation, Whitespace, Keyword
+                ),
             ),
             (r",", Punctuation),
             (r"\)", Punctuation, "#pop"),
@@ -2786,10 +2792,17 @@ class MatlabLexer(RegexLexer):
     def analyse_text(text):
         # function declaration.
         first_non_comment = next(
-            (line for line in text.splitlines() if not re.match(r"^\s*%", text)),
+            (
+                line
+                for line in text.splitlines()
+                if not re.match(r"^\s*%", text)
+            ),
             "",
         ).strip()
-        if first_non_comment.startswith("function") and "{" not in first_non_comment:
+        if (
+            first_non_comment.startswith("function")
+            and "{" not in first_non_comment
+        ):
             return 1.0
         # comment
         elif re.search(r"^\s*%", text, re.M):
@@ -2825,11 +2838,15 @@ class MatlabSessionLexer(Lexer):
             line = match.group()
 
             if line.startswith(">> "):
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:3])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:3])])
+                )
                 curcode += line[3:]
 
             elif line.startswith(">>"):
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:2])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:2])])
+                )
                 curcode += line[2:]
 
             elif line.startswith("???"):
@@ -2873,7 +2890,9 @@ class MatlabSessionLexer(Lexer):
                 continuation = False
 
         if curcode:  # or item:
-            yield from do_insertions(insertions, mlexer.get_tokens_unprocessed(curcode))
+            yield from do_insertions(
+                insertions, mlexer.get_tokens_unprocessed(curcode)
+            )
 
 
 class OctaveLexer(RegexLexer):
@@ -4156,7 +4175,11 @@ class OctaveLexer(RegexLexer):
             ),
             (
                 words(
-                    builtin_kw + command_kw + function_kw + loadable_kw + mapping_kw,
+                    builtin_kw
+                    + command_kw
+                    + function_kw
+                    + loadable_kw
+                    + mapping_kw,
                     suffix=r"\b",
                 ),
                 Name.Builtin,

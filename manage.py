@@ -46,7 +46,9 @@ def run_tests():
     Execute unit tests with specific configuration.
     Limits test failures and suppresses unnecessary warnings.
     """
-    subprocess.run(["pytest", "--maxfail=1", "--disable-warnings", "-q"], check=True)
+    subprocess.run(
+        ["pytest", "--maxfail=1", "--disable-warnings", "-q"], check=True
+    )
 
 
 def run_app():
@@ -54,7 +56,9 @@ def run_app():
     Run the primary application module for development.
     Focuses on the self-improvement core system.
     """
-    subprocess.run(["python3", "SutazAI/core_system/self_improvement.py"], check=True)
+    subprocess.run(
+        ["python3", "SutazAI/core_system/self_improvement.py"], check=True
+    )
 
 
 def main():

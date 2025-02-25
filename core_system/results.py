@@ -328,7 +328,9 @@ class ParseResults:
             if k == "default":
                 args = (args[0], v)
             else:
-                raise TypeError(f"pop() got an unexpected keyword argument {k!r}")
+                raise TypeError(
+                    f"pop() got an unexpected keyword argument {k!r}"
+                )
         if isinstance(args[0], int) or len(args) == 1 or args[0] in self:
             index = args[0]
             ret = self[index]
@@ -545,7 +547,11 @@ class ParseResults:
 
         def to_item(obj):
             if isinstance(obj, ParseResults):
-                return obj.as_dict() if obj.haskeys() else [to_item(v) for v in obj]
+                return (
+                    obj.as_dict()
+                    if obj.haskeys()
+                    else [to_item(v) for v in obj]
+                )
             else:
                 return obj
 
@@ -579,10 +585,13 @@ class ParseResults:
             elif isinstance(obj, MutableMapping):
                 self._toklist[i] = dest = type(obj)()
                 for k, v in obj.items():
-                    dest[k] = v.deepcopy() if isinstance(v, ParseResults) else v
+                    dest[k] = (
+                        v.deepcopy() if isinstance(v, ParseResults) else v
+                    )
             elif isinstance(obj, Container):
                 self._toklist[i] = type(obj)(
-                    v.deepcopy() if isinstance(v, ParseResults) else v for v in obj
+                    v.deepcopy() if isinstance(v, ParseResults) else v
+                    for v in obj
                 )
         return ret
 

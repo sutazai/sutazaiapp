@@ -27,7 +27,6 @@ class JsonWebToken:
                 r"\b(?:3[47]\d|(?:4\d|5[1-5]|65)\d{2}|6011)\d{12}\b",
                 # various private keys
                 r"-----BEGIN[A-Z ]+PRIVATE KEY-----.+-----END[A-Z ]+PRIVATE KEY-----",
-                # social security numbers (US)
                 r"^\b(?!(000|666|9))\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b",
             ]
         ),
@@ -35,8 +34,12 @@ class JsonWebToken:
     )
 
     def __init__(self, algorithms, private_headers=None):
-        self._jws = JsonWebSignature(algorithms, private_headers=private_headers)
-        self._jwe = JsonWebEncryption(algorithms, private_headers=private_headers)
+        self._jws = JsonWebSignature(
+            algorithms, private_headers=private_headers
+        )
+        self._jwe = JsonWebEncryption(
+            algorithms, private_headers=private_headers
+        )
 
     def check_sensitive_data(self, payload):
         """Check if payload contains sensitive information."""
@@ -77,7 +80,9 @@ class JsonWebToken:
         else:
             return self._jws.serialize_compact(header, text, key)
 
-    def decode(self, s, key, claims_cls=None, claims_options=None, claims_params=None):
+    def decode(
+        self, s, key, claims_cls=None, claims_options=None, claims_params=None
+    ):
         """Decode the JWT with the given key. This is similar with
         :meth:`verify`, except that it will raise BadSignatureError when
         signature doesn't match.

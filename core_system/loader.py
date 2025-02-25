@@ -20,7 +20,9 @@ if False:  # MYPY
 __all__ = ["BaseLoader", "SafeLoader", "Loader", "RoundTripLoader"]
 
 
-class BaseLoader(Reader, Scanner, Parser, Composer, BaseConstructor, VersionedResolver):
+class BaseLoader(
+    Reader, Scanner, Parser, Composer, BaseConstructor, VersionedResolver
+):
     def __init__(
         self,
         stream: StreamTextType,
@@ -36,7 +38,9 @@ class BaseLoader(Reader, Scanner, Parser, Composer, BaseConstructor, VersionedRe
         VersionedResolver.__init__(self, version, loader=self)
 
 
-class SafeLoader(Reader, Scanner, Parser, Composer, SafeConstructor, VersionedResolver):
+class SafeLoader(
+    Reader, Scanner, Parser, Composer, SafeConstructor, VersionedResolver
+):
     def __init__(
         self,
         stream: StreamTextType,
@@ -52,7 +56,9 @@ class SafeLoader(Reader, Scanner, Parser, Composer, SafeConstructor, VersionedRe
         VersionedResolver.__init__(self, version, loader=self)
 
 
-class Loader(Reader, Scanner, Parser, Composer, Constructor, VersionedResolver):
+class Loader(
+    Reader, Scanner, Parser, Composer, Constructor, VersionedResolver
+):
     def __init__(
         self,
         stream: StreamTextType,

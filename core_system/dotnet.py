@@ -91,7 +91,9 @@ class CSharpLexer(RegexLexer):
             + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl")
             + "]"
             + "["
-            + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc")
+            + uni.combine(
+                "Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc"
+            )
             + "]*"
         ),
         "full": (
@@ -125,7 +127,9 @@ class CSharpLexer(RegexLexer):
                 include("numbers"),
                 # method names
                 (
-                    r"^([ \t]*)((?:" + cs_ident + r"(?:\[\])?\s+)+?)"  # return type
+                    r"^([ \t]*)((?:"
+                    + cs_ident
+                    + r"(?:\[\])?\s+)+?)"  # return type
                     r"(" + cs_ident + ")"  # method name
                     r"(\s*)(\()",  # signature start
                     bygroups(
@@ -373,7 +377,9 @@ class CSharpLexer(RegexLexer):
         }
 
     def __init__(self, **options):
-        level = get_choice_opt(options, "unicodelevel", list(self.tokens), "basic")
+        level = get_choice_opt(
+            options, "unicodelevel", list(self.tokens), "basic"
+        )
         if level not in self._all_tokens:
             # compile the regexes now
             self._tokens = self.__class__.process_tokendef(level)
@@ -423,7 +429,9 @@ class NemerleLexer(RegexLexer):
             + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl")
             + "]"
             + "["
-            + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc")
+            + uni.combine(
+                "Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc"
+            )
             + "]*"
         ),
         "full": (
@@ -456,7 +464,9 @@ class NemerleLexer(RegexLexer):
             "root": [
                 # method names
                 (
-                    r"^([ \t]*)((?:" + cs_ident + r"(?:\[\])?\s+)+?)"  # return type
+                    r"^([ \t]*)((?:"
+                    + cs_ident
+                    + r"(?:\[\])?\s+)+?)"  # return type
                     r"(" + cs_ident + ")"  # method name
                     r"(\s*)(\()",  # signature start
                     bygroups(
@@ -598,7 +608,9 @@ class NemerleLexer(RegexLexer):
         }
 
     def __init__(self, **options):
-        level = get_choice_opt(options, "unicodelevel", list(self.tokens), "basic")
+        level = get_choice_opt(
+            options, "unicodelevel", list(self.tokens), "basic"
+        )
         if level not in self._all_tokens:
             # compile the regexes now
             self._tokens = self.__class__.process_tokendef(level)
@@ -733,7 +745,8 @@ class VbNetLexer(RegexLexer):
             ),
             (r"[(){}!#,.:]", Punctuation),
             (
-                r"(Option)(\s+)(Strict|Explicit|Compare)(\s+)" r"(On|Off|Binary|Text)",
+                r"(Option)(\s+)(Strict|Explicit|Compare)(\s+)"
+                r"(On|Off|Binary|Text)",
                 bygroups(
                     Keyword.Declaration,
                     Whitespace,
@@ -1230,7 +1243,9 @@ class FSharpLexer(RegexLexer):
             (r"\b(type)(\s+)(\w+)", bygroups(Keyword, Whitespace, Name.Class)),
             (
                 r"\b(member|override)(\s+)(\w+)(\.)(\w+)",
-                bygroups(Keyword, Whitespace, Name, Punctuation, Name.Function),
+                bygroups(
+                    Keyword, Whitespace, Name, Punctuation, Name.Function
+                ),
             ),
             (r"\b({})\b".format("|".join(keywords)), Keyword),
             (r"``([^`\n\r\t]|`[^`\n\r\t])+``", Name),
@@ -1703,7 +1718,9 @@ class XppLexer(RegexLexer):
                 bygroups(Whitespace, Keyword, using(this)),
             ),  # ensure that if is not treated like a function
             (
-                r"^([ \t]*)((?:" + XPP_CHARS + r"(?:\[\])?\s+)+?)"  # return type
+                r"^([ \t]*)((?:"
+                + XPP_CHARS
+                + r"(?:\[\])?\s+)+?)"  # return type
                 r"(" + XPP_CHARS + ")"  # method name
                 r"(\s*)(\()",  # signature start
                 bygroups(
@@ -1757,7 +1774,11 @@ class XppLexer(RegexLexer):
             ),  # declaration
             # x++ specific function to get field should highlight the classname
             (
-                r"(fieldNum\()(" + XPP_CHARS + r")(\s*,\s*)(" + XPP_CHARS + r")(\s*\))",
+                r"(fieldNum\()("
+                + XPP_CHARS
+                + r")(\s*,\s*)("
+                + XPP_CHARS
+                + r")(\s*\))",
                 bygroups(
                     using(this),
                     Name.Variable.Class,

@@ -71,7 +71,9 @@ def init(
 
 def do_init(ctx: typer.Context, directory: Path, prompt_user: bool = True):
     project_dir = (
-        directory if os.path.isabs(directory) else os.path.join(os.getcwd(), directory)
+        directory
+        if os.path.isabs(directory)
+        else os.path.join(os.getcwd(), directory)
     )
     create_project(ctx, console, Path(project_dir))
 
@@ -80,7 +82,9 @@ def do_init(ctx: typer.Context, directory: Path, prompt_user: bool = True):
         console.print(
             "Safety prevents vulnerable or malicious packages from being installed on your computer. We do this by wrapping your package manager."
         )
-        prompt = "Do you want to enable proactive malicious package prevention?"
+        prompt = (
+            "Do you want to enable proactive malicious package prevention?"
+        )
         answer = Prompt.ask(
             prompt=prompt,
             choices=["y", "n"],

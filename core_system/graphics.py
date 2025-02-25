@@ -345,9 +345,7 @@ class HLSLShaderLexer(RegexLexer):
     aliases = ["hlsl"]
     filenames = ["*.hlsl", "*.hlsli"]
     mimetypes = ["text/x-hlsl"]
-    url = (
-        "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl"
-    )
+    url = "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl"
     version_added = "2.3"
 
     tokens = {
@@ -1151,7 +1149,9 @@ class AsymptoteLexer(RegexLexer):
     def get_tokens_unprocessed(self, text):
         from pygments.lexers._asy_builtins import ASYFUNCNAME, ASYVARNAME
 
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name and value in ASYFUNCNAME:
                 token = Name.Function
             elif token is Name and value in ASYVARNAME:
@@ -1162,7 +1162,8 @@ class AsymptoteLexer(RegexLexer):
 def _shortened(word):
     dpos = word.find("$")
     return "|".join(
-        word[:dpos] + word[dpos + 1: i] + r"\b" for i in range(len(word), dpos, -1)
+        word[:dpos] + word[dpos + 1 : i] + r"\b"
+        for i in range(len(word), dpos, -1)
     )
 
 
@@ -1512,7 +1513,9 @@ class GnuplotLexer(RegexLexer):
         ],
         "save": [
             (
-                _shortened_many("f$unctions", "s$et", "t$erminal", "v$ariables"),
+                _shortened_many(
+                    "f$unctions", "s$et", "t$erminal", "v$ariables"
+                ),
                 Name.Builtin,
             ),
             include("genericargs"),

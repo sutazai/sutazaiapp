@@ -61,7 +61,6 @@ issue_detection:
 - Memory Consumption Analysis
 - Performance Bottleneck Detection
 
-## 🔒 Security Scanning
 - Dangerous Function Detection
 - Credential Exposure Prevention
 - Risky Import Identification

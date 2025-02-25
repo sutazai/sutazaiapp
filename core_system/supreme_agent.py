@@ -17,9 +17,7 @@ from core.life_optimization import LifeOptimizationEngine
 from core.personal_knowledge import PersonalKnowledgeVault
 from functionality.core import SutazAIFunctionalityExpansion
 
-from security.security import (
     DivineAuthoritySystem,
-    SecurityOversight,
     SeniorDeveloperCapabilities,
     SystemGuardian,
 )
@@ -42,7 +40,6 @@ logger = logging.getLogger(__name__)
 
 # Core System Imports
 
-# Security and Governance Imports
 
 
 # Relative Module Imports
@@ -98,7 +95,6 @@ class SupremeAIConfiguration:
     active_modules: Dict[str, bool] = field(
         default_factory=lambda: {
             "emotion_engine": True,
-            "security_system": True,
             "life_optimization": True,
             "conversation_management": True,
             "multiverse_awareness": True,
@@ -249,7 +245,6 @@ class SupremeAI(
             "functionality": SutazAIFunctionalityExpansion,
             "authority_system": DivineAuthoritySystem,
             "guardian": SystemGuardian,
-            "security_engine": SecurityOversight,
             "medic": AutonomousMedic,
             "dev_ops": SeniorDeveloperCapabilities,
             "architecture_module": SolutionsArchitect,
@@ -312,7 +307,6 @@ class SupremeAI(
             )
 
             # Emergency Protocol Activation
-            self.security_engine.initiate_protective_protocols()
 
             # Ethical Validation of Recovery Strategy
             if recovery_strategy and self.ethics_engine.validate_action(
@@ -332,7 +326,9 @@ class SupremeAI(
 
         :param anomaly: Detected system anomaly
         """
-        self.logger.warning(f"Executing default recovery for anomaly: {anomaly}")
+        self.logger.warning(
+            f"Executing default recovery for anomaly: {anomaly}"
+        )
         # Implement default recovery logic with safety checks
 
     def _critical_system_shutdown(self):
@@ -341,7 +337,6 @@ class SupremeAI(
         """
         self.current_state = SystemState.SHUTDOWN
         self.logger.critical("CRITICAL SYSTEM SHUTDOWN INITIATED")
-        self.security_engine.emergency_lockdown()
         # Additional shutdown procedures
 
     # Existing methods from previous implementation would be integrated here
@@ -353,7 +348,9 @@ def global_exception_handler(exc_type, exc_value, exc_traceback):
     """
     Global exception handling for unhandled exceptions
     """
-    logger.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    logger.error(
+        "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
 
 
 # Set global exception handler

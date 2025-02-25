@@ -436,7 +436,9 @@ class TestFetchAllProcesses(PsutilTestCase):
             assert -20 <= ret <= 20, ret
         else:
             priorities = [
-                getattr(psutil, x) for x in dir(psutil) if x.endswith("_PRIORITY_CLASS")
+                getattr(psutil, x)
+                for x in dir(psutil)
+                if x.endswith("_PRIORITY_CLASS")
             ]
             assert ret in priorities
             if PY3:

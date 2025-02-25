@@ -57,7 +57,9 @@ class FileRepairTool:
                 result = chardet.detect(raw_data)
                 return result["encoding"]
         except Exception as e:
-            self.logger.error(f"Encoding detection failed for {file_path}: {e}")
+            self.logger.error(
+                f"Encoding detection failed for {file_path}: {e}"
+            )
             return None
 
     def parse_file(self, file_path: str) -> Tuple[bool, Optional[str]]:
@@ -108,7 +110,9 @@ class FileRepairTool:
                     return True, repaired_content
 
                 except Exception as repair_error:
-                    self.logger.warning(f"Could not repair {file_path}: {repair_error}")
+                    self.logger.warning(
+                        f"Could not repair {file_path}: {repair_error}"
+                    )
                     continue
 
         # If all attempts fail

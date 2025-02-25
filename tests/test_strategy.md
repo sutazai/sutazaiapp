@@ -32,7 +32,6 @@
   - Resource utilization
   - Concurrent user handling
 
-### 2.4 Security Testing
 - **Scope**: Vulnerability assessment
 - **Tools**: 
   - Bandit
@@ -65,7 +64,6 @@
   1. Code linting
    2. Unit tests
    3. Integration tests
-   4. Security scanning
 
 ### 3.2 Test Environment
 - **Isolation**: Docker containers

@@ -822,11 +822,15 @@ class FactorLexer(RegexLexer):
             ),
             (
                 r"(M:[:]?)(\s+)(\S+)(\s+)(\S+)",
-                bygroups(Keyword, Whitespace, Name.Class, Whitespace, Name.Function),
+                bygroups(
+                    Keyword, Whitespace, Name.Class, Whitespace, Name.Function
+                ),
             ),
             (
                 r"(C:)(\s+)(\S+)(\s+)(\S+)",
-                bygroups(Keyword, Whitespace, Name.Function, Whitespace, Name.Class),
+                bygroups(
+                    Keyword, Whitespace, Name.Function, Whitespace, Name.Class
+                ),
             ),
             (
                 r"(GENERIC:)(\s+)(\S+)",
@@ -866,7 +870,9 @@ class FactorLexer(RegexLexer):
             ),
             (
                 r"(FROM:|EXCLUDE:)(\s+)(\S+)(\s+=>\s)",
-                bygroups(Keyword.Namespace, Whitespace, Name.Namespace, Whitespace),
+                bygroups(
+                    Keyword.Namespace, Whitespace, Name.Namespace, Whitespace
+                ),
                 "words",
             ),
             (
@@ -934,11 +940,15 @@ class FactorLexer(RegexLexer):
             ),
             (
                 r"(C:)(\s+)(\S+)(\s+)(\S+)",
-                bygroups(Keyword, Whitespace, Name.Function, Whitespace, Name.Class),
+                bygroups(
+                    Keyword, Whitespace, Name.Function, Whitespace, Name.Class
+                ),
             ),
             (
                 r"(INSTANCE:)(\s+)(\S+)(\s+)(\S+)",
-                bygroups(Keyword, Whitespace, Name.Class, Whitespace, Name.Class),
+                bygroups(
+                    Keyword, Whitespace, Name.Class, Whitespace, Name.Class
+                ),
             ),
             (
                 r"(SLOT:)(\s+)(\S+)",
@@ -962,7 +972,9 @@ class FactorLexer(RegexLexer):
                 bygroups(Keyword, Whitespace, Name.Class),
             ),
             (
-                r"(FUNCTION:)(\s+)" r"(\S+)(\s+)(\S+)(\s+)" r"(\()(\s+)([^)]+)(\))(\s)",
+                r"(FUNCTION:)(\s+)"
+                r"(\S+)(\s+)(\S+)(\s+)"
+                r"(\()(\s+)([^)]+)(\))(\s)",
                 bygroups(
                     Keyword.Namespace,
                     Whitespace,

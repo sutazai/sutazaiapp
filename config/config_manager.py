@@ -3,7 +3,6 @@
 SutazAI Comprehensive Configuration Management System
 
 Provides advanced, multi-environment configuration handling with
-security, validation, and dynamic loading capabilities.
 """
 
 import json
@@ -31,12 +30,10 @@ logger = logging.getLogger("SutazAI.ConfigManager")
 class ConfigurationProfile:
     """
     Represents a comprehensive configuration profile
-    with advanced validation and security features.
     """
 
     environment: str
     debug_mode: bool = False
-    security_level: int = 2
     allowed_modules: Optional[Dict[str, bool]] = None
     rate_limits: Optional[Dict[str, int]] = None
 
@@ -96,7 +93,9 @@ class ConfigurationManager:
             # Validate configuration
             self._validate_config(config)
 
-            logger.info(f"Loaded {self.environment} configuration successfully")
+            logger.info(
+                f"Loaded {self.environment} configuration successfully"
+            )
             return config
 
         except FileNotFoundError:
@@ -113,10 +112,11 @@ class ConfigurationManager:
         Args:
             config (Dict): Configuration dictionary to validate
         """
-        required_keys = ["system", "security", "modules"]
         for key in required_keys:
             if key not in config:
-                raise ValueError(f"Missing required configuration section: {key}")
+                raise ValueError(
+                    f"Missing required configuration section: {key}"
+                )
 
     def get(self, key: str, default: Any = None) -> Any:
         """
@@ -143,7 +143,6 @@ class ConfigurationManager:
         return ConfigurationProfile(
             environment=self.environment,
             debug_mode=config.get("system", {}).get("debug", False),
-            security_level=config.get("security", {}).get("level", 2),
             allowed_modules=config.get("modules", {}),
             rate_limits=config.get("rate_limits", {}),
         )

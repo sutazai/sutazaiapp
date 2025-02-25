@@ -33,7 +33,9 @@ class TestPackageIndex:
         # issue 16
         # easy_install inquant.contentmirror.plone breaks because of a typo
         # in its home URL
-        index = setuptools.package_index.PackageIndex(hosts=("www.example.com",))
+        index = setuptools.package_index.PackageIndex(
+            hosts=("www.example.com",)
+        )
 
         url = "url:%20https://svn.plone.org/svn/collective/inquant.contentmirror.plone/trunk"
 
@@ -42,7 +44,9 @@ class TestPackageIndex:
             assert isinstance(v, urllib.error.HTTPError)
 
     def test_bad_url_bad_status_line(self):
-        index = setuptools.package_index.PackageIndex(hosts=("www.example.com",))
+        index = setuptools.package_index.PackageIndex(
+            hosts=("www.example.com",)
+        )
 
         def _urlopen(*args):
             raise http.client.BadStatusLine("line")
@@ -56,7 +60,9 @@ class TestPackageIndex:
         """
         A bad URL with a double scheme should raise a DistutilsError.
         """
-        index = setuptools.package_index.PackageIndex(hosts=("www.example.com",))
+        index = setuptools.package_index.PackageIndex(
+            hosts=("www.example.com",)
+        )
 
         # issue 20
         url = "http://http://svn.pythonpaste.org/Paste/wphp/trunk"
@@ -73,7 +79,9 @@ class TestPackageIndex:
         raise RuntimeError("Did not raise")
 
     def test_url_ok(self):
-        index = setuptools.package_index.PackageIndex(hosts=("www.example.com",))
+        index = setuptools.package_index.PackageIndex(
+            hosts=("www.example.com",)
+        )
         url = "file:///tmp/test_package_index"
         assert index.url_ok(url, True)
 
@@ -174,7 +182,9 @@ class TestPackageIndex:
                 expected_dir,
             ]
         )
-        fp.register(["git", "-C", expected_dir, "checkout", "--quiet", "master"])
+        fp.register(
+            ["git", "-C", expected_dir, "checkout", "--quiet", "master"]
+        )
 
         result = index.download(url, tmp_path)
 
@@ -225,7 +235,9 @@ class TestContentCheckers:
 
     def test_blank_md5(self):
         "Content checks should succeed if a hash is empty"
-        checker = setuptools.package_index.HashChecker.from_url("http://foo/bar#md5=")
+        checker = setuptools.package_index.HashChecker.from_url(
+            "http://foo/bar#md5="
+        )
         checker.feed("anything".encode("ascii"))
         assert checker.is_valid()
 

@@ -6,7 +6,6 @@ Comprehensive initialization framework providing:
 - Automatic system configuration
 - Dependency validation
 - Environment setup
-- Security hardening
 - Performance optimization
 """
 
@@ -35,11 +34,8 @@ class DependencyManager:
         }
 
 
-class SecurityManager:
-    def comprehensive_security_scan(self) -> Dict[str, Any]:
         return {
             "status": "pending",
-            "message": "Security scan not implemented",
         }
 
 
@@ -71,7 +67,6 @@ class SystemInitializer:
         # System components
         self.config_manager = ConfigurationManager(environment=config_env)
         self.dependency_manager = DependencyManager()
-        self.security_manager = SecurityManager()
         self.system_optimizer = SystemOptimizer()
         self.logger = AdvancedLogger()
 
@@ -79,7 +74,6 @@ class SystemInitializer:
         self.initialization_steps = [
             self._validate_environment,
             self._check_dependencies,
-            self._configure_security,
             self._optimize_system,
             self._generate_initialization_report,
         ]
@@ -103,7 +97,6 @@ class SystemInitializer:
             "backend",
             "core_system",
             "logs",
-            "security",
             "config",
             "scripts",
         ]
@@ -153,14 +146,10 @@ class SystemInitializer:
         """
         return self.dependency_manager.comprehensive_dependency_analysis()
 
-    def _configure_security(self) -> Dict[str, Any]:
         """
-        Configure and harden system security
 
         Returns:
-            Security configuration results
         """
-        return self.security_manager.comprehensive_security_scan()
 
     def _optimize_system(self) -> Dict[str, Any]:
         """
@@ -175,7 +164,6 @@ class SystemInitializer:
         self,
         validation_results: Dict[str, Any],
         dependency_results: Dict[str, Any],
-        security_results: Dict[str, Any],
         optimization_results: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
@@ -184,7 +172,6 @@ class SystemInitializer:
         Args:
             validation_results (Dict): Environment validation results
             dependency_results (Dict): Dependency analysis results
-            security_results (Dict): Security configuration results
             optimization_results (Dict): System optimization results
 
         Returns:
@@ -194,7 +181,6 @@ class SystemInitializer:
             "timestamp": datetime.now().isoformat(),
             "environment_validation": validation_results,
             "dependency_analysis": dependency_results,
-            "security_configuration": security_results,
             "system_optimization": optimization_results,
         }
 
@@ -220,14 +206,12 @@ class SystemInitializer:
             # Execute initialization steps
             validation_results = self._validate_environment()
             dependency_results = self._check_dependencies()
-            security_results = self._configure_security()
             optimization_results = self._optimize_system()
 
             # Generate final initialization report
             initialization_report = self._generate_initialization_report(
                 validation_results,
                 dependency_results,
-                security_results,
                 optimization_results,
             )
 

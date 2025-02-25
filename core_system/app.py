@@ -30,7 +30,6 @@ def main():
                 " SutazAi Studio",
                 " Configuration",
                 " Documents",
-                " Security",
             ],
         )
 
@@ -43,8 +42,6 @@ def main():
         config_dashboard.show_config_console()
     elif menu_choice == " Documents":
         document_processor.show_document_center()
-    elif menu_choice == " Security":
-        show_security_console()
 
 
 def apply_sutazai_theme():

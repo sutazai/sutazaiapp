@@ -14,7 +14,9 @@ class ErrorType(Enum):
 class ErrorModel:
     """Probabilistic error model for sutazai state simulation"""
 
-    def __init__(self, bit_flip_prob: float = 0.001, phase_flip_prob: float = 0.001):
+    def __init__(
+        self, bit_flip_prob: float = 0.001, phase_flip_prob: float = 0.001
+    ):
         self.bit_flip_prob = bit_flip_prob
         self.phase_flip_prob = phase_flip_prob
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -47,7 +49,9 @@ class ErrorModel:
 class SurfaceCodeCorrector:
     """Advanced surface code error correction mechanism"""
 
-    def __init__(self, distance: int = 3, error_model: Optional[ErrorModel] = None):
+    def __init__(
+        self, distance: int = 3, error_model: Optional[ErrorModel] = None
+    ):
         self.distance = distance
         self.error_model = error_model or ErrorModel()
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -62,7 +66,9 @@ class SurfaceCodeCorrector:
         # Placeholder for advanced decoding
         return encoded_state
 
-    def syndrome_measurement(self, encoded_state: np.ndarray) -> Dict[str, Any]:
+    def syndrome_measurement(
+        self, encoded_state: np.ndarray
+    ) -> Dict[str, Any]:
         """Perform syndrome measurement to detect and localize errors"""
         syndrome = {
             "x_syndrome": self._measure_x_syndrome(encoded_state),
@@ -88,7 +94,9 @@ class SurfaceCodeCorrector:
         corrected_state = encoded_state.copy()
 
         if not self._is_error_free(syndrome):
-            corrected_state = self._apply_error_correction(encoded_state, syndrome)
+            corrected_state = self._apply_error_correction(
+                encoded_state, syndrome
+            )
 
         return corrected_state
 
@@ -110,7 +118,9 @@ class SurfaceCodeCorrector:
 class ErrorCorrectionSimulator:
     """Comprehensive error correction simulation framework"""
 
-    def __init__(self, distance: int = 3, error_model: Optional[ErrorModel] = None):
+    def __init__(
+        self, distance: int = 3, error_model: Optional[ErrorModel] = None
+    ):
         self.surface_code = SurfaceCodeCorrector(distance, error_model)
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -127,7 +137,9 @@ class ErrorCorrectionSimulator:
 
         for _ in range(num_iterations):
             # Introduce errors
-            noisy_state = self.surface_code.error_model.introduce_error(logical_state)
+            noisy_state = self.surface_code.error_model.introduce_error(
+                logical_state
+            )
 
             # Attempt error correction
             try:

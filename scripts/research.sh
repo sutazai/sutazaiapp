@@ -1,7 +1,6 @@
 #!/bin/bash
 case $1 in
     start)
-        sutazai-cli research start --focus=optimization,security
         ;;
     list)
         sutazai-cli research list

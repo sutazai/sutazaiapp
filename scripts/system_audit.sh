@@ -71,7 +71,6 @@ check_dependencies() {
         "log_rotation.sh"
         "resource_report.sh"
         "uptime_report.sh"
-        "security_scan.sh"
     )
     
     local missing=0
@@ -279,47 +278,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -329,15 +310,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -385,7 +361,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -616,47 +591,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -666,15 +623,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -722,7 +674,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -953,47 +904,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -1003,15 +936,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -1059,7 +987,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -1290,47 +1217,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -1340,15 +1249,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -1396,7 +1300,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -1627,47 +1530,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -1677,15 +1562,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -1733,7 +1613,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -1964,47 +1843,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -2014,15 +1875,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -2070,7 +1926,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -2301,47 +2156,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -2351,15 +2188,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -2407,7 +2239,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -2638,47 +2469,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -2688,15 +2501,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -2744,7 +2552,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -2975,47 +2782,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -3025,15 +2814,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -3081,7 +2865,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -3312,47 +3095,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -3362,15 +3127,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -3418,7 +3178,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -3649,47 +3408,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -3699,15 +3440,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -3755,7 +3491,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -3986,47 +3721,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -4036,15 +3753,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -4092,7 +3804,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -4323,47 +4034,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -4373,15 +4066,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -4429,7 +4117,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -4660,47 +4347,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -4710,15 +4379,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -4766,7 +4430,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -4997,47 +4660,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -5047,15 +4692,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -5103,7 +4743,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -5334,47 +4973,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -5384,15 +5005,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -5440,7 +5056,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -5671,47 +5286,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -5721,15 +5318,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -5777,7 +5369,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -6008,47 +5599,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -6058,15 +5631,10 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulnerability_scan.sh"
 log_message "Vulnerability Scan Completed"
 
-# Add after security compliance check
-log_message "=== Running System Security Hardening ==="
-run_script "security_hardening.sh"
-log_message "System Security Hardening Completed"
 
 # Final Summary
 log_message "=== System Audit Summary ==="
@@ -6114,7 +5682,6 @@ send_notification() {
 
 send_notification
 
-# Add security validation function
 validate_environment() {
     # Check for root privileges
     if [ "$EUID" -ne 0 ]; then
@@ -6345,47 +5912,29 @@ log_message "=== Running Uptime Report ==="
 run_script "uptime_report.sh"
 log_message "Uptime Report Completed"
 
-# 10. Security Scan
-log_message "=== Running Security Scan ==="
-run_script "security_scan.sh"
-log_message "Security Scan Completed"
 
-# Add after security scan
 log_message "=== Running Package Integrity Check ==="
 run_script "package_integrity.sh"
 log_message "Package Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running User Account Audit ==="
 run_script "user_audit.sh"
 log_message "User Account Audit Completed"
 
-# Add after security scan
-log_message "=== Running Network Security Check ==="
-run_script "network_security.sh"
-log_message "Network Security Check Completed"
 
-# Add after network security check
 log_message "=== Running Network Performance Check ==="
 run_script "network_performance.sh"
 log_message "Network Performance Check Completed"
 
-# Add after security scan
 log_message "=== Running Cron Job Audit ==="
 run_script "cron_audit.sh"
 log_message "Cron Job Audit Completed"
 
-# Add after security scan
-log_message "=== Running Security Compliance Check ==="
-run_script "security_compliance.sh"
-log_message "Security Compliance Check Completed"
 
-# Add after security compliance check
 log_message "=== Running Kernel Parameters Check ==="
 run_script "kernel_parameters.sh"
 log_message "Kernel Parameters Check Completed"
 
-# Add after security compliance check
 log_message "=== Running SSL/TLS Configuration Check ==="
 run_script "ssl_tls_check.sh"
 log_message "SSL/TLS Configuration Check Completed"
@@ -6395,6 +5944,5 @@ log_message "=== Running Log File Integrity Check ==="
 run_script "log_integrity.sh"
 log_message "Log File Integrity Check Completed"
 
-# Add after security scan
 log_message "=== Running Vulnerability Scan ==="
 run_script "vulner

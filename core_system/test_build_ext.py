@@ -298,7 +298,9 @@ class TestBuildExt(TempdirManager):
             cmd.check_extensions_list(exts)
 
         # ok this one should pass
-        exts = [("foo.bar", {"sources": [""], "libraries": "foo", "some": "bar"})]
+        exts = [
+            ("foo.bar", {"sources": [""], "libraries": "foo", "some": "bar"})
+        ]
         cmd.check_extensions_list(exts)
         ext = exts[0]
         assert isinstance(ext, Extension)
@@ -344,8 +346,12 @@ class TestBuildExt(TempdirManager):
         dist = Distribution({"name": "xx", "ext_modules": modules})
         cmd = self.build_ext(dist)
         cmd.ensure_finalized()
-        assert re.search(r"foo(_d)?\..*", cmd.get_ext_filename(modules[0].name))
-        assert re.search(r"föö(_d)?\..*", cmd.get_ext_filename(modules[1].name))
+        assert re.search(
+            r"foo(_d)?\..*", cmd.get_ext_filename(modules[0].name)
+        )
+        assert re.search(
+            r"föö(_d)?\..*", cmd.get_ext_filename(modules[1].name)
+        )
         assert cmd.get_export_symbols(modules[0]) == ["PyInit_foo"]
         assert cmd.get_export_symbols(modules[1]) == ["PyInitU_f_1gaa"]
 
@@ -451,7 +457,9 @@ class TestBuildExt(TempdirManager):
         build_py.package_dir = {}
         cmd.distribution.packages = ["twisted", "twisted.runner.portmap"]
         path = cmd.get_ext_fullpath("twisted.runner.portmap")
-        wanted = os.path.join(curdir, "tmpdir", "twisted", "runner", "portmap" + ext)
+        wanted = os.path.join(
+            curdir, "tmpdir", "twisted", "runner", "portmap" + ext
+        )
         assert wanted == path
 
         # building twisted.runner.portmap inplace
@@ -490,7 +498,9 @@ class TestBuildExt(TempdirManager):
             deptarget = ".".join(str(i) for i in deptarget)
             self._try_compile_deployment_target("<", deptarget)
 
-    def _try_compile_deployment_target(self, operator, target):  # pragma: no cover
+    def _try_compile_deployment_target(
+        self, operator, target
+    ):  # pragma: no cover
         if target is None:
             if os.environ.get("MACOSX_DEPLOYMENT_TARGET"):
                 del os.environ["MACOSX_DEPLOYMENT_TARGET"]
@@ -538,7 +548,9 @@ class TestBuildExt(TempdirManager):
             [self.tmp_path / "deptargetmodule.c"],
             extra_compile_args=[f"-DTARGET={target}"],
         )
-        dist = Distribution({"name": "deptarget", "ext_modules": [deptarget_ext]})
+        dist = Distribution(
+            {"name": "deptarget", "ext_modules": [deptarget_ext]}
+        )
         dist.package_dir = self.tmp_dir
         cmd = self.build_ext(dist)
         cmd.build_lib = self.tmp_dir

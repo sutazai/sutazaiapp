@@ -375,7 +375,9 @@ class TestParityWithMetadataFromPyPaWheel:
         """Example of distribution with arbitrary configuration"""
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr(expand, "read_attr", Mock(return_value="0.42"))
-        monkeypatch.setattr(expand, "read_files", Mock(return_value="hello world"))
+        monkeypatch.setattr(
+            expand, "read_files", Mock(return_value="hello world")
+        )
         if request.param is None:
             yield self.base_example()
         else:
@@ -388,7 +390,9 @@ class TestParityWithMetadataFromPyPaWheel:
         """Ensure output from setuptools is equivalent to the one from `pypa/wheel`"""
         # Generate a METADATA file using pypa/wheel for comparison
         wheel_metadata = importlib.import_module("wheel.metadata")
-        pkginfo_to_metadata = getattr(wheel_metadata, "pkginfo_to_metadata", None)
+        pkginfo_to_metadata = getattr(
+            wheel_metadata, "pkginfo_to_metadata", None
+        )
 
         if pkginfo_to_metadata is None:  # pragma: nocover
             pytest.xfail(
@@ -401,10 +405,14 @@ class TestParityWithMetadataFromPyPaWheel:
         egg_info_dir = tmp_path / "pkg.egg-info"
         egg_info_dir.mkdir(parents=True)
         (egg_info_dir / "PKG-INFO").write_text(pkg_info, encoding="utf-8")
-        write_requirements(egg_info(dist), egg_info_dir, egg_info_dir / "requires.txt")
+        write_requirements(
+            egg_info(dist), egg_info_dir, egg_info_dir / "requires.txt"
+        )
 
         # Get pypa/wheel generated METADATA but normalize requirements formatting
-        metadata_msg = pkginfo_to_metadata(egg_info_dir, egg_info_dir / "PKG-INFO")
+        metadata_msg = pkginfo_to_metadata(
+            egg_info_dir, egg_info_dir / "PKG-INFO"
+        )
         metadata_str = _normalize_metadata(metadata_msg)
         pkg_info_msg = message_from_string(pkg_info)
         pkg_info_str = _normalize_metadata(pkg_info_msg)
@@ -538,7 +546,9 @@ def _normalize_metadata(msg: Message) -> str:
     # https://github.com/pypa/packaging/issues/845
     # https://github.com/pypa/packaging/issues/644#issuecomment-2429813968
 
-    extras = {x.replace("_", "-"): x for x in msg.get_all("Provides-Extra", [])}
+    extras = {
+        x.replace("_", "-"): x for x in msg.get_all("Provides-Extra", [])
+    }
     reqs = [
         _normalize_req(req, extras)
         for req in _reqs.parse(msg.get_all("Requires-Dist", []))

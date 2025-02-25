@@ -10,7 +10,6 @@ import pylint.lint
 class ComprehensiveSystemChecker:
     """
     A comprehensive system checker for SutazAI project.
-    Performs code quality, security, and performance analysis.
     """
 
     def __init__(self, project_root: str = "."):
@@ -53,15 +52,12 @@ class ComprehensiveSystemChecker:
 
     def run_bandit(self, directories: List[str]) -> List[str]:
         """
-        Run bandit security scanner on specified directories.
 
         Args:
             directories (List[str]): Directories to scan
 
         Returns:
-            List[str]: Security issues found
         """
-        security_issues = []
         for directory in directories:
             try:
                 full_path = os.path.join(self.project_root, directory)
@@ -73,7 +69,6 @@ class ComprehensiveSystemChecker:
                 bandit_main.main()
             except Exception as e:
                 self.logger.error(f"Bandit scan error in {directory}: {e}")
-        return security_issues
 
     def optimize_imports(self, file_path: str) -> None:
         """
@@ -106,7 +101,6 @@ class ComprehensiveSystemChecker:
         """
         check_results = {
             "pylint_scores": self.run_pylint(["sutazai", "scripts"]),
-            "security_issues": self.run_bandit(["sutazai", "scripts"]),
             "import_optimization": [],
         }
 

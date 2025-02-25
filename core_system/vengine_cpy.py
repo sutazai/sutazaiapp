@@ -173,7 +173,9 @@ class VCPythonEngine(object):
         #
         # the C code will need the <ctype> objects.  Collect them in
         # order in a list.
-        revmapping = dict([(value, key) for (key, value) in self._typesdict.items()])
+        revmapping = dict(
+            [(value, key) for (key, value) in self._typesdict.items()]
+        )
         lst = [revmapping[i] for i in range(len(revmapping))]
         lst = list(map(self.ffi._get_cached_btype, lst))
 
@@ -211,7 +213,8 @@ class VCPythonEngine(object):
 
     def _get_declarations(self):
         lst = [
-            (key, tp) for (key, (tp, qual)) in self.ffi._parser._declarations.items()
+            (key, tp)
+            for (key, (tp, qual)) in self.ffi._parser._declarations.items()
         ]
         lst.sort()
         return lst
@@ -220,9 +223,13 @@ class VCPythonEngine(object):
         for name, tp in self._get_declarations():
             kind, realname = name.split(" ", 1)
             try:
-                method = getattr(self, "_generate_cpy_%s_%s" % (kind, step_name))
+                method = getattr(
+                    self, "_generate_cpy_%s_%s" % (kind, step_name)
+                )
             except AttributeError:
-                raise VerificationError("not implemented in verify(): %r" % name)
+                raise VerificationError(
+                    "not implemented in verify(): %r" % name
+                )
             try:
                 method(tp, realname)
             except Exception as e:
@@ -254,7 +261,9 @@ class VCPythonEngine(object):
                 converter = "_cffi_to_c_int"
                 extraarg = ", %s" % tp.name
             elif tp.is_complex_type():
-                raise VerificationError("not implemented in verify(): complex types")
+                raise VerificationError(
+                    "not implemented in verify(): complex types"
+                )
             else:
                 converter = "(%s)_cffi_to_c_%s" % (
                     tp.get_c_name(""),
@@ -263,7 +272,9 @@ class VCPythonEngine(object):
             errvalue = "-1"
         #
         elif isinstance(tp, model.PointerType):
-            self._convert_funcarg_to_c_ptr_or_array(tp, fromvar, tovar, errcode)
+            self._convert_funcarg_to_c_ptr_or_array(
+                tp, fromvar, tovar, errcode
+            )
             return
         #
         elif isinstance(tp, (model.StructOrUnion, model.EnumType)):
@@ -342,7 +353,8 @@ class VCPythonEngine(object):
         elif isinstance(tp, model.StructOrUnion):
             if tp.fldnames is None:
                 raise TypeError(
-                    "'%s' is used as %s, but is opaque" % (tp._get_c_name(), context)
+                    "'%s' is used as %s, but is opaque"
+                    % (tp._get_c_name(), context)
                 )
             return "_cffi_from_c_struct((char *)&%s, _cffi_type(%d))" % (
                 var,
@@ -431,7 +443,9 @@ class VCPythonEngine(object):
         prnt()
         #
         for i, type in enumerate(tp.args):
-            self._convert_funcarg_to_c(type, "arg%d" % i, "x%d" % i, "return NULL")
+            self._convert_funcarg_to_c(
+                type, "arg%d" % i, "x%d" % i, "return NULL"
+            )
             prnt()
         #
         prnt("  Py_BEGIN_ALLOW_THREADS")
@@ -535,7 +549,8 @@ class VCPythonEngine(object):
         prnt("  (void)p;")
         for fname, ftype, fbitsize, fqual in tp.enumfields():
             if (
-                isinstance(ftype, model.PrimitiveType) and ftype.is_integer_type()
+                isinstance(ftype, model.PrimitiveType)
+                and ftype.is_integer_type()
             ) or fbitsize >= 0:
                 # accept all integers, but complain on float or double
                 prnt("  (void)((p->%s) << 1);" % fname)
@@ -545,7 +560,9 @@ class VCPythonEngine(object):
                     prnt(
                         "  { %s = &p->%s; (void)tmp; }"
                         % (
-                            ftype.get_c_name("*tmp", "field %r" % fname, quals=fqual),
+                            ftype.get_c_name(
+                                "*tmp", "field %r" % fname, quals=fqual
+                            ),
                             fname,
                         )
                     )
@@ -582,7 +599,8 @@ class VCPythonEngine(object):
             return  # nothing to do with opaque structs
         layoutfuncname = "_cffi_layout_%s_%s" % (prefix, name)
         self._prnt(
-            '  {"%s", %s, METH_NOARGS, NULL},' % (layoutfuncname, layoutfuncname)
+            '  {"%s", %s, METH_NOARGS, NULL},'
+            % (layoutfuncname, layoutfuncname)
         )
 
     def _loading_struct_or_union(self, tp, prefix, name, module):
@@ -706,7 +724,10 @@ class VCPythonEngine(object):
             else:
                 realexpr = name
             prnt("  i = (%s);" % (realexpr,))
-            prnt("  o = %s;" % (self._convert_expr_from_c(tp, "i", "variable type"),))
+            prnt(
+                "  o = %s;"
+                % (self._convert_expr_from_c(tp, "i", "variable type"),)
+            )
             assert delayed
         else:
             prnt("  o = _cffi_from_c_int_const(%s);" % name)
@@ -715,7 +736,10 @@ class VCPythonEngine(object):
         if size_too:
             prnt("  {")
             prnt("    PyObject *o1 = o;")
-            prnt('    o = Py_BuildValue("On", o1, (Py_ssize_t)sizeof(%s));' % (name,))
+            prnt(
+                '    o = Py_BuildValue("On", o1, (Py_ssize_t)sizeof(%s));'
+                % (name,)
+            )
             prnt("    Py_DECREF(o1);")
             prnt("    if (o == NULL)")
             prnt("      return -1;")
@@ -748,7 +772,9 @@ class VCPythonEngine(object):
     def _check_int_constant_value(self, name, value, err_prefix=""):
         prnt = self._prnt
         if value <= 0:
-            prnt("  if ((%s) > 0 || (long)(%s) != %dL) {" % (name, name, value))
+            prnt(
+                "  if ((%s) > 0 || (long)(%s) != %dL) {" % (name, name, value)
+            )
         else:
             prnt(
                 "  if ((%s) <= 0 || (unsigned long)(%s) != %dUL) {"
@@ -761,7 +787,10 @@ class VCPythonEngine(object):
         prnt('        snprintf(buf, 63, "%%lu", (unsigned long)(%s));' % name)
         prnt("    PyErr_Format(_cffi_VerificationError,")
         prnt('                 "%s%s has the real value %s, not %s",')
-        prnt('                 "%s", "%s", buf, "%d");' % (err_prefix, name, value))
+        prnt(
+            '                 "%s", "%s", buf, "%d");'
+            % (err_prefix, name, value)
+        )
         prnt("    return -1;")
         prnt("  }")
 
@@ -781,7 +810,9 @@ class VCPythonEngine(object):
         prnt("static int %s(PyObject *lib)" % funcname)
         prnt("{")
         for enumerator, enumvalue in zip(tp.enumerators, tp.enumvalues):
-            self._check_int_constant_value(enumerator, enumvalue, "enum %s: " % name)
+            self._check_int_constant_value(
+                enumerator, enumvalue, "enum %s: " % name
+            )
         prnt("  return %s;" % self._chained_list_constants[True])
         self._chained_list_constants[True] = funcname + "(lib)"
         prnt("}")
@@ -792,7 +823,9 @@ class VCPythonEngine(object):
 
     def _loading_cpy_enum(self, tp, name, module):
         if tp.partial:
-            enumvalues = [getattr(module, enumerator) for enumerator in tp.enumerators]
+            enumvalues = [
+                getattr(module, enumerator) for enumerator in tp.enumerators
+            ]
             tp.enumvalues = tuple(enumvalues)
             tp.partial_resolved = True
 

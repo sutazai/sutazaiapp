@@ -94,7 +94,9 @@ class DocumentProcessorBenchmark:
                 torch.cuda.reset_peak_memory_stats()
 
             # Store results
-            benchmark_results["total_processing_times"].append(total_processing_time)
+            benchmark_results["total_processing_times"].append(
+                total_processing_time
+            )
             benchmark_results["system_metrics"]["cpu_usage"].append(
                 (start_cpu + end_cpu) / 2
             )
@@ -110,22 +112,31 @@ class DocumentProcessorBenchmark:
                 file_path = result.get("file_path", "unknown")
                 processing_time = result.get("processing_time", 0)
 
-                if file_path not in benchmark_results["per_file_processing_times"]:
-                    benchmark_results["per_file_processing_times"][file_path] = []
+                if (
+                    file_path
+                    not in benchmark_results["per_file_processing_times"]
+                ):
+                    benchmark_results["per_file_processing_times"][
+                        file_path
+                    ] = []
 
-                benchmark_results["per_file_processing_times"][file_path].append(
-                    processing_time
-                )
+                benchmark_results["per_file_processing_times"][
+                    file_path
+                ].append(processing_time)
 
         # Calculate statistical summary
         benchmark_results["statistical_summary"] = {
             "total_processing_time": {
-                "mean": statistics.mean(benchmark_results["total_processing_times"]),
+                "mean": statistics.mean(
+                    benchmark_results["total_processing_times"]
+                ),
                 "median": statistics.median(
                     benchmark_results["total_processing_times"]
                 ),
                 "stdev": (
-                    statistics.stdev(benchmark_results["total_processing_times"])
+                    statistics.stdev(
+                        benchmark_results["total_processing_times"]
+                    )
                     if len(benchmark_results["total_processing_times"]) > 1
                     else 0
                 ),
@@ -138,8 +149,11 @@ class DocumentProcessorBenchmark:
                     benchmark_results["system_metrics"]["cpu_usage"]
                 ),
                 "stdev": (
-                    statistics.stdev(benchmark_results["system_metrics"]["cpu_usage"])
-                    if len(benchmark_results["system_metrics"]["cpu_usage"]) > 1
+                    statistics.stdev(
+                        benchmark_results["system_metrics"]["cpu_usage"]
+                    )
+                    if len(benchmark_results["system_metrics"]["cpu_usage"])
+                    > 1
                     else 0
                 ),
             },
@@ -154,7 +168,8 @@ class DocumentProcessorBenchmark:
                     statistics.stdev(
                         benchmark_results["system_metrics"]["memory_usage"]
                     )
-                    if len(benchmark_results["system_metrics"]["memory_usage"]) > 1
+                    if len(benchmark_results["system_metrics"]["memory_usage"])
+                    > 1
                     else 0
                 ),
             },

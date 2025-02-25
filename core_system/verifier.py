@@ -21,7 +21,9 @@ else:
 
     def _extension_suffixes():
         return [
-            suffix for suffix, _, type in imp.get_suffixes() if type == imp.C_EXTENSION
+            suffix
+            for suffix, _, type in imp.get_suffixes()
+            if type == imp.C_EXTENSION
         ]
 
 
@@ -94,7 +96,9 @@ class Verifier(object):
             )
         suffix = _get_so_suffixes()[0]
         self.tmpdir = tmpdir or _caller_dir_pycache()
-        self.sourcefilename = os.path.join(self.tmpdir, modulename + source_extension)
+        self.sourcefilename = os.path.join(
+            self.tmpdir, modulename + source_extension
+        )
         self.modulefilename = os.path.join(self.tmpdir, modulename + suffix)
         self.ext_package = ext_package
         self._has_source = False
@@ -287,7 +291,9 @@ def _caller_dir_pycache():
     if result:
         return result
     filename = sys._getframe(2).f_code.co_filename
-    return os.path.abspath(os.path.join(os.path.dirname(filename), "__pycache__"))
+    return os.path.abspath(
+        os.path.join(os.path.dirname(filename), "__pycache__")
+    )
 
 
 def set_tmpdir(dirname):

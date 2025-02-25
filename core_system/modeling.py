@@ -265,7 +265,9 @@ class BugsLexer(RegexLexer):
             (r"(for|in)(?![\w.])", Keyword.Reserved),
             # Built-in Functions
             (
-                r"({})(?=\s*\()".format(r"|".join(_FUNCTIONS + _DISTRIBUTIONS)),
+                r"({})(?=\s*\()".format(
+                    r"|".join(_FUNCTIONS + _DISTRIBUTIONS)
+                ),
                 Name.Builtin,
             ),
             # Regular variable names
@@ -429,7 +431,9 @@ class JagsLexer(RegexLexer):
             # Need to use lookahead because . is a valid char
             (
                 r"({})(?=\s*\()".format(
-                    r"|".join(_FUNCTIONS + _DISTRIBUTIONS + _OTHER_DISTRIBUTIONS)
+                    r"|".join(
+                        _FUNCTIONS + _DISTRIBUTIONS + _OTHER_DISTRIBUTIONS
+                    )
                 ),
                 Name.Builtin,
             ),
@@ -516,11 +520,15 @@ class StanLexer(RegexLexer):
             # a range constraint
             (
                 r"(<)(\s*)(upper|lower|offset|multiplier)(\s*)(=)",
-                bygroups(Operator, Whitespace, Keyword, Whitespace, Punctuation),
+                bygroups(
+                    Operator, Whitespace, Keyword, Whitespace, Punctuation
+                ),
             ),
             (
                 r"(,)(\s*)(upper)(\s*)(=)",
-                bygroups(Punctuation, Whitespace, Keyword, Whitespace, Punctuation),
+                bygroups(
+                    Punctuation, Whitespace, Keyword, Whitespace, Punctuation
+                ),
             ),
             # Punctuation
             (r"[;,\[\]()]", Punctuation),
@@ -530,7 +538,9 @@ class StanLexer(RegexLexer):
                 Name.Builtin,
             ),
             (
-                r"(~)(\s*)({})(?=\s*\()".format("|".join(_stan_builtins.DISTRIBUTIONS)),
+                r"(~)(\s*)({})(?=\s*\()".format(
+                    "|".join(_stan_builtins.DISTRIBUTIONS)
+                ),
                 bygroups(Operator, Whitespace, Name.Builtin),
             ),
             # Special names ending in __, like lp__

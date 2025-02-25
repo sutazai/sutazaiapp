@@ -31,7 +31,9 @@ def encoding_unicode_range(iana_name: str) -> list[str]:
     if is_multi_byte_encoding(iana_name):
         raise OSError("Function not supported on multi-byte code page")
 
-    decoder = importlib.import_module(f"encodings.{iana_name}").IncrementalDecoder
+    decoder = importlib.import_module(
+        f"encodings.{iana_name}"
+    ).IncrementalDecoder
 
     p: IncrementalDecoder = decoder(errors="ignore")
     seen_ranges: dict[str, int] = {}
@@ -142,7 +144,9 @@ def alphabet_languages(
     """
     languages: list[tuple[str, float]] = []
 
-    source_have_accents = any(is_accentuated(character) for character in characters)
+    source_have_accents = any(
+        is_accentuated(character) for character in characters
+    )
 
     for language, language_characters in FREQUENCIES.items():
         target_have_accents, target_pure_latin = get_target_features(language)
@@ -194,11 +198,15 @@ def characters_popularity_compare(
         if character not in FREQUENCIES_language_set:
             continue
 
-        character_rank_in_language: int = FREQUENCIES[language].index(character)
+        character_rank_in_language: int = FREQUENCIES[language].index(
+            character
+        )
         expected_projection_ratio: float = (
             target_language_characters_count / ordered_characters_count
         )
-        character_rank_projection: int = int(character_rank * expected_projection_ratio)
+        character_rank_projection: int = int(
+            character_rank * expected_projection_ratio
+        )
 
         if (
             large_alphabet is False
@@ -270,7 +278,9 @@ def alpha_unicode_split(decoded_sequence: str) -> list[str]:
 
         for discovered_range in layers:
             if (
-                is_suspiciously_successive_range(discovered_range, character_range)
+                is_suspiciously_successive_range(
+                    discovered_range, character_range
+                )
                 is False
             ):
                 layer_target_range = discovered_range
@@ -308,7 +318,8 @@ def merge_coherence_ratios(
         (
             language,
             round(
-                sum(per_language_ratios[language]) / len(per_language_ratios[language]),
+                sum(per_language_ratios[language])
+                / len(per_language_ratios[language]),
                 4,
             ),
         )
@@ -363,7 +374,9 @@ def coherence_ratio(
 
     sufficient_match_count: int = 0
 
-    lg_inclusion_list = lg_inclusion.split(",") if lg_inclusion is not None else []
+    lg_inclusion_list = (
+        lg_inclusion.split(",") if lg_inclusion is not None else []
+    )
     if "Latin Based" in lg_inclusion_list:
         ignore_non_latin = True
         lg_inclusion_list.remove("Latin Based")

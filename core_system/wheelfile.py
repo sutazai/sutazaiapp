@@ -25,7 +25,9 @@ MINIMUM_TIMESTAMP = 315532800  # 1980-01-01 00:00:00 UTC
 def get_zipinfo_datetime(timestamp=None):
     # Some applications need reproducible .whl files, but they can't do this without
     # forcing the timestamp of the individual ZipInfo objects. See issue #143.
-    timestamp = int(os.environ.get("SOURCE_DATE_EPOCH", timestamp or time.time()))
+    timestamp = int(
+        os.environ.get("SOURCE_DATE_EPOCH", timestamp or time.time())
+    )
     timestamp = max(timestamp, MINIMUM_TIMESTAMP)
     return time.gmtime(timestamp)[0:6]
 
@@ -43,7 +45,9 @@ class WheelFile(ZipFile):
         if not basename.endswith(".whl") or self.parsed_filename is None:
             raise WheelError(f"Bad wheel filename {basename!r}")
 
-        ZipFile.__init__(self, file, mode, compression=compression, allowZip64=True)
+        ZipFile.__init__(
+            self, file, mode, compression=compression, allowZip64=True
+        )
 
         self.dist_info_path = "{}.dist-info".format(
             self.parsed_filename.group("namever")
@@ -99,7 +103,9 @@ class WheelFile(ZipFile):
                 raise WheelError(f"Hash mismatch for file '{ef_name}'")
 
         ef_name = (
-            name_or_info.filename if isinstance(name_or_info, ZipInfo) else name_or_info
+            name_or_info.filename
+            if isinstance(name_or_info, ZipInfo)
+            else name_or_info
         )
         if (
             mode == "r"
@@ -129,7 +135,9 @@ class WheelFile(ZipFile):
             for name in sorted(filenames):
                 path = os.path.normpath(os.path.join(root, name))
                 if os.path.isfile(path):
-                    arcname = os.path.relpath(path, base_dir).replace(os.path.sep, "/")
+                    arcname = os.path.relpath(path, base_dir).replace(
+                        os.path.sep, "/"
+                    )
                     if arcname == self.record_path:
                         pass
                     elif root.endswith(".dist-info"):
@@ -149,7 +157,9 @@ class WheelFile(ZipFile):
         zinfo = ZipInfo(
             arcname or filename, date_time=get_zipinfo_datetime(st.st_mtime)
         )
-        zinfo.external_attr = (stat.S_IMODE(st.st_mode) | stat.S_IFMT(st.st_mode)) << 16
+        zinfo.external_attr = (
+            stat.S_IMODE(st.st_mode) | stat.S_IFMT(st.st_mode)
+        ) << 16
         zinfo.compress_type = compress_type or self.compression
         self.writestr(zinfo, data, compress_type)
 
@@ -183,7 +193,9 @@ class WheelFile(ZipFile):
         # Write RECORD
         if self.fp is not None and self.mode == "w" and self._file_hashes:
             data = StringIO()
-            writer = csv.writer(data, delimiter=",", quotechar='"', lineterminator="\n")
+            writer = csv.writer(
+                data, delimiter=",", quotechar='"', lineterminator="\n"
+            )
             writer.writerows(
                 (
                     (fname, algorithm + "=" + hash_, self._file_sizes[fname])

@@ -148,7 +148,7 @@ if __name__ == "__main__":  # pragma: no cover
         content = fp.read()
 
     header = content[: content.find("Cc =")]
-    footer = content[content.find("def combine("):]
+    footer = content[content.find("def combine(") :]
 
     for code in range(0x110000):
         c = chr(code)
@@ -180,6 +180,8 @@ if __name__ == "__main__":  # pragma: no cover
         cats.remove("xid_continue")
         fp.write("cats = %r\n\n" % cats)
 
-        fp.write("# Generated from unidata %s\n\n" % (unicodedata.unidata_version,))
+        fp.write(
+            "# Generated from unidata %s\n\n" % (unicodedata.unidata_version,)
+        )
 
         fp.write(footer)

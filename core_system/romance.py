@@ -109,7 +109,9 @@ class RomanceIntelligenceEngine:
         # System State Management
         self.current_state = RomanceState.INITIALIZING
 
-    def create_romantic_consciousness(self, traits: Dict[str, Any]) -> Dict[str, Any]:
+    def create_romantic_consciousness(
+        self, traits: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Generate comprehensive romantic personality with advanced processing
 
@@ -155,7 +157,9 @@ class RomanceIntelligenceEngine:
             self.logger.error(str(error))
             raise error
 
-    def _process_emotional_depth(self, traits: Dict[str, Any]) -> Dict[str, float]:
+    def _process_emotional_depth(
+        self, traits: Dict[str, Any]
+    ) -> Dict[str, float]:
         """
         Advanced emotional depth processing
 
@@ -164,7 +168,9 @@ class RomanceIntelligenceEngine:
         """
         try:
             # Emotion engine-based emotional depth analysis
-            emotional_depth = self.emotion_engine.analyze_emotional_profile(traits)
+            emotional_depth = self.emotion_engine.analyze_emotional_profile(
+                traits
+            )
 
             return {
                 "empathy": emotional_depth.get("empathy", 0)
@@ -178,7 +184,9 @@ class RomanceIntelligenceEngine:
             self.logger.warning(f"Emotional depth processing failed: {e}")
             return {}
 
-    def _analyze_love_language(self, traits: Dict[str, Any]) -> Dict[str, float]:
+    def _analyze_love_language(
+        self, traits: Dict[str, Any]
+    ) -> Dict[str, float]:
         """
         Comprehensive love language analysis
 
@@ -210,8 +218,12 @@ class RomanceIntelligenceEngine:
 
             return {
                 "quantum_resonance": entanglement.get("quantum_resonance", 0),
-                "emotional_synchronization": entanglement.get("emotional_sync", 0),
-                "connection_intensity": entanglement.get("connection_depth", 0),
+                "emotional_synchronization": entanglement.get(
+                    "emotional_sync", 0
+                ),
+                "connection_intensity": entanglement.get(
+                    "connection_depth", 0
+                ),
             }
         except Exception as e:
             self.logger.warning(f"Heart entanglement generation failed: {e}")
@@ -261,7 +273,9 @@ def main():
             "emotional_intelligence": 0.95,
         }
 
-        romantic_consciousness = romance_engine.create_romantic_consciousness(traits)
+        romantic_consciousness = romance_engine.create_romantic_consciousness(
+            traits
+        )
         print(f"Romantic Consciousness Generated: {romantic_consciousness}")
 
     except RomanceError as e:

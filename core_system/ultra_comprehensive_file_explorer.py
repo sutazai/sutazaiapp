@@ -6,7 +6,6 @@ Provides hyper-intelligent, self-learning file management with:
 - Advanced semantic analysis
 - Predictive organization
 - Machine learning-driven classification
-- Comprehensive security and performance optimization
 """
 
 import hashlib
@@ -35,7 +34,6 @@ class UltraComprehensiveFileExplorer:
     - Semantic file classification
     - Predictive organizational strategies
     - Machine learning-driven file clustering
-    - Advanced security and performance optimization
     - Self-learning file management
     """
 
@@ -115,8 +113,6 @@ class UltraComprehensiveFileExplorer:
                 # Intelligent file reorganization
                 self._reorganize_files_by_clusters(file_clusters)
 
-                # Security and performance optimization
-                self._optimize_file_security_and_performance()
 
                 # Persist exploration insights
                 self._persist_exploration_insights(
@@ -177,14 +173,20 @@ class UltraComprehensiveFileExplorer:
                 # Size distribution
                 size_bucket = self._get_size_bucket(file_stat.st_size)
                 exploration_results["size_distribution"][size_bucket] = (
-                    exploration_results["size_distribution"].get(size_bucket, 0) + 1
+                    exploration_results["size_distribution"].get(
+                        size_bucket, 0
+                    )
+                    + 1
                 )
 
                 # Modification time patterns
                 mod_time = time.localtime(file_stat.st_mtime)
                 mod_pattern = f"{mod_time.tm_hour}:{mod_time.tm_min}"
                 exploration_results["modification_patterns"][mod_pattern] = (
-                    exploration_results["modification_patterns"].get(mod_pattern, 0) + 1
+                    exploration_results["modification_patterns"].get(
+                        mod_pattern, 0
+                    )
+                    + 1
                 )
 
         return exploration_results
@@ -237,7 +239,9 @@ class UltraComprehensiveFileExplorer:
         for file_path, file_info in exploration_results["files"].items():
             try:
                 # Read file content
-                with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                with open(
+                    file_path, "r", encoding="utf-8", errors="ignore"
+                ) as f:
                     content = f.read()
 
                 # Generate content signature
@@ -256,7 +260,9 @@ class UltraComprehensiveFileExplorer:
                 self._update_semantic_file_graph(file_path, content)
 
             except Exception as e:
-                self.logger.warning(f"Semantic analysis failed for {file_path}: {e}")
+                self.logger.warning(
+                    f"Semantic analysis failed for {file_path}: {e}"
+                )
 
         return semantic_analysis
 
@@ -318,7 +324,9 @@ class UltraComprehensiveFileExplorer:
 
         return clustered_files
 
-    def _reorganize_files_by_clusters(self, file_clusters: Dict[str, List[str]]):
+    def _reorganize_files_by_clusters(
+        self, file_clusters: Dict[str, List[str]]
+    ):
         """
         Intelligently reorganize files based on semantic clusters
 
@@ -327,33 +335,32 @@ class UltraComprehensiveFileExplorer:
         """
         for cluster, files in file_clusters.items():
             # Create cluster-specific directory
-            cluster_dir = os.path.join(self.base_dir, f"semantic_cluster_{cluster}")
+            cluster_dir = os.path.join(
+                self.base_dir, f"semantic_cluster_{cluster}"
+            )
             os.makedirs(cluster_dir, exist_ok=True)
 
             # Move files to cluster directory
             for file_path in files:
                 try:
-                    destination = os.path.join(cluster_dir, os.path.basename(file_path))
+                    destination = os.path.join(
+                        cluster_dir, os.path.basename(file_path)
+                    )
                     shutil.move(file_path, destination)
-                    self.logger.info(f"Moved {file_path} to semantic cluster {cluster}")
+                    self.logger.info(
+                        f"Moved {file_path} to semantic cluster {cluster}"
+                    )
                 except Exception as e:
                     self.logger.warning(f"File reorganization failed: {e}")
 
-    def _optimize_file_security_and_performance(self):
         """
-        Perform advanced file security and performance optimization
         """
-        # Implement security scanning
-        self._scan_files_for_security_risks()
 
         # Optimize file permissions
         self._optimize_file_permissions()
 
-    def _scan_files_for_security_risks(self):
         """
-        Scan files for potential security risks
         """
-        security_patterns = [
             r"(os\.system|subprocess\.run|eval|exec)",  # Dangerous function calls
             r'(password|secret|token)\s*=\s*[\'"]',  # Potential credential exposure
             r"import\s+(os|subprocess)",  # Potentially risky imports
@@ -369,13 +376,12 @@ class UltraComprehensiveFileExplorer:
                         ) as f:
                             content = f.read()
 
-                            for pattern in security_patterns:
                                 if re.search(pattern, content, re.IGNORECASE):
                                     self.logger.warning(
-                                        f"Potential security risk in {file_path}"
                                     )
                     except Exception as e:
-                        self.logger.error(f"Security scan failed for {file_path}: {e}")
+                        self.logger.error(
+                        )
 
     def _optimize_file_permissions(self):
         """
@@ -434,7 +440,9 @@ class UltraComprehensiveFileExplorer:
             with open(output_file, "w") as f:
                 json.dump(insights, f, indent=2)
 
-            self.logger.info(f"File exploration insights persisted: {output_file}")
+            self.logger.info(
+                f"File exploration insights persisted: {output_file}"
+            )
 
         except Exception as e:
             self.logger.error(f"Exploration insights persistence failed: {e}")

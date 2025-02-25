@@ -1,5 +1,4 @@
 #!/bin/bash
-# SutazAI Post-Verification Security Fixes
 
 # Color codes
 GREEN='\033[0;32m'
@@ -30,13 +29,7 @@ enable_selinux() {
     log "${GREEN}✅ SELinux configured in enforcing mode${NC}"
 }
 
-# Set Python Security Environment Variables
-configure_python_security() {
-    log "${YELLOW}🐍 Configuring Python Security Environment${NC}"
     
-    # Create a system-wide Python security configuration
-    sudo tee /etc/profile.d/python_security.sh << EOF
-# SutazAI Python Security Configuration
 export PYTHONSAFEPATH=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONNOUSERSITE=1
@@ -44,9 +37,7 @@ export PYTHONHASHSEED=$(od -An -N4 -i /dev/urandom)
 EOF
     
     # Make the script executable
-    sudo chmod +x /etc/profile.d/python_security.sh
     
-    log "${GREEN}✅ Python security environment configured${NC}"
 }
 
 # Close Unnecessary Ports
@@ -65,17 +56,13 @@ secure_ports() {
 
 # Main execution
 main() {
-    log "${GREEN}🌟 Starting SutazAI Post-Verification Security Fixes${NC}"
     
-    # Run security fixes
     enable_selinux
-    configure_python_security
     secure_ports
     
     # Reload firewall
     sudo ufw reload
     
-    log "${GREEN}✅ Post-verification security fixes complete${NC}"
     
     # Optional: Prompt for reboot
     echo -e "\n${YELLOW}Reboot recommended to apply all changes. Reboot now? (y/n)${NC}"

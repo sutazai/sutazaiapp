@@ -248,7 +248,9 @@ class TestLegacyNamespaces:
         )
 
         for name in examples:
-            pkg = namespaces.build_namespace_package(tmp_path, name, version="42")
+            pkg = namespaces.build_namespace_package(
+                tmp_path, name, version="42"
+            )
             with deprecation, monkeypatch.context() as ctx:
                 ctx.chdir(pkg)
                 dist = run_setup("setup.py", stop_after="config")
@@ -283,13 +285,19 @@ class TestLegacyNamespaces:
         requires = ["setuptools"]
         build-backend = "setuptools.build_meta"
         """
-        pkg_A = namespaces.build_namespace_package(tmp_path, f"{ns}.pkgA", impl=impl)
-        pkg_B = namespaces.build_namespace_package(tmp_path, f"{ns}.pkgB", impl=impl)
+        pkg_A = namespaces.build_namespace_package(
+            tmp_path, f"{ns}.pkgA", impl=impl
+        )
+        pkg_B = namespaces.build_namespace_package(
+            tmp_path, f"{ns}.pkgB", impl=impl
+        )
         (pkg_A / "pyproject.toml").write_text(build_system, encoding="utf-8")
         (pkg_B / "pyproject.toml").write_text(build_system, encoding="utf-8")
         # use pip to install to the target directory
         opts = editable_opts[:]
-        opts.append("--no-build-isolation")  # force current version of setuptools
+        opts.append(
+            "--no-build-isolation"
+        )  # force current version of setuptools
         venv.run(["python", "-m", "pip", "install", str(pkg_A), *opts])
         venv.run(["python", "-m", "pip", "install", "-e", str(pkg_B), *opts])
         venv.run(["python", "-c", f"import {ns}.pkgA; import {ns}.pkgB"])
@@ -304,16 +312,24 @@ class TestPep420Namespaces:
         normally using pip and the other installed in editable mode
         should allow importing both packages.
         """
-        pkg_A = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgA")
-        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgB")
+        pkg_A = namespaces.build_pep420_namespace_package(
+            tmp_path, "myns.n.pkgA"
+        )
+        pkg_B = namespaces.build_pep420_namespace_package(
+            tmp_path, "myns.n.pkgB"
+        )
         # use pip to install to the target directory
         opts = editable_opts[:]
-        opts.append("--no-build-isolation")  # force current version of setuptools
+        opts.append(
+            "--no-build-isolation"
+        )  # force current version of setuptools
         venv.run(["python", "-m", "pip", "install", str(pkg_A), *opts])
         venv.run(["python", "-m", "pip", "install", "-e", str(pkg_B), *opts])
         venv.run(["python", "-c", "import myns.n.pkgA; import myns.n.pkgB"])
 
-    def test_namespace_created_via_package_dir(self, venv, tmp_path, editable_opts):
+    def test_namespace_created_via_package_dir(
+        self, venv, tmp_path, editable_opts
+    ):
         """Currently users can create a namespace by tweaking `package_dir`"""
         files = {
             "pkgA": {
@@ -336,12 +352,18 @@ class TestPep420Namespaces:
         }
         jaraco.path.build(files, prefix=tmp_path)
         pkg_A = tmp_path / "pkgA"
-        pkg_B = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgB")
-        pkg_C = namespaces.build_pep420_namespace_package(tmp_path, "myns.n.pkgC")
+        pkg_B = namespaces.build_pep420_namespace_package(
+            tmp_path, "myns.n.pkgB"
+        )
+        pkg_C = namespaces.build_pep420_namespace_package(
+            tmp_path, "myns.n.pkgC"
+        )
 
         # use pip to install to the target directory
         opts = editable_opts[:]
-        opts.append("--no-build-isolation")  # force current version of setuptools
+        opts.append(
+            "--no-build-isolation"
+        )  # force current version of setuptools
         venv.run(["python", "-m", "pip", "install", str(pkg_A), *opts])
         venv.run(["python", "-m", "pip", "install", "-e", str(pkg_B), *opts])
         venv.run(["python", "-m", "pip", "install", "-e", str(pkg_C), *opts])
@@ -385,8 +407,12 @@ class TestPep420Namespaces:
 
         # use pip to install to the target directory
         opts = ["--no-build-isolation"]  # force current version of setuptools
-        venv.run(["python", "-m", "pip", "-v", "install", "-e", str(pkg_A), *opts])
-        out = venv.run(["python", "-c", "from mypkg.n import pkgA; print(pkgA.a)"])
+        venv.run(
+            ["python", "-m", "pip", "-v", "install", "-e", str(pkg_A), *opts]
+        )
+        out = venv.run(
+            ["python", "-c", "from mypkg.n import pkgA; print(pkgA.a)"]
+        )
         assert out.strip() == "1"
         cmd = """\
         try:
@@ -417,7 +443,9 @@ def test_editable_with_prefix(tmp_path, sample_project, editable_opts):
     # install workaround
     _addsitedirs(site_packages_all)
 
-    env = dict(os.environ, PYTHONPATH=os.pathsep.join(map(str, site_packages_all)))
+    env = dict(
+        os.environ, PYTHONPATH=os.pathsep.join(map(str, site_packages_all))
+    )
     cmd = [
         sys.executable,
         "-m",
@@ -555,7 +583,9 @@ class TestFinderTemplate:
             }
             dist = Distribution(attrs)
             finder = _TopLevelFinder(dist, str(uuid4()))
-            code = next(v for k, v in finder.get_implementation() if k.endswith(".py"))
+            code = next(
+                v for k, v in finder.get_implementation() if k.endswith(".py")
+            )
 
         with contexts.save_paths(), contexts.save_sys_modules():
             for mod in attrs["packages"]:
@@ -565,10 +595,14 @@ class TestFinderTemplate:
             mod1 = import_module("different_name.my_module")
             mod2 = import_module("different_name.subpkg.my_module2")
 
-            expected = str((tmp_path / "src/my_package/my_module.py").resolve())
+            expected = str(
+                (tmp_path / "src/my_package/my_module.py").resolve()
+            )
             assert str(Path(mod1.__file__).resolve()) == expected
 
-            expected = str((tmp_path / "src2/my_package2/my_module2.py").resolve())
+            expected = str(
+                (tmp_path / "src2/my_package2/my_module2.py").resolve()
+            )
             assert str(Path(mod2.__file__).resolve()) == expected
 
             assert mod1.a == 13
@@ -734,7 +768,9 @@ class TestFinderTemplate:
             with pytest.raises(ImportError, match="'ns\\.othername\\.FOO\\'"):
                 import_module("ns.othername.FOO")
 
-            with pytest.raises(ImportError, match="'ns\\.othername\\.foo\\.BAR\\'"):
+            with pytest.raises(
+                ImportError, match="'ns\\.othername\\.foo\\.BAR\\'"
+            ):
                 import_module("ns.othername.foo.BAR")
 
     def test_intermediate_packages(self, tmp_path):
@@ -1014,7 +1050,9 @@ class TestLinkTree:
         opts = ["--config-settings", "editable-mode=strict"]
         install_project("mypkg", venv, tmp_path, self.FILES, *opts)
 
-        out = venv.run(["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"])
+        out = venv.run(
+            ["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"]
+        )
         assert "42" in out
 
         # Ensure packages excluded from distribution are not importable
@@ -1042,14 +1080,18 @@ class TestLinkTree:
         assert "resource.not_in_manifest" in out
 
 
-@pytest.mark.filterwarnings("ignore:.*compat.*:setuptools.SetuptoolsDeprecationWarning")
+@pytest.mark.filterwarnings(
+    "ignore:.*compat.*:setuptools.SetuptoolsDeprecationWarning"
+)
 def test_compat_install(tmp_path, venv):
     # TODO: Remove `compat` after Dec/2022.
     opts = ["--config-settings", "editable-mode=compat"]
     files = TestOverallBehaviour.EXAMPLES["custom-layout"]
     install_project("mypkg", venv, tmp_path, files, *opts)
 
-    out = venv.run(["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"])
+    out = venv.run(
+        ["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"]
+    )
     assert "42" in out
 
     expected_path = comparable_path(str(tmp_path))
@@ -1156,7 +1198,9 @@ class TestCustomBuildPy:
         assert "SetuptoolsDeprecationWarning" in out
         assert "ValueError: TEST_RAISE" in out
         # but installation should be successful
-        out = venv.run(["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"])
+        out = venv.run(
+            ["python", "-c", "import mypkg.mod1; print(mypkg.mod1.var)"]
+        )
         assert "42" in out
 
 
@@ -1236,14 +1280,19 @@ def test_debugging_tips(tmpdir_cwd, monkeypatch):
     monkeypatch.setattr(cmd, "get_finalized_command", simulated_failure)
 
     expected_msg = "following steps are recommended to help debug"
-    with pytest.raises(SimulatedErr), pytest.warns(_DebuggingTips, match=expected_msg):
+    with (
+        pytest.raises(SimulatedErr),
+        pytest.warns(_DebuggingTips, match=expected_msg),
+    ):
         cmd.run()
 
 
 @pytest.mark.filterwarnings("error")
 def test_encode_pth():
     """Ensure _encode_pth function does not produce encoding warnings"""
-    content = _encode_pth("tkmilan_ç_utf8")  # no warnings (would be turned into errors)
+    content = _encode_pth(
+        "tkmilan_ç_utf8"
+    )  # no warnings (would be turned into errors)
     assert isinstance(content, bytes)
 
 
@@ -1270,7 +1319,9 @@ def _addsitedirs(new_dirs):
     """
     content = "\n".join(
         ("import site",)
-        + tuple(f"site.addsitedir({os.fspath(new_dir)!r})" for new_dir in new_dirs)
+        + tuple(
+            f"site.addsitedir({os.fspath(new_dir)!r})" for new_dir in new_dirs
+        )
     )
     (new_dirs[0] / "sitecustomize.py").write_text(content, encoding="utf-8")
 

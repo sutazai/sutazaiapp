@@ -220,7 +220,9 @@ def unique_values(func):
     return wrapper
 
 
-REL = re.compile(r"""<([^>]*\srel\s{0,10}=\s{0,10}['"]?([^'" >]+)[^>]*)>""", re.I)
+REL = re.compile(
+    r"""<([^>]*\srel\s{0,10}=\s{0,10}['"]?([^'" >]+)[^>]*)>""", re.I
+)
 """
 Regex for an HTML tag with 'rel="val"' attributes.
 """
@@ -450,7 +452,9 @@ class PackageIndex(Environment):
         if not link.startswith(self.index_url):
             return NO_MATCH_SENTINEL
 
-        parts = list(map(urllib.parse.unquote, link[len(self.index_url):].split("/")))
+        parts = list(
+            map(urllib.parse.unquote, link[len(self.index_url) :].split("/"))
+        )
         if len(parts) != 2 or "#" in parts[1]:
             return NO_MATCH_SENTINEL
 
@@ -466,7 +470,9 @@ class PackageIndex(Environment):
         # process an index page into the package-page index
         for match in HREF.finditer(page):
             try:
-                self._scan(urllib.parse.urljoin(url, htmldecode(match.group(1))))
+                self._scan(
+                    urllib.parse.urljoin(url, htmldecode(match.group(1)))
+                )
             except ValueError:
                 pass
 
@@ -652,7 +658,9 @@ class PackageIndex(Environment):
                         skipped.add(dist)
                     continue
 
-                test = dist in req and (dist.precedence <= SOURCE_DIST or not source)
+                test = dist in req and (
+                    dist.precedence <= SOURCE_DIST or not source
+                )
                 if test:
                     loc = self.download(dist.location, tmpdir)
                     dist.download_location = loc
@@ -726,14 +734,19 @@ class PackageIndex(Environment):
             # Make sure the file has been downloaded to the temp dir.
             if os.path.dirname(filename) != tmpdir:
                 dst = os.path.join(tmpdir, basename)
-                if not (os.path.exists(dst) and os.path.samefile(filename, dst)):
+                if not (
+                    os.path.exists(dst) and os.path.samefile(filename, dst)
+                ):
                     shutil.copy2(filename, dst)
                     filename = dst
 
-            with open(os.path.join(tmpdir, "setup.py"), "w", encoding="utf-8") as file:
+            with open(
+                os.path.join(tmpdir, "setup.py"), "w", encoding="utf-8"
+            ) as file:
                 file.write(
                     "from setuptools import setup\n"
-                    f"setup(name={dists[0].project_name!r}, version={dists[0].version!r}, py_modules=[{os.path.splitext(basename)[0]!r}])\n")
+                    f"setup(name={dists[0].project_name!r}, version={dists[0].version!r}, py_modules=[{os.path.splitext(basename)[0]!r}])\n"
+                )
             return filename
 
         elif match:
@@ -758,7 +771,9 @@ class PackageIndex(Environment):
             checker = HashChecker.from_url(url)
             fp = self.open_url(url)
             if isinstance(fp, urllib.error.HTTPError):
-                raise DistutilsError(f"Can't download {url}: {fp.code} {fp.msg}")
+                raise DistutilsError(
+                    f"Can't download {url}: {fp.code} {fp.msg}"
+                )
             headers = fp.info()
             blocknum = 0
             bs = self.dl_blocksize
@@ -805,7 +820,9 @@ class PackageIndex(Environment):
             if warning:
                 self.warn(warning, v.reason)
             else:
-                raise DistutilsError(f"Download error for {url}: {v.reason}") from v
+                raise DistutilsError(
+                    f"Download error for {url}: {v.reason}"
+                ) from v
         except http.client.BadStatusLine as v:
             if warning:
                 self.warn(warning, v.line)
@@ -835,7 +852,9 @@ class PackageIndex(Environment):
 
         filename = os.path.join(tmpdir, name)
 
-        return self._download_vcs(url, filename) or self._download_other(url, filename)
+        return self._download_vcs(url, filename) or self._download_other(
+            url, filename
+        )
 
     @staticmethod
     def _resolve_vcs(url):

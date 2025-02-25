@@ -280,7 +280,9 @@ class HebrewProber(CharSetProber):
 
         # Make the decision: is it Logical or Visual?
         # If the final letter score distance is dominant enough, rely on it.
-        finalsub = self._final_char_logical_score - self._final_char_visual_score
+        finalsub = (
+            self._final_char_logical_score - self._final_char_visual_score
+        )
         if finalsub >= self.MIN_FINAL_CHAR_DISTANCE:
             return self.LOGICAL_HEBREW_NAME
         if finalsub <= -self.MIN_FINAL_CHAR_DISTANCE:
@@ -288,7 +290,8 @@ class HebrewProber(CharSetProber):
 
         # It's not dominant enough, try to rely on the model scores instead.
         modelsub = (
-            self._logical_prober.get_confidence() - self._visual_prober.get_confidence()
+            self._logical_prober.get_confidence()
+            - self._visual_prober.get_confidence()
         )
         if modelsub > self.MIN_MODEL_DISTANCE:
             return self.LOGICAL_HEBREW_NAME

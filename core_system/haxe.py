@@ -307,7 +307,9 @@ class HaxeLexer(ExtendedRegexLexer):
         ],
         "typedef": [
             include("spaces"),
-            default(("#pop", "typedef-body", "type-param-constraint", "type-name")),
+            default(
+                ("#pop", "typedef-body", "type-param-constraint", "type-name")
+            ),
         ],
         "typedef-body": [
             include("spaces"),
@@ -950,7 +952,9 @@ class HaxeLexer(ExtendedRegexLexer):
         "bracket-check": [
             include("spaces"),
             (r":", Punctuation, ("#pop", "object-sep", "expr")),  # is object
-            default(("#pop", "block", "optional-semicolon", "expr-chain")),  # is block
+            default(
+                ("#pop", "block", "optional-semicolon", "expr-chain")
+            ),  # is block
         ],
         # code block
         "block": [
@@ -962,7 +966,9 @@ class HaxeLexer(ExtendedRegexLexer):
         "object": [
             include("spaces"),
             (r"\}", Punctuation, "#pop"),
-            default(("#pop", "object-sep", "expr", "colon", "ident-or-string")),
+            default(
+                ("#pop", "object-sep", "expr", "colon", "ident-or-string")
+            ),
         ],
         # a key of an object
         "ident-or-string": [

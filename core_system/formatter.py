@@ -155,7 +155,9 @@ class SafetyFormatter(FormatterAPI):
         Returns:
             Optional[str]: Rendered licenses report.
         """
-        LOG.info("Safety is going to render_licenses with format: %s", self.format)
+        LOG.info(
+            "Safety is going to render_licenses with format: %s", self.format
+        )
         return self.format.render_licenses(announcements, licenses)
 
     def render_announcements(self, announcements: List[Dict[str, Any]]):

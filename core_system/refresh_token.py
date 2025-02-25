@@ -91,7 +91,6 @@ class RefreshTokenGrant(BaseGrant, TokenEndpointMixin):
 
 
         For example, the client makes the following HTTP request using
-        transport-layer security (with extra line breaks for display purposes
         only):
 
         .. code-block:: http

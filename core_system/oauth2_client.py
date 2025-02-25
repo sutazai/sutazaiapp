@@ -29,7 +29,9 @@ class OAuth2Auth(Auth, TokenAuth):
 
     requires_request_body = True
 
-    def auth_flow(self, request: Request) -> typing.Generator[Request, Response, None]:
+    def auth_flow(
+        self, request: Request
+    ) -> typing.Generator[Request, Response, None]:
         try:
             url, headers, body = self.prepare(
                 str(request.url), request.headers, request.content
@@ -46,7 +48,9 @@ class OAuth2Auth(Auth, TokenAuth):
 class OAuth2ClientAuth(Auth, ClientAuth):
     requires_request_body = True
 
-    def auth_flow(self, request: Request) -> typing.Generator[Request, Response, None]:
+    def auth_flow(
+        self, request: Request
+    ) -> typing.Generator[Request, Response, None]:
         url, headers, body = self.prepare(
             request.method, str(request.url), request.headers, request.content
         )
@@ -153,7 +157,9 @@ class AsyncOAuth2Client(_OAuth2Client, httpx.AsyncClient):
                         url, grant_type="client_credentials"
                     )
                     if self.update_token:
-                        await self.update_token(new_token, access_token=access_token)
+                        await self.update_token(
+                            new_token, access_token=access_token
+                        )
                 else:
                     raise InvalidTokenError()
 

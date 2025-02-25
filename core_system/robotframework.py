@@ -104,7 +104,7 @@ class VariableTokenizer:
             yield "[", SYNTAX
             yield from self.tokenize(var.index, VARIABLE)
             yield "]", SYNTAX
-        yield from self.tokenize(string[var.end:], orig_token)
+        yield from self.tokenize(string[var.end :], orig_token)
 
 
 class RowTokenizer:
@@ -143,7 +143,9 @@ class RowTokenizer:
             elif index == 0 and value.startswith("*"):
                 self._table = self._start_table(value)
                 heading = True
-            yield from self._tokenize(value, index, commented, separator, heading)
+            yield from self._tokenize(
+                value, index, commented, separator, heading
+            )
         self._table.end_row()
 
     def _start_table(self, header):
@@ -167,7 +169,9 @@ class RowSplitter:
 
     def split(self, row):
         splitter = (
-            row.startswith("| ") and self._split_from_pipes or self._split_from_spaces
+            row.startswith("| ")
+            and self._split_from_pipes
+            or self._split_from_spaces
         )
         yield from splitter(row)
         yield "\n"
@@ -497,7 +501,9 @@ class VariableSplitter:
         self.base = "".join(self._variable_chars[2:-1])
         self.end = self.start + len(self._variable_chars)
         if self._has_list_or_dict_variable_index():
-            self.index = "".join(self._list_and_dict_variable_index_chars[1:-1])
+            self.index = "".join(
+                self._list_and_dict_variable_index_chars[1:-1]
+            )
             self.end += len(self._list_and_dict_variable_index_chars)
 
     def _has_list_or_dict_variable_index(self):

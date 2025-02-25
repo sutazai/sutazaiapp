@@ -10,15 +10,15 @@ import sys
 
 class Network:
     """Main class for network functionality"""
-    
+
     def __init__(self):
         """Initialize the Network instance"""
         self.initialized = True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         return "Active"

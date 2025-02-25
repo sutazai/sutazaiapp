@@ -46,7 +46,8 @@ class SyntaxDiagnostic:
                             "type": "Tokenization Error",
                             "details": f"Found {len(error_tokens)} error tokens",
                             "tokens": error_tokens,
-                        })
+                        }
+                    )
             except tokenize.TokenError as e:
                 file_issues.append(
                     {"type": "Tokenization Error", "details": str(e)}
@@ -109,7 +110,8 @@ class SyntaxDiagnostic:
                             "type": "Method Signature Issue",
                             "details": f"Method {method_name} missing self parameter",
                             "line": method_line,
-                        })
+                        }
+                    )
 
         return method_issues
 

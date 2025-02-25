@@ -212,7 +212,9 @@ class SystemHealthMonitorWorker:
             response = requests.get(url, timeout=timeout)
 
             return {
-                "status": ("RUNNING" if response.status_code == 200 else "DEGRADED"),
+                "status": (
+                    "RUNNING" if response.status_code == 200 else "DEGRADED"
+                ),
                 "http_status_code": response.status_code,
                 "response_time": response.elapsed.total_seconds(),
             }
@@ -221,7 +223,9 @@ class SystemHealthMonitorWorker:
             self.logger.error(f"HTTP job check failed: {e}")
             return {"status": "STOPPED", "error": str(e)}
 
-    def recover_job(self, job_config: Dict[str, Any], job_status: Dict[str, Any]):
+    def recover_job(
+        self, job_config: Dict[str, Any], job_status: Dict[str, Any]
+    ):
         """
         Attempt to recover a failed job
 
@@ -240,7 +244,9 @@ class SystemHealthMonitorWorker:
                 elif action == "notify_admin":
                     self._notify_admin(job_config, job_status)
 
-            self.logger.info(f"Recovery actions completed for {job_config.get('name')}")
+            self.logger.info(
+                f"Recovery actions completed for {job_config.get('name')}"
+            )
 
         except Exception as e:
             self.logger.error(f"Job recovery failed: {e}")
@@ -288,7 +294,9 @@ class SystemHealthMonitorWorker:
         except Exception as e:
             self.logger.error(f"Systemd service restart failed: {e}")
 
-    def _notify_admin(self, job_config: Dict[str, Any], job_status: Dict[str, Any]):
+    def _notify_admin(
+        self, job_config: Dict[str, Any], job_status: Dict[str, Any]
+    ):
         """
         Send notification to system administrators
 
@@ -341,7 +349,9 @@ class SystemHealthMonitorWorker:
         except Exception as e:
             self.logger.error(f"Comprehensive health check failed: {e}")
 
-    def _persist_health_check_results(self, job_statuses: List[Dict[str, Any]]):
+    def _persist_health_check_results(
+        self, job_statuses: List[Dict[str, Any]]
+    ):
         """
         Persist health check results to a log file
 
@@ -375,9 +385,9 @@ class SystemHealthMonitorWorker:
         """
         try:
             # Schedule periodic health checks
-            schedule.every(self.config.get("monitoring_interval", 300)).seconds.do(
-                self.run_comprehensive_health_check
-            )
+            schedule.every(
+                self.config.get("monitoring_interval", 300)
+            ).seconds.do(self.run_comprehensive_health_check)
 
             # Keep the monitoring process running
             while True:

@@ -3,7 +3,7 @@ from pathlib import Path
 from ..wheelfile import WheelFile
 
 
-def unpack(path: str, dest: str='.') ->None:
+def unpack(path: str, dest: str = ".") -> None:
     """Unpack a wheel.
 
     Wheel content will be unpacked to {dest}/{name}-{ver}, where {name}
@@ -13,11 +13,11 @@ def unpack(path: str, dest: str='.') ->None:
     :param dest: Destination directory(default to current directory).
     """
     with WheelFile(path) as wf:
-        namever = wf.parsed_filename.group('namever')
+        namever = wf.parsed_filename.group("namever")
         destination = Path(dest) / namever
-        print(f'Unpacking to: {destination}...', end='', flush=True)
+        print(f"Unpacking to: {destination}...", end="", flush=True)
         for zinfo in wf.filelist:
             wf.extract(zinfo, destination)
             permissions = zinfo.external_attr >> 16 & 511
             destination.joinpath(zinfo.filename).chmod(permissions)
-    print('OK')
+    print("OK")

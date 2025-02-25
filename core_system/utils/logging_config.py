@@ -38,7 +38,8 @@ class LoggingConfigurator:
         # Default log format if not provided
         if log_format is None:
             log_format = (
-                "%(asctime)s | %(levelname)8s | " "%(name)s:%(lineno)d | %(message)s"
+                "%(asctime)s | %(levelname)8s | "
+                "%(name)s:%(lineno)d | %(message)s"
             )
 
         # Create formatters
@@ -62,7 +63,6 @@ class LoggingConfigurator:
         # System loggers
         system_loggers = [
             "SutazAI.Core",
-            "SutazAI.Security",
             "SutazAI.Performance",
             "SutazAI.Exceptions",
         ]
@@ -128,11 +128,12 @@ class LoggingConfigurator:
 
         def handle_exception(exc_type, exc_value, exc_traceback):
             if issubclass(exc_type, KeyboardInterrupt):
-                logging.getLogger("SutazAI.Core").info("System Shutdown Requested")
+                logging.getLogger("SutazAI.Core").info(
+                    "System Shutdown Requested"
+                )
                 return
 
             logging.getLogger("SutazAI.Exceptions").critical(
                 "Unhandled Exception",
                 exc_info=(exc_type, exc_value, exc_traceback),
             )
-

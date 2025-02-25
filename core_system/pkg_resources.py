@@ -201,7 +201,9 @@ class Distribution(BaseDistribution):
         for group, entries in self._dist.get_entry_map().items():
             for name, entry_point in entries.items():
                 name, _, value = str(entry_point).partition("=")
-                yield EntryPoint(name=name.strip(), value=value.strip(), group=group)
+                yield EntryPoint(
+                    name=name.strip(), value=value.strip(), group=group
+                )
 
     def _metadata_impl(self) -> email.message.Message:
         """
@@ -225,7 +227,9 @@ class Distribution(BaseDistribution):
         feed_parser.feed(metadata)
         return feed_parser.close()
 
-    def iter_dependencies(self, extras: Collection[str] = ()) -> Iterable[Requirement]:
+    def iter_dependencies(
+        self, extras: Collection[str] = ()
+    ) -> Iterable[Requirement]:
         if extras:  # pkg_resources raises on invalid extras, so we sanitize.
             extras = frozenset(pkg_resources.safe_extra(e) for e in extras)
             extras = extras.intersection(self._dist.extras)

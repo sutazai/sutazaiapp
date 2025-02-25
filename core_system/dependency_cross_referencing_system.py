@@ -68,7 +68,9 @@ class UltraComprehensiveDependencyCrossReferencer:
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
                 logging.FileHandler(
-                    os.path.join(self.log_dir, "dependency_cross_referencing.log")
+                    os.path.join(
+                        self.log_dir, "dependency_cross_referencing.log"
+                    )
                 ),
                 logging.StreamHandler(sys.stdout),
             ],
@@ -108,8 +110,8 @@ class UltraComprehensiveDependencyCrossReferencer:
 
                     try:
                         # Analyze module dependencies
-                        module_dependencies = self._analyze_module_dependencies(
-                            file_path
+                        module_dependencies = (
+                            self._analyze_module_dependencies(file_path)
                         )
 
                         # Update dependency graph
@@ -118,8 +120,12 @@ class UltraComprehensiveDependencyCrossReferencer:
                         )
 
                         # Categorize module
-                        module_category = self._categorize_module(relative_path)
-                        dependency_report["module_categories"][module_category] = (
+                        module_category = self._categorize_module(
+                            relative_path
+                        )
+                        dependency_report["module_categories"][
+                            module_category
+                        ] = (
                             dependency_report["module_categories"].get(
                                 module_category, 0
                             )
@@ -137,10 +143,14 @@ class UltraComprehensiveDependencyCrossReferencer:
         dependency_report["circular_dependencies"] = list(
             nx.simple_cycles(self.dependency_graph)
         )
-        dependency_report["total_dependencies"] = len(self.dependency_graph.edges())
+        dependency_report["total_dependencies"] = len(
+            self.dependency_graph.edges()
+        )
 
         # Calculate dependency metrics
-        dependency_report["dependency_metrics"] = self._calculate_dependency_metrics()
+        dependency_report["dependency_metrics"] = (
+            self._calculate_dependency_metrics()
+        )
 
         # Visualize dependency graph
         self._visualize_dependency_graph()
@@ -176,7 +186,9 @@ class UltraComprehensiveDependencyCrossReferencer:
             # Analyze imports
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):
-                    dependencies["imports"].extend([alias.name for alias in node.names])
+                    dependencies["imports"].extend(
+                        [alias.name for alias in node.names]
+                    )
 
                 elif isinstance(node, ast.ImportFrom):
                     base_module = node.module or ""
@@ -213,7 +225,9 @@ class UltraComprehensiveDependencyCrossReferencer:
 
         return dependencies
 
-    def _update_dependency_graph(self, module_path: str, dependencies: Dict[str, Any]):
+    def _update_dependency_graph(
+        self, module_path: str, dependencies: Dict[str, Any]
+    ):
         """
         Update dependency graph with module relationships
 
@@ -288,7 +302,9 @@ class UltraComprehensiveDependencyCrossReferencer:
             "coupling_coefficient": {},
             "centrality": {
                 "degree": nx.degree_centrality(self.dependency_graph),
-                "betweenness": nx.betweenness_centrality(self.dependency_graph),
+                "betweenness": nx.betweenness_centrality(
+                    self.dependency_graph
+                ),
                 "closeness": nx.closeness_centrality(self.dependency_graph),
             },
         }
@@ -388,7 +404,9 @@ class UltraComprehensiveDependencyCrossReferencer:
                 )
 
         # Identify potential refactoring candidates
-        for module, fan_in in self.module_relationships.get("fan_in", {}).items():
+        for module, fan_in in self.module_relationships.get(
+            "fan_in", {}
+        ).items():
             if fan_in > 10:  # High fan-in threshold
                 insights["potential_refactoring_candidates"].append(
                     {"module": module, "fan_in": fan_in}
@@ -415,18 +433,24 @@ def main():
     dependency_cross_referencer = UltraComprehensiveDependencyCrossReferencer()
 
     # Perform comprehensive dependency analysis
-    dependency_report = dependency_cross_referencer.analyze_project_dependencies()
+    dependency_report = (
+        dependency_cross_referencer.analyze_project_dependencies()
+    )
 
     print("\n🌐 Dependency Analysis Results 🌐")
     print(f"Total Modules: {dependency_report.get('total_modules', 0)}")
-    print(f"Total Dependencies: {dependency_report.get('total_dependencies', 0)}")
+    print(
+        f"Total Dependencies: {dependency_report.get('total_dependencies', 0)}"
+    )
 
     print("\nCircular Dependencies:")
     for cycle in dependency_report.get("circular_dependencies", []):
         print(" -> ".join(cycle))
 
     # Generate dependency insights
-    dependency_insights = dependency_cross_referencer.generate_dependency_insights()
+    dependency_insights = (
+        dependency_cross_referencer.generate_dependency_insights()
+    )
 
     print("\nDependency Insights:")
     for category, insights in dependency_insights.items():

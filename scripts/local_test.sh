@@ -37,7 +37,6 @@ run_tests() {
     log "INFO" "Running unit tests"
     pytest tests/ --cov=. --cov-report=xml --cov-report=term-missing
 
-    log "INFO" "Running security scans"
     bandit -r . -f custom
     safety check
 

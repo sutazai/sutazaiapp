@@ -327,7 +327,9 @@ class ErlangShellLexer(Lexer):
             m = self._prompt_re.match(line)
             if m is not None:
                 end = m.end()
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:end])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:end])])
+                )
                 curcode += line[end:]
             else:
                 if curcode:
@@ -474,7 +476,9 @@ class ElixirLexer(RegexLexer):
     )
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name:
                 if value in self.KEYWORD:
                     yield index, Keyword, value
@@ -554,7 +558,9 @@ class ElixirLexer(RegexLexer):
                 (r"~[a-z]" + lterm, token, name + "-intp"),
                 (r"~[A-Z]" + lterm, token, name + "-no-intp"),
             ]
-            states[name + "-intp"] = gen_elixir_sigstr_rules(rterm, rterm_class, token)
+            states[name + "-intp"] = gen_elixir_sigstr_rules(
+                rterm, rterm_class, token
+            )
             states[name + "-no-intp"] = gen_elixir_sigstr_rules(
                 rterm, rterm_class, token, interpol=False
             )
@@ -583,7 +589,9 @@ class ElixirLexer(RegexLexer):
             # Various kinds of characters
             (
                 r"(\?)" + long_hex_char_re,
-                bygroups(String.Char, String.Escape, Number.Hex, String.Escape),
+                bygroups(
+                    String.Char, String.Escape, Number.Hex, String.Escape
+                ),
             ),
             (r"(\?)" + hex_char_re, bygroups(String.Char, String.Escape)),
             (r"(\?)" + escape_char_re, bygroups(String.Char, String.Escape)),
@@ -726,14 +734,18 @@ class ElixirConsoleLexer(Lexer):
             line = match.group()
             if line.startswith("** "):
                 in_error = True
-                insertions.append((len(curcode), [(0, Generic.Error, line[:-1])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Error, line[:-1])])
+                )
                 curcode += line[-1:]
             else:
                 m = self._prompt_re.match(line)
                 if m is not None:
                     in_error = False
                     end = m.end()
-                    insertions.append((len(curcode), [(0, Generic.Prompt, line[:end])]))
+                    insertions.append(
+                        (len(curcode), [(0, Generic.Prompt, line[:end])])
+                    )
                     curcode += line[end:]
                 else:
                     if curcode:

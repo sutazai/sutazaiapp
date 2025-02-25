@@ -154,7 +154,9 @@ class PackageFinder(_Finder):
                 package = rel_path.replace(os.path.sep, ".")
 
                 # Skip directory trees that are not valid packages
-                if "." in dir or not cls._looks_like_package(full_path, package):
+                if "." in dir or not cls._looks_like_package(
+                    full_path, package
+                ):
                     continue
 
                 # Should this package be included?
@@ -255,8 +257,12 @@ class FlatLayoutPackageFinder(PEP420PackageFinder):
     def _looks_like_package(_path: StrPath, package_name: str) -> bool:
         names = package_name.split(".")
         # Consider PEP 561
-        root_pkg_is_valid = names[0].isidentifier() or names[0].endswith("-stubs")
-        return root_pkg_is_valid and all(name.isidentifier() for name in names[1:])
+        root_pkg_is_valid = names[0].isidentifier() or names[0].endswith(
+            "-stubs"
+        )
+        return root_pkg_is_valid and all(
+            name.isidentifier() for name in names[1:]
+        )
 
 
 class FlatLayoutModuleFinder(ModuleFinder):
@@ -549,7 +555,9 @@ def remove_stubs(packages: list[str]) -> list[str]:
     >>> remove_stubs(["a", "a.b", "a-stubs", "a-stubs.b.c", "b", "c-stubs"])
     ['a', 'a.b', 'b']
     """
-    return [pkg for pkg in packages if not pkg.split(".")[0].endswith("-stubs")]
+    return [
+        pkg for pkg in packages if not pkg.split(".")[0].endswith("-stubs")
+    ]
 
 
 def find_parent_package(
@@ -559,7 +567,7 @@ def find_parent_package(
     packages = sorted(packages, key=len)
     common_ancestors = []
     for i, name in enumerate(packages):
-        if not all(n.startswith(f"{name}.") for n in packages[i + 1:]):
+        if not all(n.startswith(f"{name}.") for n in packages[i + 1 :]):
             # Since packages are sorted by length, this condition is able
             # to find a list of all common ancestors.
             # When there is divergence (e.g. multiple root packages)
@@ -610,7 +618,9 @@ def find_package_path(
     return os.path.join(root_dir, *parent.split("/"), *parts)
 
 
-def construct_package_dir(packages: list[str], package_path: StrPath) -> dict[str, str]:
+def construct_package_dir(
+    packages: list[str], package_path: StrPath
+) -> dict[str, str]:
     parent_pkgs = remove_nested_packages(packages)
     prefix = Path(package_path).parts
     return {pkg: "/".join([*prefix, *pkg.split(".")]) for pkg in parent_pkgs}

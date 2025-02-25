@@ -95,12 +95,16 @@ class NixLexer(RegexLexer):
             (r"\s+", Text),
             # keywords
             (
-                "({})".format("|".join(re.escape(entry) + "\\b" for entry in keywords)),
+                "({})".format(
+                    "|".join(re.escape(entry) + "\\b" for entry in keywords)
+                ),
                 Keyword,
             ),
             # highlight the builtins
             (
-                "({})".format("|".join(re.escape(entry) + "\\b" for entry in builtins)),
+                "({})".format(
+                    "|".join(re.escape(entry) + "\\b" for entry in builtins)
+                ),
                 Name.Builtin,
             ),
             (r"\b(true|false|null)\b", Name.Constant),
@@ -114,7 +118,9 @@ class NixLexer(RegexLexer):
             (r"\<[\w.+-]+(\/[\w.+-]+)*\>", Literal),
             # operators
             (
-                "({})".format("|".join(re.escape(entry) for entry in operators)),
+                "({})".format(
+                    "|".join(re.escape(entry) for entry in operators)
+                ),
                 Operator,
             ),
             # word operators
@@ -122,7 +128,9 @@ class NixLexer(RegexLexer):
             (r"\{", Punctuation, "block"),
             # punctuations
             (
-                "({})".format("|".join(re.escape(entry) for entry in punctuations)),
+                "({})".format(
+                    "|".join(re.escape(entry) for entry in punctuations)
+                ),
                 Punctuation,
             ),
             # strings

@@ -17,13 +17,17 @@ try:
     from psycopg2.pool import ThreadedConnectionPool
 except ImportError:
     psycopg2 = None
-    logging.warning("psycopg2 not installed, PostgreSQL functionality will be limited")
+    logging.warning(
+        "psycopg2 not installed, PostgreSQL functionality will be limited"
+    )
 
 try:
     import sqlite3
 except ImportError:
     sqlite3 = None
-    logging.warning("sqlite3 not available, SQLite functionality will be disabled")
+    logging.warning(
+        "sqlite3 not available, SQLite functionality will be disabled"
+    )
 
 
 class DatabaseManager:
@@ -32,7 +36,7 @@ class DatabaseManager:
     def __init__(self, config: Dict[str, Any]):
         """
         Initialize the database manager with configuration.
-        
+
         Args:
             config: Dictionary containing database configuration
                 database_type: 'postgresql' or 'sqlite'
@@ -45,13 +49,15 @@ class DatabaseManager:
         self.config = config
         self.logger = logging.getLogger(__name__)
         self.conn_pool = None
-        
+
         db_type = config.get("database_type", "sqlite").lower()
         self.db_type = db_type
-        
+
         if db_type == "postgresql":
             if psycopg2 is None:
-                raise ImportError("psycopg2 is required for PostgreSQL connections")
+                raise ImportError(
+                    "psycopg2 is required for PostgreSQL connections"
+                )
             self._setup_postgres_pool()
         elif db_type == "sqlite":
             if sqlite3 is None:
@@ -61,13 +67,13 @@ class DatabaseManager:
             )
         else:
             raise ValueError(f"Unsupported database type: {db_type}")
-            
+
     def _setup_postgres_pool(self) -> None:
         """Set up the PostgreSQL connection pool."""
         conn_params = self.config.get("connection_params", {})
         min_conn = self.config.get("pool_min_conn", 1)
         max_conn = self.config.get("pool_max_conn", 10)
-        
+
         self.conn_pool = ThreadedConnectionPool(
             min_conn,
             max_conn,
@@ -77,18 +83,18 @@ class DatabaseManager:
             user=conn_params.get("user", "postgres"),
             password=conn_params.get("password", ""),
         )
-        
+
     @contextmanager
     def get_connection(self) -> Generator[Any, None, None]:
         """
         Get a database connection from the pool or create a new SQLite connection.
-        
+
         Yields:
             Connection object (psycopg2 or sqlite3)
         """
         connection = None
         cursor = None
-        
+
         try:
             if self.db_type == "postgresql":
                 connection = self.conn_pool.getconn()
@@ -97,16 +103,16 @@ class DatabaseManager:
                 connection = sqlite3.connect(self.sqlite_path)
                 connection.row_factory = sqlite3.Row
                 cursor = connection.cursor()
-                
+
             yield cursor
             connection.commit()
-            
+
         except Exception as e:
             if connection:
                 connection.rollback()
             self.logger.error(f"Database error: {str(e)}")
             raise
-            
+
         finally:
             if cursor:
                 cursor.close()
@@ -115,37 +121,39 @@ class DatabaseManager:
                     self.conn_pool.putconn(connection)
                 else:
                     connection.close()
-    
+
     def execute_query(
         self, query: str, params: Optional[Union[Tuple, Dict[str, Any]]] = None
     ) -> List[Dict[str, Any]]:
         """
         Execute a database query and return results.
-        
+
         Args:
             query: SQL query string
             params: Query parameters (tuple, dict, or None)
-            
+
         Returns:
             List of dictionaries containing the query results
         """
         with self.get_connection() as cursor:
             cursor.execute(query, params or ())
-            
+
             if cursor.description:
                 if self.db_type == "postgresql":
                     return [dict(row) for row in cursor.fetchall()]
                 else:  # sqlite
                     columns = [col[0] for col in cursor.description]
-                    return [dict(zip(columns, row)) for row in cursor.fetchall()]
+                    return [
+                        dict(zip(columns, row)) for row in cursor.fetchall()
+                    ]
             return []
-    
+
     def execute_batch(
         self, query: str, params_list: List[Union[Tuple, Dict[str, Any]]]
     ) -> None:
         """
         Execute a batch operation.
-        
+
         Args:
             query: SQL query template
             params_list: List of parameter sets for batch execution
@@ -155,7 +163,7 @@ class DatabaseManager:
                 execute_values(cursor, query, params_list)
             else:  # sqlite
                 cursor.executemany(query, params_list)
-    
+
     def close(self) -> None:
         """Close all database connections."""
         if self.db_type == "postgresql" and self.conn_pool:
@@ -166,10 +174,10 @@ class DatabaseManager:
 def get_database_manager(config_file: Optional[str] = None) -> DatabaseManager:
     """
     Factory function to create a DatabaseManager instance.
-    
+
     Args:
         config_file: Path to config file (optional)
-        
+
     Returns:
         Configured DatabaseManager instance
     """
@@ -177,12 +185,14 @@ def get_database_manager(config_file: Optional[str] = None) -> DatabaseManager:
     config = {
         "database_type": "sqlite",
         "connection_params": {
-            "database": os.path.join(os.path.dirname(__file__), "../database/sutazai.db")
+            "database": os.path.join(
+                os.path.dirname(__file__), "../database/sutazai.db"
+            )
         },
     }
-    
+
     # TODO: Load config from file if provided
-    
+
     return DatabaseManager(config)
 
 
@@ -193,7 +203,7 @@ _db_manager = None
 def get_db() -> DatabaseManager:
     """
     Get the singleton DatabaseManager instance.
-    
+
     Returns:
         Global DatabaseManager instance
     """

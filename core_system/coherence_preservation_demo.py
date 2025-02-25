@@ -68,8 +68,10 @@ def main():
             logger.info(f"\nApplying {strategy.name} Strategy:")
 
             # Perform error mitigation
-            mitigated_state, metrics = coherence_preserver.sutazai_error_mitigation(
-                noisy_state, strategy=strategy
+            mitigated_state, metrics = (
+                coherence_preserver.sutazai_error_mitigation(
+                    noisy_state, strategy=strategy
+                )
             )
 
             # Log detailed metrics

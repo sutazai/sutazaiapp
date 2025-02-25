@@ -40,7 +40,9 @@ def validate_project_dynamic(pyproject: T) -> T:
                 },
                 name=f"data.project.{field}",
                 definition={
-                    "description": cleandoc(RedefiningStaticFieldAsDynamic._DESC),
+                    "description": cleandoc(
+                        RedefiningStaticFieldAsDynamic._DESC
+                    ),
                     "see": RedefiningStaticFieldAsDynamic._URL,
                 },
                 rule="PEP 621",

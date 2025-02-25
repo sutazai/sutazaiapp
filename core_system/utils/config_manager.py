@@ -25,7 +25,6 @@ class ConfigSettings(BaseSettings):
     port: int = Field(default=8000, env="SERVER_PORT")
     debug: bool = Field(default=False, env="DEBUG")
 
-    # Security settings
     secret_key: str = Field(default="", env="SECRET_KEY")
     api_key: Optional[str] = Field(default=None, env="API_KEY")
 

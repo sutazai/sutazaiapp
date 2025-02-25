@@ -6,7 +6,6 @@ Comprehensive utility for:
 - Intelligent dependency discovery
 - Version compatibility analysis
 - Automated dependency resolution
-- Security vulnerability tracking
 - Performance optimization
 """
 
@@ -42,7 +41,6 @@ class ComprehensiveDependencyManager:
     Ultra-Advanced Dependency Management Framework
 
     Provides intelligent, autonomous dependency tracking,
-    security analysis, and optimization capabilities
     """
 
     def __init__(
@@ -77,7 +75,6 @@ class ComprehensiveDependencyManager:
             "direct_dependencies": {},
             "transitive_dependencies": {},
             "version_compatibility": {},
-            "security_analysis": {},
         }
 
         try:
@@ -96,18 +93,21 @@ class ComprehensiveDependencyManager:
                         dependency_details = self._analyze_single_dependency(
                             name, current_version
                         )
-                        dependencies["direct_dependencies"][name] = dependency_details
+                        dependencies["direct_dependencies"][
+                            name
+                        ] = dependency_details
 
                     except Exception as e:
-                        logger.warning(f"Could not process dependency {req}: {e}")
+                        logger.warning(
+                            f"Could not process dependency {req}: {e}"
+                        )
 
             # Perform transitive dependency analysis
             dependencies["transitive_dependencies"] = (
                 self._discover_transitive_dependencies()
             )
 
-            # Perform security vulnerability analysis
-            dependencies["security_analysis"] = self._perform_security_analysis()
+            )
 
             # Persist dependency report
             self._persist_dependency_report(dependencies)
@@ -115,7 +115,9 @@ class ComprehensiveDependencyManager:
             return dependencies
 
         except FileNotFoundError:
-            logger.error(f"Requirements file not found: {self.requirements_path}")
+            logger.error(
+                f"Requirements file not found: {self.requirements_path}"
+            )
             return dependencies
 
     def _analyze_single_dependency(
@@ -183,7 +185,9 @@ class ComprehensiveDependencyManager:
             return latest
 
         except subprocess.CalledProcessError:
-            logger.warning(f"Could not retrieve latest version for {package_name}")
+            logger.warning(
+                f"Could not retrieve latest version for {package_name}"
+            )
             return "Unknown"
 
     def _check_version_compatibility(
@@ -278,7 +282,9 @@ class ComprehensiveDependencyManager:
             # Build dependency graph
             dependency_graph = nx.DiGraph()
             for package in installed_packages:
-                dependency_graph.add_node(package["name"], version=package["version"])
+                dependency_graph.add_node(
+                    package["name"], version=package["version"]
+                )
 
             # Analyze dependencies
             transitive_deps = {}
@@ -293,12 +299,14 @@ class ComprehensiveDependencyManager:
                     )
 
                     # Extract required packages
-                    required_packages = re.findall(r"Requires: (.+)", req_result.stdout)
+                    required_packages = re.findall(
+                        r"Requires: (.+)", req_result.stdout
+                    )
 
                     if required_packages:
-                        transitive_deps[package["name"]] = required_packages[0].split(
-                            ", "
-                        )
+                        transitive_deps[package["name"]] = required_packages[
+                            0
+                        ].split(", ")
 
                         # Add edges to dependency graph
                         for dep in transitive_deps[package["name"]]:
@@ -315,12 +323,9 @@ class ComprehensiveDependencyManager:
             logger.error(f"Transitive dependency discovery failed: {e}")
             return {}
 
-    def _perform_security_analysis(self) -> Dict[str, Any]:
         """
-        Conduct comprehensive security vulnerability analysis
 
         Returns:
-            Security vulnerability report
         """
         try:
             # Use safety to check for known vulnerabilities
@@ -328,7 +333,6 @@ class ComprehensiveDependencyManager:
                 files=[self.requirements_path], ignore_ids=[], cached=True
             )
 
-            security_report = {
                 "total_vulnerabilities": len(vulnerabilities),
                 "vulnerable_packages": [],
                 "severity_breakdown": {
@@ -347,22 +351,17 @@ class ComprehensiveDependencyManager:
                     "description": vuln[3],
                 }
 
-                security_report["vulnerable_packages"].append(vulnerability_details)
+                    vulnerability_details
+                )
 
                 # Severity classification (placeholder logic)
                 if "critical" in vuln[3].lower():
-                    security_report["severity_breakdown"]["critical"] += 1
                 elif "high" in vuln[3].lower():
-                    security_report["severity_breakdown"]["high"] += 1
                 elif "medium" in vuln[3].lower():
-                    security_report["severity_breakdown"]["medium"] += 1
                 else:
-                    security_report["severity_breakdown"]["low"] += 1
 
-            return security_report
 
         except Exception as e:
-            logger.error(f"Security vulnerability analysis failed: {e}")
             return {"analysis_status": "failed", "error": str(e)}
 
     def _persist_dependency_report(self, report: Dict[str, Any]):
@@ -372,9 +371,7 @@ class ComprehensiveDependencyManager:
         Args:
             report (Dict): Dependency analysis report
         """
-        report_filename = (
-            f'dependency_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
-        )
+        report_filename = f'dependency_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
         report_path = os.path.join(self.dependency_cache_dir, report_filename)
 
         try:
@@ -414,7 +411,9 @@ class ComprehensiveDependencyManager:
 
                     # Warn about potential risks
                     if potential_risks:
-                        logger.warning(f"Potential risks for {name}: {potential_risks}")
+                        logger.warning(
+                            f"Potential risks for {name}: {potential_risks}"
+                        )
 
                     # Perform update
                     subprocess.run(
@@ -475,7 +474,9 @@ class ComprehensiveDependencyManager:
                     updated_package = next(
                         (
                             pkg
-                            for pkg in update_results.get("updated_packages", [])
+                            for pkg in update_results.get(
+                                "updated_packages", []
+                            )
                             if pkg["name"] == package_name
                         ),
                         None,

@@ -23,8 +23,6 @@ sysctl -w vm.overcommit_memory=1
 
 # File Descriptor Limits
 echo "📂 Increasing File Descriptor Limits..."
-echo "* soft nofile 1048576" >> /etc/security/limits.conf
-echo "* hard nofile 1048576" >> /etc/security/limits.conf
 
 # Network Optimization
 echo "🌐 Tuning Network Performance..."

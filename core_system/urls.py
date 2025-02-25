@@ -13,7 +13,9 @@ from urllib.parse import urlencode as _urlencode
 
 from .encoding import to_bytes, to_unicode
 
-always_safe = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz" "0123456789_.-"
+always_safe = (
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz" "0123456789_.-"
+)
 urlencoded = set(always_safe) | set("=&;:%+~,*@!()/?")
 INVALID_HEX_PATTERN = re.compile(r"%[^0-9A-Fa-f]|%[0-9A-Fa-f][^0-9A-Fa-f]")
 

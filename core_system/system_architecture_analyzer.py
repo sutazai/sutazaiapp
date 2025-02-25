@@ -87,7 +87,10 @@ class ArchitectureAnalyzer:
             module = importlib.import_module(module_name)
 
             for name, obj in inspect.getmembers(module):
-                if inspect.iscoroutinefunction(obj) and obj.__module__ == module_name:
+                if (
+                    inspect.iscoroutinefunction(obj)
+                    and obj.__module__ == module_name
+                ):
                     component_type = self._classify_component(obj)
                     self.component_types[name] = component_type
                     self.architecture_graph.add_node(name, type=component_type)
@@ -101,11 +104,15 @@ class ArchitectureAnalyzer:
         if inspect.isclass(component):
             if "BaseModel" in [base.__name__ for base in component.__bases__]:
                 return "Data Model"
-            elif "APIRouter" in [base.__name__ for base in component.__bases__]:
+            elif "APIRouter" in [
+                base.__name__ for base in component.__bases__
+            ]:
                 return "API Router"
             else:
                 return "Generic Class"
-        elif inspect.isfunction(component) or inspect.iscoroutinefunction(component):
+        elif inspect.isfunction(component) or inspect.iscoroutinefunction(
+            component
+        ):
             if "router" in component.__name__.lower():
                 return "Route Handler"
             elif "service" in component.__name__.lower():

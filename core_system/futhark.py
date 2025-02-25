@@ -132,7 +132,8 @@ class FutharkLexer(RegexLexer):
             (r"[][(),:;`{}?.\'~^]", Punctuation),
             #  Numbers
             (
-                r"0[xX]_*[\da-fA-F](_*[\da-fA-F])*_*[pP][+-]?\d(_*\d)*" + num_postfix,
+                r"0[xX]_*[\da-fA-F](_*[\da-fA-F])*_*[pP][+-]?\d(_*\d)*"
+                + num_postfix,
                 Number.Float,
             ),
             (

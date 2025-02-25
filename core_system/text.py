@@ -46,7 +46,9 @@ class TextReport(FormatterAPI):
         + SMALL_DIVIDER_SECTIONS
     )
 
-    def __build_announcements_section(self, announcements: List[Dict]) -> List[str]:
+    def __build_announcements_section(
+        self, announcements: List[Dict]
+    ) -> List[str]:
         """
         Build the announcements section of the report.
 
@@ -62,7 +64,9 @@ class TextReport(FormatterAPI):
 
         if basic_announcements:
             announcements_content = click.unstyle(
-                build_announcements_section_content(basic_announcements, columns=80)
+                build_announcements_section_content(
+                    basic_announcements, columns=80
+                )
             )
             announcements_table = [
                 add_empty_line(),
@@ -114,7 +118,9 @@ class TextReport(FormatterAPI):
                 self.SMALL_DIVIDER_SECTIONS,
             ]
 
-        announcement_section = self.__build_announcements_section(announcements)
+        announcement_section = self.__build_announcements_section(
+            announcements
+        )
 
         ignored = {}
         total_ignored = 0
@@ -125,9 +131,14 @@ class TextReport(FormatterAPI):
         for n, vuln in enumerate(vulnerabilities):
             if vuln.ignored:
                 total_ignored += 1
-                ignored[vuln.package_name] = ignored.get(vuln.package_name, 0) + 1
+                ignored[vuln.package_name] = (
+                    ignored.get(vuln.package_name, 0) + 1
+                )
 
-                if is_ignore_unpinned_mode(version=vuln.analyzed_version) and not full:
+                if (
+                    is_ignore_unpinned_mode(version=vuln.analyzed_version)
+                    and not full
+                ):
                     unpinned_packages[vuln.package_name].append(vuln)
                     continue
 
@@ -137,7 +148,9 @@ class TextReport(FormatterAPI):
             build_report_brief_section(
                 columns=80,
                 primary_announcement=primary_announcement,
-                vulnerabilities_found=max(0, len(vulnerabilities) - total_ignored),
+                vulnerabilities_found=max(
+                    0, len(vulnerabilities) - total_ignored
+                ),
                 vulnerabilities_ignored=total_ignored,
                 remediations_recommended=remediations,
             )
@@ -162,7 +175,9 @@ class TextReport(FormatterAPI):
             table.extend(
                 map(
                     click.unstyle,
-                    format_unpinned_vulnerabilities(unpinned_packages, columns=80),
+                    format_unpinned_vulnerabilities(
+                        unpinned_packages, columns=80
+                    ),
                 )
             )
             if not raw_vulns:
@@ -170,7 +185,10 @@ class TextReport(FormatterAPI):
 
             for vuln in raw_vulns:
                 table.append(
-                    "\n" + format_vulnerability(vuln, full, only_text=True, columns=80)
+                    "\n"
+                    + format_vulnerability(
+                        vuln, full, only_text=True, columns=80
+                    )
                 )
 
             final_brief = click.unstyle(
@@ -192,14 +210,15 @@ class TextReport(FormatterAPI):
         else:
             table += [
                 add_empty_line(),
-                " No known security vulnerabilities found.",
                 add_empty_line(),
                 self.SMALL_DIVIDER_SECTIONS,
             ] + end_content
 
         return "\n".join(table)
 
-    def render_licenses(self, announcements: List[Dict], licenses: List[Dict]) -> str:
+    def render_licenses(
+        self, announcements: List[Dict], licenses: List[Dict]
+    ) -> str:
         """
         Render the licenses section of the report.
 
@@ -224,7 +243,9 @@ class TextReport(FormatterAPI):
         announcements_table = self.__build_announcements_section(announcements)
 
         final_brief = click.unstyle(
-            get_final_brief_license(unique_license_types, kwargs={"columns": 80})
+            get_final_brief_license(
+                unique_license_types, kwargs={"columns": 80}
+            )
         )
 
         table = (

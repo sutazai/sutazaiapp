@@ -114,7 +114,9 @@ def groups_target(tmp_path):
         # make sure modification times are sequential
         os.utime(path, (mtime, mtime))
 
-    return types.SimpleNamespace(older=paths[:2], target=paths[2], newer=paths[3:])
+    return types.SimpleNamespace(
+        older=paths[:2], target=paths[2], newer=paths[3:]
+    )
 
 
 def test_newer_pairwise_group(groups_target):

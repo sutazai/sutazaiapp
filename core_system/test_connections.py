@@ -545,7 +545,9 @@ class TestSystemWideConnections(ConnectionTestCase):
         for fname in fnames:
             wait_for_file(fname)
 
-        syscons = [x for x in psutil.net_connections(kind="all") if x.pid in pids]
+        syscons = [
+            x for x in psutil.net_connections(kind="all") if x.pid in pids
+        ]
         for pid in pids:
             assert len([x for x in syscons if x.pid == pid]) == expected
             p = psutil.Process(pid)

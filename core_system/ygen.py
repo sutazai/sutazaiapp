@@ -41,7 +41,9 @@ def filter_section(lines, tag):
 
 def main():
     dirname = os.path.dirname(__file__)
-    shutil.copy2(os.path.join(dirname, "yacc.py"), os.path.join(dirname, "yacc.py.bak"))
+    shutil.copy2(
+        os.path.join(dirname, "yacc.py"), os.path.join(dirname, "yacc.py.bak")
+    )
     with open(os.path.join(dirname, "yacc.py"), "r") as f:
         lines = f.readlines()
 

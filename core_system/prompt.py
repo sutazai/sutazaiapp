@@ -264,7 +264,9 @@ class PromptBase(Generic[PromptType]):
         self, *, default: DefaultType, stream: Optional[TextIO] = None
     ) -> Union[PromptType, DefaultType]: ...
 
-    def __call__(self, *, default: Any = ..., stream: Optional[TextIO] = None) -> Any:
+    def __call__(
+        self, *, default: Any = ..., stream: Optional[TextIO] = None
+    ) -> Any:
         """Run the prompt loop.
 
         Args:
@@ -276,7 +278,9 @@ class PromptBase(Generic[PromptType]):
         while True:
             self.pre_prompt()
             prompt = self.make_prompt(default)
-            value = self.get_input(self.console, prompt, self.password, stream=stream)
+            value = self.get_input(
+                self.console, prompt, self.password, stream=stream
+            )
             if value == "" and default != ...:
                 return default
             try:
@@ -309,7 +313,9 @@ class IntPrompt(PromptBase[int]):
     """
 
     response_type = int
-    validate_error_message = "[prompt.invalid]Please enter a valid integer number"
+    validate_error_message = (
+        "[prompt.invalid]Please enter a valid integer number"
+    )
 
 
 class FloatPrompt(PromptBase[int]):
@@ -340,7 +346,9 @@ class Confirm(PromptBase[bool]):
     def render_default(self, default: DefaultType) -> Text:
         """Render the default as (y) or (n) rather than True/False."""
         yes, no = self.choices
-        return Text(f"({yes})" if default else f"({no})", style="prompt.default")
+        return Text(
+            f"({yes})" if default else f"({no})", style="prompt.default"
+        )
 
     def process_response(self, value: str) -> bool:
         """Convert choices to a bool."""
@@ -362,7 +370,9 @@ if __name__ == "__main__":  # pragma: no cover
             )
             if result >= 1 and result <= 10:
                 break
-            print(":pile_of_poo: [prompt.invalid]Number must be between 1 and 10")
+            print(
+                ":pile_of_poo: [prompt.invalid]Number must be between 1 and 10"
+            )
         print(f"number={result}")
 
         while True:
@@ -375,7 +385,9 @@ if __name__ == "__main__":  # pragma: no cover
             print("[prompt.invalid]password too short")
         print(f"password={password!r}")
 
-        fruit = Prompt.ask("Enter a fruit", choices=["apple", "orange", "pear"])
+        fruit = Prompt.ask(
+            "Enter a fruit", choices=["apple", "orange", "pear"]
+        )
         print(f"fruit={fruit!r}")
 
     else:

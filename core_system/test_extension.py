@@ -85,7 +85,9 @@ class TestExtension:
         assert sorted(ext.sources) == ["file1", "file2"]
         ext = Extension("name", iter(["file1", "file2"]))  # iterator
         assert ext.sources == ["file1", "file2"]
-        ext = Extension("name", [pathlib.Path("file1"), "file2"])  # mixed types
+        ext = Extension(
+            "name", [pathlib.Path("file1"), "file2"]
+        )  # mixed types
         assert ext.sources == ["file1", "file2"]
 
         # others arguments have defaults
@@ -114,4 +116,6 @@ class TestExtension:
             ext = Extension("name", ["file1", "file2"], chic=True)
 
         assert len(w.warnings) == 1
-        assert str(w.warnings[0].message) == "Unknown Extension options: 'chic'"
+        assert (
+            str(w.warnings[0].message) == "Unknown Extension options: 'chic'"
+        )

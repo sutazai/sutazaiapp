@@ -19,11 +19,15 @@ def config_file(kind="local"):
     if kind == "local":
         return "setup.cfg"
     if kind == "global":
-        return os.path.join(os.path.dirname(distutils.__file__), "distutils.cfg")
+        return os.path.join(
+            os.path.dirname(distutils.__file__), "distutils.cfg"
+        )
     if kind == "user":
         dot = os.name == "posix" and "." or ""
         return os.path.expanduser(convert_path(f"~/{dot}pydistutils.cfg"))
-    raise ValueError("config_file() type must be 'local', 'global', or 'user'", kind)
+    raise ValueError(
+        "config_file() type must be 'local', 'global', or 'user'", kind
+    )
 
 
 def edit_config(filename, settings, dry_run=False):
@@ -49,7 +53,9 @@ def edit_config(filename, settings, dry_run=False):
                 opts.add_section(section)
             for option, value in options.items():
                 if value is None:
-                    log.debug("Deleting %s.%s from %s", section, option, filename)
+                    log.debug(
+                        "Deleting %s.%s from %s", section, option, filename
+                    )
                     opts.remove_option(section, option)
                     if not opts.options(section):
                         log.info(

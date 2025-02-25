@@ -8,7 +8,9 @@ from typing import Any, Dict
 
 
 class SystemEnhancementOrchestrator:
-    def __init__(self, base_path: str = "/media/ai/SutazAI_Storage/SutazAI/v1"):
+    def __init__(
+        self, base_path: str = "/media/ai/SutazAI_Storage/SutazAI/v1"
+    ):
         # Configure logging
         logging.basicConfig(
             level=logging.INFO,
@@ -23,7 +25,6 @@ class SystemEnhancementOrchestrator:
         self.base_path = base_path
         self.enhancement_report = {
             "performance_optimizations": [],
-            "security_hardening": [],
             "error_handling_improvements": [],
             "recommendations": [],
         }
@@ -102,45 +103,30 @@ class SystemEnhancementOrchestrator:
 
         return error_handling_improvements
 
-    def harden_system_security(self) -> Dict[str, Any]:
         """
-        Implement advanced security hardening techniques.
 
         Returns:
-            Dict of security hardening details
         """
-        security_hardening = {}
 
         try:
-            # Basic security recommendations
-            security_recommendations = [
                 "Enable UFW (Uncomplicated Firewall)",
                 "Configure fail2ban for intrusion prevention",
                 "Implement strict file permissions",
                 "Use virtual environments for dependency isolation",
-                "Enable automatic security updates",
             ]
 
-            # System-specific security checks
             if platform.system() == "Linux":
                 # Check and recommend firewall configuration
                 try:
                     subprocess.run(["sudo", "ufw", "enable"], check=True)
-                    security_recommendations.append("UFW firewall activated")
                 except subprocess.CalledProcessError:
-                    security_recommendations.append(
                         "Failed to enable UFW, manual intervention required"
                     )
 
-            security_hardening["recommendations"] = security_recommendations
 
-            self.enhancement_report["security_hardening"].extend(
-                security_recommendations
             )
         except Exception as e:
-            self.logger.error(f"Security hardening failed: {e}")
 
-        return security_hardening
 
     def generate_comprehensive_report(self) -> str:
         """
@@ -157,7 +143,6 @@ class SystemEnhancementOrchestrator:
                 set(
                     self.enhancement_report["performance_optimizations"]
                     + self.enhancement_report["error_handling_improvements"]
-                    + self.enhancement_report["security_hardening"]
                 )
             )
 
@@ -171,8 +156,6 @@ class SystemEnhancementOrchestrator:
             for opt in self.enhancement_report["performance_optimizations"]:
                 print(f"  - {opt}")
 
-            print("\n🛡️ Security Hardening:")
-            for sec in self.enhancement_report["security_hardening"]:
                 print(f"  - {sec}")
 
             print("\n🐛 Error Handling Improvements:")
@@ -193,7 +176,6 @@ def main():
     # Run comprehensive system enhancements
     enhancement_orchestrator.optimize_python_performance()
     enhancement_orchestrator.enhance_error_handling()
-    enhancement_orchestrator.harden_system_security()
 
     # Generate comprehensive report
     report_path = enhancement_orchestrator.generate_comprehensive_report()

@@ -42,7 +42,6 @@ class UltraComprehensiveSystemAnalyzer:
             "code_structure": {},
             "dependency_analysis": {},
             "performance_metrics": {},
-            "security_assessment": {},
             "optimization_suggestions": [],
         }
 
@@ -116,32 +115,23 @@ class UltraComprehensiveSystemAnalyzer:
 
         return dependency_insights
 
-    def security_vulnerability_scan(self) -> Dict[str, Any]:
         """
-        Conduct a comprehensive security vulnerability assessment.
 
         Returns:
-            Dict[str, Any]: Security vulnerability insights
         """
-        security_insights = {"bandit_results": {}, "safety_check": {}}
 
         try:
-            # Bandit security scan
             bandit_output = subprocess.check_output(
                 ["bandit", "-r", self.base_dir, "-f", "json"]
             ).decode()
-            security_insights["bandit_results"] = json.loads(bandit_output)
 
             # Safety dependency check
             safety_output = subprocess.check_output(
                 ["safety", "check", "--json"]
             ).decode()
-            security_insights["safety_check"] = json.loads(safety_output)
 
         except Exception as e:
-            logger.error(f"Security scan failed: {e}")
 
-        return security_insights
 
     def performance_profiling(self) -> Dict[str, Any]:
         """
@@ -204,8 +194,6 @@ class UltraComprehensiveSystemAnalyzer:
                     self.comprehensive_dependency_check
                 ): "dependency_analysis",
                 executor.submit(
-                    self.security_vulnerability_scan
-                ): "security_assessment",
                 executor.submit(
                     self.performance_profiling
                 ): "performance_metrics",
@@ -254,11 +242,7 @@ class UltraComprehensiveSystemAnalyzer:
                 "Install missing dependencies to ensure full functionality"
             )
 
-        # Security recommendations
-        security_results = self.analysis_results.get("security_assessment", {})
-        if security_results.get("bandit_results", {}).get("results"):
             suggestions.append(
-                "Address security vulnerabilities detected by Bandit"
             )
 
         # Performance optimization

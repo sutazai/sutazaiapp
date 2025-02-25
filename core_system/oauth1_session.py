@@ -16,7 +16,9 @@ class OAuth1Auth(AuthBase, ClientAuth):
     """Signs the request using OAuth 1 (RFC5849)"""
 
     def __call__(self, req):
-        url, headers, body = self.prepare(req.method, req.url, req.headers, req.body)
+        url, headers, body = self.prepare(
+            req.method, req.url, req.headers, req.body
+        )
 
         req.url = to_native(url)
         req.prepare_headers(headers)

@@ -89,10 +89,14 @@ class DependencyManagementWorker(SutazAiWorker):
         """
         try:
             # Get current installed packages
-            installed_packages = self.dependency_manager.get_installed_packages()
+            installed_packages = (
+                self.dependency_manager.get_installed_packages()
+            )
 
             # Log package count and details
-            self.logger.info(f"Total installed packages: {len(installed_packages)}")
+            self.logger.info(
+                f"Total installed packages: {len(installed_packages)}"
+            )
 
             # Optional: More detailed logging
             for pkg, ver in installed_packages.items():

@@ -8,14 +8,12 @@ from fastapi import (
     Depends,
     File,
     HTTPException,
-    Security,
     UploadFile,
 )
 from fastapi_limiter.depends import RateLimiter
 from models.document import DocumentProcessor
 from pydantic import BaseModel, Field
 
-from security.auth import validate_token
 
 from .code_analysis import analyze_code_quality
 from .model_server import model_server
@@ -89,7 +87,6 @@ async def analyze_code_endpoint(code: str):
     return analyze_code_quality(code)
 
 
-@router.post("/v1/documents", dependencies=[Security(validate_token)])
 async def process_document(
     file: UploadFile = File(...),
     process_type: str = "analysis",
@@ -118,7 +115,6 @@ async def process_document(
     }
 
 
-@router.post("/v1/documents/search", dependencies=[Security(validate_token)])
 async def semantic_search(query: str, index_type: str = "faiss", k: int = 5):
     """Hybrid search across document stores"""
     searcher = DocumentSearcher(index_type)

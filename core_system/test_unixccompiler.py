@@ -19,7 +19,9 @@ from .compat.py39 import EnvironmentVarGuard
 def save_values(monkeypatch):
     monkeypatch.setattr(sys, "platform", sys.platform)
     monkeypatch.setattr(sysconfig, "get_config_var", sysconfig.get_config_var)
-    monkeypatch.setattr(sysconfig, "get_config_vars", sysconfig.get_config_vars)
+    monkeypatch.setattr(
+        sysconfig, "get_config_vars", sysconfig.get_config_vars
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -281,7 +283,9 @@ class TestUnixCCompiler(support.TempdirManager):
         sysconfig.get_config_var = gcv
         sysconfig.get_config_vars = gcvs
         with (
-            mock.patch.object(self.cc, "spawn", return_value=None) as mock_spawn,
+            mock.patch.object(
+                self.cc, "spawn", return_value=None
+            ) as mock_spawn,
             mock.patch.object(self.cc, "_need_link", return_value=True),
             mock.patch.object(self.cc, "mkpath", return_value=None),
             EnvironmentVarGuard() as env,
@@ -339,7 +343,9 @@ class TestUnixCCompiler(support.TempdirManager):
             == f"/foo/bar/existing/{libname}"
         )
         assert (
-            compiler.find_library_file(reversed(dirs), "abc").replace("\\", "/")
+            compiler.find_library_file(reversed(dirs), "abc").replace(
+                "\\", "/"
+            )
             == f"/foo/bar/existing/{libname}"
         )
 
@@ -353,6 +359,8 @@ class TestUnixCCompiler(support.TempdirManager):
             == "/foo/bar/existing/libabc.a"
         )
         assert (
-            compiler.find_library_file(reversed(dirs), "abc").replace("\\", "/")
+            compiler.find_library_file(reversed(dirs), "abc").replace(
+                "\\", "/"
+            )
             == "/foo/bar/existing/libabc.a"
         )

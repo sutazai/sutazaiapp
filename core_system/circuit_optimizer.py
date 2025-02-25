@@ -43,7 +43,9 @@ class CircuitOptimizer:
         """Reduce redundant gates in the circuit"""
         optimized_circuit = []
         for i in range(len(circuit)):
-            if i > 0 and self._are_gates_cancellable(circuit[i - 1], circuit[i]):
+            if i > 0 and self._are_gates_cancellable(
+                circuit[i - 1], circuit[i]
+            ):
                 optimized_circuit.pop()  # Remove previous gate
             else:
                 optimized_circuit.append(circuit[i])
@@ -75,12 +77,16 @@ class CircuitOptimizer:
         }
         return analysis
 
-    def _analyze_gate_distribution(self, circuit: List[Any]) -> Dict[GateType, int]:
+    def _analyze_gate_distribution(
+        self, circuit: List[Any]
+    ) -> Dict[GateType, int]:
         """Analyze distribution of gate types in the circuit"""
         gate_counts = {}
         for gate in circuit:
             if hasattr(gate, "gate_type"):
-                gate_counts[gate.gate_type] = gate_counts.get(gate.gate_type, 0) + 1
+                gate_counts[gate.gate_type] = (
+                    gate_counts.get(gate.gate_type, 0) + 1
+                )
         return gate_counts
 
     def _estimate_circuit_depth(self, circuit: List[Any]) -> int:
@@ -104,8 +110,12 @@ class ResourceAllocator:
         """Allocate computational resources based on circuit complexity"""
         resources = {
             "compute_units": self._calculate_compute_units(circuit_complexity),
-            "memory_allocation": self._calculate_memory_allocation(circuit_complexity),
-            "coherence_budget": self._calculate_coherence_budget(circuit_complexity),
+            "memory_allocation": self._calculate_memory_allocation(
+                circuit_complexity
+            ),
+            "coherence_budget": self._calculate_coherence_budget(
+                circuit_complexity
+            ),
         }
         return resources
 

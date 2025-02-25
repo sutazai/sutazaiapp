@@ -27,7 +27,9 @@ class HTTPRangeRequestUnsupported(Exception):
     pass
 
 
-def dist_from_wheel_url(name: str, url: str, session: PipSession) -> BaseDistribution:
+def dist_from_wheel_url(
+    name: str, url: str, session: PipSession
+) -> BaseDistribution:
     """Return a distribution object from the given wheel URL.
 
     This uses HTTP range requests to only fetch the portion of the wheel

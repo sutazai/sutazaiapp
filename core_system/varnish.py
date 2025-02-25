@@ -78,7 +78,9 @@ class VCLLexer(RegexLexer):
             include("whitespace"),
             (
                 r"(\.probe)(\s*=\s*)(\w+)(;)",
-                bygroups(Name.Attribute, Operator, Name.Variable.Global, Punctuation),
+                bygroups(
+                    Name.Attribute, Operator, Name.Variable.Global, Punctuation
+                ),
             ),
             (
                 r"(\.probe)(\s*=\s*)(\{)",
@@ -238,7 +240,9 @@ class VCLLexer(RegexLexer):
             ),
             (
                 r"([a-zA-Z_]\w*)" r"(\.)" r"([a-zA-Z_]\w*)" r"(\s*\(.*\))",
-                bygroups(Name.Function, Punctuation, Name.Function, using(this)),
+                bygroups(
+                    Name.Function, Punctuation, Name.Function, using(this)
+                ),
             ),
             (r"[a-zA-Z_]\w*", Name),
         ],

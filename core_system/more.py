@@ -642,7 +642,9 @@ def strictly_n(iterable, n, too_short=None, too_long=None):
         def too_long(item_count):
             return raise_(
                 ValueError,
-                "Too many items in iterable (got at least {})".format(item_count),
+                "Too many items in iterable (got at least {})".format(
+                    item_count
+                ),
             )
 
     it = iter(iterable)
@@ -710,7 +712,7 @@ def distinct_permutations(iterable, r=None):
             # Swap the value of A[i] with that of A[j], then reverse the
             # sequence from A[i + 1] to form the new permutation
             A[i], A[j] = A[j], A[i]
-            A[i + 1:] = A[: i - size: -1]  # A[i + 1:][::-1]
+            A[i + 1 :] = A[: i - size : -1]  # A[i + 1:][::-1]
 
     # Algorithm: modified from the above
     def _partial(A, r):
@@ -748,9 +750,9 @@ def distinct_permutations(iterable, r=None):
                         break
 
             # Reverse head[i + 1:] and swap it with tail[:r - (i + 1)]
-            tail += head[: i - r: -1]  # head[i + 1:][::-1]
+            tail += head[: i - r : -1]  # head[i + 1:][::-1]
             i += 1
-            head[i:], tail[:] = tail[: r - i], tail[r - i:]
+            head[i:], tail[:] = tail[: r - i], tail[r - i :]
 
     items = sorted(iterable)
 
@@ -904,7 +906,7 @@ def substrings(iterable):
     # And the rest
     for n in range(2, item_count + 1):
         for i in range(item_count - n + 1):
-            yield seq[i: i + n]
+            yield seq[i : i + n]
 
 
 def substrings_indexes(seq, reverse=False):
@@ -936,7 +938,9 @@ def substrings_indexes(seq, reverse=False):
     r = range(1, len(seq) + 1)
     if reverse:
         r = reversed(r)
-    return ((seq[i: i + L], i, i + L) for L in r for i in range(len(seq) - L + 1))
+    return (
+        (seq[i : i + L], i, i + L) for L in r for i in range(len(seq) - L + 1)
+    )
 
 
 class bucket:
@@ -1146,7 +1150,9 @@ def interleave_evenly(iterables, lengths=None):
     dims = len(lengths)
 
     # sort iterables by length, descending
-    lengths_permute = sorted(range(dims), key=lambda i: lengths[i], reverse=True)
+    lengths_permute = sorted(
+        range(dims), key=lambda i: lengths[i], reverse=True
+    )
     lengths_desc = [lengths[i] for i in lengths_permute]
     iters_desc = [iter(iterables[i]) for i in lengths_permute]
 
@@ -1313,7 +1319,7 @@ def sliced(seq, n, strict=False):
     For non-sliceable iterables, see :func:`chunked`.
 
     """
-    iterator = takewhile(len, (seq[i: i + n] for i in count(0, n)))
+    iterator = takewhile(len, (seq[i : i + n] for i in count(0, n)))
     if strict:
 
         def ret():
@@ -1667,7 +1673,9 @@ def stagger(iterable, offsets=(-1, 0, 1), longest=False, fillvalue=None):
     """
     children = tee(iterable, len(offsets))
 
-    return zip_offset(*children, offsets=offsets, longest=longest, fillvalue=fillvalue)
+    return zip_offset(
+        *children, offsets=offsets, longest=longest, fillvalue=fillvalue
+    )
 
 
 def zip_equal(*iterables):
@@ -1804,7 +1812,9 @@ def sort_together(iterables, key_list=(0,), key=None, reverse=False):
             def key_argument(zipped_items):
                 return key(*get_key_items(zipped_items))
 
-    return list(zip(*sorted(zip(*iterables), key=key_argument, reverse=reverse)))
+    return list(
+        zip(*sorted(zip(*iterables), key=key_argument, reverse=reverse))
+    )
 
 
 def unzip(iterable):
@@ -2111,11 +2121,13 @@ class numeric_range(abc.Sequence, abc.Hashable):
             self._start, self._stop, self._step = args
         elif argc == 0:
             raise TypeError(
-                "numeric_range expected at least " "1 argument, got {}".format(argc)
+                "numeric_range expected at least "
+                "1 argument, got {}".format(argc)
             )
         else:
             raise TypeError(
-                "numeric_range expected at most " "3 arguments, got {}".format(argc)
+                "numeric_range expected at most "
+                "3 arguments, got {}".format(argc)
             )
 
         self._zero = type(self._step)(0)
@@ -2219,7 +2231,9 @@ class numeric_range(abc.Sequence, abc.Hashable):
 
     def __repr__(self):
         if self._step == 1:
-            return "numeric_range({}, {})".format(repr(self._start), repr(self._stop))
+            return "numeric_range({}, {})".format(
+                repr(self._start), repr(self._stop)
+            )
         else:
             return "numeric_range({}, {}, {})".format(
                 repr(self._start), repr(self._stop), repr(self._step)
@@ -2227,7 +2241,9 @@ class numeric_range(abc.Sequence, abc.Hashable):
 
     def __reversed__(self):
         return iter(
-            numeric_range(self._get_by_index(-1), self._start - self._step, -self._step)
+            numeric_range(
+                self._get_by_index(-1), self._start - self._step, -self._step
+            )
         )
 
     def count(self, value):
@@ -2629,7 +2645,9 @@ def consecutive_groups(iterable, ordering=lambda x: x):
         [[1, 2], [11, 12], [21, 22]]
 
     """
-    for k, g in groupby(enumerate(iterable), key=lambda x: x[0] - ordering(x[1])):
+    for k, g in groupby(
+        enumerate(iterable), key=lambda x: x[0] - ordering(x[1])
+    ):
         yield map(itemgetter(1), g)
 
 
@@ -3210,7 +3228,9 @@ def set_partitions(iterable, k=None):
     n = len(L)
     if k is not None:
         if k < 1:
-            raise ValueError("Can't partition in a negative or zero number of groups")
+            raise ValueError(
+                "Can't partition in a negative or zero number of groups"
+            )
         elif k > n:
             return
 
@@ -3226,7 +3246,7 @@ def set_partitions(iterable, k=None):
                 yield [[e], *p]
             for p in set_partitions_helper(M, k):
                 for i in range(len(p)):
-                    yield p[:i] + [[e] + p[i]] + p[i + 1:]
+                    yield p[:i] + [[e] + p[i]] + p[i + 1 :]
 
     if k is None:
         for k in range(1, n + 1):
@@ -3449,7 +3469,7 @@ def distinct_combinations(iterable, r):
         else:
             generators.append(
                 unique_everseen(
-                    enumerate(pool[cur_idx + 1:], cur_idx + 1),
+                    enumerate(pool[cur_idx + 1 :], cur_idx + 1),
                     key=itemgetter(1),
                 )
             )
@@ -3708,9 +3728,9 @@ class callback_iter:
         self._future = None
         self._wait_seconds = wait_seconds
         # Lazily import concurrent.future
-        self._executor = __import__("concurrent.futures").futures.ThreadPoolExecutor(
-            max_workers=1
-        )
+        self._executor = __import__(
+            "concurrent.futures"
+        ).futures.ThreadPoolExecutor(max_workers=1)
         self._iterator = self._reader()
 
     def __enter__(self):
@@ -3812,8 +3832,8 @@ def windowed_complete(iterable, n):
 
     for i in range(size - n + 1):
         beginning = seq[:i]
-        middle = seq[i: i + n]
-        end = seq[i + n:]
+        middle = seq[i : i + n]
+        end = seq[i + n :]
         yield beginning, middle, end
 
 
@@ -4111,7 +4131,9 @@ def combination_with_replacement_index(element, iterable):
         if y is None:
             break
     else:
-        raise ValueError("element is not a combination with replacement of iterable")
+        raise ValueError(
+            "element is not a combination with replacement of iterable"
+        )
 
     n = len(pool)
     occupations = [0] * n
@@ -4228,12 +4250,12 @@ def chunked_even(iterable, n):
     partial_start_idx = num_full * full_size
     if full_size > 0:
         for i in range(0, partial_start_idx, full_size):
-            yield buffer[i: i + full_size]
+            yield buffer[i : i + full_size]
 
     # Yield chunks of partial size
     if partial_size > 0:
         for i in range(partial_start_idx, length, partial_size):
-            yield buffer[i: i + partial_size]
+            yield buffer[i : i + partial_size]
 
 
 def zip_broadcast(*objects, scalar_types=(str, bytes), strict=False):
@@ -4488,7 +4510,9 @@ def minmax(iterable_or_value, *others, key=None, default=_marker):
     return lo, hi
 
 
-def constrained_batches(iterable, max_size, max_count=None, get_len=len, strict=True):
+def constrained_batches(
+    iterable, max_size, max_count=None, get_len=len, strict=True
+):
     """Yield batches of items from *iterable* with a combined size limited by
     *max_size*.
 

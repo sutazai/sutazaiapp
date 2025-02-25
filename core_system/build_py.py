@@ -38,12 +38,16 @@ class build_py(orig.build_py):
 
     distribution: Distribution  # override distutils.dist.Distribution with setuptools.dist.Distribution
     editable_mode: bool = False
-    existing_egg_info_dir: StrPath | None = None  #: Private API, internal use only.
+    existing_egg_info_dir: StrPath | None = (
+        None  #: Private API, internal use only.
+    )
 
     def finalize_options(self):
         orig.build_py.finalize_options(self)
         self.package_data = self.distribution.package_data
-        self.exclude_package_data = self.distribution.exclude_package_data or {}
+        self.exclude_package_data = (
+            self.distribution.exclude_package_data or {}
+        )
         if "data_files" in self.__dict__:
             del self.__dict__["data_files"]
 
@@ -61,10 +65,8 @@ class build_py(orig.build_py):
             infile = str(Path(infile).resolve())
             # type: ignore[assignment] # Re-assigning a str when outfile is StrPath is ok
             outfile = str(Path(outfile).resolve())
-        return (
-            super().copy_file(  # pyright: ignore[reportReturnType] # pypa/distutils#309
-                infile, outfile, preserve_mode, preserve_times, link, level
-            )
+        return super().copy_file(  # pyright: ignore[reportReturnType] # pypa/distutils#309
+            infile, outfile, preserve_mode, preserve_times, link, level
         )
 
     def run(self) -> None:
@@ -81,7 +83,9 @@ class build_py(orig.build_py):
 
         # Only compile actual .py files, using our base class' idea of what our
         # output files are.
-        self.byte_compile(orig.build_py.get_outputs(self, include_bytecode=False))
+        self.byte_compile(
+            orig.build_py.get_outputs(self, include_bytecode=False)
+        )
 
     def __getattr__(self, attr: str):
         "lazily compute data files"
@@ -238,7 +242,9 @@ class build_py(orig.build_py):
 
         for file in files:
             norm_path = os.path.normpath(file)
-            if not os.path.isabs(file) or all(d not in norm_path for d in norm_dirs):
+            if not os.path.isabs(file) or all(
+                d not in norm_path for d in norm_dirs
+            ):
                 yield file
 
     def get_data_files(self) -> None:

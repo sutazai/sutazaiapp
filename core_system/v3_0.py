@@ -61,7 +61,9 @@ class Package(BaseModel):
     current_version: Optional[str]
     vulnerabilities_found: Optional[int]
     recommended_version: Optional[str]
-    other_recommended_versions: List[str] = Field([], max_items=100, unique_items=True)
+    other_recommended_versions: List[str] = Field(
+        [], max_items=100, unique_items=True
+    )
     more_info_url: Optional[HttpUrl]
 
 
@@ -75,7 +77,9 @@ class OSVulnerabilities(BaseModel):
     """
 
     packages: ConstrainedDict[str, Package]
-    vulnerabilities: List[Vulnerability] = Field(..., max_items=100, unique_items=True)
+    vulnerabilities: List[Vulnerability] = Field(
+        ..., max_items=100, unique_items=True
+    )
 
 
 class EnvironmentFindings(BaseModel):
@@ -118,7 +122,9 @@ class DependencyVulnerabilities(BaseModel):
     """
 
     packages: List[PackageShort] = Field(..., max_items=500, unique_items=True)
-    vulnerabilities: List[Vulnerability] = Field(..., max_items=100, unique_items=True)
+    vulnerabilities: List[Vulnerability] = Field(
+        ..., max_items=100, unique_items=True
+    )
 
 
 class FileFindings(BaseModel):

@@ -10,15 +10,15 @@ import sys
 
 class FinanceAgent:
     """Main class for finance agent functionality"""
-    
+
     def __init__(self):
         """Initialize the FinanceAgent instance"""
         self.initialized = True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         return "Active"

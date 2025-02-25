@@ -48,8 +48,12 @@ def test_apply_pyproject_equivalent_to_setupcfg(url, monkeypatch, tmp_path):
     toml_config = LiteTranslator().translate(setupcfg_text, "setup.cfg")
     pyproject_example.write_text(toml_config, encoding="utf-8")
 
-    dist_toml = pyprojecttoml.apply_configuration(makedist(tmp_path), pyproject_example)
-    dist_cfg = setupcfg.apply_configuration(makedist(tmp_path), setupcfg_example)
+    dist_toml = pyprojecttoml.apply_configuration(
+        makedist(tmp_path), pyproject_example
+    )
+    dist_cfg = setupcfg.apply_configuration(
+        makedist(tmp_path), setupcfg_example
+    )
 
     pkg_info_toml = core_metadata(dist_toml)
     pkg_info_cfg = core_metadata(dist_cfg)
@@ -71,8 +75,12 @@ def test_apply_pyproject_equivalent_to_setupcfg(url, monkeypatch, tmp_path):
         assert ep_toml == ep_cfg
 
     if any(getattr(d, "package_data", None) for d in (dist_toml, dist_cfg)):
-        pkg_data_toml = {(k, *sorted(v)) for k, v in dist_toml.package_data.items()}
-        pkg_data_cfg = {(k, *sorted(v)) for k, v in dist_cfg.package_data.items()}
+        pkg_data_toml = {
+            (k, *sorted(v)) for k, v in dist_toml.package_data.items()
+        }
+        pkg_data_cfg = {
+            (k, *sorted(v)) for k, v in dist_cfg.package_data.items()
+        }
         assert pkg_data_toml == pkg_data_cfg
 
     if any(getattr(d, "data_files", None) for d in (dist_toml, dist_cfg)):
@@ -82,8 +90,12 @@ def test_apply_pyproject_equivalent_to_setupcfg(url, monkeypatch, tmp_path):
 
     assert set(dist_toml.install_requires) == set(dist_cfg.install_requires)
     if any(getattr(d, "extras_require", None) for d in (dist_toml, dist_cfg)):
-        extra_req_toml = {(k, *sorted(v)) for k, v in dist_toml.extras_require.items()}
-        extra_req_cfg = {(k, *sorted(v)) for k, v in dist_cfg.extras_require.items()}
+        extra_req_toml = {
+            (k, *sorted(v)) for k, v in dist_toml.extras_require.items()
+        }
+        extra_req_cfg = {
+            (k, *sorted(v)) for k, v in dist_cfg.extras_require.items()
+        }
         assert extra_req_toml == extra_req_cfg
 
 
@@ -172,7 +184,9 @@ def _pep621_example_project(
     pyproject.write_text(text, encoding="utf-8")
 
     (tmp_path / readme).write_text("hello world", encoding="utf-8")
-    (tmp_path / "LICENSE.txt").write_text("--- LICENSE stub ---", encoding="utf-8")
+    (tmp_path / "LICENSE.txt").write_text(
+        "--- LICENSE stub ---", encoding="utf-8"
+    )
     (tmp_path / "spam.py").write_text(PEP621_EXAMPLE_SCRIPT, encoding="utf-8")
     return pyproject
 
@@ -201,7 +215,9 @@ def test_readme_content_type(tmp_path, readme, ctype):
 
 def test_undefined_content_type(tmp_path):
     pyproject = _pep621_example_project(tmp_path, "README.tex")
-    with pytest.raises(ValueError, match="Undefined content type for README.tex"):
+    with pytest.raises(
+        ValueError, match="Undefined content type for README.tex"
+    ):
         pyprojecttoml.apply_configuration(makedist(tmp_path), pyproject)
 
 
@@ -290,7 +306,9 @@ class TestLicenseFiles:
         # ^ used just to trigger section validation
         pyproject = self.base_pyproject(tmp_path, setuptools_config)
 
-        license_files = "LICENCE-a.html COPYING-abc.txt AUTHORS-xyz NOTICE,def".split()
+        license_files = (
+            "LICENCE-a.html COPYING-abc.txt AUTHORS-xyz NOTICE,def".split()
+        )
 
         for fname in license_files:
             (tmp_path / fname).write_text(f"{fname}\n", encoding="utf-8")
@@ -323,7 +341,9 @@ class TestPyModules:
         monkeypatch.chdir(tmp_path)
         assert module in self.dist(module).py_modules
 
-    @pytest.mark.parametrize("module", ["pip run", "-pip-run", "pip-run-stubs"])
+    @pytest.mark.parametrize(
+        "module", ["pip run", "-pip-run", "pip-run-stubs"]
+    )
     def test_invalid_module_name(self, tmp_path, monkeypatch, module):
         monkeypatch.chdir(tmp_path)
         with pytest.raises(ValueError, match="py-modules"):
@@ -345,7 +365,9 @@ class TestExtModules:
         """
         pyproject.write_text(cleandoc(toml_config), encoding="utf-8")
         with pytest.warns(pyprojecttoml._ExperimentalConfiguration):
-            dist = pyprojecttoml.apply_configuration(Distribution({}), pyproject)
+            dist = pyprojecttoml.apply_configuration(
+                Distribution({}), pyproject
+            )
         assert len(dist.ext_modules) == 1
         assert dist.ext_modules[0].name == "my.ext"
         assert set(dist.ext_modules[0].sources) == {"hello.c", "world.c"}
@@ -392,7 +414,9 @@ class TestPresetField:
             pytest.param(
                 *("install_requires", "dependencies", ["six"]),
                 marks=[
-                    pytest.mark.filterwarnings("ignore:.*install_requires. overwritten")
+                    pytest.mark.filterwarnings(
+                        "ignore:.*install_requires. overwritten"
+                    )
                 ],
             ),
         ],
@@ -401,7 +425,9 @@ class TestPresetField:
         """Setuptools cannot set a field if not listed in ``dynamic``"""
         pyproject = self.pyproject(tmp_path, [])
         dist = makedist(tmp_path, **{attr: value})
-        msg = re.compile(f"defined outside of `pyproject.toml`:.*{field}", re.S)
+        msg = re.compile(
+            f"defined outside of `pyproject.toml`:.*{field}", re.S
+        )
         with pytest.warns(_MissingDynamic, match=msg):
             dist = pyprojecttoml.apply_configuration(dist, pyproject)
 
@@ -444,7 +470,9 @@ class TestPresetField:
         # this test has to be rewritten to adapt accordingly
         extra = "\n[project.optional-dependencies]\nfoo = ['bar>1']\n"
         pyproject = self.pyproject(tmp_path, ["dependencies"], extra)
-        install_req = ['importlib-resources (>=3.0.0) ; python_version < "3.7"']
+        install_req = [
+            'importlib-resources (>=3.0.0) ; python_version < "3.7"'
+        ]
         dist = makedist(tmp_path, install_requires=install_req)
         dist = pyprojecttoml.apply_configuration(dist, pyproject)
         assert "foo" in dist.extras_require
@@ -460,7 +488,9 @@ class TestPresetField:
         [("scripts", "console_scripts"), ("gui-scripts", "gui_scripts")],
     )
     @pytest.mark.filterwarnings("error")
-    def test_scripts_dont_require_dynamic_entry_points(self, tmp_path, field, group):
+    def test_scripts_dont_require_dynamic_entry_points(
+        self, tmp_path, field, group
+    ):
         # Issue 3862
         pyproject = self.pyproject(tmp_path, [field])
         dist = makedist(tmp_path, entry_points={group: ["foobar=foobar:main"]})

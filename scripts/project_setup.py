@@ -102,7 +102,6 @@ class ProjectSetup:
                 "packages",
                 "logs",
                 "doc_data",
-                "security",
                 "infrastructure",
                 "advanced_system_tools",
             ],
@@ -125,7 +124,6 @@ class ProjectSetup:
                 "molmo",
             ],
             "packages_subdirs": ["wheels", "node"],
-            "security_subdirs": [
                 "authentication",
                 "encryption",
                 "access_control",
@@ -188,18 +186,16 @@ class ProjectSetup:
 
         # Project Configuration
         project_config = {
-            "project": {
-                "name": "SutazAI",
-                "version": "20.1.0"},
+            "project": {"name": "SutazAI", "version": "20.1.0"},
             "system_configuration": {
                 "python_version": f"{sys.version_info.major}.{sys.version_info.minor}",
                 "environment": "development",
             },
-            "security": {
                 "authentication": {
                     "method": "otp",
                     "root_user": "Florin Cristian Suta",
-                }},
+                }
+            },
         }
 
         # Write project configuration

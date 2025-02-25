@@ -32,7 +32,9 @@ def get_closest_ver(
     if (not version and not spec) or not versions:
         return results
 
-    sorted_versions = sorted(versions, key=lambda ver: parse_version(ver), reverse=True)
+    sorted_versions = sorted(
+        versions, key=lambda ver: parse_version(ver), reverse=True
+    )
 
     if not version:
         sorted_versions = spec.filter(sorted_versions, prereleases=False)
@@ -178,7 +180,9 @@ def read_requirements(
         file_type = None
 
     content = fh.read()
-    dependency_file = parse(content, path=path, resolve=resolve, file_type=file_type)
+    dependency_file = parse(
+        content, path=path, resolve=resolve, file_type=file_type
+    )
 
     reqs_pkg = defaultdict(list)
 
@@ -270,7 +274,9 @@ def read_virtual_environment_dependencies(
     else:
         site_pkgs_path = Path("lib/")
         try:
-            site_pkgs_path = next((env_path / site_pkgs_path).glob("*/site-packages/"))
+            site_pkgs_path = next(
+                (env_path / site_pkgs_path).glob("*/site-packages/")
+            )
         except StopIteration:
             # Unable to find packages for foo env
             return
@@ -286,15 +292,17 @@ def read_virtual_environment_dependencies(
             continue
 
         dist_info_folder = path.parent
-        dep_name, dep_version = dist_info_folder.name.replace(".dist-info", "").split(
-            "-"
-        )
+        dep_name, dep_version = dist_info_folder.name.replace(
+            ".dist-info", ""
+        ).split("-")
 
         yield PythonDependency(
             name=dep_name,
             version=dep_version,
             specifications=[
-                PythonSpecification(f"{dep_name}=={dep_version}", found=site_pkgs_path)
+                PythonSpecification(
+                    f"{dep_name}=={dep_version}", found=site_pkgs_path
+                )
             ],
             found=site_pkgs_path,
             insecure_versions=[],

@@ -35,66 +35,86 @@ def main():
     """Main entry point for fixing all issues."""
     project_root = Path(os.path.dirname(os.path.abspath(__file__)))
     scripts_dir = project_root / "scripts"
-    
+
     print("\033[1;32m🔧 Starting comprehensive issue fixing process\033[0m")
-    
+
     # Step 1: Run the system checkup to identify issues
     run_command(
         [sys.executable, os.path.join(project_root, "system_checkup.py")],
-        "Running system checkup"
+        "Running system checkup",
     )
-    
+
     # Step 2: Fix syntax errors using syntax_fixer.py
     run_command(
-        [sys.executable, os.path.join(scripts_dir, "syntax_fixer.py"), str(project_root)],
-        "Fixing syntax errors"
+        [
+            sys.executable,
+            os.path.join(scripts_dir, "syntax_fixer.py"),
+            str(project_root),
+        ],
+        "Fixing syntax errors",
     )
-    
+
     # Step 3: Run the project optimizer
     if (scripts_dir / "project_optimizer.py").exists():
         run_command(
-            [sys.executable, os.path.join(scripts_dir, "project_optimizer.py")],
-            "Optimizing project structure"
+            [
+                sys.executable,
+                os.path.join(scripts_dir, "project_optimizer.py"),
+            ],
+            "Optimizing project structure",
         )
-    
+
     # Step 4: Run system_comprehensive_audit.py
     if (scripts_dir / "system_comprehensive_audit.py").exists():
         run_command(
-            [sys.executable, os.path.join(scripts_dir, "system_comprehensive_audit.py")],
-            "Auditing system configuration"
+            [
+                sys.executable,
+                os.path.join(scripts_dir, "system_comprehensive_audit.py"),
+            ],
+            "Auditing system configuration",
         )
-    
+
     # Step 5: Run system_health_check.py
     if (scripts_dir / "system_health_check.py").exists():
         run_command(
-            [sys.executable, os.path.join(scripts_dir, "system_health_check.py")],
-            "Checking system health"
+            [
+                sys.executable,
+                os.path.join(scripts_dir, "system_health_check.py"),
+            ],
+            "Checking system health",
         )
-    
+
     # Step 6: Run dependency checks and fixes
     if (scripts_dir / "dependency_management.py").exists():
         run_command(
-            [sys.executable, os.path.join(scripts_dir, "dependency_management.py")],
-            "Managing dependencies"
+            [
+                sys.executable,
+                os.path.join(scripts_dir, "dependency_management.py"),
+            ],
+            "Managing dependencies",
         )
-    
+
     # Step 7: Fix any import issues
     if (scripts_dir / "import_resolver.py").exists():
         run_command(
             [sys.executable, os.path.join(scripts_dir, "import_resolver.py")],
-            "Resolving import issues"
+            "Resolving import issues",
         )
-    
+
     # Step 8: Run final system checkup to verify fixes
     run_command(
         [sys.executable, os.path.join(project_root, "system_checkup.py")],
-        "Running final system checkup"
+        "Running final system checkup",
     )
-    
+
     print("\n\033[1;32m✅ All fix scripts have been executed!\033[0m")
-    print("\033[1;33mNote: Some issues may require manual intervention.\033[0m")
-    print("\033[1;33mPlease review the output above for any remaining issues.\033[0m")
+    print(
+        "\033[1;33mNote: Some issues may require manual intervention.\033[0m"
+    )
+    print(
+        "\033[1;33mPlease review the output above for any remaining issues.\033[0m"
+    )
 
 
 if __name__ == "__main__":
-    main() 
+    main()

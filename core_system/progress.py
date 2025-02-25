@@ -63,7 +63,9 @@ _I = typing.TypeVar("_I", TextIO, BinaryIO)
 class _TrackThread(Thread):
     """A thread to periodically update progress."""
 
-    def __init__(self, progress: "Progress", task_id: "TaskID", update_period: float):
+    def __init__(
+        self, progress: "Progress", task_id: "TaskID", update_period: float
+    ):
         self.progress = progress
         self.task_id = task_id
         self.update_period = update_period
@@ -84,7 +86,9 @@ class _TrackThread(Thread):
                 advance(task_id, completed - last_completed)
                 last_completed = completed
 
-        self.progress.update(self.task_id, completed=self.completed, refresh=True)
+        self.progress.update(
+            self.task_id, completed=self.completed, refresh=True
+        )
 
     def __enter__(self) -> "_TrackThread":
         self.start()
@@ -140,7 +144,9 @@ def track(
     """
 
     columns: List["ProgressColumn"] = (
-        [TextColumn("[progress.description]{task.description}")] if description else []
+        [TextColumn("[progress.description]{task.description}")]
+        if description
+        else []
     )
     columns.extend(
         (
@@ -331,7 +337,9 @@ def wrap_file(
     """
 
     columns: List["ProgressColumn"] = (
-        [TextColumn("[progress.description]{task.description}")] if description else []
+        [TextColumn("[progress.description]{task.description}")]
+        if description
+        else []
     )
     columns.extend(
         (
@@ -458,7 +466,9 @@ def open(
     """
 
     columns: List["ProgressColumn"] = (
-        [TextColumn("[progress.description]{task.description}")] if description else []
+        [TextColumn("[progress.description]{task.description}")]
+        if description
+        else []
     )
     columns.extend(
         (
@@ -629,7 +639,9 @@ class TextColumn(ProgressColumn):
     def render(self, task: "Task") -> Text:
         _text = self.text_format.format(task=task)
         if self.markup:
-            text = Text.from_markup(_text, style=self.style, justify=self.justify)
+            text = Text.from_markup(
+                _text, style=self.style, justify=self.justify
+            )
         else:
             text = Text(_text, style=self.style, justify=self.justify)
         if self.highlighter:
@@ -746,17 +758,23 @@ class TaskProgressColumn(TextColumn):
             1000,
         )
         data_speed = speed / unit
-        return Text(f"{data_speed:.1f}{suffix} it/s", style="progress.percentage")
+        return Text(
+            f"{data_speed:.1f}{suffix} it/s", style="progress.percentage"
+        )
 
     def render(self, task: "Task") -> Text:
         if task.total is None and self.show_speed:
             return self.render_speed(task.finished_speed or task.speed)
         text_format = (
-            self.text_format_no_percentage if task.total is None else self.text_format
+            self.text_format_no_percentage
+            if task.total is None
+            else self.text_format
         )
         _text = text_format.format(task=task)
         if self.markup:
-            text = Text.from_markup(_text, style=self.style, justify=self.justify)
+            text = Text.from_markup(
+                _text, style=self.style, justify=self.justify
+            )
         else:
             text = Text(_text, style=self.style, justify=self.justify)
         if self.highlighter:
@@ -826,7 +844,9 @@ class TotalFileSizeColumn(ProgressColumn):
 
     def render(self, task: "Task") -> Text:
         """Show data completed."""
-        data_size = filesize.decimal(int(task.total)) if task.total is not None else ""
+        data_size = (
+            filesize.decimal(int(task.total)) if task.total is not None else ""
+        )
         return Text(data_size, style="progress.filesize.total")
 
 
@@ -842,7 +862,9 @@ class MofNCompleteColumn(ProgressColumn):
         separator (str, optional): Text to separate completed and total values. Defaults to "/".
     """
 
-    def __init__(self, separator: str = "/", table_column: Optional[Column] = None):
+    def __init__(
+        self, separator: str = "/", table_column: Optional[Column] = None
+    ):
         self.separator = separator
         super().__init__(table_column=table_column)
 
@@ -1464,7 +1486,9 @@ class Progress(JupyterMixin):
             while _progress and _progress[0].timestamp < old_sample_time:
                 popleft()
             if update_completed > 0:
-                _progress.append(ProgressSample(current_time, update_completed))
+                _progress.append(
+                    ProgressSample(current_time, update_completed)
+                )
             if (
                 task.total is not None
                 and task.completed >= task.total

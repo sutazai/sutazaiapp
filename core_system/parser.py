@@ -52,7 +52,9 @@ _flag_needs_value = object()
 
 def _unpack_args(
     args: t.Sequence[str], nargs_spec: t.Sequence[int]
-) -> t.Tuple[t.Sequence[t.Union[str, t.Sequence[t.Optional[str]], None]], t.List[str]]:
+) -> t.Tuple[
+    t.Sequence[t.Union[str, t.Sequence[t.Optional[str]], None]], t.List[str]
+]:
     """Given an iterable of arguments and an iterable of nargs specifications,
     it returns a tuple with all the unpacked arguments at the first index
     and all remaining arguments as the second.
@@ -105,7 +107,7 @@ def _unpack_args(
     if spos is not None:
         rv[spos] = tuple(args)
         args = []
-        rv[spos + 1:] = reversed(rv[spos + 1:])
+        rv[spos + 1 :] = reversed(rv[spos + 1 :])
 
     return tuple(rv), list(args)
 
@@ -215,7 +217,9 @@ class Option:
 
 
 class Argument:
-    def __init__(self, obj: "CoreArgument", dest: t.Optional[str], nargs: int = 1):
+    def __init__(
+        self, obj: "CoreArgument", dest: t.Optional[str], nargs: int = 1
+    ):
         self.dest = dest
         self.nargs = nargs
         self.obj = obj
@@ -310,7 +314,9 @@ class OptionParser:
         that is returned from the parser.
         """
         opts = [normalize_opt(opt, self.ctx) for opt in opts]
-        option = Option(obj, opts, dest, action=action, nargs=nargs, const=const)
+        option = Option(
+            obj, opts, dest, action=action, nargs=nargs, const=const
+        )
         self._opt_prefixes.update(option.prefixes)
         for opt in option._short_opts:
             self._short_opt[opt] = option

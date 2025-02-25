@@ -66,8 +66,12 @@ __all__ = [
     "SetupRequirementsError",
 ]
 
-SETUPTOOLS_ENABLE_FEATURES = os.getenv("SETUPTOOLS_ENABLE_FEATURES", "").lower()
-LEGACY_EDITABLE = "legacy-editable" in SETUPTOOLS_ENABLE_FEATURES.replace("_", "-")
+SETUPTOOLS_ENABLE_FEATURES = os.getenv(
+    "SETUPTOOLS_ENABLE_FEATURES", ""
+).lower()
+LEGACY_EDITABLE = "legacy-editable" in SETUPTOOLS_ENABLE_FEATURES.replace(
+    "_", "-"
+)
 
 
 class SetupRequirementsError(BaseException):
@@ -115,7 +119,9 @@ def no_install_setup_requires():
 
 def _get_immediate_subdirectories(a_dir):
     return [
-        name for name in os.listdir(a_dir) if os.path.isdir(os.path.join(a_dir, name))
+        name
+        for name in os.listdir(a_dir)
+        if os.path.isdir(os.path.join(a_dir, name))
     ]
 
 
@@ -146,7 +152,9 @@ def suppress_known_deprecation():
         yield
 
 
-_ConfigSettings: TypeAlias = Union[Mapping[str, Union[str, list[str], None]], None]
+_ConfigSettings: TypeAlias = Union[
+    Mapping[str, Union[str, list[str], None]], None
+]
 """
 Currently the user can run::
 
@@ -169,7 +177,9 @@ class _ConfigSettingsTranslator:
 
     # See pypa/setuptools#1928 pypa/setuptools#2491
 
-    def _get_config(self, key: str, config_settings: _ConfigSettings) -> list[str]:
+    def _get_config(
+        self, key: str, config_settings: _ConfigSettings
+    ) -> list[str]:
         """
         Get the value of a specific key in ``config_settings`` as a list of strings.
 
@@ -223,7 +233,9 @@ class _ConfigSettingsTranslator:
 
         yield from self._get_config("--global-option", config_settings)
 
-    def __dist_info_args(self, config_settings: _ConfigSettings) -> Iterator[str]:
+    def __dist_info_args(
+        self, config_settings: _ConfigSettings
+    ) -> Iterator[str]:
         """
         The ``dist_info`` command accepts ``tag-date`` and ``tag-build``.
 
@@ -249,7 +261,9 @@ class _ConfigSettingsTranslator:
         if "tag-build" in cfg:
             yield from ["--tag-build", str(cfg["tag-build"])]
 
-    def _editable_args(self, config_settings: _ConfigSettings) -> Iterator[str]:
+    def _editable_args(
+        self, config_settings: _ConfigSettings
+    ) -> Iterator[str]:
         """
         The ``editable_wheel`` command accepts ``editable-mode=strict``.
 
@@ -265,7 +279,9 @@ class _ConfigSettingsTranslator:
             return
         yield from ["--mode", str(mode)]
 
-    def _arbitrary_args(self, config_settings: _ConfigSettings) -> Iterator[str]:
+    def _arbitrary_args(
+        self, config_settings: _ConfigSettings
+    ) -> Iterator[str]:
         """
         Users may expect to pass arbitrary lists of arguments to a command
         via "--global-option" (example provided in PEP 517 of a "escape hatch").
@@ -329,10 +345,14 @@ class _BuildMetaBackend(_ConfigSettingsTranslator):
                 "setup-py-deprecated.html",
             )
 
-    def get_requires_for_build_wheel(self, config_settings: _ConfigSettings = None):
+    def get_requires_for_build_wheel(
+        self, config_settings: _ConfigSettings = None
+    ):
         return self._get_build_requires(config_settings, requirements=[])
 
-    def get_requires_for_build_sdist(self, config_settings: _ConfigSettings = None):
+    def get_requires_for_build_sdist(
+        self, config_settings: _ConfigSettings = None
+    ):
         return self._get_build_requires(config_settings, requirements=[])
 
     def _bubble_up_info_directory(
@@ -350,12 +370,16 @@ class _BuildMetaBackend(_ConfigSettingsTranslator):
             # PEP 517 allow other files and dirs to exist in metadata_directory
         return info_dir.name
 
-    def _find_info_directory(self, metadata_directory: StrPath, suffix: str) -> Path:
+    def _find_info_directory(
+        self, metadata_directory: StrPath, suffix: str
+    ) -> Path:
         for parent, dirs, _ in os.walk(metadata_directory):
             candidates = [f for f in dirs if f.endswith(suffix)]
 
             if len(candidates) != 0 or len(dirs) != 1:
-                assert len(candidates) == 1, f"Multiple {suffix} directories found"
+                assert (
+                    len(candidates) == 1
+                ), f"Multiple {suffix} directories found"
                 return Path(parent, candidates[0])
 
         msg = f"No {suffix} directory found in {metadata_directory}"
@@ -407,7 +431,9 @@ class _BuildMetaBackend(_ConfigSettingsTranslator):
             with no_install_setup_requires():
                 self.run_setup()
 
-            result_basename = _file_with_extension(tmp_dist_dir, result_extension)
+            result_basename = _file_with_extension(
+                tmp_dist_dir, result_extension
+            )
             result_path = os.path.join(result_directory, result_basename)
             if os.path.exists(result_path):
                 # os.rename will fail overwriting on non-Unix.
@@ -436,7 +462,9 @@ class _BuildMetaBackend(_ConfigSettingsTranslator):
             return _build(["bdist_wheel"])
 
         try:
-            return _build(["bdist_wheel", "--dist-info-dir", str(metadata_directory)])
+            return _build(
+                ["bdist_wheel", "--dist-info-dir", str(metadata_directory)]
+            )
         except SystemExit as ex:  # pragma: nocover
             # pypa/setuptools#4683
             if "--dist-info-dir not recognized" not in str(ex):
@@ -454,10 +482,14 @@ class _BuildMetaBackend(_ConfigSettingsTranslator):
             config_settings,
         )
 
-    def _get_dist_info_dir(self, metadata_directory: StrPath | None) -> str | None:
+    def _get_dist_info_dir(
+        self, metadata_directory: StrPath | None
+    ) -> str | None:
         if not metadata_directory:
             return None
-        dist_info_candidates = list(Path(metadata_directory).glob("*.dist-info"))
+        dist_info_candidates = list(
+            Path(metadata_directory).glob("*.dist-info")
+        )
         assert len(dist_info_candidates) <= 1
         return str(dist_info_candidates[0]) if dist_info_candidates else None
 
@@ -541,7 +573,9 @@ class _BuildMetaLegacyBackend(_BuildMetaBackend):
 
 
 class _IncompatibleBdistWheel(SetuptoolsDeprecationWarning):
-    _SUMMARY = "wheel.bdist_wheel is deprecated, please import it from setuptools"
+    _SUMMARY = (
+        "wheel.bdist_wheel is deprecated, please import it from setuptools"
+    )
     _DETAILS = """
     Ensure that any custom bdist_wheel implementation is a subclass of
     setuptools.command.bdist_wheel.bdist_wheel.
@@ -562,7 +596,9 @@ build_sdist = _BACKEND.build_sdist
 
 if not LEGACY_EDITABLE:
     get_requires_for_build_editable = _BACKEND.get_requires_for_build_editable
-    prepare_metadata_for_build_editable = _BACKEND.prepare_metadata_for_build_editable
+    prepare_metadata_for_build_editable = (
+        _BACKEND.prepare_metadata_for_build_editable
+    )
     build_editable = _BACKEND.build_editable
 
 

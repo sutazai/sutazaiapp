@@ -32,7 +32,9 @@ from .enums import LanguageFilter, ProbingState
 
 
 class CharSetGroupProber(CharSetProber):
-    def __init__(self, lang_filter: LanguageFilter = LanguageFilter.NONE) -> None:
+    def __init__(
+        self, lang_filter: LanguageFilter = LanguageFilter.NONE
+    ) -> None:
         super().__init__(lang_filter=lang_filter)
         self._active_num = 0
         self.probers: List[CharSetProber] = []

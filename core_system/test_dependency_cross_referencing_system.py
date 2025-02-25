@@ -39,8 +39,8 @@ class TestDependencyCrossReferencingSystem(unittest.TestCase):
         cls._create_test_files(cls.test_dir)
 
         # Initialize dependency cross-referencing system
-        cls.dependency_cross_referencer = UltraComprehensiveDependencyCrossReferencer(
-            base_dir=cls.test_dir
+        cls.dependency_cross_referencer = (
+            UltraComprehensiveDependencyCrossReferencer(base_dir=cls.test_dir)
         )
 
     @classmethod
@@ -125,7 +125,9 @@ class AIAgent:
         self.assertIsNotNone(self.dependency_cross_referencer)
         self.assertTrue(hasattr(self.dependency_cross_referencer, "base_dir"))
         self.assertTrue(hasattr(self.dependency_cross_referencer, "log_dir"))
-        self.assertTrue(hasattr(self.dependency_cross_referencer, "dependency_graph"))
+        self.assertTrue(
+            hasattr(self.dependency_cross_referencer, "dependency_graph")
+        )
 
     def test_analyze_module_dependencies(self):
         """
@@ -134,8 +136,10 @@ class AIAgent:
         test_file = os.path.join(self.test_dir, "core_system", "module1.py")
 
         # Analyze module dependencies
-        dependencies = self.dependency_cross_referencer._analyze_module_dependencies(
-            test_file
+        dependencies = (
+            self.dependency_cross_referencer._analyze_module_dependencies(
+                test_file
+            )
         )
 
         # Validate dependencies
@@ -180,7 +184,9 @@ class AIAgent:
             )
 
         # Validate module relationships
-        self.assertTrue(len(self.dependency_cross_referencer.module_relationships) > 0)
+        self.assertTrue(
+            len(self.dependency_cross_referencer.module_relationships) > 0
+        )
 
     def test_categorize_module(self):
         """
@@ -195,7 +201,9 @@ class AIAgent:
         ]
 
         for module_path, expected_category in test_cases:
-            category = self.dependency_cross_referencer._categorize_module(module_path)
+            category = self.dependency_cross_referencer._categorize_module(
+                module_path
+            )
             self.assertEqual(category, expected_category)
 
     def test_calculate_dependency_metrics(self):
@@ -206,7 +214,9 @@ class AIAgent:
         self.dependency_cross_referencer.analyze_project_dependencies()
 
         # Calculate dependency metrics
-        metrics = self.dependency_cross_referencer._calculate_dependency_metrics()
+        metrics = (
+            self.dependency_cross_referencer._calculate_dependency_metrics()
+        )
 
         # Validate metrics structure
         self.assertIn("fan_in", metrics)
@@ -227,7 +237,9 @@ class AIAgent:
         self.dependency_cross_referencer.analyze_project_dependencies()
 
         # Generate dependency insights
-        insights = self.dependency_cross_referencer.generate_dependency_insights()
+        insights = (
+            self.dependency_cross_referencer.generate_dependency_insights()
+        )
 
         # Validate insights structure
         self.assertIn("high_coupling_modules", insights)
@@ -244,7 +256,9 @@ class AIAgent:
         )
 
         # Check log directory exists
-        self.assertTrue(os.path.exists(self.dependency_cross_referencer.log_dir))
+        self.assertTrue(
+            os.path.exists(self.dependency_cross_referencer.log_dir)
+        )
 
         # Check for recent dependency report file
         log_files = [
@@ -267,7 +281,9 @@ class AIAgent:
             persisted_report = json.load(f)
 
         # Compare persisted report with generated report
-        self.assertEqual(set(dependency_report.keys()), set(persisted_report.keys()))
+        self.assertEqual(
+            set(dependency_report.keys()), set(persisted_report.keys())
+        )
 
     def test_dependency_graph_visualization(self):
         """
@@ -286,7 +302,9 @@ class AIAgent:
             )
 
             def mock_visualization():
-                visualization_path = os.path.join(temp_dir, "dependency_graph.png")
+                visualization_path = os.path.join(
+                    temp_dir, "dependency_graph.png"
+                )
                 plt.figure(figsize=(20, 20))
                 pos = nx.spring_layout(
                     self.dependency_cross_referencer.dependency_graph,

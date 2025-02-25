@@ -62,7 +62,6 @@ class MyAgent(BaseAgent):
 - Implement caching mechanisms
 - Profile and optimize critical code paths
 
-## Security Considerations
 - Sanitize all input data
 - Use secure configuration management
 - Implement access control mechanisms

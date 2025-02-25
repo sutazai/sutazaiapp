@@ -68,7 +68,9 @@ class RotationGate(SutazAiGate):
         sin_half = np.sin(self.angle / 2)
 
         if self.gate_type == GateType.ROTATION_X:
-            return np.array([[cos_half, -1j * sin_half], [-1j * sin_half, cos_half]])
+            return np.array(
+                [[cos_half, -1j * sin_half], [-1j * sin_half, cos_half]]
+            )
         elif self.gate_type == GateType.ROTATION_Y:
             return np.array([[cos_half, -sin_half], [sin_half, cos_half]])
         elif self.gate_type == GateType.ROTATION_Z:
@@ -79,7 +81,9 @@ class RotationGate(SutazAiGate):
                 ]
             )
         else:
-            raise ValueError(f"Unsupported rotation gate type: {self.gate_type}")
+            raise ValueError(
+                f"Unsupported rotation gate type: {self.gate_type}"
+            )
 
     def apply(self, state: np.ndarray) -> np.ndarray:
         """Apply rotation transformation"""
@@ -92,7 +96,9 @@ class ControlledNotGate(SutazAiGate):
     def __init__(self):
         super().__init__(GateType.CONTROLLED_NOT)
 
-    def apply(self, control_state: np.ndarray, target_state: np.ndarray) -> np.ndarray:
+    def apply(
+        self, control_state: np.ndarray, target_state: np.ndarray
+    ) -> np.ndarray:
         """Apply CNOT gate between control and target states"""
         if control_state[0] > 0.5:  # Simplified control condition
             return np.dot(PauliXGate().matrix, target_state)
@@ -119,7 +125,9 @@ class SutazAiGateLibrary:
             GateType.ROTATION_Z,
         ]:
             if angle is None:
-                raise ValueError(f"Angle required for rotation gate: {gate_type}")
+                raise ValueError(
+                    f"Angle required for rotation gate: {gate_type}"
+                )
             return RotationGate(gate_type, angle)
 
         if gate_type not in self.gates:
@@ -182,7 +190,8 @@ def create_superposition_gate(
 
         # Post-quantum cryptography recommendation
         if dimensions < 2048:  # Quantum-resistant minimum
-            logging.warning("Gate dimensions below post-quantum security threshold")
+            logging.warning(
+            )
 
         return unitary_gate
     except Exception as e:

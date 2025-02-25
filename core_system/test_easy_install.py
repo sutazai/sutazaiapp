@@ -76,7 +76,9 @@ class TestEasyInstallTest:
         assert "'spec'" in script
         assert "'console_scripts'" in script
         assert "'name'" in script
-        assert re.search("^# EASY-INSTALL-ENTRY-SCRIPT", script, flags=re.MULTILINE)
+        assert re.search(
+            "^# EASY-INSTALL-ENTRY-SCRIPT", script, flags=re.MULTILINE
+        )
 
     def test_no_find_links(self):
         # new option '--no-find-links', that blocks find-links added at
@@ -165,7 +167,9 @@ class TestEasyInstallTest:
         return str(sdist)
 
     @fail_on_ascii
-    def test_unicode_filename_in_sdist(self, sdist_unicode, tmpdir, monkeypatch):
+    def test_unicode_filename_in_sdist(
+        self, sdist_unicode, tmpdir, monkeypatch
+    ):
         """
         The install command should execute correctly even if
         the package has unicode filenames.
@@ -897,19 +901,25 @@ data-requires-python="{dep_2_0_python_requires}">{dep_2_0_sdist}</a><br/>
                 str(tmpdir),
                 "python-xlib",
                 "0.19",  # Ignored (overridden by setup_attrs).
-                setup_attrs=dict(setup_requires="dep", dependency_links=[index_url]),
+                setup_attrs=dict(
+                    setup_requires="dep", dependency_links=[index_url]
+                ),
             )
             test_setup_py = os.path.join(test_pkg, "setup.py")
             run_setup(test_setup_py, ["--version"])
         eggs = list(
             map(
                 str,
-                pkg_resources.find_distributions(os.path.join(test_pkg, ".eggs")),
+                pkg_resources.find_distributions(
+                    os.path.join(test_pkg, ".eggs")
+                ),
             )
         )
         assert eggs == ["dep 1.0"]
 
-    @pytest.mark.parametrize("with_dependency_links_in_setup_py", (False, True))
+    @pytest.mark.parametrize(
+        "with_dependency_links_in_setup_py", (False, True)
+    )
     def test_setup_requires_with_find_links_in_setup_cfg(
         self, monkeypatch, with_dependency_links_in_setup_py
     ):
@@ -955,7 +965,9 @@ data-requires-python="{dep_2_0_python_requires}">{dep_2_0_sdist}</a><br/>
                     )
                 run_setup(test_setup_py, ["--version"])
 
-    def test_setup_requires_with_transitive_extra_dependency(self, monkeypatch):
+    def test_setup_requires_with_transitive_extra_dependency(
+        self, monkeypatch
+    ):
         """
         Use case: installing a package with a build dependency on
         an already installed `dep[extra]`, which in turn depends
@@ -1291,7 +1303,9 @@ class TestScriptHeader:
         assert actual == expected
 
     def test_get_script_header_args(self):
-        expected = f"#!{ei.nt_quote_arg(os.path.normpath(sys.executable))} -x\n"
+        expected = (
+            f"#!{ei.nt_quote_arg(os.path.normpath(sys.executable))} -x\n"
+        )
         actual = ei.ScriptWriter.get_header("#!/usr/bin/python -x")
         assert actual == expected
 
@@ -1351,7 +1365,8 @@ class TestCommandSpec:
         with pytest.raises(TypeError) as exc_info:
             ei.CommandSpec.from_param(object())  # type: ignore[arg-type] # We want a type error here
         assert (
-            str(exc_info.value) == "Argument has an unsupported type <class 'object'>"
+            str(exc_info.value)
+            == "Argument has an unsupported type <class 'object'>"
         ), exc_info.value
 
 
@@ -1424,7 +1439,9 @@ def test_use_correct_python_version_string(tmpdir, tmpdir_cwd, monkeypatch):
     sys.platform == "darwin",
     reason="https://github.com/pypa/setuptools/pull/4716#issuecomment-2447624418",
 )
-def test_editable_user_and_build_isolation(setup_context, monkeypatch, tmp_path):
+def test_editable_user_and_build_isolation(
+    setup_context, monkeypatch, tmp_path
+):
     """`setup.py develop` should honor `--user` even under build isolation"""
 
     # == Arrange ==
@@ -1462,9 +1479,7 @@ def test_editable_user_and_build_isolation(setup_context, monkeypatch, tmp_path)
     sys_prefix.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr("sys.prefix", str(sys_prefix))
 
-    setup_script = (
-        "__import__('setuptools').setup(name='aproj', version=42, packages=[])\n"
-    )
+    setup_script = "__import__('setuptools').setup(name='aproj', version=42, packages=[])\n"
     (tmp_path / "setup.py").write_text(setup_script, encoding="utf-8")
 
     # == Sanity check ==

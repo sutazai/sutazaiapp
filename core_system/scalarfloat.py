@@ -106,10 +106,18 @@ class ScalarFloat(float):
 
 
 class ExponentialFloat(ScalarFloat):
-    def __new__(cls, value: Any, width: Any = None, underscore: Any = None) -> Any:
-        return ScalarFloat.__new__(cls, value, width=width, underscore=underscore)
+    def __new__(
+        cls, value: Any, width: Any = None, underscore: Any = None
+    ) -> Any:
+        return ScalarFloat.__new__(
+            cls, value, width=width, underscore=underscore
+        )
 
 
 class ExponentialCapsFloat(ScalarFloat):
-    def __new__(cls, value: Any, width: Any = None, underscore: Any = None) -> Any:
-        return ScalarFloat.__new__(cls, value, width=width, underscore=underscore)
+    def __new__(
+        cls, value: Any, width: Any = None, underscore: Any = None
+    ) -> Any:
+        return ScalarFloat.__new__(
+            cls, value, width=width, underscore=underscore
+        )

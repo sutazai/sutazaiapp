@@ -211,7 +211,9 @@ class ArchiveUtilTestCase(support.TempdirManager):
 
     def test_make_zipfile_no_zlib(self):
         zipfile = pytest.importorskip("zipfile")
-        patch(self, archive_util.zipfile, "zlib", None)  # force zlib ImportError
+        patch(
+            self, archive_util.zipfile, "zlib", None
+        )  # force zlib ImportError
 
         called = []
         zipfile_class = zipfile.ZipFile
@@ -230,7 +232,9 @@ class ArchiveUtilTestCase(support.TempdirManager):
             make_zipfile(base_name, "dist")
 
         tarball = base_name + ".zip"
-        assert called == [((tarball, "w"), {"compression": zipfile.ZIP_STORED})]
+        assert called == [
+            ((tarball, "w"), {"compression": zipfile.ZIP_STORED})
+        ]
         assert os.path.exists(tarball)
         with zipfile.ZipFile(tarball) as zf:
             assert sorted(zf.namelist()) == self._zip_created_files
@@ -238,7 +242,9 @@ class ArchiveUtilTestCase(support.TempdirManager):
     def test_check_archive_formats(self):
         assert check_archive_formats(["gztar", "xxx", "zip"]) == "xxx"
         assert (
-            check_archive_formats(["gztar", "bztar", "xztar", "ztar", "tar", "zip"])
+            check_archive_formats(
+                ["gztar", "bztar", "xztar", "ztar", "tar", "zip"]
+            )
             is None
         )
 

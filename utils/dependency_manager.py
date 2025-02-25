@@ -93,21 +93,15 @@ class DependencyManager:
             self.logger.error(f"Vulnerability scanning failed: {e}")
             return {"status": "error", "details": str(e)}
 
-    def update_dependencies(self, security_level: str = "medium") -> Dict:
         """
-        Update dependencies based on security configuration.
 
-        :param security_level: Level of security for updates
         :return: Update operation results
         """
         try:
-            level_config = self.config.config["security_levels"].get(
-                security_level, {}
             )
 
             if not level_config.get("auto_update", False):
                 self.logger.info(
-                    f"Auto-update disabled for {security_level} level"
                 )
                 return {"status": "skipped"}
 

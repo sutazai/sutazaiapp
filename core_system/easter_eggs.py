@@ -81,20 +81,17 @@ ASCII_ARTS = {
 FORTUNES = [
     "Your dependencies are safer than a password-manager's vault.",
     "Your code sparkles with zero known vulnerabilities!",
-    "All vulnerabilities fear your security prowess!",
     "Your build is as solid as a rock!",
     "Your code is a fortress; no bug can breach it.",
     "In the realm of code, you are the vigilant guardian.",
     "Each line you write fortifies the castle of your code.",
     "Your code is a well-oiled machine, impervious to rust.",
-    "Your code is a symphony of security and efficiency.",
     "Your code is a beacon of safety in the digital ocean.",
     "Your code is a masterpiece, untouched by the hands of vulnerabilities.",
     "Your code stands tall, a citadel against cyber threats.",
     "Your code is a tapestry woven with threads of safety.",
     "Your code is a lighthouse, guiding ships away from the rocks of vulnerabilities.",
     "Your code is a garden where no weeds of bugs can grow.",
-    "In the realm of software, your security measures are legendary.",
 ]
 
 
@@ -220,7 +217,9 @@ def show_race(console):
         pos2 += random.randint(1, 3)
 
         console.clear()
-        console.print("[green]Finish line[/green]" + " " * (finish_line - 10) + "|")
+        console.print(
+            "[green]Finish line[/green]" + " " * (finish_line - 10) + "|"
+        )
         line1 = " " * pos1 + emoji1
         line2 = " " * pos2 + emoji2
         console.print(f"{emoji1} lane:  {line1}")

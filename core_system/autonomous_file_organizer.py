@@ -26,7 +26,6 @@ class AutonomousFileOrganizer:
     - Intelligent file categorization
     - Semantic file organization
     - Duplicate detection and management
-    - Performance and security-aware file handling
     """
 
     FILE_TYPE_MAPPING = {

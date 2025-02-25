@@ -174,7 +174,9 @@ class TestManifestTest(TempDirTestCase):
     def setup_method(self, method):
         super().setup_method(method)
 
-        f = open(os.path.join(self.temp_dir, "setup.py"), "w", encoding="utf-8")
+        f = open(
+            os.path.join(self.temp_dir, "setup.py"), "w", encoding="utf-8"
+        )
         f.write(SETUP_PY)
         f.close()
         """
@@ -307,7 +309,9 @@ class TestManifestTest(TempDirTestCase):
             global-exclude *.map
             """
         )
-        files = default_files | set([ml("app/static/app.js"), ml("app/static/app.css")])
+        files = default_files | set(
+            [ml("app/static/app.js"), ml("app/static/app.css")]
+        )
         assert files == self.get_files()
 
     def test_global_include(self):
@@ -338,7 +342,9 @@ class TestManifestTest(TempDirTestCase):
             prune app/static
             """
         )
-        files = default_files | set([ml("app/a.txt"), ml("app/b.txt"), ml("app/c.rst")])
+        files = default_files | set(
+            [ml("app/a.txt"), ml("app/b.txt"), ml("app/c.rst")]
+        )
         assert files == self.get_files()
 
 

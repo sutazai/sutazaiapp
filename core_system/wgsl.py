@@ -34,7 +34,9 @@ NotLineEndRE = "[^" + "".join(LineEndCodePoints) + "]"
 LineEndRE = "[" + "".join(LineEndCodePoints) + "]"
 
 # https://www.w3.org/TR/WGSL/#syntax-ident_pattern_token
-ident_pattern_token = f"([{uni.xid_start}][{uni.xid_continue}]+)|[{uni.xid_start}]"
+ident_pattern_token = (
+    f"([{uni.xid_start}][{uni.xid_continue}]+)|[{uni.xid_start}]"
+)
 
 
 class WgslLexer(RegexLexer):

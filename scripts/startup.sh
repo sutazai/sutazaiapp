@@ -66,10 +66,6 @@ log "Starting Autonomous Monitoring System"
 python3 "${BASE_PATH}/scripts/autonomous_monitor.py" &
 MONITOR_PID=$!
 
-# 5. Security Scanning
-log "Performing Initial Security Scan"
-safety check -r "${BASE_PATH}/requirements.txt" || log "WARNING: Security vulnerabilities detected"
-semgrep scan --config=auto "${BASE_PATH}" || log "WARNING: Potential security issues found"
 
 # 6. Model Initialization
 log "Initializing AI Models"

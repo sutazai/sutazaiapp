@@ -51,16 +51,24 @@ class TestSutazAiSystemAuditor(unittest.TestCase):
         code_with_repeated_comp = "def calc():\n    return expensive_func()"
 
         with patch("builtins.open", mock_open(read_data=code_with_list_comp)):
-            suggestions = self.auditor.optimize_performance("test_list_comp.py")
+            suggestions = self.auditor.optimize_performance(
+                "test_list_comp.py"
+            )
             self.assertEqual(len(suggestions), 1)
             self.assertEqual(suggestions[0]["type"], "generator_expression")
 
-        with patch("builtins.open", mock_open(read_data=code_with_repeated_comp)):
-            suggestions = self.auditor.optimize_performance("test_repeated_comp.py")
+        with patch(
+            "builtins.open", mock_open(read_data=code_with_repeated_comp)
+        ):
+            suggestions = self.auditor.optimize_performance(
+                "test_repeated_comp.py"
+            )
             self.assertEqual(len(suggestions), 1)
             self.assertEqual(suggestions[0]["type"], "memoization")
 
-    @patch("scripts.comprehensive_system_audit.SutazAiSystemAuditor.process_file")
+    @patch(
+        "scripts.comprehensive_system_audit.SutazAiSystemAuditor.process_file"
+    )
     def test_run_comprehensive_audit(self, mock_process_file):
         file_structure = {
             "src": {

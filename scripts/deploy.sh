@@ -46,10 +46,7 @@ main() {
     pip install -r /opt/sutazai_project/SutazAI/requirements.txt \
         || handle_error "Dependency Installation"
 
-    # 3. Security Checks
-    log "Stage 3: Security Vulnerability Scan"
     safety check -r /opt/sutazai_project/SutazAI/requirements.txt \
-        || log "WARNING: Security vulnerabilities detected"
 
     # 4. Model and Agent Initialization
     log "Stage 4: AI Model and Agent Initialization"

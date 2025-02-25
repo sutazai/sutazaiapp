@@ -7,7 +7,6 @@ Provides an autonomous, multi-dimensional approach to:
 - Intelligent dependency tracking
 - Semantic system mapping
 - Performance optimization
-- Security and integrity validation
 """
 
 import ast
@@ -39,7 +38,6 @@ class UltraComprehensiveArchitectureManager:
     - Semantic dependency analysis
     - Intelligent cross-referencing
     - Performance optimization
-    - Security and integrity validation
     """
 
     def __init__(
@@ -106,7 +104,6 @@ class UltraComprehensiveArchitectureManager:
             "dependency_graph": {},
             "architectural_patterns": {},
             "complexity_metrics": {},
-            "security_insights": {},
             "optimization_recommendations": [],
         }
 
@@ -131,9 +128,6 @@ class UltraComprehensiveArchitectureManager:
                 self._analyze_system_complexity()
             )
 
-            # 5. Security Insights
-            architectural_report["security_insights"] = (
-                self._extract_security_insights()
             )
 
             # 6. Generate Optimization Recommendations
@@ -319,7 +313,6 @@ class UltraComprehensiveArchitectureManager:
             ("utils", ["utils", "helpers"]),
             ("scripts", ["scripts", "deployment"]),
             ("config", ["config", "settings"]),
-            ("security", ["security", "authentication"]),
         ]
 
         for category, keywords in categories:
@@ -601,17 +594,12 @@ class UltraComprehensiveArchitectureManager:
 
         return complexity_metrics
 
-    def _extract_security_insights(self) -> Dict[str, Any]:
         """
-        Extract security-related architectural insights
 
         Returns:
-            Security insights and potential vulnerabilities
         """
-        security_insights = {
             "potential_vulnerabilities": [],
             "sensitive_modules": [],
-            "security_patterns": {},
         }
 
         # Sensitive pattern detection
@@ -635,7 +623,6 @@ class UltraComprehensiveArchitectureManager:
                 for pattern in sensitive_patterns:
                     matches = re.findall(pattern, content)
                     if matches:
-                        security_insights["potential_vulnerabilities"].append(
                             {
                                 "module": module_path,
                                 "pattern": pattern,
@@ -645,10 +632,8 @@ class UltraComprehensiveArchitectureManager:
 
             except Exception as e:
                 self.logger.warning(
-                    f"Security analysis failed for {module_path}: {e}"
                 )
 
-        return security_insights
 
     def _generate_architectural_recommendations(
         self, architectural_report: Dict[str, Any]
@@ -680,11 +665,7 @@ class UltraComprehensiveArchitectureManager:
                 f"Refactor {len(complexity_metrics['potential_complexity_issues'])} high-complexity modules"
             )
 
-        # Security recommendations
-        security_insights = architectural_report.get("security_insights", {})
-        if security_insights.get("potential_vulnerabilities"):
             recommendations.append(
-                f"Address {len(security_insights['potential_vulnerabilities'])} potential security vulnerabilities"
             )
 
         # Anti-pattern recommendations
@@ -806,7 +787,6 @@ def main():
             f"Potential Complexity Issues: {len(architectural_report.get('complexity_metrics', {}).get('potential_complexity_issues', []))}"
         )
         print(
-            f"Security Vulnerabilities: {len(architectural_report.get('security_insights', {}).get('potential_vulnerabilities', []))}"
         )
 
     except Exception as e:

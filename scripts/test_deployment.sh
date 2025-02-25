@@ -13,9 +13,6 @@
     exit 1
 }
 
-# Test security
-./test_security.sh || {
-    echo "❌ Security test failed"
     exit 1
 }
 

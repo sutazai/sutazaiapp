@@ -24,7 +24,6 @@ TARGET_BACKUP_DIR="/backup"
 # Create log directory if missing
 mkdir -p "$LOG_DIR" || {
   echo -e "${UI_PALETTE[danger]}⛔ Failed to create neural log matrix!${RESET}"
-  systemctl start security-breach-alert.service
   systemctl start sutazai-audit.service
   exit 1
 }

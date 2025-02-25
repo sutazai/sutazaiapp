@@ -193,7 +193,9 @@ class Ruler(Generic[RuleFuncTv]):
 
         """
         self.__rules__.append(
-            Rule[RuleFuncTv](ruleName, True, fn, (options or {}).get("alt", []))
+            Rule[RuleFuncTv](
+                ruleName, True, fn, (options or {}).get("alt", [])
+            )
         )
         self.__cache__ = None
 

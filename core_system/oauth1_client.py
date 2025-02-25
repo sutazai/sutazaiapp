@@ -19,7 +19,9 @@ class OAuth1Auth(Auth, ClientAuth):
 
     requires_request_body = True
 
-    def auth_flow(self, request: Request) -> typing.Generator[Request, Response, None]:
+    def auth_flow(
+        self, request: Request
+    ) -> typing.Generator[Request, Response, None]:
         url, headers, body = self.prepare(
             request.method, str(request.url), request.headers, request.content
         )

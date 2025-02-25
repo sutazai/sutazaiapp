@@ -28,7 +28,6 @@ def compare_s256_code_challenge(code_verifier, code_challenge):
 
 class CodeChallenge:
     """CodeChallenge extension to Authorization Code Grant. It is used to
-    improve the security of Authorization Code flow for public clients by
     sending extra "code_challenge" and "code_verifier" to the authorization
     server.
 
@@ -85,7 +84,9 @@ class CodeChallenge:
             raise InvalidRequestError('Unsupported "code_challenge_method"')
 
         if len(request.datalist.get("code_challenge_method", [])) > 1:
-            raise InvalidRequestError('Multiple "code_challenge_method" in request.')
+            raise InvalidRequestError(
+                'Multiple "code_challenge_method" in request.'
+            )
 
     def validate_code_verifier(self, grant):
         request: OAuth2Request = grant.request
@@ -110,7 +111,9 @@ class CodeChallenge:
             raise InvalidRequestError('Invalid "code_verifier"')
 
         # 4.6. Server Verifies code_verifier before Returning the Tokens
-        method = self.get_authorization_code_challenge_method(authorization_code)
+        method = self.get_authorization_code_challenge_method(
+            authorization_code
+        )
         if method is None:
             method = self.DEFAULT_CODE_CHALLENGE_METHOD
 

@@ -37,7 +37,6 @@ The project root should maintain a well-organized structure, including the follo
 3. **Deployment**:
    - A deployment script (e.g., deploy.sh) handles dependency installation, model verification, and starts all necessary services.
 
-## Security and Integrity
 
 - **OTP Net Override**: External network access is strictly controlled via an OTP-based system, ensuring privileged actions only after proper authentication.
 - **Non-root Supreme AI**: Supreme AI runs without root privileges, with all critical OS-level tasks reserved for the root user (Florin Cristian Suta).

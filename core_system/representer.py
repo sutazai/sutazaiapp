@@ -159,7 +159,9 @@ class BaseRepresenter:
                 comment = [None, [comment]]
         if isinstance(tag, str):
             tag = Tag(suffix=tag)
-        node = ScalarNode(tag, value, style=style, comment=comment, anchor=anchor)
+        node = ScalarNode(
+            tag, value, style=style, comment=comment, anchor=anchor
+        )
         if self.alias_key is not None:
             self.represented_objects[self.alias_key] = node
         return node
@@ -235,7 +237,9 @@ class BaseRepresenter:
             node_value = self.represent_data(item_value)
             if not (isinstance(node_key, ScalarNode) and not node_key.style):
                 best_style = False
-            if not (isinstance(node_value, ScalarNode) and not node_value.style):
+            if not (
+                isinstance(node_value, ScalarNode) and not node_value.style
+            ):
                 best_style = False
             value.append((node_key, node_value))
         if flow_style is None:
@@ -272,9 +276,13 @@ class SafeRepresenter(BaseRepresenter):
         else:
             # check py2 only?
             data = base64.encodestring(data).decode("ascii")  # type: ignore
-        return self.represent_scalar("tag:yaml.org,2002:binary", data, style="|")
+        return self.represent_scalar(
+            "tag:yaml.org,2002:binary", data, style="|"
+        )
 
-    def represent_bool(self, data: Any, anchor: Optional[Any] = None) -> ScalarNode:
+    def represent_bool(
+        self, data: Any, anchor: Optional[Any] = None
+    ) -> ScalarNode:
         try:
             value = self.dumper.boolean_representation[bool(data)]
         except AttributeError:
@@ -282,7 +290,9 @@ class SafeRepresenter(BaseRepresenter):
                 value = "true"
             else:
                 value = "false"
-        return self.represent_scalar("tag:yaml.org,2002:bool", value, anchor=anchor)
+        return self.represent_scalar(
+            "tag:yaml.org,2002:bool", value, anchor=anchor
+        )
 
     def represent_int(self, data: Any) -> ScalarNode:
         return self.represent_scalar("tag:yaml.org,2002:int", str(data))
@@ -385,7 +395,9 @@ SafeRepresenter.add_representer(dict, SafeRepresenter.represent_dict)
 
 SafeRepresenter.add_representer(set, SafeRepresenter.represent_set)
 
-SafeRepresenter.add_representer(ordereddict, SafeRepresenter.represent_ordereddict)
+SafeRepresenter.add_representer(
+    ordereddict, SafeRepresenter.represent_ordereddict
+)
 
 SafeRepresenter.add_representer(
     collections.OrderedDict,
@@ -394,7 +406,9 @@ SafeRepresenter.add_representer(
 
 SafeRepresenter.add_representer(datetime.date, SafeRepresenter.represent_date)
 
-SafeRepresenter.add_representer(datetime.datetime, SafeRepresenter.represent_datetime)
+SafeRepresenter.add_representer(
+    datetime.datetime, SafeRepresenter.represent_datetime
+)
 
 SafeRepresenter.add_representer(None, SafeRepresenter.represent_undefined)
 
@@ -420,7 +434,9 @@ class Representer(SafeRepresenter):
         except AttributeError:
             # ToDo: check if this can be reached in Py3
             name = f"{data.__module__!s}.{data.__name__!s}"
-        return self.represent_scalar("tag:yaml.org,2002:python/name:" + name, "")
+        return self.represent_scalar(
+            "tag:yaml.org,2002:python/name:" + name, ""
+        )
 
     def represent_module(self, data: Any) -> ScalarNode:
         return self.represent_scalar(
@@ -471,7 +487,9 @@ class Representer(SafeRepresenter):
             tag = "tag:yaml.org,2002:python/object/apply:"
             newobj = False
         try:
-            function_name = f"{function.__module__!s}.{function.__qualname__!s}"
+            function_name = (
+                f"{function.__module__!s}.{function.__qualname__!s}"
+            )
         except AttributeError:
             # ToDo: check if this can be reached in Py3
             function_name = f"{function.__module__!s}.{function.__name__!s}"
@@ -486,7 +504,12 @@ class Representer(SafeRepresenter):
                 "tag:yaml.org,2002:python/object:" + function_name,
                 state,
             )
-        if not listitems and not dictitems and isinstance(state, dict) and not state:
+        if (
+            not listitems
+            and not dictitems
+            and isinstance(state, dict)
+            and not state
+        ):
             return self.represent_sequence(tag + function_name, args)
         value = {}
         if args:
@@ -508,7 +531,9 @@ Representer.add_representer(type, Representer.represent_name)
 
 Representer.add_representer(types.FunctionType, Representer.represent_name)
 
-Representer.add_representer(types.BuiltinFunctionType, Representer.represent_name)
+Representer.add_representer(
+    types.BuiltinFunctionType, Representer.represent_name
+)
 
 Representer.add_representer(types.ModuleType, Representer.represent_module)
 
@@ -619,7 +644,9 @@ class RoundTripRepresenter(SafeRepresenter):
             s = "_" + s
         if underscore[2]:
             s += "_"
-        return self.represent_scalar("tag:yaml.org,2002:int", prefix + s, anchor=anchor)
+        return self.represent_scalar(
+            "tag:yaml.org,2002:int", prefix + s, anchor=anchor
+        )
 
     def represent_scalar_int(self, data: Any) -> ScalarNode:
         if data._width is not None:
@@ -648,7 +675,9 @@ class RoundTripRepresenter(SafeRepresenter):
         prefix = "0o"
         if getattr(self.serializer, "use_version", None) == (1, 1):
             prefix = "0"
-        return self.insert_underscore(prefix, s, data._underscore, anchor=anchor)
+        return self.insert_underscore(
+            prefix, s, data._underscore, anchor=anchor
+        )
 
     def represent_hex_int(self, data: Any) -> ScalarNode:
         if data._width is not None:
@@ -682,9 +711,15 @@ class RoundTripRepresenter(SafeRepresenter):
             return self.represent_scalar(
                 "tag:yaml.org,2002:float", value, anchor=anchor
             )
-        if data._exp is None and data._prec > 0 and data._prec == data._width - 1:
+        if (
+            data._exp is None
+            and data._prec > 0
+            and data._prec == data._width - 1
+        ):
             # no exponent, but trailing dot
-            value = f'{data._m_sign if data._m_sign else ""}{abs(int(data)):d}.'
+            value = (
+                f'{data._m_sign if data._m_sign else ""}{abs(int(data)):d}.'
+            )
         elif data._exp is None:
             # no exponent, "normal" dot
             prec = data._prec
@@ -712,7 +747,9 @@ class RoundTripRepresenter(SafeRepresenter):
             m = m[:w]
             e = int(es)
             m1, m2 = m.split(".")  # always second?
-            while len(m1) + len(m2) < data._width - (1 if data._prec >= 0 else 0):
+            while len(m1) + len(m2) < data._width - (
+                1 if data._prec >= 0 else 0
+            ):
                 m2 += "0"
             if data._m_sign and data > 0:
                 m1 = "+" + m1
@@ -722,13 +759,17 @@ class RoundTripRepresenter(SafeRepresenter):
                     e -= len(m2)
                 else:
                     m2 = ""
-                while (len(m1) + len(m2) - (1 if data._m_sign else 0)) < data._width:
+                while (
+                    len(m1) + len(m2) - (1 if data._m_sign else 0)
+                ) < data._width:
                     m2 += "0"
                     e -= 1
                 value = m1 + m2 + data._exp + f"{e:{esgn}0{data._e_width}d}"
             elif data._prec == 0:  # mantissa with trailing dot
                 e -= len(m2)
-                value = m1 + m2 + "." + data._exp + f"{e:{esgn}0{data._e_width}d}"
+                value = (
+                    m1 + m2 + "." + data._exp + f"{e:{esgn}0{data._e_width}d}"
+                )
             else:
                 if data._m_lead0 > 0:
                     m2 = "0" * (data._m_lead0 - 1) + m1 + m2
@@ -739,11 +780,15 @@ class RoundTripRepresenter(SafeRepresenter):
                     m1 += m2[0]
                     m2 = m2[1:]
                     e -= 1
-                value = m1 + "." + m2 + data._exp + f"{e:{esgn}0{data._e_width}d}"
+                value = (
+                    m1 + "." + m2 + data._exp + f"{e:{esgn}0{data._e_width}d}"
+                )
 
         if value is None:
             value = repr(data).lower()
-        return self.represent_scalar("tag:yaml.org,2002:float", value, anchor=anchor)
+        return self.represent_scalar(
+            "tag:yaml.org,2002:float", value, anchor=anchor
+        )
 
     def represent_sequence(
         self,
@@ -906,7 +951,9 @@ class RoundTripRepresenter(SafeRepresenter):
                     node_value.comment = item_comment[2:]
             if not (isinstance(node_key, ScalarNode) and not node_key.style):
                 best_style = False
-            if not (isinstance(node_value, ScalarNode) and not node_value.style):
+            if not (
+                isinstance(node_value, ScalarNode) and not node_value.style
+            ):
                 best_style = False
             value.append((node_key, node_value))
         if flow_style is None:
@@ -1044,7 +1091,9 @@ class RoundTripRepresenter(SafeRepresenter):
             node_value.style = "-" if flow_style else "?"
             if not (isinstance(node_key, ScalarNode) and not node_key.style):
                 best_style = False
-            if not (isinstance(node_value, ScalarNode) and not node_value.style):
+            if not (
+                isinstance(node_value, ScalarNode) and not node_value.style
+            ):
                 best_style = False
             value.append((node_key, node_value))
         best_style = best_style
@@ -1108,7 +1157,9 @@ class RoundTripRepresenter(SafeRepresenter):
             anchor = data.yaml_anchor()
         except AttributeError:
             anchor = None
-        return self.represent_scalar(tag, data.value, style=data.style, anchor=anchor)
+        return self.represent_scalar(
+            tag, data.value, style=data.style, anchor=anchor
+        )
 
     def represent_scalar_bool(self, data: Any) -> ScalarNode:
         try:
@@ -1135,7 +1186,9 @@ class RoundTripRepresenter(SafeRepresenter):
         return res
 
 
-RoundTripRepresenter.add_representer(type(None), RoundTripRepresenter.represent_none)
+RoundTripRepresenter.add_representer(
+    type(None), RoundTripRepresenter.represent_none
+)
 
 RoundTripRepresenter.add_representer(
     LiteralScalarString,
@@ -1172,9 +1225,13 @@ RoundTripRepresenter.add_representer(
     BinaryInt, RoundTripRepresenter.represent_binary_int
 )
 
-RoundTripRepresenter.add_representer(OctalInt, RoundTripRepresenter.represent_octal_int)
+RoundTripRepresenter.add_representer(
+    OctalInt, RoundTripRepresenter.represent_octal_int
+)
 
-RoundTripRepresenter.add_representer(HexInt, RoundTripRepresenter.represent_hex_int)
+RoundTripRepresenter.add_representer(
+    HexInt, RoundTripRepresenter.represent_hex_int
+)
 
 RoundTripRepresenter.add_representer(
     HexCapsInt, RoundTripRepresenter.represent_hex_caps_int
@@ -1188,9 +1245,13 @@ RoundTripRepresenter.add_representer(
     ScalarBoolean, RoundTripRepresenter.represent_scalar_bool
 )
 
-RoundTripRepresenter.add_representer(CommentedSeq, RoundTripRepresenter.represent_list)
+RoundTripRepresenter.add_representer(
+    CommentedSeq, RoundTripRepresenter.represent_list
+)
 
-RoundTripRepresenter.add_representer(CommentedMap, RoundTripRepresenter.represent_dict)
+RoundTripRepresenter.add_representer(
+    CommentedMap, RoundTripRepresenter.represent_dict
+)
 
 RoundTripRepresenter.add_representer(
     CommentedOrderedMap,
@@ -1202,11 +1263,15 @@ RoundTripRepresenter.add_representer(
     RoundTripRepresenter.represent_ordereddict,
 )
 
-RoundTripRepresenter.add_representer(CommentedSet, RoundTripRepresenter.represent_set)
+RoundTripRepresenter.add_representer(
+    CommentedSet, RoundTripRepresenter.represent_set
+)
 
 RoundTripRepresenter.add_representer(
     TaggedScalar,
     RoundTripRepresenter.represent_tagged_scalar,
 )
 
-RoundTripRepresenter.add_representer(TimeStamp, RoundTripRepresenter.represent_datetime)
+RoundTripRepresenter.add_representer(
+    TimeStamp, RoundTripRepresenter.represent_datetime
+)

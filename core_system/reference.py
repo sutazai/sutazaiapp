@@ -6,7 +6,9 @@ from .state_block import StateBlock
 LOGGER = logging.getLogger(__name__)
 
 
-def reference(state: StateBlock, startLine: int, _endLine: int, silent: bool) -> bool:
+def reference(
+    state: StateBlock, startLine: int, _endLine: int, silent: bool
+) -> bool:
     LOGGER.debug(
         "entering reference: %s, %s, %s, %s",
         state,
@@ -70,7 +72,9 @@ def reference(state: StateBlock, startLine: int, _endLine: int, silent: bool) ->
 
         nextLine += 1
 
-    string = state.getLines(startLine, nextLine, state.blkIndent, False).strip()
+    string = state.getLines(
+        startLine, nextLine, state.blkIndent, False
+    ).strip()
     maximum = len(string)
 
     labelEnd = None
@@ -91,7 +95,9 @@ def reference(state: StateBlock, startLine: int, _endLine: int, silent: bool) ->
         pos += 1
 
     if (
-        labelEnd is None or labelEnd < 0 or charCodeAt(string, labelEnd + 1) != 0x3A
+        labelEnd is None
+        or labelEnd < 0
+        or charCodeAt(string, labelEnd + 1) != 0x3A
     ):  # /* : */
         return False
 

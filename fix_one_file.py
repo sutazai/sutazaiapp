@@ -6,14 +6,15 @@ Quick Fix Script for a Single File
 import os
 import sys
 
+
 def fix_file(filepath):
     """Fix a specific file with proper structure"""
     file_name = os.path.basename(filepath)
     module_name = os.path.splitext(file_name)[0]
-    class_name = ''.join(word.capitalize() for word in module_name.split('_'))
-    
+    class_name = "".join(word.capitalize() for word in module_name.split("_"))
+
     print(f"Creating proper module for {filepath}")
-    
+
     content = f'''"""
 SutazAI {class_name} Module
 --------------------------
@@ -58,10 +59,10 @@ if __name__ == "__main__":
     instance = initialize()
     print(f"{class_name} initialized successfully")
 '''
-    
-    with open(filepath, 'w', encoding='utf-8') as f:
+
+    with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
-        
+
     print(f"✓ Fixed file {filepath}")
     return True
 
@@ -72,4 +73,4 @@ if os.path.exists(target_file):
     fix_file(target_file)
     print(f"Successfully fixed {target_file}")
 else:
-    print(f"File {target_file} does not exist") 
+    print(f"File {target_file} does not exist")

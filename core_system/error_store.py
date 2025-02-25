@@ -39,11 +39,15 @@ def merge_errors(errors1, errors2):  # noqa: PLR0911
         if isinstance(errors2, list):
             return errors1 + errors2
         if isinstance(errors2, dict):
-            return dict(errors2, **{SCHEMA: merge_errors(errors1, errors2.get(SCHEMA))})
+            return dict(
+                errors2, **{SCHEMA: merge_errors(errors1, errors2.get(SCHEMA))}
+            )
         return [*errors1, errors2]
     if isinstance(errors1, dict):
         if isinstance(errors2, list):
-            return dict(errors1, **{SCHEMA: merge_errors(errors1.get(SCHEMA), errors2)})
+            return dict(
+                errors1, **{SCHEMA: merge_errors(errors1.get(SCHEMA), errors2)}
+            )
         if isinstance(errors2, dict):
             errors = dict(errors1)
             for key, val in errors2.items():
@@ -52,9 +56,13 @@ def merge_errors(errors1, errors2):  # noqa: PLR0911
                 else:
                     errors[key] = val
             return errors
-        return dict(errors1, **{SCHEMA: merge_errors(errors1.get(SCHEMA), errors2)})
+        return dict(
+            errors1, **{SCHEMA: merge_errors(errors1.get(SCHEMA), errors2)}
+        )
     if isinstance(errors2, list):
         return [errors1, *errors2]
     if isinstance(errors2, dict):
-        return dict(errors2, **{SCHEMA: merge_errors(errors1, errors2.get(SCHEMA))})
+        return dict(
+            errors2, **{SCHEMA: merge_errors(errors1, errors2.get(SCHEMA))}
+        )
     return [errors1, errors2]

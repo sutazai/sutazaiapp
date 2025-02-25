@@ -355,7 +355,9 @@ class JsonWebEncryption:
             # Keep the normal steps order defined by RFC 7516
             for i in range(len(keys)):
                 if isinstance(alg, JWEAlgorithmWithTagAwareKeyAgreement):
-                    wrapped = alg.wrap(enc, shared_header, keys[i], sender_key, preset)
+                    wrapped = alg.wrap(
+                        enc, shared_header, keys[i], sender_key, preset
+                    )
                 else:
                     wrapped = alg.wrap(enc, shared_header, keys[i], preset)
                 if cek is None:
@@ -375,7 +377,9 @@ class JsonWebEncryption:
         # present, instead let the Additional Authenticated Data encryption
         # parameter be ASCII(Encoded Protected Header || '.' || BASE64URL(JWE AAD)).
         aad = (
-            json_b64encode(shared_header.protected) if shared_header.protected else b""
+            json_b64encode(shared_header.protected)
+            if shared_header.protected
+            else b""
         )
         if jwe_aad is not None:
             aad += b"." + urlsafe_b64encode(jwe_aad)
@@ -406,7 +410,9 @@ class JsonWebEncryption:
         obj = OrderedDict()
 
         if shared_header.protected:
-            obj["protected"] = to_unicode(json_b64encode(shared_header.protected))
+            obj["protected"] = to_unicode(
+                json_b64encode(shared_header.protected)
+            )
 
         if shared_header.unprotected:
             obj["unprotected"] = shared_header.unprotected
@@ -449,7 +455,11 @@ class JsonWebEncryption:
         :return: JWE compact serialization as bytes or
             JWE JSON serialization as dict
         """
-        if "protected" in header or "unprotected" in header or "recipients" in header:
+        if (
+            "protected" in header
+            or "unprotected" in header
+            or "recipients" in header
+        ):
             return self.serialize_json(header, payload, key, sender_key)
 
         return self.serialize_compact(header, payload, key, sender_key)
@@ -554,17 +564,23 @@ class JsonWebEncryption:
             )
 
         if "aad" in obj:
-            jwe_aad = extract_segment(to_bytes(obj["aad"]), DecodeError, "JWE AAD")
+            jwe_aad = extract_segment(
+                to_bytes(obj["aad"]), DecodeError, "JWE AAD"
+            )
         else:
             jwe_aad = None
 
-        iv = extract_segment(to_bytes(obj["iv"]), DecodeError, "initialization vector")
+        iv = extract_segment(
+            to_bytes(obj["iv"]), DecodeError, "initialization vector"
+        )
 
         ciphertext = extract_segment(
             to_bytes(obj["ciphertext"]), DecodeError, "ciphertext"
         )
 
-        tag = extract_segment(to_bytes(obj["tag"]), DecodeError, "authentication tag")
+        tag = extract_segment(
+            to_bytes(obj["tag"]), DecodeError, "authentication tag"
+        )
 
         shared_header = JWESharedHeader(protected, unprotected)
 
@@ -605,7 +621,9 @@ class JsonWebEncryption:
             if kid is not None:
                 for recipient in recipients:
                     if recipient["header"].get("kid") == kid:
-                        header = JWEHeader(protected, unprotected, recipient["header"])
+                        header = JWEHeader(
+                            protected, unprotected, recipient["header"]
+                        )
                         return unwrap_func(recipient["encrypted_key"], header)
 
             # Since no explicit match has been found, iterate over all the recipients
@@ -627,7 +645,9 @@ class JsonWebEncryption:
             if alg.key_size is not None:
                 # In case key agreement with key wrapping mode is used:
                 # Provide authentication tag to .unwrap method
-                cek = _unwrap_for_matching_recipient(_unwrap_with_sender_key_and_tag)
+                cek = _unwrap_for_matching_recipient(
+                    _unwrap_with_sender_key_and_tag
+                )
             else:
                 # Otherwise, don't provide authentication tag to .unwrap method
                 cek = _unwrap_for_matching_recipient(
@@ -636,7 +656,9 @@ class JsonWebEncryption:
         else:
             # For any other JWE algorithm:
             # Don't provide authentication tag to .unwrap method
-            cek = _unwrap_for_matching_recipient(_unwrap_without_sender_key_and_tag)
+            cek = _unwrap_for_matching_recipient(
+                _unwrap_without_sender_key_and_tag
+            )
 
         aad = to_bytes(obj.get("protected", ""))
         if "aad" in obj:

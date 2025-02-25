@@ -22,11 +22,16 @@ from .textwrap import DALS
 class TestFindParentPackage:
     def test_single_package(self, tmp_path):
         # find_parent_package should find a non-namespace parent package
-        (tmp_path / "src/namespace/pkg/nested").mkdir(exist_ok=True, parents=True)
+        (tmp_path / "src/namespace/pkg/nested").mkdir(
+            exist_ok=True, parents=True
+        )
         (tmp_path / "src/namespace/pkg/nested/__init__.py").touch()
         (tmp_path / "src/namespace/pkg/__init__.py").touch()
         packages = ["namespace", "namespace.pkg", "namespace.pkg.nested"]
-        assert find_parent_package(packages, {"": "src"}, tmp_path) == "namespace.pkg"
+        assert (
+            find_parent_package(packages, {"": "src"}, tmp_path)
+            == "namespace.pkg"
+        )
 
     def test_multiple_toplevel(self, tmp_path):
         # find_parent_package should return null if the given list of packages does not
@@ -166,7 +171,9 @@ class TestDiscoverPackagesAndPyModules:
             FILES.keys(),
         ),
     )
-    def test_purposefully_empty(self, tmp_path, config_file, param, circumstance):
+    def test_purposefully_empty(
+        self, tmp_path, config_file, param, circumstance
+    ):
         files = self.FILES[circumstance] + [
             "mod.py",
             "other.py",
@@ -179,10 +186,14 @@ class TestDiscoverPackagesAndPyModules:
         else:
             # Make sure build works with or without setup.cfg
             pyproject = self.PURPOSEFULLY_EMPY["template-pyproject.toml"]
-            (tmp_path / "pyproject.toml").write_text(pyproject, encoding="utf-8")
+            (tmp_path / "pyproject.toml").write_text(
+                pyproject, encoding="utf-8"
+            )
             template_param = param
 
-        config = self.PURPOSEFULLY_EMPY[config_file].format(param=template_param)
+        config = self.PURPOSEFULLY_EMPY[config_file].format(
+            param=template_param
+        )
         (tmp_path / config_file).write_text(config, encoding="utf-8")
 
         dist = _get_dist(tmp_path, {})
@@ -225,10 +236,14 @@ class TestDiscoverPackagesAndPyModules:
             ["other/finalize.py"],
         ],
     )
-    def test_flat_layout_with_dangerous_extra_files(self, tmp_path, extra_files):
+    def test_flat_layout_with_dangerous_extra_files(
+        self, tmp_path, extra_files
+    ):
         files = self.FILES["flat"] + extra_files
         _populate_project_dir(tmp_path, files, {})
-        with pytest.raises(PackageDiscoveryError, match="multiple (packages|modules)"):
+        with pytest.raises(
+            PackageDiscoveryError, match="multiple (packages|modules)"
+        ):
             _get_dist(tmp_path, {})
 
     def test_flat_layout_with_single_module(self, tmp_path):
@@ -240,7 +255,9 @@ class TestDiscoverPackagesAndPyModules:
     def test_flat_layout_with_multiple_modules(self, tmp_path):
         files = self.FILES["single_module"] + ["valid_module_name.py"]
         _populate_project_dir(tmp_path, files, {})
-        with pytest.raises(PackageDiscoveryError, match="multiple (packages|modules)"):
+        with pytest.raises(
+            PackageDiscoveryError, match="multiple (packages|modules)"
+        ):
             _get_dist(tmp_path, {})
 
     def test_py_modules_when_wheel_dir_is_cwd(self, tmp_path):
@@ -248,7 +265,9 @@ class TestDiscoverPackagesAndPyModules:
         from setuptools import build_meta
 
         pyproject = '[project]\nname = "test"\nversion = "1"'
-        (tmp_path / "pyproject.toml").write_text(DALS(pyproject), encoding="utf-8")
+        (tmp_path / "pyproject.toml").write_text(
+            DALS(pyproject), encoding="utf-8"
+        )
         (tmp_path / "foo.py").touch()
         with jaraco.path.DirectoryStack().context(tmp_path):
             build_meta.build_wheel(".")
@@ -280,7 +299,9 @@ class TestNoConfig:
         _populate_project_dir(tmp_path, files, {})
         _run_build(tmp_path, "--sdist")
         # Expected distribution file
-        dist_file = tmp_path / f"dist/ns_nested_pkg-{self.DEFAULT_VERSION}.tar.gz"
+        dist_file = (
+            tmp_path / f"dist/ns_nested_pkg-{self.DEFAULT_VERSION}.tar.gz"
+        )
         assert dist_file.is_file()
 
 
@@ -364,7 +385,9 @@ class TestWithCExtension:
             ]
             setup(ext_modules=ext_modules)
         """
-        (tmp_path / "setup.py").write_text(DALS(setup_script), encoding="utf-8")
+        (tmp_path / "setup.py").write_text(
+            DALS(setup_script), encoding="utf-8"
+        )
 
     def test_skip_discovery_with_setupcfg_metadata(self, tmp_path):
         """Ensure that auto-discovery is not triggered when the project is based on
@@ -377,7 +400,9 @@ class TestWithCExtension:
             requires = []
             build-backend = 'setuptools.build_meta'
         """
-        (tmp_path / "pyproject.toml").write_text(DALS(pyproject), encoding="utf-8")
+        (tmp_path / "pyproject.toml").write_text(
+            DALS(pyproject), encoding="utf-8"
+        )
 
         setupcfg = """
             [metadata]
@@ -409,8 +434,12 @@ class TestWithCExtension:
             name = 'proj'
             version = '42'
         """
-        (tmp_path / "pyproject.toml").write_text(DALS(pyproject), encoding="utf-8")
-        with pytest.raises(PackageDiscoveryError, match="multiple (packages|modules)"):
+        (tmp_path / "pyproject.toml").write_text(
+            DALS(pyproject), encoding="utf-8"
+        )
+        with pytest.raises(
+            PackageDiscoveryError, match="multiple (packages|modules)"
+        ):
             _get_dist(tmp_path, {})
 
 
@@ -493,8 +522,12 @@ class TestWithPackageData:
         self._simulate_package_with_data_files(tmp_path, src_root)
 
         expected = {
-            os.path.normpath(f"{src_root}/proj/file1.txt").replace(os.sep, "/"),
-            os.path.normpath(f"{src_root}/proj/nested/file2.txt").replace(os.sep, "/"),
+            os.path.normpath(f"{src_root}/proj/file1.txt").replace(
+                os.sep, "/"
+            ),
+            os.path.normpath(f"{src_root}/proj/nested/file2.txt").replace(
+                os.sep, "/"
+            ),
         }
 
         _run_build(tmp_path)
@@ -507,7 +540,9 @@ class TestWithPackageData:
         wheel_files = get_wheel_members(next(tmp_path.glob("dist/*.whl")))
         print("~~~~~ wheel_members ~~~~~")
         print("\n".join(wheel_files))
-        orig_files = {f.replace("src/", "").replace("lib/", "") for f in expected}
+        orig_files = {
+            f.replace("src/", "").replace("lib/", "") for f in expected
+        }
         assert wheel_files >= orig_files
 
 

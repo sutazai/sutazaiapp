@@ -46,7 +46,9 @@ class HTMLReport(FormatterAPI):
 
         return parse_html(kwargs={"json_data": report})
 
-    def render_licenses(self, announcements: List[Dict], licenses: List[Dict]) -> None:
+    def render_licenses(
+        self, announcements: List[Dict], licenses: List[Dict]
+    ) -> None:
         """
         Renders licenses in HTML format.
 

@@ -28,7 +28,9 @@ class SutazAIValidator:
                                   a truthy value if the check passes, and a falsy value if it fails.
             critical (bool, optional): Whether this check is critical for system functionality. Defaults to True.
         """
-        self.checks.append({"name": name, "validator": validator, "critical": critical})
+        self.checks.append(
+            {"name": name, "validator": validator, "critical": critical}
+        )
 
     def run_checks(self):
         """

@@ -237,7 +237,9 @@ class VcsSupport:
             repo_path = vcs_backend.get_repository_root(location)
             if not repo_path:
                 continue
-            logger.debug("Determine that %s uses VCS: %s", location, vcs_backend.name)
+            logger.debug(
+                "Determine that %s uses VCS: %s", location, vcs_backend.name
+            )
             vcs_backends[repo_path] = vcs_backend
 
         if not vcs_backends:
@@ -250,7 +252,9 @@ class VcsSupport:
         inner_most_repo_path = max(vcs_backends, key=len)
         return vcs_backends[inner_most_repo_path]
 
-    def get_backend_for_scheme(self, scheme: str) -> Optional["VersionControl"]:
+    def get_backend_for_scheme(
+        self, scheme: str
+    ) -> Optional["VersionControl"]:
         """
         Return a VersionControl object or None.
         """
@@ -323,7 +327,9 @@ class VersionControl:
 
         revision = cls.get_requirement_revision(repo_dir)
         subdir = cls.get_subdirectory(repo_dir)
-        req = make_vcs_requirement_url(repo_url, revision, project_name, subdir=subdir)
+        req = make_vcs_requirement_url(
+            repo_url, revision, project_name, subdir=subdir
+        )
 
         return req
 
@@ -396,7 +402,9 @@ class VersionControl:
         return netloc, (None, None)
 
     @classmethod
-    def get_url_rev_and_auth(cls, url: str) -> Tuple[str, Optional[str], AuthInfo]:
+    def get_url_rev_and_auth(
+        cls, url: str
+    ) -> Tuple[str, Optional[str], AuthInfo]:
         """
         Parse the repository URL to use, and return the URL, revision,
         and auth info to use.
@@ -434,7 +442,9 @@ class VersionControl:
         """
         return []
 
-    def get_url_rev_options(self, url: HiddenText) -> Tuple[HiddenText, RevOptions]:
+    def get_url_rev_options(
+        self, url: HiddenText
+    ) -> Tuple[HiddenText, RevOptions]:
         """
         Return the URL and RevOptions object to use in obtain(),
         as a tuple (url, rev_options).
@@ -482,7 +492,9 @@ class VersionControl:
         """
         raise NotImplementedError
 
-    def switch(self, dest: str, url: HiddenText, rev_options: RevOptions) -> None:
+    def switch(
+        self, dest: str, url: HiddenText, rev_options: RevOptions
+    ) -> None:
         """
         Switch the repo at ``dest`` to point to ``URL``.
 
@@ -491,7 +503,9 @@ class VersionControl:
         """
         raise NotImplementedError
 
-    def update(self, dest: str, url: HiddenText, rev_options: RevOptions) -> None:
+    def update(
+        self, dest: str, url: HiddenText, rev_options: RevOptions
+    ) -> None:
         """
         Update an already-existing repo to the given ``rev_options``.
 
@@ -693,7 +707,9 @@ class VersionControl:
         """
         Return whether a directory path is a repository directory.
         """
-        logger.debug("Checking in %s for %s (%s)...", path, cls.dirname, cls.name)
+        logger.debug(
+            "Checking in %s for %s (%s)...", path, cls.dirname, cls.name
+        )
         return os.path.exists(os.path.join(path, cls.dirname))
 
     @classmethod

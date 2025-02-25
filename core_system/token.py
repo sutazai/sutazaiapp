@@ -49,7 +49,9 @@ class JWTBearerTokenGenerator:
         """
         return user.get_user_id()
 
-    def get_token_data(self, grant_type, client, expires_in, user=None, scope=None):
+    def get_token_data(
+        self, grant_type, client, expires_in, user=None, scope=None
+    ):
         scope = self.get_allowed_scope(client, scope)
         issued_at = int(time.time())
         data = {
@@ -65,7 +67,9 @@ class JWTBearerTokenGenerator:
             data["sub"] = self.get_sub_value(user)
         return data
 
-    def generate(self, grant_type, client, user=None, scope=None, expires_in=None):
+    def generate(
+        self, grant_type, client, user=None, scope=None, expires_in=None
+    ):
         """Generate a bearer token for OAuth 2.0 authorization token endpoint.
 
         :param client: the client that making the request.
@@ -78,7 +82,9 @@ class JWTBearerTokenGenerator:
         if expires_in is None:
             expires_in = self.DEFAULT_EXPIRES_IN
 
-        token_data = self.get_token_data(grant_type, client, expires_in, user, scope)
+        token_data = self.get_token_data(
+            grant_type, client, expires_in, user, scope
+        )
         access_token = jwt.encode(
             {"alg": self.alg}, token_data, key=self.secret_key, check=False
         )

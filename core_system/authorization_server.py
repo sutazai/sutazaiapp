@@ -1,6 +1,5 @@
 import logging
 
-from authlib.common.security import generate_token
 from authlib.common.urls import url_encode
 from authlib.oauth1 import AuthorizationServer as _AuthorizationServer
 from authlib.oauth1 import OAuth1Request

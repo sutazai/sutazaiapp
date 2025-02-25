@@ -15,7 +15,6 @@ Key Responsibilities:
 - Cross-component dependency mapping
 - Configuration synchronization
 - Performance optimization
-- Security integration
 - System health monitoring
 - Resource management
 - Error detection and recovery
@@ -37,12 +36,12 @@ from config.config_manager import ConfigurationManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
-from security.security_manager import SecurityManager
 
 
 @dataclass
 class ComponentHealth:
     """Component health status tracking."""
+
     status: str = "unknown"  # unknown, healthy, degraded, critical
     last_check: datetime = field(default_factory=datetime.now)
     issues: List[str] = field(default_factory=list)
@@ -58,6 +57,7 @@ class SystemIntegrationReport:
     Captures detailed insights about system component interactions,
     dependencies, and integration health
     """
+
     timestamp: str
     component_dependencies: Dict[str, List[str]]
     integration_health: Dict[str, ComponentHealth]
@@ -65,7 +65,6 @@ class SystemIntegrationReport:
     performance_metrics: Dict[str, Any]
     optimization_recommendations: List[str]
     resource_utilization: Dict[str, float]
-    security_status: Dict[str, Any]
     error_logs: List[Dict[str, Any]]
     system_warnings: List[str]
 
@@ -82,7 +81,6 @@ class SystemIntegrator:
         self,
         config_manager: Optional[ConfigurationManager] = None,
         system_optimizer: Optional[SystemOptimizer] = None,
-        security_manager: Optional[SecurityManager] = None,
         logger: Optional[AdvancedLogger] = None,
         dependency_manager: Optional[DependencyManager] = None,
         agent_factory: Optional[AgentFactory] = None,
@@ -94,7 +92,6 @@ class SystemIntegrator:
         Args:
             config_manager: System configuration management
             system_optimizer: System optimization framework
-            security_manager: Security management system
             logger: Advanced logging system
             dependency_manager: Dependency management system
             agent_factory: AI agent management system
@@ -102,7 +99,6 @@ class SystemIntegrator:
         """
         self.config_manager = config_manager or ConfigurationManager()
         self.system_optimizer = system_optimizer or SystemOptimizer()
-        self.security_manager = security_manager or SecurityManager()
         self.logger = logger or AdvancedLogger()
         self.dependency_manager = dependency_manager or DependencyManager()
         self.agent_factory = agent_factory or AgentFactory()
@@ -112,11 +108,11 @@ class SystemIntegrator:
         self._component_registry: Dict[str, Dict[str, Any]] = {}
         self._component_health: Dict[str, ComponentHealth] = {}
         self._dependency_graph: Dict[str, Set[str]] = {}
-        
+
         # Monitoring state
         self._stop_monitoring = threading.Event()
         self._monitoring_thread: Optional[threading.Thread] = None
-        
+
         # Performance tracking
         self._performance_history: List[Dict[str, Any]] = []
         self._performance_lock = threading.Lock()
@@ -129,8 +125,7 @@ class SystemIntegrator:
 
         self._stop_monitoring.clear()
         self._monitoring_thread = threading.Thread(
-            target=self._monitor_system_health,
-            daemon=True
+            target=self._monitor_system_health, daemon=True
         )
         self._monitoring_thread.start()
         self.logger.info("System monitoring started")
@@ -166,7 +161,8 @@ class SystemIntegrator:
                     # Keep last 24 hours of metrics
                     cutoff = time.time() - (24 * 60 * 60)
                     self._performance_history = [
-                        m for m in self._performance_history
+                        m
+                        for m in self._performance_history
                         if m["timestamp"] > cutoff
                     ]
 
@@ -191,12 +187,14 @@ class SystemIntegrator:
         try:
             # Get component info
             component_info = self._component_registry[component]
-            
+
             # Check dependencies
             dependencies_status = {}
             for dep in component_info["dependencies"]:
                 if dep in self._component_health:
-                    dependencies_status[dep] = self._component_health[dep].status
+                    dependencies_status[dep] = self._component_health[
+                        dep
+                    ].status
                 else:
                     dependencies_status[dep] = "unknown"
 
@@ -210,10 +208,18 @@ class SystemIntegrator:
             # Determine status
             if any(m > 0.9 for m in metrics.values()):
                 status = "critical"
-                issues = [f"High resource usage in {k}" for k, v in metrics.items() if v > 0.9]
+                issues = [
+                    f"High resource usage in {k}"
+                    for k, v in metrics.items()
+                    if v > 0.9
+                ]
             elif any(m > 0.7 for m in metrics.values()):
                 status = "degraded"
-                issues = [f"Elevated resource usage in {k}" for k, v in metrics.items() if v > 0.7]
+                issues = [
+                    f"Elevated resource usage in {k}"
+                    for k, v in metrics.items()
+                    if v > 0.7
+                ]
             else:
                 status = "healthy"
                 issues = []
@@ -223,20 +229,15 @@ class SystemIntegrator:
                 last_check=datetime.now(),
                 issues=issues,
                 metrics=metrics,
-                dependencies_status=dependencies_status
+                dependencies_status=dependencies_status,
             )
 
         except Exception as e:
             self.logger.error(f"Error checking health of {component}: {e}")
-            return ComponentHealth(
-                status="unknown",
-                issues=[str(e)]
-            )
+            return ComponentHealth(status="unknown", issues=[str(e)])
 
     def _handle_critical_component(
-        self,
-        component: str,
-        health: ComponentHealth
+        self, component: str, health: ComponentHealth
     ) -> None:
         """
         Handle critical component issues.
@@ -259,17 +260,17 @@ class SystemIntegrator:
                 details={
                     "component": component,
                     "issues": health.issues,
-                    "metrics": health.metrics
-                }
+                    "metrics": health.metrics,
+                },
             )
 
         except Exception as e:
-            self.logger.error(f"Failed to handle critical component {component}: {e}")
+            self.logger.error(
+                f"Failed to handle critical component {component}: {e}"
+            )
 
     def _handle_degraded_component(
-        self,
-        component: str,
-        health: ComponentHealth
+        self, component: str, health: ComponentHealth
     ) -> None:
         """
         Handle degraded component performance.
@@ -290,7 +291,9 @@ class SystemIntegrator:
             self.monitoring_interval = max(30, self.monitoring_interval // 2)
 
         except Exception as e:
-            self.logger.error(f"Failed to handle degraded component {component}: {e}")
+            self.logger.error(
+                f"Failed to handle degraded component {component}: {e}"
+            )
 
     def _attempt_component_recovery(self, component: str) -> None:
         """
@@ -365,8 +368,7 @@ class SystemIntegrator:
             return 1.0
 
     def discover_system_components(
-        self,
-        base_dir: str = "/opt/SutazAI"
+        self, base_dir: str = "/opt/SutazAI"
     ) -> Dict[str, Dict[str, Any]]:
         """
         Dynamically discover and analyze system components.
@@ -387,10 +389,9 @@ class SystemIntegrator:
                         module_path = os.path.join(root, file)
                         try:
                             module_name = os.path.relpath(
-                                module_path,
-                                base_dir
+                                module_path, base_dir
                             ).replace("/", ".")[:-3]
-                            
+
                             module = importlib.import_module(module_name)
 
                             # Analyze module contents
@@ -402,12 +403,11 @@ class SystemIntegrator:
                                 ):
                                     # Extract component information
                                     component_info = self._analyze_component(
-                                        name,
-                                        obj,
-                                        module_name,
-                                        module_path
+                                        name, obj, module_name, module_path
                                     )
-                                    discovered_components[name] = component_info
+                                    discovered_components[name] = (
+                                        component_info
+                                    )
 
                         except Exception as e:
                             self.logger.warning(
@@ -424,11 +424,7 @@ class SystemIntegrator:
             raise
 
     def _analyze_component(
-        self,
-        name: str,
-        obj: Type,
-        module_name: str,
-        module_path: str
+        self, name: str, obj: Type, module_name: str, module_path: str
     ) -> Dict[str, Any]:
         """
         Analyze a component for metadata and dependencies.
@@ -464,29 +460,43 @@ class SystemIntegrator:
             List of method metadata
         """
         methods = []
-        for name, method in inspect.getmembers(component_class, inspect.isfunction):
+        for name, method in inspect.getmembers(
+            component_class, inspect.isfunction
+        ):
             if not name.startswith("_"):  # Skip private methods
                 try:
                     signature = inspect.signature(method)
-                    methods.append({
-                        "name": name,
-                        "signature": str(signature),
-                        "doc": inspect.getdoc(method) or "",
-                        "parameters": [
-                            {
-                                "name": param.name,
-                                "kind": str(param.kind),
-                                "default": "None" if param.default is param.empty else str(param.default),
-                                "annotation": str(param.annotation) if param.annotation is not param.empty else "Any"
-                            }
-                            for param in signature.parameters.values()
-                        ]
-                    })
+                    methods.append(
+                        {
+                            "name": name,
+                            "signature": str(signature),
+                            "doc": inspect.getdoc(method) or "",
+                            "parameters": [
+                                {
+                                    "name": param.name,
+                                    "kind": str(param.kind),
+                                    "default": (
+                                        "None"
+                                        if param.default is param.empty
+                                        else str(param.default)
+                                    ),
+                                    "annotation": (
+                                        str(param.annotation)
+                                        if param.annotation is not param.empty
+                                        else "Any"
+                                    ),
+                                }
+                                for param in signature.parameters.values()
+                            ],
+                        }
+                    )
                 except Exception:
                     continue
         return methods
 
-    def _extract_attributes(self, component_class: Type) -> List[Dict[str, str]]:
+    def _extract_attributes(
+        self, component_class: Type
+    ) -> List[Dict[str, str]]:
         """
         Extract attribute information from component.
 
@@ -499,17 +509,19 @@ class SystemIntegrator:
         attributes = []
         for name, value in inspect.getmembers(component_class):
             if not name.startswith("_") and not callable(value):
-                attributes.append({
-                    "name": name,
-                    "type": type(value).__name__,
-                    "value": str(value)
-                })
+                attributes.append(
+                    {
+                        "name": name,
+                        "type": type(value).__name__,
+                        "value": str(value),
+                    }
+                )
         return attributes
 
     def _update_dependency_graph(self) -> None:
         """Update component dependency graph."""
         self._dependency_graph.clear()
-        
+
         for component, info in self._component_registry.items():
             self._dependency_graph[component] = set(info["dependencies"])
 
@@ -521,7 +533,7 @@ class SystemIntegrator:
                 "healthy": 0,
                 "degraded": 0,
                 "critical": 0,
-                "unknown": 0
+                "unknown": 0,
             }
 
             for health in self._component_health.values():
@@ -546,8 +558,8 @@ class SystemIntegrator:
                         component
                         for component, health in self._component_health.items()
                         if health.status == "critical"
-                    ]
-                }
+                    ],
+                },
             )
 
             # Take action if necessary
@@ -556,8 +568,8 @@ class SystemIntegrator:
                     "Critical system health status",
                     details={
                         "health_percentages": health_percentages,
-                        "status_counts": status_counts
-                    }
+                        "status_counts": status_counts,
+                    },
                 )
                 self._initiate_system_recovery()
 
@@ -625,7 +637,9 @@ class SystemIntegrator:
             self.logger.error(f"Integrity verification failed: {e}")
             raise
 
-    def generate_comprehensive_integration_report(self) -> SystemIntegrationReport:
+    def generate_comprehensive_integration_report(
+        self,
+    ) -> SystemIntegrationReport:
         """
         Generate a comprehensive system integration report.
 
@@ -650,9 +664,8 @@ class SystemIntegrator:
                 performance_metrics=current_metrics,
                 optimization_recommendations=self._generate_recommendations(),
                 resource_utilization=self._get_resource_utilization(),
-                security_status=self.security_manager.get_security_status(),
                 error_logs=self.logger.get_recent_errors(),
-                system_warnings=self._get_system_warnings()
+                system_warnings=self._get_system_warnings(),
             )
 
             # Save report
@@ -711,7 +724,7 @@ class SystemIntegrator:
                 "cpu": self.system_optimizer.get_cpu_usage(),
                 "memory": self.system_optimizer.get_memory_usage(),
                 "disk": self.system_optimizer.get_disk_usage(),
-                "network": self.system_optimizer.get_network_usage()
+                "network": self.system_optimizer.get_network_usage(),
             }
         except Exception as e:
             self.logger.error(f"Failed to get resource utilization: {e}")
@@ -731,9 +744,7 @@ class SystemIntegrator:
             # Check component health
             for component, health in self._component_health.items():
                 if health.status != "healthy":
-                    warnings.append(
-                        f"{component} health: {health.status}"
-                    )
+                    warnings.append(f"{component} health: {health.status}")
 
             return warnings
 
@@ -750,16 +761,13 @@ class SystemIntegrator:
         """
         try:
             # Create reports directory if it doesn't exist
-            reports_dir = os.path.join(
-                os.path.dirname(__file__),
-                "reports"
-            )
+            reports_dir = os.path.join(os.path.dirname(__file__), "reports")
             os.makedirs(reports_dir, exist_ok=True)
 
             # Generate filename with timestamp
             filename = os.path.join(
                 reports_dir,
-                f"integration_report_{datetime.now():%Y%m%d_%H%M%S}.json"
+                f"integration_report_{datetime.now():%Y%m%d_%H%M%S}.json",
             )
 
             # Save report

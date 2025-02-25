@@ -55,7 +55,9 @@ def test_read_files(tmp_path, monkeypatch):
             expand.read_files(["../a.txt"])
 
         cannot_access_secrets_msg = r"Cannot access '.*secrets\.txt'"
-        with pytest.raises(DistutilsOptionError, match=cannot_access_secrets_msg):
+        with pytest.raises(
+            DistutilsOptionError, match=cannot_access_secrets_msg
+        ):
             expand.read_files(["../dir_secrets/secrets.txt"])
 
     # Make sure the same APIs work outside cwd
@@ -103,8 +105,12 @@ class TestReadAttr:
         assert is_static(values)
 
         # Make sure the same APIs work outside cwd
-        assert expand.read_attr("pkg.sub.VERSION", root_dir=tmp_path) == "0.1.1"
-        values = expand.read_attr("lib.mod.VALUES", {"lib": "pkg/sub"}, tmp_path)
+        assert (
+            expand.read_attr("pkg.sub.VERSION", root_dir=tmp_path) == "0.1.1"
+        )
+        values = expand.read_attr(
+            "lib.mod.VALUES", {"lib": "pkg/sub"}, tmp_path
+        )
         assert values["c"] == (0, 1, 1)
 
     @pytest.mark.parametrize(
@@ -173,9 +179,13 @@ class TestReadAttr:
         ({}, "flat_layout/pkg.py", "flat_layout.pkg", 836),
     ],
 )
-def test_resolve_class(monkeypatch, tmp_path, package_dir, file, module, return_value):
+def test_resolve_class(
+    monkeypatch, tmp_path, package_dir, file, module, return_value
+):
     monkeypatch.setattr(sys, "modules", {})  # reproducibility
-    files = {file: f"class Custom:\n    def testing(self): return {return_value}"}
+    files = {
+        file: f"class Custom:\n    def testing(self): return {return_value}"
+    }
     write_files(files, tmp_path)
     cls = expand.resolve_class(f"{module}.Custom", package_dir, tmp_path)
     assert cls().testing() == return_value
@@ -214,7 +224,9 @@ def test_find_packages(tmp_path, args, pkgs):
 
     # Make sure the same APIs work outside cwd
     where = [
-        str((tmp_path / p).resolve()).replace(os.sep, "/")  # ensure posix-style paths
+        str((tmp_path / p).resolve()).replace(
+            os.sep, "/"
+        )  # ensure posix-style paths
         for p in args.pop("where", ["."])
     ]
 

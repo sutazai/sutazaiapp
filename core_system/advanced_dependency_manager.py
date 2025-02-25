@@ -146,7 +146,6 @@ class AdvancedDependencyManager:
         # Generate recommendations
         if dependency_report["vulnerabilities"]:
             dependency_report["recommendations"].append(
-                "Critical: Address security vulnerabilities in dependencies"
             )
 
         if dependency_report["outdated_packages"]:

@@ -49,7 +49,9 @@ logger = logging.getLogger(__name__)
 
 def _create_truststore_ssl_context() -> Optional["SSLContext"]:
     if sys.version_info < (3, 10):
-        raise CommandError("The truststore feature is only available for Python 3.10+")
+        raise CommandError(
+            "The truststore feature is only available for Python 3.10+"
+        )
 
     try:
         import ssl
@@ -136,7 +138,9 @@ class SessionCommandMixin(CommandContextMixIn):
 
         # Handle timeouts
         if options.timeout or timeout:
-            session.timeout = timeout if timeout is not None else options.timeout
+            session.timeout = (
+                timeout if timeout is not None else options.timeout
+            )
 
         # Handle configured proxies
         if options.proxy:

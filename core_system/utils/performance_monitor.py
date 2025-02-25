@@ -186,9 +186,14 @@ class PerformanceMonitor:
                     "timestamp": datetime.now().isoformat(),
                 }
 
-                log_method = getattr(self.logger, log_level.lower(), self.logger.debug)
+                log_method = getattr(
+                    self.logger, log_level.lower(), self.logger.debug
+                )
 
-                if threshold_seconds is None or execution_time > threshold_seconds:
+                if (
+                    threshold_seconds is None
+                    or execution_time > threshold_seconds
+                ):
                     log_method(f"Function Performance: {performance_data}")
 
                 return result

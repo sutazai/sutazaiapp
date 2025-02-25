@@ -5,7 +5,6 @@ Ultra-Comprehensive System Audit and Optimization Framework
 Provides an advanced, multi-dimensional system analysis covering:
 - Architectural Integrity
 - Performance Metrics
-- Security Vulnerabilities
 - Dependency Management
 - Code Quality Assessment
 - Resource Utilization
@@ -59,7 +58,6 @@ class SystemAuditReport:
     system_architecture: Dict[str, Any]
     system_performance: Dict[str, Any]
     dependency_analysis: Dict[str, Any]
-    security_assessment: Dict[str, Any]
     code_quality_metrics: Dict[str, Any]
     resource_utilization: Dict[str, Any]
     optimization_recommendations: List[str]
@@ -85,7 +83,9 @@ class UltraComprehensiveSystemAuditor:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_audit")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_audit"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Initialize core analysis components
@@ -107,7 +107,6 @@ class UltraComprehensiveSystemAuditor:
             system_architecture={},
             system_performance={},
             dependency_analysis={},
-            security_assessment={},
             code_quality_metrics={},
             resource_utilization={},
             optimization_recommendations=[],
@@ -121,20 +120,21 @@ class UltraComprehensiveSystemAuditor:
             )
 
             # 2. System Performance Metrics
-            system_audit_report.system_performance = self._assess_system_performance()
+            system_audit_report.system_performance = (
+                self._assess_system_performance()
+            )
 
             # 3. Dependency Analysis
             system_audit_report.dependency_analysis = (
                 self._analyze_system_dependencies()
             )
 
-            # 4. Security Assessment
-            system_audit_report.security_assessment = (
-                self._perform_security_assessment()
             )
 
             # 5. Code Quality Metrics
-            system_audit_report.code_quality_metrics = self._evaluate_code_quality()
+            system_audit_report.code_quality_metrics = (
+                self._evaluate_code_quality()
+            )
 
             # 6. Resource Utilization
             system_audit_report.resource_utilization = (
@@ -143,7 +143,9 @@ class UltraComprehensiveSystemAuditor:
 
             # 7. Generate Optimization Recommendations
             system_audit_report.optimization_recommendations = (
-                self._generate_optimization_recommendations(system_audit_report)
+                self._generate_optimization_recommendations(
+                    system_audit_report
+                )
             )
 
             # 8. Identify Potential Issues
@@ -168,12 +170,20 @@ class UltraComprehensiveSystemAuditor:
         """
         try:
             # Use system architecture mapper
-            architecture_report = self.architecture_mapper.map_system_architecture()
+            architecture_report = (
+                self.architecture_mapper.map_system_architecture()
+            )
 
             return {
-                "total_components": architecture_report.get("total_components", 0),
-                "component_types": architecture_report.get("component_types", {}),
-                "dependency_metrics": architecture_report.get("dependency_metrics", {}),
+                "total_components": architecture_report.get(
+                    "total_components", 0
+                ),
+                "component_types": architecture_report.get(
+                    "component_types", {}
+                ),
+                "dependency_metrics": architecture_report.get(
+                    "dependency_metrics", {}
+                ),
                 "complexity_distribution": architecture_report.get(
                     "complexity_distribution", {}
                 ),
@@ -192,10 +202,14 @@ class UltraComprehensiveSystemAuditor:
         """
         try:
             # Use performance optimizer to monitor system resources
-            performance_metrics = self.performance_optimizer.monitor_system_resources()
+            performance_metrics = (
+                self.performance_optimizer.monitor_system_resources()
+            )
 
             return {
-                "cpu_usage": performance_metrics.get("cpu", {}).get("total_usage", 0),
+                "cpu_usage": performance_metrics.get("cpu", {}).get(
+                    "total_usage", 0
+                ),
                 "memory_usage": performance_metrics.get("memory", {}).get(
                     "used_percent", 0
                 ),
@@ -218,31 +232,35 @@ class UltraComprehensiveSystemAuditor:
         """
         try:
             # Use dependency analyzer
-            dependency_report = self.dependency_analyzer.analyze_system_dependencies()
+            dependency_report = (
+                self.dependency_analyzer.analyze_system_dependencies()
+            )
 
             return {
                 "total_modules": dependency_report.get("total_modules", 0),
-                "total_dependencies": dependency_report.get("total_dependencies", 0),
+                "total_dependencies": dependency_report.get(
+                    "total_dependencies", 0
+                ),
                 "circular_dependencies": dependency_report.get(
                     "circular_dependencies", []
                 ),
-                "module_categories": dependency_report.get("module_categories", {}),
-                "dependency_metrics": dependency_report.get("dependency_metrics", {}),
+                "module_categories": dependency_report.get(
+                    "module_categories", {}
+                ),
+                "dependency_metrics": dependency_report.get(
+                    "dependency_metrics", {}
+                ),
             }
 
         except Exception as e:
             logger.error(f"System dependency analysis failed: {e}")
             return {}
 
-    def _perform_security_assessment(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security assessment
 
         Returns:
-            Security assessment results
         """
         try:
-            # Use system checker for security scanning
             system_check_results = (
                 self.system_checker.perform_comprehensive_system_check()
             )
@@ -251,12 +269,13 @@ class UltraComprehensiveSystemAuditor:
                 "potential_vulnerabilities": system_check_results.get(
                     "potential_issues", []
                 ),
-                "security_risks": system_check_results.get("security_risks", []),
-                "hardcoded_items": system_check_results.get("hardcoded_items", []),
+                ),
+                "hardcoded_items": system_check_results.get(
+                    "hardcoded_items", []
+                ),
             }
 
         except Exception as e:
-            logger.error(f"Security assessment failed: {e}")
             return {}
 
     def _evaluate_code_quality(self) -> Dict[str, Any]:
@@ -268,13 +287,17 @@ class UltraComprehensiveSystemAuditor:
         """
         try:
             # Use system architecture mapper for code quality insights
-            architecture_report = self.architecture_mapper.map_system_architecture()
+            architecture_report = (
+                self.architecture_mapper.map_system_architecture()
+            )
 
             return {
                 "complexity_distribution": architecture_report.get(
                     "complexity_distribution", {}
                 ),
-                "total_modules": architecture_report.get("total_components", 0),
+                "total_modules": architecture_report.get(
+                    "total_components", 0
+                ),
                 "code_complexity_metrics": {
                     module: details.get("cyclomatic_complexity", 0)
                     for module, details in architecture_report.get(
@@ -299,11 +322,14 @@ class UltraComprehensiveSystemAuditor:
                 "cpu": {
                     "total_cores": psutil.cpu_count(),
                     "usage_percent": psutil.cpu_percent(interval=1),
-                    "per_core_usage": psutil.cpu_percent(interval=1, percpu=True),
+                    "per_core_usage": psutil.cpu_percent(
+                        interval=1, percpu=True
+                    ),
                 },
                 "memory": {
                     "total": psutil.virtual_memory().total / (1024**3),  # GB
-                    "available": psutil.virtual_memory().available / (1024**3),  # GB
+                    "available": psutil.virtual_memory().available
+                    / (1024**3),  # GB
                     "used_percent": psutil.virtual_memory().percent,
                 },
                 "disk": {
@@ -347,7 +373,9 @@ class UltraComprehensiveSystemAuditor:
             )
 
         # Dependency optimization recommendations
-        if system_audit_report.dependency_analysis.get("circular_dependencies"):
+        if system_audit_report.dependency_analysis.get(
+            "circular_dependencies"
+        ):
             recommendations.append(
                 f"Resolve {len(system_audit_report.dependency_analysis['circular_dependencies'])} circular dependencies"
             )
@@ -367,10 +395,9 @@ class UltraComprehensiveSystemAuditor:
                 f"Refactor {len(high_complexity_modules)} high-complexity modules"
             )
 
-        # Security recommendations
-        if system_audit_report.security_assessment.get("potential_vulnerabilities"):
+            "potential_vulnerabilities"
+        ):
             recommendations.append(
-                f"Address {len(system_audit_report.security_assessment['potential_vulnerabilities'])} potential security vulnerabilities"
             )
 
         return recommendations
@@ -401,14 +428,17 @@ class UltraComprehensiveSystemAuditor:
             )
 
         # Dependency issues
-        if system_audit_report.dependency_analysis.get("circular_dependencies"):
+        if system_audit_report.dependency_analysis.get(
+            "circular_dependencies"
+        ):
             potential_issues.append(
                 {
                     "type": "dependency",
                     "category": "circular_dependency",
                     "severity": "high",
                     "details": f"{len(system_audit_report.dependency_analysis['circular_dependencies'])} circular dependencies detected",
-                })
+                }
+            )
 
         # Code quality issues
         complexity_metrics = system_audit_report.code_quality_metrics.get(
@@ -430,15 +460,14 @@ class UltraComprehensiveSystemAuditor:
                 }
             )
 
-        # Security issues
-        if system_audit_report.security_assessment.get("potential_vulnerabilities"):
+            "potential_vulnerabilities"
+        ):
             potential_issues.append(
                 {
-                    "type": "security",
                     "category": "potential_vulnerabilities",
                     "severity": "high",
-                    "details": f"{len(system_audit_report.security_assessment['potential_vulnerabilities'])} potential vulnerabilities",
-                })
+                }
+            )
 
         return potential_issues
 
@@ -458,7 +487,9 @@ class UltraComprehensiveSystemAuditor:
             with open(report_path, "w") as f:
                 json.dump(asdict(system_audit_report), f, indent=2)
 
-            logger.info(f"Comprehensive system audit report persisted: {report_path}")
+            logger.info(
+                f"Comprehensive system audit report persisted: {report_path}"
+            )
 
         except Exception as e:
             logger.error(f"Audit report persistence failed: {e}")
@@ -483,7 +514,9 @@ def main():
         )
 
         print("\nSystem Performance:")
-        print(f"CPU Usage: {audit_report.system_performance.get('cpu_usage', 0)}%")
+        print(
+            f"CPU Usage: {audit_report.system_performance.get('cpu_usage', 0)}%"
+        )
         print(
             f"Memory Usage: {audit_report.system_performance.get('memory_usage', 0)}%"
         )

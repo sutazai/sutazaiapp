@@ -41,8 +41,12 @@ def _fetch_build_eggs(dist, requires: _StrOrIter) -> list[Distribution]:
     _warn_wheel_not_available(dist)
 
     resolved_dists = pkg_resources.working_set.resolve(
-        _reqs.parse(requires, pkg_resources.Requirement),  # required for compatibility
-        installer=partial(_fetch_build_egg_no_warn, dist),  # avoid warning twice
+        _reqs.parse(
+            requires, pkg_resources.Requirement
+        ),  # required for compatibility
+        installer=partial(
+            _fetch_build_egg_no_warn, dist
+        ),  # avoid warning twice
         replace_conflicting=True,
     )
     for dist in resolved_dists:
@@ -50,7 +54,9 @@ def _fetch_build_eggs(dist, requires: _StrOrIter) -> list[Distribution]:
     return resolved_dists
 
 
-def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  # FIXME
+def _fetch_build_egg_no_warn(
+    dist, req
+):  # noqa: C901  # is too complex (16)  # FIXME
     import pkg_resources  # Delay import to avoid unnecessary side-effects
 
     # Ignore environment markers; if supplied, it is required.
@@ -72,7 +78,9 @@ def _fetch_build_egg_no_warn(dist, req):  # noqa: C901  # is too complex (16)  #
     else:
         index_url = None
     find_links = (
-        _fixup_find_links(opts["find_links"][1])[:] if "find_links" in opts else []
+        _fixup_find_links(opts["find_links"][1])[:]
+        if "find_links" in opts
+        else []
     )
     if dist.dependency_links:
         find_links.extend(dist.dependency_links)

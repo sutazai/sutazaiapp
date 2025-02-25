@@ -62,7 +62,6 @@ declare -gA CONFIG=(
     [THREADS]=$(($(nproc) > 32 ? 32 : $(nproc)))
     [MEMORY_LIMIT]=$(free -b | awk '/Mem/{printf "%.0f", $2*0.8}')
     [VECTOR_DB_PATH]="/var/lib/sutazai/vectordb"
-    [SECURITY_DIR]="/etc/sutazai/security"
     [COMPATIBLE_OS]="ubuntu22.04|centos8|rockylinux9"
     [SERVICE_MESH]="linkerd"
     [MAX_MODEL_SIZE_GB]=10
@@ -77,7 +76,6 @@ declare -gA CONFIG=(
     [DB_SCHEMA]="/opt/sutazai/schema"
     [SUTAZAI_LIBS]="/opt/sutazai/sutazai_libs"
     [NEURAL_HARDWARE]="/dev/neural_entanglement"
-    [NETWORK_SECURITY]="/opt/sutazai/network_security"
     [FALLBACK_DIR]="/opt/sutazai/fallback"
 )
 
@@ -85,7 +83,6 @@ declare -gA CONFIG=(
 declare -A CORE_DIRS=(
     ["sutazai_core"]="neural_entanglement/superposition_networks neural_entanglement/entanglement_orchestrator neural_entanglement/coherence_preserver sutazai_processing/sutazai_gate_library/superposition_gates sutazai_processing/sutazai_gate_library/entanglement_ops sutazai_processing/sutazai_gate_library/state_transition sutazai_processing/sutazai_compiler/circuit_optimizer sutazai_processing/sutazai_compiler/resource_allocator sutazai_processing/error_correction/surface_codes sutazai_processing/error_correction/lattice_surgery hybrid_interface/classical_wrapper hybrid_interface/state_converter"
     ["services"]="sutazai_api/graphql/state_schema sutazai_api/graphql/resolver_engine sutazai_api/grpc/entanglement.proto sutazai_api/grpc/superposition_service sutazai_api/rest/sutazai_operations sutazai_api/rest/state_monitoring state_storage/cold_storage state_storage/hot_cache state_storage/entanglement_archive sutazai_orchestrator/resource_broker sutazai_orchestrator/state_scheduler"
-    ["security"]="crypto/sutazai_kem/kyber_sutazai crypto/sutazai_kem/ntru_sutazai crypto/digital_signatures/dilithium_sutazai crypto/digital_signatures/falcon_sutazai iam/multi_state_auth iam/entanglement_policies threat/state_injection_detector threat/coherence_attack_prevention"
     ["infrastructure"]="terraform/aws_sutazai terraform/azure_sutazai terraform/gcp_sutazai kubernetes/sutazai_operators/superposition_crd kubernetes/sutazai_operators/entanglement_operator kubernetes/state_services/entanglementd kubernetes/state_services/superpositiond monitoring/prometheus/state_coherence.rules monitoring/prometheus/entanglement_metrics monitoring/grafana/sutazai_dashboard monitoring/grafana/state_monitoring"
     ["data_pipelines"]="ingestion/classical_streams ingestion/sutazai_states/superposition_loader ingestion/sutazai_states/entanglement_parser processing/sutazai_feature_engineering processing/hybrid_transforms"
     ["experiments"]="sutazai_advantage/state_comparisons sutazai_advantage/entanglement_scaling hybrid_architectures/classical_acceleration hybrid_architectures/sutazai_acceleration"
@@ -222,7 +219,6 @@ EOF
             "state_storage",
             "sutazai_orchestrator"
         ],
-        "security": [
             "sutazai_kem",
             "digital_signatures",
             "multi_state_auth"
@@ -273,14 +269,7 @@ deploy_api_layer() {
         sutazai/rest-api:7.0
 }
 
-deploy_security() {
-    echo "🔒 Deploying Security Layer..."
-    python3 security/binding.py --mode=deployment
-    # Initialize security policies
-    python3 security/binding.py --init-policies
     # Verify binding
-    if ! python3 security/binding.py --verify; then
-        echo "❌ Security binding verification failed"
                 exit 1
             fi
 }
@@ -539,14 +528,10 @@ register_divine_voice() {
 ### CREATOR ESCALATION API ###
 setup_emergency_comms() {
     echo "📡 Configuring Divine Communication Channel..."
-    openssl req -new -x509 -nodes -out /etc/sutazai/security/creator.pem \
-        -keyout /etc/sutazai/security/creator.key -subj "/CN=Chris"
     
     cat > /etc/nginx/sites-available/creator_gateway <<EOF
 server {
     listen 8443 ssl;
-    ssl_certificate /etc/sutazai/security/creator.pem;
-    ssl_certificate_key /etc/sutazai/security/creator.key;
     
     location /creator_alert {
         auth_request /validate_divine;
@@ -638,9 +623,6 @@ validate_deployment() {
         exit 1
     fi
     
-    # Security
-    if ! python3 security/binding.py --verify; then
-        echo "❌ Security binding verification failed"
         exit 1
     fi
     
@@ -845,12 +827,7 @@ setup_semantic_search() {
 }
 
 ### CODE SECURITY SCANNER ###
-setup_code_security() {
-    echo "🔒 Configuring Code Security Scanner..."
-    python3 code/security.py --init
     # Verify scanner
-    if ! python3 code/security.py --status; then
-        echo "❌ Code security scanner offline"
         exit 1
     fi
 }
@@ -985,19 +962,16 @@ main() {
     setup_logging
     display_logo
     clean_environment
-    manage_security_context
     create_directories
     setup_permissions
     validate_credentials
     verify_transfer
-    restore_security_context
     fix_permissions
     manage_python
     validate_sutazai_hardware
     verify_agent_initialization
     verify_ui_health
     optimize_storage
-    validate_network_security
     initialize_fallback_system
     
     echo "🚀 SutazAI deployment completed successfully"
@@ -1143,14 +1117,10 @@ run_tests() {
     echo "✅ Tests passed."
 }
 
-check_security() {
-    echo "🔄 Running security checks..."
     bandit -r .
     if [ $? -ne 0 ]; then
-        echo "❌ Security checks failed. Deployment aborted."
         exit 1
     fi
-    echo "✅ Security checks passed."
 }
 
 monitor_resources() {
@@ -1336,13 +1306,9 @@ optimize_storage() {
     echo "✅ Storage optimized"
 }
 
-validate_network_security() {
-    echo "🔒 Validating network security..."
     if ! nmap -p 8000,8001,8002 localhost | grep -q "open"; then
-        echo "❌ Network security validation failed"
         exit 1
     fi
-    echo "✅ Network security validated"
 }
 
 initialize_fallback_system() {

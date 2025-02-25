@@ -103,13 +103,17 @@ def extract_iter(
     if processor is not None:
         query = processor(query)
 
-    choices_iter = choices.items() if hasattr(choices, "items") else enumerate(choices)
+    choices_iter = (
+        choices.items() if hasattr(choices, "items") else enumerate(choices)
+    )
     for key, choice in choices_iter:
         if is_none(choice):
             continue
 
         if processor is None:
-            score = scorer(query, choice, score_cutoff=score_cutoff, **scorer_kwargs)
+            score = scorer(
+                query, choice, score_cutoff=score_cutoff, **scorer_kwargs
+            )
         else:
             score = scorer(
                 query,
@@ -271,13 +275,17 @@ def extractOne(
 
     result = None
 
-    choices_iter = choices.items() if hasattr(choices, "items") else enumerate(choices)
+    choices_iter = (
+        choices.items() if hasattr(choices, "items") else enumerate(choices)
+    )
     for key, choice in choices_iter:
         if is_none(choice):
             continue
 
         if processor is None:
-            score = scorer(query, choice, score_cutoff=score_cutoff, **scorer_kwargs)
+            score = scorer(
+                query, choice, score_cutoff=score_cutoff, **scorer_kwargs
+            )
         else:
             score = scorer(
                 query,
@@ -405,7 +413,9 @@ def extract(
     )
 
     if limit is None:
-        return sorted(result_iter, key=lambda i: i[1], reverse=lowest_score_worst)
+        return sorted(
+            result_iter, key=lambda i: i[1], reverse=lowest_score_worst
+        )
 
     if lowest_score_worst:
         return heapq.nlargest(limit, result_iter, key=lambda i: i[1])
@@ -561,7 +571,9 @@ def cdist(
     else:
         for i, query in enumerate(queries):
             proc_query = (
-                processor(query) if (processor and not is_none(query)) else query
+                processor(query)
+                if (processor and not is_none(query))
+                else query
             )
             for j, choice in enumerate(proc_choices):
                 score = (
@@ -668,9 +680,13 @@ def cpdist(
     setupPandas()
 
     for i, (query, choice) in enumerate(zip(queries, choices)):
-        proc_query = processor(query) if (processor and not is_none(query)) else query
+        proc_query = (
+            processor(query) if (processor and not is_none(query)) else query
+        )
         proc_choice = (
-            processor(choice) if (processor and not is_none(choice)) else choice
+            processor(choice)
+            if (processor and not is_none(choice))
+            else choice
         )
         score = scorer(
             proc_query,

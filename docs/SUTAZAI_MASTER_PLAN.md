@@ -390,7 +390,6 @@ Logs each rollback event.
 
 ### Objective
 - Final exhaustive audit (automated + manual)
-- Unify all docs (deployment, security, AI agents, code generation, self‑improvement)
 - Create a handoff archive and training materials
 
 ### Detailed Steps
@@ -448,7 +447,6 @@ Document in `/docs/Handoff.md`.
   - Static Analysis (Semgrep, Bandit)
   - Unit/Integration Tests (Pytest)
   - Performance Tests (Locust, k6)
-  - Security (optional container scans if Docker-based)
   - Deployment (calls deploy.sh if OTP or override is provided)
 
 Document in `/docs/CI_CD.md`.

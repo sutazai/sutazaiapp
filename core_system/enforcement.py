@@ -10,15 +10,15 @@ import sys
 
 class Enforcement:
     """Main class for enforcement functionality"""
-    
+
     def __init__(self):
         """Initialize the Enforcement instance"""
         self.initialized = True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         return "Active"

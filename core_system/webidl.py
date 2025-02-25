@@ -226,7 +226,9 @@ class WebIDLLexer(RegexLexer):
         ],
         "interface_body": [
             (
-                words(("iterable", "maplike", "setlike"), suffix=_keyword_suffix),
+                words(
+                    ("iterable", "maplike", "setlike"), suffix=_keyword_suffix
+                ),
                 Keyword,
                 "iterable_maplike_setlike_rest",
             ),
@@ -299,7 +301,9 @@ class WebIDLLexer(RegexLexer):
         "serialization_pattern_map": [
             include("common"),
             (
-                words(("getter", "inherit", "attribute"), suffix=_keyword_suffix),
+                words(
+                    ("getter", "inherit", "attribute"), suffix=_keyword_suffix
+                ),
                 Keyword,
             ),
             (r",", Punctuation),

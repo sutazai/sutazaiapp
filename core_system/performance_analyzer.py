@@ -65,7 +65,9 @@ class PerformanceAnalyzer:
 
         # Sort and truncate to top_n
         top_functions.sort(key=lambda x: x["cumulative_time"], reverse=True)
-        self.analysis_results["top_time_consuming_functions"] = top_functions[:top_n]
+        self.analysis_results["top_time_consuming_functions"] = top_functions[
+            :top_n
+        ]
 
         # Calculate total time
         self.analysis_results["total_time"] = sum(

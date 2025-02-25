@@ -124,7 +124,9 @@ def read_configuration(
     # `ini2toml` backfills include_package_data=False when nothing is explicitly given,
     # therefore setting a default here is backwards compatible.
     if dist and dist.include_package_data is not None:
-        setuptools_table.setdefault("include-package-data", dist.include_package_data)
+        setuptools_table.setdefault(
+            "include-package-data", dist.include_package_data
+        )
     else:
         setuptools_table.setdefault("include-package-data", True)
     # Persist changes:
@@ -132,7 +134,9 @@ def read_configuration(
     tool_table["setuptools"] = setuptools_table
 
     if "ext-modules" in setuptools_table:
-        _ExperimentalConfiguration.emit(subject="[tool.setuptools.ext-modules]")
+        _ExperimentalConfiguration.emit(
+            subject="[tool.setuptools.ext-modules]"
+        )
 
     with _ignore_errors(ignore_option_errors):
         # Don't complain about unrelated errors (e.g. tools not using the "tool" table)
@@ -144,7 +148,9 @@ def read_configuration(
 
     if expand:
         root_dir = os.path.dirname(filepath)
-        return expand_configuration(asdict, root_dir, ignore_option_errors, dist)
+        return expand_configuration(
+            asdict, root_dir, ignore_option_errors, dist
+        )
 
     return asdict
 
@@ -169,7 +175,9 @@ def expand_configuration(
 
     :rtype: dict
     """
-    return _ConfigExpander(config, root_dir, ignore_option_errors, dist).expand()
+    return _ConfigExpander(
+        config, root_dir, ignore_option_errors, dist
+    ).expand()
 
 
 class _ConfigExpander:
@@ -215,7 +223,9 @@ class _ConfigExpander:
 
         # A distribution object is required for discovering the correct package_dir
         dist = self._ensure_dist()
-        ctx = _EnsurePackagesDiscovered(dist, self.project_cfg, self.setuptools_cfg)
+        ctx = _EnsurePackagesDiscovered(
+            dist, self.project_cfg, self.setuptools_cfg
+        )
         with ctx as ensure_discovered:
             package_dir = ensure_discovered.package_dir
             self._expand_data_files()
@@ -233,20 +243,28 @@ class _ConfigExpander:
         find = packages.get("find")
         if isinstance(find, dict):
             find["root_dir"] = self.root_dir
-            find["fill_package_dir"] = self.setuptools_cfg.setdefault("package-dir", {})
+            find["fill_package_dir"] = self.setuptools_cfg.setdefault(
+                "package-dir", {}
+            )
             with _ignore_errors(self.ignore_option_errors):
                 self.setuptools_cfg["packages"] = _expand.find_packages(**find)
 
     def _expand_data_files(self):
-        data_files = partial(_expand.canonic_data_files, root_dir=self.root_dir)
+        data_files = partial(
+            _expand.canonic_data_files, root_dir=self.root_dir
+        )
         self._process_field(self.setuptools_cfg, "data-files", data_files)
 
     def _expand_cmdclass(self, package_dir: Mapping[str, str]):
         root_dir = self.root_dir
-        cmdclass = partial(_expand.cmdclass, package_dir=package_dir, root_dir=root_dir)
+        cmdclass = partial(
+            _expand.cmdclass, package_dir=package_dir, root_dir=root_dir
+        )
         self._process_field(self.setuptools_cfg, "cmdclass", cmdclass)
 
-    def _expand_all_dynamic(self, dist: Distribution, package_dir: Mapping[str, str]):
+    def _expand_all_dynamic(
+        self, dist: Distribution, package_dir: Mapping[str, str]
+    ):
         special = (  # need special handling
             "version",
             "readme",
@@ -294,14 +312,20 @@ class _ConfigExpander:
         with _ignore_errors(self.ignore_option_errors):
             root_dir = self.root_dir
             if "file" in directive:
-                self._referenced_files.update(always_iterable(directive["file"]))
+                self._referenced_files.update(
+                    always_iterable(directive["file"])
+                )
                 return _expand.read_files(directive["file"], root_dir)
             if "attr" in directive:
-                return _expand.read_attr(directive["attr"], package_dir, root_dir)
+                return _expand.read_attr(
+                    directive["attr"], package_dir, root_dir
+                )
             raise ValueError(f"invalid `{specifier}`: {directive!r}")
         return None
 
-    def _obtain(self, dist: Distribution, field: str, package_dir: Mapping[str, str]):
+    def _obtain(
+        self, dist: Distribution, field: str, package_dir: Mapping[str, str]
+    ):
         if field in self.dynamic_cfg:
             return self._expand_directive(
                 f"tool.setuptools.dynamic.{field}",
@@ -311,7 +335,9 @@ class _ConfigExpander:
         self._ensure_previously_set(dist, field)
         return None
 
-    def _obtain_version(self, dist: Distribution, package_dir: Mapping[str, str]):
+    def _obtain_version(
+        self, dist: Distribution, package_dir: Mapping[str, str]
+    ):
         # Since plugins can set version, let's silently skip if it cannot be obtained
         if "version" in self.dynamic and "version" in self.dynamic_cfg:
             return _expand.version(
@@ -331,7 +357,9 @@ class _ConfigExpander:
             return {
                 # We already do an early check for the presence of "readme"
                 "text": self._obtain(dist, "readme", {}),
-                "content-type": dynamic_cfg["readme"].get("content-type", "text/x-rst"),
+                "content-type": dynamic_cfg["readme"].get(
+                    "content-type", "text/x-rst"
+                ),
             }  # pyright: ignore[reportReturnType]
 
         self._ensure_previously_set(dist, "readme")
@@ -356,7 +384,9 @@ class _ConfigExpander:
             if group in groups:
                 value = groups.pop(group)
                 if field not in self.dynamic:
-                    raise InvalidConfigError(_MissingDynamic.details(field, value))
+                    raise InvalidConfigError(
+                        _MissingDynamic.details(field, value)
+                    )
                 expanded[field] = value
 
         _set_scripts("scripts", "console_scripts")
@@ -382,7 +412,9 @@ class _ConfigExpander:
         if "optional-dependencies" not in self.dynamic:
             return None
         if "optional-dependencies" in self.dynamic_cfg:
-            optional_dependencies_map = self.dynamic_cfg["optional-dependencies"]
+            optional_dependencies_map = self.dynamic_cfg[
+                "optional-dependencies"
+            ]
             assert isinstance(optional_dependencies_map, dict)
             return {
                 group: _parse_requirements_list(
@@ -474,6 +506,4 @@ class _ExperimentalConfiguration(SetuptoolsWarning):
 
 
 class _ToolsTypoInMetadata(SetuptoolsWarning):
-    _SUMMARY = (
-        "Ignoring [tools.setuptools] in pyproject.toml, did you mean [tool.setuptools]?"
-    )
+    _SUMMARY = "Ignoring [tools.setuptools] in pyproject.toml, did you mean [tool.setuptools]?"

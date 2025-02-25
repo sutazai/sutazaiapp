@@ -105,7 +105,9 @@ class WhileyLexer(RegexLexer):
             # "constant" & "type" are not keywords unless used in declarations
             (
                 r"(constant|type)(\s+)([a-zA-Z_]\w*)(\s+)(is)\b",
-                bygroups(Keyword.Declaration, Text, Name, Text, Keyword.Reserved),
+                bygroups(
+                    Keyword.Declaration, Text, Name, Text, Keyword.Reserved
+                ),
             ),
             (r"(true|false|null)\b", Keyword.Constant),
             (r"(bool|byte|int|real|any|void)\b", Keyword.Type),
@@ -122,7 +124,9 @@ class WhileyLexer(RegexLexer):
             ),
             (
                 r"(import)(\s+)([a-zA-Z_]\w*)([^\S\n]+)(from)\b",
-                bygroups(Keyword.Namespace, Text, Name, Text, Keyword.Namespace),
+                bygroups(
+                    Keyword.Namespace, Text, Name, Text, Keyword.Namespace
+                ),
             ),
             (r"(package|import)\b", Keyword.Namespace),
             # standard library: https://github.com/Whiley/WhileyLibs/

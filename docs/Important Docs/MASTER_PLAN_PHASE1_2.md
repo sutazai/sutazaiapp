@@ -13,11 +13,9 @@ Virtual Environment & Dependencies
 • Document these steps in /docs/DEPLOYMENT.md so that the environment setup is recorded.
 ──────────────────────────────
 Initial Code Audit
-• Run automated security and quality checks:
     - Code analysis via semgrep (e.g., semgrep --config=auto .)
     - Linting with pylint (e.g., pylint backend/)
     - Static type checking with mypy (e.g., mypy .)
-    - Security scanning with bandit (e.g., bandit -r .)
 • Additionally, perform a manual review of critical components—such as scripts (deploy.sh), the backend (main.py, services), and AI agents—to flag any outdated dependencies or suspicious code.
 • Summarize findings and potential fixes in an audit document (for instance, /docs/audit/Audit_Report_v1.md).
 ──────────────────────────────
@@ -118,7 +116,6 @@ Conduct a comprehensive final audit, consolidate documentation, and prepare a ha
 
 Detailed Steps:
 - Perform exhaustive audits using tools like semgrep, pylint, mypy, and bandit.
-- Consolidate updated documentation covering system architecture, security measures, AI agent configurations, and user guides (e.g., /docs/AI_AGENTS.md, /docs/SECURITY.md).
 - Prepare final audit reports (e.g., /docs/audit/Audit_Report_vFinal.md) and tag the stable release (e.g., v1.0.0-final).
 - Assemble a handoff package with a final code archive (excluding the virtual environment) and detailed deployment instructions.
 
@@ -131,7 +128,6 @@ Detailed Steps:
 - Deploy monitoring tools like Prometheus and Grafana to track system performance and resource use.
 - Configure structured JSON logging and set up log rotation (using logrotate) for logs in /opt/SutazAI/logs.
 - Integrate alert mechanisms (via email or Slack) for critical events such as rollbacks or OTP failures.
-- Develop and document a CI/CD pipeline (using tools like GitHub Actions or Jenkins) that runs static analysis, tests, and security scans on each commit (documented in /docs/CI_CD.md).
 
 ──────────────────────────────
 Phase 9: Final Handoff, Training & Future Scalability

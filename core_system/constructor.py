@@ -190,7 +190,7 @@ class BaseConstructor:
         else:
             for tag_prefix in self.yaml_multi_constructors:
                 if tag.startswith(tag_prefix):
-                    tag_suffix = tag[len(tag_prefix):]
+                    tag_suffix = tag[len(tag_prefix) :]
                     constructor = self.yaml_multi_constructors[tag_prefix]
                     break
             else:
@@ -240,7 +240,9 @@ class BaseConstructor:
                 f"expected a sequence node, but found {node.id!s}",
                 node.start_mark,
             )
-        return [self.construct_object(child, deep=deep) for child in node.value]
+        return [
+            self.construct_object(child, deep=deep) for child in node.value
+        ]
 
     def construct_mapping(self, node: Any, deep: bool = False) -> Any:
         """deep is True when creating an object/mapping recursively,
@@ -277,7 +279,9 @@ class BaseConstructor:
 
                 value = self.construct_object(value_node, deep=deep)
                 if check:
-                    if self.check_mapping_key(node, key_node, mapping, key, value):
+                    if self.check_mapping_key(
+                        node, key_node, mapping, key, value
+                    ):
                         mapping[key] = value
                 else:
                     mapping[key] = value
@@ -312,7 +316,9 @@ class BaseConstructor:
                     """,
                 ]
                 if self.allow_duplicate_keys is None:
-                    warnings.warn(DuplicateKeyFutureWarning(*args), stacklevel=1)
+                    warnings.warn(
+                        DuplicateKeyFutureWarning(*args), stacklevel=1
+                    )
                 else:
                     raise DuplicateKeyError(*args)
             return False
@@ -338,7 +344,9 @@ class BaseConstructor:
                     """,
                 ]
                 if self.allow_duplicate_keys is None:
-                    warnings.warn(DuplicateKeyFutureWarning(*args), stacklevel=1)
+                    warnings.warn(
+                        DuplicateKeyFutureWarning(*args), stacklevel=1
+                    )
                 else:
                     raise DuplicateKeyError(*args)
 
@@ -370,7 +378,9 @@ class BaseConstructor:
         return ret_val
 
     @classmethod
-    def add_multi_constructor(cls, tag_prefix: Any, multi_constructor: Any) -> None:
+    def add_multi_constructor(
+        cls, tag_prefix: Any, multi_constructor: Any
+    ) -> None:
         if "yaml_multi_constructors" not in cls.__dict__:
             cls.yaml_multi_constructors = cls.yaml_multi_constructors.copy()
         cls.yaml_multi_constructors[tag_prefix] = multi_constructor
@@ -428,7 +438,9 @@ class SafeConstructor(BaseConstructor):
                         """,
                     ]
                     if self.allow_duplicate_keys is None:
-                        warnings.warn(DuplicateKeyFutureWarning(*args), stacklevel=1)
+                        warnings.warn(
+                            DuplicateKeyFutureWarning(*args), stacklevel=1
+                        )
                     else:
                         raise DuplicateKeyError(*args)
                 del node.value[index]
@@ -464,9 +476,7 @@ class SafeConstructor(BaseConstructor):
             else:
                 index += 1
         if bool(merge):
-            node.merge = (
-                merge  # separate merge keys to be able to update without duplicate
-            )
+            node.merge = merge  # separate merge keys to be able to update without duplicate
             node.value = merge + node.value
 
     def construct_mapping(self, node: Any, deep: bool = False) -> Any:
@@ -530,7 +540,9 @@ class SafeConstructor(BaseConstructor):
     inf_value = 1e300
     while inf_value != inf_value * inf_value:
         inf_value *= inf_value
-    nan_value = -inf_value / inf_value  # Trying to make a quiet NaN (like C99).
+    nan_value = (
+        -inf_value / inf_value
+    )  # Trying to make a quiet NaN (like C99).
 
     def construct_yaml_float(self, node: Any) -> float:
         value_so = self.construct_scalar(node)
@@ -707,7 +719,9 @@ class SafeConstructor(BaseConstructor):
         )
 
 
-for tag in "null bool int float binary timestamp omap pairs set str seq map".split():
+for (
+    tag
+) in "null bool int float binary timestamp omap pairs set str seq map".split():
     SafeConstructor.add_default_constructor(tag)
 
 SafeConstructor.add_constructor(None, SafeConstructor.construct_undefined)
@@ -1031,7 +1045,9 @@ class RoundTripConstructor(SafeConstructor):
         x.set_assigned()
         return x
 
-    def comments(self, list_of_comments: Any, idx: Optional[Any] = None) -> Any:
+    def comments(
+        self, list_of_comments: Any, idx: Optional[Any] = None
+    ) -> Any:
         # hand in the comment and optional pre, eol, post segment
         if list_of_comments is None:
             return []
@@ -1071,7 +1087,9 @@ class RoundTripConstructor(SafeConstructor):
                 if idx < 0:
                     break
                 fold_positions.append(idx - len(fold_positions))
-            fss = FoldedScalarString(node.value.replace("\a", ""), anchor=node.anchor)
+            fss = FoldedScalarString(
+                node.value.replace("\a", ""), anchor=node.anchor
+            )
             if self.loader and self.loader.comment_handling is None:
                 if node.comment and node.comment[1]:
                     fss.comment = node.comment[1][0]  # type: ignore
@@ -1205,7 +1223,9 @@ class RoundTripConstructor(SafeConstructor):
                 anchor=node.anchor,
             )
         elif node.anchor:
-            return ScalarInt(sign * int(value_s), width=None, anchor=node.anchor)
+            return ScalarInt(
+                sign * int(value_s), width=None, anchor=node.anchor
+            )
         else:
             return sign * int(value_s)
 
@@ -1297,7 +1317,9 @@ class RoundTripConstructor(SafeConstructor):
             return value
         return value
 
-    def construct_rt_sequence(self, node: Any, seqtyp: Any, deep: bool = False) -> Any:
+    def construct_rt_sequence(
+        self, node: Any, seqtyp: Any, deep: bool = False
+    ) -> Any:
         if not isinstance(node, SequenceNode):
             raise ConstructorError(
                 None,
@@ -1377,7 +1399,9 @@ class RoundTripConstructor(SafeConstructor):
                         """,
                     ]
                     if self.allow_duplicate_keys is None:
-                        warnings.warn(DuplicateKeyFutureWarning(*args), stacklevel=1)
+                        warnings.warn(
+                            DuplicateKeyFutureWarning(*args), stacklevel=1
+                        )
                     else:
                         raise DuplicateKeyError(*args)
                 del node.value[index]
@@ -1488,7 +1512,9 @@ class RoundTripConstructor(SafeConstructor):
                     ):
                         if last_value is None:
                             key_node.comment[0] = key_node.comment.pop(4)
-                            maptyp._yaml_add_comment(key_node.comment, value=last_key)
+                            maptyp._yaml_add_comment(
+                                key_node.comment, value=last_key
+                            )
                         else:
                             key_node.comment[2] = key_node.comment.pop(4)
                             maptyp._yaml_add_comment(key_node.comment, key=key)
@@ -1510,11 +1536,17 @@ class RoundTripConstructor(SafeConstructor):
                     if value_node.comment:
                         nprintf("nc5b", key, value_node.comment)
                         if value_node.comment[0]:
-                            maptyp.ca.set(key, C_VALUE_PRE, value_node.comment[0])
+                            maptyp.ca.set(
+                                key, C_VALUE_PRE, value_node.comment[0]
+                            )
                         if value_node.comment[1]:
-                            maptyp.ca.set(key, C_VALUE_EOL, value_node.comment[1])
+                            maptyp.ca.set(
+                                key, C_VALUE_EOL, value_node.comment[1]
+                            )
                         if value_node.comment[2]:
-                            maptyp.ca.set(key, C_VALUE_POST, value_node.comment[2])
+                            maptyp.ca.set(
+                                key, C_VALUE_POST, value_node.comment[2]
+                            )
                 maptyp._yaml_set_kv_line_col(
                     key,
                     [
@@ -1531,7 +1563,9 @@ class RoundTripConstructor(SafeConstructor):
         if merge_map:
             maptyp.add_yaml_merge(merge_map)
 
-    def construct_setting(self, node: Any, typ: Any, deep: bool = False) -> Any:
+    def construct_setting(
+        self, node: Any, typ: Any, deep: bool = False
+    ) -> Any:
         if not isinstance(node, MappingNode):
             raise ConstructorError(
                 None,
@@ -1627,7 +1661,8 @@ class RoundTripConstructor(SafeConstructor):
                     or field.type is InitVar
                     # this following is for handling from __future__ import allocations
                     or (
-                        isinstance(field.type, str) and field.type.startswith("InitVar")
+                        isinstance(field.type, str)
+                        and field.type.startswith("InitVar")
                     )
                 ) and field.default is not MISSING:
                     init_var_defaults[field.name] = field.default
@@ -1736,7 +1771,9 @@ class RoundTripConstructor(SafeConstructor):
         try:
             if isinstance(node, MappingNode):
                 data = CommentedMap()
-                data._yaml_set_line_col(node.start_mark.line, node.start_mark.column)
+                data._yaml_set_line_col(
+                    node.start_mark.line, node.start_mark.column
+                )
                 if node.flow_style is True:
                     data.fa.set_flow_style()
                 elif node.flow_style is False:
@@ -1764,7 +1801,9 @@ class RoundTripConstructor(SafeConstructor):
                 return
             elif isinstance(node, SequenceNode):
                 data3 = CommentedSeq()
-                data3._yaml_set_line_col(node.start_mark.line, node.start_mark.column)
+                data3._yaml_set_line_col(
+                    node.start_mark.line, node.start_mark.column
+                )
                 if node.flow_style is True:
                     data3.fa.set_flow_style()
                 elif node.flow_style is False:
@@ -1860,9 +1899,15 @@ class RoundTripConstructor(SafeConstructor):
         return b
 
 
-RoundTripConstructor.add_default_constructor("bool", method="construct_yaml_sbool")
+RoundTripConstructor.add_default_constructor(
+    "bool", method="construct_yaml_sbool"
+)
 
-for tag in "null int float binary timestamp omap pairs set str seq map".split():
+for (
+    tag
+) in "null int float binary timestamp omap pairs set str seq map".split():
     RoundTripConstructor.add_default_constructor(tag)
 
-RoundTripConstructor.add_constructor(None, RoundTripConstructor.construct_unknown)
+RoundTripConstructor.add_constructor(
+    None, RoundTripConstructor.construct_unknown
+)

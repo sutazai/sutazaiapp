@@ -100,7 +100,9 @@ class build_ext(_build_ext):
         if old_inplace:
             self.copy_extensions_to_source()
 
-    def _get_inplace_equivalent(self, build_py, ext: Extension) -> tuple[str, str]:
+    def _get_inplace_equivalent(
+        self, build_py, ext: Extension
+    ) -> tuple[str, str]:
         fullname = self.get_ext_fullname(ext.name)
         filename = self.get_ext_filename(fullname)
         modpath = fullname.split(".")
@@ -113,7 +115,9 @@ class build_ext(_build_ext):
     def copy_extensions_to_source(self) -> None:
         build_py = self.get_finalized_command("build_py")
         for ext in self.extensions:
-            inplace_file, regular_file = self._get_inplace_equivalent(build_py, ext)
+            inplace_file, regular_file = self._get_inplace_equivalent(
+                build_py, ext
+            )
 
             # Always copy, even if source is older than destination, to ensure
             # that the right extensions for the current Python/platform are
@@ -140,7 +144,9 @@ class build_ext(_build_ext):
         opt = self.get_finalized_command("install_lib").optimize or ""
 
         for ext in self.extensions:
-            inplace_file, regular_file = self._get_inplace_equivalent(build_py, ext)
+            inplace_file, regular_file = self._get_inplace_equivalent(
+                build_py, ext
+            )
             yield (regular_file, inplace_file)
 
             if ext._needs_stub:
@@ -153,8 +159,12 @@ class build_ext(_build_ext):
 
                 inplace_stub = self._get_equivalent_stub(ext, inplace_file)
                 regular_stub = self._get_equivalent_stub(ext, regular_file)
-                inplace_cache = _compiled_file_name(inplace_stub, optimization=opt)
-                output_cache = _compiled_file_name(regular_stub, optimization=opt)
+                inplace_cache = _compiled_file_name(
+                    inplace_stub, optimization=opt
+                )
+                output_cache = _compiled_file_name(
+                    regular_stub, optimization=opt
+                )
                 yield (output_cache, inplace_cache)
 
     def get_ext_filename(self, fullname: str) -> str:
@@ -195,7 +205,9 @@ class build_ext(_build_ext):
         _build_ext.finalize_options(self)
         self.extensions = self.extensions or []
         self.check_extensions_list(self.extensions)
-        self.shlibs = [ext for ext in self.extensions if isinstance(ext, Library)]
+        self.shlibs = [
+            ext for ext in self.extensions if isinstance(ext, Library)
+        ]
         if self.shlibs:
             self.setup_shlib_compiler()
         for ext in self.extensions:
@@ -323,7 +335,9 @@ class build_ext(_build_ext):
     def get_outputs(self) -> list[str]:
         if self.inplace:
             return list(self.get_output_mapping().keys())
-        return sorted(_build_ext.get_outputs(self) + self.__get_stubs_outputs())
+        return sorted(
+            _build_ext.get_outputs(self) + self.__get_stubs_outputs()
+        )
 
     def get_output_mapping(self) -> dict[str, str]:
         """See :class:`setuptools.commands.build.SubCommand`"""
@@ -348,7 +362,9 @@ class build_ext(_build_ext):
             yield ".pyo"
 
     def write_stub(self, output_dir, ext, compile=False) -> None:
-        stub_file = os.path.join(output_dir, *ext._full_name.split(".")) + ".py"
+        stub_file = (
+            os.path.join(output_dir, *ext._full_name.split(".")) + ".py"
+        )
         self._write_stub_file(stub_file, ext, compile)
 
     def _write_stub_file(self, stub_file: str, ext: Extension, compile=False):
@@ -471,4 +487,6 @@ else:
             # a different prefix
             basename = basename[3:]
 
-        self.create_static_lib(objects, basename, output_dir, debug, target_lang)
+        self.create_static_lib(
+            objects, basename, output_dir, debug, target_lang
+        )

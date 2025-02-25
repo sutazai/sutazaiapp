@@ -30,7 +30,9 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
         Set up test environment and initialize architectural integrity manager
         """
         cls.base_dir = "/opt/SutazAI"
-        cls.architectural_manager = ArchitecturalIntegrityManager(base_dir=cls.base_dir)
+        cls.architectural_manager = ArchitecturalIntegrityManager(
+            base_dir=cls.base_dir
+        )
 
     def test_architectural_manager_initialization(self):
         """
@@ -39,7 +41,9 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
         self.assertIsNotNone(self.architectural_manager)
         self.assertTrue(hasattr(self.architectural_manager, "base_dir"))
         self.assertTrue(hasattr(self.architectural_manager, "log_dir"))
-        self.assertTrue(hasattr(self.architectural_manager, "architectural_graph"))
+        self.assertTrue(
+            hasattr(self.architectural_manager, "architectural_graph")
+        )
 
     def test_perform_architectural_integrity_analysis(self):
         """
@@ -50,15 +54,21 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
         )
 
         # Validate report structure
-        self.assertIsInstance(architectural_report, ArchitecturalIntegrityReport)
+        self.assertIsInstance(
+            architectural_report, ArchitecturalIntegrityReport
+        )
 
         # Check key components
         self.assertIsNotNone(architectural_report.timestamp)
         self.assertIsInstance(architectural_report.structural_analysis, dict)
         self.assertIsInstance(architectural_report.code_quality_metrics, dict)
-        self.assertIsInstance(architectural_report.architectural_patterns, dict)
+        self.assertIsInstance(
+            architectural_report.architectural_patterns, dict
+        )
         self.assertIsInstance(architectural_report.integrity_issues, list)
-        self.assertIsInstance(architectural_report.optimization_recommendations, list)
+        self.assertIsInstance(
+            architectural_report.optimization_recommendations, list
+        )
         self.assertIsInstance(architectural_report.cross_reference_map, dict)
 
     def test_structural_analysis(self):
@@ -222,7 +232,10 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
 
         # Validate most recent log file
         most_recent_log = max(
-            [os.path.join(self.architectural_manager.log_dir, f) for f in log_files],
+            [
+                os.path.join(self.architectural_manager.log_dir, f)
+                for f in log_files
+            ],
             key=os.path.getctime,
         )
 
@@ -249,7 +262,9 @@ class TestArchitecturalIntegrityManager(unittest.TestCase):
             output_path = os.path.join(temp_dir, "architectural_graph.png")
 
             # Generate visualization
-            self.architectural_manager.visualize_architectural_graph(output_path)
+            self.architectural_manager.visualize_architectural_graph(
+                output_path
+            )
 
             # Verify visualization was created
             self.assertTrue(os.path.exists(output_path))

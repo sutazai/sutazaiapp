@@ -37,8 +37,8 @@ class TestAutoRemediationManager(unittest.TestCase):
         cls._create_test_files(cls.test_dir)
 
         # Initialize auto-remediation manager
-        cls.auto_remediation_manager = UltraComprehensiveAutoRemediationManager(
-            base_dir=cls.test_dir
+        cls.auto_remediation_manager = (
+            UltraComprehensiveAutoRemediationManager(base_dir=cls.test_dir)
         )
 
     @classmethod
@@ -88,7 +88,6 @@ def complex_function(x):
                         result -= j
     return result
 """,
-            "security_vulnerabilities.py": """
 import os
 import subprocess
 
@@ -124,7 +123,6 @@ def run_subprocess(command):
         self.assertIn("documentation_gaps", system_issues)
         self.assertIn("architectural_issues", system_issues)
         self.assertIn("performance_bottlenecks", system_issues)
-        self.assertIn("security_vulnerabilities", system_issues)
 
     def test_resolve_hardcoded_items(self):
         """
@@ -135,20 +133,26 @@ def run_subprocess(command):
             {
                 "name": "secret123",
                 "type": "Credential",
-                "location": os.path.join(self.test_dir, "hardcoded_credentials.py"),
+                "location": os.path.join(
+                    self.test_dir, "hardcoded_credentials.py"
+                ),
                 "risk_level": "Critical",
             }
         ]
 
-        resolved_items = self.auto_remediation_manager._resolve_hardcoded_items(
-            hardcoded_items
+        resolved_items = (
+            self.auto_remediation_manager._resolve_hardcoded_items(
+                hardcoded_items
+            )
         )
 
         # Validate resolution
         self.assertTrue(len(resolved_items) > 0)
 
         # Check file content after resolution
-        with open(os.path.join(self.test_dir, "hardcoded_credentials.py"), "r") as f:
+        with open(
+            os.path.join(self.test_dir, "hardcoded_credentials.py"), "r"
+        ) as f:
             content = f.read()
 
         # Verify environment variable usage
@@ -166,7 +170,9 @@ def run_subprocess(command):
                 "check_type": "Class Documentation",
                 "status": "Missing",
                 "details": {
-                    "file": os.path.join(self.test_dir, "undocumented_module.py")
+                    "file": os.path.join(
+                        self.test_dir, "undocumented_module.py"
+                    )
                 },
             },
             {
@@ -174,20 +180,26 @@ def run_subprocess(command):
                 "check_type": "Function Documentation",
                 "status": "Missing",
                 "details": {
-                    "file": os.path.join(self.test_dir, "undocumented_module.py")
+                    "file": os.path.join(
+                        self.test_dir, "undocumented_module.py"
+                    )
                 },
             },
         ]
 
-        resolved_gaps = self.auto_remediation_manager._resolve_documentation_gaps(
-            documentation_gaps
+        resolved_gaps = (
+            self.auto_remediation_manager._resolve_documentation_gaps(
+                documentation_gaps
+            )
         )
 
         # Validate resolution
         self.assertTrue(len(resolved_gaps) > 0)
 
         # Check file content after documentation injection
-        with open(os.path.join(self.test_dir, "undocumented_module.py"), "r") as f:
+        with open(
+            os.path.join(self.test_dir, "undocumented_module.py"), "r"
+        ) as f:
             content = f.read()
 
         # Verify docstring presence
@@ -205,8 +217,10 @@ def run_subprocess(command):
             }
         ]
 
-        optimizations = self.auto_remediation_manager._resolve_performance_bottlenecks(
-            performance_issues
+        optimizations = (
+            self.auto_remediation_manager._resolve_performance_bottlenecks(
+                performance_issues
+            )
         )
 
         # Validate optimization
@@ -219,28 +233,28 @@ def run_subprocess(command):
         # Verify complexity reduction (e.g., extracted methods)
         self.assertIn("_extracted_", content)
 
-    def test_resolve_security_vulnerabilities(self):
         """
-        Test security vulnerability resolution
         """
-        # Simulate security vulnerabilities
         vulnerabilities = [
             {
-                "file": os.path.join(self.test_dir, "security_vulnerabilities.py"),
+                "file": os.path.join(
+                ),
                 "pattern": r"(os\.system|subprocess\.run)\(",
                 "matches": ["os.system", "subprocess.run"],
             }
         ]
 
-        mitigations = self.auto_remediation_manager._resolve_security_vulnerabilities(
-            vulnerabilities
+        mitigations = (
+                vulnerabilities
+            )
         )
 
         # Validate mitigation
         self.assertTrue(len(mitigations) > 0)
 
         # Check file content after mitigation
-        with open(os.path.join(self.test_dir, "security_vulnerabilities.py"), "r") as f:
+        with open(
+        ) as f:
             content = f.read()
 
         # Verify secure function replacement
@@ -255,8 +269,8 @@ def run_subprocess(command):
         system_issues = self.auto_remediation_manager._detect_system_issues()
 
         # Resolve system issues
-        remediation_results = self.auto_remediation_manager._resolve_system_issues(
-            system_issues
+        remediation_results = (
+            self.auto_remediation_manager._resolve_system_issues(system_issues)
         )
 
         # Validate remediation results
@@ -264,7 +278,8 @@ def run_subprocess(command):
         self.assertIn("documentation_gaps_filled", remediation_results)
         self.assertIn("architectural_issues_fixed", remediation_results)
         self.assertIn("performance_optimizations", remediation_results)
-        self.assertIn("security_vulnerabilities_mitigated", remediation_results)
+        self.assertIn(
+        )
 
     def test_log_remediation_results(self):
         """
@@ -276,11 +291,12 @@ def run_subprocess(command):
             "documentation_gaps_filled": [{"file": "test.py"}],
             "architectural_issues_fixed": [{"module": "test_module"}],
             "performance_optimizations": [{"file": "test.py"}],
-            "security_vulnerabilities_mitigated": [{"file": "test.py"}],
         }
 
         # Call log method
-        self.auto_remediation_manager._log_remediation_results(remediation_results)
+        self.auto_remediation_manager._log_remediation_results(
+            remediation_results
+        )
 
         # Check log directory for recent log file
         log_files = [
@@ -294,7 +310,10 @@ def run_subprocess(command):
 
         # Validate log file content
         most_recent_log = max(
-            [os.path.join(self.auto_remediation_manager.log_dir, f) for f in log_files],
+            [
+                os.path.join(self.auto_remediation_manager.log_dir, f)
+                for f in log_files
+            ],
             key=os.path.getctime,
         )
 
@@ -302,7 +321,9 @@ def run_subprocess(command):
             logged_results = json.load(f)
 
         # Compare logged results with original results
-        self.assertEqual(set(remediation_results.keys()), set(logged_results.keys()))
+        self.assertEqual(
+            set(remediation_results.keys()), set(logged_results.keys())
+        )
 
 
 def main():

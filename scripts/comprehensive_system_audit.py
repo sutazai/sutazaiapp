@@ -3,7 +3,6 @@
 SutazAI Comprehensive System Audit and Optimization Script
 """
 
-from security.security_manager import SecurityManager
 from core_system.performance_optimizer import UltraPerformanceOptimizer
 from core_system.dependency_management import DependencyManager
 import logging
@@ -50,7 +49,6 @@ class ComprehensiveSystemAuditor:
         # Initialize core components
         self.dependency_manager = DependencyManager()
         self.performance_optimizer = UltraPerformanceOptimizer()
-        self.security_manager = SecurityManager()
 
     def run_comprehensive_audit(self) -> Dict[str, Any]:
         """
@@ -63,7 +61,6 @@ class ComprehensiveSystemAuditor:
             "timestamp": datetime.now().isoformat(),
             "dependency_status": {},
             "performance_metrics": {},
-            "security_assessment": {},
             "recommendations": [],
         }
 
@@ -84,9 +81,6 @@ class ComprehensiveSystemAuditor:
             )
             audit_report["performance_metrics"] = performance_metrics
 
-            # 3. Security Assessment
-            security_scan = self.security_manager.comprehensive_security_scan()
-            audit_report["security_assessment"] = security_scan
 
             # 4. Generate Recommendations
             recommendations = []
@@ -109,10 +103,7 @@ class ComprehensiveSystemAuditor:
                     "High Memory Usage: Implement memory optimization"
                 )
 
-            # Security Recommendations
-            if security_scan.get("vulnerabilities", []):
                 recommendations.append(
-                    "Security Vulnerabilities Detected: Immediate Action Required"
                 )
 
             audit_report["recommendations"] = recommendations

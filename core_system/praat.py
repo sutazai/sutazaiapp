@@ -466,7 +466,9 @@ class PraatLexer(RegexLexer):
             (r"\s+", Whitespace),
             (
                 r"([\w.]+)(?:(:)|(?:(\s*)(\()))",
-                bygroups(Name.Function, Punctuation, Text.Whitespace, Punctuation),
+                bygroups(
+                    Name.Function, Punctuation, Text.Whitespace, Punctuation
+                ),
                 "#pop",
             ),
             (r"([\w.]+)", Name.Function, ("#pop", "old_arguments")),

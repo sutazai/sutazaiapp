@@ -933,7 +933,9 @@ class FreeFemLexer(CppLexer):
     }
 
     def get_tokens_unprocessed(self, text, stack=("root",)):
-        for index, token, value in CppLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in CppLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if value in self.operators:
                 yield index, Operator, value
             elif value in self.types:

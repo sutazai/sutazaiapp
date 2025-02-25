@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
-Advanced Dependency Management and Security Framework
 
 Comprehensive dependency management with:
 - Vulnerability scanning
 - Update recommendations
 - Dependency health tracking
-- Security risk assessment
 """
 
 import json

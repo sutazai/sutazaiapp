@@ -2,7 +2,6 @@ from sutazai.config_manager import ConfigurationManager, SutazAIConfig
 from sutazai.auto_remediation import (
     AutoRemediationManager,
     RemediationAction,
-    SecurityScanResult,
 )
 import os
 import sys
@@ -11,7 +10,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 # Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 
 class TestAutoRemediationManager(unittest.TestCase):
@@ -48,7 +49,9 @@ class TestAutoRemediationManager(unittest.TestCase):
             severity="high",
         )
         self.assertTrue(
-            self.remediation_manager._should_remediate_action(high_severity_action)
+            self.remediation_manager._should_remediate_action(
+                high_severity_action
+            )
         )
 
         # Medium severity action
@@ -58,7 +61,9 @@ class TestAutoRemediationManager(unittest.TestCase):
             severity="medium",
         )
         self.assertTrue(
-            self.remediation_manager._should_remediate_action(medium_severity_action)
+            self.remediation_manager._should_remediate_action(
+                medium_severity_action
+            )
         )
 
         # Low severity action (should be skipped)
@@ -68,15 +73,14 @@ class TestAutoRemediationManager(unittest.TestCase):
             severity="low",
         )
         self.assertFalse(
-            self.remediation_manager._should_remediate_action(low_severity_action)
+            self.remediation_manager._should_remediate_action(
+                low_severity_action
+            )
         )
 
     def test_generate_remediation_actions(self):
         """
-        Test generating remediation actions from a security report.
         """
-        # Create a mock security report
-        mock_security_report = SecurityScanResult(
             vulnerability_count=3,
             high_vulnerabilities=[
                 {
@@ -85,12 +89,16 @@ class TestAutoRemediationManager(unittest.TestCase):
                     "description": "Test high vulnerability",
                 }
             ],
-            medium_vulnerabilities=[{"configuration": "Test config vulnerability"}],
-            low_vulnerabilities=[{"path": "/tmp/test.txt", "permissions": "777"}],
+            medium_vulnerabilities=[
+                {"configuration": "Test config vulnerability"}
+            ],
+            low_vulnerabilities=[
+                {"path": "/tmp/test.txt", "permissions": "777"}
+            ],
         )
 
         # Generate remediation actions
-        actions = self.remediation_manager.analyze_security_report(mock_security_report)
+        )
 
         # Verify actions
         self.assertTrue(len(actions) > 0)
@@ -125,7 +133,9 @@ class TestAutoRemediationManager(unittest.TestCase):
         ]
 
         # Execute remediation actions
-        results = self.remediation_manager.execute_remediation_actions(test_actions)
+        results = self.remediation_manager.execute_remediation_actions(
+            test_actions
+        )
 
         # Verify results
         self.assertIn("successful", results)
@@ -163,13 +173,17 @@ class TestAutoRemediationManager(unittest.TestCase):
         # Create some mock old report files
         for i in range(5):
             with open(
-                os.path.join(self.test_project_dir, f"remediation_report_{i}.json"),
+                os.path.join(
+                    self.test_project_dir, f"remediation_report_{i}.json"
+                ),
                 "w",
             ) as f:
                 f.write("{}")
 
         # Patch time to simulate old files
-        with patch("os.path.getmtime", return_value=0):  # Make all files seem very old
+        with patch(
+            "os.path.getmtime", return_value=0
+        ):  # Make all files seem very old
             self.remediation_manager._cleanup_old_reports()
 
         # Verify reports are cleaned up

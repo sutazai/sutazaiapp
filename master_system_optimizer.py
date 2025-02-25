@@ -102,13 +102,19 @@ class SystemOptimizer:
                         # Check if port is open
                         import socket
 
-                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        result = sock.connect_ex(("localhost", service["port"]))
+                        sock = socket.socket(
+                            socket.AF_INET, socket.SOCK_STREAM
+                        )
+                        result = sock.connect_ex(
+                            ("localhost", service["port"])
+                        )
                         sock.close()
                         results.append(
                             {
                                 "name": service["name"],
-                                "status": ("healthy" if result == 0 else "unhealthy"),
+                                "status": (
+                                    "healthy" if result == 0 else "unhealthy"
+                                ),
                             }
                         )
                 except Exception as e:
@@ -132,13 +138,19 @@ class SystemOptimizer:
             if path.exists():
                 for file in path.glob("**/*"):
                     if file.is_file():
-                        file_age = datetime.now().timestamp() - file.stat().st_mtime
-                        if file_age > (days_old * 86400):  # Convert days to seconds
+                        file_age = (
+                            datetime.now().timestamp() - file.stat().st_mtime
+                        )
+                        if file_age > (
+                            days_old * 86400
+                        ):  # Convert days to seconds
                             try:
                                 file.unlink()
                                 logger.info(f"Deleted old file: {file}")
                             except Exception as e:
-                                logger.error(f"Failed to delete {file}: {str(e)}")
+                                logger.error(
+                                    f"Failed to delete {file}: {str(e)}"
+                                )
 
     async def run_optimization_cycle(self):
         """Run a complete optimization cycle."""
@@ -152,7 +164,10 @@ class SystemOptimizer:
             logger.info(f"Service status: {service_status}")
 
             # Optimize performance if needed
-            if health_metrics["cpu_usage"] > 80 or health_metrics["memory_usage"] > 80:
+            if (
+                health_metrics["cpu_usage"] > 80
+                or health_metrics["memory_usage"] > 80
+            ):
                 await self.optimize_performance()
 
             # Cleanup old files weekly

@@ -140,7 +140,9 @@ def do_forceescape(value: "t.Union[str, HasHTML]") -> Markup:
 
 
 def do_urlencode(
-    value: t.Union[str, t.Mapping[str, t.Any], t.Iterable[t.Tuple[str, t.Any]]],
+    value: t.Union[
+        str, t.Mapping[str, t.Any], t.Iterable[t.Tuple[str, t.Any]]
+    ],
 ) -> str:
     """Quote data for use in a URL path or query using UTF-8.
 
@@ -166,7 +168,8 @@ def do_urlencode(
         items = value  # type: ignore
 
     return "&".join(
-        f"{url_quote(k, for_qs=True)}={url_quote(v, for_qs=True)}" for k, v in items
+        f"{url_quote(k, for_qs=True)}={url_quote(v, for_qs=True)}"
+        for k, v in items
     )
 
 
@@ -370,7 +373,9 @@ def do_dictsort(
     elif by == "value":
         pos = 1
     else:
-        raise FilterArgumentError('You can only sort by either "key" or "value"')
+        raise FilterArgumentError(
+            'You can only sort by either "key" or "value"'
+        )
 
     def sort_func(item: t.Tuple[t.Any, t.Any]) -> t.Any:
         value = item[pos]
@@ -701,15 +706,21 @@ def do_last(
 
 
 @pass_context
-def do_random(context: "Context", seq: "t.Sequence[V]") -> "t.Union[V, Undefined]":
+def do_random(
+    context: "Context", seq: "t.Sequence[V]"
+) -> "t.Union[V, Undefined]":
     """Return a random item from the sequence."""
     try:
         return random.choice(seq)
     except IndexError:
-        return context.environment.undefined("No random item, sequence was empty.")
+        return context.environment.undefined(
+            "No random item, sequence was empty."
+        )
 
 
-def do_filesizeformat(value: t.Union[str, float, int], binary: bool = False) -> str:
+def do_filesizeformat(
+    value: t.Union[str, float, int], binary: bool = False
+) -> str:
     """Format the value like a 'human-readable' file size (i.e. 13 kB,
     4.1 MB, 102 Bytes, etc).  Per default decimal prefixes are used (Mega,
     Giga, etc.), if the second parameter is set to `True` the binary
@@ -814,7 +825,9 @@ def do_urlize(
 
     for scheme in extra_schemes:
         if _uri_scheme_re.fullmatch(scheme) is None:
-            raise FilterArgumentError(f"{scheme!r} is not a valid URI scheme prefix.")
+            raise FilterArgumentError(
+                f"{scheme!r} is not a valid URI scheme prefix."
+            )
 
     rv = urlize(
         value,
@@ -1288,7 +1301,9 @@ def sync_do_groupby(
     if not case_sensitive:
         # Return the real key from the first value instead of the lowercase key.
         output_expr = make_attrgetter(environment, attribute, default=default)
-        out = [_GroupTuple(output_expr(values[0]), values) for _, values in out]
+        out = [
+            _GroupTuple(output_expr(values[0]), values) for _, values in out
+        ]
 
     return out
 
@@ -1309,13 +1324,17 @@ async def do_groupby(
     )
     out = [
         _GroupTuple(key, await auto_to_list(values))
-        for key, values in groupby(sorted(await auto_to_list(value), key=expr), expr)
+        for key, values in groupby(
+            sorted(await auto_to_list(value), key=expr), expr
+        )
     ]
 
     if not case_sensitive:
         # Return the real key from the first value instead of the lowercase key.
         output_expr = make_attrgetter(environment, attribute, default=default)
-        out = [_GroupTuple(output_expr(values[0]), values) for _, values in out]
+        out = [
+            _GroupTuple(output_expr(values[0]), values) for _, values in out
+        ]
 
     return out
 
@@ -1596,7 +1615,9 @@ async def do_select(
     *args: t.Any,
     **kwargs: t.Any,
 ) -> "t.AsyncIterator[V]":
-    return async_select_or_reject(context, value, args, kwargs, lambda x: x, False)
+    return async_select_or_reject(
+        context, value, args, kwargs, lambda x: x, False
+    )
 
 
 @pass_context
@@ -1622,7 +1643,9 @@ def sync_do_reject(
 
     .. versionadded:: 2.7
     """
-    return select_or_reject(context, value, args, kwargs, lambda x: not x, False)
+    return select_or_reject(
+        context, value, args, kwargs, lambda x: not x, False
+    )
 
 
 @async_variant(sync_do_reject)  # type: ignore
@@ -1632,7 +1655,9 @@ async def do_reject(
     *args: t.Any,
     **kwargs: t.Any,
 ) -> "t.AsyncIterator[V]":
-    return async_select_or_reject(context, value, args, kwargs, lambda x: not x, False)
+    return async_select_or_reject(
+        context, value, args, kwargs, lambda x: not x, False
+    )
 
 
 @pass_context
@@ -1672,7 +1697,9 @@ async def do_selectattr(
     *args: t.Any,
     **kwargs: t.Any,
 ) -> "t.AsyncIterator[V]":
-    return async_select_or_reject(context, value, args, kwargs, lambda x: x, True)
+    return async_select_or_reject(
+        context, value, args, kwargs, lambda x: x, True
+    )
 
 
 @pass_context
@@ -1700,7 +1727,9 @@ def sync_do_rejectattr(
 
     .. versionadded:: 2.7
     """
-    return select_or_reject(context, value, args, kwargs, lambda x: not x, True)
+    return select_or_reject(
+        context, value, args, kwargs, lambda x: not x, True
+    )
 
 
 @async_variant(sync_do_rejectattr)  # type: ignore
@@ -1710,7 +1739,9 @@ async def do_rejectattr(
     *args: t.Any,
     **kwargs: t.Any,
 ) -> "t.AsyncIterator[V]":
-    return async_select_or_reject(context, value, args, kwargs, lambda x: not x, True)
+    return async_select_or_reject(
+        context, value, args, kwargs, lambda x: not x, True
+    )
 
 
 @pass_eval_context
@@ -1760,7 +1791,9 @@ def prepare_map(
             name = args[0]
             args = args[1:]
         except LookupError:
-            raise FilterArgumentError("map requires a filter argument") from None
+            raise FilterArgumentError(
+                "map requires a filter argument"
+            ) from None
 
         def func(item: t.Any) -> t.Any:
             return context.environment.call_filter(
@@ -1781,7 +1814,9 @@ def prepare_select_or_reject(
         try:
             attr = args[0]
         except LookupError:
-            raise FilterArgumentError("Missing parameter for attribute name") from None
+            raise FilterArgumentError(
+                "Missing parameter for attribute name"
+            ) from None
 
         transfunc = make_attrgetter(context.environment, attr)
         off = 1
@@ -1793,10 +1828,12 @@ def prepare_select_or_reject(
 
     try:
         name = args[off]
-        args = args[1 + off:]
+        args = args[1 + off :]
 
         def func(item: t.Any) -> t.Any:
-            return context.environment.call_test(name, item, args, kwargs, context)
+            return context.environment.call_test(
+                name, item, args, kwargs, context
+            )
 
     except LookupError:
         func = bool  # type: ignore
@@ -1813,7 +1850,9 @@ def select_or_reject(
     lookup_attr: bool,
 ) -> "t.Iterator[V]":
     if value:
-        func = prepare_select_or_reject(context, args, kwargs, modfunc, lookup_attr)
+        func = prepare_select_or_reject(
+            context, args, kwargs, modfunc, lookup_attr
+        )
 
         for item in value:
             if func(item):
@@ -1829,7 +1868,9 @@ async def async_select_or_reject(
     lookup_attr: bool,
 ) -> "t.AsyncIterator[V]":
     if value:
-        func = prepare_select_or_reject(context, args, kwargs, modfunc, lookup_attr)
+        func = prepare_select_or_reject(
+            context, args, kwargs, modfunc, lookup_attr
+        )
 
         async for item in auto_aiter(value):
             if func(item):

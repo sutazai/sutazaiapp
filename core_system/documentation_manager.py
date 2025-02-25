@@ -80,7 +80,6 @@ class DocumentationManager:
             "python_docstrings": [],
             "system_docs": [],
             "architecture_docs": [],
-            "security_docs": [],
         }
 
         # Markdown documentation discovery
@@ -91,9 +90,9 @@ class DocumentationManager:
 
                     # Categorize markdown files
                     if "architecture" in file.lower():
-                        documentation_map["architecture_docs"].append(full_path)
-                    elif "security" in file.lower():
-                        documentation_map["security_docs"].append(full_path)
+                        documentation_map["architecture_docs"].append(
+                            full_path
+                        )
                     elif "system" in file.lower():
                         documentation_map["system_docs"].append(full_path)
                     else:
@@ -105,21 +104,26 @@ class DocumentationManager:
                 if file.endswith(".py"):
                     full_path = os.path.join(root, file)
                     try:
-                        module_name = os.path.relpath(full_path, self.base_dir).replace(
-                            "/", "."
-                        )[:-3]
+                        module_name = os.path.relpath(
+                            full_path, self.base_dir
+                        ).replace("/", ".")[:-3]
                         module = importlib.import_module(module_name)
 
                         # Check for docstrings
                         for name, obj in inspect.getmembers(module):
                             if inspect.isclass(obj) or inspect.isfunction(obj):
-                                if obj.__module__ == module_name and obj.__doc__:
-                                    documentation_map["python_docstrings"].append(
-                                        full_path
-                                    )
+                                if (
+                                    obj.__module__ == module_name
+                                    and obj.__doc__
+                                ):
+                                    documentation_map[
+                                        "python_docstrings"
+                                    ].append(full_path)
                                     break
                     except Exception as e:
-                        logger.warning(f"Could not process module {full_path}: {e}")
+                        logger.warning(
+                            f"Could not process module {full_path}: {e}"
+                        )
 
         return documentation_map
 
@@ -146,7 +150,9 @@ class DocumentationManager:
 
         return index
 
-    def centralize_documentation(self, documentation_map: Dict[str, List[str]]):
+    def centralize_documentation(
+        self, documentation_map: Dict[str, List[str]]
+    ):
         """
         Centralize documentation in the docs directory
 
@@ -165,7 +171,9 @@ class DocumentationManager:
                 except Exception as e:
                     logger.error(f"Failed to copy {file_path}: {e}")
 
-    def generate_markdown_documentation(self, documentation_map: Dict[str, List[str]]):
+    def generate_markdown_documentation(
+        self, documentation_map: Dict[str, List[str]]
+    ):
         """
         Generate consolidated markdown documentation
 
@@ -192,12 +200,16 @@ class DocumentationManager:
 
         # Write consolidated documentation
         for category, content in consolidated_docs.items():
-            output_path = os.path.join(self.docs_dir, f"{category}_consolidated.md")
+            output_path = os.path.join(
+                self.docs_dir, f"{category}_consolidated.md"
+            )
             with open(output_path, "w") as f:
                 f.write(content)
             logger.info(f"Generated consolidated documentation: {output_path}")
 
-    def generate_html_documentation(self, documentation_map: Dict[str, List[str]]):
+    def generate_html_documentation(
+        self, documentation_map: Dict[str, List[str]]
+    ):
         """
         Generate HTML documentation using pdoc
 
@@ -214,7 +226,9 @@ class DocumentationManager:
         ]
 
         try:
-            pdoc.render.whole_modules(modules=python_modules, output_directory=html_dir)
+            pdoc.render.whole_modules(
+                modules=python_modules, output_directory=html_dir
+            )
             logger.info(f"Generated HTML documentation in {html_dir}")
         except Exception as e:
             logger.error(f"HTML documentation generation failed: {e}")
@@ -228,7 +242,9 @@ class DocumentationManager:
             documentation_map = self.discover_documentation()
 
             # Generate documentation index
-            documentation_index = self.generate_documentation_index(documentation_map)
+            documentation_index = self.generate_documentation_index(
+                documentation_map
+            )
 
             # Centralize documentation
             self.centralize_documentation(documentation_map)
@@ -240,7 +256,9 @@ class DocumentationManager:
             self.generate_html_documentation(documentation_map)
 
             # Persist documentation index
-            index_path = os.path.join(self.docs_dir, "documentation_index.json")
+            index_path = os.path.join(
+                self.docs_dir, "documentation_index.json"
+            )
             with open(index_path, "w") as f:
                 json.dump(documentation_index, f, indent=2)
 

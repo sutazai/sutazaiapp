@@ -57,7 +57,9 @@ jaeger_exporter = JaegerExporter(
     agent_host_name="localhost",
     agent_port=6831,
 )
-trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(jaeger_exporter))
+trace.get_tracer_provider().add_span_processor(
+    BatchSpanProcessor(jaeger_exporter)
+)
 tracer = trace.get_tracer(__name__)
 
 
@@ -167,7 +169,9 @@ class AdvancedLogger:
         with open(log_file, "a") as f:
             f.write(json.dumps(asdict(log_entry)) + "\n")
 
-    def trace(self, operation_name: str, context: Optional[Dict[str, Any]] = None):
+    def trace(
+        self, operation_name: str, context: Optional[Dict[str, Any]] = None
+    ):
         """
         Create a distributed tracing span
 
@@ -178,7 +182,9 @@ class AdvancedLogger:
         Returns:
             OpenTelemetry Span context
         """
-        return tracer.start_as_current_span(operation_name, attributes=context or {})
+        return tracer.start_as_current_span(
+            operation_name, attributes=context or {}
+        )
 
     def track_performance(
         self,

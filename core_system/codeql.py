@@ -93,7 +93,9 @@ class CodeQLLexer(RegexLexer):
             ),
             # Types
             (
-                words(("boolean", "date", "float", "int", "string"), suffix=r"\b"),
+                words(
+                    ("boolean", "date", "float", "int", "string"), suffix=r"\b"
+                ),
                 Keyword.Type,
             ),
             # Literals

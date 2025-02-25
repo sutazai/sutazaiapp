@@ -79,7 +79,9 @@ def search_packages_info(
     """
     env = get_default_environment()
 
-    installed = {dist.canonical_name: dist for dist in env.iter_all_distributions()}
+    installed = {
+        dist.canonical_name: dist for dist in env.iter_all_distributions()
+    }
     query_names = [canonicalize_name(name) for name in query]
     missing = sorted(
         [name for name, pkg in zip(query, query_names) if pkg not in installed]
@@ -103,7 +105,9 @@ def search_packages_info(
         except KeyError:
             continue
 
-        requires = sorted((req.name for req in dist.iter_dependencies()), key=str.lower)
+        requires = sorted(
+            (req.name for req in dist.iter_dependencies()), key=str.lower
+        )
         required_by = sorted(_get_requiring_packages(dist), key=str.lower)
 
         try:

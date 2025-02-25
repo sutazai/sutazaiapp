@@ -251,7 +251,9 @@ class TypeScriptLexer(JavascriptLexer):
             # Match stuff like: (function: return type)
             (
                 r"([\w?.$]+)(\s*)(:)(\s*)([\w?.$]+)",
-                bygroups(Name.Other, Whitespace, Operator, Whitespace, Keyword.Type),
+                bygroups(
+                    Name.Other, Whitespace, Operator, Whitespace, Keyword.Type
+                ),
             ),
             # Match stuff like: Decorators
             (r"@" + JS_IDENT, Keyword.Declaration),
@@ -311,7 +313,8 @@ class KalLexer(RegexLexer):
         "root": [
             include("commentsandwhitespace"),
             (
-                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/" r"([gimuysd]+\b|\B)",
+                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/"
+                r"([gimuysd]+\b|\B)",
                 String.Regex,
             ),
             (r"\?|:|_(?=\n)|==?|!=|-(?!>)|[<>+*/-]=?", Operator),
@@ -529,7 +532,8 @@ class LiveScriptLexer(RegexLexer):
             include("commentsandwhitespace"),
             (r"//", String.Regex, ("#pop", "multilineregex")),
             (
-                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/" r"([gimuysd]+\b|\B)",
+                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/"
+                r"([gimuysd]+\b|\B)",
                 String.Regex,
                 "#pop",
             ),
@@ -540,7 +544,8 @@ class LiveScriptLexer(RegexLexer):
             (r"\A(?=\s|/)", Text, "slashstartsregex"),
             include("commentsandwhitespace"),
             (
-                r"(?:\([^()]+\))?[ ]*[~-]{1,2}>|" r"(?:\(?[^()\n]+\)?)?[ ]*<[~-]{1,2}",
+                r"(?:\([^()]+\))?[ ]*[~-]{1,2}>|"
+                r"(?:\(?[^()\n]+\)?)?[ ]*<[~-]{1,2}",
                 Name.Function,
             ),
             (
@@ -581,7 +586,9 @@ class LiveScriptLexer(RegexLexer):
             ),
             (
                 r"(@[$a-zA-Z_][\w.\-:$]*)(\s*)([:=])(\s+)",
-                bygroups(Name.Variable.Instance, Whitespace, Operator, Whitespace),
+                bygroups(
+                    Name.Variable.Instance, Whitespace, Operator, Whitespace
+                ),
                 "slashstartsregex",
             ),
             (r"@", Name.Other, "slashstartsregex"),
@@ -1053,8 +1060,12 @@ class LassoLexer(RegexLexer):
     }
 
     def __init__(self, **options):
-        self.builtinshighlighting = get_bool_opt(options, "builtinshighlighting", True)
-        self.requiredelimiters = get_bool_opt(options, "requiredelimiters", False)
+        self.builtinshighlighting = get_bool_opt(
+            options, "builtinshighlighting", True
+        )
+        self.requiredelimiters = get_bool_opt(
+            options, "requiredelimiters", False
+        )
 
         self._builtins = set()
         self._members = set()
@@ -1071,7 +1082,9 @@ class LassoLexer(RegexLexer):
         stack = ["root"]
         if self.requiredelimiters:
             stack.append("delimiters")
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if (
                 token is Name.Other
                 and value.lower() in self._builtins
@@ -1115,7 +1128,13 @@ class ObjectiveJLexer(RegexLexer):
             include("whitespace"),
             # function definition
             (
-                r"^(" + _ws + r"[+-]" + _ws + r")([(a-zA-Z_].*?[^(])(" + _ws + r"\{)",
+                r"^("
+                + _ws
+                + r"[+-]"
+                + _ws
+                + r")([(a-zA-Z_].*?[^(])("
+                + _ws
+                + r"\{)",
                 bygroups(
                     using(this),
                     using(this, state="function_signature"),
@@ -1194,7 +1213,8 @@ class ObjectiveJLexer(RegexLexer):
             (r"\d+[Ll]?", Number.Integer),
             (r"^(?=\s|/|<!--)", Text, "slashstartsregex"),
             (
-                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|" r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
+                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|"
+                r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
                 Operator,
                 "slashstartsregex",
             ),
@@ -1282,7 +1302,9 @@ class ObjectiveJLexer(RegexLexer):
                 r"([a-zA-Z_]\w+)"  # return type
                 r"(" + _ws + r"\)" + _ws + r")"  # close paren
                 r"([$a-zA-Z_]\w+" + _ws + r":)",  # function name
-                bygroups(using(this), Keyword.Type, using(this), Name.Function),
+                bygroups(
+                    using(this), Keyword.Type, using(this), Name.Function
+                ),
                 "function_parameters",
             ),
             # no-param function
@@ -1291,7 +1313,9 @@ class ObjectiveJLexer(RegexLexer):
                 r"([a-zA-Z_]\w+)"  # return type
                 r"(" + _ws + r"\)" + _ws + r")"  # close paren
                 r"([$a-zA-Z_]\w+)",  # function name
-                bygroups(using(this), Keyword.Type, using(this), Name.Function),
+                bygroups(
+                    using(this), Keyword.Type, using(this), Name.Function
+                ),
                 "#pop",
             ),
             # no return type given, start of a selector w/ parameters
@@ -1401,7 +1425,8 @@ class CoffeeScriptLexer(RegexLexer):
             include("commentsandwhitespace"),
             (r"///", String.Regex, ("#pop", "multilineregex")),
             (
-                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/" r"([gimuysd]+\b|\B)",
+                r"/(?! )(\\.|[^[/\\\n]|\[(\\.|[^\]\\\n])*])+/"
+                r"([gimuysd]+\b|\B)",
                 String.Regex,
                 "#pop",
             ),
@@ -1446,7 +1471,9 @@ class CoffeeScriptLexer(RegexLexer):
             ),
             (
                 r"(@[$a-zA-Z_][\w.:$]*)(\s*)([:=])(\s+)",
-                bygroups(Name.Variable.Instance, Whitespace, Operator, Whitespace),
+                bygroups(
+                    Name.Variable.Instance, Whitespace, Operator, Whitespace
+                ),
                 "slashstartsregex",
             ),
             (r"@", Name.Other, "slashstartsregex"),
@@ -1685,7 +1712,8 @@ class EarlGreyLexer(RegexLexer):
             (r"[rR]?`", String.Backtick, "bt"),
             (r"[rR]?```", String.Backtick, "tbt"),
             (
-                r"(?<=[\s\[{(,;])\.([a-zA-Z$_](?:[\w$\-]*[\w$])?)" r"(?=[\s\]}),;])",
+                r"(?<=[\s\[{(,;])\.([a-zA-Z$_](?:[\w$\-]*[\w$])?)"
+                r"(?=[\s\]}),;])",
                 String.Symbol,
             ),
             include("nested"),
@@ -2030,7 +2058,8 @@ class JuttleLexer(RegexLexer):
                 String.Moment,
             ),
             (
-                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|" r"(==?|!=?|[-<>+*%&|^/])=?",
+                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|"
+                r"(==?|!=?|[-<>+*%&|^/])=?",
                 Operator,
                 "slashstartsregex",
             ),
@@ -2120,7 +2149,9 @@ class NodeConsoleLexer(Lexer):
                 code = line.lstrip(".")
                 lead = len(line) - len(code)
 
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:lead])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:lead])])
+                )
 
                 curcode += code
             else:
@@ -2132,7 +2163,9 @@ class NodeConsoleLexer(Lexer):
                     curcode = ""
                     insertions = []
 
-                yield from do_insertions([], jslexer.get_tokens_unprocessed(line))
+                yield from do_insertions(
+                    [], jslexer.get_tokens_unprocessed(line)
+                )
 
         if curcode:
             yield from do_insertions(

@@ -91,7 +91,9 @@ class SutazAIPerformanceTest(HttpUser):
         if not self.performance_data:
             return
 
-        response_times = [data["response_time"] for data in self.performance_data]
+        response_times = [
+            data["response_time"] for data in self.performance_data
+        ]
 
         performance_summary = {
             "total_requests": len(self.performance_data),
@@ -103,20 +105,31 @@ class SutazAIPerformanceTest(HttpUser):
             "min_response_time": min(response_times),
             "max_response_time": max(response_times),
             "response_time_std_dev": (
-                statistics.stdev(response_times) if len(response_times) > 1 else 0
+                statistics.stdev(response_times)
+                if len(response_times) > 1
+                else 0
             ),
         }
 
-        print("Performance Summary:", json.dumps(performance_summary, indent=2))
+        print(
+            "Performance Summary:", json.dumps(performance_summary, indent=2)
+        )
 
 
 # Performance test configuration
 def test_performance_thresholds(performance_data):
     """Advanced performance threshold validation"""
-    assert performance_data["total_requests"] > 10, "Insufficient test coverage"
-    assert performance_data["avg_response_time"] < 0.5, "High average response time"
     assert (
-        performance_data["successful_requests"] / performance_data["total_requests"]
+        performance_data["total_requests"] > 10
+    ), "Insufficient test coverage"
+    assert (
+        performance_data["avg_response_time"] < 0.5
+    ), "High average response time"
+    assert (
+        performance_data["successful_requests"]
+        / performance_data["total_requests"]
         > 0.95
     ), "High failure rate"
-    assert performance_data["max_response_time"] < 2.0, "Extreme response time outliers"
+    assert (
+        performance_data["max_response_time"] < 2.0
+    ), "Extreme response time outliers"

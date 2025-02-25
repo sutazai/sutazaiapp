@@ -2,7 +2,7 @@
 """
 Mega Fix Script for SutazAI Core System
 ---------------------------------------
-This script performs a complete replacement of all broken Python files in the 
+This script performs a complete replacement of all broken Python files in the
 core_system directory with clean, functional implementations.
 """
 
@@ -31,13 +31,13 @@ def create_fixed_file(filepath):
     """Create a properly formatted Python module at the specified path"""
     file_name = os.path.basename(filepath)
     module_name = os.path.splitext(file_name)[0]
-    
+
     # Convert snake_case to CamelCase for class names
-    class_name = ''.join(word.capitalize() for word in module_name.split('_'))
-    
+    class_name = "".join(word.capitalize() for word in module_name.split("_"))
+
     # Module description based on filename
     module_description = f"{module_name.replace('_', ' ')} functionality"
-    
+
     # Generate file content
     content = f'''"""
 SutazAI {class_name} Module
@@ -103,19 +103,19 @@ if __name__ == "__main__":
     status = module.get_status()
     print(f"{status['name']} is {status['status']} with uptime {status['uptime']:.2f}s")
 '''
-    
+
     try:
         # Ensure the directory exists (in case it's a nested module)
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        
+
         # Write the content to the file
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         # Verify the file is syntactically correct
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             ast.parse(f.read())
-            
+
         logger.info(f"Fixed and verified {filepath}")
         return True
     except Exception as e:
@@ -126,31 +126,33 @@ if __name__ == "__main__":
 def fix_all_core_system_files():
     """Fix all Python files in the core_system directory"""
     logger.info(f"Starting comprehensive fix of core_system directory")
-    
+
     # List all Python files
     py_files = glob.glob(os.path.join(CORE_SYSTEM_DIR, "*.py"))
-    py_files += glob.glob(os.path.join(CORE_SYSTEM_DIR, "*", "*.py"))  # Include subdirectories
-    
+    py_files += glob.glob(
+        os.path.join(CORE_SYSTEM_DIR, "*", "*.py")
+    )  # Include subdirectories
+
     total_files = len(py_files)
     fixed_files = 0
     failed_files = 0
-    
+
     logger.info(f"Found {total_files} Python files to process")
-    
+
     # Fix each file
     for i, filepath in enumerate(py_files, 1):
         logger.info(f"Processing file {i}/{total_files}: {filepath}")
-        
+
         if create_fixed_file(filepath):
             fixed_files += 1
         else:
             failed_files += 1
-    
+
     # Print summary
     logger.info(f"Fix operation completed!")
     logger.info(f"Fixed files: {fixed_files}")
     logger.info(f"Failed files: {failed_files}")
-    
+
     return fixed_files, failed_files
 
 
@@ -162,4 +164,4 @@ if __name__ == "__main__":
         logger.info(f"Total execution time: {elapsed:.2f} seconds")
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
-        sys.exit(1) 
+        sys.exit(1)

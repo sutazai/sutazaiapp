@@ -8,7 +8,6 @@ Just export lexer classes previously contained in this module.
 :license: BSD, see LICENSE for details.
 """
 
-
 # ruff: noqa: F401
 
 __all__ = []

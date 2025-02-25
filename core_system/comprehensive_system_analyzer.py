@@ -7,7 +7,6 @@ Comprehensive Autonomous System Analysis, Optimization, and Self-Healing Platfor
 Key Capabilities:
 - Ultra-intelligent system architecture analysis
 - Proactive performance optimization
-- Advanced security hardening
 - Intelligent dependency management
 - Deep code quality assessment
 - Autonomous system remediation
@@ -27,7 +26,9 @@ from typing import Any, Dict, List
 from core_system.utils.safe_import import safe_import
 
 # Safe import utility
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 # Safely import external libraries
 networkx = safe_import("networkx")
@@ -56,7 +57,6 @@ class AdvancedSystemManager:
     Provides intelligent, self-healing system management with:
     - Multi-dimensional semantic analysis
     - Predictive optimization
-    - Adaptive security protocols
     - Intelligent dependency resolution
     """
 
@@ -71,7 +71,6 @@ class AdvancedSystemManager:
         (r"os\.system\(", "Potential command injection"),
         (r"subprocess\..*shell=True", "Potential shell injection"),
         (r"pickle\.load\(", "Potential deserialization vulnerability"),
-        (r"input\(", "Potential user input security risk"),
     ]
 
     def __init__(
@@ -116,7 +115,9 @@ class AdvancedSystemManager:
             "system_resources": {
                 "cpu_cores": psutil.cpu_count(),
                 "total_memory": psutil.virtual_memory().total,
-                "disk_partitions": [p.mountpoint for p in psutil.disk_partitions()],
+                "disk_partitions": [
+                    p.mountpoint for p in psutil.disk_partitions()
+                ],
             },
         }
 
@@ -175,7 +176,6 @@ class AdvancedSystemManager:
             "timestamp": datetime.now().isoformat(),
             "system_components": self.analyze_system_components(),
             "code_quality": self.assess_code_quality(),
-            "security_analysis": self.perform_security_analysis(),
             "performance_metrics": self.collect_performance_metrics(),
             "dependency_analysis": self.analyze_dependencies(),
             "optimization_recommendations": [],
@@ -327,9 +327,10 @@ class AdvancedSystemManager:
             json.dump(report, f, indent=2)
 
         # Log key insights
-        logger.info(f"Comprehensive System Analysis Report Generated: {report_path}")
         logger.info(
-            f"Security Issues Detected: {len(report['security_analysis'].get('potential_security_issues', []))}"
+            f"Comprehensive System Analysis Report Generated: {report_path}"
+        )
+        logger.info(
         )
         logger.info(
             f"Optimization Recommendations: {len(report['optimization_recommendations'])}"
@@ -347,7 +348,9 @@ class AdvancedSystemManager:
         try:
             for root, dirs, files in os.walk(self.base_dir):
                 # Skip version control and virtual environment directories
-                if any(skip in root for skip in [".git", "venv", "__pycache__"]):
+                if any(
+                    skip in root for skip in [".git", "venv", "__pycache__"]
+                ):
                     continue
 
                 # Track directories
@@ -413,7 +416,9 @@ class AdvancedSystemManager:
                         file_path
                     ] = pylint_output.linter.stats.global_note
                 except Exception as e:
-                    logger.warning(f"Pylint analysis failed for {file_path}: {e}")
+                    logger.warning(
+                        f"Pylint analysis failed for {file_path}: {e}"
+                    )
 
             # Complexity analysis using Radon
             for file_path in python_files:
@@ -432,7 +437,9 @@ class AdvancedSystemManager:
                         for result in complexity_results
                     ]
                 except Exception as e:
-                    logger.warning(f"Complexity analysis failed for {file_path}: {e}")
+                    logger.warning(
+                        f"Complexity analysis failed for {file_path}: {e}"
+                    )
 
             return code_quality
 
@@ -440,16 +447,11 @@ class AdvancedSystemManager:
             logger.warning(f"Code quality assessment failed: {e}")
             return code_quality
 
-    def perform_security_analysis(self) -> Dict[str, Any]:
         """
-        Conduct comprehensive security analysis
 
         Returns:
-            Dictionary of security assessment results
         """
-        security_analysis = {
             "dependency_vulnerabilities": [],
-            "potential_security_issues": [],
         }
 
         try:
@@ -459,7 +461,6 @@ class AdvancedSystemManager:
                 vulnerabilities = safety.check(
                     files=[requirements_path], ignore_ids=[], cached=True
                 )
-                security_analysis["dependency_vulnerabilities"] = [
                     {
                         "package": vuln[0],
                         "version": vuln[1],
@@ -469,7 +470,6 @@ class AdvancedSystemManager:
                     for vuln in vulnerabilities
                 ]
 
-            # Scan for potential security issues in Python files
             python_files = [
                 os.path.join(root, file)
                 for root, _, files in os.walk(self.base_dir)
@@ -482,10 +482,9 @@ class AdvancedSystemManager:
                     with open(file_path, "r") as f:
                         content = f.read()
 
-                    # Basic security pattern matching
                     for pattern, description in self.SECURITY_PATTERNS:
                         if re.search(pattern, content):
-                            security_analysis["potential_security_issues"].append(
+                            ].append(
                                 {
                                     "file": file_path,
                                     "issue": description,
@@ -493,13 +492,11 @@ class AdvancedSystemManager:
                                 }
                             )
                 except Exception as e:
-                    logger.warning(f"Security scan failed for {file_path}: {e}")
+                    logger.warning(
+                    )
 
-            return security_analysis
 
         except Exception as e:
-            logger.warning(f"Security analysis failed: {e}")
-            return security_analysis
 
     def collect_performance_metrics(self) -> Dict[str, Any]:
         """
@@ -544,7 +541,9 @@ class AdvancedSystemManager:
                         try:
                             module_name = dep.split("==")[0]
                             module = importlib.import_module(module_name)
-                            dependency_analysis["python_dependencies"][module_name] = {
+                            dependency_analysis["python_dependencies"][
+                                module_name
+                            ] = {
                                 "version": (
                                     module.__version__
                                     if hasattr(module, "__version__")
@@ -552,7 +551,9 @@ class AdvancedSystemManager:
                                 )
                             }
                         except Exception as e:
-                            logger.warning(f"Dependency analysis failed for {dep}: {e}")
+                            logger.warning(
+                                f"Dependency analysis failed for {dep}: {e}"
+                            )
 
             # Build module dependency graph
             python_files = [
@@ -615,7 +616,9 @@ class AdvancedSystemManager:
         recommendations = []
 
         # Performance recommendations
-        performance_metrics = comprehensive_report.get("performance_metrics", {})
+        performance_metrics = comprehensive_report.get(
+            "performance_metrics", {}
+        )
         if performance_metrics.get("cpu_usage", 0) > 70:
             recommendations.append(
                 f"High CPU usage detected: {performance_metrics['cpu_usage']}%. "
@@ -641,26 +644,22 @@ class AdvancedSystemManager:
                 "Refactor and improve code quality."
             )
 
-        # Security recommendations
-        security_analysis = comprehensive_report.get("security_analysis", {})
-        if security_analysis.get("dependency_vulnerabilities"):
             recommendations.append(
-                f"{len(security_analysis['dependency_vulnerabilities'])} dependency vulnerabilities detected. "
-                "Update dependencies and apply security patches."
             )
 
-        if security_analysis.get("potential_security_issues"):
             recommendations.append(
-                f"{len(security_analysis['potential_security_issues'])} potential security issues found. "
-                "Review and mitigate security risks."
             )
 
         # Dependency recommendations
-        dependency_analysis = comprehensive_report.get("dependency_analysis", {})
+        dependency_analysis = comprehensive_report.get(
+            "dependency_analysis", {}
+        )
         if dependency_analysis.get("python_dependencies"):
             outdated_deps = [
                 dep
-                for dep, info in dependency_analysis["python_dependencies"].items()
+                for dep, info in dependency_analysis[
+                    "python_dependencies"
+                ].items()
                 if info.get("version") == "Unknown"
             ]
             if outdated_deps:
@@ -692,13 +691,9 @@ class AdvancedSystemManager:
                 if "code quality" in recommendation:
                     self.improve_code_quality()
 
-                # Security enhancement
                 if "dependency vulnerabilities" in recommendation:
                     self.update_dependencies()
 
-                # Security risk mitigation
-                if "security issues" in recommendation:
-                    self.mitigate_security_risks()
 
             except Exception as e:
                 logger.warning(
@@ -740,12 +735,8 @@ class AdvancedSystemManager:
         except subprocess.CalledProcessError as e:
             logger.error(f"Dependency update failed: {e}")
 
-    def mitigate_security_risks(self):
         """
-        Attempt to mitigate identified security risks
         """
-        # Placeholder for security risk mitigation strategies
-        logger.info("Attempting security risk mitigation")
 
     def generate_system_health_report(self) -> str:
         """
@@ -767,9 +758,6 @@ class AdvancedSystemManager:
 - Files Analyzed: {len(report['code_quality'].get('pylint_scores', {}))}
 - Average Pylint Score: {sum(report['code_quality'].get('pylint_scores', {}).values()) / max(len(report['code_quality'].get('pylint_scores', {})), 1):.2f}
 
-### Security Analysis
-- Dependency Vulnerabilities: {len(report['security_analysis'].get('dependency_vulnerabilities', []))}
-- Potential Security Issues: {len(report['security_analysis'].get('potential_security_issues', []))}
 
 ### Performance Metrics
 - CPU Usage: {report['performance_metrics'].get('cpu_usage', 0)}%

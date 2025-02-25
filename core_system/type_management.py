@@ -163,7 +163,9 @@ def safe_type_conversion(
             if origin is Union and type(None) in args:
                 # Handle Optional types
                 non_none_type = next(t for t in args if t is not type(None))
-                return safe_type_conversion(value, non_none_type, default, strict)
+                return safe_type_conversion(
+                    value, non_none_type, default, strict
+                )
 
         # Handle callable types
         if callable(target_type):
@@ -171,7 +173,9 @@ def safe_type_conversion(
                 return target_type(value)  # type: ignore
             except Exception as e:
                 if strict:
-                    raise TypeError(f"Cannot convert {value} to {target_type}") from e
+                    raise TypeError(
+                        f"Cannot convert {value} to {target_type}"
+                    ) from e
                 return default
 
         return value if isinstance(value, target_type) else target_type(value)

@@ -387,7 +387,9 @@ class PipSession(requests.Session):
                 max_retries=retries,
             )
         else:
-            secure_adapter = HTTPAdapter(max_retries=retries, ssl_context=ssl_context)
+            secure_adapter = HTTPAdapter(
+                max_retries=retries, ssl_context=ssl_context
+            )
             self._trusted_host_adapter = insecure_adapter
 
         self.mount("https://", secure_adapter)
@@ -426,7 +428,9 @@ class PipSession(requests.Session):
 
         parsed_host, parsed_port = parse_netloc(host)
         if parsed_host is None:
-            raise ValueError(f"Trusted host URL must include a host part: {host!r}")
+            raise ValueError(
+                f"Trusted host URL must include a host part: {host!r}"
+            )
         if (parsed_host, parsed_port) not in self.pip_trusted_origins:
             self.pip_trusted_origins.append((parsed_host, parsed_port))
 
@@ -434,14 +438,18 @@ class PipSession(requests.Session):
             build_url_from_netloc(host, scheme="http") + "/",
             self._trusted_host_adapter,
         )
-        self.mount(build_url_from_netloc(host) + "/", self._trusted_host_adapter)
+        self.mount(
+            build_url_from_netloc(host) + "/", self._trusted_host_adapter
+        )
         if not parsed_port:
             self.mount(
                 build_url_from_netloc(host, scheme="http") + ":",
                 self._trusted_host_adapter,
             )
             # Mount wildcard ports for the same host.
-            self.mount(build_url_from_netloc(host) + ":", self._trusted_host_adapter)
+            self.mount(
+                build_url_from_netloc(host) + ":", self._trusted_host_adapter
+            )
 
     def iter_secure_origins(self) -> Generator[SecureOrigin, None, None]:
         yield from SECURE_ORIGINS
@@ -515,7 +523,9 @@ class PipSession(requests.Session):
 
         return False
 
-    def request(self, method: str, url: str, *args: Any, **kwargs: Any) -> Response:
+    def request(
+        self, method: str, url: str, *args: Any, **kwargs: Any
+    ) -> Response:
         # Allow setting a default timeout on a session
         kwargs.setdefault("timeout", self.timeout)
         # Allow setting a default proxies on a session

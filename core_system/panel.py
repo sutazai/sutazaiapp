@@ -137,7 +137,9 @@ class Panel(JupyterMixin):
     ) -> "RenderResult":
         _padding = Padding.unpack(self.padding)
         renderable = (
-            Padding(self.renderable, _padding) if any(_padding) else self.renderable
+            Padding(self.renderable, _padding)
+            if any(_padding)
+            else self.renderable
         )
         style = console.get_style(self.style)
         border_style = style + console.get_style(self.border_style)
@@ -147,7 +149,9 @@ class Panel(JupyterMixin):
             else min(options.max_width, self.width)
         )
 
-        safe_box: bool = console.safe_box if self.safe_box is None else self.safe_box
+        safe_box: bool = (
+            console.safe_box if self.safe_box is None else self.safe_box
+        )
         box = self.box.substitute(options, safe=safe_box)
 
         def align_text(
@@ -234,7 +238,9 @@ class Panel(JupyterMixin):
                 border_style,
             )
             yield Segment(box.top_left + box.top, border_style)
-            yield from console.render(title_text, child_options.update_width(width - 4))
+            yield from console.render(
+                title_text, child_options.update_width(width - 4)
+            )
             yield Segment(box.top + box.top_right, border_style)
 
         yield new_line
@@ -272,7 +278,9 @@ class Panel(JupyterMixin):
         _title = self._title
         _, right, _, left = Padding.unpack(self.padding)
         padding = left + right
-        renderables = [self.renderable, _title] if _title else [self.renderable]
+        renderables = (
+            [self.renderable, _title] if _title else [self.renderable]
+        )
 
         if self.width is None:
             width = (

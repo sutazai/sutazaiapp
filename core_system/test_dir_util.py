@@ -87,7 +87,9 @@ class TestDirUtil(support.TempdirManager):
     def test_copy_tree_skips_nfs_temp_files(self):
         mkpath(self.target, verbose=False)
 
-        jaraco.path.build({"ok.txt": "some content", ".nfs123abc": ""}, self.target)
+        jaraco.path.build(
+            {"ok.txt": "some content", ".nfs123abc": ""}, self.target
+        )
 
         copy_tree(self.target, self.target2)
         assert os.listdir(self.target2) == ["ok.txt"]

@@ -40,7 +40,9 @@ class TestMingw32CCompiler:
     def test_cygwincc_error(self, monkeypatch):
         import distutils.cygwinccompiler
 
-        monkeypatch.setattr(distutils.cygwinccompiler, "is_cygwincc", lambda _: True)
+        monkeypatch.setattr(
+            distutils.cygwinccompiler, "is_cygwincc", lambda _: True
+        )
 
         with pytest.raises(CCompilerError):
             distutils.cygwinccompiler.Mingw32CCompiler()

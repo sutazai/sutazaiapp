@@ -68,7 +68,6 @@ class ResourceOwnerPasswordCredentialsGrant(BaseGrant, TokenEndpointMixin):
         in Section 3.2.1.
 
         For example, the client makes the following HTTP request using
-        transport-layer security (with extra line breaks for display purposes
         only):
 
         .. code-block:: http

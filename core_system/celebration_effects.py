@@ -22,7 +22,9 @@ def show_confetti(console):
             x = random.randint(0, max(0, width - 1))
             y = random.randint(0, max(0, height - 2))
             char = random.choice(chars)
-            color = random.choice(["red", "green", "yellow", "blue", "magenta", "cyan"])
+            color = random.choice(
+                ["red", "green", "yellow", "blue", "magenta", "cyan"]
+            )
             console.print(
                 Text(char, style=Style(color=color)),
                 end="",
@@ -90,7 +92,9 @@ def show_balloons(console):
             console.file.write(f"\x1b[{random.randint(1, 10)};{x}H")
         console.file.flush()
         time.sleep(0.5)
-    console.print("🎈 POP! 🎉 No vulnerabilities detected!", style="bold green")
+    console.print(
+        "🎈 POP! 🎉 No vulnerabilities detected!", style="bold green"
+    )
 
 
 def show_victory_parade(console):
@@ -104,7 +108,9 @@ def show_victory_parade(console):
         console.print(line, style="bold green", justify="center")
         time.sleep(0.2)
 
-    console.print("The parade is over. Your code is safe! 🏆", style="bold yellow")
+    console.print(
+        "The parade is over. Your code is safe! 🏆", style="bold yellow"
+    )
 
 
 def show_confetti_rain(console):
@@ -163,7 +169,9 @@ def show_star_trail(console):
         console.clear()
         start_x = random.randint(0, width // 2)
         trail = "".join(random.choices(stars, k=10))
-        console.print(f"{' ' * start_x}{trail}", style="bold yellow", justify="left")
+        console.print(
+            f"{' ' * start_x}{trail}", style="bold yellow", justify="left"
+        )
         time.sleep(0.3)
 
     console.print(

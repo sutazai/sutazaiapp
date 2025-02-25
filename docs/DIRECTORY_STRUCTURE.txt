@@ -45,7 +45,6 @@
     - 📄 agent.py *(1.95 KB, text/x-python)*
     - 📄 self_coding.py *(855.00 B, text/x-python)*
   - 📁 **Semgrep/** *[r/w/x]*
-    - 📄 security_analyzer.py *(177.00 B, text/x-python)*
   - 📄 activities.py *(626.00 B, text/x-python)*
   - 📄 adhd_support.py *(427.00 B, text/x-python)*
   - 📄 app_developer.py *(1.60 KB, text/x-python)*
@@ -71,7 +70,6 @@
     - 📄 neural_bridge.py *(1.20 KB, text/x-python)*
     - 📄 qualia.py *(381.00 B, text/x-python)*
     - 📄 runtime.py *(558.00 B, text/x-python)*
-    - 📄 security.py *(333.00 B, text/x-python)*
     - 📄 self_model.py *(349.00 B, text/x-python)*
     - 📄 sutazai_bridge.py *(272.00 B, text/x-python)*
   - 📄 content.py *(497.00 B, text/x-python)*
@@ -90,7 +88,6 @@
     - 📄 message_queue.py *(594.00 B, text/x-python)*
     - 📄 personal_knowledge.py *(582.00 B, text/x-python)*
     - 📄 personality.py *(867.00 B, text/x-python)*
-    - 📄 security.py *(1.54 KB, text/x-python)*
     - 📄 voice.py *(6.70 KB, text/x-python)*
     - 📄 wellbeing.py *(413.00 B, text/x-python)*
   - 📄 core.py *(2.59 KB, text/x-python)*
@@ -220,7 +217,6 @@
   - 📄 revenue_agent.py *(760.00 B, text/x-python)*
   - 📄 revenue_models.py *(577.00 B, text/x-python)*
   - 📄 safety.py *(705.00 B, text/x-python)*
-  - 📄 security.py *(6.59 KB, text/x-python)*
   - 📁 **self_evolution/** *[r/w/x]*
     - 📄 core.py *(375.00 B, text/x-python)*
   - 📁 **self_improvement/** *[r/w/x]*
@@ -315,7 +311,6 @@
 - 📄 ai_stack.yml *(436.00 B, application/yaml)*
 - 📄 alert_rules.yml *(2.72 KB, application/yaml)*
 - 📁 **api/** *[r/w/x]*
-  - 📄 security.py *(125.00 B, text/x-python)*
 - 📄 api_test.sh *(119.00 B, text/x-sh)*
 - 📄 archive_data.sh *(165.00 B, text/x-sh)*
 - 📁 **assets/** *[r/w/x]*
@@ -435,11 +430,6 @@
     - 📄 system_validator.py *(7.67 KB, text/x-python)*
     - 📄 system_verify.py *(5.73 KB, text/x-python)*
     - 📄 system_verify.sh *(9.31 KB, text/x-sh)*
-  - 📁 **security/** *[r/w/x]*
-    - 📄 security_compliance.sh *(919.00 B, text/x-sh)*
-    - 📄 security_hardening.sh *(436.00 B, text/x-sh)*
-    - 📄 security_scan.sh *(135.00 B, text/x-sh)*
-    - 📄 security_updates.sh *(145.00 B, text/x-sh)*
   - 📄 system_optimizer.py *(9.70 KB, text/x-python)*
   - 📄 system_orchestrator.py *(13.10 KB, text/x-python)*
 - 📄 create_voice_signature.sh *(539.00 B, text/x-sh)*
@@ -500,7 +490,6 @@
   - 📄 hierarchy.py *(600.00 B, text/x-python)*
   - 📄 languages.py *(595.00 B, text/x-python)*
   - 📄 recovery.py *(257.00 B, text/x-python)*
-  - 📄 security.py *(4.14 KB, text/x-python)*
   - 📄 services.py *(4.46 KB, text/x-python)*
   - 📄 storage.py *(1.54 KB, text/x-python)*
   - 📄 validation.py *(6.44 KB, text/x-python)*
@@ -537,7 +526,6 @@
     - 📄 deploy.yml *(687.00 B, application/yaml)*
 - 📄 global_rename.py *(4.71 KB, text/x-python)*
 - 📁 **hardware/** *[r/w/x]*
-  - 📄 security.py *(137.00 B, text/x-python)*
 - 📄 hardware_health.sh *(1.29 KB, text/x-sh)*
 - 📁 **healing/** *[r/w/x]*
   - 📄 auto_repair.py *(3.19 KB, text/x-python)*
@@ -562,7 +550,6 @@
     - 📄 devices.py *(760.00 B, text/x-python)*
     - 📄 home_auth.py *(1.27 KB, text/x-python)*
     - 📄 intent_handler.py *(1.64 KB, text/x-python)*
-    - 📄 security.py *(688.00 B, text/x-python)*
     - 📄 server.py *(667.00 B, text/x-python)*
     - 📄 sutazai_voice.py *(358.00 B, text/x-python)*
     - 📄 voice_mapping.py *(879.00 B, text/x-python)*
@@ -631,14 +618,11 @@
   - 📄 grafana_dashboards.json *(629.00 B, application/json)*
   - 📄 health.py *(801.00 B, text/x-python)*
   - 📄 prometheus.yml *(531.00 B, application/yaml)*
-  - 📄 security.py *(402.00 B, text/x-python)*
-  - 📄 security_monitor.py *(198.00 B, text/x-python)*
 - 📁 **network/** *[r/w/x]*
   - 📄 validation.py *(1.09 KB, text/x-python)*
 - 📄 network_cleanup.sh *(125.00 B, text/x-sh)*
 - 📄 network_health.sh *(149.00 B, text/x-sh)*
 - 📄 network_performance.sh *(867.00 B, text/x-sh)*
-- 📄 network_security.sh *(522.00 B, text/x-sh)*
 - 📄 network_traffic.sh *(131.00 B, text/x-sh)*
 - 📁 **optimization/** *[r/w/x]*
   - 📄 temporal.py *(240.00 B, text/x-python)*
@@ -711,7 +695,6 @@
           - 📁 **common/** *[r/w/x]*
             - 📄 encoding.py *(1.51 KB, text/x-python)*
             - 📄 errors.py *(1.64 KB, text/x-python)*
-            - 📄 security.py *(493.00 B, text/x-python)*
             - 📄 urls.py *(4.40 KB, text/x-python)*
           - 📄 consts.py *(300.00 B, text/x-python)*
           - 📄 deprecate.py *(481.00 B, text/x-python)*
@@ -2021,7 +2004,6 @@
           - 📁 **common/** *[r/w/x]*
             - 📄 encoding.py *(1.51 KB, text/x-python)*
             - 📄 errors.py *(1.64 KB, text/x-python)*
-            - 📄 security.py *(493.00 B, text/x-python)*
             - 📄 urls.py *(4.40 KB, text/x-python)*
           - 📄 consts.py *(300.00 B, text/x-python)*
           - 📄 deprecate.py *(481.00 B, text/x-python)*
@@ -3391,21 +3373,16 @@
   - 📄 notify.sh *(763.00 B, text/x-sh)*
   - 📄 otp_manager.py *(4.80 KB, text/x-python)*
   - 📄 performance_tuner.py *(928.00 B, text/x-python)*
-  - 📄 port_security.sh *(1.16 KB, text/x-sh)*
   - 📄 post_verification_fixes.sh *(2.19 KB, text/x-sh)*
   - 📄 pre-commit-dependency-check *(1.94 KB, None)*
   - 📄 progress_utils.sh *(4.30 KB, text/x-sh)*
   - 📄 purge_sutazai.sh *(886.00 B, text/x-sh)*
-  - 📄 python_security.sh *(714.00 B, text/x-sh)*
   - 📄 replace_sutazai.sh *(2.61 KB, text/x-sh)*
   - 📄 research.sh *(318.00 B, text/x-sh)*
   - 📄 resource_manager.sh *(1.13 KB, text/x-sh)*
   - 📄 resource_monitor.py *(648.00 B, text/x-python)*
   - 📄 resource_monitor.sh *(1.74 KB, text/x-sh)*
   - 📄 rollback.sh *(358.00 B, text/x-sh)*
-  - 📁 **security/** *[r/w/x]*
-  - 📄 security_hardening.sh *(403.00 B, text/x-sh)*
-  - 📄 security_review.py *(4.51 KB, text/x-python)*
   - 📄 send-alert.sh *(209.00 B, text/x-sh)*
   - 📄 service_mesh.sh *(510.00 B, text/x-sh)*
   - 📄 setup_database.py *(1.15 KB, text/x-python)*
@@ -3423,7 +3400,6 @@
   - 📄 sutazai_validator.py *(4.47 KB, text/x-python)*
   - 📄 sync_dashboard.sh *(640.00 B, text/x-sh)*
   - 📄 sync_health_check.sh *(527.00 B, text/x-sh)*
-  - 📄 sync_security.sh *(672.00 B, text/x-sh)*
   - 📄 sync_status.sh *(506.00 B, text/x-sh)*
   - 📄 sync_trigger.sh *(1.68 KB, text/x-sh)*
   - 📄 syntax_cleanup.py *(2.44 KB, text/x-python)*
@@ -3444,7 +3420,6 @@
   - 📄 verify_deployment.sh *(4.63 KB, text/x-sh)*
   - 📄 view_chats.py *(322.00 B, text/x-python)*
   - 📄 vscode_sync_handler.sh *(842.00 B, text/x-sh)*
-- 📁 **security/** *[r/w/x]*
   - 📄 SECURITY_POLICY.md *(2.12 KB, text/markdown)*
   - 📄 ai_hypervisor.te *(765.00 B, None)*
   - 📄 ascended.py *(561.00 B, text/x-python)*
@@ -3484,8 +3459,6 @@
   - 📄 privacy.py *(344.00 B, text/x-python)*
   - 📄 protocols.py *(207.00 B, text/x-python)*
   - 📄 reality.py *(456.00 B, text/x-python)*
-  - 📄 security.py *(2.62 KB, text/x-python)*
-  - 📄 security_manager.py *(16.14 KB, text/x-python)*
   - 📄 sutazai_core.py *(391.00 B, text/x-python)*
   - 📄 sutazai_encryption.py *(400.00 B, text/x-python)*
   - 📄 sutazai_fuse.py *(323.00 B, text/x-python)*
@@ -3524,7 +3497,6 @@
   - 📁 **routes/** *[r/w/x]*
     - 📄 DocumentManager.svelte *(552.00 B, None)*
   - 📁 **scripts/** *[r/w/x]*
-  - 📁 **security/** *[r/w/x]*
   - 📁 **services/** *[r/w/x]*
   - 📁 **tests/** *[r/w/x]*
   - 📁 **ui/** *[r/w/x]*
@@ -3671,7 +3643,6 @@
   - 📄 deployment_worker.py *(390.00 B, text/x-python)*
   - 📄 healing_worker.py *(507.00 B, text/x-python)*
   - 📄 monitoring_worker.py *(572.00 B, text/x-python)*
-  - 📄 security_worker.py *(388.00 B, text/x-python)*
   - 📄 worker_manager.py *(836.00 B, text/x-python)*
 - 📁 **workflow/** *[r/w/x]*
   - 📄 approvals.py *(490.00 B, text/x-python)*

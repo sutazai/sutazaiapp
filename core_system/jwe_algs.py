@@ -98,7 +98,9 @@ class AESAlgorithm(JWEAlgorithm):
 
     def _check_key(self, key):
         if len(key) * 8 != self.key_size:
-            raise ValueError(f"A key of size {self.key_size} bits is required.")
+            raise ValueError(
+                f"A key of size {self.key_size} bits is required."
+            )
 
     def wrap_cek(self, cek, key):
         op_key = key.get_op_key("wrapKey")
@@ -127,7 +129,9 @@ class AESGCMAlgorithm(JWEAlgorithm):
 
     def __init__(self, key_size):
         self.name = f"A{key_size}GCMKW"
-        self.description = f"Key wrapping with AES GCM using {key_size}-bit key"
+        self.description = (
+            f"Key wrapping with AES GCM using {key_size}-bit key"
+        )
         self.key_size = key_size
 
     def prepare_key(self, raw_data):
@@ -139,7 +143,9 @@ class AESGCMAlgorithm(JWEAlgorithm):
 
     def _check_key(self, key):
         if len(key) * 8 != self.key_size:
-            raise ValueError(f"A key of size {self.key_size} bits is required.")
+            raise ValueError(
+                f"A key of size {self.key_size} bits is required."
+            )
 
     def wrap(self, enc_alg, headers, key, preset=None):
         if preset and "cek" in preset:

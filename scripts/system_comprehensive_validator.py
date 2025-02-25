@@ -56,7 +56,6 @@ class SystemComprehensiveValidator:
             "timestamp": datetime.now().isoformat(),
             "system_health": {},
             "code_quality": {},
-            "security_analysis": {},
             "performance_metrics": {},
             "optimization_recommendations": {},
         }
@@ -83,8 +82,6 @@ class SystemComprehensiveValidator:
             # Code quality analysis
             code_quality = self._analyze_code_quality()
 
-            # Security vulnerability scanning
-            security_analysis = self._perform_security_scan()
 
             # Performance metrics collection
             performance_metrics = self._collect_performance_metrics()
@@ -94,7 +91,6 @@ class SystemComprehensiveValidator:
 
         self.validation_results["system_health"] = system_health
         self.validation_results["code_quality"] = code_quality
-        self.validation_results["security_analysis"] = security_analysis
         self.validation_results["performance_metrics"] = performance_metrics
         self.validation_results["dependency_analysis"] = dependency_analysis
 
@@ -275,30 +271,21 @@ class SystemComprehensiveValidator:
         except Exception as e:
             return {"error": str(e)}
 
-    def _perform_security_scan(self) -> Dict[str, Any]:
         """
-        Perform security vulnerability scanning using semgrep and safety tools.
 
         Returns:
-            Dictionary containing security analysis results.
         """
-        security_results = {}
         try:
-            # Run semgrep security scan (cSpell directives ignore "semgrep"
             # warnings)
             semgrep_output = subprocess.run(
                 ["semgrep", "--config", "auto", self.base_path],
                 capture_output=True,
                 text=True,
             )
-            security_results["semgrep"] = {
                 "passed": semgrep_output.returncode == 0,
                 "output": semgrep_output.stdout or semgrep_output.stderr,
             }
         except Exception as e:
-            security_results["semgrep_error"] = str(e)
-        # Additional security checks (e.g., using safety) can be added here.
-        return security_results
 
     def _collect_performance_metrics(self) -> Dict[str, Any]:
         """
@@ -340,7 +327,6 @@ class SystemComprehensiveValidator:
         recommendations = {
             "system_structure": [],
             "code_quality": [],
-            "security": [],
             "performance": [],
         }
 
@@ -370,11 +356,8 @@ class SystemComprehensiveValidator:
                 "Use isort to organize and sort import statements"
             )
 
-        # Security recommendations
-        if not system_scan_results["security_analysis"][
             "dependency_vulnerabilities"
         ]["passed"]:
-            recommendations["security"].append(
                 "Update dependencies to resolve known vulnerabilities"
             )
 
@@ -382,7 +365,8 @@ class SystemComprehensiveValidator:
         if system_scan_results["performance_metrics"]["cpu_usage"] > 70:
             recommendations["performance"].append(
                 f"High CPU usage detected: {system_scan_results['performance_metrics']['cpu_usage']}%. "
-                "Investigate and optimize resource-intensive processes.")
+                "Investigate and optimize resource-intensive processes."
+            )
 
         return recommendations
 

@@ -32,7 +32,9 @@ class TestInventoryManagementSystem(unittest.TestCase):
         Set up test environment and initialize inventory management system
         """
         cls.base_dir = "/opt/SutazAI"
-        cls.inventory_manager = InventoryManagementSystem(base_dir=cls.base_dir)
+        cls.inventory_manager = InventoryManagementSystem(
+            base_dir=cls.base_dir
+        )
 
     def test_inventory_manager_initialization(self):
         """
@@ -41,14 +43,20 @@ class TestInventoryManagementSystem(unittest.TestCase):
         self.assertIsNotNone(self.inventory_manager)
         self.assertTrue(hasattr(self.inventory_manager, "base_dir"))
         self.assertTrue(hasattr(self.inventory_manager, "log_dir"))
-        self.assertTrue(hasattr(self.inventory_manager, "hardcoded_items_inventory"))
-        self.assertTrue(hasattr(self.inventory_manager, "documentation_checks"))
+        self.assertTrue(
+            hasattr(self.inventory_manager, "hardcoded_items_inventory")
+        )
+        self.assertTrue(
+            hasattr(self.inventory_manager, "documentation_checks")
+        )
 
     def test_scan_project_for_hardcoded_items(self):
         """
         Test comprehensive hardcoded item scanning
         """
-        hardcoded_items = self.inventory_manager.scan_project_for_hardcoded_items()
+        hardcoded_items = (
+            self.inventory_manager.scan_project_for_hardcoded_items()
+        )
 
         # Validate hardcoded items structure
         self.assertIsInstance(hardcoded_items, list)
@@ -56,7 +64,9 @@ class TestInventoryManagementSystem(unittest.TestCase):
         # Check hardcoded item attributes
         for item in hardcoded_items:
             self.assertIsInstance(item, InventoryItem)
-            self.assertIn(item.risk_level, ["Critical", "High", "Medium", "Low"])
+            self.assertIn(
+                item.risk_level, ["Critical", "High", "Medium", "Low"]
+            )
             self.assertIn(
                 item.type,
                 [
@@ -82,7 +92,9 @@ class TestInventoryManagementSystem(unittest.TestCase):
         ]
 
         for item, expected_risk in test_cases:
-            risk_level = self.inventory_manager._assess_hardcoded_item_risk(item)
+            risk_level = self.inventory_manager._assess_hardcoded_item_risk(
+                item
+            )
             self.assertEqual(risk_level, expected_risk)
 
     def test_hardcoded_item_type_determination(self):
@@ -105,7 +117,9 @@ class TestInventoryManagementSystem(unittest.TestCase):
         """
         Test comprehensive documentation checks
         """
-        documentation_checks = self.inventory_manager.perform_documentation_checks()
+        documentation_checks = (
+            self.inventory_manager.perform_documentation_checks()
+        )
 
         # Validate documentation checks structure
         self.assertIsInstance(documentation_checks, list)
@@ -177,8 +191,10 @@ def sample_function(arg1, arg2):
         )
         file_path = "/test/sample_module.py"
 
-        function_doc_checks = self.inventory_manager._check_function_documentation(
-            sample_module, file_path
+        function_doc_checks = (
+            self.inventory_manager._check_function_documentation(
+                sample_module, file_path
+            )
         )
 
         self.assertIsInstance(function_doc_checks, list)
@@ -231,7 +247,10 @@ def sample_function(arg1, arg2):
 
         # Validate most recent log file
         most_recent_log = max(
-            [os.path.join(self.inventory_manager.log_dir, f) for f in log_files],
+            [
+                os.path.join(self.inventory_manager.log_dir, f)
+                for f in log_files
+            ],
             key=os.path.getctime,
         )
 
@@ -239,7 +258,9 @@ def sample_function(arg1, arg2):
             persisted_report = json.load(f)
 
         # Compare persisted report with generated report
-        self.assertEqual(set(inventory_report.keys()), set(persisted_report.keys()))
+        self.assertEqual(
+            set(inventory_report.keys()), set(persisted_report.keys())
+        )
 
 
 def main():

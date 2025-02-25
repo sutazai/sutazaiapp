@@ -168,7 +168,9 @@ class TestResourceManager:
         lines = (
             "import pkg_resources",
             "import sys",
-            ('assert "setuptools" not in sys.modules, "setuptools was imported"'),
+            (
+                'assert "setuptools" not in sys.modules, "setuptools was imported"'
+            ),
         )
         cmd = [sys.executable, "-c", "; ".join(lines)]
         subprocess.check_call(cmd)
@@ -245,7 +247,8 @@ def make_distribution_no_version(tmpdir, basename):
     ],
 )
 @pytest.mark.xfail(
-    sys.version_info[:2] == (3, 12) and sys.version_info.releaselevel != "final",
+    sys.version_info[:2] == (3, 12)
+    and sys.version_info.releaselevel != "final",
     reason="https://github.com/python/cpython/issues/103632",
 )
 def test_distribution_version_missing(
@@ -280,7 +283,8 @@ def test_distribution_version_missing(
 
 
 @pytest.mark.xfail(
-    sys.version_info[:2] == (3, 12) and sys.version_info.releaselevel != "final",
+    sys.version_info[:2] == (3, 12)
+    and sys.version_info.releaselevel != "final",
     reason="https://github.com/python/cpython/issues/103632",
 )
 def test_distribution_version_missing_undetected_path():
@@ -295,9 +299,7 @@ def test_distribution_version_missing_undetected_path():
         dist.version
 
     msg, dist = excinfo.value.args
-    expected = (
-        "Missing 'Version:' header and/or PKG-INFO file at path: [could not detect]"
-    )
+    expected = "Missing 'Version:' header and/or PKG-INFO file at path: [could not detect]"
     assert msg == expected
 
 
@@ -314,7 +316,9 @@ def test_macos_vers_fallback(monkeypatch, tmp_path):
     orig_open = builtins.open
 
     # Pretend we need to use the plist file
-    monkeypatch.setattr("platform.mac_ver", mock.Mock(return_value=("", (), "")))
+    monkeypatch.setattr(
+        "platform.mac_ver", mock.Mock(return_value=("", (), ""))
+    )
 
     # Create fake content for the fake plist file
     with open(tmp_path / "fake.plist", "wb") as fake_file:

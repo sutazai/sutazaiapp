@@ -84,7 +84,9 @@ def main():
     status = DependencyManager.check_dependencies(required_packages)
     print("Dependency Check Results:")
     for package, is_valid in status.items():
-        print(f"{package}: {'✓ Installed' if is_valid else '✗ Missing/Incompatible'}")
+        print(
+            f"{package}: {'✓ Installed' if is_valid else '✗ Missing/Incompatible'}"
+        )
 
 
 if __name__ == "__main__":

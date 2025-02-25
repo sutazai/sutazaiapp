@@ -275,7 +275,9 @@ class TestFSAPIs(BaseUnicodeTest):
             assert conn.laddr == name
 
     @pytest.mark.skipif(not POSIX, reason="POSIX only")
-    @pytest.mark.skipif(not HAS_NET_CONNECTIONS_UNIX, reason="can't list UNIX sockets")
+    @pytest.mark.skipif(
+        not HAS_NET_CONNECTIONS_UNIX, reason="can't list UNIX sockets"
+    )
     @skip_on_access_denied()
     def test_net_connections(self):
         def find_sock(cons):
@@ -305,7 +307,9 @@ class TestFSAPIs(BaseUnicodeTest):
         psutil.disk_usage(dname)
 
     @pytest.mark.skipif(not HAS_MEMORY_MAPS, reason="not supported")
-    @pytest.mark.skipif(not PY3, reason="ctypes does not support unicode on PY2")
+    @pytest.mark.skipif(
+        not PY3, reason="ctypes does not support unicode on PY2"
+    )
     @pytest.mark.skipif(PYPY, reason="unstable on PYPY")
     def test_memory_maps(self):
         # XXX: on Python 2, using ctypes.CDLL with a unicode path
@@ -315,7 +319,9 @@ class TestFSAPIs(BaseUnicodeTest):
             def normpath(p):
                 return os.path.realpath(os.path.normcase(p))
 
-            libpaths = [normpath(x.path) for x in psutil.Process().memory_maps()]
+            libpaths = [
+                normpath(x.path) for x in psutil.Process().memory_maps()
+            ]
             # ...just to have a clearer msg in case of failure
             libpaths = [x for x in libpaths if TESTFN_PREFIX in x]
             assert normpath(funky_path) in libpaths

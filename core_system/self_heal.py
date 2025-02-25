@@ -132,7 +132,9 @@ class SutazAIHealer:
                 ],
                 check=True,
             )
-            subprocess.run(["sudo", "systemctl", "restart", "docker"], check=True)
+            subprocess.run(
+                ["sudo", "systemctl", "restart", "docker"], check=True
+            )
             return True
         except subprocess.CalledProcessError:
             return False

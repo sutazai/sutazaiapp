@@ -46,7 +46,8 @@ class ParaSailLexer(RegexLexer):
             (r"//.*?\n", Comment.Single),
             (r"\b(and|or|xor)=", Operator.Word),
             (
-                r"\b(and(\s+then)?|or(\s+else)?|xor|rem|mod|" r"(is|not)\s+null)\b",
+                r"\b(and(\s+then)?|or(\s+else)?|xor|rem|mod|"
+                r"(is|not)\s+null)\b",
                 Operator.Word,
             ),
             # Keywords

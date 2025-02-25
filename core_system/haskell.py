@@ -184,8 +184,14 @@ class HaskellLexer(RegexLexer):
             (r"qualified\b", Keyword),
             # import X as Y
             (
-                r"([" + uni.Lu + r"][\w.]*)(\s+)(as)(\s+)([" + uni.Lu + r"][\w.]*)",
-                bygroups(Name.Namespace, Whitespace, Keyword, Whitespace, Name),
+                r"(["
+                + uni.Lu
+                + r"][\w.]*)(\s+)(as)(\s+)(["
+                + uni.Lu
+                + r"][\w.]*)",
+                bygroups(
+                    Name.Namespace, Whitespace, Keyword, Whitespace, Name
+                ),
                 "#pop",
             ),
             # import X hiding (functions)
@@ -746,7 +752,9 @@ class CryptolLexer(RegexLexer):
             # import X as Y
             (
                 r"([A-Z][\w.]*)(\s+)(as)(\s+)([A-Z][\w.]*)",
-                bygroups(Name.Namespace, Whitespace, Keyword, Whitespace, Name),
+                bygroups(
+                    Name.Namespace, Whitespace, Keyword, Whitespace, Name
+                ),
                 "#pop",
             ),
             # import X hiding (functions)
@@ -845,7 +853,9 @@ class CryptolLexer(RegexLexer):
 
     def get_tokens_unprocessed(self, text):
         stack = ["root"]
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name and value in self.EXTRA_KEYWORDS:
                 yield index, Name.Builtin, value
             else:
@@ -884,7 +894,9 @@ class LiterateLexer(Lexer):
                 line = match.group()
                 m = self.bird_re.match(line)
                 if m:
-                    insertions.append((len(code), [(0, Comment.Special, m.group(1))]))
+                    insertions.append(
+                        (len(code), [(0, Comment.Special, m.group(1))])
+                    )
                     code += m.group(2)
                 else:
                     insertions.append((len(code), [(0, Text, line)]))
@@ -915,7 +927,9 @@ class LiterateLexer(Lexer):
                     latex = ""
                 else:
                     latex += line
-            insertions.append((len(code), list(lxlexer.get_tokens_unprocessed(latex))))
+            insertions.append(
+                (len(code), list(lxlexer.get_tokens_unprocessed(latex)))
+            )
         yield from do_insertions(
             insertions, self.baselexer.get_tokens_unprocessed(code)
         )
@@ -985,7 +999,9 @@ class LiterateAgdaLexer(LiterateLexer):
     aliases = ["literate-agda", "lagda"]
     filenames = ["*.lagda"]
     mimetypes = ["text/x-literate-agda"]
-    url = "https://agda.readthedocs.io/en/latest/tools/literate-programming.html"
+    url = (
+        "https://agda.readthedocs.io/en/latest/tools/literate-programming.html"
+    )
     version_added = "2.0"
 
     def __init__(self, **options):
@@ -1132,7 +1148,8 @@ class KokaLexer(RegexLexer):
                 "struct-type",
             ),
             (
-                (r"({})".format("|".join(typeStartKeywords))) + r"(\s+)([a-z]\w*)?",
+                (r"({})".format("|".join(typeStartKeywords)))
+                + r"(\s+)([a-z]\w*)?",
                 bygroups(Keyword, Whitespace, tokenTypeDef),
                 "type",
             ),
@@ -1140,7 +1157,9 @@ class KokaLexer(RegexLexer):
             # required by 'bygroups')
             (
                 r"(module)(\s+)(interface(?=\s))?(\s+)?((?:[a-z]\w*/)*[a-z]\w*)",
-                bygroups(Keyword, Whitespace, Keyword, Whitespace, Name.Namespace),
+                bygroups(
+                    Keyword, Whitespace, Keyword, Whitespace, Name.Namespace
+                ),
             ),
             (
                 r"(import)(\s+)((?:[a-z]\w*/)*[a-z]\w*)"
@@ -1161,7 +1180,9 @@ class KokaLexer(RegexLexer):
             (
                 r"^(public|private)?(\s+)?(function|fun|val)"
                 r"(\s+)([a-z]\w*|\((?:" + symbols + r"|/)\))",
-                bygroups(Keyword, Whitespace, Keyword, Whitespace, Name.Function),
+                bygroups(
+                    Keyword, Whitespace, Keyword, Whitespace, Name.Function
+                ),
             ),
             (
                 r"^(?:(public|private)(?=\s+external))?((?<!^)\s+)?(external)(\s+)(inline(?=\s))?(\s+)?"

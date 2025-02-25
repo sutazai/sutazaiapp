@@ -66,7 +66,9 @@ class SBCSGroupProber(CharSetGroupProber):
             is_reversed=True,
             name_prober=hebrew_prober,
         )
-        hebrew_prober.set_model_probers(logical_hebrew_prober, visual_hebrew_prober)
+        hebrew_prober.set_model_probers(
+            logical_hebrew_prober, visual_hebrew_prober
+        )
         # TODO: ORDER MATTERS HERE. I changed the order vs what was in master
         #       and several tests failed that did not before. Some thought
         #       should be put into the ordering, and we should consider making

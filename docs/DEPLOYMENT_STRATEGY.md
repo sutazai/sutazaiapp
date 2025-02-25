@@ -68,10 +68,8 @@
 - Distributed Tracing
 - Real-Time Performance Monitoring
 
-## 8. Security Considerations
 
 - Immutable Infrastructure
-- Automated Security Scanning
 - Runtime Container Protection
 - Network Policy Enforcement
 

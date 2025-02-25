@@ -226,7 +226,9 @@ def wheel_paths(tmp_path_factory):
         example_dir = mkexample(tmp_path_factory, name)
         build_dir = build_base / name
         with jaraco.path.DirectoryStack().context(example_dir):
-            bdist_wheel_cmd(bdist_dir=str(build_dir), dist_dir=str(dist_dir)).run()
+            bdist_wheel_cmd(
+                bdist_dir=str(build_dir), dist_dir=str(dist_dir)
+            ).run()
 
     return sorted(str(fname) for fname in dist_dir.glob("*.whl"))
 
@@ -295,7 +297,8 @@ def test_licenses_default(dummy_dist, monkeypatch, tmp_path):
     bdist_wheel_cmd(bdist_dir=str(tmp_path)).run()
     with ZipFile("dist/dummy_dist-1.0-py3-none-any.whl") as wf:
         license_files = {
-            "dummy_dist-1.0.dist-info/" + fname for fname in DEFAULT_LICENSE_FILES
+            "dummy_dist-1.0.dist-info/" + fname
+            for fname in DEFAULT_LICENSE_FILES
         }
         assert set(wf.namelist()) == DEFAULT_FILES | license_files
 
@@ -326,13 +329,16 @@ def test_licenses_deprecated(dummy_dist, monkeypatch, tmp_path):
         ),
     ],
 )
-def test_licenses_override(dummy_dist, monkeypatch, tmp_path, config_file, config):
+def test_licenses_override(
+    dummy_dist, monkeypatch, tmp_path, config_file, config
+):
     dummy_dist.joinpath(config_file).write_text(config, encoding="utf-8")
     monkeypatch.chdir(dummy_dist)
     bdist_wheel_cmd(bdist_dir=str(tmp_path)).run()
     with ZipFile("dist/dummy_dist-1.0-py3-none-any.whl") as wf:
         license_files = {
-            "dummy_dist-1.0.dist-info/" + fname for fname in {"DUMMYFILE", "LICENSE"}
+            "dummy_dist-1.0.dist-info/" + fname
+            for fname in {"DUMMYFILE", "LICENSE"}
         }
         assert set(wf.namelist()) == DEFAULT_FILES | license_files
 
@@ -358,7 +364,9 @@ def test_build_number(dummy_dist, monkeypatch, tmp_path):
 
 def test_universal_deprecated(dummy_dist, monkeypatch, tmp_path):
     monkeypatch.chdir(dummy_dist)
-    with pytest.warns(SetuptoolsDeprecationWarning, match=".*universal is deprecated"):
+    with pytest.warns(
+        SetuptoolsDeprecationWarning, match=".*universal is deprecated"
+    ):
         bdist_wheel_cmd(bdist_dir=str(tmp_path), universal=True).run()
 
     # For now we still respect the option
@@ -405,7 +413,9 @@ def test_limited_abi(monkeypatch, tmp_path, tmp_path_factory):
     """Test that building a binary wheel with the limited ABI works."""
     source_dir = tmp_path_factory.mktemp("extension_dist")
     (source_dir / "setup.py").write_text(EXTENSION_SETUPPY, encoding="utf-8")
-    (source_dir / "extension.c").write_text(EXTENSION_EXAMPLE, encoding="utf-8")
+    (source_dir / "extension.c").write_text(
+        EXTENSION_EXAMPLE, encoding="utf-8"
+    )
     build_dir = tmp_path.joinpath("build")
     dist_dir = tmp_path.joinpath("dist")
     monkeypatch.chdir(source_dir)
@@ -444,7 +454,9 @@ def test_compression(dummy_dist, monkeypatch, tmp_path, option, compress_type):
 def test_wheelfile_line_endings(wheel_paths):
     for path in wheel_paths:
         with ZipFile(path) as wf:
-            wheelfile = next(fn for fn in wf.filelist if fn.filename.endswith("WHEEL"))
+            wheelfile = next(
+                fn for fn in wf.filelist if fn.filename.endswith("WHEEL")
+            )
             wheelfile_contents = wf.read(wheelfile)
             assert b"\r" not in wheelfile_contents
 
@@ -467,11 +479,15 @@ def test_unix_epoch_timestamps(dummy_dist, monkeypatch, tmp_path):
 
 def test_get_abi_tag_windows(monkeypatch):
     monkeypatch.setattr(tags, "interpreter_name", lambda: "cp")
-    monkeypatch.setattr(sysconfig, "get_config_var", lambda x: "cp313-win_amd64")
+    monkeypatch.setattr(
+        sysconfig, "get_config_var", lambda x: "cp313-win_amd64"
+    )
     assert get_abi_tag() == "cp313"
     monkeypatch.setattr(sys, "gettotalrefcount", lambda: 1, False)
     assert get_abi_tag() == "cp313d"
-    monkeypatch.setattr(sysconfig, "get_config_var", lambda x: "cp313t-win_amd64")
+    monkeypatch.setattr(
+        sysconfig, "get_config_var", lambda x: "cp313t-win_amd64"
+    )
     assert get_abi_tag() == "cp313td"
     monkeypatch.delattr(sys, "gettotalrefcount")
     assert get_abi_tag() == "cp313t"
@@ -484,7 +500,9 @@ def test_get_abi_tag_pypy_old(monkeypatch):
 
 
 def test_get_abi_tag_pypy_new(monkeypatch):
-    monkeypatch.setattr(sysconfig, "get_config_var", lambda x: "pypy37-pp73-darwin")
+    monkeypatch.setattr(
+        sysconfig, "get_config_var", lambda x: "pypy37-pp73-darwin"
+    )
     monkeypatch.setattr(tags, "interpreter_name", lambda: "pp")
     assert get_abi_tag() == "pypy37_pp73"
 
@@ -500,7 +518,9 @@ def test_get_abi_tag_graalpy(monkeypatch):
 
 
 def test_get_abi_tag_fallback(monkeypatch):
-    monkeypatch.setattr(sysconfig, "get_config_var", lambda x: "unknown-python-310")
+    monkeypatch.setattr(
+        sysconfig, "get_config_var", lambda x: "unknown-python-310"
+    )
     monkeypatch.setattr(tags, "interpreter_name", lambda: "unknown-python")
     assert get_abi_tag() == "unknown_python_310"
 

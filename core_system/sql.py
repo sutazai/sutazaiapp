@@ -120,20 +120,22 @@ def language_callback(lexer, match):
     plpgsql if inside a DO statement and no LANGUAGE has been found.
     """
     lx = None
-    m = language_re.match(lexer.text[match.end(): match.end() + 100])
+    m = language_re.match(lexer.text[match.end() : match.end() + 100])
     if m is not None:
         lx = lexer._get_lexer(m.group(1))
     else:
         m = list(
             language_re.finditer(
-                lexer.text[max(0, match.start() - 100): match.start()]
+                lexer.text[max(0, match.start() - 100) : match.start()]
             )
         )
         if m:
             lx = lexer._get_lexer(m[-1].group(1))
         else:
             m = list(
-                do_re.finditer(lexer.text[max(0, match.start() - 25): match.start()])
+                do_re.finditer(
+                    lexer.text[max(0, match.start() - 25) : match.start()]
+                )
             )
             if m:
                 lx = lexer._get_lexer("plpgsql")
@@ -210,7 +212,9 @@ class PostgresLexer(PostgresBase, RegexLexer):
             (r"/\*", Comment.Multiline, "multiline-comments"),
             (
                 r"("
-                + "|".join(s.replace(" ", r"\s+") for s in DATATYPES + PSEUDO_TYPES)
+                + "|".join(
+                    s.replace(" ", r"\s+") for s in DATATYPES + PSEUDO_TYPES
+                )
                 + r")\b",
                 Name.Builtin,
             ),
@@ -390,18 +394,22 @@ class PostgresConsoleLexer(Lexer):
                     insertions.append(
                         (len(curcode), [(0, Generic.Prompt, mprompt.group())])
                     )
-                    curcode += line[len(mprompt.group()):]
+                    curcode += line[len(mprompt.group()) :]
                 else:
                     curcode += line
 
                 # Check if this is the end of the command
                 # TODO: better handle multiline comments at the end with
                 # a lexer with an external state?
-                if re_psql_command.match(curcode) or re_end_command.search(curcode):
+                if re_psql_command.match(curcode) or re_end_command.search(
+                    curcode
+                ):
                     break
 
             # Emit the combined stream of command and prompt(s)
-            yield from do_insertions(insertions, sql.get_tokens_unprocessed(curcode))
+            yield from do_insertions(
+                insertions, sql.get_tokens_unprocessed(curcode)
+            )
 
             # Emit the output lines
             out_token = Generic.Output
@@ -414,9 +422,9 @@ class PostgresConsoleLexer(Lexer):
 
                 mmsg = re_message.match(line)
                 if mmsg is not None:
-                    if mmsg.group(1).startswith("ERROR") or mmsg.group(1).startswith(
-                        "FATAL"
-                    ):
+                    if mmsg.group(1).startswith("ERROR") or mmsg.group(
+                        1
+                    ).startswith("FATAL"):
                         out_token = Generic.Error
                     yield (mmsg.start(1), Generic.Strong, mmsg.group(1))
                     yield (mmsg.start(2), out_token, mmsg.group(2))
@@ -694,7 +702,9 @@ class PostgresExplainLexer(RegexLexer):
         "setting": [
             (
                 r"([a-z_]*?)(\s*)(=)(\s*)(\'.*?\')",
-                bygroups(Name.Attribute, Whitespace, Operator, Whitespace, String),
+                bygroups(
+                    Name.Attribute, Whitespace, Operator, Whitespace, String
+                ),
             ),
             (r"\, ", Punctuation),
         ],
@@ -1370,8 +1380,12 @@ class TransactSqlLexer(RegexLexer):
             # Found T-SQL variable declaration.
             rating = 1.0
         else:
-            name_between_backtick_count = len(name_between_backtick_re.findall(text))
-            name_between_bracket_count = len(name_between_bracket_re.findall(text))
+            name_between_backtick_count = len(
+                name_between_backtick_re.findall(text)
+            )
+            name_between_bracket_count = len(
+                name_between_bracket_re.findall(text)
+            )
             # We need to check if there are any names using
             # backticks or brackets, as otherwise both are 0
             # and 0 >= 2 * 0, so we would always assume it's true
@@ -1380,7 +1394,8 @@ class TransactSqlLexer(RegexLexer):
             )
             if (
                 dialect_name_count >= 1
-                and name_between_bracket_count >= 2 * name_between_backtick_count
+                and name_between_bracket_count
+                >= 2 * name_between_backtick_count
             ):
                 # Found at least twice as many [name] as `name`.
                 rating += 0.5
@@ -1568,10 +1583,14 @@ class MySqlLexer(RegexLexer):
 
     def analyse_text(text):
         rating = 0
-        name_between_backtick_count = len(name_between_backtick_re.findall(text))
+        name_between_backtick_count = len(
+            name_between_backtick_re.findall(text)
+        )
         name_between_bracket_count = len(name_between_bracket_re.findall(text))
         # Same logic as above in the TSQL analysis
-        dialect_name_count = name_between_backtick_count + name_between_bracket_count
+        dialect_name_count = (
+            name_between_backtick_count + name_between_bracket_count
+        )
         if (
             dialect_name_count >= 1
             and name_between_backtick_count >= 2 * name_between_bracket_count
@@ -1669,7 +1688,9 @@ class GoogleSqlLexer(RegexLexer):
             ),
             # Constants, types, keywords, functions, operators
             (
-                words(_googlesql_builtins.constants, prefix=r"\b", suffix=r"\b"),
+                words(
+                    _googlesql_builtins.constants, prefix=r"\b", suffix=r"\b"
+                ),
                 Name.Constant,
             ),
             (
@@ -1677,7 +1698,9 @@ class GoogleSqlLexer(RegexLexer):
                 Keyword.Type,
             ),
             (
-                words(_googlesql_builtins.keywords, prefix=r"\b", suffix=r"\b"),
+                words(
+                    _googlesql_builtins.keywords, prefix=r"\b", suffix=r"\b"
+                ),
                 Keyword,
             ),
             (
@@ -1689,7 +1712,9 @@ class GoogleSqlLexer(RegexLexer):
                 bygroups(Name.Function, Whitespace, Punctuation),
             ),
             (
-                words(_googlesql_builtins.operators, prefix=r"\b", suffix=r"\b"),
+                words(
+                    _googlesql_builtins.operators, prefix=r"\b", suffix=r"\b"
+                ),
                 Operator,
             ),
             # Schema object names
@@ -1785,7 +1810,9 @@ class SqliteConsoleLexer(Lexer):
             line = match.group()
             prompt_match = sqlite_prompt_re.match(line)
             if prompt_match is not None:
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:7])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:7])])
+                )
                 insertions.append((len(curcode), [(7, Whitespace, " ")]))
                 curcode += line[8:]
             else:
@@ -1800,7 +1827,9 @@ class SqliteConsoleLexer(Lexer):
                 else:
                     yield (match.start(), Generic.Output, line)
         if curcode:
-            yield from do_insertions(insertions, sql.get_tokens_unprocessed(curcode))
+            yield from do_insertions(
+                insertions, sql.get_tokens_unprocessed(curcode)
+            )
 
 
 class RqlLexer(RegexLexer):

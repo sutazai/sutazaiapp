@@ -85,7 +85,10 @@ class UnixAliasInterceptor(CommandInterceptor):
         aliases_lines = tuple(aliases)
 
         lines = (
-            (self.marker_start,) + metadata_lines + aliases_lines + (self.marker_end,)
+            (self.marker_start,)
+            + metadata_lines
+            + aliases_lines
+            + (self.marker_end,)
         )
 
         return "\n".join(lines) + "\n"
@@ -163,9 +166,14 @@ class UnixAliasInterceptor(CommandInterceptor):
 
                 pattern = rf"{self.marker_start}\n.*?\{self.marker_end}\n?"
 
-                with open(self.user_rc_path, "r") as src, open(temp_file, "w") as dst:
+                with (
+                    open(self.user_rc_path, "r") as src,
+                    open(temp_file, "w") as dst,
+                ):
                     content = src.read()
-                    cleaned_content = re.sub(pattern, "", content, flags=re.DOTALL)
+                    cleaned_content = re.sub(
+                        pattern, "", content, flags=re.DOTALL
+                    )
                     dst.write(cleaned_content)
 
                 if not temp_file.exists():

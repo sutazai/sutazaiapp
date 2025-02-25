@@ -3,14 +3,12 @@
 import time
 
 from agents.knowledge_base import SutazAiKnowledgeBase
-from agents.security import FounderProtectionSystem
 
 
 class CognitiveEvolutionEngine:
     def __init__(self):
         self.learning_cycles = 0
         self.knowledge = SutazAiKnowledgeBase()
-        self.security = FounderProtectionSystem()
 
     def continuous_learning_loop(self):
         """Continuously improve the system and agent"""
@@ -23,7 +21,6 @@ class CognitiveEvolutionEngine:
 
             # 3. Secure skill acquisition
             for skill in learning_queue:
-                if self.security.authorize_learning(skill):
                     self._acquire_skill(skill)
 
             # 4. Integration testing

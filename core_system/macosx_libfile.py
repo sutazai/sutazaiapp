@@ -275,7 +275,9 @@ def get_base_class_and_magic_number(lib_file, seek=None):
 
 
 def read_data(struct_class, lib_file):
-    return struct_class.from_buffer_copy(lib_file.read(ctypes.sizeof(struct_class)))
+    return struct_class.from_buffer_copy(
+        lib_file.read(ctypes.sizeof(struct_class))
+    )
 
 
 def extract_macosx_min_system_version(path_to_lib):
@@ -306,7 +308,8 @@ def extract_macosx_min_system_version(path_to_lib):
                     _fields_ = fat_arch_64_fields
 
             fat_arch_list = [
-                read_data(FatArch, lib_file) for _ in range(fat_header.nfat_arch)
+                read_data(FatArch, lib_file)
+                for _ in range(fat_header.nfat_arch)
             ]
 
             versions_list = []
@@ -314,7 +317,10 @@ def extract_macosx_min_system_version(path_to_lib):
                 try:
                     version = read_mach_header(lib_file, el.offset)
                     if version is not None:
-                        if el.cputype == CPU_TYPE_ARM64 and len(fat_arch_list) != 1:
+                        if (
+                            el.cputype == CPU_TYPE_ARM64
+                            and len(fat_arch_list) != 1
+                        ):
                             # Xcode will not set the deployment target below 11.0.0
                             # for the arm64 architecture. Ignore the arm64 deployment
                             # in fat binaries when the target is 11.0.0, that way
@@ -446,7 +452,9 @@ def calculate_macosx_platform_tag(archive_root, platform_tag):
     # macosx platform tag do not support minor bugfix release
     fin_base_version = "_".join([str(x) for x in base_version])
     if start_version < base_version:
-        problematic_files = [k for k, v in versions_dict.items() if v > start_version]
+        problematic_files = [
+            k for k, v in versions_dict.items() if v > start_version
+        ]
         problematic_files = "\n".join(problematic_files)
         if len(problematic_files) == 1:
             files_form = "this file"

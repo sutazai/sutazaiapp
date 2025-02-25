@@ -60,7 +60,9 @@ class UrbiscriptLexer(ExtendedRegexLexer):
             return
 
         # if blob is well formatted, yield as Escape
-        blob_text = blob_start + ctx.text[match.end(): match.end() + blob_size] + ")"
+        blob_text = (
+            blob_start + ctx.text[match.end() : match.end() + blob_size] + ")"
+        )
         yield match.start(), String.Escape, blob_text
         ctx.pos = match.end() + blob_size + 1  # +1 is the ending ")"
 

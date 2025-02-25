@@ -155,7 +155,9 @@ class DocumentUtils:
             ]
 
         except ImportError:
-            logger.warning("langdetect not installed. Skipping language detection.")
+            logger.warning(
+                "langdetect not installed. Skipping language detection."
+            )
             return []
         except Exception as e:
             logger.error(f"Language detection error: {e}")

@@ -44,7 +44,9 @@ class DevicetreeLexer(RegexLexer):
             # Include preprocessor directives (C style):
             (
                 r"(#include)(" + _ws + r")([^\n]+)",
-                bygroups(Comment.Preproc, Comment.Multiline, Comment.PreprocFile),
+                bygroups(
+                    Comment.Preproc, Comment.Multiline, Comment.PreprocFile
+                ),
             ),
             # Define preprocessor directives (C style):
             (
@@ -54,7 +56,9 @@ class DevicetreeLexer(RegexLexer):
             # devicetree style with file:
             (
                 r"(/[^*/{]+/)(" + _ws + r')("[^\n{]+")',
-                bygroups(Comment.Preproc, Comment.Multiline, Comment.PreprocFile),
+                bygroups(
+                    Comment.Preproc, Comment.Multiline, Comment.PreprocFile
+                ),
             ),
             # devicetree style with property:
             (

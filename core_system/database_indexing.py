@@ -10,15 +10,15 @@ import sys
 
 class DatabaseIndexing:
     """Main class for database indexing functionality"""
-    
+
     def __init__(self):
         """Initialize the DatabaseIndexing instance"""
         self.initialized = True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         return "Active"

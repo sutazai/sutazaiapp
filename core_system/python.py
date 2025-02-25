@@ -780,7 +780,10 @@ class PythonLexer(RegexLexer):
     }
 
     def analyse_text(text):
-        return shebang_matches(text, r"pythonw?(3(\.\d)?)?") or "import " in text[:1000]
+        return (
+            shebang_matches(text, r"pythonw?(3(\.\d)?)?")
+            or "import " in text[:1000]
+        )
 
 
 Python3Lexer = PythonLexer
@@ -1019,7 +1022,8 @@ class Python2Lexer(RegexLexer):
                 Name.Builtin,
             ),
             (
-                r"(?<!\.)(self|None|Ellipsis|NotImplemented|False|True|cls" r")\b",
+                r"(?<!\.)(self|None|Ellipsis|NotImplemented|False|True|cls"
+                r")\b",
                 Name.Builtin.Pseudo,
             ),
             (
@@ -1382,7 +1386,9 @@ class PythonConsoleLexer(DelegatingLexer):
                     pylexer, _PythonConsoleLexerBase, Other.Code, **options
                 )
 
-        super().__init__(tblexer, _ReplaceInnerCode, Other.Traceback, **options)
+        super().__init__(
+            tblexer, _ReplaceInnerCode, Other.Traceback, **options
+        )
 
 
 class PythonTracebackLexer(RegexLexer):
@@ -1425,7 +1431,9 @@ class PythonTracebackLexer(RegexLexer):
         "intb": [
             (
                 r'^(  File )("[^"]+")(, line )(\d+)(, in )(.+)(\n)',
-                bygroups(Text, Name.Builtin, Text, Number, Text, Name, Whitespace),
+                bygroups(
+                    Text, Name.Builtin, Text, Number, Text, Name, Whitespace
+                ),
             ),
             (
                 r'^(  File )("[^"]+")(, line )(\d+)(\n)',
@@ -1501,7 +1509,9 @@ class Python2TracebackLexer(RegexLexer):
         "intb": [
             (
                 r'^(  File )("[^"]+")(, line )(\d+)(, in )(.+)(\n)',
-                bygroups(Text, Name.Builtin, Text, Number, Text, Name, Whitespace),
+                bygroups(
+                    Text, Name.Builtin, Text, Number, Text, Name, Whitespace
+                ),
             ),
             (
                 r'^(  File )("[^"]+")(, line )(\d+)(\n)',
@@ -1731,7 +1741,8 @@ class CythonLexer(RegexLexer):
                 Name.Builtin,
             ),
             (
-                r"(?<!\.)(self|None|Ellipsis|NotImplemented|False|True|NULL" r")\b",
+                r"(?<!\.)(self|None|Ellipsis|NotImplemented|False|True|NULL"
+                r")\b",
                 Name.Builtin.Pseudo,
             ),
             (
@@ -2488,7 +2499,9 @@ class NumPyLexer(PythonLexer):
     }
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in PythonLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in PythonLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name and value in self.EXTRA_KEYWORDS:
                 yield index, Keyword.Pseudo, value
             else:

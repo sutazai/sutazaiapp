@@ -125,7 +125,9 @@ class FileList:
             self.debug_print("include " + " ".join(patterns))
             for pattern in patterns:
                 if not self.include_pattern(pattern, anchor=True):
-                    log.warning("warning: no files found matching '%s'", pattern)
+                    log.warning(
+                        "warning: no files found matching '%s'", pattern
+                    )
 
         elif action == "exclude":
             self.debug_print("exclude " + " ".join(patterns))
@@ -161,14 +163,18 @@ class FileList:
                     )
 
         elif action == "recursive-include":
-            self.debug_print("recursive-include {} {}".format(dir, " ".join(patterns)))
+            self.debug_print(
+                "recursive-include {} {}".format(dir, " ".join(patterns))
+            )
             for pattern in patterns:
                 if not self.include_pattern(pattern, prefix=dir):
                     msg = "warning: no files found matching '%s' under directory '%s'"
                     log.warning(msg, pattern, dir)
 
         elif action == "recursive-exclude":
-            self.debug_print("recursive-exclude {} {}".format(dir, " ".join(patterns)))
+            self.debug_print(
+                "recursive-exclude {} {}".format(dir, " ".join(patterns))
+            )
             for pattern in patterns:
                 if not self.exclude_pattern(pattern, prefix=dir):
                     log.warning(
@@ -183,7 +189,9 @@ class FileList:
         elif action == "graft":
             self.debug_print("graft " + dir_pattern)
             if not self.include_pattern(None, prefix=dir_pattern):
-                log.warning("warning: no directories found matching '%s'", dir_pattern)
+                log.warning(
+                    "warning: no directories found matching '%s'", dir_pattern
+                )
 
         elif action == "prune":
             self.debug_print("prune " + dir_pattern)
@@ -199,7 +207,9 @@ class FileList:
 
     # Filtering/selection methods
 
-    def include_pattern(self, pattern, anchor=True, prefix=None, is_regex=False):
+    def include_pattern(
+        self, pattern, anchor=True, prefix=None, is_regex=False
+    ):
         """Select strings (presumably filenames) from 'self.files' that
         match 'pattern', a Unix-style wildcard (glob) pattern.  Patterns
         are not quite the same as implemented by the 'fnmatch' module: '*'
@@ -227,7 +237,9 @@ class FileList:
         # XXX docstring lying about what the special chars are?
         files_found = False
         pattern_re = translate_pattern(pattern, anchor, prefix, is_regex)
-        self.debug_print(f"include_pattern: applying regex r'{pattern_re.pattern}'")
+        self.debug_print(
+            f"include_pattern: applying regex r'{pattern_re.pattern}'"
+        )
 
         # delayed loading of allfiles list
         if self.allfiles is None:
@@ -240,7 +252,9 @@ class FileList:
                 files_found = True
         return files_found
 
-    def exclude_pattern(self, pattern, anchor=True, prefix=None, is_regex=False):
+    def exclude_pattern(
+        self, pattern, anchor=True, prefix=None, is_regex=False
+    ):
         """Remove strings (presumably filenames) from 'files' that match
         'pattern'.  Other parameters are the same as for
         'include_pattern()', above.
@@ -249,7 +263,9 @@ class FileList:
         """
         files_found = False
         pattern_re = translate_pattern(pattern, anchor, prefix, is_regex)
-        self.debug_print(f"exclude_pattern: applying regex r'{pattern_re.pattern}'")
+        self.debug_print(
+            f"exclude_pattern: applying regex r'{pattern_re.pattern}'"
+        )
         for i in range(len(self.files) - 1, -1, -1):
             if pattern_re.search(self.files[i]):
                 self.debug_print(" removing " + self.files[i])
@@ -267,7 +283,9 @@ def _find_all_simple(path):
     """
     all_unique = _UniqueDirs.filter(os.walk(path, followlinks=True))
     results = (
-        os.path.join(base, file) for base, dirs, files in all_unique for file in files
+        os.path.join(base, file)
+        for base, dirs, files in all_unique
+        for file in files
     )
     return filter(os.path.isfile, results)
 
@@ -358,11 +376,11 @@ def translate_pattern(pattern, anchor=True, prefix=None, is_regex=False):
     if prefix is not None:
         prefix_re = glob_to_re(prefix)
         assert prefix_re.startswith(start) and prefix_re.endswith(end)
-        prefix_re = prefix_re[len(start): len(prefix_re) - len(end)]
+        prefix_re = prefix_re[len(start) : len(prefix_re) - len(end)]
         sep = os.sep
         if os.sep == "\\":
             sep = r"\\"
-        pattern_re = pattern_re[len(start): len(pattern_re) - len(end)]
+        pattern_re = pattern_re[len(start) : len(pattern_re) - len(end)]
         pattern_re = rf"{start}\A{prefix_re}{sep}.*{pattern_re}{end}"
     else:  # no prefix -- respect anchor flag
         if anchor:

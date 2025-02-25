@@ -68,7 +68,9 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",
-            filename=os.path.join(self.log_dir, "ultra_system_integration_worker.log"),
+            filename=os.path.join(
+                self.log_dir, "ultra_system_integration_worker.log"
+            ),
         )
         self.logger = logging.getLogger("SutazAI.UltraSystemIntegrationWorker")
 
@@ -76,8 +78,10 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
         self.load_configuration()
 
         # Initialize ultra-comprehensive integration framework
-        self.integration_framework = UltraComprehensiveSystemIntegrationFramework(
-            base_dir=base_dir, log_dir=self.log_dir
+        self.integration_framework = (
+            UltraComprehensiveSystemIntegrationFramework(
+                base_dir=base_dir, log_dir=self.log_dir
+            )
         )
 
     def load_configuration(self):
@@ -92,7 +96,9 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
                 "Ultra-comprehensive system integration configuration loaded successfully"
             )
         except Exception as e:
-            self.logger.error(f"Failed to load advanced integration configuration: {e}")
+            self.logger.error(
+                f"Failed to load advanced integration configuration: {e}"
+            )
             self.config = {
                 "global_policies": {
                     "auto_discovery": True,
@@ -106,7 +112,9 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
         Primary execution method for ultra-comprehensive system integration analysis
         """
         try:
-            self.logger.info("Starting ultra-comprehensive system integration analysis")
+            self.logger.info(
+                "Starting ultra-comprehensive system integration analysis"
+            )
 
             # Run advanced system integration analysis
             analysis_results = (
@@ -121,7 +129,9 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
                 f"Ultra-comprehensive system integration analysis failed: {e}"
             )
 
-    def _process_advanced_analysis_results(self, analysis_results: Dict[str, Any]):
+    def _process_advanced_analysis_results(
+        self, analysis_results: Dict[str, Any]
+    ):
         """
         Process and log advanced system integration analysis results
 
@@ -131,20 +141,28 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
         try:
             # Log advanced component discovery insights
             total_components = analysis_results.get("total_components", 0)
-            self.logger.info(f"Discovered {total_components} system components")
+            self.logger.info(
+                f"Discovered {total_components} system components"
+            )
 
             # Log advanced dependency graph details
             semantic_graph = analysis_results.get("semantic_graph", None)
             if semantic_graph:
                 total_dependencies = len(semantic_graph.edges())
-                self.logger.info(f"Total semantic dependencies: {total_dependencies}")
+                self.logger.info(
+                    f"Total semantic dependencies: {total_dependencies}"
+                )
 
             # Log component clustering results
             component_clusters = analysis_results.get("component_clusters", {})
-            self.logger.info(f"Identified {len(component_clusters)} component clusters")
+            self.logger.info(
+                f"Identified {len(component_clusters)} component clusters"
+            )
 
             # Log performance metrics
-            performance_metrics = analysis_results.get("performance_metrics", {})
+            performance_metrics = analysis_results.get(
+                "performance_metrics", {}
+            )
             complexity_distribution = performance_metrics.get(
                 "complexity_distribution", {}
             )
@@ -158,10 +176,14 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
             )
 
             # Generate advanced optimization recommendations
-            self._generate_advanced_optimization_recommendations(analysis_results)
+            self._generate_advanced_optimization_recommendations(
+                analysis_results
+            )
 
         except Exception as e:
-            self.logger.error(f"Advanced analysis results processing failed: {e}")
+            self.logger.error(
+                f"Advanced analysis results processing failed: {e}"
+            )
 
     def _generate_advanced_optimization_recommendations(
         self, analysis_results: Dict[str, Any]
@@ -212,7 +234,9 @@ class UltraSystemIntegrationWorker(SutazAiWorker):
 
             # Log advanced recommendations
             if recommendations:
-                self.logger.info("Advanced System Optimization Recommendations:")
+                self.logger.info(
+                    "Advanced System Optimization Recommendations:"
+                )
                 for rec in recommendations:
                     self.logger.info(f"- {rec['type']}: {rec['description']}")
                     self.logger.info(

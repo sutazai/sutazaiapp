@@ -85,7 +85,9 @@ class TestFileUtil:
         #  Unix, see issue #8876).
         jaraco.path.build({self.source: "some content"})
         st = os.stat(self.source)
-        with mock.patch("os.link", side_effect=OSError(0, "linking unsupported")):
+        with mock.patch(
+            "os.link", side_effect=OSError(0, "linking unsupported")
+        ):
             copy_file(self.source, self.target, link="hard")
         st2 = os.stat(self.source)
         st3 = os.stat(self.target)

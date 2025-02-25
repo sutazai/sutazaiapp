@@ -35,12 +35,16 @@ def make_local_path(s):
 
 class TestFileList:
     def assertNoWarnings(self, caplog):
-        warnings = [rec for rec in caplog.records if rec.levelno == logging.WARNING]
+        warnings = [
+            rec for rec in caplog.records if rec.levelno == logging.WARNING
+        ]
         assert not warnings
         caplog.clear()
 
     def assertWarnings(self, caplog):
-        warnings = [rec for rec in caplog.records if rec.levelno == logging.WARNING]
+        warnings = [
+            rec for rec in caplog.records if rec.levelno == logging.WARNING
+        ]
         assert warnings
         caplog.clear()
 
@@ -133,14 +137,18 @@ class TestFileList:
 
     def test_translate_pattern(self):
         # not regex
-        assert hasattr(translate_pattern("a", anchor=True, is_regex=False), "search")
+        assert hasattr(
+            translate_pattern("a", anchor=True, is_regex=False), "search"
+        )
 
         # is a regex
         regex = re.compile("a")
         assert translate_pattern(regex, anchor=True, is_regex=True) == regex
 
         # plain string flagged as regex
-        assert hasattr(translate_pattern("a", anchor=True, is_regex=True), "search")
+        assert hasattr(
+            translate_pattern("a", anchor=True, is_regex=True), "search"
+        )
 
         # glob support
         assert translate_pattern("*.py", anchor=True, is_regex=False).search(
@@ -249,7 +257,9 @@ class TestFileList:
 
         # recursive-include
         file_list = FileList()
-        file_list.set_allfiles(["a.py", mlp("d/b.py"), mlp("d/c.txt"), mlp("d/d/e.py")])
+        file_list.set_allfiles(
+            ["a.py", mlp("d/b.py"), mlp("d/c.txt"), mlp("d/d/e.py")]
+        )
 
         file_list.process_template_line("recursive-include d *.py")
         assert file_list.files == [mlp("d/b.py"), mlp("d/d/e.py")]
@@ -278,7 +288,9 @@ class TestFileList:
 
         # graft
         file_list = FileList()
-        file_list.set_allfiles(["a.py", mlp("d/b.py"), mlp("d/d/e.py"), mlp("f/f.py")])
+        file_list.set_allfiles(
+            ["a.py", mlp("d/b.py"), mlp("d/d/e.py"), mlp("f/f.py")]
+        )
 
         file_list.process_template_line("graft d")
         assert file_list.files == [mlp("d/b.py"), mlp("d/d/e.py")]

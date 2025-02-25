@@ -40,7 +40,9 @@ from pygments.util import shebang_matches
 __all__ = ["JuliaLexer", "JuliaConsoleLexer"]
 
 # see https://docs.julialang.org/en/v1/manual/variables/#Allowed-Variable-Names
-allowed_variable = "(?:[a-zA-Z_\u00a1-\U0010ffff][a-zA-Z_0-9!\u00a1-\U0010ffff]*)"
+allowed_variable = (
+    "(?:[a-zA-Z_\u00a1-\U0010ffff][a-zA-Z_0-9!\u00a1-\U0010ffff]*)"
+)
 # see https://github.com/JuliaLang/julia/blob/master/src/flisp/julia_opsuffs.h
 operator_suffixes = r"[²³¹ʰʲʳʷʸˡˢˣᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁᵂᵃᵇᵈᵉᵍᵏᵐᵒᵖᵗᵘᵛᵝᵞᵟᵠᵡᵢᵣᵤᵥᵦᵧᵨᵩᵪᶜᶠᶥᶦᶫᶰᶸᶻᶿ′″‴‵‶‷⁗⁰ⁱ⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₒₓₕₖₗₘₙₚₛₜⱼⱽ]*"
 
@@ -67,7 +69,11 @@ class JuliaLexer(RegexLexer):
             # symbols
             #   intercept range expressions first
             (
-                r"(" + allowed_variable + r")(\s*)(:)(" + allowed_variable + ")",
+                r"("
+                + allowed_variable
+                + r")(\s*)(:)("
+                + allowed_variable
+                + ")",
                 bygroups(Name, Whitespace, Operator, Name),
             ),
             #   then match :name which does not follow closing brackets, digits, or the
@@ -349,7 +355,9 @@ class JuliaConsoleLexer(Lexer):
 
         for line in text.splitlines(keepends=True):
             if line.startswith("julia>"):
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:6])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:6])])
+                )
                 curcode += line[6:]
                 output = False
                 error = False

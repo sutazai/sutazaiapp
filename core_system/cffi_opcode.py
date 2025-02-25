@@ -17,7 +17,9 @@ class CffiOp(object):
         if self.op is None and self.arg.isdigit():
             value = int(self.arg)  # non-negative: '-' not in self.arg
             if value >= 2**31:
-                raise OverflowError("cannot emit %r: limited to 2**31-1" % (self.arg,))
+                raise OverflowError(
+                    "cannot emit %r: limited to 2**31-1" % (self.arg,)
+                )
             return format_four_bytes(value)
         if isinstance(self.arg, str):
             raise VerificationError("cannot emit to Python: %r" % (self.arg,))

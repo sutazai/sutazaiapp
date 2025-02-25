@@ -139,7 +139,9 @@ class ListCommand(IndexGroupCommand):
             default=True,
         )
         self.cmd_opts.add_option(cmdoptions.list_exclude())
-        index_opts = cmdoptions.make_option_group(cmdoptions.index_group, self.parser)
+        index_opts = cmdoptions.make_option_group(
+            cmdoptions.index_group, self.parser
+        )
 
         self.parser.insert_option_group(0, index_opts)
         self.parser.insert_option_group(0, self.cmd_opts)
@@ -165,7 +167,9 @@ class ListCommand(IndexGroupCommand):
 
     def run(self, options: Values, args: List[str]) -> int:
         if options.outdated and options.uptodate:
-            raise CommandError("Options --outdated and --uptodate cannot be combined.")
+            raise CommandError(
+                "Options --outdated and --uptodate cannot be combined."
+            )
 
         if options.outdated and options.list_format == "freeze":
             raise CommandError(
@@ -180,7 +184,9 @@ class ListCommand(IndexGroupCommand):
 
         packages: "_ProcessedDists" = [
             cast("_DistWithLatestInfo", d)
-            for d in get_environment(options.path).iter_installed_distributions(
+            for d in get_environment(
+                options.path
+            ).iter_installed_distributions(
                 local_only=options.local,
                 user_only=options.user,
                 editables_only=options.editable,
@@ -234,7 +240,9 @@ class ListCommand(IndexGroupCommand):
         # Create a set to remove duplicate packages, and cast it to a list
         # to keep the return type consistent with get_outdated and
         # get_uptodate
-        return list({pkg for pkg in packages if pkg.canonical_name not in dep_keys})
+        return list(
+            {pkg for pkg in packages if pkg.canonical_name not in dep_keys}
+        )
 
     def iter_packages_latest_infos(
         self, packages: "_ProcessedDists", options: Values
@@ -245,7 +253,9 @@ class ListCommand(IndexGroupCommand):
             def latest_info(
                 dist: "_DistWithLatestInfo",
             ) -> Optional["_DistWithLatestInfo"]:
-                all_candidates = finder.find_all_candidates(dist.canonical_name)
+                all_candidates = finder.find_all_candidates(
+                    dist.canonical_name
+                )
                 if not options.pre:
                     # Remove prereleases
                     all_candidates = [

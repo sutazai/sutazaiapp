@@ -29,12 +29,16 @@ def _workaround_for_static_import_finders():
 
 
 CDEF_SOURCE_STRING = "<cdef source string>"
-_r_comment = re.compile(r"/\*.*?\*/|//([^\n\\]|\\.)*?$", re.DOTALL | re.MULTILINE)
+_r_comment = re.compile(
+    r"/\*.*?\*/|//([^\n\\]|\\.)*?$", re.DOTALL | re.MULTILINE
+)
 _r_define = re.compile(
     r"^\s*#\s*define\s+([A-Za-z_][A-Za-z_0-9]*)" r"\b((?:[^\n\\]|\\.)*?)$",
     re.DOTALL | re.MULTILINE,
 )
-_r_line_directive = re.compile(r"^[ \t]*#[ \t]*(?:line|\d+)\b.*$", re.MULTILINE)
+_r_line_directive = re.compile(
+    r"^[ \t]*#[ \t]*(?:line|\d+)\b.*$", re.MULTILINE
+)
 _r_partial_enum = re.compile(r"=\s*\.\.\.\s*[,}]|\.\.\.\s*\}")
 _r_enum_dotdotdot = re.compile(r"__dotdotdot\d+__$")
 _r_partial_array = re.compile(r"\[\s*\.\.\.\s*\]")
@@ -142,17 +146,18 @@ def _preprocess_extern_python(csource):
                 raise CDefError("'extern \"Python\" {': no '}' found")
             if csource.find("{", endpos + 1, closing) >= 0:
                 raise NotImplementedError(
-                    "cannot use { } inside a block " "'extern \"Python\" { ... }'"
+                    "cannot use { } inside a block "
+                    "'extern \"Python\" { ... }'"
                 )
-            parts.append(csource[endpos + 1: closing])
-            csource = csource[closing + 1:]
+            parts.append(csource[endpos + 1 : closing])
+            csource = csource[closing + 1 :]
         else:
             # non-grouping variant
             semicolon = csource.find(";", endpos)
             if semicolon < 0:
                 raise CDefError("'extern \"Python\": no ';' found")
-            parts.append(csource[endpos: semicolon + 1])
-            csource = csource[semicolon + 1:]
+            parts.append(csource[endpos : semicolon + 1])
+            csource = csource[semicolon + 1 :]
         parts.append(" void __cffi_extern_python_stop;")
         # print ''.join(parts)+csource
         # print
@@ -208,7 +213,8 @@ def _put_back_line_directives(csource, line_directives):
         s = m.group()
         if not s.startswith("#line@"):
             raise AssertionError(
-                "unexpected #line directive " "(should have been processed and removed"
+                "unexpected #line directive "
+                "(should have been processed and removed"
             )
         return line_directives[int(s[6:])]
 
@@ -269,14 +275,14 @@ def _preprocess(csource):
             csource = "%s,__dotdotdot%d__ %s" % (
                 csource[:p],
                 number,
-                csource[p2 + 3:],
+                csource[p2 + 3 :],
             )
         else:
-            assert csource[p: p + 3] == "..."
+            assert csource[p : p + 3] == "..."
             csource = "%s __dotdotdot%d__ %s" % (
                 csource[:p],
                 number,
-                csource[p + 3:],
+                csource[p + 3 :],
             )
     # Replace "int ..." or "unsigned long int..." with "__dotdotdotint__"
     csource = _r_int_dotdotdot.sub(" __dotdotdotint__ ", csource)
@@ -362,7 +368,8 @@ class Parser(object):
         for typename in typenames:
             csourcelines.append("typedef int %s;" % typename)
         csourcelines.append(
-            "typedef int __dotdotdotint__, __dotdotdotfloat__," " __dotdotdot__;"
+            "typedef int __dotdotdotint__, __dotdotdotfloat__,"
+            " __dotdotdot__;"
         )
         # this forces pycparser to consider the following in the file
         # called <cdef source string> from line 1
@@ -406,7 +413,9 @@ class Parser(object):
             msg = "parse error\n%s" % (msg,)
         raise CDefError(msg)
 
-    def parse(self, csource, override=False, packed=False, pack=None, dllexport=False):
+    def parse(
+        self, csource, override=False, packed=False, pack=None, dllexport=False
+    ):
         if packed:
             if not packed:
                 raise ValueError(
@@ -418,7 +427,9 @@ class Parser(object):
             pack = 1
         elif pack:
             if pack & (pack - 1):
-                raise ValueError("'pack' must be a power of two, not %r" % (pack,))
+                raise ValueError(
+                    "'pack' must be a power of two, not %r" % (pack,)
+                )
         else:
             pack = 0
         prev_options = self._options
@@ -454,7 +465,9 @@ class Parser(object):
                     self._parse_decl(decl)
                 elif isinstance(decl, pycparser.c_ast.Typedef):
                     if not decl.name:
-                        raise CDefError("typedef does not declare any name", decl)
+                        raise CDefError(
+                            "typedef does not declare any name", decl
+                        )
                     quals = 0
                     if isinstance(
                         decl.type.type, pycparser.c_ast.IdentifierType
@@ -462,11 +475,15 @@ class Parser(object):
                         realtype = self._get_unknown_type(decl)
                     elif (
                         isinstance(decl.type, pycparser.c_ast.PtrDecl)
-                        and isinstance(decl.type.type, pycparser.c_ast.TypeDecl)
+                        and isinstance(
+                            decl.type.type, pycparser.c_ast.TypeDecl
+                        )
                         and isinstance(
                             decl.type.type.type, pycparser.c_ast.IdentifierType
                         )
-                        and decl.type.type.type.names[-1].startswith("__dotdotdot")
+                        and decl.type.type.type.names[-1].startswith(
+                            "__dotdotdot"
+                        )
                     ):
                         realtype = self._get_unknown_ptr_type(decl)
                     else:
@@ -476,7 +493,9 @@ class Parser(object):
                             partial_length_ok=True,
                             typedef_example="*(%s *)0" % (decl.name,),
                         )
-                    self._declare("typedef " + decl.name, realtype, quals=quals)
+                    self._declare(
+                        "typedef " + decl.name, realtype, quals=quals
+                    )
                 elif decl.__class__.__name__ == "Pragma":
                     # skip pragma, only in pycparser 2.15
                     import warnings
@@ -518,7 +537,11 @@ class Parser(object):
         if neg:
             int_str = int_str[1:]
         # "010" is not valid oct in py3
-        if int_str.startswith("0") and int_str != "0" and not int_str.startswith("0x"):
+        if (
+            int_str.startswith("0")
+            and int_str != "0"
+            and not int_str.startswith("0x")
+        ):
             int_str = "0o" + int_str[1:]
         pyvalue = int(int_str, 0)
         if neg:
@@ -569,10 +592,14 @@ class Parser(object):
             elif isinstance(node, pycparser.c_ast.Enum):
                 self._get_struct_union_enum_type("enum", node)
             elif not decl.name:
-                raise CDefError("construct does not declare any variable", decl)
+                raise CDefError(
+                    "construct does not declare any variable", decl
+                )
             #
             if decl.name:
-                tp, quals = self._get_type_and_quals(node, partial_length_ok=True)
+                tp, quals = self._get_type_and_quals(
+                    node, partial_length_ok=True
+                )
                 if tp.is_raw_function:
                     self._declare_function(tp, quals, decl)
                 elif (
@@ -589,7 +616,9 @@ class Parser(object):
                     and hasattr(decl.init.expr, "value")
                     and _r_int_literal.match(decl.init.expr.value)
                 ):
-                    self._add_integer_constant(decl.name, "-" + decl.init.expr.value)
+                    self._add_integer_constant(
+                        decl.name, "-" + decl.init.expr.value
+                    )
                 elif tp is model.void_type and decl.name.startswith(
                     "__cffi_extern_python_"
                 ):
@@ -598,7 +627,10 @@ class Parser(object):
                     # "void __cffi_extern_python_stop;"
                     self._inside_extern_python = decl.name
                 else:
-                    if self._inside_extern_python != "__cffi_extern_python_stop":
+                    if (
+                        self._inside_extern_python
+                        != "__cffi_extern_python_stop"
+                    ):
                         raise CDefError(
                             "cannot declare constants or "
                             "variables with 'extern \"Python\"'"
@@ -637,7 +669,9 @@ class Parser(object):
 
     def _extract_quals(self, type):
         quals = 0
-        if isinstance(type, (pycparser.c_ast.TypeDecl, pycparser.c_ast.PtrDecl)):
+        if isinstance(
+            type, (pycparser.c_ast.TypeDecl, pycparser.c_ast.PtrDecl)
+        ):
             if "const" in type.quals:
                 quals |= model.Q_CONST
             if "volatile" in type.quals:
@@ -739,7 +773,9 @@ class Parser(object):
                 if ident == "void":
                     return model.void_type, quals
                 if ident == "__dotdotdot__":
-                    raise FFIError(':%d: bad usage of "..."' % typenode.coord.line)
+                    raise FFIError(
+                        ':%d: bad usage of "..."' % typenode.coord.line
+                    )
                 tp0, quals0 = resolve_common_type(self, ident)
                 return tp0, (quals | quals0)
             #
@@ -765,16 +801,22 @@ class Parser(object):
         # nested anonymous structs or unions end up here
         if isinstance(typenode, pycparser.c_ast.Struct):
             return (
-                self._get_struct_union_enum_type("struct", typenode, name, nested=True),
+                self._get_struct_union_enum_type(
+                    "struct", typenode, name, nested=True
+                ),
                 0,
             )
         if isinstance(typenode, pycparser.c_ast.Union):
             return (
-                self._get_struct_union_enum_type("union", typenode, name, nested=True),
+                self._get_struct_union_enum_type(
+                    "union", typenode, name, nested=True
+                ),
                 0,
             )
         #
-        raise FFIError(":%d: bad or unsupported type declaration" % typenode.coord.line)
+        raise FFIError(
+            ":%d: bad or unsupported type declaration" % typenode.coord.line
+        )
 
     def _parse_function_type(self, typenode, funcname=None):
         params = list(getattr(typenode.args, "params", []))
@@ -793,7 +835,9 @@ class Parser(object):
         ellipsis = (
             len(params) > 0
             and isinstance(params[-1].type, pycparser.c_ast.TypeDecl)
-            and isinstance(params[-1].type.type, pycparser.c_ast.IdentifierType)
+            and isinstance(
+                params[-1].type.type, pycparser.c_ast.IdentifierType
+            )
             and params[-1].type.type.names == ["__dotdotdot__"]
         )
         if ellipsis:
@@ -814,7 +858,9 @@ class Parser(object):
         # to detect __stdcall functions: we textually replace "__stdcall"
         # with "volatile volatile const" above.
         abi = None
-        if hasattr(typenode.type, "quals"):  # else, probable syntax error anyway
+        if hasattr(
+            typenode.type, "quals"
+        ):  # else, probable syntax error anyway
             if typenode.type.quals[-3:] == ["volatile", "volatile", "const"]:
                 abi = "__stdcall"
         return model.RawFunctionType(tuple(args), result, ellipsis, abi)
@@ -924,7 +970,9 @@ class Parser(object):
             else:
                 bitsize = self._parse_constant(decl.bitsize)
             self._partial_length = False
-            type, fqual = self._get_type_and_quals(decl.type, partial_length_ok=True)
+            type, fqual = self._get_type_and_quals(
+                decl.type, partial_length_ok=True
+            )
             if self._partial_length:
                 self._make_partial(tp, nested)
             if isinstance(type, model.StructType) and type.partial:
@@ -939,7 +987,9 @@ class Parser(object):
         tp.fldquals = tuple(fldquals)
         if fldbitsize != [-1] * len(fldbitsize):
             if isinstance(tp, model.StructType) and tp.partial:
-                raise NotImplementedError("%s: using both bitfields and '...;'" % (tp,))
+                raise NotImplementedError(
+                    "%s: using both bitfields and '...;'" % (tp,)
+                )
         tp.packed = self._options.get("packed")
         if tp.completed:  # must be re-completed: it is not opaque any more
             tp.completed = 0
@@ -950,7 +1000,9 @@ class Parser(object):
         if not isinstance(tp, model.StructOrUnion):
             raise CDefError("%s cannot be partial" % (tp,))
         if not tp.has_c_name() and not nested:
-            raise NotImplementedError("%s is partial but has no C name" % (tp,))
+            raise NotImplementedError(
+                "%s is partial but has no C name" % (tp,)
+            )
         tp.partial = True
 
     def _parse_constant(self, exprnode, partial_length_ok=False):
@@ -981,10 +1033,16 @@ class Parser(object):
             else:
                 raise CDefError("invalid constant %r" % (s,))
         #
-        if isinstance(exprnode, pycparser.c_ast.UnaryOp) and exprnode.op == "+":
+        if (
+            isinstance(exprnode, pycparser.c_ast.UnaryOp)
+            and exprnode.op == "+"
+        ):
             return self._parse_constant(exprnode.expr)
         #
-        if isinstance(exprnode, pycparser.c_ast.UnaryOp) and exprnode.op == "-":
+        if (
+            isinstance(exprnode, pycparser.c_ast.UnaryOp)
+            and exprnode.op == "-"
+        ):
             return -self._parse_constant(exprnode.expr)
         # load previously defined int constant
         if (
@@ -1090,9 +1148,13 @@ class Parser(object):
                 self._uses_new_feature = "'typedef float... %s'" % decl.name
             return model.UnknownFloatType(decl.name)
 
-        raise FFIError(':%d: unsupported usage of "..." in typedef' % decl.coord.line)
+        raise FFIError(
+            ':%d: unsupported usage of "..." in typedef' % decl.coord.line
+        )
 
     def _get_unknown_ptr_type(self, decl):
         if decl.type.type.type.names == ["__dotdotdot__"]:
             return model.unknown_ptr_type(decl.name)
-        raise FFIError(':%d: unsupported usage of "..." in typedef' % decl.coord.line)
+        raise FFIError(
+            ':%d: unsupported usage of "..." in typedef' % decl.coord.line
+        )

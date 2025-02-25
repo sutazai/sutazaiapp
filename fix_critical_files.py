@@ -2,7 +2,7 @@
 """
 Critical Core Files Fix Script
 -----------------------------
-This script fixes the most essential files in the core_system directory 
+This script fixes the most essential files in the core_system directory
 with proper structure and functionality.
 """
 
@@ -15,14 +15,16 @@ def fix_file(filepath, override_class_name=None):
     """Fix a specific file with proper structure"""
     file_name = os.path.basename(filepath)
     module_name = os.path.splitext(file_name)[0]
-    
+
     if override_class_name:
         class_name = override_class_name
     else:
-        class_name = ''.join(word.capitalize() for word in module_name.split('_'))
-    
+        class_name = "".join(
+            word.capitalize() for word in module_name.split("_")
+        )
+
     print(f"Creating proper module for {filepath}")
-    
+
     content = f'''"""
 SutazAI {class_name} Module
 --------------------------
@@ -71,12 +73,12 @@ if __name__ == "__main__":
     instance = initialize()
     print("{class_name} initialized successfully")
 '''
-    
+
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    
-    with open(filepath, 'w', encoding='utf-8') as f:
+
+    with open(filepath, "w", encoding="utf-8") as f:
         f.write(content)
-        
+
     print(f"✓ Fixed file {filepath}")
     return True
 
@@ -92,7 +94,6 @@ CRITICAL_FILES = [
     "core_system/system_audit.py",
     "core_system/integration_manager.py",
     "core_system/system_optimizer.py",
-    "core_system/advanced_security_manager.py",
 ]
 
 # Special class names for certain files
@@ -106,16 +107,16 @@ CLASS_NAME_OVERRIDES = {
     "core_system/system_audit.py": "SystemAuditor",
     "core_system/integration_manager.py": "IntegrationManager",
     "core_system/system_optimizer.py": "SystemOptimizer",
-    "core_system/advanced_security_manager.py": "SecurityManager",
 }
+
 
 def main():
     """Fix all critical files"""
     print("\n🔧 Starting critical files fix...\n")
-    
+
     fixed_count = 0
     error_count = 0
-    
+
     for filepath in CRITICAL_FILES:
         try:
             override_class_name = CLASS_NAME_OVERRIDES.get(filepath)
@@ -126,11 +127,11 @@ def main():
         except Exception as e:
             print(f"Error fixing {filepath}: {e}")
             error_count += 1
-    
+
     print(f"\n✅ Fix completed!")
     print(f"   - Files fixed successfully: {fixed_count}")
     print(f"   - Files with errors: {error_count}")
 
 
 if __name__ == "__main__":
-    main() 
+    main()

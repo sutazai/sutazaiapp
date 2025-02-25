@@ -233,7 +233,9 @@ class FantomLexer(RegexLexer):
             # new makeXXX (
             (
                 r"(new)(\s+)(make\w*)(\s*)(\()",
-                bygroups(Keyword, Whitespace, Name.Function, Whitespace, Punctuation),
+                bygroups(
+                    Keyword, Whitespace, Name.Function, Whitespace, Punctuation
+                ),
                 "insideMethodDeclArgs",
             ),
             # Type name (
@@ -292,7 +294,9 @@ class FantomLexer(RegexLexer):
             # Type var
             (
                 s(r"($type)([ \t]+)($id)"),
-                bygroups(using(this, state="inType"), Whitespace, Name.Variable),
+                bygroups(
+                    using(this, state="inType"), Whitespace, Name.Variable
+                ),
             ),
             (r"\(", Punctuation, "insideParen"),
             (r"\{", Punctuation, "insideBrace"),

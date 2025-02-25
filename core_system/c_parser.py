@@ -81,7 +81,9 @@ class CParser(PLYParser):
             type_lookup_func=self._lex_type_lookup_func,
         )
 
-        self.clex.build(optimize=lex_optimize, lextab=lextab, outputdir=taboutputdir)
+        self.clex.build(
+            optimize=lex_optimize, lextab=lextab, outputdir=taboutputdir
+        )
         self.tokens = self.clex.tokens
 
         rules_with_opt = [
@@ -158,7 +160,8 @@ class CParser(PLYParser):
         """Add a new typedef name (ie a TYPEID) to the current scope"""
         if not self._scope_stack[-1].get(name, True):
             self._parse_error(
-                "Typedef %r previously declared as non-typedef " "in this scope" % name,
+                "Typedef %r previously declared as non-typedef "
+                "in this scope" % name,
                 coord,
             )
         self._scope_stack[-1][name] = True
@@ -169,7 +172,8 @@ class CParser(PLYParser):
         """
         if self._scope_stack[-1].get(name, False):
             self._parse_error(
-                "Non-typedef %r previously declared as typedef " "in this scope" % name,
+                "Non-typedef %r previously declared as typedef "
+                "in this scope" % name,
                 coord,
             )
         self._scope_stack[-1][name] = False
@@ -312,7 +316,9 @@ class CParser(PLYParser):
         for tn in typename:
             if not isinstance(tn, c_ast.IdentifierType):
                 if len(typename) > 1:
-                    self._parse_error("Invalid multiple types specified", tn.coord)
+                    self._parse_error(
+                        "Invalid multiple types specified", tn.coord
+                    )
                 else:
                     type.type = tn
                     return decl
@@ -333,7 +339,9 @@ class CParser(PLYParser):
             )
         return decl
 
-    def _add_declaration_specifier(self, declspec, newspec, kind, append=False):
+    def _add_declaration_specifier(
+        self, declspec, newspec, kind, append=False
+    ):
         """Declaration specifiers are represented by a dictionary
         with the entries:
         * qual: a list of type qualifiers
@@ -349,7 +357,9 @@ class CParser(PLYParser):
         Returns the declaration specifier, with the new
         specifier incorporated.
         """
-        spec = declspec or dict(qual=[], storage=[], type=[], function=[], alignment=[])
+        spec = declspec or dict(
+            qual=[], storage=[], type=[], function=[], alignment=[]
+        )
 
         if append:
             spec[kind].append(newspec)
@@ -441,7 +451,9 @@ class CParser(PLYParser):
             ):
                 fixed_decl = declaration
             else:
-                fixed_decl = self._fix_decl_name_type(declaration, spec["type"])
+                fixed_decl = self._fix_decl_name_type(
+                    declaration, spec["type"]
+                )
 
             # Add the type name defined by typedef to a
             # symbol table (for usage in the lexer)
@@ -564,7 +576,9 @@ class CParser(PLYParser):
 
     def p_pp_directive(self, p):
         """pp_directive  : PPHASH"""
-        self._parse_error("Directives not supported yet", self._token_coord(p, 1))
+        self._parse_error(
+            "Directives not supported yet", self._token_coord(p, 1)
+        )
 
     # This encompasses two types of C99-compatible pragmas:
     # - The #pragma directive:
@@ -598,7 +612,9 @@ class CParser(PLYParser):
             qual=[],
             alignment=[],
             storage=[],
-            type=[c_ast.IdentifierType(["int"], coord=self._token_coord(p, 1))],
+            type=[
+                c_ast.IdentifierType(["int"], coord=self._token_coord(p, 1))
+            ],
             function=[],
         )
 
@@ -804,11 +820,15 @@ class CParser(PLYParser):
 
     def p_declaration_specifiers_2(self, p):
         """declaration_specifiers  : declaration_specifiers storage_class_specifier"""
-        p[0] = self._add_declaration_specifier(p[1], p[2], "storage", append=True)
+        p[0] = self._add_declaration_specifier(
+            p[1], p[2], "storage", append=True
+        )
 
     def p_declaration_specifiers_3(self, p):
         """declaration_specifiers  : declaration_specifiers function_specifier"""
-        p[0] = self._add_declaration_specifier(p[1], p[2], "function", append=True)
+        p[0] = self._add_declaration_specifier(
+            p[1], p[2], "function", append=True
+        )
 
     def p_declaration_specifiers_4(self, p):
         """declaration_specifiers  : declaration_specifiers type_specifier_no_typeid"""
@@ -824,7 +844,9 @@ class CParser(PLYParser):
 
     def p_declaration_specifiers_7(self, p):
         """declaration_specifiers  : declaration_specifiers alignment_specifier"""
-        p[0] = self._add_declaration_specifier(p[1], p[2], "alignment", append=True)
+        p[0] = self._add_declaration_specifier(
+            p[1], p[2], "alignment", append=True
+        )
 
     def p_storage_class_specifier(self, p):
         """storage_class_specifier : AUTO
@@ -925,11 +947,15 @@ class CParser(PLYParser):
 
     def p_specifier_qualifier_list_4(self, p):
         """specifier_qualifier_list  : type_qualifier_list type_specifier"""
-        p[0] = dict(qual=p[1], alignment=[], storage=[], type=[p[2]], function=[])
+        p[0] = dict(
+            qual=p[1], alignment=[], storage=[], type=[p[2]], function=[]
+        )
 
     def p_specifier_qualifier_list_5(self, p):
         """specifier_qualifier_list  : alignment_specifier"""
-        p[0] = dict(qual=[], alignment=[p[1]], storage=[], type=[], function=[])
+        p[0] = dict(
+            qual=[], alignment=[p[1]], storage=[], type=[], function=[]
+        )
 
     def p_specifier_qualifier_list_6(self, p):
         """specifier_qualifier_list  : specifier_qualifier_list alignment_specifier"""
@@ -1007,7 +1033,9 @@ class CParser(PLYParser):
             else:
                 decl_type = c_ast.IdentifierType(node)
 
-            decls = self._build_declarations(spec=spec, decls=[dict(decl=decl_type)])
+            decls = self._build_declarations(
+                spec=spec, decls=[dict(decl=decl_type)]
+            )
 
         else:
             # Structure/union members can have the same names as typedefs.
@@ -1106,17 +1134,23 @@ class CParser(PLYParser):
         """
         p[0] = p[1]
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_xxx_declarator_1(self, p):
         """xxx_declarator  : direct_xxx_declarator"""
         p[0] = p[1]
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_xxx_declarator_2(self, p):
         """xxx_declarator  : pointer direct_xxx_declarator"""
         p[0] = self._type_modify_decl(p[2], p[1])
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_direct_xxx_declarator_1(self, p):
         """direct_xxx_declarator   : yyy"""
         p[0] = c_ast.TypeDecl(
@@ -1132,7 +1166,9 @@ class CParser(PLYParser):
         """direct_xxx_declarator   : LPAREN xxx_declarator RPAREN"""
         p[0] = p[2]
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_direct_xxx_declarator_3(self, p):
         """direct_xxx_declarator   : direct_xxx_declarator LBRACKET type_qualifier_list_opt assignment_expression_opt RBRACKET"""
         quals = (p[3] if len(p) > 5 else []) or []
@@ -1147,7 +1183,9 @@ class CParser(PLYParser):
 
         p[0] = self._type_modify_decl(decl=p[1], modifier=arr)
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_direct_xxx_declarator_4(self, p):
         """direct_xxx_declarator   : direct_xxx_declarator LBRACKET STATIC type_qualifier_list_opt assignment_expression RBRACKET
         | direct_xxx_declarator LBRACKET type_qualifier_list STATIC assignment_expression RBRACKET
@@ -1159,7 +1197,10 @@ class CParser(PLYParser):
             item if isinstance(item, list) else [item] for item in [p[3], p[4]]
         ]
         dim_quals = [
-            qual for sublist in listed_quals for qual in sublist if qual is not None
+            qual
+            for sublist in listed_quals
+            for qual in sublist
+            if qual is not None
         ]
         arr = c_ast.ArrayDecl(
             type=None, dim=p[5], dim_quals=dim_quals, coord=p[1].coord
@@ -1169,7 +1210,9 @@ class CParser(PLYParser):
 
     # Special for VLAs
     #
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_direct_xxx_declarator_5(self, p):
         """direct_xxx_declarator   : direct_xxx_declarator LBRACKET type_qualifier_list_opt TIMES RBRACKET"""
         arr = c_ast.ArrayDecl(
@@ -1181,7 +1224,9 @@ class CParser(PLYParser):
 
         p[0] = self._type_modify_decl(decl=p[1], modifier=arr)
 
-    @parameterized(("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID"))
+    @parameterized(
+        ("id", "ID"), ("typeid", "TYPEID"), ("typeid_noparen", "TYPEID")
+    )
     def p_direct_xxx_declarator_6(self, p):
         """direct_xxx_declarator   : direct_xxx_declarator LPAREN parameter_type_list RPAREN
         | direct_xxx_declarator LPAREN identifier_list_opt RPAREN
@@ -1410,7 +1455,9 @@ class CParser(PLYParser):
 
     def p_direct_abstract_declarator_2(self, p):
         """direct_abstract_declarator  : direct_abstract_declarator LBRACKET assignment_expression_opt RBRACKET"""
-        arr = c_ast.ArrayDecl(type=None, dim=p[3], dim_quals=[], coord=p[1].coord)
+        arr = c_ast.ArrayDecl(
+            type=None, dim=p[3], dim_quals=[], coord=p[1].coord
+        )
 
         p[0] = self._type_modify_decl(decl=p[1], modifier=arr)
 
@@ -1502,7 +1549,9 @@ class CParser(PLYParser):
 
     def p_selection_statement_3(self, p):
         """selection_statement : SWITCH LPAREN expression RPAREN pragmacomp_or_statement"""
-        p[0] = fix_switch_cases(c_ast.Switch(p[3], p[5], self._token_coord(p, 1)))
+        p[0] = fix_switch_cases(
+            c_ast.Switch(p[3], p[5], self._token_coord(p, 1))
+        )
 
     def p_iteration_statement_1(self, p):
         """iteration_statement : WHILE LPAREN expression RPAREN pragmacomp_or_statement"""
@@ -1542,7 +1591,9 @@ class CParser(PLYParser):
         """jump_statement  : RETURN expression SEMI
         | RETURN SEMI
         """
-        p[0] = c_ast.Return(p[2] if len(p) == 4 else None, self._token_coord(p, 1))
+        p[0] = c_ast.Return(
+            p[2] if len(p) == 4 else None, self._token_coord(p, 1)
+        )
 
     def p_expression_statement(self, p):
         """expression_statement : expression_opt SEMI"""
@@ -1750,7 +1801,9 @@ class CParser(PLYParser):
         elif len(p) == 5:
             p[0] = c_ast.ArrayRef(p[1], p[3], p[1].coord)
         else:
-            raise NotImplementedError("Unexpected parsing state. len(p): %u" % len(p))
+            raise NotImplementedError(
+                "Unexpected parsing state. len(p): %u" % len(p)
+            )
 
     def p_argument_expression_list(self, p):
         """argument_expression_list    : assignment_expression
@@ -1865,7 +1918,9 @@ class CParser(PLYParser):
         if p:
             self._parse_error(
                 "before: %s" % p.value,
-                self._coord(lineno=p.lineno, column=self.clex.find_tok_column(p)),
+                self._coord(
+                    lineno=p.lineno, column=self.clex.find_tok_column(p)
+                ),
             )
         else:
             self._parse_error("At end of input", self.clex.filename)

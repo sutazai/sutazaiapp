@@ -60,7 +60,9 @@ class ComprehensiveSystemChecker:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_checker")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_checker"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -69,7 +71,9 @@ class ComprehensiveSystemChecker:
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
                 logging.FileHandler(
-                    os.path.join(self.log_dir, "comprehensive_system_checker.log")
+                    os.path.join(
+                        self.log_dir, "comprehensive_system_checker.log"
+                    )
                 ),
                 logging.StreamHandler(sys.stdout),
             ],
@@ -80,8 +84,8 @@ class ComprehensiveSystemChecker:
         self.dependency_mapper = AdvancedDependencyMapper(base_dir)
         self.system_auditor = UltraComprehensiveSystemAuditor(base_dir)
         self.system_optimizer = AdvancedSystemOptimizer(base_dir)
-        self.integration_framework = UltraComprehensiveSystemIntegrationFramework(
-            base_dir
+        self.integration_framework = (
+            UltraComprehensiveSystemIntegrationFramework(base_dir)
         )
 
         # Tracking and analysis
@@ -119,7 +123,9 @@ class ComprehensiveSystemChecker:
             potential_issues = self._identify_potential_system_issues()
 
             # Generate optimization recommendations
-            optimization_recommendations = self._generate_optimization_recommendations()
+            optimization_recommendations = (
+                self._generate_optimization_recommendations()
+            )
 
             # Update comprehensive analysis results
             self.comprehensive_analysis_results.update(
@@ -158,7 +164,9 @@ class ComprehensiveSystemChecker:
         mapped_dependencies = self.dependency_mapper.map_system_dependencies()
 
         # Extract and process dependency information
-        dependency_map["module_dependencies"] = mapped_dependencies.get("modules", {})
+        dependency_map["module_dependencies"] = mapped_dependencies.get(
+            "modules", {}
+        )
         dependency_map["circular_dependencies"] = mapped_dependencies.get(
             "circular_dependencies", []
         )
@@ -208,7 +216,9 @@ class ComprehensiveSystemChecker:
                         complexity = self._calculate_file_complexity(content)
 
                         code_structure["files"][relative_path] = structure
-                        code_structure["complexity_metrics"][relative_path] = complexity
+                        code_structure["complexity_metrics"][
+                            relative_path
+                        ] = complexity
 
                     except Exception as e:
                         self.logger.warning(
@@ -258,13 +268,17 @@ class ComprehensiveSystemChecker:
                             "complexity": sum(
                                 1
                                 for child in ast.walk(node)
-                                if isinstance(child, (ast.If, ast.For, ast.While))
+                                if isinstance(
+                                    child, (ast.If, ast.For, ast.While)
+                                )
                             ),
                         }
                     )
 
                 elif isinstance(node, ast.Import):
-                    structure["imports"].extend([alias.name for alias in node.names])
+                    structure["imports"].extend(
+                        [alias.name for alias in node.names]
+                    )
 
                 elif isinstance(node, ast.ImportFrom):
                     structure["imports"].extend(
@@ -312,10 +326,14 @@ class ComprehensiveSystemChecker:
                     )
                 ),
                 "function_count": sum(
-                    1 for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+                    1
+                    for node in ast.walk(tree)
+                    if isinstance(node, ast.FunctionDef)
                 ),
                 "class_count": sum(
-                    1 for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
+                    1
+                    for node in ast.walk(tree)
+                    if isinstance(node, ast.ClassDef)
                 ),
             }
 
@@ -331,7 +349,9 @@ class ComprehensiveSystemChecker:
             dependency_map (Dict): Comprehensive dependency mapping
         """
         # Build dependency graph
-        for module, dependencies in dependency_map.get("import_graph", {}).items():
+        for module, dependencies in dependency_map.get(
+            "import_graph", {}
+        ).items():
             for dep in dependencies:
                 self.system_dependency_graph.add_edge(module, dep)
 
@@ -357,7 +377,9 @@ class ComprehensiveSystemChecker:
 
         # Analyze code complexity
         for file, complexity in (
-            self.comprehensive_analysis_results.get("code_structure_analysis", {})
+            self.comprehensive_analysis_results.get(
+                "code_structure_analysis", {}
+            )
             .get("complexity_metrics", {})
             .items()
         ):
@@ -384,7 +406,9 @@ class ComprehensiveSystemChecker:
 
         # Recommendations based on dependency analysis
         if self.comprehensive_analysis_results.get("potential_issues"):
-            for issue in self.comprehensive_analysis_results["potential_issues"]:
+            for issue in self.comprehensive_analysis_results[
+                "potential_issues"
+            ]:
                 if issue["type"] == "circular_dependency":
                     recommendations.append(
                         f"Resolve circular dependency between modules: {', '.join(issue['modules'])}"
@@ -432,10 +456,14 @@ class ComprehensiveSystemChecker:
             while True:
                 try:
                     # Perform comprehensive system check
-                    system_check_results = self.perform_comprehensive_system_check()
+                    system_check_results = (
+                        self.perform_comprehensive_system_check()
+                    )
 
                     # Log key insights
-                    self.logger.info("Continuous system checking cycle completed")
+                    self.logger.info(
+                        "Continuous system checking cycle completed"
+                    )
                     self.logger.info(
                         f"Potential Issues: {len(system_check_results.get('potential_issues', []))}"
                     )
@@ -447,11 +475,15 @@ class ComprehensiveSystemChecker:
                     time.sleep(interval)
 
                 except Exception as e:
-                    self.logger.error(f"Continuous system checking failed: {e}")
+                    self.logger.error(
+                        f"Continuous system checking failed: {e}"
+                    )
                     time.sleep(interval)  # Backoff on continuous errors
 
         # Start system checking thread
-        system_check_thread = threading.Thread(target=system_check_worker, daemon=True)
+        system_check_thread = threading.Thread(
+            target=system_check_worker, daemon=True
+        )
         system_check_thread.start()
 
         self.logger.info("Continuous system checking started")
@@ -466,7 +498,9 @@ def main():
         system_checker = ComprehensiveSystemChecker()
 
         # Perform initial comprehensive system check
-        system_check_results = system_checker.perform_comprehensive_system_check()
+        system_check_results = (
+            system_checker.perform_comprehensive_system_check()
+        )
 
         print("\n🔍 Comprehensive System Check Results 🔍")
 

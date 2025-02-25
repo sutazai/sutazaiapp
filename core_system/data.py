@@ -92,7 +92,7 @@ class YamlLexer(ExtendedRegexLexer):
                     while context.next_indent < context.indent:
                         context.indent = context.indent_stack.pop()
                     if context.next_indent > context.indent:
-                        extra = text[context.indent:]
+                        extra = text[context.indent :]
                         text = text[: context.indent]
             else:
                 context.next_indent += len(text)
@@ -151,7 +151,7 @@ class YamlLexer(ExtendedRegexLexer):
                     yield match.start(), indent_token_class, text
             else:
                 indentation = text[: context.block_scalar_indent]
-                content = text[context.block_scalar_indent:]
+                content = text[context.block_scalar_indent :]
                 yield match.start(), indent_token_class, indentation
                 yield (
                     match.start() + context.block_scalar_indent,
@@ -247,7 +247,8 @@ class YamlLexer(ExtendedRegexLexer):
         "tag-directive": [
             # a tag handle and the corresponding prefix
             (
-                r"([ ]+)(!|![\w-]*!)" r"([ ]+)(!|!?[\w;/?:@&=+$,.!~*\'()\[\]%-]+)",
+                r"([ ]+)(!|![\w-]*!)"
+                r"([ ]+)(!|!?[\w;/?:@&=+$,.!~*\'()\[\]%-]+)",
                 bygroups(Whitespace, Keyword.Type, Whitespace, Keyword.Type),
                 "ignored-line",
             ),
@@ -574,7 +575,9 @@ class JsonLexer(Lexer):
                     in_escape = True
 
                 elif character == '"':
-                    queue.append((start, String.Double, text[start: stop + 1]))
+                    queue.append(
+                        (start, String.Double, text[start : stop + 1])
+                    )
                     in_string = False
                     in_escape = False
                     in_unicode_escape = 0
@@ -646,11 +649,13 @@ class JsonLexer(Lexer):
                                 (
                                     start,
                                     Comment.Multiline,
-                                    text[start: stop + 1],
+                                    text[start : stop + 1],
                                 )
                             )
                         else:
-                            yield start, Comment.Multiline, text[start: stop + 1]
+                            yield start, Comment.Multiline, text[
+                                start : stop + 1
+                            ]
 
                         in_comment_multiline = False
 

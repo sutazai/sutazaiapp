@@ -223,7 +223,9 @@ def objective(baselexer):
                     r"^([-+])(\s*)"  # method marker
                     r"(\(.*?\))?(\s*)"  # return type
                     r"([a-zA-Z$_][\w$]*:?)",  # begin of method name
-                    bygroups(Punctuation, Text, using(this), Text, Name.Function),
+                    bygroups(
+                        Punctuation, Text, using(this), Text, Name.Function
+                    ),
                     "method",
                 ),
                 inherit,
@@ -347,7 +349,9 @@ class LogosLexer(ObjectiveCppLexer):
             (r"(%orig|%log)\b", Keyword),
             (
                 r"(%c)\b(\()(\s*)([a-zA-Z$_][\w$]*)(\s*)(\))",
-                bygroups(Keyword, Punctuation, Text, Name.Class, Text, Punctuation),
+                bygroups(
+                    Keyword, Punctuation, Text, Name.Class, Text, Punctuation
+                ),
             ),
             (
                 r"(%init)\b(\()",
@@ -957,7 +961,9 @@ class SwiftLexer(RegexLexer):
             COCOA_PROTOCOLS,
         )
 
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name or token is Name.Class:
                 if (
                     value in COCOA_INTERFACES

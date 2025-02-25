@@ -108,7 +108,7 @@ class Tag:
             if ch != "%":
                 res += ch
             else:
-                res += chr(int(self.suffix[idx: idx + 2], 16))
+                res += chr(int(self.suffix[idx : idx + 2], 16))
                 idx += 2
         self._uri_decoded_suffix = res
         return res

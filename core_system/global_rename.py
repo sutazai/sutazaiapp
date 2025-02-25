@@ -46,7 +46,9 @@ class SutazAiRenamer:
                         )
                         os.rename(old_path, new_path)
                         renamed_dirs += 1
-                        self.logger.info(f"Renamed directory: {old_path} -> {new_path}")
+                        self.logger.info(
+                            f"Renamed directory: {old_path} -> {new_path}"
+                        )
 
             # Rename and modify files
             for root, _, files in os.walk(root_dir):
@@ -62,10 +64,14 @@ class SutazAiRenamer:
                         os.rename(file_path, new_file_path)
                         file_path = new_file_path
                         renamed_files += 1
-                        self.logger.info(f"Renamed file: {file} -> {new_file_name}")
+                        self.logger.info(
+                            f"Renamed file: {file} -> {new_file_name}"
+                        )
 
                     # Modify file contents
-                    if file.endswith((".py", ".md", ".txt", ".json", ".yaml", ".yml")):
+                    if file.endswith(
+                        (".py", ".md", ".txt", ".json", ".yaml", ".yml")
+                    ):
                         self._rename_in_file(file_path)
 
             self.logger.info(
@@ -141,7 +147,9 @@ def rename_file(old_path, new_path):
     try:
         os.rename(old_path, new_path)
     except Exception as e:
-        logging.error(f"Failed to rename file from {old_path} to {new_path}: {e}")
+        logging.error(
+            f"Failed to rename file from {old_path} to {new_path}: {e}"
+        )
         raise
 
 

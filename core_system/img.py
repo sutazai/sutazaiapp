@@ -118,7 +118,9 @@ class FontManager:
             for stylename in STYLES[style]:
                 path = self._get_nix_font_path(self.font_name, stylename)
                 if path is not None:
-                    self.fonts[style] = ImageFont.truetype(path, self.font_size)
+                    self.fonts[style] = ImageFont.truetype(
+                        path, self.font_size
+                    )
                     break
             else:
                 if style == "BOLDITALIC":
@@ -151,9 +153,13 @@ class FontManager:
             raise FontNotFound('No usable fonts named: "%s"' % self.font_name)
         for style in ("ITALIC", "BOLD", "BOLDITALIC"):
             for stylename in STYLES[style]:
-                path = self._get_mac_font_path(font_map, self.font_name, stylename)
+                path = self._get_mac_font_path(
+                    font_map, self.font_name, stylename
+                )
                 if path is not None:
-                    self.fonts[style] = ImageFont.truetype(path, self.font_size)
+                    self.fonts[style] = ImageFont.truetype(
+                        path, self.font_size
+                    )
                     break
             else:
                 if style == "BOLDITALIC":
@@ -177,7 +183,8 @@ class FontManager:
         else:
             if fail:
                 raise FontNotFound(
-                    "Font %s (%s) not found in registry" % (basename, styles[0])
+                    "Font %s (%s) not found in registry"
+                    % (basename, styles[0])
                 )
             return None
 
@@ -205,12 +212,20 @@ class FontManager:
             try:
                 key = _winreg.OpenKey(*keyname)
                 try:
-                    path = self._lookup_win(key, self.font_name, STYLES["NORMAL"], True)
-                    self.fonts["NORMAL"] = ImageFont.truetype(path, self.font_size)
+                    path = self._lookup_win(
+                        key, self.font_name, STYLES["NORMAL"], True
+                    )
+                    self.fonts["NORMAL"] = ImageFont.truetype(
+                        path, self.font_size
+                    )
                     for style in ("ITALIC", "BOLD", "BOLDITALIC"):
-                        path = self._lookup_win(key, self.font_name, STYLES[style])
+                        path = self._lookup_win(
+                            key, self.font_name, STYLES[style]
+                        )
                         if path:
-                            self.fonts[style] = ImageFont.truetype(path, self.font_size)
+                            self.fonts[style] = ImageFont.truetype(
+                                path, self.font_size
+                            )
                         else:
                             if style == "BOLDITALIC":
                                 self.fonts[style] = self.fonts["BOLD"]
@@ -416,8 +431,12 @@ class ImageFormatter(Formatter):
         self.line_number_fg = options.get("line_number_fg", "#886")
         self.line_number_bg = options.get("line_number_bg", "#eed")
         self.line_number_chars = get_int_opt(options, "line_number_chars", 2)
-        self.line_number_bold = get_bool_opt(options, "line_number_bold", False)
-        self.line_number_italic = get_bool_opt(options, "line_number_italic", False)
+        self.line_number_bold = get_bool_opt(
+            options, "line_number_bold", False
+        )
+        self.line_number_italic = get_bool_opt(
+            options, "line_number_italic", False
+        )
         self.line_number_pad = get_int_opt(options, "line_number_pad", 6)
         self.line_numbers = get_bool_opt(options, "line_numbers", True)
         self.line_number_separator = get_bool_opt(
@@ -438,7 +457,9 @@ class ImageFormatter(Formatter):
                 self.hl_lines.append(int(line))
             except ValueError:
                 pass
-        self.hl_color = options.get("hl_color", self.style.highlight_color) or "#f90"
+        self.hl_color = (
+            options.get("hl_color", self.style.highlight_color) or "#f90"
+        )
         self.drawables = []
 
     def get_style_defs(self, arg=""):
@@ -525,7 +546,9 @@ class ImageFormatter(Formatter):
         self._draw_text(
             self._get_linenumber_pos(posno),
             str(lineno).rjust(self.line_number_chars),
-            font=self.fonts.get_font(self.line_number_bold, self.line_number_italic),
+            font=self.fonts.get_font(
+                self.line_number_bold, self.line_number_italic
+            ),
             text_fg=self.line_number_fg,
             text_bg=None,
         )
@@ -622,12 +645,19 @@ class ImageFormatter(Formatter):
         draw = ImageDraw.Draw(im)
         # Highlight
         if self.hl_lines:
-            x = self.image_pad + self.line_number_width - self.line_number_pad + 1
+            x = (
+                self.image_pad
+                + self.line_number_width
+                - self.line_number_pad
+                + 1
+            )
             recth = self._get_line_height()
             rectw = im.size[0] - x
             for linenumber in self.hl_lines:
                 y = self._get_line_y(linenumber - 1)
-                draw.rectangle([(x, y), (x + rectw, y + recth)], fill=self.hl_color)
+                draw.rectangle(
+                    [(x, y), (x + rectw, y + recth)], fill=self.hl_color
+                )
         for pos, value, font, text_fg, text_bg in self.drawables:
             if text_bg:
                 text_size = draw.textsize(text=value, font=font)

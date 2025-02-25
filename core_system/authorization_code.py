@@ -1,6 +1,5 @@
 import logging
 
-from authlib.common.security import generate_token
 from authlib.common.urls import add_params_to_uri
 
 from ..errors import (

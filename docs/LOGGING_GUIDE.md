@@ -95,7 +95,6 @@ logger.log(
 - Rate limiting
 - Pattern-based filtering
 
-## Security and Compliance
 
 ### Data Protection
 

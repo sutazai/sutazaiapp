@@ -59,7 +59,6 @@ class ProjectOrganizer:
         "backend": ["services", "config", "tests"],
         "web_ui": ["src", "public", "build"],
         "core_system": [],
-        "security": [],
         "system_integration": [],
         "scripts": [],
         "packages": ["wheels", "node"],
@@ -99,7 +98,9 @@ class ProjectOrganizer:
                     os.makedirs(category_path)
                     logger.info(f"Created missing directory: {category_path}")
                 except Exception as e:
-                    logger.error(f"Failed to create directory {category_path}: {e}")
+                    logger.error(
+                        f"Failed to create directory {category_path}: {e}"
+                    )
                     return False
 
             # Ensure subcategory directories exist
@@ -108,7 +109,9 @@ class ProjectOrganizer:
                 if not os.path.exists(subcategory_path):
                     try:
                         os.makedirs(subcategory_path)
-                        logger.info(f"Created missing subdirectory: {subcategory_path}")
+                        logger.info(
+                            f"Created missing subdirectory: {subcategory_path}"
+                        )
                     except Exception as e:
                         logger.error(
                             f"Failed to create subdirectory {subcategory_path}: {e}"
@@ -142,7 +145,9 @@ class ProjectOrganizer:
                     file_categories["source_code"].append(file_path)
                 elif file.endswith((".md", ".rst", ".txt", ".pdf")):
                     file_categories["documentation"].append(file_path)
-                elif file.endswith((".yml", ".yaml", ".json", ".ini", ".conf")):
+                elif file.endswith(
+                    (".yml", ".yaml", ".json", ".ini", ".conf")
+                ):
                     file_categories["configuration"].append(file_path)
                 elif file.endswith((".sh", ".bash", ".zsh")):
                     file_categories["scripts"].append(file_path)

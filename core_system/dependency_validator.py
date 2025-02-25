@@ -10,21 +10,21 @@ import defusedxml.xmlrpc
 
 # Whitelist of allowed modules for dynamic import
 ALLOWED_MODULES = {
-    'numpy',
-    'pandas',
-    'tensorflow',
-    'torch',
-    'sklearn',
-    'scipy',
-    'matplotlib',
-    'seaborn',
-    'requests',
-    'fastapi',
-    'sqlalchemy',
-    'psycopg2',
-    'redis',
-    'celery',
-    'pydantic',
+    "numpy",
+    "pandas",
+    "tensorflow",
+    "torch",
+    "sklearn",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+    "requests",
+    "fastapi",
+    "sqlalchemy",
+    "psycopg2",
+    "redis",
+    "celery",
+    "pydantic",
 }
 
 defusedxml.xmlrpc.monkey_patch()
@@ -38,12 +38,11 @@ def validate_module_import(module_name: str) -> bool:
 def safe_import_module(module_name: str):
     """Safely import a module after validation."""
     if not validate_module_import(module_name):
-        raise SecurityError(f"Module {module_name} is not in the allowed modules list")
+            f"Module {module_name} is not in the allowed modules list"
+        )
     return importlib.import_module(module_name)
 
 
-class SecurityError(Exception):
-    """Custom exception for security-related errors."""
 
 
 class SystemValidator:
@@ -118,7 +117,9 @@ class SystemValidator:
             import torch
 
             cuda_available = torch.cuda.is_available()
-            device_name = torch.cuda.get_device_name(0) if cuda_available else None
+            device_name = (
+                torch.cuda.get_device_name(0) if cuda_available else None
+            )
 
             self.validation_results["gpu_availability"] = {
                 "cuda_available": cuda_available,
@@ -163,7 +164,11 @@ class SystemValidator:
                 result = self._run_command(cmd)
                 self.validation_results["system_tools"][name] = {
                     "version": result[0],
-                    "status": "✅ Installed" if result[1] == 0 else "❌ Not Installed",
+                    "status": (
+                        "✅ Installed"
+                        if result[1] == 0
+                        else "❌ Not Installed"
+                    ),
                 }
             except Exception as e:
                 self.validation_results["system_tools"][name] = {
@@ -208,7 +213,9 @@ def main():
     else:
         print("\n⚠️ System Validation Failed")
         print("Warnings and Issues:")
-        for warning in validator.validation_results.get("compatibility_warnings", []):
+        for warning in validator.validation_results.get(
+            "compatibility_warnings", []
+        ):
             print(f" - {warning}")
         sys.exit(1)
 

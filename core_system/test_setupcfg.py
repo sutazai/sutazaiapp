@@ -110,7 +110,9 @@ class TestConfigurationReader:
         with pytest.raises(ImportError):
             read_configuration(str(config))
 
-        config_dict = read_configuration(str(config), ignore_option_errors=True)
+        config_dict = read_configuration(
+            str(config), ignore_option_errors=True
+        )
 
         assert config_dict["metadata"]["keywords"] == ["one", "two"]
         assert "version" not in config_dict["metadata"]
@@ -194,7 +196,9 @@ class TestMetadata:
         tmpdir.ensure("README")
         project = tmpdir.join("depth1", "depth2")
         project.ensure(dir=True)
-        fake_env(project, "[metadata]\nlong_description = file: ../../README\n")
+        fake_env(
+            project, "[metadata]\nlong_description = file: ../../README\n"
+        )
 
         with get_dist(project, parse=False) as dist:
             with pytest.raises(DistutilsOptionError):
@@ -281,20 +285,28 @@ class TestMetadata:
         with get_dist(tmpdir) as dist:
             assert dist.metadata.version == "3.4.5.dev"
 
-        config.write("[metadata]\nversion = attr: fake_package.VERSION_MAJOR\n")
+        config.write(
+            "[metadata]\nversion = attr: fake_package.VERSION_MAJOR\n"
+        )
         with get_dist(tmpdir) as dist:
             assert dist.metadata.version == "1"
 
-        config.write("[metadata]\nversion = attr: fake_package.subpkg_a.mod.VERSION\n")
+        config.write(
+            "[metadata]\nversion = attr: fake_package.subpkg_a.mod.VERSION\n"
+        )
         with get_dist(tmpdir) as dist:
             assert dist.metadata.version == "2016.11.26"
 
-        config.write("[metadata]\nversion = attr: fake_package.subpkg_b.mod.VERSION\n")
+        config.write(
+            "[metadata]\nversion = attr: fake_package.subpkg_b.mod.VERSION\n"
+        )
         with get_dist(tmpdir) as dist:
             assert dist.metadata.version == "2016.11.26"
 
     def test_version_file(self, tmpdir):
-        fake_env(tmpdir, "[metadata]\nversion = file: fake_package/version.txt\n")
+        fake_env(
+            tmpdir, "[metadata]\nversion = file: fake_package/version.txt\n"
+        )
         tmpdir.join("fake_package", "version.txt").write("1.2.3\n")
 
         with get_dist(tmpdir) as dist:
@@ -368,7 +380,9 @@ class TestMetadata:
         )
 
         # From file.
-        _, config = fake_env(tmpdir, "[metadata]\nclassifiers = file: classifiers\n")
+        _, config = fake_env(
+            tmpdir, "[metadata]\nclassifiers = file: classifiers\n"
+        )
 
         tmpdir.join("classifiers").write(
             "Framework :: Django\n"
@@ -448,8 +462,12 @@ class TestMetadata:
     def test_make_option_lowercase(self, tmpdir):
         # remove this test and the method make_option_lowercase() in setuptools.dist
         # when no longer needed
-        fake_env(tmpdir, "[metadata]\nName = foo\ndescription = Some description\n")
-        msg = "Usage of uppercase key 'Name' in 'metadata' will not be supported"
+        fake_env(
+            tmpdir, "[metadata]\nName = foo\ndescription = Some description\n"
+        )
+        msg = (
+            "Usage of uppercase key 'Name' in 'metadata' will not be supported"
+        )
         with pytest.warns(SetuptoolsDeprecationWarning, match=msg):
             with get_dist(tmpdir) as dist:
                 metadata = dist.metadata
@@ -477,7 +495,9 @@ class TestOptions:
             "python_requires = >=1.0, !=2.8\n"
             "py_modules = module1, module2\n",
         )
-        deprec = pytest.warns(SetuptoolsDeprecationWarning, match="namespace_packages")
+        deprec = pytest.warns(
+            SetuptoolsDeprecationWarning, match="namespace_packages"
+        )
         with deprec, get_dist(tmpdir) as dist:
             assert dist.zip_safe
             assert dist.include_package_data
@@ -539,7 +559,9 @@ class TestOptions:
             "  http://some.com/here/1\n"
             "  http://some.com/there/2\n",
         )
-        deprec = pytest.warns(SetuptoolsDeprecationWarning, match="namespace_packages")
+        deprec = pytest.warns(
+            SetuptoolsDeprecationWarning, match="namespace_packages"
+        )
         with deprec, get_dist(tmpdir) as dist:
             assert dist.package_dir == {"": "src", "b": "c"}
             assert dist.packages == ["pack_a", "pack_b.subpack"]
@@ -637,7 +659,9 @@ class TestOptions:
             "    fake_package.sub_one\n"
         )
         with get_dist(tmpdir) as dist:
-            assert set(dist.packages) == set(["fake_package", "fake_package.sub_two"])
+            assert set(dist.packages) == set(
+                ["fake_package", "fake_package.sub_two"]
+            )
 
     def test_find_namespace_directive(self, tmpdir):
         dir_package, config = fake_env(
@@ -755,8 +779,12 @@ class TestOptions:
             "[options]\ninstall_requires =\n    bar\n    python_version<3\n",
         ],
     )
-    @pytest.mark.filterwarnings("error::setuptools.SetuptoolsDeprecationWarning")
-    def test_nowarn_accidental_env_marker_misconfig(self, config, tmpdir, recwarn):
+    @pytest.mark.filterwarnings(
+        "error::setuptools.SetuptoolsDeprecationWarning"
+    )
+    def test_nowarn_accidental_env_marker_misconfig(
+        self, config, tmpdir, recwarn
+    ):
         fake_env(tmpdir, config)
         num_warnings = len(recwarn)
         with get_dist(tmpdir) as _:
@@ -765,7 +793,9 @@ class TestOptions:
         assert len(recwarn) == num_warnings
 
     def test_dash_preserved_extras_require(self, tmpdir):
-        fake_env(tmpdir, "[options.extras_require]\nfoo-a = foo\nfoo_b = test\n")
+        fake_env(
+            tmpdir, "[options.extras_require]\nfoo-a = foo\nfoo_b = test\n"
+        )
 
         with get_dist(tmpdir) as dist:
             assert dist.extras_require == {"foo-a": ["foo"], "foo_b": ["test"]}
@@ -912,7 +942,9 @@ class TestOptions:
                 dist.parse_config_files()
 
     def test_cmdclass(self, tmpdir):
-        module_path = Path(tmpdir, "src/custom_build.py")  # auto discovery for src
+        module_path = Path(
+            tmpdir, "src/custom_build.py"
+        )  # auto discovery for src
         module_path.parent.mkdir(parents=True, exist_ok=True)
         module_path.write_text(
             "from distutils.core import Command\nclass CustomCmd(Command): pass\n",

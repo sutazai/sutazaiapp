@@ -34,8 +34,12 @@ class InitTest(TestCase):
     def assertWrapped(self):
         self.assertIsNot(sys.stdout, orig_stdout, "stdout should be wrapped")
         self.assertIsNot(sys.stderr, orig_stderr, "stderr should be wrapped")
-        self.assertTrue(isinstance(sys.stdout, StreamWrapper), "bad stdout wrapper")
-        self.assertTrue(isinstance(sys.stderr, StreamWrapper), "bad stderr wrapper")
+        self.assertTrue(
+            isinstance(sys.stdout, StreamWrapper), "bad stdout wrapper"
+        )
+        self.assertTrue(
+            isinstance(sys.stderr, StreamWrapper), "bad stderr wrapper"
+        )
 
     def assertNotWrapped(self):
         self.assertIs(sys.stdout, orig_stdout, "stdout should not be wrapped")
@@ -103,8 +107,12 @@ class InitTest(TestCase):
 
             init()
             self.assertEqual(len(mockATW32.call_args_list), 6)
-            self.assertEqual(mockATW32.call_args_list[4][1]["autoreset"], False)
-            self.assertEqual(mockATW32.call_args_list[5][1]["autoreset"], False)
+            self.assertEqual(
+                mockATW32.call_args_list[4][1]["autoreset"], False
+            )
+            self.assertEqual(
+                mockATW32.call_args_list[5][1]["autoreset"], False
+            )
 
     @patch("colorama.initialise.atexit.register")
     def testAtexitRegisteredOnlyOnce(self, mockRegister):

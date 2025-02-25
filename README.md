@@ -18,11 +18,9 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 - Automated update mechanisms
 - Dependency graph generation
 
-### 3. Multi-Layered Security
 - Zero-trust network design
 - Multi-tier threat detection
 - Adaptive access control
-- Continuous security monitoring
 
 ### 4. Performance Optimization
 - Real-time resource monitoring
@@ -42,7 +40,6 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 ### Core Components
 1. **System Orchestrator**: Coordinates system-wide operations
 2. **Dependency Manager**: Advanced dependency tracking
-3. **Security Manager**: Multi-layer threat protection
 4. **Performance Optimizer**: Continuous system tuning
 5. **System Integrator**: Component discovery and synchronization
 
@@ -83,11 +80,9 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 └── docs/
 
 
-## 🔒 Security Principles
 - Zero-trust architecture
 - Granular access control
 - Continuous threat assessment
-- Autonomous security optimization
 
 ## 🚀 Performance Strategy
 - Intelligent resource allocation
@@ -171,7 +166,6 @@ pytest tests/
 - [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md)
 - [System Architecture](/docs/SYSTEM_ARCHITECTURE.md)
 - [Dependency Management](/docs/DEPENDENCY_MANAGEMENT.md)
-- [Security Policy](/security/SECURITY_POLICY.md)
 - [Contribution Guidelines](/docs/CONTRIBUTION_GUIDELINES.md)
 
 ## 📞 Contact

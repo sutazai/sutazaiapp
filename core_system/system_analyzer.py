@@ -7,14 +7,12 @@ Comprehensive system analysis tool providing:
 - Dependency mapping
 - Performance profiling
 - Code quality assessment
-- Security vulnerability scanning
 
 Key Responsibilities:
 - Holistic system architecture analysis
 - Cross-component dependency tracking
 - Code complexity evaluation
 - Performance bottleneck identification
-- Security risk assessment
 """
 
 import ast
@@ -47,7 +45,6 @@ class SystemAnalysisReport:
     dependency_graph: Dict[str, List[str]]
     code_quality_metrics: Dict[str, Any]
     performance_analysis: Dict[str, Any]
-    security_assessment: Dict[str, Any]
     optimization_recommendations: List[str]
 
 
@@ -158,20 +155,24 @@ class SystemAnalyzer:
             # Use radon for code complexity analysis
             radon_cmd = ["radon", "cc", "-s", "-a", "-j", self.base_dir]
 
-            radon_result = subprocess.run(radon_cmd, capture_output=True, text=True)
+            radon_result = subprocess.run(
+                radon_cmd, capture_output=True, text=True
+            )
 
-            # Use bandit for security vulnerability scanning
             bandit_cmd = ["bandit", "-r", "-f", "json", self.base_dir]
 
-            bandit_result = subprocess.run(bandit_cmd, capture_output=True, text=True)
+            bandit_result = subprocess.run(
+                bandit_cmd, capture_output=True, text=True
+            )
 
             return {
                 "complexity_analysis": json.loads(radon_result.stdout),
-                "security_vulnerabilities": json.loads(bandit_result.stdout),
             }
 
         except Exception as e:
-            self.logger.log(f"Code quality assessment failed: {e}", level="error")
+            self.logger.log(
+                f"Code quality assessment failed: {e}", level="error"
+            )
             return {"status": "error", "error_details": str(e)}
 
     def profile_system_performance(self) -> Dict[str, Any]:
@@ -194,7 +195,9 @@ class SystemAnalyzer:
 
             # CPU Usage
             for _ in range(5):
-                performance_metrics["cpu_usage"].append(psutil.cpu_percent(interval=1))
+                performance_metrics["cpu_usage"].append(
+                    psutil.cpu_percent(interval=1)
+                )
 
             # Memory Usage
             memory = psutil.virtual_memory()
@@ -219,7 +222,9 @@ class SystemAnalyzer:
             }
 
         except Exception as e:
-            self.logger.log(f"Performance profiling failed: {e}", level="warning")
+            self.logger.log(
+                f"Performance profiling failed: {e}", level="warning"
+            )
 
         return performance_metrics
 
@@ -265,13 +270,10 @@ class SystemAnalyzer:
                     f"Refactor module {module} to reduce code complexity"
                 )
 
-        # Security vulnerability recommendations
-        vulnerabilities = code_quality.get("security_vulnerabilities", {}).get(
             "results", []
         )
         for vuln in vulnerabilities:
             recommendations.append(
-                f"Address security vulnerability: {vuln['issue_text']}"
             )
 
         # Performance recommendations
@@ -305,11 +307,13 @@ class SystemAnalyzer:
             performance_metrics = self.profile_system_performance()
 
             # Generate optimization recommendations
-            optimization_recommendations = self.generate_optimization_recommendations(
-                project_structure,
-                dependency_graph,
-                code_quality,
-                performance_metrics,
+            optimization_recommendations = (
+                self.generate_optimization_recommendations(
+                    project_structure,
+                    dependency_graph,
+                    code_quality,
+                    performance_metrics,
+                )
             )
 
             # Create comprehensive analysis report
@@ -319,7 +323,7 @@ class SystemAnalyzer:
                 dependency_graph=dependency_graph,
                 code_quality_metrics=code_quality,
                 performance_analysis=performance_metrics,
-                security_assessment=code_quality.get("security_vulnerabilities", {}),
+                ),
                 optimization_recommendations=optimization_recommendations,
             )
 

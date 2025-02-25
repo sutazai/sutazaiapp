@@ -10,6 +10,5 @@ annotate_code() {
     # Add warning comments for similar code
     sed -i '/#SIMILAR:/s/$/ #WARNING: Similar code pattern!/' "$file"
     
-    # Add security annotations
     sed -i '/password =/s/$/ #SECURITY: Potential credential exposure!/' "$file"
 } 

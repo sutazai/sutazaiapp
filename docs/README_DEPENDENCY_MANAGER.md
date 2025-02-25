@@ -126,9 +126,7 @@ Customize the Comprehensive Dependency Manager's behavior through the `system_in
 - Advanced Architectural Optimization
 - Predictive Refactoring Strategies
 
-## 🔒 Security Considerations
 - Risky import detection
-- Dependency security scanning
 - Architectural vulnerability assessment
 
 ---

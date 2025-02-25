@@ -61,7 +61,7 @@ class SystemCheckup:
     def check_syntax_errors(self):
         """Check for syntax errors in Python files."""
         print("\n🔍 Checking for syntax errors in Python files...")
-        
+
         for path in self.project_root.rglob("*.py"):
             rel_path = path.relative_to(self.project_root)
             try:
@@ -80,15 +80,15 @@ class SystemCheckup:
     def check_import_errors(self):
         """Check for import errors in Python files."""
         print("\n🔍 Checking for import errors in Python files...")
-        
+
         for path in self.project_root.rglob("*.py"):
             rel_path = path.relative_to(self.project_root)
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     content = f.read()
-                
+
                 tree = ast.parse(content)
-                
+
                 # Find all import statements
                 for node in ast.walk(tree):
                     if isinstance(node, (ast.Import, ast.ImportFrom)):
@@ -129,29 +129,29 @@ class SystemCheckup:
     def check_requirements(self):
         """Check if all required packages are installed."""
         print("\n🔍 Checking requirements installation...")
-        
+
         req_files = [
             "requirements.txt",
             "requirements-integration.txt",
             "requirements-documentation.txt",
             "requirements-analysis.txt",
         ]
-        
+
         for req_file in req_files:
             if not os.path.exists(os.path.join(self.project_root, req_file)):
                 continue
-                
+
             with open(os.path.join(self.project_root, req_file), "r") as f:
                 requirements = f.readlines()
-                
+
             for req in requirements:
                 req = req.strip()
                 if not req or req.startswith("#"):
                     continue
-                    
+
                 # Extract package name (without version specifiers)
-                package_name = re.split(r'[<>=!~]', req)[0].strip()
-                
+                package_name = re.split(r"[<>=!~]", req)[0].strip()
+
                 try:
                     importlib.import_module(package_name)
                 except ImportError:
@@ -164,7 +164,7 @@ class SystemCheckup:
     def check_empty_files(self):
         """Check for empty Python files."""
         print("\n🔍 Checking for empty Python files...")
-        
+
         for path in self.project_root.rglob("*.py"):
             rel_path = path.relative_to(self.project_root)
             if path.stat().st_size == 0:
@@ -178,14 +178,14 @@ class SystemCheckup:
     def check_duplicate_files(self):
         """Check for duplicate Python files."""
         print("\n🔍 Checking for duplicate Python files...")
-        
+
         file_contents = {}
         for path in self.project_root.rglob("*.py"):
             rel_path = path.relative_to(self.project_root)
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     content = f.read()
-                    
+
                 if content in file_contents:
                     self.log_issue(
                         "INFO",
@@ -201,49 +201,62 @@ class SystemCheckup:
     def fix_issues(self):
         """Attempt to fix identified issues."""
         print("\n🔧 Attempting to fix issues...")
-        
+
         # Fix syntax errors using the syntax_fixer.py script
-        syntax_fixer_path = os.path.join(self.project_root, "scripts", "syntax_fixer.py")
+        syntax_fixer_path = os.path.join(
+            self.project_root, "scripts", "syntax_fixer.py"
+        )
         if os.path.exists(syntax_fixer_path):
             syntax_issues = [
-                issue for issue in self.issues_found
-                if issue["level"] == "ERROR" and "Syntax error" in issue["message"] and issue["file"]
+                issue
+                for issue in self.issues_found
+                if issue["level"] == "ERROR"
+                and "Syntax error" in issue["message"]
+                and issue["file"]
             ]
-            
+
             if syntax_issues:
                 print(f"Fixing {len(syntax_issues)} syntax issues...")
                 for issue in syntax_issues:
                     try:
-                        file_path = os.path.join(self.project_root, issue["file"])
+                        file_path = os.path.join(
+                            self.project_root, issue["file"]
+                        )
                         subprocess.run(
                             [sys.executable, syntax_fixer_path, file_path],
-                            check=True, capture_output=True
+                            check=True,
+                            capture_output=True,
                         )
                         self.log_fix("Fixed syntax issue", file=issue["file"])
                     except subprocess.CalledProcessError:
                         print(f"Failed to fix syntax issue in {issue['file']}")
-        
+
         # Fix missing dependencies
         missing_deps = [
-            issue for issue in self.issues_found
-            if issue["level"] in ("ERROR", "WARNING") and "Cannot import module" in issue["message"]
+            issue
+            for issue in self.issues_found
+            if issue["level"] in ("ERROR", "WARNING")
+            and "Cannot import module" in issue["message"]
         ]
-        
+
         if missing_deps:
             # Get unique packages
             packages = set()
             for issue in missing_deps:
-                match = re.search(r"Cannot import module: ([\w\.]+)", issue["message"])
+                match = re.search(
+                    r"Cannot import module: ([\w\.]+)", issue["message"]
+                )
                 if match:
                     packages.add(match.group(1))
-            
+
             if packages:
                 print(f"Installing {len(packages)} missing packages...")
                 for package in packages:
                     try:
                         subprocess.run(
                             [sys.executable, "-m", "pip", "install", package],
-                            check=True, capture_output=True
+                            check=True,
+                            capture_output=True,
                         )
                         self.log_fix(f"Installed package: {package}")
                     except subprocess.CalledProcessError:
@@ -252,43 +265,54 @@ class SystemCheckup:
     def run_full_checkup(self):
         """Run a full system checkup."""
         print("🚀 Starting SutazAI system checkup...")
-        
+
         self.check_syntax_errors()
         self.check_import_errors()
         self.check_requirements()
         self.check_empty_files()
         self.check_duplicate_files()
-        
+
         print("\n📊 Checkup Summary:")
         print(f"- Errors: {self.error_count}")
         print(f"- Warnings: {self.warning_count}")
         print(f"- Info: {self.info_count}")
-        
+
         if self.error_count > 0 or self.warning_count > 0:
             self.fix_issues()
-            
+
             print("\n📝 Final Report:")
             print(f"- Issues found: {len(self.issues_found)}")
             print(f"- Issues fixed: {len(self.issues_fixed)}")
-            
+
             if self.issues_fixed:
                 print("\nFixed issues:")
                 for fix in self.issues_fixed:
                     file_info = f" in {fix['file']}" if fix.get("file") else ""
                     print(f"- {fix['message']}{file_info}")
-            
+
             if len(self.issues_found) > len(self.issues_fixed):
                 print("\nRemaining issues that need manual intervention:")
                 for issue in self.issues_found:
-                    if not any(fix.get("file") == issue.get("file") for fix in self.issues_fixed):
-                        file_info = f" in {issue['file']}" if issue.get("file") else ""
-                        line_info = f" at line {issue['line']}" if issue.get("line") else ""
-                        print(f"- {issue['level']}: {issue['message']}{file_info}{line_info}")
+                    if not any(
+                        fix.get("file") == issue.get("file")
+                        for fix in self.issues_fixed
+                    ):
+                        file_info = (
+                            f" in {issue['file']}" if issue.get("file") else ""
+                        )
+                        line_info = (
+                            f" at line {issue['line']}"
+                            if issue.get("line")
+                            else ""
+                        )
+                        print(
+                            f"- {issue['level']}: {issue['message']}{file_info}{line_info}"
+                        )
                         if issue.get("fix_action"):
                             print(f"  Fix: {issue['fix_action']}")
         else:
             print("\n✨ No issues found. System is in good health!")
-        
+
         return self.error_count == 0 and self.warning_count == 0
 
 

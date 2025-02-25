@@ -91,7 +91,9 @@ class SafetyRequirement(Requirement):
         dep = requirement
 
         if isinstance(requirement, str):
-            deps = parse(requirement, file_type=filetypes.requirements_txt).dependencies
+            deps = parse(
+                requirement, file_type=filetypes.requirements_txt
+            ).dependencies
             dep = deps[0] if deps else None
 
         if not dep:
@@ -222,9 +224,12 @@ class Package(DictConverter):
         Returns:
             Set[str]: The set of versions.
         """
-        pkg_meta = db_full.get("meta", {}).get("packages", {}).get(self.name, {})
+        pkg_meta = (
+            db_full.get("meta", {}).get("packages", {}).get(self.name, {})
+        )
         versions = self.filter_by_supported_versions(
-            pkg_meta.get("insecure_versions", []) + pkg_meta.get("secure_versions", [])
+            pkg_meta.get("insecure_versions", [])
+            + pkg_meta.get("secure_versions", [])
         )
         return set(versions)
 
@@ -303,7 +308,6 @@ class Announcement(announcement_nmt):
     """
     A class representing an announcement.
     """
-
 
 
 class Remediation(remediation_nmt, DictConverter):
@@ -446,7 +450,9 @@ class Vulnerability(vulnerability_nmt):
                 result[field] = val
             elif isinstance(value, DictConverter):
                 result.update(value.to_dict())
-            elif isinstance(value, SpecifierSet) or isinstance(value, datetime):
+            elif isinstance(value, SpecifierSet) or isinstance(
+                value, datetime
+            ):
                 result[field] = str(value)
             else:
                 result[field] = value

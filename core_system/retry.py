@@ -279,7 +279,9 @@ class Retry(object):
         if allowed_methods is _Default:
             allowed_methods = self.DEFAULT_ALLOWED_METHODS
         if remove_headers_on_redirect is _Default:
-            remove_headers_on_redirect = self.DEFAULT_REMOVE_HEADERS_ON_REDIRECT
+            remove_headers_on_redirect = (
+                self.DEFAULT_REMOVE_HEADERS_ON_REDIRECT
+            )
 
         self.total = total
         self.connect = connect
@@ -370,7 +372,9 @@ class Retry(object):
         if consecutive_errors_len <= 1:
             return 0
 
-        backoff_value = self.backoff_factor * (2 ** (consecutive_errors_len - 1))
+        backoff_value = self.backoff_factor * (
+            2 ** (consecutive_errors_len - 1)
+        )
         return min(self.DEFAULT_BACKOFF_MAX, backoff_value)
 
     def parse_retry_after(self, retry_after):
@@ -380,13 +384,17 @@ class Retry(object):
         else:
             retry_date_tuple = email.utils.parsedate_tz(retry_after)
             if retry_date_tuple is None:
-                raise InvalidHeader("Invalid Retry-After header: %s" % retry_after)
+                raise InvalidHeader(
+                    "Invalid Retry-After header: %s" % retry_after
+                )
             if retry_date_tuple[9] is None:  # Python 2
                 # Assume UTC if no timezone was specified
                 # On Python2.7, parsedate_tz returns None for a timezone offset
                 # instead of 0 if no timezone is given, where mktime_tz treats
                 # a None timezone offset as local time.
-                retry_date_tuple = retry_date_tuple[:9] + (0,) + retry_date_tuple[10:]
+                retry_date_tuple = (
+                    retry_date_tuple[:9] + (0,) + retry_date_tuple[10:]
+                )
 
             retry_date = email.utils.mktime_tz(retry_date_tuple)
             seconds = retry_date - time.time()
@@ -576,7 +584,9 @@ class Retry(object):
             if response and response.status:
                 if status_count is not None:
                     status_count -= 1
-                cause = ResponseError.SPECIFIC_ERROR.format(status_code=response.status)
+                cause = ResponseError.SPECIFIC_ERROR.format(
+                    status_code=response.status
+                )
                 status = response.status
 
         history = self.history + (

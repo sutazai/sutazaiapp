@@ -7,14 +7,12 @@ Comprehensive system analysis tool providing:
 - Dependency mapping
 - Performance profiling
 - Code quality assessment
-- Security vulnerability scanning
 
 Key Responsibilities:
 - Holistic system architecture analysis
 - Cross-component dependency tracking
 - Code complexity evaluation
 - Performance bottleneck identification
-- Security risk assessment
 """
 
 import ast
@@ -44,7 +42,6 @@ class SystemAnalysisReport:
     dependency_graph: Dict[str, List[str]]
     code_quality_metrics: Dict[str, Any]
     performance_analysis: Dict[str, Any]
-    security_assessment: Dict[str, Any]
     optimization_recommendations: List[str]
 
 
@@ -89,7 +86,9 @@ class SystemAnalyzer:
                         structure["packages"].append(rel_path)
 
         except Exception as e:
-            self.logger.log(f"Error analyzing project structure: {e}", level="error")
+            self.logger.log(
+                f"Error analyzing project structure: {e}", level="error"
+            )
 
         return structure
 
@@ -126,7 +125,9 @@ class SystemAnalyzer:
                         dependencies[module_name] = sorted(set(imports))
 
         except Exception as e:
-            self.logger.log(f"Error generating dependency graph: {e}", level="error")
+            self.logger.log(
+                f"Error generating dependency graph: {e}", level="error"
+            )
 
         return dependencies
 
@@ -167,7 +168,9 @@ class SystemAnalyzer:
                     }
 
         except Exception as e:
-            self.logger.log(f"Error assessing code quality: {e}", level="error")
+            self.logger.log(
+                f"Error assessing code quality: {e}", level="error"
+            )
 
         return quality_metrics
 
@@ -191,13 +194,17 @@ class SystemAnalyzer:
                 performance_metrics["execution_times"][component] = metrics[
                     "execution_time"
                 ]
-                performance_metrics["memory_usage"][component] = metrics["memory_usage"]
+                performance_metrics["memory_usage"][component] = metrics[
+                    "memory_usage"
+                ]
 
                 if metrics["is_bottleneck"]:
                     performance_metrics["bottlenecks"].append(component)
 
         except Exception as e:
-            self.logger.log(f"Error profiling system performance: {e}", level="error")
+            self.logger.log(
+                f"Error profiling system performance: {e}", level="error"
+            )
 
         return performance_metrics
 
@@ -230,7 +237,9 @@ class SystemAnalyzer:
         # Analyze dependencies
         for module, deps in dependency_graph.items():
             if len(deps) > 10:
-                recommendations.append(f"Reduce dependencies in module {module}")
+                recommendations.append(
+                    f"Reduce dependencies in module {module}"
+                )
 
         # Analyze code quality
         for module, score in code_quality["complexity_scores"].items():
@@ -239,7 +248,9 @@ class SystemAnalyzer:
 
         # Analyze performance
         for bottleneck in performance_metrics["bottlenecks"]:
-            recommendations.append(f"Optimize performance bottleneck in {bottleneck}")
+            recommendations.append(
+                f"Optimize performance bottleneck in {bottleneck}"
+            )
 
         return recommendations
 
@@ -262,8 +273,6 @@ class SystemAnalyzer:
             # Profile performance
             performance = self.profile_system_performance()
 
-            # Security assessment (placeholder)
-            security = {"vulnerabilities": [], "risk_level": "low"}
 
             # Generate recommendations
             recommendations = self.generate_optimization_recommendations(
@@ -277,14 +286,15 @@ class SystemAnalyzer:
                 dependency_graph=dependencies,
                 code_quality_metrics=quality,
                 performance_analysis=performance,
-                security_assessment=security,
                 optimization_recommendations=recommendations,
             )
 
             return report
 
         except Exception as e:
-            self.logger.log(f"Error generating analysis report: {e}", level="error")
+            self.logger.log(
+                f"Error generating analysis report: {e}", level="error"
+            )
             raise
 
     def _profile_component(self, component: str) -> Dict[str, float]:

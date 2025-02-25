@@ -39,9 +39,7 @@ class FuncLexer(RegexLexer):
     # 2. Can start from ` and end with `, containing any character
     # 3. Starts with underscore or { or } and have more than 1 character after it
     # 4. Starts with letter, contains letters, numbers and underscores
-    identifier = (
-        r'(?!")(`([^`]+)`|((?=_)_|(?=\{)\{|(?=\})\}|(?![_`{}]))([^;,\[\]\(\)\s~.]+))'
-    )
+    identifier = r'(?!")(`([^`]+)`|((?=_)_|(?=\{)\{|(?=\})\}|(?![_`{}]))([^;,\[\]\(\)\s~.]+))'
 
     tokens = {
         "root": [

@@ -1,4 +1,3 @@
-from sutazai.security_scanner import SecurityScanResult
 from sutazai.config_manager import ConfigurationManager, SutazAIConfig
 from sutazai.auto_remediation import (
     AutoRemediationManager,
@@ -13,7 +12,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 # Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 
 class TestAutoRemediationIntegration(unittest.TestCase):
@@ -71,8 +72,6 @@ def remediate_test_vulnerability(context=None):
 '''
             )
 
-        # Create a mock security report with a custom script vulnerability
-        mock_security_report = SecurityScanResult(
             vulnerability_count=1,
             custom_vulnerabilities=[
                 {
@@ -86,8 +85,6 @@ def remediate_test_vulnerability(context=None):
         )
 
         # Generate and execute remediation actions
-        remediation_actions = self.remediation_manager.analyze_security_report(
-            mock_security_report
         )
         results = self.remediation_manager.execute_remediation_actions(
             remediation_actions
@@ -124,8 +121,6 @@ def remediate_test_vulnerability(context=None):
 '''
             )
 
-        # Create a mock security report with a custom script vulnerability
-        mock_security_report = SecurityScanResult(
             vulnerability_count=1,
             custom_vulnerabilities=[
                 {
@@ -139,8 +134,6 @@ def remediate_test_vulnerability(context=None):
         )
 
         # Generate and execute remediation actions
-        remediation_actions = self.remediation_manager.analyze_security_report(
-            mock_security_report
         )
         results = self.remediation_manager.execute_remediation_actions(
             remediation_actions
@@ -158,12 +151,16 @@ def remediate_test_vulnerability(context=None):
         from sutazai.auto_remediation import AdvancedRemediationStrategies
 
         # Test dependency tree update
-        result = AdvancedRemediationStrategies.dependency_tree_update("requests")
+        result = AdvancedRemediationStrategies.dependency_tree_update(
+            "requests"
+        )
         self.assertTrue(result)
 
         # Create a temporary configuration file for rollback test
         config_path = os.path.join(self.test_project_dir, "test_config.json")
-        backup_path = os.path.join(self.test_project_dir, "test_config.json.bak")
+        backup_path = os.path.join(
+            self.test_project_dir, "test_config.json.bak"
+        )
 
         with open(config_path, "w") as f:
             json.dump({"test_key": "original_value"}, f)
@@ -187,8 +184,6 @@ def remediate_test_vulnerability(context=None):
         """
         Test comprehensive remediation report generation.
         """
-        # Create a mock security report
-        mock_security_report = SecurityScanResult(
             vulnerability_count=3,
             high_vulnerabilities=[
                 {
@@ -197,12 +192,12 @@ def remediate_test_vulnerability(context=None):
                     "description": "Test high vulnerability",
                 }
             ],
-            medium_vulnerabilities=[{"configuration": "Test config vulnerability"}],
+            medium_vulnerabilities=[
+                {"configuration": "Test config vulnerability"}
+            ],
         )
 
         # Generate and execute remediation actions
-        remediation_actions = self.remediation_manager.analyze_security_report(
-            mock_security_report
         )
         results = self.remediation_manager.execute_remediation_actions(
             remediation_actions
@@ -220,7 +215,9 @@ def remediate_test_vulnerability(context=None):
         self.assertTrue(len(report_files) > 0)
 
         # Verify report contents
-        with open(os.path.join(self.test_project_dir, report_files[0]), "r") as f:
+        with open(
+            os.path.join(self.test_project_dir, report_files[0]), "r"
+        ) as f:
             report_data = json.load(f)
 
         self.assertIn("successful", report_data)

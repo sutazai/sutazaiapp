@@ -62,7 +62,9 @@ class LinkHash:
         # proactively discarding an invalid hex digest, as we handle incorrect hashes
         # and malformed hashes in the same place.
         r"[#&]({choices})=([^&]*)".format(
-            choices="|".join(re.escape(hash_name) for hash_name in _SUPPORTED_HASHES)
+            choices="|".join(
+                re.escape(hash_name) for hash_name in _SUPPORTED_HASHES
+            )
         ),
     )
 
@@ -347,7 +349,9 @@ class Link(KeyBasedCompareMixin):
             # The file exists, and hashes have been supplied
             hashname, sep, hashval = metadata_info.partition("=")
             if sep == "=":
-                metadata_file_data = MetadataFile(supported_hashes({hashname: hashval}))
+                metadata_file_data = MetadataFile(
+                    supported_hashes({hashname: hashval})
+                )
             else:
                 # Error - data is wrong. Treat as no hashes supplied.
                 logger.debug(
@@ -515,7 +519,9 @@ class Link(KeyBasedCompareMixin):
         """
         if hashes is None:
             return False
-        return any(hashes.is_hash_allowed(k, v) for k, v in self._hashes.items())
+        return any(
+            hashes.is_hash_allowed(k, v) for k, v in self._hashes.items()
+        )
 
 
 class _CleanResult(NamedTuple):

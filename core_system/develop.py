@@ -62,7 +62,9 @@ class develop(namespaces.DevelopInstaller, easy_install):
             self.egg_path = os.path.abspath(ei.egg_base)
 
         target = _path.normpath(self.egg_base)
-        egg_path = _path.normpath(os.path.join(self.install_dir, self.egg_path))
+        egg_path = _path.normpath(
+            os.path.join(self.install_dir, self.egg_path)
+        )
         if egg_path != target:
             raise DistutilsOptionError(
                 "--egg-path must be a relative path from the install"
@@ -92,7 +94,9 @@ class develop(namespaces.DevelopInstaller, easy_install):
         path_to_setup = egg_base.replace(os.sep, "/").rstrip("/")
         if path_to_setup != os.curdir:
             path_to_setup = "../" * (path_to_setup.count("/") + 1)
-        resolved = _path.normpath(os.path.join(install_dir, egg_path, path_to_setup))
+        resolved = _path.normpath(
+            os.path.join(install_dir, egg_path, path_to_setup)
+        )
         curdir = _path.normpath(os.curdir)
         if resolved != curdir:
             raise DistutilsOptionError(
@@ -131,7 +135,9 @@ class develop(namespaces.DevelopInstaller, easy_install):
 
             contents = [
                 line.rstrip()
-                for line in _read_utf8_with_fallback(self.egg_link).splitlines()
+                for line in _read_utf8_with_fallback(
+                    self.egg_link
+                ).splitlines()
             ]
 
             if contents not in (

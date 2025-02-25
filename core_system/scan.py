@@ -42,10 +42,14 @@ class ReportModel(SafetyBaseModel):
     version: ReportSchemaVersion = DEFAULT_SCHEMA_VERSION
 
     @version_validator
-    def validate_version(cls, version: ReportSchemaVersion) -> ReportSchemaVersion:
+    def validate_version(
+        cls, version: ReportSchemaVersion
+    ) -> ReportSchemaVersion:
         versions = list(ReportSchemaVersion)
         if version not in (versions):
-            raise ValueError(f"Invalid version, allowed versions are {versions}")
+            raise ValueError(
+                f"Invalid version, allowed versions are {versions}"
+            )
         return version
 
     def as_v30(self) -> v3_0.Report:
@@ -53,8 +57,12 @@ class ReportModel(SafetyBaseModel):
 
         projects_data = [p.as_v30(full=full) for p in self.projects]
 
-        if not all(isinstance(p, type(projects_data[0])) for p in projects_data):
-            raise ValueError("All objects in projects_data must be of the same type")
+        if not all(
+            isinstance(p, type(projects_data[0])) for p in projects_data
+        ):
+            raise ValueError(
+                "All objects in projects_data must be of the same type"
+            )
 
         results = v3_0.ScanResults(
             files=[f.as_v30() for f in self.files],
@@ -66,7 +74,9 @@ class ReportModel(SafetyBaseModel):
         if not isinstance(meta_data, v3_0.Meta) or not isinstance(
             results, v3_0.ScanResults
         ):
-            raise TypeError("Expected instance of v3_0.Meta and v3_0.ScanResults")
+            raise TypeError(
+                "Expected instance of v3_0.Meta and v3_0.ScanResults"
+            )
 
         report = v3_0.Report(meta=meta_data, scan_results=results)
 
@@ -82,7 +92,9 @@ class ReportModel(SafetyBaseModel):
             version=ReportSchemaVersion(obj.meta.schema_version),
             telemetry=TelemetryModel.from_v30(obj.meta.telemetry),
             metadata=MetadataModel.from_v30(obj.meta),
-            projects=[ProjectModel.from_v30(p) for p in obj.scan_results.projects],
+            projects=[
+                ProjectModel.from_v30(p) for p in obj.scan_results.projects
+            ],
             files=[FileModel.from_v30(f) for f in obj.scan_results.files],
         )
 

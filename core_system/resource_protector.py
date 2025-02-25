@@ -51,7 +51,9 @@ class ResourceProtector(_ResourceProtector):
         if app:
             self.init_app(app)
 
-    def init_app(self, app, query_client=None, query_token=None, exists_nonce=None):
+    def init_app(
+        self, app, query_client=None, query_token=None, exists_nonce=None
+    ):
         if query_client is not None:
             self.query_client = query_client
         if query_token is not None:

@@ -135,7 +135,12 @@ class RendererHTML(RendererProtocol):
         #  - a
         #    >
         #
-        if token.block and token.nesting != -1 and idx and tokens[idx - 1].hidden:
+        if (
+            token.block
+            and token.nesting != -1
+            and idx
+            and tokens[idx - 1].hidden
+        ):
             result += "\n"
 
         # Add token name, e.g. `<img`
@@ -155,7 +160,9 @@ class RendererHTML(RendererProtocol):
             if token.nesting == 1 and (idx + 1 < len(tokens)):
                 nextToken = tokens[idx + 1]
 
-                if nextToken.type == "inline" or nextToken.hidden:  # noqa: SIM114
+                if (
+                    nextToken.type == "inline" or nextToken.hidden
+                ):  # noqa: SIM114
                     # Block-level tag containing an inline tag.
                     #
                     needLf = False
@@ -175,7 +182,9 @@ class RendererHTML(RendererProtocol):
         result = ""
 
         for key, value in token.attrItems():
-            result += " " + escapeHtml(key) + '="' + escapeHtml(str(value)) + '"'
+            result += (
+                " " + escapeHtml(key) + '="' + escapeHtml(str(value)) + '"'
+            )
 
         return result
 
@@ -201,7 +210,9 @@ class RendererHTML(RendererProtocol):
                 result += token.content
             elif token.type == "image":
                 if token.children:
-                    result += self.renderInlineAsText(token.children, options, env)
+                    result += self.renderInlineAsText(
+                        token.children, options, env
+                    )
             elif token.type == "softbreak":
                 result += "\n"
 
@@ -275,7 +286,9 @@ class RendererHTML(RendererProtocol):
         # now we prefer to keep things local.
         if info:
             # Fake token just to render attributes
-            tmpToken = Token(type="", tag="", nesting=0, attrs=token.attrs.copy())
+            tmpToken = Token(
+                type="", tag="", nesting=0, attrs=token.attrs.copy()
+            )
             tmpToken.attrJoin("class", options.langPrefix + langName)
 
             return (
@@ -306,7 +319,9 @@ class RendererHTML(RendererProtocol):
         # "alt" attr MUST be set, even if empty. Because it's mandatory and
         # should be placed on proper position for tests.
         if token.children:
-            token.attrSet("alt", self.renderInlineAsText(token.children, options, env))
+            token.attrSet(
+                "alt", self.renderInlineAsText(token.children, options, env)
+            )
         else:
             token.attrSet("alt", "")
 
@@ -329,7 +344,9 @@ class RendererHTML(RendererProtocol):
         env: EnvType,
     ) -> str:
         return (
-            ("<br />\n" if options.xhtmlOut else "<br>\n") if options.breaks else "\n"
+            ("<br />\n" if options.xhtmlOut else "<br>\n")
+            if options.breaks
+            else "\n"
         )
 
     def text(

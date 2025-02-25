@@ -144,7 +144,9 @@ class TestCheck(support.TempdirManager):
         assert cmd._warnings == 0
 
         # check that includes work to test #31292
-        metadata["long_description"] = "title\n=====\n\n.. include:: includetest.rst"
+        metadata["long_description"] = (
+            "title\n=====\n\n.. include:: includetest.rst"
+        )
         cmd = self._run(metadata, cwd=HERE, strict=True, restructuredtext=True)
         assert cmd._warnings == 0
 

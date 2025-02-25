@@ -104,7 +104,9 @@ class RedirectHandler(BaseRedirectHandler):
                 headers.replace_header(key, newurl)
             else:
                 headers[key] = newurl
-        return BaseRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
+        return BaseRedirectHandler.http_error_302(
+            self, req, fp, code, msg, headers
+        )
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302
 
@@ -276,7 +278,9 @@ class Locator(object):
         result = None
         scheme, netloc, path, params, query, frag = urlparse(url)
         if frag.lower().startswith("egg="):  # pragma: no cover
-            logger.debug("%s: version hint in fragment: %r", project_name, frag)
+            logger.debug(
+                "%s: version hint in fragment: %r", project_name, frag
+            )
         m = HASHER_HASH.match(frag)
         if m:
             algo, digest = m.groups()
@@ -309,7 +313,9 @@ class Locator(object):
                         }
             except Exception:  # pragma: no cover
                 logger.warning("invalid path for wheel: %s", path)
-        elif not path.endswith(self.downloadable_extensions):  # pragma: no cover
+        elif not path.endswith(
+            self.downloadable_extensions
+        ):  # pragma: no cover
             logger.debug("Not downloadable: %s", path)
         else:  # downloadable extension
             path = filename = posixpath.basename(path)
@@ -321,7 +327,9 @@ class Locator(object):
                         logger.debug("No match for project/version: %s", path)
                     else:
                         name, version, pyver = t
-                        if not project_name or same_project(project_name, name):
+                        if not project_name or same_project(
+                            project_name, name
+                        ):
                             result = {
                                 "name": name,
                                 "version": version,
@@ -611,7 +619,9 @@ href\\s*=\\s*(?:"(?P<url1>[^"]*)"|'(?P<url2>[^']*)'|(?P<url3>[^>\\s\n]*))
         def clean(url):
             "Tidy up an URL."
             scheme, netloc, path, params, query, frag = urlparse(url)
-            return urlunparse((scheme, netloc, quote(path), params, query, frag))
+            return urlunparse(
+                (scheme, netloc, quote(path), params, query, frag)
+            )
 
         result = set()
         for match in self._href.finditer(self.data):
@@ -758,7 +768,9 @@ class SimpleScrapingLocator(Locator):
         """
         scheme, netloc, path, _, _, _ = urlparse(link)
         if path.endswith(
-            self.source_extensions + self.binary_extensions + self.excluded_extensions
+            self.source_extensions
+            + self.binary_extensions
+            + self.excluded_extensions
         ):
             result = False
         elif self.skip_externals and not link.startswith(self.base_url):
@@ -777,7 +789,9 @@ class SimpleScrapingLocator(Locator):
                 result = False
             else:
                 result = True
-        logger.debug("should_queue: %s (%s) from %s -> %s", link, rel, referrer, result)
+        logger.debug(
+            "should_queue: %s (%s) from %s -> %s", link, rel, referrer, result
+        )
         return result
 
     def _fetch(self):
@@ -801,9 +815,13 @@ class SimpleScrapingLocator(Locator):
                                 if not self._process_download(
                                     link
                                 ) and self._should_queue(link, url, rel):
-                                    logger.debug("Queueing %s from %s", link, url)
+                                    logger.debug(
+                                        "Queueing %s from %s", link, url
+                                    )
                                     self._to_fetch.put(link)
-                            except MetadataInvalidError:  # e.g. invalid versions
+                            except (
+                                MetadataInvalidError
+                            ):  # e.g. invalid versions
                                 pass
             except Exception as e:  # pragma: no cover
                 self.errors.put(text_type(e))
@@ -848,7 +866,9 @@ class SimpleScrapingLocator(Locator):
                         data = resp.read()
                         encoding = headers.get("Content-Encoding")
                         if encoding:
-                            decoder = self.decoders[encoding]  # fail if not found
+                            decoder = self.decoders[
+                                encoding
+                            ]  # fail if not found
                             data = decoder(data)
                         encoding = "utf-8"
                         m = CHARSET.search(content_type)
@@ -1180,7 +1200,9 @@ class DependencyFinder(object):
         del self.dists[(name, dist.version)]
         for p in dist.provides:
             name, version = parse_name_and_version(p)
-            logger.debug("Remove from provided: %s, %s, %s", name, version, dist)
+            logger.debug(
+                "Remove from provided: %s, %s, %s", name, version, dist
+            )
             s = self.provided[name]
             s.remove((version, dist))
             if not s:
@@ -1253,7 +1275,9 @@ class DependencyFinder(object):
                 unmatched.add(s)
         if unmatched:
             # can't replace other with provider
-            problems.add(("cantreplace", provider, other, frozenset(unmatched)))
+            problems.add(
+                ("cantreplace", provider, other, frozenset(unmatched))
+            )
             result = False
         else:
             # can replace other with provider
@@ -1306,7 +1330,9 @@ class DependencyFinder(object):
             dist = odist = requirement
             logger.debug("passed %s as requirement", odist)
         else:
-            dist = odist = self.locator.locate(requirement, prereleases=prereleases)
+            dist = odist = self.locator.locate(
+                requirement, prereleases=prereleases
+            )
             if dist is None:
                 raise DistlibException("Unable to locate %r" % requirement)
             logger.debug("located %s", odist)

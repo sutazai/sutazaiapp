@@ -7,7 +7,6 @@ Comprehensive framework for:
 - Advanced dependency mapping
 - Architectural integrity validation
 - Performance optimization recommendations
-- Security vulnerability detection
 """
 
 import ast

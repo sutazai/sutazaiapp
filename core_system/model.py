@@ -195,7 +195,8 @@ class UnknownIntegerType(BasePrimitiveType):
 
     def build_backend_type(self, ffi, finishlist):
         raise NotImplementedError(
-            "integer type '%s' can only be used after " "compilation" % self.name
+            "integer type '%s' can only be used after "
+            "compilation" % self.name
         )
 
 
@@ -329,7 +330,9 @@ class ArrayType(BaseType):
             brackets = "&[/*...*/]"
         else:
             brackets = "&[%s]" % length
-        self.c_name_with_marker = self.item.c_name_with_marker.replace("&", brackets)
+        self.c_name_with_marker = self.item.c_name_with_marker.replace(
+            "&", brackets
+        )
 
     def length_is_unknown(self):
         return isinstance(self.length, str)
@@ -339,7 +342,9 @@ class ArrayType(BaseType):
 
     def build_backend_type(self, ffi, finishlist):
         if self.length_is_unknown():
-            raise CDefError("cannot render the type %r: unknown length" % (self,))
+            raise CDefError(
+                "cannot render the type %r: unknown length" % (self,)
+            )
         self.item.get_cached_btype(ffi, finishlist)  # force the item BType
         BPtrItem = PointerType(self.item).get_cached_btype(ffi, finishlist)
         return global_cache(self, ffi, "new_array_type", BPtrItem, self.length)
@@ -422,7 +427,9 @@ class StructOrUnion(StructOrUnionOrEnum):
         self.fldquals = tuple(fldquals)
 
     def get_cached_btype(self, ffi, finishlist, can_delay=False):
-        BType = StructOrUnionOrEnum.get_cached_btype(self, ffi, finishlist, can_delay)
+        BType = StructOrUnionOrEnum.get_cached_btype(
+            self, ffi, finishlist, can_delay
+        )
         if not can_delay:
             self.finish_backend_type(ffi, finishlist)
         return BType
@@ -431,7 +438,8 @@ class StructOrUnion(StructOrUnionOrEnum):
         if self.completed:
             if self.completed != 2:
                 raise NotImplementedError(
-                    "recursive structure declaration " "for '%s'" % (self.name,)
+                    "recursive structure declaration "
+                    "for '%s'" % (self.name,)
                 )
             return
         BType = ffi._cached_btypes[self]
@@ -442,7 +450,9 @@ class StructOrUnion(StructOrUnionOrEnum):
             pass  # not completing it: it's an opaque struct
             #
         elif self.fixedlayout is None:
-            fldtypes = [tp.get_cached_btype(ffi, finishlist) for tp in self.fldtypes]
+            fldtypes = [
+                tp.get_cached_btype(ffi, finishlist) for tp in self.fldtypes
+            ]
             lst = list(zip(self.fldnames, fldtypes, self.fldbitsize))
             extra_flags = ()
             if self.packed:
@@ -472,7 +482,7 @@ class StructOrUnion(StructOrUnionOrEnum):
                         )
                     ftype = ftype.resolve_length(nlen)
                     self.fldtypes = (
-                        self.fldtypes[:i] + (ftype,) + self.fldtypes[i + 1:]
+                        self.fldtypes[:i] + (ftype,) + self.fldtypes[i + 1 :]
                     )
                 #
                 BFieldType = ftype.get_cached_btype(ffi, finishlist)
@@ -582,7 +592,8 @@ class EnumType(StructOrUnionOrEnum):
                 pass
             warnings.warn(
                 "%r has no values explicitly defined; "
-                "guessing that it is equivalent to 'unsigned int'" % self._get_c_name()
+                "guessing that it is equivalent to 'unsigned int'"
+                % self._get_c_name()
             )
             smallest_value = largest_value = 0
         if smallest_value < 0:  # needs a signed type

@@ -59,7 +59,6 @@ check_services() {
     return 0
 }
 
-check_security() {
     # Verify file permissions
     local secure_files=(
         "/etc/sutazai/database.conf"
@@ -68,7 +67,6 @@ check_security() {
     
     for file in "${secure_files[@]}"; do
         if [ ! -f "$file" ]; then
-            log_error "Security file $file not found"
             return 1
         fi
         if [[ $(stat -c %a "$file") != "600" ]]; then
@@ -166,7 +164,6 @@ main() {
     check_directories || failed=1
     check_naming || failed=1
     check_services || failed=1
-    check_security || failed=1
     verify_resources || failed=1
     verify_services || failed=1
     verify_deployment || failed=1

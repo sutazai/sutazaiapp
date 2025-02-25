@@ -129,7 +129,10 @@ class TestSpecialMethods(PsutilTestCase):
         )
 
     def test_no_such_process__str__(self):
-        assert str(psutil.NoSuchProcess(321)) == "process no longer exists (pid=321)"
+        assert (
+            str(psutil.NoSuchProcess(321))
+            == "process no longer exists (pid=321)"
+        )
         assert (
             str(psutil.NoSuchProcess(321, name="name", msg="msg"))
             == "msg (pid=321, name='name')"
@@ -243,7 +246,10 @@ class TestMisc(PsutilTestCase):
             assert name in dir_psutil
 
     def test_version(self):
-        assert ".".join([str(x) for x in psutil.version_info]) == psutil.__version__
+        assert (
+            ".".join([str(x) for x in psutil.version_info])
+            == psutil.__version__
+        )
 
     def test_process_as_dict_no_new_names(self):
         # See https://github.com/giampaolo/psutil/issues/813
@@ -294,7 +300,9 @@ class TestMisc(PsutilTestCase):
         # --- exception classes
 
         b = pickle.loads(
-            pickle.dumps(psutil.NoSuchProcess(pid=4567, name="name", msg="msg"))
+            pickle.dumps(
+                psutil.NoSuchProcess(pid=4567, name="name", msg="msg")
+            )
         )
         assert isinstance(b, psutil.NoSuchProcess)
         assert b.pid == 4567
@@ -321,7 +329,9 @@ class TestMisc(PsutilTestCase):
         assert b.msg == "msg"
 
         b = pickle.loads(
-            pickle.dumps(psutil.TimeoutExpired(seconds=33, pid=4567, name="name"))
+            pickle.dumps(
+                psutil.TimeoutExpired(seconds=33, pid=4567, name="name")
+            )
         )
         assert isinstance(b, psutil.TimeoutExpired)
         assert b.seconds == 33
@@ -371,7 +381,9 @@ class TestMisc(PsutilTestCase):
 
     def test_sanity_version_check(self):
         # see: https://github.com/giampaolo/psutil/issues/564
-        with mock.patch("psutil._psplatform.cext.version", return_value="0.0.0"):
+        with mock.patch(
+            "psutil._psplatform.cext.version", return_value="0.0.0"
+        ):
             with pytest.raises(ImportError) as cm:
                 reload_module(psutil)
             assert "version conflict" in str(cm.value).lower()

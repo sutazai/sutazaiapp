@@ -201,7 +201,6 @@ _KEYWORDS_SERVER = (
     "rule",
     "save",
     "schema",
-    "securityaudit",
     "select",
     "semantickeyphrasetable",
     "semanticsimilaritydetailstable",

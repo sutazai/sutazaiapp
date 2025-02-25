@@ -771,7 +771,9 @@ class Inform6Lexer(RegexLexer):
             include("_whitespace"),
             (r";", Punctuation, "#pop"),
             (r":", Error),
-            default(("_list-expression", "_expression", "_list-expression", "form")),
+            default(
+                ("_list-expression", "_expression", "_list-expression", "form")
+            ),
         ],
         "form": [
             include("_whitespace"),
@@ -800,7 +802,9 @@ class Inform6Lexer(RegexLexer):
         objectloop_queue = []
         objectloop_token_count = -1
         previous_token = None
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if previous_token is Name.Variable and value == "in":
                 objectloop_queue = [[index, token, value]]
                 objectloop_token_count = 2
@@ -1028,7 +1032,9 @@ class Inform7Lexer(RegexLexer):
             "+i6t-inline": [
                 (
                     r"(\{)(\S[^}]*)?(\})",
-                    bygroups(Punctuation, using(this, state="+main"), Punctuation),
+                    bygroups(
+                        Punctuation, using(this, state="+main"), Punctuation
+                    ),
                 )
             ],
             "+i6t": [
@@ -1038,16 +1044,22 @@ class Inform7Lexer(RegexLexer):
                 ),
                 (
                     rf"(\{{[{_dash}])(lines)(:)([^}}]*)(\}}?)",
-                    bygroups(Punctuation, Keyword, Punctuation, Text, Punctuation),
+                    bygroups(
+                        Punctuation, Keyword, Punctuation, Text, Punctuation
+                    ),
                     "+lines",
                 ),
                 (
                     rf"(\{{[{_dash}])([^:}}]*)(:?)([^}}]*)(\}}?)",
-                    bygroups(Punctuation, Keyword, Punctuation, Text, Punctuation),
+                    bygroups(
+                        Punctuation, Keyword, Punctuation, Text, Punctuation
+                    ),
                 ),
                 (
                     r"(\(\+)(.*?)(\+\)|\Z)",
-                    bygroups(Punctuation, using(this, state="+main"), Punctuation),
+                    bygroups(
+                        Punctuation, using(this, state="+main"), Punctuation
+                    ),
                 ),
             ],
             "+p": [
@@ -1141,7 +1153,8 @@ class Tads3Lexer(RegexLexer):
     _name = r"(?:[_a-zA-Z]\w*)"
     _no_quote = r"(?=\s|\\?>)"
     _operator = (
-        r"(?:&&|\|\||\+\+|--|\?\?|::|[.,@\[\]~]|" r"(?:[=+\-*/%!&|^]|<<?|>>?>?)=?)"
+        r"(?:&&|\|\||\+\+|--|\?\?|::|[.,@\[\]~]|"
+        r"(?:[=+\-*/%!&|^]|<<?|>>?>?)=?)"
     )
     _ws = rf"(?:\\|\s|{_comment_single}|{_comment_multiline})"
     _ws_pp = rf"(?:\\\n|[^\S\n]|{_comment_single}|{_comment_multiline})"
@@ -1149,7 +1162,10 @@ class Tads3Lexer(RegexLexer):
     def _make_string_state(triple, double, verbatim=None, _escape=_escape):
         if verbatim:
             verbatim = "".join(
-                [f"(?:{re.escape(c.lower())}|{re.escape(c.upper())})" for c in verbatim]
+                [
+                    f"(?:{re.escape(c.lower())}|{re.escape(c.upper())})"
+                    for c in verbatim
+                ]
             )
         char = r'"' if double else r"'"
         token = String.Double if double else String.Single
@@ -1212,7 +1228,9 @@ class Tads3Lexer(RegexLexer):
     def _make_tag_state(triple, double, _escape=_escape):
         char = r'"' if double else r"'"
         quantifier = r"{3,}" if triple else r""
-        state_name = "{}{}qt".format("t" if triple else "", "d" if double else "s")
+        state_name = "{}{}qt".format(
+            "t" if triple else "", "d" if double else "s"
+        )
         token = String.Double if double else String.Single
         escaped_quotes = rf"+|{char}(?!{char}{{2}})" if triple else r""
         return [
@@ -1255,11 +1273,15 @@ class Tads3Lexer(RegexLexer):
         host_char = r'"' if host_double else r"'"
         host_quantifier = r"{3,}" if host_triple else r""
         host_token = String.Double if host_double else String.Single
-        escaped_quotes = rf"+|{host_char}(?!{host_char}{{2}})" if host_triple else r""
+        escaped_quotes = (
+            rf"+|{host_char}(?!{host_char}{{2}})" if host_triple else r""
+        )
         return [
             (rf"{host_char}{host_quantifier}", host_token, "#pop:3"),
             (
-                r"{}{}".format(r"" if token is String.Other else r"\\?", terminator),
+                r"{}{}".format(
+                    r"" if token is String.Other else r"\\?", terminator
+                ),
                 token,
                 "#pop",
             ),
@@ -1270,7 +1292,8 @@ class Tads3Lexer(RegexLexer):
                 String.Interpol,
             ),
             (
-                r'([^\s"\'<%s{}\\&])+' % (r">" if token is String.Other else r""),
+                r'([^\s"\'<%s{}\\&])+'
+                % (r">" if token is String.Other else r""),
                 token,
             ),
             include("s/escape"),
@@ -1292,7 +1315,9 @@ class Tads3Lexer(RegexLexer):
             ),
             (
                 rf"({_name})({_ws}*)(\()",
-                bygroups(Name.Function, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Function, using(this, state="whitespace"), Punctuation
+                ),
                 ("block?/root", "more/parameters", "main/parameters"),
             ),
             include("whitespace"),
@@ -1316,17 +1341,23 @@ class Tads3Lexer(RegexLexer):
             (r":", Punctuation, ("classes", "class")),
             (
                 rf"({_name}?)({_ws}*)(\()",
-                bygroups(Name.Function, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Function, using(this, state="whitespace"), Punctuation
+                ),
                 ("block?", "more/parameters", "main/parameters"),
             ),
             (
                 rf"({_name})({_ws}*)(\{{)",
-                bygroups(Name.Function, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Function, using(this, state="whitespace"), Punctuation
+                ),
                 "block",
             ),
             (
                 rf"({_name})({_ws}*)(:)",
-                bygroups(Name.Variable, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Variable, using(this, state="whitespace"), Punctuation
+                ),
                 ("object-body/no-braces", "classes", "class"),
             ),
             include("whitespace"),
@@ -1337,7 +1368,9 @@ class Tads3Lexer(RegexLexer):
             include("main/basic"),
             (
                 rf"({_name})({_ws}*)(=?)",
-                bygroups(Name.Variable, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Variable, using(this, state="whitespace"), Punctuation
+                ),
                 ("#pop", "more", "main"),
             ),
             default("#pop:2"),
@@ -1365,7 +1398,9 @@ class Tads3Lexer(RegexLexer):
             (r"default\b", Keyword.Reserved),
             (
                 rf"({_name})({_ws}*)(:)",
-                bygroups(Name.Label, using(this, state="whitespace"), Punctuation),
+                bygroups(
+                    Name.Label, using(this, state="whitespace"), Punctuation
+                ),
             ),
             include("whitespace"),
         ],
@@ -1449,7 +1484,9 @@ class Tads3Lexer(RegexLexer):
             ),
             (
                 rf"(string)({_ws}+)(template\b)",
-                bygroups(Keyword, using(this, state="whitespace"), Keyword.Reserved),
+                bygroups(
+                    Keyword, using(this, state="whitespace"), Keyword.Reserved
+                ),
                 ("#pop", "function-name"),
             ),
             # Keywords
@@ -1517,7 +1554,9 @@ class Tads3Lexer(RegexLexer):
             # Operators
             (
                 rf"(__objref|defined)({_ws}*)(\()",
-                bygroups(Operator.Word, using(this, state="whitespace"), Operator),
+                bygroups(
+                    Operator.Word, using(this, state="whitespace"), Operator
+                ),
                 ("#pop", "more/__objref", "main"),
             ),
             (r"delegated\b", Operator.Word),
@@ -1588,7 +1627,9 @@ class Tads3Lexer(RegexLexer):
             ),
             (
                 rf"({_name})({_ws}+)({_name})",
-                bygroups(Name.Class, using(this, state="whitespace"), Name.Variable),
+                bygroups(
+                    Name.Class, using(this, state="whitespace"), Name.Variable
+                ),
                 "#pop",
             ),
             (r"\[+", Punctuation),
@@ -1656,7 +1697,9 @@ class Tads3Lexer(RegexLexer):
             include("whitespace"),
             (
                 rf"(\[)({_ws}*)(badness)",
-                bygroups(Punctuation, using(this, state="whitespace"), Keyword),
+                bygroups(
+                    Punctuation, using(this, state="whitespace"), Keyword
+                ),
                 "main",
             ),
             (rf"->|{_operator}|[()]", Punctuation),
@@ -1761,7 +1804,9 @@ class Tads3Lexer(RegexLexer):
                 ("block/embed", "more/embed", "main"),
             ),
         ],
-        "s/entity": [(r"(?i)&(#(x[\da-f]+|\d+)|[a-z][\da-z]*);?", Name.Entity)],
+        "s/entity": [
+            (r"(?i)&(#(x[\da-f]+|\d+)|[a-z][\da-z]*);?", Name.Entity)
+        ],
         "tdqs": _make_string_state(True, True),
         "tsqs": _make_string_state(True, False),
         "dqs": _make_string_state(False, True),
@@ -1829,7 +1874,9 @@ class Tads3Lexer(RegexLexer):
                     if_false_level = 1
             else:  # In a false #if
                 if token is Comment.Preproc:
-                    if if_false_level == 1 and re.match(rf"{pp}el(if|se)\b", value):
+                    if if_false_level == 1 and re.match(
+                        rf"{pp}el(if|se)\b", value
+                    ):
                         if_false_level = 0
                     elif re.match(rf"{pp}if", value):
                         if_false_level += 1

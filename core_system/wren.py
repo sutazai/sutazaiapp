@@ -75,7 +75,9 @@ class WrenLexer(RegexLexer):
                 Keyword,
             ),
             (
-                words(("true", "false", "null"), prefix=r"(?<!\.)", suffix=r"\b"),
+                words(
+                    ("true", "false", "null"), prefix=r"(?<!\.)", suffix=r"\b"
+                ),
                 Keyword.Constant,
             ),
             (

@@ -26,9 +26,9 @@ def _wrap_core(
             # AES has a 128-bit block size) and since we're using ECB it is
             # safe to reuse the encryptor for the entire operation
             b = encryptor.update(a + r[i])
-            a = (int.from_bytes(b[:8], byteorder="big") ^ ((n * j) + i + 1)).to_bytes(
-                length=8, byteorder="big"
-            )
+            a = (
+                int.from_bytes(b[:8], byteorder="big") ^ ((n * j) + i + 1)
+            ).to_bytes(length=8, byteorder="big")
             r[i] = b[-8:]
 
     assert encryptor.finalize() == b""
@@ -51,7 +51,7 @@ def aes_key_wrap(
         raise ValueError("The key to wrap must be a multiple of 8 bytes")
 
     a = b"\xa6\xa6\xa6\xa6\xa6\xa6\xa6\xa6"
-    r = [key_to_wrap[i: i + 8] for i in range(0, len(key_to_wrap), 8)]
+    r = [key_to_wrap[i : i + 8] for i in range(0, len(key_to_wrap), 8)]
     return _wrap_core(wrapping_key, a, r)
 
 
@@ -65,9 +65,9 @@ def _unwrap_core(
     n = len(r)
     for j in reversed(range(6)):
         for i in reversed(range(n)):
-            atr = (int.from_bytes(a, byteorder="big") ^ ((n * j) + i + 1)).to_bytes(
-                length=8, byteorder="big"
-            ) + r[i]
+            atr = (
+                int.from_bytes(a, byteorder="big") ^ ((n * j) + i + 1)
+            ).to_bytes(length=8, byteorder="big") + r[i]
             # every decryption operation is a discrete 16 byte chunk so
             # it is safe to reuse the decryptor for the entire operation
             b = decryptor.update(atr)
@@ -86,7 +86,9 @@ def aes_key_wrap_with_padding(
     if len(wrapping_key) not in [16, 24, 32]:
         raise ValueError("The wrapping key must be a valid AES key length")
 
-    aiv = b"\xa6\x59\x59\xa6" + len(key_to_wrap).to_bytes(length=4, byteorder="big")
+    aiv = b"\xa6\x59\x59\xa6" + len(key_to_wrap).to_bytes(
+        length=4, byteorder="big"
+    )
     # pad the key to wrap if necessary
     pad = (8 - (len(key_to_wrap) % 8)) % 8
     key_to_wrap = key_to_wrap + b"\x00" * pad
@@ -97,7 +99,7 @@ def aes_key_wrap_with_padding(
         assert encryptor.finalize() == b""
         return b
     else:
-        r = [key_to_wrap[i: i + 8] for i in range(0, len(key_to_wrap), 8)]
+        r = [key_to_wrap[i : i + 8] for i in range(0, len(key_to_wrap), 8)]
         return _wrap_core(wrapping_key, aiv, r)
 
 
@@ -121,7 +123,7 @@ def aes_key_unwrap_with_padding(
         data = out[8:]
         n = 1
     else:
-        r = [wrapped_key[i: i + 8] for i in range(0, len(wrapped_key), 8)]
+        r = [wrapped_key[i : i + 8] for i in range(0, len(wrapped_key), 8)]
         encrypted_aiv = r.pop(0)
         n = len(r)
         a, r = _unwrap_core(wrapping_key, encrypted_aiv, r)
@@ -162,7 +164,7 @@ def aes_key_unwrap(
         raise ValueError("The wrapping key must be a valid AES key length")
 
     aiv = b"\xa6\xa6\xa6\xa6\xa6\xa6\xa6\xa6"
-    r = [wrapped_key[i: i + 8] for i in range(0, len(wrapped_key), 8)]
+    r = [wrapped_key[i : i + 8] for i in range(0, len(wrapped_key), 8)]
     a = r.pop(0)
     a, r = _unwrap_core(wrapping_key, a, r)
     if not bytes_eq(a, aiv):

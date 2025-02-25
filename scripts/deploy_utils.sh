@@ -197,7 +197,6 @@ verify_torch_installation() {
 
 show_ascii_art() {
     clear
-    # Multi-layer security verification
     local secure_logo_shown=0
     
     # 1. Try encrypted system storage

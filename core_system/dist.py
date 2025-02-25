@@ -325,9 +325,13 @@ Common commands: (see '--help-commands' for more)
         for cmd_name in commands:
             opt_dict = self.command_options.get(cmd_name)
             if opt_dict is None:
-                self.announce(indent + f"no option dict for '{cmd_name}' command")
+                self.announce(
+                    indent + f"no option dict for '{cmd_name}' command"
+                )
             else:
-                self.announce(indent + f"option dict for '{cmd_name}' command:")
+                self.announce(
+                    indent + f"option dict for '{cmd_name}' command:"
+                )
                 out = pformat(opt_dict)
                 for line in out.split("\n"):
                     self.announce(indent + "  " + line)
@@ -350,7 +354,9 @@ Common commands: (see '--help-commands' for more)
         - a file named by an environment variable
         """
         check_environ()
-        files = [str(path) for path in self._gen_paths() if os.path.isfile(path)]
+        files = [
+            str(path) for path in self._gen_paths() if os.path.isfile(path)
+        ]
 
         if DEBUG:
             self.announce("using config files: {}".format(", ".join(files)))
@@ -596,7 +602,9 @@ Common commands: (see '--help-commands' for more)
         parser.set_negative_aliases(negative_opt)
         (args, opts) = parser.getopt(args[1:])
         if hasattr(opts, "help") and opts.help:
-            self._show_help(parser, display_options=False, commands=[cmd_class])
+            self._show_help(
+                parser, display_options=False, commands=[cmd_class]
+            )
             return
 
         if hasattr(cmd_class, "help_options") and isinstance(
@@ -682,7 +690,9 @@ Common commands: (see '--help-commands' for more)
                 klass = command
             else:
                 klass = self.get_command_class(command)
-            if hasattr(klass, "help_options") and isinstance(klass.help_options, list):
+            if hasattr(klass, "help_options") and isinstance(
+                klass.help_options, list
+            ):
                 parser.set_option_table(
                     klass.user_options + fix_help_options(klass.help_options)
                 )
@@ -767,7 +777,9 @@ Common commands: (see '--help-commands' for more)
         std_commands = distutils.command.__all__
         is_std = set(std_commands)
 
-        extra_commands = [cmd for cmd in self.cmdclass.keys() if cmd not in is_std]
+        extra_commands = [
+            cmd for cmd in self.cmdclass.keys() if cmd not in is_std
+        ]
 
         max_length = 0
         for cmd in std_commands + extra_commands:
@@ -777,7 +789,9 @@ Common commands: (see '--help-commands' for more)
         self.print_command_list(std_commands, "Standard commands", max_length)
         if extra_commands:
             print()
-            self.print_command_list(extra_commands, "Extra commands", max_length)
+            self.print_command_list(
+                extra_commands, "Extra commands", max_length
+            )
 
     def get_command_list(self):
         """Get a list of (command, description) tuples.
@@ -793,7 +807,9 @@ Common commands: (see '--help-commands' for more)
         std_commands = distutils.command.__all__
         is_std = set(std_commands)
 
-        extra_commands = [cmd for cmd in self.cmdclass.keys() if cmd not in is_std]
+        extra_commands = [
+            cmd for cmd in self.cmdclass.keys() if cmd not in is_std
+        ]
 
         rv = []
         for cmd in std_commands + extra_commands:
@@ -869,7 +885,9 @@ Common commands: (see '--help-commands' for more)
         self, command: str, create: Literal[False]
     ) -> Command | None: ...
 
-    def get_command_obj(self, command: str, create: bool = True) -> Command | None:
+    def get_command_obj(
+        self, command: str, create: bool = True
+    ) -> Command | None:
         """Return the command object for 'command'.  Normally this object
         is cached on a previous call to 'get_command_obj()'; if no command
         object for 'command' is in the cache, then we either create and
@@ -898,7 +916,9 @@ Common commands: (see '--help-commands' for more)
 
         return cmd_obj
 
-    def _set_command_options(self, command_obj, option_dict=None):  # noqa: C901
+    def _set_command_options(
+        self, command_obj, option_dict=None
+    ):  # noqa: C901
         """Set the options for 'command_obj' from 'option_dict'.  Basically
         this means copying elements of a dictionary ('option_dict') to
         attributes of an instance ('command').
@@ -917,7 +937,9 @@ Common commands: (see '--help-commands' for more)
             if DEBUG:
                 self.announce(f"    {option} = {value} (from {source})")
             try:
-                bool_opts = [translate_longopt(o) for o in command_obj.boolean_options]
+                bool_opts = [
+                    translate_longopt(o) for o in command_obj.boolean_options
+                ]
             except AttributeError:
                 bool_opts = []
             try:
@@ -1201,7 +1223,9 @@ class DistributionMetadata:
         maybe_write("Author-email", self.get_contact_email())
         maybe_write("License", self.get_license())
         maybe_write("Download-URL", self.download_url)
-        maybe_write("Description", rfc822_escape(self.get_long_description() or ""))
+        maybe_write(
+            "Description", rfc822_escape(self.get_long_description() or "")
+        )
         maybe_write("Keywords", ",".join(self.get_keywords()))
 
         self._write_list(file, "Platform", self.get_platforms())

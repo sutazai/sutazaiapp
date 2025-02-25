@@ -52,7 +52,9 @@ class DependencyCrossReferencer:
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
-            filename=os.path.join(self.log_dir, "dependency_cross_reference.log"),
+            filename=os.path.join(
+                self.log_dir, "dependency_cross_reference.log"
+            ),
         )
         self.logger = logging.getLogger("SutazAI.DependencyCrossReferencer")
 
@@ -81,7 +83,9 @@ class DependencyCrossReferencer:
             return compatibility_graph
 
         except Exception as e:
-            self.logger.error(f"Dependency compatibility graph generation failed: {e}")
+            self.logger.error(
+                f"Dependency compatibility graph generation failed: {e}"
+            )
             return nx.DiGraph()
 
     def detect_version_conflicts(
@@ -152,8 +156,12 @@ class DependencyCrossReferencer:
             # Analyze package dependencies
             for pkg in compatibility_graph.nodes():
                 compatibility_analysis["package_dependencies"][pkg] = {
-                    "direct_dependencies": list(compatibility_graph.successors(pkg)),
-                    "reverse_dependencies": list(compatibility_graph.predecessors(pkg)),
+                    "direct_dependencies": list(
+                        compatibility_graph.successors(pkg)
+                    ),
+                    "reverse_dependencies": list(
+                        compatibility_graph.predecessors(pkg)
+                    ),
                 }
 
             # Detect version conflicts
@@ -183,7 +191,9 @@ class DependencyCrossReferencer:
 
         try:
             # Recommend package updates or alternatives for conflicting packages
-            for conflict in compatibility_analysis.get("potential_conflicts", []):
+            for conflict in compatibility_analysis.get(
+                "potential_conflicts", []
+            ):
                 recommendations.append(
                     {
                         "package": conflict["package"],
@@ -285,8 +295,12 @@ def main():
             f"Total Packages: {cross_reference_report.get('compatibility_analysis', {}).get('total_packages', 0)}"
         )
         print("\nCompatibility Recommendations:")
-        for rec in cross_reference_report.get("compatibility_recommendations", []):
-            print(f"- {rec['package']}: {rec['recommendation']} ({rec['details']})")
+        for rec in cross_reference_report.get(
+            "compatibility_recommendations", []
+        ):
+            print(
+                f"- {rec['package']}: {rec['recommendation']} ({rec['details']})"
+            )
 
     except Exception as e:
         print(f"Dependency cross-referencing failed: {e}")

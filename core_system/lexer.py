@@ -248,20 +248,22 @@ class Lexer(metaclass=LexerMeta):
                 decoded = None
                 for bom, encoding in _encoding_map:
                     if text.startswith(bom):
-                        decoded = text[len(bom):].decode(encoding, "replace")
+                        decoded = text[len(bom) :].decode(encoding, "replace")
                         break
                 # no BOM found, so use chardet
                 if decoded is None:
                     enc = chardet.detect(text[:1024])  # Guess using first 1KB
-                    decoded = text.decode(enc.get("encoding") or "utf-8", "replace")
+                    decoded = text.decode(
+                        enc.get("encoding") or "utf-8", "replace"
+                    )
                 text = decoded
             else:
                 text = text.decode(self.encoding)
                 if text.startswith("\ufeff"):
-                    text = text[len("\ufeff"):]
+                    text = text[len("\ufeff") :]
         else:
             if text.startswith("\ufeff"):
-                text = text[len("\ufeff"):]
+                text = text[len("\ufeff") :]
 
         # text now *is* a unicode string
         text = text.replace("\r\n", "\n")
@@ -340,7 +342,6 @@ class include(str):  # pylint: disable=invalid-name
     """
     Indicates that a state should include rules from another state.
     """
-
 
 
 class _inherit:
@@ -467,7 +468,9 @@ def using(_other, **kwargs):
             else:
                 lx = lexer
             s = match.start()
-            for i, t, v in lx.get_tokens_unprocessed(match.group(), **gt_kwargs):
+            for i, t, v in lx.get_tokens_unprocessed(
+                match.group(), **gt_kwargs
+            ):
                 yield i + s, t, v
             if ctx:
                 ctx.pos = match.end()
@@ -480,7 +483,9 @@ def using(_other, **kwargs):
             lx = _other(**kwargs)
 
             s = match.start()
-            for i, t, v in lx.get_tokens_unprocessed(match.group(), **gt_kwargs):
+            for i, t, v in lx.get_tokens_unprocessed(
+                match.group(), **gt_kwargs
+            ):
                 yield i + s, t, v
             if ctx:
                 ctx.pos = match.end()
@@ -558,7 +563,9 @@ class RegexLexerMeta(LexerMeta):
             itokens = []
             for istate in new_state:
                 assert istate != new_state, "circular state ref %r" % istate
-                itokens.extend(cls._process_state(unprocessed, processed, istate))
+                itokens.extend(
+                    cls._process_state(unprocessed, processed, istate)
+                )
             processed[tmp_state] = itokens
             return (tmp_state,)
         elif isinstance(new_state, tuple):
@@ -583,7 +590,9 @@ class RegexLexerMeta(LexerMeta):
             if isinstance(tdef, include):
                 # it's a state reference
                 assert tdef != state, "circular state reference %r" % state
-                tokens.extend(cls._process_state(unprocessed, processed, str(tdef)))
+                tokens.extend(
+                    cls._process_state(unprocessed, processed, str(tdef))
+                )
                 continue
             if isinstance(tdef, _inherit):
                 # should be processed already, but may not in the case of:
@@ -591,7 +600,9 @@ class RegexLexerMeta(LexerMeta):
                 # 2. the state includes more than one 'inherit'
                 continue
             if isinstance(tdef, default):
-                new_state = cls._process_new_state(tdef.state, unprocessed, processed)
+                new_state = cls._process_new_state(
+                    tdef.state, unprocessed, processed
+                )
                 tokens.append((re.compile("").match, None, new_state))
                 continue
 
@@ -610,7 +621,9 @@ class RegexLexerMeta(LexerMeta):
             if len(tdef) == 2:
                 new_state = None
             else:
-                new_state = cls._process_new_state(tdef[2], unprocessed, processed)
+                new_state = cls._process_new_state(
+                    tdef[2], unprocessed, processed
+                )
 
             tokens.append((rex, token, new_state))
         return tokens
@@ -660,7 +673,7 @@ class RegexLexerMeta(LexerMeta):
                     continue
 
                 # Replace the "inherit" value with the items
-                curitems[inherit_ndx: inherit_ndx + 1] = items
+                curitems[inherit_ndx : inherit_ndx + 1] = items
                 try:
                     # N.b. this is the index in items (that is, the superclass
                     # copy), so offset required when storing below.
@@ -903,7 +916,7 @@ def do_insertions(insertions, tokens):
             realpos = i
         oldi = 0
         while insleft and i + len(v) >= index:
-            tmpval = v[oldi: index - i]
+            tmpval = v[oldi : index - i]
             if tmpval:
                 yield realpos, t, tmpval
                 realpos += len(tmpval)
@@ -939,7 +952,9 @@ class ProfilingRegexLexerMeta(RegexLexerMeta):
 
     def _process_regex(cls, regex, rflags, state):
         if isinstance(regex, words):
-            rex = regex_opt(regex.words, prefix=regex.prefix, suffix=regex.suffix)
+            rex = regex_opt(
+                regex.words, prefix=regex.prefix, suffix=regex.suffix
+            )
         else:
             rex = regex
         compiled = re.compile(rex, rflags)

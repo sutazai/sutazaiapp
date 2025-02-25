@@ -21,7 +21,6 @@ import psutil
 
 from config.config_manager import ConfigurationManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
-from security.security_manager import SecurityManager
 
 # Add project root to Python path
 sys.path.insert(
@@ -41,7 +40,6 @@ class AdvancedSystemOptimizer:
         base_dir: str = "/opt/SutazAI",
         config_manager: ConfigurationManager = None,
         logger: AdvancedLogger = None,
-        security_manager: SecurityManager = None,
     ):
         """
         Initialize advanced system optimizer
@@ -50,12 +48,10 @@ class AdvancedSystemOptimizer:
             base_dir (str): Base directory of the project
             config_manager (ConfigurationManager): Configuration management system
             logger (AdvancedLogger): Advanced logging system
-            security_manager (SecurityManager): Security management system
         """
         self.base_dir = base_dir
         self.config_manager = config_manager or ConfigurationManager()
         self.logger = logger or AdvancedLogger()
-        self.security_manager = security_manager or SecurityManager()
 
         # Optimization configuration
         self.optimization_config = {
@@ -184,9 +180,6 @@ class AdvancedSystemOptimizer:
             system_metrics
         )
 
-        # Security assessment
-        security_assessment = (
-            self.security_manager.comprehensive_security_scan()
         )
 
         # Configuration validation
@@ -199,7 +192,6 @@ class AdvancedSystemOptimizer:
             "timestamp": datetime.now().isoformat(),
             "system_metrics": system_metrics,
             "performance_recommendations": performance_recommendations,
-            "security_assessment": security_assessment,
             "configuration_validation": configuration_validation,
         }
 
@@ -240,13 +232,8 @@ class AdvancedSystemOptimizer:
                     level="info",
                 )
 
-            # Apply security recommendations
-            security_recommendations = optimization_report.get(
-                "security_assessment", {}
             ).get("recommendations", [])
-            for recommendation in security_recommendations:
                 self.logger.log(
-                    f"Applying security optimization: {recommendation}",
                     level="info",
                 )
 

@@ -100,9 +100,12 @@ class AdvancedDependencyManager:
                                 "current_version": current_version,
                                 "required_version": version,
                                 "latest_version": latest_version,
-                                "is_outdated": current_version != latest_version,
+                                "is_outdated": current_version
+                                != latest_version,
                                 "vulnerabilities": vulnerability_check,
-                                "potential_replacements": self._find_alternative_packages(package),
+                                "potential_replacements": self._find_alternative_packages(
+                                    package
+                                ),
                             }
 
                         except Exception as e:

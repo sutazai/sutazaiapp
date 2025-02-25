@@ -8,7 +8,6 @@ This script performs a comprehensive system-wide checkup and auto-fix process. I
 - Verifies and installs dependencies (verify_dependencies.py and scripts/advanced_dependency_manager.py)
 - Fixes markdown formatting issues (markdown_fixer.py)
 - Organizes the project structure (scripts/project_structure_organizer.py)
-- Creates missing stub modules for the agents and system_integration packages, as well as for advanced_security_manager and file_structure_tracker.
 - Generates a detailed AUTO_FIX_REPORT.md report documenting all actions performed.
 
 All actions are logged and executed autonomously to ensure maximum stability, performance, and organization across the SutazAI codebase.
@@ -94,16 +93,12 @@ def main():
             f.write("pass\n")
         print(f"Created stub module: {sysint_file}")
 
-    # Create stub for advanced_security_manager in core_system if missing
     adv_sec_path = os.path.join(
-        os.getcwd(), "core_system", "advanced_security_manager.py"
     )
     if not os.path.exists(adv_sec_path):
         os.makedirs(os.path.dirname(adv_sec_path), exist_ok=True)
         with open(adv_sec_path, "w") as f:
-            f.write('"""Stub for advanced security manager."""\n')
             f.write(
-                "class AdvancedSecurityManager:\n    def assess(self):\n        pass\n"
             )
         print(f"Created stub module: {adv_sec_path}")
 
@@ -138,7 +133,6 @@ def main():
             "- Created missing stub modules for the agents and system_integration packages\n"
         )
         f.write(
-            "- Created stubs for advanced_security_manager and file_structure_tracker\n"
         )
 
     print(

@@ -5,7 +5,9 @@ import re
 
 from . import version
 
-re_validPackage = re.compile(r"(?i)^\s*([a-z_]\w*(?:\.[a-z_]\w*)*)(.*)", re.ASCII)
+re_validPackage = re.compile(
+    r"(?i)^\s*([a-z_]\w*(?:\.[a-z_]\w*)*)(.*)", re.ASCII
+)
 # (package) (rest)
 
 re_paren = re.compile(r"^\s*\((.*)\)\s*$")  # (list) inside of parentheses
@@ -123,7 +125,9 @@ class VersionPredicate:
             str = match.groups()[0]
             self.pred = [splitUp(aPred) for aPred in str.split(",")]
             if not self.pred:
-                raise ValueError(f"empty parenthesized list in {versionPredicateStr!r}")
+                raise ValueError(
+                    f"empty parenthesized list in {versionPredicateStr!r}"
+                )
         else:
             self.pred = []
 

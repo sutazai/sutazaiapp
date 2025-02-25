@@ -60,7 +60,9 @@ ErrorList = Union[Sequence[Any], ErrorWrapper]
 class ValidationError(Representation, ValueError):
     __slots__ = "raw_errors", "model", "_error_cache"
 
-    def __init__(self, errors: Sequence[ErrorList], model: "ModelOrDc") -> None:
+    def __init__(
+        self, errors: Sequence[ErrorList], model: "ModelOrDc"
+    ) -> None:
         self.raw_errors = errors
         self.model = model
         self._error_cache: Optional[List["ErrorDict"]] = None
@@ -75,7 +77,9 @@ class ValidationError(Representation, ValueError):
         return self._error_cache
 
     def json(self, *, indent: Union[None, int, str] = 2) -> str:
-        return json.dumps(self.errors(), indent=indent, default=pydantic_encoder)
+        return json.dumps(
+            self.errors(), indent=indent, default=pydantic_encoder
+        )
 
     def __str__(self) -> str:
         errors = self.errors()
@@ -122,7 +126,9 @@ def flatten_errors(
                 error_loc = error.loc_tuple()
 
             if isinstance(error.exc, ValidationError):
-                yield from flatten_errors(error.exc.raw_errors, config, error_loc)
+                yield from flatten_errors(
+                    error.exc.raw_errors, config, error_loc
+                )
             else:
                 yield error_dict(error.exc, config, error_loc)
         elif isinstance(error, list):
@@ -131,7 +137,9 @@ def flatten_errors(
             raise RuntimeError(f"Unknown error object: {error}")
 
 
-def error_dict(exc: Exception, config: Type["BaseConfig"], loc: "Loc") -> "ErrorDict":
+def error_dict(
+    exc: Exception, config: Type["BaseConfig"], loc: "Loc"
+) -> "ErrorDict":
     type_ = get_exc_type(exc.__class__)
     msg_template = config.error_msg_templates.get(type_) or getattr(
         exc, "msg_template", None
@@ -174,5 +182,7 @@ def _get_exc_type(cls: Type[Exception]) -> str:
 
     # if it's not a TypeError or ValueError, we just take the lowercase of the exception name
     # no chaining or snake case logic, use "code" for more complex error types.
-    code = getattr(cls, "code", None) or cls.__name__.replace("Error", "").lower()
+    code = (
+        getattr(cls, "code", None) or cls.__name__.replace("Error", "").lower()
+    )
     return base_name + "." + code

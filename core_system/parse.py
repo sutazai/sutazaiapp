@@ -53,7 +53,9 @@ def load_str_bytes(
         return json_loads(b)  # type: ignore
     elif proto == Protocol.pickle:
         if not allow_pickle:
-            raise RuntimeError("Trying to decode with pickle with allow_pickle=False")
+            raise RuntimeError(
+                "Trying to decode with pickle with allow_pickle=False"
+            )
         bb = b if isinstance(b, bytes) else b.encode()  # type: ignore
         return pickle.loads(bb)
     else:

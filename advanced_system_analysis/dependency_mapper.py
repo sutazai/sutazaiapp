@@ -148,7 +148,9 @@ class AdvancedDependencyMapper:
                         rel_path = os.path.relpath(file_path, self.base_dir)
 
                         # Extract dependencies
-                        dependencies = self._extract_module_dependencies(file_path)
+                        dependencies = self._extract_module_dependencies(
+                            file_path
+                        )
 
                         # Add to dependency graph
                         dependency_graph[rel_path] = list(dependencies)
@@ -180,7 +182,9 @@ class AdvancedDependencyMapper:
             return [(cycle[0], cycle[1]) for cycle in cycles]
 
         except Exception as e:
-            self.logger.log(f"Circular dependency detection failed: {e}", level="error")
+            self.logger.log(
+                f"Circular dependency detection failed: {e}", level="error"
+            )
             return []
 
     def identify_high_coupling_modules(self) -> List[Dict[str, Any]]:
@@ -230,7 +234,9 @@ class AdvancedDependencyMapper:
             circular_penalty = min(circular_dependencies * 10, 50)
             coupling_penalty = min(high_coupling_modules * 5, 30)
 
-            health_score = max(base_score - circular_penalty - coupling_penalty, 0)
+            health_score = max(
+                base_score - circular_penalty - coupling_penalty, 0
+            )
 
             return round(health_score, 2)
 
@@ -263,7 +269,8 @@ class AdvancedDependencyMapper:
         # Circular dependency recommendations
         for dep_pair in circular_dependencies:
             recommendations.append(
-                f"Break circular dependency between " f"{dep_pair[0]} and {dep_pair[1]}"
+                f"Break circular dependency between "
+                f"{dep_pair[0]} and {dep_pair[1]}"
             )
 
         # High coupling module recommendations
@@ -277,7 +284,8 @@ class AdvancedDependencyMapper:
         # General dependency optimization
         if len(dependency_graph) > 100:
             recommendations.append(
-                "Consider modularizing the project " "to reduce overall complexity"
+                "Consider modularizing the project "
+                "to reduce overall complexity"
             )
 
         return recommendations
@@ -305,10 +313,12 @@ class AdvancedDependencyMapper:
             dependency_health_score = self.calculate_dependency_health_score()
 
             # Generate optimization recommendations
-            optimization_recommendations = self.generate_optimization_recommendations(
-                dependency_graph,
-                circular_dependencies,
-                high_coupling_modules,
+            optimization_recommendations = (
+                self.generate_optimization_recommendations(
+                    dependency_graph,
+                    circular_dependencies,
+                    high_coupling_modules,
+                )
             )
 
             # Create comprehensive dependency report
@@ -356,7 +366,10 @@ def main():
             print(f"- {recommendation}")
 
         # Print dependency health score
-        print(f"\nDependency Health Score: " f"{report.dependency_health_score}/100")
+        print(
+            f"\nDependency Health Score: "
+            f"{report.dependency_health_score}/100"
+        )
 
     except Exception as e:
         print(f"Dependency mapping failed: {e}")

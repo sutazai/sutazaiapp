@@ -25,7 +25,9 @@ class TestBuildPy(support.TempdirManager):
 
         destination = self.mkdtemp()
 
-        dist = Distribution({"packages": ["pkg"], "package_dir": {"pkg": sources}})
+        dist = Distribution(
+            {"packages": ["pkg"], "package_dir": {"pkg": sources}}
+        )
         # script_name need not exist, it just need to be initialized
         dist.script_name = os.path.join(sources, "setup.py")
         dist.command_obj["build"] = support.DummyCommand(
@@ -60,7 +62,9 @@ class TestBuildPy(support.TempdirManager):
     def test_empty_package_dir(self):
         # See bugs #1668596/#1720897
         sources = self.mkdtemp()
-        jaraco.path.build({"__init__.py": "", "doc": {"testfile": ""}}, sources)
+        jaraco.path.build(
+            {"__init__.py": "", "doc": {"testfile": ""}}, sources
+        )
 
         os.chdir(sources)
         dist = Distribution(
@@ -135,7 +139,9 @@ class TestBuildPy(support.TempdirManager):
         )
 
         os.chdir(sources)
-        dist = Distribution({"packages": ["pkg"], "package_data": {"pkg": ["doc/*"]}})
+        dist = Distribution(
+            {"packages": ["pkg"], "package_data": {"pkg": ["doc/*"]}}
+        )
         # script_name need not exist, it just need to be initialized
         dist.script_name = os.path.join(sources, "setup.py")
         dist.script_args = ["build"]
@@ -194,5 +200,6 @@ class TestBuildPy(support.TempdirManager):
         cmd.run()
 
         assert not any(
-            "package init file" in msg and "not found" in msg for msg in caplog.messages
+            "package init file" in msg and "not found" in msg
+            for msg in caplog.messages
         )

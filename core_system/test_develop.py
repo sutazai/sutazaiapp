@@ -81,7 +81,9 @@ class TestDevelop:
         cmd.run()
         # assert '0.0' not in foocmd_text
 
-    @pytest.mark.xfail(reason="legacy behavior retained for compatibility #4167")
+    @pytest.mark.xfail(
+        reason="legacy behavior retained for compatibility #4167"
+    )
     def test_egg_link_filename(self):
         settings = dict(
             name="Foo $$$ Bar_baz-bing",

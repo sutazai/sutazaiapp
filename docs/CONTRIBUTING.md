@@ -13,7 +13,6 @@ Thank you for your interest in contributing to SutazAI, an ultra-comprehensive a
 6. [Code Review Process](#code-review-process)
 7. [Reporting Bugs](#reporting-bugs)
 8. [Feature Requests](#feature-requests)
-9. [Security Vulnerabilities](#security-vulnerabilities)
 
 ## 🤝 Code of Conduct
 
@@ -78,7 +77,6 @@ SutazAI follows a comprehensive development plan outlined in the [SutazAI Master
 git checkout -b feature/your-feature-name develop
 ```
 
-### OTP Security
 External operations (network access, package installations) require OTP validation. When developing features that require external access:
 
 1. Request an OTP token from the project maintainer
@@ -177,11 +175,8 @@ Steps to reproduce the behavior:
 3. Include potential implementation details
 4. Discuss potential impact on the project
 
-## 🔒 Security Vulnerabilities
 
 ### Reporting Process
-- Do NOT create public GitHub issues for security vulnerabilities
-- Email security concerns to: chrissuta01@gmail.com
 - Include detailed information about the vulnerability
 - Provide steps to reproduce (if possible)
 
@@ -193,14 +188,12 @@ SutazAI uses a comprehensive CI/CD pipeline for continuous testing and deploymen
 1. **Static Analysis**: Code is analyzed using Semgrep, Bandit, and other tools
 2. **Unit/Integration Tests**: Automated tests are run using Pytest
 3. **Performance Tests**: Performance benchmarks are executed
-4. **Security Scans**: Code is scanned for security vulnerabilities
 5. **Deployment**: If all tests pass, code is deployed to the Deployment Server
 
 ### Monitoring Your PR
 After submitting a PR, you can monitor its progress through the CI/CD pipeline. The pipeline will:
 - Run automated tests
 - Check code quality
-- Verify security
 - Test performance
 - Deploy to staging (if applicable)
 

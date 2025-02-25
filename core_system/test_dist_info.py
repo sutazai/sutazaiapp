@@ -28,7 +28,10 @@ class TestDistInfo:
 
     @classmethod
     def build_metadata(cls, **kwargs):
-        lines = ("{key}: {value}\n".format(**locals()) for key, value in kwargs.items())
+        lines = (
+            "{key}: {value}\n".format(**locals())
+            for key, value in kwargs.items()
+        )
         return cls.metadata_base + "".join(lines)
 
     @pytest.fixture
@@ -56,7 +59,8 @@ class TestDistInfo:
 
     def test_distinfo(self, metadata):
         dists = dict(
-            (d.project_name, d) for d in pkg_resources.find_distributions(metadata)
+            (d.project_name, d)
+            for d in pkg_resources.find_distributions(metadata)
         )
 
         assert len(dists) == 2, dists
@@ -187,7 +191,9 @@ class TestWheelCompatibility:
         dist_info = next(tmp_path.glob("dir_dist/*.dist-info"))
 
         assert dist_info.name == wheel_dist_info.name
-        assert dist_info.name.startswith(f"{name.replace('-', '_')}-{version}{suffix}")
+        assert dist_info.name.startswith(
+            f"{name.replace('-', '_')}-{version}{suffix}"
+        )
         for file in "METADATA", "entry_points.txt":
             assert read(dist_info / file) == read(wheel_dist_info / file)
 

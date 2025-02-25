@@ -62,8 +62,12 @@ class VulnerabilitySchemaV05(Schema):
     version = fields_.Str(attribute="pkg.version")
     advisory = fields_.Str()
     vulnerability_id = fields_.Str()
-    cvssv2: Optional[CVSSv2] = fields_.Nested(CVSSv2, attribute="severity.cvssv2")
-    cvssv3: Optional[CVSSv3] = fields_.Nested(CVSSv3, attribute="severity.cvssv3")
+    cvssv2: Optional[CVSSv2] = fields_.Nested(
+        CVSSv2, attribute="severity.cvssv2"
+    )
+    cvssv3: Optional[CVSSv3] = fields_.Nested(
+        CVSSv3, attribute="severity.cvssv3"
+    )
 
     class Meta:
         ordered = True

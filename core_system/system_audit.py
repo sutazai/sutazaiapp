@@ -14,23 +14,23 @@ logger = logging.getLogger(__name__)
 
 class SystemAuditor:
     """Main class for system audit functionality"""
-    
+
     def __init__(self):
         """Initialize the SystemAuditor instance"""
         self.initialized = True
         self.configuration = {}
         self.start_time = time.time()
         logger.info("SystemAuditor initialized")
-        
+
     def configure(self, config_dict):
         """Configure the SystemAuditor with the provided settings"""
         self.configuration.update(config_dict)
         return True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         uptime = time.time() - self.start_time

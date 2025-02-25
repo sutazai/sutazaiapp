@@ -42,4 +42,6 @@ class _test(Command):
         pass
 
     def run(self):
-        raise RuntimeError("Support for the test command was removed in Setuptools 72")
+        raise RuntimeError(
+            "Support for the test command was removed in Setuptools 72"
+        )

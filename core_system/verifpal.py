@@ -62,7 +62,9 @@ class VerifpalLexer(RegexLexer):
             ),
             (
                 r"(knows)( +)(private|public)( +)",
-                bygroups(Name.Builtin, Whitespace, Keyword.Constant, Whitespace),
+                bygroups(
+                    Name.Builtin, Whitespace, Keyword.Constant, Whitespace
+                ),
                 "shared",
             ),
             (

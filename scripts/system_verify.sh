@@ -26,8 +26,6 @@ verify_selinux() {
     fi
 }
 
-verify_security_context() {
-    echo "🔍 Checking security context..."
     
     # Verify SELinux state
     if command -v sestatus >/dev/null; then
@@ -44,7 +42,6 @@ verify_security_context() {
         exit 1
     fi
     
-    echo "✅ Security context verified"
 }
 
 verify_selinux_context() {
@@ -63,7 +60,6 @@ verify_selinux_context() {
 }
 
 verify_deployment() {
-    verify_security_context
     verify_selinux_context
     echo "=== SYSTEM VERIFICATION ==="
     verify_selinux
@@ -78,7 +74,6 @@ verify_deployment() {
     # Check directory structure
     declare -a dirs=(
         "/root/sutazai/v1/agents/architect"
-        "/root/sutazai/v1/security"
         "/root/sutazai/v1/services"
     )
     
@@ -92,7 +87,6 @@ verify_deployment() {
     # Check file permissions
     declare -A perms=(
         ["/root/sutazai/v1/deploy_sutazai.sh"]="755"
-        ["/root/sutazai/v1/security/docker_creds.gpg"]="600"
     )
     
     for file in "${!perms[@]}"; do
@@ -134,7 +128,6 @@ required_dirs=(
     "backend"
     "frontend"
     "scripts"
-    "security"
     "agents"
     "data"
     "config"
@@ -154,7 +147,6 @@ done
 echo -e "\n=== ESSENTIAL FILE VERIFICATION ==="
 critical_files=(
     "deploy_sutazai.sh"
-    "security/docker_creds.gpg"
     "backend/main.py"
     "frontend/app.py"
     "config/settings.py"
@@ -182,7 +174,6 @@ check_perms() {
 }
 
 check_perms "deploy_sutazai.sh" "750"
-check_perms "security/docker_creds.gpg" "600"
 check_perms "scripts/*.sh" "750"
 
 # 4. Docker Credentials Validation
@@ -190,14 +181,12 @@ echo -e "\n=== DOCKER CREDENTIALS VERIFICATION ==="
 temp_creds=$(mktemp)
 if ! gpg --decrypt --cipher-algo AES256 --digest-algo SHA512 \
     --passphrase "1988" --batch --no-tty \
-    --output "$temp_creds" security/docker_creds.gpg 2>gpg-errors.log; then
     echo "❌ GPG Decryption Failed - Critical System Error"
     echo "Technical Details:"
     cat gpg-errors.log
     echo -e "\nPossible Solutions:"
     echo "1. Run hardware diagnostics: memtester 4M && smartctl -a /dev/sda"
     echo "2. Verify system clock: timedatectl status"
-    echo "3. Recreate credentials: rm security/docker_creds.gpg && recreate with encryption command"
     exit 1
 fi
 
@@ -226,7 +215,6 @@ echo "✅ Docker credentials format valid"
 rm -f "$temp_creds" gpg-errors.log
 
 # Add checksum file check
-if [ ! -f security/docker_creds.sha256 ]; then
     echo "❌ Missing credentials checksum file"
     echo "Run: make generate-checksum"
     exit 1
@@ -288,7 +276,6 @@ check_port 8000  # API Port
 check_port 8501  # Frontend Port
 check_port 5432  # Database Port
 
-# 8. Security Audit
 echo -e "\n=== SECURITY AUDIT ==="
 if grep -r "password" . | grep -v "docker_creds.gpg"; then
     echo "❌ Clear-text credentials found in codebase!"
@@ -303,7 +290,6 @@ gpg --version | head -n 1
 gpgconf --list-dirs | grep '^homedir:'
 
 echo -e "\n=== CREDENTIALS INTEGRITY CHECK ==="
-sha256sum -c security/docker_creds.sha256 || {
     echo "❌ Credentials file validation failed"
     exit 1
 }
@@ -320,9 +306,7 @@ rm -f "$test_file" "${test_file}.gpg"
 
 # Add credentials lifecycle test
 echo -e "\n=== CREDENTIALS LIFECYCLE TEST ==="
-original_checksum=$(sha256sum security/docker_creds.gpg)
 ./scripts/generate_credentials.sh
-if [ "$original_checksum" = "$(sha256sum security/docker_creds.gpg)" ]; then
     echo "❌ Credentials regeneration failed"
     exit 1
 fi

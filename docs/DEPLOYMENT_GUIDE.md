@@ -122,7 +122,6 @@ The deployment script handles:
 - Service startup
 - Health checks
 
-#### 5.2 OTP-Based Security
 External operations (network access, package installations) require OTP validation:
 ```bash
 # Example of using OTP for deployment with external dependencies
@@ -174,7 +173,6 @@ If deployment fails or causes issues:
 
 ### Regular Tasks
 - Weekly dependency updates
-- Monthly security scans
 - Quarterly comprehensive system audit
 
 ### Monitoring
@@ -189,4 +187,3 @@ If deployment fails or causes issues:
 ## Additional Resources
 - [SutazAI Master Plan](/docs/SUTAZAI_MASTER_PLAN.md)
 - [System Architecture](/docs/SYSTEM_ARCHITECTURE.md)
-- [Security Policy](/docs/SECURITY_POLICY.md) 

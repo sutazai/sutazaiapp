@@ -63,26 +63,40 @@ class SystemDiagnostic:
                     ),
                 },
                 "memory": {
-                    "total_gb": round(psutil.virtual_memory().total / (1024**3), 2),
+                    "total_gb": round(
+                        psutil.virtual_memory().total / (1024**3), 2
+                    ),
                     "available_gb": round(
                         psutil.virtual_memory().available / (1024**3), 2
                     ),
                     "usage_percent": psutil.virtual_memory().percent,
                 },
                 "disk": {
-                    "total_gb": round(psutil.disk_usage("/").total / (1024**3), 2),
-                    "free_gb": round(psutil.disk_usage("/").free / (1024**3), 2),
+                    "total_gb": round(
+                        psutil.disk_usage("/").total / (1024**3), 2
+                    ),
+                    "free_gb": round(
+                        psutil.disk_usage("/").free / (1024**3), 2
+                    ),
                     "usage_percent": psutil.disk_usage("/").percent,
                 },
             }
 
             # Check for performance bottlenecks
-            if self.diagnostic_report["performance"]["cpu"]["usage_percent"] > 80:
+            if (
+                self.diagnostic_report["performance"]["cpu"]["usage_percent"]
+                > 80
+            ):
                 self.diagnostic_report["potential_issues"].append(
                     f"High CPU usage: {self.diagnostic_report['performance']['cpu']['usage_percent']}%"
                 )
 
-            if self.diagnostic_report["performance"]["memory"]["usage_percent"] > 85:
+            if (
+                self.diagnostic_report["performance"]["memory"][
+                    "usage_percent"
+                ]
+                > 85
+            ):
                 self.diagnostic_report["potential_issues"].append(
                     f"High memory usage: {self.diagnostic_report['performance']['memory']['usage_percent']}%"
                 )
@@ -99,7 +113,11 @@ class SystemDiagnostic:
             # Check network interfaces
             network_interfaces = psutil.net_if_addrs()
             self.diagnostic_report["network"]["interfaces"] = {
-                name: [addr.address for addr in addrs if addr.family == socket.AF_INET]
+                name: [
+                    addr.address
+                    for addr in addrs
+                    if addr.family == socket.AF_INET
+                ]
                 for name, addrs in network_interfaces.items()
             }
 

@@ -127,14 +127,24 @@ class Lexer:
         # regular expression and findex is a list
         # mapping regex group numbers to rules
         self.lexretext = None  # Current regular expression strings
-        self.lexstatere = {}  # Dictionary mapping lexer states to master regexs
-        self.lexstateretext = {}  # Dictionary mapping lexer states to regex strings
-        self.lexstaterenames = {}  # Dictionary mapping lexer states to symbol names
+        self.lexstatere = (
+            {}
+        )  # Dictionary mapping lexer states to master regexs
+        self.lexstateretext = (
+            {}
+        )  # Dictionary mapping lexer states to regex strings
+        self.lexstaterenames = (
+            {}
+        )  # Dictionary mapping lexer states to symbol names
         self.lexstate = "INITIAL"  # Current lexer state
         self.lexstatestack = []  # Stack of lexer states
         self.lexstateinfo = None  # State information
-        self.lexstateignore = {}  # Dictionary of ignored characters for each state
-        self.lexstateerrorf = {}  # Dictionary of error functions for each state
+        self.lexstateignore = (
+            {}
+        )  # Dictionary of ignored characters for each state
+        self.lexstateerrorf = (
+            {}
+        )  # Dictionary of error functions for each state
         self.lexstateeoff = {}  # Dictionary of eof functions for each state
         self.lexreflags = 0  # Optional re compile flags
         self.lexdata = None  # Actual input data (as a string)
@@ -166,7 +176,9 @@ class Lexer:
                         if not f or not f[0]:
                             newfindex.append(f)
                             continue
-                        newfindex.append((getattr(object, f[0].__name__), f[1]))
+                        newfindex.append(
+                            (getattr(object, f[0].__name__), f[1])
+                        )
                 newre.append((cre, newfindex))
                 newtab[key] = newre
             c.lexstatere = newtab
@@ -190,7 +202,10 @@ class Lexer:
                 % (basetabmodule, __version__)
             )
             tf.write("_tabversion   = %s\n" % repr(__tabversion__))
-            tf.write("_lextokens    = set(%s)\n" % repr(tuple(sorted(self.lextokens))))
+            tf.write(
+                "_lextokens    = set(%s)\n"
+                % repr(tuple(sorted(self.lextokens)))
+            )
             tf.write("_lexreflags   = %s\n" % repr(self.lexreflags))
             tf.write("_lexliterals  = %s\n" % repr(self.lexliterals))
             tf.write("_lexstateinfo = %s\n" % repr(self.lexstateinfo))
@@ -363,7 +378,9 @@ class Lexer:
 
                 # If token is processed by a function, call it
 
-                tok.lexer = self  # Set additional attributes useful in token rules
+                tok.lexer = (
+                    self  # Set additional attributes useful in token rules
+                )
                 self.lexmatch = m
                 self.lexpos = lexpos
 
@@ -429,7 +446,8 @@ class Lexer:
 
                 self.lexpos = lexpos
                 raise LexError(
-                    "Illegal character '%s' at index %d" % (lexdata[lexpos], lexpos),
+                    "Illegal character '%s' at index %d"
+                    % (lexdata[lexpos], lexpos),
                     lexdata[lexpos:],
                 )
 
@@ -562,8 +580,12 @@ def _form_master_re(relist, reflags, ldict, toknames):
         m = int(len(relist) / 2)
         if m == 0:
             m = 1
-        llist, lre, lnames = _form_master_re(relist[:m], reflags, ldict, toknames)
-        rlist, rre, rnames = _form_master_re(relist[m:], reflags, ldict, toknames)
+        llist, lre, lnames = _form_master_re(
+            relist[:m], reflags, ldict, toknames
+        )
+        rlist, rre, rnames = _form_master_re(
+            relist[m:], reflags, ldict, toknames
+        )
         return (llist + rlist), (lre + rre), (lnames + rnames)
 
 
@@ -697,10 +719,14 @@ class LexerReflect(object):
                         continue
                     name, statetype = s
                     if not isinstance(name, StringTypes):
-                        self.log.error("State name %s must be a string", repr(name))
+                        self.log.error(
+                            "State name %s must be a string", repr(name)
+                        )
                         self.error = True
                         continue
-                    if not (statetype == "inclusive" or statetype == "exclusive"):
+                    if not (
+                        statetype == "inclusive" or statetype == "exclusive"
+                    ):
                         self.log.error(
                             "State type for state %s must be 'inclusive' or 'exclusive'",
                             name,
@@ -766,10 +792,14 @@ class LexerReflect(object):
                     for s in states:
                         self.ignore[s] = t
                     if "\\" in t:
-                        self.log.warning("%s contains a literal backslash '\\'", f)
+                        self.log.warning(
+                            "%s contains a literal backslash '\\'", f
+                        )
 
                 elif tokname == "error":
-                    self.log.error("Rule '%s' must be defined as a function", f)
+                    self.log.error(
+                        "Rule '%s' must be defined as a function", f
+                    )
                     self.error = True
                 else:
                     for s in states:
@@ -834,7 +864,9 @@ class LexerReflect(object):
                     continue
 
                 try:
-                    c = re.compile("(?P<%s>%s)" % (fname, _get_regex(f)), self.reflags)
+                    c = re.compile(
+                        "(?P<%s>%s)" % (fname, _get_regex(f)), self.reflags
+                    )
                     if c.match(""):
                         self.log.error(
                             "%s:%d: Regular expression for rule '%s' matches empty string",
@@ -864,7 +896,9 @@ class LexerReflect(object):
             for name, r in self.strsym[state]:
                 tokname = self.toknames[name]
                 if tokname == "error":
-                    self.log.error("Rule '%s' must be defined as a function", name)
+                    self.log.error(
+                        "Rule '%s' must be defined as a function", name
+                    )
                     self.error = True
                     continue
 
@@ -1115,14 +1149,20 @@ def lex(
         lexobj.lexstaterenames[state] = re_names
         if debug:
             for i, text in enumerate(re_text):
-                debuglog.info("lex: state '%s' : regex[%d] = '%s'", state, i, text)
+                debuglog.info(
+                    "lex: state '%s' : regex[%d] = '%s'", state, i, text
+                )
 
     # For inclusive states, we need to add the regular expressions from the INITIAL state
     for state, stype in stateinfo.items():
         if state != "INITIAL" and stype == "inclusive":
             lexobj.lexstatere[state].extend(lexobj.lexstatere["INITIAL"])
-            lexobj.lexstateretext[state].extend(lexobj.lexstateretext["INITIAL"])
-            lexobj.lexstaterenames[state].extend(lexobj.lexstaterenames["INITIAL"])
+            lexobj.lexstateretext[state].extend(
+                lexobj.lexstateretext["INITIAL"]
+            )
+            lexobj.lexstaterenames[state].extend(
+                lexobj.lexstaterenames["INITIAL"]
+            )
 
     lexobj.lexstateinfo = stateinfo
     lexobj.lexre = lexobj.lexstatere["INITIAL"]
@@ -1147,7 +1187,9 @@ def lex(
     for s, stype in stateinfo.items():
         if stype == "exclusive":
             if s not in linfo.errorf:
-                errorlog.warning("No error rule is defined for exclusive state '%s'", s)
+                errorlog.warning(
+                    "No error rule is defined for exclusive state '%s'", s
+                )
             if s not in linfo.ignore and lexobj.lexignore:
                 errorlog.warning(
                     "No ignore rule is defined for exclusive state '%s'", s
@@ -1184,7 +1226,9 @@ def lex(
         try:
             lexobj.writetab(lextab, outputdir)
         except IOError as e:
-            errorlog.warning("Couldn't write lextab module %r. %s" % (lextab, e))
+            errorlog.warning(
+                "Couldn't write lextab module %r. %s" % (lextab, e)
+            )
 
     return lexobj
 
@@ -1204,7 +1248,9 @@ def runmain(lexer=None, data=None):
             data = f.read()
             f.close()
         except IndexError:
-            sys.stdout.write("Reading from standard input (type EOF to end):\n")
+            sys.stdout.write(
+                "Reading from standard input (type EOF to end):\n"
+            )
             data = sys.stdin.read()
 
     if lexer:

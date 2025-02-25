@@ -1,19 +1,23 @@
 """Paragraph."""
+
 import logging
 from .state_block import StateBlock
+
 LOGGER = logging.getLogger(__name__)
 
 
-def paragraph(state: StateBlock, startLine: int, endLine: int, silent: bool
-    ) ->bool:
-    LOGGER.debug('entering paragraph: %s, %s, %s, %s', state, startLine,
-        endLine, silent)
+def paragraph(
+    state: StateBlock, startLine: int, endLine: int, silent: bool
+) -> bool:
+    LOGGER.debug(
+        "entering paragraph: %s, %s, %s, %s", state, startLine, endLine, silent
+    )
     nextLine = startLine + 1
     ruler = state.md.block.ruler
-    terminatorRules = ruler.getRules('paragraph')
+    terminatorRules = ruler.getRules("paragraph")
     endLine = state.lineMax
     oldParentType = state.parentType
-    state.parentType = 'paragraph'
+    state.parentType = "paragraph"
     while nextLine < endLine:
         if state.isEmpty(nextLine):
             break
@@ -31,15 +35,16 @@ def paragraph(state: StateBlock, startLine: int, endLine: int, silent: bool
         if terminate:
             break
         nextLine += 1
-    content = state.getLines(startLine, nextLine, state.blkIndent, False
-        ).strip()
+    content = state.getLines(
+        startLine, nextLine, state.blkIndent, False
+    ).strip()
     state.line = nextLine
-    token = state.push('paragraph_open', 'p', 1)
+    token = state.push("paragraph_open", "p", 1)
     token.map = [startLine, state.line]
-    token = state.push('inline', '', 0)
+    token = state.push("inline", "", 0)
     token.content = content
     token.map = [startLine, state.line]
     token.children = []
-    token = state.push('paragraph_close', 'p', -1)
+    token = state.push("paragraph_close", "p", -1)
     state.parentType = oldParentType
     return True

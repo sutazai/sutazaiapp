@@ -64,8 +64,5 @@ handle_config_changed() {
     reload_config "$config_file"
 }
 
-handle_security_issue() {
     local issue=$1
-    send_notification "Security issue detected: $issue" "CRITICAL"
-    # Additional security handling logic
 } 

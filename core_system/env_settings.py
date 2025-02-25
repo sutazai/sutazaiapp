@@ -124,7 +124,9 @@ class BaseSettings(BaseModel):
             env_names: Union[List[str], AbstractSet[str]]
             field_info_from_config = cls.get_field_info(field.name)
 
-            env = field_info_from_config.get("env") or field.field_info.extra.get("env")
+            env = field_info_from_config.get(
+                "env"
+            ) or field.field_info.extra.get("env")
             if env is None:
                 if field.has_alias:
                     warnings.warn(
@@ -231,7 +233,9 @@ class EnvSettingsSource:
                 else:
                     # field is complex and there's a value, decode that as JSON, then add explode_env_vars
                     try:
-                        env_val = settings.__config__.parse_env_var(field.name, env_val)
+                        env_val = settings.__config__.parse_env_var(
+                            field.name, env_val
+                        )
                     except ValueError as e:
                         if not allow_parse_failure:
                             raise SettingsError(
@@ -250,7 +254,9 @@ class EnvSettingsSource:
 
         return d
 
-    def _read_env_files(self, case_sensitive: bool) -> Dict[str, Optional[str]]:
+    def _read_env_files(
+        self, case_sensitive: bool
+    ) -> Dict[str, Optional[str]]:
         env_files = self.env_file
         if env_files is None:
             return {}
@@ -309,7 +315,7 @@ class EnvSettingsSource:
             if not any(env_name.startswith(prefix) for prefix in prefixes):
                 continue
             # we remove the prefix before splitting in case the prefix has characters in common with the delimiter
-            env_name_without_prefix = env_name[self.env_prefix_len:]
+            env_name_without_prefix = env_name[self.env_prefix_len :]
             _, *keys, last_key = env_name_without_prefix.split(
                 self.env_nested_delimiter
             )

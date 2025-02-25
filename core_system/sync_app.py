@@ -1,7 +1,6 @@
 import logging
 import time
 
-from authlib.common.security import generate_token
 from authlib.common.urls import urlparse
 from authlib.consts import default_user_agent
 
@@ -140,7 +139,9 @@ class OAuth1Base:
 class OAuth1Mixin(_RequestMixin, OAuth1Base):
     def request(self, method, url, token=None, **kwargs):
         with self._get_oauth_client() as session:
-            return self._send_token_request(session, method, url, token, kwargs)
+            return self._send_token_request(
+                session, method, url, token, kwargs
+            )
 
     def create_authorization_url(self, redirect_uri=None, **kwargs):
         """Generate the authorization url and state for HTTP redirect.
@@ -158,7 +159,9 @@ class OAuth1Mixin(_RequestMixin, OAuth1Base):
         with self._get_oauth_client() as client:
             client.redirect_uri = redirect_uri
             params = self.request_token_params or {}
-            request_token = client.fetch_request_token(self.request_token_url, **params)
+            request_token = client.fetch_request_token(
+                self.request_token_url, **params
+            )
             log.debug(f"Fetch request token: {request_token!r}")
             url = client.create_authorization_url(self.authorize_url, **kwargs)
             state = request_token["oauth_token"]
@@ -271,7 +274,9 @@ class OAuth2Base:
         return params
 
     @staticmethod
-    def _create_oauth2_authorization_url(client, authorization_endpoint, **kwargs):
+    def _create_oauth2_authorization_url(
+        client, authorization_endpoint, **kwargs
+    ):
         rv = {}
         if client.code_challenge_method:
             code_verifier = kwargs.get("code_verifier")
@@ -295,7 +300,9 @@ class OAuth2Base:
                 kwargs["nonce"] = nonce
             rv["nonce"] = nonce
 
-        url, state = client.create_authorization_url(authorization_endpoint, **kwargs)
+        url, state = client.create_authorization_url(
+            authorization_endpoint, **kwargs
+        )
         rv["url"] = url
         rv["state"] = state
         return rv
@@ -318,10 +325,15 @@ class OAuth2Mixin(_RequestMixin, OAuth2Base):
     def request(self, method, url, token=None, **kwargs):
         metadata = self.load_server_metadata()
         with self._get_oauth_client(**metadata) as session:
-            return self._send_token_request(session, method, url, token, kwargs)
+            return self._send_token_request(
+                session, method, url, token, kwargs
+            )
 
     def load_server_metadata(self):
-        if self._server_metadata_url and "_loaded_at" not in self.server_metadata:
+        if (
+            self._server_metadata_url
+            and "_loaded_at" not in self.server_metadata
+        ):
             with self.client_cls(**self.client_kwargs) as session:
                 resp = session.request(
                     "GET", self._server_metadata_url, withhold_token=True
@@ -367,7 +379,9 @@ class OAuth2Mixin(_RequestMixin, OAuth2Base):
         :return: A token dict.
         """
         metadata = self.load_server_metadata()
-        token_endpoint = self.access_token_url or metadata.get("token_endpoint")
+        token_endpoint = self.access_token_url or metadata.get(
+            "token_endpoint"
+        )
         with self._get_oauth_client(**metadata) as client:
             if redirect_uri is not None:
                 client.redirect_uri = redirect_uri

@@ -111,7 +111,9 @@ def style_lines(
 
                 if i == 0:
                     text = left_padding  # Include the line padding in the word to avoid Github issues
-                    left_padding = ""  # Clean left padding to avoid be added two times
+                    left_padding = (
+                        ""  # Clean left padding to avoid be added two times
+                    )
 
                 text += word.get("value", "")
 
@@ -176,7 +178,9 @@ def format_vulnerability(
         }
     ]
 
-    is_pinned_req = is_pinned_requirement(vulnerability.analyzed_requirement.specifier)
+    is_pinned_req = is_pinned_requirement(
+        vulnerability.analyzed_requirement.specifier
+    )
 
     cve = vulnerability.CVE
 
@@ -210,9 +214,7 @@ def format_vulnerability(
                 s = cve.cvssv3.get("impact_score", "-")
                 v = cve.cvssv3.get("vector_string", "-")
 
-                cvssv3_text = (
-                    f"CVSS v3, BASE SCORE {b}, IMPACT SCORE {s}, VECTOR STRING {v}"
-                )
+                cvssv3_text = f"CVSS v3, BASE SCORE {b}, IMPACT SCORE {s}, VECTOR STRING {v}"
 
             else:
                 cvssv3_text = f"CVSS v3, BASE SCORE {b} "
@@ -237,7 +239,9 @@ def format_vulnerability(
                 cve_lines.append(cvssv2_line)
 
         elif cve.name:
-            cve_lines = [{"words": [{"style": {"bold": True}, "value": cve.name}]}]
+            cve_lines = [
+                {"words": [{"style": {"bold": True}, "value": cve.name}]}
+            ]
 
     advisory_format = (
         {"sub_indent": " " * 3, "max_lines": None}
@@ -463,7 +467,9 @@ def get_unpinned_hint(pkg: str) -> str:
     )
 
 
-def get_specifier_range_info(style: bool = True, pin_hint: bool = False) -> str:
+def get_specifier_range_info(
+    style: bool = True, pin_hint: bool = False
+) -> str:
     """
     Get the specifier range information.
 
@@ -613,9 +619,7 @@ def build_remediation_section(
 
             if fix_version:
                 fix_v: str = click.style(fix_version, bold=True)
-                closest_msg = (
-                    f"The closest version with no known vulnerabilities is {fix_v}"
-                )
+                closest_msg = f"The closest version with no known vulnerabilities is {fix_v}"
 
                 if is_spec:
                     closest_msg = (
@@ -714,7 +718,9 @@ def build_remediation_section(
     body = [content]
 
     if not is_using_api_key():
-        vuln_text = "vulnerabilities were" if total_vulns != 1 else "vulnerability was"
+        vuln_text = (
+            "vulnerabilities were" if total_vulns != 1 else "vulnerability was"
+        )
         pkg_text = "packages" if total_packages > 1 else "package"
         msg = (
             "{0} {1} reported in {2} {3}. "
@@ -724,7 +730,9 @@ def build_remediation_section(
         )
         content = (
             "\n"
-            + format_long_text(msg, indent=" ", sub_indent=" ", columns=columns)
+            + format_long_text(
+                msg, indent=" ", sub_indent=" ", columns=columns
+            )
             + "\n"
         )
         body = [content]
@@ -769,7 +777,9 @@ def get_final_brief(
     pkg_text = "packages were" if len(ignored.keys()) > 1 else "package was"
 
     policy_file_text = (
-        " using a safety policy file" if is_using_a_safety_policy_file() else ""
+        " using a safety policy file"
+        if is_using_a_safety_policy_file()
+        else ""
     )
 
     vuln_brief = f" {total_vulns} vulnerabilit{'y was' if total_vulns == 1 else 'ies were'} reported."
@@ -809,10 +819,8 @@ def get_final_brief_license(
     licenses_text = " Scan was completed."
 
     if licenses:
-        licenses_text = (
-            "The following software licenses were present in your system: {0}".format(
-                ", ".join(licenses)
-            )
+        licenses_text = "The following software licenses were present in your system: {0}".format(
+            ", ".join(licenses)
         )
 
     return format_long_text(
@@ -863,7 +871,9 @@ def format_long_text(
         if line == "":
             empty_line = base_format.format(" ")
             formatted_lines.append(
-                "{0}{1}{2}".format(start_line_decorator, empty_line, end_line_decorator)
+                "{0}{1}{2}".format(
+                    start_line_decorator, empty_line, end_line_decorator
+                )
             )
         wrapped_lines = textwrap.wrap(
             line,
@@ -1038,7 +1048,6 @@ def build_report_for_review_vuln_report(
         safety_policy_used = [
             {
                 "style": False,
-                "value": "\nScanning using a security policy file",
             },
             {"style": True, "value": " {0}".format(policy_f_name)},
         ]
@@ -1140,7 +1149,11 @@ def build_using_sentence(
 
     database_sentence = [{"style": True, "value": db_name + " database"}]
 
-    return [{"style": False, "value": "Using "}] + key_sentence + database_sentence
+    return (
+        [{"style": False, "value": "Using "}]
+        + key_sentence
+        + database_sentence
+    )
 
 
 def build_scanned_count_sentence(
@@ -1185,16 +1198,26 @@ def add_warnings_if_needed(brief_info: List[List[Dict[str, Any]]]):
                 ]
             ]
 
-        if ctx.params.get("ignore_severity_rules", False) and not is_using_api_key():
-            warnings += [[{"style": True,
-                           "value": "* Could not filter by severity, please upgrade your account to include severity data.",
-                           }]]
+        if (
+            ctx.params.get("ignore_severity_rules", False)
+            and not is_using_api_key()
+        ):
+            warnings += [
+                [
+                    {
+                        "style": True,
+                        "value": "* Could not filter by severity, please upgrade your account to include severity data.",
+                    }
+                ]
+            ]
 
     if warnings:
         brief_info += [[{"style": False, "value": ""}]] + warnings
 
 
-def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs: Any):
+def get_report_brief_info(
+    as_dict: bool = False, report_type: int = 1, **kwargs: Any
+):
     """
     Get the brief info of the report.
 
@@ -1246,7 +1269,9 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
             scanning_types[command]["scanning_target"] = target
             break
 
-    scanning_target = scanning_types.get(context.command, {}).get("scanning_target", "")
+    scanning_target = scanning_types.get(context.command, {}).get(
+        "scanning_target", ""
+    )
     brief_data["scan_target"] = scanning_target
     scanned_items, data = get_printable_list_of_scanned_items(scanning_target)
     brief_data["scanned"] = data
@@ -1281,7 +1306,6 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
         safety_policy_used = [
             {
                 "style": False,
-                "value": "\nScan configuration using a security policy file",
             },
             {
                 "style": True,
@@ -1315,8 +1339,12 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
     # Vuln report
     additional_data = []
     if report_type == 1:
-        brief_data["vulnerabilities_found"] = kwargs.get("vulnerabilities_found", 0)
-        brief_data["vulnerabilities_ignored"] = kwargs.get("vulnerabilities_ignored", 0)
+        brief_data["vulnerabilities_found"] = kwargs.get(
+            "vulnerabilities_found", 0
+        )
+        brief_data["vulnerabilities_ignored"] = kwargs.get(
+            "vulnerabilities_ignored", 0
+        )
         brief_data["remediations_recommended"] = 0
 
         additional_data = [
@@ -1351,7 +1379,9 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
                     [
                         {
                             "style": True,
-                            "value": str(brief_data["remediations_recommended"]),
+                            "value": str(
+                                brief_data["remediations_recommended"]
+                            ),
                         },
                         {
                             "style": True,
@@ -1387,7 +1417,9 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
     brief_using_sentence = " ".join(sentence_array)
     brief_data["using_sentence"] = brief_using_sentence
 
-    using_sentence_section = [nl] if not using_sentence else [nl] + [using_sentence]
+    using_sentence_section = (
+        [nl] if not using_sentence else [nl] + [using_sentence]
+    )
     scanned_count_sentence = build_scanned_count_sentence(packages)
 
     timestamp = [
@@ -1403,7 +1435,9 @@ def get_report_brief_info(as_dict: bool = False, report_type: int = 1, **kwargs:
                 {"style": False, "value": " is scanning for "},
                 {
                     "style": True,
-                    "value": scanning_types.get(context.command, {}).get("name", ""),
+                    "value": scanning_types.get(context.command, {}).get(
+                        "name", ""
+                    ),
                 },
                 {"style": True, "value": "..."},
             ]
@@ -1551,7 +1585,9 @@ def get_skipped_msg(fix: Fix) -> str:
     Returns:
         str: The message for the skipped fix.
     """
-    return f"{fix.package} remediation was skipped because {get_skip_reason(fix)}"
+    return (
+        f"{fix.package} remediation was skipped because {get_skip_reason(fix)}"
+    )
 
 
 def get_fix_opt_used_msg(fix_options: Optional[List[str]] = None) -> str:
@@ -1702,7 +1738,9 @@ def format_unpinned_vulnerabilities(
         doc_msg: str = get_specifier_range_info(style=False, pin_hint=True)
 
         match_text = (
-            "vulnerabilities match" if len(total) > 1 else "vulnerability matches"
+            "vulnerabilities match"
+            if len(total) > 1
+            else "vulnerability matches"
         )
         reqs = ", ".join([str(r) for r in pkg.get_unpinned_req()])
 
@@ -1710,8 +1748,8 @@ def format_unpinned_vulnerabilities(
             f"-> Warning: {len(total)} known {match_text} the {pkg.name} versions that could be "
             f"installed from your specifier{'s' if len(pkg.requirements) > 1 else ''}: {reqs} (unpinned). These vulnerabilities are not "
             f"reported by default. To report these vulnerabilities set 'ignore-unpinned-requirements' to False "
-            f"under 'security' in your policy file. "
-            f"See https://docs.pyup.io/docs/safety-20-policy-file for more information.")
+            f"See https://docs.pyup.io/docs/safety-20-policy-file for more information."
+        )
 
         kwargs = {
             "color": "yellow",
@@ -1725,7 +1763,9 @@ def format_unpinned_vulnerabilities(
             kwargs.update({"columns": columns})
 
         msg = format_long_text(text=msg, **kwargs)
-        doc_msg = format_long_text(text=doc_msg, **{**kwargs, **{"indent": " " * 3}})
+        doc_msg = format_long_text(
+            text=doc_msg, **{**kwargs, **{"indent": " " * 3}}
+        )
 
         lines.append(f"{msg}\n{doc_msg}")
 

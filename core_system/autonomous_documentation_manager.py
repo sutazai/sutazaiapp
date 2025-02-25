@@ -76,7 +76,6 @@ class AutonomousDocumentationManager:
             "ai_agents": [],
             "core_system": [],
             "backend": [],
-            "security": [],
             "scripts": [],
             "system_integration": [],
         }
@@ -93,8 +92,6 @@ class AutonomousDocumentationManager:
                         components["core_system"].append(full_path)
                     elif "backend" in full_path:
                         components["backend"].append(full_path)
-                    elif "security" in full_path:
-                        components["security"].append(full_path)
                     elif "scripts" in full_path:
                         components["scripts"].append(full_path)
                     elif "system_integration" in full_path:

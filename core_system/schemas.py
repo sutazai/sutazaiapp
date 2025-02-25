@@ -8,7 +8,9 @@ class ChatRequest(BaseModel):
     Schema for chat request with model selection and optional parameters.
     """
 
-    model: str = Field(default="deepseek-coder", description="Model to use for chat")
+    model: str = Field(
+        default="deepseek-coder", description="Model to use for chat"
+    )
     prompt: str = Field(
         ..., min_length=1, max_length=2000, description="User's chat prompt"
     )
@@ -28,11 +30,15 @@ class ReportRequest(BaseModel):
     Schema for report generation request.
     """
 
-    format: str = Field(default="markdown", description="Output format for the report")
+    format: str = Field(
+        default="markdown", description="Output format for the report"
+    )
     topic: str = Field(
         ..., min_length=1, max_length=200, description="Topic of the report"
     )
     detail_level: str = Field(
         default="medium", description="Level of detail for the report"
     )
-    language: Optional[str] = Field(default="en", description="Language of the report")
+    language: Optional[str] = Field(
+        default="en", description="Language of the report"
+    )

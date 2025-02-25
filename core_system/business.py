@@ -728,7 +728,9 @@ class ABAPLexer(RegexLexer):
             ),
             (
                 r"(MODULE)(\s+)(\S+)(\s+)(INPUT|OUTPUT)",
-                bygroups(Keyword, Whitespace, Name.Function, Whitespace, Keyword),
+                bygroups(
+                    Keyword, Whitespace, Name.Function, Whitespace, Keyword
+                ),
             ),
             # method implementation
             (

@@ -6,7 +6,6 @@ configuring FastAPI and Uvicorn in the SutazAI backend.
 
 Key Considerations:
 - Performance optimization
-- Security hardening
 - Scalability strategies
 """
 
@@ -25,14 +24,15 @@ class WebServerConfig(BaseModel):
 
     # Server Basics
     host: str = Field(default="0.0.0.0", description="Binding host address")
-    port: int = Field(default=8000, ge=1024, le=65535, description="Port number")
+    port: int = Field(
+        default=8000, ge=1024, le=65535, description="Port number"
+    )
 
     # Performance Tuning
     workers: Optional[int] = Field(
         default=None, description="Number of worker processes"
     )
 
-    # Security Settings
     cors_origins: Optional[list] = Field(
         default_factory=list, description="Allowed CORS origins"
     )

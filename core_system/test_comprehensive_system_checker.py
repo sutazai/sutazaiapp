@@ -41,7 +41,9 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test comprehensive system check method
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
 
         # Validate result structure
         self.assertIsInstance(system_check_results, dict)
@@ -57,8 +59,12 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test dependency analysis functionality
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
-        dependency_analysis = system_check_results.get("dependency_analysis", {})
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
+        dependency_analysis = system_check_results.get(
+            "dependency_analysis", {}
+        )
 
         self.assertIn("module_dependencies", dependency_analysis)
         self.assertIn("import_graph", dependency_analysis)
@@ -69,8 +75,12 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test code structure analysis functionality
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
-        code_structure = system_check_results.get("code_structure_analysis", {})
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
+        code_structure = system_check_results.get(
+            "code_structure_analysis", {}
+        )
 
         self.assertIn("files", code_structure)
         self.assertIn("complexity_metrics", code_structure)
@@ -80,7 +90,9 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test potential issues detection
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
         potential_issues = system_check_results.get("potential_issues", [])
 
         # Validate issues structure
@@ -92,8 +104,12 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test optimization recommendations generation
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
-        recommendations = system_check_results.get("optimization_recommendations", [])
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
+        recommendations = system_check_results.get(
+            "optimization_recommendations", []
+        )
 
         # Recommendations should be a list of strings
         for recommendation in recommendations:
@@ -103,7 +119,9 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         """
         Test persistence of analysis results
         """
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
 
         # Check log directory exists
         self.assertTrue(os.path.exists(self.system_checker.log_dir))
@@ -112,7 +130,8 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         log_files = [
             f
             for f in os.listdir(self.system_checker.log_dir)
-            if f.startswith("comprehensive_system_check_") and f.endswith(".json")
+            if f.startswith("comprehensive_system_check_")
+            and f.endswith(".json")
         ]
         self.assertTrue(len(log_files) > 0)
 
@@ -146,9 +165,12 @@ class TestComprehensiveSystemChecker(unittest.TestCase):
         log_files = [
             f
             for f in os.listdir(self.system_checker.log_dir)
-            if f.startswith("comprehensive_system_check_") and f.endswith(".json")
+            if f.startswith("comprehensive_system_check_")
+            and f.endswith(".json")
         ]
-        self.assertTrue(len(log_files) > 1)  # At least two logs (initial + continuous)
+        self.assertTrue(
+            len(log_files) > 1
+        )  # At least two logs (initial + continuous)
 
 
 def main():

@@ -93,7 +93,9 @@ class TestSpawn(support.TempdirManager):
         with os_helper.EnvironmentVarGuard() as env:
             env["PATH"] = os.pathsep
             with (
-                mock.patch("distutils.spawn.os.confstr", return_value="", create=True),
+                mock.patch(
+                    "distutils.spawn.os.confstr", return_value="", create=True
+                ),
                 mock.patch("distutils.spawn.os.defpath", ""),
             ):
                 rv = find_executable(program)

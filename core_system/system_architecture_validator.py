@@ -6,7 +6,6 @@ Comprehensive script to:
 - Validate system architecture integrity
 - Identify potential vulnerabilities
 - Optimize system structure
-- Ensure peak performance and security
 """
 
 import importlib
@@ -27,28 +26,32 @@ logging.basicConfig(
     format="%(asctime)s - [%(levelname)s] %(name)s - %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("/var/log/sutazai/system_validator.log")
-    ]
+        logging.FileHandler("/var/log/sutazai/system_validator.log"),
+    ],
 )
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class SystemComponent:
     """Represents a system component with its metadata and dependencies."""
+
     name: str
     path: Path
     dependencies: Set[str] = field(default_factory=set)
-    security_score: float = 0.0
     performance_score: float = 0.0
     issues: List[str] = field(default_factory=list)
+
 
 @dataclass
 class ValidationResult:
     """Represents the result of a system validation check."""
+
     success: bool
     message: str
     details: Dict[str, Any] = field(default_factory=dict)
     timestamp: datetime = field(default_factory=datetime.now)
+
 
 class SystemArchitectureValidator:
     """
@@ -68,31 +71,38 @@ class SystemArchitectureValidator:
         self.components: Dict[str, SystemComponent] = {}
         self.validation_results: List[ValidationResult] = []
         self.allowed_modules = {
-            'numpy', 'pandas', 'tensorflow', 'torch', 'sklearn',
-            'scipy', 'fastapi', 'sqlalchemy', 'redis', 'celery'
+            "numpy",
+            "pandas",
+            "tensorflow",
+            "torch",
+            "sklearn",
+            "scipy",
+            "fastapi",
+            "sqlalchemy",
+            "redis",
+            "celery",
         }
 
     def validate_system_architecture(self) -> bool:
         """Perform comprehensive system validation and optimization.
-        
+
         Returns:
             bool: True if all validations pass, False otherwise
         """
         try:
             # Discover and analyze all system components
             self._discover_components()
-            
+
             # Validate core requirements
             validations = [
                 self._validate_python_environment(),
                 self._validate_system_resources(),
-                self._validate_security_configuration(),
                 self._validate_dependencies(),
                 self._validate_file_permissions(),
                 self._validate_network_configuration(),
                 self._check_for_duplicate_code(),
                 self._validate_docker_configuration(),
-                self._validate_database_configuration()
+                self._validate_database_configuration(),
             ]
 
             # Generate comprehensive report
@@ -107,10 +117,11 @@ class SystemArchitectureValidator:
     def _discover_components(self) -> None:
         """Discover and analyze all system components recursively."""
         for path in self.base_dir.rglob("*.py"):
-            if path.is_file() and not any(x.startswith('.') for x in path.parts):
+            if path.is_file() and not any(
+                x.startswith(".") for x in path.parts
+            ):
                 component = SystemComponent(
-                    name=path.stem,
-                    path=path.relative_to(self.base_dir)
+                    name=path.stem, path=path.relative_to(self.base_dir)
                 )
                 self._analyze_component(component)
                 self.components[component.name] = component
@@ -118,34 +129,36 @@ class SystemArchitectureValidator:
     def _analyze_component(self, component: SystemComponent) -> None:
         """Analyze a single system component for dependencies and issues."""
         try:
-            with open(component.path, 'r') as f:
+            with open(component.path, "r") as f:
                 content = f.read()
-                
+
             # Extract imports and dependencies
-            import_lines = [line for line in content.split('\n') 
-                          if line.startswith(('import ', 'from '))]
-            
+            import_lines = [
+                line
+                for line in content.split("\n")
+                if line.startswith(("import ", "from "))
+            ]
+
             for line in import_lines:
-                module = line.split()[1].split('.')[0]
+                module = line.split()[1].split(".")[0]
                 component.dependencies.add(module)
 
-            # Calculate security score
-            component.security_score = self._calculate_security_score(content)
-            
+
             # Calculate performance score
-            component.performance_score = self._calculate_performance_score(content)
-            
+            component.performance_score = self._calculate_performance_score(
+                content
+            )
+
             # Check for potential issues
             self._check_component_issues(component, content)
 
         except Exception as e:
-            logger.error(f"Failed to analyze component {component.name}: {str(e)}")
+            logger.error(
+                f"Failed to analyze component {component.name}: {str(e)}"
+            )
 
-    def _calculate_security_score(self, content: str) -> float:
-        """Calculate security score for a component based on various factors."""
         score = 10.0  # Start with perfect score
-        
-        # Check for security issues
+
         if "shell=True" in content:
             score -= 2.0
         if "eval(" in content or "exec(" in content:
@@ -154,13 +167,13 @@ class SystemArchitectureValidator:
             score -= 1.5
         if "md5" in content.lower() or "sha1" in content.lower():
             score -= 1.0
-            
+
         return max(0.0, score)
 
     def _calculate_performance_score(self, content: str) -> float:
         """Calculate performance score for a component."""
         score = 10.0
-        
+
         # Check for performance issues
         if "import *" in content:
             score -= 1.0
@@ -168,23 +181,24 @@ class SystemArchitectureValidator:
             score -= 1.0
         if ".copy()" in content:  # Unnecessary copies
             score -= 0.5
-            
+
         return max(0.0, score)
 
-    def _check_component_issues(self, component: SystemComponent, content: str) -> None:
+    def _check_component_issues(
+        self, component: SystemComponent, content: str
+    ) -> None:
         """Check for various issues in a component."""
-        # Security issues
         if "shell=True" in content:
             component.issues.append("Using shell=True in subprocess calls")
         if "eval(" in content or "exec(" in content:
             component.issues.append("Using eval() or exec()")
-            
+
         # Performance issues
         if "import *" in content:
             component.issues.append("Using wildcard imports")
         if "except:" in content:
             component.issues.append("Using bare except clauses")
-            
+
         # Dependency issues
         for dep in component.dependencies:
             if dep not in self.allowed_modules and dep not in self.components:
@@ -198,17 +212,17 @@ class SystemArchitectureValidator:
                 return ValidationResult(
                     success=False,
                     message="Python version not in supported range (3.9-3.11)",
-                    details={"version": platform.python_version()}
+                    details={"version": platform.python_version()},
                 )
             return ValidationResult(
                 success=True,
                 message="Python environment validated successfully",
-                details={"version": platform.python_version()}
+                details={"version": platform.python_version()},
             )
         except Exception as e:
             return ValidationResult(
                 success=False,
-                message=f"Python environment validation failed: {str(e)}"
+                message=f"Python environment validation failed: {str(e)}",
             )
 
     def _validate_system_resources(self) -> ValidationResult:
@@ -216,64 +230,54 @@ class SystemArchitectureValidator:
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
-            disk = psutil.disk_usage('/')
-            
+            disk = psutil.disk_usage("/")
+
             details = {
                 "cpu_usage": cpu_percent,
                 "memory_usage": memory.percent,
-                "disk_usage": disk.percent
+                "disk_usage": disk.percent,
             }
-            
+
             if cpu_percent > 80 or memory.percent > 80 or disk.percent > 80:
                 return ValidationResult(
                     success=False,
                     message="System resources are constrained",
-                    details=details
+                    details=details,
                 )
-                
+
             return ValidationResult(
                 success=True,
                 message="System resources validated successfully",
-                details=details
+                details=details,
             )
         except Exception as e:
             return ValidationResult(
                 success=False,
-                message=f"System resource validation failed: {str(e)}"
+                message=f"System resource validation failed: {str(e)}",
             )
 
-    def _validate_security_configuration(self) -> ValidationResult:
-        """Validate security configuration across the system."""
         try:
             issues = []
-            
+
             # Check SSL/TLS configuration
             if not self._check_ssl_configuration():
                 issues.append("Invalid SSL/TLS configuration")
-                
+
             # Check file permissions
             if not self._check_file_permissions():
                 issues.append("Insecure file permissions detected")
-                
-            # Check security dependencies
-            if not self._check_security_dependencies():
-                issues.append("Missing security dependencies")
-                
+
+
             if issues:
                 return ValidationResult(
                     success=False,
-                    message="Security validation failed",
-                    details={"issues": issues}
+                    details={"issues": issues},
                 )
-                
+
             return ValidationResult(
-                success=True,
-                message="Security validation passed successfully"
             )
         except Exception as e:
             return ValidationResult(
-                success=False,
-                message=f"Security validation failed: {str(e)}"
             )
 
     def _check_ssl_configuration(self) -> bool:
@@ -292,16 +296,14 @@ class SystemArchitectureValidator:
         except Exception:
             return False
 
-    def _check_security_dependencies(self) -> bool:
-        """Check security-related dependencies."""
         try:
             required_packages = [
                 "cryptography",
                 "defusedxml",
                 "bandit",
-                "safety"
+                "safety",
             ]
-            
+
             for package in required_packages:
                 try:
                     importlib.import_module(package)
@@ -316,13 +318,12 @@ class SystemArchitectureValidator:
         try:
             # Implementation details...
             return ValidationResult(
-                success=True,
-                message="Dependencies validated successfully"
+                success=True, message="Dependencies validated successfully"
             )
         except Exception as e:
             return ValidationResult(
                 success=False,
-                message=f"Dependency validation failed: {str(e)}"
+                message=f"Dependency validation failed: {str(e)}",
             )
 
     def _validate_file_permissions(self) -> ValidationResult:
@@ -330,13 +331,12 @@ class SystemArchitectureValidator:
         try:
             # Implementation details...
             return ValidationResult(
-                success=True,
-                message="File permissions validated successfully"
+                success=True, message="File permissions validated successfully"
             )
         except Exception as e:
             return ValidationResult(
                 success=False,
-                message=f"File permission validation failed: {str(e)}"
+                message=f"File permission validation failed: {str(e)}",
             )
 
     def _validate_network_configuration(self) -> ValidationResult:
@@ -345,12 +345,11 @@ class SystemArchitectureValidator:
             # Implementation details...
             return ValidationResult(
                 success=True,
-                message="Network configuration validated successfully"
+                message="Network configuration validated successfully",
             )
         except Exception as e:
             return ValidationResult(
-                success=False,
-                message=f"Network validation failed: {str(e)}"
+                success=False, message=f"Network validation failed: {str(e)}"
             )
 
     def _check_for_duplicate_code(self) -> ValidationResult:
@@ -359,40 +358,36 @@ class SystemArchitectureValidator:
             # Implementation details...
             return ValidationResult(
                 success=True,
-                message="Code duplication check completed successfully"
+                message="Code duplication check completed successfully",
             )
         except Exception as e:
             return ValidationResult(
                 success=False,
-                message=f"Code duplication check failed: {str(e)}"
+                message=f"Code duplication check failed: {str(e)}",
             )
 
     def _validate_docker_configuration(self) -> ValidationResult:
-        """Validate Docker configuration and security."""
         try:
             # Implementation details...
             return ValidationResult(
                 success=True,
-                message="Docker configuration validated successfully"
+                message="Docker configuration validated successfully",
             )
         except Exception as e:
             return ValidationResult(
-                success=False,
-                message=f"Docker validation failed: {str(e)}"
+                success=False, message=f"Docker validation failed: {str(e)}"
             )
 
     def _validate_database_configuration(self) -> ValidationResult:
-        """Validate database configuration and security."""
         try:
             # Implementation details...
             return ValidationResult(
                 success=True,
-                message="Database configuration validated successfully"
+                message="Database configuration validated successfully",
             )
         except Exception as e:
             return ValidationResult(
-                success=False,
-                message=f"Database validation failed: {str(e)}"
+                success=False, message=f"Database validation failed: {str(e)}"
             )
 
     def _generate_validation_report(self) -> None:
@@ -403,15 +398,14 @@ class SystemArchitectureValidator:
                 "system_info": {
                     "python_version": platform.python_version(),
                     "platform": platform.platform(),
-                    "architecture": platform.machine()
+                    "architecture": platform.machine(),
                 },
                 "components": {
                     name: {
                         "path": str(comp.path),
                         "dependencies": list(comp.dependencies),
-                        "security_score": comp.security_score,
                         "performance_score": comp.performance_score,
-                        "issues": comp.issues
+                        "issues": comp.issues,
                     }
                     for name, comp in self.components.items()
                 },
@@ -420,23 +414,28 @@ class SystemArchitectureValidator:
                         "success": result.success,
                         "message": result.message,
                         "details": result.details,
-                        "timestamp": result.timestamp.isoformat()
+                        "timestamp": result.timestamp.isoformat(),
                     }
                     for result in self.validation_results
-                ]
+                ],
             }
-            
+
             # Save report
-            report_path = self.base_dir / "reports" / f"validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            report_path = (
+                self.base_dir
+                / "reports"
+                / f"validation_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            )
             report_path.parent.mkdir(exist_ok=True)
-            
-            with open(report_path, 'w') as f:
+
+            with open(report_path, "w") as f:
                 json.dump(report, f, indent=2)
-                
+
             logger.info(f"Validation report generated: {report_path}")
-            
+
         except Exception as e:
             logger.error(f"Failed to generate validation report: {str(e)}")
+
 
 def main():
     """

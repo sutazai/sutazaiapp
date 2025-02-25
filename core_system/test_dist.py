@@ -386,7 +386,9 @@ class TestMetadata(support.TempdirManager):
             "classifiers": ["Programming Language :: Python :: 3"],
         }
         dist = Distribution(attrs)
-        assert dist.get_classifiers() == ["Programming Language :: Python :: 3"]
+        assert dist.get_classifiers() == [
+            "Programming Language :: Python :: 3"
+        ]
         meta = self.format_metadata(dist)
         assert "Metadata-Version: 1.1" in meta
 
@@ -506,7 +508,9 @@ class TestMetadata(support.TempdirManager):
         dist.parse_command_line()
 
         output = [
-            line for line in capsys.readouterr().out.split("\n") if line.strip() != ""
+            line
+            for line in capsys.readouterr().out.split("\n")
+            if line.strip() != ""
         ]
         assert output
 

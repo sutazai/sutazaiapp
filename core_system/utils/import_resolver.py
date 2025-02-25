@@ -55,7 +55,9 @@ class UltraImportResolver:
                 elif isinstance(node, ast.ImportFrom):
                     module = node.module or ""
                     for name in node.names:
-                        full_name = f"{module}.{name.name}" if module else name.name
+                        full_name = (
+                            f"{module}.{name.name}" if module else name.name
+                        )
                         if not self._check_import(full_name):
                             missing_imports.append(full_name)
         except Exception as e:
@@ -121,7 +123,9 @@ class UltraImportResolver:
                     text=True,
                 )
                 if result.returncode != 0:
-                    self.logger.error(f"Failed to install {package}: {result.stderr}")
+                    self.logger.error(
+                        f"Failed to install {package}: {result.stderr}"
+                    )
                     success = False
                     self._log_unresolved_import(package, result.stderr)
             except Exception as e:
@@ -139,7 +143,9 @@ class UltraImportResolver:
             "error": error,
         }
 
-        log_file = os.path.join(self.project_root, "logs", "unresolved_imports.json")
+        log_file = os.path.join(
+            self.project_root, "logs", "unresolved_imports.json"
+        )
         os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
         existing_logs = []
@@ -201,7 +207,7 @@ def main() -> None:
             package = resolver.suggest_package(imp)
             if package is not None:
                 all_packages.add(package)
-                
+
     if all_packages:
         print("\nAttempting to install missing packages...")
         resolver.install_missing_packages(list(all_packages))

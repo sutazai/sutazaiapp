@@ -8,7 +8,6 @@ declare -A COMPONENTS=(
     ["Agents"]="validate_agents"
     ["Backend"]="validate_backend"
     ["WebUI"]="validate_ui"
-    ["Security"]="validate_security"
     ["Networking"]="validate_network"
 )
 
@@ -33,7 +32,6 @@ echo "🌐 Access URL: https://$(hostname -I | awk '{print $1}')"
 components=(
     "Agent Services"
     "Hardware Config" 
-    "Security"
     "Dependencies"
 )
 

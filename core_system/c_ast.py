@@ -24,7 +24,11 @@ def _repr(obj):
     Get the representation of an object, with dedicated pprint-like format for lists.
     """
     if isinstance(obj, list):
-        return "[" + (",\n ".join((_repr(e).replace("\n", "\n ") for e in obj))) + "\n]"
+        return (
+            "["
+            + (",\n ".join((_repr(e).replace("\n", "\n ") for e in obj)))
+            + "\n]"
+        )
     else:
         return repr(obj)
 
@@ -49,7 +53,8 @@ class Node(object):
                 + (
                     _repr(getattr(self, name)).replace(
                         "\n",
-                        "\n  " + (" " * (len(name) + len(self.__class__.__name__))),
+                        "\n  "
+                        + (" " * (len(name) + len(self.__class__.__name__))),
                     )
                 )
             )
@@ -96,7 +101,9 @@ class Node(object):
         """
         lead = " " * offset
         if nodenames and _my_node_name is not None:
-            buf.write(lead + self.__class__.__name__ + " <" + _my_node_name + ">: ")
+            buf.write(
+                lead + self.__class__.__name__ + " <" + _my_node_name + ">: "
+            )
         else:
             buf.write(lead + self.__class__.__name__ + ": ")
 

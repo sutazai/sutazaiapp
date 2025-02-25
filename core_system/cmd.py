@@ -227,7 +227,9 @@ class Command:
             setattr(self, option, default)
             return default
         elif not isinstance(val, str):
-            raise DistutilsOptionError(f"'{option}' must be a {what} (got `{val}`)")
+            raise DistutilsOptionError(
+                f"'{option}' must be a {what} (got `{val}`)"
+            )
         return val
 
     def ensure_string(self, option, default=None):
@@ -257,7 +259,9 @@ class Command:
                     f"'{option}' must be a list of strings (got {val!r})"
                 )
 
-    def _ensure_tested_string(self, option, tester, what, error_fmt, default=None):
+    def _ensure_tested_string(
+        self, option, tester, what, error_fmt, default=None
+    ):
         val = self._ensure_stringlike(option, what, default)
         if val is not None and not tester(val):
             raise DistutilsOptionError(
@@ -335,7 +339,9 @@ class Command:
     def reinitialize_command(
         self, command: str | Command, reinit_subcommands=False
     ) -> Command:
-        return self.distribution.reinitialize_command(command, reinit_subcommands)
+        return self.distribution.reinitialize_command(
+            command, reinit_subcommands
+        )
 
     def run_command(self, command):
         """Run some other command: uses the 'run_command()' method of
@@ -466,10 +472,14 @@ class Command:
         if isinstance(infiles, str):
             infiles = (infiles,)
         elif not isinstance(infiles, (list, tuple)):
-            raise TypeError("'infiles' must be a string, or a list or tuple of strings")
+            raise TypeError(
+                "'infiles' must be a string, or a list or tuple of strings"
+            )
 
         if exec_msg is None:
-            exec_msg = "generating {} from {}".format(outfile, ", ".join(infiles))
+            exec_msg = "generating {} from {}".format(
+                outfile, ", ".join(infiles)
+            )
 
         # If 'outfile' must be regenerated (either because it doesn't
         # exist, is out-of-date, or the 'force' flag is true) then

@@ -22,11 +22,14 @@ from urllib3.util.retry import Retry
 # Configure logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler("/opt/sutazai_project/SutazAI/logs/api_client.log")
+handler = logging.FileHandler(
+    "/opt/sutazai_project/SutazAI/logs/api_client.log"
+)
 handler.setFormatter(
     logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 )
 logger.addHandler(handler)
+
 
 class APIClient:
     """Robust API client with advanced error handling and retries."""
@@ -52,7 +55,7 @@ class APIClient:
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.verify_ssl = verify_ssl
-        
+
         # Configure session with retries
         self.session = requests.Session()
         retry_strategy = Retry(
@@ -120,7 +123,9 @@ class APIClient:
             )
             if e.response.status_code == 429:
                 retry_after = e.response.headers.get("Retry-After", "60")
-                logger.warning(f"Rate limited. Retry after {retry_after} seconds")
+                logger.warning(
+                    f"Rate limited. Retry after {retry_after} seconds"
+                )
             return None
 
         except ConnectionError as e:
@@ -146,45 +151,29 @@ class APIClient:
             return None
 
     def get(
-        self,
-        endpoint: str,
-        params: Optional[Dict[str, Any]] = None,
-        **kwargs
+        self, endpoint: str, params: Optional[Dict[str, Any]] = None, **kwargs
     ) -> Union[Dict[str, Any], None]:
         """Make GET request."""
         return self.request("GET", endpoint, params=params, **kwargs)
 
     def post(
-        self,
-        endpoint: str,
-        data: Optional[Dict[str, Any]] = None,
-        **kwargs
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, **kwargs
     ) -> Union[Dict[str, Any], None]:
         """Make POST request."""
         return self.request("POST", endpoint, data=data, **kwargs)
 
     def put(
-        self,
-        endpoint: str,
-        data: Optional[Dict[str, Any]] = None,
-        **kwargs
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, **kwargs
     ) -> Union[Dict[str, Any], None]:
         """Make PUT request."""
         return self.request("PUT", endpoint, data=data, **kwargs)
 
-    def delete(
-        self,
-        endpoint: str,
-        **kwargs
-    ) -> Union[Dict[str, Any], None]:
+    def delete(self, endpoint: str, **kwargs) -> Union[Dict[str, Any], None]:
         """Make DELETE request."""
         return self.request("DELETE", endpoint, **kwargs)
 
     def patch(
-        self,
-        endpoint: str,
-        data: Optional[Dict[str, Any]] = None,
-        **kwargs
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, **kwargs
     ) -> Union[Dict[str, Any], None]:
         """Make PATCH request."""
         return self.request("PATCH", endpoint, data=data, **kwargs)

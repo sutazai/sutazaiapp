@@ -39,7 +39,6 @@ class SystemAuditManager:
     - Hardware resources
     - Software configuration
     - Network connectivity
-    - Security posture
     """
 
     def __init__(self, output_dir: str = "/opt/sutazai/audit_reports"):

@@ -225,7 +225,9 @@ def one_of(
     elif isinstance(strs, Iterable):
         symbols = list(strs)
     else:
-        raise TypeError("Invalid argument to one_of, expected string or iterable")
+        raise TypeError(
+            "Invalid argument to one_of, expected string or iterable"
+        )
     if not symbols:
         return NoMatch()
 
@@ -235,7 +237,7 @@ def one_of(
         i = 0
         while i < len(symbols) - 1:
             cur = symbols[i]
-            for j, other in enumerate(symbols[i + 1:]):
+            for j, other in enumerate(symbols[i + 1 :]):
                 if isequal(other, cur):
                     del symbols[i + j + 1]
                     break
@@ -361,20 +363,24 @@ def original_text_for(
     locMarker = Empty().set_parse_action(lambda s, loc, t: loc)
     endlocMarker = locMarker.copy()
     endlocMarker.callPreparse = False
-    matchExpr = locMarker("_original_start") + expr + endlocMarker("_original_end")
+    matchExpr = (
+        locMarker("_original_start") + expr + endlocMarker("_original_end")
+    )
     if asString:
 
         def extractText(s, l, t):
-            return s[t._original_start: t._original_end]
+            return s[t._original_start : t._original_end]
 
     else:
 
         def extractText(s, l, t):
-            t[:] = [s[t.pop("_original_start"): t.pop("_original_end")]]
+            t[:] = [s[t.pop("_original_start") : t.pop("_original_end")]]
 
     matchExpr.set_parse_action(extractText)
     matchExpr.ignoreExprs = expr.ignoreExprs
-    matchExpr.suppress_warning(Diagnostics.warn_ungrouped_named_tokens_in_collection)
+    matchExpr.suppress_warning(
+        Diagnostics.warn_ungrouped_named_tokens_in_collection
+    )
     return matchExpr
 
 
@@ -496,7 +502,9 @@ def nested_expr(
         dec_to_hex (int) args: [['char', 'hchar']]
     """
     if ignoreExpr != ignore_expr:
-        ignoreExpr = ignore_expr if ignoreExpr == quoted_string() else ignoreExpr
+        ignoreExpr = (
+            ignore_expr if ignoreExpr == quoted_string() else ignoreExpr
+        )
     if opener == closer:
         raise ValueError("opening and closing strings cannot be the same")
     if content is None:
@@ -509,7 +517,9 @@ def nested_expr(
                         OneOrMore(
                             ~ignoreExpr
                             + CharsNotIn(
-                                opener + closer + ParserElement.DEFAULT_WHITE_CHARS,
+                                opener
+                                + closer
+                                + ParserElement.DEFAULT_WHITE_CHARS,
                                 exact=1,
                             )
                         )
@@ -525,7 +535,9 @@ def nested_expr(
                             ~ignoreExpr
                             + ~Literal(opener)
                             + ~Literal(closer)
-                            + CharsNotIn(ParserElement.DEFAULT_WHITE_CHARS, exact=1)
+                            + CharsNotIn(
+                                ParserElement.DEFAULT_WHITE_CHARS, exact=1
+                            )
                         )
                     ).set_parse_action(lambda t: t[0].strip())
                 else:
@@ -533,7 +545,9 @@ def nested_expr(
                         OneOrMore(
                             ~Literal(opener)
                             + ~Literal(closer)
-                            + CharsNotIn(ParserElement.DEFAULT_WHITE_CHARS, exact=1)
+                            + CharsNotIn(
+                                ParserElement.DEFAULT_WHITE_CHARS, exact=1
+                            )
                         )
                     ).set_parse_action(lambda t: t[0].strip())
         else:
@@ -543,15 +557,21 @@ def nested_expr(
     ret = Forward()
     if ignoreExpr is not None:
         ret <<= Group(
-            Suppress(opener) + ZeroOrMore(ignoreExpr | ret | content) + Suppress(closer)
+            Suppress(opener)
+            + ZeroOrMore(ignoreExpr | ret | content)
+            + Suppress(closer)
         )
     else:
-        ret <<= Group(Suppress(opener) + ZeroOrMore(ret | content) + Suppress(closer))
+        ret <<= Group(
+            Suppress(opener) + ZeroOrMore(ret | content) + Suppress(closer)
+        )
     ret.set_name("nested %s%s expression" % (opener, closer))
     return ret
 
 
-def _makeTags(tagStr, xml, suppress_LT=Suppress("<"), suppress_GT=Suppress(">")):
+def _makeTags(
+    tagStr, xml, suppress_LT=Suppress("<"), suppress_GT=Suppress(">")
+):
     """Internal helper to construct opening and closing tag expressions, given a tag name"""
     if isinstance(tagStr, str_type):
         resname = tagStr
@@ -565,16 +585,18 @@ def _makeTags(tagStr, xml, suppress_LT=Suppress("<"), suppress_GT=Suppress(">"))
         openTag = (
             suppress_LT
             + tagStr("tag")
-            + Dict(ZeroOrMore(Group(tagAttrName + Suppress("=") + tagAttrValue)))
+            + Dict(
+                ZeroOrMore(Group(tagAttrName + Suppress("=") + tagAttrValue))
+            )
             + Opt("/", default=[False])("empty").set_parse_action(
                 lambda s, l, t: t[0] == "/"
             )
             + suppress_GT
         )
     else:
-        tagAttrValue = quoted_string.copy().set_parse_action(remove_quotes) | Word(
-            printables, exclude_chars=">"
-        )
+        tagAttrValue = quoted_string.copy().set_parse_action(
+            remove_quotes
+        ) | Word(printables, exclude_chars=">")
         openTag = (
             suppress_LT
             + tagStr("tag")
@@ -655,9 +677,9 @@ any_open_tag, any_close_tag = make_html_tags(
 )
 
 _htmlEntityMap = {k.rstrip(";"): v for k, v in html.entities.html5.items()}
-common_html_entity = Regex("&(?P<entity>" + "|".join(_htmlEntityMap) + ");").set_name(
-    "common HTML entity"
-)
+common_html_entity = Regex(
+    "&(?P<entity>" + "|".join(_htmlEntityMap) + ");"
+).set_name("common HTML entity")
 
 
 def replace_html_entity(s, l, t):
@@ -820,33 +842,46 @@ def infix_notation(
             term_name = f"{opExpr} term"
 
         if not 1 <= arity <= 3:
-            raise ValueError("operator must be unary (1), binary (2), or ternary (3)")
+            raise ValueError(
+                "operator must be unary (1), binary (2), or ternary (3)"
+            )
 
         if rightLeftAssoc not in (OpAssoc.LEFT, OpAssoc.RIGHT):
-            raise ValueError("operator must indicate right or left associativity")
+            raise ValueError(
+                "operator must indicate right or left associativity"
+            )
 
         thisExpr: ParserElement = Forward().set_name(term_name)
         thisExpr = typing.cast(Forward, thisExpr)
         if rightLeftAssoc is OpAssoc.LEFT:
             if arity == 1:
-                matchExpr = _FB(lastExpr + opExpr) + Group(lastExpr + opExpr[1, ...])
+                matchExpr = _FB(lastExpr + opExpr) + Group(
+                    lastExpr + opExpr[1, ...]
+                )
             elif arity == 2:
                 if opExpr is not None:
                     matchExpr = _FB(lastExpr + opExpr + lastExpr) + Group(
                         lastExpr + (opExpr + lastExpr)[1, ...]
                     )
                 else:
-                    matchExpr = _FB(lastExpr + lastExpr) + Group(lastExpr[2, ...])
+                    matchExpr = _FB(lastExpr + lastExpr) + Group(
+                        lastExpr[2, ...]
+                    )
             elif arity == 3:
                 matchExpr = _FB(
                     lastExpr + opExpr1 + lastExpr + opExpr2 + lastExpr
-                ) + Group(lastExpr + OneOrMore(opExpr1 + lastExpr + opExpr2 + lastExpr))
+                ) + Group(
+                    lastExpr
+                    + OneOrMore(opExpr1 + lastExpr + opExpr2 + lastExpr)
+                )
         elif rightLeftAssoc is OpAssoc.RIGHT:
             if arity == 1:
                 # try to avoid LR with this extra test
                 if not isinstance(opExpr, Opt):
                     opExpr = Opt(opExpr)
-                matchExpr = _FB(opExpr.expr + thisExpr) + Group(opExpr + thisExpr)
+                matchExpr = _FB(opExpr.expr + thisExpr) + Group(
+                    opExpr + thisExpr
+                )
             elif arity == 2:
                 if opExpr is not None:
                     matchExpr = _FB(lastExpr + opExpr + thisExpr) + Group(
@@ -871,7 +906,9 @@ def infix_notation(
     return ret
 
 
-def indentedBlock(blockStatementExpr, indentStack, indent=True, backup_stacks=[]):
+def indentedBlock(
+    blockStatementExpr, indentStack, indent=True, backup_stacks=[]
+):
     """
     (DEPRECATED - use :class:`IndentedBlock` class instead)
     Helper method for defining space-delimited indentation blocks,
@@ -988,7 +1025,9 @@ def indentedBlock(blockStatementExpr, indentStack, indent=True, backup_stacks=[]
             indentStack.pop()
 
     NL = OneOrMore(LineEnd().set_whitespace_chars("\t ").suppress())
-    INDENT = (Empty() + Empty().set_parse_action(checkSubIndent)).set_name("INDENT")
+    INDENT = (Empty() + Empty().set_parse_action(checkSubIndent)).set_name(
+        "INDENT"
+    )
     PEER = Empty().set_parse_action(checkPeerIndent).set_name("")
     UNDENT = Empty().set_parse_action(checkUnindent).set_name("UNINDENT")
     if indent:

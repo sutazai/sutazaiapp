@@ -84,7 +84,9 @@ class TargetPython:
             ("implementation", self.implementation),
         ]
         return " ".join(
-            f"{key}={value!r}" for key, value in key_values if value is not None
+            f"{key}={value!r}"
+            for key, value in key_values
+            if value is not None
         )
 
     def get_sorted_tags(self) -> List[Tag]:

@@ -191,16 +191,11 @@ class ProjectAnalyzer:
 
         return dependency_analysis
 
-    def security_vulnerability_scan(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security vulnerability scanning
 
         Returns:
-            Detailed security scan results
         """
-        security_scan = {
             "dependency_vulnerabilities": {},
-            "code_security_issues": {},
         }
 
         try:
@@ -218,12 +213,10 @@ class ProjectAnalyzer:
 
             # Parse safety results
             if safety_result.returncode != 0:
-                security_scan["dependency_vulnerabilities"] = {
                     "passed": False,
                     "details": safety_result.stdout,
                 }
 
-            # Semgrep security scanning
             semgrep_result = subprocess.run(
                 ["semgrep", "scan", "--config=auto", self.base_path],
                 capture_output=True,
@@ -232,16 +225,12 @@ class ProjectAnalyzer:
 
             # Parse semgrep results
             if semgrep_result.returncode != 0:
-                security_scan["code_security_issues"] = {
                     "passed": False,
                     "details": semgrep_result.stdout,
                 }
 
         except Exception as e:
-            logging.error(f"Security scan failed: {e}")
-            security_scan["error"] = str(e)
 
-        return security_scan
 
     def performance_optimization_recommendations(
         self,
@@ -304,7 +293,6 @@ class ProjectAnalyzer:
             "timestamp": datetime.now().isoformat(),
             "project_structure": self.analyze_project_structure(),
             "dependency_analysis": self.analyze_dependencies(),
-            "security_scan": self.security_vulnerability_scan(),
         }
 
         # Generate optimization recommendations
@@ -345,23 +333,15 @@ class ProjectAnalyzer:
         )
         self.console.print(structure_panel)
 
-        # Security Scan Results
-        self.console.rule("[bold red]Security Scan Results[/bold red]")
-        security_status = "✅ Passed"
         if (
-            analysis_results["security_scan"]
             .get("dependency_vulnerabilities", {})
             .get("passed", True)
             is False
-            or analysis_results["security_scan"]
-            .get("code_security_issues", {})
             .get("passed", True)
             is False
         ):
-            security_status = "❌ Vulnerabilities Detected"
 
         self.console.print(
-            f"[yellow]Overall Security Status:[/yellow] {security_status}"
         )
 
         # Optimization Recommendations

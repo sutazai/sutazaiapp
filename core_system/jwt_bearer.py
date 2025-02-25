@@ -124,7 +124,9 @@ class JWTBearerGrant(BaseGrant, TokenEndpointMixin):
         if subject:
             user = self.authenticate_user(subject)
             if not user:
-                raise InvalidGrantError(description='Invalid "sub" value in assertion')
+                raise InvalidGrantError(
+                    description='Invalid "sub" value in assertion'
+                )
 
             log.debug("Check client(%s) permission to User(%s)", client, user)
             if not self.has_granted_permission(client, user):

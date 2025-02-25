@@ -185,7 +185,9 @@ class FileSystemLoader(BaseLoader):
         encoding: str = "utf-8",
         followlinks: bool = False,
     ) -> None:
-        if not isinstance(searchpath, abc.Iterable) or isinstance(searchpath, str):
+        if not isinstance(searchpath, abc.Iterable) or isinstance(
+            searchpath, str
+        ):
             searchpath = [searchpath]
 
         self.searchpath = [os.fspath(p) for p in searchpath]
@@ -233,7 +235,7 @@ class FileSystemLoader(BaseLoader):
             for dirpath, _, filenames in walk_dir:
                 for filename in filenames:
                     template = (
-                        os.path.join(dirpath, filename)[len(searchpath):]
+                        os.path.join(dirpath, filename)[len(searchpath) :]
                         .strip(os.path.sep)
                         .replace(os.path.sep, "/")
                     )
@@ -324,7 +326,9 @@ class PackageLoader(BaseLoader):
         # packages work, otherwise get_loader returns None.
         import_module(package_name)
         spec = importlib.util.find_spec(package_name)
-        assert spec is not None, "An import spec was not found for the package."
+        assert (
+            spec is not None
+        ), "An import spec was not found for the package."
         loader = spec.loader
         assert loader is not None, "A loader was not found for the package."
         self._loader = loader
@@ -333,7 +337,9 @@ class PackageLoader(BaseLoader):
         if isinstance(loader, zipimport.zipimporter):
             self._archive = loader.archive
             pkgdir = next(iter(spec.submodule_search_locations))  # type: ignore
-            template_root = os.path.join(pkgdir, package_path).rstrip(os.path.sep)
+            template_root = os.path.join(pkgdir, package_path).rstrip(
+                os.path.sep
+            )
         else:
             roots: t.List[str] = []
 
@@ -421,7 +427,7 @@ class PackageLoader(BaseLoader):
 
             # Package is a zip file.
             prefix = (
-                self._template_root[len(self._archive):].lstrip(os.path.sep)
+                self._template_root[len(self._archive) :].lstrip(os.path.sep)
                 + os.path.sep
             )
             offset = len(prefix)
@@ -484,7 +490,9 @@ class FunctionLoader(BaseLoader):
             t.Optional[
                 t.Union[
                     str,
-                    t.Tuple[str, t.Optional[str], t.Optional[t.Callable[[], bool]]],
+                    t.Tuple[
+                        str, t.Optional[str], t.Optional[t.Callable[[], bool]]
+                    ],
                 ]
             ],
         ],

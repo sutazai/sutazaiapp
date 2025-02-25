@@ -152,9 +152,7 @@ Customize the Architectural Integrity Manager's behavior through the `system_int
 - Predictive Refactoring Strategies
 - Quantum Computing Architectural Optimization
 
-## 🔒 Security Considerations
 - Architectural vulnerability detection
-- Dependency security analysis
 - Code quality risk assessment
 
 ## 📊 Performance Monitoring

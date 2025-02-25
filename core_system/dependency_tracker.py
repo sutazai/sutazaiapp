@@ -42,7 +42,9 @@ class AdvancedDependencyTracker:
             log_dir (Optional[str]): Custom log directory
         """
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "dependency_tracking")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "dependency_tracking"
+        )
 
         # Ensure log directory exists
         os.makedirs(self.log_dir, exist_ok=True)
@@ -86,8 +88,8 @@ class AdvancedDependencyTracker:
                             self.module_dependency_graph.add_node(module_name)
 
                             # Analyze module dependencies
-                            module_dependencies = self._analyze_module_dependencies(
-                                full_path
+                            module_dependencies = (
+                                self._analyze_module_dependencies(full_path)
                             )
 
                             # Add edges for dependencies
@@ -105,7 +107,9 @@ class AdvancedDependencyTracker:
             return self.module_dependency_graph
 
         except Exception as e:
-            self.logger.error(f"Module dependency graph generation failed: {e}")
+            self.logger.error(
+                f"Module dependency graph generation failed: {e}"
+            )
             return nx.DiGraph()
 
     def _analyze_module_dependencies(self, file_path: str) -> List[str]:
@@ -140,7 +144,9 @@ class AdvancedDependencyTracker:
             return list(set(dependencies))
 
         except Exception as e:
-            self.logger.warning(f"Dependency tracking failed for {file_path}: {e}")
+            self.logger.warning(
+                f"Dependency tracking failed for {file_path}: {e}"
+            )
             return []
 
     def detect_circular_dependencies(
@@ -187,7 +193,9 @@ class AdvancedDependencyTracker:
 
             # Get installed packages
             for pkg in pkg_resources.working_set:
-                self.package_dependency_graph.add_node(pkg.key, version=pkg.version)
+                self.package_dependency_graph.add_node(
+                    pkg.key, version=pkg.version
+                )
 
                 # Add edges for dependencies
                 for req in pkg.requires():
@@ -196,7 +204,9 @@ class AdvancedDependencyTracker:
             return self.package_dependency_graph
 
         except Exception as e:
-            self.logger.error(f"Package dependency graph generation failed: {e}")
+            self.logger.error(
+                f"Package dependency graph generation failed: {e}"
+            )
             return nx.DiGraph()
 
     def analyze_dependency_compatibility(self) -> Dict[str, Any]:
@@ -216,7 +226,9 @@ class AdvancedDependencyTracker:
             # Generate package dependency graph
             package_graph = self.generate_package_dependency_graph()
 
-            compatibility_analysis["total_packages"] = len(package_graph.nodes())
+            compatibility_analysis["total_packages"] = len(
+                package_graph.nodes()
+            )
 
             # Analyze version distribution
             for node, data in package_graph.nodes(data=True):
@@ -224,7 +236,9 @@ class AdvancedDependencyTracker:
                 compatibility_analysis["version_distribution"][node] = version
 
             # Detect potential conflicts
-            for pkg, version in compatibility_analysis["version_distribution"].items():
+            for pkg, version in compatibility_analysis[
+                "version_distribution"
+            ].items():
                 # Example conflict detection (can be expanded)
                 conflicting_versions = [
                     other_pkg
@@ -261,7 +275,9 @@ class AdvancedDependencyTracker:
             module_graph = self.generate_module_dependency_graph()
 
             # Detect circular dependencies
-            circular_dependencies = self.detect_circular_dependencies(module_graph)
+            circular_dependencies = self.detect_circular_dependencies(
+                module_graph
+            )
 
             # Analyze package compatibility
             compatibility_analysis = self.analyze_dependency_compatibility()
@@ -293,7 +309,9 @@ class AdvancedDependencyTracker:
             return dependency_report
 
         except Exception as e:
-            self.logger.error(f"Comprehensive dependency report generation failed: {e}")
+            self.logger.error(
+                f"Comprehensive dependency report generation failed: {e}"
+            )
             return {}
 
 

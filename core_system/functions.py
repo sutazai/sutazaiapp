@@ -30,7 +30,9 @@ def create_save_token_func(session, token_model):
         else:
             user_id = None
         client = request.client
-        item = token_model(client_id=client.client_id, user_id=user_id, **token)
+        item = token_model(
+            client_id=client.client_id, user_id=user_id, **token
+        )
         session.add(item)
         session.commit()
 

@@ -53,7 +53,9 @@ __all__ = ["FormatControl", "BestCandidateResult", "PackageFinder"]
 logger = getLogger(__name__)
 
 BuildTag = Union[Tuple[()], Tuple[int, str]]
-CandidateSortingKey = Tuple[int, int, int, _BaseVersion, Optional[int], BuildTag]
+CandidateSortingKey = Tuple[
+    int, int, int, _BaseVersion, Optional[int], BuildTag
+]
 
 
 def _check_link_requires_python(
@@ -482,7 +484,9 @@ class CandidateEvaluator:
         }
 
         # Again, converting version to str to deal with debundling.
-        applicable_candidates = [c for c in candidates if str(c.version) in versions]
+        applicable_candidates = [
+            c for c in candidates if str(c.version) in versions
+        ]
 
         filtered_applicable_candidates = filter_unallowed_hashes(
             candidates=applicable_candidates,
@@ -492,7 +496,9 @@ class CandidateEvaluator:
 
         return sorted(filtered_applicable_candidates, key=self._sort_key)
 
-    def _sort_key(self, candidate: InstallationCandidate) -> CandidateSortingKey:
+    def _sort_key(
+        self, candidate: InstallationCandidate
+    ) -> CandidateSortingKey:
         """
         Function to pass as the `key` argument to a call to sorted() to sort
         InstallationCandidates by preference.
@@ -746,7 +752,9 @@ class PackageFinder:
                     no_eggs.append(link)
         return no_eggs + eggs
 
-    def _log_skipped_link(self, link: Link, result: LinkType, detail: str) -> None:
+    def _log_skipped_link(
+        self, link: Link, result: LinkType, detail: str
+    ) -> None:
         entry = (link, result, detail)
         if entry not in self._logged_links:
             # Put the link at the end so the reason is more visible and because
@@ -808,7 +816,9 @@ class PackageFinder:
         return package_links
 
     @functools.lru_cache(maxsize=None)
-    def find_all_candidates(self, project_name: str) -> List[InstallationCandidate]:
+    def find_all_candidates(
+        self, project_name: str
+    ) -> List[InstallationCandidate]:
         """Find all available InstallationCandidate for project_name
 
         This checks index_urls and find_links.
@@ -946,7 +956,9 @@ class PackageFinder:
                 _format_versions(best_candidate_result.iter_all()),
             )
 
-            raise DistributionNotFound(f"No matching distribution found for {req}")
+            raise DistributionNotFound(
+                f"No matching distribution found for {req}"
+            )
 
         def _should_install_candidate(
             candidate: Optional[InstallationCandidate],
@@ -1016,7 +1028,9 @@ def _find_name_version_sep(fragment: str, canonical_name: str) -> int:
     raise ValueError(f"{fragment} does not match {canonical_name}")
 
 
-def _extract_version_from_fragment(fragment: str, canonical_name: str) -> Optional[str]:
+def _extract_version_from_fragment(
+    fragment: str, canonical_name: str
+) -> Optional[str]:
     """Parse the version string from a <package>+<version> filename
     "fragment" (stem) or egg fragment.
 

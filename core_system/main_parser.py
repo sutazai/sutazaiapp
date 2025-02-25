@@ -81,7 +81,10 @@ def parse_command(args: List[str]) -> Tuple[str, List[str]]:
     general_options, args_else = parser.parse_args(args)
 
     # --python
-    if general_options.python and "_PIP_RUNNING_IN_SUBPROCESS" not in os.environ:
+    if (
+        general_options.python
+        and "_PIP_RUNNING_IN_SUBPROCESS" not in os.environ
+    ):
         # Re-invoke pip using the specified Python interpreter
         interpreter = identify_python_interpreter(general_options.python)
         if interpreter is None:

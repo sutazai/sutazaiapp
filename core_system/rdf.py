@@ -60,7 +60,12 @@ class SparqlLexer(RegexLexer):
     PN_CHARS_U_GRP = PN_CHARS_BASE_GRP + "_"
 
     PN_CHARS_GRP = (
-        PN_CHARS_U_GRP + r"\-" + r"0-9" + "\u00b7" + "\u0300-\u036f" + "\u203f-\u2040"
+        PN_CHARS_U_GRP
+        + r"\-"
+        + r"0-9"
+        + "\u00b7"
+        + "\u0300-\u036f"
+        + "\u203f-\u2040"
     )
 
     HEX_GRP = "0-9A-Fa-f"
@@ -82,7 +87,13 @@ class SparqlLexer(RegexLexer):
     IRIREF = r'<(?:[^<>"{}|^`\\\x00-\x20])*>'
 
     BLANK_NODE_LABEL = (
-        "_:[0-9" + PN_CHARS_U_GRP + "](?:[" + PN_CHARS_GRP + ".]*" + PN_CHARS + ")?"
+        "_:[0-9"
+        + PN_CHARS_U_GRP
+        + "](?:["
+        + PN_CHARS_GRP
+        + ".]*"
+        + PN_CHARS
+        + ")?"
     )
 
     PN_PREFIX = PN_CHARS_BASE + "(?:[" + PN_CHARS_GRP + ".]*" + PN_CHARS + ")?"
@@ -250,7 +261,12 @@ class TurtleLexer(RegexLexer):
     PN_CHARS_U_GRP = PN_CHARS_BASE_GRP + "_"
 
     PN_CHARS_GRP = (
-        PN_CHARS_U_GRP + r"\-" + r"0-9" + "\u00b7" + "\u0300-\u036f" + "\u203f-\u2040"
+        PN_CHARS_U_GRP
+        + r"\-"
+        + r"0-9"
+        + "\u00b7"
+        + "\u0300-\u036f"
+        + "\u203f-\u2040"
     )
 
     PN_CHARS = "[" + PN_CHARS_GRP + "]"
@@ -302,7 +318,9 @@ class TurtleLexer(RegexLexer):
             # Base / prefix
             (
                 r"(@base|BASE)(\s+){IRIREF}(\s*)(\.?)".format(**patterns),
-                bygroups(Keyword, Whitespace, Name.Variable, Whitespace, Punctuation),
+                bygroups(
+                    Keyword, Whitespace, Name.Variable, Whitespace, Punctuation
+                ),
             ),
             (
                 r"(@prefix|PREFIX)(\s+){PNAME_NS}(\s+){IRIREF}(\s*)(\.?)".format(
@@ -428,7 +446,12 @@ class ShExCLexer(RegexLexer):
     PN_CHARS_U_GRP = PN_CHARS_BASE_GRP + "_"
 
     PN_CHARS_GRP = (
-        PN_CHARS_U_GRP + r"\-" + r"0-9" + "\u00b7" + "\u0300-\u036f" + "\u203f-\u2040"
+        PN_CHARS_U_GRP
+        + r"\-"
+        + r"0-9"
+        + "\u00b7"
+        + "\u0300-\u036f"
+        + "\u203f-\u2040"
     )
 
     HEX_GRP = "0-9A-Fa-f"
@@ -454,7 +477,13 @@ class ShExCLexer(RegexLexer):
     IRIREF = r'<(?:[^\x00-\x20<>"{}|^`\\]|' + UCHAR + ")*>"
 
     BLANK_NODE_LABEL = (
-        "_:[0-9" + PN_CHARS_U_GRP + "](?:[" + PN_CHARS_GRP + ".]*" + PN_CHARS + ")?"
+        "_:[0-9"
+        + PN_CHARS_U_GRP
+        + "](?:["
+        + PN_CHARS_GRP
+        + ".]*"
+        + PN_CHARS
+        + ")?"
     )
 
     PN_PREFIX = PN_CHARS_BASE + "(?:[" + PN_CHARS_GRP + ".]*" + PN_CHARS + ")?"

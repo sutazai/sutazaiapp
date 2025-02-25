@@ -141,8 +141,12 @@ class StateInline(StateBase):
         # treat end of the line as a whitespace
         nextChar = self.src[pos] if pos < maximum else " "
 
-        isLastPunctChar = isMdAsciiPunct(ord(lastChar)) or isPunctChar(lastChar)
-        isNextPunctChar = isMdAsciiPunct(ord(nextChar)) or isPunctChar(nextChar)
+        isLastPunctChar = isMdAsciiPunct(ord(lastChar)) or isPunctChar(
+            lastChar
+        )
+        isNextPunctChar = isMdAsciiPunct(ord(nextChar)) or isPunctChar(
+            nextChar
+        )
 
         isLastWhiteSpace = isWhiteSpace(ord(lastChar))
         isNextWhiteSpace = isWhiteSpace(ord(nextChar))
@@ -157,8 +161,12 @@ class StateInline(StateBase):
         )
 
         if not canSplitWord:
-            can_open = left_flanking and ((not right_flanking) or isLastPunctChar)
-            can_close = right_flanking and ((not left_flanking) or isNextPunctChar)
+            can_open = left_flanking and (
+                (not right_flanking) or isLastPunctChar
+            )
+            can_close = right_flanking and (
+                (not left_flanking) or isNextPunctChar
+            )
         else:
             can_open = left_flanking
             can_close = right_flanking

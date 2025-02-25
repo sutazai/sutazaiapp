@@ -4,7 +4,6 @@
 
 - Modular Microservices Design
 - Scalable and Flexible Framework
-- Security-Centric Architecture
 
 ## 2. System Components
 
@@ -14,7 +13,6 @@
 - Intelligent Routing
 - Dynamic Configuration Management
 
-### 2.2 Security Layer
 
 - Authentication Middleware
 - Access Control Mechanisms
@@ -57,7 +55,6 @@
 - Kubernetes Orchestration
 - Cloud-Agnostic Design
 
-## 8. Security Architecture
 
 - Zero Trust Network Model
 - Comprehensive Encryption

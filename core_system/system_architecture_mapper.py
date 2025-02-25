@@ -58,7 +58,9 @@ class SystemArchitectureMapper:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_architecture")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_architecture"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -67,7 +69,9 @@ class SystemArchitectureMapper:
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
                 logging.FileHandler(
-                    os.path.join(self.log_dir, "system_architecture_mapper.log")
+                    os.path.join(
+                        self.log_dir, "system_architecture_mapper.log"
+                    )
                 ),
                 logging.StreamHandler(sys.stdout),
             ],
@@ -119,18 +123,24 @@ class SystemArchitectureMapper:
                 for file in files:
                     if file.endswith(".py"):
                         file_path = os.path.join(root, file)
-                        relative_path = os.path.relpath(file_path, self.base_dir)
+                        relative_path = os.path.relpath(
+                            file_path, self.base_dir
+                        )
 
                         try:
                             # Analyze architectural component
-                            component = self._analyze_architectural_component(file_path)
+                            component = self._analyze_architectural_component(
+                                file_path
+                            )
 
                             # Update architectural graph
                             self._update_architectural_graph(component)
 
                             # Update architecture report
                             component_type = component.type
-                            architecture_report["component_types"][component_type] = (
+                            architecture_report["component_types"][
+                                component_type
+                            ] = (
                                 architecture_report["component_types"].get(
                                     component_type, 0
                                 )
@@ -150,7 +160,9 @@ class SystemArchitectureMapper:
                             )
 
         # Calculate dependency metrics
-        architecture_report["dependency_metrics"] = self._calculate_dependency_metrics()
+        architecture_report["dependency_metrics"] = (
+            self._calculate_dependency_metrics()
+        )
 
         # Detect architectural patterns
         architecture_report["architectural_patterns"] = (
@@ -220,7 +232,9 @@ class SystemArchitectureMapper:
                 1 for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
             ),
             "function": sum(
-                1 for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+                1
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
             ),
             "module": 1,  # Every file is a module
         }
@@ -253,7 +267,11 @@ class SystemArchitectureMapper:
                 base_module = node.module or ""
                 dependencies.extend(
                     [
-                        (f"{base_module}.{alias.name}" if base_module else alias.name)
+                        (
+                            f"{base_module}.{alias.name}"
+                            if base_module
+                            else alias.name
+                        )
                         for alias in node.names
                     ]
                 )
@@ -280,7 +298,9 @@ class SystemArchitectureMapper:
                 )
             ),
             "function_count": sum(
-                1 for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+                1
+                for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)
             ),
             "class_count": sum(
                 1 for node in ast.walk(tree) if isinstance(node, ast.ClassDef)
@@ -349,7 +369,9 @@ class SystemArchitectureMapper:
             "coupling_coefficient": {},
             "centrality": {
                 "degree": nx.degree_centrality(self.architectural_graph),
-                "betweenness": nx.betweenness_centrality(self.architectural_graph),
+                "betweenness": nx.betweenness_centrality(
+                    self.architectural_graph
+                ),
                 "closeness": nx.closeness_centrality(self.architectural_graph),
             },
         }
@@ -357,7 +379,9 @@ class SystemArchitectureMapper:
         # Calculate fan-in and fan-out
         for node in self.architectural_graph.nodes():
             metrics["fan_in"][node] = self.architectural_graph.in_degree(node)
-            metrics["fan_out"][node] = self.architectural_graph.out_degree(node)
+            metrics["fan_out"][node] = self.architectural_graph.out_degree(
+                node
+            )
 
             # Calculate coupling coefficient
             try:
@@ -413,7 +437,9 @@ class SystemArchitectureMapper:
         """
         try:
             plt.figure(figsize=(20, 20))
-            pos = nx.spring_layout(self.architectural_graph, k=0.5, iterations=50)
+            pos = nx.spring_layout(
+                self.architectural_graph, k=0.5, iterations=50
+            )
 
             nx.draw(
                 self.architectural_graph,
@@ -441,9 +467,13 @@ class SystemArchitectureMapper:
             )
 
         except Exception as e:
-            self.logger.error(f"System architecture graph visualization failed: {e}")
+            self.logger.error(
+                f"System architecture graph visualization failed: {e}"
+            )
 
-    def _persist_architecture_report(self, architecture_report: Dict[str, Any]):
+    def _persist_architecture_report(
+        self, architecture_report: Dict[str, Any]
+    ):
         """
         Persist comprehensive architecture report
 
@@ -459,10 +489,14 @@ class SystemArchitectureMapper:
             with open(report_path, "w") as f:
                 json.dump(architecture_report, f, indent=2)
 
-            self.logger.info(f"System architecture report persisted: {report_path}")
+            self.logger.info(
+                f"System architecture report persisted: {report_path}"
+            )
 
         except Exception as e:
-            self.logger.error(f"System architecture report persistence failed: {e}")
+            self.logger.error(
+                f"System architecture report persistence failed: {e}"
+            )
 
     def generate_architectural_insights(self) -> Dict[str, Any]:
         """
@@ -487,7 +521,9 @@ class SystemArchitectureMapper:
                 )
 
         # Identify potential refactoring candidates
-        for component, fan_in in self.architectural_graph.get("fan_in", {}).items():
+        for component, fan_in in self.architectural_graph.get(
+            "fan_in", {}
+        ).items():
             if fan_in > 10:  # High fan-in threshold
                 insights["potential_refactoring_candidates"].append(
                     {"component": component, "fan_in": fan_in}
@@ -517,14 +553,20 @@ def main():
     architecture_report = architecture_mapper.map_system_architecture()
 
     print("\n🏗️ System Architecture Analysis Results 🏗️")
-    print(f"Total Components: {architecture_report.get('total_components', 0)}")
+    print(
+        f"Total Components: {architecture_report.get('total_components', 0)}"
+    )
 
     print("\nComponent Types:")
-    for category, count in architecture_report.get("component_types", {}).items():
+    for category, count in architecture_report.get(
+        "component_types", {}
+    ).items():
         print(f"- {category.replace('_', ' ').title()}: {count}")
 
     # Generate architectural insights
-    architectural_insights = architecture_mapper.generate_architectural_insights()
+    architectural_insights = (
+        architecture_mapper.generate_architectural_insights()
+    )
 
     print("\nArchitectural Insights:")
     for category, insights in architectural_insights.items():

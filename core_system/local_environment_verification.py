@@ -62,13 +62,17 @@ class LocalEnvironmentVerifier:
         try:
             # Test internet connectivity
             socket.create_connection(("8.8.8.8", 53), timeout=3)
-            self.environment_report["network_info"]["internet_connectivity"] = True
+            self.environment_report["network_info"][
+                "internet_connectivity"
+            ] = True
 
             # DNS resolution test
             socket.gethostbyname("google.com")
             self.environment_report["network_info"]["dns_resolution"] = True
         except (socket.error, socket.timeout) as e:
-            self.environment_report["network_info"]["internet_connectivity"] = False
+            self.environment_report["network_info"][
+                "internet_connectivity"
+            ] = False
             self.environment_report["network_info"]["dns_resolution"] = False
             self.environment_report["potential_issues"].append(
                 f"Network connectivity issue: {str(e)}"

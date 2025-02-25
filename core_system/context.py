@@ -52,7 +52,9 @@ def tarball(
     >>> assert not os.path.exists(extracted)
     """
     if target_dir is None:
-        target_dir = os.path.basename(url).replace(".tar.gz", "").replace(".tgz", "")
+        target_dir = (
+            os.path.basename(url).replace(".tar.gz", "").replace(".tgz", "")
+        )
     # In the tar command, use --strip-components=1 to strip the first path and
     #  then
     #  use -C to cause the files to be extracted to {target_dir}. This ensures

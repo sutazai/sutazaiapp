@@ -5,7 +5,6 @@ SutazAI Ultra-Comprehensive System Integration Framework
 Advanced orchestration system designed to:
 - Coordinate system-wide optimization efforts
 - Manage complex interactions between system components
-- Ensure holistic performance, security, and reliability
 - Provide autonomous system management capabilities
 """
 
@@ -145,7 +144,9 @@ class UltraComprehensiveSystemIntegrationFramework:
         base_dir: str = "/opt/SutazAI",
         log_dir: Optional[str] = None,
         config_path: Optional[str] = None,
-        disable_autonomous_features: Optional[bool] = True,  # Change default to True
+        disable_autonomous_features: Optional[
+            bool
+        ] = True,  # Change default to True
     ):
         """
         Initialize ultra-comprehensive system integration framework
@@ -177,42 +178,54 @@ class UltraComprehensiveSystemIntegrationFramework:
         if disable_autonomous_features is not None:
             self.disable_autonomous_features = disable_autonomous_features
         else:
-            self.disable_autonomous_features = self.config.get("global", {}).get(
-                "disable_autonomous_features", True
-            )
+            self.disable_autonomous_features = self.config.get(
+                "global", {}
+            ).get("disable_autonomous_features", True)
 
         # Logging setup
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_integration")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_integration"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Initialize core system components
-        self.system_auditor = UltraComprehensiveSystemAuditor(base_dir, config_path)
+        self.system_auditor = UltraComprehensiveSystemAuditor(
+            base_dir, config_path
+        )
         self.system_optimizer = AdvancedSystemOptimizer(base_dir, config_path)
-        self.system_enhancer = SystemEnhancementOrchestrator(base_dir, config_path)
+        self.system_enhancer = SystemEnhancementOrchestrator(
+            base_dir, config_path
+        )
 
         # Conditionally initialize autonomous components
         if not self.disable_autonomous_features:
             # Initialize file management components
-            self.file_structure_manager = AutonomousFileStructureManager(base_dir)
+            self.file_structure_manager = AutonomousFileStructureManager(
+                base_dir
+            )
             self.file_explorer = UltraComprehensiveFileExplorer(base_dir)
 
             # Initialize Comprehensive System Checker
             self.system_checker = ComprehensiveSystemChecker(base_dir, log_dir)
 
             # Initialize Comprehensive Dependency Manager
-            self.dependency_manager = ComprehensiveDependencyManager(base_dir, log_dir)
-
-            # Initialize Architectural Integrity Manager
-            self.architectural_integrity_manager = ArchitecturalIntegrityManager(
+            self.dependency_manager = ComprehensiveDependencyManager(
                 base_dir, log_dir
             )
 
+            # Initialize Architectural Integrity Manager
+            self.architectural_integrity_manager = (
+                ArchitecturalIntegrityManager(base_dir, log_dir)
+            )
+
             # Initialize Inventory Management System
-            self.inventory_manager = InventoryManagementSystem(base_dir, log_dir)
+            self.inventory_manager = InventoryManagementSystem(
+                base_dir, log_dir
+            )
 
             # Initialize Auto-Remediation Manager
-            self.auto_remediation_manager = UltraComprehensiveAutoRemediationManager(
-                base_dir, log_dir
+            self.auto_remediation_manager = (
+                UltraComprehensiveAutoRemediationManager(base_dir, log_dir)
             )
 
             # Initialize Dependency Cross-Referencing System
@@ -357,7 +370,9 @@ class UltraComprehensiveSystemIntegrationFramework:
         )
 
         # Perform dependency analysis
-        dependency_report = self.dependency_manager.analyze_project_dependencies()
+        dependency_report = (
+            self.dependency_manager.analyze_project_dependencies()
+        )
 
         analysis_results = {
             "system_audit": self.system_auditor.generate_comprehensive_audit_report(),
@@ -384,7 +399,10 @@ class UltraComprehensiveSystemIntegrationFramework:
             "complexity_threshold", 10
         )
 
-        if analysis_results.get("overall_complexity", 0) > complexity_threshold:
+        if (
+            analysis_results.get("overall_complexity", 0)
+            > complexity_threshold
+        ):
             logger.warning(
                 "System complexity exceeds threshold. Initiating optimization."
             )
@@ -426,7 +444,9 @@ class UltraComprehensiveSystemIntegrationFramework:
                 # Attempt to refactor and reduce coupling
                 self._refactor_component_coupling(component_pair)
             except Exception as e:
-                logger.error(f"Component decoupling failed for {component_pair}: {e}")
+                logger.error(
+                    f"Component decoupling failed for {component_pair}: {e}"
+                )
 
     def _identify_tightly_coupled_components(
         self, dependency_graph: Dict[str, Any]
@@ -448,7 +468,9 @@ class UltraComprehensiveSystemIntegrationFramework:
             for node2 in dependency_graph.get("nodes", []):
                 if node1 != node2:
                     # Check for bidirectional or high-frequency dependencies
-                    if self._check_component_coupling(node1, node2, dependency_graph):
+                    if self._check_component_coupling(
+                        node1, node2, dependency_graph
+                    ):
                         tightly_coupled_pairs.append((node1, node2))
 
         return tightly_coupled_pairs
@@ -506,9 +528,13 @@ class UltraComprehensiveSystemIntegrationFramework:
                     # Attempt module refactoring
                     self._apply_module_refactoring(module, complexity)
                 except Exception as e:
-                    logger.error(f"Module refactoring failed for {module}: {e}")
+                    logger.error(
+                        f"Module refactoring failed for {module}: {e}"
+                    )
 
-    def _apply_module_refactoring(self, module: str, complexity: Dict[str, Any]):
+    def _apply_module_refactoring(
+        self, module: str, complexity: Dict[str, Any]
+    ):
         """
         Apply refactoring to a complex module
 
@@ -529,9 +555,9 @@ class UltraComprehensiveSystemIntegrationFramework:
         Args:
             analysis_results (Dict[str, Any]): System analysis results
         """
-        performance_metrics = analysis_results.get("system_optimization", {}).get(
-            "performance_metrics", {}
-        )
+        performance_metrics = analysis_results.get(
+            "system_optimization", {}
+        ).get("performance_metrics", {})
 
         # Identify performance bottlenecks
         bottleneck_components = self._identify_performance_bottlenecks(
@@ -543,7 +569,9 @@ class UltraComprehensiveSystemIntegrationFramework:
                 # Attempt load redistribution
                 self._apply_load_redistribution(component)
             except Exception as e:
-                logger.error(f"Load redistribution failed for {component}: {e}")
+                logger.error(
+                    f"Load redistribution failed for {component}: {e}"
+                )
 
     def _identify_performance_bottlenecks(
         self, performance_metrics: Dict[str, Any]
@@ -592,7 +620,9 @@ class UltraComprehensiveSystemIntegrationFramework:
             Detailed system integration report
         """
         # Perform comprehensive system check before generating integration report
-        system_check_results = self.system_checker.perform_comprehensive_system_check()
+        system_check_results = (
+            self.system_checker.perform_comprehensive_system_check()
+        )
 
         # Perform comprehensive system analysis
         analysis_results = self._perform_system_analysis()
@@ -631,19 +661,23 @@ class UltraComprehensiveSystemIntegrationFramework:
         integration_report = SystemIntegrationReport(
             timestamp=datetime.now().isoformat(),
             system_audit_report=analysis_results.get("system_audit", {}),
-            system_optimization_report=analysis_results.get("system_optimization", {}),
-            system_enhancement_report=analysis_results.get("system_enhancement", {}),
+            system_optimization_report=analysis_results.get(
+                "system_optimization", {}
+            ),
+            system_enhancement_report=analysis_results.get(
+                "system_enhancement", {}
+            ),
             file_structure_report=analysis_results.get("file_structure", {}),
-            file_exploration_report=analysis_results.get("file_exploration", {}),
+            file_exploration_report=analysis_results.get(
+                "file_exploration", {}
+            ),
             overall_system_health={
                 "complexity": analysis_results.get("system_audit", {}).get(
                     "overall_complexity", 0
                 ),
-                "performance": analysis_results.get("system_optimization", {}).get(
-                    "performance_metrics", {}
-                ),
-                "security": analysis_results.get("system_enhancement", {}).get(
-                    "security_enhancements", {}
+                "performance": analysis_results.get(
+                    "system_optimization", {}
+                ).get("performance_metrics", {}),
                 ),
                 "dependencies": {
                     "total_modules": dependency_report.get("total_modules", 0),
@@ -684,7 +718,9 @@ class UltraComprehensiveSystemIntegrationFramework:
         with open(report_path, "w") as f:
             json.dump(asdict(integration_report), f, indent=2)
 
-        logger.info(f"Comprehensive system integration report generated: {report_path}")
+        logger.info(
+            f"Comprehensive system integration report generated: {report_path}"
+        )
 
         # Optional: Visualize dependency graph
         if (
@@ -789,7 +825,9 @@ class UltraComprehensiveSystemIntegrationFramework:
 
             if critical_items:
                 logger.warning("Machine Learning Risk Detection Triggered")
-                logger.warning(f"Critical Items Detected: {len(critical_items)}")
+                logger.warning(
+                    f"Critical Items Detected: {len(critical_items)}"
+                )
 
                 # Example: Generate refactoring suggestions
                 refactoring_suggestions = [
@@ -830,7 +868,9 @@ def main():
         )
 
         # Generate initial comprehensive integration report
-        report = integration_framework.generate_comprehensive_integration_report()
+        report = (
+            integration_framework.generate_comprehensive_integration_report()
+        )
 
         print("\n🌐 Ultra-Comprehensive System Integration Results 🌐")
 

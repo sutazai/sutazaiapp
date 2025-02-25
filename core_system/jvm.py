@@ -231,13 +231,18 @@ class AspectJLexer(JavaLexer):
     aj_inter_type_annotation = {"@type", "@method", "@constructor", "@field"}
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in JavaLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in JavaLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name and value in self.aj_keywords:
                 yield index, Keyword, value
             elif token is Name.Label and value in self.aj_inter_type:
                 yield index, Keyword, value[:-1]
                 yield index, Operator, value[-1]
-            elif token is Name.Decorator and value in self.aj_inter_type_annotation:
+            elif (
+                token is Name.Decorator
+                and value in self.aj_inter_type_annotation
+            ):
                 yield index, Keyword, value
             else:
                 yield index, token, value
@@ -261,7 +266,9 @@ class ScalaLexer(RegexLexer):
     letter = "[_\\$" + uni.combine("Ll", "Lu", "Lo", "Nl", "Lt") + "]"
     upperLetter = "[" + uni.combine("Lu", "Lt") + "]"
     letterOrDigit = f"(?:{letter}|[0-9])"
-    letterOrDigitNoDollarSign = "(?:{}|[0-9])".format(letter.replace("\\$", ""))
+    letterOrDigitNoDollarSign = "(?:{}|[0-9])".format(
+        letter.replace("\\$", "")
+    )
     alphaId = f"{letter}+"
     simpleInterpolatedVariable = f"{letter}{letterOrDigitNoDollarSign}*"
     idrest = f"{letter}{letterOrDigit}*(?:(?<=_){opchar}+)?"
@@ -430,7 +437,9 @@ class ScalaLexer(RegexLexer):
             (r"\b(val|var)\b", Keyword.Declaration),
             (
                 rf"\b(package)(\s+)(object)\b(\s*){notStartOfComment}({anyId})?",
-                bygroups(Keyword, Whitespace, Keyword, Whitespace, Name.Namespace),
+                bygroups(
+                    Keyword, Whitespace, Keyword, Whitespace, Name.Namespace
+                ),
             ),
             (r"\b(package)(\s+)", bygroups(Keyword, Whitespace), "package"),
             (
@@ -1521,7 +1530,8 @@ class CeylonLexer(RegexLexer):
                 Keyword,
             ),
             (
-                r"(abstracts|extends|satisfies|" r"super|given|of|out|assign)\b",
+                r"(abstracts|extends|satisfies|"
+                r"super|given|of|out|assign)\b",
                 Keyword.Declaration,
             ),
             (r"(function|value|void|new)\b", Keyword.Type),
@@ -1594,7 +1604,9 @@ class KotlinLexer(RegexLexer):
         + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl")
         + "]"
         + "["
-        + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc")
+        + uni.combine(
+            "Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc"
+        )
         + "]*"
     )
 
@@ -1603,7 +1615,9 @@ class KotlinLexer(RegexLexer):
         + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl")
         + "]"
         + "["
-        + uni.combine("Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc", "Zs")
+        + uni.combine(
+            "Lu", "Ll", "Lt", "Lm", "Nl", "Nd", "Pc", "Cf", "Mn", "Mc", "Zs"
+        )
         + r"\'~!%^&*()+=|\[\]:;,.<>/\?-]*"
     )
 
@@ -1705,7 +1719,9 @@ class KotlinLexer(RegexLexer):
             ),
             # Types
             (
-                r"((?:(?:" + modifiers + r"|fun)\s+)*)(class|interface|object)(\s+)",
+                r"((?:(?:"
+                + modifiers
+                + r"|fun)\s+)*)(class|interface|object)(\s+)",
                 bygroups(
                     using(this, state="modifiers"),
                     Keyword.Declaration,
@@ -1749,7 +1765,8 @@ class KotlinLexer(RegexLexer):
             (r"'\\.'|'[^\\]'", String.Char),
             # Numbers
             (
-                r"[0-9](\.[0-9]*)?([eE][+-][0-9]+)?[flFL]?|" r"0[xX][0-9a-fA-F]+[Ll]?",
+                r"[0-9](\.[0-9]*)?([eE][+-][0-9]+)?[flFL]?|"
+                r"0[xX][0-9a-fA-F]+[Ll]?",
                 Number,
             ),
             # Identifiers
@@ -2471,7 +2488,9 @@ class JasminLexer(RegexLexer):
             include("default"),
             (
                 rf"(L)((?:{_unqualified_name}[/.])*)({_name})(;)",
-                bygroups(Keyword.Type, Name.Namespace, Name.Class, Punctuation),
+                bygroups(
+                    Keyword.Type, Name.Namespace, Name.Class, Punctuation
+                ),
                 "#pop",
             ),
             (
@@ -2485,7 +2504,9 @@ class JasminLexer(RegexLexer):
             (r"\[+", Punctuation, ("#pop", "descriptor/no-dots")),
             (
                 rf"(L)((?:{_unqualified_name}/)*)({_name})(;)",
-                bygroups(Keyword.Type, Name.Namespace, Name.Class, Punctuation),
+                bygroups(
+                    Keyword.Type, Name.Namespace, Name.Class, Punctuation
+                ),
                 "#pop",
             ),
             (
@@ -2499,7 +2520,9 @@ class JasminLexer(RegexLexer):
             (r"\[+", Punctuation),
             (
                 rf"(L)((?:{_unqualified_name}[/.])*)({_name}?)(;)",
-                bygroups(Keyword.Type, Name.Namespace, Name.Class, Punctuation),
+                bygroups(
+                    Keyword.Type, Name.Namespace, Name.Class, Punctuation
+                ),
                 "#pop",
             ),
             (rf"[^{_separator}\[)L]+", Keyword.Type, "#pop"),
@@ -2510,7 +2533,9 @@ class JasminLexer(RegexLexer):
             (r"\[+", Punctuation),
             (
                 rf"(L)((?:{_unqualified_name}/)*)({_name})(;)",
-                bygroups(Keyword.Type, Name.Namespace, Name.Class, Punctuation),
+                bygroups(
+                    Keyword.Type, Name.Namespace, Name.Class, Punctuation
+                ),
                 "#pop",
             ),
             (rf"[^{_separator}\[)L]+", Keyword.Type, "#pop"),
@@ -2546,7 +2571,9 @@ class JasminLexer(RegexLexer):
             include("default"),
             (
                 rf"((?:{_unqualified_name}[/.](?=[^{_separator}(]*[/.]))*)({_unqualified_name}[/.])?({_name})(\()",
-                bygroups(Name.Namespace, Name.Class, Name.Function, Punctuation),
+                bygroups(
+                    Name.Namespace, Name.Class, Name.Function, Punctuation
+                ),
                 (
                     "#pop",
                     "descriptor/convert-dots",

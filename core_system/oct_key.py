@@ -4,7 +4,6 @@ from authlib.common.encoding import (
     urlsafe_b64decode,
     urlsafe_b64encode,
 )
-from authlib.common.security import generate_token
 
 from ..rfc7517 import Key
 
@@ -78,7 +77,6 @@ class OctKey(Key):
         else:
             raw_key = to_bytes(raw)
 
-            # security check
             if raw_key.startswith(POSSIBLE_UNSAFE_KEYS):
                 raise ValueError("This key may not be safe to import")
 

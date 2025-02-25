@@ -30,7 +30,7 @@ def parseLinkDestination(string: str, pos: int, maximum: int) -> _Result:
                 return result
             if code == 0x3E:  # /* > */) {
                 result.pos = pos + 1
-                result.str = unescapeAll(string[start + 1: pos])
+                result.str = unescapeAll(string[start + 1 : pos])
                 result.ok = True
                 return result
 

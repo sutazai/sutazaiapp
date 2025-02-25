@@ -26,4 +26,6 @@ class InstallationCandidate(KeyBasedCompareMixin):
         )
 
     def __str__(self) -> str:
-        return f"{self.name!r} candidate (version {self.version} at {self.link})"
+        return (
+            f"{self.name!r} candidate (version {self.version} at {self.link})"
+        )

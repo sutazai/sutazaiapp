@@ -81,7 +81,9 @@ def auto_retry(max_retries=3, delay=5):
                     logger.warning(f"Attempt {retries} failed: {str(e)}")
                     if retries < max_retries:
                         time.sleep(wait_time)
-                    logger.error(f"Operation failed after {max_retries} attempts")
+                    logger.error(
+                        f"Operation failed after {max_retries} attempts"
+                    )
                     raise
             return wrapper
 
@@ -155,8 +157,6 @@ class SuperAI(AIBase):
         schedule.every().week.do(self.retrain_models)
         # Automated performance optimization
         schedule.every().day.at("03:00").do(self.optimize_performance)
-        # Automated security audits
-        schedule.every().month.at("04:00").do(self.run_security_audit)
         # Schedule regular system checks
         schedule.every(5).minutes.do(self.check_system_health)
         schedule.every(1).hour.do(self.optimize_resources)
@@ -169,9 +169,6 @@ class SuperAI(AIBase):
         """Optimize system performance"""
         logger.info("Optimizing performance...")
 
-    def run_security_audit(self):
-        """Run system security audit"""
-        logger.info("Running security audit...")
 
     def run(self):
         while True:

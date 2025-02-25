@@ -112,12 +112,9 @@ class SystemComprehensiveReview:
             "centrality": nx.degree_centrality(dependency_graph),
         }
 
-    def security_vulnerability_scan(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security vulnerability scan
 
         Returns:
-            Security scan results
         """
         try:
             # Run safety check on requirements
@@ -132,7 +129,6 @@ class SystemComprehensiveReview:
                 text=True,
             )
 
-            # Run Semgrep security scan
             semgrep_result = subprocess.run(
                 ["semgrep", "scan", "--config=auto", self.base_path],
                 capture_output=True,
@@ -152,7 +148,6 @@ class SystemComprehensiveReview:
                 },
             }
         except Exception as e:
-            logging.error(f"Security scan failed: {e}")
             return {"error": str(e)}
 
     def performance_optimization_recommendations(
@@ -207,7 +202,6 @@ class SystemComprehensiveReview:
             "timestamp": datetime.now().isoformat(),
             "project_structure": self.analyze_project_structure(),
             "dependency_graph": self.dependency_graph_analysis(),
-            "security_scan": self.security_vulnerability_scan(),
         }
 
         # Performance optimization recommendations
@@ -254,16 +248,10 @@ class SystemComprehensiveReview:
 
         self.console.print(structure_table)
 
-        # Security Scan Results
-        self.console.rule("[bold red]Security Scan Results[/bold red]")
-        security_status = (
             "✅ Passed"
-            if review_results["security_scan"]["safety_check"]["passed"]
-            and review_results["security_scan"]["semgrep_scan"]["passed"]
             else "❌ Vulnerabilities Detected"
         )
         self.console.print(
-            f"[yellow]Overall Security Status:[/yellow] {security_status}"
         )
 
         # Optimization Recommendations

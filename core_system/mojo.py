@@ -343,9 +343,11 @@ class MojoLexer(RegexLexer):
                 r"(^[ \t]*)"  # at beginning of line + possible indentation
                 r"(match|case)\b"  # a possible keyword
                 r"(?![ \t]*(?:"  # not followed by...
-                r"[:,;=^&|@~)\]}]|(?:" +  # characters and keywords that mean this isn't
+                r"[:,;=^&|@~)\]}]|(?:"  # characters and keywords that mean this isn't
+                +
                 # pattern matching (but None/True/False is ok)
-                r"|".join(k for k in keyword.kwlist if k[0].islower()) + r")\b))",
+                r"|".join(k for k in keyword.kwlist if k[0].islower())
+                + r")\b))",
                 bygroups(Whitespace, Keyword),
                 "soft-keywords-inner",
             ),

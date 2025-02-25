@@ -3,7 +3,6 @@ import hashlib
 import time
 
 from authlib.common.encoding import to_native
-from authlib.common.security import generate_token
 from authlib.common.urls import extract_params
 
 from .parameters import (
@@ -149,9 +148,14 @@ class ClientAuth:
 
         # https://datatracker.ietf.org/doc/html/draft-eaton-oauth-bodyhash-00.html
         # include oauth_body_hash
-        if body and headers.get("Content-Type") != CONTENT_TYPE_FORM_URLENCODED:
+        if (
+            body
+            and headers.get("Content-Type") != CONTENT_TYPE_FORM_URLENCODED
+        ):
             oauth_body_hash = base64.b64encode(hashlib.sha1(body).digest())
-            oauth_params.append(("oauth_body_hash", oauth_body_hash.decode("utf-8")))
+            oauth_params.append(
+                ("oauth_body_hash", oauth_body_hash.decode("utf-8"))
+            )
 
         uri, headers, body = self._render(uri, headers, body, oauth_params)
 

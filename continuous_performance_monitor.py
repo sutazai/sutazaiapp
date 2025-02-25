@@ -30,7 +30,9 @@ logging.basicConfig(
     format="%(asctime)s - [%(levelname)s] 🔍 %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("/opt/sutazai/logs/continuous_performance_monitor.log"),
+        logging.FileHandler(
+            "/opt/sutazai/logs/continuous_performance_monitor.log"
+        ),
     ],
 )
 logger = logging.getLogger("ContinuousPerformanceMonitor")
@@ -63,8 +65,12 @@ class SutazAIPerformanceMonitor:
                 "per_core": psutil.cpu_percent(interval=1, percpu=True),
             },
             "memory": {
-                "total_gb": round(psutil.virtual_memory().total / (1024**3), 2),
-                "available_gb": round(psutil.virtual_memory().available / (1024**3), 2),
+                "total_gb": round(
+                    psutil.virtual_memory().total / (1024**3), 2
+                ),
+                "available_gb": round(
+                    psutil.virtual_memory().available / (1024**3), 2
+                ),
                 "percent": psutil.virtual_memory().percent,
             },
             "disk_io": dict(psutil.disk_io_counters()._asdict()),
@@ -112,9 +118,9 @@ class SutazAIPerformanceMonitor:
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
 
-            return sorted(processes, key=lambda x: x["cpu_percent"], reverse=True)[
-                :limit
-            ]
+            return sorted(
+                processes, key=lambda x: x["cpu_percent"], reverse=True
+            )[:limit]
         except Exception as e:
             logger.error(f"Top processes retrieval failed: {e}")
             return []
@@ -134,7 +140,10 @@ class SutazAIPerformanceMonitor:
                 }
             )
 
-        if metrics["memory"]["percent"] > self.alert_thresholds["memory_percent"]:
+        if (
+            metrics["memory"]["percent"]
+            > self.alert_thresholds["memory_percent"]
+        ):
             bottlenecks.append(
                 {
                     "type": "MEMORY_PRESSURE",
@@ -172,7 +181,9 @@ class SutazAIPerformanceMonitor:
         """Log performance metrics and bottlenecks to historical record."""
         self.performance_history["timestamps"].append(metrics["timestamp"])
         self.performance_history["cpu_usage"].append(metrics["cpu"]["percent"])
-        self.performance_history["memory_usage"].append(metrics["memory"]["percent"])
+        self.performance_history["memory_usage"].append(
+            metrics["memory"]["percent"]
+        )
         self.performance_history["disk_io"].append(metrics["disk_io"])
         self.performance_history["network_io"].append(metrics["network_io"])
 
@@ -195,7 +206,9 @@ class SutazAIPerformanceMonitor:
     def send_performance_alert(self, bottlenecks: List[Dict[str, Any]]):
         """Send performance alerts via logging and optional external notification."""
         for bottleneck in bottlenecks:
-            logger.warning(f"🚨 Performance Bottleneck Detected: {bottleneck['type']}")
+            logger.warning(
+                f"🚨 Performance Bottleneck Detected: {bottleneck['type']}"
+            )
             logger.warning(f"Recommendation: {bottleneck['recommendation']}")
 
     def continuous_monitoring_job(self):
@@ -220,7 +233,9 @@ class SutazAIPerformanceMonitor:
         )
 
         # Schedule periodic monitoring job
-        schedule.every(interval_minutes).minutes.do(self.continuous_monitoring_job)
+        schedule.every(interval_minutes).minutes.do(
+            self.continuous_monitoring_job
+        )
 
         # Run monitoring in a separate thread
         def run_scheduler():

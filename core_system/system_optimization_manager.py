@@ -90,7 +90,6 @@ class SutazAiOptimizationManager:
         optimizers = {
             "system_validator.py": self._optimize_system_validator,
             "coherence_preserver.py": self._optimize_coherence_preserver,
-            "security_review.py": self._optimize_security_review,
             "model_server.py": self._optimize_model_server,
             # Add more file-specific optimizers
         }
@@ -155,9 +154,6 @@ class SutazAiOptimizationManager:
         # Improve numerical stability
         return self._generic_file_optimizer(content)
 
-    def _optimize_security_review(self, content: str) -> str:
-        """Specific optimizations for security_review.py"""
-        # Enhance security scanning
         # Improve vulnerability detection
         return self._generic_file_optimizer(content)
 
@@ -177,7 +173,6 @@ def main():
         "system_validator.py",
         "sutazai_core/neural_entanglement/coherence_preserver.py",
         "examples/coherence_preservation_demo.py",
-        "scripts/security_review.py",
         "backend/model_server.py",
         "system_verify.py",
         "main.py",
@@ -185,7 +180,9 @@ def main():
     ]
 
     # Full file paths
-    full_file_paths = [os.path.join(project_root, f) for f in files_to_optimize]
+    full_file_paths = [
+        os.path.join(project_root, f) for f in files_to_optimize
+    ]
 
     # Initialize optimization manager
     optimizer = SutazAiOptimizationManager(project_root)

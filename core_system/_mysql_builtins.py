@@ -1047,7 +1047,6 @@ MYSQL_KEYWORDS = (
     "secondary_engine_attribute",
     "secondary_load",
     "secondary_unload",
-    "security",
     "select",
     "sensitive",
     "separator",

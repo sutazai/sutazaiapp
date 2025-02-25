@@ -57,7 +57,8 @@ class AwkLexer(RegexLexer):
             (r"^(?=\s|/)", Text, "slashstartsregex"),
             include("commentsandwhitespace"),
             (
-                r"\+\+|--|\|\||&&|in\b|\$|!?~|\?|:|" r"(\*\*|[-<>+*%\^/!=|])=?",
+                r"\+\+|--|\|\||&&|in\b|\$|!?~|\?|:|"
+                r"(\*\*|[-<>+*%\^/!=|])=?",
                 Operator,
                 "slashstartsregex",
             ),
@@ -131,7 +132,11 @@ class SedLexer(RegexLexer):
                 bygroups(Punctuation, None, String.Regex, Punctuation),
             ),
             (
-                r"(y)(.)" + _inside_delims + r"(\2)" + _inside_delims + r"(\2)",
+                r"(y)(.)"
+                + _inside_delims
+                + r"(\2)"
+                + _inside_delims
+                + r"(\2)",
                 bygroups(
                     Keyword,
                     Punctuation,
@@ -190,7 +195,9 @@ class VimLexer(RegexLexer):
     tokens = {
         "root": [
             (
-                r"^([ \t:]*)(" + _python + r")([ \t]*)(<<)([ \t]*)(.*)((?:\n|.)*)(\6)",
+                r"^([ \t:]*)("
+                + _python
+                + r")([ \t]*)(<<)([ \t]*)(.*)((?:\n|.)*)(\6)",
                 bygroups(
                     using(this),
                     Keyword,
@@ -268,11 +275,15 @@ class VimLexer(RegexLexer):
         # TODO: builtins are only subsequent tokens on lines
         #       and 'keywords' only happen at the beginning except
         #       for :au ones
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name.Other:
                 if self.is_in(value, self._cmd):
                     yield index, Keyword, value
-                elif self.is_in(value, self._opt) or self.is_in(value, self._aut):
+                elif self.is_in(value, self._opt) or self.is_in(
+                    value, self._aut
+                ):
                     yield index, Name.Builtin, value
                 else:
                     yield index, Text, value

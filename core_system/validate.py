@@ -134,7 +134,9 @@ class URL(Validator):
             ]
             if not require_tld:
                 # allow dotless hostnames
-                hostname_variants.append(r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.?)")
+                hostname_variants.append(
+                    r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.?)"
+                )
 
             absolute_part = "".join(
                 (
@@ -233,7 +235,9 @@ class URL(Validator):
         # Hostname is optional for file URLS. If absent it means `localhost`.
         # Fill it in for the validation if needed
         if scheme == "file" and value.startswith("file:///"):
-            matched = regex.search(value.replace("file:///", "file://localhost/", 1))
+            matched = regex.search(
+                value.replace("file:///", "file://localhost/", 1)
+            )
         else:
             matched = regex.search(value)
 
@@ -260,7 +264,8 @@ class Email(Validator):
 
     DOMAIN_REGEX = re.compile(
         # domain
-        r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+" r"(?:[A-Z]{2,6}|[A-Z0-9-]{2,})\Z"
+        r"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+"
+        r"(?:[A-Z]{2,6}|[A-Z0-9-]{2,})\Z"
         # literal form, ipv4 address (SMTP 4.1.3)
         r"|^\[(25[0-5]|2[0-4]\d|[0-1]?\d?\d)"
         r"(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}\]\Z",
@@ -361,19 +366,25 @@ class Range(Validator):
         return f"min={self.min!r}, max={self.max!r}, min_inclusive={self.min_inclusive!r}, max_inclusive={self.max_inclusive!r}"
 
     def _format_error(self, value: _T, message: str) -> str:
-        return (self.error or message).format(input=value, min=self.min, max=self.max)
+        return (self.error or message).format(
+            input=value, min=self.min, max=self.max
+        )
 
     def __call__(self, value: _T) -> _T:
         if self.min is not None and (
             value < self.min if self.min_inclusive else value <= self.min
         ):
-            message = self.message_min if self.max is None else self.message_all
+            message = (
+                self.message_min if self.max is None else self.message_all
+            )
             raise ValidationError(self._format_error(value, message))
 
         if self.max is not None and (
             value > self.max if self.max_inclusive else value >= self.max
         ):
-            message = self.message_max if self.min is None else self.message_all
+            message = (
+                self.message_max if self.min is None else self.message_all
+            )
             raise ValidationError(self._format_error(value, message))
 
         return value
@@ -434,15 +445,21 @@ class Length(Validator):
 
         if self.equal is not None:
             if length != self.equal:
-                raise ValidationError(self._format_error(value, self.message_equal))
+                raise ValidationError(
+                    self._format_error(value, self.message_equal)
+                )
             return value
 
         if self.min is not None and length < self.min:
-            message = self.message_min if self.max is None else self.message_all
+            message = (
+                self.message_min if self.max is None else self.message_all
+            )
             raise ValidationError(self._format_error(value, message))
 
         if self.max is not None and length > self.max:
-            message = self.message_max if self.min is None else self.message_all
+            message = (
+                self.message_max if self.min is None else self.message_all
+            )
             raise ValidationError(self._format_error(value, message))
 
         return value
@@ -500,7 +517,9 @@ class Regexp(Validator):
         error: str | None = None,
     ):
         self.regex = (
-            re.compile(regex, flags) if isinstance(regex, (str, bytes)) else regex
+            re.compile(regex, flags)
+            if isinstance(regex, (str, bytes))
+            else regex
         )
         self.error: str = error or self.default_message
 
@@ -643,7 +662,9 @@ class OneOf(Validator):
             of an attribute of the choice objects. Defaults to `str()`
             or `str()`.
         """
-        valuegetter = valuegetter if callable(valuegetter) else attrgetter(valuegetter)
+        valuegetter = (
+            valuegetter if callable(valuegetter) else attrgetter(valuegetter)
+        )
         pairs = zip_longest(self.choices, self.labels, fillvalue="")
 
         return ((valuegetter(choice), label) for choice, label in pairs)
@@ -665,7 +686,9 @@ class ContainsOnly(OneOf):
         to validate against empty inputs.
     """
 
-    default_message = "One or more of the choices you made was not in: {choices}."
+    default_message = (
+        "One or more of the choices you made was not in: {choices}."
+    )
 
     def _format_error(self, value) -> str:
         value_text = ", ".join(str(val) for val in value)

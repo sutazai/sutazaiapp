@@ -42,7 +42,9 @@ def get_legacy_build_wheel_path(
     # Sort for determinism.
     names = sorted(names)
     if not names:
-        msg = ("Legacy build of wheel for {!r} created no files.\n").format(name)
+        msg = ("Legacy build of wheel for {!r} created no files.\n").format(
+            name
+        )
         msg += format_command_result(command_args, command_output)
         logger.warning(msg)
         return None

@@ -181,7 +181,9 @@ class NimrodLexer(RegexLexer):
             ),
             (rf"({underscorize(keywords)})\b", Keyword),
             (
-                r"({})\b".format(underscorize(["from", "import", "include", "export"])),
+                r"({})\b".format(
+                    underscorize(["from", "import", "include", "export"])
+                ),
                 Keyword.Namespace,
             ),
             (r"(v_?a_?r)\b", Keyword.Declaration),

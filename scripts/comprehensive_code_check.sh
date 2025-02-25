@@ -94,8 +94,6 @@ run_checks() {
     log_message "INFO" "Running Semgrep with basic configuration..."
     semgrep --config=r/all 2>&1 | tee -a "$LOG_FILE" || true
 
-    # Run Bandit security scan
-    log_message "INFO" "Running Bandit security scan..."
     bandit -r "$PROJECT_ROOT" -lll -x "**/tests/*" 2>&1 | tee -a "$LOG_FILE" || true
 
     # Check for deprecated features or potential 3.11 incompatibilities

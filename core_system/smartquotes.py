@@ -23,7 +23,7 @@ def replaceAt(string: str, index: int, ch: str) -> str:
     # When the index is negative, the behavior is different from the js version.
     # But basically, the index will not be negative.
     assert index >= 0
-    return string[:index] + ch + string[index + 1:]
+    return string[:index] + ch + string[index + 1 :]
 
 
 def process_inlines(tokens: list[Token], state: StateCore) -> None:
@@ -69,13 +69,18 @@ def process_inlines(tokens: list[Token], state: StateCore) -> None:
                 lastChar = charCodeAt(text, t.start(0) + lastIndex - 1)
             else:
                 for j in range(i)[::-1]:
-                    if tokens[j].type == "softbreak" or tokens[j].type == "hardbreak":
+                    if (
+                        tokens[j].type == "softbreak"
+                        or tokens[j].type == "hardbreak"
+                    ):
                         break
                     # should skip all tokens except 'text', 'html_inline' or 'code_inline'
                     if not tokens[j].content:
                         continue
 
-                    lastChar = charCodeAt(tokens[j].content, len(tokens[j].content) - 1)
+                    lastChar = charCodeAt(
+                        tokens[j].content, len(tokens[j].content) - 1
+                    )
                     break
 
             # Find next character,
@@ -87,7 +92,10 @@ def process_inlines(tokens: list[Token], state: StateCore) -> None:
             else:
                 for j in range(i + 1, len(tokens)):
                     # nextChar defaults to 0x20
-                    if tokens[j].type == "softbreak" or tokens[j].type == "hardbreak":
+                    if (
+                        tokens[j].type == "softbreak"
+                        or tokens[j].type == "hardbreak"
+                    ):
                         break
                     # should skip all tokens except 'text', 'html_inline' or 'code_inline'
                     if not tokens[j].content:
@@ -116,9 +124,13 @@ def process_inlines(tokens: list[Token], state: StateCore) -> None:
             elif isLastPunctChar and not (isNextWhiteSpace or isNextPunctChar):
                 canClose = False
 
-            if nextChar == 0x22 and t.group(0) == '"':  # 0x22: "  # noqa: SIM102
+            if (
+                nextChar == 0x22 and t.group(0) == '"'
+            ):  # 0x22: "  # noqa: SIM102
                 if (
-                    lastChar is not None and lastChar >= 0x30 and lastChar <= 0x39
+                    lastChar is not None
+                    and lastChar >= 0x30
+                    and lastChar <= 0x39
                 ):  # 0x30: 0, 0x39: 9
                     # special case: 1"" - count first quote as an inch
                     canClose = canOpen = False
@@ -147,7 +159,10 @@ def process_inlines(tokens: list[Token], state: StateCore) -> None:
                     item = stack[j]
                     if stack[j]["level"] < thisLevel:
                         break
-                    if item["single"] == isSingle and stack[j]["level"] == thisLevel:
+                    if (
+                        item["single"] == isSingle
+                        and stack[j]["level"] == thisLevel
+                    ):
                         item = stack[j]
 
                         if isSingle:

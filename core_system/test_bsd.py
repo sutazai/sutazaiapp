@@ -46,9 +46,9 @@ def sysctl(cmdline):
     """
     result = sh("sysctl " + cmdline)
     if FREEBSD:
-        result = result[result.find(": ") + 2:]
+        result = result[result.find(": ") + 2 :]
     elif OPENBSD or NETBSD:
-        result = result[result.find("=") + 1:]
+        result = result[result.find("=") + 1 :]
     try:
         return int(result)
     except ValueError:
@@ -126,12 +126,16 @@ class BSDTestCase(PsutilTestCase):
         assert psutil.cpu_count(logical=True) == syst
 
     @pytest.mark.skipif(not which("sysctl"), reason="sysctl cmd not available")
-    @pytest.mark.skipif(NETBSD, reason="skipped on NETBSD")  # we check /proc/meminfo
+    @pytest.mark.skipif(
+        NETBSD, reason="skipped on NETBSD"
+    )  # we check /proc/meminfo
     def test_virtual_memory_total(self):
         num = sysctl("hw.physmem")
         assert num == psutil.virtual_memory().total
 
-    @pytest.mark.skipif(not which("ifconfig"), reason="ifconfig cmd not available")
+    @pytest.mark.skipif(
+        not which("ifconfig"), reason="ifconfig cmd not available"
+    )
     def test_net_if_stats(self):
         for name, stats in psutil.net_if_stats().items():
             try:
@@ -350,15 +354,25 @@ class FreeBSDSystemTestCase(PsutilTestCase):
 
     def test_cpu_stats_ctx_switches(self):
         assert (
-            abs(psutil.cpu_stats().ctx_switches - sysctl("vm.stats.sys.v_swtch")) < 1000
+            abs(
+                psutil.cpu_stats().ctx_switches
+                - sysctl("vm.stats.sys.v_swtch")
+            )
+            < 1000
         )
 
     def test_cpu_stats_interrupts(self):
-        assert abs(psutil.cpu_stats().interrupts - sysctl("vm.stats.sys.v_intr")) < 1000
+        assert (
+            abs(psutil.cpu_stats().interrupts - sysctl("vm.stats.sys.v_intr"))
+            < 1000
+        )
 
     def test_cpu_stats_soft_interrupts(self):
         assert (
-            abs(psutil.cpu_stats().soft_interrupts - sysctl("vm.stats.sys.v_soft"))
+            abs(
+                psutil.cpu_stats().soft_interrupts
+                - sysctl("vm.stats.sys.v_soft")
+            )
             < 1000
         )
 
@@ -366,7 +380,8 @@ class FreeBSDSystemTestCase(PsutilTestCase):
     def test_cpu_stats_syscalls(self):
         # pretty high tolerance but it looks like it's OK.
         assert (
-            abs(psutil.cpu_stats().syscalls - sysctl("vm.stats.sys.v_syscall")) < 200000
+            abs(psutil.cpu_stats().syscalls - sysctl("vm.stats.sys.v_syscall"))
+            < 200000
         )
 
     # def test_cpu_stats_traps(self):
@@ -391,7 +406,7 @@ class FreeBSDSystemTestCase(PsutilTestCase):
 
     def test_boot_time(self):
         s = sysctl("sysctl kern.boottime")
-        s = s[s.find(" sec = ") + 7:]
+        s = s[s.find(" sec = ") + 7 :]
         s = s[: s.find(",")]
         btime = int(s)
         assert btime == psutil.boot_time()
@@ -406,7 +421,9 @@ class FreeBSDSystemTestCase(PsutilTestCase):
             return "%d:%02d" % (h, m)
 
         out = sh("acpiconf -i 0")
-        fields = dict([(x.split("\t")[0], x.split("\t")[-1]) for x in out.split("\n")])
+        fields = dict(
+            [(x.split("\t")[0], x.split("\t")[-1]) for x in out.split("\n")]
+        )
         metrics = psutil.sensors_battery()
         percent = int(fields["Remaining capacity:"].replace("%", ""))
         remaining_time = fields["Remaining time:"]
@@ -418,8 +435,12 @@ class FreeBSDSystemTestCase(PsutilTestCase):
 
     @pytest.mark.skipif(not HAS_BATTERY, reason="no battery")
     def test_sensors_battery_against_sysctl(self):
-        assert psutil.sensors_battery().percent == sysctl("hw.acpi.battery.life")
-        assert psutil.sensors_battery().power_plugged == (sysctl("hw.acpi.acline") == 1)
+        assert psutil.sensors_battery().percent == sysctl(
+            "hw.acpi.battery.life"
+        )
+        assert psutil.sensors_battery().power_plugged == (
+            sysctl("hw.acpi.acline") == 1
+        )
         secsleft = psutil.sensors_battery().secsleft
         if secsleft < 0:
             assert sysctl("hw.acpi.battery.time") == -1
@@ -458,7 +479,10 @@ class FreeBSDSystemTestCase(PsutilTestCase):
 
             sensor = "dev.cpu.%s.coretemp.tjmax" % cpu
             sysctl_result = int(float(sysctl(sensor)[:-1]))
-            assert psutil.sensors_temperatures()["coretemp"][cpu].high == sysctl_result
+            assert (
+                psutil.sensors_temperatures()["coretemp"][cpu].high
+                == sysctl_result
+            )
 
 
 # =====================================================================
@@ -503,13 +527,19 @@ class NetBSDTestCase(PsutilTestCase):
 
     def test_vmem_buffers(self):
         assert (
-            abs(psutil.virtual_memory().buffers - self.parse_meminfo("Buffers:"))
+            abs(
+                psutil.virtual_memory().buffers
+                - self.parse_meminfo("Buffers:")
+            )
             < TOLERANCE_SYS_MEM
         )
 
     def test_vmem_shared(self):
         assert (
-            abs(psutil.virtual_memory().shared - self.parse_meminfo("MemShared:"))
+            abs(
+                psutil.virtual_memory().shared
+                - self.parse_meminfo("MemShared:")
+            )
             < TOLERANCE_SYS_MEM
         )
 

@@ -1292,7 +1292,9 @@ class DelphiLexer(Lexer):
                 self.keywords.update(self.DELPHI_KEYWORDS)
             if get_bool_opt(options, "freepascal", True):
                 self.keywords.update(self.FREE_PASCAL_KEYWORDS)
-            for unit in get_list_opt(options, "units", list(self.BUILTIN_UNITS)):
+            for unit in get_list_opt(
+                options, "units", list(self.BUILTIN_UNITS)
+            ):
                 self.builtins.update(self.BUILTIN_UNITS[unit])
 
     def get_tokens_unprocessed(self, text):
@@ -1313,7 +1315,9 @@ class DelphiLexer(Lexer):
             if stack[-1] == "initial":
                 if scanner.scan(r"\s+"):
                     token = Whitespace
-                elif not self.is_portugol and scanner.scan(r"\{.*?\}|\(\*.*?\*\)"):
+                elif not self.is_portugol and scanner.scan(
+                    r"\{.*?\}|\(\*.*?\*\)"
+                ):
                     if scanner.match.startswith("$"):
                         token = Comment.Preproc
                     else:
@@ -1324,7 +1328,9 @@ class DelphiLexer(Lexer):
                     r"(<\-)|(>=)|(<=)|%|<|>|-|\+|\*|\=|(<>)|\/|\.|:|,"
                 ):
                     token = Operator
-                elif not self.is_portugol and scanner.scan(r"[-+*\/=<>:;,.@\^]"):
+                elif not self.is_portugol and scanner.scan(
+                    r"[-+*\/=<>:;,.@\^]"
+                ):
                     token = Operator
                     # stop label highlighting on next ";"
                     if collect_labels and scanner.match == ";":
@@ -1437,9 +1443,15 @@ class DelphiLexer(Lexer):
                         and lowercase_name in self.PORTUGOL_BUILTIN_TYPES
                     ):
                         token = Keyword.Type
-                    elif not self.is_portugol and lowercase_name in self.BUILTIN_TYPES:
+                    elif (
+                        not self.is_portugol
+                        and lowercase_name in self.BUILTIN_TYPES
+                    ):
                         token = Keyword.Type
-                    elif not self.is_portugol and lowercase_name in self.DIRECTIVES:
+                    elif (
+                        not self.is_portugol
+                        and lowercase_name in self.DIRECTIVES
+                    ):
                         token = Keyword.Pseudo
                     # builtins are just builtins if the token
                     # before isn't a dot
@@ -1457,7 +1469,9 @@ class DelphiLexer(Lexer):
                 elif not self.is_portugol and scanner.scan(r"'"):
                     token = String
                     stack.append("string")
-                elif not self.is_portugol and scanner.scan(r"\#(\d+|\$[0-9A-Fa-f]+)"):
+                elif not self.is_portugol and scanner.scan(
+                    r"\#(\d+|\$[0-9A-Fa-f]+)"
+                ):
                     token = String.Char
                 elif not self.is_portugol and scanner.scan(r"\$[0-9A-Fa-f]+"):
                     token = Number.Hex

@@ -11,7 +11,8 @@ OS_DESCRIPTION_DESC: str = (
     "SAFETY_OS_DESCRIPTION has higher priority."
 )
 PYTHON_VERSION_DESC: str = (
-    "The output of call platform.python_version(), " "major.minor.patchlevel value."
+    "The output of call platform.python_version(), "
+    "major.minor.patchlevel value."
 )
 SAFETY_COMMAND_DESC: str = "The command used in Safety CLI."
 SAFETY_OPTIONS_DESC: str = (

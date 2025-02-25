@@ -2,7 +2,6 @@ import logging
 from typing import Any, Callable, Dict, Optional, Tuple
 
 import click
-from authlib.common.security import generate_token
 from safety.auth.constants import CLIENT_ID, OPENID_CONFIG_URL
 from safety.auth.models import Auth, Organization
 from safety.auth.utils import (
@@ -121,7 +120,9 @@ def load_auth_session(click_ctx: click.Context) -> None:
         click_ctx (click.Context): The Click context object.
     """
     if not click_ctx:
-        LOG.warning("Click context is needed to be able to load the Auth data.")
+        LOG.warning(
+            "Click context is needed to be able to load the Auth data."
+        )
         return
 
     client = click_ctx.obj.auth.client

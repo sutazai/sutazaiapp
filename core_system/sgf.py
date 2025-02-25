@@ -58,7 +58,9 @@ class SmartGameFormatLexer(RegexLexer):
             # double points:
             (
                 r"(\[)([a-z]{2})(:)([a-z]{2})(\])",
-                bygroups(Punctuation, String, Punctuation, String, Punctuation),
+                bygroups(
+                    Punctuation, String, Punctuation, String, Punctuation
+                ),
             ),
             (
                 r"(\[)([\w\s#()+,\-.:?]+)(\])",

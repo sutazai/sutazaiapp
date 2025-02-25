@@ -47,9 +47,13 @@ class ScreenReport(FormatterAPI):
         + DIVIDER_SECTIONS
     )
 
-    ANNOUNCEMENTS_HEADING = format_long_text(click.style("ANNOUNCEMENTS", bold=True))
+    ANNOUNCEMENTS_HEADING = format_long_text(
+        click.style("ANNOUNCEMENTS", bold=True)
+    )
 
-    def __build_announcements_section(self, announcements: List[Dict]) -> List[str]:
+    def __build_announcements_section(
+        self, announcements: List[Dict]
+    ) -> List[str]:
         """
         Build the announcements section of the report.
 
@@ -101,7 +105,9 @@ class ScreenReport(FormatterAPI):
         Returns:
             str: Rendered vulnerabilities report.
         """
-        announcements_section = self.__build_announcements_section(announcements)
+        announcements_section = self.__build_announcements_section(
+            announcements
+        )
         primary_announcement = get_primary_announcement(announcements)
         remediation_section = build_remediation_section(remediations)
         end_content = []
@@ -125,8 +131,13 @@ class ScreenReport(FormatterAPI):
         for n, vuln in enumerate(vulnerabilities):
             if vuln.ignored:
                 total_ignored += 1
-                ignored[vuln.package_name] = ignored.get(vuln.package_name, 0) + 1
-                if is_ignore_unpinned_mode(version=vuln.analyzed_version) and not full:
+                ignored[vuln.package_name] = (
+                    ignored.get(vuln.package_name, 0) + 1
+                )
+                if (
+                    is_ignore_unpinned_mode(version=vuln.analyzed_version)
+                    and not full
+                ):
                     unpinned_packages[vuln.package_name].append(vuln)
                     continue
             styled_vulns.append(format_vulnerability(vuln, full))
@@ -174,7 +185,6 @@ class ScreenReport(FormatterAPI):
         else:
             content = format_long_text(
                 click.style(
-                    "No known security vulnerabilities reported.",
                     bold=True,
                     fg="green",
                 )
@@ -193,7 +203,9 @@ class ScreenReport(FormatterAPI):
                 + end_content
             )
 
-    def render_licenses(self, announcements: List[Dict], licenses: List[Dict]) -> str:
+    def render_licenses(
+        self, announcements: List[Dict], licenses: List[Dict]
+    ) -> str:
         """
         Render the licenses section of the report.
 
@@ -211,7 +223,9 @@ class ScreenReport(FormatterAPI):
             report_type=2,
             licenses_found=len(unique_license_types),
         )
-        announcements_section = self.__build_announcements_section(announcements)
+        announcements_section = self.__build_announcements_section(
+            announcements
+        )
 
         if not licenses:
             content = format_long_text(
@@ -243,7 +257,9 @@ class ScreenReport(FormatterAPI):
                 report_brief_section,
                 add_empty_line(),
                 self.DIVIDER_SECTIONS,
-                format_long_text(click.style("LICENSES FOUND", bold=True, fg="yellow")),
+                format_long_text(
+                    click.style("LICENSES FOUND", bold=True, fg="yellow")
+                ),
                 self.DIVIDER_SECTIONS,
                 add_empty_line(),
                 "\n".join(table),

@@ -118,17 +118,27 @@ print("success")
 @pytest.mark.parametrize(
     ("distutils_version", "imported_module"),
     [
-        pytest.param("stdlib", "dir_util", marks=skip_without_stdlib_distutils),
-        pytest.param("stdlib", "file_util", marks=skip_without_stdlib_distutils),
-        pytest.param("stdlib", "archive_util", marks=skip_without_stdlib_distutils),
+        pytest.param(
+            "stdlib", "dir_util", marks=skip_without_stdlib_distutils
+        ),
+        pytest.param(
+            "stdlib", "file_util", marks=skip_without_stdlib_distutils
+        ),
+        pytest.param(
+            "stdlib", "archive_util", marks=skip_without_stdlib_distutils
+        ),
         ("local", "dir_util"),
         ("local", "file_util"),
         ("local", "archive_util"),
     ],
 )
-def test_modules_are_not_duplicated_on_import(distutils_version, imported_module, venv):
+def test_modules_are_not_duplicated_on_import(
+    distutils_version, imported_module, venv
+):
     env = dict(SETUPTOOLS_USE_DISTUTILS=distutils_version)
-    script = ENSURE_IMPORTS_ARE_NOT_DUPLICATED.format(imported_module=imported_module)
+    script = ENSURE_IMPORTS_ARE_NOT_DUPLICATED.format(
+        imported_module=imported_module
+    )
     cmd = ["python", "-c", script]
     output = venv.run(cmd, env=win_sr(env), **_TEXT_KWARGS).strip()
     assert output == "success"
@@ -187,7 +197,9 @@ else:
         ),
     ],
 )
-def test_consistent_error_from_modified_py(distutils_version, imported_module, venv):
+def test_consistent_error_from_modified_py(
+    distutils_version, imported_module, venv
+):
     env = dict(SETUPTOOLS_USE_DISTUTILS=distutils_version)
     cmd = [
         "python",

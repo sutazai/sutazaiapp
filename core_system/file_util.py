@@ -37,7 +37,9 @@ def _copy_file_contents(src, dst, buffer_size=16 * 1024):  # noqa: C901
             try:
                 os.unlink(dst)
             except OSError as e:
-                raise DistutilsFileError(f"could not delete '{dst}': {e.strerror}")
+                raise DistutilsFileError(
+                    f"could not delete '{dst}': {e.strerror}"
+                )
 
         try:
             fdst = open(dst, "wb")
@@ -48,7 +50,9 @@ def _copy_file_contents(src, dst, buffer_size=16 * 1024):  # noqa: C901
             try:
                 buf = fsrc.read(buffer_size)
             except OSError as e:
-                raise DistutilsFileError(f"could not read from '{src}': {e.strerror}")
+                raise DistutilsFileError(
+                    f"could not read from '{src}': {e.strerror}"
+                )
 
             if not buf:
                 break
@@ -56,7 +60,9 @@ def _copy_file_contents(src, dst, buffer_size=16 * 1024):  # noqa: C901
             try:
                 fdst.write(buf)
             except OSError as e:
-                raise DistutilsFileError(f"could not write to '{dst}': {e.strerror}")
+                raise DistutilsFileError(
+                    f"could not write to '{dst}': {e.strerror}"
+                )
     finally:
         if fdst:
             fdst.close()
@@ -213,7 +219,9 @@ def move_file(src, dst, verbose=True, dry_run=False):  # noqa: C901
         if num == errno.EXDEV:
             copy_it = True
         else:
-            raise DistutilsFileError(f"couldn't move '{src}' to '{dst}': {msg}")
+            raise DistutilsFileError(
+                f"couldn't move '{src}' to '{dst}': {msg}"
+            )
 
     if copy_it:
         copy_file(src, dst, verbose=verbose)

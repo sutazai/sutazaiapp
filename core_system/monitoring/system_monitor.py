@@ -40,7 +40,9 @@ class SystemMonitor:
                 },
                 "memory": {
                     "total_gb": round(memory_usage.total / (1024**3), 2),
-                    "available_gb": round(memory_usage.available / (1024**3), 2),
+                    "available_gb": round(
+                        memory_usage.available / (1024**3), 2
+                    ),
                     "used_percent": memory_usage.percent,
                 },
                 "disk": {

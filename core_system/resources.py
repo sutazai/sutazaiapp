@@ -176,7 +176,9 @@ class ResourceFinder(object):
 
     def get_resources(self, resource):
         def allowed(f):
-            return f != "__pycache__" and not f.endswith(self.skipped_extensions)
+            return f != "__pycache__" and not f.endswith(
+                self.skipped_extensions
+            )
 
         return set([f for f in os.listdir(resource.path) if allowed(f)])
 
@@ -226,7 +228,7 @@ class ZipResourceFinder(ResourceFinder):
         return path
 
     def _find(self, path):
-        path = path[self.prefix_len:]
+        path = path[self.prefix_len :]
         if path in self._files:
             result = True
         else:
@@ -245,7 +247,7 @@ class ZipResourceFinder(ResourceFinder):
 
     def get_cache_info(self, resource):
         prefix = self.loader.archive
-        path = resource.path[1 + len(prefix):]
+        path = resource.path[1 + len(prefix) :]
         return prefix, path
 
     def get_bytes(self, resource):
@@ -255,11 +257,11 @@ class ZipResourceFinder(ResourceFinder):
         return io.BytesIO(self.get_bytes(resource))
 
     def get_size(self, resource):
-        path = resource.path[self.prefix_len:]
+        path = resource.path[self.prefix_len :]
         return self._files[path][3]
 
     def get_resources(self, resource):
-        path = resource.path[self.prefix_len:]
+        path = resource.path[self.prefix_len :]
         if path and path[-1] != os.sep:
             path += os.sep
         plen = len(path)
@@ -274,7 +276,7 @@ class ZipResourceFinder(ResourceFinder):
         return result
 
     def _is_directory(self, path):
-        path = path[self.prefix_len:]
+        path = path[self.prefix_len :]
         if path and path[-1] != os.sep:
             path += os.sep
         i = bisect.bisect(self.index, path)

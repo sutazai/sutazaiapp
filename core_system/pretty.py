@@ -343,7 +343,9 @@ class Pretty(JupyterMixin):
             expand_all=self.expand_all,
         )
         text_width = (
-            max(cell_len(line) for line in pretty_str.splitlines()) if pretty_str else 0
+            max(cell_len(line) for line in pretty_str.splitlines())
+            if pretty_str
+            else 0
         )
         return Measurement(text_width, text_width)
 
@@ -425,7 +427,11 @@ class Node:
         elif self.children is not None:
             if self.children:
                 yield self.open_brace
-                if self.is_tuple and not self.is_namedtuple and len(self.children) == 1:
+                if (
+                    self.is_tuple
+                    and not self.is_namedtuple
+                    and len(self.children) == 1
+                ):
                     yield from self.children[0].iter_tokens()
                     yield ","
                 else:
@@ -480,7 +486,7 @@ class Node:
             line = lines[line_no]
             if line.expandable and not line.expanded:
                 if expand_all or not line.check_length(max_width):
-                    lines[line_no: line_no + 1] = line.expand(indent_size)
+                    lines[line_no : line_no + 1] = line.expand(indent_size)
             line_no += 1
 
         repr_str = "\n".join(str(line) for line in lines)
@@ -550,9 +556,7 @@ class _Line:
         if self.last:
             return f"{self.whitespace}{self.text}{self.node or ''}"
         else:
-            return (
-                f"{self.whitespace}{self.text}{self.node or ''}{self.suffix.rstrip()}"
-            )
+            return f"{self.whitespace}{self.text}{self.node or ''}{self.suffix.rstrip()}"
 
 
 def _is_namedtuple(obj: Any) -> bool:
@@ -705,7 +709,9 @@ def traverse(
                             append(child_node)
             else:
                 node = Node(
-                    value_repr=(f"<{class_name}>" if angular else f"{class_name}()"),
+                    value_repr=(
+                        f"<{class_name}>" if angular else f"{class_name}()"
+                    ),
                     children=[],
                     last=root,
                 )
@@ -728,7 +734,9 @@ def traverse(
                     )
 
                     def iter_attrs() -> (
-                        Iterable[Tuple[str, Any, Optional[Callable[[Any], str]]]]
+                        Iterable[
+                            Tuple[str, Any, Optional[Callable[[Any], str]]]
+                        ]
                     ):
                         """Iterate over attr fields and values."""
                         for attr in attr_fields:
@@ -742,12 +750,20 @@ def traverse(
                                     yield (
                                         attr.name,
                                         value,
-                                        (attr.repr if callable(attr.repr) else None),
+                                        (
+                                            attr.repr
+                                            if callable(attr.repr)
+                                            else None
+                                        ),
                                     )
 
-                    for last, (name, value, repr_callable) in loop_last(iter_attrs()):
+                    for last, (name, value, repr_callable) in loop_last(
+                        iter_attrs()
+                    ):
                         if repr_callable:
-                            child_node = Node(value_repr=str(repr_callable(value)))
+                            child_node = Node(
+                                value_repr=str(repr_callable(value))
+                            )
                         else:
                             child_node = _traverse(value, depth=depth + 1)
                         child_node.last = last
@@ -784,7 +800,9 @@ def traverse(
                 for last, field in loop_last(
                     field for field in fields(obj) if field.repr
                 ):
-                    child_node = _traverse(getattr(obj, field.name), depth=depth + 1)
+                    child_node = _traverse(
+                        getattr(obj, field.name), depth=depth + 1
+                    )
                     child_node.key_repr = field.name
                     child_node.last = last
                     child_node.key_separator = "="

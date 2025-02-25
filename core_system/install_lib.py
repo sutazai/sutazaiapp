@@ -84,7 +84,9 @@ class install_lib(orig.install_lib):
         if not hasattr(sys, "implementation"):
             return
 
-        base = os.path.join("__pycache__", "__init__." + sys.implementation.cache_tag)
+        base = os.path.join(
+            "__pycache__", "__init__." + sys.implementation.cache_tag
+        )
         yield base + ".pyc"
         yield base + ".pyo"
         yield base + ".opt-1.pyc"
@@ -118,7 +120,9 @@ class install_lib(orig.install_lib):
 
         def pf(src: str, dst: str):
             if dst in exclude:
-                log.warn("Skipping installation of %s (namespace package)", dst)
+                log.warn(
+                    "Skipping installation of %s (namespace package)", dst
+                )
                 return False
 
             log.info("copying %s -> %s", src, os.path.dirname(dst))

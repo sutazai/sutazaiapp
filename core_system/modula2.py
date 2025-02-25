@@ -1812,7 +1812,9 @@ class Modula2Lexer(RegexLexer):
 
     # intercept the token stream, modify token attributes and return them
     def get_tokens_unprocessed(self, text):
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             #
             # check for dialect tag if dialect has not been set by tag
             if not self.dialect_set_by_tag and token == Comment.Special:
@@ -1890,7 +1892,9 @@ class Modula2Lexer(RegexLexer):
                 #
                 if token is Comment.Preproc:
                     # mark ISO pragma as error for PIM dialects
-                    if value.startswith("<*") and self.dialect.startswith("m2pim"):
+                    if value.startswith("<*") and self.dialect.startswith(
+                        "m2pim"
+                    ):
                         token = Error
                     # mark PIM pragma as comment for other dialects
                     elif (

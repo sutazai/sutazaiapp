@@ -143,7 +143,10 @@ class Emitter:
     ) -> None:
         # NOQA
         self.dumper = dumper
-        if self.dumper is not None and getattr(self.dumper, "_emitter", None) is None:
+        if (
+            self.dumper is not None
+            and getattr(self.dumper, "_emitter", None) is None
+        ):
             self.dumper._emitter = self
         self.stream = stream
 
@@ -233,7 +236,9 @@ class Emitter:
         self.analysis: Any = None
         self.style: Any = None
 
-        self.scalar_after_indicator = True  # write a scalar on the same line as `---`
+        self.scalar_after_indicator = (
+            True  # write a scalar on the same line as `---`
+        )
 
         self.alt_null = "null"
 
@@ -249,7 +254,9 @@ class Emitter:
         if val is None:
             return
         if not hasattr(val, "write"):
-            raise YAMLStreamError("stream argument needs to have a write() method")
+            raise YAMLStreamError(
+                "stream argument needs to have a write() method"
+            )
         self._stream = val
 
     @property
@@ -347,7 +354,9 @@ class Emitter:
             self.write_stream_start()
             self.state = self.expect_first_document_start
         else:
-            raise EmitterError(f"expected StreamStartEvent, but got {self.event!s}")
+            raise EmitterError(
+                f"expected StreamStartEvent, but got {self.event!s}"
+            )
 
     def expect_nothing(self) -> None:
         raise EmitterError(f"expected nothing, but got {self.event!s}")
@@ -395,7 +404,9 @@ class Emitter:
             self.write_stream_end()
             self.state = self.expect_nothing
         else:
-            raise EmitterError(f"expected DocumentStartEvent, but got {self.event!s}")
+            raise EmitterError(
+                f"expected DocumentStartEvent, but got {self.event!s}"
+            )
 
     def expect_document_end(self) -> None:
         if isinstance(self.event, DocumentEndEvent):
@@ -406,7 +417,9 @@ class Emitter:
             self.flush_stream()
             self.state = self.expect_document_start
         else:
-            raise EmitterError(f"expected DocumentEndEvent, but got {self.event!s}")
+            raise EmitterError(
+                f"expected DocumentEndEvent, but got {self.event!s}"
+            )
 
     def expect_document_root(self) -> None:
         self.states.append(self.expect_document_end)
@@ -511,7 +524,9 @@ class Emitter:
 
     # Flow sequence handlers.
 
-    def expect_flow_sequence(self, force_flow_indent: Optional[bool] = False) -> None:
+    def expect_flow_sequence(
+        self, force_flow_indent: Optional[bool] = False
+    ) -> None:
         if force_flow_indent:
             self.increase_indent(flow=True, sequence=True)
         ind = self.indents.seq_flow_align(
@@ -519,7 +534,9 @@ class Emitter:
             self.column,
             force_flow_indent,
         )
-        self.write_indicator(" " * ind + self.flow_seq_start, True, whitespace=True)
+        self.write_indicator(
+            " " * ind + self.flow_seq_start, True, whitespace=True
+        )
         if not force_flow_indent:
             self.increase_indent(flow=True, sequence=True)
         self.flow_context.append("[")
@@ -652,7 +669,9 @@ class Emitter:
                 self.expect_node(mapping=True)
 
     def expect_flow_mapping_simple_value(self) -> None:
-        if getattr(self.event, "style", "?") != "-":  # suppress for flow style sets
+        if (
+            getattr(self.event, "style", "?") != "-"
+        ):  # suppress for flow style sets
             self.write_indicator(self.prefixed_colon, False)
         self.states.append(self.expect_flow_mapping_key)
         self.expect_node(mapping=True)
@@ -694,7 +713,10 @@ class Emitter:
             self.write_indent()
             ind = self.sequence_dash_offset  # if  len(self.indents) > 1 else 0
             self.write_indicator(" " * ind + "-", True, indention=True)
-            if nonl or self.sequence_dash_offset + 2 > self.best_sequence_indent:
+            if (
+                nonl
+                or self.sequence_dash_offset + 2 > self.best_sequence_indent
+            ):
                 self.no_newline = True
             self.states.append(self.expect_block_sequence_item)
             self.expect_node(sequence=True)
@@ -702,7 +724,9 @@ class Emitter:
     # Block mapping handlers.
 
     def expect_block_mapping(self) -> None:
-        if not self.mapping_context and not (self.compact_seq_map or self.column == 0):
+        if not self.mapping_context and not (
+            self.compact_seq_map or self.column == 0
+        ):
             self.write_line_break()
         self.increase_indent(flow=False, sequence=False)
         self.state = self.expect_first_block_mapping_key
@@ -735,7 +759,10 @@ class Emitter:
                 self.states.append(self.expect_block_mapping_simple_value)
                 self.expect_node(mapping=True, simple_key=True)
                 # test on style for alias in !!set
-                if isinstance(self.event, AliasEvent) and not self.event.style == "?":
+                if (
+                    isinstance(self.event, AliasEvent)
+                    and not self.event.style == "?"
+                ):
                     self.stream.write(" ")
             else:
                 self.write_indicator("?", True, indention=True)
@@ -747,7 +774,10 @@ class Emitter:
             # prefix = ''
             if self.indent == 0 and self.top_level_colon_align is not None:
                 # write non-prefixed colon
-                c = " " * (self.top_level_colon_align - self.column) + self.colon
+                c = (
+                    " " * (self.top_level_colon_align - self.column)
+                    + self.colon
+                )
             else:
                 c = self.prefixed_colon
             self.write_indicator(c, False)
@@ -818,7 +848,11 @@ class Emitter:
             or (
                 isinstance(self.event, ScalarEvent)
                 # if there is an explicit style for an empty string, it is a simple key
-                and not (self.analysis.empty and self.style and self.style not in "'\"")
+                and not (
+                    self.analysis.empty
+                    and self.style
+                    and self.style not in "'\""
+                )
                 and not self.analysis.multiline
             )
             or self.check_empty_sequence()
@@ -890,7 +924,9 @@ class Emitter:
         if self.event.style == '"' or self.canonical:
             return '"'
         if (
-            not self.event.style or self.event.style == "?" or self.event.style == "-"
+            not self.event.style
+            or self.event.style == "?"
+            or self.event.style == "-"
         ) and (self.event.implicit[0] or not self.event.implicit[2]):
             if not (
                 self.simple_key_context
@@ -976,17 +1012,24 @@ class Emitter:
     def prepare_version(self, version: Any) -> Any:
         major, minor = version
         if major != 1:
-            raise EmitterError(f"unsupported YAML version: {major:d}.{minor:d}")
+            raise EmitterError(
+                f"unsupported YAML version: {major:d}.{minor:d}"
+            )
         return f"{major:d}.{minor:d}"
 
     def prepare_tag_handle(self, handle: Any) -> Any:
         if not handle:
             raise EmitterError("tag handle must not be empty")
         if handle[0] != "!" or handle[-1] != "!":
-            raise EmitterError(f"tag handle must start and end with '!': {handle!r}")
+            raise EmitterError(
+                f"tag handle must start and end with '!': {handle!r}"
+            )
         for ch in handle[1:-1]:
             if not (
-                "0" <= ch <= "9" or "A" <= ch <= "Z" or "a" <= ch <= "z" or ch in "-_"
+                "0" <= ch <= "9"
+                or "A" <= ch <= "Z"
+                or "a" <= ch <= "z"
+                or ch in "-_"
             ):
                 raise EmitterError(
                     f"invalid character {ch!r} in the tag handle: {handle!r}"
@@ -1007,7 +1050,12 @@ class Emitter:
                 ch_set += "#"
         while end < len(prefix):
             ch = prefix[end]
-            if "0" <= ch <= "9" or "A" <= ch <= "Z" or "a" <= ch <= "z" or ch in ch_set:
+            if (
+                "0" <= ch <= "9"
+                or "A" <= ch <= "Z"
+                or "a" <= ch <= "z"
+                or ch in ch_set
+            ):
                 end += 1
             else:
                 if start < end:
@@ -1030,9 +1078,11 @@ class Emitter:
         suffix = tag
         prefixes = sorted(self.tag_prefixes.keys())
         for prefix in prefixes:
-            if tag.startswith(prefix) and (prefix == "!" or len(prefix) < len(tag)):
+            if tag.startswith(prefix) and (
+                prefix == "!" or len(prefix) < len(tag)
+            ):
                 handle = self.tag_prefixes[prefix]
-                suffix = tag[len(prefix):]
+                suffix = tag[len(prefix) :]
         chunks: List[Any] = []
         start = end = 0
         ch_set = "-;/?:@&=+$,_.~*'()[]"
@@ -1144,7 +1194,9 @@ class Emitter:
                     block_indicators = True
             else:
                 # Some indicators cannot appear within a scalar as well.
-                if ch in ",[]{}":  # http://yaml.org/spec/1.2/spec.html#id2788859
+                if (
+                    ch in ",[]{}"
+                ):  # http://yaml.org/spec/1.2/spec.html#id2788859
                     flow_indicators = True
                 if ch == "?" and self.serializer.use_version == (1, 1):
                     flow_indicators = True
@@ -1229,9 +1281,9 @@ class Emitter:
         # Spaces followed by breaks, as well as special character are only
         # allowed for double quoted scalars.
         if special_characters:
-            allow_flow_plain = allow_block_plain = allow_single_quoted = allow_block = (
-                False
-            )
+            allow_flow_plain = allow_block_plain = allow_single_quoted = (
+                allow_block
+            ) = False
         elif space_break:
             allow_flow_plain = allow_block_plain = allow_single_quoted = False
             if not self.allow_space_break:
@@ -1486,7 +1538,7 @@ class Emitter:
                             '"' not in text[end:space_pos]
                             and "'" not in text[end:space_pos]
                             and text[space_pos + 1] != " "
-                            and text[end - 1: end + 1] != "  "
+                            and text[end - 1 : end + 1] != "  "
                         ):
                             need_backquote = False
                     except (ValueError, IndexError):
@@ -1599,7 +1651,10 @@ class Emitter:
                         data = data.encode(self.encoding)
                     self.stream.write(data)
                     if ch == "\a":
-                        if end < (len(text) - 1) and not text[end + 2].isspace():
+                        if (
+                            end < (len(text) - 1)
+                            and not text[end + 2].isspace()
+                        ):
                             self.write_line_break()
                             self.write_indent()
                             end += 2  # \a and the space that is inserted on the fold
@@ -1650,7 +1705,9 @@ class Emitter:
                             self.write_line_break(br)
                     if ch is not None:
                         if self.root_context:
-                            idnx = self.indent if self.indent is not None else 0
+                            idnx = (
+                                self.indent if self.indent is not None else 0
+                            )
                             self.stream.write(" " * (_indent + idnx))
                         else:
                             self.write_indent()
@@ -1695,7 +1752,11 @@ class Emitter:
                 ch = text[end]
             if spaces:
                 if ch != " ":
-                    if start + 1 == end and self.column > self.best_width and split:
+                    if (
+                        start + 1 == end
+                        and self.column > self.best_width
+                        and split
+                    ):
                         self.write_indent()
                         self.whitespace = False
                         self.indention = False
@@ -1764,7 +1825,12 @@ class Emitter:
             # at least one space if the current column >= the start column of the comment
             # but not at the start of a line
             nr_spaces = col - self.column
-            if self.column and value.strip() and nr_spaces < 1 and value[0] != "\n":
+            if (
+                self.column
+                and value.strip()
+                and nr_spaces < 1
+                and value[0] != "\n"
+            ):
                 nr_spaces = 1
             value = " " * nr_spaces + value
             try:
@@ -1822,9 +1888,11 @@ class RoundTripEmitter(Emitter):
         # print('handling', repr(tag), repr(suffix), repr(handle))
         if handle is None:
             for prefix in prefixes:
-                if tag.startswith(prefix) and (prefix == "!" or len(prefix) < len(tag)):
+                if tag.startswith(prefix) and (
+                    prefix == "!" or len(prefix) < len(tag)
+                ):
                     handle = self.tag_prefixes[prefix]
-                    suffix = suffix[len(prefix):]
+                    suffix = suffix[len(prefix) :]
         if handle:
             return f"{handle!s}{suffix!s}"
         else:

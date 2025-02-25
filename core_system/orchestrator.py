@@ -73,7 +73,9 @@ class SupremeAIOrchestrator:
                 init_module = os.path.join(agent_path, "__init__.py")
                 if os.path.exists(init_module):
                     try:
-                        module = importlib.import_module(f"ai_agents.{agent_name}")
+                        module = importlib.import_module(
+                            f"ai_agents.{agent_name}"
+                        )
                         agent_class = getattr(
                             module, f"{agent_name.capitalize()}Agent", None
                         )
@@ -84,12 +86,16 @@ class SupremeAIOrchestrator:
                             logger.info(f"✅ Loaded Agent: {agent_name}")
 
                     except Exception as e:
-                        logger.error(f"❌ Failed to load agent {agent_name}: {e}")
+                        logger.error(
+                            f"❌ Failed to load agent {agent_name}: {e}"
+                        )
 
         except Exception as e:
             logger.critical(f"Agent discovery failed: {e}")
 
-    def execute_collaborative_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_collaborative_task(
+        self, task: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Execute a collaborative task across multiple agents
 
@@ -115,12 +121,16 @@ class SupremeAIOrchestrator:
                     self._track_agent_performance(agent_name, agent_result)
 
                 except Exception as e:
-                    logger.error(f"Agent {agent_name} task execution failed: {e}")
+                    logger.error(
+                        f"Agent {agent_name} task execution failed: {e}"
+                    )
                     results[agent_name] = {"status": "failed", "error": str(e)}
 
         return results
 
-    def _track_agent_performance(self, agent_name: str, result: Dict[str, Any]):
+    def _track_agent_performance(
+        self, agent_name: str, result: Dict[str, Any]
+    ):
         """
         Track and analyze agent performance for potential self-improvement
 
@@ -150,14 +160,20 @@ class SupremeAIOrchestrator:
         Args:
             agent_name (str): Name of the agent requiring improvement
         """
-        logger.warning(f"🔧 Initiating self-improvement for agent: {agent_name}")
+        logger.warning(
+            f"🔧 Initiating self-improvement for agent: {agent_name}"
+        )
 
         # Analyze performance history
         performance_data = self.agent_performance_history.get(agent_name, [])
 
         improvement_strategy = {
-            "analyze_failures": self._analyze_failure_patterns(performance_data),
-            "recommend_updates": self._generate_improvement_recommendations(agent_name),
+            "analyze_failures": self._analyze_failure_patterns(
+                performance_data
+            ),
+            "recommend_updates": self._generate_improvement_recommendations(
+                agent_name
+            ),
         }
 
         # Log improvement strategy
@@ -179,7 +195,9 @@ class SupremeAIOrchestrator:
         failure_analysis = {
             "total_attempts": len(performance_data),
             "failure_rate": sum(
-                1 for record in performance_data if record["success_rate"] < 0.5
+                1
+                for record in performance_data
+                if record["success_rate"] < 0.5
             )
             / len(performance_data),
             "common_failure_reasons": {},
@@ -187,7 +205,9 @@ class SupremeAIOrchestrator:
 
         return failure_analysis
 
-    def _generate_improvement_recommendations(self, agent_name: str) -> List[str]:
+    def _generate_improvement_recommendations(
+        self, agent_name: str
+    ) -> List[str]:
         """
         Generate improvement recommendations for a specific agent
 

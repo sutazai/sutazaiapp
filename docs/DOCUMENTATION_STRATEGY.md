@@ -30,7 +30,6 @@
 - System Configuration Protocols
 - Monitoring and Maintenance Procedures
 - Disaster Recovery Strategies
-- Security Compliance Guidelines
 
 ## 3. Documentation Tools and Technologies
 
@@ -60,7 +59,6 @@
 │   ├── deployment.md
 │   ├── monitoring.md
 │   └── troubleshooting.md
-├── security/
 │   ├── compliance.md
 │   └── best_practices.md
 └── performance/

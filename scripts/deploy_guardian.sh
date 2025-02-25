@@ -24,7 +24,6 @@ analyze_environment() {
   (( $(jq '.storage.root_gb' <<< "$HARDWARE_PROFILE") < 50 )) && \
     warnings+=("Low disk space: $(jq '.storage.root_gb' <<< "$HARDWARE_PROFILE")GB")
 
-  # Security checks
   [[ $(sysctl -n vm.swappiness) -gt 30 ]] && \
     warnings+=("High swappiness: $(sysctl -n vm.swappiness)")
   

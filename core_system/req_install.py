@@ -113,7 +113,9 @@ class InstallRequirement:
         if self.editable:
             assert link
             if link.is_file:
-                self.source_dir = os.path.normpath(os.path.abspath(link.file_path))
+                self.source_dir = os.path.normpath(
+                    os.path.abspath(link.file_path)
+                )
 
         # original_link is the direct URL that was provided by the user for the
         # requirement, either directly or via a constraints file.
@@ -264,7 +266,10 @@ class InstallRequirement:
                 "Checking if build backend supports build_editable"
             )
             with self.pep517_backend.subprocess_runner(runner):
-                return "build_editable" in self.pep517_backend._supported_features()
+                return (
+                    "build_editable"
+                    in self.pep517_backend._supported_features()
+                )
 
     @property
     def specifier(self) -> SpecifierSet:
@@ -289,7 +294,9 @@ class InstallRequirement:
             "===",
         }
 
-    def match_markers(self, extras_requested: Optional[Iterable[str]] = None) -> bool:
+    def match_markers(
+        self, extras_requested: Optional[Iterable[str]] = None
+    ) -> bool:
         if not extras_requested:
             # Provide an extra to safely evaluate the markers
             # without matching any extra
@@ -448,7 +455,9 @@ class InstallRequirement:
         """
         if self.req is None:
             return
-        existing_dist = get_default_environment().get_distribution(self.req.name)
+        existing_dist = get_default_environment().get_distribution(
+            self.req.name
+        )
         if not existing_dist:
             return
 
@@ -461,7 +470,10 @@ class InstallRequirement:
             if use_user_site:
                 if existing_dist.in_usersite:
                     self.should_reinstall = True
-                elif running_under_virtualenv() and existing_dist.in_site_packages:
+                elif (
+                    running_under_virtualenv()
+                    and existing_dist.in_site_packages
+                ):
                     raise InstallationError(
                         f"Will not install to the user site because it will "
                         f"lack sys.path precedence to {existing_dist.raw_name} "
@@ -639,7 +651,11 @@ class InstallRequirement:
     def assert_source_matches_version(self) -> None:
         assert self.source_dir, f"No source dir for {self}"
         version = self.metadata["version"]
-        if self.req and self.req.specifier and version not in self.req.specifier:
+        if (
+            self.req
+            and self.req.specifier
+            and version not in self.req.specifier
+        ):
             logger.warning(
                 "Requested %s, but installing version %s",
                 self,
@@ -744,12 +760,14 @@ class InstallRequirement:
         uninstalled_pathset.remove(auto_confirm, verbose)
         return uninstalled_pathset
 
-    def _get_archive_name(self, path: str, parentdir: str, rootdir: str) -> str:
+    def _get_archive_name(
+        self, path: str, parentdir: str, rootdir: str
+    ) -> str:
         def _clean_zip_name(name: str, prefix: str) -> str:
             assert name.startswith(
                 prefix + os.path.sep
             ), f"name {name!r} doesn't start with prefix {prefix!r}"
-            name = name[len(prefix) + 1:]
+            name = name[len(prefix) + 1 :]
             name = name.replace(os.path.sep, "/")
             return name
 
@@ -803,7 +821,9 @@ class InstallRequirement:
             allowZip64=True,
         )
         with zip_output:
-            dir = os.path.normcase(os.path.abspath(self.unpacked_source_directory))
+            dir = os.path.normcase(
+                os.path.abspath(self.unpacked_source_directory)
+            )
             for dirpath, dirnames, filenames in os.walk(dir):
                 for dirname in dirnames:
                     dir_arcname = self._get_archive_name(
@@ -854,7 +874,9 @@ class InstallRequirement:
                     self,
                 )
             install_editable_legacy(
-                global_options=(global_options if global_options is not None else []),
+                global_options=(
+                    global_options if global_options is not None else []
+                ),
                 prefix=prefix,
                 home=home,
                 use_user_site=use_user_site,
@@ -911,7 +933,9 @@ def check_invalid_constraint_type(req: InstallRequirement) -> str:
     return problem
 
 
-def _has_option(options: Values, reqs: List[InstallRequirement], option: str) -> bool:
+def _has_option(
+    options: Values, reqs: List[InstallRequirement], option: str
+) -> bool:
     if getattr(options, option, None):
         return True
     for req in reqs:

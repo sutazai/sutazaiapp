@@ -78,7 +78,9 @@ if TYPE_CHECKING:
     class Dataclass:
         # stdlib attributes
         __dataclass_fields__: ClassVar[Dict[str, Any]]
-        __dataclass_params__: ClassVar[Any]  # in reality `dataclasses._DataclassParams`
+        __dataclass_params__: ClassVar[
+            Any
+        ]  # in reality `dataclasses._DataclassParams`
         __post_init__: ClassVar[Callable[..., None]]
 
         # Added by pydantic
@@ -196,7 +198,9 @@ def dataclass(
     validate_on_init: Optional[bool] = None,
     use_proxy: Optional[bool] = None,
     kw_only: bool = False,
-) -> Union[Callable[[Type[_T]], "DataclassClassOrWrapper"], "DataclassClassOrWrapper"]:
+) -> Union[
+    Callable[[Type[_T]], "DataclassClassOrWrapper"], "DataclassClassOrWrapper"
+]:
     """
     Like the python standard lib dataclasses but with type validation.
     The result is either a pydantic dataclass that will validate input data
@@ -249,12 +253,16 @@ def dataclass(
             default_validate_on_init = True
 
         should_validate_on_init = (
-            default_validate_on_init if validate_on_init is None else validate_on_init
+            default_validate_on_init
+            if validate_on_init is None
+            else validate_on_init
         )
         _add_pydantic_validation_attributes(
             cls, the_config, should_validate_on_init, dc_cls_doc
         )
-        dc_cls.__pydantic_model__.__try_update_forward_refs__(**{cls.__name__: cls})
+        dc_cls.__pydantic_model__.__try_update_forward_refs__(
+            **{cls.__name__: cls}
+        )
         return dc_cls
 
     if _cls is None:
@@ -315,12 +323,18 @@ def _add_pydantic_validation_attributes(  # noqa: C901 (ignore complexity)
     init = dc_cls.__init__
 
     @wraps(init)
-    def handle_extra_init(self: "Dataclass", *args: Any, **kwargs: Any) -> None:
+    def handle_extra_init(
+        self: "Dataclass", *args: Any, **kwargs: Any
+    ) -> None:
         if config.extra == Extra.ignore:
             init(
                 self,
                 *args,
-                **{k: v for k, v in kwargs.items() if k in self.__dataclass_fields__},
+                **{
+                    k: v
+                    for k, v in kwargs.items()
+                    if k in self.__dataclass_fields__
+                },
             )
 
         elif config.extra == Extra.allow:
@@ -329,7 +343,11 @@ def _add_pydantic_validation_attributes(  # noqa: C901 (ignore complexity)
             init(
                 self,
                 *args,
-                **{k: v for k, v in kwargs.items() if k in self.__dataclass_fields__},
+                **{
+                    k: v
+                    for k, v in kwargs.items()
+                    if k in self.__dataclass_fields__
+                },
             )
 
         else:
@@ -342,7 +360,9 @@ def _add_pydantic_validation_attributes(  # noqa: C901 (ignore complexity)
             post_init = dc_cls.__post_init__
 
         @wraps(post_init)
-        def new_post_init(self: "Dataclass", *args: Any, **kwargs: Any) -> None:
+        def new_post_init(
+            self: "Dataclass", *args: Any, **kwargs: Any
+        ) -> None:
             if config.post_init_call == "before_validation":
                 post_init(self, *args, **kwargs)
 
@@ -372,13 +392,17 @@ def _add_pydantic_validation_attributes(  # noqa: C901 (ignore complexity)
 
                 # get all initvars and their default values
                 initvars_and_values: Dict[str, Any] = {}
-                for i, f in enumerate(self.__class__.__dataclass_fields__.values()):
+                for i, f in enumerate(
+                    self.__class__.__dataclass_fields__.values()
+                ):
                     if f._field_type is dataclasses._FIELD_INITVAR:  # type: ignore[attr-defined]
                         try:
                             # set arg value by default
                             initvars_and_values[f.name] = args[i]
                         except IndexError:
-                            initvars_and_values[f.name] = kwargs.get(f.name, f.default)
+                            initvars_and_values[f.name] = kwargs.get(
+                                f.name, f.default
+                            )
 
                 self.__post_init_post_parse__(**initvars_and_values)
 
@@ -462,7 +486,9 @@ def create_pydantic_model_from_dataclass(
         __cls_kwargs__={"__resolve_forward_refs__": False},
         **field_definitions,
     )
-    model.__doc__ = dc_cls_doc if dc_cls_doc is not None else dc_cls.__doc__ or ""
+    model.__doc__ = (
+        dc_cls_doc if dc_cls_doc is not None else dc_cls.__doc__ or ""
+    )
     return model
 
 
@@ -488,7 +514,9 @@ def _dataclass_validate_values(self: "Dataclass") -> None:
         input_data = {
             k: v
             for k, v in self.__dict__.items()
-            if not (isinstance(v, FieldInfo) or _is_field_cached_property(self, k))
+            if not (
+                isinstance(v, FieldInfo) or _is_field_cached_property(self, k)
+            )
         }
     else:
         input_data = {
@@ -513,7 +541,9 @@ def _dataclass_validate_assignment_setattr(
         d.pop(name, None)
         known_field = self.__pydantic_model__.__fields__.get(name, None)
         if known_field:
-            value, error_ = known_field.validate(value, d, loc=name, cls=self.__class__)
+            value, error_ = known_field.validate(
+                value, d, loc=name, cls=self.__class__
+            )
             if error_:
                 raise ValidationError([error_], self.__class__)
 
@@ -559,4 +589,6 @@ def make_dataclass_validator(
     and yield the validators
     It retrieves the parameters of the dataclass and forwards them to the newly created dataclass
     """
-    yield from _get_validators(dataclass(dc_cls, config=config, use_proxy=True))
+    yield from _get_validators(
+        dataclass(dc_cls, config=config, use_proxy=True)
+    )

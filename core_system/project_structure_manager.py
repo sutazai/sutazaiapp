@@ -56,8 +56,6 @@ class AdvancedProjectStructureManager:
                     "management",
                 ],
             },
-            "security": {
-                "description": "Security Management and Threat Detection",
                 "subdirs": [
                     "authentication",
                     "encryption",
@@ -66,7 +64,6 @@ class AdvancedProjectStructureManager:
             },
             "tests": {
                 "description": "Comprehensive Testing Framework",
-                "subdirs": ["unit", "integration", "performance", "security"],
             },
         }
     }
@@ -92,7 +89,9 @@ class AdvancedProjectStructureManager:
             format="%(asctime)s - %(levelname)s: %(message)s",
             filename=os.path.join(log_dir, "advanced_project_structure.log"),
         )
-        self.logger = logging.getLogger("SutazAI.AdvancedProjectStructureManager")
+        self.logger = logging.getLogger(
+            "SutazAI.AdvancedProjectStructureManager"
+        )
 
         # Load NLP model for semantic analysis
         try:
@@ -202,9 +201,9 @@ class AdvancedProjectStructureManager:
                             module_ast = ast.parse(f.read())
 
                         # Extract module name
-                        module_name = os.path.relpath(full_path, self.base_dir).replace(
-                            "/", "."
-                        )[:-3]
+                        module_name = os.path.relpath(
+                            full_path, self.base_dir
+                        ).replace("/", ".")[:-3]
 
                         # Add module as a node with semantic metadata
                         dependency_graph.add_node(module_name, path=full_path)
@@ -213,11 +212,15 @@ class AdvancedProjectStructureManager:
                         for node in ast.walk(module_ast):
                             if isinstance(node, ast.Import):
                                 for alias in node.names:
-                                    dependency_graph.add_edge(module_name, alias.name)
+                                    dependency_graph.add_edge(
+                                        module_name, alias.name
+                                    )
 
                             elif isinstance(node, ast.ImportFrom):
                                 if node.module:
-                                    dependency_graph.add_edge(module_name, node.module)
+                                    dependency_graph.add_edge(
+                                        module_name, node.module
+                                    )
 
                     except Exception as e:
                         self.logger.warning(
@@ -259,7 +262,9 @@ class AdvancedProjectStructureManager:
             }
 
         except Exception as e:
-            self.logger.warning(f"Code complexity analysis failed for {file_path}: {e}")
+            self.logger.warning(
+                f"Code complexity analysis failed for {file_path}: {e}"
+            )
             return {}
 
     def generate_project_documentation(self) -> Dict[str, Any]:
@@ -296,7 +301,9 @@ class AdvancedProjectStructureManager:
             for file in files:
                 if file.endswith(".py"):
                     full_path = os.path.join(root, file)
-                    complexity_metrics = self.analyze_code_complexity(full_path)
+                    complexity_metrics = self.analyze_code_complexity(
+                        full_path
+                    )
 
                     if complexity_metrics:
                         documentation["dependencies"]["complexity_metrics"][
@@ -305,7 +312,9 @@ class AdvancedProjectStructureManager:
 
         # Semantic insights (if NLP model is available)
         if self.nlp:
-            documentation["semantic_insights"] = self._generate_semantic_insights()
+            documentation["semantic_insights"] = (
+                self._generate_semantic_insights()
+            )
 
         # Persist documentation
         doc_path = os.path.join(
@@ -316,7 +325,9 @@ class AdvancedProjectStructureManager:
         with open(doc_path, "w") as f:
             json.dump(documentation, f, indent=2)
 
-        self.logger.info(f"Advanced project documentation generated: {doc_path}")
+        self.logger.info(
+            f"Advanced project documentation generated: {doc_path}"
+        )
 
         return documentation
 
@@ -342,7 +353,8 @@ class AdvancedProjectStructureManager:
 
                         # Extract named entities
                         entities = [
-                            {"text": ent.text, "label": ent.label_} for ent in doc.ents
+                            {"text": ent.text, "label": ent.label_}
+                            for ent in doc.ents
                         ]
 
                         # Extract key phrases
@@ -376,7 +388,9 @@ class AdvancedProjectStructureManager:
             )
 
         except Exception as e:
-            self.logger.error(f"Advanced autonomous project organization failed: {e}")
+            self.logger.error(
+                f"Advanced autonomous project organization failed: {e}"
+            )
 
 
 def main():

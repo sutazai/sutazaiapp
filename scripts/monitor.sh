@@ -1,13 +1,11 @@
 #!/bin/bash
 case $1 in
     start)
-        sutazai-cli monitor --frequency=1s --detailed --security-level=maximum
         ;;
     status)
         sutazai-cli system-status --detailed --encrypted
         ;;
     audit)
-        sutazai-cli security-audit --full --founder-verify
         ;;
     *)
         echo "Usage: $0 {start|status|audit}"

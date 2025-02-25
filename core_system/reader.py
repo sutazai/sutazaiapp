@@ -77,7 +77,10 @@ class Reader:
 
     def __init__(self, stream: Any, loader: Any = None) -> None:
         self.loader = loader
-        if self.loader is not None and getattr(self.loader, "_reader", None) is None:
+        if (
+            self.loader is not None
+            and getattr(self.loader, "_reader", None) is None
+        ):
             self.loader._reader = self
         self.reset_reader()
         self.stream: Any = stream  # as .read is called
@@ -117,7 +120,9 @@ class Reader:
             self.determine_encoding()
         else:
             if not hasattr(val, "read"):
-                raise YAMLStreamError("stream argument needs to have a read() method")
+                raise YAMLStreamError(
+                    "stream argument needs to have a read() method"
+                )
             self._stream = val
             self.name = getattr(self.stream, "name", "<file>")
             self.eof = False
@@ -134,7 +139,7 @@ class Reader:
     def prefix(self, length: int = 1) -> Any:
         if self.pointer + length >= len(self.buffer):
             self.update(length)
-        return self.buffer[self.pointer: self.pointer + length]
+        return self.buffer[self.pointer : self.pointer + length]
 
     def forward_1_1(self, length: int = 1) -> None:
         if self.pointer + length + 1 >= len(self.buffer):
@@ -159,7 +164,9 @@ class Reader:
             ch = self.buffer[self.pointer]
             self.pointer += 1
             self.index += 1
-            if ch == "\n" or (ch == "\r" and self.buffer[self.pointer] != "\n"):
+            if ch == "\n" or (
+                ch == "\r" and self.buffer[self.pointer] != "\n"
+            ):
                 self.line += 1
                 self.column = 0
             elif ch != "\ufeff":
@@ -180,7 +187,9 @@ class Reader:
             return FileMark(self.name, self.index, self.line, self.column)
 
     def determine_encoding(self) -> None:
-        while not self.eof and (self.raw_buffer is None or len(self.raw_buffer) < 2):
+        while not self.eof and (
+            self.raw_buffer is None or len(self.raw_buffer) < 2
+        ):
             self.update_raw()
         if isinstance(self.raw_buffer, bytes):
             if self.raw_buffer.startswith(codecs.BOM_UTF16_LE):
@@ -202,9 +211,9 @@ class Reader:
         "]"  # NOQA
     )
 
-    _printable_ascii = ("\x09\x0a\x0d" + "".join(map(chr, range(0x20, 0x7F)))).encode(
-        "ascii"
-    )
+    _printable_ascii = (
+        "\x09\x0a\x0d" + "".join(map(chr, range(0x20, 0x7F)))
+    ).encode("ascii")
 
     @classmethod
     def _get_non_printable_ascii(cls: Text, data: bytes) -> Optional[Tuple[int, Text]]:  # type: ignore # NOQA
@@ -216,7 +225,9 @@ class Reader:
         return ascii_bytes.index(non_printable), non_printable.decode("ascii")
 
     @classmethod
-    def _get_non_printable_regex(cls, data: Text) -> Optional[Tuple[int, Text]]:
+    def _get_non_printable_regex(
+        cls, data: Text
+    ) -> Optional[Tuple[int, Text]]:
         match = cls.NON_PRINTABLE.search(data)
         if not bool(match):
             return None
@@ -245,7 +256,7 @@ class Reader:
     def update(self, length: int) -> None:
         if self.raw_buffer is None:
             return
-        self.buffer = self.buffer[self.pointer:]
+        self.buffer = self.buffer[self.pointer :]
         self.pointer = 0
         while len(self.buffer) < length:
             if not self.eof:
@@ -259,11 +270,15 @@ class Reader:
                     character = self.raw_buffer[exc.start]
                     if self.stream is not None:
                         position = (
-                            self.stream_pointer - len(self.raw_buffer) + exc.start
+                            self.stream_pointer
+                            - len(self.raw_buffer)
+                            + exc.start
                         )
                     elif self.stream is not None:
                         position = (
-                            self.stream_pointer - len(self.raw_buffer) + exc.start
+                            self.stream_pointer
+                            - len(self.raw_buffer)
+                            + exc.start
                         )
                     else:
                         position = exc.start

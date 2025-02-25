@@ -93,7 +93,9 @@ class PipfileUpdater:
                 if package_type in data:
                     if dependency.full_name in data[package_type]:
                         data[package_type][dependency.full_name] = (
-                            "{spec}{version}".format(spec=spec, version=version)
+                            "{spec}{version}".format(
+                                spec=spec, version=version
+                            )
                         )
         try:
             from pipenv.project import Project

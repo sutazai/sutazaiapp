@@ -13,6 +13,7 @@ from typing import Any, Dict, Set, TypeVar
 # Simple utility functions for copying and model manipulation
 # This is a simplified version that doesn't rely on Pydantic internals
 
+
 def object_setattr(obj: Any, name: str, value: Any) -> None:
     """Set attribute on object, bypassing __setattr__."""
     object.__setattr__(obj, name, value)
@@ -33,17 +34,21 @@ def is_dict_like(obj: Any) -> bool:
     return isinstance(obj, dict)
 
 
-def copy_dict_exclude(d: Dict[str, Any], exclude_keys: Set[str]) -> Dict[str, Any]:
+def copy_dict_exclude(
+    d: Dict[str, Any], exclude_keys: Set[str]
+) -> Dict[str, Any]:
     """Copy a dictionary excluding certain keys."""
     return {k: v for k, v in d.items() if k not in exclude_keys}
 
 
-def copy_dict_include(d: Dict[str, Any], include_keys: Set[str]) -> Dict[str, Any]:
+def copy_dict_include(
+    d: Dict[str, Any], include_keys: Set[str]
+) -> Dict[str, Any]:
     """Copy a dictionary including only certain keys."""
     return {k: v for k, v in d.items() if k in include_keys}
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def copy_and_set_values(
@@ -54,26 +59,26 @@ def copy_and_set_values(
 ) -> T:
     """
     Create a copy of an object with new values.
-    
+
     Args:
         obj: The object to copy
         values: New values to set
         deep: Whether to perform a deep copy
-        
+
     Returns:
         A new instance with the values set
     """
     if deep:
         values = deepcopy(values)
-    
+
     # Create a new instance of the same class
     cls = obj.__class__
     new_obj = cls.__new__(cls)
-    
+
     # Set the values
     for key, value in values.items():
         setattr(new_obj, key, value)
-    
+
     return new_obj
 
 

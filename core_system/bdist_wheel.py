@@ -65,7 +65,9 @@ def python_tag() -> str:
 def get_platform(archive_root: str | None) -> str:
     """Return our platform name 'win32', 'linux_x86_64'"""
     result = sysconfig.get_platform()
-    if result.startswith("macosx") and archive_root is not None:  # pragma: no cover
+    if (
+        result.startswith("macosx") and archive_root is not None
+    ):  # pragma: no cover
         from wheel.macosx_libfile import calculate_macosx_platform_tag
 
         result = calculate_macosx_platform_tag(archive_root, result)
@@ -106,7 +108,9 @@ def get_abi_tag() -> str | None:
     if not soabi and impl in ("cp", "pp") and hasattr(sys, "maxunicode"):
         d = ""
         u = ""
-        if get_flag("Py_DEBUG", hasattr(sys, "gettotalrefcount"), warn=(impl == "cp")):
+        if get_flag(
+            "Py_DEBUG", hasattr(sys, "gettotalrefcount"), warn=(impl == "cp")
+        ):
             d = "d"
 
         abi = f"{impl}{tags.interpreter_version()}{d}{u}"
@@ -140,7 +144,7 @@ def safer_name(name: str) -> str:
 
 def safer_version(version: str) -> str:
     """Like safe_version, but with additional replacements."""
-    return safe_version(version).replace('-', '_')
+    return safe_version(version).replace("-", "_")
 
 
 class bdist_wheel(command_module.Command):
@@ -256,7 +260,9 @@ class bdist_wheel(command_module.Command):
             self.bdist_dir = os.path.join(bdist_base, "wheel")
 
         if self.dist_info_dir is None:
-            egg_info = cast(egg_info_cls, self.distribution.get_command_obj("egg_info"))
+            egg_info = cast(
+                egg_info_cls, self.distribution.get_command_obj("egg_info")
+            )
             egg_info.ensure_finalized()  # needed for correct `wheel_dist_name`
 
         self.data_dir = self.wheel_dist_name + ".data"
@@ -267,7 +273,8 @@ class bdist_wheel(command_module.Command):
         self.set_undefined_options("bdist", *zip(need_options, need_options))
 
         self.root_is_pure = not (
-            self.distribution.has_ext_modules() or self.distribution.has_c_libraries()
+            self.distribution.has_ext_modules()
+            or self.distribution.has_c_libraries()
         )
 
         self._validate_py_limited_api()
@@ -276,7 +283,9 @@ class bdist_wheel(command_module.Command):
         wheel = self.distribution.get_option_dict("wheel")
         if "universal" in wheel:  # pragma: no cover
             # please don't define this in your global configs
-            log.warn("The [wheel] section is deprecated. Use [bdist_wheel] instead.")
+            log.warn(
+                "The [wheel] section is deprecated. Use [bdist_wheel] instead."
+            )
             val = wheel["universal"][1].strip()
             if val.lower() in ("1", "true", "yes"):
                 self.universal = True
@@ -294,15 +303,22 @@ class bdist_wheel(command_module.Command):
                 due_date=(2025, 8, 30),  # Introduced in 2024-08-30
             )
 
-        if self.build_number is not None and not self.build_number[:1].isdigit():
-            raise ValueError("Build tag (build-number) must start with a digit.")
+        if (
+            self.build_number is not None
+            and not self.build_number[:1].isdigit()
+        ):
+            raise ValueError(
+                "Build tag (build-number) must start with a digit."
+            )
 
     def _validate_py_limited_api(self) -> None:
         if not self.py_limited_api:
             return
 
         if not re.match(PY_LIMITED_API_PATTERN, self.py_limited_api):
-            raise ValueError(f"py-limited-api must match '{PY_LIMITED_API_PATTERN}'")
+            raise ValueError(
+                f"py-limited-api must match '{PY_LIMITED_API_PATTERN}'"
+            )
 
         if sysconfig.get_config_var("Py_GIL_DISABLED"):
             raise ValueError(
@@ -352,7 +368,10 @@ class bdist_wheel(command_module.Command):
                     plat_name = "linux_armv7l"
 
         plat_name = (
-            plat_name.lower().replace("-", "_").replace(".", "_").replace(" ", "_")
+            plat_name.lower()
+            .replace("-", "_")
+            .replace(".", "_")
+            .replace(" ", "_")
         )
 
         if self.root_is_pure:
@@ -366,7 +385,9 @@ class bdist_wheel(command_module.Command):
             impl_ver = tags.interpreter_version()
             impl = impl_name + impl_ver
             # We don't work on CPython 3.1, 3.0.
-            if self.py_limited_api and (impl_name + impl_ver).startswith("cp3"):
+            if self.py_limited_api and (impl_name + impl_ver).startswith(
+                "cp3"
+            ):
                 impl = self.py_limited_api
                 abi_tag = "abi3"
             else:
@@ -407,14 +428,18 @@ class bdist_wheel(command_module.Command):
         # Use a custom scheme for the archive, because we have to decide
         # at installation time which scheme to use.
         for key in ("headers", "scripts", "data", "purelib", "platlib"):
-            setattr(install, "install_" + key, os.path.join(self.data_dir, key))
+            setattr(
+                install, "install_" + key, os.path.join(self.data_dir, key)
+            )
 
         basedir_observed = ""
 
         if os.name == "nt":
             # win32 barfs if any of these are ''; could be '.'?
             # (distutils.command.install:change_roots bug)
-            basedir_observed = os.path.normpath(os.path.join(self.data_dir, ".."))
+            basedir_observed = os.path.normpath(
+                os.path.join(self.data_dir, "..")
+            )
             self.install_libbase = self.install_lib = basedir_observed
 
         setattr(
@@ -428,7 +453,9 @@ class bdist_wheel(command_module.Command):
         self.run_command("install")
 
         impl_tag, abi_tag, plat_tag = self.get_tag()
-        archive_basename = f"{self.wheel_dist_name}-{impl_tag}-{abi_tag}-{plat_tag}"
+        archive_basename = (
+            f"{self.wheel_dist_name}-{impl_tag}-{abi_tag}-{plat_tag}"
+        )
         if not self.relative:
             archive_root = self.bdist_dir
         else:
@@ -436,7 +463,9 @@ class bdist_wheel(command_module.Command):
                 self.bdist_dir, self._ensure_relative(install.install_base)
             )
 
-        self.set_undefined_options("install_egg_info", ("target", "egginfo_dir"))
+        self.set_undefined_options(
+            "install_egg_info", ("target", "egginfo_dir")
+        )
         distinfo_dirname = (
             f"{safer_name(self.distribution.get_name())}-"
             f"{safer_version(self.distribution.get_version())}.dist-info"
@@ -520,7 +549,9 @@ class bdist_wheel(command_module.Command):
         metadata = self.distribution.get_option_dict("metadata")
         if setuptools_major_version >= 42:
             # Setuptools recognizes the license_files option but does not do globbing
-            patterns = cast(Sequence[str], self.distribution.metadata.license_files)
+            patterns = cast(
+                Sequence[str], self.distribution.metadata.license_files
+            )
         else:
             # Prior to those, wheel is entirely responsible for handling license files
             if "license_files" in metadata:
@@ -560,7 +591,11 @@ class bdist_wheel(command_module.Command):
 
         def adios(p: str) -> None:
             """Appropriately delete directory, file or link."""
-            if os.path.exists(p) and not os.path.islink(p) and os.path.isdir(p):
+            if (
+                os.path.exists(p)
+                and not os.path.islink(p)
+                and os.path.isdir(p)
+            ):
                 _shutil.rmtree(p)
             elif os.path.exists(p):
                 os.unlink(p)
@@ -599,8 +634,12 @@ class bdist_wheel(command_module.Command):
         )
 
         # delete dependency_links if it is only whitespace
-        dependency_links_path = os.path.join(distinfo_path, "dependency_links.txt")
-        with open(dependency_links_path, encoding="utf-8") as dependency_links_file:
+        dependency_links_path = os.path.join(
+            distinfo_path, "dependency_links.txt"
+        )
+        with open(
+            dependency_links_path, encoding="utf-8"
+        ) as dependency_links_file:
             dependency_links = dependency_links_file.read().strip()
         if not dependency_links:
             adios(dependency_links_path)

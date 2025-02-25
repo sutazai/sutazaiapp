@@ -9,7 +9,6 @@ Comprehensive system optimization framework providing:
 - Multi-dimensional optimization strategies
 """
 
-from security.security_manager import SecurityManager
 from core_system.monitoring.advanced_logger import AdvancedLogger
 from config.config_manager import ConfigurationManager
 import json
@@ -40,7 +39,6 @@ class AdvancedSystemOptimizer:
         base_dir: str = "/opt/sutazai_project/SutazAI",
         config_manager: ConfigurationManager = None,
         logger: AdvancedLogger = None,
-        security_manager: SecurityManager = None,
     ):
         """
         Initialize advanced system optimizer
@@ -49,12 +47,10 @@ class AdvancedSystemOptimizer:
             base_dir (str): Base directory of the project
             config_manager (ConfigurationManager): Configuration management system
             logger (AdvancedLogger): Advanced logging system
-            security_manager (SecurityManager): Security management system
         """
         self.base_dir = base_dir
         self.config_manager = config_manager or ConfigurationManager()
         self.logger = logger or AdvancedLogger()
-        self.security_manager = security_manager or SecurityManager()
 
         # Optimization configuration
         self.optimization_config = {
@@ -136,7 +132,8 @@ class AdvancedSystemOptimizer:
         ):
             recommendations.append(
                 f"High CPU usage detected. Consider optimizing resource-intensive processes. "
-                f"Peak CPU usage: {max(metrics['cpu_metrics']['cpu_usage_percent'])}%")
+                f"Peak CPU usage: {max(metrics['cpu_metrics']['cpu_usage_percent'])}%"
+            )
 
         # Memory optimization recommendations
         if (
@@ -145,7 +142,8 @@ class AdvancedSystemOptimizer:
         ):
             recommendations.append(
                 f"High memory usage detected. Implement memory optimization strategies. "
-                f"Memory usage: {metrics['memory_metrics']['memory_usage_percent']}%")
+                f"Memory usage: {metrics['memory_metrics']['memory_usage_percent']}%"
+            )
 
         # Disk space recommendations
         if metrics["disk_metrics"]["disk_usage_percent"] > 85:
@@ -161,7 +159,8 @@ class AdvancedSystemOptimizer:
         ):
             recommendations.append(
                 f"High number of running processes. Review and optimize process management. "
-                f"Total processes: {metrics['process_metrics']['total_processes']}")
+                f"Total processes: {metrics['process_metrics']['total_processes']}"
+            )
 
         return recommendations
 
@@ -180,9 +179,6 @@ class AdvancedSystemOptimizer:
             system_metrics
         )
 
-        # Security assessment
-        security_assessment = (
-            self.security_manager.comprehensive_security_scan()
         )
 
         # Configuration validation
@@ -195,7 +191,6 @@ class AdvancedSystemOptimizer:
             "timestamp": datetime.now().isoformat(),
             "system_metrics": system_metrics,
             "performance_recommendations": performance_recommendations,
-            "security_assessment": security_assessment,
             "configuration_validation": configuration_validation,
         }
 
@@ -236,13 +231,8 @@ class AdvancedSystemOptimizer:
                     level="info",
                 )
 
-            # Apply security recommendations
-            security_recommendations = optimization_report.get(
-                "security_assessment", {}
             ).get("recommendations", [])
-            for recommendation in security_recommendations:
                 self.logger.log(
-                    f"Applying security optimization: {recommendation}",
                     level="info",
                 )
 

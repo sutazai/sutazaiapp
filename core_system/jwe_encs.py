@@ -57,7 +57,7 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
         """
         self.check_iv(iv)
         hkey = key[: self.key_len]
-        ekey = key[self.key_len:]
+        ekey = key[self.key_len :]
 
         pad = PKCS7(AES.block_size).padder()
         padded_data = pad.update(msg) + pad.finalize()
@@ -80,7 +80,7 @@ class CBCHS2EncAlgorithm(JWEEncAlgorithm):
         """
         self.check_iv(iv)
         hkey = key[: self.key_len]
-        dkey = key[self.key_len:]
+        dkey = key[self.key_len :]
 
         _tag = self._hmac(ciphertext, aad, iv, hkey)
         if not hmac.compare_digest(_tag, tag):

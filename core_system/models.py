@@ -78,7 +78,9 @@ class OpenIDProviderMetadata(AuthorizationServerMetadata):
         # 3. Valid types include pairwise and public
         valid_types = {"pairwise", "public"}
         if not valid_types.issuperset(set(values)):
-            raise ValueError('"subject_types_supported" contains invalid values')
+            raise ValueError(
+                '"subject_types_supported" contains invalid values'
+            )
 
     def validate_id_token_signing_alg_values_supported(self):
         """REQUIRED. JSON array containing a list of the JWS signing
@@ -92,7 +94,9 @@ class OpenIDProviderMetadata(AuthorizationServerMetadata):
         # 1. REQUIRED
         values = self.get("id_token_signing_alg_values_supported")
         if values is None:
-            raise ValueError('"id_token_signing_alg_values_supported" is required')
+            raise ValueError(
+                '"id_token_signing_alg_values_supported" is required'
+            )
 
         # 2. JSON array
         if not isinstance(values, list):
@@ -172,7 +176,9 @@ class OpenIDProviderMetadata(AuthorizationServerMetadata):
         These algorithms are used both when the Request Object is passed
         by value and when it is passed by reference.
         """
-        validate_array_value(self, "request_object_encryption_alg_values_supported")
+        validate_array_value(
+            self, "request_object_encryption_alg_values_supported"
+        )
 
     def validate_request_object_encryption_enc_values_supported(self):
         """OPTIONAL. JSON array containing a list of the JWE encryption
@@ -180,7 +186,9 @@ class OpenIDProviderMetadata(AuthorizationServerMetadata):
         These algorithms are used both when the Request Object is passed
         by value and when it is passed by reference.
         """
-        validate_array_value(self, "request_object_encryption_enc_values_supported")
+        validate_array_value(
+            self, "request_object_encryption_enc_values_supported"
+        )
 
     def validate_display_values_supported(self):
         """OPTIONAL. JSON array containing a list of the display parameter
@@ -196,7 +204,9 @@ class OpenIDProviderMetadata(AuthorizationServerMetadata):
 
         valid_values = {"page", "popup", "touch", "wap"}
         if not valid_values.issuperset(set(values)):
-            raise ValueError('"display_values_supported" contains invalid values')
+            raise ValueError(
+                '"display_values_supported" contains invalid values'
+            )
 
     def validate_claim_types_supported(self):
         """OPTIONAL. JSON array containing a list of the Claim Types that

@@ -184,7 +184,9 @@ class UniversalDetector:
                     "confidence": 1.0,
                     "language": "",
                 }
-            elif byte_str.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+            elif byte_str.startswith(
+                (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)
+            ):
                 # FF FE 00 00  UTF-32, little-endian BOM
                 # 00 00 FE FF  UTF-32, big-endian BOM
                 self.result = {
@@ -257,7 +259,10 @@ class UniversalDetector:
         if self._input_state == InputState.ESC_ASCII:
             if not self._esc_charset_prober:
                 self._esc_charset_prober = EscCharSetProber(self.lang_filter)
-            if self._esc_charset_prober.feed(byte_str) == ProbingState.FOUND_IT:
+            if (
+                self._esc_charset_prober.feed(byte_str)
+                == ProbingState.FOUND_IT
+            ):
                 self.result = {
                     "encoding": self._esc_charset_prober.charset_name,
                     "confidence": self._esc_charset_prober.get_confidence(),

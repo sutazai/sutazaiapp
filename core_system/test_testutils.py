@@ -332,14 +332,21 @@ class TestNetUtils(PsutilTestCase):
     def test_unix_socketpair(self):
         p = psutil.Process()
         num_fds = p.num_fds()
-        assert filter_proc_net_connections(p.net_connections(kind="unix")) == []
+        assert (
+            filter_proc_net_connections(p.net_connections(kind="unix")) == []
+        )
         name = self.get_testfn()
         server, client = unix_socketpair(name)
         try:
             assert os.path.exists(name)
             assert stat.S_ISSOCK(os.stat(name).st_mode)
             assert p.num_fds() - num_fds == 2
-            assert len(filter_proc_net_connections(p.net_connections(kind="unix"))) == 2
+            assert (
+                len(
+                    filter_proc_net_connections(p.net_connections(kind="unix"))
+                )
+                == 2
+            )
             assert server.getsockname() == name
             assert client.getpeername() == name
         finally:
@@ -419,7 +426,9 @@ class TestMemLeakClass(TestMemoryLeak):
 
         ls = []
         times = 100
-        self.execute(fun, times=times, warmup_times=0, tolerance=200 * 1024 * 1024)
+        self.execute(
+            fun, times=times, warmup_times=0, tolerance=200 * 1024 * 1024
+        )
         assert len(ls) == times + 1
 
     def test_execute_w_exc(self):
@@ -525,7 +534,9 @@ class TestFakePytest(PsutilTestCase):
                 ).lstrip()
             )
         with mock.patch.object(psutil.tests, "HERE", tmpdir):
-            with self.assertWarnsRegex(UserWarning, "Fake pytest module was used"):
+            with self.assertWarnsRegex(
+                UserWarning, "Fake pytest module was used"
+            ):
                 suite = fake_pytest.main()
                 assert suite.countTestCases() == 1
 

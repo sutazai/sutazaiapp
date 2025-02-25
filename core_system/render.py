@@ -54,10 +54,14 @@ def render_header(targets: List[Path], is_system_scan: bool) -> Text:
     if is_system_scan:
         action = "running [bold]system scan[/bold]"
 
-    return Text.from_markup(f"[bold]Safety[/bold] {version} {action}\n{scan_datetime}")
+    return Text.from_markup(
+        f"[bold]Safety[/bold] {version} {action}\n{scan_datetime}"
+    )
 
 
-def print_header(console, targets: List[Path], is_system_scan: bool = False) -> None:
+def print_header(
+    console, targets: List[Path], is_system_scan: bool = False
+) -> None:
     """
     Print the header for the scan.
 
@@ -92,7 +96,9 @@ def print_announcements(console: Console, ctx: typer.Context):
         console.print()
         for announcement in announcements:
             color = colors.get(announcement.get("type", "info"), "default")
-            console.print(f"[{color}]* {announcement.get('message')}[/{color}]")
+            console.print(
+                f"[{color}]* {announcement.get('message')}[/{color}]"
+            )
 
 
 def print_detected_ecosystems_section(
@@ -160,7 +166,8 @@ def print_fixes_section(
     if requirements_txt_found:
         console.print(
             "[green]Run `safety scan --apply-fixes`[/green] to update these packages and fix these vulnerabilities. "
-            "Documentation, limitations, and configurations for applying automated fixes: [link]https://docs.safetycli.com/safety-docs/vulnerability-remediation/applying-fixes[/link]")
+            "Documentation, limitations, and configurations for applying automated fixes: [link]https://docs.safetycli.com/safety-docs/vulnerability-remediation/applying-fixes[/link]"
+        )
         console.print()
         console.print(
             "Alternatively, use your package manager to update packages to their secure versions. Always check for breaking changes when updating packages."
@@ -192,13 +199,11 @@ def print_summary(
     """
     Prints a concise summary of scan results including vulnerabilities, fixes, and ignored vulnerabilities.
 
-    This function summarizes the results of a security scan, displaying the number of dependencies scanned,
     vulnerabilities found, suggested fixes, and the impact of those fixes. It also optionally provides a
     detailed breakdown of ignored vulnerabilities based on predefined policies.
 
     Args:
         console (Console): The console object used to print formatted output.
-        total_issues_with_duplicates (int): The total number of security issues, including duplicates.
         total_ignored_issues (int): The number of issues that were ignored based on project policies.
         project (ProjectModel): The project model containing the scanned project details and policies.
         dependencies_count (int, optional): The total number of dependencies scanned for vulnerabilities. Defaults to 0.
@@ -230,16 +235,14 @@ def print_summary(
         policy_msg = "default Safety CLI policies"
 
     console.print(
-        f"Tested [number]{dependencies_count}[/number] {pluralize('dependency', dependencies_count)} for security issues using {policy_msg}"
     )
 
     if total_issues_with_duplicates == 0:
-        console.print("0 security issues found, 0 fixes suggested.")
     else:
-        # Print security issues and ignored vulnerabilities
         console.print(
             f"[number]{total_issues_with_duplicates}[/number] {pluralize('vulnerability', total_issues_with_duplicates)} found, "
-            f"[number]{total_ignored_issues}[/number] ignored due to policy.")
+            f"[number]{total_ignored_issues}[/number] ignored due to policy."
+        )
 
     console.print(
         f"[number]{fixes_count}[/number] {pluralize('fix', fixes_count)} suggested, resolving [number]{resolved_vulns_per_fix}[/number] vulnerabilities."
@@ -288,20 +291,23 @@ def print_summary(
             console.print(
                 f"[number]{count}[/number] {pluralize('vulnerability', count)} {pluralize('was', count)} ignored because "
                 "of their severity or exploitability impacted the following"
-                f" {pluralize('package', len(cvss_severity_ignored_pkgs))}: {', '.join(cvss_severity_ignored_pkgs)}")
+                f" {pluralize('package', len(cvss_severity_ignored_pkgs))}: {', '.join(cvss_severity_ignored_pkgs)}"
+            )
 
         if environment_ignored:
             count = len(environment_ignored)
             console.print(
                 f"[number]{count}[/number] {pluralize('vulnerability', count)} {pluralize('was', count)} ignored because "
-                "they are inside an environment dependency.")
+                "they are inside an environment dependency."
+            )
 
         if unpinned_ignored:
             count = len(unpinned_ignored)
             console.print(
                 f"[number]{count}[/number] {pluralize('vulnerability', count)} {pluralize('was', count)} ignored because "
                 f"{pluralize('this', len(unpinned_ignored_pkgs))} {pluralize('package', len(unpinned_ignored_pkgs))} {pluralize('has', len(unpinned_ignored_pkgs))} unpinned specs: "
-                f"{', '.join(unpinned_ignored_pkgs)}")
+                f"{', '.join(unpinned_ignored_pkgs)}"
+            )
 
 
 def print_wait_project_verification(
@@ -360,7 +366,9 @@ def print_project_info(console: Console, project: ProjectModel):
             rel_location = (
                 project.policy.location.name if project.policy.location else ""
             )
-            config_msg = "configuration and policies fetched " f"from {rel_location}."
+            config_msg = (
+                "configuration and policies fetched " f"from {rel_location}."
+            )
         else:
             config_msg = " policies fetched " "from Safety Platform."
 
@@ -410,7 +418,10 @@ def prompt_project_id(console: Console, default_id: str) -> str:
     interactive_mode = console.is_interactive and not console.quiet
 
     if not interactive_mode:
-        LOG.info("Fallback to default project id, because of " "non-interactive mode.")
+        LOG.info(
+            "Fallback to default project id, because of "
+            "non-interactive mode."
+        )
 
         return default_prj_id
 
@@ -425,10 +436,16 @@ def prompt_project_id(console: Console, default_id: str) -> str:
             show_default=False,
         )
 
-        return clean_project_id(result) if result != default_prj_id else default_prj_id
+        return (
+            clean_project_id(result)
+            if result != default_prj_id
+            else default_prj_id
+        )
 
 
-def prompt_link_project(console: Console, prj_name: str, prj_admin_email: str) -> bool:
+def prompt_link_project(
+    console: Console, prj_name: str, prj_admin_email: str
+) -> bool:
     """
     Prompt the user to link the scan with an existing project.
 
@@ -494,7 +511,9 @@ def get_render_console(entity_type: Any) -> Any:
 
     if entity_type is Vulnerability:
 
-        def __render__(self, console: Console, detailed_output: bool, rich_kwargs):
+        def __render__(
+            self, console: Console, detailed_output: bool, rich_kwargs
+        ):
             if not rich_kwargs:
                 rich_kwargs = {}
 
@@ -504,7 +523,10 @@ def get_render_console(entity_type: Any) -> Any:
             if self.severity and self.severity.source:
                 severity_detail = self.severity.source
 
-                if self.severity.cvssv3 and "base_severity" in self.severity.cvssv3:
+                if (
+                    self.severity.cvssv3
+                    and "base_severity" in self.severity.cvssv3
+                ):
                     severity_detail += f", CVSS Severity {self.severity.cvssv3['base_severity'].upper()}"
 
             advisory_length = 200 if detailed_output else 110
@@ -589,7 +611,10 @@ def render_scan_html(report: ReportModel, obj: Any) -> str:
     ecosystems = [
         (
             f"{ecosystem.name.title()}",
-            [file_type.human_name(plural=True) for file_type in ecosystem.file_types],
+            [
+                file_type.human_name(plural=True)
+                for file_type in ecosystem.file_types
+            ],
         )
         for ecosystem in [
             Ecosystem(member.value) for member in list(ScannableEcosystems)
@@ -615,7 +640,9 @@ def render_scan_html(report: ReportModel, obj: Any) -> str:
     return parse_html(kwargs=template_context, template="scan/index.html")
 
 
-def generate_spdx_creation_info(spdx_version: str, project_identifier: str) -> Any:
+def generate_spdx_creation_info(
+    spdx_version: str, project_identifier: str
+) -> Any:
     """
     Generate SPDX creation information.
 
@@ -636,9 +663,7 @@ def generate_spdx_creation_info(spdx_version: str, project_identifier: str) -> A
     # DOC_NAMESPACE = f"urn:safety:{project_identifier}:{version}"
 
     DOC_COMMENT = f"This document was created using SPDX {spdx_version}"
-    CREATOR_COMMENT = (
-        "Safety CLI automatically created this SPDX document from a scan report."
-    )
+    CREATOR_COMMENT = "Safety CLI automatically created this SPDX document from a scan report."
 
     TOOL_ID = "safety"
     TOOL_VERSION = get_version()
@@ -660,7 +685,9 @@ def generate_spdx_creation_info(spdx_version: str, project_identifier: str) -> A
     return creation_info
 
 
-def create_pkg_ext_ref(*, package: PythonDependency, version: Optional[str]) -> Any:
+def create_pkg_ext_ref(
+    *, package: PythonDependency, version: Optional[str]
+) -> Any:
     """
     Create an external package reference for SPDX.
 
@@ -715,7 +742,9 @@ def create_packages(dependencies: List[PythonDependency]) -> List[Any]:
             )
             if pkg_id in pkgs_added:
                 continue
-            pkg_ref = create_pkg_ext_ref(package=dependency, version=pkg_version)
+            pkg_ref = create_pkg_ext_ref(
+                package=dependency, version=pkg_version
+            )
 
             pkg = Package(
                 spdx_id=pkg_id,
@@ -735,7 +764,9 @@ def create_packages(dependencies: List[PythonDependency]) -> List[Any]:
     return doc_pkgs
 
 
-def create_spdx_document(*, report: ReportModel, spdx_version: str) -> Optional[Any]:
+def create_spdx_document(
+    *, report: ReportModel, spdx_version: str
+) -> Optional[Any]:
     """
     Create an SPDX document.
 
@@ -773,7 +804,9 @@ def create_spdx_document(*, report: ReportModel, spdx_version: str) -> Optional[
     relationship = Relationship(
         "SPDXRef-DOCUMENT", RelationshipType.DESCRIBES, "SPDXRef-DOCUMENT"
     )
-    spdx_doc = Document(creation_info, packages, [], [], [], [relationship], [])
+    spdx_doc = Document(
+        creation_info, packages, [], [], [], [relationship], []
+    )
     return spdx_doc
 
 
@@ -800,7 +833,9 @@ def render_scan_spdx(
     if not spdx_version:
         spdx_version = "2.3"
 
-    document_obj = create_spdx_document(report=report, spdx_version=spdx_version)
+    document_obj = create_spdx_document(
+        report=report, spdx_version=spdx_version
+    )
     document_obj = validate_and_deduplicate(
         document=document_obj, validate=True, drop_duplicates=True
     )

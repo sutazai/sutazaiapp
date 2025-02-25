@@ -36,7 +36,9 @@ class ModelManager:
         return {
             "model_name": model_name,
             "model_path": self.models[model_name]["path"],
-            "context_window": self.models[model_name]["metadata"]["context_window"],
+            "context_window": self.models[model_name]["metadata"][
+                "context_window"
+            ],
         }
 
 

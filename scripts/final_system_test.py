@@ -32,18 +32,22 @@ def main():
 
     summary = {}
     tasks = [
-        ("System Validation",
-         "python3 /opt/sutazai_project/SutazAI/scripts/system_comprehensive_validator.py",
-         ),
-        ("Project Analysis",
-         "python3 /opt/sutazai_project/SutazAI/scripts/project_analyzer.py",
-         ),
-        ("Documentation Generation",
-         "python3 /opt/sutazai_project/SutazAI/scripts/documentation_generator.py",
-         ),
-        ("Spell Checking",
-         "python3 /opt/sutazai_project/SutazAI/scripts/spell_checker.py",
-         ),
+        (
+            "System Validation",
+            "python3 /opt/sutazai_project/SutazAI/scripts/system_comprehensive_validator.py",
+        ),
+        (
+            "Project Analysis",
+            "python3 /opt/sutazai_project/SutazAI/scripts/project_analyzer.py",
+        ),
+        (
+            "Documentation Generation",
+            "python3 /opt/sutazai_project/SutazAI/scripts/documentation_generator.py",
+        ),
+        (
+            "Spell Checking",
+            "python3 /opt/sutazai_project/SutazAI/scripts/spell_checker.py",
+        ),
     ]
 
     for task_name, command in tasks:

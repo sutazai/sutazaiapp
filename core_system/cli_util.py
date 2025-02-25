@@ -224,7 +224,9 @@ def pretty_format_help(
         )
 
         if isinstance(obj, click.MultiCommand):
-            panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
+            panel_to_commands: DefaultDict[str, List[click.Command]] = (
+                defaultdict(list)
+            )
             for command_name in obj.list_commands(ctx):
                 command = obj.get_command(ctx, command_name)
                 if command and not command.hidden:
@@ -251,20 +253,26 @@ def pretty_format_help(
                     console=console,
                 )
 
-        panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
-        panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
+        panel_to_arguments: DefaultDict[str, List[click.Argument]] = (
+            defaultdict(list)
+        )
+        panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(
+            list
+        )
         for param in obj.get_params(ctx):
             # Skip if option is hidden
             if getattr(param, "hidden", False):
                 continue
             if isinstance(param, click.Argument):
                 panel_name = (
-                    getattr(param, "rich_help_panel", None) or ARGUMENTS_PANEL_TITLE
+                    getattr(param, "rich_help_panel", None)
+                    or ARGUMENTS_PANEL_TITLE
                 )
                 panel_to_arguments[panel_name].append(param)
             elif isinstance(param, click.Option):
                 panel_name = (
-                    getattr(param, "rich_help_panel", None) or OPTIONS_PANEL_TITLE
+                    getattr(param, "rich_help_panel", None)
+                    or OPTIONS_PANEL_TITLE
                 )
                 panel_to_options[panel_name].append(param)
 
@@ -389,7 +397,9 @@ def print_main_command_panels(
     description = None
 
     if commands_type is CommandType.BETA:
-        description = Group(Text(""), Text(BETA_PANEL_DESCRIPTION_HELP), Text(""))
+        description = Group(
+            Text(""), Text(BETA_PANEL_DESCRIPTION_HELP), Text("")
+        )
 
     commands_table.add_column(
         style="bold cyan",
@@ -465,7 +475,9 @@ def format_main_help(
 
     typer_console = Console()
 
-    with typer_console.use_theme(Theme(styles=CONSOLE_HELP_THEME)) as theme_context:
+    with typer_console.use_theme(
+        Theme(styles=CONSOLE_HELP_THEME)
+    ) as theme_context:
         console = theme_context.console
 
         # Print command / group help if we have some
@@ -522,20 +534,26 @@ def format_main_help(
                     console=console,
                 )
 
-        panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
-        panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
+        panel_to_arguments: DefaultDict[str, List[click.Argument]] = (
+            defaultdict(list)
+        )
+        panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(
+            list
+        )
         for param in obj.get_params(ctx):
             # Skip if option is hidden
             if getattr(param, "hidden", False):
                 continue
             if isinstance(param, click.Argument):
                 panel_name = (
-                    getattr(param, "rich_help_panel", None) or ARGUMENTS_PANEL_TITLE
+                    getattr(param, "rich_help_panel", None)
+                    or ARGUMENTS_PANEL_TITLE
                 )
                 panel_to_arguments[panel_name].append(param)
             elif isinstance(param, click.Option):
                 panel_name = (
-                    getattr(param, "rich_help_panel", None) or OPTIONS_PANEL_TITLE
+                    getattr(param, "rich_help_panel", None)
+                    or OPTIONS_PANEL_TITLE
                 )
                 panel_to_options[panel_name].append(param)
         default_arguments = panel_to_arguments.get(ARGUMENTS_PANEL_TITLE, [])
@@ -582,7 +600,9 @@ def format_main_help(
             console.print(Padding(Align(epilogue_text, pad=False), 1))
 
 
-def process_auth_status_not_ready(console, auth: Auth, ctx: typer.Context) -> None:
+def process_auth_status_not_ready(
+    console, auth: Auth, ctx: typer.Context
+) -> None:
     """
     Handle the process when the authentication status is not ready.
 
@@ -613,7 +633,9 @@ def process_auth_status_not_ready(console, auth: Auth, ctx: typer.Context) -> No
 
                 from safety.auth.cli import auth_app
 
-                login_command = get_command_for(name="login", typer_instance=auth_app)
+                login_command = get_command_for(
+                    name="login", typer_instance=auth_app
+                )
                 ctx.invoke(login_command)
             else:
                 console.print(MSG_NO_AUTHD_DEV_STG)
@@ -629,7 +651,9 @@ def process_auth_status_not_ready(console, auth: Auth, ctx: typer.Context) -> No
 
                 from safety.auth.cli import auth_app
 
-                login_command = get_command_for(name="login", typer_instance=auth_app)
+                login_command = get_command_for(
+                    name="login", typer_instance=auth_app
+                )
                 register_command = get_command_for(
                     name="register", typer_instance=auth_app
                 )
@@ -646,7 +670,9 @@ def process_auth_status_not_ready(console, auth: Auth, ctx: typer.Context) -> No
                     sys.exit(1)
         else:
             if not auth.org:
-                console.print(MSG_NO_AUTHD_CICD_PROD_STG_ORG.format(LOGIN_URL=CLI_AUTH))
+                console.print(
+                    MSG_NO_AUTHD_CICD_PROD_STG_ORG.format(LOGIN_URL=CLI_AUTH)
+                )
 
             else:
                 console.print(MSG_NO_AUTHD_CICD_PROD_STG)
@@ -692,7 +718,9 @@ class SafetyCLISubGroup(TyperGroup):
 
     context_class = CustomContext
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format help message with rich formatting.
 
@@ -702,7 +730,9 @@ class SafetyCLISubGroup(TyperGroup):
         """
         pretty_format_help(self, ctx, markup_mode=self.rich_markup_mode)
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_usage(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format usage message.
 
@@ -714,9 +744,7 @@ class SafetyCLISubGroup(TyperGroup):
         pieces = self.collect_usage_pieces(ctx)
         main_group = ctx.parent
         if main_group:
-            command_path = (
-                f"{main_group.command_path} [GLOBAL-OPTIONS] {ctx.command.name}"
-            )
+            command_path = f"{main_group.command_path} [GLOBAL-OPTIONS] {ctx.command.name}"
 
         formatter.write_usage(command_path, " ".join(pieces))
 
@@ -745,7 +773,9 @@ class SafetyCLICommand(TyperCommand):
 
     context_class = CustomContext
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format help message with rich formatting.
 
@@ -755,7 +785,9 @@ class SafetyCLICommand(TyperCommand):
         """
         pretty_format_help(self, ctx, markup_mode=self.rich_markup_mode)
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_usage(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format usage message.
 
@@ -767,9 +799,7 @@ class SafetyCLICommand(TyperCommand):
         pieces = self.collect_usage_pieces(ctx)
         main_group = ctx.parent
         if main_group:
-            command_path = (
-                f"{main_group.command_path} [GLOBAL-OPTIONS] {ctx.command.name}"
-            )
+            command_path = f"{main_group.command_path} [GLOBAL-OPTIONS] {ctx.command.name}"
 
         formatter.write_usage(command_path, " ".join(pieces))
 
@@ -853,7 +883,9 @@ class SafetyCLILegacyGroup(click.Group):
         proxy = options if options["proxy_host"] else None
         return proxy, key
 
-    def get_filtered_commands(self, ctx: click.Context) -> Dict[str, click.Command]:
+    def get_filtered_commands(
+        self, ctx: click.Context
+    ) -> Dict[str, click.Command]:
         from safety.auth.utils import initialize
 
         initialize(ctx, refresh=False)
@@ -909,7 +941,9 @@ class SafetyCLILegacyGroup(click.Group):
 
         return super().list_commands(ctx)
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format help message with rich formatting.
 
@@ -932,7 +966,9 @@ class SafetyCLILegacyCommand(click.Command):
 
     context_class = CustomContext
 
-    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+    def format_help(
+        self, ctx: click.Context, formatter: click.HelpFormatter
+    ) -> None:
         """
         Format help message with rich formatting.
 
@@ -971,7 +1007,11 @@ def handle_cmd_exception(func):
             output_exception(e, exit_code_output=True)
         except Exception as e:
             LOG.exception("Unexpected Exception happened: %s", e)
-            exception = e if isinstance(e, SafetyException) else SafetyException(info=e)
+            exception = (
+                e
+                if isinstance(e, SafetyException)
+                else SafetyException(info=e)
+            )
             output_exception(exception, exit_code_output=True)
 
     return inner

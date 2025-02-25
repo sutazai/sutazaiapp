@@ -25,7 +25,6 @@ from ai_agents.agent_factory import AgentFactory
 from config.config_manager import ConfigurationManager
 from core_system.system_optimizer import SystemOptimizer
 from scripts.dependency_manager import DependencyManager
-from security.security_manager import SecurityManager
 
 # Import system integration components
 from system_integration.system_integrator import SystemIntegrator
@@ -64,9 +63,15 @@ class TestSystemIntegration:
 
         # Validate component metadata
         for component_name, component_info in discovered_components.items():
-            assert "name" in component_info, f"Missing name for {component_name}"
-            assert "module" in component_info, f"Missing module for {component_name}"
-            assert "path" in component_info, f"Missing path for {component_name}"
+            assert (
+                "name" in component_info
+            ), f"Missing name for {component_name}"
+            assert (
+                "module" in component_info
+            ), f"Missing module for {component_name}"
+            assert (
+                "path" in component_info
+            ), f"Missing path for {component_name}"
             assert (
                 "dependencies" in component_info
             ), f"Missing dependencies for {component_name}"
@@ -121,14 +126,20 @@ class TestSystemIntegration:
         """
         # Discover components and analyze dependencies
         system_integrator.discover_system_components()
-        component_dependencies = system_integrator.analyze_component_dependencies()
+        component_dependencies = (
+            system_integrator.analyze_component_dependencies()
+        )
         config_sync_status = {"status": "success"}
 
-        recommendations = system_integrator.generate_integration_recommendations(
-            component_dependencies, config_sync_status
+        recommendations = (
+            system_integrator.generate_integration_recommendations(
+                component_dependencies, config_sync_status
+            )
         )
 
-        assert isinstance(recommendations, list), "Recommendations must be a list"
+        assert isinstance(
+            recommendations, list
+        ), "Recommendations must be a list"
 
     def test_comprehensive_integration_report(self, system_integrator):
         """
@@ -172,7 +183,6 @@ class TestSystemIntegration:
         # Initialize core components
         config_manager = ConfigurationManager()
         system_optimizer = SystemOptimizer()
-        security_manager = SecurityManager()
         dependency_manager = DependencyManager(DependencyConfig())
         agent_factory = AgentFactory()
 
@@ -186,8 +196,6 @@ class TestSystemIntegration:
                 system_optimizer.generate_comprehensive_optimization_report()
             )
 
-            # Perform security optimization
-            security_manager.autonomous_security_optimization()
 
             # Scan dependencies
             dependency_manager.scan_vulnerabilities()

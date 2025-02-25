@@ -31,7 +31,9 @@ class BaseModel:
     Base model with common fields and methods for enhanced tracking.
     """
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     is_active = Column(Boolean, default=True)
@@ -49,7 +51,6 @@ class BaseModel:
 
 class SutazAiInteractionLog(BaseModel, Base):
     """
-    Enhanced database model for tracking SutazAi interactions with advanced security and performance features.
     """
 
     __tablename__ = "interaction_logs"
@@ -68,7 +69,6 @@ class SutazAiInteractionLog(BaseModel, Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
-    # Performance and security tracking
     request_size = Column(Integer, nullable=True)
     response_size = Column(Integer, nullable=True)
     processing_time = Column(Float, nullable=True)  # seconds
@@ -119,7 +119,9 @@ class SutazAiModelLog(BaseModel, Base):
 
     __tablename__ = "model_logs"
     __table_args__ = (
-        UniqueConstraint("model_name", "timestamp", name="_model_timestamp_uc"),
+        UniqueConstraint(
+            "model_name", "timestamp", name="_model_timestamp_uc"
+        ),
         {"comment": "SutazAi comprehensive model performance tracking"},
     )
 
@@ -154,7 +156,9 @@ class SutazAiModelLog(BaseModel, Base):
             float: Error rate percentage.
         """
         total_calls = self.success_count + self.error_count
-        return (self.error_count / total_calls * 100) if total_calls > 0 else 0.0
+        return (
+            (self.error_count / total_calls * 100) if total_calls > 0 else 0.0
+        )
 
     def __repr__(self):
         return f"<SutazAiModelLog(id={self.id}, model_name={self.model_name})>"
@@ -164,7 +168,9 @@ class SystemConfiguration(Base):
     __tablename__ = "system_configs"
 
     id = Column(Integer, primary_key=True)
-    config_name = Column(String(50), nullable=False)  # Fixed length specification
+    config_name = Column(
+        String(50), nullable=False
+    )  # Fixed length specification
     config_value = Column(String(200), nullable=False)
 
     @validates("config_value")
@@ -193,7 +199,6 @@ class SutazAiUser(Base):
         return f"<SutazAiUser(username={self.username}, email={self.email})>"
 
 
-# Database engine configuration with enhanced security and performance
 engine = create_engine(
     settings.database_url,
     poolclass=QueuePool,

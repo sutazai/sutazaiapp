@@ -46,7 +46,9 @@ class IntelligentErrorCorrector:
             log_dir (Optional[str]): Custom log directory
         """
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "error_correction")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "error_correction"
+        )
 
         # Ensure log directory exists
         os.makedirs(self.log_dir, exist_ok=True)
@@ -55,7 +57,9 @@ class IntelligentErrorCorrector:
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
-            filename=os.path.join(self.log_dir, "intelligent_error_corrector.log"),
+            filename=os.path.join(
+                self.log_dir, "intelligent_error_corrector.log"
+            ),
         )
         self.logger = logging.getLogger("SutazAI.IntelligentErrorCorrector")
 
@@ -102,7 +106,9 @@ class IntelligentErrorCorrector:
                             ).replace("/", ".")[:-3]
 
                             module_info = self._analyze_module(full_path)
-                            project_structure["modules"][module_name] = module_info
+                            project_structure["modules"][
+                                module_name
+                            ] = module_info
 
                             # Track module dependencies
                             project_structure["dependencies"][module_name] = (
@@ -188,7 +194,9 @@ class IntelligentErrorCorrector:
         complexity = 1
 
         for node in module.body:
-            if isinstance(node, (astroid.If, astroid.While, astroid.For, astroid.Try)):
+            if isinstance(
+                node, (astroid.If, astroid.While, astroid.For, astroid.Try)
+            ):
                 complexity += 1
 
         return complexity
@@ -273,7 +281,9 @@ class IntelligentErrorCorrector:
             return dependencies
 
         except Exception as e:
-            self.logger.warning(f"Dependency tracking failed for {file_path}: {e}")
+            self.logger.warning(
+                f"Dependency tracking failed for {file_path}: {e}"
+            )
             return []
 
     def generate_semantic_linking_graph(
@@ -292,11 +302,17 @@ class IntelligentErrorCorrector:
 
         try:
             # Add modules as nodes
-            for module_name, module_info in project_structure["modules"].items():
-                semantic_graph.add_node(module_name, **module_info.get("structure", {}))
+            for module_name, module_info in project_structure[
+                "modules"
+            ].items():
+                semantic_graph.add_node(
+                    module_name, **module_info.get("structure", {})
+                )
 
             # Add edges based on dependencies
-            for module, dependencies in project_structure["dependencies"].items():
+            for module, dependencies in project_structure[
+                "dependencies"
+            ].items():
                 for dep in dependencies:
                     if dep in project_structure["modules"]:
                         semantic_graph.add_edge(module, dep)
@@ -322,7 +338,9 @@ class IntelligentErrorCorrector:
                 source_code = f.read()
 
             # Use Black for code formatting
-            formatted_code = black.format_str(source_code, mode=black.FileMode())
+            formatted_code = black.format_str(
+                source_code, mode=black.FileMode()
+            )
 
             # Detect and correct common issues
             corrected_code = self._apply_semantic_corrections(formatted_code)
@@ -332,7 +350,9 @@ class IntelligentErrorCorrector:
                 with open(file_path, "w") as f:
                     f.write(corrected_code)
 
-                self.logger.info(f"Intelligent corrections applied to {file_path}")
+                self.logger.info(
+                    f"Intelligent corrections applied to {file_path}"
+                )
                 return corrected_code
 
             return None
@@ -451,7 +471,9 @@ class IntelligentErrorCorrector:
             project_structure = self.analyze_project_structure()
 
             # Generate semantic linking graph
-            semantic_graph = self.generate_semantic_linking_graph(project_structure)
+            semantic_graph = self.generate_semantic_linking_graph(
+                project_structure
+            )
 
             # Correct files
             corrections_summary = {
@@ -467,22 +489,31 @@ class IntelligentErrorCorrector:
                         full_path = os.path.join(root, file)
 
                         # Skip certain directories
-                        if any(skip in full_path for skip in ["venv", ".git", "logs"]):
+                        if any(
+                            skip in full_path
+                            for skip in ["venv", ".git", "logs"]
+                        ):
                             continue
 
                         corrections_summary["total_files"] += 1
 
                         # Perform intelligent correction
-                        corrected_code = self.intelligent_code_correction(full_path)
+                        corrected_code = self.intelligent_code_correction(
+                            full_path
+                        )
 
                         if corrected_code:
                             corrections_summary["files_corrected"] += 1
 
                             # Analyze error patterns
                             module_info = self._analyze_module(full_path)
-                            for pattern in module_info.get("error_patterns", []):
+                            for pattern in module_info.get(
+                                "error_patterns", []
+                            ):
                                 pattern_name = pattern["pattern"]
-                                corrections_summary["error_patterns"][pattern_name] = (
+                                corrections_summary["error_patterns"][
+                                    pattern_name
+                                ] = (
                                     corrections_summary["error_patterns"].get(
                                         pattern_name, 0
                                     )
@@ -491,12 +522,16 @@ class IntelligentErrorCorrector:
 
             # Log correction summary
             self.logger.info("Comprehensive Error Correction Summary:")
-            self.logger.info(f"Total Files: {corrections_summary['total_files']}")
+            self.logger.info(
+                f"Total Files: {corrections_summary['total_files']}"
+            )
             self.logger.info(
                 f"Files Corrected: {corrections_summary['files_corrected']}"
             )
             self.logger.info("Error Patterns Detected:")
-            for pattern, count in corrections_summary["error_patterns"].items():
+            for pattern, count in corrections_summary[
+                "error_patterns"
+            ].items():
                 self.logger.info(f"- {pattern}: {count} occurrences")
 
             return corrections_summary
@@ -512,14 +547,22 @@ def main():
     """
     try:
         error_corrector = IntelligentErrorCorrector()
-        correction_results = error_corrector.run_comprehensive_error_correction()
+        correction_results = (
+            error_corrector.run_comprehensive_error_correction()
+        )
 
         # Print key insights
         print("Intelligent Error Correction Insights:")
-        print(f"Total Files Analyzed: {correction_results.get('total_files', 0)}")
-        print(f"Files Corrected: {correction_results.get('files_corrected', 0)}")
+        print(
+            f"Total Files Analyzed: {correction_results.get('total_files', 0)}"
+        )
+        print(
+            f"Files Corrected: {correction_results.get('files_corrected', 0)}"
+        )
         print("\nError Patterns:")
-        for pattern, count in correction_results.get("error_patterns", {}).items():
+        for pattern, count in correction_results.get(
+            "error_patterns", {}
+        ).items():
             print(f"- {pattern}: {count} occurrences")
 
     except Exception as e:

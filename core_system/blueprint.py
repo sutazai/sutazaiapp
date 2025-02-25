@@ -163,7 +163,9 @@ class BlueprintLexer(RegexLexer):
             # Menus
             (
                 r"(menu|section|submenu)(?:(\s+)([a-z_][a-z0-9_\-]*))?(\s*)(\{)",
-                bygroups(Keyword, Whitespace, Name.Variable, Whitespace, Punctuation),
+                bygroups(
+                    Keyword, Whitespace, Name.Variable, Whitespace, Punctuation
+                ),
                 "brace-block",
             ),
             (

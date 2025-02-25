@@ -320,9 +320,13 @@ class easy_install(Command):
         # Let install_dir get set by install_lib command, which in turn
         # gets its info from the install command, and takes into account
         # --prefix and --home and all that other crud.
-        self.set_undefined_options("install_lib", ("install_dir", "install_dir"))
+        self.set_undefined_options(
+            "install_lib", ("install_dir", "install_dir")
+        )
         # Likewise, set default script_dir from 'install_scripts.install_dir'
-        self.set_undefined_options("install_scripts", ("install_dir", "script_dir"))
+        self.set_undefined_options(
+            "install_scripts", ("install_dir", "script_dir")
+        )
 
         if self.user and self.install_purelib:
             self.install_dir = self.install_purelib
@@ -334,7 +338,9 @@ class easy_install(Command):
 
         if not self.editable:
             self.check_site_dir()
-        default_index = os.getenv("__EASYINSTALL_INDEX", "https://pypi.org/simple/")
+        default_index = os.getenv(
+            "__EASYINSTALL_INDEX", "https://pypi.org/simple/"
+        )
         # ^ Private API for testing purposes only
         self.index_url = self.index_url or default_index
         self.shadow_path = self.all_site_dirs[:]
@@ -383,12 +389,16 @@ class easy_install(Command):
             return
 
         normpath = map(normalize_path, sys.path)
-        site_dirs = [os.path.expanduser(s.strip()) for s in site_dirs.split(",")]
+        site_dirs = [
+            os.path.expanduser(s.strip()) for s in site_dirs.split(",")
+        ]
         for d in site_dirs:
             if not os.path.isdir(d):
                 log.warn("%s (in --site-dirs) does not exist", d)
             elif normalize_path(d) not in normpath:
-                raise DistutilsOptionError(d + " (in --site-dirs) is not on sys.path")
+                raise DistutilsOptionError(
+                    d + " (in --site-dirs) is not on sys.path"
+                )
             else:
                 yield normalize_path(d)
 
@@ -623,7 +633,10 @@ class easy_install(Command):
                 if os.name == "nt":
                     dirname, basename = os.path.split(executable)
                     alt = os.path.join(dirname, "pythonw.exe")
-                    use_alt = basename.lower() == "python.exe" and os.path.exists(alt)
+                    use_alt = (
+                        basename.lower() == "python.exe"
+                        and os.path.exists(alt)
+                    )
                     if use_alt:
                         # use pythonw.exe to avoid opening a console window
                         executable = alt
@@ -795,7 +808,10 @@ class easy_install(Command):
         self.install_egg_scripts(dist)
         self.installed_projects[dist.key] = dist
         log.info(self.installation_report(requirement, dist, *info))
-        if dist.has_metadata("dependency_links.txt") and not self.no_find_links:
+        if (
+            dist.has_metadata("dependency_links.txt")
+            and not self.no_find_links
+        ):
             self.package_index.add_find_links(
                 dist.get_metadata_lines("dependency_links.txt")
             )
@@ -836,7 +852,9 @@ class easy_install(Command):
     def maybe_move(self, spec, dist_filename, setup_base):
         dst = os.path.join(self.build_directory, spec.key)
         if os.path.exists(dst):
-            msg = "%r already exists in %s; build directory %s will not be kept"
+            msg = (
+                "%r already exists in %s; build directory %s will not be kept"
+            )
             log.warn(msg, spec.key, self.build_directory, setup_base)
             return setup_base
         if os.path.isdir(dist_filename):
@@ -860,7 +878,9 @@ class easy_install(Command):
         for args in ScriptWriter.best().get_args(dist):
             self.write_script(*args)
 
-    def install_script(self, dist, script_name, script_text, dev_path=None) -> None:
+    def install_script(
+        self, dist, script_name, script_text, dev_path=None
+    ) -> None:
         """Generate a legacy script wrapper and install it"""
         spec = str(dist.as_requirement())
         is_script = is_python_script(script_text, script_name)
@@ -885,7 +905,9 @@ class easy_install(Command):
         raw_bytes = resource_string("setuptools", name)
         return raw_bytes.decode("utf-8")
 
-    def write_script(self, script_name, contents, mode: str = "t", blockers=()) -> None:
+    def write_script(
+        self, script_name, contents, mode: str = "t", blockers=()
+    ) -> None:
         """Write an executable file to the scripts directory"""
         self.delete_blockers(  # clean up old .py/.pyw w/o a script
             [os.path.join(self.script_dir, x) for x in blockers]
@@ -959,7 +981,9 @@ class easy_install(Command):
 
     def egg_distribution(self, egg_path):
         if os.path.isdir(egg_path):
-            metadata = PathMetadata(egg_path, os.path.join(egg_path, "EGG-INFO"))
+            metadata = PathMetadata(
+                egg_path, os.path.join(egg_path, "EGG-INFO")
+            )
         else:
             metadata = EggMetadata(zipimport.zipimporter(egg_path))
         return Distribution.from_filename(egg_path, metadata=metadata)
@@ -976,7 +1000,8 @@ class easy_install(Command):
 
         dist = self.egg_distribution(egg_path)
         if not (
-            os.path.exists(destination) and os.path.samefile(egg_path, destination)
+            os.path.exists(destination)
+            and os.path.samefile(egg_path, destination)
         ):
             if os.path.isdir(destination) and not os.path.islink(destination):
                 dir_util.remove_tree(destination, dry_run=self.dry_run)
@@ -1058,7 +1083,10 @@ class easy_install(Command):
         script_dir = os.path.join(_egg_info, "scripts")
         # delete entry-point scripts to avoid duping
         self.delete_blockers(
-            [os.path.join(script_dir, args[0]) for args in ScriptWriter.get_args(dist)]
+            [
+                os.path.join(script_dir, args[0])
+                for args in ScriptWriter.get_args(dist)
+            ]
         )
         # Build .egg file from tmpdir
         bdist_egg.make_zipfile(
@@ -1083,7 +1111,7 @@ class easy_install(Command):
             s = src.lower()
             for old, new in prefixes:
                 if s.startswith(old):
-                    src = new + src[len(old):]
+                    src = new + src[len(old) :]
                     parts = src.split("/")
                     dst = os.path.join(egg_tmp, *parts)
                     dl = dst.lower()
@@ -1219,13 +1247,15 @@ class easy_install(Command):
             args.insert(0, "-n")
         log.info(
             "Running %s %s",
-            setup_script[len(setup_base) + 1:],
+            setup_script[len(setup_base) + 1 :],
             " ".join(args),
         )
         try:
             run_setup(setup_script, args)
         except SystemExit as v:
-            raise DistutilsError(f"Setup script exited with {v.args[0]}") from v
+            raise DistutilsError(
+                f"Setup script exited with {v.args[0]}"
+            ) from v
 
     def build_and_install(self, setup_script, setup_base):
         args = ["bdist_egg", "--dist-dir"]
@@ -1245,7 +1275,9 @@ class easy_install(Command):
                 for dist in all_eggs[key]
             ]
             if not eggs and not self.dry_run:
-                log.warn("No eggs found in %s (setup script problem?)", dist_dir)
+                log.warn(
+                    "No eggs found in %s (setup script problem?)", dist_dir
+                )
             return eggs
         finally:
             _rmtree(dist_dir)
@@ -1278,7 +1310,9 @@ class easy_install(Command):
         cfg_filename = os.path.join(base, "setup.cfg")
         setopt.edit_config(cfg_filename, settings)
 
-    def update_pth(self, dist) -> None:  # noqa: C901  # is too complex (11)  # FIXME
+    def update_pth(
+        self, dist
+    ) -> None:  # noqa: C901  # is too complex (11)  # FIXME
         if self.pth_file is None:
             return
 
@@ -1356,7 +1390,9 @@ class easy_install(Command):
             # try to make the byte compile messages quieter
             log.set_verbosity(self.verbose - 1)
 
-            byte_compile(to_compile, optimize=0, force=True, dry_run=self.dry_run)
+            byte_compile(
+                to_compile, optimize=0, force=True, dry_run=self.dry_run
+            )
             if self.optimize:
                 byte_compile(
                     to_compile,
@@ -1924,7 +1960,9 @@ def _collect_zipimporter_cache_entries(normalized_path, cache):
     prefix_len = len(normalized_path)
     for p in cache:
         np = normalize_path(p)
-        if np.startswith(normalized_path) and np[prefix_len: prefix_len + 1] in (
+        if np.startswith(normalized_path) and np[
+            prefix_len : prefix_len + 1
+        ] in (
             os.sep,
             "",
         ):
@@ -1988,7 +2026,9 @@ def _remove_and_clear_zip_directory_cache_data(normalized_path):
 # instead of being automatically corrected to use the new correct zip archive
 # directory information.
 if "__pypy__" in sys.builtin_module_names:
-    _replace_zip_directory_cache_data = _remove_and_clear_zip_directory_cache_data
+    _replace_zip_directory_cache_data = (
+        _remove_and_clear_zip_directory_cache_data
+    )
 else:
 
     def _replace_zip_directory_cache_data(normalized_path):

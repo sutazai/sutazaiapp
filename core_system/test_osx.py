@@ -67,7 +67,9 @@ class TestProcess(PsutilTestCase):
         hhmmss = start_ps.split(" ")[-2]
         year = start_ps.split(" ")[-1]
         start_psutil = psutil.Process(self.pid).create_time()
-        assert hhmmss == time.strftime("%H:%M:%S", time.localtime(start_psutil))
+        assert hhmmss == time.strftime(
+            "%H:%M:%S", time.localtime(start_psutil)
+        )
         assert year == time.strftime("%Y", time.localtime(start_psutil))
 
 

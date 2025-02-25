@@ -118,7 +118,9 @@ def tree_set(root):
     contents = set()
     for dirpath, dirnames, filenames in os.walk(root):
         for filename in filenames:
-            contents.add(os.path.join(os.path.relpath(dirpath, root), filename))
+            contents.add(
+                os.path.join(os.path.relpath(dirpath, root), filename)
+            )
     return contents
 
 
@@ -131,7 +133,9 @@ def flatten_tree(tree):
 
         for elem in contents:
             if isinstance(elem, dict):
-                output |= {os.path.join(node, val) for val in flatten_tree(elem)}
+                output |= {
+                    os.path.join(node, val) for val in flatten_tree(elem)
+                }
             else:
                 output.add(os.path.join(node, elem))
     return output
@@ -628,7 +632,9 @@ def test_wheel_install_pep_503():
         ) as filename,
         tempdir() as install_dir,
     ):
-        new_filename = filename.replace(project_name, canonicalize_name(project_name))
+        new_filename = filename.replace(
+            project_name, canonicalize_name(project_name)
+        )
         shutil.move(filename, new_filename)
         _check_wheel_install(
             new_filename,
@@ -663,7 +669,9 @@ def test_wheel_is_compatible(monkeypatch):
         }
 
     monkeypatch.setattr("setuptools.wheel._get_supported_tags", sys_tags)
-    assert Wheel("onnxruntime-0.1.2-cp36-cp36m-manylinux1_x86_64.whl").is_compatible()
+    assert Wheel(
+        "onnxruntime-0.1.2-cp36-cp36m-manylinux1_x86_64.whl"
+    ).is_compatible()
 
 
 def test_wheel_mode():

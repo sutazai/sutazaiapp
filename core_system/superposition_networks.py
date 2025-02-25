@@ -23,7 +23,9 @@ class SutazAiBuffer:
             raise ValueError("State exceeds buffer dimensions")
         self.buffer[: state.shape[0], : state.shape[1]] = state
 
-    def retrieve(self, start: int = 0, end: Optional[int] = None) -> np.ndarray:
+    def retrieve(
+        self, start: int = 0, end: Optional[int] = None
+    ) -> np.ndarray:
         """Retrieve a portion of the buffer"""
         end = end or self.qubits
         return self.buffer[start:end, start:end]
@@ -68,12 +70,16 @@ class EntanglementEngine:
     ) -> List[Any]:
         """Create entanglement links between states"""
         if topology == "full_mesh":
-            return EntanglementEngine._full_mesh_entanglement(states, coherence_time)
+            return EntanglementEngine._full_mesh_entanglement(
+                states, coherence_time
+            )
         else:
             raise ValueError(f"Unsupported topology: {topology}")
 
     @staticmethod
-    def _full_mesh_entanglement(states: List[Any], coherence_time: float) -> List[Any]:
+    def _full_mesh_entanglement(
+        states: List[Any], coherence_time: float
+    ) -> List[Any]:
         """Create full mesh entanglement topology"""
         entangled_states = []
         for i, state in enumerate(states):
@@ -110,7 +116,9 @@ class SutazAiStateManager:
             self.logger.error(f"State entanglement failed: {e}")
             raise
 
-    def measure_state(self, basis: MeasurementBasis = MeasurementBasis.Z) -> np.ndarray:
+    def measure_state(
+        self, basis: MeasurementBasis = MeasurementBasis.Z
+    ) -> np.ndarray:
         """Perform state measurement with advanced error correction"""
         try:
             raw_measurement = MeasurementUnit.capture(basis)

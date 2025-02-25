@@ -7,7 +7,6 @@ the entire SutazAI project structure, ensuring:
 - Correct directory hierarchy
 - Consistent naming conventions
 - Dependency integrity
-- Security compliance
 """
 
 import json
@@ -44,7 +43,9 @@ class ProjectStructureValidator:
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
-            filename=os.path.join(base_dir, "logs", "project_structure_validation.log"),
+            filename=os.path.join(
+                base_dir, "logs", "project_structure_validation.log"
+            ),
         )
         self.logger = logging.getLogger("SutazAI.ProjectStructureValidator")
 
@@ -80,7 +81,6 @@ class ProjectStructureValidator:
                 "test_files": r"^test_[a-z_]+\.py$",
                 "script_files": r"^[a-z_]+\.sh$",
             },
-            "security_checks": {
                 "no_hardcoded_credentials": True,
                 "no_external_api_keys": True,
             },
@@ -97,7 +97,6 @@ class ProjectStructureValidator:
             "timestamp": time.time(),
             "directory_structure": {},
             "naming_compliance": {},
-            "security_checks": {},
             "optimization_recommendations": [],
         }
 
@@ -105,10 +104,10 @@ class ProjectStructureValidator:
         validation_report["directory_structure"] = self._validate_directories()
 
         # Validate file naming conventions
-        validation_report["naming_compliance"] = self._validate_naming_conventions()
+        validation_report["naming_compliance"] = (
+            self._validate_naming_conventions()
+        )
 
-        # Perform security checks
-        validation_report["security_checks"] = self._perform_security_checks()
 
         # Generate optimization recommendations
         validation_report["optimization_recommendations"] = (
@@ -136,8 +135,8 @@ class ProjectStructureValidator:
         # Check required directories
         for directory in self.config.get("required_directories", []):
             full_path = os.path.join(self.base_dir, directory)
-            directory_validation["required_directories"][directory] = os.path.exists(
-                full_path
+            directory_validation["required_directories"][directory] = (
+                os.path.exists(full_path)
             )
 
             if not os.path.exists(full_path):
@@ -188,9 +187,9 @@ class ProjectStructureValidator:
                             os.path.join(root, file)
                         )
                     else:
-                        naming_validation["python_files"]["non_compliant"].append(
-                            os.path.join(root, file)
-                        )
+                        naming_validation["python_files"][
+                            "non_compliant"
+                        ].append(os.path.join(root, file))
 
                 if file.startswith("test_") and file.endswith(".py"):
                     is_compliant = (
@@ -206,9 +205,9 @@ class ProjectStructureValidator:
                             os.path.join(root, file)
                         )
                     else:
-                        naming_validation["test_files"]["non_compliant"].append(
-                            os.path.join(root, file)
-                        )
+                        naming_validation["test_files"][
+                            "non_compliant"
+                        ].append(os.path.join(root, file))
 
         # Validate shell scripts
         for root, _, files in os.walk(self.base_dir):
@@ -227,26 +226,23 @@ class ProjectStructureValidator:
                             os.path.join(root, file)
                         )
                     else:
-                        naming_validation["script_files"]["non_compliant"].append(
-                            os.path.join(root, file)
-                        )
+                        naming_validation["script_files"][
+                            "non_compliant"
+                        ].append(os.path.join(root, file))
 
         return naming_validation
 
-    def _perform_security_checks(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security checks
 
         Returns:
-            Security check results
         """
-        security_checks = {
             "hardcoded_credentials": [],
             "external_api_keys": [],
         }
 
         # Check for hardcoded credentials
-        if self.config["security_checks"].get("no_hardcoded_credentials", True):
+            "no_hardcoded_credentials", True
+        ):
             for root, _, files in os.walk(self.base_dir):
                 for file in files:
                     if file.endswith(".py") or file.endswith(".sh"):
@@ -261,13 +257,15 @@ class ProjectStructureValidator:
                             ]
 
                             for pattern in credential_patterns:
-                                matches = re.findall(pattern, content, re.IGNORECASE)
+                                matches = re.findall(
+                                    pattern, content, re.IGNORECASE
+                                )
                                 if matches:
-                                    security_checks["hardcoded_credentials"].append(
+                                        "hardcoded_credentials"
+                                    ].append(
                                         {"file": file_path, "matches": matches}
                                     )
 
-        return security_checks
 
     def _generate_optimization_recommendations(
         self, validation_report: Dict[str, Any]
@@ -295,16 +293,15 @@ class ProjectStructureValidator:
             )
 
         # Naming convention recommendations
-        for file_type, compliance in validation_report["naming_compliance"].items():
+        for file_type, compliance in validation_report[
+            "naming_compliance"
+        ].items():
             if compliance["non_compliant"]:
                 recommendations.append(
                     f"Rename non-compliant {file_type}: {len(compliance['non_compliant'])} files"
                 )
 
-        # Security recommendations
-        if validation_report["security_checks"]["hardcoded_credentials"]:
             recommendations.append(
-                f"Remove hardcoded credentials in {len(validation_report['security_checks']['hardcoded_credentials'])} files"
             )
 
         return recommendations
@@ -334,7 +331,6 @@ class ProjectStructureValidator:
             f"Non-Compliant Files: {sum(len(files['non_compliant']) for files in validation_report['naming_compliance'].values())}"
         )
         self.logger.info(
-            f"Security Issues: {len(validation_report['security_checks']['hardcoded_credentials'])}"
         )
 
 
@@ -356,14 +352,14 @@ def main():
     )
 
     print("\nNaming Compliance:")
-    for file_type, compliance in validation_report["naming_compliance"].items():
+    for file_type, compliance in validation_report[
+        "naming_compliance"
+    ].items():
         print(f"{file_type.replace('_', ' ').title()}:")
         print(f"  Compliant: {len(compliance['compliant'])}")
         print(f"  Non-Compliant: {len(compliance['non_compliant'])}")
 
-    print("\nSecurity Checks:")
     print(
-        f"Hardcoded Credentials: {len(validation_report['security_checks']['hardcoded_credentials'])}"
     )
 
     print("\nOptimization Recommendations:")

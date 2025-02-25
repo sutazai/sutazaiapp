@@ -35,7 +35,9 @@ class TestSysconfig:
         assert os.path.isfile(makefile)
 
     def test_get_python_lib(self, tmp_path):
-        assert sysconfig.get_python_lib() != sysconfig.get_python_lib(prefix=tmp_path)
+        assert sysconfig.get_python_lib() != sysconfig.get_python_lib(
+            prefix=tmp_path
+        )
 
     def test_get_config_vars(self):
         cvars = sysconfig.get_config_vars()
@@ -204,12 +206,12 @@ class TestSysconfig:
     def test_sysconfig_module(self):
         import sysconfig as global_sysconfig
 
-        assert global_sysconfig.get_config_var("CFLAGS") == sysconfig.get_config_var(
+        assert global_sysconfig.get_config_var(
             "CFLAGS"
-        )
-        assert global_sysconfig.get_config_var("LDFLAGS") == sysconfig.get_config_var(
+        ) == sysconfig.get_config_var("CFLAGS")
+        assert global_sysconfig.get_config_var(
             "LDFLAGS"
-        )
+        ) == sysconfig.get_config_var("LDFLAGS")
 
     # On macOS, binary installers support extension module building on
     # various levels of the operating system with differing Xcode
@@ -230,10 +232,12 @@ class TestSysconfig:
 
         if sysconfig.get_config_var("CUSTOMIZED_OSX_COMPILER"):
             pytest.skip("compiler flags customized")
-        assert global_sysconfig.get_config_var("LDSHARED") == sysconfig.get_config_var(
+        assert global_sysconfig.get_config_var(
             "LDSHARED"
-        )
-        assert global_sysconfig.get_config_var("CC") == sysconfig.get_config_var("CC")
+        ) == sysconfig.get_config_var("LDSHARED")
+        assert global_sysconfig.get_config_var(
+            "CC"
+        ) == sysconfig.get_config_var("CC")
 
     @pytest.mark.skipif("not sysconfig.get_config_var('EXT_SUFFIX')")
     def test_SO_deprecation(self):

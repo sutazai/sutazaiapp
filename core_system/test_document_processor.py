@@ -26,7 +26,9 @@ class TestDocumentProcessorAgent:
         import fitz
 
         # Create a temporary PDF
-        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_pdf:
+        with tempfile.NamedTemporaryFile(
+            suffix=".pdf", delete=False
+        ) as temp_pdf:
             doc = fitz.open()
             page = doc.new_page()
             page.insert_text((50, 50), "SutazAI Document Processing Test")
@@ -49,7 +51,9 @@ class TestDocumentProcessorAgent:
         import cv2
 
         # Create a temporary image
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_img:
+        with tempfile.NamedTemporaryFile(
+            suffix=".png", delete=False
+        ) as temp_img:
             image = np.zeros((200, 200), dtype=np.uint8)
             cv2.putText(
                 image,
@@ -172,7 +176,9 @@ class TestDocumentProcessorAgent:
         """
         Test document metadata extraction utility
         """
-        metadata_result = DocumentUtils.extract_document_metadata(sample_pdf_path)
+        metadata_result = DocumentUtils.extract_document_metadata(
+            sample_pdf_path
+        )
 
         assert metadata_result["status"] == "success"
         assert "metadata" in metadata_result

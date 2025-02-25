@@ -62,7 +62,7 @@ class PlatformInfo:
         str
             Target CPU
         """
-        return self.arch[self.arch.find("_") + 1:]
+        return self.arch[self.arch.find("_") + 1 :]
 
     def target_is_x86(self):
         """
@@ -376,7 +376,9 @@ class SystemInfo:
         self.known_vs_paths = self.find_programdata_vs_vers()
 
         # Except for VS15+, VC version is aligned with VS version
-        self.vs_ver = self.vc_ver = vc_ver or self._find_latest_available_vs_ver()
+        self.vs_ver = self.vc_ver = (
+            vc_ver or self._find_latest_available_vs_ver()
+        )
 
     def _find_latest_available_vs_ver(self):
         """
@@ -440,7 +442,9 @@ class SystemInfo:
             float version as key, path as value.
         """
         vs_versions: dict[float, str] = {}
-        instances_dir = r"C:\ProgramData\Microsoft\VisualStudio\Packages\_Instances"
+        instances_dir = (
+            r"C:\ProgramData\Microsoft\VisualStudio\Packages\_Instances"
+        )
 
         try:
             hashed_names = os.listdir(instances_dir)
@@ -461,9 +465,9 @@ class SystemInfo:
                 os.listdir(os.path.join(vs_path, r"VC\Tools\MSVC"))
 
                 # Store version and path
-                vs_versions[self._as_float_version(state["installationVersion"])] = (
-                    vs_path
-                )
+                vs_versions[
+                    self._as_float_version(state["installationVersion"])
+                ] = vs_path
 
             except (OSError, KeyError):
                 # Skip if "state.json" file is missing or bad format
@@ -672,7 +676,9 @@ class SystemInfo:
         else:
             netfxver = 40
             hidex86 = True if self.vs_ver <= 12.0 else False
-            arch = self.pi.current_dir(x64=True, hidex86=hidex86).replace("\\", "-")
+            arch = self.pi.current_dir(x64=True, hidex86=hidex86).replace(
+                "\\", "-"
+            )
         fx = f"WinSDK-NetFx{netfxver}Tools{arch}"
 
         # list all possibles registry paths
@@ -702,7 +708,9 @@ class SystemInfo:
         str
             path
         """
-        path = os.path.join(self.ri.visualstudio, rf"{self.vs_ver:0.1f}\Setup\F#")
+        path = os.path.join(
+            self.ri.visualstudio, rf"{self.vs_ver:0.1f}\Setup\F#"
+        )
         return self.ri.lookup(path, "productdir") or ""
 
     @property
@@ -720,7 +728,9 @@ class SystemInfo:
 
         # Find path of the more recent Kit
         for ver in vers:
-            sdkdir = self.ri.lookup(self.ri.windows_kits_roots, f"kitsroot{ver}")
+            sdkdir = self.ri.lookup(
+                self.ri.windows_kits_roots, f"kitsroot{ver}"
+            )
             if sdkdir:
                 return sdkdir or ""
 
@@ -736,7 +746,9 @@ class SystemInfo:
         str
             version
         """
-        return self._use_last_dir_name(os.path.join(self.UniversalCRTSdkDir, "lib"))
+        return self._use_last_dir_name(
+            os.path.join(self.UniversalCRTSdkDir, "lib")
+        )
 
     @property
     def NetFxSdkVersion(self):
@@ -1054,10 +1066,14 @@ class EnvironmentInfo:
 
         elif self.vs_ver >= 15.0:
             host_dir = (
-                r"bin\HostX86%s" if self.pi.current_is_x86() else r"bin\HostX64%s"
+                r"bin\HostX86%s"
+                if self.pi.current_is_x86()
+                else r"bin\HostX64%s"
             )
             tools += [
-                os.path.join(si.VCInstallDir, host_dir % self.pi.target_dir(x64=True))
+                os.path.join(
+                    si.VCInstallDir, host_dir % self.pi.target_dir(x64=True)
+                )
             ]
 
             if self.pi.current_cpu != self.pi.target_cpu:
@@ -1142,8 +1158,12 @@ class EnvironmentInfo:
             libpath += [
                 ref,
                 os.path.join(self.si.WindowsSdkDir, "UnionMetadata"),
-                os.path.join(ref, "Windows.Foundation.UniversalApiContract", "1.0.0.0"),
-                os.path.join(ref, "Windows.Foundation.FoundationContract", "1.0.0.0"),
+                os.path.join(
+                    ref, "Windows.Foundation.UniversalApiContract", "1.0.0.0"
+                ),
+                os.path.join(
+                    ref, "Windows.Foundation.FoundationContract", "1.0.0.0"
+                ),
                 os.path.join(
                     ref,
                     "Windows.Networking.Connectivity.WwanContract",
@@ -1259,11 +1279,13 @@ class EnvironmentInfo:
         tools = []
         if include32:
             tools += [
-                os.path.join(si.FrameworkDir32, ver) for ver in si.FrameworkVersion32
+                os.path.join(si.FrameworkDir32, ver)
+                for ver in si.FrameworkVersion32
             ]
         if include64:
             tools += [
-                os.path.join(si.FrameworkDir64, ver) for ver in si.FrameworkVersion64
+                os.path.join(si.FrameworkDir64, ver)
+                for ver in si.FrameworkVersion64
             ]
         return tools
 
@@ -1428,10 +1450,14 @@ class EnvironmentInfo:
         # Installation prefixes candidates
         prefixes = []
         tools_path = self.si.VCInstallDir
-        redist_path = os.path.dirname(tools_path.replace(r"\Tools", r"\Redist"))
+        redist_path = os.path.dirname(
+            tools_path.replace(r"\Tools", r"\Redist")
+        )
         if os.path.isdir(redist_path):
             # Redist version may not be exactly the same as tools
-            redist_path = os.path.join(redist_path, os.listdir(redist_path)[-1])
+            redist_path = os.path.join(
+                redist_path, os.listdir(redist_path)[-1]
+            )
             prefixes += [redist_path, os.path.join(redist_path, "onecore")]
 
         prefixes += [os.path.join(tools_path, "redist")]  # VS14 legacy path

@@ -26,8 +26,7 @@ if typing.TYPE_CHECKING:
         kw_only_default=False,
         field_specifiers=(PydanticModelField, PydanticModelPrivateAttr),
     )
-    class _RootModelMetaclass(_model_construction.ModelMetaclass):
-        ...
+    class _RootModelMetaclass(_model_construction.ModelMetaclass): ...
 
 else:
     _RootModelMetaclass = _model_construction.ModelMetaclass

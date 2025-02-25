@@ -107,7 +107,8 @@ def get_from_cache(
 
                         if "cached_at" in data[db_name]:
                             if (
-                                data[db_name]["cached_at"] + cache_valid_seconds
+                                data[db_name]["cached_at"]
+                                + cache_valid_seconds
                                 > time.time()
                                 or skip_time_verification
                             ):
@@ -137,7 +138,9 @@ def get_from_cache(
                             )
 
                 except json.JSONDecodeError:
-                    LOG.debug("JSONDecodeError trying to get the cached database.")
+                    LOG.debug(
+                        "JSONDecodeError trying to get the cached database."
+                    )
         else:
             LOG.debug("Cache file doesn't exist...")
     return None
@@ -192,7 +195,9 @@ def write_to_cache(db_name: str, data: Dict[str, Any]) -> None:
         with open(DB_CACHE_FILE, "w") as f:
             cache[db_name] = {"cached_at": time.time(), "db": data}
             f.write(json.dumps(cache))
-            LOG.debug("Safety updated the cache file for %s database.", db_name)
+            LOG.debug(
+                "Safety updated the cache file for %s database.", db_name
+            )
 
 
 def fetch_database_url(
@@ -225,7 +230,9 @@ def fetch_database_url(
     }
 
     if cached and from_cache:
-        cached_data = get_from_cache(db_name=db_name, cache_valid_seconds=cached)
+        cached_data = get_from_cache(
+            db_name=db_name, cache_valid_seconds=cached
+        )
         if cached_data:
             LOG.info("Database %s returned from cache.", db_name)
             return cached_data
@@ -252,7 +259,9 @@ def fetch_database_url(
         raise DatabaseFetchError()
 
     if r.status_code == 403:
-        raise InvalidCredentialError(credential=session.get_credential(), reason=r.text)
+        raise InvalidCredentialError(
+            credential=session.get_credential(), reason=r.text
+        )
 
     if r.status_code == 429:
         raise TooManyRequestsError(reason=r.text)
@@ -266,7 +275,9 @@ def fetch_database_url(
         raise MalformedDatabase(reason=e)
 
     if cached:
-        LOG.info("Writing %s to cache because cached value was %s", db_name, cached)
+        LOG.info(
+            "Writing %s to cache because cached value was %s", db_name, cached
+        )
         write_to_cache(db_name, data)
 
     return data
@@ -366,7 +377,9 @@ def fetch_database_file(
         data = json.loads(f.read())
 
     if cached:
-        LOG.info("Writing %s to cache because cached value was %s", db_name, cached)
+        LOG.info(
+            "Writing %s to cache because cached value was %s", db_name, cached
+        )
         write_to_cache(db_name, data)
 
     return data
@@ -503,7 +516,9 @@ def get_vulnerability_from(
     """
     base_domain = db.get("meta", {}).get("base_domain")
     unpinned_ignored = ignore_vulns.get(vuln_id, {}).get("requirements", None)
-    should_ignore = not unpinned_ignored or str(affected.specifier) in unpinned_ignored
+    should_ignore = (
+        not unpinned_ignored or str(affected.specifier) in unpinned_ignored
+    )
 
     ignored = (
         ignore_vulns
@@ -518,7 +533,9 @@ def get_vulnerability_from(
     severity = None
 
     if cve and (cve.cvssv2 or cve.cvssv3):
-        severity = Severity(source=cve.name, cvssv2=cve.cvssv2, cvssv3=cve.cvssv3)
+        severity = Severity(
+            source=cve.name, cvssv2=cve.cvssv2, cvssv3=cve.cvssv3
+        )
 
     analyzed_requirement = affected
     analyzed_version = (
@@ -536,10 +553,14 @@ def get_vulnerability_from(
         pkg=pkg,
         ignored=ignored,
         ignored_reason=(
-            ignore_vulns.get(vuln_id, {}).get("reason", None) if ignore_vulns else None
+            ignore_vulns.get(vuln_id, {}).get("reason", None)
+            if ignore_vulns
+            else None
         ),
         ignored_expires=(
-            ignore_vulns.get(vuln_id, {}).get("expires", None) if ignore_vulns else None
+            ignore_vulns.get(vuln_id, {}).get("expires", None)
+            if ignore_vulns
+            else None
         ),
         vulnerable_spec=vulnerable_spec,
         all_vulnerable_specs=data.get("specs", []),
@@ -560,7 +581,9 @@ def get_vulnerability_from(
     )
 
 
-def get_cve_from(data: Dict[str, Any], db_full: Dict[str, Any]) -> Optional[CVE]:
+def get_cve_from(
+    data: Dict[str, Any], db_full: Dict[str, Any]
+) -> Optional[CVE]:
     """
     Retrieves the CVE object from the provided data.
 
@@ -637,12 +660,16 @@ def ignore_vuln_if_needed(
 
     if severity:
         if float(severity) < ignore_severity_below:
-            reason = "Ignored by severity rule in policy file, {0} < {1}".format(
-                float(severity), ignore_severity_below
+            reason = (
+                "Ignored by severity rule in policy file, {0} < {1}".format(
+                    float(severity), ignore_severity_below
+                )
             )
             ignore_vulns[vuln_id] = {"reason": reason, "expires": None}
     elif ignore_unknown_severity:
-        reason = "Unknown CVSS severity, ignored by severity rule in policy file."
+        reason = (
+            "Unknown CVSS severity, ignored by severity rule in policy file."
+        )
         ignore_vulns[vuln_id] = {"reason": reason, "expires": None}
 
     version = (
@@ -652,11 +679,15 @@ def ignore_vuln_if_needed(
     )
 
     is_prev_not_ignored: bool = vuln_id not in ignore_vulns
-    is_req_not_ignored: bool = "requirements" in ignore_vulns.get(vuln_id, {}) and str(
-        req.specifier
-    ) not in ignore_vulns.get(vuln_id, {}).get("requirements", set())
+    is_req_not_ignored: bool = "requirements" in ignore_vulns.get(
+        vuln_id, {}
+    ) and str(req.specifier) not in ignore_vulns.get(vuln_id, {}).get(
+        "requirements", set()
+    )
 
-    if (is_prev_not_ignored or is_req_not_ignored) and is_ignore_unpinned_mode(version):
+    if (is_prev_not_ignored or is_req_not_ignored) and is_ignore_unpinned_mode(
+        version
+    ):
         reason = IGNORE_UNPINNED_REQ_REASON
         requirements = set()
         requirements.add(str(req.specifier))
@@ -685,11 +716,15 @@ def is_vulnerable(
     """
     if is_pinned_requirement(requirement.specifier):
         try:
-            return vulnerable_spec.contains(next(iter(requirement.specifier)).version)
+            return vulnerable_spec.contains(
+                next(iter(requirement.specifier)).version
+            )
         except Exception:
             # Ugly for now...
             message = f"Version {requirement.specifier} for {package.name} is invalid and is ignored by Safety. Please See PEP 440."
-            if message not in [a["message"] for a in SafetyContext.local_announcements]:
+            if message not in [
+                a["message"] for a in SafetyContext.local_announcements
+            ]:
                 SafetyContext.local_announcements.append(
                     {"message": message, "type": "warning", "local": True}
                 )
@@ -697,7 +732,9 @@ def is_vulnerable(
 
     return any(
         requirement.specifier.filter(
-            vulnerable_spec.filter(package.insecure_versions, prereleases=True),
+            vulnerable_spec.filter(
+                package.insecure_versions, prereleases=True
+            ),
             prereleases=True,
         )
     )
@@ -740,7 +777,9 @@ def check(
         tuple: A tuple containing the list of vulnerabilities and the full database.
     """
     SafetyContext().command = "check"
-    db = fetch_database(session, db=db_mirror, cached=cached, telemetry=telemetry)
+    db = fetch_database(
+        session, db=db_mirror, cached=cached, telemetry=telemetry
+    )
     db_full = None
     vulnerable_packages = frozenset(db.get("vulnerable_packages", []))
     vulnerabilities = []
@@ -793,7 +832,8 @@ def check(
                             vuln_id: str = str(
                                 next(
                                     filter(
-                                        lambda i: i.get("type", None) == "pyup",
+                                        lambda i: i.get("type", None)
+                                        == "pyup",
                                         data.get("ids", []),
                                     )
                                 ).get("id", "")
@@ -802,7 +842,9 @@ def check(
                             vuln_id: str = ""
 
                         if vuln_id in vuln_per_req:
-                            vuln_per_req[vuln_id].vulnerable_spec.add(specifier)
+                            vuln_per_req[vuln_id].vulnerable_spec.add(
+                                specifier
+                            )
                             continue
 
                         cve = get_cve_from(data, db_full)
@@ -834,9 +876,12 @@ def check(
 
                         if (
                             include_ignored
-                            or vulnerability.vulnerability_id not in ignore_vulns
+                            or vulnerability.vulnerability_id
+                            not in ignore_vulns
                         ) and should_add_vuln:
-                            vuln_per_req[vulnerability.vulnerability_id] = vulnerability
+                            vuln_per_req[vulnerability.vulnerability_id] = (
+                                vulnerability
+                            )
                             vulnerabilities.append(vulnerability)
 
     return vulnerabilities, db_full
@@ -871,13 +916,19 @@ def precompute_remediations(
             spec = remediations[vuln.package_name][
                 str(vuln.analyzed_requirement.specifier)
             ]
-            spec["vulnerabilities_found"] = spec.get("vulnerabilities_found", 0) + 1
+            spec["vulnerabilities_found"] = (
+                spec.get("vulnerabilities_found", 0) + 1
+            )
         else:
             version = None
-            is_pinned = is_pinned_requirement(vuln.analyzed_requirement.specifier)
+            is_pinned = is_pinned_requirement(
+                vuln.analyzed_requirement.specifier
+            )
 
             if is_pinned:
-                version = next(iter(vuln.analyzed_requirement.specifier)).version
+                version = next(
+                    iter(vuln.analyzed_requirement.specifier)
+                ).version
 
             if not is_pinned and is_ignore_unpinned_mode(version):
                 # Let's ignore this requirement
@@ -918,7 +969,9 @@ def get_closest_ver(
     if (not version and not spec) or not versions:
         return results
 
-    sorted_versions = sorted(versions, key=lambda ver: parse_version(ver), reverse=True)
+    sorted_versions = sorted(
+        versions, key=lambda ver: parse_version(ver), reverse=True
+    )
 
     if not version:
         sorted_versions = spec.filter(sorted_versions, prereleases=False)
@@ -984,7 +1037,9 @@ def compute_sec_ver_for_user(
     affected_v = set(affected_versions)
     sec_ver_for_user = list(versions.difference(affected_v))
 
-    return sorted(sec_ver_for_user, key=lambda ver: parse_version(ver), reverse=True)
+    return sorted(
+        sec_ver_for_user, key=lambda ver: parse_version(ver), reverse=True
+    )
 
 
 def compute_sec_ver(
@@ -1035,7 +1090,9 @@ def compute_sec_ver(
                     db_full=db_full,
                 )
 
-            rem["closest_secure_version"] = get_closest_ver(secure_v, version, spec)
+            rem["closest_secure_version"] = get_closest_ver(
+                secure_v, version, spec
+            )
 
             upgrade = rem["closest_secure_version"].get("upper", None)
             downgrade = rem["closest_secure_version"].get("lower", None)
@@ -1048,7 +1105,9 @@ def compute_sec_ver(
 
             rem["recommended_version"] = recommended_version
             rem["other_recommended_versions"] = [
-                other_v for other_v in secure_v if other_v != str(recommended_version)
+                other_v
+                for other_v in secure_v
+                if other_v != str(recommended_version)
             ]
 
             # Refresh the URL with the recommended version.
@@ -1083,8 +1142,12 @@ def calculate_remediations(
     if not db_full:
         return remediations
 
-    precompute_remediations(remediations, package_metadata, vulns, secure_vulns_by_user)
-    compute_sec_ver(remediations, package_metadata, secure_vulns_by_user, db_full)
+    precompute_remediations(
+        remediations, package_metadata, vulns, secure_vulns_by_user
+    )
+    compute_sec_ver(
+        remediations, package_metadata, secure_vulns_by_user, db_full
+    )
 
     return remediations
 
@@ -1243,7 +1306,9 @@ def process_fixes_scan(
         return {
             "vulnerabilities_found": spec.remediation.vulnerabilities_found,
             "version": (
-                next(iter(spec.specifier)).version if spec.is_pinned() else None
+                next(iter(spec.specifier)).version
+                if spec.is_pinned()
+                else None
             ),
             "requirement": spec,
             "more_info_url": spec.remediation.more_info_url,
@@ -1252,7 +1317,9 @@ def process_fixes_scan(
             "other_recommended_versions": spec.remediation.other_recommended,
         }
 
-    req_remediations = iter(get_remmediation_from(spec) for spec in to_fix_spec)
+    req_remediations = iter(
+        get_remmediation_from(spec) for spec in to_fix_spec
+    )
     SUPPORTED_FILE_TYPES = [FileType.REQUIREMENTS_TXT]
 
     if file_to_fix.file_type in SUPPORTED_FILE_TYPES:
@@ -1368,7 +1435,9 @@ def compute_fixes_per_requirements(
             requirements["files"][file]["fixes"]["TO_SKIP"].append(dry_fix)
             continue
 
-        dependency, name = requirements["dependencies"][pkg][dry_fix.previous_spec]
+        dependency, name = requirements["dependencies"][pkg][
+            dry_fix.previous_spec
+        ]
         dry_fix.applied_at = name
 
         fixes = requirements["files"][name]["fixes"]
@@ -1404,7 +1473,9 @@ def compute_fixes_per_requirements(
         dry_fix.update_type = update_type
         dry_fix.dependency = dependency
 
-        auto_fix = should_apply_auto_fix(from_ver, to_ver, auto_remediation_limit)
+        auto_fix = should_apply_auto_fix(
+            from_ver, to_ver, auto_remediation_limit
+        )
 
         TARGET = "TO_APPLY"
 
@@ -1517,9 +1588,10 @@ def apply_fixes(
 
                     print_service([("", {})], out_type)
                     confirmed: str = prompt_service(
-                        (f"- {f.package}{f.previous_spec} requires at least a {f.update_type} version update. Do you want to update {f.package} from {f.previous_spec} to =={f.updated_version}, which is the closest secure version? {input_hint}",
-                         {},
-                         ),
+                        (
+                            f"- {f.package}{f.previous_spec} requires at least a {f.update_type} version update. Do you want to update {f.package} from {f.previous_spec} to =={f.updated_version}, which is the closest secure version? {input_hint}",
+                            {},
+                        ),
                         out_type,
                     ).lower()
 
@@ -1551,7 +1623,9 @@ def apply_fixes(
                         )
                     else:
                         f.status = "MANUALLY_SKIPPED"
-                        output.append((get_skipped_msg(f), {"indent": " " * 5}))
+                        output.append(
+                            (get_skipped_msg(f), {"indent": " " * 5})
+                        )
 
                     if not no_output:
                         print_service(output, out_type)
@@ -1566,9 +1640,11 @@ def apply_fixes(
                     [1 for fix in r_confirm if fix.status == "APPLIED"]
                 )
                 output.append(
-                    (f"{count} package {pluralize('version', count)} {pluralize('has', count)} been updated to secure versions in {Path(name).name}",
-                     {},
-                     ))
+                    (
+                        f"{count} package {pluralize('version', count)} {pluralize('has', count)} been updated to secure versions in {Path(name).name}",
+                        {},
+                    )
+                )
                 output.append(
                     (
                         "Always check for breaking changes after updating packages.",
@@ -1581,8 +1657,11 @@ def apply_fixes(
         else:
             not_supported_filename = data.get("filename", name)
             output.append(
-                (f"{not_supported_filename} updates not supported: Please update these dependencies using your package manager.", {
-                    "start_line_decorator": " -", "indent": " "}, ))
+                (
+                    f"{not_supported_filename} updates not supported: Please update these dependencies using your package manager.",
+                    {"start_line_decorator": " -", "indent": " "},
+                )
+            )
             output.append(("", {}))
 
         if not no_output:
@@ -1666,9 +1745,13 @@ def review(
             secure_v = req_rem.get("other_recommended_versions", [])
 
             remediations[key][req] = {
-                "vulnerabilities_found": req_rem.get("vulnerabilities_found", 0),
+                "vulnerabilities_found": req_rem.get(
+                    "vulnerabilities_found", 0
+                ),
                 "version": req_rem.get("version"),
-                "requirement": SafetyRequirement(req_rem["requirement"]["raw"]),
+                "requirement": SafetyRequirement(
+                    req_rem["requirement"]["raw"]
+                ),
                 "other_recommended_versions": secure_v,
                 "recommended_version": (
                     parse_version(recommended) if recommended else None
@@ -1705,7 +1788,9 @@ def review(
             cvssv3 = severity.get("cvssv3", None)
             # Trying to get the PVE ID if it exists, otherwise it will be the same CVE ID of above
             XVE_ID = severity.get("source", False)
-            vuln["severity"] = Severity(source=XVE_ID, cvssv2=cvssv2, cvssv3=cvssv3)
+            vuln["severity"] = Severity(
+                source=XVE_ID, cvssv2=cvssv2, cvssv3=cvssv3
+            )
         else:
             vuln["severity"] = None
 
@@ -1714,7 +1799,9 @@ def review(
         if ignored_expires:
             vuln["ignored_expires"] = validate_expiration_date(ignored_expires)
 
-        vuln["CVE"] = CVE(name=XVE_ID, cvssv2=cvssv2, cvssv3=cvssv3) if XVE_ID else None
+        vuln["CVE"] = (
+            CVE(name=XVE_ID, cvssv2=cvssv2, cvssv3=cvssv3) if XVE_ID else None
+        )
         vuln["analyzed_requirement"] = SafetyRequirement(
             vuln["analyzed_requirement"]["raw"]
         )
@@ -1762,7 +1849,9 @@ def get_licenses(
                 telemetry=telemetry,
             )
         else:
-            licenses = fetch_database_file(mirror, db_name=db_name, ecosystem=None)
+            licenses = fetch_database_file(
+                mirror, db_name=db_name, ecosystem=None
+            )
         if licenses:
             return licenses
     raise DatabaseFetchError()
@@ -1810,7 +1899,9 @@ def add_local_notifications(
                 f"being ignored given `ignore-unpinned-requirements` is True in your config. {doc_msg}"
             )
 
-        announcements.append({"message": msg, "type": "warning", "local": True})
+        announcements.append(
+            {"message": msg, "type": "warning", "local": True}
+        )
 
     announcements.extend(SafetyContext().local_announcements)
 
@@ -1840,7 +1931,9 @@ def get_announcements(
     url = f"{DATA_API_BASE_URL}announcements/"
     method = "post"
     telemetry_data = (
-        with_telemetry if with_telemetry else build_telemetry_data(telemetry=telemetry)
+        with_telemetry
+        if with_telemetry
+        else build_telemetry_data(telemetry=telemetry)
     )
     data = asdict(telemetry_data)
     request_kwargs = {"timeout": 3}
@@ -1849,7 +1942,9 @@ def get_announcements(
     source = os.environ.get("SAFETY_ANNOUNCEMENTS_URL", None)
 
     if source:
-        LOG.debug(f"Getting the announcement from a different source: {source}")
+        LOG.debug(
+            f"Getting the announcement from a different source: {source}"
+        )
         url = source
         method = "get"
         data = {"telemetry": json.dumps(data)}
@@ -1942,7 +2037,9 @@ def get_packages(
         Package(
             name=d.key,
             version=d.version,
-            requirements=[SafetyRequirement(f"{d.key}=={d.version}", found=d.location)],
+            requirements=[
+                SafetyRequirement(f"{d.key}=={d.version}", found=d.location)
+            ],
             found=d.location,
             insecure_versions=[],
             secure_versions=[],
@@ -2010,11 +2107,15 @@ def get_server_policies(
             file=sys.stderr,
         )
     elif server_safety_policy:
-        with tempfile.NamedTemporaryFile(prefix="server-safety-policy-") as tmp:
+        with tempfile.NamedTemporaryFile(
+            prefix="server-safety-policy-"
+        ) as tmp:
             tmp.write(server_safety_policy.encode("utf-8"))
             tmp.seek(0)
 
-            policy_file = SafetyPolicyFile().convert(tmp.name, param=None, ctx=None)
+            policy_file = SafetyPolicyFile().convert(
+                tmp.name, param=None, ctx=None
+            )
             LOG.info("Using server side policy file")
 
     return policy_file, server_audit_and_monitor

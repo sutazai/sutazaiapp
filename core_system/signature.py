@@ -249,7 +249,9 @@ def normalize_parameters(params):
 def generate_signature_base_string(request):
     """Generate signature base string from request."""
     host = request.headers.get("Host", None)
-    return construct_base_string(request.method, request.uri, request.params, host)
+    return construct_base_string(
+        request.method, request.uri, request.params, host
+    )
 
 
 def hmac_sha1_signature(base_string, client_secret, token_secret):
@@ -354,7 +356,9 @@ def plaintext_signature(client_secret, token_secret):
 def sign_hmac_sha1(client, request):
     """Sign a HMAC-SHA1 signature."""
     base_string = generate_signature_base_string(request)
-    return hmac_sha1_signature(base_string, client.client_secret, client.token_secret)
+    return hmac_sha1_signature(
+        base_string, client.client_secret, client.token_secret
+    )
 
 
 def sign_rsa_sha1(client, request):
@@ -371,7 +375,9 @@ def sign_plaintext(client, request):
 def verify_hmac_sha1(request):
     """Verify a HMAC-SHA1 signature."""
     base_string = generate_signature_base_string(request)
-    sig = hmac_sha1_signature(base_string, request.client_secret, request.token_secret)
+    sig = hmac_sha1_signature(
+        base_string, request.client_secret, request.token_secret
+    )
     return hmac.compare_digest(sig, request.signature)
 
 

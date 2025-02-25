@@ -96,14 +96,18 @@ class Pip:
                 "project_id": ctx.obj.project.id if ctx.obj.project else None,
             }
         )
-        return base64.urlsafe_b64encode(auth_envelop.encode("utf-8")).decode("utf-8")
+        return base64.urlsafe_b64encode(auth_envelop.encode("utf-8")).decode(
+            "utf-8"
+        )
 
     @classmethod
     def default_index_url(cls) -> str:
         return "https://pypi.org/simple/"
 
     @classmethod
-    def build_index_url(cls, ctx: typer.Context, index_url: Optional[str]) -> str:
+    def build_index_url(
+        cls, ctx: typer.Context, index_url: Optional[str]
+    ) -> str:
         if index_url is None:
             index_url = REPOSITORY_URL
 

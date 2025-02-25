@@ -137,7 +137,9 @@ class ArchiveInfo:
         self._hash = value
 
     @classmethod
-    def _from_dict(cls, d: Optional[Dict[str, Any]]) -> Optional["ArchiveInfo"]:
+    def _from_dict(
+        cls, d: Optional[Dict[str, Any]]
+    ) -> Optional["ArchiveInfo"]:
         if d is None:
             return None
         return cls(hash=_get(d, str, "hash"), hashes=_get(d, dict, "hashes"))

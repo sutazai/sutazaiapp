@@ -95,7 +95,8 @@ class VGenericEngine(object):
 
     def _get_declarations(self):
         lst = [
-            (key, tp) for (key, (tp, qual)) in self.ffi._parser._declarations.items()
+            (key, tp)
+            for (key, (tp, qual)) in self.ffi._parser._declarations.items()
         ]
         lst.sort()
         return lst
@@ -104,9 +105,13 @@ class VGenericEngine(object):
         for name, tp in self._get_declarations():
             kind, realname = name.split(" ", 1)
             try:
-                method = getattr(self, "_generate_gen_%s_%s" % (kind, step_name))
+                method = getattr(
+                    self, "_generate_gen_%s_%s" % (kind, step_name)
+                )
             except AttributeError:
-                raise VerificationError("not implemented in verify(): %r" % name)
+                raise VerificationError(
+                    "not implemented in verify(): %r" % name
+                )
             try:
                 method(tp, realname)
             except Exception as e:
@@ -222,7 +227,9 @@ class VGenericEngine(object):
             wrappername = "_cffi_f_%s" % name
             newfunction = module.load_function(BFunc, wrappername)
             for i, typ in indirections:
-                newfunction = self._make_struct_wrapper(newfunction, i, typ, base_tp)
+                newfunction = self._make_struct_wrapper(
+                    newfunction, i, typ, base_tp
+                )
         setattr(library, name, newfunction)
         type(library)._cffi_dir.append(name)
 
@@ -240,7 +247,9 @@ class VGenericEngine(object):
         else:
 
             def newfunc(*args):
-                args = args[:i] + (backend.newp(BType, args[i]),) + args[i + 1:]
+                args = (
+                    args[:i] + (backend.newp(BType, args[i]),) + args[i + 1 :]
+                )
                 return oldfunc(*args)
 
         newfunc._cffi_base_type = base_tp
@@ -283,7 +292,8 @@ class VGenericEngine(object):
         prnt("  (void)p;")
         for fname, ftype, fbitsize, fqual in tp.enumfields():
             if (
-                isinstance(ftype, model.PrimitiveType) and ftype.is_integer_type()
+                isinstance(ftype, model.PrimitiveType)
+                and ftype.is_integer_type()
             ) or fbitsize >= 0:
                 # accept all integers, but complain on float or double
                 prnt("  (void)((p->%s) << 1);" % fname)
@@ -293,7 +303,9 @@ class VGenericEngine(object):
                     prnt(
                         "  { %s = &p->%s; (void)tmp; }"
                         % (
-                            ftype.get_c_name("*tmp", "field %r" % fname, quals=fqual),
+                            ftype.get_c_name(
+                                "*tmp", "field %r" % fname, quals=fqual
+                            ),
                             fname,
                         )
                     )
@@ -480,7 +492,9 @@ class VGenericEngine(object):
             fntypeextra = "(*)(void)"
             if isinstance(tp, model.StructOrUnion):
                 fntypeextra = "*" + fntypeextra
-            BFunc = self.ffi._typeof_locked(tp.get_c_name(fntypeextra, name))[0]
+            BFunc = self.ffi._typeof_locked(tp.get_c_name(fntypeextra, name))[
+                0
+            ]
             function = module.load_function(BFunc, funcname)
             value = function()
             if isinstance(tp, model.StructOrUnion):
@@ -499,7 +513,9 @@ class VGenericEngine(object):
     def _check_int_constant_value(self, name, value):
         prnt = self._prnt
         if value <= 0:
-            prnt("  if ((%s) > 0 || (long)(%s) != %dL) {" % (name, name, value))
+            prnt(
+                "  if ((%s) > 0 || (long)(%s) != %dL) {" % (name, name, value)
+            )
         else:
             prnt(
                 "  if ((%s) <= 0 || (unsigned long)(%s) != %dUL) {"
@@ -582,7 +598,9 @@ class VGenericEngine(object):
             check_value = None
         else:
             check_value = tp  # an integer
-        value = self._load_constant(True, tp, name, module, check_value=check_value)
+        value = self._load_constant(
+            True, tp, name, module, check_value=check_value
+        )
         setattr(library, name, value)
         type(library)._cffi_dir.append(name)
 

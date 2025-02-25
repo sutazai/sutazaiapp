@@ -69,9 +69,9 @@ STYLE_ERRORS_SUGGESTION = "dim"
 STYLE_ABORTED = "red"
 _TERMINAL_WIDTH = getenv("TERMINAL_WIDTH")
 MAX_WIDTH = int(_TERMINAL_WIDTH) if _TERMINAL_WIDTH else None
-COLOR_SYSTEM: Optional[Literal["auto", "standard", "256", "truecolor", "windows"]] = (
-    "auto"  # Set to None to disable colors
-)
+COLOR_SYSTEM: Optional[
+    Literal["auto", "standard", "256", "truecolor", "windows"]
+] = "auto"  # Set to None to disable colors
 _TYPER_FORCE_DISABLE_TERMINAL = getenv("_TYPER_FORCE_DISABLE_TERMINAL")
 FORCE_TERMINAL = (
     True
@@ -257,7 +257,9 @@ def _get_parameter_help(
             envvar = f"{ctx.auto_envvar_prefix}_{param.name.upper()}"
     if envvar is not None:
         var_str = (
-            envvar if isinstance(envvar, str) else ", ".join(str(d) for d in envvar)
+            envvar
+            if isinstance(envvar, str)
+            else ", ".join(str(d) for d in envvar)
         )
 
     # Main help text
@@ -284,7 +286,9 @@ def _get_parameter_help(
 
     # Environment variable AFTER help text
     if envvar and getattr(param, "show_envvar", None):
-        items.append(Text(ENVVAR_STRING.format(var_str), style=STYLE_OPTION_ENVVAR))
+        items.append(
+            Text(ENVVAR_STRING.format(var_str), style=STYLE_OPTION_ENVVAR)
+        )
 
     # Default value
     # This uses Typer's specific param._get_default_string
@@ -390,7 +394,9 @@ def _print_options_panel(
         if (
             isinstance(param.type, click.types._NumberRangeBase)
             and isinstance(param, click.Option)
-            and not (param.count and param.type.min == 0 and param.type.max is None)
+            and not (
+                param.count and param.type.min == 0 and param.type.max is None
+            )
         ):
             range_str = param.type._describe_range()
             if range_str:
@@ -500,15 +506,21 @@ def _print_commands_panel(
     # A big ratio makes the description column be greedy and take all the space
     # available instead of allowing the command column to grow and misalign with
     # other panels.
-    commands_table.add_column("Description", justify="left", no_wrap=False, ratio=10)
+    commands_table.add_column(
+        "Description", justify="left", no_wrap=False, ratio=10
+    )
     rows: List[List[Union[RenderableType, None]]] = []
     deprecated_rows: List[Union[RenderableType, None]] = []
     for command in commands:
         helptext = command.short_help or command.help or ""
         command_name = command.name or ""
         if command.deprecated:
-            command_name_text = Text(f"{command_name}", style=STYLE_DEPRECATED_COMMAND)
-            deprecated_rows.append(Text(DEPRECATED_STRING, style=STYLE_DEPRECATED))
+            command_name_text = Text(
+                f"{command_name}", style=STYLE_DEPRECATED_COMMAND
+            )
+            deprecated_rows.append(
+                Text(DEPRECATED_STRING, style=STYLE_DEPRECATED)
+            )
         else:
             command_name_text = Text(command_name)
             deprecated_rows.append(None)
@@ -575,7 +587,9 @@ def rich_format_help(
                 (0, 1, 1, 1),
             )
         )
-    panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(list)
+    panel_to_arguments: DefaultDict[str, List[click.Argument]] = defaultdict(
+        list
+    )
     panel_to_options: DefaultDict[str, List[click.Option]] = defaultdict(list)
     for param in obj.get_params(ctx):
         # Skip if option is hidden
@@ -583,12 +597,14 @@ def rich_format_help(
             continue
         if isinstance(param, click.Argument):
             panel_name = (
-                getattr(param, _RICH_HELP_PANEL_NAME, None) or ARGUMENTS_PANEL_TITLE
+                getattr(param, _RICH_HELP_PANEL_NAME, None)
+                or ARGUMENTS_PANEL_TITLE
             )
             panel_to_arguments[panel_name].append(param)
         elif isinstance(param, click.Option):
             panel_name = (
-                getattr(param, _RICH_HELP_PANEL_NAME, None) or OPTIONS_PANEL_TITLE
+                getattr(param, _RICH_HELP_PANEL_NAME, None)
+                or OPTIONS_PANEL_TITLE
             )
             panel_to_options[panel_name].append(param)
     default_arguments = panel_to_arguments.get(ARGUMENTS_PANEL_TITLE, [])
@@ -631,7 +647,9 @@ def rich_format_help(
         )
 
     if isinstance(obj, click.Group):
-        panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(list)
+        panel_to_commands: DefaultDict[str, List[click.Command]] = defaultdict(
+            list
+        )
         for command_name in obj.list_commands(ctx):
             command = obj.get_command(ctx, command_name)
             if command and not command.hidden:
@@ -733,4 +751,6 @@ def rich_to_html(input_text: str) -> str:
 
     console.print(input_text, overflow="ignore", crop=False)
 
-    return console.export_html(inline_styles=True, code_format="{code}").strip()
+    return console.export_html(
+        inline_styles=True, code_format="{code}"
+    ).strip()

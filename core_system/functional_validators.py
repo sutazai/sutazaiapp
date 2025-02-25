@@ -73,7 +73,10 @@ class AfterValidator:
         ```
     """
 
-    func: core_schema.NoInfoValidatorFunction | core_schema.WithInfoValidatorFunction
+    func: (
+        core_schema.NoInfoValidatorFunction
+        | core_schema.WithInfoValidatorFunction
+    )
 
     def __get_pydantic_core_schema__(
         self, source_type: Any, handler: GetCoreSchemaHandler
@@ -87,12 +90,16 @@ class AfterValidator:
             )
         else:
             func = cast(core_schema.NoInfoValidatorFunction, self.func)
-            return core_schema.no_info_after_validator_function(func, schema=schema)
+            return core_schema.no_info_after_validator_function(
+                func, schema=schema
+            )
 
     @classmethod
     def _from_decorator(
         cls,
-        decorator: _decorators.Decorator[_decorators.FieldValidatorDecoratorInfo],
+        decorator: _decorators.Decorator[
+            _decorators.FieldValidatorDecoratorInfo
+        ],
     ) -> Self:
         return cls(func=decorator.func)
 
@@ -130,7 +137,10 @@ class BeforeValidator:
         ```
     """
 
-    func: core_schema.NoInfoValidatorFunction | core_schema.WithInfoValidatorFunction
+    func: (
+        core_schema.NoInfoValidatorFunction
+        | core_schema.WithInfoValidatorFunction
+    )
     json_schema_input_type: Any = PydanticUndefined
 
     def __get_pydantic_core_schema__(
@@ -142,7 +152,9 @@ class BeforeValidator:
             if self.json_schema_input_type is PydanticUndefined
             else handler.generate_schema(self.json_schema_input_type)
         )
-        metadata = _core_metadata.build_metadata_dict(js_input_core_schema=input_schema)
+        metadata = _core_metadata.build_metadata_dict(
+            js_input_core_schema=input_schema
+        )
 
         info_arg = _inspect_validator(self.func, "before")
         if info_arg:
@@ -162,7 +174,9 @@ class BeforeValidator:
     @classmethod
     def _from_decorator(
         cls,
-        decorator: _decorators.Decorator[_decorators.FieldValidatorDecoratorInfo],
+        decorator: _decorators.Decorator[
+            _decorators.FieldValidatorDecoratorInfo
+        ],
     ) -> Self:
         return cls(
             func=decorator.func,
@@ -197,7 +211,10 @@ class PlainValidator:
         ```
     """
 
-    func: core_schema.NoInfoValidatorFunction | core_schema.WithInfoValidatorFunction
+    func: (
+        core_schema.NoInfoValidatorFunction
+        | core_schema.WithInfoValidatorFunction
+    )
     json_schema_input_type: Any = Any
 
     def __get_pydantic_core_schema__(
@@ -226,7 +243,9 @@ class PlainValidator:
             serialization = None
 
         input_schema = handler.generate_schema(self.json_schema_input_type)
-        metadata = _core_metadata.build_metadata_dict(js_input_core_schema=input_schema)
+        metadata = _core_metadata.build_metadata_dict(
+            js_input_core_schema=input_schema
+        )
 
         info_arg = _inspect_validator(self.func, "plain")
         if info_arg:
@@ -248,7 +267,9 @@ class PlainValidator:
     @classmethod
     def _from_decorator(
         cls,
-        decorator: _decorators.Decorator[_decorators.FieldValidatorDecoratorInfo],
+        decorator: _decorators.Decorator[
+            _decorators.FieldValidatorDecoratorInfo
+        ],
     ) -> Self:
         return cls(
             func=decorator.func,
@@ -311,7 +332,9 @@ class WrapValidator:
             if self.json_schema_input_type is PydanticUndefined
             else handler.generate_schema(self.json_schema_input_type)
         )
-        metadata = _core_metadata.build_metadata_dict(js_input_core_schema=input_schema)
+        metadata = _core_metadata.build_metadata_dict(
+            js_input_core_schema=input_schema
+        )
 
         info_arg = _inspect_validator(self.func, "wrap")
         if info_arg:
@@ -333,7 +356,9 @@ class WrapValidator:
     @classmethod
     def _from_decorator(
         cls,
-        decorator: _decorators.Decorator[_decorators.FieldValidatorDecoratorInfo],
+        decorator: _decorators.Decorator[
+            _decorators.FieldValidatorDecoratorInfo
+        ],
     ) -> Self:
         return cls(
             func=decorator.func,
@@ -531,7 +556,11 @@ def field_validator(
         )
 
     def dec(
-        f: Callable[..., Any] | staticmethod[Any, Any] | classmethod[Any, Any, Any],
+        f: (
+            Callable[..., Any]
+            | staticmethod[Any, Any]
+            | classmethod[Any, Any, Any]
+        ),
     ) -> _decorators.PydanticDescriptorProxy[Any]:
         if _decorators.is_instance_method_from_sig(f):
             raise PydanticUserError(
@@ -669,7 +698,9 @@ ModelAfterValidatorWithoutInfo = Callable[[_ModelType], _ModelType]
 have info argument.
 """
 
-ModelAfterValidator = Callable[[_ModelType, _core_schema.ValidationInfo], _ModelType]
+ModelAfterValidator = Callable[
+    [_ModelType, _core_schema.ValidationInfo], _ModelType
+]
 """A `@model_validator` decorated function signature. This is used when `mode='after'`."""
 
 _AnyModelWrapValidator = Union[
@@ -692,7 +723,9 @@ def model_validator(
     mode: Literal["wrap"],
 ) -> Callable[
     [_AnyModelWrapValidator[_ModelType]],
-    _decorators.PydanticDescriptorProxy[_decorators.ModelValidatorDecoratorInfo],
+    _decorators.PydanticDescriptorProxy[
+        _decorators.ModelValidatorDecoratorInfo
+    ],
 ]: ...
 
 
@@ -702,7 +735,9 @@ def model_validator(
     mode: Literal["before"],
 ) -> Callable[
     [_AnyModelBeforeValidator],
-    _decorators.PydanticDescriptorProxy[_decorators.ModelValidatorDecoratorInfo],
+    _decorators.PydanticDescriptorProxy[
+        _decorators.ModelValidatorDecoratorInfo
+    ],
 ]: ...
 
 
@@ -712,7 +747,9 @@ def model_validator(
     mode: Literal["after"],
 ) -> Callable[
     [_AnyModelAfterValidator[_ModelType]],
-    _decorators.PydanticDescriptorProxy[_decorators.ModelValidatorDecoratorInfo],
+    _decorators.PydanticDescriptorProxy[
+        _decorators.ModelValidatorDecoratorInfo
+    ],
 ]: ...
 
 

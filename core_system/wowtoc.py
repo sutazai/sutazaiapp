@@ -104,7 +104,9 @@ class WoWTocLexer(RegexLexer):
         # if this tag is omitted, players will need to opt-in to loading the addon with
         # an options change ("Load out of date addons"). the value is also standardized:
         # `<major><minor><patch>`, with minor and patch being two-digit zero-padded.
-        interface_pattern = _create_tag_line_pattern(r"(Interface)", ignore_case=True)
+        interface_pattern = _create_tag_line_pattern(
+            r"(Interface)", ignore_case=True
+        )
         match = re.search(interface_pattern, text)
         if match and re.match(r"(\d+)(\d{2})(\d{2})", match.group(7)):
             result += 0.8

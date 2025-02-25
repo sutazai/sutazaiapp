@@ -32,7 +32,9 @@ def visualize_error_mitigation(
 
     # Original State
     plt.subplot(1, 3, 1)
-    sns.heatmap(state, cmap="coolwarm", center=0, annot=True, fmt=".2f", cbar=False)
+    sns.heatmap(
+        state, cmap="coolwarm", center=0, annot=True, fmt=".2f", cbar=False
+    )
     plt.title(f"Original Noisy State\nNoise Level: {metrics.noise_level:.4f}")
 
     # Mitigated State
@@ -50,7 +52,9 @@ def visualize_error_mitigation(
     # Difference Heatmap
     plt.subplot(1, 3, 3)
     difference = mitigated_state - state
-    sns.heatmap(difference, cmap="RdBu_r", center=0, annot=True, fmt=".4f", cbar=False)
+    sns.heatmap(
+        difference, cmap="RdBu_r", center=0, annot=True, fmt=".4f", cbar=False
+    )
     plt.title(
         f"Correction Difference\nEntropy Reduction: {metrics.entropy_reduction:.4f}"
     )
@@ -89,7 +93,9 @@ def main():
 
         for strategy in strategies:
             print(f"\nStrategy: {strategy.name}")
-            visualize_error_mitigation(noisy_state, strategy, coherence_preserver)
+            visualize_error_mitigation(
+                noisy_state, strategy, coherence_preserver
+            )
 
 
 if __name__ == "__main__":

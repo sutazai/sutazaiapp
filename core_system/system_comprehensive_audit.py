@@ -3,7 +3,6 @@
 SutazAI Comprehensive System Audit Script
 
 This script performs a thorough audit of the system, checking:
-1. Security vulnerabilities
 2. Performance metrics
 3. Resource utilization
 4. Dependency health
@@ -33,14 +32,10 @@ class SystemAudit:
         os.makedirs(output_dir, exist_ok=True)
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    def run_security_checks(self) -> Dict[str, Any]:
         """
-        Perform comprehensive security checks
 
         Returns:
-            Dict containing security audit results
         """
-        security_results = {
             "timestamp": self.timestamp,
             "vulnerabilities": [],
             "system_checks": {},
@@ -53,21 +48,16 @@ class SystemAudit:
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            security_results["vulnerabilities"] = self._parse_safety_output(
                 safety_output
             )
         except subprocess.CalledProcessError as e:
-            security_results["safety_check_error"] = str(e)
 
-        # System-level security checks
-        security_results["system_checks"] = {
             "os_version": platform.platform(),
             "python_version": platform.python_version(),
             "open_ports": self._get_open_ports(),
             "firewall_status": self._check_firewall_status(),
         }
 
-        return security_results
 
     def _parse_safety_output(self, output: str) -> List[Dict[str, str]]:
         """
@@ -100,7 +90,9 @@ class SystemAudit:
             List of dictionaries with port information
         """
         try:
-            netstat_output = subprocess.check_output(["netstat", "-tuln"], text=True)
+            netstat_output = subprocess.check_output(
+                ["netstat", "-tuln"], text=True
+            )
             # Parse netstat output to extract port details
             # Implement detailed parsing logic
             return [
@@ -121,7 +113,9 @@ class SystemAudit:
         try:
             ufw_status = subprocess.check_output(["ufw", "status"], text=True)
             return {
-                "status": ("active" if "Status: active" in ufw_status else "inactive"),
+                "status": (
+                    "active" if "Status: active" in ufw_status else "inactive"
+                ),
                 "details": ufw_status,
             }
         except Exception:
@@ -182,7 +176,6 @@ class SystemAudit:
         Generate a comprehensive system audit report
         """
         report = {
-            "security_audit": self.run_security_checks(),
             "resource_utilization": self.analyze_resource_utilization(),
             "dependencies": self.check_dependencies(),
         }

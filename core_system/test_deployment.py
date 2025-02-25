@@ -7,7 +7,9 @@ import requests
 from dotenv import load_dotenv
 
 # Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 # Load environment variables
 load_dotenv()
@@ -42,11 +44,12 @@ class TestDeployment:
                 text=True,
                 check=True,
             )
-            assert result.returncode == 0, "Docker Compose configuration is invalid"
+            assert (
+                result.returncode == 0
+            ), "Docker Compose configuration is invalid"
         except subprocess.CalledProcessError as e:
             pytest.fail(f"Docker Compose config validation failed: {e.stderr}")
 
-    def test_environment_file_security(self):
         """Check .env file permissions"""
         env_path = ".env"
         assert os.path.exists(env_path), ".env file does not exist"
@@ -78,12 +81,16 @@ class TestDeployment:
                 capture_output=True,
                 text=True,
             )
-            assert result.returncode == 0, f"Docker build failed: {result.stderr}"
+            assert (
+                result.returncode == 0
+            ), f"Docker build failed: {result.stderr}"
         except subprocess.CalledProcessError as e:
             pytest.fail(f"Docker build error: {e}")
         finally:
             # Clean up test image
-            subprocess.run(["docker", "rmi", "sutazai_test"], capture_output=True)
+            subprocess.run(
+                ["docker", "rmi", "sutazai_test"], capture_output=True
+            )
 
     def test_dependency_installation(self):
         """Verify dependencies can be installed"""
@@ -105,11 +112,15 @@ class TestDeployment:
                 f"http://localhost:{env_config.get('PORT', 8000)}/health",
                 timeout=5,
             )
-            assert response.status_code == 200, "Health endpoint not responding"
+            assert (
+                response.status_code == 200
+            ), "Health endpoint not responding"
 
             # Optional: Check health response content
             health_data = response.json()
-            assert isinstance(health_data, dict), "Invalid health endpoint response"
+            assert isinstance(
+                health_data, dict
+            ), "Invalid health endpoint response"
             assert (
                 health_data.get("status") == "healthy"
             ), "Application not in healthy state"
@@ -120,11 +131,15 @@ class TestDeployment:
     def test_configuration_validation(self, env_config):
         """Validate critical configuration parameters"""
         # Check database configuration
-        assert env_config["DB_HOST"] != "db", "Default database host not replaced"
+        assert (
+            env_config["DB_HOST"] != "db"
+        ), "Default database host not replaced"
         assert len(env_config["SECRET_KEY"]) >= 32, "Weak secret key"
 
         # Check project naming
-        assert env_config["PROJECT_NAME"] == "SutazAI", "Incorrect project name"
+        assert (
+            env_config["PROJECT_NAME"] == "SutazAI"
+        ), "Incorrect project name"
 
 
 def pytest_configure(config):

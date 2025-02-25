@@ -118,7 +118,10 @@ class TestDistro:
         self.checkFooPkg(d)
 
         d = Distribution("/some/path")
-        assert d.py_version == f"{sys.version_info.major}.{sys.version_info.minor}"
+        assert (
+            d.py_version
+            == f"{sys.version_info.major}.{sys.version_info.minor}"
+        )
         assert d.platform is None
 
     def testDistroParse(self):
@@ -133,7 +136,9 @@ class TestDistro:
             project_name="FooPkg",
             py_version="2.4",
             platform="win32",
-            metadata=Metadata(("PKG-INFO", "Metadata-Version: 1.0\nVersion: 1.3-1\n")),
+            metadata=Metadata(
+                ("PKG-INFO", "Metadata-Version: 1.0\nVersion: 1.3-1\n")
+            ),
         )
         self.checkFooPkg(d)
 
@@ -345,7 +350,8 @@ class TestDistro:
         assert res == [a, c, b, foo]
 
     @pytest.mark.xfail(
-        sys.version_info[:2] == (3, 12) and sys.version_info.releaselevel != "final",
+        sys.version_info[:2] == (3, 12)
+        and sys.version_info.releaselevel != "final",
         reason="https://github.com/python/cpython/issues/103632",
     )
     def testDistroDependsOptions(self):
@@ -619,9 +625,16 @@ class TestRequirements:
 
         assert Requirement.parse("setuptools").project_name == "setuptools"
         # setuptools 0.7 and higher means setuptools.
-        assert Requirement.parse("setuptools == 0.7").project_name == "setuptools"
-        assert Requirement.parse("setuptools == 0.7a1").project_name == "setuptools"
-        assert Requirement.parse("setuptools >= 0.7").project_name == "setuptools"
+        assert (
+            Requirement.parse("setuptools == 0.7").project_name == "setuptools"
+        )
+        assert (
+            Requirement.parse("setuptools == 0.7a1").project_name
+            == "setuptools"
+        )
+        assert (
+            Requirement.parse("setuptools >= 0.7").project_name == "setuptools"
+        )
 
 
 class TestParsing:
@@ -683,7 +696,9 @@ class TestParsing:
         assert list(parse_requirements("Twisted >=1.2, \\ # more\n<2.0")) == [
             Requirement("Twisted>=1.2,<2.0")
         ]
-        assert Requirement.parse("FooBar==1.99a3") == Requirement("FooBar==1.99a3")
+        assert Requirement.parse("FooBar==1.99a3") == Requirement(
+            "FooBar==1.99a3"
+        )
         with pytest.raises(ValueError):
             Requirement.parse(">=2.3")
         with pytest.raises(ValueError):
@@ -833,11 +848,15 @@ class TestNamespaces:
             pkg2.ensure_dir()
             (pkg1 / "__init__.py").write_text(self.ns_str, encoding="utf-8")
             (pkg2 / "__init__.py").write_text(self.ns_str, encoding="utf-8")
-        with pytest.warns(DeprecationWarning, match="pkg_resources.declare_namespace"):
+        with pytest.warns(
+            DeprecationWarning, match="pkg_resources.declare_namespace"
+        ):
             import pkg1  # pyright: ignore[reportMissingImports] # Temporary package for test
         assert "pkg1" in pkg_resources._namespace_packages
         # attempt to import pkg2 from site-pkgs2
-        with pytest.warns(DeprecationWarning, match="pkg_resources.declare_namespace"):
+        with pytest.warns(
+            DeprecationWarning, match="pkg_resources.declare_namespace"
+        ):
             import pkg1.pkg2  # pyright: ignore[reportMissingImports] # Temporary package for test
         # check the _namespace_packages dict
         assert "pkg1.pkg2" in pkg_resources._namespace_packages
@@ -876,9 +895,13 @@ class TestNamespaces:
             subpkg = nspkg / "subpkg"
             subpkg.ensure_dir()
             (nspkg / "__init__.py").write_text(self.ns_str, encoding="utf-8")
-            (subpkg / "__init__.py").write_text(vers_str % number, encoding="utf-8")
+            (subpkg / "__init__.py").write_text(
+                vers_str % number, encoding="utf-8"
+            )
 
-        with pytest.warns(DeprecationWarning, match="pkg_resources.declare_namespace"):
+        with pytest.warns(
+            DeprecationWarning, match="pkg_resources.declare_namespace"
+        ):
             import nspkg  # pyright: ignore[reportMissingImports] # Temporary package for test
             import nspkg.subpkg  # pyright: ignore[reportMissingImports] # Temporary package for test
         expected = [str(site.realpath() / "nspkg") for site in site_dirs]

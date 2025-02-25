@@ -127,7 +127,6 @@ class UltraComprehensiveProjectOrganizer:
             "backend/config/settings.json": {
                 "debug": False,
                 "log_level": "INFO",
-                "security": {"otp_enabled": True},
             },
         }
 

@@ -119,7 +119,9 @@ class RebolLexer(RegexLexer):
             yield match.start(), Generic.Heading, word
         elif re.match("to-.*", word):
             yield match.start(), Keyword, word
-        elif re.match(r"(\+|-|\*|/|//|\*\*|and|or|xor|=\?|=|==|<>|<|>|<=|>=)$", word):
+        elif re.match(
+            r"(\+|-|\*|/|//|\*\*|and|or|xor|=\?|=|==|<>|<|>|<=|>=)$", word
+        ):
             yield match.start(), Operator, word
         elif re.match(r".*\?$", word):
             yield match.start(), Keyword, word

@@ -28,7 +28,6 @@ class SystemValidator:
             "system_info": {},
             "resource_usage": {},
             "performance_metrics": {},
-            "security_checks": {},
             "recommendations": [],
         }
 
@@ -136,29 +135,20 @@ class SystemValidator:
         self.validation_report["performance_metrics"] = performance_metrics
         return performance_metrics
 
-    def security_checks(self) -> Dict[str, bool]:
         """
-        Perform basic security checks.
 
         Returns:
-            Dict containing security check results
         """
-        security_checks = {
             "firewall_enabled": self._check_firewall(),
             "antivirus_running": self._check_antivirus(),
             "system_updates_current": self._check_system_updates(),
         }
 
-        self.validation_report["security_checks"] = security_checks
 
-        # Add security recommendations
-        for check, status in security_checks.items():
             if not status:
                 self.validation_report["recommendations"].append(
-                    f"Security concern: {check} is not configured optimally"
                 )
 
-        return security_checks
 
     def _check_firewall(self) -> bool:
         """Check if firewall is enabled."""
@@ -214,7 +204,9 @@ class SystemValidator:
             )
 
             print("\n📊 Resource Usage:")
-            for resource, usage in self.validation_report["resource_usage"].items():
+            for resource, usage in self.validation_report[
+                "resource_usage"
+            ].items():
                 print(f"  {resource.replace('_', ' ').title()}: {usage}%")
 
             print("\n🚨 Recommendations:")
@@ -234,7 +226,6 @@ def main():
     validator.collect_system_info()
     validator.check_resource_usage()
     validator.run_performance_tests()
-    validator.security_checks()
 
     # Generate report
     report_path = validator.generate_report()

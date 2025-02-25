@@ -77,7 +77,6 @@ class EPSSExploitabilityLabels(Enum):
     CRITICAL = "critical"
 
 
-class SecurityUpdatesLimits(Enum):
     MAJOR = "major"
     MINOR = "minor"
     PATCH = "patch"
@@ -113,7 +112,9 @@ class PythonEcosystemSettings(SchemaModelV30):
 
 class IgnoredVulnerability(SchemaModelV30):
     reason: Annotated[  # type: ignore[valid-type]
-        constr(strip_whitespace=True, strict=True, min_length=10, max_length=255),
+        constr(
+            strip_whitespace=True, strict=True, min_length=10, max_length=255
+        ),
         Field(),
     ]
     expires: Annotated[datetime.date, Field()]
@@ -167,16 +168,11 @@ class FailOnAnyOf(SchemaModelV30):
 
 class FailScanDependencyVulnerabilities(SchemaModelV30):
     enabled: Annotated[Optional[StrictBool], Field()] = True
-    fail_on_any_of: Annotated[Optional[FailOnAnyOf], Field(alias="fail-on-any-of")] = (
-        FailOnAnyOf()
-    )
+    fail_on_any_of: Annotated[
+        Optional[FailOnAnyOf], Field(alias="fail-on-any-of")
+    ] = FailOnAnyOf()
 
 
-class SecurityUpdatesDependencyVulnerabilities(SchemaModelV30):
-    auto_security_updates_limit: Annotated[  # type: ignore[valid-type]
-        Optional[conlist(SecurityUpdatesLimits, **AUTO_SECURITY_UPDATES_LIMIT_KWARGS)],  # type: ignore
-        Field(alias="auto-security-updates-limit"),
-    ] = [SecurityUpdatesLimits.PATCH]
 
 
 class System(SchemaModelV30):
@@ -221,9 +217,7 @@ class FailScan(SchemaModelV30):
     ]
 
 
-class SecurityUpdatesSettings(SchemaModelV30):
     dependency_vulnerabilities: Annotated[
-        Optional[SecurityUpdatesDependencyVulnerabilities],
         Field(alias="dependency-vulnerabilities"),
     ]
 
@@ -288,7 +282,9 @@ class AllowedInstallation(SchemaModelV30):
     if LATEST_PYDANTIC:
         model_config = ConfigDict(coerce_numbers_to_str=True)
     packages: Annotated[Optional[List[PackageDefinition]], Field()] = []
-    vulnerabilities: Annotated[Optional[Dict[str, IgnoredVulnerability]], Field()] = {}
+    vulnerabilities: Annotated[
+        Optional[Dict[str, IgnoredVulnerability]], Field()
+    ] = {}
 
 
 class DeniedInstallation(SchemaModelV30):
@@ -304,9 +300,9 @@ class Installation(SchemaModelV30):
     default_action: Annotated[
         Optional[InstallationAction], Field(alias="default-action")
     ]
-    audit_logging: Annotated[Optional[AuditLogging], Field(alias="audit-logging")] = (
-        None
-    )
+    audit_logging: Annotated[
+        Optional[AuditLogging], Field(alias="audit-logging")
+    ] = None
     allow: Annotated[Optional[AllowedInstallation], Field()] = None
     deny: Annotated[Optional[DeniedInstallation], Field()] = None
 
@@ -315,13 +311,13 @@ class Config(SchemaModelV30):
     """Main configuration schema for Safety policy."""
 
     version: Annotated[Optional[str], Field()] = "3.0"
-    scan: Annotated[Optional[ScanSettings], Field(alias="scanning-settings")] = None
+    scan: Annotated[
+        Optional[ScanSettings], Field(alias="scanning-settings")
+    ] = None
     report: Annotated[Optional[Report], Field()] = None
     fail_scan: Annotated[
         Optional[FailScan], Field(alias="fail-scan-with-exit-code")
     ] = None
-    security_updates: Annotated[
-        Optional[SecurityUpdatesSettings], Field(alias="security-updates")
     ] = None
     installation: Annotated[Optional[Installation], Field()] = None
 

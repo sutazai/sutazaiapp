@@ -1,7 +1,6 @@
 #!/bin/bash
 case $1 in
     start)
-        sutazai-cli chat --security-level=maximum
         ;;
     auth)
         sutazai-cli auth-request --method $2

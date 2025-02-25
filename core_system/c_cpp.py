@@ -57,7 +57,9 @@ class CFamilyLexer(RegexLexer):
 
     # Identifier regex with C and C++ Universal Character Name (UCN) support.
     _ident = r"(?!\d)(?:[\w$]|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8})+"
-    _namespaced_ident = r"(?!\d)(?:[\w$]|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|::)+"
+    _namespaced_ident = (
+        r"(?!\d)(?:[\w$]|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|::)+"
+    )
 
     # Single and multiline comment regexes
     # Beware not to use *? for the inner content! When these regexes
@@ -65,7 +67,9 @@ class CFamilyLexer(RegexLexer):
     # match more than it would have if the regex had been used in
     # a standalone way ...
     _comment_single = r"//(?:.|(?<=\\)\n)*\n"
-    _comment_multiline = r"/(?:\\\n)?[*](?:[^*]|[*](?!(?:\\\n)?/))*[*](?:\\\n)?/"
+    _comment_multiline = (
+        r"/(?:\\\n)?[*](?:[^*]|[*](?!(?:\\\n)?/))*[*](?:\\\n)?/"
+    )
 
     # Regex to match optional comments
     _possible_comments = (
@@ -516,14 +520,20 @@ class CFamilyLexer(RegexLexer):
     }
 
     def __init__(self, **options):
-        self.stdlibhighlighting = get_bool_opt(options, "stdlibhighlighting", True)
+        self.stdlibhighlighting = get_bool_opt(
+            options, "stdlibhighlighting", True
+        )
         self.c99highlighting = get_bool_opt(options, "c99highlighting", True)
         self.c11highlighting = get_bool_opt(options, "c11highlighting", True)
-        self.platformhighlighting = get_bool_opt(options, "platformhighlighting", True)
+        self.platformhighlighting = get_bool_opt(
+            options, "platformhighlighting", True
+        )
         RegexLexer.__init__(self, **options)
 
     def get_tokens_unprocessed(self, text, stack=("root",)):
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name:
                 if self.stdlibhighlighting and value in self.stdlib_types:
                     token = Keyword.Type

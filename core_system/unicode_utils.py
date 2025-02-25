@@ -48,7 +48,9 @@ def try_encode(string, enc):
         return None
 
 
-def _read_utf8_with_fallback(file: str, fallback_encoding=py39.LOCALE_ENCODING) -> str:
+def _read_utf8_with_fallback(
+    file: str, fallback_encoding=py39.LOCALE_ENCODING
+) -> str:
     """
     First try to read the file with UTF-8, if there is an error fallback to a
     different encoding ("locale" by default). Returns the content of the file.
@@ -59,7 +61,9 @@ def _read_utf8_with_fallback(file: str, fallback_encoding=py39.LOCALE_ENCODING) 
         with open(file, "r", encoding="utf-8") as f:
             return f.read()
     except UnicodeDecodeError:  # pragma: no cover
-        _Utf8EncodingNeeded.emit(file=file, fallback_encoding=fallback_encoding)
+        _Utf8EncodingNeeded.emit(
+            file=file, fallback_encoding=fallback_encoding
+        )
         with open(file, "r", encoding=fallback_encoding) as f:
             return f.read()
 
@@ -75,7 +79,9 @@ def _cfg_read_utf8_with_fallback(
     try:
         cfg.read(file, encoding="utf-8")
     except UnicodeDecodeError:  # pragma: no cover
-        _Utf8EncodingNeeded.emit(file=file, fallback_encoding=fallback_encoding)
+        _Utf8EncodingNeeded.emit(
+            file=file, fallback_encoding=fallback_encoding
+        )
         cfg.clear()
         cfg.read(file, encoding=fallback_encoding)
 

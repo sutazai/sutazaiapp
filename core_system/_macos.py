@@ -43,8 +43,6 @@ def _load_cdll(name: str, macos10_16_path: str) -> CDLL:
         raise ImportError(f"The library {name} failed to load") from None
 
 
-Security = _load_cdll(
-    "Security", "/System/Library/Frameworks/Security.framework/Security"
 )
 CoreFoundation = _load_cdll(
     "CoreFoundation",
@@ -81,55 +79,32 @@ SecTrustResultType = c_uint32
 SecTrustOptionFlags = c_uint32
 
 try:
-    Security.SecCertificateCreateWithData.argtypes = [
         CFAllocatorRef,
         CFDataRef,
     ]
-    Security.SecCertificateCreateWithData.restype = SecCertificateRef
 
-    Security.SecCertificateCopyData.argtypes = [SecCertificateRef]
-    Security.SecCertificateCopyData.restype = CFDataRef
 
-    Security.SecCopyErrorMessageString.argtypes = [OSStatus, c_void_p]
-    Security.SecCopyErrorMessageString.restype = CFStringRef
 
-    Security.SecTrustSetAnchorCertificates.argtypes = [SecTrustRef, CFArrayRef]
-    Security.SecTrustSetAnchorCertificates.restype = OSStatus
 
-    Security.SecTrustSetAnchorCertificatesOnly.argtypes = [
         SecTrustRef,
         Boolean,
     ]
-    Security.SecTrustSetAnchorCertificatesOnly.restype = OSStatus
 
-    Security.SecTrustEvaluate.argtypes = [
         SecTrustRef,
         POINTER(SecTrustResultType),
     ]
-    Security.SecTrustEvaluate.restype = OSStatus
 
-    Security.SecPolicyCreateRevocation.argtypes = [CFOptionFlags]
-    Security.SecPolicyCreateRevocation.restype = SecPolicyRef
 
-    Security.SecPolicyCreateSSL.argtypes = [Boolean, CFStringRef]
-    Security.SecPolicyCreateSSL.restype = SecPolicyRef
 
-    Security.SecTrustCreateWithCertificates.argtypes = [
         CFTypeRef,
         CFTypeRef,
         POINTER(SecTrustRef),
     ]
-    Security.SecTrustCreateWithCertificates.restype = OSStatus
 
-    Security.SecTrustGetTrustResult.argtypes = [
         SecTrustRef,
         POINTER(SecTrustResultType),
     ]
-    Security.SecTrustGetTrustResult.restype = OSStatus
 
-    Security.SecTrustRef = SecTrustRef  # type: ignore[attr-defined]
-    Security.SecTrustResultType = SecTrustResultType  # type: ignore[attr-defined]
-    Security.OSStatus = OSStatus  # type: ignore[attr-defined]
 
     kSecRevocationUseAnyAvailableMethod = 3
     kSecRevocationRequirePositiveResponse = 8
@@ -229,7 +204,6 @@ def _handle_osstatus(
     # into a UTF-8 Python string.
     error_message_cfstring = None
     try:
-        error_message_cfstring = Security.SecCopyErrorMessageString(
             result, None
         )
 
@@ -275,9 +249,6 @@ def _handle_osstatus(
     raise ssl.SSLError(message)
 
 
-Security.SecTrustCreateWithCertificates.errcheck = _handle_osstatus  # type: ignore[assignment]
-Security.SecTrustSetAnchorCertificates.errcheck = _handle_osstatus  # type: ignore[assignment]
-Security.SecTrustGetTrustResult.errcheck = _handle_osstatus  # type: ignore[assignment]
 
 
 class CFConst:
@@ -351,7 +322,6 @@ def _der_certs_to_cf_cert_array(certs: list[bytes]) -> CFMutableArrayRef:  # typ
         sec_cert_ref = None
         try:
             cf_data = _bytes_to_cf_data_ref(cert_data)
-            sec_cert_ref = Security.SecCertificateCreateWithData(
                 CoreFoundation.kCFAllocatorDefault, cf_data
             )
             CoreFoundation.CFArrayAppendValue(cf_array, sec_cert_ref)
@@ -393,12 +363,10 @@ def _verify_peercerts_impl(
                 cf_str_hostname = _bytes_to_cf_string(
                     server_hostname.encode("ascii")
                 )
-                ssl_policy = Security.SecPolicyCreateSSL(True, cf_str_hostname)
             finally:
                 if cf_str_hostname:
                     CoreFoundation.CFRelease(cf_str_hostname)
         else:
-            ssl_policy = Security.SecPolicyCreateSSL(True, None)
 
         policies = ssl_policy
         if ssl_context.verify_flags & ssl.VERIFY_CRL_CHECK_CHAIN:
@@ -410,7 +378,6 @@ def _verify_peercerts_impl(
             )
             CoreFoundation.CFArrayAppendValue(policies, ssl_policy)
             CoreFoundation.CFRelease(ssl_policy)
-            revocation_policy = Security.SecPolicyCreateRevocation(
                 kSecRevocationUseAnyAvailableMethod
                 | kSecRevocationRequirePositiveResponse
             )
@@ -427,8 +394,6 @@ def _verify_peercerts_impl(
 
             # Now that we have certificates loaded and a SecPolicy
             # we can finally create a SecTrust object!
-            trust = Security.SecTrustRef()
-            Security.SecTrustCreateWithCertificates(
                 certs, policies, ctypes.byref(trust)
             )
 
@@ -448,15 +413,12 @@ def _verify_peercerts_impl(
             ctx_ca_certs = None
             try:
                 ctx_ca_certs = _der_certs_to_cf_cert_array(cert_chain)
-                Security.SecTrustSetAnchorCertificates(trust, ctx_ca_certs)
             finally:
                 if ctx_ca_certs:
                     CoreFoundation.CFRelease(ctx_ca_certs)
         else:
-            Security.SecTrustSetAnchorCertificates(trust, None)
 
         cf_error = CoreFoundation.CFErrorRef()
-        sec_trust_eval_result = Security.SecTrustEvaluateWithError(
             trust, ctypes.byref(cf_error)
         )
         # sec_trust_eval_result is a bool (0 or 1)
@@ -467,7 +429,6 @@ def _verify_peercerts_impl(
             is_trusted = False
         else:
             raise ssl.SSLError(
-                f"Unknown result from Security.SecTrustEvaluateWithError: {sec_trust_eval_result!r}"
             )
 
         cf_error_code = 0
@@ -505,8 +466,6 @@ def _verify_peercerts_impl(
 
                 # TODO: Not sure if we need the SecTrustResultType for anything?
                 # We only care whether or not it's a success or failure for now.
-                sec_trust_result_type = Security.SecTrustResultType()
-                Security.SecTrustGetTrustResult(
                     trust, ctypes.byref(sec_trust_result_type)
                 )
 

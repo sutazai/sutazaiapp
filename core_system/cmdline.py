@@ -136,7 +136,9 @@ def _print_list(what):
             tup = (
                 ", ".join(cls.aliases) + ":",
                 doc,
-                cls.filenames and "(filenames " + ", ".join(cls.filenames) + ")" or "",
+                cls.filenames
+                and "(filenames " + ", ".join(cls.filenames) + ")"
+                or "",
             )
             info.append(tup)
         info.sort()
@@ -449,7 +451,9 @@ def main_inner(parser, argns):
                         name = None
 
                 if filename and name:
-                    fmter = load_formatter_from_file(filename, name, **parsed_opts)
+                    fmter = load_formatter_from_file(
+                        filename, name, **parsed_opts
+                    )
                 else:
                     fmter = load_formatter_from_file(fmter, **parsed_opts)
             except ClassNotFound as err:
@@ -550,7 +554,9 @@ def main_inner(parser, argns):
 
 
 class HelpFormatter(argparse.HelpFormatter):
-    def __init__(self, prog, indent_increment=2, max_help_position=16, width=None):
+    def __init__(
+        self, prog, indent_increment=2, max_help_position=16, width=None
+    ):
         if width is None:
             try:
                 width = shutil.get_terminal_size().columns - 2
@@ -656,7 +662,8 @@ def main(args=sys.argv):
     )
     flags.add_argument(
         "--json",
-        help="Output as JSON. This can " "be only used in conjunction with -L.",
+        help="Output as JSON. This can "
+        "be only used in conjunction with -L.",
         default=False,
         action="store_true",
     )

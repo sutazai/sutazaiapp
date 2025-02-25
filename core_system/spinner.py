@@ -107,7 +107,9 @@ class Spinner:
             speed (float, optional): Speed factor for animation. Defaults to None.
         """
         if text:
-            self.text = Text.from_markup(text) if isinstance(text, str) else text
+            self.text = (
+                Text.from_markup(text) if isinstance(text, str) else text
+            )
         if style:
             self.style = style
         if speed:

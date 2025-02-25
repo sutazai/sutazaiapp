@@ -256,7 +256,6 @@ _css_properties = (
     "initial-letter-wrap",
     "inline-size",
     "inline-sizing",
-    "input-security",
     "inset",
     "inset-block",
     "inset-block-end",

@@ -61,7 +61,9 @@ def get_dep(specification: Union[str, ParsedDependency]):
 
 @dataclass(config={"arbitrary_types_allowed": True})
 class PythonSpecification(Requirement, Specification):
-    dep: ClassVar[Optional[ParsedDependency]] = Field(default=None, exclude=True)
+    dep: ClassVar[Optional[ParsedDependency]] = Field(
+        default=None, exclude=True
+    )
 
     def __load_req(self, specification: Union[str, ParsedDependency]):
         self.dep = get_dep(specification)

@@ -176,7 +176,9 @@ class UnixCCompiler(CCompiler):
         # - force is indicated
         # - output is directed to stdout
         # - source file is newer than the target
-        preprocess = self.force or output_file is None or newer(source, output_file)
+        preprocess = (
+            self.force or output_file is None or newer(source, output_file)
+        )
         if not preprocess:
             return
 
@@ -189,15 +191,24 @@ class UnixCCompiler(CCompiler):
             raise CompileError(msg)
 
     def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts):
-        compiler_so = compiler_fixup(self.compiler_so, cc_args + extra_postargs)
-        compiler_so_cxx = compiler_fixup(self.compiler_so_cxx, cc_args + extra_postargs)
+        compiler_so = compiler_fixup(
+            self.compiler_so, cc_args + extra_postargs
+        )
+        compiler_so_cxx = compiler_fixup(
+            self.compiler_so_cxx, cc_args + extra_postargs
+        )
         try:
             if self.detect_language(src) == "c++":
                 self.spawn(
-                    compiler_so_cxx + cc_args + [src, "-o", obj] + extra_postargs
+                    compiler_so_cxx
+                    + cc_args
+                    + [src, "-o", obj]
+                    + extra_postargs
                 )
             else:
-                self.spawn(compiler_so + cc_args + [src, "-o", obj] + extra_postargs)
+                self.spawn(
+                    compiler_so + cc_args + [src, "-o", obj] + extra_postargs
+                )
         except DistutilsExecError as msg:
             raise CompileError(msg)
 
@@ -211,11 +222,15 @@ class UnixCCompiler(CCompiler):
     ):
         objects, output_dir = self._fix_object_args(objects, output_dir)
 
-        output_filename = self.library_filename(output_libname, output_dir=output_dir)
+        output_filename = self.library_filename(
+            output_libname, output_dir=output_dir
+        )
 
         if self._need_link(objects, output_filename):
             self.mkpath(os.path.dirname(output_filename))
-            self.spawn(self.archiver + [output_filename] + objects + self.objects)
+            self.spawn(
+                self.archiver + [output_filename] + objects + self.objects
+            )
 
             # Not many Unices required ranlib anymore -- SunOS 4.x is, I
             # think the only major Unix that does.  Maybe we need some
@@ -247,17 +262,23 @@ class UnixCCompiler(CCompiler):
         target_lang=None,
     ):
         objects, output_dir = self._fix_object_args(objects, output_dir)
-        fixed_args = self._fix_lib_args(libraries, library_dirs, runtime_library_dirs)
+        fixed_args = self._fix_lib_args(
+            libraries, library_dirs, runtime_library_dirs
+        )
         libraries, library_dirs, runtime_library_dirs = fixed_args
 
-        lib_opts = gen_lib_options(self, library_dirs, runtime_library_dirs, libraries)
+        lib_opts = gen_lib_options(
+            self, library_dirs, runtime_library_dirs, libraries
+        )
         if not isinstance(output_dir, (str, type(None))):
             raise TypeError("'output_dir' must be a string or None")
         if output_dir is not None:
             output_filename = os.path.join(output_dir, output_filename)
 
         if self._need_link(objects, output_filename):
-            ld_args = objects + self.objects + lib_opts + ["-o", output_filename]
+            ld_args = (
+                objects + self.objects + lib_opts + ["-o", output_filename]
+            )
             if debug:
                 ld_args[:0] = ["-g"]
             if extra_preargs:
@@ -274,7 +295,9 @@ class UnixCCompiler(CCompiler):
                     self.linker_exe
                     if building_exe
                     else (
-                        self.linker_so_cxx if target_lang == "c++" else self.linker_so
+                        self.linker_so_cxx
+                        if target_lang == "c++"
+                        else self.linker_so
                     )
                 )[:]
 
@@ -384,7 +407,10 @@ class UnixCCompiler(CCompiler):
             and match
             and (
                 dir.startswith("/System/")
-                or (dir.startswith("/usr/") and not dir.startswith("/usr/local/"))
+                or (
+                    dir.startswith("/usr/")
+                    and not dir.startswith("/usr/local/")
+                )
             )
         )
 
@@ -404,7 +430,9 @@ class UnixCCompiler(CCompiler):
 
         roots = map(self._library_root, dirs)
 
-        searched = itertools.starmap(os.path.join, itertools.product(roots, lib_names))
+        searched = itertools.starmap(
+            os.path.join, itertools.product(roots, lib_names)
+        )
 
         found = filter(os.path.exists, searched)
 

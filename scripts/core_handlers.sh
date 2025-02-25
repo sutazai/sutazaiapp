@@ -84,19 +84,15 @@ resource_optimizer() {
     done
 }
 
-# Security Auditor
-security_auditor() {
     while true; do
         # Check for world-writable files
         local world_writable=$(find / -xdev -type f -perm -0002 2>/dev/null)
         if [[ -n "$world_writable" ]]; then
-            trigger_event "security_issue" "World-writable files found"
         fi
 
         # Check for unauthorized changes
         local changed_files=$(rpm -Va --nomtime --nosize --nomd5 --nolinkto 2>/dev/null)
         if [[ -n "$changed_files" ]]; then
-            trigger_event "security_issue" "System files modified"
         fi
 
         sleep 3600

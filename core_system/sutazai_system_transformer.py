@@ -55,7 +55,9 @@ class SutazAiSystemTransformer:
                     "details": str(e),
                 }
                 self.transformation_report["errors"].append(error_entry)
-                self.logger.error(f"Transformation failed for {file_path}: {e}")
+                self.logger.error(
+                    f"Transformation failed for {file_path}: {e}"
+                )
 
     def _transform_single_file(self, file_path: str):
         """
@@ -257,7 +259,6 @@ def main():
         "sutazai_core/neural_entanglement/coherence_preserver.py",
         "system_validator.py",
         "examples/coherence_preservation_demo.py",
-        "scripts/security_review.py",
         "backend/model_server.py",
         "system_verify.py",
         "main.py",
@@ -268,7 +269,9 @@ def main():
     project_root = os.getcwd()
 
     # Full file paths
-    full_file_paths = [os.path.join(project_root, f) for f in files_to_transform]
+    full_file_paths = [
+        os.path.join(project_root, f) for f in files_to_transform
+    ]
 
     # Initialize transformer
     transformer = SutazAiSystemTransformer(project_root)

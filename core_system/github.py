@@ -45,7 +45,9 @@ def delete_branch(repo: Any, branch: str) -> None:
 
 
 @click.command()
-@click.option("--repo", help="GitHub standard repo path (eg, my-org/my-project)")
+@click.option(
+    "--repo", help="GitHub standard repo path (eg, my-org/my-project)"
+)
 @click.option("--token", help="GitHub Access Token")
 @click.option(
     "--base-url",
@@ -54,7 +56,9 @@ def delete_branch(repo: Any, branch: str) -> None:
 )
 @click.pass_obj
 @utils.require_files_report
-def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
+def github_pr(
+    obj: Any, repo: str, token: str, base_url: Optional[str]
+) -> None:
     """
     Create a GitHub PR to fix any vulnerabilities using Safety's remediation data.
 
@@ -75,16 +79,15 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
 
     # Load alert configurations from the policy
     alert = obj.policy.get("alert", {}) or {}
-    security = alert.get("security", {}) or {}
-    config_pr = security.get("github-pr", {}) or {}
 
     branch_prefix = config_pr.get("branch-prefix", "pyup/")
     pr_prefix = config_pr.get("pr-prefix", "[PyUp] ")
     assignees = config_pr.get("assignees", [])
-    labels = config_pr.get("labels", ["security"])
     label_severity = config_pr.get("label-severity", True)
     ignore_cvss_severity_below = config_pr.get("ignore-cvss-severity-below", 0)
-    ignore_cvss_unknown_severity = config_pr.get("ignore-cvss-unknown-severity", False)
+    ignore_cvss_unknown_severity = config_pr.get(
+        "ignore-cvss-unknown-severity", False
+    )
 
     # Authenticate with GitHub
     gh = pygithub.Github(token, **({"base_url": base_url} if base_url else {}))
@@ -106,7 +109,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
     )
 
     # Get all open pull requests for the repository
-    pulls = repo.get_pulls(state="open", sort="created", base=repo.default_branch)
+    pulls = repo.get_pulls(
+        state="open", sort="created", base=repo.default_branch
+    )
     pending_updates = set(
         [
             f"{canonicalize_name(req_rem['requirement']['name'])}{req_rem['requirement']['specifier']}"
@@ -199,7 +204,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                     updated_contents = parsed_req.update_version(
                         contents, remediation["recommended_version"]
                     )
-                    pending_updates.discard(f"{pkg_canonical_name}{analyzed_spec}")
+                    pending_updates.discard(
+                        f"{pkg_canonical_name}{analyzed_spec}"
+                    )
 
                     new_branch = branch_prefix + utils.generate_branch_name(
                         pkg, remediation
@@ -220,7 +227,8 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                             continue
 
                         authors = [
-                            commit.committer.login for commit in pr.get_commits()
+                            commit.committer.login
+                            for commit in pr.get_commits()
                         ]
                         only_us = all([x == self_user for x in authors])
 
@@ -304,15 +312,20 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                     except pygithub.GithubException as e:
                         if e.data["message"] == "Reference already exists":
                             # There might be a stale branch. If the bot is the only committer, nuke it.
-                            comparison = repo.compare(repo.default_branch, new_branch)
+                            comparison = repo.compare(
+                                repo.default_branch, new_branch
+                            )
                             authors = [
-                                commit.committer.login for commit in comparison.commits
+                                commit.committer.login
+                                for commit in comparison.commits
                             ]
                             only_us = all([x == self_user for x in authors])
 
                             if only_us:
                                 delete_branch(repo, new_branch)
-                                create_branch(repo, repo.default_branch, new_branch)
+                                create_branch(
+                                    repo, repo.default_branch, new_branch
+                                )
                             else:
                                 LOG.debug(
                                     f"The branch '{new_branch}' already exists - but there is no matching PR and this branch has committers other than us. This remediation will be skipped."
@@ -324,7 +337,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                     try:
                         repo.update_file(
                             path=name,
-                            message=utils.generate_commit_message(pkg, remediation),
+                            message=utils.generate_commit_message(
+                                pkg, remediation
+                            ),
                             content=updated_contents,
                             branch=new_branch,
                             sha=utils.git_sha1(raw_contents),
@@ -340,7 +355,8 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                             raise e
 
                     pr = repo.create_pull(
-                        title=pr_prefix + utils.generate_title(pkg, remediation, vulns),
+                        title=pr_prefix
+                        + utils.generate_title(pkg, remediation, vulns),
                         body=utils.generate_body(
                             pkg, remediation, vulns, api_key=obj.key
                         ),
@@ -359,7 +375,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
                         pr.add_to_labels(label)
 
                     if label_severity:
-                        score_as_label = utils.cvss3_score_to_label(highest_base_score)
+                        score_as_label = utils.cvss3_score_to_label(
+                            highest_base_score
+                        )
                         if score_as_label:
                             pr.add_to_labels(score_as_label)
 
@@ -382,7 +400,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
 
 
 @click.command()
-@click.option("--repo", help="GitHub standard repo path (eg, my-org/my-project)")
+@click.option(
+    "--repo", help="GitHub standard repo path (eg, my-org/my-project)"
+)
 @click.option("--token", help="GitHub Access Token")
 @click.option(
     "--base-url",
@@ -391,7 +411,9 @@ def github_pr(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
 )
 @click.pass_obj
 @utils.require_files_report  # TODO: For now, it can be removed in the future to support env scans.
-def github_issue(obj: Any, repo: str, token: str, base_url: Optional[str]) -> None:
+def github_issue(
+    obj: Any, repo: str, token: str, base_url: Optional[str]
+) -> None:
     """
     Create a GitHub Issue for any vulnerabilities found using PyUp's remediation data.
 
@@ -414,15 +436,14 @@ def github_issue(obj: Any, repo: str, token: str, base_url: Optional[str]) -> No
 
     # Load alert configurations from the policy
     alert = obj.policy.get("alert", {}) or {}
-    security = alert.get("security", {}) or {}
-    config_issue = security.get("github-issue", {}) or {}
 
     issue_prefix = config_issue.get("issue-prefix", "[PyUp] ")
     assignees = config_issue.get("assignees", [])
-    labels = config_issue.get("labels", ["security"])
 
     label_severity = config_issue.get("label-severity", True)
-    ignore_cvss_severity_below = config_issue.get("ignore-cvss-severity-below", 0)
+    ignore_cvss_severity_below = config_issue.get(
+        "ignore-cvss-severity-below", 0
+    )
     ignore_cvss_unknown_severity = config_issue.get(
         "ignore-cvss-unknown-severity", False
     )
@@ -434,7 +455,8 @@ def github_issue(obj: Any, repo: str, token: str, base_url: Optional[str]) -> No
 
     # Get all open issues for the repository
     issues = list(repo.get_issues(state="open", sort="created"))
-    ISSUE_TITLE_REGEX = re.escape(issue_prefix) + r"Security Vulnerability in (.+)"
+    ISSUE_TITLE_REGEX = (
+    )
     req_remediations = list(
         itertools.chain.from_iterable(
             rem.get("requirements", {}).values()
@@ -529,7 +551,8 @@ def github_issue(obj: Any, repo: str, token: str, base_url: Optional[str]) -> No
                             group = match.group(1)
                             if (
                                 group == f"{pkg}{analyzed_spec}"
-                                or group == f"{pkg_canonical_name}{analyzed_spec}"
+                                or group
+                                == f"{pkg_canonical_name}{analyzed_spec}"
                             ):
                                 skip = True
                                 break
@@ -561,7 +584,9 @@ def github_issue(obj: Any, repo: str, token: str, base_url: Optional[str]) -> No
                         pr.add_to_labels(label)
 
                     if label_severity:
-                        score_as_label = utils.cvss3_score_to_label(highest_base_score)
+                        score_as_label = utils.cvss3_score_to_label(
+                            highest_base_score
+                        )
                         if score_as_label:
                             pr.add_to_labels(score_as_label)
 

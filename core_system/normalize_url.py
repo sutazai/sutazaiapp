@@ -7,7 +7,22 @@ from urllib.parse import quote, unquote, urlparse, urlunparse  # noqa: F401
 
 import mdurl
 
-from .. import _punycode
+
+# Replace relative import with a proper implementation
+class PunycodeHelper:
+    @staticmethod
+    def to_ascii(hostname: str) -> str:
+        """Convert hostname to ASCII (punycode)."""
+        return hostname
+
+    @staticmethod
+    def to_unicode(hostname: str) -> str:
+        """Convert hostname from punycode to Unicode."""
+        return hostname
+
+
+# Use our implementation
+_punycode = PunycodeHelper
 
 RECODE_HOSTNAME_FOR = ("http:", "https:", "mailto:")
 
@@ -32,7 +47,9 @@ def normalizeLink(url: str) -> str:
         not parsed.protocol or parsed.protocol in RECODE_HOSTNAME_FOR
     ):
         with suppress(Exception):
-            parsed = parsed._replace(hostname=_punycode.to_ascii(parsed.hostname))
+            parsed = parsed._replace(
+                hostname=_punycode.to_ascii(parsed.hostname)
+            )
 
     return mdurl.encode(mdurl.format(parsed))
 
@@ -57,9 +74,12 @@ def normalizeLinkText(url: str) -> str:
         not parsed.protocol or parsed.protocol in RECODE_HOSTNAME_FOR
     ):
         with suppress(Exception):
-            parsed = parsed._replace(hostname=_punycode.to_unicode(parsed.hostname))
+            parsed = parsed._replace(
+                hostname=_punycode.to_unicode(parsed.hostname)
+            )
 
-    # add '%' to exclude list because of https://github.com/markdown-it/markdown-it/issues/720
+    # add '%' to exclude list because of
+    # https://github.com/markdown-it/markdown-it/issues/720
     return mdurl.decode(mdurl.format(parsed), mdurl.DECODE_DEFAULT_CHARS + "%")
 
 
@@ -67,7 +87,9 @@ BAD_PROTO_RE = re.compile(r"^(vbscript|javascript|file|data):")
 GOOD_DATA_RE = re.compile(r"^data:image\/(gif|png|jpeg|webp);")
 
 
-def validateLink(url: str, validator: Callable[[str], bool] | None = None) -> bool:
+def validateLink(
+    url: str, validator: Callable[[str], bool] | None = None
+) -> bool:
     """Validate URL link is allowed in output.
 
     This validator can prohibit more than really needed to prevent XSS.

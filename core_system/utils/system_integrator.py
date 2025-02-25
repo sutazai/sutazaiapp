@@ -10,7 +10,6 @@ Key Capabilities:
 - Holistic system component discovery
 - Dependency graph generation
 - Architectural relationship tracking
-- Performance and security cross-referencing
 - Autonomous system topology documentation
 """
 
@@ -26,7 +25,9 @@ from typing import Any, Dict
 from core_system.utils.safe_import import safe_import
 
 # Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+)
 
 # Safely import external libraries
 networkx = safe_import("networkx")
@@ -122,7 +123,9 @@ class AdvancedSystemIntegrator:
                 if file.endswith(".py"):
                     full_path = os.path.join(root, file)
                     relative_path = os.path.relpath(full_path, self.base_dir)
-                    module_name = relative_path.replace("/", ".").replace(".py", "")
+                    module_name = relative_path.replace("/", ".").replace(
+                        ".py", ""
+                    )
 
                     try:
                         # Dynamically import module
@@ -151,9 +154,9 @@ class AdvancedSystemIntegrator:
                                 self.component_registry["classes"][
                                     f"{module_name}.{name}"
                                 ] = class_details
-                                self.component_registry["modules"][module_name][
-                                    "classes"
-                                ].append(name)
+                                self.component_registry["modules"][
+                                    module_name
+                                ]["classes"].append(name)
 
                             if inspect.isfunction(obj):
                                 func_details = {
@@ -164,12 +167,14 @@ class AdvancedSystemIntegrator:
                                 self.component_registry["functions"][
                                     f"{module_name}.{name}"
                                 ] = func_details
-                                self.component_registry["modules"][module_name][
-                                    "functions"
-                                ].append(name)
+                                self.component_registry["modules"][
+                                    module_name
+                                ]["functions"].append(name)
 
                     except Exception as e:
-                        logger.warning(f"Could not process module {module_name}: {e}")
+                        logger.warning(
+                            f"Could not process module {module_name}: {e}"
+                        )
 
     def generate_dependency_graph(self) -> networkx.DiGraph:
         """
@@ -181,7 +186,9 @@ class AdvancedSystemIntegrator:
         dependency_graph = networkx.DiGraph()
 
         # Add modules as nodes
-        for module_name, module_details in self.component_registry["modules"].items():
+        for module_name, module_details in self.component_registry[
+            "modules"
+        ].items():
             dependency_graph.add_node(module_name, type="module")
 
             # Add classes as nodes
@@ -239,9 +246,7 @@ class AdvancedSystemIntegrator:
         Args:
             report (Dict): System architecture report
         """
-        report_filename = (
-            f'system_architecture_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
-        )
+        report_filename = f'system_architecture_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
         report_path = os.path.join(self.output_dir, report_filename)
 
         try:
@@ -259,7 +264,9 @@ class AdvancedSystemIntegrator:
         """
         try:
             plt.figure(figsize=(20, 20))
-            pos = networkx.spring_layout(self.system_topology, k=0.5, iterations=50)
+            pos = networkx.spring_layout(
+                self.system_topology, k=0.5, iterations=50
+            )
 
             # Node colors based on type
             node_colors = [
@@ -267,7 +274,9 @@ class AdvancedSystemIntegrator:
                     "lightblue"
                     if data.get("type") == "module"
                     else (
-                        "lightgreen" if data.get("type") == "class" else "lightsalmon"
+                        "lightgreen"
+                        if data.get("type") == "class"
+                        else "lightsalmon"
                     )
                 )
                 for _, data in self.system_topology.nodes(data=True)
@@ -311,7 +320,9 @@ class AdvancedSystemIntegrator:
             )
 
         except ImportError:
-            logger.warning("Matplotlib not available. Skipping topology visualization.")
+            logger.warning(
+                "Matplotlib not available. Skipping topology visualization."
+            )
         except Exception as e:
             logger.error(f"Topology visualization failed: {e}")
 
@@ -326,23 +337,35 @@ class AdvancedSystemIntegrator:
 
         # Module overview
         markdown_doc += "## Modules Overview\n\n"
-        for module_name, module_details in self.component_registry["modules"].items():
+        for module_name, module_details in self.component_registry[
+            "modules"
+        ].items():
             markdown_doc += f"### {module_name}\n"
             markdown_doc += f"- **Path**: `{module_details['path']}`\n"
-            markdown_doc += f"- **Classes**: {len(module_details['classes'])}\n"
-            markdown_doc += f"- **Functions**: {len(module_details['functions'])}\n\n"
+            markdown_doc += (
+                f"- **Classes**: {len(module_details['classes'])}\n"
+            )
+            markdown_doc += (
+                f"- **Functions**: {len(module_details['functions'])}\n\n"
+            )
 
         # Detailed class documentation
         markdown_doc += "## Classes Catalog\n\n"
-        for class_name, class_details in self.component_registry["classes"].items():
+        for class_name, class_details in self.component_registry[
+            "classes"
+        ].items():
             markdown_doc += f"### {class_name}\n"
             markdown_doc += f"- **Module**: {class_details['module']}\n"
-            markdown_doc += f"- **Methods**: {', '.join(class_details['methods'])}\n"
+            markdown_doc += (
+                f"- **Methods**: {', '.join(class_details['methods'])}\n"
+            )
             markdown_doc += f"- **Docstring**:\n```\n{class_details['docstring'] or 'No docstring available'}\n```\n\n"
 
         # Function catalog
         markdown_doc += "## Functions Catalog\n\n"
-        for func_name, func_details in self.component_registry["functions"].items():
+        for func_name, func_details in self.component_registry[
+            "functions"
+        ].items():
             markdown_doc += f"### {func_name}\n"
             markdown_doc += f"- **Module**: {func_details['module']}\n"
             markdown_doc += f"- **Signature**: `{func_details['signature']}`\n"
@@ -358,7 +381,9 @@ class AdvancedSystemIntegrator:
             with open(doc_path, "w") as f:
                 f.write(markdown_doc)
 
-            logger.info(f"System Architecture Documentation Generated: {doc_path}")
+            logger.info(
+                f"System Architecture Documentation Generated: {doc_path}"
+            )
         except Exception as e:
             logger.error(f"Could not generate documentation: {e}")
 
@@ -379,9 +404,15 @@ def main():
         system_integrator.generate_markdown_documentation()
 
         print("System Integration Analysis Completed Successfully")
-        print(f"Total Modules: {architecture_report['metrics']['total_modules']}")
-        print(f"Total Classes: {architecture_report['metrics']['total_classes']}")
-        print(f"Total Functions: {architecture_report['metrics']['total_functions']}")
+        print(
+            f"Total Modules: {architecture_report['metrics']['total_modules']}"
+        )
+        print(
+            f"Total Classes: {architecture_report['metrics']['total_classes']}"
+        )
+        print(
+            f"Total Functions: {architecture_report['metrics']['total_functions']}"
+        )
 
     except Exception as e:
         logger.error(f"System Integration Analysis Failed: {e}", exc_info=True)

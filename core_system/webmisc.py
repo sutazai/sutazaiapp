@@ -60,7 +60,9 @@ class DuelLexer(RegexLexer):
             ),
             (
                 r"(<%\$)(.*?)(:)(.*?)(%>)",
-                bygroups(Name.Tag, Name.Function, Punctuation, String, Name.Tag),
+                bygroups(
+                    Name.Tag, Name.Function, Punctuation, String, Name.Tag
+                ),
             ),
             (
                 r"(<%--)(.*?)(--%>)",
@@ -68,7 +70,9 @@ class DuelLexer(RegexLexer):
             ),
             (
                 r"(<script.*?>)(.*?)(</script>)",
-                bygroups(using(HtmlLexer), using(JavascriptLexer), using(HtmlLexer)),
+                bygroups(
+                    using(HtmlLexer), using(JavascriptLexer), using(HtmlLexer)
+                ),
             ),
             (r"(.+?)(?=<)", using(HtmlLexer)),
             (r".+", using(HtmlLexer)),
@@ -244,7 +248,9 @@ class XQueryLexer(ExtendedRegexLexer):
         lexer.xquery_parse_state.append("operator")
         ctx.pos = match.end()
 
-    def pushstate_element_content_processing_instruction_callback(lexer, match, ctx):
+    def pushstate_element_content_processing_instruction_callback(
+        lexer, match, ctx
+    ):
         yield match.start(), String.Doc, match.group(1)
         ctx.stack.append("processing_instruction")
         lexer.xquery_parse_state.append("element_content")
@@ -938,8 +944,12 @@ class XQueryLexer(ExtendedRegexLexer):
             ),
             # PROCESSING_INSTRUCTION
             (
-                r"(processing-instruction|namespace)(\s+)(" + ncname + r")(\s*)(\{)",
-                bygroups(Keyword, Whitespace, Name.Variable, Whitespace, Punctuation),
+                r"(processing-instruction|namespace)(\s+)("
+                + ncname
+                + r")(\s*)(\{)",
+                bygroups(
+                    Keyword, Whitespace, Name.Variable, Whitespace, Punctuation
+                ),
                 "operator",
             ),
             (
@@ -1063,7 +1073,8 @@ class QmlLexer(RegexLexer):
             (r"^(?=\s|/|<!--)", Text, "slashstartsregex"),
             include("commentsandwhitespace"),
             (
-                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|" r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
+                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|"
+                r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
                 Operator,
                 "slashstartsregex",
             ),

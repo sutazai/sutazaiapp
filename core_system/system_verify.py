@@ -97,7 +97,10 @@ class SystemVerifier:
         """Check required software dependencies."""
         dependencies = {
             "docker": self._run_command(["docker", "--version"])[1] == 0,
-            "docker_compose": self._run_command(["docker-compose", "--version"])[1] == 0,
+            "docker_compose": self._run_command(
+                ["docker-compose", "--version"]
+            )[1]
+            == 0,
             "python3": self._run_command(["python3", "--version"])[1] == 0,
             "git": self._run_command(["git", "--version"])[1] == 0,
         }
@@ -129,7 +132,9 @@ class SystemVerifier:
 
         self.results["network_checks"] = {
             "status": (
-                "PASS" if len([x for x in network_checks.values() if x]) > 0 else "WARN"
+                "PASS"
+                if len([x for x in network_checks.values() if x]) > 0
+                else "WARN"
             ),
             "details": network_checks,
         }
@@ -152,7 +157,9 @@ class SystemVerifier:
 
     def generate_report(self):
         """Generate a detailed verification report."""
-        report_path = os.path.join(self.project_root, "system_verification_report.json")
+        report_path = os.path.join(
+            self.project_root, "system_verification_report.json"
+        )
         with open(report_path, "w") as f:
             json.dump(self.results, f, indent=4)
         return report_path
@@ -171,7 +178,9 @@ def main():
             print("\n✅ System Verification Passed!")
             sys.exit(0)
         else:
-            print("\n❌ System Verification Failed. Check the report for details.")
+            print(
+                "\n❌ System Verification Failed. Check the report for details."
+            )
             sys.exit(1)
 
     except Exception as e:

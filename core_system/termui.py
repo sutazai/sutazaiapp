@@ -244,7 +244,9 @@ def confirm(
 
 
 def echo_via_pager(
-    text_or_generator: t.Union[t.Iterable[str], t.Callable[[], t.Iterable[str]], str],
+    text_or_generator: t.Union[
+        t.Iterable[str], t.Callable[[], t.Iterable[str]], str
+    ],
     color: t.Optional[bool] = None,
 ) -> None:
     """This function takes a text and shows it via an environment specific
@@ -282,7 +284,9 @@ def progressbar(
     show_eta: bool = True,
     show_percent: t.Optional[bool] = None,
     show_pos: bool = False,
-    item_show_func: t.Optional[t.Callable[[t.Optional[V]], t.Optional[str]]] = None,
+    item_show_func: t.Optional[
+        t.Callable[[t.Optional[V]], t.Optional[str]]
+    ] = None,
     fill_char: str = "#",
     empty_char: str = "-",
     bar_template: str = "%(label)s  [%(bar)s]  %(info)s",
@@ -666,7 +670,9 @@ def edit(
     """
     from ._termui_impl import Editor
 
-    ed = Editor(editor=editor, env=env, require_save=require_save, extension=extension)
+    ed = Editor(
+        editor=editor, env=env, require_save=require_save, extension=extension
+    )
 
     if filename is None:
         return ed.edit(text)

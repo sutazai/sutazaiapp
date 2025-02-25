@@ -9,7 +9,9 @@ class RobustFileParser:
     A robust file parsing utility to handle various encoding and syntax challenges.
     """
 
-    def __init__(self, base_path: str = "/media/ai/SutazAI_Storage/SutazAI/v1"):
+    def __init__(
+        self, base_path: str = "/media/ai/SutazAI_Storage/SutazAI/v1"
+    ):
         """
         Initialize the robust file parser.
 

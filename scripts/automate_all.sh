@@ -33,7 +33,6 @@ automate_system() {
         # Run automation tasks
         automate_deployment
         automate_healing
-        automate_security
         automate_monitoring
         automate_backups
         
@@ -53,10 +52,6 @@ automate_healing() {
     python3 healing/auto_repair.py >> "$AUTOMATION_LOG" 2>&1
 }
 
-automate_security() {
-    echo "Starting security automation..." | tee -a "$AUTOMATION_LOG"
-    ./security/sutazai_sec.py >> "$AUTOMATION_LOG" 2>&1
-    ./scripts/security_hardening.sh >> "$AUTOMATION_LOG" 2>&1
 }
 
 automate_monitoring() {

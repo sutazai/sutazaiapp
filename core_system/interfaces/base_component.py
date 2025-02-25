@@ -18,8 +18,12 @@ class BaseComponent(ABC):
         Args:
             config: Optional configuration parameters.
         """
-        self._id = str(uuid.uuid4())  # Unique identifier for each component instance
-        self._logger = logging.getLogger(f"{self.__class__.__name__}[{self._id[:8]}]")
+        self._id = str(
+            uuid.uuid4()
+        )  # Unique identifier for each component instance
+        self._logger = logging.getLogger(
+            f"{self.__class__.__name__}[{self._id[:8]}]"
+        )
 
         self._config = config or {}
         self._state = {
@@ -53,9 +57,9 @@ class BaseComponent(ABC):
         """
         old_config = self._config.copy()
         self._config.update(config)
-        self._state["last_updated"] = logging.Formatter("%(asctime)s").formatTime(
-            logging.LogRecord("", 0, "", 0, "", (), None)
-        )
+        self._state["last_updated"] = logging.Formatter(
+            "%(asctime)s"
+        ).formatTime(logging.LogRecord("", 0, "", 0, "", (), None))
 
         # Log configuration changes
         changed_keys = set(config.keys()) - set(old_config.keys())

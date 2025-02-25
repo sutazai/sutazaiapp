@@ -69,7 +69,9 @@ if TYPE_CHECKING:
     )
     from typing_extensions import Literal, TypedDict
 
-    ConstrainedNumber = Union[ConstrainedDecimal, ConstrainedFloat, ConstrainedInt]
+    ConstrainedNumber = Union[
+        ConstrainedDecimal, ConstrainedFloat, ConstrainedInt
+    ]
     AnyOrderedDict = OrderedDict[Any, Any]
     Number = Union[int, float, Decimal]
     StrBytes = Union[str, bytes]
@@ -200,8 +202,12 @@ def number_multiple_validator(v: "Number", field: "ModelField") -> "Number":
     field_type: ConstrainedNumber = field.type_
     if field_type.multiple_of is not None:
         mod = float(v) / float(field_type.multiple_of) % 1
-        if not almost_equal_floats(mod, 0.0) and not almost_equal_floats(mod, 1.0):
-            raise errors.NumberNotMultipleError(multiple_of=field_type.multiple_of)
+        if not almost_equal_floats(mod, 0.0) and not almost_equal_floats(
+            mod, 1.0
+        ):
+            raise errors.NumberNotMultipleError(
+                multiple_of=field_type.multiple_of
+            )
     return v
 
 
@@ -324,7 +330,9 @@ def deque_validator(v: Any) -> Deque[Any]:
         raise errors.DequeError()
 
 
-def enum_member_validator(v: Any, field: "ModelField", config: "BaseConfig") -> Enum:
+def enum_member_validator(
+    v: Any, field: "ModelField", config: "BaseConfig"
+) -> Enum:
     try:
         enum_v = field.type_(v)
     except ValueError:
@@ -510,7 +518,9 @@ def make_literal_validator(type_: Any) -> Callable[[Any], Any]:
         try:
             return allowed_choices[v]
         except (KeyError, TypeError):
-            raise errors.WrongConstantError(given=v, permitted=permitted_choices)
+            raise errors.WrongConstantError(
+                given=v, permitted=permitted_choices
+            )
 
     return literal_validator
 
@@ -542,7 +552,9 @@ def constr_length_validator(
 def constr_strip_whitespace(
     v: "StrBytes", field: "ModelField", config: "BaseConfig"
 ) -> "StrBytes":
-    strip_whitespace = field.type_.strip_whitespace or config.anystr_strip_whitespace
+    strip_whitespace = (
+        field.type_.strip_whitespace or config.anystr_strip_whitespace
+    )
     if strip_whitespace:
         v = v.strip()
 
@@ -647,7 +659,9 @@ def make_namedtuple_validator(
             raise errors.ListMaxLengthError(limit_value=len(annotations))
 
         dict_values: Dict[str, Any] = dict(zip(annotations, values))
-        validated_dict_values: Dict[str, Any] = dict(NamedTupleModel(**dict_values))
+        validated_dict_values: Dict[str, Any] = dict(
+            NamedTupleModel(**dict_values)
+        )
         return namedtuple_cls(**validated_dict_values)
 
     return namedtuple_validator
@@ -728,7 +742,9 @@ _VALIDATORS: List[Tuple[Type[Any], List[Any]]] = [
         float,
         [
             float_validator,
-            IfConfig(float_finite_validator, "allow_inf_nan", ignored_value=True),
+            IfConfig(
+                float_finite_validator, "allow_inf_nan", ignored_value=True
+            ),
         ],
     ),
     (Path, [path_validator]),

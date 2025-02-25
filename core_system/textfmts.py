@@ -146,7 +146,9 @@ class GettextLexer(RegexLexer):
             ),
             (
                 r'^(msgstr\[)(\d)(\])(\s+)(".*")$',
-                bygroups(Name.Variable, Number.Integer, Name.Variable, Text, String),
+                bygroups(
+                    Name.Variable, Number.Integer, Name.Variable, Text, String
+                ),
             ),
         ]
     }
@@ -198,7 +200,9 @@ class HttpLexer(RegexLexer):
             if "+" in content_type:
                 # application/calendar+xml can be treated as application/xml
                 # if there's not a better match.
-                general_type = re.sub(r"^(.*)/.*\+(.*)$", r"\1/\2", content_type)
+                general_type = re.sub(
+                    r"^(.*)/.*\+(.*)$", r"\1/\2", content_type
+                )
                 possible_lexer_mimetypes.append(general_type)
 
             for i in possible_lexer_mimetypes:
@@ -207,7 +211,9 @@ class HttpLexer(RegexLexer):
                 except ClassNotFound:
                     pass
                 else:
-                    for idx, token, value in lexer.get_tokens_unprocessed(content):
+                    for idx, token, value in lexer.get_tokens_unprocessed(
+                        content
+                    ):
                         yield offset + idx, token, value
                     return
         yield offset, Text, content
@@ -302,7 +308,9 @@ class TodotxtLexer(RegexLexer):
 
     # Compound regex expressions
     complete_one_date_regex = r"(x )(" + date_regex + r")"
-    complete_two_date_regex = complete_one_date_regex + r"( )(" + date_regex + r")"
+    complete_two_date_regex = (
+        complete_one_date_regex + r"( )(" + date_regex + r")"
+    )
     priority_date_regex = r"(" + priority_regex + r")( )(" + date_regex + r")"
 
     tokens = {

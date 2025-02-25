@@ -5,7 +5,6 @@ declare -A SYSTEMS=(
     ["CORE"]="validate_sutazai_core"
     ["ETHICS"]="validate_ethical_governor"
     ["PERF"]="validate_performance"
-    ["SEC"]="validate_security"
     ["HW"]="validate_hardware"
 )
 

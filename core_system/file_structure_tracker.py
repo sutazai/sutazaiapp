@@ -138,7 +138,9 @@ class UltraComprehensiveStructureTracker:
             # Handle both dictionary and list contents
             if isinstance(contents, dict):
                 for component, description in list(contents.items()):
-                    full_path = os.path.join(self.base_dir, category, component)
+                    full_path = os.path.join(
+                        self.base_dir, category, component
+                    )
 
                     if os.path.exists(full_path):
                         structure["metadata"]["total_components"] += 1
@@ -208,15 +210,21 @@ class UltraComprehensiveStructureTracker:
                     if isinstance(details, dict):
                         # Directory or file with additional details
                         description = details.get("description", "")
-                        lines.append(f"{'  ' * indent}- 📁 **{name}/** {description}")
+                        lines.append(
+                            f"{'  ' * indent}- 📁 **{name}/** {description}"
+                        )
 
                         # Recursively add contents if it's a directory
                         if "contents" in details:
                             for item in details["contents"]:
-                                lines.append(f"{'  ' * (indent + 1)}- 📄 {item}")
+                                lines.append(
+                                    f"{'  ' * (indent + 1)}- 📄 {item}"
+                                )
                     else:
                         # Simple description
-                        lines.append(f"{'  ' * indent}- 📄 **{name}**: {details}")
+                        lines.append(
+                            f"{'  ' * indent}- 📄 **{name}**: {details}"
+                        )
 
             # Handle list contents
             elif isinstance(contents, list):
@@ -250,9 +258,13 @@ class UltraComprehensiveStructureTracker:
         # YAML Structure (for additional flexibility)
         yaml_path = os.path.join(self.base_dir, "DIRECTORY_STRUCTURE.yml")
         with open(yaml_path, "w") as f:
-            yaml.safe_dump(self.generate_comprehensive_structure(), f, indent=2)
+            yaml.safe_dump(
+                self.generate_comprehensive_structure(), f, indent=2
+            )
 
-        self.logger.info("Project structure documentation updated successfully")
+        self.logger.info(
+            "Project structure documentation updated successfully"
+        )
 
     def update_readme_structure(self):
         """
@@ -352,7 +364,9 @@ def main():
 
     except Exception as e:
         # Comprehensive error logging
-        logger.critical(f"Unexpected error in structure tracking: {e}", exc_info=True)
+        logger.critical(
+            f"Unexpected error in structure tracking: {e}", exc_info=True
+        )
         print(f"Critical Error: {e}")
 
         # Additional system diagnostics

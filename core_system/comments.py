@@ -119,7 +119,9 @@ class Comment:
             ln = max([len(str(k)) for k in self._items]) + 1
         except ValueError:
             ln = ""  # type: ignore
-        it = "    ".join([f'{str(k) + ":":{ln}} {v}\n' for k, v in self._items.items()])
+        it = "    ".join(
+            [f'{str(k) + ":":{ln}} {v}\n' for k, v in self._items.items()]
+        )
         if it:
             it = "\n    " + it + "  "
         return f"Comment(\n  start={self.comment},\n  items={{{it}}}{end})"
@@ -135,7 +137,9 @@ class Comment:
             ln = max([len(str(k)) for k in self._items]) + 1
         except ValueError:
             ln = ""  # type: ignore
-        it = "    ".join([f'{str(k) + ":":{ln}} {v}\n' for k, v in self._items.items()])
+        it = "    ".join(
+            [f'{str(k) + ":":{ln}} {v}\n' for k, v in self._items.items()]
+        )
         if it:
             it = "\n    " + it + "  "
         return f"Comment(\n  pre={self.pre},\n  items={{{it}}}{end})"
@@ -280,7 +284,9 @@ class CommentedBase:
             setattr(self, Comment.attrib, Comment())
         return getattr(self, Comment.attrib)
 
-    def yaml_end_comment_extend(self, comment: Any, clear: bool = False) -> None:
+    def yaml_end_comment_extend(
+        self, comment: Any, clear: bool = False
+    ) -> None:
         if comment is None:
             return
         if clear or self.ca.end is None:
@@ -518,7 +524,9 @@ class CommentedSeq(MutableSliceableSequence, list, CommentedBase):  # type: igno
     def __eq__(self, other: Any) -> bool:
         return list.__eq__(self, other)
 
-    def _yaml_add_comment(self, comment: Any, key: Optional[Any] = NotNone) -> None:
+    def _yaml_add_comment(
+        self, comment: Any, key: Optional[Any] = NotNone
+    ) -> None:
         if key is not NotNone:
             self.yaml_key_comment_extend(key, comment)
         else:
@@ -586,7 +594,9 @@ class CommentedSeq(MutableSliceableSequence, list, CommentedBase):  # type: igno
                 zip(map(key, list.__iter__(self)), range(len(self))),
                 reverse=reverse,
             )
-            list.__init__(self, [list.__getitem__(self, x[1]) for x in tmp_lst])
+            list.__init__(
+                self, [list.__getitem__(self, x[1]) for x in tmp_lst]
+            )
         itm = self.ca.items
         self.ca._items = {}
         for idx, x in enumerate(tmp_lst):
@@ -601,7 +611,9 @@ class CommentedSeq(MutableSliceableSequence, list, CommentedBase):  # type: igno
 class CommentedKeySeq(tuple, CommentedBase):  # type: ignore
     """This primarily exists to be able to roundtrip keys that are sequences"""
 
-    def _yaml_add_comment(self, comment: Any, key: Optional[Any] = NotNone) -> None:
+    def _yaml_add_comment(
+        self, comment: Any, key: Optional[Any] = NotNone
+    ) -> None:
         if key is not NotNone:
             self.yaml_key_comment_extend(key, comment)
         else:
@@ -839,7 +851,9 @@ class CommentedMap(ordereddict, CommentedBase):
         if comment is not None:
             self.yaml_add_eol_comment(comment, key=key)
 
-    def mlget(self, key: Any, default: Any = None, list_ok: Any = False) -> Any:
+    def mlget(
+        self, key: Any, default: Any = None, list_ok: Any = False
+    ) -> Any:
         """multi-level get that expects dicts within dicts"""
         if not isinstance(key, list):
             return self.get(key, default)
@@ -1058,7 +1072,9 @@ class CommentedKeyMap(CommentedBase, Mapping):  # type: ignore
     def fromkeys(keys: Any, v: Any = None) -> Any:
         return CommentedKeyMap(dict.fromkeys(keys, v))
 
-    def _yaml_add_comment(self, comment: Any, key: Optional[Any] = NotNone) -> None:
+    def _yaml_add_comment(
+        self, comment: Any, key: Optional[Any] = NotNone
+    ) -> None:
         if key is not NotNone:
             self.yaml_key_comment_extend(key, comment)
         else:
@@ -1155,7 +1171,9 @@ class CommentedSet(MutableSet, CommentedBase):  # type: ignore  # NOQA
 
 class TaggedScalar(CommentedBase):
     # the value and style attributes are set during roundtrip construction
-    def __init__(self, value: Any = None, style: Any = None, tag: Any = None) -> None:
+    def __init__(
+        self, value: Any = None, style: Any = None, tag: Any = None
+    ) -> None:
         self.value = value
         self.style = style
         if tag is not None:

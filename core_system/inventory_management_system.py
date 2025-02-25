@@ -70,7 +70,9 @@ class InventoryManagementSystem:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "inventory_management")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "inventory_management"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -124,11 +126,15 @@ class InventoryManagementSystem:
 
                         # Scan for hardcoded items
                         for pattern in hardcoded_patterns:
-                            matches = re.findall(pattern, content, re.IGNORECASE)
+                            matches = re.findall(
+                                pattern, content, re.IGNORECASE
+                            )
 
                             for match in matches:
                                 # Determine risk level
-                                risk_level = self._assess_hardcoded_item_risk(match)
+                                risk_level = self._assess_hardcoded_item_risk(
+                                    match
+                                )
 
                                 inventory_item = InventoryItem(
                                     name=str(match),
@@ -143,7 +149,9 @@ class InventoryManagementSystem:
                                     documentation_status="Unreviewed",
                                 )
 
-                                self.hardcoded_items_inventory.append(inventory_item)
+                                self.hardcoded_items_inventory.append(
+                                    inventory_item
+                                )
 
                     except Exception as e:
                         self.logger.warning(
@@ -201,7 +209,9 @@ class InventoryManagementSystem:
         if re.match(r"(password|secret|token|api_key)", item_str):
             return "Credential"
 
-        if re.match(r'(mysql|postgresql|sqlite)://.*?:[\'"].*?[\'"]', item_str):
+        if re.match(
+            r'(mysql|postgresql|sqlite)://.*?:[\'"].*?[\'"]', item_str
+        ):
             return "Connection String"
 
         if re.match(r'https?://[^\s\'"]+', item_str):
@@ -249,8 +259,8 @@ class InventoryManagementSystem:
                         self.documentation_checks.extend(class_doc_checks)
 
                         # Check function documentation
-                        function_doc_checks = self._check_function_documentation(
-                            tree, file_path
+                        function_doc_checks = (
+                            self._check_function_documentation(tree, file_path)
                         )
                         self.documentation_checks.extend(function_doc_checks)
 
@@ -358,7 +368,9 @@ class InventoryManagementSystem:
                             details={
                                 "file": file_path,
                                 "function_name": node.name,
-                                "arguments": [arg.arg for arg in node.args.args],
+                                "arguments": [
+                                    arg.arg for arg in node.args.args
+                                ],
                             },
                             recommendations=[
                                 f"Add a docstring to function {node.name}",
@@ -388,12 +400,18 @@ class InventoryManagementSystem:
         inventory_report = {
             "timestamp": datetime.now().isoformat(),
             "hardcoded_items": [asdict(item) for item in hardcoded_items],
-            "documentation_checks": [asdict(check) for check in documentation_checks],
+            "documentation_checks": [
+                asdict(check) for check in documentation_checks
+            ],
             "summary": {
                 "total_hardcoded_items": len(hardcoded_items),
                 "hardcoded_items_by_risk": {
                     risk: len(
-                        [item for item in hardcoded_items if item.risk_level == risk]
+                        [
+                            item
+                            for item in hardcoded_items
+                            if item.risk_level == risk
+                        ]
                     )
                     for risk in ["Critical", "High", "Medium", "Low"]
                 },
@@ -451,12 +469,16 @@ def main():
     inventory_manager = InventoryManagementSystem()
 
     # Generate comprehensive inventory report
-    inventory_report = inventory_manager.generate_comprehensive_inventory_report()
+    inventory_report = (
+        inventory_manager.generate_comprehensive_inventory_report()
+    )
 
     print("\n🔍 Comprehensive Inventory and Documentation Report 🔍")
 
     print("\nHardcoded Items Summary:")
-    for risk, count in inventory_report["summary"]["hardcoded_items_by_risk"].items():
+    for risk, count in inventory_report["summary"][
+        "hardcoded_items_by_risk"
+    ].items():
         print(f"- {risk} Risk Items: {count}")
 
     print("\nDocumentation Checks Summary:")
@@ -469,7 +491,9 @@ def main():
 
     print("\nDetailed Hardcoded Items:")
     for item in inventory_report["hardcoded_items"]:
-        print(f"- {item['name']} (Risk: {item['risk_level']}, Type: {item['type']})")
+        print(
+            f"- {item['name']} (Risk: {item['risk_level']}, Type: {item['type']})"
+        )
 
     print("\nDocumentation Recommendations:")
     for check in inventory_report.get("documentation_checks", []):

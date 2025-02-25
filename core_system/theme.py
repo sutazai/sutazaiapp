@@ -24,7 +24,11 @@ class Theme:
         if styles is not None:
             self.styles.update(
                 {
-                    name: (style if isinstance(style, Style) else Style.parse(style))
+                    name: (
+                        style
+                        if isinstance(style, Style)
+                        else Style.parse(style)
+                    )
                     for name, style in styles.items()
                 }
             )
@@ -56,7 +60,9 @@ class Theme:
         """
         config = configparser.ConfigParser()
         config.read_file(config_file, source=source)
-        styles = {name: Style.parse(value) for name, value in config.items("styles")}
+        styles = {
+            name: Style.parse(value) for name, value in config.items("styles")
+        }
         theme = Theme(styles, inherit=inherit)
         return theme
 
@@ -102,7 +108,9 @@ class ThemeStack:
         """
         styles: Dict[str, Style]
         styles = (
-            {**self._entries[-1], **theme.styles} if inherit else theme.styles.copy()
+            {**self._entries[-1], **theme.styles}
+            if inherit
+            else theme.styles.copy()
         )
         self._entries.append(styles)
         self.get = self._entries[-1].get

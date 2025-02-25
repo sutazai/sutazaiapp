@@ -35,7 +35,10 @@ class WindowsInterceptor(CommandInterceptor):
         metadata_lines = self._generate_metadata_content(prepend="")
 
         lines = (
-            (self.marker_start,) + metadata_lines + (path_content,) + (self.marker_end,)
+            (self.marker_start,)
+            + metadata_lines
+            + (path_content,)
+            + (self.marker_end,)
         )
 
         content = "\n".join(lines) + "\n"

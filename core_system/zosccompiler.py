@@ -155,7 +155,9 @@ class zOSCCompiler(UnixCCompiler):
         local_args.extend(cc_args)
 
         try:
-            self.spawn(compiler + local_args + [src, "-o", obj] + extra_postargs)
+            self.spawn(
+                compiler + local_args + [src, "-o", obj] + extra_postargs
+            )
         except DistutilsExecError as msg:
             raise CompileError(msg)
 

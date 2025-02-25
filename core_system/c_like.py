@@ -639,7 +639,9 @@ class CudaLexer(CLexer):
     execution_confs = {"<<<", ">>>"}
 
     def get_tokens_unprocessed(self, text, stack=("root",)):
-        for index, token, value in CLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in CLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if token is Name:
                 if value in self.variable_qualifiers:
                     token = Keyword.Type
@@ -1314,7 +1316,9 @@ class ArduinoLexer(CppLexer):
     }
 
     def get_tokens_unprocessed(self, text, stack=("root",)):
-        for index, token, value in CppLexer.get_tokens_unprocessed(self, text, stack):
+        for index, token, value in CppLexer.get_tokens_unprocessed(
+            self, text, stack
+        ):
             if value in self.structure:
                 yield index, Name.Builtin, value
             elif value in self.operators:
@@ -1422,11 +1426,15 @@ class OmgIdlLexer(CLexer):
             (r'([Ll]?)(")', bygroups(String.Affix, String.Double), "string"),
             (
                 r"([Ll]?)(\')(\\[^\']+)(\')",
-                bygroups(String.Affix, String.Char, String.Escape, String.Char),
+                bygroups(
+                    String.Affix, String.Char, String.Escape, String.Char
+                ),
             ),
             (
                 r"([Ll]?)(\')(\\\')(\')",
-                bygroups(String.Affix, String.Char, String.Escape, String.Char),
+                bygroups(
+                    String.Affix, String.Char, String.Escape, String.Char
+                ),
             ),
             (r"([Ll]?)(\'.\')", bygroups(String.Affix, String.Char)),
             (r"[+-]?\d+(\.\d*)?[Ee][+-]?\d+", Number.Float),

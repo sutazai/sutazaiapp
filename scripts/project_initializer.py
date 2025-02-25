@@ -54,7 +54,6 @@ class ProjectInitializer:
                 "packages",
                 "logs",
                 "doc_data",
-                "security",
                 "infrastructure",
                 "advanced_system_tools",
             ],
@@ -77,7 +76,6 @@ class ProjectInitializer:
                 "molmo",
             ],
             "packages_subdirs": ["wheels", "node"],
-            "security_subdirs": [
                 "authentication",
                 "encryption",
                 "access_control",

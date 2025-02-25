@@ -141,9 +141,13 @@ def test_iter_decode():
     assert iter_decode_to_string([b"hell", b"o"], "latin1") == "hello"
     assert iter_decode_to_string([b"\xc3\xa9"], "latin1") == "Ã©"
     assert iter_decode_to_string([b"\xef\xbb\xbf\xc3\xa9"], "latin1") == "é"
-    assert iter_decode_to_string([b"\xef\xbb\xbf", b"\xc3", b"\xa9"], "latin1") == "é"
     assert (
-        iter_decode_to_string([b"\xef\xbb\xbf", b"a", b"\xc3"], "latin1") == "a\ufffd"
+        iter_decode_to_string([b"\xef\xbb\xbf", b"\xc3", b"\xa9"], "latin1")
+        == "é"
+    )
+    assert (
+        iter_decode_to_string([b"\xef\xbb\xbf", b"a", b"\xc3"], "latin1")
+        == "a\ufffd"
     )
     assert (
         iter_decode_to_string(
@@ -156,11 +160,14 @@ def test_iter_decode():
     assert iter_decode_to_string([b"\xfe\xff\x00\xe9"], "latin1") == "é"
     assert iter_decode_to_string([b"\xff\xfe\xe9\x00"], "latin1") == "é"
     assert (
-        iter_decode_to_string([b"", b"\xff", b"", b"", b"\xfe\xe9", b"\x00"], "latin1")
+        iter_decode_to_string(
+            [b"", b"\xff", b"", b"", b"\xfe\xe9", b"\x00"], "latin1"
+        )
         == "é"
     )
     assert (
-        iter_decode_to_string([b"", b"h\xe9", b"llo"], "x-user-defined") == "h\uf7e9llo"
+        iter_decode_to_string([b"", b"h\xe9", b"llo"], "x-user-defined")
+        == "h\uf7e9llo"
     )
 
 

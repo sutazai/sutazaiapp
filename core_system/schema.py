@@ -217,8 +217,8 @@ def get_field_info_schema(
     # is in the definitions part of the schema.
     schema_: Dict[str, Any] = {}
     if field.field_info.title or not lenient_issubclass(field.type_, Enum):
-        schema_["title"] = field.field_info.title or field.alias.title().replace(
-            "_", " "
+        schema_["title"] = (
+            field.field_info.title or field.alias.title().replace("_", " ")
         )
 
     if field.field_info.title:
@@ -291,13 +291,17 @@ def field_schema(
 
 
 numeric_types = (int, float, Decimal)
-_str_types_attrs: Tuple[Tuple[str, Union[type, Tuple[type, ...]], str], ...] = (
+_str_types_attrs: Tuple[
+    Tuple[str, Union[type, Tuple[type, ...]], str], ...
+] = (
     ("max_length", numeric_types, "maxLength"),
     ("min_length", numeric_types, "minLength"),
     ("regex", str, "pattern"),
 )
 
-_numeric_types_attrs: Tuple[Tuple[str, Union[type, Tuple[type, ...]], str], ...] = (
+_numeric_types_attrs: Tuple[
+    Tuple[str, Union[type, Tuple[type, ...]], str], ...
+] = (
     ("gt", numeric_types, "exclusiveMinimum"),
     ("lt", numeric_types, "exclusiveMaximum"),
     ("ge", numeric_types, "minimum"),
@@ -363,7 +367,9 @@ def get_model_name_map(
         elif model_name in name_model_map:
             conflicting_names.add(model_name)
             conflicting_model = name_model_map.pop(model_name)
-            name_model_map[get_long_model_name(conflicting_model)] = conflicting_model
+            name_model_map[get_long_model_name(conflicting_model)] = (
+                conflicting_model
+            )
             name_model_map[get_long_model_name(model)] = model
         else:
             name_model_map[model_name] = model
@@ -388,7 +394,9 @@ def get_flat_models_from_model(
     flat_models.add(model)
     known_models |= flat_models
     fields = cast(Sequence[ModelField], model.__fields__.values())
-    flat_models |= get_flat_models_from_fields(fields, known_models=known_models)
+    flat_models |= get_flat_models_from_fields(
+        fields, known_models=known_models
+    )
     return flat_models
 
 
@@ -411,15 +419,22 @@ def get_flat_models_from_field(
     flat_models: TypeModelSet = set()
 
     field_type = field.type_
-    if lenient_issubclass(getattr(field_type, "__pydantic_model__", None), BaseModel):
+    if lenient_issubclass(
+        getattr(field_type, "__pydantic_model__", None), BaseModel
+    ):
         field_type = field_type.__pydantic_model__
 
     if field.sub_fields and not lenient_issubclass(field_type, BaseModel):
         flat_models |= get_flat_models_from_fields(
             field.sub_fields, known_models=known_models
         )
-    elif lenient_issubclass(field_type, BaseModel) and field_type not in known_models:
-        flat_models |= get_flat_models_from_model(field_type, known_models=known_models)
+    elif (
+        lenient_issubclass(field_type, BaseModel)
+        and field_type not in known_models
+    ):
+        flat_models |= get_flat_models_from_model(
+            field_type, known_models=known_models
+        )
     elif lenient_issubclass(field_type, Enum):
         flat_models.add(field_type)
     return flat_models
@@ -441,7 +456,9 @@ def get_flat_models_from_fields(
     """
     flat_models: TypeModelSet = set()
     for field in fields:
-        flat_models |= get_flat_models_from_field(field, known_models=known_models)
+        flat_models |= get_flat_models_from_field(
+            field, known_models=known_models
+        )
     return flat_models
 
 
@@ -758,7 +775,9 @@ def field_singleton_sub_fields_schema(
         if field_has_discriminator:
             assert field.sub_fields_mapping is not None
 
-            discriminator_models_refs: Dict[str, Union[str, Dict[str, Any]]] = {}
+            discriminator_models_refs: Dict[
+                str, Union[str, Dict[str, Any]]
+            ] = {}
 
             for (
                 discriminator_value,
@@ -796,7 +815,9 @@ def field_singleton_sub_fields_schema(
 
             s["discriminator"] = {
                 "propertyName": (
-                    field.discriminator_alias if by_alias else field.discriminator_key
+                    field.discriminator_alias
+                    if by_alias
+                    else field.discriminator_key
                 ),
                 "mapping": discriminator_models_refs,
             }
@@ -869,7 +890,10 @@ def add_field_type_to_schema(field_type: Any, schema_: Dict[str, Any]) -> None:
     """
     for type_, t_schema in field_class_to_schema:
         # Fallback for `typing.Pattern` and `re.Pattern` as they are not a valid class
-        if lenient_issubclass(field_type, type_) or field_type is type_ is Pattern:
+        if (
+            lenient_issubclass(field_type, type_)
+            or field_type is type_ is Pattern
+        ):
             schema_.update(t_schema)
             break
 
@@ -962,9 +986,13 @@ def field_singleton_schema(  # noqa: C901 (ignore complexity)
         add_field_type_to_schema(field_type, f_schema)
     elif lenient_issubclass(field_type, Enum):
         enum_name = model_name_map[field_type]
-        f_schema, schema_overrides = get_field_info_schema(field, schema_overrides)
+        f_schema, schema_overrides = get_field_info_schema(
+            field, schema_overrides
+        )
         f_schema.update(
-            get_schema_ref(enum_name, ref_prefix, ref_template, schema_overrides)
+            get_schema_ref(
+                enum_name, ref_prefix, ref_template, schema_overrides
+            )
         )
         definitions[enum_name] = enum_process_schema(field_type, field=field)
     elif is_namedtuple(field_type):
@@ -997,20 +1025,24 @@ def field_singleton_schema(  # noqa: C901 (ignore complexity)
         return f_schema, definitions, nested_models
 
     # Handle dataclass-based models
-    if lenient_issubclass(getattr(field_type, "__pydantic_model__", None), BaseModel):
+    if lenient_issubclass(
+        getattr(field_type, "__pydantic_model__", None), BaseModel
+    ):
         field_type = field_type.__pydantic_model__
 
     if issubclass(field_type, BaseModel):
         model_name = model_name_map[field_type]
         if field_type not in known_models:
-            sub_schema, sub_definitions, sub_nested_models = model_process_schema(
-                field_type,
-                by_alias=by_alias,
-                model_name_map=model_name_map,
-                ref_prefix=ref_prefix,
-                ref_template=ref_template,
-                known_models=known_models,
-                field=field,
+            sub_schema, sub_definitions, sub_nested_models = (
+                model_process_schema(
+                    field_type,
+                    by_alias=by_alias,
+                    model_name_map=model_name_map,
+                    ref_prefix=ref_prefix,
+                    ref_template=ref_template,
+                    known_models=known_models,
+                    field=field,
+                )
             )
             definitions.update(sub_definitions)
             definitions[model_name] = sub_schema
@@ -1158,7 +1190,9 @@ def get_annotation_with_constraints(
                 or field_info.max_items is not None
                 or field_info.unique_items is not None
             ):
-                used_constraints.update({"min_items", "max_items", "unique_items"})
+                used_constraints.update(
+                    {"min_items", "max_items", "unique_items"}
+                )
                 return conlist(
                     go(args[0]),
                     min_items=field_info.min_items,
@@ -1167,7 +1201,8 @@ def get_annotation_with_constraints(
                 )
 
             if issubclass(origin, Set) and (
-                field_info.min_items is not None or field_info.max_items is not None
+                field_info.min_items is not None
+                or field_info.max_items is not None
             ):
                 used_constraints.update({"min_items", "max_items"})
                 return conset(
@@ -1177,7 +1212,8 @@ def get_annotation_with_constraints(
                 )
 
             if issubclass(origin, FrozenSet) and (
-                field_info.min_items is not None or field_info.max_items is not None
+                field_info.min_items is not None
+                or field_info.max_items is not None
             ):
                 used_constraints.update({"min_items", "max_items"})
                 return confrozenset(
@@ -1202,7 +1238,9 @@ def get_annotation_with_constraints(
                 def constraint_func(**kw: Any) -> Type[Any]:  # noqa: F811
                     return type(type_.__name__, (type_,), kw)
 
-            elif issubclass(type_, str) and not issubclass(type_, (EmailStr, AnyUrl)):
+            elif issubclass(type_, str) and not issubclass(
+                type_, (EmailStr, AnyUrl)
+            ):
                 attrs = ("max_length", "min_length", "regex")
                 if issubclass(type_, StrictStr):
 
@@ -1248,7 +1286,8 @@ def get_annotation_with_constraints(
             kwargs = {
                 attr_name: attr
                 for attr_name, attr in (
-                    (attr_name, getattr(field_info, attr_name)) for attr_name in attrs
+                    (attr_name, getattr(field_info, attr_name))
+                    for attr_name in attrs
                 )
                 if attr is not None
             }

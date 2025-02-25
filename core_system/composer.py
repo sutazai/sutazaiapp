@@ -29,7 +29,10 @@ class ComposerError(MarkedYAMLError):
 class Composer:
     def __init__(self, loader: Any = None) -> None:
         self.loader = loader
-        if self.loader is not None and getattr(self.loader, "_composer", None) is None:
+        if (
+            self.loader is not None
+            and getattr(self.loader, "_composer", None) is None
+        ):
             self.loader._composer = self
         self.anchors: Dict[Any, Any] = {}
         self.warn_double_anchors = True
@@ -136,7 +139,9 @@ class Composer:
         event = self.parser.get_event()
         tag = event.ctag
         if tag is None or str(tag) == "!":
-            tag = self.resolver.resolve(ScalarNode, event.value, event.implicit)
+            tag = self.resolver.resolve(
+                ScalarNode, event.value, event.implicit
+            )
             assert not isinstance(tag, str)
             # e.g tag.yaml.org,2002:str
         node = ScalarNode(
@@ -156,7 +161,9 @@ class Composer:
         start_event = self.parser.get_event()
         tag = start_event.ctag
         if tag is None or str(tag) == "!":
-            tag = self.resolver.resolve(SequenceNode, None, start_event.implicit)
+            tag = self.resolver.resolve(
+                SequenceNode, None, start_event.implicit
+            )
             assert not isinstance(tag, str)
         node = SequenceNode(
             tag,
@@ -189,7 +196,9 @@ class Composer:
         start_event = self.parser.get_event()
         tag = start_event.ctag
         if tag is None or str(tag) == "!":
-            tag = self.resolver.resolve(MappingNode, None, start_event.implicit)
+            tag = self.resolver.resolve(
+                MappingNode, None, start_event.implicit
+            )
             assert not isinstance(tag, str)
         node = MappingNode(
             tag,

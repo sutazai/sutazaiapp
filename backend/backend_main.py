@@ -111,7 +111,6 @@ async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
 
 if __name__ == "__main__":
     # Use 127.0.0.1 instead of 0.0.0.0 for development to avoid exposing
-    # the server to all network interfaces (better security practice)
     # In production, this should be controlled by environment variables
     uvicorn.run(
         "backend.backend_main:app",

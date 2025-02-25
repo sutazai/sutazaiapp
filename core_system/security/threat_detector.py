@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 """
-Advanced Threat Detection and Security Monitoring Framework
 
-Comprehensive security monitoring with:
 - Intrusion detection
 - Anomaly tracking
 - Behavioral analysis
 - Real-time threat assessment
-- Multi-layered security checks
 """
 
 import json
@@ -27,15 +24,11 @@ from cryptography.fernet import Fernet
 class ThreatDetector:
     def __init__(
         self,
-        log_dir: str = "security_logs",
-        config_path: str = "security_config.json",
     ):
         """
         Initialize the advanced threat detection system.
 
         Args:
-            log_dir (str): Directory to store security logs
-            config_path (str): Path to security configuration
         """
         # Create log directory
         os.makedirs(log_dir, exist_ok=True)
@@ -49,7 +42,9 @@ class ThreatDetector:
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
-                logging.FileHandler(os.path.join(log_dir, "threat_detection.log")),
+                logging.FileHandler(
+                    os.path.join(log_dir, "threat_detection.log")
+                ),
                 logging.StreamHandler(),
             ],
         )
@@ -70,10 +65,8 @@ class ThreatDetector:
 
     def _load_config(self) -> Dict[str, Any]:
         """
-        Load security configuration.
 
         Returns:
-            Dict[str, Any]: Security configuration
         """
         default_config = {
             "max_failed_logins": 5,
@@ -119,7 +112,6 @@ class ThreatDetector:
 
     def detect_network_anomalies(self) -> List[Dict[str, Any]]:
         """
-        Detect network-related security anomalies.
 
         Returns:
             List[Dict[str, Any]]: Detected network anomalies
@@ -197,7 +189,9 @@ class ThreatDetector:
         suspicious_processes = []
 
         try:
-            for proc in psutil.process_iter(["pid", "name", "cmdline", "cpu_percent"]):
+            for proc in psutil.process_iter(
+                ["pid", "name", "cmdline", "cpu_percent"]
+            ):
                 try:
                     # Check for high resource consumption
                     if proc.info["cpu_percent"] > 80:
@@ -250,14 +244,15 @@ class ThreatDetector:
         ]
 
         cmdline_str = " ".join(cmdline)
-        return any(re.search(pattern, cmdline_str) for pattern in suspicious_patterns)
+        return any(
+            re.search(pattern, cmdline_str) for pattern in suspicious_patterns
+        )
 
-    def log_security_event(self, event_type: str, details: Dict[str, Any]) -> None:
+        self, event_type: str, details: Dict[str, Any]
+    ) -> None:
         """
-        Log a security event with encryption.
 
         Args:
-            event_type (str): Type of security event
             details (Dict[str, Any]): Event details
         """
         try:
@@ -268,17 +263,17 @@ class ThreatDetector:
             }
 
             # Encrypt event log
-            encrypted_event = self.cipher_suite.encrypt(json.dumps(event).encode())
+            encrypted_event = self.cipher_suite.encrypt(
+                json.dumps(event).encode()
+            )
 
             log_file = os.path.join(
-                self.log_dir, f"security_events_{datetime.now().date()}.log"
             )
 
             with open(log_file, "ab") as f:
                 f.write(encrypted_event + b"\n")
 
         except Exception as e:
-            self.logger.error(f"Security event logging error: {e}")
 
     def run_comprehensive_threat_scan(self) -> Dict[str, List[Dict[str, Any]]]:
         """
@@ -295,7 +290,6 @@ class ThreatDetector:
         # Log detected threats
         for threat_type, threat_list in threats.items():
             for threat in threat_list:
-                self.log_security_event(threat_type, threat)
                 self.active_threats.add(str(threat))
 
         return threats

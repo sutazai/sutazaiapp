@@ -132,7 +132,9 @@ def compress_for_rename(paths: Iterable[str]) -> Set[str]:
     """
     case_map = {os.path.normcase(p): p for p in paths}
     remaining = set(case_map)
-    unchecked = sorted({os.path.split(p)[0] for p in case_map.values()}, key=len)
+    unchecked = sorted(
+        {os.path.split(p)[0] for p in case_map.values()}, key=len
+    )
     wildcards: Set[str] = set()
 
     def norm_join(*a: str) -> str:
@@ -345,7 +347,9 @@ class UninstallPathSet:
 
         # we normalize the head to resolve parent directory symlinks, but not
         # the tail, since we only want to uninstall symlinks, not their targets
-        path = os.path.join(self._normalize_path_cached(head), os.path.normcase(tail))
+        path = os.path.join(
+            self._normalize_path_cached(head), os.path.normcase(tail)
+        )
 
         if not os.path.exists(path):
             return
@@ -368,7 +372,9 @@ class UninstallPathSet:
         else:
             self._refuse.add(pth_file)
 
-    def remove(self, auto_confirm: bool = False, verbose: bool = False) -> None:
+    def remove(
+        self, auto_confirm: bool = False, verbose: bool = False
+    ) -> None:
         """Remove paths in ``self._paths`` with confirmation (unless
         ``auto_confirm`` is True)."""
 
@@ -490,7 +496,9 @@ class UninstallPathSet:
             and os.path.exists(info_location)
             # If dist is editable and the location points to a ``.egg-info``,
             # we are in fact in the legacy editable case.
-            and not info_location.endswith(f"{dist.setuptools_filename}.egg-info")
+            and not info_location.endswith(
+                f"{dist.setuptools_filename}.egg-info"
+            )
         )
 
         # Uninstall cases order do matter as in the case of 2 installs of the
@@ -501,13 +509,17 @@ class UninstallPathSet:
             installed_files = dist.iter_declared_entries()
             if installed_files is not None:
                 for installed_file in installed_files:
-                    paths_to_remove.add(os.path.join(dist_location, installed_file))
+                    paths_to_remove.add(
+                        os.path.join(dist_location, installed_file)
+                    )
             # FIXME: need a test for this elif block
             # occurs with --single-version-externally-managed/--record outside
             # of pip
             elif dist.is_file("top_level.txt"):
                 try:
-                    namespace_packages = dist.read_text("namespace_packages.txt")
+                    namespace_packages = dist.read_text(
+                        "namespace_packages.txt"
+                    )
                 except FileNotFoundError:
                     namespaces = []
                 else:
@@ -553,8 +565,8 @@ class UninstallPathSet:
             # above, so this only covers the setuptools-style editable.
             with open(develop_egg_link) as fh:
                 link_pointer = os.path.normcase(fh.readline().strip())
-                normalized_link_pointer = paths_to_remove._normalize_path_cached(
-                    link_pointer
+                normalized_link_pointer = (
+                    paths_to_remove._normalize_path_cached(link_pointer)
                 )
             assert os.path.samefile(
                 normalized_link_pointer, normalized_dist_location
@@ -632,7 +644,9 @@ class UninstallPthEntries:
 
         # If the file doesn't exist, log a warning and return
         if not os.path.isfile(self.file):
-            logger.warning("Cannot remove entries from nonexistent file %s", self.file)
+            logger.warning(
+                "Cannot remove entries from nonexistent file %s", self.file
+            )
             return
         with open(self.file, "rb") as fh:
             # windows uses '\r\n' with py3k, but uses '\n' with py2.x
@@ -656,7 +670,9 @@ class UninstallPthEntries:
 
     def rollback(self) -> bool:
         if self._saved_lines is None:
-            logger.error("Cannot roll back changes to %s, none were made", self.file)
+            logger.error(
+                "Cannot roll back changes to %s, none were made", self.file
+            )
             return False
         logger.debug("Rolling %s back to previous state", self.file)
         with open(self.file, "wb") as fh:

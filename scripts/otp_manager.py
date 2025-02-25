@@ -35,7 +35,6 @@ class OTPManager:
 
     def _generate_encryption_key(self):
         """Generate a secure encryption key"""
-        key_path = "/opt/sutazai_project/SutazAI/security/otp_encryption.key"
 
         if os.path.exists(key_path):
             with open(key_path, "rb") as key_file:

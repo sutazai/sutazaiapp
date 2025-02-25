@@ -373,7 +373,10 @@ class Unpacker(object):
     def feed(self, next_bytes):
         assert self._feeding
         view = _get_data_from_buffer(next_bytes)
-        if len(self._buffer) - self._buff_i + len(view) > self._max_buffer_size:
+        if (
+            len(self._buffer) - self._buff_i + len(view)
+            > self._max_buffer_size
+        ):
             raise BufferFull
 
         # Strip buffer before checkpoint before reading file.
@@ -394,7 +397,7 @@ class Unpacker(object):
         return self._buff_i < len(self._buffer)
 
     def _get_extradata(self):
-        return self._buffer[self._buff_i:]
+        return self._buffer[self._buff_i :]
 
     def read_bytes(self, n):
         ret = self._read(n, raise_outofdata=False)
@@ -405,7 +408,7 @@ class Unpacker(object):
         # (int) -> bytearray
         self._reserve(n, raise_outofdata=raise_outofdata)
         i = self._buff_i
-        ret = self._buffer[i: i + n]
+        ret = self._buffer[i : i + n]
         self._buff_i = i + len(ret)
         return ret
 
@@ -458,7 +461,9 @@ class Unpacker(object):
             n = b & 0b00011111
             typ = TYPE_RAW
             if n > self._max_str_len:
-                raise ValueError("%s exceeds max_str_len(%s)" % (n, self._max_str_len))
+                raise ValueError(
+                    "%s exceeds max_str_len(%s)" % (n, self._max_str_len)
+                )
             obj = self._read(n)
         elif b & 0b11110000 == 0b10010000:
             n = b & 0b00001111
@@ -471,7 +476,9 @@ class Unpacker(object):
             n = b & 0b00001111
             typ = TYPE_MAP
             if n > self._max_map_len:
-                raise ValueError("%s exceeds max_map_len(%s)" % (n, self._max_map_len))
+                raise ValueError(
+                    "%s exceeds max_map_len(%s)" % (n, self._max_map_len)
+                )
         elif b == 0xC0:
             obj = None
         elif b == 0xC2:
@@ -487,7 +494,9 @@ class Unpacker(object):
                 n = self._buffer[self._buff_i]
             self._buff_i += size
             if n > self._max_bin_len:
-                raise ValueError("%s exceeds max_bin_len(%s)" % (n, self._max_bin_len))
+                raise ValueError(
+                    "%s exceeds max_bin_len(%s)" % (n, self._max_bin_len)
+                )
             obj = self._read(n)
         elif 0xC7 <= b <= 0xC9:
             size, fmt, typ = _MSGPACK_HEADERS[b]
@@ -495,7 +504,9 @@ class Unpacker(object):
             L, n = _unpack_from(fmt, self._buffer, self._buff_i)
             self._buff_i += size
             if L > self._max_ext_len:
-                raise ValueError("%s exceeds max_ext_len(%s)" % (L, self._max_ext_len))
+                raise ValueError(
+                    "%s exceeds max_ext_len(%s)" % (L, self._max_ext_len)
+                )
             obj = self._read(L)
         elif 0xCA <= b <= 0xD3:
             size, fmt = _MSGPACK_HEADERS[b]
@@ -523,7 +534,9 @@ class Unpacker(object):
                 n = self._buffer[self._buff_i]
             self._buff_i += size
             if n > self._max_str_len:
-                raise ValueError("%s exceeds max_str_len(%s)" % (n, self._max_str_len))
+                raise ValueError(
+                    "%s exceeds max_str_len(%s)" % (n, self._max_str_len)
+                )
             obj = self._read(n)
         elif 0xDC <= b <= 0xDD:
             size, fmt, typ = _MSGPACK_HEADERS[b]
@@ -540,7 +553,9 @@ class Unpacker(object):
             (n,) = _unpack_from(fmt, self._buffer, self._buff_i)
             self._buff_i += size
             if n > self._max_map_len:
-                raise ValueError("%s exceeds max_map_len(%s)" % (n, self._max_map_len))
+                raise ValueError(
+                    "%s exceeds max_map_len(%s)" % (n, self._max_map_len)
+                )
         else:
             raise FormatError("Unknown header: 0x%x" % b)
         return typ, n, obj
@@ -871,7 +886,11 @@ class Packer(object):
                     len(obj), dict_iteritems(obj), nest_limit - 1
                 )
 
-            if self._datetime and check(obj, _DateTime) and obj.tzinfo is not None:
+            if (
+                self._datetime
+                and check(obj, _DateTime)
+                and obj.tzinfo is not None
+            ):
                 obj = Timestamp.from_datetime(obj)
                 default_used = 1
                 continue
@@ -882,7 +901,9 @@ class Packer(object):
                 continue
 
             if self._datetime and check(obj, _DateTime):
-                raise ValueError("Cannot serialize %r where tzinfo=None" % (obj,))
+                raise ValueError(
+                    "Cannot serialize %r where tzinfo=None" % (obj,)
+                )
 
             raise TypeError("Cannot serialize %r" % (obj,))
 

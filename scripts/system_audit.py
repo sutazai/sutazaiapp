@@ -5,7 +5,6 @@ SutazAI Comprehensive System Audit Script
 Performs an exhaustive audit of the entire system, including:
 - Configuration Validation
 - Dependency Checks
-- Security Assessment
 - Performance Metrics
 - Logging and Monitoring Evaluation
 """

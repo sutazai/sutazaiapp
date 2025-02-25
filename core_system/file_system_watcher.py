@@ -59,7 +59,9 @@ class ProjectStructureHandler(FileSystemEventHandler):
         """
         if not event.is_directory and self._should_update():
             try:
-                logger.info(f"Updating project structure after event: {event.src_path}")
+                logger.info(
+                    f"Updating project structure after event: {event.src_path}"
+                )
                 self.structure_tracker.update_structure_files()
 
                 # Update README structure

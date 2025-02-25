@@ -60,7 +60,6 @@ task = {
 result = document_processor.execute(task)
 ```
 
-## Security Considerations
 - Input sanitization
 - Secure file handling
 - Configurable processing limits

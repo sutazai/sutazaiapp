@@ -240,7 +240,9 @@ def conint(
     multiple_of: Optional[int] = None,
 ) -> Type[int]:
     # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = dict(strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of)
+    namespace = dict(
+        strict=strict, gt=gt, ge=ge, lt=lt, le=le, multiple_of=multiple_of
+    )
     return type("ConstrainedIntValue", (ConstrainedInt,), namespace)
 
 
@@ -403,7 +405,9 @@ def conbytes(
         max_length=max_length,
         strict=strict,
     )
-    return _registered(type("ConstrainedBytesValue", (ConstrainedBytes,), namespace))
+    return _registered(
+        type("ConstrainedBytesValue", (ConstrainedBytes,), namespace)
+    )
 
 
 if TYPE_CHECKING:
@@ -483,7 +487,9 @@ def constr(
         curtail_length=curtail_length,
         regex=regex and re.compile(regex),
     )
-    return _registered(type("ConstrainedStrValue", (ConstrainedStr,), namespace))
+    return _registered(
+        type("ConstrainedStrValue", (ConstrainedStr,), namespace)
+    )
 
 
 if TYPE_CHECKING:
@@ -513,7 +519,9 @@ class ConstrainedSet(set):  # type: ignore
 
     @classmethod
     def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-        update_not_none(field_schema, minItems=cls.min_items, maxItems=cls.max_items)
+        update_not_none(
+            field_schema, minItems=cls.min_items, maxItems=cls.max_items
+        )
 
     @classmethod
     def set_length_validator(cls, v: "Optional[Set[T]]") -> "Optional[Set[T]]":
@@ -570,7 +578,9 @@ class ConstrainedFrozenSet(frozenset):  # type: ignore
 
     @classmethod
     def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-        update_not_none(field_schema, minItems=cls.min_items, maxItems=cls.max_items)
+        update_not_none(
+            field_schema, minItems=cls.min_items, maxItems=cls.max_items
+        )
 
     @classmethod
     def frozenset_length_validator(
@@ -643,7 +653,9 @@ class ConstrainedList(list):  # type: ignore
         )
 
     @classmethod
-    def list_length_validator(cls, v: "Optional[List[T]]") -> "Optional[List[T]]":
+    def list_length_validator(
+        cls, v: "Optional[List[T]]"
+    ) -> "Optional[List[T]]":
         if v is None:
             return None
 
@@ -659,7 +671,9 @@ class ConstrainedList(list):  # type: ignore
         return v
 
     @classmethod
-    def unique_items_validator(cls, v: "Optional[List[T]]") -> "Optional[List[T]]":
+    def unique_items_validator(
+        cls, v: "Optional[List[T]]"
+    ) -> "Optional[List[T]]":
         if v is None:
             return None
 
@@ -787,7 +801,9 @@ class ConstrainedDecimal(Decimal, metaclass=ConstrainedNumberMeta):
             raise errors.DecimalMaxDigitsError(max_digits=cls.max_digits)
 
         if cls.decimal_places is not None and decimals > cls.decimal_places:
-            raise errors.DecimalMaxPlacesError(decimal_places=cls.decimal_places)
+            raise errors.DecimalMaxPlacesError(
+                decimal_places=cls.decimal_places
+            )
 
         if cls.max_digits is not None and cls.decimal_places is not None:
             expected = cls.max_digits - cls.decimal_places
@@ -834,7 +850,9 @@ else:
 
         @classmethod
         def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-            field_schema.update(type="string", format=f"uuid{cls._required_version}")
+            field_schema.update(
+                type="string", format=f"uuid{cls._required_version}"
+            )
 
     class UUID3(UUID1):
         _required_version = 3
@@ -901,7 +919,9 @@ class JsonMeta(type):
     def __getitem__(self, t: Type[Any]) -> Type[JsonWrapper]:
         if t is Any:
             return Json  # allow Json[Any] to replecate plain Json
-        return _registered(type("JsonWrapperValue", (JsonWrapper,), {"inner_type": t}))
+        return _registered(
+            type("JsonWrapperValue", (JsonWrapper,), {"inner_type": t})
+        )
 
 
 if TYPE_CHECKING:
@@ -1171,7 +1191,9 @@ BYTE_SIZES = {
     "pib": 2**50,
     "eib": 2**60,
 }
-BYTE_SIZES.update({k.lower()[0]: v for k, v in BYTE_SIZES.items() if "i" not in k})
+BYTE_SIZES.update(
+    {k.lower()[0]: v for k, v in BYTE_SIZES.items() if "i" not in k}
+)
 byte_string_re = re.compile(r"^\s*(\d*\.?\d+)\s*(\w+)?", re.IGNORECASE)
 
 

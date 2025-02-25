@@ -57,7 +57,9 @@ class OKPKey(AsymmetricKey):
     def exchange_shared_key(self, pubkey):
         # used in ECDHESAlgorithm
         private_key = self.get_private_key()
-        if private_key and isinstance(private_key, (X25519PrivateKey, X448PrivateKey)):
+        if private_key and isinstance(
+            private_key, (X25519PrivateKey, X448PrivateKey)
+        ):
             return private_key.exchange(pubkey)
         raise ValueError("Invalid key for exchanging shared key")
 
@@ -100,7 +102,9 @@ class OKPKey(AsymmetricKey):
         }
 
     @classmethod
-    def generate_key(cls, crv="Ed25519", options=None, is_private=False) -> "OKPKey":
+    def generate_key(
+        cls, crv="Ed25519", options=None, is_private=False
+    ) -> "OKPKey":
         if crv not in PRIVATE_KEYS_MAP:
             raise ValueError(f'Invalid crv value: "{crv}"')
         private_key_cls = PRIVATE_KEYS_MAP[crv]

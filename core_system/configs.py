@@ -87,7 +87,9 @@ class IniLexer(RegexLexer):
             (r"(\[.*?\])([ \t]*)$", bygroups(Keyword, Whitespace)),
             (
                 r"""(.*?)([ \t]*)([=:])([ \t]*)(["'])""",
-                bygroups(Name.Attribute, Whitespace, Operator, Whitespace, String),
+                bygroups(
+                    Name.Attribute, Whitespace, Operator, Whitespace, String
+                ),
                 "quoted_value",
             ),
             (
@@ -105,7 +107,9 @@ class IniLexer(RegexLexer):
             ),
             (
                 r"(.*?)([ \t]*)([=:])([ \t]*)([^ ;#\n]*(?: +[^ ;#\n]+)*)",
-                bygroups(Name.Attribute, Whitespace, Operator, Whitespace, String),
+                bygroups(
+                    Name.Attribute, Whitespace, Operator, Whitespace, String
+                ),
             ),
             # standalone option, supported by some INI parsers
             (r"(.+?)$", Name.Attribute),
@@ -187,7 +191,9 @@ class SystemdLexer(RegexLexer):
     """
 
     name = "Systemd"
-    url = "https://www.freedesktop.org/software/systemd/man/systemd.syntax.html"
+    url = (
+        "https://www.freedesktop.org/software/systemd/man/systemd.syntax.html"
+    )
     aliases = ["systemd"]
     filenames = [
         "*.service",
@@ -252,7 +258,10 @@ class SystemdLexer(RegexLexer):
     def analyse_text(text):
         if text.startswith("[Unit]"):
             return 1.0
-        if re.search(r"^\[Unit\][ \t]*$", text[:500], re.MULTILINE) is not None:
+        if (
+            re.search(r"^\[Unit\][ \t]*$", text[:500], re.MULTILINE)
+            is not None
+        ):
             return 0.9
         return 0.0
 
@@ -523,7 +532,9 @@ class Cfengine3Lexer(RegexLexer):
             ),
             (
                 r"(body|bundle)(\s+)(\S+)(\s+)(\w+)",
-                bygroups(Keyword, Whitespace, Keyword, Whitespace, Name.Function),
+                bygroups(
+                    Keyword, Whitespace, Keyword, Whitespace, Name.Function
+                ),
             ),
             (
                 r'(")([^"]+)(")(\s+)(string|slist|int|real)(\s*)(=>)(\s*)',
@@ -1052,7 +1063,9 @@ class DockerLexer(RegexLexer):
             ),
             (
                 rf"(VOLUME|ENTRYPOINT|CMD|SHELL)(\s+)({_lb})(\[.*?\])",
-                bygroups(Keyword, Whitespace, using(BashLexer), using(JsonLexer)),
+                bygroups(
+                    Keyword, Whitespace, using(BashLexer), using(JsonLexer)
+                ),
             ),
             (
                 rf"(LABEL|ENV|ARG)(\s+)(({_lb}\w+=\w+{_lb})*)",
@@ -1351,7 +1364,6 @@ class TerraformLexer(ExtendedRegexLexer):
                 r"(\[)([a-z_,\s]+)(\])",
                 bygroups(Punctuation, Name.Builtin, Punctuation),
             ),
-            # e.g. resource "aws_security_group" "allow_tls" {
             # e.g. backend "consul" {
             (
                 classes_re
@@ -1844,21 +1856,27 @@ class NestedTextLexer(RegexLexer):
             # multiline string item: > ...
             (
                 r"^([ ]*)(>)( )(.*?)([ \t]*)$",
-                bygroups(Whitespace, Punctuation, Whitespace, Text, Whitespace),
+                bygroups(
+                    Whitespace, Punctuation, Whitespace, Text, Whitespace
+                ),
             ),
             # empty list item: -
             (r"^([ ]*)(-)$", bygroups(Whitespace, Punctuation)),
             # list item: - ...
             (
                 r"^([ ]*)(-)( )(.*?)([ \t]*)$",
-                bygroups(Whitespace, Punctuation, Whitespace, Text, Whitespace),
+                bygroups(
+                    Whitespace, Punctuation, Whitespace, Text, Whitespace
+                ),
             ),
             # empty multiline key item: :
             (r"^([ ]*)(:)$", bygroups(Whitespace, Punctuation)),
             # multiline key item: : ...
             (
                 r"^([ ]*)(:)( )([^\n]*?)([ \t]*)$",
-                bygroups(Whitespace, Punctuation, Whitespace, Name.Tag, Whitespace),
+                bygroups(
+                    Whitespace, Punctuation, Whitespace, Name.Tag, Whitespace
+                ),
             ),
             # empty dict key item: ...:
             (
@@ -1946,7 +1964,9 @@ class SingularityLexer(RegexLexer):
         """This is a quite simple script file, but there are a few keywords
         which seem unique to this language."""
         result = 0
-        if re.search(r"\b(?:osversion|includecmd|mirrorurl)\b", text, re.IGNORECASE):
+        if re.search(
+            r"\b(?:osversion|includecmd|mirrorurl)\b", text, re.IGNORECASE
+        ):
             result += 0.5
 
         if re.search(SingularityLexer._section[1:], text):

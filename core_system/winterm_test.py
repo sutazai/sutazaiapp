@@ -35,7 +35,9 @@ class WinTermTest(TestCase):
         self.assertEqual(term.get_attrs(), WinColor.YELLOW)
 
         term._back = WinColor.MAGENTA
-        self.assertEqual(term.get_attrs(), WinColor.YELLOW + WinColor.MAGENTA * 16)
+        self.assertEqual(
+            term.get_attrs(), WinColor.YELLOW + WinColor.MAGENTA * 16
+        )
 
         term._style = WinStyle.BRIGHT
         self.assertEqual(

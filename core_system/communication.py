@@ -9,15 +9,15 @@ from typing import Any
 
 class Communication:
     """Main class for communication functionality"""
-    
+
     def __init__(self) -> None:
         """Initialize the Communication instance"""
         self.initialized = True
-        
+
     def process(self, data: Any) -> Any:
         """Process the given data"""
         return data
-        
+
     def get_status(self) -> str:
         """Get the current status"""
         return "Active"

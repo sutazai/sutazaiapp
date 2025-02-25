@@ -120,7 +120,10 @@ class CygwinCCompiler(UnixCCompiler):
                     )
                 else:
                     self.spawn(
-                        self.compiler_so + cc_args + [src, "-o", obj] + extra_postargs
+                        self.compiler_so
+                        + cc_args
+                        + [src, "-o", obj]
+                        + extra_postargs
                     )
             except DistutilsExecError as msg:
                 raise CompileError(msg)
@@ -181,7 +184,9 @@ class CygwinCCompiler(UnixCCompiler):
                 "EXPORTS",
             ]
             contents.extend(export_symbols)
-            self.execute(write_file, (def_file, contents), f"writing {def_file}")
+            self.execute(
+                write_file, (def_file, contents), f"writing {def_file}"
+            )
 
             # next add options for def-file
 
@@ -254,7 +259,9 @@ class Mingw32CCompiler(CygwinCCompiler):
         shared_option = "-shared"
 
         if is_cygwincc(self.cc):
-            raise CCompilerError("Cygwin gcc cannot be used with --compiler=mingw32")
+            raise CCompilerError(
+                "Cygwin gcc cannot be used with --compiler=mingw32"
+            )
 
         self.set_executables(
             compiler=f"{self.cc} -O -Wall",

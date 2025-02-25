@@ -26,8 +26,6 @@ check_selinux() {
     sestatus | tee -a "$LOG_FILE"
 }
 
-check_python_security() {
-    log "${YELLOW}🐍 Checking Python Security Environment${NC}"
     echo "PYTHONSAFEPATH: ${PYTHONSAFEPATH:-Not Set}"
     echo "PYTHONDONTWRITEBYTECODE: ${PYTHONDONTWRITEBYTECODE:-Not Set}"
     echo "PYTHONNOUSERSITE: ${PYTHONNOUSERSITE:-Not Set}"
@@ -53,8 +51,6 @@ run_system_tests() {
     fi
 }
 
-final_security_scan() {
-    log "${YELLOW}🔍 Running Comprehensive Security Scan${NC}"
     
     # Run ClamAV if installed
     if command -v clamscan &> /dev/null; then
@@ -72,10 +68,8 @@ main() {
     # Run all checks
     check_firewall
     check_selinux
-    check_python_security
     check_open_ports
     run_system_tests
-    final_security_scan
     
     # Prompt for reboot
     log "${YELLOW}🔄 System verification complete. Preparing for reboot...${NC}"

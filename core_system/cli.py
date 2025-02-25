@@ -47,7 +47,9 @@ def maybe_update_state(ctx: click.Context) -> None:
         if file_path.exists() and file_path.is_file():
             state.file = file_path
         else:
-            if not re.fullmatch(r"[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*", path_or_module):
+            if not re.fullmatch(
+                r"[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*", path_or_module
+            ):
                 typer.echo(
                     f"Not a valid file or Python module: {path_or_module}",
                     err=True,
@@ -132,14 +134,20 @@ def get_typer_from_state() -> Optional[typer.Typer]:
     spec = None
     if state.file:
         module_name = state.file.name
-        spec = importlib.util.spec_from_file_location(module_name, str(state.file))
+        spec = importlib.util.spec_from_file_location(
+            module_name, str(state.file)
+        )
     elif state.module:
         spec = importlib.util.find_spec(state.module)
     if spec is None:
         if state.file:
-            typer.echo(f"Could not import as Python file: {state.file}", err=True)
+            typer.echo(
+                f"Could not import as Python file: {state.file}", err=True
+            )
         else:
-            typer.echo(f"Could not import as Python module: {state.module}", err=True)
+            typer.echo(
+                f"Could not import as Python module: {state.module}", err=True
+            )
         sys.exit(1)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)  # type: ignore
@@ -172,7 +180,9 @@ def callback(
     ctx: typer.Context,
     *,
     path_or_module: str = typer.Argument(None),
-    app: str = typer.Option(None, help="The typer app object/variable to use."),
+    app: str = typer.Option(
+        None, help="The typer app object/variable to use."
+    ),
     func: str = typer.Option(None, help="The function to convert to Typer."),
     version: bool = typer.Option(
         False,
@@ -285,7 +295,9 @@ def _parse_html(input_text: str) -> str:
 @utils_app.command()
 def docs(
     ctx: typer.Context,
-    name: str = typer.Option("", help="The name of the CLI program to use in docs."),
+    name: str = typer.Option(
+        "", help="The name of the CLI program to use in docs."
+    ),
     output: Optional[Path] = typer.Option(
         None,
         help="An output file to write docs to, like README.md.",

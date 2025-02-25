@@ -43,7 +43,9 @@ def get_build_tracker() -> Generator["BuildTracker", None, None]:
     with contextlib.ExitStack() as ctx:
         if root is None:
             root = ctx.enter_context(TempDirectory(kind="build-tracker")).path
-            ctx.enter_context(update_env_context_manager(PIP_BUILD_TRACKER=root))
+            ctx.enter_context(
+                update_env_context_manager(PIP_BUILD_TRACKER=root)
+            )
             logger.debug("Initialized build tracking at %s", root)
 
         with BuildTracker(root) as tracker:
@@ -98,7 +100,9 @@ class BuildTracker:
         except FileNotFoundError:
             pass
         else:
-            message = "{} is already being built: {}".format(req.link, contents)
+            message = "{} is already being built: {}".format(
+                req.link, contents
+            )
             raise LookupError(message)
 
         # If we're here, req should really not be building already.
@@ -127,7 +131,9 @@ class BuildTracker:
         logger.debug("Removed build tracker: %r", self._root)
 
     @contextlib.contextmanager
-    def track(self, req: InstallRequirement, key: str) -> Generator[None, None, None]:
+    def track(
+        self, req: InstallRequirement, key: str
+    ) -> Generator[None, None, None]:
         """Ensure that `key` cannot install itself as a setup requirement.
 
         :raises LookupError: If `key` was already provided in a parent invocation of

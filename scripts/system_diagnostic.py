@@ -147,12 +147,9 @@ class SystemDiagnosticOptimizer:
 
         return structure_analysis
 
-    def security_vulnerability_scan(self) -> Dict[str, Any]:
         """
-        Perform a comprehensive security vulnerability scan.
 
         Returns:
-            Detailed security scan results.
         """
         try:
             # Run dependency safety check.
@@ -167,7 +164,6 @@ class SystemDiagnosticOptimizer:
                 text=True,
             )
 
-            # Run semgrep security scanning.
             semgrep_result = subprocess.run(
                 ["semgrep", "scan", "--config=auto", self.base_path],
                 capture_output=True,
@@ -187,7 +183,6 @@ class SystemDiagnosticOptimizer:
                 },
             }
         except Exception as e:
-            logging.error(f"Security scan failed: {e}")
             return {"error": str(e)}
 
     def performance_optimization_recommendations(
@@ -247,7 +242,6 @@ class SystemDiagnosticOptimizer:
             "timestamp": datetime.now().isoformat(),
             "system_health": self.system_health_check(),
             "project_structure": self.project_structure_analysis(),
-            "security_scan": self.security_vulnerability_scan(),
         }
 
         # Generate optimization recommendations
@@ -290,16 +284,10 @@ class SystemDiagnosticOptimizer:
         )
         self.console.print(health_panel)
 
-        # Security Scan Results
-        self.console.rule("[bold red]Security Scan Results[/bold red]")
-        security_status = (
             "✅ Passed"
-            if diagnostic_results["security_scan"]["safety_check"]["passed"]
-            and diagnostic_results["security_scan"]["semgrep_scan"]["passed"]
             else "❌ Vulnerabilities Detected"
         )
         self.console.print(
-            f"[yellow]Overall Security Status:[/yellow] {security_status}"
         )
 
         # Optimization Recommendations

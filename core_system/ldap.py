@@ -83,13 +83,17 @@ class LdifLexer(RegexLexer):
             ),
             (
                 r"(changetype)(:)([ \t]*)([a-z]*)([ \t]*\n)",
-                bygroups(Keyword, Punctuation, Whitespace, Keyword, Whitespace),
+                bygroups(
+                    Keyword, Punctuation, Whitespace, Keyword, Whitespace
+                ),
             ),
             (r"(dn|newrdn)(::)", bygroups(Keyword, Punctuation), "base64-dn"),
             (r"(dn|newrdn)(:)", bygroups(Keyword, Punctuation), "dn"),
             (
                 r"(objectclass)(:)([ \t]*)([^ \t\n]*)([ \t]*\n)",
-                bygroups(Keyword, Punctuation, Whitespace, Name.Class, Whitespace),
+                bygroups(
+                    Keyword, Punctuation, Whitespace, Name.Class, Whitespace
+                ),
             ),
             (
                 r"([a-zA-Z]*|[0-9][0-9\.]*[0-9])(;)",
@@ -193,9 +197,7 @@ class LdaprcLexer(RegexLexer):
     _literal_keywords = (
         rf"(?:URI|SOCKET_BIND_ADDRESSES|{_sasl_keywords}|{_tls_keywords})"
     )
-    _boolean_keywords = (
-        r"GSSAPI_(?:ALLOW_REMOTE_PRINCIPAL|ENCRYPT|SIGN)|REFERRALS|SASL_NOCANON"
-    )
+    _boolean_keywords = r"GSSAPI_(?:ALLOW_REMOTE_PRINCIPAL|ENCRYPT|SIGN)|REFERRALS|SASL_NOCANON"
     _integer_keywords = r"KEEPALIVE_(?:IDLE|PROBES|INTERVAL)|NETWORK_TIMEOUT|PORT|SIZELIMIT|TIMELIMIT|TIMEOUT"
     _secprops = r"none|noanonymous|noplain|noactive|nodict|forwardsec|passcred|(?:minssf|maxssf|maxbufsize)=\d+"
 

@@ -44,4 +44,6 @@ class TestBuild(support.TempdirManager):
             if getattr(subcmd, "_unsupported", False):
                 # command is not supported on this build
                 continue
-            assert subcmd.skip_build, f"{name} should take --skip-build from bdist"
+            assert (
+                subcmd.skip_build
+            ), f"{name} should take --skip-build from bdist"

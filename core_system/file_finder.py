@@ -75,7 +75,8 @@ class FileFinder:
         # If no handlers are provided, initialize them from the ecosystem mapping
         if not handlers:
             handlers = set(
-                ECOSYSTEM_HANDLER_MAPPING[ecosystem]() for ecosystem in ecosystems
+                ECOSYSTEM_HANDLER_MAPPING[ecosystem]()
+                for ecosystem in ecosystems
             )
 
         self.handlers = handlers
@@ -143,17 +144,24 @@ class FileFinder:
             filenames[:] = [
                 f
                 for f in filenames
-                if not should_exclude(excludes=self.exclude_files, to_analyze=Path(f))
+                if not should_exclude(
+                    excludes=self.exclude_files, to_analyze=Path(f)
+                )
             ]
 
             self.file_count += len(filenames)
 
             for file_name in filenames:
                 for handler in self.handlers:
-                    file_type = handler.can_handle(root, file_name, self.include_files)
+                    file_type = handler.can_handle(
+                        root, file_name, self.include_files
+                    )
                     if file_type:
                         inspectable_file: Path = Path(root, file_name)
-                        if file_type.value not in files or not files[file_type.value]:
+                        if (
+                            file_type.value not in files
+                            or not files[file_type.value]
+                        ):
                             files[file_type.value] = set()
                         files[file_type.value].add(inspectable_file)
                         break

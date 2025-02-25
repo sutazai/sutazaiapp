@@ -251,7 +251,9 @@ class TestSDist(support.TempdirManager):
         assert sorted(content) == ["ns_fake_pkg-1.0/" + x for x in expected]
 
         # checking the MANIFEST
-        manifest = pathlib.Path(self.tmp_dir, "MANIFEST").read_text(encoding="utf-8")
+        manifest = pathlib.Path(self.tmp_dir, "MANIFEST").read_text(
+            encoding="utf-8"
+        )
         assert manifest == MANIFEST % {"sep": os.sep}
 
     @staticmethod

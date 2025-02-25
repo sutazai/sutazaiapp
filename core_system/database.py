@@ -161,7 +161,9 @@ class DistributionPath(object):
                             LEGACY_METADATA_FILENAME,
                         ]
                         for metadata_filename in possible_filenames:
-                            metadata_path = posixpath.join(entry, metadata_filename)
+                            metadata_path = posixpath.join(
+                                entry, metadata_filename
+                            )
                             pydist = finder.find(metadata_path)
                             if pydist:
                                 break
@@ -169,11 +171,17 @@ class DistributionPath(object):
                             continue
 
                         with contextlib.closing(pydist.as_stream()) as stream:
-                            metadata = Metadata(fileobj=stream, scheme="legacy")
+                            metadata = Metadata(
+                                fileobj=stream, scheme="legacy"
+                            )
                         logger.debug("Found %s", r.path)
                         seen.add(r.path)
-                        yield new_dist_class(r.path, metadata=metadata, env=self)
-                    elif self._include_egg and entry.endswith((".egg-info", ".egg")):
+                        yield new_dist_class(
+                            r.path, metadata=metadata, env=self
+                        )
+                    elif self._include_egg and entry.endswith(
+                        (".egg-info", ".egg")
+                    ):
                         logger.debug("Found %s", r.path)
                         seen.add(r.path)
                         yield old_dist_class(r.path, self)
@@ -415,7 +423,9 @@ class Distribution(object):
             req_attr,
             reqts,
         )
-        return set(md.get_requirements(reqts, extras=self.extras, env=self.context))
+        return set(
+            md.get_requirements(reqts, extras=self.extras, env=self.context)
+        )
 
     @property
     def run_requires(self):
@@ -586,7 +596,9 @@ class InstalledDistribution(BaseInstalledDistribution):
             if r is None:
                 r = finder.find(LEGACY_METADATA_FILENAME)
             if r is None:
-                raise ValueError("no %s found in %s" % (METADATA_FILENAME, path))
+                raise ValueError(
+                    "no %s found in %s" % (METADATA_FILENAME, path)
+                )
             with contextlib.closing(r.as_stream()) as stream:
                 metadata = Metadata(fileobj=stream, scheme="legacy")
 
@@ -694,7 +706,8 @@ class InstalledDistribution(BaseInstalledDistribution):
                     if relative == relative_path:
                         return destination
         raise KeyError(
-            "no resource file with relative path %r " "is installed" % relative_path
+            "no resource file with relative path %r "
+            "is installed" % relative_path
         )
 
     def list_installed_files(self):
@@ -775,7 +788,9 @@ class InstalledDistribution(BaseInstalledDistribution):
                     with open(path, "rb") as f:
                         actual_hash = self.get_hash(f.read(), hasher)
                         if actual_hash != hash_value:
-                            mismatches.append((path, "hash", hash_value, actual_hash))
+                            mismatches.append(
+                                (path, "hash", hash_value, actual_hash)
+                            )
         return mismatches
 
     @cached_property
@@ -833,7 +848,8 @@ class InstalledDistribution(BaseInstalledDistribution):
     def get_distinfo_resource(self, path):
         if path not in DIST_FILES:
             raise DistlibException(
-                "invalid path for a dist-info file: " "%r at %r" % (path, self.path)
+                "invalid path for a dist-info file: "
+                "%r at %r" % (path, self.path)
             )
         finder = resources.finder_for_path(self.path)
         if finder is None:
@@ -866,7 +882,8 @@ class InstalledDistribution(BaseInstalledDistribution):
         # The file must be relative
         if path not in DIST_FILES:
             raise DistlibException(
-                "invalid path for a dist-info file: " "%r at %r" % (path, self.path)
+                "invalid path for a dist-info file: "
+                "%r at %r" % (path, self.path)
             )
 
         return os.path.join(self.path, path)
@@ -888,7 +905,10 @@ class InstalledDistribution(BaseInstalledDistribution):
                 yield path
 
     def __eq__(self, other):
-        return isinstance(other, InstalledDistribution) and self.path == other.path
+        return (
+            isinstance(other, InstalledDistribution)
+            and self.path == other.path
+        )
 
     # See http://docs.python.org/reference/datamodel#object.__hash__
     __hash__ = object.__hash__
@@ -951,7 +971,8 @@ class EggInfoDistribution(BaseInstalledDistribution):
                     continue
                 if r.extras:  # pragma: no cover
                     logger.warning(
-                        "extra requirements in requires.txt are " "not supported"
+                        "extra requirements in requires.txt are "
+                        "not supported"
                     )
                 if not r.constraints:
                     reqs.append(r.name)
@@ -986,11 +1007,15 @@ class EggInfoDistribution(BaseInstalledDistribution):
             else:
                 # FIXME handle the case where zipfile is not available
                 zipf = zipimport.zipimporter(path)
-                fileobj = StringIO(zipf.get_data("EGG-INFO/PKG-INFO").decode("utf8"))
+                fileobj = StringIO(
+                    zipf.get_data("EGG-INFO/PKG-INFO").decode("utf8")
+                )
                 metadata = Metadata(fileobj=fileobj, scheme="legacy")
                 try:
                     data = zipf.get_data("EGG-INFO/requires.txt")
-                    tl_data = zipf.get_data("EGG-INFO/top_level.txt").decode("utf-8")
+                    tl_data = zipf.get_data("EGG-INFO/top_level.txt").decode(
+                        "utf-8"
+                    )
                     requires = parse_requires_data(data.decode("utf-8"))
                 except IOError:
                     requires = None
@@ -1117,7 +1142,9 @@ class EggInfoDistribution(BaseInstalledDistribution):
                                 yield line
 
     def __eq__(self, other):
-        return isinstance(other, EggInfoDistribution) and self.path == other.path
+        return (
+            isinstance(other, EggInfoDistribution) and self.path == other.path
+        )
 
     # See http://docs.python.org/reference/datamodel#object.__hash__
     __hash__ = object.__hash__
@@ -1218,7 +1245,8 @@ class DependencyGraph(object):
             for other, label in adjs:
                 if label is not None:
                     f.write(
-                        '"%s" -> "%s" [label="%s"]\n' % (dist.name, other.name, label)
+                        '"%s" -> "%s" [label="%s"]\n'
+                        % (dist.name, other.name, label)
                     )
                 else:
                     f.write('"%s" -> "%s"\n' % (dist.name, other.name))
@@ -1308,7 +1336,9 @@ def make_graph(dists, scheme="default"):
                 matcher = scheme.matcher(req)
             except UnsupportedVersionError:
                 # XXX compat-mode if cannot read the version
-                logger.warning("could not read version %r - using name only", req)
+                logger.warning(
+                    "could not read version %r - using name only", req
+                )
                 name = req.split()[0]
                 matcher = scheme.matcher(name)
 

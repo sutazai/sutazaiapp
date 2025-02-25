@@ -193,7 +193,9 @@ class SlurmBashLexer(BashLexer):
     EXTRA_KEYWORDS = {"srun"}
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in BashLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in BashLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Text and value in self.EXTRA_KEYWORDS:
                 yield index, Name.Builtin, value
             elif token is Comment.Single and "SBATCH" in value:
@@ -231,8 +233,10 @@ class ShellSessionBaseLexer(Lexer):
                     (len(curcode), [(0, Generic.Prompt.VirtualEnv, venv)])
                 )
                 if venv_whitespace:
-                    insertions.append((len(curcode), [(0, Text, venv_whitespace)]))
-                line = line[venv_match.end():]
+                    insertions.append(
+                        (len(curcode), [(0, Text, venv_whitespace)])
+                    )
+                line = line[venv_match.end() :]
 
             m = self._ps1rgx.match(line)
             if m:
@@ -242,7 +246,9 @@ class ShellSessionBaseLexer(Lexer):
                 if not insertions:
                     pos = match.start()
 
-                insertions.append((len(curcode), [(0, Generic.Prompt, m.group(1))]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, m.group(1))])
+                )
                 curcode += m.group(2)
                 backslash_continuation = curcode.endswith("\\\n")
             elif backslash_continuation:
@@ -253,7 +259,7 @@ class ShellSessionBaseLexer(Lexer):
                             [(0, Generic.Prompt, line[: len(self._ps2)])],
                         )
                     )
-                    curcode += line[len(self._ps2):]
+                    curcode += line[len(self._ps2) :]
                 else:
                     curcode += line
                 backslash_continuation = curcode.endswith("\\\n")
@@ -264,7 +270,7 @@ class ShellSessionBaseLexer(Lexer):
                         [(0, Generic.Prompt, line[: len(self._ps2)])],
                     )
                 )
-                curcode += line[len(self._ps2):]
+                curcode += line[len(self._ps2) :]
             else:
                 if insertions:
                     toks = innerlexer.get_tokens_unprocessed(curcode)
@@ -321,7 +327,9 @@ class BatchLexer(RegexLexer):
     _ws = r"\t\v\f\r ,;=\xa0"
     _nlws = r"\s\x1a\xa0,;="
     _space = rf"(?:(?:(?:\^[{_nl}])?[{_ws}])+)"
-    _keyword_terminator = rf"(?=(?:\^[{_nl}]?)?[{_ws}+./:[\\\]]|[{_nl}{_punct}(])"
+    _keyword_terminator = (
+        rf"(?=(?:\^[{_nl}]?)?[{_ws}+./:[\\\]]|[{_nl}{_punct}(])"
+    )
     _token_terminator = rf"(?=\^?[{_ws}]|[{_punct}{_nl}])"
     _start_label = rf"((?:(?<=^[^:])|^[^:]?)[{_ws}]*)(:)"
     _label = rf"(?:(?:[^{_nlws}{_punct}+:^]|\^[{_nl}]?[\w\W])*)"
@@ -576,7 +584,9 @@ class BatchLexer(RegexLexer):
         ]
         return state
 
-    def _make_call_state(compound, _label=_label, _label_compound=_label_compound):
+    def _make_call_state(
+        compound, _label=_label, _label_compound=_label_compound
+    ):
         state = []
         if compound:
             state.append((r"(?=\))", Text, "#pop"))
@@ -630,9 +640,7 @@ class BatchLexer(RegexLexer):
         _variable=_variable,
         _nlws=_nlws,
     ):
-        stoken_compound = (
-            rf"(?:[{_punct}]+|(?:{_string}|{_variable}|{_core_token_compound})+)"
-        )
+        stoken_compound = rf"(?:[{_punct}]+|(?:{_string}|{_variable}|{_core_token_compound})+)"
         return [
             (
                 rf"((?:(?<=[{_nlws}])\d)?)(>>?&|<&)([{_nlws}]*)(\d)",
@@ -640,7 +648,9 @@ class BatchLexer(RegexLexer):
             ),
             (
                 rf"((?:(?<=[{_nlws}])(?<!\^[{_nl}])\d)?)(>>?|<)({_space}?{stoken_compound if compound else _stoken})",
-                bygroups(Number.Integer, Punctuation, using(this, state="text")),
+                bygroups(
+                    Number.Integer, Punctuation, using(this, state="text")
+                ),
             ),
         ]
 
@@ -978,7 +988,9 @@ class PowerShellLexer(RegexLexer):
             (r"\(", Punctuation, "child"),
             (r"\s+", Text),
             (
-                r"^(\s*#[#\s]*)(\.(?:{}))([^\n]*$)".format("|".join(commenthelp)),
+                r"^(\s*#[#\s]*)(\.(?:{}))([^\n]*$)".format(
+                    "|".join(commenthelp)
+                ),
                 bygroups(Comment, String.Doc, Comment),
             ),
             (r"#[^\n]*?$", Comment),

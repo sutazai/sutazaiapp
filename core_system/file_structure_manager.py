@@ -78,12 +78,10 @@ class UltraComprehensiveFileManager:
                 "semantic_tags": ["script", "automation", "utility"],
             },
             "tests": {
-                "subdirs": ["unit", "integration", "performance", "security"],
                 "semantic_tags": [
                     "test",
                     "verification",
                     "performance",
-                    "security",
                 ],
             },
             "docs": {
@@ -115,10 +113,8 @@ class UltraComprehensiveFileManager:
                 "subdirs": ["task_queues", "background_jobs"],
                 "semantic_tags": ["worker", "task", "queue", "background"],
             },
-            "security": {
                 "subdirs": ["authentication", "encryption", "compliance"],
                 "semantic_tags": [
-                    "security",
                     "authentication",
                     "encryption",
                     "compliance",
@@ -137,7 +133,9 @@ class UltraComprehensiveFileManager:
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s - %(message)s",
             handlers=[
-                logging.FileHandler(os.path.join(log_dir, "file_management.log")),
+                logging.FileHandler(
+                    os.path.join(log_dir, "file_management.log")
+                ),
                 logging.StreamHandler(sys.stdout),
             ],
         )
@@ -162,7 +160,9 @@ class UltraComprehensiveFileManager:
             self.logger.error(f"Hash generation failed for {file_path}: {e}")
             return ""
 
-    def _extract_file_semantic_signature(self, file_path: str) -> Dict[str, Any]:
+    def _extract_file_semantic_signature(
+        self, file_path: str
+    ) -> Dict[str, Any]:
         """
         Extract comprehensive semantic signature for a file
         """
@@ -171,7 +171,9 @@ class UltraComprehensiveFileManager:
                 content = f.read()
 
             # TF-IDF vectorization
-            vectorizer = TfidfVectorizer(stop_words="english", max_features=100)
+            vectorizer = TfidfVectorizer(
+                stop_words="english", max_features=100
+            )
             tfidf_matrix = vectorizer.fit_transform([content])
 
             return {
@@ -192,7 +194,9 @@ class UltraComprehensiveFileManager:
         Find semantically similar files using cosine similarity
         """
         try:
-            current_signature = self._extract_file_semantic_signature(file_path)
+            current_signature = self._extract_file_semantic_signature(
+                file_path
+            )
 
             duplicates = []
             for (
@@ -245,7 +249,7 @@ class UltraComprehensiveFileManager:
                 )
                 merged_content = "".join(
                     [
-                        current_content[block[0]: block[0] + block[2]]
+                        current_content[block[0] : block[0] + block[2]]
                         for block in merger.get_matching_blocks()
                         if block[2] > 0
                     ]
@@ -256,7 +260,9 @@ class UltraComprehensiveFileManager:
                 with open(merged_file_path, "w") as merged_file:
                     merged_file.write(merged_content)
 
-                self.logger.info(f"Merged files: {file_path} and {duplicate_path}")
+                self.logger.info(
+                    f"Merged files: {file_path} and {duplicate_path}"
+                )
                 return merged_file_path
 
             except Exception as e:
@@ -278,7 +284,9 @@ class UltraComprehensiveFileManager:
                     file_path = merged_file
 
                 # Extract semantic signature
-                semantic_signature = self._extract_file_semantic_signature(file_path)
+                semantic_signature = self._extract_file_semantic_signature(
+                    file_path
+                )
                 self.semantic_file_map[file_path] = semantic_signature
 
                 # Semantic categorization
@@ -286,13 +294,19 @@ class UltraComprehensiveFileManager:
                     for tag in details.get("semantic_tags", []):
                         if (
                             tag
-                            in " ".join(semantic_signature.get("keywords", [])).lower()
+                            in " ".join(
+                                semantic_signature.get("keywords", [])
+                            ).lower()
                         ):
-                            target_dir = os.path.join(self.project_root, category)
+                            target_dir = os.path.join(
+                                self.project_root, category
+                            )
                             os.makedirs(target_dir, exist_ok=True)
 
                             try:
-                                shutil.move(file_path, os.path.join(target_dir, file))
+                                shutil.move(
+                                    file_path, os.path.join(target_dir, file)
+                                )
                                 self.logger.info(
                                     f"Semantically moved {file} to {target_dir}"
                                 )
@@ -356,7 +370,11 @@ class UltraComprehensiveFileManager:
                 json.dump(
                     {
                         k: {
-                            sk: (str(v) if not isinstance(v, (int, float, str)) else v)
+                            sk: (
+                                str(v)
+                                if not isinstance(v, (int, float, str))
+                                else v
+                            )
                             for sk, v in sig.items()
                         }
                         for k, sig in self.semantic_file_map.items()
@@ -394,7 +412,9 @@ class UltraComprehensiveFileManager:
                     self.logger.error(f"Ultra file management error: {e}")
                     self._stop_event.wait(self.interval)
 
-        management_thread = threading.Thread(target=management_worker, daemon=True)
+        management_thread = threading.Thread(
+            target=management_worker, daemon=True
+        )
         management_thread.start()
         self.logger.info(
             f"Ultra-comprehensive file management started (interval: {self.interval} seconds)"

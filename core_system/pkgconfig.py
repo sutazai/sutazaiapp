@@ -18,9 +18,13 @@ def merge_flags(cfg1, cfg2):
             cfg1[key] = value
         else:
             if not isinstance(cfg1[key], list):
-                raise TypeError("cfg1[%r] should be a list of strings" % (key,))
+                raise TypeError(
+                    "cfg1[%r] should be a list of strings" % (key,)
+                )
             if not isinstance(value, list):
-                raise TypeError("cfg2[%r] should be a list of strings" % (key,))
+                raise TypeError(
+                    "cfg2[%r] should be a list of strings" % (key,)
+                )
             cfg1[key].extend(value)
     return cfg1
 
@@ -31,7 +35,9 @@ def call(libname, flag, encoding=sys.getfilesystemencoding()):
     a.append(flag)
     a.append(libname)
     try:
-        pc = subprocess.Popen(a, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        pc = subprocess.Popen(
+            a, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
     except EnvironmentError as e:
         raise PkgConfigError("cannot run pkg-config: %s" % (str(e).strip(),))
 
@@ -49,7 +55,8 @@ def call(libname, flag, encoding=sys.getfilesystemencoding()):
         except UnicodeDecodeError:
             raise PkgConfigError(
                 "pkg-config %s %s returned bytes that cannot "
-                "be decoded with encoding %r:\n%r" % (flag, libname, encoding, bout)
+                "be decoded with encoding %r:\n%r"
+                % (flag, libname, encoding, bout)
             )
 
     if os.altsep != "\\" and "\\" in bout:

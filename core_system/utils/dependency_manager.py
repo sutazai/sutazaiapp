@@ -25,9 +25,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(
-            "/opt/SutazAI/logs/dependency_management.log"
-        ),
+        logging.FileHandler("/opt/SutazAI/logs/dependency_management.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -58,7 +56,9 @@ class AdvancedDependencyManager:
         self.requirements_path = requirements_path or os.path.join(
             base_dir, "requirements.txt"
         )
-        self.dependency_cache_path = os.path.join(base_dir, "dependency_cache.json")
+        self.dependency_cache_path = os.path.join(
+            base_dir, "dependency_cache.json"
+        )
 
     def discover_dependencies(self) -> Dict[str, Any]:
         """
@@ -90,10 +90,14 @@ class AdvancedDependencyManager:
                             > version.parse(current_version),
                         }
                     except Exception as e:
-                        logger.warning(f"Could not process dependency {req}: {e}")
+                        logger.warning(
+                            f"Could not process dependency {req}: {e}"
+                        )
 
         except FileNotFoundError:
-            logger.error(f"Requirements file not found: {self.requirements_path}")
+            logger.error(
+                f"Requirements file not found: {self.requirements_path}"
+            )
 
         return dependencies
 
@@ -122,7 +126,9 @@ class AdvancedDependencyManager:
             return latest
 
         except subprocess.CalledProcessError:
-            logger.warning(f"Could not retrieve latest version for {package_name}")
+            logger.warning(
+                f"Could not retrieve latest version for {package_name}"
+            )
             return "Unknown"
 
     def update_dependencies(self, force: bool = False) -> Dict[str, Any]:
@@ -160,7 +166,9 @@ class AdvancedDependencyManager:
                     }
 
                     # Update requirements file
-                    self._update_requirements_file(name, details["latest_version"])
+                    self._update_requirements_file(
+                        name, details["latest_version"]
+                    )
 
                 except subprocess.CalledProcessError as e:
                     update_results[name] = {
@@ -187,7 +195,11 @@ class AdvancedDependencyManager:
                 requirements = f.readlines()
 
             updated_requirements = [
-                (f"{package_name}=={new_version}" if package_name in line else line)
+                (
+                    f"{package_name}=={new_version}"
+                    if package_name in line
+                    else line
+                )
                 for line in requirements
             ]
 

@@ -26,7 +26,6 @@ EXPECTED_DIRECTORIES = [
     "core_system",
     "docs",
     "logs",
-    "security",
     "scripts",
     "tests",
     "config",

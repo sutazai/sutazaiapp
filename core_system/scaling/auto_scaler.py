@@ -148,17 +148,23 @@ class AutoScaler:
         }
 
         scale_up_events = [
-            event for event in self.scaling_history if event["type"] == "scale_up"
+            event
+            for event in self.scaling_history
+            if event["type"] == "scale_up"
         ]
         scale_down_events = [
-            event for event in self.scaling_history if event["type"] == "scale_down"
+            event
+            for event in self.scaling_history
+            if event["type"] == "scale_down"
         ]
 
         if scale_up_events:
             recommendations["last_scale_up"] = scale_up_events[-1]["timestamp"]
 
         if scale_down_events:
-            recommendations["last_scale_down"] = scale_down_events[-1]["timestamp"]
+            recommendations["last_scale_down"] = scale_down_events[-1][
+                "timestamp"
+            ]
 
         if len(self.scaling_history) > 1:
             time_between_events = [
@@ -166,9 +172,9 @@ class AutoScaler:
                 - self.scaling_history[i]["timestamp"]
                 for i in range(len(self.scaling_history) - 1)
             ]
-            recommendations["average_scale_frequency"] = sum(time_between_events) / len(
+            recommendations["average_scale_frequency"] = sum(
                 time_between_events
-            )
+            ) / len(time_between_events)
 
         return recommendations
 

@@ -69,7 +69,9 @@ class SystemIntegrationOrchestrator:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_integration")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_integration"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -83,13 +85,19 @@ class SystemIntegrationOrchestrator:
                 logging.StreamHandler(sys.stdout),
             ],
         )
-        self.logger = logging.getLogger("SutazAI.SystemIntegrationOrchestrator")
+        self.logger = logging.getLogger(
+            "SutazAI.SystemIntegrationOrchestrator"
+        )
 
         # Initialize advanced system components
         self.components = {
-            "architecture_manager": UltraComprehensiveArchitectureManager(base_dir),
+            "architecture_manager": UltraComprehensiveArchitectureManager(
+                base_dir
+            ),
             "dependency_mapper": AdvancedDependencyMapper(base_dir),
-            "system_health_monitor": UltraComprehensiveSystemHealthMonitor(base_dir),
+            "system_health_monitor": UltraComprehensiveSystemHealthMonitor(
+                base_dir
+            ),
             "system_checker": ComprehensiveSystemChecker(base_dir),
             "inventory_manager": InventoryManagementSystem(base_dir),
             "auto_remediation_manager": UltraComprehensiveAutoRemediationManager(
@@ -124,15 +132,16 @@ class SystemIntegrationOrchestrator:
             "dependency_insights": {},
             "system_health": {},
             "performance_metrics": {},
-            "security_assessment": {},
             "optimization_recommendations": [],
         }
 
         try:
             # 1. Architectural Analysis
-            system_integration_report["architectural_analysis"] = self.components[
-                "architecture_manager"
-            ].perform_comprehensive_architectural_analysis()
+            system_integration_report["architectural_analysis"] = (
+                self.components[
+                    "architecture_manager"
+                ].perform_comprehensive_architectural_analysis()
+            )
 
             # 2. Dependency Insights
             system_integration_report["dependency_insights"] = self.components[
@@ -149,8 +158,6 @@ class SystemIntegrationOrchestrator:
                 "performance_optimizer"
             ].optimize_system_performance()
 
-            # 5. Security Assessment
-            system_integration_report["security_assessment"] = self.components[
                 "project_validator"
             ].validate_project_structure()
 
@@ -162,9 +169,9 @@ class SystemIntegrationOrchestrator:
             )
 
             # Update system state
-            self.system_state["last_analysis_timestamp"] = system_integration_report[
-                "timestamp"
-            ]
+            self.system_state["last_analysis_timestamp"] = (
+                system_integration_report["timestamp"]
+            )
             self.system_state["total_optimization_cycles"] += 1
 
             # Persist system integration report
@@ -190,26 +197,31 @@ class SystemIntegrationOrchestrator:
         recommendations = []
 
         # Architectural recommendations
-        arch_analysis = system_integration_report.get("architectural_analysis", {})
-        recommendations.extend(arch_analysis.get("optimization_recommendations", []))
+        arch_analysis = system_integration_report.get(
+            "architectural_analysis", {}
+        )
+        recommendations.extend(
+            arch_analysis.get("optimization_recommendations", [])
+        )
 
         # Dependency recommendations
-        dependency_insights = system_integration_report.get("dependency_insights", {})
+        dependency_insights = system_integration_report.get(
+            "dependency_insights", {}
+        )
         if dependency_insights.get("circular_dependencies"):
             recommendations.append(
                 f"Resolve {len(dependency_insights['circular_dependencies'])} circular dependencies"
             )
 
         # Performance optimization recommendations
-        performance_metrics = system_integration_report.get("performance_metrics", {})
+        performance_metrics = system_integration_report.get(
+            "performance_metrics", {}
+        )
         if performance_metrics.get("recommendations"):
             recommendations.extend(performance_metrics["recommendations"])
 
-        # Security recommendations
-        security_assessment = system_integration_report.get("security_assessment", {})
-        if security_assessment.get("security_issues"):
+        )
             recommendations.append(
-                f"Address {len(security_assessment['security_issues'])} security vulnerabilities"
             )
 
         return recommendations
@@ -239,7 +251,9 @@ class SystemIntegrationOrchestrator:
                     ].start_autonomous_remediation()
 
                     # Log key insights
-                    self.logger.info("Autonomous system integration cycle completed")
+                    self.logger.info(
+                        "Autonomous system integration cycle completed"
+                    )
                     self.logger.info(
                         f"Optimization Recommendations: {system_integration_report.get('optimization_recommendations', [])}"
                     )
@@ -248,7 +262,9 @@ class SystemIntegrationOrchestrator:
                     self._stop_orchestration.wait(interval)
 
                 except Exception as e:
-                    self.logger.error(f"Autonomous system integration failed: {e}")
+                    self.logger.error(
+                        f"Autonomous system integration failed: {e}"
+                    )
                     self._stop_orchestration.wait(
                         interval
                     )  # Backoff on continuous errors
@@ -279,10 +295,14 @@ class SystemIntegrationOrchestrator:
             with open(report_path, "w") as f:
                 json.dump(system_integration_report, f, indent=2)
 
-            self.logger.info(f"System integration report persisted: {report_path}")
+            self.logger.info(
+                f"System integration report persisted: {report_path}"
+            )
 
         except Exception as e:
-            self.logger.error(f"System integration report persistence failed: {e}")
+            self.logger.error(
+                f"System integration report persistence failed: {e}"
+            )
 
     def stop_autonomous_system_integration(self):
         """
@@ -295,7 +315,9 @@ class SystemIntegrationOrchestrator:
 
         # Stop dependent components
         for component in self.components.values():
-            stop_method = getattr(component, "stop_autonomous_remediation", None)
+            stop_method = getattr(
+                component, "stop_autonomous_remediation", None
+            )
             if callable(stop_method):
                 stop_method()
 

@@ -64,7 +64,9 @@ class RtfFormatter(Formatter):
         self.fontsize = get_int_opt(options, "fontsize", 0)
 
     def _escape(self, text):
-        return text.replace("\\", "\\\\").replace("{", "\\{").replace("}", "\\}")
+        return (
+            text.replace("\\", "\\\\").replace("{", "\\{").replace("}", "\\}")
+        )
 
     def _escape_text(self, text):
         # empty strings, should give a small performance improvement
@@ -95,7 +97,8 @@ class RtfFormatter(Formatter):
         outfile.write(
             "{\\rtf1\\ansi\\uc0\\deff0"
             "{\\fonttbl{\\f0\\fmodern\\fprq1\\fcharset0%s;}}"
-            "{\\colortbl;" % (self.fontface and " " + self._escape(self.fontface) or "")
+            "{\\colortbl;"
+            % (self.fontface and " " + self._escape(self.fontface) or "")
         )
 
         # convert colors and save them in a mapping to access them later.
@@ -135,7 +138,9 @@ class RtfFormatter(Formatter):
             if style["underline"]:
                 buf.append("\\ul")
             if style["border"]:
-                buf.append("\\chbrdr\\chcfpat%d" % color_mapping[style["border"]])
+                buf.append(
+                    "\\chbrdr\\chcfpat%d" % color_mapping[style["border"]]
+                )
             start = "".join(buf)
             if start:
                 outfile.write("{%s " % start)

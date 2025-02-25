@@ -107,9 +107,7 @@ function lintAndAudit() {
     fi
   fi
 
-  # Example: Security scanning with Semgrep
   if command -v semgrep &>/dev/null; then
-    echo "[INFO] Running Semgrep security checks..." | tee -a "$LOGFILE"
     semgrep --config p/ci .
   fi
 

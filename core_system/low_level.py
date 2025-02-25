@@ -17,7 +17,6 @@ import ssl
 import struct
 import tempfile
 
-from .bindings import CFConst, CoreFoundation, Security
 
 # This regular expression is used to grab PEM data out of a PEM bundle.
 _PEM_CERTS_RE = re.compile(
@@ -135,7 +134,6 @@ def _assert_no_error(error, exception_class=None):
     if error == 0:
         return
 
-    cf_error_string = Security.SecCopyErrorMessageString(error, None)
     output = _cf_string_to_unicode(cf_error_string)
     CoreFoundation.CFRelease(cf_error_string)
 
@@ -157,7 +155,8 @@ def _cert_array_from_pem(pem_bundle):
     pem_bundle = pem_bundle.replace(b"\r\n", b"\n")
 
     der_certs = [
-        base64.b64decode(match.group(1)) for match in _PEM_CERTS_RE.finditer(pem_bundle)
+        base64.b64decode(match.group(1))
+        for match in _PEM_CERTS_RE.finditer(pem_bundle)
     ]
     if not der_certs:
         raise ssl.SSLError("No root certificates specified")
@@ -175,7 +174,6 @@ def _cert_array_from_pem(pem_bundle):
             certdata = _cf_data_from_bytes(der_bytes)
             if not certdata:
                 raise ssl.SSLError("Unable to allocate memory!")
-            cert = Security.SecCertificateCreateWithData(
                 CoreFoundation.kCFAllocatorDefault, certdata
             )
             CoreFoundation.CFRelease(certdata)
@@ -198,7 +196,6 @@ def _is_cert(item):
     """
     Returns True if a given CFTypeRef is a certificate.
     """
-    expected = Security.SecCertificateGetTypeID()
     return CoreFoundation.CFGetTypeID(item) == expected
 
 
@@ -206,7 +203,6 @@ def _is_identity(item):
     """
     Returns True if a given CFTypeRef is an identity.
     """
-    expected = Security.SecIdentityGetTypeID()
     return CoreFoundation.CFGetTypeID(item) == expected
 
 
@@ -235,8 +231,6 @@ def _temporary_keychain():
     keychain_path = os.path.join(tempdirectory, filename).encode("utf-8")
 
     # We now want to create the keychain itself.
-    keychain = Security.SecKeychainRef()
-    status = Security.SecKeychainCreate(
         keychain_path,
         len(password),
         password,
@@ -269,7 +263,6 @@ def _load_items_from_file(keychain, path):
             CoreFoundation.kCFAllocatorDefault, raw_filedata, len(raw_filedata)
         )
         result_array = CoreFoundation.CFArrayRef()
-        result = Security.SecItemImport(
             filedata,  # cert data
             None,  # Filename, leaving it out for now
             None,  # What the type of the file is, we don't care
@@ -317,7 +310,6 @@ def _load_client_cert_chain(keychain, *paths):
     # This relies on knowing that macOS will not give you a SecIdentityRef
     # unless you have imported a key into a keychain. This is a somewhat
     # artificial limitation of macOS (for example, it doesn't necessarily
-    # affect iOS), but there is nothing inside Security.framework that lets you
     # get a SecIdentityRef without having a key in a keychain.
     #
     # So the policy here is we take all the files and iterate them in order.
@@ -345,15 +337,15 @@ def _load_client_cert_chain(keychain, *paths):
 
     try:
         for file_path in paths:
-            new_identities, new_certs = _load_items_from_file(keychain, file_path)
+            new_identities, new_certs = _load_items_from_file(
+                keychain, file_path
+            )
             identities.extend(new_identities)
             certificates.extend(new_certs)
 
         # Ok, we have everything. The question is: do we have an identity? If
         # not, we want to grab one from the first cert we have.
         if not identities:
-            new_identity = Security.SecIdentityRef()
-            status = Security.SecIdentityCreateWithCertificate(
                 keychain, certificates[0], ctypes.byref(new_identity)
             )
             _assert_no_error(status)
@@ -399,5 +391,8 @@ def _build_tls_unknown_ca_alert(version):
     msg = struct.pack(">BB", severity_fatal, description_unknown_ca)
     msg_len = len(msg)
     record_type_alert = 0x15
-    record = struct.pack(">BBBH", record_type_alert, ver_maj, ver_min, msg_len) + msg
+    record = (
+        struct.pack(">BBBH", record_type_alert, ver_maj, ver_min, msg_len)
+        + msg
+    )
     return record

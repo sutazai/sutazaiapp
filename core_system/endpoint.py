@@ -1,4 +1,3 @@
-from authlib.common.security import generate_token
 from authlib.common.urls import add_params_to_uri
 from authlib.consts import default_json_headers
 

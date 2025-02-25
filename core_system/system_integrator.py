@@ -80,7 +80,9 @@ class AdvancedSystemIntegrator:
 
                     try:
                         # Import module dynamically
-                        module_name = relative_path.replace("/", ".").replace(".py", "")
+                        module_name = relative_path.replace("/", ".").replace(
+                            ".py", ""
+                        )
                         module = importlib.import_module(module_name)
 
                         # Catalog module details
@@ -120,7 +122,9 @@ class AdvancedSystemIntegrator:
                                 ].append(name)
 
                     except Exception as e:
-                        logger.warning(f"Could not process module {relative_path}: {e}")
+                        logger.warning(
+                            f"Could not process module {relative_path}: {e}"
+                        )
 
         return system_components
 
@@ -194,9 +198,7 @@ class AdvancedSystemIntegrator:
         Args:
             report (Dict): System architecture report
         """
-        report_filename = (
-            f'system_architecture_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
-        )
+        report_filename = f'system_architecture_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
         report_path = os.path.join(self.output_dir, report_filename)
 
         try:
@@ -257,7 +259,9 @@ class AdvancedSystemIntegrator:
             )
 
         except ImportError:
-            logger.warning("Matplotlib not available. Skipping topology visualization.")
+            logger.warning(
+                "Matplotlib not available. Skipping topology visualization."
+            )
         except Exception as e:
             logger.error(f"Topology visualization failed: {e}")
 

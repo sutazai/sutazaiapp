@@ -544,7 +544,9 @@ class ZeekLexer(RegexLexer):
             ),
             (
                 r"(redef)(\s+)(record|enum)(\s+)((?:[A-Za-z_]\w*)(?:::(?:[A-Za-z_]\w*))*)\b",
-                bygroups(Keyword, Whitespace, Keyword.Type, Whitespace, Name.Class),
+                bygroups(
+                    Keyword, Whitespace, Keyword.Type, Whitespace, Name.Class
+                ),
             ),
         ],
         "keywords": [
@@ -1007,7 +1009,9 @@ class MscgenLexer(RegexLexer):
             (r"\]", Punctuation, "#pop"),
             (
                 _var + r"(\s*)(=)(\s*)" + _var,
-                bygroups(Name.Attribute, Whitespace, Operator, Whitespace, String),
+                bygroups(
+                    Name.Attribute, Whitespace, Operator, Whitespace, String
+                ),
             ),
             (r",", Punctuation),
             include("comments"),
@@ -1335,7 +1339,9 @@ class CrmshLexer(RegexLexer):
     acl_mod = r"(?:tag|ref|reference|attribute|type|xpath)"
     bin_ops = r"(?:lt|gt|lte|gte|eq|ne)"
     val_qual = r"(?:string|version|number)"
-    rsc_role_action = r"(?:Master|Started|Slave|Stopped|" r"start|promote|demote|stop)"
+    rsc_role_action = (
+        r"(?:Master|Started|Slave|Stopped|" r"start|promote|demote|stop)"
+    )
 
     tokens = {
         "root": [

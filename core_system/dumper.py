@@ -168,7 +168,9 @@ class Dumper(Emitter, Serializer, Representer, Resolver):
         Resolver.__init__(self, loadumper=self)
 
 
-class RoundTripDumper(Emitter, Serializer, RoundTripRepresenter, VersionedResolver):
+class RoundTripDumper(
+    Emitter, Serializer, RoundTripRepresenter, VersionedResolver
+):
     def __init__(
         self,
         stream: StreamType,

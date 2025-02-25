@@ -10,7 +10,6 @@ import torch
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
 from pydantic import BaseSettings
 
@@ -30,7 +29,6 @@ app = FastAPI(
     version="1.4.0",
 )
 
-# Security Middleware
 app.add_middleware(
     TrustedHostMiddleware,
     allowed_hosts=["localhost", "127.0.0.1", "sutazai.local"],
@@ -43,15 +41,20 @@ app.mount("/metrics", metrics_app)
 logger = logging.getLogger(__name__)
 
 # Enhanced Prometheus Metrics
-REQUEST_COUNT = Counter("model_requests_total", "Total model inference requests")
-REQUEST_LATENCY = Histogram("model_request_latency_seconds", "Model request latency")
+REQUEST_COUNT = Counter(
+    "model_requests_total", "Total model inference requests"
+)
+REQUEST_LATENCY = Histogram(
+    "model_request_latency_seconds", "Model request latency"
+)
 ERROR_COUNT = Counter("model_errors_total", "Total model inference errors")
 ACTIVE_CONNECTIONS = Gauge(
     "active_connections", "Current active model server connections"
 )
-MODEL_MEMORY_USAGE = Gauge("model_memory_usage_bytes", "Current model memory usage")
+MODEL_MEMORY_USAGE = Gauge(
+    "model_memory_usage_bytes", "Current model memory usage"
+)
 
-security = HTTPBearer()
 
 
 class Settings(BaseSettings):
@@ -64,7 +67,9 @@ class SutazAiModelServer:
     """Advanced model serving infrastructure"""
 
     models: Dict[str, Any] = field(default_factory=dict)
-    logger: logging.Logger = field(default_factory=lambda: logging.getLogger(__name__))
+    logger: logging.Logger = field(
+        default_factory=lambda: logging.getLogger(__name__)
+    )
 
     def __post_init__(self):
         logging.basicConfig(
@@ -72,7 +77,9 @@ class SutazAiModelServer:
             format="%(asctime)s - SutazAi ModelServer - %(levelname)s: %(message)s",
         )
 
-    async def load_model(self, model_name: str, model_config: Dict[str, Any]) -> bool:
+    async def load_model(
+        self, model_name: str, model_config: Dict[str, Any]
+    ) -> bool:
         """
         Asynchronously load and initialize AI model
 
@@ -122,8 +129,12 @@ class SutazAiModelServer:
 
 async def main():
     model_server = SutazAiModelServer()
-    await model_server.load_model("neural_network_v1", {"layers": 5, "complexity": 0.8})
-    result = await model_server.predict("neural_network_v1", {"data": "test_input"})
+    await model_server.load_model(
+        "neural_network_v1", {"layers": 5, "complexity": 0.8}
+    )
+    result = await model_server.predict(
+        "neural_network_v1", {"data": "test_input"}
+    )
     print(result)
 
 
@@ -176,7 +187,9 @@ async def health_check():
         "memory_usage": {
             "total": model_server.max_memory,
             "current": (
-                model_server.model.get_memory_footprint() if model_server.model else 0
+                model_server.model.get_memory_footprint()
+                if model_server.model
+                else 0
             ),
         },
         "metrics": {
@@ -200,7 +213,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        credentials: HTTPAuthorizationCredentials = Depends(security)
         if not validate_token(credentials.credentials):
             raise HTTPException(status_code=401, detail="Unauthorized")
         # Add input validation

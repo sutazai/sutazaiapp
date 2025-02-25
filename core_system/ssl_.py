@@ -40,7 +40,9 @@ def _const_compare_digest_backport(a, b):
     return result == 0
 
 
-_const_compare_digest = getattr(hmac, "compare_digest", _const_compare_digest_backport)
+_const_compare_digest = getattr(
+    hmac, "compare_digest", _const_compare_digest_backport
+)
 
 try:  # Test for SSL features
     import ssl
@@ -93,7 +95,6 @@ except ImportError:
 # A secure default.
 # Sources for more information on TLS ciphers:
 #
-# - https://wiki.mozilla.org/Security/Server_Side_TLS
 # - https://www.ssllabs.com/projects/best-practices/index.html
 # - https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
 #
@@ -101,10 +102,8 @@ except ImportError:
 # - prefer cipher suites that offer perfect forward secrecy (DHE/ECDHE),
 # - prefer ECDHE over DHE for better performance,
 # - prefer any AES-GCM and ChaCha20 over any AES-CBC for better performance and
-#   security,
 # - prefer AES-GCM over ChaCha20 because hardware-accelerated AES is common,
 # - disable NULL authentication, MD5 MACs, DSS, and other
-#   insecure ciphers for security reasons.
 # - NOTE: TLS 1.3 cipher suites are managed through a different interface
 #   not exposed by CPython (yet!) and are enabled by default if they're available.
 DEFAULT_CIPHERS = ":".join(
@@ -193,7 +192,9 @@ def assert_fingerprint(cert, fingerprint):
     digest_length = len(fingerprint)
     hashfunc = HASHFUNC_MAP.get(digest_length)
     if not hashfunc:
-        raise SSLError("Fingerprint of invalid length: {0}".format(fingerprint))
+        raise SSLError(
+            "Fingerprint of invalid length: {0}".format(fingerprint)
+        )
 
     # We need encode() here for py32; works on py2 and p33.
     fingerprint_bytes = unhexlify(fingerprint.encode())
@@ -317,9 +318,9 @@ def create_urllib3_context(
     # versions of Python.  We only enable on Python 3.7.4+ or if certificate
     # verification is enabled to work around Python issue #37428
     # See: https://bugs.python.org/issue37428
-    if (cert_reqs == ssl.CERT_REQUIRED or sys.version_info >= (3, 7, 4)) and getattr(
-        context, "post_handshake_auth", None
-    ) is not None:
+    if (
+        cert_reqs == ssl.CERT_REQUIRED or sys.version_info >= (3, 7, 4)
+    ) and getattr(context, "post_handshake_auth", None) is not None:
         context.post_handshake_auth = True
 
     def disable_check_hostname():
@@ -395,7 +396,9 @@ def ssl_wrap_socket(
         # Note: This branch of code and all the variables in it are no longer
         # used by urllib3 itself. We should consider deprecating and removing
         # this code.
-        context = create_urllib3_context(ssl_version, cert_reqs, ciphers=ciphers)
+        context = create_urllib3_context(
+            ssl_version, cert_reqs, ciphers=ciphers
+        )
 
     if ca_certs or ca_cert_dir or ca_cert_data:
         try:
@@ -422,7 +425,9 @@ def ssl_wrap_socket(
     try:
         if hasattr(context, "set_alpn_protocols"):
             context.set_alpn_protocols(ALPN_PROTOCOLS)
-    except NotImplementedError:  # Defensive: in CI, we always have set_alpn_protocols
+    except (
+        NotImplementedError
+    ):  # Defensive: in CI, we always have set_alpn_protocols
         pass
 
     # If we detect server_hostname is an IP address then the SNI
@@ -464,7 +469,9 @@ def is_ipaddress(hostname):
     if not six.PY2 and isinstance(hostname, bytes):
         # IDN A-label bytes are ASCII compatible.
         hostname = hostname.decode("ascii")
-    return bool(IPV4_RE.match(hostname) or BRACELESS_IPV6_ADDRZ_RE.match(hostname))
+    return bool(
+        IPV4_RE.match(hostname) or BRACELESS_IPV6_ADDRZ_RE.match(hostname)
+    )
 
 
 def _is_key_file_encrypted(key_file):

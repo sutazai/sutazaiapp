@@ -213,7 +213,9 @@ def cpython_tags(
         for platform_ in platforms:
             yield Tag(interpreter, abi, platform_)
     if _abi3_applies(python_version):
-        yield from (Tag(interpreter, "abi3", platform_) for platform_ in platforms)
+        yield from (
+            Tag(interpreter, "abi3", platform_) for platform_ in platforms
+        )
     yield from (Tag(interpreter, "none", platform_) for platform_ in platforms)
 
     if _abi3_applies(python_version):
@@ -356,7 +358,9 @@ def mac_platforms(
     """
     version_str, _, cpu_arch = platform.mac_ver()
     if version is None:
-        version = cast("MacVersion", tuple(map(int, version_str.split(".")[:2])))
+        version = cast(
+            "MacVersion", tuple(map(int, version_str.split(".")[:2]))
+        )
     else:
         version = version
     if arch is None:

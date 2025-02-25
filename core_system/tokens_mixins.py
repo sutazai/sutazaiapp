@@ -11,7 +11,9 @@ class OAuth2AuthorizationCodeMixin(AuthorizationCodeMixin):
     response_type = Column(Text, default="")
     scope = Column(Text, default="")
     nonce = Column(Text)
-    auth_time = Column(Integer, nullable=False, default=lambda: int(time.time()))
+    auth_time = Column(
+        Integer, nullable=False, default=lambda: int(time.time())
+    )
 
     code_challenge = Column(Text)
     code_challenge_method = Column(String(48))
@@ -38,7 +40,9 @@ class OAuth2TokenMixin(TokenMixin):
     access_token = Column(String(255), unique=True, nullable=False)
     refresh_token = Column(String(255), index=True)
     scope = Column(Text, default="")
-    issued_at = Column(Integer, nullable=False, default=lambda: int(time.time()))
+    issued_at = Column(
+        Integer, nullable=False, default=lambda: int(time.time())
+    )
     access_token_revoked_at = Column(Integer, nullable=False, default=0)
     refresh_token_revoked_at = Column(Integer, nullable=False, default=0)
     expires_in = Column(Integer, nullable=False, default=0)

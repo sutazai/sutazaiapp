@@ -27,7 +27,6 @@ class ComprehensiveSystemAuditor:
             "timestamp": None,
             "project_structure": {},
             "dependency_analysis": {},
-            "security_checks": {},
             "performance_metrics": {},
             "optimization_suggestions": [],
         }
@@ -55,7 +54,6 @@ class ComprehensiveSystemAuditor:
             # Audit Stages
             self.audit_project_structure()
             self.analyze_dependencies()
-            self.perform_security_checks()
             self.evaluate_performance()
             self.generate_optimization_suggestions()
 
@@ -166,19 +164,14 @@ class ComprehensiveSystemAuditor:
 
         self.logger.info("Dependency Analysis Completed")
 
-    def perform_security_checks(self):
         """
-        Conduct comprehensive security vulnerability checks.
         """
-        self.logger.info("Performing Security Vulnerability Checks")
 
-        security_audit = {
             "potential_vulnerabilities": [],
             "sensitive_data_checks": {},
             "permission_issues": [],
         }
 
-        # Check for potential security issues in Python files
         for root, _, files in os.walk(self.project_root):
             for file in files:
                 if file.endswith(".py"):
@@ -187,14 +180,12 @@ class ComprehensiveSystemAuditor:
                         try:
                             tree = ast.parse(f.read())
                             for node in ast.walk(tree):
-                                # Check for potential security anti-patterns
                                 if isinstance(node, ast.Call):
                                     if (
                                         hasattr(node, "func")
                                         and hasattr(node.func, "id")
                                         and node.func.id in ["eval", "exec"]
                                     ):
-                                        security_audit[
                                             "potential_vulnerabilities"
                                         ].append(
                                             {
@@ -205,8 +196,6 @@ class ComprehensiveSystemAuditor:
                         except SyntaxError:
                             self.logger.warning(f"Could not parse {full_path}")
 
-        self.audit_report["security_checks"] = security_audit
-        self.logger.info("Security Vulnerability Checks Completed")
 
     def evaluate_performance(self):
         """
@@ -243,7 +232,8 @@ class ComprehensiveSystemAuditor:
                 {
                     "type": "structure",
                     "recommendation": f"Create missing directories: {', '.join(self.audit_report['project_structure']['missing_directories'])}",
-                })
+                }
+            )
 
         # Check for missing dependencies
         missing_deps = self.audit_report["dependency_analysis"].get(
@@ -254,18 +244,16 @@ class ComprehensiveSystemAuditor:
                 {
                     "type": "dependencies",
                     "recommendation": f"Install missing dependencies: {', '.join(missing_deps)}",
-                })
+                }
+            )
 
-        # Security vulnerability suggestions
-        vulnerabilities = self.audit_report["security_checks"].get(
             "potential_vulnerabilities", []
         )
         if vulnerabilities:
             suggestions.append(
                 {
-                    "type": "security",
-                    "recommendation": f"Review and mitigate {len(vulnerabilities)} potential security vulnerabilities",
-                })
+                }
+            )
 
         self.audit_report["optimization_suggestions"] = suggestions
         self.logger.info("Optimization Suggestions Generated")

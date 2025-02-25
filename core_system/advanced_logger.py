@@ -28,9 +28,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(
-            "/opt/SutazAI/logs/system_monitoring.log"
-        ),
+        logging.FileHandler("/opt/SutazAI/logs/system_monitoring.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )

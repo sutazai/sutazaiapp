@@ -125,7 +125,9 @@ class TestInstall(
             include = sysconfig.get_python_inc(0, "")
         expect_headers = os.path.join(include, "xx")
 
-        assert os.path.normcase(actual_headers) == os.path.normcase(expect_headers)
+        assert os.path.normcase(actual_headers) == os.path.normcase(
+            expect_headers
+        )
 
     def test_handle_extra_path(self):
         dist = Distribution({"name": "xx", "extra_path": "path,dirs"})
@@ -182,7 +184,9 @@ class TestInstall(
 
     def test_record(self):
         install_dir = self.mkdtemp()
-        project_dir, dist = self.create_dist(py_modules=["hello"], scripts=["sayhi"])
+        project_dir, dist = self.create_dist(
+            py_modules=["hello"], scripts=["sayhi"]
+        )
         os.chdir(project_dir)
         self.write_file("hello.py", "def main(): print('o hai')")
         self.write_file("sayhi", "from hello import main; main()")
@@ -242,4 +246,6 @@ class TestInstall(
         monkeypatch.setattr(install_module, "DEBUG", True)
         caplog.set_level(logging.DEBUG)
         self.test_record()
-        assert any(rec for rec in caplog.records if rec.levelno == logging.DEBUG)
+        assert any(
+            rec for rec in caplog.records if rec.levelno == logging.DEBUG
+        )

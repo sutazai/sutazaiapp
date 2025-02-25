@@ -158,7 +158,7 @@ def _partial_ratio_impl(s1, s2, score_cutoff):
 
         # todo cache map
         ls_ratio = indel_block_normalized_similarity(
-            block, s1, s2[i: i + len1], score_cutoff=score_cutoff
+            block, s1, s2[i : i + len1], score_cutoff=score_cutoff
         )
         if ls_ratio > res.score:
             res.score = score_cutoff = ls_ratio
@@ -501,8 +501,12 @@ def token_set_ratio(
     sect_ba_len = sect_len + (sect_len != 0) + ba_len
 
     result = 0.0
-    cutoff_distance = ceil((sect_ab_len + sect_ba_len) * (1 - score_cutoff / 100))
-    dist = indel_distance(diff_ab_joined, diff_ba_joined, score_cutoff=cutoff_distance)
+    cutoff_distance = ceil(
+        (sect_ab_len + sect_ba_len) * (1 - score_cutoff / 100)
+    )
+    dist = indel_distance(
+        diff_ab_joined, diff_ba_joined, score_cutoff=cutoff_distance
+    )
 
     if dist <= cutoff_distance:
         result = _norm_distance(dist, sect_ab_len + sect_ba_len, score_cutoff)
@@ -515,10 +519,14 @@ def token_set_ratio(
     # since only sect is similar in them the distance can be calculated based on
     # the length difference
     sect_ab_dist = (sect_len != 0) + ab_len
-    sect_ab_ratio = _norm_distance(sect_ab_dist, sect_len + sect_ab_len, score_cutoff)
+    sect_ab_ratio = _norm_distance(
+        sect_ab_dist, sect_len + sect_ab_len, score_cutoff
+    )
 
     sect_ba_dist = (sect_len != 0) + ba_len
-    sect_ba_ratio = _norm_distance(sect_ba_dist, sect_len + sect_ba_len, score_cutoff)
+    sect_ba_ratio = _norm_distance(
+        sect_ba_dist, sect_len + sect_ba_len, score_cutoff
+    )
 
     return max(result, sect_ab_ratio, sect_ba_ratio)
 
@@ -745,7 +753,9 @@ def partial_token_ratio(
     )
 
     # do not calculate the same partial_ratio twice
-    if len(tokens_split_a) == len(diff_ab) and len(tokens_split_b) == len(diff_ba):
+    if len(tokens_split_a) == len(diff_ab) and len(tokens_split_b) == len(
+        diff_ba
+    ):
         return result
 
     score_cutoff = max(score_cutoff, result)

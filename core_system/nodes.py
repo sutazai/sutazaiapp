@@ -52,13 +52,17 @@ class Node:
         #     else:
         #         value = repr(value)
         value = repr(value)
-        return f"{self.__class__.__name__!s}(tag={self.tag!r}, value={value!s})"
+        return (
+            f"{self.__class__.__name__!s}(tag={self.tag!r}, value={value!s})"
+        )
 
     def dump(self, indent: int = 0) -> None:
         xx = self.__class__.__name__
         xi = "  " * indent
         if isinstance(self.value, str):
-            sys.stdout.write(f"{xi}{xx}(tag={self.tag!r}, value={self.value!r})\n")
+            sys.stdout.write(
+                f"{xi}{xx}(tag={self.tag!r}, value={self.value!r})\n"
+            )
             if self.comment:
                 sys.stdout.write(f"    {xi}comment: {self.comment})\n")
             return

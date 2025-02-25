@@ -32,7 +32,9 @@ pytestmark = pytest.mark.skipif(
 
 
 class BuildBackendBase:
-    def __init__(self, cwd=".", env=None, backend_name="setuptools.build_meta"):
+    def __init__(
+        self, cwd=".", env=None, backend_name="setuptools.build_meta"
+    ):
         self.cwd = cwd
         self.env = env or {}
         self.backend_name = backend_name
@@ -54,14 +56,22 @@ class BuildBackend(BuildBackendBase):
             pid = None
             try:
                 pid = self.pool.submit(os.getpid).result(TIMEOUT)
-                return self.pool.submit(caller, name, *args, **kw).result(TIMEOUT)
+                return self.pool.submit(caller, name, *args, **kw).result(
+                    TIMEOUT
+                )
             except futures.TimeoutError:
-                self.pool.shutdown(wait=False)  # doesn't stop already running processes
+                self.pool.shutdown(
+                    wait=False
+                )  # doesn't stop already running processes
                 self._kill(pid)
-                pytest.xfail(f"Backend did not respond before timeout ({TIMEOUT} s)")
+                pytest.xfail(
+                    f"Backend did not respond before timeout ({TIMEOUT} s)"
+                )
             except (futures.process.BrokenProcessPool, MemoryError, OSError):
                 if IS_PYPY:
-                    pytest.xfail("PyPy frequently fails tests with ProcessPoolExector")
+                    pytest.xfail(
+                        "PyPy frequently fails tests with ProcessPoolExector"
+                    )
                 raise
 
         return method
@@ -77,7 +87,9 @@ class BuildBackendCaller(BuildBackendBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        (self.backend_name, _, self.backend_obj) = self.backend_name.partition(":")
+        (self.backend_name, _, self.backend_obj) = self.backend_name.partition(
+            ":"
+        )
 
     def __call__(self, name, *args, **kw):
         """Handles arbitrary function invocations on the build backend."""
@@ -393,8 +405,12 @@ class TestBuildMetaBackend:
         with ZipFile(os.path.join(tmpdir, "temp", wheel_file)) as zipfile:
             wheel_contents = set(zipfile.namelist())
             metadata = str(zipfile.read("foo-0.1.dist-info/METADATA"), "utf-8")
-            license = str(zipfile.read("foo-0.1.dist-info/LICENSE.txt"), "utf-8")
-            epoints = str(zipfile.read("foo-0.1.dist-info/entry_points.txt"), "utf-8")
+            license = str(
+                zipfile.read("foo-0.1.dist-info/LICENSE.txt"), "utf-8"
+            )
+            epoints = str(
+                zipfile.read("foo-0.1.dist-info/entry_points.txt"), "utf-8"
+            )
 
         assert sdist_contents - {"foo-0.1/setup.py"} == {
             "foo-0.1",
@@ -442,7 +458,11 @@ class TestBuildMetaBackend:
             "Requires-Dist: appdirs",
             "Requires-Dist: " + str(Requirement('tomli>=1 ; extra == "all"')),
             "Requires-Dist: "
-            + str(Requirement('importlib; python_version=="2.6" and extra =="all"')),
+            + str(
+                Requirement(
+                    'importlib; python_version=="2.6" and extra =="all"'
+                )
+            ),
         ):
             assert line in metadata, (line, metadata)
 
@@ -568,13 +588,17 @@ class TestBuildMetaBackend:
         with open(setup_loc, "rt", encoding="utf-8") as file_handler:
             content = file_handler.read()
         with open(setup_loc, "wt", encoding="utf-8") as file_handler:
-            file_handler.write(content.replace("version='0.0.0'", "version='0.0.1'"))
+            file_handler.write(
+                content.replace("version='0.0.0'", "version='0.0.1'")
+            )
 
         shutil.rmtree(sdist_into_directory)
         os.makedirs(sdist_into_directory)
 
         sdist_name = build_backend.build_sdist("out_sdist")
-        assert os.path.isfile(os.path.join(os.path.abspath("out_sdist"), sdist_name))
+        assert os.path.isfile(
+            os.path.join(os.path.abspath("out_sdist"), sdist_name)
+        )
 
     def test_build_sdist_pyproject_toml_exists(self, tmpdir_cwd):
         files = {
@@ -723,7 +747,9 @@ class TestBuildMetaBackend:
         build_backend = self.get_build_backend()
         assert not Path("build").exists()
         Path("build").mkdir()
-        build_backend.prepare_metadata_for_build_wheel("build", config_settings)
+        build_backend.prepare_metadata_for_build_wheel(
+            "build", config_settings
+        )
         build_backend.build_wheel("build", config_settings)
         assert Path("build/proj-42-py3-none-any.whl").exists()
 
@@ -732,7 +758,9 @@ class TestBuildMetaBackend:
         path.build({**self._simple_pyproject_example, "_meta": {}})
         assert not Path("build").exists()
         build_backend = self.get_build_backend()
-        build_backend.prepare_metadata_for_build_editable("_meta", config_settings)
+        build_backend.prepare_metadata_for_build_editable(
+            "_meta", config_settings
+        )
         build_backend.build_editable("temp", config_settings, "_meta")
         self._assert_link_tree(next(Path("build").glob("__editable__.*")))
 
@@ -753,7 +781,9 @@ class TestBuildMetaBackend:
         ],
     )
     @pytest.mark.parametrize("use_wheel", [True, False])
-    def test_setup_requires(self, setup_literal, requirements, use_wheel, tmpdir_cwd):
+    def test_setup_requires(
+        self, setup_literal, requirements, use_wheel, tmpdir_cwd
+    ):
         files = {
             "setup.py": DALS(
                 """

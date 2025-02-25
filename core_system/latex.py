@@ -286,7 +286,10 @@ class LatexFormatter(Formatter):
         def rgbcolor(col):
             if col:
                 return ",".join(
-                    ["%.2f" % (int(col[i] + col[i + 1], 16) / 255.0) for i in (0, 2, 4)]
+                    [
+                        "%.2f" % (int(col[i] + col[i + 1], 16) / 255.0)
+                        for i in (0, 2, 4)
+                    ]
                 )
             else:
                 return "1,1,1"
@@ -307,8 +310,9 @@ class LatexFormatter(Formatter):
             if ndef["mono"]:
                 cmndef += r"\let\$$@ff=\textsf"
             if ndef["color"]:
-                cmndef += r"\def\$$@tc##1{\textcolor[rgb]{%s}{##1}}" % rgbcolor(
-                    ndef["color"]
+                cmndef += (
+                    r"\def\$$@tc##1{\textcolor[rgb]{%s}{##1}}"
+                    % rgbcolor(ndef["color"])
                 )
             if ndef["border"]:
                 cmndef += (
@@ -319,7 +323,8 @@ class LatexFormatter(Formatter):
             elif ndef["bgcolor"]:
                 cmndef += (
                     r"\def\$$@bc##1{{\setlength{\fboxsep}{0pt}"
-                    r"\colorbox[rgb]{%s}{\strut ##1}}}" % rgbcolor(ndef["bgcolor"])
+                    r"\colorbox[rgb]{%s}{\strut ##1}}}"
+                    % rgbcolor(ndef["bgcolor"])
                 )
             if cmndef == "":
                 continue
@@ -351,7 +356,9 @@ class LatexFormatter(Formatter):
             outfile = StringIO()
 
         if not self.nowrap:
-            outfile.write("\\begin{" + self.envname + "}[commandchars=\\\\\\{\\}")
+            outfile.write(
+                "\\begin{" + self.envname + "}[commandchars=\\\\\\{\\}"
+            )
             if self.linenos:
                 start, step = self.linenostart, self.linenostep
                 outfile.write(
@@ -361,7 +368,8 @@ class LatexFormatter(Formatter):
                 )
             if self.mathescape or self.texcomments or self.escapeinside:
                 outfile.write(
-                    ",codes={\\catcode`\\$=3\\catcode`\\^=7" "\\catcode`\\_=8\\relax}"
+                    ",codes={\\catcode`\\$=3\\catcode`\\^=7"
+                    "\\catcode`\\_=8\\relax}"
                 )
             if self.verboptions:
                 outfile.write("," + self.verboptions)
@@ -377,7 +385,7 @@ class LatexFormatter(Formatter):
                             break
                         start += value[i]
 
-                    value = value[len(start):]
+                    value = value[len(start) :]
                     start = escape_tex(start, cp)
 
                     # ... but do not escape inside comment.
@@ -486,7 +494,9 @@ class LatexEmbeddedLexer(Lexer):
                 insertion_buf.append((i, t, v))
         if insertion_buf:
             insertions.append((len(buffered), insertion_buf))
-        return do_insertions(insertions, self.lang.get_tokens_unprocessed(buffered))
+        return do_insertions(
+            insertions, self.lang.get_tokens_unprocessed(buffered)
+        )
 
     def _find_safe_escape_tokens(self, text):
         """find escape tokens that are not in strings or comments"""

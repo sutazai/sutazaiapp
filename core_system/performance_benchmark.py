@@ -32,16 +32,22 @@ class DocumentProcessorBenchmark:
 
         for i in range(num_docs):
             # PDF document
-            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_pdf:
+            with tempfile.NamedTemporaryFile(
+                suffix=".pdf", delete=False
+            ) as temp_pdf:
                 doc = fitz.open()
                 page = doc.new_page()
-                page.insert_text((50, 50), f"SutazAI Performance Test Document {i}")
+                page.insert_text(
+                    (50, 50), f"SutazAI Performance Test Document {i}"
+                )
                 doc.save(temp_pdf.name)
                 doc.close()
                 test_docs.append(temp_pdf.name)
 
             # Image document
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_img:
+            with tempfile.NamedTemporaryFile(
+                suffix=".png", delete=False
+            ) as temp_img:
                 image = np.zeros((200, 200), dtype=np.uint8)
                 cv2.putText(
                     image,
@@ -182,7 +188,9 @@ class DocumentProcessorBenchmark:
             Dict: Comprehensive benchmark results
         """
         # Generate test documents
-        test_documents = DocumentProcessorBenchmark.generate_test_documents(num_docs)
+        test_documents = DocumentProcessorBenchmark.generate_test_documents(
+            num_docs
+        )
 
         # Run benchmarks
         benchmarks = {
@@ -208,12 +216,16 @@ def test_performance_benchmarks():
     """
     Pytest performance benchmark test
     """
-    benchmark_results = DocumentProcessorBenchmark.run_comprehensive_benchmark()
+    benchmark_results = (
+        DocumentProcessorBenchmark.run_comprehensive_benchmark()
+    )
 
     # Performance assertions
     for task, results in benchmark_results.items():
         assert results["mean_time"] < 2.0, f"{task} performance too slow"
-        assert results["total_documents"] > 0, f"No documents processed for {task}"
+        assert (
+            results["total_documents"] > 0
+        ), f"No documents processed for {task}"
 
 
 def main():
@@ -222,12 +234,12 @@ def main():
     """
     import json
 
-    benchmark_results = DocumentProcessorBenchmark.run_comprehensive_benchmark()
+    benchmark_results = (
+        DocumentProcessorBenchmark.run_comprehensive_benchmark()
+    )
 
     # Generate performance report
-    report_path = (
-        "/opt/SutazAI/logs/document_processor_performance.json"
-    )
+    report_path = "/opt/SutazAI/logs/document_processor_performance.json"
     with open(report_path, "w") as report_file:
         json.dump(benchmark_results, report_file, indent=2)
 

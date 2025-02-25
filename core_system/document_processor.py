@@ -40,7 +40,9 @@ class AdvancedDocumentProcessor:
         self.model = AutoModel.from_pretrained(model_name)
 
         # Move model to GPU if available
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
         self.model.to(self.device)
 
         # Performance optimization configurations
@@ -127,7 +129,7 @@ class AdvancedDocumentProcessor:
         chunks = []
 
         for i in range(0, len(tokens), chunk_size - overlap):
-            chunk = tokens[i: i + chunk_size]
+            chunk = tokens[i : i + chunk_size]
             chunks.append(self.tokenizer.decode(chunk))
 
         return chunks
@@ -265,10 +267,14 @@ def main():
     results = processor.batch_process_documents(test_files)
 
     for result in results:
-        print(f"Processed {result.get('file_path', 'Unknown')}: {result['status']}")
+        print(
+            f"Processed {result.get('file_path', 'Unknown')}: {result['status']}"
+        )
         if result["status"] == "processed":
             print(f"  Chunks: {result['chunks']}")
-            print(f"  Processing Time: {result['processing_time']:.4f} seconds")
+            print(
+                f"  Processing Time: {result['processing_time']:.4f} seconds"
+            )
 
 
 if __name__ == "__main__":

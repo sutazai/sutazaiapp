@@ -88,7 +88,9 @@ class GroffFormatter(Formatter):
 
     def _write_lineno(self, outfile):
         self._lineno += 1
-        outfile.write("%s% 4d " % (self._lineno != 1 and "\n" or "", self._lineno))
+        outfile.write(
+            "%s% 4d " % (self._lineno != 1 and "\n" or "", self._lineno)
+        )
 
     def _wrap_line(self, line):
         length = len(line.rstrip("\n"))
@@ -97,11 +99,11 @@ class GroffFormatter(Formatter):
 
         if length > self.wrap:
             for i in range(0, math.floor(length / self.wrap)):
-                chunk = line[i * self.wrap: i * self.wrap + self.wrap]
+                chunk = line[i * self.wrap : i * self.wrap + self.wrap]
                 newline += chunk + "\n" + space
             remainder = length % self.wrap
             if remainder > 0:
-                newline += line[-remainder - 1:]
+                newline += line[-remainder - 1 :]
                 self._linelen = remainder
         elif self._linelen + length > self.wrap:
             newline = ("\n" + space) + line

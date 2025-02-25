@@ -78,14 +78,10 @@ optimize_performance() {
     echo "✅ Performance optimization completed" | tee -a "$LOG_DIR/self_improvement.log"
 }
 
-# Security enhancements
-enhance_security() {
-    echo "🔒 Enhancing security..." | tee -a "$LOG_DIR/self_improvement.log"
     
     # Secure shell scripts
     find . -name "*.sh" | while read -r file; do
         echo "📄 Securing $file" | tee -a "$LOG_DIR/self_improvement.log"
-        # Add security enhancements here
         sed -i 's/rm -rf/rm -rf --preserve-root/g' "$file"
         sed -i 's/curl -s/curl -sSf/g' "$file"
         sed -i 's/wget -q/wget -q --no-check-certificate/g' "$file"
@@ -94,11 +90,9 @@ enhance_security() {
     # Secure Python scripts
     find . -name "*.py" | while read -r file; do
         echo "📄 Securing $file" | tee -a "$LOG_DIR/self_improvement.log"
-        # Add security enhancements here
         bandit -r "$file" > "$IMPROVEMENTS_DIR/${file}_bandit.txt"
     done
     
-    echo "✅ Security enhancements completed" | tee -a "$LOG_DIR/self_improvement.log"
 }
 
 # Documentation generation
@@ -278,8 +272,6 @@ improve_codebase() {
     # Phase 2: Performance Optimization
     optimize_performance
     
-    # Phase 3: Security Enhancements
-    enhance_security
     
     # Phase 4: Documentation Generation
     generate_documentation

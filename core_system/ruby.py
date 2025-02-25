@@ -145,7 +145,9 @@ class RubyLexer(ExtendedRegexLexer):
             nctx = LexerContext(match.group(3), 0, ["interpolated-regex"])
             for i, t, v in self.get_tokens_unprocessed(context=nctx):
                 yield match.start(3) + i, t, v
-            yield match.start(4), String.Regex, match.group(4)  # end[mixounse]*
+            yield match.start(4), String.Regex, match.group(
+                4
+            )  # end[mixounse]*
             ctx.pos = match.end()
 
         def intp_string_callback(self, match, ctx):
@@ -222,7 +224,9 @@ class RubyLexer(ExtendedRegexLexer):
                 (r"[\\#" + bracecc + "]", String.Regex),
                 (r"[^\\#" + bracecc + "]+", String.Regex),
             ]
-            states["strings"].append((r"%r" + lbrace, String.Regex, name + "-regex"))
+            states["strings"].append(
+                (r"%r" + lbrace, String.Regex, name + "-regex")
+            )
 
         # these must come after %<brace>!
         states["strings"] += [
@@ -570,7 +574,8 @@ class RubyLexer(ExtendedRegexLexer):
             ),
             (r"[a-zA-Z_]\w*[!?]?", Name),
             (
-                r"(\[|\]|\*\*|<<?|>>?|>=|<=|<=>|=~|={3}|" r"!~|&&?|\|\||\.{1,3})",
+                r"(\[|\]|\*\*|<<?|>>?|>=|<=|<=>|=~|={3}|"
+                r"!~|&&?|\|\||\.{1,3})",
                 Operator,
             ),
             (r"[-+/*%=<>&!^|~]=?", Operator),
@@ -658,7 +663,9 @@ class RubyConsoleLexer(Lexer):
     version_added = ""
     _example = "rbcon/console"
 
-    _prompt_re = re.compile(r'irb\([a-zA-Z_]\w*\):\d{3}:\d+[>*"\'] ' r"|>> |\?> ")
+    _prompt_re = re.compile(
+        r'irb\([a-zA-Z_]\w*\):\d{3}:\d+[>*"\'] ' r"|>> |\?> "
+    )
 
     def get_tokens_unprocessed(self, text):
         rblexer = RubyLexer(**self.options)
@@ -670,7 +677,9 @@ class RubyConsoleLexer(Lexer):
             m = self._prompt_re.match(line)
             if m is not None:
                 end = m.end()
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:end])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:end])])
+                )
                 curcode += line[end:]
             else:
                 if curcode:

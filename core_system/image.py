@@ -47,7 +47,9 @@ def image(state: StateInline, silent: bool) -> bool:
         # [link](  <href>  "title"  )
         #          ^^^^^^ parsing link destination
         start = pos
-        res = state.md.helpers.parseLinkDestination(state.src, pos, state.posMax)
+        res = state.md.helpers.parseLinkDestination(
+            state.src, pos, state.posMax
+        )
         if res.ok:
             href = state.md.normalizeLink(res.str)
             if state.md.validateLink(href):

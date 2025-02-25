@@ -212,7 +212,9 @@ class CCompiler:
         """
         A valid macro is a ``name : str`` and a ``value : str | None``.
         """
-        return isinstance(name, str) and isinstance(value, (str, types.NoneType))
+        return isinstance(name, str) and isinstance(
+            value, (str, types.NoneType)
+        )
 
     # -- Bookkeeping methods -------------------------------------------
 
@@ -343,13 +345,17 @@ class CCompiler:
 
     def _setup_compile(self, outdir, macros, incdirs, sources, depends, extra):
         """Process arguments and decide which source files to compile."""
-        outdir, macros, incdirs = self._fix_compile_args(outdir, macros, incdirs)
+        outdir, macros, incdirs = self._fix_compile_args(
+            outdir, macros, incdirs
+        )
 
         if extra is None:
             extra = []
 
         # Get the list of expected output (object) files
-        objects = self.object_filenames(sources, strip_dir=False, output_dir=outdir)
+        objects = self.object_filenames(
+            sources, strip_dir=False, output_dir=outdir
+        )
         assert len(objects) == len(sources)
 
         pp_opts = gen_preprocess_options(macros, incdirs)
@@ -400,7 +406,9 @@ class CCompiler:
         elif isinstance(include_dirs, (list, tuple)):
             include_dirs = list(include_dirs) + (self.include_dirs or [])
         else:
-            raise TypeError("'include_dirs' (if supplied) must be a list of strings")
+            raise TypeError(
+                "'include_dirs' (if supplied) must be a list of strings"
+            )
 
         # add include dirs for class
         include_dirs += self.__class__.include_dirs
@@ -452,14 +460,18 @@ class CCompiler:
         elif isinstance(libraries, (list, tuple)):
             libraries = list(libraries) + (self.libraries or [])
         else:
-            raise TypeError("'libraries' (if supplied) must be a list of strings")
+            raise TypeError(
+                "'libraries' (if supplied) must be a list of strings"
+            )
 
         if library_dirs is None:
             library_dirs = list(self.library_dirs)
         elif isinstance(library_dirs, (list, tuple)):
             library_dirs = list(library_dirs) + (self.library_dirs or [])
         else:
-            raise TypeError("'library_dirs' (if supplied) must be a list of strings")
+            raise TypeError(
+                "'library_dirs' (if supplied) must be a list of strings"
+            )
 
         # add library dirs for class
         library_dirs += self.__class__.library_dirs
@@ -912,7 +924,9 @@ int main (int argc, char **argv) {{
             return False
         else:
             os.remove(
-                self.executable_filename("a.out", output_dir=self.output_dir or "")
+                self.executable_filename(
+                    "a.out", output_dir=self.output_dir or ""
+                )
             )
         finally:
             for fn in objects:
@@ -962,7 +976,9 @@ int main (int argc, char **argv) {{
     #   * exe_extension -
     #     extension for executable files, eg. '' or '.exe'
 
-    def object_filenames(self, source_filenames, strip_dir=False, output_dir=""):
+    def object_filenames(
+        self, source_filenames, strip_dir=False, output_dir=""
+    ):
         if output_dir is None:
             output_dir = ""
         return list(
@@ -994,7 +1010,9 @@ int main (int argc, char **argv) {{
         try:
             new_ext = extensions[src.suffix]
         except LookupError:
-            raise UnknownFileError(f"unknown file type '{src.suffix}' (from '{src}')")
+            raise UnknownFileError(
+                f"unknown file type '{src.suffix}' (from '{src}')"
+            )
         if strip_dir:
             base = pathlib.PurePath(base.name)
         return os.path.join(output_dir, base.with_suffix(new_ext))
@@ -1145,7 +1163,9 @@ def show_compilers():
     pretty_printer.print_help("List of available compilers:")
 
 
-def new_compiler(plat=None, compiler=None, verbose=False, dry_run=False, force=False):
+def new_compiler(
+    plat=None, compiler=None, verbose=False, dry_run=False, force=False
+):
     """Generate an instance of some CCompiler subclass for the supplied
     platform/compiler combination.  'plat' defaults to 'os.name'
     (eg. 'posix', 'nt'), and 'compiler' defaults to the default compiler
@@ -1245,7 +1265,9 @@ def gen_lib_options(compiler, library_dirs, runtime_library_dirs, libraries):
     lib_opts = [compiler.library_dir_option(dir) for dir in library_dirs]
 
     for dir in runtime_library_dirs:
-        lib_opts.extend(always_iterable(compiler.runtime_library_dir_option(dir)))
+        lib_opts.extend(
+            always_iterable(compiler.runtime_library_dir_option(dir))
+        )
 
     # XXX it's important that we *not* remove redundant library mentions!
     # sometimes you really do have to say "-lfoo -lbar -lfoo" in order to

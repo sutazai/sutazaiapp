@@ -23,16 +23,22 @@ class ProjectModel(SafetyBaseModel):
     git: Optional[GITModel] = None
     files: List[FileModel] = field(default_factory=lambda: [])
 
-    def as_v30(self, full: bool = True) -> Union[v3_0.Projects, v3_0.ProjectsScan]:
+    def as_v30(
+        self, full: bool = True
+    ) -> Union[v3_0.Projects, v3_0.ProjectsScan]:
         if not full:
             if not self.upload_request_id:
                 raise TypeError(
                     "upload_request_id is required when a single project is created"
                 )
-            return v3_0.Projects(id=self.id, upload_request_id=self.upload_request_id)
+            return v3_0.Projects(
+                id=self.id, upload_request_id=self.upload_request_id
+            )
 
         if not self.project_path:
-            raise TypeError("project_path is required when a project scan is created")
+            raise TypeError(
+                "project_path is required when a project scan is created"
+            )
 
         git_repr = v3_0.Git(**asdict(self.git)) if self.git else None
         policy = self.policy.as_v30() if self.policy else None
@@ -52,7 +58,9 @@ class ProjectModel(SafetyBaseModel):
         if not isinstance(obj, v3_0.ProjectsScan) and not isinstance(
             obj, v3_0.Projects
         ):
-            raise TypeError("Expected instance of v3_0.ProjectsScan or v3_0.Projects")
+            raise TypeError(
+                "Expected instance of v3_0.ProjectsScan or v3_0.Projects"
+            )
 
         if isinstance(obj, v3_0.ProjectsScan):
             git_model_inst = None

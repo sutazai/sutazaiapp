@@ -57,7 +57,9 @@ class Serializer:
                     header_value = str(header_value)
                 data["vary"][header] = header_value
 
-        return b",".join([f"cc={self.serde_version}".encode(), self.serialize(data)])
+        return b",".join(
+            [f"cc={self.serde_version}".encode(), self.serialize(data)]
+        )
 
     def serialize(self, data: dict[str, Any]) -> bytes:
         return cast(bytes, msgpack.dumps(data, use_bin_type=True))
@@ -147,7 +149,9 @@ class Serializer:
         # Discard any `strict` parameter serialized by older version of cachecontrol.
         cached["response"].pop("strict", None)
 
-        return HTTPResponse(body=body, preload_content=False, **cached["response"])
+        return HTTPResponse(
+            body=body, preload_content=False, **cached["response"]
+        )
 
     def _loads_v0(
         self,
@@ -167,7 +171,6 @@ class Serializer:
         body_file: IO[bytes] | None = None,
     ) -> HTTPResponse | None:
         # The "v1" pickled cache format. This is no longer supported
-        # for security reasons, so we treat it as a miss.
         return None
 
     def _loads_v2(

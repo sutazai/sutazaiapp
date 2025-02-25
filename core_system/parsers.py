@@ -410,7 +410,9 @@ class AntlrLexer(RegexLexer):
             # attrScope
             (
                 r"(scope)(\s*)(" + _id + r")(\s*)(\{)",
-                bygroups(Keyword, Whitespace, Name.Variable, Whitespace, Punctuation),
+                bygroups(
+                    Keyword, Whitespace, Name.Variable, Whitespace, Punctuation
+                ),
                 "action",
             ),
             # exception
@@ -431,7 +433,9 @@ class AntlrLexer(RegexLexer):
             ),
             # rule
             (
-                r"((?:protected|private|public|fragment)\b)?(\s*)(" + _id + ")(!)?",
+                r"((?:protected|private|public|fragment)\b)?(\s*)("
+                + _id
+                + ")(!)?",
                 bygroups(Keyword, Whitespace, Name.Label, Punctuation),
                 ("rule-alts", "rule-prelims"),
             ),
@@ -470,7 +474,9 @@ class AntlrLexer(RegexLexer):
             ),
             (
                 r"(scope)(\s+)(" + _id + r")(\s*)(;)",
-                bygroups(Keyword, Whitespace, Name.Label, Whitespace, Punctuation),
+                bygroups(
+                    Keyword, Whitespace, Name.Label, Whitespace, Punctuation
+                ),
             ),
             # ruleAction
             (

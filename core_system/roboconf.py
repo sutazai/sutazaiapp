@@ -79,7 +79,9 @@ class RoboconfInstancesLexer(RegexLexer):
             (r"\s+", Text),
             # Keywords
             (
-                words(("instance of", "import"), suffix=r"\s*\b", prefix=r"\b"),
+                words(
+                    ("instance of", "import"), suffix=r"\s*\b", prefix=r"\b"
+                ),
                 Keyword,
             ),
             (words(("name", "count"), suffix=r"s*:?", prefix=r"\b"), Name),

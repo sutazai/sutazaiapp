@@ -192,7 +192,9 @@ class _Pipeline(Generic[_InT, _OutT]):
 
         This is useful when you need to reference the class in it's own type annotations.
         """
-        return _Pipeline[_InT, _NewOutT](self._steps + (_ValidateAsDefer(func),))
+        return _Pipeline[_InT, _NewOutT](
+            self._steps + (_ValidateAsDefer(func),)
+        )
 
     # constraints
     @overload
@@ -331,11 +333,15 @@ class _Pipeline(Generic[_InT, _OutT]):
         """Constrain a value to be a multiple of a certain number."""
         return self.constrain(annotated_types.MultipleOf(multiple_of))
 
-    def eq(self: _Pipeline[_InT, _OutT], value: _OutT) -> _Pipeline[_InT, _OutT]:
+    def eq(
+        self: _Pipeline[_InT, _OutT], value: _OutT
+    ) -> _Pipeline[_InT, _OutT]:
         """Constrain a value to be equal to a certain value."""
         return self.constrain(_Eq(value))
 
-    def not_eq(self: _Pipeline[_InT, _OutT], value: _OutT) -> _Pipeline[_InT, _OutT]:
+    def not_eq(
+        self: _Pipeline[_InT, _OutT], value: _OutT
+    ) -> _Pipeline[_InT, _OutT]:
         """Constrain a value to not be equal to a certain value."""
         return self.constrain(_NotEq(value))
 
@@ -385,7 +391,9 @@ class _Pipeline(Generic[_InT, _OutT]):
     def str_strip(self: _Pipeline[_InT, str]) -> _Pipeline[_InT, str]:
         return self.transform(str.strip)
 
-    def str_pattern(self: _Pipeline[_InT, str], pattern: str) -> _Pipeline[_InT, str]:
+    def str_pattern(
+        self: _Pipeline[_InT, str], pattern: str
+    ) -> _Pipeline[_InT, str]:
         return self.constrain(re.compile(pattern))
 
     def str_contains(
@@ -398,7 +406,9 @@ class _Pipeline(Generic[_InT, _OutT]):
     ) -> _Pipeline[_InT, str]:
         return self.predicate(lambda v: v.startswith(prefix))
 
-    def str_ends_with(self: _Pipeline[_InT, str], suffix: str) -> _Pipeline[_InT, str]:
+    def str_ends_with(
+        self: _Pipeline[_InT, str], suffix: str
+    ) -> _Pipeline[_InT, str]:
         return self.predicate(lambda v: v.endswith(suffix))
 
     # operators
@@ -410,7 +420,9 @@ class _Pipeline(Generic[_InT, _OutT]):
 
     __or__ = otherwise
 
-    def then(self, other: _Pipeline[_OutT, _OtherOut]) -> _Pipeline[_InT, _OtherOut]:
+    def then(
+        self, other: _Pipeline[_OutT, _OtherOut]
+    ) -> _Pipeline[_InT, _OtherOut]:
         """Pipe the result of one validation chain into another."""
         return _Pipeline((_PipelineAnd(self, other),))
 
@@ -630,7 +642,9 @@ def _apply_constraint(  # noqa: C901
                 return (min_len <= len(v)) and (len(v) <= max_len)
             return min_len <= len(v)
 
-        s = _check_func(check_len, f"length >= {min_len} and length <= {max_len}", s)
+        s = _check_func(
+            check_len, f"length >= {min_len} and length <= {max_len}", s
+        )
     elif isinstance(constraint, annotated_types.MultipleOf):
         multiple_of = constraint.multiple_of
         if s and s["type"] in {"int", "float", "decimal"}:
@@ -756,7 +770,9 @@ def _apply_constraint(  # noqa: C901
     return s
 
 
-class _SupportsRange(annotated_types.SupportsLe, annotated_types.SupportsGe, Protocol):
+class _SupportsRange(
+    annotated_types.SupportsLe, annotated_types.SupportsGe, Protocol
+):
     pass
 
 

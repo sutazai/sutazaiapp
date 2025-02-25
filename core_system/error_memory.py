@@ -36,7 +36,6 @@ class ErrorClassifier:
             ],
             "warning": ["RuntimeWarning", "DeprecationWarning"],
             "performance": ["TimeoutError", "ResourceWarning"],
-            "security": ["PermissionError", "AuthenticationError"],
         }
 
     def classify_error(self, error_details: Dict[str, Any]) -> str:
@@ -62,8 +61,6 @@ class ErrorClassifier:
         error_message = error_details.get("error_message", "").lower()
 
         # Advanced classification rules
-        if "security" in module or "auth" in module:
-            return "security"
 
         if "timeout" in error_message or "connection" in error_message:
             return "performance"
@@ -80,7 +77,9 @@ class ErrorMemory:
     with Machine Learning-Inspired Capabilities
     """
 
-    def __init__(self, memory_path: str = "/var/log/sutazai/error_memory.json"):
+    def __init__(
+        self, memory_path: str = "/var/log/sutazai/error_memory.json"
+    ):
         """
         Initialize the advanced error memory system.
 
@@ -218,7 +217,9 @@ class ErrorMemory:
         # Enhanced resolution strategy selection
         candidate_strategies = [
             (sig, strategy)
-            for sig, strategy in self.error_memory["resolution_strategies"].items()
+            for sig, strategy in self.error_memory[
+                "resolution_strategies"
+            ].items()
             if self._calculate_strategy_relevance(signature, sig)
             > self.config["similarity_threshold"]
         ]
@@ -266,7 +267,9 @@ class ErrorMemory:
             self.error_memory["error_signatures"][signature] = {
                 "count": 1,
                 "first_seen": datetime.now().isoformat(),
-                "modules_affected": set([error_details.get("module", "unknown")]),
+                "modules_affected": set(
+                    [error_details.get("module", "unknown")]
+                ),
             }
         else:
             error_sig_entry = self.error_memory["error_signatures"][signature]
@@ -321,7 +324,9 @@ class ErrorMemory:
         """
         analysis = {
             "total_errors": len(self.error_memory["error_history"]),
-            "unique_error_signatures": len(self.error_memory["error_signatures"]),
+            "unique_error_signatures": len(
+                self.error_memory["error_signatures"]
+            ),
             "error_trends": {
                 "hourly_distribution": {},
                 "module_error_frequency": {},
@@ -341,18 +346,26 @@ class ErrorMemory:
 
             # Hourly distribution
             analysis["error_trends"]["hourly_distribution"][timestamp.hour] = (
-                analysis["error_trends"]["hourly_distribution"].get(timestamp.hour, 0)
+                analysis["error_trends"]["hourly_distribution"].get(
+                    timestamp.hour, 0
+                )
                 + 1
             )
 
             # Module error frequency
             analysis["error_trends"]["module_error_frequency"][module] = (
-                analysis["error_trends"]["module_error_frequency"].get(module, 0) + 1
+                analysis["error_trends"]["module_error_frequency"].get(
+                    module, 0
+                )
+                + 1
             )
 
             # Error type trends
             analysis["error_trends"]["error_type_trends"][error_type] = (
-                analysis["error_trends"]["error_type_trends"].get(error_type, 0) + 1
+                analysis["error_trends"]["error_type_trends"].get(
+                    error_type, 0
+                )
+                + 1
             )
 
         # Identify high-risk modules
@@ -369,9 +382,9 @@ class ErrorMemory:
             if (
                 frequency > len(self.error_memory["error_history"]) * 0.2
             ):  # More than 20% of total errors
-                analysis["predictive_insights"]["potential_systemic_issues"].append(
-                    {"error_type": error_type, "frequency": frequency}
-                )
+                analysis["predictive_insights"][
+                    "potential_systemic_issues"
+                ].append({"error_type": error_type, "frequency": frequency})
 
         return analysis
 
@@ -399,7 +412,9 @@ class ErrorMemory:
                     {
                         "module": module,
                         "suggestion": "Refactor and improve error handling",
-                        "confidence": min(frequency / 50, 1.0),  # Confidence score
+                        "confidence": min(
+                            frequency / 50, 1.0
+                        ),  # Confidence score
                     }
                 )
 
@@ -446,7 +461,9 @@ class ErrorMemory:
             for strategy in self.error_memory["resolution_strategies"].values()
         )
 
-        resolution_rate = resolved_errors / total_errors if total_errors > 0 else 0
+        resolution_rate = (
+            resolved_errors / total_errors if total_errors > 0 else 0
+        )
 
         # Adaptive learning rate adjustment
         self.config["learning_rate"] = min(
@@ -456,7 +473,9 @@ class ErrorMemory:
         # Dynamically adjust max retry attempts
         self.config["max_retry_attempts"] = max(
             3,  # Minimum
-            min(int(total_errors * 0.1), 10),  # Scale with total errors  # Maximum
+            min(
+                int(total_errors * 0.1), 10
+            ),  # Scale with total errors  # Maximum
         )
 
         # Update similarity threshold based on error complexity
@@ -553,7 +572,9 @@ class ErrorMemoryEnhanced(ErrorMemory):
     Enhanced Error Memory with advanced machine learning capabilities.
     """
 
-    def __init__(self, memory_path: str = "/var/log/sutazai/error_memory.json"):
+    def __init__(
+        self, memory_path: str = "/var/log/sutazai/error_memory.json"
+    ):
         """
         Initialize the enhanced error memory system.
         """
@@ -614,7 +635,8 @@ class ErrorMemoryEnhanced(ErrorMemory):
 
         # Analyze clusters
         cluster_analysis = {
-            "total_clusters": len(set(clusters)) - (1 if -1 in clusters else 0),
+            "total_clusters": len(set(clusters))
+            - (1 if -1 in clusters else 0),
             "noise_points": list(clusters).count(-1),
             "cluster_details": {},
         }
@@ -631,8 +653,12 @@ class ErrorMemoryEnhanced(ErrorMemory):
                 cluster_analysis["cluster_details"][cluster_id] = {
                     "size": len(cluster_errors),
                     "representative_errors": cluster_errors[:3],
-                    "common_modules": self._find_common_modules(cluster_errors),
-                    "error_types": self._find_common_error_types(cluster_errors),
+                    "common_modules": self._find_common_modules(
+                        cluster_errors
+                    ),
+                    "error_types": self._find_common_error_types(
+                        cluster_errors
+                    ),
                 }
 
         return cluster_analysis
@@ -647,7 +673,9 @@ class ErrorMemoryEnhanced(ErrorMemory):
         Returns:
             List of most common modules
         """
-        modules = [error["details"].get("module", "unknown") for error in errors]
+        modules = [
+            error["details"].get("module", "unknown") for error in errors
+        ]
         module_counts = {}
         for module in modules:
             module_counts[module] = module_counts.get(module, 0) + 1
@@ -664,7 +692,9 @@ class ErrorMemoryEnhanced(ErrorMemory):
         Returns:
             List of most common error types
         """
-        error_types = [error["details"].get("type", "unknown") for error in errors]
+        error_types = [
+            error["details"].get("type", "unknown") for error in errors
+        ]
         type_counts = {}
         for error_type in error_types:
             type_counts[error_type] = type_counts.get(error_type, 0) + 1
@@ -721,7 +751,9 @@ class ErrorMemoryEnhanced(ErrorMemory):
                 predictions = self.predict_future_errors()
 
                 # Append ML insights to the report
-                with open("/var/log/sutazai/error_memory_report.json", "r") as f:
+                with open(
+                    "/var/log/sutazai/error_memory_report.json", "r"
+                ) as f:
                     report = json.load(f)
 
                 report["machine_learning_insights"] = {
@@ -729,14 +761,20 @@ class ErrorMemoryEnhanced(ErrorMemory):
                     "future_error_predictions": predictions,
                 }
 
-                with open("/var/log/sutazai/error_memory_report.json", "w") as f:
+                with open(
+                    "/var/log/sutazai/error_memory_report.json", "w"
+                ) as f:
                     json.dump(report, f, indent=2)
 
                 # Print ML insights
                 print("\n🤖 Machine Learning Insights:")
                 print("\nError Clusters:")
-                print(f"Total Clusters: {cluster_analysis.get('total_clusters', 0)}")
-                print(f"Noise Points: {cluster_analysis.get('noise_points', 0)}")
+                print(
+                    f"Total Clusters: {cluster_analysis.get('total_clusters', 0)}"
+                )
+                print(
+                    f"Noise Points: {cluster_analysis.get('noise_points', 0)}"
+                )
 
                 print("\nFuture Error Predictions:")
                 print("High-Risk Modules:")
@@ -752,7 +790,9 @@ class ErrorMemoryEnhanced(ErrorMemory):
                     )
 
         except Exception as e:
-            self.logger.error(f"Machine learning insights generation failed: {e}")
+            self.logger.error(
+                f"Machine learning insights generation failed: {e}"
+            )
 
 
 def main():

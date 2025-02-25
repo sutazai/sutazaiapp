@@ -50,7 +50,9 @@ def _is_python_source_dir(d):
     un-installed Python.
     """
     modules = pathlib.Path(d).joinpath("Modules")
-    return any(modules.joinpath(fn).is_file() for fn in ("Setup", "Setup.local"))
+    return any(
+        modules.joinpath(fn).is_file() for fn in ("Setup", "Setup.local")
+    )
 
 
 _sys_home = getattr(sys, "_home", None)
@@ -257,7 +259,9 @@ def get_python_lib(plat_specific=False, standard_lib=False, prefix=None):
             # Pure Python
             libdir = "lib"
         implementation = "pypy" if IS_PYPY else "python"
-        libpython = os.path.join(prefix, libdir, implementation + get_python_version())
+        libpython = os.path.join(
+            prefix, libdir, implementation + get_python_version()
+        )
         return _posix_lib(standard_lib, libpython, early_prefix, prefix)
     elif os.name == "nt":
         if standard_lib:
@@ -328,7 +332,7 @@ def customize_compiler(compiler):
             if "LDSHARED" not in os.environ and ldshared.startswith(cc):
                 # If CC is overridden, use that as the default
                 #       command for LDSHARED as well
-                ldshared = newcc + ldshared[len(cc):]
+                ldshared = newcc + ldshared[len(cc) :]
             cc = newcc
         cxx = os.environ.get("CXX", cxx)
         ldshared = os.environ.get("LDSHARED", ldshared)
@@ -470,7 +474,10 @@ def parse_makefile(fn, g=None):  # noqa: C901
                     item = os.environ[n]
 
                 elif n in renamed_variables:
-                    if name.startswith("PY_") and name[3:] in renamed_variables:
+                    if (
+                        name.startswith("PY_")
+                        and name[3:] in renamed_variables
+                    ):
                         item = ""
 
                     elif "PY_" + n in notdone:
@@ -481,7 +488,7 @@ def parse_makefile(fn, g=None):  # noqa: C901
                 else:
                     done[n] = item = ""
                 if found:
-                    after = value[m.end():]
+                    after = value[m.end() :]
                     value = value[: m.start()] + item + after
                     if "$" in after:
                         notdone[name] = value
@@ -494,7 +501,10 @@ def parse_makefile(fn, g=None):  # noqa: C901
                             done[name] = value
                         del notdone[name]
 
-                        if name.startswith("PY_") and name[3:] in renamed_variables:
+                        if (
+                            name.startswith("PY_")
+                            and name[3:] in renamed_variables
+                        ):
                             name = name[3:]
                             if name not in done:
                                 done[name] = value
@@ -568,7 +578,9 @@ def get_config_var(name):
     if name == "SO":
         import warnings
 
-        warnings.warn("SO is deprecated, use EXT_SUFFIX", DeprecationWarning, 2)
+        warnings.warn(
+            "SO is deprecated, use EXT_SUFFIX", DeprecationWarning, 2
+        )
     return get_config_vars().get(name)
 
 

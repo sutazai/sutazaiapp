@@ -1,12 +1,19 @@
 import os
 import sys
 from .error import VerificationError
-LIST_OF_FILE_NAMES = ['sources', 'include_dirs', 'library_dirs',
-    'extra_objects', 'depends']
+
+LIST_OF_FILE_NAMES = [
+    "sources",
+    "include_dirs",
+    "library_dirs",
+    "extra_objects",
+    "depends",
+]
 
 
 def get_extension(srcfilename, modname, sources=(), **kwds):
     from cffi._shimmed_dist_utils import Extension
+
     allsources = [srcfilename]
     for src in sources:
         allsources.append(os.path.normpath(src))
@@ -27,27 +34,34 @@ def compile(tmpdir, ext, compiler_verbose=0, debug=None):
 
 
 def _build(tmpdir, ext, compiler_verbose=0, debug=None):
-    from cffi._shimmed_dist_utils import CompileError, Distribution, LinkError, set_threshold, set_verbosity
-    dist = Distribution({'ext_modules': [ext]})
+    from cffi._shimmed_dist_utils import (
+        CompileError,
+        Distribution,
+        LinkError,
+        set_threshold,
+        set_verbosity,
+    )
+
+    dist = Distribution({"ext_modules": [ext]})
     dist.parse_config_files()
-    options = dist.get_option_dict('build_ext')
+    options = dist.get_option_dict("build_ext")
     if debug is None:
         debug = sys.flags.debug
-    options['debug'] = 'ffiplatform', debug
-    options['force'] = 'ffiplatform', True
-    options['build_lib'] = 'ffiplatform', tmpdir
-    options['build_temp'] = 'ffiplatform', tmpdir
+    options["debug"] = "ffiplatform", debug
+    options["force"] = "ffiplatform", True
+    options["build_lib"] = "ffiplatform", tmpdir
+    options["build_temp"] = "ffiplatform", tmpdir
     try:
         old_level = set_threshold(0) or 0
         try:
             set_verbosity(compiler_verbose)
-            dist.run_command('build_ext')
-            cmd_obj = dist.get_command_obj('build_ext')
+            dist.run_command("build_ext")
+            cmd_obj = dist.get_command_obj("build_ext")
             [soname] = cmd_obj.get_outputs()
         finally:
             set_threshold(old_level)
     except (CompileError, LinkError) as e:
-        raise VerificationError('%s: %s' % (e.__class__.__name__, e))
+        raise VerificationError("%s: %s" % (e.__class__.__name__, e))
     return soname
 
 
@@ -88,22 +102,23 @@ except NameError:
 
 def _flatten(x, f):
     if isinstance(x, str):
-        f.write('%ds%s' % (len(x), x))
+        f.write("%ds%s" % (len(x), x))
     elif isinstance(x, dict):
         keys = sorted(x.keys())
-        f.write('%dd' % len(keys))
+        f.write("%dd" % len(keys))
         for key in keys:
             _flatten(key, f)
             _flatten(x[key], f)
     elif isinstance(x, (list, tuple)):
-        f.write('%dl' % len(x))
+        f.write("%dl" % len(x))
         for value in x:
             _flatten(value, f)
     elif isinstance(x, int_or_long):
-        f.write('%di' % (x,))
+        f.write("%di" % (x,))
     else:
         raise TypeError(
-            'the keywords to verify() contains unsupported object %r' % (x,))
+            "the keywords to verify() contains unsupported object %r" % (x,)
+        )
 
 
 def flatten(x):

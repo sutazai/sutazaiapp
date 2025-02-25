@@ -3,7 +3,6 @@
 SutazAI Advanced Dependency Analysis and Optimization System
 
 Provides comprehensive dependency intelligence,
-performance optimization, and security enhancement.
 """
 
 import json
@@ -24,7 +23,6 @@ class AdvancedDependencyAnalyzer:
     Key Capabilities:
     - Dependency graph generation
     - Performance impact analysis
-    - Security vulnerability tracking
     - Optimization recommendations
     """
 
@@ -41,7 +39,9 @@ class AdvancedDependencyAnalyzer:
             log_dir (Optional[str]): Custom log directory
         """
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "dependency_analysis")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "dependency_analysis"
+        )
 
         # Ensure log directory exists
         os.makedirs(self.log_dir, exist_ok=True)
@@ -108,8 +108,12 @@ class AdvancedDependencyAnalyzer:
             # Calculate centrality metrics
             performance_analysis["centrality_metrics"] = {
                 "degree_centrality": nx.degree_centrality(dependency_graph),
-                "betweenness_centrality": nx.betweenness_centrality(dependency_graph),
-                "eigenvector_centrality": nx.eigenvector_centrality(dependency_graph),
+                "betweenness_centrality": nx.betweenness_centrality(
+                    dependency_graph
+                ),
+                "eigenvector_centrality": nx.eigenvector_centrality(
+                    dependency_graph
+                ),
             }
 
             return performance_analysis
@@ -140,9 +144,9 @@ class AdvancedDependencyAnalyzer:
             high_centrality_threshold = 0.5
             high_centrality_packages = [
                 pkg
-                for pkg, centrality in performance_analysis["centrality_metrics"][
-                    "degree_centrality"
-                ].items()
+                for pkg, centrality in performance_analysis[
+                    "centrality_metrics"
+                ]["degree_centrality"].items()
                 if centrality > high_centrality_threshold
             ]
 
@@ -159,7 +163,9 @@ class AdvancedDependencyAnalyzer:
             deep_dependency_threshold = 5
             deep_dependency_packages = [
                 pkg
-                for pkg, depth in performance_analysis["dependency_depth"].items()
+                for pkg, depth in performance_analysis[
+                    "dependency_depth"
+                ].items()
                 if depth > deep_dependency_threshold
             ]
 
@@ -175,7 +181,9 @@ class AdvancedDependencyAnalyzer:
             return optimization_recommendations
 
         except Exception as e:
-            self.logger.error(f"Optimization opportunity identification failed: {e}")
+            self.logger.error(
+                f"Optimization opportunity identification failed: {e}"
+            )
             return optimization_recommendations
 
     def generate_comprehensive_dependency_report(self) -> Dict[str, Any]:
@@ -190,11 +198,15 @@ class AdvancedDependencyAnalyzer:
             dependency_graph = self.generate_dependency_graph()
 
             # Perform performance analysis
-            performance_analysis = self.analyze_dependency_performance(dependency_graph)
+            performance_analysis = self.analyze_dependency_performance(
+                dependency_graph
+            )
 
             # Identify optimization opportunities
-            optimization_recommendations = self.identify_optimization_opportunities(
-                dependency_graph, performance_analysis
+            optimization_recommendations = (
+                self.identify_optimization_opportunities(
+                    dependency_graph, performance_analysis
+                )
             )
 
             # Compile comprehensive report
@@ -224,7 +236,9 @@ class AdvancedDependencyAnalyzer:
             return dependency_report
 
         except Exception as e:
-            self.logger.error(f"Comprehensive dependency report generation failed: {e}")
+            self.logger.error(
+                f"Comprehensive dependency report generation failed: {e}"
+            )
             return {}
 
 
@@ -245,7 +259,9 @@ def main():
         )
         print("\nOptimization Recommendations:")
         for rec in dependency_report.get("optimization_recommendations", []):
-            print(f"- {rec['package']}: {rec['recommendation']} ({rec['reason']})")
+            print(
+                f"- {rec['package']}: {rec['recommendation']} ({rec['reason']})"
+            )
 
     except Exception as e:
         print(f"Dependency analysis failed: {e}")

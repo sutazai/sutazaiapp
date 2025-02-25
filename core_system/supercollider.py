@@ -60,7 +60,8 @@ class SuperColliderLexer(RegexLexer):
             (r"^(?=\s|/|<!--)", Text, "slashstartsregex"),
             include("commentsandwhitespace"),
             (
-                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|" r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
+                r"\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|"
+                r"(<<|>>>?|==?|!=?|[-<>+*%&|^/])=?",
                 Operator,
                 "slashstartsregex",
             ),

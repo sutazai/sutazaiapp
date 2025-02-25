@@ -56,7 +56,9 @@ class SystemDependencyAnalyzer:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(base_dir, "logs", "system_dependency")
+        self.log_dir = log_dir or os.path.join(
+            base_dir, "logs", "system_dependency"
+        )
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -65,7 +67,9 @@ class SystemDependencyAnalyzer:
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
                 logging.FileHandler(
-                    os.path.join(self.log_dir, "system_dependency_analyzer.log")
+                    os.path.join(
+                        self.log_dir, "system_dependency_analyzer.log"
+                    )
                 ),
                 logging.StreamHandler(sys.stdout),
             ],
@@ -118,12 +122,14 @@ class SystemDependencyAnalyzer:
                 for file in files:
                     if file.endswith(".py"):
                         file_path = os.path.join(root, file)
-                        relative_path = os.path.relpath(file_path, self.base_dir)
+                        relative_path = os.path.relpath(
+                            file_path, self.base_dir
+                        )
 
                         try:
                             # Analyze module dependencies
-                            module_dependencies = self._analyze_module_dependencies(
-                                file_path
+                            module_dependencies = (
+                                self._analyze_module_dependencies(file_path)
                             )
 
                             # Update dependency graph
@@ -132,8 +138,12 @@ class SystemDependencyAnalyzer:
                             )
 
                             # Categorize module
-                            module_category = self._categorize_module(relative_path)
-                            dependency_report["module_categories"][module_category] = (
+                            module_category = self._categorize_module(
+                                relative_path
+                            )
+                            dependency_report["module_categories"][
+                                module_category
+                            ] = (
                                 dependency_report["module_categories"].get(
                                     module_category, 0
                                 )
@@ -151,10 +161,14 @@ class SystemDependencyAnalyzer:
         dependency_report["circular_dependencies"] = list(
             nx.simple_cycles(self.dependency_graph)
         )
-        dependency_report["total_dependencies"] = len(self.dependency_graph.edges())
+        dependency_report["total_dependencies"] = len(
+            self.dependency_graph.edges()
+        )
 
         # Calculate dependency metrics
-        dependency_report["dependency_metrics"] = self._calculate_dependency_metrics()
+        dependency_report["dependency_metrics"] = (
+            self._calculate_dependency_metrics()
+        )
 
         # Detect architectural patterns
         dependency_report["architectural_patterns"] = (
@@ -195,7 +209,9 @@ class SystemDependencyAnalyzer:
             # Analyze imports
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):
-                    dependencies["imports"].extend([alias.name for alias in node.names])
+                    dependencies["imports"].extend(
+                        [alias.name for alias in node.names]
+                    )
 
                 elif isinstance(node, ast.ImportFrom):
                     base_module = node.module or ""
@@ -232,7 +248,9 @@ class SystemDependencyAnalyzer:
 
         return dependencies
 
-    def _update_dependency_graph(self, module_path: str, dependencies: Dict[str, Any]):
+    def _update_dependency_graph(
+        self, module_path: str, dependencies: Dict[str, Any]
+    ):
         """
         Update dependency graph with module relationships
 
@@ -307,7 +325,9 @@ class SystemDependencyAnalyzer:
             "coupling_coefficient": {},
             "centrality": {
                 "degree": nx.degree_centrality(self.dependency_graph),
-                "betweenness": nx.betweenness_centrality(self.dependency_graph),
+                "betweenness": nx.betweenness_centrality(
+                    self.dependency_graph
+                ),
                 "closeness": nx.closeness_centrality(self.dependency_graph),
             },
         }
@@ -401,7 +421,9 @@ class SystemDependencyAnalyzer:
             )
 
         except Exception as e:
-            self.logger.error(f"System dependency graph visualization failed: {e}")
+            self.logger.error(
+                f"System dependency graph visualization failed: {e}"
+            )
 
     def _persist_dependency_report(self, dependency_report: Dict[str, Any]):
         """
@@ -419,10 +441,14 @@ class SystemDependencyAnalyzer:
             with open(report_path, "w") as f:
                 json.dump(dependency_report, f, indent=2)
 
-            self.logger.info(f"System dependency report persisted: {report_path}")
+            self.logger.info(
+                f"System dependency report persisted: {report_path}"
+            )
 
         except Exception as e:
-            self.logger.error(f"System dependency report persistence failed: {e}")
+            self.logger.error(
+                f"System dependency report persistence failed: {e}"
+            )
 
     def generate_dependency_insights(self) -> Dict[str, Any]:
         """
@@ -478,7 +504,9 @@ def main():
 
     print("\n🌐 System Dependency Analysis Results 🌐")
     print(f"Total Modules: {dependency_report.get('total_modules', 0)}")
-    print(f"Total Dependencies: {dependency_report.get('total_dependencies', 0)}")
+    print(
+        f"Total Dependencies: {dependency_report.get('total_dependencies', 0)}"
+    )
 
     print("\nCircular Dependencies:")
     for cycle in dependency_report.get("circular_dependencies", []):

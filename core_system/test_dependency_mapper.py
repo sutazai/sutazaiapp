@@ -84,7 +84,9 @@ class TestDependencyMapper:
 
         # Validate graph structure
         for module, dependencies in dependency_graph.items():
-            assert isinstance(dependencies, list), f"Invalid dependencies for {module}"
+            assert isinstance(
+                dependencies, list
+            ), f"Invalid dependencies for {module}"
 
     def test_circular_dependency_detection(self, dependency_mapper):
         """
@@ -98,7 +100,9 @@ class TestDependencyMapper:
         dependency_mapper.build_dependency_graph()
 
         # Detect circular dependencies
-        circular_dependencies = dependency_mapper.detect_circular_dependencies()
+        circular_dependencies = (
+            dependency_mapper.detect_circular_dependencies()
+        )
 
         # Validate circular dependency detection
         assert isinstance(
@@ -124,7 +128,9 @@ class TestDependencyMapper:
         dependency_mapper.build_dependency_graph()
 
         # Identify high coupling modules
-        high_coupling_modules = dependency_mapper.identify_high_coupling_modules()
+        high_coupling_modules = (
+            dependency_mapper.identify_high_coupling_modules()
+        )
 
         # Validate high coupling module identification
         assert isinstance(
@@ -133,10 +139,18 @@ class TestDependencyMapper:
 
         # Validate module coupling details
         for module in high_coupling_modules:
-            assert "module" in module, "Missing module name in coupling details"
-            assert "in_degree" in module, "Missing in-degree in coupling details"
-            assert "out_degree" in module, "Missing out-degree in coupling details"
-            assert "total_coupling" in module, "Missing total coupling in details"
+            assert (
+                "module" in module
+            ), "Missing module name in coupling details"
+            assert (
+                "in_degree" in module
+            ), "Missing in-degree in coupling details"
+            assert (
+                "out_degree" in module
+            ), "Missing out-degree in coupling details"
+            assert (
+                "total_coupling" in module
+            ), "Missing total coupling in details"
 
     def test_dependency_health_score_calculation(self, dependency_mapper):
         """
@@ -155,7 +169,9 @@ class TestDependencyMapper:
 
         # Validate health score
         assert isinstance(health_score, float), "Health score must be a float"
-        assert 0 <= health_score <= 100, "Health score must be between 0 and 100"
+        assert (
+            0 <= health_score <= 100
+        ), "Health score must be between 0 and 100"
 
     def test_optimization_recommendation_generation(self, dependency_mapper):
         """
@@ -183,13 +199,19 @@ class TestDependencyMapper:
             }
         ]
 
-        recommendations = dependency_mapper.generate_optimization_recommendations(
-            dependency_graph, circular_dependencies, high_coupling_modules
+        recommendations = (
+            dependency_mapper.generate_optimization_recommendations(
+                dependency_graph, circular_dependencies, high_coupling_modules
+            )
         )
 
         # Validate recommendations
-        assert isinstance(recommendations, list), "Recommendations must be a list"
-        assert len(recommendations) > 0, "No optimization recommendations generated"
+        assert isinstance(
+            recommendations, list
+        ), "Recommendations must be a list"
+        assert (
+            len(recommendations) > 0
+        ), "No optimization recommendations generated"
 
         # Optional: Print recommendations for manual review
         print("\nDependency Optimization Recommendations:")
@@ -205,11 +227,15 @@ class TestDependencyMapper:
         - Comprehensive report structure
         - Meaningful insights and recommendations
         """
-        dependency_report = dependency_mapper.generate_comprehensive_dependency_report()
+        dependency_report = (
+            dependency_mapper.generate_comprehensive_dependency_report()
+        )
 
         # Validate report structure
         assert hasattr(dependency_report, "timestamp"), "Missing timestamp"
-        assert hasattr(dependency_report, "total_modules"), "Missing total modules"
+        assert hasattr(
+            dependency_report, "total_modules"
+        ), "Missing total modules"
         assert hasattr(
             dependency_report, "dependency_graph"
         ), "Missing dependency graph"

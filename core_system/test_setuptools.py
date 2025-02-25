@@ -82,7 +82,9 @@ class TestDepends:
         assert dep.get_module_constant("json", "__version__") == __version__
         assert dep.get_module_constant("sys", "version") == sys.version
         assert (
-            dep.get_module_constant("setuptools.tests.test_setuptools", "__doc__")
+            dep.get_module_constant(
+                "setuptools.tests.test_setuptools", "__doc__"
+            )
             == __doc__
         )
 
@@ -284,5 +286,6 @@ def test_wheel_includes_vendored_metadata(setuptools_wheel):
         contents = [f.replace(os.sep, "/") for f in zipfile.namelist()]
 
     assert any(
-        re.search(r"_vendor/.*\.dist-info/METADATA", member) for member in contents
+        re.search(r"_vendor/.*\.dist-info/METADATA", member)
+        for member in contents
     )

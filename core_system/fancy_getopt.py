@@ -168,7 +168,9 @@ class FancyGetopt:
                     f"invalid long option '{long}': must be a string of length >= 2"
                 )
 
-            if not ((short is None) or (isinstance(short, str) and len(short) == 1)):
+            if not (
+                (short is None) or (isinstance(short, str) and len(short) == 1)
+            ):
                 raise DistutilsGetoptError(
                     f"invalid short option '{short}': must a single character or None"
                 )
@@ -221,7 +223,9 @@ class FancyGetopt:
                 self.short_opts.append(short)
                 self.short2long[short[0]] = long
 
-    def getopt(self, args: Sequence[str] | None = None, object=None):  # noqa: C901
+    def getopt(
+        self, args: Sequence[str] | None = None, object=None
+    ):  # noqa: C901
         """Parse command-line options in args. Store as attributes on object.
 
         If 'args' is None or not supplied, uses 'sys.argv[1:]'.  If

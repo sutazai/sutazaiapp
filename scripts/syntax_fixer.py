@@ -36,7 +36,7 @@ class SyntaxTransformer(ast.NodeTransformer):
             isinstance(method, ast.FunctionDef) and method.name == "__init__"
             for method in node.body
         )
-        
+
         if not has_init:
             # Add a basic __init__ method
             init_method = ast.FunctionDef(
@@ -53,17 +53,21 @@ class SyntaxTransformer(ast.NodeTransformer):
                 returns=None,
             )
             node.body.insert(0, init_method)
-            
+
         # Fix method signatures in class methods
         for method in node.body:
             if isinstance(method, ast.FunctionDef):
                 # Ensure first parameter is self for instance methods
                 if method.args.args and len(method.args.args) > 0:
                     if method.args.args[0].arg != "self":
-                        method.args.args.insert(0, ast.arg(arg="self", annotation=None))
+                        method.args.args.insert(
+                            0, ast.arg(arg="self", annotation=None)
+                        )
                 else:
-                    method.args.args.insert(0, ast.arg(arg="self", annotation=None))
-        
+                    method.args.args.insert(
+                        0, ast.arg(arg="self", annotation=None)
+                    )
+
         return self.generic_visit(node)
 
     def visit_FunctionDef(self, node):
@@ -86,22 +90,34 @@ def ast_transform(content):
 def regex_fix(content):
     """Use regex to fix common syntax patterns"""
     # Fix missing colons
-    content = re.sub(r'(if|elif|else|for|while|def|class|try|except|finally|with)\s+([^:]+)(?<!\n|:)$', r'\1 \2:', content, flags=re.MULTILINE)
-    
+    content = re.sub(
+        r"(if|elif|else|for|while|def|class|try|except|finally|with)\s+([^:]+)(?<!\n|:)$",
+        r"\1 \2:",
+        content,
+        flags=re.MULTILINE,
+    )
+
     # Fix indentation (convert tabs to spaces)
-    content = re.sub(r'^\t+', lambda match: '    ' * len(match.group(0)), content, flags=re.MULTILINE)
-    
+    content = re.sub(
+        r"^\t+",
+        lambda match: "    " * len(match.group(0)),
+        content,
+        flags=re.MULTILINE,
+    )
+
     # Fix parentheses in function calls
-    content = re.sub(r'(\w+)\s+\(', r'\1(', content)
-    
+    content = re.sub(r"(\w+)\s+\(", r"\1(", content)
+
     # Fix missing parentheses in print statements (Python 3)
-    content = re.sub(r'print\s+([^(].*?)$', r'print(\1)', content, flags=re.MULTILINE)
-    
+    content = re.sub(
+        r"print\s+([^(].*?)$", r"print(\1)", content, flags=re.MULTILINE
+    )
+
     # Fix common typos
-    content = re.sub(r'\bimpotr\b', 'import', content)
-    content = re.sub(r'\bfrom\s+(\w+)\s+imports\b', r'from \1 import', content)
-    content = re.sub(r'\belse\s+if\b', 'elif', content)
-    
+    content = re.sub(r"\bimpotr\b", "import", content)
+    content = re.sub(r"\bfrom\s+(\w+)\s+imports\b", r"from \1 import", content)
+    content = re.sub(r"\belse\s+if\b", "elif", content)
+
     return content
 
 
@@ -113,13 +129,13 @@ def fix_file_syntax(file_path):
 
         # Apply multiple fixing strategies
         original_content = content
-        
+
         # Step 1: Apply regex fixes for common patterns
         content = regex_fix(content)
-        
+
         # Step 2: Apply tokenization fixes
         content = tokenize_and_fix(content)
-        
+
         # Step 3: Apply AST transformation if possible
         try:
             content = ast_transform(content)
@@ -150,17 +166,17 @@ def process_directory(directory, extensions=None):
     """Process all Python files in a directory and its subdirectories"""
     if extensions is None:
         extensions = [".py"]
-        
+
     fixed_files = 0
     error_files = 0
-    
+
     for path in Path(directory).rglob("*"):
         if path.is_file() and path.suffix in extensions:
             if fix_file_syntax(path):
                 fixed_files += 1
             else:
                 error_files += 1
-    
+
     return fixed_files, error_files
 
 
@@ -170,13 +186,19 @@ def main():
         print("Usage: python syntax_fixer.py <directory> [extensions]")
         print("Example: python syntax_fixer.py . .py,.pyw")
         return
-    
+
     directory = sys.argv[1]
-    extensions = [f".{ext}" for ext in sys.argv[2].split(",")] if len(sys.argv) > 2 else [".py"]
-    
-    print(f"Starting syntax fixing in {directory} for files with extensions: {extensions}")
+    extensions = (
+        [f".{ext}" for ext in sys.argv[2].split(",")]
+        if len(sys.argv) > 2
+        else [".py"]
+    )
+
+    print(
+        f"Starting syntax fixing in {directory} for files with extensions: {extensions}"
+    )
     fixed_files, error_files = process_directory(directory, extensions)
-    
+
     print(f"\nSummary:")
     print(f"- Directory processed: {directory}")
     print(f"- Files processed successfully: {fixed_files}")

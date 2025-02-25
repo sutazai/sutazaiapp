@@ -119,12 +119,16 @@ class TestProcess(PsutilTestCase):
     def test_send_signal_mocked(self):
         sig = signal.SIGTERM
         p = self.spawn_psproc()
-        with mock.patch("psutil.os.kill", side_effect=OSError(errno.ESRCH, "")):
+        with mock.patch(
+            "psutil.os.kill", side_effect=OSError(errno.ESRCH, "")
+        ):
             with pytest.raises(psutil.NoSuchProcess):
                 p.send_signal(sig)
 
         p = self.spawn_psproc()
-        with mock.patch("psutil.os.kill", side_effect=OSError(errno.EPERM, "")):
+        with mock.patch(
+            "psutil.os.kill", side_effect=OSError(errno.EPERM, "")
+        ):
             with pytest.raises(psutil.AccessDenied):
                 p.send_signal(sig)
 
@@ -400,11 +404,15 @@ class TestProcess(PsutilTestCase):
             p.ionice(psutil.IOPRIO_CLASS_NONE, 1)
         with pytest.raises(ValueError, match="ioclass accepts no value"):
             p.ionice(psutil.IOPRIO_CLASS_IDLE, 1)
-        with pytest.raises(ValueError, match="'ioclass' argument must be specified"):
+        with pytest.raises(
+            ValueError, match="'ioclass' argument must be specified"
+        ):
             p.ionice(value=1)
 
     @pytest.mark.skipif(not HAS_IONICE, reason="not supported")
-    @pytest.mark.skipif(not WINDOWS, reason="not supported on this win version")
+    @pytest.mark.skipif(
+        not WINDOWS, reason="not supported on this win version"
+    )
     def test_ionice_win(self):
         p = psutil.Process()
         if not CI_TESTING:
@@ -424,7 +432,9 @@ class TestProcess(PsutilTestCase):
         else:
             assert p.ionice() == psutil.IOPRIO_HIGH
         # errs
-        with pytest.raises(TypeError, match="value argument not accepted on Windows"):
+        with pytest.raises(
+            TypeError, match="value argument not accepted on Windows"
+        ):
             p.ionice(psutil.IOPRIO_NORMAL, value=1)
         with pytest.raises(ValueError, match="is not a valid priority"):
             p.ionice(psutil.IOPRIO_HIGH + 1)
@@ -565,9 +575,16 @@ class TestProcess(PsutilTestCase):
                 p.threads()
             except psutil.AccessDenied:
                 raise pytest.skip("on OpenBSD this requires root access")
-        assert abs(p.cpu_times().user - sum([x.user_time for x in p.threads()])) < 0.1
         assert (
-            abs(p.cpu_times().system - sum([x.system_time for x in p.threads()])) < 0.1
+            abs(p.cpu_times().user - sum([x.user_time for x in p.threads()]))
+            < 0.1
+        )
+        assert (
+            abs(
+                p.cpu_times().system
+                - sum([x.system_time for x in p.threads()])
+            )
+            < 0.1
         )
 
     @retry_on_failure()
@@ -755,7 +772,9 @@ class TestProcess(PsutilTestCase):
     def test_long_cmdline(self):
         cmdline = [PYTHON_EXE]
         cmdline.extend(["-v"] * 50)
-        cmdline.extend(["-c", "import time; [time.sleep(0.1) for x in range(100)]"])
+        cmdline.extend(
+            ["-c", "import time; [time.sleep(0.1) for x in range(100)]"]
+        )
         p = self.spawn_psproc(cmdline)
         if OPENBSD:
             # XXX: for some reason the test process may turn into a
@@ -905,11 +924,17 @@ class TestProcess(PsutilTestCase):
         else:
             try:
                 if hasattr(os, "getpriority"):
-                    assert os.getpriority(os.PRIO_PROCESS, os.getpid()) == p.nice()
+                    assert (
+                        os.getpriority(os.PRIO_PROCESS, os.getpid())
+                        == p.nice()
+                    )
                 p.nice(1)
                 assert p.nice() == 1
                 if hasattr(os, "getpriority"):
-                    assert os.getpriority(os.PRIO_PROCESS, os.getpid()) == p.nice()
+                    assert (
+                        os.getpriority(os.PRIO_PROCESS, os.getpid())
+                        == p.nice()
+                    )
                 # XXX - going back to previous nice value raises
                 # AccessDenied on MACOS
                 if not MACOS:
@@ -1086,7 +1111,9 @@ class TestProcess(PsutilTestCase):
                 ):
                     break
             else:
-                raise self.fail("no file found; files=%s" % (repr(p.open_files())))
+                raise self.fail(
+                    "no file found; files=%s" % (repr(p.open_files()))
+                )
             assert normcase(file.path) == normcase(fileobj.name)
             if WINDOWS:
                 assert file.fd == -1
@@ -1115,7 +1142,9 @@ class TestProcess(PsutilTestCase):
         assert p.num_fds() == start
 
     @skip_on_not_implemented(only_if=LINUX)
-    @pytest.mark.skipif(OPENBSD or NETBSD, reason="not reliable on OPENBSD & NETBSD")
+    @pytest.mark.skipif(
+        OPENBSD or NETBSD, reason="not reliable on OPENBSD & NETBSD"
+    )
     def test_num_ctx_switches(self):
         p = psutil.Process()
         before = sum(p.num_ctx_switches())
@@ -1381,7 +1410,9 @@ class TestProcess(PsutilTestCase):
         # Emulate a case where internally is_running() raises
         # ZombieProcess.
         p = psutil.Process()
-        with mock.patch("psutil.Process", side_effect=psutil.ZombieProcess(0)) as m:
+        with mock.patch(
+            "psutil.Process", side_effect=psutil.ZombieProcess(0)
+        ) as m:
             assert p.is_running()
             assert m.called
 
@@ -1417,7 +1448,10 @@ class TestProcess(PsutilTestCase):
         with mock.patch.object(psutil._common, "PSUTIL_DEBUG", True):
             with redirect_stderr(StringIO()) as f:
                 list(psutil.process_iter())
-        assert "refreshing Process instance for reused PID %s" % p.pid in f.getvalue()
+        assert (
+            "refreshing Process instance for reused PID %s" % p.pid
+            in f.getvalue()
+        )
         assert p.pid not in psutil._pmap
 
         assert p != psutil.Process(subp.pid)
@@ -1524,7 +1558,9 @@ class TestProcess(PsutilTestCase):
         MACOS_11PLUS,
         reason="macOS 11+ can't get another process environment, issue #2084",
     )
-    @pytest.mark.skipif(NETBSD, reason="sometimes fails on `assert is_running()`")
+    @pytest.mark.skipif(
+        NETBSD, reason="sometimes fails on `assert is_running()`"
+    )
     def test_weird_environ(self):
         # environment variables can contain values without an equals sign
         code = textwrap.dedent(

@@ -96,7 +96,7 @@ def _parse_authorization_header(headers):
 
     auth_scheme = "oauth "
     if authorization_header.lower().startswith(auth_scheme):
-        items = parse_http_list(authorization_header[len(auth_scheme):])
+        items = parse_http_list(authorization_header[len(auth_scheme) :])
         try:
             items = parse_keqv_list(items).items()
             auth_params = [(unescape(k), unescape(v)) for k, v in items]

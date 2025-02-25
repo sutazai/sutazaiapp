@@ -158,13 +158,17 @@ class TNTLexer(Lexer):
         groups = sorted(match.regs[1:])  # exclude whole match
         for group in groups:
             if group[0] >= 0:  # this group matched
-                self.cur.append((start, Keyword, text[start: group[0]]))
-                self.cur.append((group[0], Number.Integer, text[group[0]: group[1]]))
+                self.cur.append((start, Keyword, text[start : group[0]]))
+                self.cur.append(
+                    (group[0], Number.Integer, text[group[0] : group[1]])
+                )
                 if group[1] != match.end():
-                    self.cur.append((group[1], Keyword, text[group[1]: match.end()]))
+                    self.cur.append(
+                        (group[1], Keyword, text[group[1] : match.end()])
+                    )
                 break
         else:
-            self.cur.append((start, Keyword, text[start: match.end()]))
+            self.cur.append((start, Keyword, text[start : match.end()]))
         return match.end()
 
     def lineno(self, start, text):
@@ -173,7 +177,7 @@ class TNTLexer(Lexer):
         while text[end] not in self.NUMBERS:
             end += 1
         self.cur.append((start, Punctuation, text[start]))
-        self.cur.append((start + 1, Text, text[start + 1: end]))
+        self.cur.append((start + 1, Text, text[start + 1 : end]))
         start = end
         match = self.LINENOS.match(text, start)
         if match is None:
@@ -219,7 +223,9 @@ class TNTLexer(Lexer):
                 # at this point it could be a comment
                 match = self.COMMENT.match(text, start)
                 if match is not None:
-                    self.cur.append((start, Comment, text[start: match.end()]))
+                    self.cur.append(
+                        (start, Comment, text[start : match.end()])
+                    )
                     start = end = match.end()
                     # anything after the closing bracket is invalid
                     start = end = self.error_till_line_end(start, text)

@@ -151,7 +151,9 @@ class TestProcess(PsutilTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.pid = spawn_testproc([PYTHON_EXE, "-E", "-O"], stdin=subprocess.PIPE).pid
+        cls.pid = spawn_testproc(
+            [PYTHON_EXE, "-E", "-O"], stdin=subprocess.PIPE
+        ).pid
 
     @classmethod
     def tearDownClass(cls):
@@ -227,7 +229,9 @@ class TestProcess(PsutilTestCase):
         name = "long-program-name"
         cmdline = ["long-program-name-extended", "foo", "bar"]
         with mock.patch("psutil._psplatform.Process.name", return_value=name):
-            with mock.patch("psutil._psplatform.Process.cmdline", return_value=cmdline):
+            with mock.patch(
+                "psutil._psplatform.Process.cmdline", return_value=cmdline
+            ):
                 p = psutil.Process()
                 assert p.name() == "long-program-name-extended"
 
@@ -261,9 +265,9 @@ class TestProcess(PsutilTestCase):
     def test_create_time(self):
         time_ps = ps("start", self.pid)
         time_psutil = psutil.Process(self.pid).create_time()
-        time_psutil_tstamp = datetime.datetime.fromtimestamp(time_psutil).strftime(
-            "%H:%M:%S"
-        )
+        time_psutil_tstamp = datetime.datetime.fromtimestamp(
+            time_psutil
+        ).strftime("%H:%M:%S")
         # sometimes ps shows the time rounded up instead of down, so we check
         # for both possible values
         round_time_psutil = round(time_psutil)
@@ -349,7 +353,8 @@ class TestSystemAPIs(PsutilTestCase):
                     break
             else:
                 raise self.fail(
-                    "couldn't find %s nic in 'ifconfig -a' output\n%s" % (nic, output)
+                    "couldn't find %s nic in 'ifconfig -a' output\n%s"
+                    % (nic, output)
                 )
 
     # @pytest.mark.skipif(CI_TESTING and not psutil.users(),
@@ -398,13 +403,15 @@ class TestSystemAPIs(PsutilTestCase):
                         started = [x.capitalize() for x in started]
 
         if not tstamp:
-            raise pytest.skip("cannot interpret tstamp in who output\n%s" % (out))
+            raise pytest.skip(
+                "cannot interpret tstamp in who output\n%s" % (out)
+            )
 
         with self.subTest(psutil=psutil.users(), who=out):
             for idx, u in enumerate(psutil.users()):
-                psutil_value = datetime.datetime.fromtimestamp(u.started).strftime(
-                    tstamp
-                )
+                psutil_value = datetime.datetime.fromtimestamp(
+                    u.started
+                ).strftime(tstamp)
                 assert psutil_value == started[idx]
 
     def test_pid_exists_let_raise(self):
@@ -439,7 +446,9 @@ class TestSystemAPIs(PsutilTestCase):
 
     def test_os_waitpid_bad_ret_status(self):
         # Simulate os.waitpid() returning a bad status.
-        with mock.patch("psutil._psposix.os.waitpid", return_value=(1, -1)) as m:
+        with mock.patch(
+            "psutil._psposix.os.waitpid", return_value=(1, -1)
+        ) as m:
             with pytest.raises(ValueError):
                 psutil._psposix.wait_pid(os.getpid())
             assert m.called

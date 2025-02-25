@@ -108,7 +108,9 @@ class TestFindPackages:
         packages = find_packages(self.dist_dir)
         assert "build.pkg" not in packages
 
-    @pytest.mark.skipif(not os_helper.can_symlink(), reason="Symlink support required")
+    @pytest.mark.skipif(
+        not os_helper.can_symlink(), reason="Symlink support required"
+    )
     def test_symlinked_packages_are_included(self):
         """
         A symbolically-linked directory should be treated like any other
@@ -133,8 +135,12 @@ class TestFindPackages:
         self._assert_packages(packages, ["pkg", "pkg.nspkg", "pkg.subpkg"])
 
     def test_pep420_ns_package_no_includes(self):
-        packages = find_namespace_packages(self.dist_dir, exclude=["pkg.subpkg.assets"])
-        self._assert_packages(packages, ["docs", "pkg", "pkg.nspkg", "pkg.subpkg"])
+        packages = find_namespace_packages(
+            self.dist_dir, exclude=["pkg.subpkg.assets"]
+        )
+        self._assert_packages(
+            packages, ["docs", "pkg", "pkg.nspkg", "pkg.subpkg"]
+        )
 
     def test_pep420_ns_package_no_includes_or_excludes(self):
         packages = find_namespace_packages(self.dist_dir)

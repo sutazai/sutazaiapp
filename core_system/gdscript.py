@@ -350,7 +350,9 @@ class GDScriptLexer(RegexLexer):
     def analyse_text(text):
         score = 0.0
 
-        if re.search(r"func (_ready|_init|_input|_process|_unhandled_input)", text):
+        if re.search(
+            r"func (_ready|_init|_input|_process|_unhandled_input)", text
+        ):
             score += 0.8
 
         if re.search(

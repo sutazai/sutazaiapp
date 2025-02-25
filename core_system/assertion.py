@@ -1,6 +1,5 @@
 import time
 
-from authlib.common.security import generate_token
 from authlib.jose import jwt
 
 

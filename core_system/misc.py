@@ -201,7 +201,7 @@ def display_path(path: str) -> str:
     if possible."""
     path = os.path.normcase(os.path.abspath(path))
     if path.startswith(os.getcwd() + os.path.sep):
-        path = "." + path[len(os.getcwd()):]
+        path = "." + path[len(os.getcwd()) :]
     return path
 
 
@@ -631,7 +631,9 @@ def protect_pip_from_modification_on_windows(modifying_pip: bool) -> None:
 
     # See https://github.com/pypa/pip/issues/1299 for more discussion
     should_show_use_python_msg = (
-        modifying_pip and WINDOWS and os.path.basename(sys.argv[0]) in pip_names
+        modifying_pip
+        and WINDOWS
+        and os.path.basename(sys.argv[0]) in pip_names
     )
 
     if should_show_use_python_msg:

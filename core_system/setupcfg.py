@@ -111,7 +111,9 @@ def _apply(
 
     try:
         # TODO: Temporary cast until mypy 1.12 is released with upstream fixes from typeshed
-        _Distribution.parse_config_files(dist, filenames=cast(list[str], filenames))
+        _Distribution.parse_config_files(
+            dist, filenames=cast(list[str], filenames)
+        )
         handlers = parse_configuration(
             dist,
             dist.command_options,
@@ -186,7 +188,9 @@ def parse_configuration(
 
         options.parse()
         if not distribution.package_dir:
-            distribution.package_dir = options.package_dir  # Filled by `find_packages`
+            distribution.package_dir = (
+                options.package_dir
+            )  # Filled by `find_packages`
 
         meta = ConfigMetadataHandler(
             distribution.metadata,
@@ -204,7 +208,9 @@ def parse_configuration(
     return meta, options
 
 
-def _warn_accidental_env_marker_misconfig(label: str, orig_value: str, parsed: list):
+def _warn_accidental_env_marker_misconfig(
+    label: str, orig_value: str, parsed: list
+):
     """Because users sometimes misinterpret this configuration:
 
     [options.extras_require]
@@ -344,7 +350,9 @@ class ConfigHandler(Generic[Target]):
         for line in cls._parse_list(value):
             key, sep, val = line.partition(separator)
             if sep != separator:
-                raise OptionError(f"Unable to parse option value to dict: {value}")
+                raise OptionError(
+                    f"Unable to parse option value to dict: {value}"
+                )
             result[key.strip()] = val.strip()
 
         return result
@@ -403,7 +411,7 @@ class ConfigHandler(Generic[Target]):
         if not value.startswith(include_directive):
             return _static.Str(value)
 
-        spec = value[len(include_directive):]
+        spec = value[len(include_directive) :]
         filepaths = [path.strip() for path in spec.split(",")]
         self._referenced_files.update(filepaths)
         # XXX: Is marking as static contents coming from files too optimistic?
@@ -474,7 +482,11 @@ class ConfigHandler(Generic[Target]):
         :param callable values_parser: function with 1 arg corresponding to option value
         :rtype: dict
         """
-        parser = (lambda _, v: values_parser(v)) if values_parser else (lambda _, v: v)
+        parser = (
+            (lambda _, v: values_parser(v))
+            if values_parser
+            else (lambda _, v: v)
+        )
         return cls._parse_section_to_dict_with_key(section_options, parser)
 
     def parse_section(self, section_options) -> None:
@@ -522,7 +534,9 @@ class ConfigHandler(Generic[Target]):
         @wraps(func)
         def config_handler(*args, **kwargs):
             kw.setdefault("stacklevel", 2)
-            _DeprecatedConfig.emit("Deprecated config in `setup.cfg`", msg, **kw)
+            _DeprecatedConfig.emit(
+                "Deprecated config in `setup.cfg`", msg, **kw
+            )
             return func(*args, **kwargs)
 
         return config_handler
@@ -553,15 +567,21 @@ class ConfigMetadataHandler(ConfigHandler["DistributionMetadata"]):
         package_dir: dict | None = None,
         root_dir: StrPath | None = os.curdir,
     ) -> None:
-        super().__init__(target_obj, options, ignore_option_errors, ensure_discovered)
+        super().__init__(
+            target_obj, options, ignore_option_errors, ensure_discovered
+        )
         self.package_dir = package_dir
         self.root_dir = root_dir
 
     @property
     def parsers(self):
         """Metadata item name to parser function mapping."""
-        parse_list_static = self._get_parser_compound(self._parse_list, _static.List)
-        parse_dict_static = self._get_parser_compound(self._parse_dict, _static.Dict)
+        parse_list_static = self._get_parser_compound(
+            self._parse_list, _static.List
+        )
+        parse_dict_static = self._get_parser_compound(
+            self._parse_dict, _static.Dict
+        )
         parse_file = partial(self._parse_file, root_dir=self.root_dir)
         exclude_files_parser = self._exclude_files_parser
 
@@ -574,7 +594,9 @@ class ConfigMetadataHandler(ConfigHandler["DistributionMetadata"]):
             "keywords": parse_list_static,
             "provides": parse_list_static,
             "obsoletes": parse_list_static,
-            "classifiers": self._get_parser_compound(parse_file, parse_list_static),
+            "classifiers": self._get_parser_compound(
+                parse_file, parse_list_static
+            ),
             "license": exclude_files_parser("license"),
             "license_files": parse_list_static,
             "description": parse_file,
@@ -608,7 +630,9 @@ class ConfigMetadataHandler(ConfigHandler["DistributionMetadata"]):
 
             return version
 
-        return expand.version(self._parse_attr(value, self.package_dir, self.root_dir))
+        return expand.version(
+            self._parse_attr(value, self.package_dir, self.root_dir)
+        )
 
 
 class ConfigOptionsHandler(ConfigHandler["Distribution"]):
@@ -621,9 +645,13 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
         ignore_option_errors: bool,
         ensure_discovered: expand.EnsurePackagesDiscovered,
     ) -> None:
-        super().__init__(target_obj, options, ignore_option_errors, ensure_discovered)
+        super().__init__(
+            target_obj, options, ignore_option_errors, ensure_discovered
+        )
         self.root_dir = target_obj.src_root
-        self.package_dir: dict[str, str] = {}  # To be filled by `find_packages`
+        self.package_dir: dict[str, str] = (
+            {}
+        )  # To be filled by `find_packages`
 
     @classmethod
     def _parse_list_semicolon(cls, value):
@@ -638,7 +666,9 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
         _warn_accidental_env_marker_misconfig(label, value, parsed)
         # Filter it to only include lines that are not comments. `parse_list`
         # will have stripped each line and filtered out empties.
-        return _static.List(line for line in parsed if not line.startswith("#"))
+        return _static.List(
+            line for line in parsed if not line.startswith("#")
+        )
         # ^-- Use `_static.List` to mark a non-`Dynamic` Core Metadata
 
     @property
@@ -674,7 +704,9 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
 
     def _parse_cmdclass(self, value):
         package_dir = self.ensure_discovered.package_dir
-        return expand.cmdclass(self._parse_dict(value), package_dir, self.root_dir)
+        return expand.cmdclass(
+            self._parse_dict(value), package_dir, self.root_dir
+        )
 
     def _parse_packages(self, value):
         """Parses `packages` option value.
@@ -708,10 +740,14 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
 
         :param dict section_options:
         """
-        section_data = self._parse_section_to_dict(section_options, self._parse_list)
+        section_data = self._parse_section_to_dict(
+            section_options, self._parse_list
+        )
 
         valid_keys = ["where", "include", "exclude"]
-        find_kwargs = {k: v for k, v in section_data.items() if k in valid_keys and v}
+        find_kwargs = {
+            k: v for k, v in section_data.items() if k in valid_keys and v
+        }
 
         where = find_kwargs.get("where")
         if where is not None:
@@ -728,7 +764,9 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
         self["entry_points"] = parsed
 
     def _parse_package_data(self, section_options):
-        package_data = self._parse_section_to_dict(section_options, self._parse_list)
+        package_data = self._parse_section_to_dict(
+            section_options, self._parse_list
+        )
         return expand.canonic_package_data(package_data)
 
     def parse_section_package_data(self, section_options) -> None:
@@ -743,16 +781,22 @@ class ConfigOptionsHandler(ConfigHandler["Distribution"]):
 
         :param dict section_options:
         """
-        self["exclude_package_data"] = self._parse_package_data(section_options)
+        self["exclude_package_data"] = self._parse_package_data(
+            section_options
+        )
 
-    def parse_section_extras_require(self, section_options) -> None:  # Core Metadata
+    def parse_section_extras_require(
+        self, section_options
+    ) -> None:  # Core Metadata
         """Parses `extras_require` configuration file section.
 
         :param dict section_options:
         """
         parsed = self._parse_section_to_dict_with_key(
             section_options,
-            lambda k, v: self._parse_requirements_list(f"extras_require[{k}]", v),
+            lambda k, v: self._parse_requirements_list(
+                f"extras_require[{k}]", v
+            ),
         )
 
         self["extras_require"] = _static.Dict(parsed)
@@ -784,7 +828,9 @@ class _AmbiguousMarker(SetuptoolsDeprecationWarning):
     @classmethod
     def message(cls, **kw):
         docs = f"https://setuptools.pypa.io/en/latest/{cls._SEE_DOCS}"
-        return cls._format(cls._SUMMARY, cls._DETAILS, see_url=docs, format_args=kw)
+        return cls._format(
+            cls._SUMMARY, cls._DETAILS, see_url=docs, format_args=kw
+        )
 
 
 class _DeprecatedConfig(SetuptoolsDeprecationWarning):

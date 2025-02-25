@@ -305,7 +305,9 @@ class DylanLexer(RegexLexer):
     valid_name = "\\\\?[\\w!&*<>|^$%@\\-+~?/=]+"
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+        for index, token, value in RegexLexer.get_tokens_unprocessed(
+            self, text
+        ):
             if token is Name:
                 lowercase_value = value.lower()
                 if lowercase_value in self.builtins:
@@ -466,7 +468,9 @@ class DylanConsoleLexer(Lexer):
             m = self._prompt_re.match(line)
             if m is not None:
                 end = m.end()
-                insertions.append((len(curcode), [(0, Generic.Prompt, line[:end])]))
+                insertions.append(
+                    (len(curcode), [(0, Generic.Prompt, line[:end])])
+                )
                 curcode += line[end:]
             else:
                 if curcode:

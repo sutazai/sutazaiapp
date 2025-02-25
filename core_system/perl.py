@@ -410,7 +410,8 @@ class PerlLexer(RegexLexer):
                 Keyword,
             ),
             (
-                r"(\[\]|\*\*|::|<<|>>|>=|<=>|<=|={3}|!=|=~|" r"!~|&&?|\|\||\.{1,3})",
+                r"(\[\]|\*\*|::|<<|>>|>=|<=>|<=|={3}|!=|=~|"
+                r"!~|&&?|\|\||\.{1,3})",
                 Operator,
             ),
             (r"[-+/*%=<>&^|!\\~]=?", Operator),
@@ -1878,7 +1879,9 @@ class Perl6Lexer(ExtendedRegexLexer):
         "\uff62": "\uff63",
     }
 
-    def _build_word_match(words, boundary_regex_fragment=None, prefix="", suffix=""):
+    def _build_word_match(
+        words, boundary_regex_fragment=None, prefix="", suffix=""
+    ):
         if boundary_regex_fragment is None:
             return (
                 r"\b("
@@ -1915,7 +1918,9 @@ class Perl6Lexer(ExtendedRegexLexer):
             if closer is None:  # it's not a mirrored character, which means we
                 # just need to look for the next occurrence
 
-                end_pos = text.find(opening_chars, match.start("delimiter") + n_chars)
+                end_pos = text.find(
+                    opening_chars, match.start("delimiter") + n_chars
+                )
             else:  # we need to look for the corresponding closing character,
                 # keep nesting in mind
                 closing_chars = closer * n_chars
@@ -1924,13 +1929,19 @@ class Perl6Lexer(ExtendedRegexLexer):
                 search_pos = match.start("delimiter")
 
                 while nesting_level > 0:
-                    next_open_pos = text.find(opening_chars, search_pos + n_chars)
-                    next_close_pos = text.find(closing_chars, search_pos + n_chars)
+                    next_open_pos = text.find(
+                        opening_chars, search_pos + n_chars
+                    )
+                    next_close_pos = text.find(
+                        closing_chars, search_pos + n_chars
+                    )
 
                     if next_close_pos == -1:
                         next_close_pos = len(text)
                         nesting_level = 0
-                    elif next_open_pos != -1 and next_open_pos < next_close_pos:
+                    elif (
+                        next_open_pos != -1 and next_open_pos < next_close_pos
+                    ):
                         nesting_level += 1
                         search_pos = next_open_pos
                     else:  # next_close_pos < next_open_pos
@@ -1944,7 +1955,9 @@ class Perl6Lexer(ExtendedRegexLexer):
                 end_pos = len(text)
 
             if adverbs is not None and re.search(r":to\b", adverbs):
-                heredoc_terminator = text[match.start("delimiter") + n_chars: end_pos]
+                heredoc_terminator = text[
+                    match.start("delimiter") + n_chars : end_pos
+                ]
                 end_heredoc = re.search(
                     r"^\s*" + re.escape(heredoc_terminator) + r"\s*$",
                     text[end_pos:],
@@ -1956,7 +1969,9 @@ class Perl6Lexer(ExtendedRegexLexer):
                 else:
                     end_pos = len(text)
 
-            yield match.start(), token_class, text[match.start(): end_pos + n_chars]
+            yield match.start(), token_class, text[
+                match.start() : end_pos + n_chars
+            ]
             context.pos = end_pos + n_chars
 
         return callback
@@ -1964,7 +1979,7 @@ class Perl6Lexer(ExtendedRegexLexer):
     def opening_brace_callback(lexer, match, context):
         stack = context.stack
 
-        yield match.start(), Text, context.text[match.start(): match.end()]
+        yield match.start(), Text, context.text[match.start() : match.end()]
         context.pos = match.end()
 
         # if we encounter an opening brace and we're one level
@@ -1977,7 +1992,7 @@ class Perl6Lexer(ExtendedRegexLexer):
     def closing_brace_callback(lexer, match, context):
         stack = context.stack
 
-        yield match.start(), Text, context.text[match.start(): match.end()]
+        yield match.start(), Text, context.text[match.start() : match.end()]
         context.pos = match.end()
 
         # if we encounter a free closing brace and we're one level
@@ -1990,7 +2005,7 @@ class Perl6Lexer(ExtendedRegexLexer):
 
     def embedded_perl6_callback(lexer, match, context):
         context.perl6_token_nesting_level = 1
-        yield match.start(), Text, context.text[match.start(): match.end()]
+        yield match.start(), Text, context.text[match.start() : match.end()]
         context.pos = match.end()
         context.stack.append("root")
 
@@ -2055,7 +2070,9 @@ class Perl6Lexer(ExtendedRegexLexer):
             (r"\$[!/](?:<<.*?>>|<.*?>|«.*?»)*", Name.Variable.Global),
             (r"::\?\w+", Name.Variable.Global),
             (
-                r"[$@%&]\*" + PERL6_IDENTIFIER_RANGE + "+(?:<<.*?>>|<.*?>|«.*?»)*",
+                r"[$@%&]\*"
+                + PERL6_IDENTIFIER_RANGE
+                + "+(?:<<.*?>>|<.*?>|«.*?»)*",
                 Name.Variable.Global,
             ),
             (r"\$(?:<.*?>)+", Name.Variable),

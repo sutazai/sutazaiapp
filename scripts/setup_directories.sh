@@ -41,7 +41,6 @@ DIRS=(
     "frontend/components"
     "models/memory"
     "monitoring/grafana/dashboards"
-    "security"
     "services"
     "system"
     "system_optimizer"

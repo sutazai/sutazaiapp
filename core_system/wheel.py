@@ -231,7 +231,9 @@ class Wheel(object):
                 dirname, filename = os.path.split(filename)
                 m = FILENAME_RE.match(filename)
                 if not m:
-                    raise DistlibException("Invalid name or " "filename: %r" % filename)
+                    raise DistlibException(
+                        "Invalid name or " "filename: %r" % filename
+                    )
                 if dirname:
                     self.dirname = os.path.abspath(dirname)
                 self._filename = filename
@@ -351,7 +353,7 @@ class Wheel(object):
             if cr < 0 or cr > lf:
                 term = b"\n"
             else:
-                if data[cr: cr + 2] == b"\r\n":
+                if data[cr : cr + 2] == b"\r\n":
                     term = b"\r\n"
                 else:
                     term = b"\r"
@@ -364,7 +366,9 @@ class Wheel(object):
         try:
             hasher = getattr(hashlib, hash_kind)
         except AttributeError:
-            raise DistlibException("Unsupported hash algorithm: %r" % hash_kind)
+            raise DistlibException(
+                "Unsupported hash algorithm: %r" % hash_kind
+            )
         result = hasher(data).digest()
         result = base64.urlsafe_b64encode(result).rstrip(b"=").decode("ascii")
         return hash_kind, result
@@ -551,7 +555,9 @@ class Wheel(object):
         dry_run = maker.dry_run
         warner = kwargs.get("warner")
         lib_only = kwargs.get("lib_only", False)
-        bc_hashed_invalidation = kwargs.get("bytecode_hashed_invalidation", False)
+        bc_hashed_invalidation = kwargs.get(
+            "bytecode_hashed_invalidation", False
+        )
 
         pathname = os.path.join(self.dirname, self.filename)
         name_ver = "%s-%s" % (self.name, self.version)
@@ -616,7 +622,9 @@ class Wheel(object):
                         continue
                     row = records[u_arcname]
                     if row[2] and str(zinfo.file_size) != row[2]:
-                        raise DistlibException("size mismatch for " "%s" % u_arcname)
+                        raise DistlibException(
+                            "size mismatch for " "%s" % u_arcname
+                        )
                     if row[1]:
                         kind, value = row[1].split("=", 1)
                         with zf.open(arcname) as bf:
@@ -651,7 +659,9 @@ class Wheel(object):
                         # So ... manually preserve permission bits as given in zinfo
                         if os.name == "posix":
                             # just set the normal permission bits
-                            os.chmod(outfile, (zinfo.external_attr >> 16) & 0x1FF)
+                            os.chmod(
+                                outfile, (zinfo.external_attr >> 16) & 0x1FF
+                            )
                         outfiles.append(outfile)
                         # Double check the digest of the written file
                         if not dry_run and row[1]:
@@ -674,7 +684,9 @@ class Wheel(object):
                             except Exception:
                                 # Don't give up if byte-compilation fails,
                                 # but log it and perhaps warn the user
-                                logger.warning("Byte-compilation failed", exc_info=True)
+                                logger.warning(
+                                    "Byte-compilation failed", exc_info=True
+                                )
                     else:
                         fn = os.path.basename(convert_path(arcname))
                         workname = os.path.join(workdir, fn)
@@ -738,7 +750,9 @@ class Wheel(object):
                         if console_scripts or gui_scripts:
                             script_dir = paths.get("scripts", "")
                             if not os.path.isdir(script_dir):
-                                raise ValueError("Valid script path not " "specified")
+                                raise ValueError(
+                                    "Valid script path not " "specified"
+                                )
                             maker.target_dir = script_dir
                             for k, v in console_scripts.items():
                                 script = "%s = %s" % (k, v)
@@ -765,7 +779,9 @@ class Wheel(object):
                         outfiles.append(p)
 
                     # Write RECORD
-                    dist.write_installed_files(outfiles, paths["prefix"], dry_run)
+                    dist.write_installed_files(
+                        outfiles, paths["prefix"], dry_run
+                    )
                 return dist
             except Exception:  # pragma: no cover
                 logger.exception("installation failed.")
@@ -809,7 +825,9 @@ class Wheel(object):
                             extract = True
                         else:
                             file_time = os.stat(dest).st_mtime
-                            file_time = datetime.datetime.fromtimestamp(file_time)
+                            file_time = datetime.datetime.fromtimestamp(
+                                file_time
+                            )
                             info = zf.getinfo(relpath)
                             wheel_time = datetime.datetime(*info.date_time)
                             extract = wheel_time > file_time
@@ -903,20 +921,26 @@ class Wheel(object):
                 # updated to look for .. in the directory portions
                 p = u_arcname.split("/")
                 if ".." in p:
-                    raise DistlibException("invalid entry in " "wheel: %r" % u_arcname)
+                    raise DistlibException(
+                        "invalid entry in " "wheel: %r" % u_arcname
+                    )
 
                 if self.skip_entry(u_arcname):
                     continue
                 row = records[u_arcname]
                 if row[2] and str(zinfo.file_size) != row[2]:
-                    raise DistlibException("size mismatch for " "%s" % u_arcname)
+                    raise DistlibException(
+                        "size mismatch for " "%s" % u_arcname
+                    )
                 if row[1]:
                     kind, value = row[1].split("=", 1)
                     with zf.open(arcname) as bf:
                         data = bf.read()
                     _, digest = self.get_hash(data, kind)
                     if digest != value:
-                        raise DistlibException("digest mismatch for " "%s" % arcname)
+                        raise DistlibException(
+                            "digest mismatch for " "%s" % arcname
+                        )
 
     def update(self, modifier, dest_dir=None, **kwargs):
         """
@@ -953,7 +977,7 @@ class Wheel(object):
                 if i < 0:
                     updated = "%s+1" % version
                 else:
-                    parts = [int(s) for s in version[i + 1:].split(".")]
+                    parts = [int(s) for s in version[i + 1 :].split(".")]
                     parts[-1] += 1
                     updated = "%s+%s" % (
                         version[:i],
@@ -1012,7 +1036,9 @@ class Wheel(object):
                     os.close(fd)
                 else:
                     if not os.path.isdir(dest_dir):
-                        raise DistlibException("Not a directory: %r" % dest_dir)
+                        raise DistlibException(
+                            "Not a directory: %r" % dest_dir
+                        )
                     newpath = os.path.join(dest_dir, self.filename)
                 archive_paths = list(path_map.items())
                 distinfo = os.path.join(workdir, info_dir)

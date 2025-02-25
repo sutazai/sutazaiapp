@@ -134,7 +134,8 @@ class ForthLexer(RegexLexer):
                 # *** Wordset SEARCH-EXT
                 r"also|forth|only|order|previous|"
                 # *** Wordset STRING
-                r"-trailing|\/string|blank|cmove|cmove>|compare|" r"search|sliteral|"
+                r"-trailing|\/string|blank|cmove|cmove>|compare|"
+                r"search|sliteral|"
                 # *** Wordset TOOLS
                 r".s|dump|see|words|"
                 # *** Wordset TOOLS-EXT

@@ -66,7 +66,9 @@ else:
         pass
 
 
-NetworkType = Union[str, bytes, int, Tuple[Union[str, bytes, int], Union[str, int]]]
+NetworkType = Union[
+    str, bytes, int, Tuple[Union[str, bytes, int], Union[str, int]]
+]
 
 __all__ = [
     "AnyUrl",
@@ -152,9 +154,7 @@ def ascii_domain_regex() -> Pattern[str]:
 def int_domain_regex() -> Pattern[str]:
     global _int_domain_regex_cache
     if _int_domain_regex_cache is None:
-        int_chunk = (
-            r"[_0-9a-\U00040000](?:[-_0-9a-\U00040000]{0,61}[_0-9a-\U00040000])?"
-        )
+        int_chunk = r"[_0-9a-\U00040000](?:[-_0-9a-\U00040000]{0,61}[_0-9a-\U00040000])?"
         int_domain_ending = (
             r"(?P<tld>(\.[^\W\d_]{2,63})|(\.(?:xn--)[_0-9a-z-]{2,63}))?\.?"
         )
@@ -309,7 +309,7 @@ class AnyUrl(str):
         parts = cls.validate_parts(parts)
 
         if m.end() != len(url):
-            raise errors.UrlExtraError(extra=url[m.end():])
+            raise errors.UrlExtraError(extra=url[m.end() :])
 
         return cls._build_url(m, url, parts)
 
@@ -345,7 +345,9 @@ class AnyUrl(str):
             raise errors.UrlPortError()
 
     @classmethod
-    def validate_parts(cls, parts: "Parts", validate_port: bool = True) -> "Parts":
+    def validate_parts(
+        cls, parts: "Parts", validate_port: bool = True
+    ) -> "Parts":
         """
         A method used to validate parts of a URL.
         Could be overridden to set default values for parts if missing
@@ -367,7 +369,9 @@ class AnyUrl(str):
         return parts
 
     @classmethod
-    def validate_host(cls, parts: "Parts") -> Tuple[str, Optional[str], str, bool]:
+    def validate_host(
+        cls, parts: "Parts"
+    ) -> Tuple[str, Optional[str], str, bool]:
         tld, host_type, rebuild = None, None, False
         for f in ("domain", "ipv4", "ipv6"):
             host = parts[f]  # type: ignore[literal-required]
@@ -469,11 +473,15 @@ class MultiHostDsn(AnyUrl):
         return multi_host_url_regex().match(url)
 
     @classmethod
-    def validate_parts(cls, parts: "Parts", validate_port: bool = True) -> "Parts":
+    def validate_parts(
+        cls, parts: "Parts", validate_port: bool = True
+    ) -> "Parts":
         return super().validate_parts(parts, validate_port=False)
 
     @classmethod
-    def _build_url(cls, m: Match[str], url: str, parts: "Parts") -> "MultiHostDsn":
+    def _build_url(
+        cls, m: Match[str], url: str, parts: "Parts"
+    ) -> "MultiHostDsn":
         hosts_parts: List["HostParts"] = []
         host_re = host_regex()
         for host in m.groupdict()["hosts"].split(","):
@@ -560,7 +568,9 @@ class RedisDsn(AnyUrl):
     @staticmethod
     def get_default_parts(parts: "Parts") -> "Parts":
         return {
-            "domain": ("localhost" if not (parts["ipv4"] or parts["ipv6"]) else ""),
+            "domain": (
+                "localhost" if not (parts["ipv4"] or parts["ipv6"]) else ""
+            ),
             "port": "6379",
             "path": "/0",
         }
@@ -683,7 +693,9 @@ class IPvAnyAddress(_BaseAddress):
         yield cls.validate
 
     @classmethod
-    def validate(cls, value: Union[str, bytes, int]) -> Union[IPv4Address, IPv6Address]:
+    def validate(
+        cls, value: Union[str, bytes, int]
+    ) -> Union[IPv4Address, IPv6Address]:
         try:
             return IPv4Address(value)
         except ValueError:
@@ -707,7 +719,9 @@ class IPvAnyInterface(_BaseAddress):
         yield cls.validate
 
     @classmethod
-    def validate(cls, value: NetworkType) -> Union[IPv4Interface, IPv6Interface]:
+    def validate(
+        cls, value: NetworkType
+    ) -> Union[IPv4Interface, IPv6Interface]:
         try:
             return IPv4Interface(value)
         except ValueError:
@@ -770,7 +784,9 @@ def validate_email(value: Union[str]) -> Tuple[str, str]:
         name, value = m.groups()
     email = value.strip()
     try:
-        parts = email_validator.validate_email(email, check_deliverability=False)
+        parts = email_validator.validate_email(
+            email, check_deliverability=False
+        )
     except email_validator.EmailNotValidError as e:
         raise errors.EmailError from e
 
@@ -783,7 +799,9 @@ def validate_email(value: Union[str]) -> Tuple[str, str]:
     else:
         # email-validator >1, <2
         at_index = email.index("@")
-        local_part = email[:at_index]  # RFC 5321, local part must be case-sensitive.
+        local_part = email[
+            :at_index
+        ]  # RFC 5321, local part must be case-sensitive.
         global_part = email[at_index:].lower()
 
         return name or local_part, local_part + global_part

@@ -14,23 +14,23 @@ logger = logging.getLogger(__name__)
 
 class SystemHealthMonitor:
     """Main class for system health monitor functionality"""
-    
+
     def __init__(self):
         """Initialize the SystemHealthMonitor instance"""
         self.initialized = True
         self.configuration = {}
         self.start_time = time.time()
         logger.info("SystemHealthMonitor initialized")
-        
+
     def configure(self, config_dict):
         """Configure the SystemHealthMonitor with the provided settings"""
         self.configuration.update(config_dict)
         return True
-        
+
     def process(self, data):
         """Process the given data"""
         return data
-        
+
     def get_status(self):
         """Get the current status"""
         uptime = time.time() - self.start_time

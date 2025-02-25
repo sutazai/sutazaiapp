@@ -37,7 +37,9 @@ def environment(monkeypatch):
     monkeypatch.setattr(os.path, "join", os.path.join)
     monkeypatch.setattr(os.path, "isabs", os.path.isabs)
     monkeypatch.setattr(os.path, "splitdrive", os.path.splitdrive)
-    monkeypatch.setattr(sysconfig, "_config_vars", copy(sysconfig._config_vars))
+    monkeypatch.setattr(
+        sysconfig, "_config_vars", copy(sysconfig._config_vars)
+    )
 
 
 @pytest.mark.usefixtures("save_env")
@@ -60,7 +62,9 @@ class TestUtil:
                 assert get_platform() == "win-amd64"
             with mock.patch.dict("os.environ", {"VSCMD_ARG_TGT_ARCH": "arm"}):
                 assert get_platform() == "win-arm32"
-            with mock.patch.dict("os.environ", {"VSCMD_ARG_TGT_ARCH": "arm64"}):
+            with mock.patch.dict(
+                "os.environ", {"VSCMD_ARG_TGT_ARCH": "arm64"}
+            ):
                 assert get_platform() == "win-arm64"
 
     def test_convert_path(self):
@@ -108,7 +112,8 @@ class TestUtil:
         os.path.join = _join
 
         assert (
-            change_root("c:\\root", "c:\\old\\its\\here") == "c:\\root\\old\\its\\here"
+            change_root("c:\\root", "c:\\old\\its\\here")
+            == "c:\\root\\old\\its\\here"
         )
         assert change_root("c:\\root", "its\\here") == "c:\\root\\its\\here"
 

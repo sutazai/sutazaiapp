@@ -15,7 +15,9 @@ class SystemInvestigator:
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
-                logging.FileHandler("/var/log/sutazai/system_investigation.log"),
+                logging.FileHandler(
+                    "/var/log/sutazai/system_investigation.log"
+                ),
                 logging.StreamHandler(),
             ],
         )
@@ -84,7 +86,8 @@ class SystemInvestigator:
 
                     # Skip files not in allowed extensions or matching ignore patterns
                     if not any(
-                        ext in filepath for ext in self.config["allowed_extensions"]
+                        ext in filepath
+                        for ext in self.config["allowed_extensions"]
                     ) or any(
                         pattern in filepath
                         for pattern in self.config["ignore_patterns"]
@@ -94,7 +97,9 @@ class SystemInvestigator:
                     try:
                         file_hash = self.calculate_file_hash(filepath)
                         if file_hash in file_hashes:
-                            duplicates.setdefault(file_hash, []).append(filepath)
+                            duplicates.setdefault(file_hash, []).append(
+                                filepath
+                            )
                             file_hashes[file_hash].append(filepath)
                         else:
                             file_hashes[file_hash] = [filepath]
@@ -107,19 +112,27 @@ class SystemInvestigator:
         """Consolidate duplicate files, keeping the most recent version."""
         for hash_key, file_paths in duplicates.items():
             # Sort by modification time, most recent first
-            sorted_files = sorted(file_paths, key=os.path.getmtime, reverse=True)
+            sorted_files = sorted(
+                file_paths, key=os.path.getmtime, reverse=True
+            )
 
             # Keep the first (most recent) file, remove others
             for filepath in sorted_files[1:]:
                 try:
                     # Move to consolidated path, preserving directory structure
-                    relative_path = os.path.relpath(filepath, start=self.base_paths[0])
-                    dest_path = os.path.join(self.consolidated_path, relative_path)
+                    relative_path = os.path.relpath(
+                        filepath, start=self.base_paths[0]
+                    )
+                    dest_path = os.path.join(
+                        self.consolidated_path, relative_path
+                    )
 
                     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                     shutil.move(filepath, dest_path)
 
-                    self.logger.info(f"Consolidated file: {filepath} -> {dest_path}")
+                    self.logger.info(
+                        f"Consolidated file: {filepath} -> {dest_path}"
+                    )
                 except Exception as e:
                     self.logger.error(f"Error consolidating {filepath}: {e}")
 
@@ -152,8 +165,12 @@ class SystemInvestigator:
                                     tree = ast.parse(f.read())
 
                                     # Analyze complexity
-                                    complexity = self._calculate_code_complexity(tree)
-                                    code_structure_report["complexity_metrics"].append(
+                                    complexity = (
+                                        self._calculate_code_complexity(tree)
+                                    )
+                                    code_structure_report[
+                                        "complexity_metrics"
+                                    ].append(
                                         {
                                             "file": file_path,
                                             "complexity": complexity,
@@ -174,11 +191,15 @@ class SystemInvestigator:
                         logging.error(
                             f"Could not parse {file_path} with any of the tried encodings"
                         )
-                        code_structure_report["unparsed_files"].append(file_path)
+                        code_structure_report["unparsed_files"].append(
+                            file_path
+                        )
 
         # Log the report
         logging.info("Code Structure Analysis Report:")
-        logging.info(f"Total Python files: {code_structure_report['total_files']}")
+        logging.info(
+            f"Total Python files: {code_structure_report['total_files']}"
+        )
         logging.info(
             f"Successfully parsed files: {code_structure_report['parsed_files']}"
         )
@@ -256,7 +277,9 @@ class SystemInvestigator:
         )
 
         # Write detailed report
-        with open("/var/log/sutazai/system_investigation_report.json", "w") as f:
+        with open(
+            "/var/log/sutazai/system_investigation_report.json", "w"
+        ) as f:
             json.dump(self.investigation_report, f, indent=2)
 
         # Print summary
@@ -280,7 +303,9 @@ class SystemInvestigator:
         if self.investigation_report["dependency_conflicts"]:
             print("\n🧩 Dependency Conflicts:")
             for conflict in self.investigation_report["dependency_conflicts"]:
-                print(f"  - Between {conflict['file1']} and {conflict['file2']}")
+                print(
+                    f"  - Between {conflict['file1']} and {conflict['file2']}"
+                )
                 print(f"    Conflicting packages: {conflict['conflicts']}")
 
         print(

@@ -47,9 +47,13 @@ class LatticeSurgeryOperator:
         if self.topology == LatticeTopology.SQUARE:
             return np.zeros((self.distance, self.distance), dtype=complex)
         elif self.topology == LatticeTopology.HEXAGONAL:
-            return np.zeros((self.distance * 2, self.distance * 2), dtype=complex)
+            return np.zeros(
+                (self.distance * 2, self.distance * 2), dtype=complex
+            )
         elif self.topology == LatticeTopology.TRIANGULAR:
-            return np.zeros((self.distance * 3, self.distance * 3), dtype=complex)
+            return np.zeros(
+                (self.distance * 3, self.distance * 3), dtype=complex
+            )
         else:
             raise ValueError(f"Unsupported lattice topology: {self.topology}")
 
@@ -77,17 +81,23 @@ class LatticeSurgeryOperator:
         split_qubits = self._split_qubit(merged_qubit)
 
         # Apply coherence preservation
-        split_qubits = [self._preserve_coherence(sutaz) for sutaz in split_qubits]
+        split_qubits = [
+            self._preserve_coherence(sutaz) for sutaz in split_qubits
+        ]
 
         return tuple(split_qubits)
 
-    def _merge_qubits(self, qubit1: np.ndarray, qubit2: np.ndarray) -> np.ndarray:
+    def _merge_qubits(
+        self, qubit1: np.ndarray, qubit2: np.ndarray
+    ) -> np.ndarray:
         """Advanced sutaz merging with topology awareness"""
         merged_qubit = qubit1 + qubit2
         merged_qubit /= np.linalg.norm(merged_qubit)
         return merged_qubit
 
-    def _split_qubit(self, merged_qubit: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def _split_qubit(
+        self, merged_qubit: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """Advanced sutaz splitting with minimal information loss"""
         # SutazAi state tomography-inspired splitting
         split_prob = np.abs(merged_qubit) ** 2
@@ -191,17 +201,25 @@ class LatticeSurgerySimulator:
 
         for iteration in range(num_iterations):
             # Introduce errors
-            noisy_qubit = self.operator.error_model.introduce_error(logical_qubit)
+            noisy_qubit = self.operator.error_model.introduce_error(
+                logical_qubit
+            )
 
             # Encode logical sutaz
             encoded_qubit = self.operator.encode_logical_qubit(noisy_qubit)
 
             # Perform error correction
-            corrected_qubit = self.operator.error_correction_cycle(encoded_qubit)
+            corrected_qubit = self.operator.error_correction_cycle(
+                encoded_qubit
+            )
 
             # Estimate error rates
-            initial_error_rate = np.mean(np.abs(noisy_qubit - logical_qubit) ** 2)
-            corrected_error_rate = np.mean(np.abs(corrected_qubit - logical_qubit) ** 2)
+            initial_error_rate = np.mean(
+                np.abs(noisy_qubit - logical_qubit) ** 2
+            )
+            corrected_error_rate = np.mean(
+                np.abs(corrected_qubit - logical_qubit) ** 2
+            )
 
             results["corrected_error_rates"].append(corrected_error_rate)
 

@@ -39,12 +39,16 @@ def add_cffi_module(dist, mod_spec):
     try:
         build_file_name, ffi_var_name = mod_spec.split(":")
     except ValueError:
-        error("%r must be of the form 'path/build.py:ffi_variable'" % (mod_spec,))
+        error(
+            "%r must be of the form 'path/build.py:ffi_variable'" % (mod_spec,)
+        )
     if not os.path.exists(build_file_name):
         ext = ""
         rewritten = build_file_name.replace(".", "/") + ".py"
         if os.path.exists(rewritten):
-            ext = " (rewrite cffi_modules to [%r])" % (rewritten + ":" + ffi_var_name,)
+            ext = " (rewrite cffi_modules to [%r])" % (
+                rewritten + ":" + ffi_var_name,
+            )
         error("%r does not name an existing file%s" % (build_file_name, ext))
 
     mod_vars = {"__name__": "__cffi__", "__file__": build_file_name}
@@ -57,7 +61,10 @@ def add_cffi_module(dist, mod_spec):
     if not isinstance(ffi, FFI):
         ffi = ffi()  # maybe it's a function instead of directly an ffi
     if not isinstance(ffi, FFI):
-        error("%r is not an FFI instance (got %r)" % (mod_spec, type(ffi).__name__))
+        error(
+            "%r is not an FFI instance (got %r)"
+            % (mod_spec, type(ffi).__name__)
+        )
     if not hasattr(ffi, "_assigned_source"):
         error("%r: the set_source() method was not called" % (mod_spec,))
     module_name, source, source_extension, kwds = ffi._assigned_source
@@ -98,7 +105,9 @@ def _set_py_limited_api(Extension, kwds):
         import setuptools
 
         try:
-            setuptools_major_version = int(setuptools.__version__.partition(".")[0])
+            setuptools_major_version = int(
+                setuptools.__version__.partition(".")[0]
+            )
             if setuptools_major_version >= 26:
                 kwds["py_limited_api"] = True
         except ValueError:  # certain development versions of setuptools
@@ -183,7 +192,9 @@ def _add_py_module(dist, ffi, module_name):
             saved_py_modules = self.py_modules
             try:
                 if saved_py_modules:
-                    self.py_modules = [m for m in saved_py_modules if m != module_name]
+                    self.py_modules = [
+                        m for m in saved_py_modules if m != module_name
+                    ]
                 return base_class.get_source_files(self)
             finally:
                 self.py_modules = saved_py_modules

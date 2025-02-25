@@ -45,12 +45,16 @@ class StateSynchronizer:
                 node_metrics.last_sync = datetime.now()
                 node_metrics.state = NodeState.ACTIVE
             except Exception as e:
-                self.logger.error(f"State distribution failed for {node_id}: {e}")
+                self.logger.error(
+                    f"State distribution failed for {node_id}: {e}"
+                )
                 node_metrics.state = NodeState.DISCONNECTED
 
         return distributed_states
 
-    def _route_state(self, global_state: Any, node_metrics: NodeMetrics) -> Any:
+    def _route_state(
+        self, global_state: Any, node_metrics: NodeMetrics
+    ) -> Any:
         """Intelligent state routing with locality and coherence considerations"""
         # Implement advanced state routing logic
         node_metrics.coherence_score = np.random.uniform(0.9, 1.0)
@@ -77,7 +81,9 @@ class CoherenceMonitor:
 
         stability_metrics = {
             "global_coherence": self._calculate_global_coherence(nodes),
-            "error_correction_efficiency": self._assess_error_correction(nodes),
+            "error_correction_efficiency": self._assess_error_correction(
+                nodes
+            ),
             "network_synchronization": self._evaluate_network_sync(nodes),
         }
 
@@ -105,7 +111,9 @@ class CoherenceMonitor:
             return 1.0
 
         latencies = [node.latency for node in nodes]
-        return 1.0 - (max(latencies) / min(latencies) if min(latencies) > 0 else 0)
+        return 1.0 - (
+            max(latencies) / min(latencies) if min(latencies) > 0 else 0
+        )
 
 
 class EntanglementOrchestrator:
@@ -120,7 +128,9 @@ class EntanglementOrchestrator:
     def synchronize_states(self, global_state: Any) -> Dict[str, Any]:
         """Synchronize states across all nodes with advanced routing"""
         try:
-            distributed_states = self.state_synchronizer.distribute(global_state)
+            distributed_states = self.state_synchronizer.distribute(
+                global_state
+            )
             return distributed_states
         except Exception as e:
             self.logger.error(f"State synchronization failed: {e}")
@@ -132,9 +142,13 @@ class EntanglementOrchestrator:
         """Comprehensive coherence and stability monitoring"""
         try:
             if node_metrics is None:
-                node_metrics = list(self.state_synchronizer.node_registry.values())
+                node_metrics = list(
+                    self.state_synchronizer.node_registry.values()
+                )
 
-            stability_metrics = self.coherence_monitor.check_stability(node_metrics)
+            stability_metrics = self.coherence_monitor.check_stability(
+                node_metrics
+            )
 
             # Log warning if stability is below threshold
             if any(

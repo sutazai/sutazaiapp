@@ -163,7 +163,8 @@ class Manifest(object):
             for pattern in patterns:
                 if not self._include_pattern(pattern, anchor=False):
                     logger.warning(
-                        "no files found matching %r " "anywhere in distribution",
+                        "no files found matching %r "
+                        "anywhere in distribution",
                         pattern,
                     )
 
@@ -233,7 +234,9 @@ class Manifest(object):
             "global-exclude",
         ):
             if len(words) < 2:
-                raise DistlibException("%r expects <pattern1> <pattern2> ..." % action)
+                raise DistlibException(
+                    "%r expects <pattern1> <pattern2> ..." % action
+                )
 
             patterns = [convert_path(word) for word in words[1:]]
 
@@ -248,7 +251,9 @@ class Manifest(object):
 
         elif action in ("graft", "prune"):
             if len(words) != 2:
-                raise DistlibException("%r expects a single <dir_pattern>" % action)
+                raise DistlibException(
+                    "%r expects a single <dir_pattern>" % action
+                )
 
             dir_pattern = convert_path(words[1])
 
@@ -257,7 +262,9 @@ class Manifest(object):
 
         return action, patterns, thedir, dir_pattern
 
-    def _include_pattern(self, pattern, anchor=True, prefix=None, is_regex=False):
+    def _include_pattern(
+        self, pattern, anchor=True, prefix=None, is_regex=False
+    ):
         """Select strings (presumably filenames) from 'self.files' that
         match 'pattern', a Unix-style wildcard (glob) pattern.
 
@@ -297,7 +304,9 @@ class Manifest(object):
                 found = True
         return found
 
-    def _exclude_pattern(self, pattern, anchor=True, prefix=None, is_regex=False):
+    def _exclude_pattern(
+        self, pattern, anchor=True, prefix=None, is_regex=False
+    ):
         """Remove strings (presumably filenames) from 'files' that match
         'pattern'.
 
@@ -316,7 +325,9 @@ class Manifest(object):
                 found = True
         return found
 
-    def _translate_pattern(self, pattern, anchor=True, prefix=None, is_regex=False):
+    def _translate_pattern(
+        self, pattern, anchor=True, prefix=None, is_regex=False
+    ):
         """Translate a shell-like wildcard pattern to a compiled regular
         expression.
 
@@ -337,7 +348,9 @@ class Manifest(object):
         if pattern:
             pattern_re = self._glob_to_re(pattern)
             if _PYTHON_VERSION > (3, 2):
-                assert pattern_re.startswith(start) and pattern_re.endswith(end)
+                assert pattern_re.startswith(start) and pattern_re.endswith(
+                    end
+                )
         else:
             pattern_re = ""
 
@@ -350,14 +363,18 @@ class Manifest(object):
             else:
                 prefix_re = self._glob_to_re(prefix)
                 assert prefix_re.startswith(start) and prefix_re.endswith(end)
-                prefix_re = prefix_re[len(start): len(prefix_re) - len(end)]
+                prefix_re = prefix_re[len(start) : len(prefix_re) - len(end)]
             sep = os.sep
             if os.sep == "\\":
                 sep = r"\\"
             if _PYTHON_VERSION <= (3, 2):
-                pattern_re = "^" + base + sep.join((prefix_re, ".*" + pattern_re))
+                pattern_re = (
+                    "^" + base + sep.join((prefix_re, ".*" + pattern_re))
+                )
             else:
-                pattern_re = pattern_re[len(start): len(pattern_re) - len(end)]
+                pattern_re = pattern_re[
+                    len(start) : len(pattern_re) - len(end)
+                ]
                 pattern_re = r"%s%s%s%s.*%s%s" % (
                     start,
                     base,
@@ -374,7 +391,7 @@ class Manifest(object):
                     pattern_re = r"%s%s%s" % (
                         start,
                         base,
-                        pattern_re[len(start):],
+                        pattern_re[len(start) :],
                     )
 
         return re.compile(pattern_re)
