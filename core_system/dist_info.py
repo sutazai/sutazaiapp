@@ -1,106 +1,133 @@
 """
-Create a dist_info directory
-As defined in the wheel specification
+SutazAI Distribution Information Module
+--------------------------------------
+A simplified version of distribution information utilities for the SutazAI system.
 """
 
 import os
 import shutil
-from contextlib import contextmanager
-from distutils import log
-from distutils.core import Command
 from pathlib import Path
-from typing import cast
-
-from .. import _normalization
-from .._shutil import rmdir as _rm
-from .egg_info import egg_info as egg_info_cls
+from typing import Dict, List, Optional, Union
 
 
-class dist_info(Command):
+class DistributionInfo:
+    """Class for handling distribution information."""
+    
+    def __init__(self, name: str, version: str) -> None:
+        """
+        Initialize distribution information.
+        
+        Args:
+            name: Package name
+            version: Package version
+        """
+        self.name = name
+        self.version = version
+        self.metadata: Dict[str, str] = {}
+        
+    def get_dist_info_dir(self, base_dir: Union[str, Path]) -> Path:
+        """
+        Get the path to the .dist-info directory.
+        
+        Args:
+            base_dir: Base directory
+            
+        Returns:
+            Path to the .dist-info directory
+        """
+        base_path = Path(base_dir)
+        return base_path / f"{self.name}-{self.version}.dist-info"
+    
+    def create_dist_info(self, base_dir: Union[str, Path]) -> Path:
+        """
+        Create a .dist-info directory.
+        
+        Args:
+            base_dir: Base directory
+            
+        Returns:
+            Path to the created .dist-info directory
+        """
+        dist_info_dir = self.get_dist_info_dir(base_dir)
+        
+        # Create the directory if it doesn't exist
+        os.makedirs(dist_info_dir, exist_ok=True)
+        
+        # Create METADATA file
+        with open(dist_info_dir / "METADATA", "w") as f:
+            f.write(f"Metadata-Version: 2.1\n")
+            f.write(f"Name: {self.name}\n")
+            f.write(f"Version: {self.version}\n")
+            
+            for key, value in self.metadata.items():
+                f.write(f"{key}: {value}\n")
+        
+        # Create WHEEL file
+        with open(dist_info_dir / "WHEEL", "w") as f:
+            f.write("Wheel-Version: 1.0\n")
+            f.write("Generator: SutazAI\n")
+            f.write("Root-Is-Purelib: true\n")
+            f.write("Tag: py3-none-any\n")
+        
+        return dist_info_dir
+    
+    def add_metadata(self, key: str, value: str) -> None:
+        """
+        Add metadata to the distribution information.
+        
+        Args:
+            key: Metadata key
+            value: Metadata value
+        """
+        self.metadata[key] = value
+    
+    @staticmethod
+    def backup_directory(dir_path: Union[str, Path]) -> Path:
+        """
+        Create a backup of a directory.
+        
+        Args:
+            dir_path: Directory to backup
+            
+        Returns:
+            Path to the backup directory
+        """
+        dir_path = Path(dir_path)
+        backup_path = dir_path.with_suffix(".bak")
+        
+        if backup_path.exists():
+            shutil.rmtree(backup_path)
+        
+        shutil.copytree(dir_path, backup_path)
+        return backup_path
+    
+    @staticmethod
+    def restore_from_backup(backup_path: Union[str, Path], target_path: Union[str, Path]) -> None:
+        """
+        Restore a directory from a backup.
+        
+        Args:
+            backup_path: Path to the backup directory
+            target_path: Path to restore to
+        """
+        backup_path = Path(backup_path)
+        target_path = Path(target_path)
+        
+        if target_path.exists():
+            shutil.rmtree(target_path)
+        
+        shutil.copytree(backup_path, target_path)
+
+
+def get_distribution_info(name: str, version: str) -> DistributionInfo:
     """
-    This command is private and reserved for internal use of setuptools,
-    users should rely on ``setuptools.build_meta`` APIs.
+    Get distribution information.
+    
+    Args:
+        name: Package name
+        version: Package version
+        
+    Returns:
+        Distribution information
     """
-
-    description = "DO NOT CALL DIRECTLY, INTERNAL ONLY: create .dist-info directory"
-
-    user_options = [
-        (
-            "output-dir=",
-            "o",
-            "directory inside of which the .dist-info will be"
-            "created [default: top of the source tree]",
-        ),
-        ("tag-date", "d", "Add date stamp (e.g. 20050528) to version number"),
-        ("tag-build=", "b", "Specify explicit tag to add to version number"),
-        ("no-date", "D", "Don't include date stamp [default]"),
-        (
-            "keep-egg-info",
-            None,
-            "*TRANSITIONAL* will be removed in the future",
-        ),
-    ]
-
-    boolean_options = ["tag-date", "keep-egg-info"]
-    negative_opt = {"no-date": "tag-date"}
-
-    def initialize_options(self):
-        self.output_dir = None
-        self.name = None
-        self.dist_info_dir = None
-        self.tag_date = None
-        self.tag_build = None
-        self.keep_egg_info = False
-
-    def finalize_options(self) -> None:
-        dist = self.distribution
-        project_dir = dist.src_root or os.curdir
-        self.output_dir = Path(self.output_dir or project_dir)
-
-        egg_info = cast(egg_info_cls, self.reinitialize_command("egg_info"))
-        egg_info.egg_base = str(self.output_dir)
-
-        if self.tag_date:
-            egg_info.tag_date = self.tag_date
-        else:
-            self.tag_date = egg_info.tag_date
-
-        if self.tag_build:
-            egg_info.tag_build = self.tag_build
-        else:
-            self.tag_build = egg_info.tag_build
-
-        egg_info.finalize_options()
-        self.egg_info = egg_info
-
-        name = _normalization.safer_name(dist.get_name())
-        version = _normalization.safer_best_effort_version(dist.get_version())
-        self.name = f"{name}-{version}"
-        self.dist_info_dir = os.path.join(self.output_dir, f"{self.name}.dist-info")
-
-    @contextmanager
-    def _maybe_bkp_dir(self, dir_path: str, requires_bkp: bool):
-        if requires_bkp:
-            bkp_name = f"{dir_path}.__bkp__"
-            _rm(bkp_name, ignore_errors=True)
-            shutil.copytree(dir_path, bkp_name, dirs_exist_ok=True, symlinks=True)
-            try:
-                yield
-            finally:
-                _rm(dir_path, ignore_errors=True)
-                shutil.move(bkp_name, dir_path)
-        else:
-            yield
-
-    def run(self) -> None:
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.egg_info.run()
-        egg_info_dir = self.egg_info.egg_info
-        assert os.path.isdir(egg_info_dir), ".egg-info dir should have been created"
-
-        log.info(f"creating '{os.path.abspath(self.dist_info_dir)}'")
-        bdist_wheel = self.get_finalized_command("bdist_wheel")
-
-        # TODO: if bdist_wheel if merged into setuptools, just add "keep_egg_info" there
-        with self._maybe_bkp_dir(egg_info_dir, self.keep_egg_info):
-            bdist_wheel.egg2dist(egg_info_dir, self.dist_info_dir)
+    return DistributionInfo(name, version)
