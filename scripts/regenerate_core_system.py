@@ -3,9 +3,7 @@ import os
 
 def generate_module_template(module_name):
     """Generate a basic template for a module."""
-    module_name_class = "".join(
-        word.capitalize() for word in module_name.split("_")
-    )
+    module_name_class = "".join(word.capitalize() for word in module_name.split("_"))
 
     template = f'''"""
 {module_name_class} Module for SutazAI Core System

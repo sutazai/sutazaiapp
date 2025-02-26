@@ -22,9 +22,7 @@ from datetime import datetime
 from typing import Any, Dict
 
 # Add project root to Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 logging.basicConfig(
@@ -100,9 +98,7 @@ class SystemAuditor:
             audit_result = {
                 "status": "PASSED",
                 "total_packages": len(installed_packages),
-                "vulnerable_packages": [
-                    vuln[0] for vuln in vulnerability_check
-                ],
+                "vulnerable_packages": [vuln[0] for vuln in vulnerability_check],
                 "outdated_packages": [],  # TODO: Implement version comparison
             }
 

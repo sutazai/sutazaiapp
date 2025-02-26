@@ -64,9 +64,7 @@ class SystemArchitectureValidator:
             dir_validation[req_dir] = {
                 "exists": os.path.exists(full_path),
                 "is_dir": (
-                    os.path.isdir(full_path)
-                    if os.path.exists(full_path)
-                    else False
+                    os.path.isdir(full_path) if os.path.exists(full_path) else False
                 ),
                 "contents": (
                     os.listdir(full_path) if os.path.exists(full_path) else []
@@ -91,9 +89,9 @@ class SystemArchitectureValidator:
                     file_path = os.path.join(root, file)
                     try:
                         # Attempt to import and inspect the module
-                        module_name = os.path.relpath(
-                            file_path, self.base_dir
-                        ).replace("/", ".")[:-3]
+                        module_name = os.path.relpath(file_path, self.base_dir).replace(
+                            "/", "."
+                        )[:-3]
                         module = importlib.import_module(module_name)
 
                         module_integrity[module_name] = {
@@ -114,9 +112,7 @@ class SystemArchitectureValidator:
                             ],
                         }
                     except Exception as e:
-                        module_integrity[module_name] = {
-                            "import_error": str(e)
-                        }
+                        module_integrity[module_name] = {"import_error": str(e)}
 
         self.validation_report["module_integrity"] = module_integrity
         return module_integrity
@@ -182,9 +178,7 @@ class SystemArchitectureValidator:
 
         for root, _, files in os.walk(self.base_dir):
             for file in files:
-                if any(
-                    pattern in file.lower() for pattern in sensitive_patterns
-                ):
+                if any(pattern in file.lower() for pattern in sensitive_patterns):
                     security_analysis["sensitive_files"].append(
                         os.path.join(root, file)
                     )
@@ -199,9 +193,7 @@ class SystemArchitectureValidator:
                             content = f.read()
 
                             if "eval(" in content or "exec(" in content:
-                                security_analysis[
-                                    "potential_vulnerabilities"
-                                ].append(
+                                security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
                                         "issue": "Potential code injection "
@@ -209,13 +201,8 @@ class SystemArchitectureValidator:
                                     }
                                 )
 
-                            if (
-                                "subprocess.call(" in content
-                                or "os.system(" in content
-                            ):
-                                security_analysis[
-                                    "potential_vulnerabilities"
-                                ].append(
+                            if "subprocess.call(" in content or "os.system(" in content:
+                                security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
                                         "issue": "Potential shell injection "
@@ -264,20 +251,14 @@ class SystemArchitectureValidator:
         # Dependency recommendations
         dependencies = self.validation_report["dependency_analysis"]
         if not dependencies["requirements"]:
-            recommendations.append(
-                "Update requirements.txt with project dependencies"
-            )
+            recommendations.append("Update requirements.txt with project dependencies")
 
         # Security recommendations
         security = self.validation_report["security_analysis"]
         if security["sensitive_files"]:
-            recommendations.append(
-                "Review and secure sensitive files"
-            )
+            recommendations.append("Review and secure sensitive files")
 
-        self.validation_report["optimization_recommendations"] = (
-            recommendations
-        )
+        self.validation_report["optimization_recommendations"] = recommendations
         return recommendations
 
     def generate_comprehensive_report(self) -> Dict[str, Any]:
@@ -298,7 +279,7 @@ class SystemArchitectureValidator:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.base_dir,
-            f'logs/system_architecture_report_{timestamp}.json',
+            f"logs/system_architecture_report_{timestamp}.json",
         )
 
         with open(report_path, "w") as f:

@@ -81,30 +81,24 @@ class ComprehensiveSystemAuditor:
             )
             audit_report["performance_metrics"] = performance_metrics
 
-
             # 4. Generate Recommendations
             recommendations = []
 
             # Dependency Recommendations
             for package, status in audit_report["dependency_status"].items():
                 if not status:
-                    recommendations.append(
-                        f"Update/Install package: {package}"
-                    )
+                    recommendations.append(f"Update/Install package: {package}")
 
             # Performance Recommendations
             if performance_metrics["cpu_metrics"]["usage_percent"][0] > 80:
-                recommendations.append(
-                    "High CPU Usage: Optimize CPU-intensive tasks"
-                )
+                recommendations.append("High CPU Usage: Optimize CPU-intensive tasks")
 
             if performance_metrics["memory_metrics"]["percent"] > 85:
                 recommendations.append(
                     "High Memory Usage: Implement memory optimization"
                 )
 
-                recommendations.append(
-                )
+                recommendations.append()
 
             audit_report["recommendations"] = recommendations
 

@@ -60,9 +60,7 @@ class AgentFactory:
 
             try:
                 module = importlib.import_module(f"ai_agents.{agent_type}.src")
-                agent_class = getattr(
-                    module, f"{agent_type.capitalize()}Agent", None
-                )
+                agent_class = getattr(module, f"{agent_type.capitalize()}Agent", None)
 
                 if agent_class and issubclass(agent_class, BaseAgent):
                     self._agent_registry[agent_type] = agent_class
@@ -95,9 +93,7 @@ class AgentFactory:
             try:
                 config = self.config_manager.load_config(agent_type)
             except Exception as e:
-                logger.warning(
-                    f"Using default configuration for {agent_type}: {e}"
-                )
+                logger.warning(f"Using default configuration for {agent_type}: {e}")
                 config = {}
 
         agent_class = self._agent_registry[agent_type]

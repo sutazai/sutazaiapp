@@ -30,9 +30,15 @@ def main():
 
     summary = {}
     tasks = [
-        ("System Validation", "python3 /opt/sutazaiapp/scripts/system_comprehensive_validator.py"),
+        (
+            "System Validation",
+            "python3 /opt/sutazaiapp/scripts/system_comprehensive_validator.py",
+        ),
         ("Project Analysis", "python3 /opt/sutazaiapp/scripts/project_analyzer.py"),
-        ("Documentation Generation", "python3 /opt/sutazaiapp/scripts/documentation_generator.py"),
+        (
+            "Documentation Generation",
+            "python3 /opt/sutazaiapp/scripts/documentation_generator.py",
+        ),
         ("Spell Checking", "python3 /opt/sutazaiapp/scripts/spell_checker.py"),
     ]
 
@@ -72,7 +78,9 @@ def main():
     summary_file = f"/opt/sutazaiapp/logs/final_system_test_summary_{timestamp}.json"
     with open(summary_file, "w") as f:
         json.dump(summary, f, indent=4)
-    console.print(f"[bold green]Final system test summary saved to {summary_file}[/bold green]")
+    console.print(
+        f"[bold green]Final system test summary saved to {summary_file}[/bold green]"
+    )
 
 
 if __name__ == "__main__":

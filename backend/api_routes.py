@@ -20,9 +20,7 @@ class ApiStatus(BaseModel):
     version: str = Field(default="0.1.0", description="API version")
 
     model_config = {
-        "json_schema_extra": {
-            "example": {"status": "running", "version": "0.1.0"}
-        },
+        "json_schema_extra": {"example": {"status": "running", "version": "0.1.0"}},
     }
 
 

@@ -47,8 +47,7 @@ class DocumentationGenerator:
 
         self.doc_log = os.path.join(
             self.log_dir,
-            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            f".json",
+            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".json",
         )
 
         logging.basicConfig(
@@ -68,9 +67,7 @@ class DocumentationGenerator:
             "dependencies": {},
         }
 
-    def generate_module_documentation(
-        self, module_path: str
-    ) -> Dict[str, Any]:
+    def generate_module_documentation(self, module_path: str) -> Dict[str, Any]:
         """
         Generate comprehensive documentation for a Python module
 
@@ -126,9 +123,7 @@ class DocumentationGenerator:
                             class_doc["methods"][method_node.name] = {
                                 "docstring": ast.get_docstring(method_node)
                                 or "No method documentation",
-                                "arguments": [
-                                    arg.arg for arg in method_node.args.args
-                                ],
+                                "arguments": [arg.arg for arg in method_node.args.args],
                             }
 
                     module_doc["classes"][node.name] = class_doc
@@ -142,9 +137,7 @@ class DocumentationGenerator:
                     }
 
         except Exception as e:
-            logging.error(
-                f"Error generating documentation for {module_path}: {e}"
-            )
+            logging.error(f"Error generating documentation for {module_path}: {e}")
 
         return module_doc
 
@@ -165,16 +158,12 @@ class DocumentationGenerator:
 
                     # Skip test and init files
                     if not (file.startswith("test_") or file == "__init__.py"):
-                        module_doc = self.generate_module_documentation(
-                            file_path
-                        )
+                        module_doc = self.generate_module_documentation(file_path)
                         project_docs[file_path] = module_doc
 
         return project_docs
 
-    def generate_dependency_graph(
-        self, project_docs: Dict[str, Any]
-    ) -> nx.DiGraph:
+    def generate_dependency_graph(self, project_docs: Dict[str, Any]) -> nx.DiGraph:
         """
         Create a dependency graph based on module imports
 
@@ -196,9 +185,7 @@ class DocumentationGenerator:
 
         return dependency_graph
 
-    def generate_markdown_documentation(
-        self, project_docs: Dict[str, Any]
-    ) -> str:
+    def generate_markdown_documentation(self, project_docs: Dict[str, Any]) -> str:
         """
         Generate comprehensive Markdown documentation
 
@@ -210,8 +197,7 @@ class DocumentationGenerator:
         """
         markdown_doc = "# SutazAI Project Documentation\n\n"
         markdown_doc += (
-            f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-            f"\n\n"
+            f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" f"\n\n"
         )
 
         # Project overview
@@ -232,32 +218,24 @@ class DocumentationGenerator:
                 markdown_doc += "#### Classes\n\n"
                 for class_name, class_info in module_info["classes"].items():
                     markdown_doc += f"##### {class_name}\n\n"
-                    markdown_doc += (
-                        f"**Docstring**: {class_info['docstring']}\n\n"
-                    )
+                    markdown_doc += f"**Docstring**: {class_info['docstring']}\n\n"
 
                     # Methods
                     if class_info["methods"]:
                         markdown_doc += "**Methods**:\n\n"
-                        for method_name, method_info in class_info[
-                            "methods"
-                        ].items():
-                            method_args = ", ".join(method_info['arguments'])
+                        for method_name, method_info in class_info["methods"].items():
+                            method_args = ", ".join(method_info["arguments"])
                             method_entry = f"- `{method_name}("
                             method_entry += f"{method_args})`\n"
                             markdown_doc += method_entry
-                            markdown_doc += (
-                                f"  - {method_info['docstring']}\n\n"
-                            )
+                            markdown_doc += f"  - {method_info['docstring']}\n\n"
 
             # Functions
             if module_info["functions"]:
                 markdown_doc += "#### Functions\n\n"
                 for func_name, func_info in module_info["functions"].items():
                     markdown_doc += f"##### {func_name}\n\n"
-                    markdown_doc += (
-                        f"**Docstring**: {func_info['docstring']}\n\n"
-                    )
+                    markdown_doc += f"**Docstring**: {func_info['docstring']}\n\n"
 
         return markdown_doc
 
@@ -309,9 +287,7 @@ class DocumentationGenerator:
             project_docs (Dict): Project module documentation
             dependency_graph (nx.DiGraph): Module dependency graph
         """
-        self.console.rule(
-            "[bold blue]SutazAI Documentation Generation[/bold blue]"
-        )
+        self.console.rule("[bold blue]SutazAI Documentation Generation[/bold blue]")
 
         # Documentation Summary Panel
         total_modules = len(project_docs)
@@ -347,7 +323,7 @@ class DocumentationGenerator:
 def main():
     # Verify Python version
     verify_python_version()
-    
+
     doc_generator = DocumentationGenerator()
     doc_generator.comprehensive_documentation_generation()
 

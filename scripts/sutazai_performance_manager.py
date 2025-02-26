@@ -75,7 +75,7 @@ class SutazAIPerformanceManager:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.log_dir,
-            f'system_diagnostics_{timestamp}.json',
+            f"system_diagnostics_{timestamp}.json",
         )
         with open(report_path, "w") as f:
             json.dump(diagnostics, f, indent=4)
@@ -95,9 +95,7 @@ class SutazAIPerformanceManager:
             for interface, addresses in psutil.net_if_addrs().items():
                 network_info[interface] = {
                     "ip_addresses": [
-                        addr.address
-                        for addr in addresses
-                        if addr.family == 2  # IPv4
+                        addr.address for addr in addresses if addr.family == 2  # IPv4
                     ]
                 }
         except Exception as e:
@@ -163,8 +161,7 @@ class SutazAIPerformanceManager:
                 )
             except subprocess.CalledProcessError as e:
                 logger.warning(
-                    f"Compileall failed: {e}. "
-                    f"Proceeding without compiled bytecode."
+                    f"Compileall failed: {e}. " f"Proceeding without compiled bytecode."
                 )
 
             logger.info("Python environment optimization completed")
@@ -182,19 +179,14 @@ class SutazAIPerformanceManager:
         """
         try:
             # Update requirements
-            requirements_path = os.path.join(
-                self.project_root, "requirements.txt"
-            )
+            requirements_path = os.path.join(self.project_root, "requirements.txt")
             if (not os.path.exists(requirements_path)) or (
                 os.path.getsize(requirements_path) == 0
             ):
                 unified_path = os.path.join(
                     self.project_root, "requirements_unified.txt"
                 )
-                if (
-                    os.path.exists(unified_path)
-                    and os.path.getsize(unified_path) > 0
-                ):
+                if os.path.exists(unified_path) and os.path.getsize(unified_path) > 0:
                     logger.info(
                         "requirements.txt is empty, installing dependencies "
                         "from requirements_unified.txt"
@@ -272,15 +264,13 @@ class SutazAIPerformanceManager:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.log_dir,
-            f'optimization_report_{timestamp}.json',
+            f"optimization_report_{timestamp}.json",
         )
 
         with open(report_path, "w") as f:
             json.dump(optimization_report, f, indent=4)
 
-        logger.info(
-            f"Comprehensive optimization report saved to {report_path}"
-        )
+        logger.info(f"Comprehensive optimization report saved to {report_path}")
 
 
 def main():

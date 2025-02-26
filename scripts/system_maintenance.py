@@ -78,10 +78,7 @@ class SystemMaintenance:
                     if file.is_file():
                         try:
                             stat = file.stat()
-                            if (
-                                datetime.fromtimestamp(stat.st_mtime)
-                                < cutoff_time
-                            ):
+                            if datetime.fromtimestamp(stat.st_mtime) < cutoff_time:
                                 file.unlink()
                                 logger.info(f"Deleted old file: {file}")
                         except Exception as e:
@@ -114,9 +111,7 @@ class SystemMaintenance:
                 self.redis_client.flushdb()
                 logger.info("Cleared Redis cache due to high memory usage")
             else:
-                logger.info(
-                    f"Redis memory usage is normal: {used_memory:.2f}MB"
-                )
+                logger.info(f"Redis memory usage is normal: {used_memory:.2f}MB")
         except Exception as e:
             logger.error(f"Redis cache cleanup failed: {str(e)}")
 
@@ -149,19 +144,13 @@ class SystemMaintenance:
                     elif "port" in service:
                         import socket
 
-                        sock = socket.socket(
-                            socket.AF_INET, socket.SOCK_STREAM
-                        )
-                        result = sock.connect_ex(
-                            ("localhost", service["port"])
-                        )
+                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        result = sock.connect_ex(("localhost", service["port"]))
                         sock.close()
                         results.append(
                             {
                                 "name": service["name"],
-                                "status": (
-                                    "healthy" if result == 0 else "unhealthy"
-                                ),
+                                "status": ("healthy" if result == 0 else "unhealthy"),
                             }
                         )
                 except Exception as e:

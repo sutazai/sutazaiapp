@@ -16,14 +16,13 @@ from datetime import datetime
 from typing import Any, Dict
 
 # Add project root to Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import local modules after path adjustment
 # isort: off
 from config.config_manager import ConfigurationManager  # noqa: E402
 from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+
 # isort: on
 
 
@@ -48,7 +47,6 @@ class DependencyManager:
             "status": "pending",
             "message": "Dependency analysis not implemented",
         }
-
 
         return {
             "status": "pending",
@@ -122,16 +120,12 @@ class SystemInitializer:
             validation_results["required_directories"][directory] = {
                 "exists": os.path.exists(full_path),
                 "is_dir": (
-                    os.path.isdir(full_path)
-                    if os.path.exists(full_path)
-                    else False
+                    os.path.isdir(full_path) if os.path.exists(full_path) else False
                 ),
             }
 
         # Validate Python version
-        validation_results["python_version_validation"] = (
-            self.validate_python_version()
-        )
+        validation_results["python_version_validation"] = self.validate_python_version()
 
         return validation_results
 
@@ -241,9 +235,7 @@ class SystemInitializer:
             return initialization_report
 
         except Exception as e:
-            self.logger.log(
-                f"System initialization failed: {e}", level="error"
-            )
+            self.logger.log(f"System initialization failed: {e}", level="error")
             raise
 
 
@@ -254,7 +246,7 @@ def main():
     try:
         # Verify Python version
         verify_python_version()
-        
+
         initializer = SystemInitializer()
         initialization_report = initializer.initialize_system()
 

@@ -30,9 +30,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 # Add project root to Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import local modules after path adjustment
 # isort: off
@@ -40,6 +38,7 @@ from config.config_manager import ConfigurationManager  # noqa: E402
 from core_system.dependency_management import DependencyManager  # noqa: E402
 from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
 from core_system.performance_optimizer import UltraPerformanceOptimizer  # noqa: E402
+
 # isort: on
 
 
@@ -79,7 +78,7 @@ class UltraSystemAuditor:
         self.base_dir = base_dir
         self.log_dir = log_dir
         self.config_env = config_env
-        
+
         # Rich console for visualization
         self.console = Console()
 
@@ -119,10 +118,14 @@ class UltraSystemAuditor:
                 )
 
             audit_result = {
-                "status": "PASSED" if all(
-                    result.get("valid", False) 
-                    for result in validation_results.values()
-                ) else "WARNING",
+                "status": (
+                    "PASSED"
+                    if all(
+                        result.get("valid", False)
+                        for result in validation_results.values()
+                    )
+                    else "WARNING"
+                ),
                 "config_profile": profile,
                 "config_sections": list(config.keys()),
                 "validation_results": validation_results,
@@ -140,9 +143,9 @@ class UltraSystemAuditor:
 
         except Exception as e:
             error_result = {
-                "status": "FAILED", 
+                "status": "FAILED",
                 "error": str(e),
-                "recommendations": ["Fix configuration loading errors"]
+                "recommendations": ["Fix configuration loading errors"],
             }
             self.logger.error(f"Configuration audit failed: {e}")
             return error_result
@@ -162,13 +165,13 @@ class UltraSystemAuditor:
         """
         # This would be expanded with actual validation logic
         validation_result = {"valid": True, "issues": []}
-        
+
         # Check for empty or None values in critical settings
         for key, value in settings.items():
             if value is None or (isinstance(value, str) and value == ""):
                 validation_result["valid"] = False
                 validation_result["issues"].append(f"Missing value for '{key}'")
-                
+
         return validation_result
 
     def audit_dependencies(self) -> Dict[str, Any]:
@@ -190,11 +193,13 @@ class UltraSystemAuditor:
                 try:
                     latest_version = self._get_latest_version(package)
                     if latest_version != version:
-                        outdated_packages.append({
-                            "name": package,
-                            "current_version": version,
-                            "latest_version": latest_version,
-                        })
+                        outdated_packages.append(
+                            {
+                                "name": package,
+                                "current_version": version,
+                                "latest_version": latest_version,
+                            }
+                        )
                 except Exception:
                     # Skip packages that can't be checked
                     pass
@@ -215,7 +220,7 @@ class UltraSystemAuditor:
                 audit_result["recommendations"].append(
                     "Update vulnerable packages immediately"
                 )
-            
+
             if len(outdated_packages) > 10:
                 audit_result["recommendations"].append(
                     "Update significantly outdated packages"
@@ -225,9 +230,9 @@ class UltraSystemAuditor:
 
         except Exception as e:
             error_result = {
-                "status": "FAILED", 
+                "status": "FAILED",
                 "error": str(e),
-                "recommendations": ["Fix dependency analysis errors"]
+                "recommendations": ["Fix dependency analysis errors"],
             }
             self.logger.error(f"Dependency audit failed: {e}")
             return error_result
@@ -235,10 +240,10 @@ class UltraSystemAuditor:
     def _get_latest_version(self, package: str) -> str:
         """
         Get the latest version of a package
-        
+
         Args:
             package (str): Package name
-            
+
         Returns:
             Latest version string
         """
@@ -249,7 +254,7 @@ class UltraSystemAuditor:
     def _check_vulnerabilities(self) -> List[Dict[str, Any]]:
         """
         Check for security vulnerabilities in dependencies
-        
+
         Returns:
             List of vulnerable packages
         """
@@ -261,15 +266,15 @@ class UltraSystemAuditor:
                 text=True,
                 check=False,
             )
-            
+
             if result.returncode == 0:
                 return []
-            
+
             # Parse safety output
             if result.stdout:
                 vulnerabilities = json.loads(result.stdout)
                 return vulnerabilities
-                
+
             return []
         except Exception as e:
             self.logger.error(f"Vulnerability check failed: {e}")
@@ -338,9 +343,9 @@ class UltraSystemAuditor:
 
         except Exception as e:
             error_result = {
-                "status": "FAILED", 
+                "status": "FAILED",
                 "error": str(e),
-                "recommendations": ["Fix resource monitoring errors"]
+                "recommendations": ["Fix resource monitoring errors"],
             }
             self.logger.error(f"System resources audit failed: {e}")
             return error_result
@@ -348,7 +353,7 @@ class UltraSystemAuditor:
     def audit_code_quality(self) -> Dict[str, Any]:
         """
         Audit code quality across the project
-        
+
         Returns:
             Code quality audit results
         """
@@ -356,7 +361,7 @@ class UltraSystemAuditor:
             # This would be replaced with actual code quality tooling
             # such as running pylint, flake8, etc.
             # For now we'll provide a simplified implementation
-            
+
             audit_result = {
                 "status": "PASSED",
                 "lint_score": 8.5,  # Out of 10
@@ -365,33 +370,33 @@ class UltraSystemAuditor:
                 "maintainability_index": 75.0,  # Out of 100
                 "recommendations": [],
             }
-            
+
             # Add recommendations based on metrics
             if audit_result["lint_score"] < 8.0:
                 audit_result["status"] = "WARNING"
                 audit_result["recommendations"].append(
                     "Improve code style and adherence to PEP 8"
                 )
-                
+
             if audit_result["test_coverage"] < 70.0:
                 audit_result["status"] = "WARNING"
                 audit_result["recommendations"].append(
                     "Increase test coverage for critical components"
                 )
-                
+
             if audit_result["complexity_score"] < 7.0:
                 audit_result["status"] = "WARNING"
                 audit_result["recommendations"].append(
                     "Reduce cyclomatic complexity in core modules"
                 )
-                
+
             return audit_result
-            
+
         except Exception as e:
             error_result = {
-                "status": "FAILED", 
+                "status": "FAILED",
                 "error": str(e),
-                "recommendations": ["Fix code quality analysis errors"]
+                "recommendations": ["Fix code quality analysis errors"],
             }
             self.logger.error(f"Code quality audit failed: {e}")
             return error_result
@@ -399,7 +404,7 @@ class UltraSystemAuditor:
     def audit_security(self) -> Dict[str, Any]:
         """
         Audit security configuration and vulnerabilities
-        
+
         Returns:
             Security audit results
         """
@@ -411,45 +416,45 @@ class UltraSystemAuditor:
                 "code_security_scan": self._run_code_security_scan(),
                 "permission_check": self._check_file_permissions(),
             }
-            
+
             # Evaluate overall security status
             has_vulnerabilities = (
-                len(security_checks["dependency_vulnerabilities"]) > 0 or
-                not security_checks["code_security_scan"]["passed"] or
-                not security_checks["permission_check"]["passed"]
+                len(security_checks["dependency_vulnerabilities"]) > 0
+                or not security_checks["code_security_scan"]["passed"]
+                or not security_checks["permission_check"]["passed"]
             )
-            
+
             audit_result = {
                 "status": "PASSED" if not has_vulnerabilities else "WARNING",
                 "security_checks": security_checks,
                 "recommendations": [],
             }
-            
+
             # Generate security recommendations
             if len(security_checks["dependency_vulnerabilities"]) > 0:
                 audit_result["recommendations"].append(
                     "Update packages with security vulnerabilities"
                 )
-                
+
             if not security_checks["code_security_scan"]["passed"]:
                 audit_result["recommendations"].append(
-                    "Address security issues in code: " + 
-                    security_checks["code_security_scan"]["message"]
+                    "Address security issues in code: "
+                    + security_checks["code_security_scan"]["message"]
                 )
-                
+
             if not security_checks["permission_check"]["passed"]:
                 audit_result["recommendations"].append(
-                    "Fix file permission issues: " + 
-                    security_checks["permission_check"]["message"]
+                    "Fix file permission issues: "
+                    + security_checks["permission_check"]["message"]
                 )
-                
+
             return audit_result
-            
+
         except Exception as e:
             error_result = {
-                "status": "FAILED", 
+                "status": "FAILED",
                 "error": str(e),
-                "recommendations": ["Fix security audit errors"]
+                "recommendations": ["Fix security audit errors"],
             }
             self.logger.error(f"Security audit failed: {e}")
             return error_result
@@ -457,7 +462,7 @@ class UltraSystemAuditor:
     def _run_code_security_scan(self) -> Dict[str, Any]:
         """
         Run a security scan on the codebase
-        
+
         Returns:
             Security scan results
         """
@@ -473,7 +478,7 @@ class UltraSystemAuditor:
         except Exception as e:
             self.logger.error(f"Code security scan failed: {e}")
             return {
-                "passed": False, 
+                "passed": False,
                 "message": f"Scan failed: {e}",
                 "issues": [],
             }
@@ -481,7 +486,7 @@ class UltraSystemAuditor:
     def _check_file_permissions(self) -> Dict[str, Any]:
         """
         Check file permissions for security issues
-        
+
         Returns:
             File permission check results
         """
@@ -496,7 +501,7 @@ class UltraSystemAuditor:
         except Exception as e:
             self.logger.error(f"File permission check failed: {e}")
             return {
-                "passed": False, 
+                "passed": False,
                 "message": f"Check failed: {e}",
                 "issues": [],
             }
@@ -509,7 +514,7 @@ class UltraSystemAuditor:
             Complete audit report with recommendations
         """
         self.logger.info("Starting comprehensive system audit")
-        
+
         # Collect audit data from all subsystems
         audit_data = {
             "timestamp": datetime.now().isoformat(),
@@ -524,7 +529,7 @@ class UltraSystemAuditor:
             "code_quality": self.audit_code_quality(),
             "security": self.audit_security(),
         }
-        
+
         # Determine overall system status
         statuses = [
             section.get("status", "UNKNOWN")
@@ -532,67 +537,67 @@ class UltraSystemAuditor:
             if section_name not in ["timestamp", "system_info"]
             and isinstance(section, dict)
         ]
-        
+
         if "FAILED" in statuses:
             audit_data["overall_status"] = "CRITICAL"
         elif "WARNING" in statuses:
             audit_data["overall_status"] = "WARNING"
         else:
             audit_data["overall_status"] = "HEALTHY"
-            
+
         # Collect all recommendations
         all_recommendations = []
         for section_name, section in audit_data.items():
             if isinstance(section, dict) and "recommendations" in section:
                 all_recommendations.extend(section["recommendations"])
-                
+
         audit_data["recommendations"] = all_recommendations
-        
+
         # Save audit report
         self._save_audit_report(audit_data)
-        
+
         # Visualize audit results
         self._visualize_audit_results(audit_data)
-        
+
         return audit_data
 
     def _save_audit_report(self, audit_data: Dict[str, Any]) -> str:
         """
         Save the audit report to a file
-        
+
         Args:
             audit_data (Dict): Comprehensive audit data
-            
+
         Returns:
             Path to the saved report
         """
         # Ensure logs directory exists
         os.makedirs(self.log_dir, exist_ok=True)
-        
+
         # Generate report filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.log_dir, f"system_audit_report_{timestamp}.json"
         )
-        
+
         # Save report as JSON
         with open(report_path, "w") as f:
             json.dump(audit_data, f, indent=2)
-            
+
         self.logger.info(f"Audit report saved to {report_path}")
         return report_path
 
     def _visualize_audit_results(self, audit_data: Dict[str, Any]) -> None:
         """
         Visualize audit results using rich console
-        
+
         Args:
             audit_data (Dict): Comprehensive audit data
         """
         self.console.print()
         self.console.rule("[bold blue]SutazAI Ultra System Audit[/bold blue]")
         self.console.print()
-        
+
         # Print overall status with appropriate color
         status = audit_data["overall_status"]
         status_color = {
@@ -600,7 +605,7 @@ class UltraSystemAuditor:
             "WARNING": "yellow",
             "CRITICAL": "red",
         }.get(status, "white")
-        
+
         self.console.print(
             Panel(
                 f"[bold {status_color}]{status}[/bold {status_color}]",
@@ -608,11 +613,9 @@ class UltraSystemAuditor:
                 expand=False,
             )
         )
-        
+
         # Print system info
-        self.console.print(
-            f"[bold]OS:[/bold] {audit_data['system_info']['os']}"
-        )
+        self.console.print(f"[bold]OS:[/bold] {audit_data['system_info']['os']}")
         self.console.print(
             f"[bold]Python:[/bold] {audit_data['system_info']['python_version']}"
         )
@@ -620,14 +623,19 @@ class UltraSystemAuditor:
             f"[bold]Hostname:[/bold] {audit_data['system_info']['hostname']}"
         )
         self.console.print()
-        
+
         # Create table for section status
         table = Table(title="Audit Results by Section")
         table.add_column("Section", style="cyan")
         table.add_column("Status", style="bold")
-        
+
         for section_name, section in audit_data.items():
-            if section_name not in ["timestamp", "system_info", "overall_status", "recommendations"]:
+            if section_name not in [
+                "timestamp",
+                "system_info",
+                "overall_status",
+                "recommendations",
+            ]:
                 if isinstance(section, dict) and "status" in section:
                     status = section["status"]
                     status_style = {
@@ -636,10 +644,10 @@ class UltraSystemAuditor:
                         "FAILED": "[red]FAILED[/red]",
                     }.get(status, status)
                     table.add_row(section_name.capitalize(), status_style)
-        
+
         self.console.print(table)
         self.console.print()
-        
+
         # Print recommendations if any
         if audit_data["recommendations"]:
             self.console.print("[bold yellow]Recommendations:[/bold yellow]")
@@ -657,17 +665,17 @@ def main():
     """
     # Verify Python version
     verify_python_version()
-    
+
     try:
         auditor = UltraSystemAuditor()
         audit_report = auditor.run_comprehensive_audit()
-        
+
         print(f"\nSystem Audit completed with status: {audit_report['overall_status']}")
-        
+
     except Exception as e:
         print(f"System audit failed: {e}")
         sys.exit(1)
 
 
 if __name__ == "__main__":
-    main() 
+    main()

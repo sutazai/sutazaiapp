@@ -114,8 +114,7 @@ class SystemComprehensiveReview:
                             imports = [
                                 line.split()[-1].strip()
                                 for line in content.split("\n")
-                                if line.startswith("import")
-                                or line.startswith("from")
+                                if line.startswith("import") or line.startswith("from")
                             ]
 
                             for imp in imports:
@@ -194,16 +193,14 @@ class SystemComprehensiveReview:
                 full_path = os.path.join(self.base_path, directory, file)
                 if os.path.getsize(full_path) > 10 * 1024 * 1024:  # 10MB
                     recommendations["code_structure"].append(
-                        f"Large file detected: {full_path}. "
-                        f"Consider refactoring."
+                        f"Large file detected: {full_path}. " f"Consider refactoring."
                     )
 
         # Dependency complexity
         for node, centrality in dependency_graph.get("centrality", {}).items():
             if centrality > 0.5:
                 recommendations["dependency_optimization"].append(
-                    f"High dependency centrality for {node}. "
-                    f"Review module design."
+                    f"High dependency centrality for {node}. " f"Review module design."
                 )
 
         return recommendations
@@ -247,9 +244,7 @@ class SystemComprehensiveReview:
         Args:
             review_results (Dict): Comprehensive review results
         """
-        self.console.rule(
-            "[bold blue]SutazAI Comprehensive System Review[/bold blue]"
-        )
+        self.console.rule("[bold blue]SutazAI Comprehensive System Review[/bold blue]")
 
         # Project Structure Overview
         structure_table = Table(title="Project Structure")
@@ -270,28 +265,22 @@ class SystemComprehensiveReview:
         # Security Check Status
         security_status = (
             "✅ Passed"
-            if review_results.get("security_analysis", {}).get(
-                "passed", False
-            )
+            if review_results.get("security_analysis", {}).get("passed", False)
             else "❌ Vulnerabilities Detected"
         )
         self.console.print(f"Security Scan Status: {security_status}")
 
         # Optimization Recommendations
         if review_results["optimization_recommendations"]["code_structure"]:
-            self.console.rule(
-                "[bold yellow]Optimization Recommendations[/bold yellow]"
-            )
-            for rec in review_results["optimization_recommendations"][
-                "code_structure"
-            ]:
+            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
+            for rec in review_results["optimization_recommendations"]["code_structure"]:
                 self.console.print(f"[red]➤[/red] {rec}")
 
 
 def main():
     # Verify Python version
     verify_python_version()
-    
+
     review = SystemComprehensiveReview()
     review.comprehensive_review()
 

@@ -174,27 +174,23 @@ class UltraComprehensiveProjectOrganizer:
         # Check directory structure
         for main_dir, subdirs in self.standard_structure.items():
             full_path = os.path.join(self.base_dir, main_dir)
-            validation_report["directory_structure"][main_dir] = (
-                os.path.exists(full_path)
+            validation_report["directory_structure"][main_dir] = os.path.exists(
+                full_path
             )
 
             for subdir in subdirs:
                 subdir_path = os.path.join(full_path, subdir)
-                validation_report["directory_structure"][subdir_path] = (
-                    os.path.exists(subdir_path)
+                validation_report["directory_structure"][subdir_path] = os.path.exists(
+                    subdir_path
                 )
 
         # Validate configuration files
-        validation_report["configuration_files"] = (
-            self.validate_configuration_files()
-        )
+        validation_report["configuration_files"] = self.validate_configuration_files()
 
         # Identify potential issues
         for path, exists in validation_report["directory_structure"].items():
             if not exists:
-                validation_report["potential_issues"].append(
-                    f"Missing: {path}"
-                )
+                validation_report["potential_issues"].append(f"Missing: {path}")
 
         return validation_report
 
@@ -203,8 +199,7 @@ class UltraComprehensiveProjectOrganizer:
         Execute the full project organization workflow.
         """
         logger.info(
-            "🚀 Initiating Ultra-Comprehensive Project Structure "
-            "Organization..."
+            "🚀 Initiating Ultra-Comprehensive Project Structure " "Organization..."
         )
 
         # Create project structure
@@ -226,7 +221,7 @@ class UltraComprehensiveProjectOrganizer:
 def main():
     # Verify Python version
     verify_python_version()
-    
+
     organizer = UltraComprehensiveProjectOrganizer()
     organizer.execute_project_organization()
 

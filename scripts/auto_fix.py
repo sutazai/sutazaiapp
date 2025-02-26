@@ -69,9 +69,7 @@ def create_missing_directories():
 def initialize_virtualenv():
     logging.info("Checking for virtual environment...")
     if not os.path.isdir("venv"):
-        logging.warning(
-            "Virtual environment is missing. Attempting to create it..."
-        )
+        logging.warning("Virtual environment is missing. Attempting to create it...")
         try:
             # Create a virtual environment using python3
             subprocess.check_call([sys.executable, "-m", "venv", "venv"])
@@ -92,16 +90,12 @@ def ensure_dummy_wheels():
     req_file = "requirements.txt"
     wheels_dir = os.path.join("packages", "wheels")
     if not os.path.isfile(req_file):
-        logging.error(
-            "requirements.txt not found; cannot create dummy wheels."
-        )
+        logging.error("requirements.txt not found; cannot create dummy wheels.")
         return
     try:
         with open(req_file, "r") as f:
             requirements = [
-                line.strip()
-                for line in f
-                if line.strip() and not line.startswith("#")
+                line.strip() for line in f if line.strip() and not line.startswith("#")
             ]
     except Exception as e:
         logging.error(f"Error reading requirements.txt: {e}")

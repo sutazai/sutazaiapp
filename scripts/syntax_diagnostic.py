@@ -32,13 +32,9 @@ class SyntaxDiagnostic:
 
             # 2. Tokenization Check
             try:
-                tokens = list(
-                    tokenize.generate_tokens(io.StringIO(content).readline)
-                )
+                tokens = list(tokenize.generate_tokens(io.StringIO(content).readline))
                 error_tokens = [
-                    token
-                    for token in tokens
-                    if token[0] == tokenize.ERRORTOKEN
+                    token for token in tokens if token[0] == tokenize.ERRORTOKEN
                 ]
                 if error_tokens:
                     file_issues.append(
@@ -49,9 +45,7 @@ class SyntaxDiagnostic:
                         }
                     )
             except tokenize.TokenError as e:
-                file_issues.append(
-                    {"type": "Tokenization Error", "details": str(e)}
-                )
+                file_issues.append({"type": "Tokenization Error", "details": str(e)})
 
             # 3. Common Syntax Pattern Checks
             pattern_checks = [
@@ -84,9 +78,7 @@ class SyntaxDiagnostic:
                 self.issues[file_path] = file_issues
 
         except Exception as e:
-            self.issues[file_path] = [
-                {"type": "File Read Error", "details": str(e)}
-            ]
+            self.issues[file_path] = [{"type": "File Read Error", "details": str(e)}]
 
     def _analyze_method_signatures(self, content):
         method_issues = []
@@ -101,9 +93,7 @@ class SyntaxDiagnostic:
 
             # Check if method is part of a class (indentation matters)
             method_line = match.group(0)
-            if method_line.startswith(
-                "    def"
-            ):  # Simple heuristic for class method
+            if method_line.startswith("    def"):  # Simple heuristic for class method
                 if not any("self" in param.strip() for param in params):
                     method_issues.append(
                         {
@@ -150,9 +140,7 @@ def main():
     print(report)
 
     # Optional: Write report to file
-    with open(
-        "/opt/sutazai_project/SutazAI/syntax_diagnostic_report.txt", "w"
-    ) as f:
+    with open("/opt/sutazai_project/SutazAI/syntax_diagnostic_report.txt", "w") as f:
         f.write(report)
 
 

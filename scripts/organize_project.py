@@ -67,11 +67,7 @@ def organize_root():
     items = os.listdir(".")
     for item in items:
         # Skip expected directories and files
-        if (
-            item in EXPECTED_DIRECTORIES
-            or item in EXPECTED_FILES
-            or item == MISC_DIR
-        ):
+        if item in EXPECTED_DIRECTORIES or item in EXPECTED_FILES or item == MISC_DIR:
             continue
         # Also skip hidden files and directories
         if item.startswith("."):
@@ -88,6 +84,4 @@ def organize_root():
 if __name__ == "__main__":
     logging.info("Starting automatic organization of project files...")
     organize_root()
-    logging.info(
-        "Organization completed. Check logs/organize.log for details."
-    )
+    logging.info("Organization completed. Check logs/organize.log for details.")

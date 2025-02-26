@@ -120,7 +120,7 @@ class ComprehensiveSystemOptimizer:
         # Get performance metrics first
         perf_metrics = self.system_optimizer.generate_performance_metrics()
         code_quality = self.system_optimizer.assess_code_quality()
-        
+
         optimization_report = OptimizationReport(
             timestamp=datetime.now().isoformat(),
             structural_analysis=self.perform_structural_analysis(),
@@ -147,18 +147,14 @@ class ComprehensiveSystemOptimizer:
         # Structural recommendations
         if report.structural_analysis["total_files"] > 1000:
             recommendations.append(
-                "Consider modularizing project structure to improve "
-                "maintainability"
+                "Consider modularizing project structure to improve " "maintainability"
             )
 
         # Dependency recommendations
         if report.dependency_health.get("outdated_dependencies", 0) > 5:
-            recommendations.append(
-                "Update dependencies to latest stable versions"
-            )
+            recommendations.append("Update dependencies to latest stable versions")
 
-            recommendations.append(
-            )
+            recommendations.append()
 
         # Performance recommendations
         if report.performance_metrics.get("cpu_usage", 0) > 70:
@@ -175,14 +171,10 @@ class ComprehensiveSystemOptimizer:
         report = self.generate_comprehensive_optimization_report()
 
         # Log optimization report
-        with open(
-            os.path.join(self.base_dir, "optimization_report.json"), "w"
-        ) as f:
+        with open(os.path.join(self.base_dir, "optimization_report.json"), "w") as f:
             json.dump(asdict(report), f, indent=2)
 
-        self.logger.info(
-            "Comprehensive system optimization completed successfully"
-        )
+        self.logger.info("Comprehensive system optimization completed successfully")
 
 
 def main():

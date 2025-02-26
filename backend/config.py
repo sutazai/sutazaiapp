@@ -23,9 +23,7 @@ class Config(BaseModel):
         trusted_hosts: List of trusted host addresses
     """
 
-    host: str = Field(
-        default="127.0.0.1", description="Host address to bind to"
-    )
+    host: str = Field(default="127.0.0.1", description="Host address to bind to")
     port: int = Field(default=8000, description="Port to listen on")
     debug: bool = Field(default=False, description="Enable debug mode")
     trusted_hosts: List[str] = Field(
@@ -81,9 +79,7 @@ def load_config_from_env() -> Config:
         )
     if "TRUSTED_HOSTS" in env_vars:
         hosts_str = env_vars["TRUSTED_HOSTS"]
-        config_data["trusted_hosts"] = [
-            h.strip() for h in hosts_str.split(",")
-        ]
+        config_data["trusted_hosts"] = [h.strip() for h in hosts_str.split(",")]
 
     return Config(**config_data)
 

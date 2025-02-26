@@ -144,9 +144,7 @@ class DocumentProcessorAgent(BaseAgent):
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
             # OCR processing
-            ocr_result = pytesseract.image_to_string(
-                gray, lang="+".join(languages)
-            )
+            ocr_result = pytesseract.image_to_string(gray, lang="+".join(languages))
 
             return {
                 "status": "success",

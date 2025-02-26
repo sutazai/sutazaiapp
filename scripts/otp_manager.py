@@ -9,9 +9,7 @@ from cryptography.fernet import Fernet
 
 
 class OTPManager:
-    def __init__(
-        self, root_email="chrissuta01@gmail.com", otp_expiry_minutes=15
-    ):
+    def __init__(self, root_email="chrissuta01@gmail.com", otp_expiry_minutes=15):
         """
         Initialize OTP Management System
 
@@ -37,7 +35,7 @@ class OTPManager:
         """Generate a secure encryption key"""
         # Define key path in the /opt/sutazaiapp/config directory
         key_path = "/opt/sutazaiapp/config/otp_encryption.key"
-        
+
         if os.path.exists(key_path):
             with open(key_path, "rb") as key_file:
                 return key_file.read()

@@ -154,9 +154,7 @@ async def get_status(_: Request) -> Dict[str, Any]:
         ) from e
 
 
-async def custom_exception_handler(
-    _: Request, exc: HTTPException
-) -> JSONResponse:
+async def custom_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
     """
     Returns a custom JSON response for HTTP exceptions.
 

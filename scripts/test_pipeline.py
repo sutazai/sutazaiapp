@@ -13,9 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler(
-            "/opt/sutazaiapp/logs/system_validation.log"
-        ),
+        logging.FileHandler("/opt/sutazaiapp/logs/system_validation.log"),
         logging.StreamHandler(sys.stdout),
     ],
 )
@@ -75,9 +73,7 @@ class SystemValidator:
         logger.info("Checking Critical Directories")
 
         for directory in self.critical_dirs:
-            assert os.path.exists(
-                directory
-            ), f"Critical directory missing: {directory}"
+            assert os.path.exists(directory), f"Critical directory missing: {directory}"
             logger.info(f"Directory validated: {directory}")
 
     def _validate_network_config(self):

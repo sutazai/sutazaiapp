@@ -27,9 +27,7 @@ from typing import Any, Dict, List
 import psutil
 
 # Add project root to Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import local modules after path adjustment
 # isort: off
@@ -37,6 +35,7 @@ from config.config_manager import ConfigurationManager  # noqa: E402
 from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
 from scripts.dependency_manager import DependencyManager  # noqa: E402
 from system_integration.system_integrator import SystemIntegrator  # noqa: E402
+
 # isort: on
 
 
@@ -59,6 +58,7 @@ class OptimizationReport:
     """
     Comprehensive optimization report capturing system-wide insights
     """
+
     timestamp: str
     system_info: Dict[str, Any]
     structural_analysis: Dict[str, Any]
@@ -90,7 +90,7 @@ class UltraSystemOptimizer:
         self.base_dir = base_dir
         self.config_manager = config_manager or ConfigurationManager()
         self.logger = logger or AdvancedLogger()
-        
+
         # Initialize dependency manager
         self.dependency_manager = DependencyManager()
         self.system_integrator = SystemIntegrator()
@@ -120,13 +120,16 @@ class UltraSystemOptimizer:
             "cpu_metrics": {
                 "physical_cores": psutil.cpu_count(logical=False),
                 "total_cores": psutil.cpu_count(logical=True),
-                "cpu_frequencies": [
-                    freq.current for freq in psutil.cpu_freq(percpu=True)
-                    if freq is not None
-                ] if psutil.cpu_freq(percpu=True) else [],
-                "cpu_usage_percent": psutil.cpu_percent(
-                    interval=1, percpu=True
+                "cpu_frequencies": (
+                    [
+                        freq.current
+                        for freq in psutil.cpu_freq(percpu=True)
+                        if freq is not None
+                    ]
+                    if psutil.cpu_freq(percpu=True)
+                    else []
                 ),
+                "cpu_usage_percent": psutil.cpu_percent(interval=1, percpu=True),
             },
             "memory_metrics": {
                 "total_memory": psutil.virtual_memory().total,
@@ -203,9 +206,7 @@ class UltraSystemOptimizer:
         """
         return self.dependency_manager.comprehensive_dependency_analysis()
 
-    def analyze_performance_bottlenecks(
-        self, metrics: Dict[str, Any]
-    ) -> List[str]:
+    def analyze_performance_bottlenecks(self, metrics: Dict[str, Any]) -> List[str]:
         """
         Analyze system performance and identify potential bottlenecks
 
@@ -219,7 +220,11 @@ class UltraSystemOptimizer:
 
         # CPU optimization recommendations
         cpu_usage_percent = metrics["cpu_metrics"]["cpu_usage_percent"]
-        if cpu_usage_percent and max(cpu_usage_percent) > self.optimization_config["cpu_optimization_threshold"]:
+        if (
+            cpu_usage_percent
+            and max(cpu_usage_percent)
+            > self.optimization_config["cpu_optimization_threshold"]
+        ):
             recommendations.append(
                 f"High CPU usage detected. Consider optimizing resource-intensive processes. "
                 f"Peak CPU usage: {max(cpu_usage_percent)}%"
@@ -257,7 +262,7 @@ class UltraSystemOptimizer:
     def assess_code_quality(self) -> Dict[str, Any]:
         """
         Assess code quality across the project
-        
+
         Returns:
             Dictionary with code quality metrics
         """
@@ -268,14 +273,14 @@ class UltraSystemOptimizer:
             "test_coverage": 0,
             "improvement_areas": [],
         }
-        
+
         try:
             # Placeholder for actual code quality assessment
             # In a real implementation, this would call pylint, flake8, etc.
             code_quality["lint_score"] = 8.5
             code_quality["complexity_score"] = 7.8
             code_quality["test_coverage"] = 65.0
-            
+
             # Identify improvement areas
             if code_quality["lint_score"] < 8.0:
                 code_quality["improvement_areas"].append(
@@ -290,10 +295,8 @@ class UltraSystemOptimizer:
                     "Increase test coverage for critical components"
                 )
         except Exception as e:
-            self.logger.log(
-                f"Code quality assessment failed: {e}", level="error"
-            )
-            
+            self.logger.log(f"Code quality assessment failed: {e}", level="error")
+
         return code_quality
 
     def generate_optimization_report(self) -> OptimizationReport:
@@ -305,27 +308,31 @@ class UltraSystemOptimizer:
         """
         # Collect system metrics
         system_metrics = self.collect_system_metrics()
-        
+
         # Analyze structural components
         structural_analysis = self.perform_structural_analysis()
-        
+
         # Check dependencies
         dependency_health = self.optimize_dependencies()
-        
+
         # Assess code quality
         code_quality = self.assess_code_quality()
-        
+
         # Generate performance recommendations
-        performance_recommendations = self.analyze_performance_bottlenecks(system_metrics)
-        
+        performance_recommendations = self.analyze_performance_bottlenecks(
+            system_metrics
+        )
+
         # Configuration validation
         configuration_validation = self.config_manager.validate_configurations()
-        
+
         # Combine all recommendations
         all_recommendations = performance_recommendations.copy()
-        all_recommendations.extend(structural_analysis.get("potential_improvements", []))
+        all_recommendations.extend(
+            structural_analysis.get("potential_improvements", [])
+        )
         all_recommendations.extend(code_quality.get("improvement_areas", []))
-        
+
         # Create report
         optimization_report = OptimizationReport(
             timestamp=datetime.now().isoformat(),
@@ -343,13 +350,13 @@ class UltraSystemOptimizer:
             "logs",
             f'system_optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
         )
-        
+
         # Create logs directory if it doesn't exist
         os.makedirs(os.path.dirname(report_path), exist_ok=True)
 
         with open(report_path, "w") as f:
             json.dump(asdict(optimization_report), f, indent=2)
-            
+
         self.logger.log(
             "System optimization report generated",
             level="info",
@@ -423,7 +430,7 @@ def main():
     """
     # Verify Python version
     verify_python_version()
-    
+
     try:
         optimizer = UltraSystemOptimizer()
         optimizer.execute_optimization()
@@ -433,4 +440,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()

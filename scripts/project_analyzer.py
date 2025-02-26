@@ -30,8 +30,7 @@ class ProjectAnalyzer:
 
         self.analysis_log = os.path.join(
             self.log_dir,
-            f"project_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            f".json",
+            f"project_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".json",
         )
 
         logging.basicConfig(
@@ -86,9 +85,7 @@ class ProjectAnalyzer:
                 # Analyze file complexity for code files
                 if ext in [".py", ".js", ".ts", ".sh"]:
                     complexity = self._analyze_file_complexity(full_path)
-                    structure_analysis["file_complexity"][
-                        full_path
-                    ] = complexity
+                    structure_analysis["file_complexity"][full_path] = complexity
 
         return structure_analysis
 
@@ -122,14 +119,10 @@ class ProjectAnalyzer:
                     1 for line in lines if line.strip().startswith("class ")
                 )
                 complexity["import_count"] = sum(
-                    1
-                    for line in lines
-                    if line.strip().startswith(("import ", "from "))
+                    1 for line in lines if line.strip().startswith(("import ", "from "))
                 )
         except Exception as e:
-            logging.warning(
-                f"Could not analyze complexity of {file_path}: {e}"
-            )
+            logging.warning(f"Could not analyze complexity of {file_path}: {e}")
 
         return complexity
 
@@ -145,7 +138,7 @@ class ProjectAnalyzer:
             "centrality": {},
             "isolated_modules": [],
             "dependency_vulnerabilities": {},
-            "security_scan": {}
+            "security_scan": {},
         }
 
         # Scan Python files for imports
@@ -162,8 +155,7 @@ class ProjectAnalyzer:
                             imports = [
                                 line.split()[-1].strip()
                                 for line in content.split("\n")
-                                if line.startswith("import")
-                                or line.startswith("from")
+                                if line.startswith("import") or line.startswith("from")
                             ]
 
                             # Build dependency graph
@@ -171,8 +163,7 @@ class ProjectAnalyzer:
                                 self.dependency_graph.add_edge(full_path, imp)
                     except Exception as e:
                         logging.warning(
-                            f"Could not analyze dependencies in "
-                            f"{full_path}: {e}"
+                            f"Could not analyze dependencies in " f"{full_path}: {e}"
                         )
 
         # Analyze dependency graph
@@ -214,9 +205,7 @@ class ProjectAnalyzer:
                     "details": safety_result.stdout,
                 }
             else:
-                dependency_analysis["dependency_vulnerabilities"] = {
-                    "passed": True
-                }
+                dependency_analysis["dependency_vulnerabilities"] = {"passed": True}
 
             # Run semgrep for code security scanning
             semgrep_result = subprocess.run(
@@ -232,20 +221,15 @@ class ProjectAnalyzer:
                     "details": semgrep_result.stdout,
                 }
             else:
-                dependency_analysis["security_scan"] = {
-                    "passed": True
-                }
+                dependency_analysis["security_scan"] = {"passed": True}
 
         except Exception as e:
             logging.warning(f"Security scanning failed: {e}")
             dependency_analysis["dependency_vulnerabilities"] = {
                 "passed": True,
-                "error": str(e)
+                "error": str(e),
             }
-            dependency_analysis["security_scan"] = {
-                "passed": True,
-                "error": str(e)
-            }
+            dependency_analysis["security_scan"] = {"passed": True, "error": str(e)}
 
         return dependency_analysis
 
@@ -280,13 +264,10 @@ class ProjectAnalyzer:
                 )
 
         # Dependency complexity
-        for node, centrality in dependency_analysis.get(
-            "centrality", {}
-        ).items():
+        for node, centrality in dependency_analysis.get("centrality", {}).items():
             if centrality > 0.5:
                 recommendations["dependency_optimization"].append(
-                    f"High dependency centrality for {node}. "
-                    f"Review module design."
+                    f"High dependency centrality for {node}. " f"Review module design."
                 )
 
         # Isolated modules
@@ -344,8 +325,7 @@ class ProjectAnalyzer:
 
         # Format file types to display
         file_types_formatted = json.dumps(
-            analysis_results['project_structure']['file_types'], 
-            indent=2
+            analysis_results["project_structure"]["file_types"], indent=2
         )
 
         # Project Structure Panel
@@ -365,26 +345,17 @@ class ProjectAnalyzer:
         dep_vuln = dep_vuln.get("dependency_vulnerabilities", {})
         sec_scan = analysis_results.get("dependency_analysis", {})
         sec_scan = sec_scan.get("security_scan", {})
-        
-        if ((not dep_vuln.get("passed", True)) or 
-                (not sec_scan.get("passed", True))):
-            self.console.print(
-                "[bold red]SECURITY WARNINGS DETECTED[/bold red]"
-            )
+
+        if (not dep_vuln.get("passed", True)) or (not sec_scan.get("passed", True)):
+            self.console.print("[bold red]SECURITY WARNINGS DETECTED[/bold red]")
             if not dep_vuln.get("passed", True):
-                self.console.print(
-                    "[yellow]Dependency vulnerabilities found![/yellow]"
-                )
+                self.console.print("[yellow]Dependency vulnerabilities found![/yellow]")
             if not sec_scan.get("passed", True):
-                self.console.print(
-                    "[yellow]Code security issues found![/yellow]"
-                )
+                self.console.print("[yellow]Code security issues found![/yellow]")
 
         # Optimization Recommendations
         if any(analysis_results["optimization_recommendations"].values()):
-            self.console.rule(
-                "[bold yellow]Optimization Recommendations[/bold yellow]"
-            )
+            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
             for category, recommendations in analysis_results[
                 "optimization_recommendations"
             ].items():

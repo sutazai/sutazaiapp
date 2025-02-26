@@ -132,9 +132,7 @@ class SystemHealthChecker:
         """
         try:
             # Read requirements from requirements.txt
-            requirements_path = os.path.join(
-                self.project_root, "requirements.txt"
-            )
+            requirements_path = os.path.join(self.project_root, "requirements.txt")
 
             with open(requirements_path, "r") as f:
                 required_packages = [
@@ -150,9 +148,7 @@ class SystemHealthChecker:
                 2:
             ]  # Skip header lines
 
-            installed_package_names = [
-                line.split()[0] for line in installed_packages
-            ]
+            installed_package_names = [line.split()[0] for line in installed_packages]
 
             missing_packages = [
                 pkg
@@ -217,10 +213,7 @@ def main():
             report = json.load(f)
 
         # Example of checking for critical issues
-        if any(
-            dep.get("status") == "ERROR"
-            for dep in report["dependencies"].values()
-        ):
+        if any(dep.get("status") == "ERROR" for dep in report["dependencies"].values()):
             sys.exit(1)
 
     except Exception as e:

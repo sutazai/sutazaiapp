@@ -3,10 +3,11 @@
 # This file consolidates all requirements from multiple sources and is ready for Python 3.11
 # Updated for security and compatibility fixes
 
-pip>=23.1.0; python_version == '3.11'
+pip>=25.0.1; python_version == '3.11'
 setuptools>=68.0.0; python_version == '3.11'
 wheel>=0.40.0; python_version == '3.11'
-aria2c; python_version == '3.11'  # Added aria2c dependency
+# aria2c is not a Python package; install via system package manager (apt-get install aria2)
+# aria2c; python_version == '3.11'  # Added aria2c dependency
 
 accelerate>=0.25.0; python_version == '3.11'
 aiohttp>=3.8.5; python_version == '3.11'  # Version >=3.8.5 required for Python 3.11

@@ -25,14 +25,13 @@ from typing import Any, Dict, List
 import psutil
 
 # Add project root to Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import local modules after path adjustment
 # isort: off
 from config.config_manager import ConfigurationManager  # noqa: E402
 from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+
 # isort: on
 
 
@@ -101,9 +100,7 @@ class AdvancedSystemOptimizer:  # noqa: E501
                 "cpu_frequencies": [
                     freq.current for freq in psutil.cpu_freq(percpu=True)
                 ],
-                "cpu_usage_percent": psutil.cpu_percent(
-                    interval=1, percpu=True
-                ),
+                "cpu_usage_percent": psutil.cpu_percent(interval=1, percpu=True),
             },
             "memory_metrics": {
                 "total_memory": psutil.virtual_memory().total,
@@ -133,9 +130,7 @@ class AdvancedSystemOptimizer:  # noqa: E501
 
         return metrics
 
-    def analyze_performance_bottlenecks(
-        self, metrics: Dict[str, Any]
-    ) -> List[str]:
+    def analyze_performance_bottlenecks(self, metrics: Dict[str, Any]) -> List[str]:
         """
         Analyze system performance and identify potential bottlenecks
 
@@ -205,9 +200,7 @@ class AdvancedSystemOptimizer:  # noqa: E501
         )
 
         # Configuration validation
-        configuration_validation = (
-            self.config_manager.validate_configurations()
-        )
+        configuration_validation = self.config_manager.validate_configurations()
 
         # Construct optimization report
         optimization_report = {
@@ -228,7 +221,7 @@ class AdvancedSystemOptimizer:  # noqa: E501
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.base_dir,
-            f'logs/system_optimization_report_{timestamp}.json',
+            f"logs/system_optimization_report_{timestamp}.json",
         )
 
         with open(report_path, "w") as f:
@@ -254,11 +247,9 @@ class AdvancedSystemOptimizer:  # noqa: E501
                     f"Applying performance optimization: {recommendation}",
                     level="info",
                 )
-            
+
             # Apply other recommendations
-            for recommendation in optimization_report.get(
-                "recommendations", []
-            ):
+            for recommendation in optimization_report.get("recommendations", []):
                 self.logger.log(
                     f"Applying recommendation: {recommendation}",
                     level="info",
@@ -269,9 +260,7 @@ class AdvancedSystemOptimizer:  # noqa: E501
                 "configuration_validation", {}
             )
             if not configuration_validation.get("is_valid", False):
-                self.config_manager.update_configurations(
-                    configuration_validation
-                )
+                self.config_manager.update_configurations(configuration_validation)
 
         except Exception as e:
             self.logger.log(

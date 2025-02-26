@@ -41,8 +41,7 @@ def ast_transform(content):
             def visit_ClassDef(self, node):
                 # Add missing __init__ if not present
                 has_init = any(
-                    isinstance(method, ast.FunctionDef)
-                    and method.name == "__init__"
+                    isinstance(method, ast.FunctionDef) and method.name == "__init__"
                     for method in node.body
                 )
                 if not has_init:
@@ -77,9 +76,7 @@ def regex_fix(content):
     content = re.sub(r"def\s+(\w+)\s*\(\s*\),", r"def \1(self, ", content)
 
     # Add missing self parameter
-    content = re.sub(
-        r"def\s+(\w+)\s*\((\w+)\):", r"def \1(self, \2):", content
-    )
+    content = re.sub(r"def\s+(\w+)\s*\((\w+)\):", r"def \1(self, \2):", content)
 
     return content
 

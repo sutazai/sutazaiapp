@@ -60,13 +60,9 @@ class SyntaxTransformer(ast.NodeTransformer):
                 # Ensure first parameter is self for instance methods
                 if method.args.args and len(method.args.args) > 0:
                     if method.args.args[0].arg != "self":
-                        method.args.args.insert(
-                            0, ast.arg(arg="self", annotation=None)
-                        )
+                        method.args.args.insert(0, ast.arg(arg="self", annotation=None))
                 else:
-                    method.args.args.insert(
-                        0, ast.arg(arg="self", annotation=None)
-                    )
+                    method.args.args.insert(0, ast.arg(arg="self", annotation=None))
 
         return self.generic_visit(node)
 
@@ -109,9 +105,7 @@ def regex_fix(content):
     content = re.sub(r"(\w+)\s+\(", r"\1(", content)
 
     # Fix missing parentheses in print statements (Python 3)
-    content = re.sub(
-        r"print\s+([^(].*?)$", r"print(\1)", content, flags=re.MULTILINE
-    )
+    content = re.sub(r"print\s+([^(].*?)$", r"print(\1)", content, flags=re.MULTILINE)
 
     # Fix common typos
     content = re.sub(r"\bimpotr\b", "import", content)
@@ -189,9 +183,7 @@ def main():
 
     directory = sys.argv[1]
     extensions = (
-        [f".{ext}" for ext in sys.argv[2].split(",")]
-        if len(sys.argv) > 2
-        else [".py"]
+        [f".{ext}" for ext in sys.argv[2].split(",")] if len(sys.argv) > 2 else [".py"]
     )
 
     print(

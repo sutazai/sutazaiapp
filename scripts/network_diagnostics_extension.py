@@ -129,14 +129,10 @@ class AdvancedNetworkDiagnostics:
                         {
                             "hop_number": hop_details[0],
                             "ip_address": (
-                                hop_details[1]
-                                if len(hop_details) > 1
-                                else "N/A"
+                                hop_details[1] if len(hop_details) > 1 else "N/A"
                             ),
                             "response_time": (
-                                hop_details[2]
-                                if len(hop_details) > 2
-                                else "N/A"
+                                hop_details[2] if len(hop_details) > 2 else "N/A"
                             ),
                         }
                     )
@@ -175,9 +171,7 @@ def main():
     ping_results = network_diag.ping_test()
     for host, result in ping_results.items():
         status = "✅ Reachable" if result["reachable"] else "❌ Unreachable"
-        print(
-            f"{host}: {status} (Response Time: {result['response_time']:.2f}s)"
-        )
+        print(f"{host}: {status} (Response Time: {result['response_time']:.2f}s)")
 
     # Traceroute Analysis
     print("\n🛤️ Traceroute Analysis:")

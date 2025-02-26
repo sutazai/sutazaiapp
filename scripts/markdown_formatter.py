@@ -22,9 +22,7 @@ class MarkdownFormatter:
                 if i > 0 and not re.match(r"^[*+-\d]\s", formatted_lines[-1]):
                     formatted_lines.append("")
                 formatted_lines.append(line)
-                if i < len(lines) - 1 and not re.match(
-                    r"^[*+-\d]\s", lines[i + 1]
-                ):
+                if i < len(lines) - 1 and not re.match(r"^[*+-\d]\s", lines[i + 1]):
                     formatted_lines.append("")
 
             else:

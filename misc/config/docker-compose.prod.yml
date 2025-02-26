@@ -1,8 +1,0 @@
-services:
-  ai-service:
-    image: ai-service:v1
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3 

@@ -50,9 +50,7 @@ class UltraComprehensiveProjectValidator:
         """
         # Core configuration
         self.base_dir = base_dir
-        self.log_dir = log_dir or os.path.join(
-            base_dir, "logs", "project_validation"
-        )
+        self.log_dir = log_dir or os.path.join(base_dir, "logs", "project_validation")
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Configure logging
@@ -96,7 +94,6 @@ class UltraComprehensiveProjectValidator:
             # 2. Code Quality Assessment
             self._assess_code_quality()
 
-
             # 4. Documentation Quality Check
             self._check_documentation_quality()
 
@@ -137,9 +134,7 @@ class UltraComprehensiveProjectValidator:
                 directory_analysis["total_directories"] += 1
 
                 # Add to project structure graph
-                self.project_structure_graph.add_node(
-                    relative_path, type=dir_type
-                )
+                self.project_structure_graph.add_node(relative_path, type=dir_type)
 
         # Identify potential directory structure issues
         if len(directory_analysis["directory_types"]) < 5:
@@ -202,14 +197,10 @@ class UltraComprehensiveProjectValidator:
 
                         # Complexity analysis
                         complexity = self._calculate_code_complexity(tree)
-                        code_quality["complexity_metrics"][
-                            file_path
-                        ] = complexity
+                        code_quality["complexity_metrics"][file_path] = complexity
 
                         # Type hint coverage
-                        type_hint_coverage = self._analyze_type_hint_coverage(
-                            tree
-                        )
+                        type_hint_coverage = self._analyze_type_hint_coverage(tree)
                         code_quality["type_hint_coverage"][
                             file_path
                         ] = type_hint_coverage
@@ -217,9 +208,7 @@ class UltraComprehensiveProjectValidator:
                         code_quality["total_files"] += 1
 
                     except Exception as e:
-                        self.logger.warning(
-                            f"Code quality analysis failed for {file_path}: {e}"
-                        )
+                        self.logger.warning(f"Error analyzing {file_path}: {str(e)}")
 
         # Identify code quality issues
         high_complexity_files = [
@@ -304,62 +293,6 @@ class UltraComprehensiveProjectValidator:
                     annotated += 1
 
         return annotated / total_annotatable if total_annotatable > 0 else 0
-
-        """
-        """
-
-        # Dangerous function patterns
-        dangerous_patterns = [
-            r"(eval|exec)\(",
-            r"os\.system\(",
-            r"subprocess\.(?:call|run|Popen)",
-            r"pickle\.(?:load|loads)",
-            r"yaml\.(?:load|unsafe_load)",
-        ]
-
-        # Sensitive information patterns
-        sensitive_patterns = [
-            r'(password|secret|token|api_key)\s*=\s*[\'"].*?[\'"]',
-            r'(mysql|postgresql|sqlite)://.*?:[\'"].*?[\'"]',
-        ]
-
-        for root, _, files in os.walk(self.base_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    file_path = os.path.join(root, file)
-
-                    try:
-                        with open(file_path, "r") as f:
-                            content = f.read()
-
-                        # Check for dangerous functions
-                        for pattern in dangerous_patterns:
-                            matches = re.findall(pattern, content)
-                            if matches:
-                                    {
-                                        "file": file_path,
-                                        "type": "dangerous_function",
-                                        "matches": matches,
-                                    }
-                                )
-
-                        # Check for sensitive information
-                        for pattern in sensitive_patterns:
-                            matches = re.findall(
-                                pattern, content, re.IGNORECASE
-                            )
-                            if matches:
-                                    {
-                                        "file": file_path,
-                                        "type": "sensitive_information",
-                                        "matches": matches,
-                                    }
-                                )
-
-                    except Exception as e:
-                        self.logger.warning(
-                        )
-
 
     def _check_documentation_quality(self):
         """
@@ -472,9 +405,7 @@ class UltraComprehensiveProjectValidator:
                         ] = dependencies
 
                         # Build import graph
-                        dependency_analysis["import_graph"].add_node(
-                            relative_path
-                        )
+                        dependency_analysis["import_graph"].add_node(relative_path)
                         for dep in dependencies:
                             dependency_analysis["import_graph"].add_edge(
                                 relative_path, dep
@@ -499,22 +430,15 @@ class UltraComprehensiveProjectValidator:
         recommendations = []
 
         # Directory structure recommendations
-        if self.validation_report["directory_structure"].get(
-            "potential_issues"
-        ):
+        if self.validation_report["directory_structure"].get("potential_issues"):
             recommendations.extend(
-                self.validation_report["directory_structure"][
-                    "potential_issues"
-                ]
+                self.validation_report["directory_structure"]["potential_issues"]
             )
 
         # Code quality recommendations
         code_quality = self.validation_report["code_quality"]
         if code_quality.get("potential_issues"):
             recommendations.extend(code_quality["potential_issues"])
-
-            recommendations.append(
-            )
 
         # Documentation recommendations
         if self.validation_report["documentation_gaps"]:
@@ -529,9 +453,7 @@ class UltraComprehensiveProjectValidator:
                 f"Resolve {len(dependency_analysis['circular_dependencies'])} circular dependencies"
             )
 
-        self.validation_report["optimization_recommendations"] = (
-            recommendations
-        )
+        self.validation_report["optimization_recommendations"] = recommendations
 
     def _persist_validation_report(self):
         """
@@ -546,9 +468,7 @@ class UltraComprehensiveProjectValidator:
             with open(report_path, "w") as f:
                 json.dump(self.validation_report, f, indent=2)
 
-            self.logger.info(
-                f"Project validation report persisted: {report_path}"
-            )
+            self.logger.info(f"Project validation report persisted: {report_path}")
 
         except Exception as e:
             self.logger.error(f"Validation report persistence failed: {e}")
@@ -568,9 +488,7 @@ def main():
         print("\n🔍 Ultra-Comprehensive Project Validation Results 🔍")
 
         print("\nOptimization Recommendations:")
-        for recommendation in validation_report.get(
-            "optimization_recommendations", []
-        ):
+        for recommendation in validation_report.get("optimization_recommendations", []):
             print(f"- {recommendation}")
 
         print("\nDetailed Insights:")
@@ -580,8 +498,7 @@ def main():
         print(
             f"Total Python Files: {validation_report['code_quality'].get('total_files', 0)}"
         )
-        print(
-        )
+        print()
         print(
             f"Documentation Gaps: {len(validation_report.get('documentation_gaps', []))}"
         )

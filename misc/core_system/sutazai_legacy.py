@@ -1,9 +1,0 @@
-"""sutazai_legacy.py stub generated due to syntax errors. Please implement logic as needed."""
-
-
-def main():
-    print("Stub for sutazai_legacy.py")
-
-
-if __name__ == "__main__":
-    main()

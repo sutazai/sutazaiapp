@@ -61,9 +61,7 @@ class AdvancedPerformanceProfiler:
             duration (int): Total monitoring duration in seconds
             interval (int): Sampling interval in seconds
         """
-        logger.info(
-            f"Starting system performance monitoring for {duration} seconds"
-        )
+        logger.info(f"Starting system performance monitoring for {duration} seconds")
 
         self.is_profiling = True
         self.profile_thread = threading.Thread(
@@ -200,22 +198,16 @@ class AdvancedPerformanceProfiler:
         """
         insights = {
             "cpu_usage": {
-                "max": max(
-                    metric["percent"] for metric in self.metrics["cpu_usage"]
-                ),
-                "avg": sum(
-                    metric["percent"] for metric in self.metrics["cpu_usage"]
-                )
+                "max": max(metric["percent"] for metric in self.metrics["cpu_usage"]),
+                "avg": sum(metric["percent"] for metric in self.metrics["cpu_usage"])
                 / len(self.metrics["cpu_usage"]),
             },
             "memory_usage": {
                 "max_percent": max(
-                    metric["percent"]
-                    for metric in self.metrics["memory_usage"]
+                    metric["percent"] for metric in self.metrics["memory_usage"]
                 ),
                 "avg_percent": sum(
-                    metric["percent"]
-                    for metric in self.metrics["memory_usage"]
+                    metric["percent"] for metric in self.metrics["memory_usage"]
                 )
                 / len(self.metrics["memory_usage"]),
             },

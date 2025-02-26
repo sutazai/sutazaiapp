@@ -79,21 +79,15 @@ class SystemDiagnosticOptimizer:
                     "load_average": os.getloadavg(),  # using getloadavg to capture system load
                 },
                 "memory": {
-                    "total_gb": round(
-                        psutil.virtual_memory().total / (1024**3), 2
-                    ),
+                    "total_gb": round(psutil.virtual_memory().total / (1024**3), 2),
                     "available_gb": round(
                         psutil.virtual_memory().available / (1024**3), 2
                     ),
                     "usage_percent": psutil.virtual_memory().percent,
                 },
                 "disk": {
-                    "total_gb": round(
-                        psutil.disk_usage("/").total / (1024**3), 2
-                    ),
-                    "free_gb": round(
-                        psutil.disk_usage("/").free / (1024**3), 2
-                    ),
+                    "total_gb": round(psutil.disk_usage("/").total / (1024**3), 2),
+                    "free_gb": round(psutil.disk_usage("/").free / (1024**3), 2),
                     "usage_percent": psutil.disk_usage("/").percent,
                 },
             },
@@ -142,8 +136,7 @@ class SystemDiagnosticOptimizer:
                             imports = [
                                 line.split()[-1].strip()
                                 for line in content.split("\n")
-                                if line.startswith("import")
-                                or line.startswith("from")
+                                if line.startswith("import") or line.startswith("from")
                             ]
 
                             for imp in imports:
@@ -275,18 +268,14 @@ class SystemDiagnosticOptimizer:
 
         return diagnostic_results
 
-    def _visualize_diagnostic_results(
-        self, diagnostic_results: Dict[str, Any]
-    ):
+    def _visualize_diagnostic_results(self, diagnostic_results: Dict[str, Any]):
         """
         Visualize diagnostic results with a rich interface
 
         Args:
             diagnostic_results: Results from comprehensive diagnostic
         """
-        self.console.rule(
-            "[bold blue]SutazAI System Diagnostic Results[/bold blue]"
-        )
+        self.console.rule("[bold blue]SutazAI System Diagnostic Results[/bold blue]")
 
         # System Health Panel
         cpu_usage = f"{diagnostic_results['system_health']['resources']['cpu']['usage_percent']}%"
@@ -304,7 +293,7 @@ class SystemDiagnosticOptimizer:
 
         # Security Status
         security_status = (
-            "✅ Passed" 
+            "✅ Passed"
             if diagnostic_results.get("security_check", {}).get("passed", False)
             else "❌ Vulnerabilities Detected"
         )
@@ -312,9 +301,7 @@ class SystemDiagnosticOptimizer:
 
         # Optimization Recommendations
         if any(diagnostic_results["optimization_recommendations"].values()):
-            self.console.rule(
-                "[bold yellow]Optimization Recommendations[/bold yellow]"
-            )
+            self.console.rule("[bold yellow]Optimization Recommendations[/bold yellow]")
             for category, recommendations in diagnostic_results[
                 "optimization_recommendations"
             ].items():
@@ -329,7 +316,7 @@ class SystemDiagnosticOptimizer:
 def main():
     # Verify Python version
     verify_python_version()
-    
+
     optimizer = SystemDiagnosticOptimizer()
     optimizer.comprehensive_diagnostic()
 

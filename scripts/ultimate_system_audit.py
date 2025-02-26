@@ -75,10 +75,8 @@ class SystemAuditManager:
             "hardware": {
                 "cpu_count": psutil.cpu_count(logical=False),
                 "logical_cpu_count": psutil.cpu_count(logical=True),
-                "total_memory": psutil.virtual_memory().total
-                / (1024**3),  # GB
-                "available_memory": psutil.virtual_memory().available
-                / (1024**3),  # GB
+                "total_memory": psutil.virtual_memory().total / (1024**3),  # GB
+                "available_memory": psutil.virtual_memory().available / (1024**3),  # GB
             },
         }
 
@@ -121,9 +119,7 @@ class SystemAuditManager:
         try:
             # Platform-specific gateway retrieval
             if platform.system() == "Windows":
-                output = subprocess.check_output(
-                    ["ipconfig"], universal_newlines=True
-                )
+                output = subprocess.check_output(["ipconfig"], universal_newlines=True)
                 for line in output.split("\n"):
                     if "Default Gateway" in line:
                         return line.split(":")[-1].strip()
@@ -206,10 +202,8 @@ class SystemAuditManager:
             partition.mountpoint: {
                 "total": psutil.disk_usage(partition.mountpoint).total
                 / (1024**3),  # GB
-                "used": psutil.disk_usage(partition.mountpoint).used
-                / (1024**3),  # GB
-                "free": psutil.disk_usage(partition.mountpoint).free
-                / (1024**3),  # GB
+                "used": psutil.disk_usage(partition.mountpoint).used / (1024**3),  # GB
+                "free": psutil.disk_usage(partition.mountpoint).free / (1024**3),  # GB
                 "percent": psutil.disk_usage(partition.mountpoint).percent,
             }
             for partition in psutil.disk_partitions()
@@ -241,9 +235,7 @@ def get_cpu_usage() -> Dict[str, float]:
     """
     # Obtain per-core CPU usage percentages; psutil returns a list of floats.
     per_cpu_usage = psutil.cpu_percent(interval=1, percpu=True)
-    avg_usage = (
-        sum(per_cpu_usage) / len(per_cpu_usage) if per_cpu_usage else 0.0
-    )
+    avg_usage = sum(per_cpu_usage) / len(per_cpu_usage) if per_cpu_usage else 0.0
     return {"average_cpu_usage": avg_usage}
 
 
