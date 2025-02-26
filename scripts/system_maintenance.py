@@ -27,7 +27,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(
-            os.getenv("LOG_FILE_PATH", "/opt/sutazai/logs/maintenance.log")
+            os.getenv("LOG_FILE_PATH", "/opt/sutazaiapp/logs/maintenance.log")
         ),
         logging.StreamHandler(),
     ],
@@ -65,8 +65,8 @@ class SystemMaintenance:
     async def cleanup_old_files(self, days: int = 30):
         """Clean up old log and temporary files."""
         cleanup_paths = [
-            Path("/opt/sutazai/logs"),
-            Path("/opt/sutazai/storage/temp"),
+            Path("/opt/sutazaiapp/logs"),
+            Path("/opt/sutazaiapp/storage/temp"),
             Path("/tmp"),
         ]
 

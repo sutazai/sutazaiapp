@@ -14,7 +14,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Project root directory
-PROJECT_ROOT="/opt/sutazai_project/SutazAI"
+PROJECT_ROOT="/opt/sutazaiapp"
 
 # Function to log messages
 log() {
@@ -36,9 +36,10 @@ install_system_dependencies() {
     # Essential build tools
     sudo apt-get install -y \
         build-essential \
-        python3-dev \
+        python3.11 \
+        python3.11-dev \
+        python3.11-venv \
         python3-pip \
-        python3-venv \
         git \
         curl \
         wget \
@@ -66,8 +67,8 @@ create_python_venv() {
     # Remove existing venv if it exists
     rm -rf "$PROJECT_ROOT/venv"
     
-    # Create new virtual environment
-    python3 -m venv "$PROJECT_ROOT/venv"
+    # Create new virtual environment with Python 3.11
+    python3.11 -m venv "$PROJECT_ROOT/venv"
     
     # Activate venv and upgrade pip
     source "$PROJECT_ROOT/venv/bin/activate"
@@ -118,11 +119,31 @@ install_nodejs_dependencies() {
     log "${GREEN}Node.js dependencies installed${NC}"
 }
 
+# Verify Python 3.11
+verify_python_version() {
+    log "${YELLOW}Verifying Python Version${NC}"
+    
+    # Check if Python 3.11 is installed
+    if command -v python3.11 >/dev/null 2>&1; then
+        log "${GREEN}Python 3.11 is installed${NC}"
+    else
+        log "${RED}Python 3.11 is not installed. Installing...${NC}"
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+    
+    # Verify Python version
+    PYTHON_VERSION=$(python3.11 --version)
+    log "${GREEN}Using $PYTHON_VERSION${NC}"
+}
+
 # Main dependency management function
 main() {
     log "${GREEN}Starting SutazAI Dependency Management${NC}"
     
     update_system_packages
+    verify_python_version
     install_system_dependencies
     create_python_venv
     install_python_dependencies

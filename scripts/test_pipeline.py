@@ -14,7 +14,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
         logging.FileHandler(
-            "/opt/sutazai_project/SutazAI/logs/system_validation.log"
+            "/opt/sutazaiapp/logs/system_validation.log"
         ),
         logging.StreamHandler(sys.stdout),
     ],
@@ -25,10 +25,10 @@ class SystemValidator:
     def __init__(self):
         """Initialize comprehensive system validation framework"""
         self.critical_dirs = [
-            "/opt/sutazai_project/SutazAI/ai_agents",
-            "/opt/sutazai_project/SutazAI/model_management",
-            "/opt/sutazai_project/SutazAI/backend",
-            "/opt/sutazai_project/SutazAI/scripts",
+            "/opt/sutazaiapp/ai_agents",
+            "/opt/sutazaiapp/model_management",
+            "/opt/sutazaiapp/backend",
+            "/opt/sutazaiapp/scripts",
         ]
 
         self.required_models = ["gpt4all", "deepseek-coder", "llama2"]
@@ -39,7 +39,7 @@ class SystemValidator:
 
         # Python version check
         logger.info(f"Python Version: {sys.version}")
-        assert sys.version_info >= (          3, 11), "Python 3.8+ is required"
+        assert sys.version_info >= (3, 11), "Python 3.8+ is required"
 
         # OS and Hardware Validation
         self._validate_os_and_hardware()
@@ -114,7 +114,7 @@ class SystemValidator:
                 [
                     "-v",
                     "--tb=short",
-                    "/opt/sutazai_project/SutazAI/backend/tests",
+                    "/opt/sutazaiapp/backend/tests",
                 ]
             )
 

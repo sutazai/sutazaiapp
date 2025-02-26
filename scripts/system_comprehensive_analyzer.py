@@ -2,8 +2,9 @@
 """
 Ultra-Comprehensive System Analysis and Improvement Framework
 
-This script performs an exhaustive, multi-dimensional analysis of the entire SutazAI ecosystem,
-providing deep insights into code structure, dependencies, performance, and potential optimizations.
+This script performs an exhaustive, multi-dimensional analysis of the 
+entire SutazAI ecosystem, providing deep insights into code structure,
+dependencies, performance, and potential optimizations.
 """
 
 import ast
@@ -30,9 +31,10 @@ logger = logging.getLogger("SystemComprehensiveAnalyzer")
 
 
 class UltraComprehensiveSystemAnalyzer:
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/sutazaiapp"):
         """
-        Initialize the comprehensive system analyzer with base project directory.
+        Initialize the comprehensive system analyzer with base project 
+        directory.
 
         Args:
             base_dir (str): Root directory of the project
@@ -47,7 +49,8 @@ class UltraComprehensiveSystemAnalyzer:
 
     def deep_code_structure_analysis(self) -> Dict[str, Any]:
         """
-        Perform an ultra-deep analysis of code structure across all Python files.
+        Perform an ultra-deep analysis of code structure across all Python 
+        files.
 
         Returns:
             Dict[str, Any]: Comprehensive code structure insights
@@ -110,28 +113,29 @@ class UltraComprehensiveSystemAnalyzer:
                 pkg["name"]: pkg["version"] for pkg in installed_packages
             }
 
+            # Additional security checks
+            try:
+                bandit_output = subprocess.check_output(
+                    ["bandit", "-r", self.base_dir, "-f", "json"]
+                ).decode()
+
+                # Safety dependency check
+                safety_output = subprocess.check_output(
+                    ["safety", "check", "--json"]
+                ).decode()
+                
+                dependency_insights["security_issues"] = {
+                    "bandit": json.loads(bandit_output),
+                    "safety": json.loads(safety_output)
+                }
+            except Exception as e:
+                logger.warning(f"Security check failed: {e}")
+                dependency_insights["security_issues"] = {"error": str(e)}
+
         except Exception as e:
             logger.error(f"Dependency check failed: {e}")
 
         return dependency_insights
-
-        """
-
-        Returns:
-        """
-
-        try:
-            bandit_output = subprocess.check_output(
-                ["bandit", "-r", self.base_dir, "-f", "json"]
-            ).decode()
-
-            # Safety dependency check
-            safety_output = subprocess.check_output(
-                ["safety", "check", "--json"]
-            ).decode()
-
-        except Exception as e:
-
 
     def performance_profiling(self) -> Dict[str, Any]:
         """
@@ -194,7 +198,6 @@ class UltraComprehensiveSystemAnalyzer:
                     self.comprehensive_dependency_check
                 ): "dependency_analysis",
                 executor.submit(
-                executor.submit(
                     self.performance_profiling
                 ): "performance_metrics",
             }
@@ -232,7 +235,8 @@ class UltraComprehensiveSystemAnalyzer:
         ).items():
             if len(structure.get("functions", [])) > 10:
                 suggestions.append(
-                    f"Refactor {file_path}: Too many functions, consider modularization"
+                    f"Refactor {file_path}: Too many functions, "
+                    f"consider modularization"
                 )
 
         # Dependency optimization
@@ -241,9 +245,13 @@ class UltraComprehensiveSystemAnalyzer:
             suggestions.append(
                 "Install missing dependencies to ensure full functionality"
             )
-
-            suggestions.append(
-            )
+            
+            # Add specific dependencies to install
+            if dependencies.get("missing_dependencies"):
+                missing_deps = dependencies["missing_dependencies"]
+                suggestions.append(
+                    f"Install missing packages: {', '.join(missing_deps)}"
+                )
 
         # Performance optimization
         performance_metrics = self.analysis_results.get(
@@ -259,22 +267,29 @@ class UltraComprehensiveSystemAnalyzer:
 
     def execute_comprehensive_analysis(self) -> None:
         """
-        Execute the full comprehensive system analysis workflow with resource monitoring.
+        Execute the full comprehensive system analysis workflow with resource 
+        monitoring.
         """
         logger.info("🚀 Initiating Ultra-Comprehensive System Analysis...")
 
         # Monitor resources before starting
         initial_resources = self.monitor_resources()
+        cpu_usage = initial_resources['cpu_usage']
+        memory_usage = initial_resources['memory_usage']
         logger.info(
-            f"Initial Resources - CPU: {initial_resources['cpu_usage']}%, Memory: {initial_resources['memory_usage']}%"
+            f"Initial Resources - CPU: {cpu_usage}%, "
+            f"Memory: {memory_usage}%"
         )
 
         self.generate_comprehensive_report()
 
         # Monitor resources after analysis
         final_resources = self.monitor_resources()
+        cpu_usage = final_resources['cpu_usage']
+        memory_usage = final_resources['memory_usage']
         logger.info(
-            f"Final Resources - CPU: {final_resources['cpu_usage']}%, Memory: {final_resources['memory_usage']}%"
+            f"Final Resources - CPU: {cpu_usage}%, "
+            f"Memory: {memory_usage}%"
         )
 
         optimization_suggestions = self.auto_optimization_suggestions()

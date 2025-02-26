@@ -1,7 +1,7 @@
 {
     "agent_name": "document_processor",
     "processing_config": {
-        "temp_dir": "/opt/sutazai_project/SutazAI/doc_data/temp",
+        "temp_dir": "/opt/sutazaiapp/doc_data/temp",
         "default_languages": [
             "eng"
         ],

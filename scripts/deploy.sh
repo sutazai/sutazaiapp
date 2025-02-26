@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Logging configuration
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_DIR="/opt/sutazai_project/SutazAI/logs/deployment"
+LOG_DIR="/opt/sutazaiapp/logs/deployment"
 DEPLOYMENT_LOG="${LOG_DIR}/deployment_${TIMESTAMP}.log"
 AUDIT_LOG="${LOG_DIR}/audit_${TIMESTAMP}.log"
 
@@ -29,24 +29,24 @@ main() {
 
     # 1. Pre-deployment system audit
     log "Stage 1: Pre-Deployment System Audit"
-    python3 /opt/sutazai_project/SutazAI/core_system/scripts/system_comprehensive_audit.py \
+    python3 /opt/sutazaiapp/core_system/scripts/system_comprehensive_audit.py \
         || handle_error "Pre-Deployment Audit"
 
     # 2. Dependency Management
     log "Stage 2: Dependency Management"
-    python3 -m venv /opt/sutazai_project/SutazAI/venv \
+    python3 -m venv /opt/sutazaiapp/venv \
         || handle_error "Virtual Environment Creation"
     
-    source /opt/sutazai_project/SutazAI/venv/bin/activate \
+    source /opt/sutazaiapp/venv/bin/activate \
         || handle_error "Virtual Environment Activation"
     
     pip install --upgrade pip setuptools wheel \
         || handle_error "Pip Upgrade"
     
-    pip install -r /opt/sutazai_project/SutazAI/requirements.txt \
+    pip install -r /opt/sutazaiapp/requirements.txt \
         || handle_error "Dependency Installation"
 
-    safety check -r /opt/sutazai_project/SutazAI/requirements.txt \
+    safety check -r /opt/sutazaiapp/requirements.txt \
 
     # 4. Model and Agent Initialization
     log "Stage 4: AI Model and Agent Initialization"
@@ -60,7 +60,7 @@ main() {
 
     # 6. Web UI Deployment
     log "Stage 6: Web UI Deployment"
-    cd /opt/sutazai_project/SutazAI/web_ui
+    cd /opt/sutazaiapp/web_ui
     npm install || handle_error "NPM Dependencies"
     npm run build || handle_error "Web UI Build"
     npm start &
@@ -68,12 +68,12 @@ main() {
 
     # 7. Post-Deployment Verification
     log "Stage 7: Post-Deployment Verification"
-    python3 /opt/sutazai_project/SutazAI/scripts/system_verify.py \
+    python3 /opt/sutazaiapp/scripts/system_verify.py \
         || handle_error "Post-Deployment Verification"
 
     # 8. Final System Health Check
     log "Stage 8: Final System Health Check"
-    python3 /opt/sutazai_project/SutazAI/core_system/scripts/system_comprehensive_audit.py \
+    python3 /opt/sutazaiapp/core_system/scripts/system_comprehensive_audit.py \
         || log "WARNING: Post-Deployment Audit Detected Issues"
 
     log "Deployment Completed Successfully"

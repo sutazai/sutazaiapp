@@ -18,7 +18,7 @@ import psutil
 logging.basicConfig(
     level=logging.INFO,
     format="[%(levelname)s] %(asctime)s - %(message)s",
-    filename="/opt/sutazai/logs/performance_monitor.log",
+    filename="/opt/sutazaiapp/logs/performance_monitor.log",
 )
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class PerformanceMonitor:
     def __init__(
         self,
-        log_dir="/opt/sutazai/performance_logs",
+        log_dir="/opt/sutazaiapp/performance_logs",
         interval=60,
         duration=3600,
     ):
@@ -165,7 +165,7 @@ def main():
     Main function to demonstrate performance monitoring.
     """
     monitor = PerformanceMonitor(
-        log_dir="/opt/sutazai/performance_logs",
+        log_dir="/opt/sutazaiapp/performance_logs",
         interval=30,  # Check every 30 seconds
         duration=1800,  # Monitor for 30 minutes
     )

@@ -8,7 +8,7 @@ shopt -s inherit_errexit
 exec > >(tee -a "${CONFIG[LOG_DIR]}/deployment.log") 2>&1
 
 # Initialize deployment engine
-ENGINE="/opt/sutazai/engine/deploy.py"
+ENGINE="/opt/sutazaiapp/engine/deploy.py"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -35,9 +35,9 @@ main() {
 
 # Execute deployment
 python3 $ENGINE \
-    --root-dir "/opt/sutazai" \
+    --root-dir "/opt/sutazaiapp" \
     --log-dir "/var/log/sutazai" \
-    --model-registry "/opt/sutazai/models" \
+    --model-registry "/opt/sutazaiapp/models" \
     ${INSECURE:+--insecure} \
     ${VALIDATE:+--validate}
 

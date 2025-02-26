@@ -169,7 +169,7 @@ def main():
     Demonstration of Document Utility Functions
     """
     # Example usage
-    document_path = "/opt/sutazai_project/SutazAI/doc_data/sample.pdf"
+    document_path = "/opt/sutazaiapp/doc_data/sample.pdf"
 
     # Document Validation
     validation_result = DocumentUtils.validate_document(document_path)

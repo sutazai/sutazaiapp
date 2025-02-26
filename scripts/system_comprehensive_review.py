@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Comprehensive System Review for SutazAI
+"""
 
 import json
 import logging
@@ -13,8 +16,22 @@ from rich.console import Console
 from rich.table import Table
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 class SystemComprehensiveReview:
-    def __init__(self, base_path: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
         """
         Initialize Comprehensive System Review
 
@@ -177,14 +194,16 @@ class SystemComprehensiveReview:
                 full_path = os.path.join(self.base_path, directory, file)
                 if os.path.getsize(full_path) > 10 * 1024 * 1024:  # 10MB
                     recommendations["code_structure"].append(
-                        f"Large file detected: {full_path}. Consider refactoring."
+                        f"Large file detected: {full_path}. "
+                        f"Consider refactoring."
                     )
 
         # Dependency complexity
         for node, centrality in dependency_graph.get("centrality", {}).items():
             if centrality > 0.5:
                 recommendations["dependency_optimization"].append(
-                    f"High dependency centrality for {node}. Review module design."
+                    f"High dependency centrality for {node}. "
+                    f"Review module design."
                 )
 
         return recommendations
@@ -248,11 +267,15 @@ class SystemComprehensiveReview:
 
         self.console.print(structure_table)
 
+        # Security Check Status
+        security_status = (
             "✅ Passed"
+            if review_results.get("security_analysis", {}).get(
+                "passed", False
+            )
             else "❌ Vulnerabilities Detected"
         )
-        self.console.print(
-        )
+        self.console.print(f"Security Scan Status: {security_status}")
 
         # Optimization Recommendations
         if review_results["optimization_recommendations"]["code_structure"]:
@@ -266,6 +289,9 @@ class SystemComprehensiveReview:
 
 
 def main():
+    # Verify Python version
+    verify_python_version()
+    
     review = SystemComprehensiveReview()
     review.comprehensive_review()
 

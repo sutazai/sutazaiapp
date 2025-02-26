@@ -14,7 +14,7 @@
                 "temp_dir": {
                     "type": "string",
                     "description": "Temporary directory for document processing",
-                    "default": "/opt/sutazai_project/SutazAI/doc_data/temp"
+                    "default": "/opt/sutazaiapp/doc_data/temp"
                 },
                 "default_languages": {
                     "type": "array",

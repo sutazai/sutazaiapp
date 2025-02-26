@@ -65,7 +65,7 @@ preload_ai_models() {
 
   for model in "${!AI_MODELS[@]}"; do
     echo -e "\n${UI_PALETTE[ai]}🌀 Preloading ${model_size^^} ${model} model...${RESET}"
-    turbo_download "${AI_MODELS[$model]}/${model_size}" "/opt/sutazai/models/${model}.bin"
+    turbo_download "${AI_MODELS[$model]}/${model_size}" "/opt/sutazaiapp/models/${model}.bin"
   done
 }
 

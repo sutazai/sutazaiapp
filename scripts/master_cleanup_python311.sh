@@ -14,7 +14,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Define base paths
-BASE_PATH="/opt/SutazAI"
+BASE_PATH="/opt/sutazaiapp"
 LOG_DIR="${BASE_PATH}/logs/cleanup"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 LOG_FILE="${LOG_DIR}/master_cleanup_${TIMESTAMP}.log"

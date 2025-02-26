@@ -46,7 +46,7 @@ SutazAI is an advanced, self-improving AI development platform designed to push 
 ## 📦 Project Structure
 
 ```
-/opt/SutazAI/
+/opt/sutazaiapp/
 ├── ai_agents/
 │   ├── superagi/
 │   ├── auto_gpt/
@@ -218,3 +218,35 @@ This script orchestrates multiple repair tools to fix:
 - System configuration problems
 - Performance bottlenecks
 # Updated on Tue Feb 25 03:38:01 PM UTC 2025
+
+# SutazAI Application
+
+A Python 3.11 compatible application with advanced features.
+
+## Requirements
+
+- Python 3.11 or later
+- Dependencies listed in requirements.txt
+
+## Installation
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/sutazai/sutazaiapp.git
+   cd sutazaiapp
+   ```
+
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+## Usage
+
+Run the application:

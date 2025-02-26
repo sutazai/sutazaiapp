@@ -121,4 +121,4 @@ def process_directory(directory):
 
 
 if __name__ == "__main__":
-    process_directory("/opt/sutazai_project/SutazAI/core_system")
+    process_directory("/opt/sutazaiapp/core_system")

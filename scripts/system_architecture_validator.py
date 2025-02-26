@@ -13,6 +13,7 @@ import inspect
 import json
 import os
 import sys
+from datetime import datetime
 from typing import Any, Dict, List
 
 
@@ -23,7 +24,7 @@ class SystemArchitectureValidator:
     Provides comprehensive analysis and optimization of system structure
     """
 
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/sutazaiapp"):
         """
         Initialize system architecture validator
 
@@ -164,10 +165,14 @@ class SystemArchitectureValidator:
         self.validation_report["dependency_analysis"] = dependency_analysis
         return dependency_analysis
 
+    def analyze_security(self) -> Dict[str, Any]:
         """
+        Analyze security aspects of the project
 
         Returns:
+            Detailed security analysis report
         """
+        security_analysis = {
             "sensitive_files": [],
             "potential_vulnerabilities": [],
         }
@@ -180,6 +185,7 @@ class SystemArchitectureValidator:
                 if any(
                     pattern in file.lower() for pattern in sensitive_patterns
                 ):
+                    security_analysis["sensitive_files"].append(
                         os.path.join(root, file)
                     )
 
@@ -193,11 +199,13 @@ class SystemArchitectureValidator:
                             content = f.read()
 
                             if "eval(" in content or "exec(" in content:
+                                security_analysis[
                                     "potential_vulnerabilities"
                                 ].append(
                                     {
                                         "file": file_path,
-                                        "issue": "Potential code injection vulnerability",
+                                        "issue": "Potential code injection "
+                                        "vulnerability",
                                     }
                                 )
 
@@ -205,16 +213,20 @@ class SystemArchitectureValidator:
                                 "subprocess.call(" in content
                                 or "os.system(" in content
                             ):
+                                security_analysis[
                                     "potential_vulnerabilities"
                                 ].append(
                                     {
                                         "file": file_path,
-                                        "issue": "Potential shell injection vulnerability",
+                                        "issue": "Potential shell injection "
+                                        "vulnerability",
                                     }
                                 )
                     except Exception:
                         pass
 
+        self.validation_report["security_analysis"] = security_analysis
+        return security_analysis
 
     def generate_optimization_recommendations(self) -> List[str]:
         """
@@ -256,9 +268,11 @@ class SystemArchitectureValidator:
                 "Update requirements.txt with project dependencies"
             )
 
-            recommendations.append("Review and secure sensitive files")
-
+        # Security recommendations
+        security = self.validation_report["security_analysis"]
+        if security["sensitive_files"]:
             recommendations.append(
+                "Review and secure sensitive files"
             )
 
         self.validation_report["optimization_recommendations"] = (
@@ -277,12 +291,14 @@ class SystemArchitectureValidator:
         self.validate_directory_structure()
         self.validate_module_integrity()
         self.analyze_dependencies()
+        self.analyze_security()
         self.generate_optimization_recommendations()
 
         # Save report
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.base_dir,
-            f'logs/system_architecture_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'logs/system_architecture_report_{timestamp}.json',
         )
 
         with open(report_path, "w") as f:

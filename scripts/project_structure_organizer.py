@@ -2,15 +2,31 @@
 """
 Ultra-Comprehensive Project Structure Organizer for SutazAI
 
-This script ensures a meticulously organized and standardized project structure,
-automatically creating necessary directories, validating configurations,
-and maintaining a consistent ecosystem across the entire project.
+This script creates an organized project structure with directories,
+validates configurations, and maintains a consistent ecosystem for
+the entire project.
 """
 
 import json
 import logging
 import os
+import sys
 from typing import Any, Dict
+
+
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
 
 # Advanced logging configuration
 logging.basicConfig(
@@ -25,7 +41,7 @@ logger = logging.getLogger("ProjectStructureOrganizer")
 
 
 class UltraComprehensiveProjectOrganizer:
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/sutazaiapp"):
         """
         Initialize the project structure organizer.
 
@@ -187,7 +203,8 @@ class UltraComprehensiveProjectOrganizer:
         Execute the full project organization workflow.
         """
         logger.info(
-            "🚀 Initiating Ultra-Comprehensive Project Structure Organization..."
+            "🚀 Initiating Ultra-Comprehensive Project Structure "
+            "Organization..."
         )
 
         # Create project structure
@@ -207,6 +224,9 @@ class UltraComprehensiveProjectOrganizer:
 
 
 def main():
+    # Verify Python version
+    verify_python_version()
+    
     organizer = UltraComprehensiveProjectOrganizer()
     organizer.execute_project_organization()
 

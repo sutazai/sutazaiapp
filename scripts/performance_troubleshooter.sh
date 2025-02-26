@@ -10,7 +10,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Logging
-LOG_DIR="/var/log/sutazai_troubleshooting"
+LOG_DIR="/opt/sutazaiapp/logs/troubleshooting"
 TROUBLESHOOT_LOG="$LOG_DIR/performance_troubleshoot_$(date +%Y%m%d_%H%M%S).log"
 
 # Create log directory
@@ -53,28 +53,36 @@ install_system_tools() {
 diagnose_python_environment() {
     log "${YELLOW}Diagnosing Python Environment${NC}"
 
+    # Check if Python 3.11 is installed
+    if ! command -v python3.11 &> /dev/null; then
+        log "${RED}Python 3.11 not found. Installing...${NC}"
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+
     # Check Python version
     log "${GREEN}Python Version:${NC}"
-    python3 --version | tee -a "$TROUBLESHOOT_LOG"
+    python3.11 --version | tee -a "$TROUBLESHOOT_LOG"
 
     # Check pip version
     log "${GREEN}Pip Version:${NC}"
-    python3 -m pip --version | tee -a "$TROUBLESHOOT_LOG"
+    python3.11 -m pip --version | tee -a "$TROUBLESHOOT_LOG"
 
     # Check for virtual environment
-    if [ ! -d "/opt/sutazai_project/SutazAI/venv" ]; then
+    if [ ! -d "/opt/sutazaiapp/venv" ]; then
         log "${RED}Virtual environment not found. Creating...${NC}"
-        python3 -m venv /opt/sutazai_project/SutazAI/venv
+        python3.11 -m venv /opt/sutazaiapp/venv
     fi
 
     # Activate virtual environment
-    source /opt/sutazai_project/SutazAI/venv/bin/activate
+    source /opt/sutazaiapp/venv/bin/activate
 
     # Upgrade pip and setuptools
-    python3 -m pip install --upgrade pip setuptools wheel
+    python3.11 -m pip install --upgrade pip setuptools wheel
 
     # Verify pip installation
-    python3 -m pip list | tee -a "$TROUBLESHOOT_LOG"
+    python3.11 -m pip list | tee -a "$TROUBLESHOOT_LOG"
 
     deactivate
 }

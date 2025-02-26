@@ -40,7 +40,7 @@ class OptimizationReport:
 
 
 class ComprehensiveSystemOptimizer:
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/sutazaiapp"):
         """
         Initialize system optimization framework
 
@@ -117,12 +117,16 @@ class ComprehensiveSystemOptimizer:
         """
         from datetime import datetime
 
+        # Get performance metrics first
+        perf_metrics = self.system_optimizer.generate_performance_metrics()
+        code_quality = self.system_optimizer.assess_code_quality()
+        
         optimization_report = OptimizationReport(
             timestamp=datetime.now().isoformat(),
             structural_analysis=self.perform_structural_analysis(),
             dependency_health=self.optimize_dependencies(),
-            performance_metrics=self.system_optimizer.generate_performance_metrics(),
-            code_quality_metrics=self.system_optimizer.assess_code_quality(),
+            performance_metrics=perf_metrics,
+            code_quality_metrics=code_quality,
             optimization_recommendations=[],
         )
 
@@ -143,7 +147,8 @@ class ComprehensiveSystemOptimizer:
         # Structural recommendations
         if report.structural_analysis["total_files"] > 1000:
             recommendations.append(
-                "Consider modularizing project structure to improve maintainability"
+                "Consider modularizing project structure to improve "
+                "maintainability"
             )
 
         # Dependency recommendations

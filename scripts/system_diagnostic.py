@@ -16,8 +16,22 @@ from rich.console import Console
 from rich.panel import Panel
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 class SystemDiagnosticOptimizer:
-    def __init__(self, base_path: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
         """
         Advanced System Diagnostic and Optimization Tool
 
@@ -265,30 +279,36 @@ class SystemDiagnosticOptimizer:
         self, diagnostic_results: Dict[str, Any]
     ):
         """
-        Create a rich, detailed visualization of diagnostic results
+        Visualize diagnostic results with a rich interface
 
         Args:
-            diagnostic_results (Dict): Comprehensive diagnostic results
+            diagnostic_results: Results from comprehensive diagnostic
         """
         self.console.rule(
-            "[bold blue]SutazAI Comprehensive System Diagnostic[/bold blue]"
+            "[bold blue]SutazAI System Diagnostic Results[/bold blue]"
         )
 
         # System Health Panel
+        cpu_usage = f"{diagnostic_results['system_health']['resources']['cpu']['usage_percent']}%"
+        mem_usage = f"{diagnostic_results['system_health']['resources']['memory']['usage_percent']}%"
+        disk_usage = f"{diagnostic_results['system_health']['resources']['disk']['usage_percent']}%"
+
         health_panel = Panel(
-            f"CPU Usage: {diagnostic_results['system_health']['resources']['cpu']['usage_percent']}%\n"
-            f"Memory Usage: {diagnostic_results['system_health']['resources']['memory']['usage_percent']}%\n"
-            f"Disk Usage: {diagnostic_results['system_health']['resources']['disk']['usage_percent']}%",
+            f"CPU Usage: {cpu_usage}\n"
+            f"Memory Usage: {mem_usage}\n"
+            f"Disk Usage: {disk_usage}",
             title="System Resources",
             border_style="green",
         )
         self.console.print(health_panel)
 
-            "✅ Passed"
+        # Security Status
+        security_status = (
+            "✅ Passed" 
+            if diagnostic_results.get("security_check", {}).get("passed", False)
             else "❌ Vulnerabilities Detected"
         )
-        self.console.print(
-        )
+        self.console.print(f"Security Status: {security_status}")
 
         # Optimization Recommendations
         if any(diagnostic_results["optimization_recommendations"].values()):
@@ -307,8 +327,11 @@ class SystemDiagnosticOptimizer:
 
 
 def main():
-    diagnostic = SystemDiagnosticOptimizer()
-    diagnostic.comprehensive_diagnostic()
+    # Verify Python version
+    verify_python_version()
+    
+    optimizer = SystemDiagnosticOptimizer()
+    optimizer.comprehensive_diagnostic()
 
 
 if __name__ == "__main__":

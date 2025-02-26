@@ -11,7 +11,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Project root
-PROJECT_ROOT="/opt/SutazAI"
+PROJECT_ROOT="/opt/sutazaiapp"
 
 # Log file
 LOG_FILE="$HOME/sutazai_project_setup.log"

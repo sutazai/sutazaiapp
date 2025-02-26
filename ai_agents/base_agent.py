@@ -21,7 +21,7 @@ class BaseAgent(ABC):
     def __init__(
         self,
         agent_name: str = None,
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        log_dir: str = "/opt/sutazaiapp/logs",
     ):
         """
         Initialize base agent with unique identifier and logging

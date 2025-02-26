@@ -19,8 +19,22 @@ from datetime import datetime
 from typing import Dict, List, Optional, Set
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 class UltraImportResolver:
-    def __init__(self, base_dir: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_dir: str = "/opt/sutazaiapp"):
         """
         Initialize the advanced import resolution system.
 
@@ -174,7 +188,8 @@ class UltraImportResolver:
                     )
                     installation_results[import_name] = True
                     print(
-                        f"✅ Successfully installed {package_name} for {import_name}"
+                        f"✅ Successfully installed {package_name} "
+                        f"for {import_name}"
                     )
                 except subprocess.CalledProcessError:
                     installation_results[import_name] = False
@@ -195,7 +210,8 @@ class UltraImportResolver:
         Log unresolved imports for further investigation.
 
         Args:
-            unresolved_imports (List[str]): List of imports that couldn't be resolved
+            unresolved_imports (List[str]): List of imports that couldn't 
+                be resolved
         """
         os.makedirs(
             os.path.dirname(self.unresolved_imports_log), exist_ok=True
@@ -269,6 +285,9 @@ class UltraImportResolver:
 
 
 def main():
+    # Verify Python version
+    verify_python_version()
+    
     import_resolver = UltraImportResolver()
     import_resolver.execute_import_resolution()
 

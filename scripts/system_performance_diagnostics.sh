@@ -141,7 +141,7 @@ python_environment_optimization() {
         memory_profiler
 
     # Compile Python bytecode
-    python3 -m compileall /opt/sutazai_project/SutazAI
+    python3 -m compileall /opt/sutazaiapp
 
     log "${GREEN}Python Environment Optimization Complete${NC}"
 }

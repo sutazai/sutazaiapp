@@ -20,7 +20,7 @@ class AgentFactory:
 
     def __init__(
         self,
-        agents_dir: str = "/opt/sutazai_project/SutazAI/ai_agents",
+        agents_dir: str = "/opt/sutazaiapp/ai_agents",
         config_manager: Optional[AgentConfigManager] = None,
     ):
         """

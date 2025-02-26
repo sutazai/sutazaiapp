@@ -21,13 +21,13 @@ import psutil
 logging.basicConfig(
     level=logging.INFO,
     format="[%(levelname)s] %(asctime)s - %(message)s",
-    filename="/opt/sutazai/logs/performance_management.log",
+    filename="/opt/sutazaiapp/logs/performance_management.log",
 )
 logger = logging.getLogger(__name__)
 
 
 class SutazAIPerformanceManager:
-    def __init__(self, project_root: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, project_root: str = "/opt/sutazaiapp"):
         """
         Initialize performance manager with project root.
 
@@ -35,7 +35,7 @@ class SutazAIPerformanceManager:
             project_root (str): Root directory of the SutazAI project
         """
         self.project_root = project_root
-        self.log_dir = "/opt/sutazai/logs/performance_reports"
+        self.log_dir = "/opt/sutazaiapp/logs/performance_reports"
         os.makedirs(self.log_dir, exist_ok=True)
 
     def run_system_diagnostics(self) -> Dict[str, Any]:
@@ -72,9 +72,10 @@ class SutazAIPerformanceManager:
         }
 
         # Save diagnostics to file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.log_dir,
-            f'system_diagnostics_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'system_diagnostics_{timestamp}.json',
         )
         with open(report_path, "w") as f:
             json.dump(diagnostics, f, indent=4)
@@ -162,7 +163,8 @@ class SutazAIPerformanceManager:
                 )
             except subprocess.CalledProcessError as e:
                 logger.warning(
-                    f"Compileall failed: {e}. Proceeding without compiled bytecode."
+                    f"Compileall failed: {e}. "
+                    f"Proceeding without compiled bytecode."
                 )
 
             logger.info("Python environment optimization completed")
@@ -194,7 +196,8 @@ class SutazAIPerformanceManager:
                     and os.path.getsize(unified_path) > 0
                 ):
                     logger.info(
-                        "requirements.txt is empty, installing dependencies from requirements_unified.txt"
+                        "requirements.txt is empty, installing dependencies "
+                        "from requirements_unified.txt"
                     )
                     subprocess.run(
                         [
@@ -210,7 +213,8 @@ class SutazAIPerformanceManager:
                     )
                 else:
                     logger.info(
-                        "No valid requirements file found, skipping dependency installation."
+                        "No valid requirements file found, "
+                        "skipping dependency installation."
                     )
             else:
                 subprocess.run(
@@ -265,9 +269,10 @@ class SutazAIPerformanceManager:
             "dependency_management": dependency_management_result,
         }
 
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.log_dir,
-            f'optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'optimization_report_{timestamp}.json',
         )
 
         with open(report_path, "w") as f:

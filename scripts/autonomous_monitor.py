@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Autonomous Monitoring System for SutazAI
+"""
 
 import hashlib
 import os
@@ -16,10 +19,24 @@ from rich.console import Console
 from rich.table import Table
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 class AutonomousMonitor:
     def __init__(
         self,
-        config_path: str = "/opt/sutazai_project/SutazAI/config/monitor_config.yaml",
+        config_path: str = "/opt/sutazaiapp/config/monitor_config.yaml",
     ):
         """
         Initialize the Autonomous Monitoring System
@@ -28,7 +45,7 @@ class AutonomousMonitor:
             config_path (str): Path to the monitoring configuration file
         """
         self.config = self._load_configuration(config_path)
-        self.base_path = "/opt/sutazai_project/SutazAI"
+        self.base_path = "/opt/sutazaiapp"
         self.log_dir = os.path.join(
             self.base_path, "logs", "autonomous_monitor"
         )
@@ -355,6 +372,12 @@ class AutonomousMonitor:
 
 
 def main():
+    """
+    Main function for autonomous monitoring
+    """
+    # Verify Python version
+    verify_python_version()
+    
     monitor = AutonomousMonitor()
     monitor.run()
 

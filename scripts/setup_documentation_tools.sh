@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Logging configuration
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_DIR="/opt/sutazai_project/SutazAI/logs/setup"
+LOG_DIR="/opt/sutazaiapp/logs/setup"
 SETUP_LOG="${LOG_DIR}/documentation_tools_setup_${TIMESTAMP}.log"
 
 # Create log directory
@@ -22,13 +22,34 @@ handle_error() {
     exit 1
 }
 
+# Python version verification
+verify_python_version() {
+    log "Verifying Python 3.11"
+    
+    if command -v python3.11 >/dev/null 2>&1; then
+        log "Python 3.11 is installed"
+    else
+        log "Python 3.11 not found. Installing..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+    
+    PYTHON_VERSION=$(python3.11 --version)
+    log "Using ${PYTHON_VERSION}"
+}
+
 # Main setup workflow
 main() {
     log "Starting SutazAI Documentation Analysis Tools Setup"
 
+    # 0. Verify Python version
+    verify_python_version \
+        || handle_error "Python Version Verification"
+        
     # 1. Activate virtual environment
     log "Stage 1: Activating Virtual Environment"
-    source /opt/sutazai_project/SutazAI/venv/bin/activate \
+    source /opt/sutazaiapp/venv/bin/activate \
         || handle_error "Virtual Environment Activation"
 
     # 2. Install system dependencies
@@ -36,22 +57,22 @@ main() {
     sudo apt-get update
     sudo apt-get install -y \
         graphviz \
-        python3-dev \
+        python3.11-dev \
         build-essential \
         || handle_error "System Dependency Installation"
 
     # 3. Install Python documentation requirements
     log "Stage 3: Installing Documentation Requirements"
     pip install --upgrade pip
-    pip install -r /opt/sutazai_project/SutazAI/requirements-documentation.txt \
+    pip install -r /opt/sutazaiapp/requirements-documentation.txt \
         || handle_error "Documentation Requirements Installation"
 
     # 4. Download NLP models
     log "Stage 4: Downloading NLP Models"
-    python3 -m spacy download en_core_web_sm \
+    python -m spacy download en_core_web_sm \
         || handle_error "SpaCy Model Download"
     
-    python3 -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perceptron_tagger')" \
+    python -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perceptron_tagger')" \
         || handle_error "NLTK Resource Download"
 
     # 5. Configure documentation tools
@@ -87,7 +108,7 @@ EOL
     # 6. Install pre-commit hooks for documentation
     log "Stage 6: Installing Documentation Pre-Commit Hooks"
     pip install pre-commit
-    cat > /opt/sutazai_project/SutazAI/.pre-commit-config.yaml << EOL
+    cat > /opt/sutazaiapp/.pre-commit-config.yaml << EOL
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -101,7 +122,7 @@ repos:
     hooks:
     -   id: documentation-check
         name: Documentation Validation
-        entry: python3 /opt/sutazai_project/SutazAI/core_system/advanced_documentation_analyzer.py
+        entry: python3 /opt/sutazaiapp/core_system/advanced_documentation_analyzer.py
         language: system
         pass_filenames: false
 EOL

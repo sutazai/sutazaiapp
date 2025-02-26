@@ -21,7 +21,7 @@ monitor_engine() {
 }
 
 start_engine() {
-    /opt/sutazai/scripts/auto_detection_engine.sh &
+    /opt/sutazaiapp/scripts/auto_detection_engine.sh &
     echo $! > "$ENGINE_PID_FILE"
     send_notification "Auto-Detection Engine started (Attempt: $((RESTART_COUNT + 1)))" "INFO"
 }

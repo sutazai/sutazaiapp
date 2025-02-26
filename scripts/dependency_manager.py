@@ -10,6 +10,7 @@ import json
 import logging
 import subprocess
 import sys
+import os
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any, Dict, List
@@ -23,7 +24,7 @@ import yaml
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/dependency_management.log",
+    filename="/opt/sutazaiapp/logs/dependency_management.log",
     filemode="a",
 )
 logger = logging.getLogger("SutazAI.DependencyManager")
@@ -50,8 +51,8 @@ class AdvancedDependencyManager:
 
     def __init__(
         self,
-        requirements_path: str = "/opt/sutazai_project/SutazAI/requirements.txt",
-        policy_path: str = "/opt/sutazai_project/SutazAI/config/dependency_policy.yml",
+        requirements_path: str = "/opt/sutazaiapp/requirements.txt",
+        policy_path: str = "/opt/sutazaiapp/config/dependency_policy.yml",
     ):
         """
         Initialize advanced dependency management system
@@ -103,9 +104,8 @@ class AdvancedDependencyManager:
                                 "is_outdated": current_version
                                 != latest_version,
                                 "vulnerabilities": vulnerability_check,
-                                "potential_replacements": self._find_alternative_packages(
-                                    package
-                                ),
+                                "potential_replacements": 
+                                self._find_alternative_packages(package),
                             }
 
                         except Exception as e:
@@ -190,7 +190,8 @@ class AdvancedDependencyManager:
         for pkg, details in dependencies.items():
             if details.get("potential_replacements"):
                 recommendations.append(
-                    f"Consider alternatives for {pkg}: {', '.join(details['potential_replacements'])}"
+                    f"Consider alternatives for {pkg}: "
+                    f"{', '.join(details['potential_replacements'])}"
                 )
 
         return recommendations
@@ -229,7 +230,11 @@ class AdvancedDependencyManager:
         )
 
         # Persist dependency report
-        report_path = f'/opt/sutazai_project/SutazAI/logs/dependency_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_path = os.path.join(
+            self.base_dir,
+            f'logs/ultra_dependency_report_{timestamp}.json',
+        )
 
         with open(report_path, "w") as f:
             json.dump(asdict(dependency_report), f, indent=2)
@@ -269,14 +274,29 @@ class AdvancedDependencyManager:
                 logger.error(f"Dependency update failed: {e}")
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 def main():
     """
     Main execution for dependency management
     """
     try:
+        # Verify Python version
+        verify_python_version()
+        
         dependency_manager = AdvancedDependencyManager()
-
-        # Generate dependency report
         report = dependency_manager.generate_dependency_report()
 
         print("Dependency Management Recommendations:")

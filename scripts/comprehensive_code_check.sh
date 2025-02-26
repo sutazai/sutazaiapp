@@ -11,7 +11,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Project root
-PROJECT_ROOT="/opt/SutazAI"
+PROJECT_ROOT="/opt/sutazaiapp"
 
 # Log file
 LOG_FILE="$HOME/python311_compatibility_check.log"
@@ -51,7 +51,16 @@ install_tools() {
 # Check Python version
 check_python_version() {
     local required_version="3.11"
-    local current_version=$(python3 --version | cut -d' ' -f2)
+    
+    # Check if Python 3.11 is installed
+    if ! command -v python3.11 &> /dev/null; then
+        log_message "WARN" "Python 3.11 not found. Installing..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+    
+    local current_version=$(python3.11 --version | cut -d' ' -f2)
 
     log_message "INFO" "Checking Python version compatibility..."
     

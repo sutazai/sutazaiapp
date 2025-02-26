@@ -19,28 +19,32 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual Environment
 venv/
 env/
-.env
-.venv
 ENV/
 
-# Logs
-logs/
-*.log
-log/
-*.log.*
-
-# IDE & Editor
-.vscode/
+# IDE
 .idea/
+.vscode/
 *.swp
 *.swo
-*~
+
+# Logs
+*.log
+logs/
+
+# Local configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS specific
 .DS_Store
+Thumbs.db
 
 # Model & Large Binary Files
 model_management/**/*.bin
@@ -88,10 +92,6 @@ security_scan_results/
 *.bak
 *.backup
 *.old
-
-# System Files
-.DS_Store
-Thumbs.db
 
 # Specific Project Exclusions
 packages/wheels/

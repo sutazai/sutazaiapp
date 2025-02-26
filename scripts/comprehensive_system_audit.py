@@ -22,8 +22,8 @@ class ComprehensiveSystemAuditor:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        base_dir: str = "/opt/sutazaiapp",
+        log_dir: str = "/opt/sutazaiapp/logs",
     ):
         """
         Initialize comprehensive system auditor

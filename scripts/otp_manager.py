@@ -28,14 +28,16 @@ class OTPManager:
 
         # Logging configuration
         logging.basicConfig(
-            filename="/opt/sutazai_project/SutazAI/logs/otp_manager.log",
+            filename="/opt/sutazaiapp/logs/otp_manager.log",
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
         )
 
     def _generate_encryption_key(self):
         """Generate a secure encryption key"""
-
+        # Define key path in the /opt/sutazaiapp/config directory
+        key_path = "/opt/sutazaiapp/config/otp_encryption.key"
+        
         if os.path.exists(key_path):
             with open(key_path, "rb") as key_file:
                 return key_file.read()

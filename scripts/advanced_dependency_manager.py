@@ -30,7 +30,7 @@ class UltraDependencyManager:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/sutazaiapp",
         requirements_file: str = "requirements.txt",
     ):
         """
@@ -249,9 +249,10 @@ class UltraDependencyManager:
             )
 
         # Persist report
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.base_dir,
-            f'logs/ultra_dependency_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'logs/ultra_dependency_report_{timestamp}.json',
         )
 
         with open(report_path, "w") as f:
@@ -273,8 +274,12 @@ def main():
         print("Ultra Dependency Management Report:")
         print("Package Updates:")
         for update in report.get("package_updates", []):
+            current = update['current_version']
+            latest = update['latest_version']
+            update_type = update['update_type']
             print(
-                f"- {update['package']}: {update['current_version']} -> {update['latest_version']} ({update['update_type']} update)"
+                f"- {update['package']}: {current} -> {latest} "
+                f"({update_type} update)"
             )
 
         print("\nRecommendations:")

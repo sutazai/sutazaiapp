@@ -24,7 +24,7 @@ class DocumentProcessorAgent(BaseAgent):
 
     def __init__(
         self,
-        temp_dir: str = "/opt/sutazai_project/SutazAI/doc_data/temp",
+        temp_dir: str = "/opt/sutazaiapp/doc_data/temp",
         **kwargs,
     ):
         """
@@ -227,13 +227,13 @@ def main():
     # Example tasks
     pdf_task = {
         "type": "extract_text",
-        "document": "/opt/sutazai_project/SutazAI/doc_data/sample.pdf",
+        "document": "/opt/sutazaiapp/doc_data/sample.pdf",
         "params": {"pages": [0, 1]},
     }
 
     ocr_task = {
         "type": "ocr_processing",
-        "document": "/opt/sutazai_project/SutazAI/doc_data/sample_image.png",
+        "document": "/opt/sutazaiapp/doc_data/sample_image.png",
         "params": {"languages": ["eng", "fra"]},
     }
 

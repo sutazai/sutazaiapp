@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class LogRotator:
     def __init__(
         self,
-        log_dir: str = "/opt/sutazai/logs",
+        log_dir: str = "/opt/sutazaiapp/logs",
         max_size_mb: int = 100,
         retention_days: int = 30,
     ):

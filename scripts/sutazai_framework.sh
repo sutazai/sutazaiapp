@@ -119,8 +119,8 @@ init_framework() {
 
 # Setup virtual environment
 setup_virtualenv() {
-    python3 -m venv /opt/sutazai/venv
-    source /opt/sutazai/venv/bin/activate
+    python3 -m venv /opt/sutazaiapp/venv
+    source /opt/sutazaiapp/venv/bin/activate
 }
 
 # Standardize error codes

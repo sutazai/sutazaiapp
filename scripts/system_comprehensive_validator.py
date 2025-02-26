@@ -24,7 +24,7 @@ from rich.table import Table
 
 
 class SystemComprehensiveValidator:
-    def __init__(self, base_path: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
         """
         Ultra-Comprehensive System Validation and Optimization Framework
 
@@ -39,7 +39,8 @@ class SystemComprehensiveValidator:
         # Comprehensive logging setup
         self.validation_log = os.path.join(
             self.log_dir,
-            f"system_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            f"system_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            f".json",
         )
 
         logging.basicConfig(
@@ -82,12 +83,11 @@ class SystemComprehensiveValidator:
             # Code quality analysis
             code_quality = self._analyze_code_quality()
 
+            # Dependency analysis
+            dependency_analysis = self._analyze_dependencies()
 
             # Performance metrics collection
             performance_metrics = self._collect_performance_metrics()
-
-            # Dependency analysis
-            dependency_analysis = self._analyze_dependencies()
 
         self.validation_results["system_health"] = system_health
         self.validation_results["code_quality"] = code_quality
@@ -98,7 +98,8 @@ class SystemComprehensiveValidator:
 
     def _check_system_health(self) -> Dict[str, Any]:
         """
-        Perform comprehensive system health check including resource monitoring.
+        Perform comprehensive system health check including resource 
+        monitoring.
 
         Returns:
             A dictionary containing system health metrics.
@@ -210,6 +211,10 @@ class SystemComprehensiveValidator:
             "black_formatting": self._run_black_formatting(),
             "isort_imports": self._run_isort_imports(),
             "mypy_type_checking": self._run_mypy_type_check(),
+            "semgrep_analysis": self._run_semgrep_analysis(),
+            "dependency_vulnerabilities": (
+                self._check_dependency_vulnerabilities()
+            ),
         }
         return code_quality
 
@@ -271,21 +276,47 @@ class SystemComprehensiveValidator:
         except Exception as e:
             return {"error": str(e)}
 
+    def _run_semgrep_analysis(self) -> Dict[str, Any]:
         """
+        Run semgrep security analysis.
 
         Returns:
+            Dictionary with semgrep analysis results.
         """
         try:
+            # Run semgrep with auto config (detects common issues and security
             # warnings)
             semgrep_output = subprocess.run(
                 ["semgrep", "--config", "auto", self.base_path],
                 capture_output=True,
                 text=True,
             )
+            return {
                 "passed": semgrep_output.returncode == 0,
                 "output": semgrep_output.stdout or semgrep_output.stderr,
             }
         except Exception as e:
+            return {"error": str(e)}
+
+    def _check_dependency_vulnerabilities(self) -> Dict[str, Any]:
+        """
+        Check for vulnerable dependencies using safety.
+
+        Returns:
+            Dictionary with vulnerability check results.
+        """
+        try:
+            safety_output = subprocess.run(
+                ["safety", "check", "-r", "requirements.txt"],
+                capture_output=True,
+                text=True,
+            )
+            return {
+                "passed": safety_output.returncode == 0,
+                "output": safety_output.stdout or safety_output.stderr,
+            }
+        except Exception as e:
+            return {"error": str(e)}
 
     def _collect_performance_metrics(self) -> Dict[str, Any]:
         """
@@ -356,15 +387,24 @@ class SystemComprehensiveValidator:
                 "Use isort to organize and sort import statements"
             )
 
-            "dependency_vulnerabilities"
-        ]["passed"]:
+        # Dependency vulnerability check
+        dependency_vuln_key = "dependency_vulnerabilities"
+        if (dependency_vuln_key in system_scan_results["code_quality"] and
+                not system_scan_results["code_quality"][
+                    dependency_vuln_key
+                ]["passed"]):
+            recommendations["code_quality"].append(
                 "Update dependencies to resolve known vulnerabilities"
             )
 
         # Performance recommendations
-        if system_scan_results["performance_metrics"]["cpu_usage"] > 70:
+        cpu_key = "cpu"
+        if (system_scan_results["performance_metrics"][cpu_key]
+                ["usage_percent"] > 70):
+            metrics = system_scan_results["performance_metrics"]
+            cpu_usage = metrics[cpu_key]["usage_percent"]
             recommendations["performance"].append(
-                f"High CPU usage detected: {system_scan_results['performance_metrics']['cpu_usage']}%. "
+                f"High CPU usage detected: {cpu_usage}%. "
                 "Investigate and optimize resource-intensive processes."
             )
 
@@ -412,14 +452,29 @@ class SystemComprehensiveValidator:
             validation_results (Dict): Comprehensive validation results
         """
         self.console.rule(
-            "[bold blue]SutazAI Ultra-Comprehensive System Validation[/bold blue]"
+            "[bold blue]SutazAI Ultra-Comprehensive System "
+            "Validation[/bold blue]"
         )
+
+        # Get relevant system health components
+        system_health = validation_results['system_health']
+        dir_struct = system_health['directory_structure']
+        file_integ = system_health['file_integrity']
+        env_conf = system_health['environment_configuration']
+        
+        missing_dirs = dir_struct['missing_directories']
+        missing_files = file_integ['missing_files']
+        python_compatible = env_conf['python_version']['is_compatible']
+        
+        dir_status = "✅ Healthy" if not missing_dirs else "❌ Issues Detected"
+        file_status = "✅ Intact" if not missing_files else "❌ Missing Files"
+        env_status = "✅ Configured" if python_compatible else "❌ Incompatible"
 
         # System Health Panel
         health_panel = Panel(
-            f"Directory Structure: {'✅ Healthy' if not validation_results['system_health']['directory_structure']['missing_directories'] else '❌ Issues Detected'}\n"
-            f"File Integrity: {'✅ Intact' if not validation_results['system_health']['file_integrity']['missing_files'] else '❌ Missing Files'}\n"
-            f"Environment Config: {'✅ Configured' if validation_results['system_health']['environment_configuration']['python_version']['is_compatible'] else '❌ Incompatible'}",
+            f"Directory Structure: {dir_status}\n"
+            f"File Integrity: {file_status}\n"
+            f"Environment Config: {env_status}",
             title="System Health Overview",
             border_style="green",
         )

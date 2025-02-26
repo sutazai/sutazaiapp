@@ -48,35 +48,35 @@ declare -gA DIVINITY=(
 )
 
 ### SYSTEM CONFIGURATION ###
-BASE_DIR="/root/sutazai/v1"
+BASE_DIR="/opt/sutazaiapp"
 export BASE_DIR
 
 declare -gA CONFIG=(
-    [ROOT_DIR]="/opt/sutazai"
-    [VENV_DIR]="/opt/sutazai/venv"
-    [MODEL_REGISTRY]="/opt/sutazai/model_registry"
-    [LOG_DIR]="/var/log/sutazai"
+    [ROOT_DIR]="/opt/sutazaiapp"
+    [VENV_DIR]="/opt/sutazaiapp/venv"
+    [MODEL_REGISTRY]="/opt/sutazaiapp/model_registry"
+    [LOG_DIR]="/opt/sutazaiapp/logs"
     [DATA_LAKE]="/data/ai_lake"
     [DOCKER_NETWORK]="sutazai-net"
     [GPU_ENABLED]=$(lspci | grep -qi 'nvidia' && echo 1 || echo 0)
     [THREADS]=$(($(nproc) > 32 ? 32 : $(nproc)))
     [MEMORY_LIMIT]=$(free -b | awk '/Mem/{printf "%.0f", $2*0.8}')
-    [VECTOR_DB_PATH]="/var/lib/sutazai/vectordb"
+    [VECTOR_DB_PATH]="/opt/sutazaiapp/vectordb"
     [COMPATIBLE_OS]="ubuntu22.04|centos8|rockylinux9"
     [SERVICE_MESH]="linkerd"
     [MAX_MODEL_SIZE_GB]=10
-    [MODEL_CACHE]="/var/cache/sutazai/models"
+    [MODEL_CACHE]="/opt/sutazaiapp/model_cache"
     [APP_USER]="sutazai_svc"
     [APP_GROUP]="sutazai_grp"
-    [AGENT_RESOURCES]="/opt/sutazai/agents"
+    [AGENT_RESOURCES]="/opt/sutazaiapp/agents"
     [UI_PORTS]="8501:8502"
-    [DB_INIT_SCRIPT]="/opt/sutazai/scripts/init_db.sh"
-    [AGENT_DEPENDENCIES]="/opt/sutazai/agent_deps"
-    [UI_DEPENDENCIES]="/opt/sutazai/ui_deps"
-    [DB_SCHEMA]="/opt/sutazai/schema"
-    [SUTAZAI_LIBS]="/opt/sutazai/sutazai_libs"
+    [DB_INIT_SCRIPT]="/opt/sutazaiapp/scripts/init_db.sh"
+    [AGENT_DEPENDENCIES]="/opt/sutazaiapp/agent_deps"
+    [UI_DEPENDENCIES]="/opt/sutazaiapp/ui_deps"
+    [DB_SCHEMA]="/opt/sutazaiapp/schema"
+    [SUTAZAI_LIBS]="/opt/sutazaiapp/sutazai_libs"
     [NEURAL_HARDWARE]="/dev/neural_entanglement"
-    [FALLBACK_DIR]="/opt/sutazai/fallback"
+    [FALLBACK_DIR]="/opt/sutazaiapp/fallback"
 )
 
 ### CORE DIRECTORY STRUCTURE ###
@@ -117,7 +117,7 @@ declare -A SERVICE_PORTS=(
 ### INITIALIZATION FUNCTIONS ###
 setup_logging() {
     # 5-Layer Fallback with Atomic Operations
-    _LOG_DIR="/var/log/sutazai"
+    _LOG_DIR="/opt/sutazaiapp/logs"
     {
         # Layer 1: Enterprise directory
         if { mkdir -p "$_LOG_DIR" && touch "$_LOG_DIR/deployment.log"; } 2>/dev/null; then
@@ -178,8 +178,8 @@ SUTAZAI_ROOT=${BASE_DIR}
 PYTHON_VERSION=3.11
 GPU_ENABLED=true
 DOCKER_NETWORK=sutazai-net
-MODEL_REGISTRY=/opt/sutazai/models
-VECTOR_DB_PATH=/var/lib/sutazai/vectordb
+MODEL_REGISTRY=/opt/sutazaiapp/models
+VECTOR_DB_PATH=/opt/sutazaiapp/vectordb
 EOF
 
     # Production Specs

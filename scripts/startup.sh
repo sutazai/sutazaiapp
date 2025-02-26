@@ -8,7 +8,7 @@ export PYTHONUNBUFFERED=1
 
 # Logging Configuration
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BASE_PATH="/opt/sutazai_project/SutazAI"
+BASE_PATH="/opt/sutazaiapp"
 LOG_DIR="${BASE_PATH}/logs/startup"
 STARTUP_LOG="${LOG_DIR}/startup_${TIMESTAMP}.log"
 ERROR_LOG="${LOG_DIR}/startup_errors_${TIMESTAMP}.log"
@@ -43,8 +43,16 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # Create and activate virtual environment
 VENV_PATH="${BASE_PATH}/venv"
 if [ ! -d "${VENV_PATH}" ]; then
-    log "Creating Python Virtual Environment"
-    python3 -m venv "${VENV_PATH}" || handle_error "Virtual Environment Creation"
+    # Verify Python 3.11 is available
+    if ! command -v python3.11 &> /dev/null; then
+        log "Python 3.11 not found. Installing..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+    
+    log "Creating Python 3.11 Virtual Environment"
+    python3.11 -m venv "${VENV_PATH}" || handle_error "Virtual Environment Creation"
 fi
 
 # Activate virtual environment
@@ -59,21 +67,21 @@ pip install -r "${BASE_PATH}/requirements.txt" || handle_error "Dependency Insta
 
 # 3. System Diagnostic and Optimization
 log "Running Comprehensive System Diagnostic"
-python3 "${BASE_PATH}/scripts/system_diagnostic.py" || handle_error "System Diagnostic"
+python3.11 "${BASE_PATH}/scripts/system_diagnostic.py" || handle_error "System Diagnostic"
 
 # 4. Autonomous Monitor Initialization
 log "Starting Autonomous Monitoring System"
-python3 "${BASE_PATH}/scripts/autonomous_monitor.py" &
+python3.11 "${BASE_PATH}/scripts/autonomous_monitor.py" &
 MONITOR_PID=$!
 
 
 # 6. Model Initialization
 log "Initializing AI Models"
-python3 "${BASE_PATH}/scripts/model_initializer.py" || handle_error "Model Initialization"
+python3.11 "${BASE_PATH}/scripts/model_initializer.py" || handle_error "Model Initialization"
 
 # 7. Comprehensive System Review
 log "Performing Comprehensive System Review"
-python3 "${BASE_PATH}/scripts/system_comprehensive_review.py" || handle_error "System Review"
+python3.11 "${BASE_PATH}/scripts/system_comprehensive_review.py" || handle_error "System Review"
 
 # Final Confirmation
 log "SutazAI System Initialization Completed Successfully"

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Documentation Generator for SutazAI Project
+"""
 
 import ast
 import logging
@@ -13,8 +16,22 @@ from rich.panel import Panel
 from rich.table import Table
 
 
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
 class DocumentationGenerator:
-    def __init__(self, base_path: str = "/opt/sutazai_project/SutazAI"):
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
         """
         Comprehensive Documentation Generation Tool
 
@@ -30,7 +47,8 @@ class DocumentationGenerator:
 
         self.doc_log = os.path.join(
             self.log_dir,
-            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            f".json",
         )
 
         logging.basicConfig(
@@ -191,7 +209,10 @@ class DocumentationGenerator:
             Markdown-formatted documentation
         """
         markdown_doc = "# SutazAI Project Documentation\n\n"
-        markdown_doc += f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        markdown_doc += (
+            f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            f"\n\n"
+        )
 
         # Project overview
         markdown_doc += "## Project Overview\n\n"
@@ -221,7 +242,10 @@ class DocumentationGenerator:
                         for method_name, method_info in class_info[
                             "methods"
                         ].items():
-                            markdown_doc += f"- `{method_name}({', '.join(method_info['arguments'])})`\n"
+                            method_args = ", ".join(method_info['arguments'])
+                            method_entry = f"- `{method_name}("
+                            method_entry += f"{method_args})`\n"
+                            markdown_doc += method_entry
                             markdown_doc += (
                                 f"  - {method_info['docstring']}\n\n"
                             )
@@ -290,9 +314,11 @@ class DocumentationGenerator:
         )
 
         # Documentation Summary Panel
+        total_modules = len(project_docs)
+        total_deps = dependency_graph.number_of_edges()
         doc_panel = Panel(
-            f"Total Modules Documented: {len(project_docs)}\n"
-            f"Total Dependency Connections: {dependency_graph.number_of_edges()}",
+            f"Total Modules Documented: {total_modules}\n"
+            f"Total Dependency Connections: {total_deps}",
             title="Documentation Summary",
             border_style="green",
         )
@@ -319,6 +345,9 @@ class DocumentationGenerator:
 
 
 def main():
+    # Verify Python version
+    verify_python_version()
+    
     doc_generator = DocumentationGenerator()
     doc_generator.comprehensive_documentation_generation()
 

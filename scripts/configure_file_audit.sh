@@ -6,7 +6,7 @@ echo "Configuring SutazAI file tracking..."
 cat > "$AUDIT_RULES" << EOF
 # SutazAI critical paths
 -w /etc/sutazai -p wa -k sutazai_config
--w /opt/sutazai/models -p wa -k sutazai_models
+-w /opt/sutazaiapp/models -p wa -k sutazai_models
 -w /var/log/sutazai -p wa -k sutazai_logs
 -w /usr/local/bin/sutazai -p wa -k sutazai_bin
 EOF
@@ -30,11 +30,11 @@ LOG_DIR="/var/log/sutazai/audit"
 create_audit_rules() {
     # Monitor critical directories
     auditctl -w ${CONFIG_DIR} -p wa -k sutazai_config
-    auditctl -w /opt/sutazai/bin -p wa -k sutazai_binaries
+    auditctl -w /opt/sutazaiapp/bin -p wa -k sutazai_binaries
     auditctl -w ${LOG_DIR} -p wa -k sutazai_logs
     
     # Monitor deployment scripts
-    find /opt/sutazai/scripts -type f -exec auditctl -w {} -p wa -k sutazai_scripts \;
+    find /opt/sutazaiapp/scripts -type f -exec auditctl -w {} -p wa -k sutazai_scripts \;
 }
 
 # Rotate audit logs

@@ -158,11 +158,21 @@ disk_io_optimization() {
 python_environment_optimization() {
     log "INFO" "🐍 Optimizing Python Environment"
     
+    # Ensure Python 3.11 is installed
+    if ! command -v python3.11 &> /dev/null; then
+        log "WARNING" "Python 3.11 not found. Installing..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    else
+        log "DEBUG" "Python 3.11 is already installed"
+    fi
+    
     # Ensure virtual environment exists
-    VENV_PATH="/opt/sutazai_project/SutazAI/venv"
+    VENV_PATH="/opt/sutazaiapp/venv"
     if [ ! -d "$VENV_PATH" ]; then
         log "WARNING" "Virtual environment not found. Creating..."
-        python3 -m venv "$VENV_PATH"
+        python3.11 -m venv "$VENV_PATH"
     fi
     
     # Activate virtual environment
@@ -182,7 +192,7 @@ python_environment_optimization() {
         line_profiler
     
     # Compile Python bytecode
-    python3 -m compileall /opt/sutazai_project/SutazAI
+    python -m compileall /opt/sutazaiapp
     
     deactivate
 }

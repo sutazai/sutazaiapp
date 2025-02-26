@@ -30,7 +30,7 @@ sys.path.insert(
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename="/opt/sutazai_project/SutazAI/logs/system_audit.log",
+    filename="/opt/sutazaiapp/logs/system_audit.log",
     filemode="a",
 )
 logger = logging.getLogger("SutazAI.SystemAudit")
@@ -192,7 +192,7 @@ class SystemAuditor:
             self.audit_report["overall_status"] = "PASSED"
 
         # Save audit report
-        report_path = f'/opt/sutazai_project/SutazAI/logs/system_audit_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+        report_path = f'/opt/sutazaiapp/logs/system_audit_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
 
         with open(report_path, "w") as f:
             json.dump(self.audit_report, f, indent=2)

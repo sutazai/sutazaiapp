@@ -9,8 +9,6 @@ Comprehensive initialization framework providing:
 - Performance optimization
 """
 
-from core_system.monitoring.advanced_logger import AdvancedLogger
-from config.config_manager import ConfigurationManager
 import json
 import os
 import sys
@@ -22,7 +20,25 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 
-# Internal system imports
+# Import local modules after path adjustment
+# isort: off
+from config.config_manager import ConfigurationManager  # noqa: E402
+from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+# isort: on
+
+
+# Verify Python version
+def verify_python_version():
+    """
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
 
 
 # Replace specific imports with placeholders
@@ -51,7 +67,7 @@ class SystemInitializer:
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
+        base_dir: str = "/opt/sutazaiapp",
         config_env: str = "development",
     ):
         """
@@ -236,6 +252,9 @@ def main():
     Main execution for system initialization
     """
     try:
+        # Verify Python version
+        verify_python_version()
+        
         initializer = SystemInitializer()
         initialization_report = initializer.initialize_system()
 

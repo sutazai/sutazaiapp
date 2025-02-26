@@ -14,8 +14,6 @@ Key Responsibilities:
 - Generate comprehensive optimization reports
 """
 
-from core_system.monitoring.advanced_logger import AdvancedLogger
-from config.config_manager import ConfigurationManager
 import json
 import multiprocessing
 import os
@@ -31,18 +29,37 @@ sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 
-# Internal system imports
+# Import local modules after path adjustment
+# isort: off
+from config.config_manager import ConfigurationManager  # noqa: E402
+from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+# isort: on
 
 
-class AdvancedSystemOptimizer:
+# Verify Python version
+def verify_python_version():
     """
-    Comprehensive system optimization framework with autonomous improvement capabilities
+    Verify that Python 3.11 or higher is being used.
+    """
+    major, minor = sys.version_info.major, sys.version_info.minor  # noqa: E501
+    if major < 3 or (major == 3 and minor < 11):
+        print("❌ Error: Python 3.11 or higher is required.")
+        print(f"Current Python version: {sys.version}")
+        print("Please install Python 3.11 and try again.")
+        sys.exit(1)
+    print(f"✅ Python {major}.{minor} detected.")
+
+
+class AdvancedSystemOptimizer:  # noqa: E501
+    """
+    Comprehensive system optimization framework
+    with autonomous improvement capabilities
     """
 
     def __init__(
         self,
-        base_dir: str = "/opt/sutazai_project/SutazAI",
-        config_manager: ConfigurationManager = None,
+        base_dir: str = "/opt/sutazaiapp",
+        config_manager: ConfigurationManager = None,  # noqa: E501
         logger: AdvancedLogger = None,
     ):
         """
@@ -50,8 +67,8 @@ class AdvancedSystemOptimizer:
 
         Args:
             base_dir (str): Base directory of the project
-            config_manager (ConfigurationManager): Configuration management system
-            logger (AdvancedLogger): Advanced logging system
+            config_manager: Configuration management system
+            logger: Advanced logging system
         """
         self.base_dir = base_dir
         self.config_manager = config_manager or ConfigurationManager()
@@ -136,8 +153,9 @@ class AdvancedSystemOptimizer:
             > self.optimization_config["cpu_optimization_threshold"]
         ):
             recommendations.append(
-                f"High CPU usage detected. Consider optimizing resource-intensive processes. "
-                f"Peak CPU usage: {max(metrics['cpu_metrics']['cpu_usage_percent'])}%"
+                "High CPU usage detected. Consider optimizing "
+                "resource-intensive processes. Peak CPU usage: "
+                f"{max(metrics['cpu_metrics']['cpu_usage_percent'])}%"
             )
 
         # Memory optimization recommendations
@@ -146,8 +164,9 @@ class AdvancedSystemOptimizer:
             > self.optimization_config["memory_optimization_threshold"]
         ):
             recommendations.append(
-                f"High memory usage detected. Implement memory optimization strategies. "
-                f"Memory usage: {metrics['memory_metrics']['memory_usage_percent']}%"
+                "High memory usage detected. Implement memory "
+                "optimization strategies. Memory usage: "
+                f"{metrics['memory_metrics']['memory_usage_percent']}%"
             )
 
         # Disk space recommendations
@@ -163,8 +182,9 @@ class AdvancedSystemOptimizer:
             > multiprocessing.cpu_count() * 10
         ):
             recommendations.append(
-                f"High number of running processes. Review and optimize process management. "
-                f"Total processes: {metrics['process_metrics']['total_processes']}"
+                "High number of running processes. Review and optimize "
+                "process management. Total processes: "
+                f"{metrics['process_metrics']['total_processes']}"
             )
 
         return recommendations
@@ -182,8 +202,6 @@ class AdvancedSystemOptimizer:
         # Analyze performance bottlenecks
         performance_recommendations = self.analyze_performance_bottlenecks(
             system_metrics
-        )
-
         )
 
         # Configuration validation
@@ -207,9 +225,10 @@ class AdvancedSystemOptimizer:
         )
 
         # Persist report
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         report_path = os.path.join(
             self.base_dir,
-            f'logs/system_optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
+            f'logs/system_optimization_report_{timestamp}.json',
         )
 
         with open(report_path, "w") as f:
@@ -235,9 +254,13 @@ class AdvancedSystemOptimizer:
                     f"Applying performance optimization: {recommendation}",
                     level="info",
                 )
-
-            ).get("recommendations", [])
+            
+            # Apply other recommendations
+            for recommendation in optimization_report.get(
+                "recommendations", []
+            ):
                 self.logger.log(
+                    f"Applying recommendation: {recommendation}",
                     level="info",
                 )
 
@@ -261,6 +284,7 @@ def main():
     Main execution for system optimization
     """
     try:
+        verify_python_version()
         optimizer = AdvancedSystemOptimizer()
         optimizer.autonomous_system_optimization()
 

@@ -20,8 +20,8 @@ class SupremeAIOrchestrator:
 
     def __init__(
         self,
-        agents_dir: str = "/opt/sutazai_project/SutazAI/ai_agents",
-        log_dir: str = "/opt/sutazai_project/SutazAI/logs",
+        agents_dir: str = "/opt/sutazaiapp/ai_agents",
+        log_dir: str = "/opt/sutazaiapp/logs",
     ):
         """
         Initialize Supreme AI Orchestrator

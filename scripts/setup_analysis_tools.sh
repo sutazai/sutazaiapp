@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Logging configuration
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-LOG_DIR="/opt/sutazai_project/SutazAI/logs/setup"
+LOG_DIR="/opt/sutazaiapp/logs/setup"
 SETUP_LOG="${LOG_DIR}/analysis_tools_setup_${TIMESTAMP}.log"
 
 # Create log directory
@@ -22,13 +22,34 @@ handle_error() {
     exit 1
 }
 
+# Python version verification
+verify_python_version() {
+    log "Verifying Python 3.11"
+    
+    if command -v python3.11 >/dev/null 2>&1; then
+        log "Python 3.11 is installed"
+    else
+        log "Python 3.11 not found. Installing..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt-get update
+        sudo apt-get install -y python3.11 python3.11-dev python3.11-venv
+    fi
+    
+    PYTHON_VERSION=$(python3.11 --version)
+    log "Using ${PYTHON_VERSION}"
+}
+
 # Main setup workflow
 main() {
     log "Starting SutazAI Advanced Project Analysis Tools Setup"
 
+    # 0. Verify Python version
+    verify_python_version \
+        || handle_error "Python Version Verification"
+        
     # 1. Activate virtual environment
     log "Stage 1: Activating Virtual Environment"
-    source /opt/sutazai_project/SutazAI/venv/bin/activate \
+    source /opt/sutazaiapp/venv/bin/activate \
         || handle_error "Virtual Environment Activation"
 
     # 2. Install system dependencies
@@ -36,14 +57,14 @@ main() {
     sudo apt-get update
     sudo apt-get install -y \
         graphviz \
-        python3-dev \
+        python3.11-dev \
         build-essential \
         || handle_error "System Dependency Installation"
 
     # 3. Install Python analysis requirements
     log "Stage 3: Installing Python Analysis Requirements"
     pip install --upgrade pip
-    pip install -r /opt/sutazai_project/SutazAI/requirements-analysis.txt \
+    pip install -r /opt/sutazaiapp/requirements-analysis.txt \
         || handle_error "Python Analysis Requirements Installation"
 
     # 4. Configure analysis tools
@@ -108,7 +129,7 @@ EOL
     # 5. Install pre-commit hooks
     log "Stage 5: Installing Pre-Commit Hooks"
     pip install pre-commit
-    cat > /opt/sutazai_project/SutazAI/.pre-commit-config.yaml << EOL
+    cat > /opt/sutazaiapp/.pre-commit-config.yaml << EOL
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0

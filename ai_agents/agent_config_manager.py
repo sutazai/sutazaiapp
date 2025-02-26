@@ -20,8 +20,8 @@ class AgentConfigManager:
 
     def __init__(
         self,
-        config_dir: str = "/opt/sutazai_project/SutazAI/ai_agents/configs",
-        schema_dir: str = "/opt/sutazai_project/SutazAI/ai_agents/schemas",
+        config_dir: str = "/opt/sutazaiapp/ai_agents/configs",
+        schema_dir: str = "/opt/sutazaiapp/ai_agents/schemas",
     ):
         """
         Initialize Agent Configuration Manager

@@ -2,9 +2,9 @@
 
 # SutazAI Autonomous Monitor Daemon Management Script
 
-MONITOR_SCRIPT="/opt/sutazai_project/SutazAI/scripts/autonomous_monitor.py"
+MONITOR_SCRIPT="/opt/sutazaiapp/scripts/autonomous_monitor.py"
 PID_FILE="/var/run/sutazai_monitor.pid"
-LOG_FILE="/opt/sutazai_project/SutazAI/logs/autonomous_monitor/daemon.log"
+LOG_FILE="/opt/sutazaiapp/logs/autonomous_monitor/daemon.log"
 
 start_monitor() {
     if [ -f "$PID_FILE" ]; then
