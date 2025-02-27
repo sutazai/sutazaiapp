@@ -11,22 +11,23 @@ modules, and more.
 import logging
 
 
-def main():
+    def main():
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s"
-    )
-    logging.info("Starting Supreme AI orchestrator...")
+    level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s"
+)
+logging.info("Starting Supreme AI orchestrator...")
 
-    # Placeholder: Add orchestration logic here
-    logging.info("Supreme AI orchestrator is running. Awaiting tasks...")
+# Placeholder: Add orchestration logic here
+logging.info("Supreme AI orchestrator is running. Awaiting tasks...")
 
-    # Simulate continuous operation
+# Simulate continuous operation
     try:
         while True:
-            pass  # In production, here would be the logic to coordinate sub-agents
-    except KeyboardInterrupt:
+        pass  # In production, here would be the logic to coordinate sub-agents
+        except KeyboardInterrupt:
         logging.info("Supreme AI orchestrator shutting down...")
-
-
-if __name__ == "__main__":
-    main()
+        
+        
+            if __name__ == "__main__":
+            main()
+            

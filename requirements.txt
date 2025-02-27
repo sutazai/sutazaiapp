@@ -1,113 +1,106 @@
-# SutazAI Optimized Requirements for Python 3.11
-# Core dependencies
-fastapi>=0.115.0; python_version == '3.11'
-uvicorn[standard]>=0.34.0; python_version == '3.11'
-pydantic>=2.10.0; python_version == '3.11'
-SQLAlchemy>=2.0.27; python_version == '3.11'
-python-dotenv>=1.0.1; python_version == '3.11'
-loguru>=0.7.3; python_version == '3.11'
-httpx>=0.28.0; python_version == '3.11'
-alembic>=1.13.0; python_version == '3.11'
-asyncpg>=0.29.0; python_version == '3.11'
-psycopg2-binary>=2.9.9; python_version == '3.11'
+# SutazAI Comprehensive Requirements for Python 3.11
 
-# AI and ML dependencies
-langchain>=0.0.267; python_version == '3.11'
-transformers>=4.36.0; python_version == '3.11'
-huggingface-hub>=0.20.0; python_version == '3.11'
-sentence-transformers>=2.2.2; python_version == '3.11'
-numpy>=1.26.0; python_version == '3.11'
-pandas>=2.2.0; python_version == '3.11'
-scikit-learn>=1.4.0; python_version == '3.11'
-torch>=2.0.0; python_version == '3.11'
-chromadb>=0.4.14; python_version == '3.11'
+# Core Web and API Framework
+fastapi>=0.109.0,<0.116.0
+uvicorn[standard]>=0.27.0,<0.35.0
+pydantic>=2.6.0,<2.11.0
+pydantic-settings>=2.1.0,<2.2.0
+SQLAlchemy>=2.0.25,<2.1.0
+alembic>=1.13.0,<1.14.0
 
-# Vector databases
-qdrant-client>=1.8.2,<2.0.0; python_version == '3.11'
-pgvector>=0.2.3; python_version == '3.11'
-faiss-cpu>=1.7.4; python_version == '3.11'
+# Database Connectors
+asyncpg>=0.29.0,<0.30.0
+psycopg2-binary>=2.9.9,<3.0.0
+pgvector>=0.2.3,<0.3.0
 
-# API and authentication
-python-jose[cryptography]>=3.3.2; python_version == '3.11'
-passlib[bcrypt]>=1.7.4; python_version == '3.11'
-python-multipart>=0.0.9; python_version == '3.11'
-pyjwt>=2.8.0; python_version == '3.11'
+# Environment and Configuration
+python-dotenv>=1.0.0,<1.1.0
+python-jose[cryptography]>=3.3.0,<3.4.0
+passlib[bcrypt]>=1.7.4,<1.8.0
 
-# Document processing
-PyMuPDF==1.23.8; python_version == '3.11'  # fitz library for PDF processing
-pytesseract>=0.3.10; python_version == '3.11'  # OCR processing
+# Logging and Monitoring
+loguru>=0.7.2,<0.8.0
+structlog>=24.1.0,<25.0.0
 
-# Security and encryption
-cryptography>=41.0.0; python_version == '3.11'  # For encryption operations
+# AI and Machine Learning
+torch>=2.2.0,<2.7.0
+transformers>=4.38.0,<4.39.0
+sentence-transformers>=2.3.0,<2.4.0
+langchain>=0.1.0,<0.2.0
+huggingface-hub>=0.21.0,<0.22.0
 
-# Utilities
-requests>=2.32.0; python_version == '3.11'
-python-dateutil>=2.9.0; python_version == '3.11'
-tqdm>=4.65.0; python_version == '3.11'
-rich>=13.7.0; python_version == '3.11'
-pydantic-settings>=2.1.0; python_version == '3.11'
-orjson>=3.9.0; python_version == '3.11'
-structlog>=23.1.0; python_version == '3.11'
-networkx>=3.0.0; python_version == '3.11'
-redis>=4.5.0; python_version == '3.11'
-spacy>=3.6.0; python_version == '3.11'
-psutil==5.9.7; python_version == '3.11'
-pyyaml>=6.0.0; python_version == '3.11'  # For YAML parsing
+# Data Processing and Analysis
+numpy>=1.26.0,<1.27.0
+pandas>=2.2.0,<2.3.0
+scikit-learn>=1.4.0,<1.5.0
+scipy>=1.12.0,<1.13.0
 
-# Profiling and performance
-pyinstrument>=4.6.0; python_version == '3.11'  # More efficient profiling library than cProfile
+# Vector Databases and Search
+chromadb>=0.4.22,<0.5.0
+qdrant-client>=1.8.2,<1.9.0
+faiss-cpu>=1.7.4,<1.8.0
 
-# NLP and text processing
-nltk>=3.8.0; python_version == '3.11'
-gensim>=4.3.0; python_version == '3.11'
+# Networking and HTTP
+httpx>=0.27.0,<0.28.0
+requests>=2.31.0,<2.32.0
+urllib3>=2.2.0,<2.3.0
 
-# Testing
-pytest>=8.0.0; python_version == '3.11'
-pytest-asyncio>=0.25.0; python_version == '3.11'
-pytest-cov>=4.1.0; python_version == '3.11'
-pytest-mock>=3.11.0; python_version == '3.11'
-hypothesis>=6.82.0; python_version == '3.11'
+# Text and NLP Processing
+nltk>=3.8.1,<3.9.0
+spacy>=3.7.0,<3.8.0
+gensim>=4.3.0,<4.4.0
+pytesseract>=0.3.10,<0.4.0
 
-# Code quality and documentation
-black>=25.1.0; python_version == '3.11'
-isort>=5.13.0; python_version == '3.11'
-flake8>=7.0.0; python_version == '3.11'
-mypy>=1.8.0; python_version == '3.11'
-ruff>=0.1.6; python_version == '3.11'
-bandit>=1.7.6; python_version == '3.11'
-pre-commit>=3.6.0; python_version == '3.11'
-pylint>=3.0.0; python_version == '3.11'  # Python linter for code analysis
-autopep8>=2.0.0; python_version == '3.11'  # PEP 8 code formatter
-semgrep>=1.38.0; python_version == '3.11'  # Pattern-based code scanner
-safety>=2.3.0; python_version == '3.11'  # Dependency vulnerability checker
+# Utilities and Helpers
+tqdm>=4.66.0,<4.67.0
+rich>=13.7.0,<13.8.0
+python-dateutil>=2.9.0,<2.10.0
+networkx>=3.2.0,<3.3.0
 
-# Add Python basics for 3.11
-pip>=25.0.0; python_version == '3.11'
-setuptools>=68.0.0; python_version == '3.11'
-wheel>=0.40.0; python_version == '3.11'
+# Security and Encryption
+cryptography>=42.0.0,<43.0.0
+defusedxml>=0.7.1,<0.8.0
 
-# Additional dependencies for Python 3.11 compatibility and internal modules
-python-magic==0.4.27
-astor==0.8.1
+# Testing and Development
+pytest>=8.0.0,<8.1.0
+pytest-asyncio>=0.23.0,<0.24.0
+pytest-cov>=4.1.0,<4.2.0
+hypothesis>=6.95.0,<6.96.0
 
-# Type Checking and Linting
+# Code Quality and Linting
+black>=24.3.0,<25.0.0
+isort>=5.13.0,<5.14.0
+flake8>=7.0.0,<7.1.0
+mypy>=1.9.0,<1.10.0
+ruff>=0.3.0,<0.4.0
+pylint>=3.0.0,<3.1.0
+bandit>=1.7.8,<1.8.0
+semgrep>=1.67.0,<1.68.0
 
-# Document Processing
+# Performance and Profiling
+pyinstrument>=4.6.0,<4.7.0
+psutil>=5.9.8,<5.10.0
 
-# Ensure compatibility with Python 3.11
-typing-extensions==4.7.1
-importlib-metadata==6.8.0
+# Miscellaneous
+orjson>=3.9.0,<3.10.0
+pyyaml>=6.0.1,<6.1.0
+redis>=4.5.5,<4.6.0
 
-# Add missing dependencies
-langdetect>=1.0.9; python_version == '3.11'
-pyperclip>=1.8.2; python_version == '3.11'
-safety>=2.3.0; python_version == '3.11'
+# Type Checking and Compatibility
+typing-extensions>=4.10.0,<4.11.0
+importlib-metadata>=7.0.0,<7.1.0
 
-# Ensure core system dependencies
+# Project-Specific Local Packages
 core_system @ file:///opt/sutazaiapp/core_system
 misc @ file:///opt/sutazaiapp/misc
 system_integration @ file:///opt/sutazaiapp/system_integration
 
-# Update vulnerable packages with latest secure versions
-python-jose[cryptography]>=3.3.2; python_version == '3.11'
-ecdsa>=0.19.2; python_version == '3.11'  # Latest version with security fixes
+# Optional Dependencies
+python-multipart>=0.0.9,<0.1.0
+python-magic>=0.4.27,<0.5.0
+pyperclip>=1.8.2,<1.9.0
+
+# Ensure latest security updates
+setuptools>=69.2.0,<70.0.0
+pip>=24.0.0,<25.0.0
+wheel>=0.43.0,<0.44.0

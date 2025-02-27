@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sutazai_app"
+version = "0.1.0"
+description = "Comprehensive AI-powered application"
+readme = "README.md"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "mypy",
+    "black",
+    "isort",
+    "bandit",
+    "pytest",
+    "ruff"
+]
+
+[tool.pylint.master]
+ignore-paths = ["venv", ".mypy_cache", ".ruff_cache"]
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true 
