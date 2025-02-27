@@ -37,7 +37,7 @@ class SystemValidator:
 
         # Python version check
         logger.info(f"Python Version: {sys.version}")
-        assert sys.version_info >= (    3, 11), "Python 3.8+ is required"
+        assert sys.version_info >= (3, 11), "Python 3.8+ is required"
 
         # OS and Hardware Validation
         self._validate_os_and_hardware()

@@ -137,7 +137,7 @@ class DocumentationGenerator:
                     }
 
         except Exception as e:
-            logging.error(f"Error generating documentation for {module_path}: {e}")
+            logging.error("Error generating docs: %s", e)
 
         return module_doc
 

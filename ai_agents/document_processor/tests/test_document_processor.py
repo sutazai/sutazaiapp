@@ -1,12 +1,14 @@
 import os
 import tempfile
-from typing import Any, Dict
+from typing import Any, Dict, Generator
 
 import numpy as np
 import pytest
+import cv2  # type: ignore
 
-from ai_agents.document_processor.src import DocumentProcessorAgent
+from ..src import DocumentProcessorAgent
 from ai_agents.document_processor.utils.document_utils import DocumentUtils
+from ai_agents.exceptions import AgentError
 
 
 class TestDocumentProcessorAgent:
@@ -17,19 +19,19 @@ class TestDocumentProcessorAgent:
     """
 
     @pytest.fixture
-    def sample_pdf_path(self) -> str:
+    def sample_pdf_path(self) -> Generator[str, None, None]:
         """
         Fixture to generate a sample PDF for testing
 
         Returns:
             str: Path to the sample PDF
         """
-        import fitz
+        import fitz  # type: ignore
 
         # Create a temporary PDF
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as temp_pdf:
             doc = fitz.open()
-            page = doc.new_page()
+            page = doc.new_page(width=595, height=842)  # A4 size
             page.insert_text((50, 50), "SutazAI Document Processing Test")
             doc.save(temp_pdf.name)
             doc.close()
@@ -40,25 +42,23 @@ class TestDocumentProcessorAgent:
         os.unlink(temp_pdf.name)
 
     @pytest.fixture
-    def sample_image_path(self) -> str:
+    def sample_image_path(self) -> Generator[str, None, None]:
         """
         Fixture to generate a sample image for testing
 
         Returns:
             str: Path to the sample image
         """
-        import cv2
-
         # Create a temporary image
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_img:
             image = np.zeros((200, 200), dtype=np.uint8)
-            cv2.putText(
+            cv2.putText(  # type: ignore
                 image,
                 "SutazAI OCR Test",
                 (10, 100),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
-                255,
+                (255, 255, 255),  # Use a tuple for color in BGR format
                 2,
             )
             cv2.imwrite(temp_img.name, image)
@@ -75,9 +75,9 @@ class TestDocumentProcessorAgent:
         agent = DocumentProcessorAgent()
 
         task = {
-            "type": "extract_text",
-            "document": sample_pdf_path,
-            "params": {},
+            "document_path": sample_pdf_path,
+            "operation": "extract_text",
+            "parameters": {},
         }
 
         result = agent.execute(task)
@@ -94,9 +94,9 @@ class TestDocumentProcessorAgent:
         agent = DocumentProcessorAgent()
 
         task = {
-            "type": "ocr_processing",
-            "document": sample_image_path,
-            "params": {"languages": ["eng"]},
+            "document_path": sample_image_path,
+            "operation": "ocr",
+            "parameters": {"languages": ["eng"]},
         }
 
         result = agent.execute(task)
@@ -111,9 +111,9 @@ class TestDocumentProcessorAgent:
         agent = DocumentProcessorAgent()
 
         task = {
-            "type": "document_analysis",
-            "document": sample_pdf_path,
-            "params": {},
+            "document_path": sample_pdf_path,
+            "operation": "analyze",
+            "parameters": {},
         }
 
         result = agent.execute(task)
@@ -129,12 +129,12 @@ class TestDocumentProcessorAgent:
         agent = DocumentProcessorAgent()
 
         task = {
-            "type": "extract_text",
-            "document": "/path/to/nonexistent/document.pdf",
-            "params": {},
+            "document_path": "/path/to/nonexistent/document.pdf",
+            "operation": "extract_text",
+            "parameters": {},
         }
 
-        with pytest.raises(Exception) as excinfo:
+        with pytest.raises(AgentError) as excinfo:
             agent.execute(task)
 
         assert "Document processing failed" in str(excinfo.value)
@@ -146,15 +146,15 @@ class TestDocumentProcessorAgent:
         agent = DocumentProcessorAgent()
 
         task = {
-            "type": "unsupported_task",
-            "document": sample_pdf_path,
-            "params": {},
+            "document_path": sample_pdf_path,
+            "operation": "unsupported_task",
+            "parameters": {},
         }
 
-        with pytest.raises(Exception) as excinfo:
+        with pytest.raises(AgentError) as excinfo:
             agent.execute(task)
 
-        assert "Unsupported task type" in str(excinfo.value)
+        assert "Unsupported operation" in str(excinfo.value)
 
     def test_document_utils_validation(self, sample_pdf_path: str):
         """
@@ -188,7 +188,11 @@ class TestDocumentProcessorAgent:
         languages = DocumentUtils.detect_document_language(test_text)
 
         assert isinstance(languages, list)
-        assert "en" in languages
+        assert "en" in languages[0]
+
+    def test_image_processing(self):
+        img = cv2.imread("test.jpg")  # type: ignore
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # type: ignore
 
 
 def pytest_configure(config):

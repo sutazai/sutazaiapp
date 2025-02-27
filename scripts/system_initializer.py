@@ -20,8 +20,21 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 # Import local modules after path adjustment
 # isort: off
-from config.config_manager import ConfigurationManager  # noqa: E402
-from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+from misc.config.config_manager import ConfigurationManager  # noqa: E402
+
+try:
+    from core_system.monitoring import advanced_logger
+except ImportError:
+
+    class advanced_logger:
+        @staticmethod
+        def log_info(msg):
+            pass
+
+        @staticmethod
+        def log_error(msg):
+            pass
+
 
 # isort: on
 
@@ -82,7 +95,7 @@ class SystemInitializer:
         self.config_manager = ConfigurationManager(environment=config_env)
         self.dependency_manager = DependencyManager()
         self.system_optimizer = SystemOptimizer()
-        self.logger = AdvancedLogger()
+        self.logger = advanced_logger
 
         # Initialization configuration
         self.initialization_steps = [
@@ -200,7 +213,7 @@ class SystemInitializer:
             f'logs/system_initialization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
         )
 
-        with open(report_path, "w") as f:
+        with open(report_path, "w", encoding="utf-8") as f:
             json.dump(initialization_report, f, indent=2)
 
         return initialization_report

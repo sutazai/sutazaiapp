@@ -29,15 +29,14 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-# Add project root to Python path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Update sys.path insertion
+sys.path.insert(0, "/opt/sutazaiapp")
 
 # Import local modules after path adjustment
 # isort: off
-from config.config_manager import ConfigurationManager  # noqa: E402
+from misc.config.config_manager import ConfigurationManager  # noqa: E402
 from core_system.dependency_management import DependencyManager  # noqa: E402
-from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
-from core_system.performance_optimizer import UltraPerformanceOptimizer  # noqa: E402
+from core_system.utils import AdvancedLogger  # Corrected import path
 
 # isort: on
 
@@ -581,7 +580,7 @@ class UltraSystemAuditor:
         )
 
         # Save report as JSON
-        with open(report_path, "w") as f:
+        with open(report_path, "w", encoding="utf-8") as f:
             json.dump(audit_data, f, indent=2)
 
         self.logger.info(f"Audit report saved to {report_path}")

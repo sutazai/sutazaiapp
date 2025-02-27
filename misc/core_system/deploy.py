@@ -15,6 +15,7 @@ import subprocess
 import sys
 import time
 from typing import List, Tuple, Dict, Any
+import json
 
 # Import our consolidated system setup module
 try:
@@ -77,7 +78,7 @@ def deploy_services(base_path: str = "/opt/sutazaiapp") -> None:
             subprocess.Popen(
                 cmd_parts, stdout=open(service_log, "a"), stderr=subprocess.STDOUT
             )
-            logger.info(f"Started {name} service")
+            logger.info("Started %s service", name)
 
             # Stagger service starts to avoid resource contention
             time.sleep(2)

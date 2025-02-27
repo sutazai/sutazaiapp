@@ -1,68 +1,53 @@
-import json
-import uuid
-from abc import ABC, abstractmethod
+from typing import Dict, Any, List, Optional
 from datetime import datetime
-from typing import Any, Dict
+import json
+import logging
 
-from loguru import logger
+# Configure logger
+logger = logging.getLogger(__name__)
+
+# Add module-level docstring
+"""Base Agent Module
+This module defines the BaseAgent class used as the foundation for all AI agents in the application.
+"""
 
 
-class BaseAgent(ABC):
+class AgentError(Exception):
     """
-    Abstract Base Agent: Standardized Interface for AI Agents
+    Custom exception for agent-related errors
 
-    Provides a consistent framework for:
-    - Agent initialization
-    - Task execution
-    - Performance tracking
-    - Error handling
+    Attributes:
+        message (str): Error message
+        task (Dict): Task that caused the error
+        details (Dict): Additional error details
     """
 
     def __init__(
         self,
-        agent_name: str = None,
-        log_dir: str = "/opt/sutazaiapp/logs",
+        message: str,
+        task: Optional[Dict[str, Any]] = None,
+        details: Optional[Dict[str, Any]] = None,
     ):
+        self.message = message
+        self.task = task
+        self.details = details or {}
+        super().__init__(self.message)
+
+
+class BaseAgent:
+    def __init__(self, agent_name: str = "base_agent", log_dir: str = "logs"):
         """
-        Initialize base agent with unique identifier and logging
+        Initialize the base agent with required attributes
 
         Args:
-            agent_name (str): Unique name for the agent
-            log_dir (str): Directory for logging agent activities
+            agent_name (str): Name of the agent
+            log_dir (str): Directory for storing logs
         """
-        self.agent_id = str(uuid.uuid4())
-        self.agent_name = agent_name or self.__class__.__name__
+        self.agent_name = agent_name
         self.log_dir = log_dir
+        self.performance_history: List[Dict[str, Any]] = []
 
-        # Comprehensive logging setup
-        logger.add(
-            f"{log_dir}/{self.agent_name}_agent.log",
-            rotation="10 MB",
-            level="INFO",
-        )
-
-        # Performance tracking
-        self.performance_history = []
-
-        logger.info(f"🤖 Agent {self.agent_name} (ID: {self.agent_id}) initialized")
-
-    @abstractmethod
-    def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Abstract method for task execution
-
-        Args:
-            task (Dict): Task specification with required parameters
-
-        Returns:
-            Dict: Task execution results
-
-        Raises:
-            NotImplementedError: If not implemented by subclass
-        """
-        raise NotImplementedError("Subclasses must implement execute method")
-
-    def _log_performance(self, task: Dict[str, Any], result: Dict[str, Any]):
+    def _log_performance(self, task: Dict[str, Any], result: Dict[str, Any]) -> None:
         """
         Log agent performance for each task
 
@@ -70,7 +55,7 @@ class BaseAgent(ABC):
             task (Dict): Executed task details
             result (Dict): Task execution results
         """
-        performance_record = {
+        performance_record: Dict[str, Any] = {
             "task": task,
             "result": result,
             "success": result.get("status", "failed") == "success",
@@ -82,7 +67,7 @@ class BaseAgent(ABC):
         # Optional: Persist performance history
         self._persist_performance_history()
 
-    def _persist_performance_history(self, max_records: int = 100):
+    def _persist_performance_history(self, max_records: int = 100) -> None:
         """
         Persist performance history to a file, maintaining a maximum number of records
 
@@ -95,64 +80,35 @@ class BaseAgent(ABC):
             # Trim history if exceeding max records
             trimmed_history = self.performance_history[-max_records:]
 
-            with open(history_file, "w") as f:
+            with open(history_file, "w", encoding="utf-8") as f:
                 json.dump(trimmed_history, f, indent=2, default=str)
 
-        except Exception as e:
+        except (IOError, json.JSONDecodeError) as e:
             logger.error(f"Failed to persist performance history: {e}")
 
     def get_performance_summary(self) -> Dict[str, Any]:
         """
-        Generate a summary of agent performance
+        Get a summary of agent performance
 
         Returns:
-            Dict: Performance metrics and summary
+            Dict containing performance metrics
         """
-        if not self.performance_history:
-            return {"total_tasks": 0, "success_rate": 0}
-
         total_tasks = len(self.performance_history)
+        if total_tasks == 0:
+            return {"total_tasks": 0, "success_rate": 0.0}
+
         successful_tasks = sum(
-            1 for record in self.performance_history if record["success"]
+            1 for record in self.performance_history if record.get("success", False)
         )
+        success_rate = (successful_tasks / total_tasks) * 100
 
         return {
             "total_tasks": total_tasks,
             "successful_tasks": successful_tasks,
-            "success_rate": successful_tasks / total_tasks,
+            "success_rate": success_rate,
+            "last_execution": (
+                self.performance_history[-1]["timestamp"]
+                if self.performance_history
+                else None
+            ),
         }
-
-
-class AgentError(Exception):
-    """
-    Custom exception for agent-related errors
-
-    Provides detailed error information for agent execution
-    """
-
-    def __init__(self, message: str, agent_id: str = None, task: Dict[str, Any] = None):
-        """
-        Initialize agent-specific error
-
-        Args:
-            message (str): Error description
-            agent_id (str, optional): ID of the agent that encountered the error
-            task (Dict, optional): Task details when error occurred
-        """
-        self.agent_id = agent_id
-        self.task = task
-        super().__init__(message)
-
-    def __str__(self):
-        """
-        Provide a comprehensive error representation
-
-        Returns:
-            str: Detailed error description
-        """
-        error_details = f"Agent Error: {super().__str__()}"
-        if self.agent_id:
-            error_details += f"\nAgent ID: {self.agent_id}"
-        if self.task:
-            error_details += f"\nTask: {self.task}"
-        return error_details

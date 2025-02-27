@@ -1,12 +1,14 @@
+# pylint: disable=no-member
 import hashlib
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
-import cv2
-import fitz
-import magic
+import cv2  # type: ignore
+import fitz  # type: ignore
+import magic  # type: ignore
 import numpy as np
 from loguru import logger
+from ai_agents.exceptions import DocumentProcessingError
 
 
 class DocumentUtils:
@@ -53,12 +55,12 @@ class DocumentUtils:
                 },
             }
 
-        except Exception as e:
+        except FileNotFoundError as e:
             logger.error(f"Document validation error: {e}")
             return {"status": "error", "message": str(e)}
 
     @staticmethod
-    def preprocess_image(image_path: str) -> Optional[np.ndarray]:
+    def preprocess_image(image_path: str) -> "np.ndarray":
         """
         Advanced image preprocessing for OCR
 
@@ -66,33 +68,26 @@ class DocumentUtils:
             image_path (str): Path to the image file
 
         Returns:
-            Optional[np.ndarray]: Preprocessed image
+            np.ndarray: Preprocessed image
         """
         try:
-            # Read image
-            image = cv2.imread(image_path)
-
-            # Grayscale conversion
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-            # Noise reduction
-            denoised = cv2.fastNlMeansDenoising(gray)
-
-            # Binarization
-            _, binary = cv2.threshold(
-                denoised, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+            img: "np.ndarray" = cv2.imread(image_path, cv2.IMREAD_COLOR)  # type: ignore
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # type: ignore
+            return cv2.adaptiveThreshold(  # type: ignore
+                gray,
+                255,
+                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,  # type: ignore
+                cv2.THRESH_BINARY,
+                11,
+                2,  # type: ignore
             )
-
-            return binary
-
-        except Exception as e:
-            logger.error(f"Image preprocessing error: {e}")
-            return None
+        except cv2.error as e:  # type: ignore
+            raise DocumentProcessingError(f"CV2 processing error: {e}") from e
 
     @staticmethod
     def extract_document_metadata(document_path: str) -> Dict[str, Any]:
         """
-        Extract comprehensive document metadata
+        Extract metadata from a document
 
         Args:
             document_path (str): Path to the document
@@ -103,23 +98,38 @@ class DocumentUtils:
         try:
             doc = fitz.open(document_path)
 
-            metadata = {
+            # Initialize metadata dictionary with defaults
+            metadata: Dict[str, Any] = {
                 "total_pages": len(doc),
-                "title": doc.metadata.get("title", "Unknown"),
-                "author": doc.metadata.get("author", "Unknown"),
-                "creator": doc.metadata.get("creator", "Unknown"),
-                "producer": doc.metadata.get("producer", "Unknown"),
-                "creation_date": doc.metadata.get("creationDate", "Unknown"),
-                "modification_date": doc.metadata.get("modDate", "Unknown"),
-                "keywords": doc.metadata.get("keywords", []),
+                "title": "Unknown",
+                "author": "Unknown",
+                "creator": "Unknown",
+                "producer": "Unknown",
+                "creation_date": "Unknown",
+                "modification_date": "Unknown",
+                "keywords": [],
                 "page_dimensions": [],
             }
 
+            # Safely get metadata if available
+            if hasattr(doc, "metadata") and doc.metadata is not None:
+                metadata.update(
+                    {
+                        "title": doc.metadata.get("title", "Unknown"),
+                        "author": doc.metadata.get("author", "Unknown"),
+                        "creator": doc.metadata.get("creator", "Unknown"),
+                        "producer": doc.metadata.get("producer", "Unknown"),
+                        "creation_date": doc.metadata.get("creationDate", "Unknown"),
+                        "modification_date": doc.metadata.get("modDate", "Unknown"),
+                        "keywords": doc.metadata.get("keywords", []),
+                    }
+                )
+
             # Page dimension extraction
-            for page_num in range(len(doc)):
-                page = doc[page_num]
+            page_dimensions: List[Dict[str, Any]] = []
+            for page_num, page in enumerate(doc):
                 rect = page.rect
-                metadata["page_dimensions"].append(
+                page_dimensions.append(
                     {
                         "page": page_num,
                         "width": rect.width,
@@ -127,56 +137,37 @@ class DocumentUtils:
                     }
                 )
 
+            metadata["page_dimensions"] = page_dimensions
+
             return {"status": "success", "metadata": metadata}
 
-        except Exception as e:
+        except fitz.fitz.FileDataError as e:
             logger.error(f"Metadata extraction error: {e}")
             return {"status": "error", "message": str(e)}
 
     @staticmethod
     def detect_document_language(text: str) -> List[str]:
         """
-        Detect document languages
+        Detect the language of a document text
 
         Args:
-            text (str): Document text
+            text (str): Document text content
 
         Returns:
-            List[str]: Detected languages
+            List[str]: List of detected languages with confidence scores
         """
         try:
-            from langdetect import detect_langs
+            from langdetect import detect_langs  # type: ignore
 
-            languages = detect_langs(text)
-            return [
-                lang.lang
-                for lang in languages
-                if lang.prob > 0.1  # Confidence threshold
-            ]
-
-        except ImportError:
-            logger.warning("langdetect not installed. Skipping language detection.")
-            return []
+            # Detect languages with confidence scores
+            langs = detect_langs(text)
+            return [str(lang) for lang in langs]
         except Exception as e:
-            logger.error(f"Language detection error: {e}")
-            return []
+            logger.error(f"Language detection failed: {e}")
+            return ["unknown"]
 
+    @staticmethod
+    def detect_language(text: str) -> Dict[str, float]:
+        from langdetect import detect_langs  # type: ignore
 
-def main():
-    """
-    Demonstration of Document Utility Functions
-    """
-    # Example usage
-    document_path = "/opt/sutazaiapp/doc_data/sample.pdf"
-
-    # Document Validation
-    validation_result = DocumentUtils.validate_document(document_path)
-    print("Document Validation:", validation_result)
-
-    # Metadata Extraction
-    metadata_result = DocumentUtils.extract_document_metadata(document_path)
-    print("Document Metadata:", metadata_result)
-
-
-if __name__ == "__main__":
-    main()
+        return {result.lang: result.prob for result in detect_langs(text)}  # type: ignore

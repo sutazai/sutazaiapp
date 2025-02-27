@@ -85,7 +85,7 @@ class UltraComprehensiveSystemAnalyzer:
                         structure_insights[full_path] = file_insights
 
                     except Exception as e:
-                        logger.error(f"Error analyzing {full_path}: {e}")
+                        logger.error("Error processing file %s: %s", full_path, e)
 
         return structure_insights
 

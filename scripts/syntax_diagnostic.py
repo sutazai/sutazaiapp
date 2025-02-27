@@ -12,7 +12,7 @@ class SyntaxDiagnostic:
 
     def analyze_file(self, file_path):
         try:
-            with open(file_path, "r") as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             file_issues = []
@@ -77,7 +77,7 @@ class SyntaxDiagnostic:
             if file_issues:
                 self.issues[file_path] = file_issues
 
-        except Exception as e:
+        except (FileNotFoundError, IOError, PermissionError) as e:
             self.issues[file_path] = [{"type": "File Read Error", "details": str(e)}]
 
     def _analyze_method_signatures(self, content):

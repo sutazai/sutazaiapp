@@ -1,14 +1,37 @@
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from typing import (
+    Any,
+    Dict,
+    List,
+    Optional,
+    Callable,
+    cast,
+    Iterable,
+    overload,
+    Iterator,
+    Union,
+)
+from collections.abc import Sequence
 
 import cv2
-import fitz  # PyMuPDF
+import fitz  # PyMuPDF  # type: ignore
 import numpy as np
-import pytesseract
+import pytesseract  # type: ignore
 from loguru import logger
 
+try:
+    from cv2 import error as cv2_error
+except ImportError:
+    cv2_error: type = Exception  # type: ignore
+
 from ai_agents.base_agent import AgentError, BaseAgent
+from ai_agents.exceptions import PDFExtractionError
+
+try:
+    FileDataError = fitz.FileDataError  # type: ignore[attr-defined]
+except AttributeError:
+    FileDataError = Exception
 
 
 class DocumentProcessorAgent(BaseAgent):
@@ -45,45 +68,53 @@ class DocumentProcessorAgent(BaseAgent):
 
     def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Execute document processing tasks
+        Execute document processing task
 
         Args:
-            task (Dict): Processing task specification
+            task (Dict): Task details including:
+                - document_path: Path to the document
+                - operation: Operation to perform (extract_text, ocr, analyze)
+                - parameters: Operation-specific parameters
 
         Returns:
-            Dict: Processing results
-
-        Raises:
-            AgentError: For processing failures
+            Dict containing operation results
         """
         try:
-            task_type = task.get("type", "extract_text")
-            document_path = task.get("document")
+            document_path = task.get("document_path")
+            operation = task.get("operation", "extract_text")
+            parameters = task.get("parameters", {})
 
-            if not document_path:
-                raise AgentError("No document path provided")
+            if not document_path or not os.path.exists(document_path):
+                return {
+                    "status": "failed",
+                    "error": f"Document not found: {document_path}",
+                }
 
-            # Task routing
-            processing_methods = {
-                "extract_text": self._extract_text,
-                "ocr_processing": self._ocr_processing,
-                "document_analysis": self._document_analysis,
-            }
+            result: Dict[str, Any] = {"status": "success"}
 
-            method = processing_methods.get(task_type)
-            if not method:
-                raise AgentError(f"Unsupported task type: {task_type}")
-
-            result = method(document_path, **task.get("params", {}))
+            if operation == "extract_text":
+                pages = parameters.get("pages")
+                result.update(self._extract_text(document_path, pages))
+            elif operation == "ocr":
+                languages = parameters.get("languages", ["eng"])
+                result.update(self._ocr_processing(document_path, languages))
+            elif operation == "analyze":
+                analysis_type = parameters.get("analysis_type", "structure")
+                result.update(self._document_analysis(document_path, analysis_type))
+            else:
+                result = {
+                    "status": "failed",
+                    "error": f"Unsupported operation: {operation}",
+                }
 
             # Log performance
             self._log_performance(task, result)
-
             return result
 
         except Exception as e:
-            logger.error(f"Document processing error: {e}")
-            raise AgentError(f"Document processing failed: {e}", task=task)
+            error_result = {"status": "failed", "error": str(e)}
+            self._log_performance(task, error_result)
+            raise AgentError(f"Document processing failed: {e}", task=task) from e
 
     def _extract_text(
         self, document_path: str, pages: Optional[List[int]] = None
@@ -99,27 +130,27 @@ class DocumentProcessorAgent(BaseAgent):
             Dict: Extracted text and metadata
         """
         try:
-            doc = fitz.open(document_path)
+            doc: fitz.Document = fitz.open(document_path)  # type: ignore[attr-defined]
 
             # Page selection
-            page_range = pages or range(len(doc))
+            page_range = pages or range(len(doc))  # type: ignore
 
             extracted_text = []
             for page_num in page_range:
-                page = doc[page_num]
-                extracted_text.append(page.get_text())
+                page = doc[page_num]  # type: ignore
+                extracted_text.append(page.get_text("text"))
 
             return {
                 "status": "success",
                 "text": extracted_text,
-                "total_pages": len(doc),
+                "total_pages": len(doc) if hasattr(doc, '__len__') else 0,
                 "metadata": {
                     "file_path": document_path,
                     "extracted_pages": list(page_range),
                 },
             }
 
-        except Exception as e:
+        except FileDataError as e:
             logger.error(f"Text extraction failed: {e}")
             return {"status": "failed", "error": str(e)}
 
@@ -127,7 +158,7 @@ class DocumentProcessorAgent(BaseAgent):
         self, image_path: str, languages: List[str] = ["eng"]
     ) -> Dict[str, Any]:
         """
-        Perform Optical Character Recognition (OCR)
+        Perform OCR on an image
 
         Args:
             image_path (str): Path to the image
@@ -138,10 +169,12 @@ class DocumentProcessorAgent(BaseAgent):
         """
         try:
             # Read image
-            image = cv2.imread(image_path)
+            img = cv2.imread(image_path)
+            if img is None:
+                raise FileNotFoundError(f"Could not read image at {image_path}")
 
             # Preprocess image
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # type: ignore
 
             # OCR processing
             ocr_result = pytesseract.image_to_string(gray, lang="+".join(languages))
@@ -152,9 +185,9 @@ class DocumentProcessorAgent(BaseAgent):
                 "metadata": {"image_path": image_path, "languages": languages},
             }
 
-        except Exception as e:
-            logger.error(f"OCR processing failed: {e}")
-            return {"status": "failed", "error": str(e)}
+        except cv2_error as e:
+            logger.error(f"OpenCV processing error: {str(e)}")
+            raise
 
     def _document_analysis(
         self, document_path: str, analysis_type: str = "structure"
@@ -170,39 +203,61 @@ class DocumentProcessorAgent(BaseAgent):
             Dict: Document analysis results
         """
         try:
-            doc = fitz.open(document_path)
+            doc: fitz.Document = fitz.open(document_path)  # type: ignore
 
-            analysis_results = {
-                "total_pages": len(doc),
+            analysis_results: Dict[str, Any] = {
+                "total_pages": len(doc) if hasattr(doc, '__len__') else 0,
                 "text_blocks": [],
                 "images": [],
                 "tables": [],
             }
 
-            for page_num in range(len(doc)):
-                page = doc[page_num]
+            for page_num, page in enumerate(doc):
 
-                # Text block extraction
-                blocks = page.get_text("dict")["blocks"]
-                analysis_results["text_blocks"].extend(
-                    [
-                        {
-                            "text": block.get("lines", []),
-                            "bbox": block.get("bbox"),
-                        }
-                        for block in blocks
-                        if block["type"] == 0
-                    ]
-                )
+                # Text block extraction - updated for PyMuPDF compatibility with Python 3.11
+                text_dict = page.get_text("dict")
+                if "blocks" in text_dict:
+                    blocks = text_dict["blocks"]
+                    text_blocks = []
+                    for block in blocks:
+                        if block.get("type", -1) == 0:  # Text blocks have type 0
+                            text_blocks.append(
+                                {
+                                    "text": block.get("lines", []),
+                                    "bbox": block.get("bbox"),
+                                }
+                            )
 
-                # Image detection
-                images = page.get_images()
-                analysis_results["images"].extend(
-                    [
-                        {"xref": img[0], "bbox": page.get_image_bbox(img[0])}
-                        for img in images
-                    ]
-                )
+                    # Fix for type checking issues
+                    if analysis_results["text_blocks"]:
+                        analysis_results["text_blocks"] = (
+                            cast(List, analysis_results["text_blocks"]) + text_blocks
+                        )
+                    else:
+                        analysis_results["text_blocks"] = text_blocks
+
+                # Image detection - updated for PyMuPDF compatibility with Python 3.11
+                try:
+                    images = page.get_images()
+                    image_info = []
+                    for img in images:
+                        try:
+                            bbox = page.get_image_bbox(img[0])
+                            image_info.append({"xref": img[0], "bbox": bbox})
+                        except Exception as img_err:
+                            logger.warning(f"Error getting image bbox: {img_err}")
+
+                    # Fix for type checking issues
+                    if analysis_results["images"]:
+                        analysis_results["images"] = (
+                            cast(List, analysis_results["images"]) + image_info
+                        )
+                    else:
+                        analysis_results["images"] = image_info
+                except Exception as img_ex:
+                    logger.warning(
+                        f"Error processing images on page {page_num}: {img_ex}"
+                    )
 
             return {
                 "status": "success",
@@ -213,9 +268,29 @@ class DocumentProcessorAgent(BaseAgent):
                 },
             }
 
-        except Exception as e:
+        except FileDataError as e:
             logger.error(f"Document analysis failed: {e}")
             return {"status": "failed", "error": str(e)}
+
+
+class Document(Sequence[str]):
+    def __init__(self, pages: List[str]) -> None:
+        self.pages = pages
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.pages)
+
+    @overload
+    def __getitem__(self, index: int) -> str: ...
+
+    @overload
+    def __getitem__(self, s: slice) -> List[str]: ...
+
+    def __getitem__(self, key: Union[int, slice]) -> Union[str, List[str]]:
+        return self.pages[key]
+
+    def __len__(self) -> int:
+        return len(self.pages)
 
 
 def main():
@@ -224,15 +299,15 @@ def main():
 
     # Example tasks
     pdf_task = {
-        "type": "extract_text",
-        "document": "/opt/sutazaiapp/doc_data/sample.pdf",
-        "params": {"pages": [0, 1]},
+        "document_path": "/opt/sutazaiapp/doc_data/sample.pdf",
+        "operation": "extract_text",
+        "parameters": {"pages": [0, 1]},
     }
 
     ocr_task = {
-        "type": "ocr_processing",
-        "document": "/opt/sutazaiapp/doc_data/sample_image.png",
-        "params": {"languages": ["eng", "fra"]},
+        "document_path": "/opt/sutazaiapp/doc_data/sample_image.png",
+        "operation": "ocr",
+        "parameters": {"languages": ["eng", "fra"]},
     }
 
     try:

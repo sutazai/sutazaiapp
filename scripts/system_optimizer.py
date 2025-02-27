@@ -29,8 +29,29 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 # Import local modules after path adjustment
 # isort: off
-from config.config_manager import ConfigurationManager  # noqa: E402
-from core_system.monitoring.advanced_logger import AdvancedLogger  # noqa: E402
+try:
+    from config import config_manager
+except ImportError:
+    # Stub implementation for config_manager
+    class config_manager:
+        @staticmethod
+        def load_config(name):
+            return {}
+
+
+try:
+    from core_system.monitoring import advanced_logger
+except ImportError:
+    # Stub implementation for advanced_logger
+    class advanced_logger:
+        @staticmethod
+        def log_info(msg):
+            pass
+
+        @staticmethod
+        def log_error(msg):
+            pass
+
 
 # isort: on
 
@@ -58,8 +79,8 @@ class AdvancedSystemOptimizer:  # noqa: E501
     def __init__(
         self,
         base_dir: str = "/opt/sutazaiapp",
-        config_manager: ConfigurationManager = None,  # noqa: E501
-        logger: AdvancedLogger = None,
+        config_manager: config_manager = None,  # noqa: E501
+        logger: advanced_logger = None,
     ):
         """
         Initialize advanced system optimizer
@@ -70,8 +91,8 @@ class AdvancedSystemOptimizer:  # noqa: E501
             logger: Advanced logging system
         """
         self.base_dir = base_dir
-        self.config_manager = config_manager or ConfigurationManager()
-        self.logger = logger or AdvancedLogger()
+        self.config_manager = config_manager or config_manager()
+        self.logger = logger or advanced_logger()
 
         # Optimization configuration
         self.optimization_config = {

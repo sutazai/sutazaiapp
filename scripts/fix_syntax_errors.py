@@ -9,7 +9,7 @@ def fix_syntax_errors(directory):
             if file.endswith(".py"):
                 filepath = os.path.join(root, file)
                 try:
-                    with open(filepath, "r") as f:
+                    with open(filepath, "r", encoding="utf-8") as f:
                         source = f.read()
 
                     # Try parsing the AST
@@ -21,7 +21,7 @@ def fix_syntax_errors(directory):
                     corrected_source = correct_common_syntax_errors(source)
 
                     # Write corrected source
-                    with open(filepath, "w") as f:
+                    with open(filepath, "w", encoding="utf-8") as f:
                         f.write(corrected_source)
 
                     print(f"Attempted to fix {filepath}")

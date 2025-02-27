@@ -1,253 +1,93 @@
-# SutazAI Consolidated Requirements for Python 3.11
-# Generated on 2025-02-25
-# This file consolidates all requirements from multiple sources and is ready for Python 3.11
-# Updated for security and compatibility fixes
+# SutazAI Optimized Requirements for Python 3.11
+# Core dependencies
+fastapi>=0.115.0; python_version == '3.11'
+uvicorn[standard]>=0.34.0; python_version == '3.11'
+pydantic>=2.10.0; python_version == '3.11'
+SQLAlchemy>=2.0.27; python_version == '3.11'
+python-dotenv>=1.0.1; python_version == '3.11'
+loguru>=0.7.3; python_version == '3.11'
+httpx>=0.28.0; python_version == '3.11'
+alembic>=1.13.0; python_version == '3.11'
+asyncpg>=0.29.0; python_version == '3.11'
+psycopg2-binary>=2.9.9; python_version == '3.11'
 
-pip>=25.0.1; python_version == '3.11'
+# AI and ML dependencies
+langchain>=0.0.267; python_version == '3.11'
+transformers>=4.36.0; python_version == '3.11'
+huggingface-hub>=0.20.0; python_version == '3.11'
+sentence-transformers>=2.2.2; python_version == '3.11'
+numpy>=1.26.0; python_version == '3.11'
+pandas>=2.2.0; python_version == '3.11'
+scikit-learn>=1.4.0; python_version == '3.11'
+torch>=2.0.0; python_version == '3.11'
+chromadb>=0.4.14; python_version == '3.11'
+
+# Vector databases
+qdrant-client>=1.8.2,<2.0.0; python_version == '3.11'
+pgvector>=0.2.3; python_version == '3.11'
+faiss-cpu>=1.7.4; python_version == '3.11'
+
+# API and authentication
+python-jose[cryptography]>=3.3.0; python_version == '3.11'
+passlib[bcrypt]>=1.7.4; python_version == '3.11'
+python-multipart>=0.0.9; python_version == '3.11'
+pyjwt>=2.8.0; python_version == '3.11'
+
+# Document processing
+PyMuPDF==1.23.8; python_version == '3.11'  # fitz library for PDF processing
+opencv-python-headless==4.9.0.80; python_version == '3.11'  # cv2 for image processing
+pytesseract>=0.3.10; python_version == '3.11'  # OCR processing
+
+# Security and encryption
+cryptography>=41.0.0; python_version == '3.11'  # For encryption operations
+
+# Utilities
+requests>=2.32.0; python_version == '3.11'
+python-dateutil>=2.9.0; python_version == '3.11'
+tqdm>=4.65.0; python_version == '3.11'
+rich>=13.7.0; python_version == '3.11'
+pydantic-settings>=2.1.0; python_version == '3.11'
+orjson>=3.9.0; python_version == '3.11'
+structlog>=23.1.0; python_version == '3.11'
+networkx>=3.0.0; python_version == '3.11'
+redis>=4.5.0; python_version == '3.11'
+spacy>=3.6.0; python_version == '3.11'
+psutil==5.9.7; python_version == '3.11'
+pyyaml>=6.0.0; python_version == '3.11'  # For YAML parsing
+
+# Profiling and performance
+pyinstrument>=4.6.0; python_version == '3.11'  # More efficient profiling library than cProfile
+
+# NLP and text processing
+nltk>=3.8.0; python_version == '3.11'
+gensim>=4.3.0; python_version == '3.11'
+
+# Testing
+pytest>=8.0.0; python_version == '3.11'
+pytest-asyncio>=0.25.0; python_version == '3.11'
+pytest-cov>=4.1.0; python_version == '3.11'
+pytest-mock>=3.11.0; python_version == '3.11'
+hypothesis>=6.82.0; python_version == '3.11'
+
+# Code quality and documentation
+black>=25.1.0; python_version == '3.11'
+isort>=5.13.0; python_version == '3.11'
+flake8>=7.0.0; python_version == '3.11'
+mypy>=1.8.0; python_version == '3.11'
+ruff>=0.1.6; python_version == '3.11'
+bandit>=1.7.6; python_version == '3.11'
+pre-commit>=3.6.0; python_version == '3.11'
+pylint>=3.0.0; python_version == '3.11'  # Python linter for code analysis
+autopep8>=2.0.0; python_version == '3.11'  # PEP 8 code formatter
+semgrep>=1.38.0; python_version == '3.11'  # Pattern-based code scanner
+safety>=2.3.0; python_version == '3.11'  # Dependency vulnerability checker
+
+# Add Python basics for 3.11
+pip>=25.0.0; python_version == '3.11'
 setuptools>=68.0.0; python_version == '3.11'
 wheel>=0.40.0; python_version == '3.11'
-# aria2c is not a Python package; install via system package manager (apt-get install aria2)
-# aria2c; python_version == '3.11'  # Added aria2c dependency
 
-accelerate>=0.25.0; python_version == '3.11'
-aiohttp>=3.8.5; python_version == '3.11'  # Version >=3.8.5 required for Python 3.11
-aiobotocore>=2.5.0; python_version == '3.11'  # AWS S3 interactions
-alembic>=1.13.1; python_version == '3.11'  # Updated to newer version
-allure-pytest>=2.13.2; python_version == '3.11'
-annotated-types>=0.7.0; python_version == '3.11'
-annoy>=1.17.0; python_version == '3.11'  # Vector similarity search
-anyio>=4.8.0; python_version == '3.11'
-asyncpg>=0.29.0; python_version == '3.11'  # Async PostgreSQL client
-astroid>=2.15.5; python_version == '3.11'
-attrs>=25.1.0; python_version == '3.11'
-authlib>=1.4.1; python_version == '3.11'
-autopep8>=2.0.4; python_version == '3.11'
-bandit>=1.7.6; python_version == '3.11'  # Security scanning tool
-bcrypt>=4.0.1; python_version == '3.11'
-bitsandbytes>=0.41.3; python_version == '3.11'  # Quantization for ML models
-black>=25.1.0; python_version == '3.11'
-bokeh>=3.3.0; python_version == '3.11'  # Interactive visualization
-boltons>=21.0.0; python_version == '3.11'
-boto3>=1.28.0; python_version == '3.11'  # AWS SDK
-bracex>=2.5.post1; python_version == '3.11'
-catalogue>=2.0.6, <2.1.0; python_version == '3.11'
-celery>=5.3.6; python_version == '3.11'
-certifi>=2025.1.31; python_version == '3.11'
-cffi>=1.17.1; python_version == '3.11'
-charset-normalizer>=3.4.1; python_version == '3.11'
-chromadb>=0.4.14; python_version == '3.11'  # Vector database
-click>=8.1.8; python_version == '3.11'
-click-option-group>=0.5.6; python_version == '3.11'
-colorama>=0.4.6; python_version == '3.11'
-contourpy>=1.3.1; python_version == '3.11'
-coverage>=7.4.0; python_version == '3.11'
-cryptography>=44.0.1; python_version == '3.11'  # Latest for security fixes
-cycler>=0.12.1; python_version == '3.11'
-cymem>=2.0.2, <2.1.0; python_version == '3.11'
-cython>=0.25, <3.0.0; python_version == '3.11'
-cython-lint>=0.15.0; python_version == '3.11'
-dask==2025.2.0; python_version == '3.11'
-distributed==2025.2.0; python_version == '3.11'
-defusedxml>=0.7.1; python_version == '3.11'
-deprecated>=1.2.18; python_version == '3.11'
-dill>=0.3.9; python_version == '3.11'
-distlib>=0.3.9; python_version == '3.11'
-docker>=6.1.2; python_version == '3.11'
-dparse>=0.6.4; python_version == '3.11'
-einops>=0.7.0; python_version == '3.11'  # Tensor operations
-elasticsearch>=8.9.0; python_version == '3.11'  # Elasticsearch integration
-exceptiongroup>=1.2.2; python_version == '3.11'
-face>=24.0.0; python_version == '3.11'
-faiss-cpu>=1.7.4; python_version == '3.11'  # Vector similarity search
-faker>=20.1.0; python_version == '3.11'
-fastapi>=0.115.8; python_version == '3.11'
-filelock>=3.16.1; python_version == '3.11'  # Modified to be compatible with safety package
-flake8>=7.0.0; python_version == '3.11'
-flower>=2.0.1; python_version == '3.11'
-fonttools>=4.56.0; python_version == '3.11'
-gensim>=4.3.1; python_version == '3.11'
-glom>=22.1.0; python_version == '3.11'
-googleapis-common-protos>=1.67.0; python_version == '3.11'
-gputil>=1.4.0; python_version == '3.11'
-graphviz>=0.20.1; python_version == '3.11'
-gunicorn>=21.2.0; python_version == '3.11'
-h11>=0.14.0; python_version == '3.11'
-hnswlib>=0.7.0; python_version == '3.11'  # Approximate nearest neighbors
-httpcore>=1.0.7; python_version == '3.11'
-httptools>=0.6.1; python_version == '3.11'  # HTTP protocol parser
-httpx>=0.28.1; python_version == '3.11'
-huggingface-hub>=0.20.0; python_version == '3.11'  # Interface with HuggingFace models
-hypothesis>=6.82.1, <7.0.0; python_version == '3.11'
-idna>=3.10; python_version == '3.11'  # Compatible with newer requests
-importlib_metadata>=7.1.0; python_version == '3.11'
-iniconfig>=2.0.0; python_version == '3.11'
-isort>=5.13.2, <6.0; python_version == '3.11'
-jinja2>=3.1.2; python_version == '3.11'
-jsonschema>=4.17.3; python_version == '3.11'
-jsonschema-specifications>=2024.10.1; python_version == '3.11'
-kiwisolver>=1.4.8; python_version == '3.11'
-langchain>=0.0.267; python_version == '3.11'  # Large language model framework
-langchain-experimental>=0.0.43; python_version == '3.11'  # Experimental LLM tools
-langcodes>=3.2.0, <4.0.0; python_version == '3.11'
-line-profiler>=4.0.3; python_version == '3.11'
-llama-cpp-python>=0.3.0; python_version == '3.11'  # Python bindings for llama.cpp
-locust>=2.15.1; python_version == '3.11'
-loguru>=0.7.3; python_version == '3.11'
-mando>=0.7.1; python_version == '3.11'
-markdown>=3.4.3; python_version == '3.11'
-markdown-it-py>=3.0.0; python_version == '3.11'
-markupsafe>=3.0.2; python_version == '3.11'
-marshmallow>=3.26.1; python_version == '3.11'
-matplotlib>=3.7.2; python_version == '3.11'
-mccabe>=0.7.0; python_version == '3.11'
-mdurl>=0.1.2; python_version == '3.11'
-memory-profiler>=0.60.0; python_version == '3.11'
-minio>=7.2.0; python_version == '3.11'  # S3-compatible object storage
-ml_datasets>=0.2.0, <0.3.0; python_version == '3.11'
-murmurhash>=0.28.0, <1.1.0; python_version == '3.11'
-mypy>=1.8.0; python_version == '3.11'
-mypy-extensions>=1.0.0; python_version == '3.11'
-networkx>=3.1; python_version == '3.11'
-nltk>=3.8.1; python_version == '3.11'
-numpy>=1.26.4; python_version == '3.11'  # Version >=1.23 required for Python 3.11
-opentelemetry-api>=1.21.0; python_version == '3.11'
-opentelemetry-exporter-otlp-proto-common>=1.25.0; python_version == '3.11'
-opentelemetry-exporter-otlp-proto-http>=1.25.0; python_version == '3.11'
-opentelemetry-instrumentation>=0.46b0; python_version == '3.11'
-opentelemetry-instrumentation-requests>=0.46b0; python_version == '3.11'
-opentelemetry-proto>=1.25.0; python_version == '3.11'
-opentelemetry-sdk>=1.21.0; python_version == '3.11'
-opentelemetry-semantic-conventions>=0.46b0; python_version == '3.11'
-opentelemetry-util-http>=0.46b0; python_version == '3.11'
-optimum>=1.14.1; python_version == '3.11'  # Hugging Face optimization library
-orjson>=3.9.0; python_version == '3.11'  # High-performance JSON parsing
-packaging>=24.2; python_version == '3.11'
-pandas>=2.2.3; python_version == '3.11'  # Version >=1.5 required for Python 3.11
-passlib[bcrypt]>=1.7.4; python_version == '3.11'
-pathspec>=0.12.1; python_version == '3.11'
-pdoc>=7.1.0; python_version == '3.11'
-pdoc3>=0.10.0; python_version == '3.11'
-peewee>=3.17.9; python_version == '3.11'
-pendulum>=2.1.2; python_version == '3.11'  # Advanced datetime handling
-pgvector>=0.2.3; python_version == '3.11'  # PostgreSQL vector extension
-pillow>=11.1.0; python_version == '3.11'  # Latest for security fixes (>=10.0.0 for CVE fixes)
-pip-tools>=7.3.0; python_version == '3.11'
-pipdeptree>=2.5.0; python_version == '3.11'
-platformdirs>=4.3.6; python_version == '3.11'
-plotly>=5.16.1; python_version == '3.11'
-pluggy>=1.5.0; python_version == '3.11'
-polars>=0.19.0; python_version == '3.11'  # High-performance dataframes
-pre-commit>=3.6.2; python_version == '3.11'
-preshed>=3.0.2, <3.1.0; python_version == '3.11'
-prometheus-client>=0.16.0; python_version == '3.11'
-protobuf>=4.25.6; python_version == '3.11'
-psutil>=5.9.5; python_version == '3.11'
-psycopg2-binary>=2.9.9; python_version == '3.11'
-py-cpuinfo>=9.0.0; python_version == '3.11'
-py-spy>=0.3.14; python_version == '3.11'
-pyarrow>=12.0.0; python_version == '3.11'  # Columnar data processing for high-performance analytics
-pycparser>=2.22; python_version == '3.11'
-pydantic>=2.10.6; python_version == '3.11'
-pydantic-settings>=2.1.0; python_version == '3.11'
-pydantic_core>=2.18.2; python_version == '3.11'
-pygments>=2.19.1; python_version == '3.11'
-pyjwt>=2.8.0; python_version == '3.11'  # Updated for CVE-2022-29217 fix
-pylint>=3.0.3; python_version == '3.11'
-pymupdf>=1.22.3; python_version == '3.11'
-pymysql>=1.0.3; python_version == '3.11'
-pynacl>=1.5.0; python_version == '3.11'  # Cryptographic library (safer alternative to PyCrypto)
-pyparsing>=3.2.1; python_version == '3.11'
+# Additional dependencies for Python 3.11 compatibility and internal modules
+python-magic>=0.4.24; python_version == '3.11'
+astor>=0.8.1; python_version == '3.11'
 pyperclip>=1.8.2; python_version == '3.11'
-pypdf2>=3.0.1; python_version == '3.11'  # PDF processing
-pyre-check>=0.9.19; python_version == '3.11'
-pyright>=1.1.346; python_version == '3.11'
-pyspellchecker>=0.7.0; python_version == '3.11'
-pyspark>=3.4.0; python_version == '3.11'  # Spark integration
-pytesseract>=0.3.8; python_version == '3.11'  # OCR tool
-pytest>=8.3.4; python_version == '3.11'
-pytest-asyncio>=0.25.3; python_version == '3.11'
-pytest-benchmark>=4.0.0; python_version == '3.11'
-pytest-cov>=4.1.0; python_version == '3.11'
-pytest-html>=3.2.0; python_version == '3.11'
-pytest-mock>=3.11.1; python_version == '3.11'
-pytest-timeout>=1.3.0, <2.0.0; python_version == '3.11'
-python-dateutil>=2.9.0.post0; python_version == '3.11'
-python-docx>=0.8.11; python_version == '3.11'
-python-dotenv>=1.0.0; python_version == '3.11'
-python-frontmatter>=1.0.0; python_version == '3.11'
-python-jose[cryptography]>=3.3.0; python_version == '3.11'
-python-json-logger>=2.0.7; python_version == '3.11'
-python-magic>=0.4.27; python_version == '3.11'  # File type detection
-python-multipart>=0.0.9; python_version == '3.11'
-pytype>=2023.6.20; python_version == '3.11'
-PyYAML>=6.0.1; python_version == '3.11'  # Updated for security fixes (>=5.1 for safe_load by default)
-qdrant-client>=1.8.2,<2.0.0; python_version == '3.11'  # Vector database client
-radon>=5.1.0; python_version == '3.11'
-rapidfuzz>=3.5.2; python_version == '3.11'
-ray>=2.42.0; python_version == '3.11'
-redis>=5.0.1; python_version == '3.11'
-referencing>=0.36.2; python_version == '3.11'
-requests>=2.32.3; python_version == '3.11'  # Updated for security fixes and idna>=3 compatibility
-responses>=0.23.1; python_version == '3.11'
-rich>=13.7.0; python_version == '3.11'
-rpds-py>=0.22.3; python_version == '3.11'
-ruamel.yaml>=0.18.6; python_version == '3.11'
-ruamel.yaml.clib>=0.2.8; python_version == '3.11'
-ruff>=0.1.6; python_version == '3.11'  # Fast Python linter
-safetensors>=0.4.0; python_version == '3.11'  # Safe way to store tensors
-safety>=3.3.1; python_version == '3.11'
-scann>=1.2.9; python_version == '3.11'  # Vector similarity search
-scikit-learn>=1.4.0; python_version == '3.11'
-scipy>=1.15.2; python_version == '3.11'  # Scientific computing library
-seaborn>=0.12.2; python_version == '3.11'
-semgrep>=1.67.0; python_version == '3.11'
-sentence-transformers>=2.2.2; python_version == '3.11'  # Sentence embeddings
-sentencepiece>=0.1.99; python_version == '3.11'  # Tokenization for NLP
-setuptools>=75.8.0; python_version == '3.11'
-shellingham>=1.5.4; python_version == '3.11'
-six>=1.17.0; python_version == '3.11'
-sniffio>=1.3.1; python_version == '3.11'
-spacy>=3.5.2; python_version == '3.11'
-spacy-legacy>=3.0.11, <3.1.0; python_version == '3.11'
-spacy-loggers>=1.0.0, <2.0.0; python_version == '3.11'
-sphinx>=5.3.0; python_version == '3.11'
-sphinx-rtd-theme>=1.1.1; python_version == '3.11'
-sqlalchemy>=2.0.27; python_version == '3.11'
-srsly>=2.4.3, <3.0.0; python_version == '3.11'
-starlette>=0.45.3; python_version == '3.11'
-streamlit>=1.28.2; python_version == '3.11'  # Data app framework
-streamlit-ace>=0.1.1; python_version == '3.11'  # Code editor for Streamlit
-streamlit-chat>=0.0.2.1; python_version == '3.11'  # Chat interface for Streamlit
-structlog>=23.1.0; python_version == '3.11'
-superagi>=0.0.10; python_version == '3.11'  # Agent framework
-tensorflow>=2.18.0; python_version == '3.11'  # Machine learning framework
-testcontainers>=3.7.1; python_version == '3.11'
-textstat>=0.7.3; python_version == '3.11'
-thinc>=8.3.4, <8.4.0; python_version == '3.11'
-tokenizers>=0.15.0; python_version == '3.11'  # Fast tokenizers
-tomli>=2.0.2; python_version == '3.11'
-tomlkit>=0.13.2; python_version == '3.11'
-torch>=2.6.0; python_version == '3.11'
-torchaudio>=2.6.0; python_version == '3.11'  # Audio processing for PyTorch
-torchvision>=0.21.0; python_version == '3.11'
-tqdm>=4.65.0; python_version == '3.11'
-transformers>=4.36.0; python_version == '3.11'
-typer>=0.3.0, <1.0.0; python_version == '3.11'
-types-mock>=0.1.1; python_version == '3.11'
-types-PyYAML>=6.0.12; python_version == '3.11'  # Type stubs for PyYAML
-types-redis>=4.6.0; python_version == '3.11'
-types-requests>=2.31.0; python_version == '3.11'
-types-setuptools>=69.0.0; python_version == '3.11'
-typing-extensions>=4.12.2; python_version == '3.11'
-urllib3>=2.3.0; python_version == '3.11'  # Compatible with requests>=2.32.0
-uvicorn[standard]>=0.34.0; python_version == '3.11'
-uvloop>=0.19.0; python_version == '3.11'
-virtualenv>=20.29.2; python_version == '3.11'
-wasabi>=0.9.1, <1.2.0; python_version == '3.11'
-watchdog>=3.0.0; python_version == '3.11'
-wcmatch>=8.5.2; python_version == '3.11'
-weasel>=0.1.0, <0.5.0; python_version == '3.11'
-wheel>=0.45.1; python_version == '3.11'
-wrapt>=1.17.2; python_version == '3.11'
-zipp>=3.21.0; python_version == '3.11'
-flask==3.1.0; python_version == '3.11'

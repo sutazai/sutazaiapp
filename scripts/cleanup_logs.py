@@ -20,7 +20,7 @@ threshold = 86400
 
 def compress_old_logs():
     now = time.time()
-    for root, dirs, files in os.walk(logs_dir):
+    for root, _, files in os.walk(logs_dir):
         for filename in files:
             filepath = os.path.join(root, filename)
             # Skip if already compressed

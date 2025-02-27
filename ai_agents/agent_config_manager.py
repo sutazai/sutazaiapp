@@ -1,9 +1,13 @@
+"""Agent Configuration Manager Module
+This module provides functionalities to load, validate, update, and manage configuration files for AI agents.
+"""
+
 import json
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
-import jsonschema
-import yaml
+import jsonschema  # type: ignore
+import yaml  # type: ignore
 from loguru import logger
 
 
@@ -43,7 +47,7 @@ class AgentConfigManager:
         # Configuration cache
         self._config_cache: Dict[str, Dict[str, Any]] = {}
 
-    def load_config(self, agent_name: str, config_type: str = "json") -> Dict[str, Any]:
+    def load_config(self, agent_name: str, config_type: str = "json") -> dict[str, Any]:
         """
         Load configuration for a specific agent
 
@@ -70,7 +74,7 @@ class AgentConfigManager:
 
         # Load configuration
         try:
-            with open(config_path, "r") as config_file:
+            with open(config_path, "r", encoding="utf-8") as config_file:
                 if config_type == "json":
                     config = json.load(config_file)
                 elif config_type == "yaml":
@@ -84,7 +88,7 @@ class AgentConfigManager:
             # Cache configuration
             self._config_cache[agent_name] = config
 
-            return config
+            return cast(dict[str, Any], config)
 
         except FileNotFoundError:
             logger.error(f"Configuration file not found: {config_path}")
@@ -188,7 +192,7 @@ class AgentConfigManager:
                 merged[key] = value
         return merged
 
-    def get_config_schema(self, agent_name: str) -> Optional[Dict[str, Any]]:
+    def get_config_schema(self, agent_name: str) -> Optional[dict[str, Any]]:
         """
         Retrieve configuration schema for an agent
 
@@ -202,7 +206,8 @@ class AgentConfigManager:
 
         try:
             with open(schema_path, "r") as schema_file:
-                return json.load(schema_file)
+                schema = json.load(schema_file)
+            return cast(Optional[dict[str, Any]], schema)
         except FileNotFoundError:
             logger.warning(f"No schema found for agent: {agent_name}")
             return None

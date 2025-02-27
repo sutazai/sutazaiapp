@@ -10,7 +10,7 @@ Comprehensive system optimization framework providing:
 """
 
 from core_system.monitoring.advanced_logger import AdvancedLogger
-from config.config_manager import ConfigurationManager
+from misc.config.config_manager import ConfigurationManager
 import json
 import multiprocessing
 import os
@@ -19,6 +19,7 @@ import sys
 from datetime import datetime
 from typing import Any, Dict, List
 
+# Third party imports
 import psutil
 
 # Add project root to Python path
@@ -197,7 +198,7 @@ class AdvancedSystemOptimizer:
             f'logs/system_optimization_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json',
         )
 
-        with open(report_path, "w") as f:
+        with open(report_path, "w", encoding="utf-8") as f:
             json.dump(optimization_report, f, indent=2)
 
         return optimization_report

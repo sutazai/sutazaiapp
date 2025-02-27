@@ -9,7 +9,16 @@ Performs an exhaustive audit of the entire system, including:
 - Logging and Monitoring Evaluation
 """
 
-from config.config_manager import ConfigurationManager
+try:
+    from config import config_manager
+except ImportError:
+    # Stub implementation for config_manager
+    class config_manager:
+        @staticmethod
+        def load_config(name):
+            return {}
+
+
 import safety
 import psutil
 import pkg_resources
@@ -46,7 +55,7 @@ class SystemAuditor:
         Args:
             config_env (str): Configuration environment to audit
         """
-        self.config_manager = ConfigurationManager(environment=config_env)
+        self.config_manager = config_manager(environment=config_env)
         self.audit_report: Dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "environment": config_env,

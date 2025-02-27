@@ -169,6 +169,7 @@ class SystemDiagnosticOptimizer:
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
             )
 
             semgrep_result = subprocess.run(

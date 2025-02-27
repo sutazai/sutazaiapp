@@ -47,14 +47,13 @@ class AgentFactory:
         self._discover_agents()
 
     def _discover_agents(self):
-        """
-        Dynamically discover and register available agent classes
-        """
+        """Discover and register available agent classes by scanning the agents directory."""
         logger.info("🔍 Discovering AI Agents")
 
         for agent_type in os.listdir(self.agents_dir):
             agent_path = os.path.join(self.agents_dir, agent_type)
 
+            # Skip if not a directory or if it is the base_agent which is abstract
             if not os.path.isdir(agent_path) or agent_type == "base_agent":
                 continue
 
@@ -73,11 +72,11 @@ class AgentFactory:
         self, agent_type: str, config: Optional[Dict[str, Any]] = None
     ) -> BaseAgent:
         """
-        Create an agent instance with optional configuration
+        Create an agent instance by type
 
         Args:
             agent_type (str): Type of agent to create
-            config (Dict, optional): Agent-specific configuration
+            config (Optional[Dict]): Agent configuration
 
         Returns:
             BaseAgent: Instantiated agent
@@ -86,7 +85,9 @@ class AgentFactory:
             ValueError: If agent type is not registered
         """
         if agent_type not in self._agent_registry:
-            raise ValueError(f"Agent type {agent_type} not found")
+            raise ValueError(
+                f"Unknown agent type: {agent_type}. Available types: {', '.join(self._agent_registry.keys())}"
+            )
 
         # Load configuration if not provided
         if config is None:
@@ -97,7 +98,15 @@ class AgentFactory:
                 config = {}
 
         agent_class = self._agent_registry[agent_type]
-        agent_instance = agent_class(agent_name=agent_type, **config)
+
+        # Extract BaseAgent parameters from config
+        agent_name = agent_type
+        log_dir = config.pop("log_dir", "logs") if config else "logs"
+
+        # Create the agent instance with proper parameters
+        agent_instance = agent_class(
+            agent_name=agent_name, log_dir=log_dir, **(config or {})
+        )
 
         logger.info(f"🤖 Created Agent: {agent_type}")
         return agent_instance
