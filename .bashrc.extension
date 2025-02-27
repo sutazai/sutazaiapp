@@ -1,0 +1,28 @@
+# SutazAI Terminal Performance Extensions
+
+# Use stdbuf to prevent output buffering issues
+alias pylint='stdbuf -oL /opt/sutazaiapp/scripts/wrappers/pylint-wrapper.sh'
+alias mypy='stdbuf -oL /opt/sutazaiapp/scripts/wrappers/mypy-wrapper.sh'
+alias semgrep='stdbuf -oL /opt/sutazaiapp/scripts/wrappers/semgrep-wrapper.sh'
+
+# Use unbuffer for other potentially problematic commands
+if command -v unbuffer >/dev/null 2>&1; then
+  alias npm='unbuffer npm'
+  alias python='unbuffer python'
+else
+  echo "Warning: 'unbuffer' not found. Install 'expect' package for better terminal behavior."
+fi
+
+# Fix cursor terminal settings
+export TERM=xterm-256color
+stty sane
+
+# Avoid terminal freezing with large outputs
+export PYTHONUNBUFFERED=1
+export NODE_NO_READLINE=1
+
+# Ensure proper path
+export PATH="/opt/sutazaiapp/scripts/wrappers:$PATH"
+
+# Message
+echo "SutazAI Terminal Performance Extensions loaded"
