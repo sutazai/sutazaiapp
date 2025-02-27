@@ -1,0 +1,38 @@
+[owner]
+name = "Florin Cristian Suta"
+email = "chrissuta01@gmail.com"
+phone = "+48517716005"
+
+[system]
+mode = "offline"
+log_level = "INFO"
+log_path = "/opt/sutazaiapp/logs/agent.log"
+
+[security]
+external_calls_enabled = false
+otp_required = true
+
+[performance]
+max_concurrent_agents = 4
+resource_allocation_strategy = "conservative"
+
+[modules]
+enabled = [
+    "code_generation",
+    "task_orchestration",
+    "offline_model_management"
+]
+
+[offline_mode]
+local_model_path = "/opt/sutazaiapp/model_management"
+network_isolation = true
+
+[logging]
+rotation_size = "10 MB"
+max_log_files = 5
+
+[agent_capabilities]
+code_generation = true
+task_planning = true
+self_improvement = true
+context_awareness = true 

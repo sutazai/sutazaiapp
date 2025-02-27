@@ -1,0 +1,19 @@
+[security]
+external_calls_enabled = false
+otp_required = true
+max_attempts = 3
+
+[logging]
+log_external_attempts = true
+log_path = "/opt/sutazaiapp/logs/external_calls.log"
+
+[restrictions]
+allowed_domains = [
+    "github.com",
+    "pypi.org",
+    "raw.githubusercontent.com"
+]
+
+[performance]
+timeout_seconds = 10
+retry_delay = 2 

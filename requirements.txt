@@ -23,7 +23,7 @@ loguru>=0.7.2,<0.8.0; python_version == '3.11'
 structlog>=24.1.0,<25.0.0; python_version == '3.11'
 
 # AI and Machine Learning
-torch>=2.2.0,<2.7.0; python_version == '3.11'
+torch>=2.1.0,<2.2.0; python_version == '3.11'
 transformers>=4.38.0,<4.39.0; python_version == '3.11'
 sentence-transformers>=2.3.0,<2.4.0; python_version == '3.11'
 langchain>=0.1.0,<0.2.0; python_version == '3.11'
@@ -91,7 +91,7 @@ redis>=4.5.5,<4.6.0; python_version == '3.11'
 
 # Type Checking and Compatibility
 typing-extensions>=4.10.0,<4.11.0; python_version == '3.11'
-importlib-metadata>=7.0.0,<7.1.0; python_version == '3.11'
+importlib-metadata>=3.7.0,<7.0.0; python_version == '3.11'
 
 # Optional Dependencies
 python-multipart>=0.0.9,<0.1.0; python_version == '3.11'
@@ -100,7 +100,7 @@ pyperclip>=1.8.2,<1.9.0; python_version == '3.11'
 
 # Ensure latest security updates
 setuptools>=69.2.0,<70.0.0; python_version == '3.11'
-pip>=24.0.0,<25.0.0; python_version == '3.11'
+pip>=25.0.1,>25.0.0; python_version == '3.11'
 wheel>=0.43.0,<0.44.0; python_version == '3.11'
 
 # Additional Python 3.11 Compatibility Packages
@@ -108,3 +108,26 @@ python-dateutil>=2.9.0,<2.10.0; python_version == '3.11'
 langdetect>=1.0.9,<1.1.0; python_version == '3.11'
 safety>=2.3.0,<2.4.0; python_version == '3.11'
 ecdsa>=0.19.0,<0.20.0; python_version == '3.11'
+
+# Document Parsing Dependencies
+pymupdf>=1.23.0,<1.24.0; python_version == '3.11'
+docx2txt>=0.8,<0.9; python_version == '3.11'
+opencv-python-headless>=4.5.5,<4.6.0; python_version == '3.11'
+pillow>=10.2.0,<10.3.0; python_version == '3.11'
+
+# Code Generation and Local LLM Dependencies
+gpt4all<2.2.0,>=2.1.0; python_version == '3.11'
+llama-cpp-python<0.3.0,>=0.2.20; python_version == '3.11'
+transformers<4.39.0,>=4.38.0; python_version == '3.11'
+accelerate<0.28.0,>=0.27.0; python_version == '3.11'
+bitsandbytes<0.43.0,>=0.42.0; python_version == '3.11'
+mlflow<2.9.0,>=2.7.0; python_version == '3.11'
+
+# OTP and Security Enhancement Dependencies
+pyotp>=2.9.0,<3.0.0; python_version == '3.11'
+
+# Continuous Improvement Dependencies
+torch>=2.1.0,<2.2.0; python_version == '3.11'
+datasets>=2.14.0,<2.15.0; python_version == '3.11'
+psutil>=5.9.0,<5.10.0; python_version == '3.11'
+numpy>=1.26.0,<1.27.0; python_version == '3.11'

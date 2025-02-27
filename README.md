@@ -1,3 +1,90 @@
+# Sutazaiapp: Comprehensive AI-Powered Development System
+
+## Project Overview
+
+Sutazaiapp is an advanced, offline-first AI development system designed to provide comprehensive code generation, management, and deployment capabilities.
+
+### System Architecture
+
+- **Code Server**: 192.168.100.28
+- **Deployment Server**: 192.168.100.100
+- **Owner**: Florin Cristian Suta
+  - Phone: +48517716005
+  - Email: chrissuta01@gmail.com
+
+### Key Components
+
+1. **AI Agents** (`ai_agents/`)
+   - Integrates SuperAGI, AutoGPT
+   - Modular agent management system
+
+2. **Model Management** (`model_management/`)
+   - Supports GPT4All, DeepSeek-Coder-33B
+   - Offline model handling
+
+3. **Backend** (`backend/`)
+   - FastAPI-based services
+   - Strict security measures
+   - OTP-based external call authorization
+
+4. **Web UI** (`web_ui/`)
+   - React frontend
+   - Responsive design
+
+5. **Deployment Scripts** (`scripts/`)
+   - Automated deployment
+   - Rollback capabilities
+   - System configuration
+
+### Setup Instructions
+
+#### Prerequisites
+
+- Python 3.11
+- Ubuntu/Debian-based Linux
+- Root access for initial setup
+
+#### Installation Steps
+
+1. Clone the repository
+```bash
+git clone https://github.com/chrissuta/sutazaiapp.git /opt/sutazaiapp
+```
+
+2. Run Setup Script
+```bash
+sudo bash /opt/sutazaiapp/scripts/setup_sutazaiapp.sh
+```
+
+### Security Features
+
+- OTP-based authorization
+- Offline-first design
+- Comprehensive code auditing
+- Strict permission management
+
+### Development Workflow
+
+1. Use `scripts/code_audit.sh` for regular code quality checks
+2. Commit changes to the appropriate module directory
+3. Run tests before deployment
+
+### Logging
+
+Centralized logging available in `logs/` directory
+
+### Documentation
+
+Comprehensive documentation located in `docs/` directory
+
+## License
+
+[To be determined - contact project owner]
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
 # SutazAI: Autonomous AI Development Platform
 
 ## 🚀 Project Overview

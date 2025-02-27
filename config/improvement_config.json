@@ -1,0 +1,25 @@
+{
+    "log_dir": "/opt/sutazaiapp/logs/improvements",
+    "model_checkpoint_dir": "/opt/sutazaiapp/models/checkpoints",
+    "training_data_dir": "/opt/sutazaiapp/training_data",
+    "max_gpu_memory_gb": 32,
+    "performance_threshold": 0.90,
+    "improvement_cycle_frequency_hours": 24,
+    "domains": [
+        "code_generation",
+        "document_parsing", 
+        "diagram_analysis"
+    ],
+    "gpu_config": {
+        "max_batch_size": 8,
+        "precision": "float16"
+    },
+    "otp_validation": {
+        "required": true,
+        "secret_rotation_interval_days": 30
+    },
+    "error_handling": {
+        "max_consecutive_failures": 3,
+        "retry_delay_minutes": 15
+    }
+} 
