@@ -16,7 +16,11 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Dict, List, Optional, Set
+from typing import Dict
+
+import List
+import Optional
+import Set
 
 
 # Verify Python version
@@ -95,7 +99,7 @@ class UltraImportResolver:
             "errors": "traceback",
         }
         self.unresolved_imports_log = os.path.join(
-            base_dir, "logs", "unresolved_imports.json"
+            base_dir, "logs", "unresolved_imports.json",
         )
 
     def find_missing_imports(self, file_path: str) -> Set[str]:
@@ -111,7 +115,7 @@ class UltraImportResolver:
         missing_imports = set()
 
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 tree = ast.parse(f.read())
 
             for node in ast.walk(tree):
@@ -182,12 +186,12 @@ class UltraImportResolver:
                             "install",
                             "--no-cache-dir",
                             package_name,
-                        ]
+                        ],
                     )
                     installation_results[import_name] = True
                     print(
                         f"✅ Successfully installed {package_name} "
-                        f"for {import_name}"
+                        f"for {import_name}",
                     )
                 except subprocess.CalledProcessError:
                     installation_results[import_name] = False
@@ -216,7 +220,7 @@ class UltraImportResolver:
         try:
             existing_log = {}
             if os.path.exists(self.unresolved_imports_log):
-                with open(self.unresolved_imports_log, "r") as f:
+                with open(self.unresolved_imports_log) as f:
                     existing_log = json.load(f)
 
             existing_log[str(datetime.now())] = unresolved_imports

@@ -13,14 +13,16 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+
+import Dict
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import local modules after path adjustment
 # isort: off
-from misc.config.config_manager import ConfigurationManager  # noqa: E402
+from misc.config.config_manager import ConfigurationManager
 
 try:
     from core_system.monitoring import advanced_logger

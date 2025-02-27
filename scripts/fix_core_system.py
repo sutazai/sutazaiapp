@@ -16,7 +16,7 @@ import shutil
 
 def fix_core_system_files():
     base_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "..", "core_system"
+        os.path.dirname(os.path.abspath(__file__)), "..", "core_system",
     )
     print(f"Scanning directory: {base_dir}")
     for root, dirs, files in os.walk(base_dir):
@@ -24,7 +24,7 @@ def fix_core_system_files():
             if file.endswith(".py"):
                 filepath = os.path.join(root, file)
                 try:
-                    with open(filepath, "r") as f:
+                    with open(filepath) as f:
                         code = f.read()
                     compile(code, filepath, "exec")
                     print(f"Compiled OK: {filepath}")
@@ -35,7 +35,7 @@ def fix_core_system_files():
                     print(f"Backup created: {backup_path}")
                     with open(filepath, "w") as f:
                         f.write(
-                            f'"""{file} stub generated due to syntax errors. Please implement logic as needed."""\n\n'
+                            f'"""{file} stub generated due to syntax errors. Please implement logic as needed."""\n\n',
                         )
                         f.write("def main():\n")
                         f.write(f"    print('Stub for {file}')\n\n")

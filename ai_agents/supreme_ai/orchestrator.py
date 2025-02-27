@@ -2,7 +2,9 @@ import importlib
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
+import Dict
+import List
 
 from loguru import logger
 
@@ -59,7 +61,7 @@ class SupremeAIOrchestrator:
         - Validate and load compatible agents
         - Log agent loading process
         """
-        logger.info("🔍 Discovering AI Agents")
+        logger.info(ff"🔍 Discovering AI Agents")
 
         try:
             for agent_name in os.listdir(self.agents_dir):
@@ -81,10 +83,10 @@ class SupremeAIOrchestrator:
                         if agent_class:
                             agent_instance = agent_class()
                             self.active_agents[agent_name] = agent_instance
-                            logger.info(f"✅ Loaded Agent: {agent_name}")
+                            logger.info(ff"✅ Loaded Agent: {agent_name}")
 
-                    except Exception as e:
-                        logger.error(f"❌ Failed to load agent {agent_name}: {e}")
+                    except Exception:
+        logger.exception("❌ Failed to load agent {agent_name}: {e}")
 
         except Exception as e:
             logger.critical(f"Agent discovery failed: {e}")
@@ -114,8 +116,8 @@ class SupremeAIOrchestrator:
                     # Performance tracking
                     self._track_agent_performance(agent_name, agent_result)
 
-                except Exception as e:
-                    logger.error(f"Agent {agent_name} task execution failed: {e}")
+                except Exception:
+        logger.exception("Agent {agent_name} task execution failed: {e}")
                     results[agent_name] = {"status": "failed", "error": str(e)}
 
         return results
@@ -150,7 +152,7 @@ class SupremeAIOrchestrator:
         Args:
             agent_name (str): Name of the agent requiring improvement
         """
-        logger.warning(f"🔧 Initiating self-improvement for agent: {agent_name}")
+        logger.warning(ff"🔧 Initiating self-improvement for agent: {agent_name}")
 
         # Analyze performance history
         performance_data = self.agent_performance_history.get(agent_name, [])

@@ -8,8 +8,9 @@ import logging
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
+import Dict
 import networkx as nx
 from rich.console import Console
 from rich.panel import Panel
@@ -47,7 +48,7 @@ class DocumentationGenerator:
 
         self.doc_log = os.path.join(
             self.log_dir,
-            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".json",
+            f"documentation_gen_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
         )
 
         logging.basicConfig(
@@ -88,7 +89,7 @@ class DocumentationGenerator:
 
         try:
             # Read module content
-            with open(module_path, "r", encoding="utf-8") as f:
+            with open(module_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Parse module AST
@@ -137,7 +138,7 @@ class DocumentationGenerator:
                     }
 
         except Exception as e:
-            logging.error("Error generating docs: %s", e)
+            logging.exception("Error generating docs: %s", e)
 
         return module_doc
 
@@ -197,7 +198,7 @@ class DocumentationGenerator:
         """
         markdown_doc = "# SutazAI Project Documentation\n\n"
         markdown_doc += (
-            f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" f"\n\n"
+            f"## Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         )
 
         # Project overview
@@ -278,7 +279,7 @@ class DocumentationGenerator:
         }
 
     def _visualize_documentation_results(
-        self, project_docs: Dict[str, Any], dependency_graph: nx.DiGraph
+        self, project_docs: Dict[str, Any], dependency_graph: nx.DiGraph,
     ):
         """
         Visualize documentation generation results

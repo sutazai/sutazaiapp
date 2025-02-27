@@ -2,7 +2,8 @@
 Custom Exceptions for SutazAI Agents
 """
 
-from typing import Optional, Dict
+from typing import Optional
+import Dict
 
 
 class DocumentProcessingError(Exception):

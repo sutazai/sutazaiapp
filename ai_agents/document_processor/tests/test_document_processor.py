@@ -1,14 +1,16 @@
 import os
 import tempfile
-from typing import Any, Dict, Generator
+from typing import Any
+import Dict
+import Generator
 
 import numpy as np
 import pytest
 import cv2  # type: ignore
 
-from ..src import DocumentProcessorAgent
-from ai_agents.document_processor.utils.document_utils import DocumentUtils
+from ai_agents.document_processor.src import DocumentProcessorAgent
 from ai_agents.exceptions import AgentError
+from ai_agents.document_processor.utils.document_utils import DocumentUtils
 
 
 class TestDocumentProcessorAgent:

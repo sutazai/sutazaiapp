@@ -28,14 +28,13 @@ pgvector>=0.2.3; python_version == '3.11'
 faiss-cpu>=1.7.4; python_version == '3.11'
 
 # API and authentication
-python-jose[cryptography]>=3.3.0; python_version == '3.11'
+python-jose[cryptography]>=3.3.2; python_version == '3.11'
 passlib[bcrypt]>=1.7.4; python_version == '3.11'
 python-multipart>=0.0.9; python_version == '3.11'
 pyjwt>=2.8.0; python_version == '3.11'
 
 # Document processing
 PyMuPDF==1.23.8; python_version == '3.11'  # fitz library for PDF processing
-opencv-python-headless==4.9.0.80; python_version == '3.11'  # cv2 for image processing
 pytesseract>=0.3.10; python_version == '3.11'  # OCR processing
 
 # Security and encryption
@@ -88,6 +87,27 @@ setuptools>=68.0.0; python_version == '3.11'
 wheel>=0.40.0; python_version == '3.11'
 
 # Additional dependencies for Python 3.11 compatibility and internal modules
-python-magic>=0.4.24; python_version == '3.11'
-astor>=0.8.1; python_version == '3.11'
+python-magic==0.4.27
+astor==0.8.1
+
+# Type Checking and Linting
+
+# Document Processing
+
+# Ensure compatibility with Python 3.11
+typing-extensions==4.7.1
+importlib-metadata==6.8.0
+
+# Add missing dependencies
+langdetect>=1.0.9; python_version == '3.11'
 pyperclip>=1.8.2; python_version == '3.11'
+safety>=2.3.0; python_version == '3.11'
+
+# Ensure core system dependencies
+core_system @ file:///opt/sutazaiapp/core_system
+misc @ file:///opt/sutazaiapp/misc
+system_integration @ file:///opt/sutazaiapp/system_integration
+
+# Update vulnerable packages with latest secure versions
+python-jose[cryptography]>=3.3.2; python_version == '3.11'
+ecdsa>=0.19.2; python_version == '3.11'  # Latest version with security fixes

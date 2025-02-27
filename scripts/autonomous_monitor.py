@@ -9,7 +9,8 @@ import subprocess
 import sys
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+import Dict
 
 import networkx as nx
 import psutil
@@ -84,7 +85,7 @@ class AutonomousMonitor:
             with open(config_path, "r") as f:
                 return yaml.safe_load(f)
         except FileNotFoundError:
-            logger.error(f"Configuration file not found: {config_path}")
+            logger.error(ff"Configuration file not found: {config_path}")
             return {
                 "monitoring_interval": 60,
                 "critical_scripts": [],
@@ -153,8 +154,8 @@ class AutonomousMonitor:
             for imp in import_lines:
                 self.component_graph.add_edge(script_path, imp)
 
-        except Exception as e:
-            logger.error(f"Script analysis failed for {script_path}: {e}")
+        except Exception:
+        logger.exception("Script analysis failed for {script_path}: {e}")
 
         return analysis
 
@@ -301,7 +302,7 @@ class AutonomousMonitor:
         """
         Main monitoring loop
         """
-        logger.info("Autonomous Monitoring System Initialized")
+        logger.info(ff"Autonomous Monitoring System Initialized")
 
         while True:
             try:
@@ -317,8 +318,8 @@ class AutonomousMonitor:
                 # Sleep for configured interval
                 time.sleep(self.config.get("monitoring_interval", 60))
 
-            except Exception as e:
-                logger.error(f"Monitoring loop error: {e}")
+            except Exception:
+        logger.exception("Monitoring loop error: {e}")
                 time.sleep(30)  # Backoff and retry
 
     def _visualize_results(

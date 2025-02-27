@@ -14,16 +14,20 @@ import os
 import subprocess
 import sys
 import time
-from typing import List, Tuple, Dict, Any
-import json
 
 # Import our consolidated system setup module
 try:
-    from system_setup import SystemSetup
+    from .system_setup import SystemSetup
 except ImportError:
-    # If we can't import directly, adjust Python path
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from system_setup import SystemSetup
+    try:
+        # Attempt to import from the parent directory
+        from misc.core_system.system_setup import SystemSetup
+    except ImportError:
+        # Fallback to a minimal SystemSetup class
+        class SystemSetup:
+            def setup_system(self):
+                logger.error("SystemSetup import failed")
+                raise ImportError("SystemSetup not found")
 
 # Configure logging
 logging.basicConfig(
@@ -34,9 +38,20 @@ logger = logging.getLogger("SutazAI.Deploy")
 
 # Define services to be deployed
 SERVICES = [
-    ("model_server", "uvicorn backend.model_server:app --host 0.0.0.0 --port 8001"),
-    ("api_server", "uvicorn backend.api_routes:app --host 0.0.0.0 --port 8000"),
-    ("frontend", "streamlit run frontend/app.py --server.port 8501"),
+    (
+        "model_server",
+        "uvicorn backend.model_server:app "
+        "--host 0.0.0.0 --port 8001",
+    ),
+    (
+        "api_server",
+        "uvicorn backend.api_routes:app "
+        "--host 0.0.0.0 --port 8000",
+    ),
+    (
+        "frontend",
+        "streamlit run frontend/app.py --server.port 8501",
+    ),
 ]
 
 
@@ -49,7 +64,10 @@ def check_python_version() -> bool:
     """
     major, minor = sys.version_info.major, sys.version_info.minor
     if major != 3 or minor != 11:
-        logger.error(f"Python 3.11 is required. Current version: {major}.{minor}")
+        logger.error(
+            "Unsupported Python version. "
+            f"Required: 3.11, Current: {major}.{minor}"
+        )
         return False
     return True
 
@@ -59,7 +77,7 @@ def deploy_services(base_path: str = "/opt/sutazaiapp") -> None:
     Deploy all system services.
 
     Args:
-        base_path: The base path of the application
+        base_path (str): The base path of the application
     """
     logger.info("Deploying system services...")
 
@@ -76,30 +94,32 @@ def deploy_services(base_path: str = "/opt/sutazaiapp") -> None:
 
             # Start the service
             subprocess.Popen(
-                cmd_parts, stdout=open(service_log, "a"), stderr=subprocess.STDOUT
+                cmd_parts,
+                stdout=open(service_log, "a"),
+                stderr=subprocess.STDOUT,
             )
-            logger.info("Started %s service", name)
+            logger.info(f"Started service: {name}")
 
             # Stagger service starts to avoid resource contention
             time.sleep(2)
-        except Exception as e:
-            logger.error(f"Failed to start {name}: {str(e)}")
+        except Exception:
+            logger.exception(f"Failed to start service {name}")
             raise
 
 
 def rollback_deployment() -> None:
     """
-    Rollback deployment in case of failure.
+    Rollback deployment in case of system failure.
     """
-    logger.info("Rolling back deployment due to errors...")
+    logger.info("Rolling back deployment...")
 
     # Kill deployed services
     try:
         subprocess.run(["pkill", "-f", "uvicorn"], check=False)
         subprocess.run(["pkill", "-f", "streamlit"], check=False)
         logger.info("Services terminated")
-    except Exception as e:
-        logger.error(f"Error during rollback: {e}")
+    except Exception:
+        logger.exception("Error during rollback")
 
 
 def main() -> None:
@@ -111,7 +131,7 @@ def main() -> None:
 
         # Check Python version
         if not check_python_version():
-            logger.warning("Continuing deployment despite Python version mismatch")
+            logger.warning("Continuing deployment despite version mismatch")
 
         # Initialize system setup
         system_setup = SystemSetup()
@@ -124,8 +144,8 @@ def main() -> None:
 
         logger.info("Deployment completed successfully")
 
-    except Exception as e:
-        logger.critical(f"Deployment failed: {str(e)}")
+    except Exception:
+        logger.exception("Deployment failed")
         rollback_deployment()
         sys.exit(1)
 

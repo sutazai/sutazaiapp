@@ -2,7 +2,9 @@ import os
 import statistics
 import tempfile
 import time
-from typing import Any, Dict, List
+from typing import Any
+import Dict
+import List
 
 import cv2
 import fitz  # type: ignore

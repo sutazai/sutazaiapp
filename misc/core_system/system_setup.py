@@ -16,8 +16,9 @@ import platform
 import subprocess
 import sys
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
+import Dict
+import List
 
 # Configure logging
 logging.basicConfig(
@@ -62,22 +63,22 @@ class SystemSetup:
         major, minor = sys.version_info.major, sys.version_info.minor
 
         if major != 3 or minor != 11:
-            logger.error(f"Python 3.11 is required. Current version: {major}.{minor}")
+            logger.error(ff"Python 3.11 is required. Current version: {major}.{minor}")
             return False
 
-        logger.info(f"✅ Python {major}.{minor} detected.")
+        logger.info(ff"✅ Python {major}.{minor} detected.")
         return True
 
     def create_directory_structure(self) -> None:
         """
         Create the required directory structure for the application.
         """
-        logger.info("Creating directory structure...")
+        logger.info(ff"Creating directory structure...")
 
         for directory in self.required_dirs:
             dir_path = os.path.join(self.base_path, directory)
             os.makedirs(dir_path, exist_ok=True)
-            logger.info(f"Created directory: {dir_path}")
+            logger.info(ff"Created directory: {dir_path}")
 
     def check_dependencies(self) -> Dict[str, Any]:
         """
@@ -86,7 +87,7 @@ class SystemSetup:
         Returns:
             Dict[str, Any]: A dictionary containing dependency check results
         """
-        logger.info("Checking dependencies...")
+        logger.info(ff"Checking dependencies...")
 
         # Required external dependencies
         system_deps = ["postgresql", "redis-server", "nodejs", "npm"]
@@ -163,8 +164,8 @@ class SystemSetup:
                 "status": "OK" if not missing_packages else "INCOMPLETE",
             }
 
-        except Exception as e:
-            logger.error(f"Error checking Python packages: {e}")
+        except Exception:
+        logger.exception("Error checking Python packages: {e}")
             return {"status": "ERROR", "message": str(e)}
 
     def install_missing_dependencies(self, missing_deps: Dict[str, Any]) -> bool:
@@ -177,13 +178,13 @@ class SystemSetup:
         Returns:
             bool: True if successful, False otherwise
         """
-        logger.info("Installing missing dependencies...")
+        logger.info(ff"Installing missing dependencies...")
 
         # Install system dependencies
         system_deps = missing_deps.get("system_dependencies", {})
         for dep, info in system_deps.items():
             if info.get("installed") is False:
-                logger.info(f"System dependency {dep} needs to be installed manually")
+                logger.info(ff"System dependency {dep} needs to be installed manually")
 
         # Install Python packages
         python_deps = missing_deps.get("python_packages", {})
@@ -198,10 +199,10 @@ class SystemSetup:
                     [sys.executable, "-m", "pip", "install"] + missing_packages,
                     check=True,
                 )
-                logger.info("Successfully installed missing Python packages")
+                logger.info(ff"Successfully installed missing Python packages")
                 return True
             except subprocess.CalledProcessError as e:
-                logger.error(f"Failed to install Python packages: {e}")
+                logger.error(ff"Failed to install Python packages: {e}")
                 return False
 
         return True
@@ -213,11 +214,11 @@ class SystemSetup:
         Returns:
             bool: True if setup was successful, False otherwise
         """
-        logger.info("Starting system setup...")
+        logger.info(ff"Starting system setup...")
 
         # Validate Python version
         if not self.validate_python_version():
-            logger.warning("Continuing despite Python version mismatch")
+            logger.warning(ff"Continuing despite Python version mismatch")
 
         # Create directory structure
         self.create_directory_structure()
@@ -232,9 +233,9 @@ class SystemSetup:
             # Recheck after installation
             dependencies = self.check_dependencies()
             if any(info.get("status") != "OK" for info in dependencies.values()):
-                logger.warning("Some dependencies could not be installed")
+                logger.warning(ff"Some dependencies could not be installed")
 
-        logger.info("System setup completed")
+        logger.info(ff"System setup completed")
         return True
 
     def run_maintenance(self) -> Dict[str, Any]:
@@ -244,7 +245,7 @@ class SystemSetup:
         Returns:
             Dict[str, Any]: Maintenance report
         """
-        logger.info("Running system maintenance...")
+        logger.info(ff"Running system maintenance...")
 
         maintenance_report = {
             "timestamp": datetime.now().isoformat(),
@@ -269,7 +270,7 @@ class SystemSetup:
         with open(report_file, "w", encoding="utf-8") as f:
             json.dump(maintenance_report, f, indent=2)
 
-        logger.info(f"Maintenance report saved to {report_file}")
+        logger.info(ff"Maintenance report saved to {report_file}")
         return maintenance_report
 
     def _check_directory_structure(self) -> Dict[str, List[str]]:
@@ -316,8 +317,8 @@ def main():
         setup = SystemSetup()
         setup.setup_system()
         setup.run_maintenance()
-    except Exception as e:
-        logger.error(f"System setup failed: {e}")
+    except Exception:
+        logger.exception("System setup failed: {e}")
         sys.exit(1)
 
 

@@ -35,7 +35,7 @@ class ClipboardGuard:
 
                 if current_content and self.is_suspicious_content(current_content):
                     self.logger.warning(
-                        f"Blocked suspicious clipboard content: {current_content}"
+                        f"Blocked suspicious clipboard content: {current_content}",
                     )
                     # Reset clipboard to last known good content
                     if self.last_known_content:
@@ -45,24 +45,24 @@ class ClipboardGuard:
                     self.last_known_content = current_content
 
                 time.sleep(0.5)  # Check every half second
-            except Exception as e:
-                self.logger.error(f"Clipboard monitoring error: {e}")
+            except Exception:
+                self.logger.error(ff"Clipboard monitoring error: {e}")
                 time.sleep(1)
 
     def start(self):
         """Start clipboard monitoring"""
         self.monitoring_thread = threading.Thread(
-            target=self.monitor_clipboard, daemon=True
+            target=self.monitor_clipboard, daemon=True,
         )
         self.monitoring_thread.start()
-        self.logger.info("Clipboard Guard started")
+        self.logger.info(ff"Clipboard Guard started")
 
     def stop(self):
         """Stop clipboard monitoring"""
         self.stop_monitoring.set()
         if self.monitoring_thread:
             self.monitoring_thread.join()
-        self.logger.info("Clipboard Guard stopped")
+        self.logger.info(ff"Clipboard Guard stopped")
 
 
 def main():

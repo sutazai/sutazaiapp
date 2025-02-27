@@ -8,16 +8,20 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+
+import Dict
 
 # ----------------------------------------------------------------------
 # Note: The following import is for system resource monitoring.
 # psutil might not be resolved statically in some environments; hence, we
 # add a type ignore.
 import psutil  # type: ignore
+import SpinnerColumn
+import TextColumn
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.progress import Progress
 from rich.table import Table
 
 # ----------------------------------------------------------------------
@@ -39,7 +43,7 @@ class SystemComprehensiveValidator:
         # Comprehensive logging setup
         self.validation_log = os.path.join(
             self.log_dir,
-            f"system_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".json",
+            f"system_validation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
         )
 
         logging.basicConfig(
@@ -73,7 +77,7 @@ class SystemComprehensiveValidator:
             transient=True,
         ) as progress:
             progress.add_task(
-                "[green]Performing Comprehensive System Scan...", total=None
+                "[green]Performing Comprehensive System Scan...", total=None,
             )
 
             # Comprehensive system health check
@@ -177,7 +181,7 @@ class SystemComprehensiveValidator:
             else:
                 with open(full_path, "rb") as f:
                     integrity["file_checksums"][file_path] = hashlib.sha256(
-                        f.read()
+                        f.read(),
                     ).hexdigest()
         return integrity
 
@@ -224,7 +228,7 @@ class SystemComprehensiveValidator:
             result = subprocess.run(
                 ["black", "--check", self.base_path],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
             return {
                 "passed": result.returncode == 0,
@@ -244,7 +248,7 @@ class SystemComprehensiveValidator:
             result = subprocess.run(
                 ["isort", "--check-only", self.base_path],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
             return {
                 "passed": result.returncode == 0,
@@ -262,7 +266,7 @@ class SystemComprehensiveValidator:
         """
         try:
             result = subprocess.run(
-                ["mypy", self.base_path], capture_output=True, text=True
+                ["mypy", self.base_path], capture_output=True, text=True, check=False,
             )
             return {
                 "passed": result.returncode == 0,
@@ -284,7 +288,7 @@ class SystemComprehensiveValidator:
             semgrep_output = subprocess.run(
                 ["semgrep", "--config", "auto", self.base_path],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
             return {
                 "passed": semgrep_output.returncode == 0,
@@ -304,7 +308,7 @@ class SystemComprehensiveValidator:
             safety_output = subprocess.run(
                 ["safety", "check", "-r", "requirements.txt"],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
             return {
                 "passed": safety_output.returncode == 0,
@@ -339,7 +343,7 @@ class SystemComprehensiveValidator:
         return dependencies
 
     def generate_optimization_recommendations(
-        self, system_scan_results: Dict[str, Any]
+        self, system_scan_results: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Generate comprehensive optimization recommendations
@@ -365,19 +369,19 @@ class SystemComprehensiveValidator:
                 + ", ".join(
                     system_scan_results["system_health"]["directory_structure"][
                         "missing_directories"
-                    ]
-                )
+                    ],
+                ),
             )
 
         # Code quality recommendations
         if not system_scan_results["code_quality"]["black_formatting"]["passed"]:
             recommendations["code_quality"].append(
-                "Run Black code formatter to ensure consistent code style"
+                "Run Black code formatter to ensure consistent code style",
             )
 
         if not system_scan_results["code_quality"]["isort_imports"]["passed"]:
             recommendations["code_quality"].append(
-                "Use isort to organize and sort import statements"
+                "Use isort to organize and sort import statements",
             )
 
         # Dependency vulnerability check
@@ -387,7 +391,7 @@ class SystemComprehensiveValidator:
             and not system_scan_results["code_quality"][dependency_vuln_key]["passed"]
         ):
             recommendations["code_quality"].append(
-                "Update dependencies to resolve known vulnerabilities"
+                "Update dependencies to resolve known vulnerabilities",
             )
 
         # Performance recommendations
@@ -397,7 +401,7 @@ class SystemComprehensiveValidator:
             cpu_usage = metrics[cpu_key]["usage_percent"]
             recommendations["performance"].append(
                 f"High CPU usage detected: {cpu_usage}%. "
-                "Investigate and optimize resource-intensive processes."
+                "Investigate and optimize resource-intensive processes.",
             )
 
         return recommendations
@@ -416,7 +420,7 @@ class SystemComprehensiveValidator:
 
         # Generate optimization recommendations
         optimization_recommendations = self.generate_optimization_recommendations(
-            system_scan_results
+            system_scan_results,
         )
 
         # Combine all results
@@ -442,7 +446,7 @@ class SystemComprehensiveValidator:
             validation_results (Dict): Comprehensive validation results
         """
         self.console.rule(
-            "[bold blue]SutazAI Ultra-Comprehensive System " "Validation[/bold blue]"
+            "[bold blue]SutazAI Ultra-Comprehensive System Validation[/bold blue]",
         )
 
         # Get relevant system health components
@@ -502,7 +506,7 @@ class SystemComprehensiveValidator:
             ].items():
                 if recommendations:
                     self.console.print(
-                        f"[bold]{category.replace('_', ' ').title()}:[/bold]"
+                        f"[bold]{category.replace('_', ' ').title()}:[/bold]",
                     )
                     for rec in recommendations:
                         self.console.print(f"[red]➤[/red] {rec}")

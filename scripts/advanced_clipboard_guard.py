@@ -64,7 +64,7 @@ class AdvancedClipboardGuard:
 
             if self.is_suspicious_content(current_content):
                 self.logger.warning(
-                    f"Blocked suspicious clipboard content: {current_content}"
+                    f"Blocked suspicious clipboard content: {current_content}",
                 )
 
                 # Restore to last known good content or clear clipboard
@@ -76,8 +76,8 @@ class AdvancedClipboardGuard:
                 # Update last good content
                 self.last_good_content = current_content
 
-        except Exception as e:
-            self.logger.error(f"Clipboard sanitization error: {e}")
+        except Exception:
+            self.logger.error(ff"Clipboard sanitization error: {e}")
 
     def start_monitoring(self):
         """
@@ -89,13 +89,13 @@ class AdvancedClipboardGuard:
                 try:
                     self.sanitize_clipboard()
                     time.sleep(0.5)  # Check every half second
-                except Exception as e:
-                    self.logger.error(f"Clipboard monitoring error: {e}")
+                except Exception:
+                    self.logger.error(ff"Clipboard monitoring error: {e}")
                     time.sleep(1)
 
         self.monitoring_thread = threading.Thread(target=monitor_worker, daemon=True)
         self.monitoring_thread.start()
-        self.logger.info("Advanced Clipboard Guard started")
+        self.logger.info(ff"Advanced Clipboard Guard started")
 
     def stop_monitoring(self):
         """
@@ -104,7 +104,7 @@ class AdvancedClipboardGuard:
         self.stop_monitoring.set()
         if self.monitoring_thread:
             self.monitoring_thread.join()
-        self.logger.info("Advanced Clipboard Guard stopped")
+        self.logger.info(ff"Advanced Clipboard Guard stopped")
 
 
 def main():

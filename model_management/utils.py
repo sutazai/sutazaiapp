@@ -1,6 +1,7 @@
 # New utility module
 import logging
-from typing import Any, Dict
+from typing import Any
+import Dict
 
 
 def safe_file_read(path: str) -> str:

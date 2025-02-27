@@ -61,7 +61,7 @@ class AdvancedPerformanceProfiler:
             duration (int): Total monitoring duration in seconds
             interval (int): Sampling interval in seconds
         """
-        logger.info(f"Starting system performance monitoring for {duration} seconds")
+        logger.info(ff"Starting system performance monitoring for {duration} seconds")
 
         self.is_profiling = True
         self.profile_thread = threading.Thread(
@@ -83,8 +83,8 @@ class AdvancedPerformanceProfiler:
             try:
                 self._collect_system_metrics()
                 time.sleep(interval)
-            except Exception as e:
-                logger.error(f"Error in monitoring loop: {e}")
+            except Exception:
+        logger.exception("Error in monitoring loop: {e}")
                 break
 
     def _collect_system_metrics(self):
@@ -132,8 +132,8 @@ class AdvancedPerformanceProfiler:
                 }
             )
 
-        except Exception as e:
-            logger.error(f"Error collecting system metrics: {e}")
+        except Exception:
+        logger.exception("Error collecting system metrics: {e}")
 
     def profile_python_code(self, target_script: str):
         """
@@ -142,7 +142,7 @@ class AdvancedPerformanceProfiler:
         Args:
             target_script (str): Path to the Python script to profile
         """
-        logger.info(f"Profiling Python script: {target_script}")
+        logger.info(ff"Profiling Python script: {target_script}")
 
         # Memory profiling
         tracemalloc.start()
@@ -153,7 +153,7 @@ class AdvancedPerformanceProfiler:
         try:
             # Run the script with profiling
             profiler.enable()
-            exec(open(target_script).read())
+            safe_exec(open(target_script).read())
             profiler.disable()
 
             # Capture memory snapshot
@@ -181,10 +181,10 @@ class AdvancedPerformanceProfiler:
                 for stat in top_stats[:10]:
                     f.write(f"{stat}\n")
 
-            logger.info(f"Profiling report saved: {profile_report_path}")
+            logger.info(ff"Profiling report saved: {profile_report_path}")
 
-        except Exception as e:
-            logger.error(f"Script profiling failed: {e}")
+        except Exception:
+        logger.exception("Script profiling failed: {e}")
 
         finally:
             tracemalloc.stop()
@@ -222,7 +222,7 @@ class AdvancedPerformanceProfiler:
         with open(insights_path, "w") as f:
             json.dump(insights, f, indent=4)
 
-        logger.info(f"Performance insights saved: {insights_path}")
+        logger.info(ff"Performance insights saved: {insights_path}")
         return insights
 
     def stop_monitoring(self):
@@ -258,8 +258,8 @@ def main():
         # Stop monitoring
         profiler.stop_monitoring()
 
-    except Exception as e:
-        logger.error(f"Performance profiling failed: {e}")
+    except Exception:
+        logger.exception("Performance profiling failed: {e}")
         sys.exit(1)
 
 

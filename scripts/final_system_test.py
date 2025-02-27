@@ -18,7 +18,7 @@ def run_command(command: str) -> Tuple[bool, str]:
     """
     try:
         output = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, shell=False, text=True
+            command, stderr=subprocess.STDOUT, shell=False, text=True,
         )
         return True, output
     except subprocess.CalledProcessError as e:
@@ -27,22 +27,15 @@ def run_command(command: str) -> Tuple[bool, str]:
 
 def main():
     console = Console()
-    console.rule(
-        "[bold blue]Final System Test: Comprehensive Audit[/bold blue]"
-    )
+    console.rule("[bold blue]Final System Test: Comprehensive Audit[/bold blue]")
 
     summary = {}
     tasks = [
         (
             "System Validation",
-            "python3 /opt/sutazaiapp/scripts/"
-            "system_comprehensive_validator.py",
+            "python3 /opt/sutazaiapp/scripts/system_comprehensive_validator.py",
         ),
-        (
-            "Project Analysis",
-            "python3 /opt/sutazaiapp/scripts/"
-            "project_analyzer.py"
-        ),
+        ("Project Analysis", "python3 /opt/sutazaiapp/scripts/project_analyzer.py"),
         (
             "Documentation Generation",
             "python3 /opt/sutazaiapp/scripts/documentation_generator.py",
@@ -61,7 +54,9 @@ def main():
         console.print(Panel(output, title=f"{task_name} Output", expand=False))
 
     # Execute unit tests via pytest
-    console.print("[bold]Unit Tests:[/bold] Running pytest with detailed logs...")  # noqa: E501
+    console.print(
+        "[bold]Unit Tests:[/bold] Running pytest with detailed logs...",
+    )
     success, output = run_command("pytest --maxfail=1 --disable-warnings -q")
     summary["Unit Tests"] = {"success": success, "output": output}
     status = "[green]Success[/green]" if success else "[red]Failed[/red]"
@@ -75,7 +70,9 @@ def main():
     table.add_column("Details", style="green")
 
     for task, result in summary.items():
-        detail = result["output"].splitlines()[0] if result["output"] else "No Output"  # noqa: E501
+        detail = (
+            result["output"].splitlines()[0] if result["output"] else "No Output"
+        )
         status_text = "Success" if result["success"] else "Failed"
         table.add_row(task, status_text, detail)
 
@@ -83,11 +80,13 @@ def main():
 
     # Save JSON summary with full details
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    summary_file = f"/opt/sutazaiapp/logs/final_system_test_summary_{timestamp}.json"  # noqa: E501
+    summary_file = (
+        f"/opt/sutazaiapp/logs/final_system_test_summary_{timestamp}.json"
+    )
     with open(summary_file, "w") as f:
         json.dump(summary, f, indent=4)
     console.print(
-        f"[bold green]Final system test summary saved to {summary_file}[/bold green]"  # noqa: E501
+        f"[bold green]Final system test summary saved to {summary_file}[/bold green]",
     )
 
 

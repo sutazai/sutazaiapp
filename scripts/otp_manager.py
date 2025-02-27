@@ -2,9 +2,10 @@ import logging
 import os
 import secrets
 import smtplib
-from datetime import datetime, timedelta
+from datetime import datetime
 from email.mime.text import MIMEText
 
+import timedelta
 from cryptography.fernet import Fernet
 
 
@@ -78,7 +79,7 @@ class OTPManager:
         try:
             # Decrypt stored OTP
             decrypted_otp = self.cipher_suite.decrypt(
-                stored_otp_info["encrypted_otp"].encode()
+                stored_otp_info["encrypted_otp"].encode(),
             ).decode()
 
             # Check OTP expiry
@@ -86,7 +87,7 @@ class OTPManager:
             otp_generation_time = stored_otp_info["timestamp"]
 
             if (current_time - otp_generation_time) > timedelta(
-                minutes=self.otp_expiry_minutes
+                minutes=self.otp_expiry_minutes,
             ):
                 logging.warning("OTP expired")
                 return False
@@ -102,7 +103,7 @@ class OTPManager:
             return is_valid
 
         except Exception as e:
-            logging.error(f"OTP validation error: {e}")
+            logging.exception(f"OTP validation error: {e}")
             return False
 
     def send_otp_email(self, otp):
@@ -128,7 +129,7 @@ class OTPManager:
             logging.info(f"OTP email sent to {self.root_email}")
 
         except Exception as e:
-            logging.error(f"Email sending failed: {e}")
+            logging.exception(f"Email sending failed: {e}")
 
 
 def main():
@@ -138,7 +139,7 @@ def main():
     # Generate OTP
     otp_info = otp_manager.generate_otp()
     decrypted_otp = otp_manager.cipher_suite.decrypt(
-        otp_info["encrypted_otp"].encode()
+        otp_info["encrypted_otp"].encode(),
     ).decode()
 
     # Send OTP

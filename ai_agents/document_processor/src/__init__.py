@@ -25,7 +25,8 @@ try:
 except ImportError:
     cv2_error: type = Exception  # type: ignore
 
-from ai_agents.base_agent import AgentError, BaseAgent
+from ai_agents.base_agent import AgentError
+import BaseAgent
 from ai_agents.exceptions import PDFExtractionError
 
 try:
@@ -64,7 +65,7 @@ class DocumentProcessorAgent(BaseAgent):
         os.makedirs(temp_dir, exist_ok=True)
 
         # Logging configuration
-        logger.info("📄 Document Processor Agent initialized")
+        logger.info(ff"📄 Document Processor Agent initialized")
 
     def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -143,7 +144,7 @@ class DocumentProcessorAgent(BaseAgent):
             return {
                 "status": "success",
                 "text": extracted_text,
-                "total_pages": len(doc) if hasattr(doc, '__len__') else 0,
+                "total_pages": len(doc) if hasattr(doc, "__len__") else 0,
                 "metadata": {
                     "file_path": document_path,
                     "extracted_pages": list(page_range),
@@ -151,7 +152,7 @@ class DocumentProcessorAgent(BaseAgent):
             }
 
         except FileDataError as e:
-            logger.error(f"Text extraction failed: {e}")
+            logger.error(ff"Text extraction failed: {e}")
             return {"status": "failed", "error": str(e)}
 
     def _ocr_processing(
@@ -186,7 +187,7 @@ class DocumentProcessorAgent(BaseAgent):
             }
 
         except cv2_error as e:
-            logger.error(f"OpenCV processing error: {str(e)}")
+            logger.error(ff"OpenCV processing error: {str(e)}")
             raise
 
     def _document_analysis(
@@ -206,7 +207,7 @@ class DocumentProcessorAgent(BaseAgent):
             doc: fitz.Document = fitz.open(document_path)  # type: ignore
 
             analysis_results: Dict[str, Any] = {
-                "total_pages": len(doc) if hasattr(doc, '__len__') else 0,
+                "total_pages": len(doc) if hasattr(doc, "__len__") else 0,
                 "text_blocks": [],
                 "images": [],
                 "tables": [],
@@ -245,7 +246,7 @@ class DocumentProcessorAgent(BaseAgent):
                             bbox = page.get_image_bbox(img[0])
                             image_info.append({"xref": img[0], "bbox": bbox})
                         except Exception as img_err:
-                            logger.warning(f"Error getting image bbox: {img_err}")
+                            logger.warning(ff"Error getting image bbox: {img_err}")
 
                     # Fix for type checking issues
                     if analysis_results["images"]:
@@ -269,7 +270,7 @@ class DocumentProcessorAgent(BaseAgent):
             }
 
         except FileDataError as e:
-            logger.error(f"Document analysis failed: {e}")
+            logger.error(ff"Document analysis failed: {e}")
             return {"status": "failed", "error": str(e)}
 
 

@@ -6,8 +6,9 @@ import os
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
+import Dict
 import networkx as nx
 from rich.console import Console
 from rich.panel import Panel
@@ -30,7 +31,7 @@ class ProjectAnalyzer:
 
         self.analysis_log = os.path.join(
             self.log_dir,
-            f"project_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".json",
+            f"project_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
         )
 
         logging.basicConfig(
@@ -107,7 +108,7 @@ class ProjectAnalyzer:
         }
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 lines = f.readlines()
                 complexity["lines_of_code"] = len(lines)
 
@@ -148,7 +149,7 @@ class ProjectAnalyzer:
                     full_path = os.path.join(root, file)
 
                     try:
-                        with open(full_path, "r", encoding="utf-8") as f:
+                        with open(full_path, encoding="utf-8") as f:
                             content = f.read()
 
                             # Extract imports
@@ -163,7 +164,7 @@ class ProjectAnalyzer:
                                 self.dependency_graph.add_edge(full_path, imp)
                     except Exception as e:
                         logging.warning(
-                            f"Could not analyze dependencies in " f"{full_path}: {e}"
+                            f"Could not analyze dependencies in {full_path}: {e}",
                         )
 
         # Analyze dependency graph
@@ -174,7 +175,7 @@ class ProjectAnalyzer:
 
         # Centrality analysis
         dependency_analysis["centrality"] = dict(
-            nx.degree_centrality(self.dependency_graph)
+            nx.degree_centrality(self.dependency_graph),
         )
 
         # Identify isolated modules
@@ -195,7 +196,7 @@ class ProjectAnalyzer:
                     os.path.join(self.base_path, "requirements.txt"),
                 ],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
 
             # Parse safety results
@@ -211,7 +212,7 @@ class ProjectAnalyzer:
             semgrep_result = subprocess.run(
                 ["semgrep", "scan", "--config=auto", self.base_path],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
 
             # Parse semgrep results
@@ -256,25 +257,25 @@ class ProjectAnalyzer:
 
         # Large file detection
         for file_path, complexity in structure_analysis.get(
-            "file_complexity", {}
+            "file_complexity", {},
         ).items():
             if complexity["lines_of_code"] > 1000:
                 recommendations["code_structure"].append(
-                    f"Large file detected: {file_path}. Consider refactoring."
+                    f"Large file detected: {file_path}. Consider refactoring.",
                 )
 
         # Dependency complexity
         for node, centrality in dependency_analysis.get("centrality", {}).items():
             if centrality > 0.5:
                 recommendations["dependency_optimization"].append(
-                    f"High dependency centrality for {node}. " f"Review module design."
+                    f"High dependency centrality for {node}. Review module design.",
                 )
 
         # Isolated modules
         for module in dependency_analysis.get("isolated_modules", []):
             recommendations["dependency_optimization"].append(
                 f"Isolated module detected: {module}. "
-                f"Consider integration or removal."
+                f"Consider integration or removal.",
             )
 
         return recommendations
@@ -320,12 +321,12 @@ class ProjectAnalyzer:
             analysis_results (Dict): Comprehensive analysis results
         """
         self.console.rule(
-            "[bold blue]SutazAI Comprehensive Project Analysis[/bold blue]"
+            "[bold blue]SutazAI Comprehensive Project Analysis[/bold blue]",
         )
 
         # Format file types to display
         file_types_formatted = json.dumps(
-            analysis_results["project_structure"]["file_types"], indent=2
+            analysis_results["project_structure"]["file_types"], indent=2,
         )
 
         # Project Structure Panel
@@ -361,7 +362,7 @@ class ProjectAnalyzer:
             ].items():
                 if recommendations:
                     self.console.print(
-                        f"[bold]{category.replace('_', ' ').title()}:[/bold]"
+                        f"[bold]{category.replace('_', ' ').title()}:[/bold]",
                     )
                     for rec in recommendations:
                         self.console.print(f"[red]➤[/red] {rec}")

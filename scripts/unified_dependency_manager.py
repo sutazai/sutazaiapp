@@ -10,20 +10,21 @@ Advanced dependency management system providing:
 - Package optimization recommendations
 """
 
-import importlib
 import json
 import logging
 import os
-import re
 import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict
+import dataclass
+import field
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
+import Dict
+import List, Optional
 
 import networkx as nx
 import pkg_resources
-import requests
 from packaging import version
 from rich.console import Console
 from rich.panel import Panel
@@ -147,7 +148,7 @@ class UnifiedDependencyManager:
 
             # Analyze for optimization
             optimization_recommendations = self.generate_optimization_recommendations(
-                installed_packages, outdated_packages, vulnerable_packages
+                installed_packages, outdated_packages, vulnerable_packages,
             )
 
             # Create analysis report
@@ -165,13 +166,13 @@ class UnifiedDependencyManager:
                 f"Dependency analysis completed: "
                 f"{analysis_report['total_packages']} packages analyzed, "
                 f"{analysis_report['outdated_count']} outdated, "
-                f"{analysis_report['vulnerable_count']} vulnerable."
+                f"{analysis_report['vulnerable_count']} vulnerable.",
             )
 
             return analysis_report
 
         except Exception as e:
-            self.logger.error(f"Dependency analysis failed: {e}")
+            self.logger.error(ff"Dependency analysis failed: {e}")
             return {
                 "error": str(e),
                 "timestamp": datetime.now().isoformat(),
@@ -215,8 +216,8 @@ class UnifiedDependencyManager:
 
             return installed_packages
 
-        except Exception as e:
-            self.logger.error(f"Failed to get installed packages: {e}")
+        except Exception:
+            self.logger.error(ff"Failed to get installed packages: {e}")
             return {}
 
     def _build_dependency_graph(self, packages: Dict[str, PackageInfo]) -> None:
@@ -247,14 +248,14 @@ class UnifiedDependencyManager:
 
             self.logger.info(
                 f"Dependency graph built: {len(self.dependency_graph.nodes())} nodes, "
-                f"{len(self.dependency_graph.edges())} edges."
+                f"{len(self.dependency_graph.edges())} edges.",
             )
 
-        except Exception as e:
-            self.logger.error(f"Failed to build dependency graph: {e}")
+        except Exception:
+            self.logger.error(ff"Failed to build dependency graph: {e}")
 
     def _check_outdated_packages(
-        self, packages: Dict[str, PackageInfo]
+        self, packages: Dict[str, PackageInfo],
     ) -> List[PackageInfo]:
         """
         Check for outdated packages
@@ -310,15 +311,15 @@ class UnifiedDependencyManager:
             # Sort by update priority
             outdated_packages.sort(key=lambda x: x.update_priority, reverse=True)
 
-            self.logger.info(f"Found {len(outdated_packages)} outdated packages.")
+            self.logger.info(ff"Found {len(outdated_packages)} outdated packages.")
             return outdated_packages
 
-        except Exception as e:
-            self.logger.error(f"Failed to check outdated packages: {e}")
+        except Exception:
+            self.logger.error(ff"Failed to check outdated packages: {e}")
             return []
 
     def _check_vulnerabilities(
-        self, packages: Dict[str, PackageInfo]
+        self, packages: Dict[str, PackageInfo],
     ) -> List[PackageInfo]:
         """
         Check for security vulnerabilities in dependencies
@@ -356,7 +357,7 @@ class UnifiedDependencyManager:
                                     "vulnerability_id": vuln[1],
                                     "affected_versions": vuln[2],
                                     "description": vuln[3],
-                                }
+                                },
                             )
 
                             # Set highest update priority for vulnerable packages
@@ -367,11 +368,11 @@ class UnifiedDependencyManager:
                     # Safety might not return valid JSON
                     pass
 
-            self.logger.info(f"Found {len(vulnerable_packages)} vulnerable packages.")
+            self.logger.info(ff"Found {len(vulnerable_packages)} vulnerable packages.")
             return vulnerable_packages
 
-        except Exception as e:
-            self.logger.error(f"Failed to check vulnerabilities: {e}")
+        except Exception:
+            self.logger.error(ff"Failed to check vulnerabilities: {e}")
             return []
 
     def generate_optimization_recommendations(
@@ -397,14 +398,14 @@ class UnifiedDependencyManager:
             # Security recommendations (highest priority)
             if vulnerable_packages:
                 recommendations.append(
-                    f"CRITICAL: Update {len(vulnerable_packages)} packages with security vulnerabilities immediately"
+                    f"CRITICAL: Update {len(vulnerable_packages)} packages with security vulnerabilities immediately",
                 )
 
                 # Add specific recommendations for top vulnerabilities
                 for pkg in vulnerable_packages[:3]:
                     recommendations.append(
                         f"Update vulnerable package {pkg.name} from {pkg.current_version} "
-                        f"to {pkg.latest_version or 'latest version'}"
+                        f"to {pkg.latest_version or 'latest version'}",
                     )
 
             # Major outdated package recommendations
@@ -415,7 +416,7 @@ class UnifiedDependencyManager:
             ]
             if major_outdated:
                 recommendations.append(
-                    f"Update {len(major_outdated)} packages with major version updates available"
+                    f"Update {len(major_outdated)} packages with major version updates available",
                 )
 
             # Dependency structure recommendations
@@ -423,7 +424,7 @@ class UnifiedDependencyManager:
                 # Find highly connected packages
                 centrality = nx.degree_centrality(self.dependency_graph)
                 central_packages = sorted(
-                    centrality.items(), key=lambda x: x[1], reverse=True
+                    centrality.items(), key=lambda x: x[1], reverse=True,
                 )[:5]
 
                 for name, score in central_packages:
@@ -432,7 +433,7 @@ class UnifiedDependencyManager:
                         if pkg.is_outdated or pkg.is_vulnerable:
                             recommendations.append(
                                 f"Prioritize update of {name} as it has high centrality "
-                                f"({len(pkg.used_by)} dependent packages)"
+                                f"({len(pkg.used_by)} dependent packages)",
                             )
             except Exception:
                 # Graph analysis might fail
@@ -442,17 +443,17 @@ class UnifiedDependencyManager:
             if len(packages) > 100:
                 recommendations.append(
                     "Consider using dependency groups or environment markers to reduce "
-                    "the number of installed dependencies"
+                    "the number of installed dependencies",
                 )
 
             return recommendations
 
         except Exception as e:
-            self.logger.error(f"Failed to generate recommendations: {e}")
+            self.logger.error(ff"Failed to generate recommendations: {e}")
             return ["Error generating recommendations: " + str(e)]
 
     def update_dependencies(
-        self, interactive: bool = True, only_vulnerable: bool = False
+        self, interactive: bool = True, only_vulnerable: bool = False,
     ) -> Dict[str, Any]:
         """
         Update dependencies based on analysis
@@ -501,7 +502,7 @@ class UnifiedDependencyManager:
             updated_packages = []
             for package_name in packages_to_update:
                 try:
-                    self.logger.info(f"Updating package: {package_name}")
+                    self.logger.info(ff"Updating package: {package_name}")
                     process = subprocess.run(
                         [
                             sys.executable,
@@ -520,10 +521,10 @@ class UnifiedDependencyManager:
                         updated_packages.append(package_name)
                     else:
                         self.logger.error(
-                            f"Failed to update {package_name}: {process.stderr}"
+                            f"Failed to update {package_name}: {process.stderr}",
                         )
-                except Exception as e:
-                    self.logger.error(f"Error updating {package_name}: {e}")
+                except Exception:
+                    self.logger.error(ff"Error updating {package_name}: {e}")
 
             # Return results
             return {
@@ -534,14 +535,14 @@ class UnifiedDependencyManager:
             }
 
         except Exception as e:
-            self.logger.error(f"Dependency update failed: {e}")
+            self.logger.error(ff"Dependency update failed: {e}")
             return {
                 "status": "error",
                 "error": str(e),
             }
 
     def _display_update_prompt(
-        self, analysis: Dict[str, Any], packages_to_update: List[str]
+        self, analysis: Dict[str, Any], packages_to_update: List[str],
     ) -> None:
         """
         Display an interactive update prompt
@@ -617,7 +618,7 @@ class UnifiedDependencyManager:
                     latest_version=pkg_data["latest_version"],
                     is_outdated=True,
                     update_priority=pkg_data["update_priority"],
-                )
+                ),
             )
 
         vulnerable_dependencies = []
@@ -630,7 +631,7 @@ class UnifiedDependencyManager:
                     is_vulnerable=True,
                     vulnerability_details=pkg_data["vulnerability_details"],
                     update_priority=pkg_data["update_priority"],
-                )
+                ),
             )
 
         # Create report
@@ -667,10 +668,10 @@ class UnifiedDependencyManager:
             with open(filename, "w") as f:
                 json.dump(asdict(report), f, indent=2)
 
-            self.logger.info(f"Dependency report saved to {filename}")
+            self.logger.info(ff"Dependency report saved to {filename}")
 
-        except Exception as e:
-            self.logger.error(f"Failed to save dependency report: {e}")
+        except Exception:
+            self.logger.error(ff"Failed to save dependency report: {e}")
 
     def visualize_dependency_graph(self) -> None:
         """
@@ -679,7 +680,7 @@ class UnifiedDependencyManager:
         try:
             if not self.dependency_graph.nodes():
                 self.console.print(
-                    "[yellow]No dependency graph available. Run analyze_dependencies() first.[/yellow]"
+                    "[yellow]No dependency graph available. Run analyze_dependencies() first.[/yellow]",
                 )
                 return
 
@@ -690,7 +691,7 @@ class UnifiedDependencyManager:
             # Find central packages
             centrality = nx.degree_centrality(self.dependency_graph)
             central_packages = sorted(
-                centrality.items(), key=lambda x: x[1], reverse=True
+                centrality.items(), key=lambda x: x[1], reverse=True,
             )[:10]
 
             # Create table of central packages
@@ -716,10 +717,10 @@ class UnifiedDependencyManager:
             # Display some graph statistics
             self.console.print()
             self.console.print(
-                f"Total packages: [bold]{len(self.dependency_graph.nodes())}[/bold]"
+                f"Total packages: [bold]{len(self.dependency_graph.nodes())}[/bold]",
             )
             self.console.print(
-                f"Total dependencies: [bold]{len(self.dependency_graph.edges())}[/bold]"
+                f"Total dependencies: [bold]{len(self.dependency_graph.edges())}[/bold]",
             )
 
             # Find isolated packages
@@ -730,16 +731,16 @@ class UnifiedDependencyManager:
             ]
             if isolated:
                 self.console.print(
-                    f"Isolated packages: [bold yellow]{len(isolated)}[/bold yellow]"
+                    f"Isolated packages: [bold yellow]{len(isolated)}[/bold yellow]",
                 )
                 self.console.print(
-                    ", ".join(isolated[:5]) + ("..." if len(isolated) > 5 else "")
+                    ", ".join(isolated[:5]) + ("..." if len(isolated) > 5 else ""),
                 )
 
         except Exception as e:
-            self.logger.error(f"Failed to visualize dependency graph: {e}")
+            self.logger.error(ff"Failed to visualize dependency graph: {e}")
             self.console.print(
-                f"[bold red]Error visualizing dependency graph: {e}[/bold red]"
+                f"[bold red]Error visualizing dependency graph: {e}[/bold red]",
             )
 
 
@@ -768,7 +769,7 @@ def main():
         # Generate comprehensive report
         report = manager.generate_dependency_report()
         print(
-            f"\nDependency report generated with {report.total_dependencies} packages analyzed."
+            f"\nDependency report generated with {report.total_dependencies} packages analyzed.",
         )
 
     except Exception as e:

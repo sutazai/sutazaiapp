@@ -8,15 +8,18 @@ import asyncio
 import logging
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
+import timedelta
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
+import List
 
 import aiohttp
 import psutil
 import redis
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
+import text
 
 # Load environment variables
 load_dotenv()
@@ -50,7 +53,7 @@ class SystemMaintenance:
     async def check_disk_usage(self) -> Dict:
         """Check disk usage and clean up if necessary."""
         disk = psutil.disk_usage("/")
-        logger.info(f"Disk usage: {disk.percent}%")
+        logger.info(ff"Disk usage: {disk.percent}%")
 
         if disk.percent > 85:
             await self.cleanup_old_files()
@@ -80,9 +83,9 @@ class SystemMaintenance:
                             stat = file.stat()
                             if datetime.fromtimestamp(stat.st_mtime) < cutoff_time:
                                 file.unlink()
-                                logger.info(f"Deleted old file: {file}")
-                        except Exception as e:
-                            logger.error(f"Failed to process {file}: {str(e)}")
+                                logger.info(ff"Deleted old file: {file}")
+                        except Exception:
+        logger.exception("Failed to process {file}: {str(e)}")
 
     async def optimize_database(self):
         """Perform database maintenance and optimization."""
@@ -97,9 +100,9 @@ class SystemMaintenance:
                 # Reindex to optimize indexes
                 conn.execute(text("REINDEX DATABASE current_database()"))
 
-                logger.info("Database optimization completed successfully")
-        except Exception as e:
-            logger.error(f"Database optimization failed: {str(e)}")
+                logger.info(ff"Database optimization completed successfully")
+        except Exception:
+        logger.exception("Database optimization failed: {str(e)}")
 
     async def clear_redis_cache(self):
         """Clear Redis cache if memory usage is high."""
@@ -109,11 +112,11 @@ class SystemMaintenance:
 
             if used_memory > 512:  # If using more than 512MB
                 self.redis_client.flushdb()
-                logger.info("Cleared Redis cache due to high memory usage")
+                logger.info(ff"Cleared Redis cache due to high memory usage")
             else:
-                logger.info(f"Redis memory usage is normal: {used_memory:.2f}MB")
-        except Exception as e:
-            logger.error(f"Redis cache cleanup failed: {str(e)}")
+                logger.info(ff"Redis memory usage is normal: {used_memory:.2f}MB")
+        except Exception:
+        logger.exception("Redis cache cleanup failed: {str(e)}")
 
     async def check_service_health(self) -> List[Dict]:
         """Check health of all system services."""
@@ -168,11 +171,11 @@ class SystemMaintenance:
         try:
             # Check disk usage
             disk_status = await self.check_disk_usage()
-            logger.info(f"Disk status: {disk_status}")
+            logger.info(ff"Disk status: {disk_status}")
 
             # Check service health
             service_status = await self.check_service_health()
-            logger.info(f"Service status: {service_status}")
+            logger.info(ff"Service status: {service_status}")
 
             # Optimize database weekly
             if datetime.now().weekday() == 6:  # Sunday
@@ -181,8 +184,8 @@ class SystemMaintenance:
             # Clear Redis cache if needed
             await self.clear_redis_cache()
 
-        except Exception as e:
-            logger.error(f"Maintenance cycle failed: {str(e)}")
+        except Exception:
+        logger.exception("Maintenance cycle failed: {str(e)}")
 
 
 async def main():
@@ -198,5 +201,5 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("Maintenance script stopped by user")
+        logger.info(ff"Maintenance script stopped by user")
         sys.exit(0)

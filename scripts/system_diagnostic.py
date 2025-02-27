@@ -8,8 +8,9 @@ import platform
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
+import Dict
 import networkx as nx
 import psutil  # type: ignore
 from rich.console import Console
@@ -81,7 +82,7 @@ class SystemDiagnosticOptimizer:
                 "memory": {
                     "total_gb": round(psutil.virtual_memory().total / (1024**3), 2),
                     "available_gb": round(
-                        psutil.virtual_memory().available / (1024**3), 2
+                        psutil.virtual_memory().available / (1024**3), 2,
                     ),
                     "usage_percent": psutil.virtual_memory().percent,
                 },
@@ -131,7 +132,7 @@ class SystemDiagnosticOptimizer:
                 if file.endswith(".py"):
                     full_path = os.path.join(root, file)
                     try:
-                        with open(full_path, "r") as f:
+                        with open(full_path) as f:
                             content = f.read()
                             imports = [
                                 line.split()[-1].strip()
@@ -143,7 +144,7 @@ class SystemDiagnosticOptimizer:
                                 dependency_graph.add_edge(full_path, imp)
                     except Exception as e:
                         logging.warning(
-                            f"Could not analyze imports in {full_path}: {e}"
+                            f"Could not analyze imports in {full_path}: {e}",
                         )
 
         structure_analysis["dependency_graph"] = {
@@ -175,7 +176,7 @@ class SystemDiagnosticOptimizer:
             semgrep_result = subprocess.run(
                 ["semgrep", "scan", "--config=auto", self.base_path],
                 capture_output=True,
-                text=True,
+                text=True, check=False,
             )
 
             return {
@@ -217,12 +218,12 @@ class SystemDiagnosticOptimizer:
         # Resource utilization recommendations.
         if health_metrics["resources"]["cpu"]["usage_percent"] > 80:
             recommendations["resource_optimization"].append(
-                "High CPU usage detected. Consider optimizing CPU-intensive processes."
+                "High CPU usage detected. Consider optimizing CPU-intensive processes.",
             )
 
         if health_metrics["resources"]["memory"]["usage_percent"] > 85:
             recommendations["resource_optimization"].append(
-                "High memory usage detected. Investigate memory leaks or optimize memory-intensive scripts."
+                "High memory usage detected. Investigate memory leaks or optimize memory-intensive scripts.",
             )
 
         # Dependency optimization based on centrality in the dependency graph.
@@ -231,7 +232,7 @@ class SystemDiagnosticOptimizer:
         ].items():
             if centrality > 0.5:
                 recommendations["dependency_optimizations"].append(
-                    f"High dependency centrality for {file_path}. Consider modularizing the code."
+                    f"High dependency centrality for {file_path}. Consider modularizing the code.",
                 )
 
         return recommendations
@@ -308,7 +309,7 @@ class SystemDiagnosticOptimizer:
             ].items():
                 if recommendations:
                     self.console.print(
-                        f"[bold]{category.replace('_', ' ').title()}:[/bold]"
+                        f"[bold]{category.replace('_', ' ').title()}:[/bold]",
                     )
                     for rec in recommendations:
                         self.console.print(f"[red]➤[/red] {rec}")

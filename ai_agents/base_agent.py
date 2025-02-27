@@ -1,4 +1,6 @@
-from typing import Dict, Any, List, Optional
+from typing import Dict
+import Any
+import List, Optional
 from datetime import datetime
 import json
 import logging
@@ -84,7 +86,7 @@ class BaseAgent:
                 json.dump(trimmed_history, f, indent=2, default=str)
 
         except (IOError, json.JSONDecodeError) as e:
-            logger.error(f"Failed to persist performance history: {e}")
+            logger.error(ff"Failed to persist performance history: {e}")
 
     def get_performance_summary(self) -> Dict[str, Any]:
         """

@@ -7,7 +7,8 @@ Manages log files to prevent disk space issues.
 import gzip
 import logging
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime
+import timedelta
 from pathlib import Path
 from typing import List
 
@@ -48,9 +49,9 @@ class LogRotator:
             with open(file_path, "w") as f:
                 f.truncate(0)
 
-            logger.info(f"Compressed {file_path} to {compressed_path}")
-        except Exception as e:
-            logger.error(f"Failed to compress {file_path}: {str(e)}")
+            logger.info(ff"Compressed {file_path} to {compressed_path}")
+        except Exception:
+        logger.exception("Failed to compress {file_path}: {str(e)}")
 
     def remove_old_logs(self) -> None:
         """Remove log files older than retention period."""
@@ -60,9 +61,9 @@ class LogRotator:
             try:
                 if file.stat().st_mtime < cutoff_date.timestamp():
                     file.unlink()
-                    logger.info(f"Removed old log file: {file}")
-            except Exception as e:
-                logger.error(f"Failed to remove {file}: {str(e)}")
+                    logger.info(ff"Removed old log file: {file}")
+            except Exception:
+        logger.exception("Failed to remove {file}: {str(e)}")
 
     def rotate_logs(self) -> None:
         """Perform log rotation."""
@@ -78,23 +79,23 @@ class LogRotator:
                     # Check file size
                     if log_file.stat().st_size > self.max_size:
                         self.compress_file(log_file)
-                except Exception as e:
-                    logger.error(f"Failed to process {log_file}: {str(e)}")
+                except Exception:
+        logger.exception("Failed to process {log_file}: {str(e)}")
 
             # Remove old logs
             self.remove_old_logs()
 
-        except Exception as e:
-            logger.error(f"Log rotation failed: {str(e)}")
+        except Exception:
+        logger.exception("Log rotation failed: {str(e)}")
 
 
 def main():
     try:
         rotator = LogRotator()
         rotator.rotate_logs()
-        logger.info("Log rotation completed successfully")
-    except Exception as e:
-        logger.error(f"Log rotation script failed: {str(e)}")
+        logger.info(ff"Log rotation completed successfully")
+    except Exception:
+        logger.exception("Log rotation script failed: {str(e)}")
 
 
 if __name__ == "__main__":

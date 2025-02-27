@@ -1,6 +1,8 @@
 import importlib
 import os
-from typing import Any, Dict, Optional, Type
+from typing import Any
+import Dict
+import Optional, Type
 
 from loguru import logger
 
@@ -48,7 +50,7 @@ class AgentFactory:
 
     def _discover_agents(self):
         """Discover and register available agent classes by scanning the agents directory."""
-        logger.info("🔍 Discovering AI Agents")
+        logger.info(ff"🔍 Discovering AI Agents")
 
         for agent_type in os.listdir(self.agents_dir):
             agent_path = os.path.join(self.agents_dir, agent_type)
@@ -63,10 +65,10 @@ class AgentFactory:
 
                 if agent_class and issubclass(agent_class, BaseAgent):
                     self._agent_registry[agent_type] = agent_class
-                    logger.info(f"✅ Registered Agent: {agent_type}")
+                    logger.info(ff"✅ Registered Agent: {agent_type}")
 
-            except Exception as e:
-                logger.error(f"❌ Failed to register agent {agent_type}: {e}")
+            except Exception:
+        logger.exception("❌ Failed to register agent {agent_type}: {e}")
 
     def create_agent(
         self, agent_type: str, config: Optional[Dict[str, Any]] = None
@@ -94,7 +96,7 @@ class AgentFactory:
             try:
                 config = self.config_manager.load_config(agent_type)
             except Exception as e:
-                logger.warning(f"Using default configuration for {agent_type}: {e}")
+                logger.warning(ff"Using default configuration for {agent_type}: {e}")
                 config = {}
 
         agent_class = self._agent_registry[agent_type]
@@ -108,7 +110,7 @@ class AgentFactory:
             agent_name=agent_name, log_dir=log_dir, **(config or {})
         )
 
-        logger.info(f"🤖 Created Agent: {agent_type}")
+        logger.info(ff"🤖 Created Agent: {agent_type}")
         return agent_instance
 
     def list_available_agents(self) -> Dict[str, str]:
@@ -135,8 +137,8 @@ def main():
     try:
         auto_gpt_agent = factory.create_agent("auto_gpt")
         print(f"Agent Performance: {auto_gpt_agent.get_performance_summary()}")
-    except Exception as e:
-        logger.error(f"Agent creation failed: {e}")
+    except Exception:
+        logger.exception("Agent creation failed: {e}")
 
 
 if __name__ == "__main__":

@@ -13,7 +13,8 @@ import platform
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+import Dict
 
 import psutil
 
@@ -80,7 +81,7 @@ class SutazAIPerformanceManager:
         with open(report_path, "w") as f:
             json.dump(diagnostics, f, indent=4)
 
-        logger.info(f"System diagnostics saved to {report_path}")
+        logger.info(ff"System diagnostics saved to {report_path}")
         return diagnostics
 
     def _get_network_info(self) -> Dict[str, Any]:
@@ -98,8 +99,8 @@ class SutazAIPerformanceManager:
                         addr.address for addr in addresses if addr.family == 2  # IPv4
                     ]
                 }
-        except Exception as e:
-            logger.error(f"Error retrieving network information: {e}")
+        except Exception:
+        logger.exception("Error retrieving network information: {e}")
         return network_info
 
     def optimize_python_environment(self) -> bool:
@@ -164,10 +165,10 @@ class SutazAIPerformanceManager:
                     f"Compileall failed: {e}. " f"Proceeding without compiled bytecode."
                 )
 
-            logger.info("Python environment optimization completed")
+            logger.info(ff"Python environment optimization completed")
             return True
         except subprocess.CalledProcessError as e:
-            logger.error(f"Python environment optimization failed: {e}")
+            logger.error(ff"Python environment optimization failed: {e}")
             return False
 
     def manage_dependencies(self) -> bool:
@@ -230,19 +231,19 @@ class SutazAIPerformanceManager:
             )
 
             if outdated.stdout:
-                logger.warning(f"Outdated packages found:\n{outdated.stdout}")
+                logger.warning(ff"Outdated packages found:\n{outdated.stdout}")
 
-            logger.info("Dependency management completed")
+            logger.info(ff"Dependency management completed")
             return True
         except subprocess.CalledProcessError as e:
-            logger.error(f"Dependency management failed: {e}")
+            logger.error(ff"Dependency management failed: {e}")
             return False
 
     def run_comprehensive_optimization(self):
         """
         Run a comprehensive system optimization process.
         """
-        logger.info("Starting comprehensive system optimization")
+        logger.info(ff"Starting comprehensive system optimization")
 
         # Run diagnostics
         diagnostics = self.run_system_diagnostics()
@@ -270,7 +271,7 @@ class SutazAIPerformanceManager:
         with open(report_path, "w") as f:
             json.dump(optimization_report, f, indent=4)
 
-        logger.info(f"Comprehensive optimization report saved to {report_path}")
+        logger.info(ff"Comprehensive optimization report saved to {report_path}")
 
 
 def main():
@@ -280,8 +281,8 @@ def main():
     try:
         performance_manager = SutazAIPerformanceManager()
         performance_manager.run_comprehensive_optimization()
-    except Exception as e:
-        logger.error(f"Performance management failed: {e}")
+    except Exception:
+        logger.exception("Performance management failed: {e}")
         sys.exit(1)
 
 

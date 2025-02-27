@@ -14,7 +14,10 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
+
+import Dict
+import List
 
 
 class SystemArchitectureValidator:
@@ -90,7 +93,7 @@ class SystemArchitectureValidator:
                     try:
                         # Attempt to import and inspect the module
                         module_name = os.path.relpath(file_path, self.base_dir).replace(
-                            "/", "."
+                            "/", ".",
                         )[:-3]
                         module = importlib.import_module(module_name)
 
@@ -99,14 +102,14 @@ class SystemArchitectureValidator:
                             "classes": [
                                 name
                                 for name, obj in inspect.getmembers(
-                                    module, inspect.isclass
+                                    module, inspect.isclass,
                                 )
                                 if obj.__module__ == module_name
                             ],
                             "functions": [
                                 name
                                 for name, obj in inspect.getmembers(
-                                    module, inspect.isfunction
+                                    module, inspect.isfunction,
                                 )
                                 if obj.__module__ == module_name
                             ],
@@ -129,7 +132,7 @@ class SystemArchitectureValidator:
         # Check requirements.txt
         requirements_path = os.path.join(self.base_dir, "requirements.txt")
         if os.path.exists(requirements_path):
-            with open(requirements_path, "r") as f:
+            with open(requirements_path) as f:
                 dependencies = [
                     line.strip()
                     for line in f
@@ -144,7 +147,7 @@ class SystemArchitectureValidator:
                 if file.endswith(".py") and not file.startswith("__"):
                     file_path = os.path.join(root, file)
                     try:
-                        with open(file_path, "r") as f:
+                        with open(file_path) as f:
                             content = f.read()
                             imports = [
                                 line.split()[-1].strip()
@@ -180,7 +183,7 @@ class SystemArchitectureValidator:
             for file in files:
                 if any(pattern in file.lower() for pattern in sensitive_patterns):
                     security_analysis["sensitive_files"].append(
-                        os.path.join(root, file)
+                        os.path.join(root, file),
                     )
 
         # Basic vulnerability checks
@@ -189,25 +192,25 @@ class SystemArchitectureValidator:
                 if file.endswith(".py"):
                     file_path = os.path.join(root, file)
                     try:
-                        with open(file_path, "r") as f:
+                        with open(file_path) as f:
                             content = f.read()
 
-                            if "eval(" in content or "exec(" in content:
+                            if "eval(" in content or "safe_exec(" in content:
                                 security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
                                         "issue": "Potential code injection "
                                         "vulnerability",
-                                    }
+                                    },
                                 )
 
-                            if "subprocess.call(" in content or "os.system(" in content:
+                            if "subprocess.run(" in content or "os.system(" in content:
                                 security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
                                         "issue": "Potential shell injection "
                                         "vulnerability",
-                                    }
+                                    },
                                 )
                     except Exception:
                         pass
@@ -233,7 +236,7 @@ class SystemArchitectureValidator:
         ]
         if missing_dirs:
             recommendations.append(
-                f"Create missing directories: {', '.join(missing_dirs)}"
+                f"Create missing directories: {', '.join(missing_dirs)}",
             )
 
         # Module integrity recommendations
@@ -245,7 +248,7 @@ class SystemArchitectureValidator:
         ]
         if import_errors:
             recommendations.append(
-                f"Fix import errors in modules: {', '.join(import_errors)}"
+                f"Fix import errors in modules: {', '.join(import_errors)}",
             )
 
         # Dependency recommendations

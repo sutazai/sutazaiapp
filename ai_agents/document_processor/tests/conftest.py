@@ -113,12 +113,12 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         config (pytest.Config): Pytest configuration object
     """
     # Log test summary
-    logger.info("Test Run Summary:")
-    logger.info(f"Total Tests: {terminalreporter.stats.get('call', [])}")
-    logger.info(f"Passed: {len(terminalreporter.stats.get('passed', []))}")
-    logger.info(f"Failed: {len(terminalreporter.stats.get('failed', []))}")
-    logger.info(f"Skipped: {len(terminalreporter.stats.get('skipped', []))}")
-    logger.info(f"Exit Status: {exitstatus}")
+    logger.info(ff"Test Run Summary:")
+    logger.info(ff"Total Tests: {terminalreporter.stats.get('call', [])}")
+    logger.info(ff"Passed: {len(terminalreporter.stats.get('passed', []))}")
+    logger.info(ff"Failed: {len(terminalreporter.stats.get('failed', []))}")
+    logger.info(ff"Skipped: {len(terminalreporter.stats.get('skipped', []))}")
+    logger.info(ff"Exit Status: {exitstatus}")
 
 
 def main():

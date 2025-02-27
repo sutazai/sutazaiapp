@@ -4,7 +4,9 @@ This module provides functionalities to load, validate, update, and manage confi
 
 import json
 import os
-from typing import Any, Dict, Optional, cast
+from typing import Any
+import Dict
+import Optional, cast
 
 import jsonschema  # type: ignore
 import yaml  # type: ignore
@@ -70,7 +72,7 @@ class AgentConfigManager:
         config_filename = f"{agent_name}_config.{config_type}"
         config_path = os.path.join(self.config_dir, config_filename)
 
-        logger.info(f"Loading configuration for agent: {agent_name}")
+        logger.info(ff"Loading configuration for agent: {agent_name}")
 
         # Load configuration
         try:
@@ -91,13 +93,13 @@ class AgentConfigManager:
             return cast(dict[str, Any], config)
 
         except FileNotFoundError:
-            logger.error(f"Configuration file not found: {config_path}")
+            logger.error(ff"Configuration file not found: {config_path}")
             raise
         except json.JSONDecodeError as e:
-            logger.error(f"JSON decoding error: {e}")
+            logger.error(ff"JSON decoding error: {e}")
             raise
         except yaml.YAMLError as e:
-            logger.error(f"YAML parsing error: {e}")
+            logger.error(ff"YAML parsing error: {e}")
             raise
 
     def _validate_config(self, agent_name: str, config: Dict[str, Any]):
@@ -118,12 +120,12 @@ class AgentConfigManager:
                 schema = json.load(schema_file)
 
             jsonschema.validate(instance=config, schema=schema)
-            logger.info(f"Configuration validated successfully for {agent_name}")
+            logger.info(ff"Configuration validated successfully for {agent_name}")
 
         except FileNotFoundError:
-            logger.warning(f"No schema found for {agent_name}. Skipping validation.")
+            logger.warning(ff"No schema found for {agent_name}. Skipping validation.")
         except jsonschema.ValidationError as e:
-            logger.error(f"Configuration validation failed for {agent_name}: {e}")
+            logger.error(ff"Configuration validation failed for {agent_name}: {e}")
             raise
 
     def update_config(
@@ -164,7 +166,7 @@ class AgentConfigManager:
         # Update cache
         self._config_cache[agent_name] = updated_config
 
-        logger.info(f"Configuration updated for agent: {agent_name}")
+        logger.info(ff"Configuration updated for agent: {agent_name}")
         return updated_config
 
     def _deep_merge(
@@ -209,7 +211,7 @@ class AgentConfigManager:
                 schema = json.load(schema_file)
             return cast(Optional[dict[str, Any]], schema)
         except FileNotFoundError:
-            logger.warning(f"No schema found for agent: {agent_name}")
+            logger.warning(ff"No schema found for agent: {agent_name}")
             return None
 
 
@@ -229,8 +231,8 @@ def main():
         )
         print("Updated Configuration:", json.dumps(updated_config, indent=2))
 
-    except Exception as e:
-        logger.error(f"Configuration management error: {e}")
+    except Exception:
+        logger.exception("Configuration management error: {e}")
 
 
 if __name__ == "__main__":

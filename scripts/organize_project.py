@@ -78,7 +78,7 @@ def organize_root():
             shutil.move(item, dest)
             logging.info(f"Moved '{item}' to '{dest}'")
         except Exception as e:
-            logging.error(f"Error moving {item} to {MISC_DIR}: {e}")
+            logging.exception(f"Error moving {item} to {MISC_DIR}: {e}")
 
 
 if __name__ == "__main__":

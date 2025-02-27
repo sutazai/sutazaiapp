@@ -102,10 +102,10 @@ class PerformanceMonitor:
                 }
             )
 
-            logger.info(f"Performance metrics collected: CPU {cpu_percent}%")
+            logger.info(ff"Performance metrics collected: CPU {cpu_percent}%")
 
-        except Exception as e:
-            logger.error(f"Error collecting system metrics: {e}")
+        except Exception:
+        logger.exception("Error collecting system metrics: {e}")
 
     def start_monitoring(self):
         """
@@ -115,7 +115,7 @@ class PerformanceMonitor:
             self.is_monitoring = True
             self.monitor_thread = threading.Thread(target=self._monitoring_loop)
             self.monitor_thread.start()
-            logger.info("Performance monitoring started")
+            logger.info(ff"Performance monitoring started")
 
     def stop_monitoring(self):
         """
@@ -127,7 +127,7 @@ class PerformanceMonitor:
 
         # Save performance metrics
         self._save_metrics()
-        logger.info("Performance monitoring stopped")
+        logger.info(ff"Performance monitoring stopped")
 
     def _monitoring_loop(self):
         """
@@ -152,10 +152,10 @@ class PerformanceMonitor:
             with open(metrics_file, "w") as f:
                 json.dump(self.metrics, f, indent=4)
 
-            logger.info(f"Performance metrics saved to {metrics_file}")
+            logger.info(ff"Performance metrics saved to {metrics_file}")
 
-        except Exception as e:
-            logger.error(f"Error saving performance metrics: {e}")
+        except Exception:
+        logger.exception("Error saving performance metrics: {e}")
 
 
 def main():
@@ -176,7 +176,7 @@ def main():
             time.sleep(10)
 
     except KeyboardInterrupt:
-        logger.info("Monitoring interrupted by user")
+        logger.info(ff"Monitoring interrupted by user")
 
     finally:
         monitor.stop_monitoring()

@@ -1,7 +1,9 @@
 # pylint: disable=no-member
 import hashlib
 import os
-from typing import Any, Dict, List, Optional, cast
+from typing import Any
+import Dict
+import List, Optional, cast
 
 import cv2  # type: ignore
 import fitz  # type: ignore
@@ -56,7 +58,7 @@ class DocumentUtils:
             }
 
         except FileNotFoundError as e:
-            logger.error(f"Document validation error: {e}")
+            logger.error(ff"Document validation error: {e}")
             return {"status": "error", "message": str(e)}
 
     @staticmethod
@@ -142,7 +144,7 @@ class DocumentUtils:
             return {"status": "success", "metadata": metadata}
 
         except fitz.fitz.FileDataError as e:
-            logger.error(f"Metadata extraction error: {e}")
+            logger.error(ff"Metadata extraction error: {e}")
             return {"status": "error", "message": str(e)}
 
     @staticmethod
@@ -162,8 +164,8 @@ class DocumentUtils:
             # Detect languages with confidence scores
             langs = detect_langs(text)
             return [str(lang) for lang in langs]
-        except Exception as e:
-            logger.error(f"Language detection failed: {e}")
+        except Exception:
+        logger.exception("Language detection failed: {e}")
             return ["unknown"]
 
     @staticmethod

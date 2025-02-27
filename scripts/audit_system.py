@@ -109,12 +109,12 @@ def check_requirements_vs_wheels():
         logging.error("No requirements.txt file found!")
         return []
     try:
-        with open("requirements.txt", "r") as f:
+        with open("requirements.txt") as f:
             requirements = [
                 line.strip() for line in f if line.strip() and not line.startswith("#")
             ]
     except Exception as e:
-        logging.error(f"Error reading requirements.txt: {e}")
+        logging.exception(f"Error reading requirements.txt: {e}")
         return []
 
     wheels_dir = os.path.join("packages", "wheels")
@@ -133,7 +133,7 @@ def check_requirements_vs_wheels():
             logging.info(f"Found wheel for requirement: {req}")
     if missing_wheels:
         logging.warning(
-            "Some requirements are missing corresponding wheels in packages/wheels."
+            "Some requirements are missing corresponding wheels in packages/wheels.",
         )
     else:
         logging.info("All requirements have corresponding wheels.")
@@ -142,7 +142,7 @@ def check_requirements_vs_wheels():
 
 def search_for_sensitive_keywords():
     logging.info(
-        "Scanning code for sensitive keywords (e.g., JWT, token, password, secret)..."
+        "Scanning code for sensitive keywords (e.g., JWT, token, password, secret)...",
     )
     sensitive_keywords = ["JWT", "token", "password", "secret"]
     issues_found = []
@@ -154,16 +154,16 @@ def search_for_sensitive_keywords():
             if file.endswith((".py", ".js", ".ts", ".txt", ".sh", ".md")):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                    with open(file_path, encoding="utf-8", errors="ignore") as f:
                         content = f.read()
                         for keyword in sensitive_keywords:
                             if keyword in content:
                                 logging.warning(
-                                    f"Sensitive keyword '{keyword}' found in {file_path}"
+                                    f"Sensitive keyword '{keyword}' found in {file_path}",
                                 )
                                 issues_found.append((file_path, keyword))
                 except Exception as e:
-                    logging.error(f"Error reading file {file_path}: {e}")
+                    logging.exception(f"Error reading file {file_path}: {e}")
     if not issues_found:
         logging.info("No sensitive keywords found in code.")
     return issues_found
@@ -179,12 +179,12 @@ def syntax_check():
             if file.endswith(".py"):
                 file_path = os.path.join(root, file)
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                    with open(file_path, encoding="utf-8", errors="ignore") as f:
                         source = f.read()
                     compile(source, file_path, "exec")
                     logging.info(f"Syntax OK: {file_path}")
                 except Exception as e:
-                    logging.error(f"Syntax error in {file_path}: {e}")
+                    logging.exception(f"Syntax error in {file_path}: {e}")
                     issues_found.append((file_path, str(e)))
     if not issues_found:
         logging.info("All Python files pass syntax check.")

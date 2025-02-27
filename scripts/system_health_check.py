@@ -13,7 +13,8 @@ import platform
 import subprocess
 import sys
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
+import Dict
 
 # Configure logging
 logging.basicConfig(
@@ -71,8 +72,8 @@ class SystemHealthChecker:
                 "is_compatible": (major == 3 and minor >= 8),
                 "status": "OK" if (major == 3 and minor >= 8) else "WARNING",
             }
-        except Exception as e:
-            logger.error(f"Python version check failed: {e}")
+        except Exception:
+        logger.exception("Python version check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_pip_version(self) -> Dict[str, Any]:
@@ -88,8 +89,8 @@ class SystemHealthChecker:
             ).strip()
 
             return {"version": version_output, "status": "OK"}
-        except Exception as e:
-            logger.error(f"Pip version check failed: {e}")
+        except Exception:
+        logger.exception("Pip version check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_virtual_environment(self) -> Dict[str, Any]:
@@ -119,8 +120,8 @@ class SystemHealthChecker:
                 "python_executable_exists": os.path.exists(python_path),
                 "status": "OK",
             }
-        except Exception as e:
-            logger.error(f"Virtual environment check failed: {e}")
+        except Exception:
+        logger.exception("Virtual environment check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_required_packages(self) -> Dict[str, Any]:
@@ -165,8 +166,8 @@ class SystemHealthChecker:
                 "missing_packages": missing_packages,
                 "status": "OK" if not missing_packages else "WARNING",
             }
-        except Exception as e:
-            logger.error(f"Package check failed: {e}")
+        except Exception:
+        logger.exception("Package check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def generate_health_report(self) -> str:
@@ -195,7 +196,7 @@ class SystemHealthChecker:
         with open(report_path, "w") as f:
             json.dump(health_report, f, indent=4)
 
-        logger.info(f"Health report generated: {report_path}")
+        logger.info(ff"Health report generated: {report_path}")
         return report_path
 
 
@@ -216,8 +217,8 @@ def main():
         if any(dep.get("status") == "ERROR" for dep in report["dependencies"].values()):
             sys.exit(1)
 
-    except Exception as e:
-        logger.error(f"System health check failed: {e}")
+    except Exception:
+        logger.exception("System health check failed: {e}")
         sys.exit(1)
 
 

@@ -13,8 +13,11 @@ import logging
 import os
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Dict, List
+from concurrent.futures import ThreadPoolExecutor
+import as_completed
+from typing import Any
+import Dict
+import List
 
 import psutil
 
@@ -84,8 +87,8 @@ class UltraComprehensiveSystemAnalyzer:
 
                         structure_insights[full_path] = file_insights
 
-                    except Exception as e:
-                        logger.error("Error processing file %s: %s", full_path, e)
+                    except Exception:
+        logger.exception("Error processing file %s: %s", full_path, e)
 
         return structure_insights
 
@@ -129,11 +132,11 @@ class UltraComprehensiveSystemAnalyzer:
                     "safety": json.loads(safety_output),
                 }
             except Exception as e:
-                logger.warning(f"Security check failed: {e}")
+                logger.warning(ff"Security check failed: {e}")
                 dependency_insights["security_issues"] = {"error": str(e)}
 
-        except Exception as e:
-            logger.error(f"Dependency check failed: {e}")
+        except Exception:
+        logger.exception("Dependency check failed: {e}")
 
         return dependency_insights
 
@@ -166,7 +169,7 @@ class UltraComprehensiveSystemAnalyzer:
             }
 
         except ImportError:
-            logger.warning("psutil not available for detailed performance analysis")
+            logger.warning(ff"psutil not available for detailed performance analysis")
 
         return performance_metrics
 
@@ -200,8 +203,8 @@ class UltraComprehensiveSystemAnalyzer:
                 analysis_type = futures[future]
                 try:
                     self.analysis_results[analysis_type] = future.result()
-                except Exception as e:
-                    logger.error(f"Error in {analysis_type} analysis: {e}")
+                except Exception:
+        logger.exception("Error in {analysis_type} analysis: {e}")
 
         # Generate comprehensive JSON report
         report_path = os.path.join(
@@ -210,7 +213,7 @@ class UltraComprehensiveSystemAnalyzer:
         with open(report_path, "w") as f:
             json.dump(self.analysis_results, f, indent=2)
 
-        logger.info(f"Comprehensive system analysis report generated: {report_path}")
+        logger.info(ff"Comprehensive system analysis report generated: {report_path}")
 
     def auto_optimization_suggestions(self) -> List[str]:
         """
@@ -260,7 +263,7 @@ class UltraComprehensiveSystemAnalyzer:
         Execute the full comprehensive system analysis workflow with resource
         monitoring.
         """
-        logger.info("🚀 Initiating Ultra-Comprehensive System Analysis...")
+        logger.info(ff"🚀 Initiating Ultra-Comprehensive System Analysis...")
 
         # Monitor resources before starting
         initial_resources = self.monitor_resources()
@@ -276,15 +279,15 @@ class UltraComprehensiveSystemAnalyzer:
         final_resources = self.monitor_resources()
         cpu_usage = final_resources["cpu_usage"]
         memory_usage = final_resources["memory_usage"]
-        logger.info(f"Final Resources - CPU: {cpu_usage}%, " f"Memory: {memory_usage}%")
+        logger.info(ff"Final Resources - CPU: {cpu_usage}%, " f"Memory: {memory_usage}%")
 
         optimization_suggestions = self.auto_optimization_suggestions()
 
-        logger.info("\n🔍 Optimization Suggestions:")
+        logger.info(ff"\n🔍 Optimization Suggestions:")
         for suggestion in optimization_suggestions:
-            logger.info(f"  • {suggestion}")
+            logger.info(ff"  • {suggestion}")
 
-        logger.info("\n✨ Comprehensive System Analysis Complete!")
+        logger.info(ff"\n✨ Comprehensive System Analysis Complete!")
 
 
 def main():

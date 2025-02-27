@@ -10,7 +10,9 @@ import platform
 import socket
 import subprocess
 import time
-from typing import Dict, List, Optional, Union
+from typing import Dict
+import List
+import Optional, Union
 
 # Configure logging
 logging.basicConfig(
@@ -87,8 +89,8 @@ class AdvancedNetworkDiagnostics:
                     "reachable": False,
                     "response_time": timeout,
                 }
-            except Exception as e:
-                logger.error(f"Ping test failed for {host}: {e}")
+            except Exception:
+        logger.exception("Ping test failed for {host}: {e}")
                 ping_results[host] = {
                     "reachable": False,
                     "response_time": None,
@@ -141,8 +143,8 @@ class AdvancedNetworkDiagnostics:
 
             return hops
 
-        except Exception as e:
-            logger.error(f"Traceroute analysis failed: {e}")
+        except Exception:
+        logger.exception("Traceroute analysis failed: {e}")
             return None
 
 

@@ -10,14 +10,16 @@ Provides an autonomous, multi-dimensional approach to:
 - Architectural compliance validation
 """
 
-import networkx as nx
 import ast
 import json
 import logging
 import os
-import re
 import sys
-from typing import Any, Dict, Optional
+from typing import Any
+import Dict
+import Optional
+
+import networkx as nx
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -59,7 +61,7 @@ class UltraComprehensiveProjectValidator:
             format="%(asctime)s - %(levelname)s: %(message)s",
             handlers=[
                 logging.FileHandler(
-                    os.path.join(self.log_dir, "project_validator.log")
+                    os.path.join(self.log_dir, "project_validator.log"),
                 ),
                 logging.StreamHandler(sys.stdout),
             ],
@@ -106,8 +108,8 @@ class UltraComprehensiveProjectValidator:
             # Persist validation report
             self._persist_validation_report()
 
-        except Exception as e:
-            self.logger.error(f"Comprehensive project validation failed: {e}")
+        except Exception:
+            self.logger.error(ff"Comprehensive project validation failed: {e}")
 
         return self.validation_report
 
@@ -139,7 +141,7 @@ class UltraComprehensiveProjectValidator:
         # Identify potential directory structure issues
         if len(directory_analysis["directory_types"]) < 5:
             directory_analysis["potential_issues"].append(
-                "Limited directory diversity. Consider expanding project structure."
+                "Limited directory diversity. Consider expanding project structure.",
             )
 
         self.validation_report["directory_structure"] = directory_analysis
@@ -189,7 +191,7 @@ class UltraComprehensiveProjectValidator:
                     file_path = os.path.join(root, file)
 
                     try:
-                        with open(file_path, "r") as f:
+                        with open(file_path) as f:
                             content = f.read()
 
                         # Parse AST
@@ -207,8 +209,8 @@ class UltraComprehensiveProjectValidator:
 
                         code_quality["total_files"] += 1
 
-                    except Exception as e:
-                        self.logger.warning(f"Error analyzing {file_path}: {str(e)}")
+                    except Exception:
+                        self.logger.warning(ff"Error analyzing {file_path}: {str(e)}")
 
         # Identify code quality issues
         high_complexity_files = [
@@ -225,12 +227,12 @@ class UltraComprehensiveProjectValidator:
 
         if high_complexity_files:
             code_quality["potential_issues"].append(
-                f"High complexity in {len(high_complexity_files)} files"
+                f"High complexity in {len(high_complexity_files)} files",
             )
 
         if low_type_hint_files:
             code_quality["potential_issues"].append(
-                f"Low type hint coverage in {len(low_type_hint_files)} files"
+                f"Low type hint coverage in {len(low_type_hint_files)} files",
             )
 
         self.validation_report["code_quality"] = code_quality
@@ -254,7 +256,7 @@ class UltraComprehensiveProjectValidator:
         for node in ast.walk(tree):
             # Cyclomatic complexity calculation
             if isinstance(
-                node, (ast.If, ast.While, ast.For, ast.Try, ast.ExceptHandler)
+                node, (ast.If, ast.While, ast.For, ast.Try, ast.ExceptHandler),
             ):
                 complexity["cyclomatic_complexity"] += 1
 
@@ -306,7 +308,7 @@ class UltraComprehensiveProjectValidator:
                     file_path = os.path.join(root, file)
 
                     try:
-                        with open(file_path, "r") as f:
+                        with open(file_path) as f:
                             content = f.read()
 
                         tree = ast.parse(content)
@@ -319,7 +321,7 @@ class UltraComprehensiveProjectValidator:
                                     "file": file_path,
                                     "type": "module_docstring",
                                     "description": "Missing module-level docstring",
-                                }
+                                },
                             )
 
                         # Check class docstrings
@@ -333,7 +335,7 @@ class UltraComprehensiveProjectValidator:
                                             "type": "class_docstring",
                                             "class_name": node.name,
                                             "description": "Missing class docstring",
-                                        }
+                                        },
                                     )
 
                             # Check function docstrings
@@ -346,12 +348,12 @@ class UltraComprehensiveProjectValidator:
                                             "type": "function_docstring",
                                             "function_name": node.name,
                                             "description": "Missing function docstring",
-                                        }
+                                        },
                                     )
 
                     except Exception as e:
                         self.logger.warning(
-                            f"Documentation quality check failed for {file_path}: {e}"
+                            f"Documentation quality check failed for {file_path}: {e}",
                         )
 
         self.validation_report["documentation_gaps"] = documentation_gaps
@@ -374,7 +376,7 @@ class UltraComprehensiveProjectValidator:
                     relative_path = os.path.relpath(file_path, self.base_dir)
 
                     try:
-                        with open(file_path, "r") as f:
+                        with open(file_path) as f:
                             content = f.read()
 
                         tree = ast.parse(content)
@@ -384,7 +386,7 @@ class UltraComprehensiveProjectValidator:
                         for node in ast.walk(tree):
                             if isinstance(node, ast.Import):
                                 dependencies.extend(
-                                    [alias.name for alias in node.names]
+                                    [alias.name for alias in node.names],
                                 )
                             elif isinstance(node, ast.ImportFrom):
                                 base_module = node.module or ""
@@ -396,7 +398,7 @@ class UltraComprehensiveProjectValidator:
                                             else alias.name
                                         )
                                         for alias in node.names
-                                    ]
+                                    ],
                                 )
 
                         # Update dependency analysis
@@ -408,17 +410,17 @@ class UltraComprehensiveProjectValidator:
                         dependency_analysis["import_graph"].add_node(relative_path)
                         for dep in dependencies:
                             dependency_analysis["import_graph"].add_edge(
-                                relative_path, dep
+                                relative_path, dep,
                             )
 
                     except Exception as e:
                         self.logger.warning(
-                            f"Dependency analysis failed for {file_path}: {e}"
+                            f"Dependency analysis failed for {file_path}: {e}",
                         )
 
         # Detect circular dependencies
         dependency_analysis["circular_dependencies"] = list(
-            nx.simple_cycles(dependency_analysis["import_graph"])
+            nx.simple_cycles(dependency_analysis["import_graph"]),
         )
 
         self.validation_report["dependency_analysis"] = dependency_analysis
@@ -432,7 +434,7 @@ class UltraComprehensiveProjectValidator:
         # Directory structure recommendations
         if self.validation_report["directory_structure"].get("potential_issues"):
             recommendations.extend(
-                self.validation_report["directory_structure"]["potential_issues"]
+                self.validation_report["directory_structure"]["potential_issues"],
             )
 
         # Code quality recommendations
@@ -443,14 +445,14 @@ class UltraComprehensiveProjectValidator:
         # Documentation recommendations
         if self.validation_report["documentation_gaps"]:
             recommendations.append(
-                f"Fill {len(self.validation_report['documentation_gaps'])} documentation gaps"
+                f"Fill {len(self.validation_report['documentation_gaps'])} documentation gaps",
             )
 
         # Dependency recommendations
         dependency_analysis = self.validation_report["dependency_analysis"]
         if dependency_analysis.get("circular_dependencies"):
             recommendations.append(
-                f"Resolve {len(dependency_analysis['circular_dependencies'])} circular dependencies"
+                f"Resolve {len(dependency_analysis['circular_dependencies'])} circular dependencies",
             )
 
         self.validation_report["optimization_recommendations"] = recommendations
@@ -468,10 +470,10 @@ class UltraComprehensiveProjectValidator:
             with open(report_path, "w") as f:
                 json.dump(self.validation_report, f, indent=2)
 
-            self.logger.info(f"Project validation report persisted: {report_path}")
+            self.logger.info(ff"Project validation report persisted: {report_path}")
 
-        except Exception as e:
-            self.logger.error(f"Validation report persistence failed: {e}")
+        except Exception:
+            self.logger.error(ff"Validation report persistence failed: {e}")
 
 
 def main():
@@ -493,14 +495,14 @@ def main():
 
         print("\nDetailed Insights:")
         print(
-            f"Total Directories: {validation_report['directory_structure'].get('total_directories', 0)}"
+            f"Total Directories: {validation_report['directory_structure'].get('total_directories', 0)}",
         )
         print(
-            f"Total Python Files: {validation_report['code_quality'].get('total_files', 0)}"
+            f"Total Python Files: {validation_report['code_quality'].get('total_files', 0)}",
         )
         print()
         print(
-            f"Documentation Gaps: {len(validation_report.get('documentation_gaps', []))}"
+            f"Documentation Gaps: {len(validation_report.get('documentation_gaps', []))}",
         )
 
     except Exception as e:
