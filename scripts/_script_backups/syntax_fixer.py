@@ -1,248 +1,136 @@
-#!/usr/bin/env python3.11
+#!/usr/bin/env python3
+"""
+Syntax Fixer: A comprehensive script for detecting and fixing syntax issues in Python files.
+"""
+
 import ast
-import io
-import re
+import logging
+import os
 import sys
-import tokenize
 from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
-import astor
+# Configure logging
+logging.basicConfig(
+level=logging.INFO,
+format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+handlers=[
+logging.FileHandler("/opt/sutazaiapp/logs/syntax_fixer.log"),
+logging.StreamHandler(sys.stdout),
+],
+)
+logger = logging.getLogger(__name__)
 
+    def safe_import_check(module_name: str) -> bool:    """
+    Safely check if a module can be imported.
 
-def tokenize_and_fix(content):
-    """Use tokenize to identify and fix syntax issues"""
-    try:
-        tokens = list(tokenize.generate_tokens(io.StringIO(content).readline))
-        fixed_tokens = []
+    Args:    module_name: Name of the module to check
 
-        for token_type, token_string, start, end, line in tokens:
-            # Fix common syntax issues during tokenization
-            if token_type == tokenize.ERRORTOKEN:
-                # Skip or replace error tokens
-            continue
-            fixed_tokens.append((token_type, token_string, start, end, line))
+    Returns:    Boolean indicating if the module can be imported
+    """
+        try:        __import__(module_name)
+    return True
+        except ImportError:        logger.warning(f"Could not import module: {module_name}")
+    return False
 
-            # Reconstruct source code
-        return tokenize.untokenize(fixed_tokens)
-        except tokenize.TokenError:
-        return content
+        def detect_syntax_errors(file_path: str) -> List[Dict[str, str]]:        """
+        Detect syntax errors in a Python file.
 
+        Args:        file_path: Path to the Python file
 
-        class SyntaxTransformer(ast.NodeTransformer):
-            def visit_ClassDef(self, node):
-                # Add missing methods or correct existing methods
-                has_init = any(
-                isinstance(
-                    method,
-                    ast.FunctionDef) and method.name == "__init__"
-                for method in node.body
-                    )
+        Returns:        List of detected syntax errors
+        """
+        errors = []
+            try:                with open(file_path, encoding="utf-8") as f:                source = f.read()
 
-                    if not has_init:
-                        # Add a basic __init__ method
-                        init_method = ast.FunctionDef(
-                        name="__init__",
-                        args=ast.arguments(
-                        args=[ast.arg(arg="self", annotation=None)],
-                        posonlyargs=[],
-                        kwonlyargs=[],
-                        kw_defaults=[],
-                        defaults=[],
-                        ),
-                        body=[ast.Pass()],
-                        decorator_list=[],
-                    returns=None,
-                    )
-                    node.body.insert(0, init_method)
+                    try:                    ast.parse(source)
+                        except SyntaxError as e:                        errors.append({
+                        "type": "SyntaxError",
+                        "line": str(e.lineno),
+                        "message": str(e),
+                        "filename": file_path,
+                        })
+                            except Exception as e:                            logger.error(
+                                f"Error reading file {file_path}: {e}")
 
-                    # Fix method signatures in class methods
-                    for method in node.body:
-                        if isinstance(method, ast.FunctionDef):
-                            # Ensure first parameter is self for instance methods
-                            if method.args.args and len(method.args.args) > 0:
-                                if method.args.args[0].arg != "self":
-                                    method.args.args.insert(
-                                        0,
-                                        ast.arg(arg="self", annotation=None))
-                                    else:
-                                    method.args.args.insert(
-                                        0,
-                                        ast.arg(arg="self", annotation=None))
+                        return errors
 
-                                return self.generic_visit(node)
+                            def fix_syntax_errors(
+    file_path: str) -> Optional[str]:                            """
+                            Attempt to fix syntax errors in a Python file.
 
-                                def visit_FunctionDef(self, node):
-                                    # Skip this transformation for methods within classes
-                                    # as they're handled in visit_ClassDef
-                                return self.generic_visit(node)
+                            Args:                            file_path: Path to the Python file
 
+                            Returns:                            Fixed source code or None if fixing fails
+                            """
+                                try:                                    with open(file_path, encoding="utf-8") as f:                                    source = f.read()
 
-                                def ast_transform(content):
-                                    """Use AST transformation to fix structural issues"""
-                                    try:
-                                        tree = ast.parse(content)
-                                        transformer = SyntaxTransformer()
-                                        modified_tree = transformer.visit(tree)
-                                    return astor.to_source(modified_tree)
-                                    except SyntaxError:
-                                    return content
+                                    # Basic syntax error fixes
+                                    # Note: This is a simplified example and
+                                    # may not cover all cases
+                                    fixed_source = source.replace(
+                                        "\t", "    ")  # Convert tabs to spaces
+
+                                    # Remove trailing whitespaces
+                                    fixed_source = "\n".join(line.rstrip()
+                                        for line in fixed_source.splitlines())
+
+                                        # Validate the fixed source
+                                            try:                                            ast.parse(fixed_source)
+                                        return fixed_source
+                                            except SyntaxError:                                            logger.warning(f"Could not fully fix syntax errors in {file_path}")
+                                        return None
+
+                                            except Exception as e:                                            logger.error(f"Error fixing syntax in {file_path}: {e}")
+                                        return None
 
 
-                                    def regex_fix(content):
-                                        """Use regex to fix common syntax patterns"""
-                                        # Fix missing colons
-                                        content = re.sub(
-                                        r"(
-                                            if|elif|else|for|while|def|class|try|except|finally|with)\s+([^:]+)(?<!\n|:)$",
-                                        r"\1 \2:",
-                                        content,
-                                        flags=re.MULTILINE,
-                                        )
+                                            def scan_project_for_syntax_errors(
+                                            base_path: str) -> Dict[str, List[Dict[str, str]]]:                                            """
+                                            Scan an entire project for syntax errors.
 
-                                        # Fix indentation (convert tabs to spaces)
-                                        content = re.sub(
-                                        r"^\t+",
-                                        lambda match: "    " * len(
-                                            match.group(0)),
-                                        content,
-                                        flags=re.MULTILINE,
-                                        )
+                                            Args:                                            base_path: Root directory of the project
 
-                                        # Fix parentheses in function calls
-                                        content = re.sub(
-                                            r"(\w+)\s+\(", r"\1(", content)
+                                            Returns:                                            Dictionary of files with their syntax errors
+                                            """
+                                            syntax_errors = {}
 
-                                        # Fix missing parentheses in print statements (Python 3)
-                                        content = re.sub(
-                                            r"print\s+([^(].*?)$", r"print(\1)", content, flags=re.MULTILINE)
+                                                for root, _, files in os.walk(base_path):                                                    for file in files:                                                        if file.endswith(".py"):                                                        file_path = os.path.join(root, file)
+                                                        file_errors = detect_syntax_errors(file_path)
 
-                                        # Fix common typos
-                                        content = re.sub(
-                                            r"\bimpotr\b",
-                                            "import",
-                                            content)
-                                        content = re.sub(
-                                            r"\bfrom\s+(\w+)\s+imports\b",
-                                            r"from \1 import",
-                                            content)
-                                        content = re.sub(
-                                            r"\belse\s+if\b",
-                                            "elif",
-                                            content)
+                                                            if file_errors:                                                            syntax_errors[file_path] = file_errors
 
-                                    return content
+                                                        return syntax_errors
 
 
-                                    def fix_file_syntax(file_path):
-                                                                                """Fix syntax errors in \
-                                            a single Python file"""
-                                        try:
-                                            with open(
-                                                file_path,
-                                                encoding="utf-8") as f:
-                                            content = f.read()
+                                                            def main():                                                            """
+                                                            Main function to run syntax fixing process.
+                                                            """
+                                                            base_path = "/opt/sutazaiapp"
 
-                                            # Apply multiple fixing strategies
-                                            original_content = content
+                                                            # Perform system checks
+                                                            logger.info("Starting syntax fixing process")
 
-                                            # Step 1: Apply regex fixes for common patterns
-                                            content = regex_fix(content)
+                                                            # Check critical imports
+                                                            critical_imports = ["ast", "logging", "os", "sys"]
+                                                                for module in critical_imports:                                                                    if not safe_import_check(module):                                                                    logger.critical(f"Critical module {module} cannot be imported!")
+                                                                    sys.exit(1)
 
-                                            # Step 2: Apply tokenization fixes
-                                            content = tokenize_and_fix(content)
+                                                                    # Scan for syntax errors
+                                                                    syntax_errors = scan_project_for_syntax_errors(base_path)
 
-                                            # Step 3: Apply AST transformation if possible
-                                            try:
-                                                content = ast_transform(
-                                                    content)
-                                                except Exception as e:
-                                                    print(
-                                                        f"Warning: AST transformation failed for {file_path}: {e}")
+                                                                        if syntax_errors:                                                                        logger.warning(f"Found {len(syntax_errors)} files with syntax errors")
 
-                                                    # Final syntax validation
-                                                    try:
-                                                        ast.parse(content)
-                                                        if original_content != content:
-                                                            with open(
-                                                                file_path,
-                                                                "w",
-                                                                encoding="utf-8") as f:
-                                                            f.write(content)
-                                                            print(
-                                                                f"✓ Successfully fixed syntax in {file_path}")
-                                                        return True
-                                                        print(
-                                                            f"✓ No syntax issues found in {file_path}")
-                                                    return True
-                                                    except SyntaxError as e:
-                                                        print(
-                                                            f"✗ Remaining syntax error in {file_path}: {e}")
-                                                    return False
+                                                                            for file_path, errors in syntax_errors.items():                                                                            logger.info(f"Attempting to fix {file_path}")
+                                                                            fixed_source = fix_syntax_errors(file_path)
 
-                                                    except Exception as e:
-                                                        print(
-                                                            f"✗ Error processing {file_path}: {e}")
-                                                    return False
+                                                                                if fixed_source:                                                                                    try:                                                                                        with open(file_path, "w", encoding="utf-8") as f:                                                                                        f.write(fixed_source)
+                                                                                        logger.info(f"Successfully fixed {file_path}")
+                                                                                            except Exception as e:                                                                                            logger.error(
+                                                                                            f"Could not write fixed source to {file_path}: {e}")
+                                                                                            else:                                                                                            logger.error(f"Could not fix syntax errors in {file_path}")
+                                                                                            else:                                                                                            logger.info("No syntax errors found in the project")
 
 
-                                                    def process_directory(
-                                                        directory,
-                                                        extensions=None):
-                                                                                                                """Process all Python files in a directory and \
-                                                            its subdirectories"""
-                                                        if extensions is None:
-                                                            extensions = [".py"]
+                                                                                                if __name__ == "__main__":                                                                                                main()
 
-                                                            fixed_files = 0
-                                                            error_files = 0
-
-                                                            for path in Path(
-                                                                directory).rglob("*"):
-                                                                if path.is_file() and path.suffix in extensions:
-                                                                    if fix_file_syntax(
-                                                                        path):
-                                                                        fixed_files += 1
-                                                                        else:
-                                                                        error_files += 1
-
-                                                                    return fixed_files, error_files
-
-
-                                                                    def main():
-                                                                        """Main entry point for syntax error fixing"""
-                                                                        if len(
-                                                                            sys.argv) < 2:
-                                                                            print(
-                                                                                "Usage: python syntax_fixer.py <directory> [extensions]")
-                                                                            print(
-                                                                                "Example: python syntax_fixer.py . .py,
-                                                                                .pyw")
-                                                                        return
-
-                                                                        directory = sys.argv[1]
-                                                                        extensions = (
-                                                                        [f".{ext}" for ext in sys.argv[2].split(
-                                                                            ",
-                                                                            ")] if len(sys.argv) > 2 else [".py"]
-                                                                        )
-
-                                                                        print(
-                                                                                                                                                f"Starting syntax fixing in \
-                                                                            {directory} for files with extensions: {extensions}",
-                                                                        )
-                                                                        fixed_files, error_files = process_directory(
-                                                                            directory,
-                                                                            extensions)
-
-                                                                        print(
-                                                                            "\nSummary:")
-                                                                        print(
-                                                                            f"- Directory processed: {directory}")
-                                                                        print(
-                                                                            f"- Files processed successfully: {fixed_files}")
-                                                                        print(
-                                                                            f"- Files with remaining errors: {error_files}")
-
-
-                                                                        if __name__ == "__main__":
-                                                                            main()

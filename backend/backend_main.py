@@ -63,98 +63,84 @@ app.include_router(health_router, prefix="/api", tags=["health"])
 
 
 @app.middleware("http")
-async def log_requests(request: Request, call_next: Callable[[Request], Awaitable[Any]]) -> Any:
-    """
-    Log all incoming requests for monitoring and debugging.
+async def log_requests(request: Request,
+                    call_next: Callable[[Request],
+                                        Awaitable[Any]]) -> Any:"""
+Log all incoming requests for monitoring and debugging.
 
-    Args:
-        request: The incoming request
-        call_next: The next middleware in the chain
+Args:request: The incoming request
+call_next: The next middleware in the chain
 
-    Returns:
-        Any: The response from the next middleware
-    """
-    logger.info(f"Request: {request.method} {request.url}")
-    try:
-        response = await call_next(request)
-        logger.info(f"Response status: {response.status_code}")
-        return response
-    except Exception as error:
-        logger.exception(f"Unhandled exception in middleware: {error}")
-        raise
+Returns:Any: The response from the next middleware
+"""
+logger.info(f"Request: {request.method} {request.url}")
+try:    response = await call_next(request)
+    logger.info(f"Response status: {response.status_code}")
+return response
+except Exception as error:    logger.exception(f"Unhandled exception in middleware: {error}")
+    raise
 
-
-@app.get("/health")
-async def health_check() -> Dict[str, str]:
-    """
+    @app.get("/health")
+    async def health_check() -> Dict[str, str]:    """
     Basic health check endpoint.
 
-    Returns:
-        Dict[str, str]: A dictionary containing status and version information.
+    Returns:    Dict[str, str]: A dictionary containing status and version information.
     """
-    return {"status": "healthy", "version": "0.1.0"}
+return {"status": "healthy", "version": "0.1.0"}
 
 
 @app.exception_handler(Exception)
-async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
-    """
-    Global exception handler for unhandled exceptions.
+async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:"""
+Global exception handler for unhandled exceptions.
 
-    Args:
-        _: Unused request parameter
-        exc: The exception that was raised
+Args:_: Unused request parameter
+exc: The exception that was raised
 
-    Returns:
-        JSONResponse: A JSON response containing error details
-    """
-    logger.error(f"Unhandled exception: {exc}")
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal Server Error",
-            "detail": str(exc),
-        },
-    )
+Returns:JSONResponse: A JSON response containing error details
+"""
+logger.error(f"Unhandled exception: {exc}")
+return JSONResponse(
+    status_code=500,
+    content={
+        "error": "Internal Server Error",
+        "detail": str(exc),
+    },
+)
 
 
-async def initialize_backend() -> None:
-    """
-    Initialize the backend application.
+async def initialize_backend() -> None:"""
+Initialize the backend application.
 
-    This function is called when the application starts up.
-    It can be used to perform any necessary initialization tasks.
-    """
-    logger.info("Initializing backend...")
-    # Add initialization logic here
-    logger.info("Backend initialized successfully")
+This function is called when the application starts up.
+It can be used to perform any necessary initialization tasks.
+"""
+logger.info("Initializing backend...")
+# Add initialization logic here
+logger.info("Backend initialized successfully")
 
 
 @app.on_event("startup")
-async def startup_event() -> None:
-    """
-    FastAPI startup event handler.
+async def startup_event() -> None:"""
+FastAPI startup event handler.
 
-    This function is called when the application starts up.
-    It triggers the backend initialization process.
-    """
-    await initialize_backend()
+This function is called when the application starts up.
+It triggers the backend initialization process.
+"""
+await initialize_backend()
 
 
 @app.on_event("shutdown")
-async def shutdown_event() -> None:
-    """
-    FastAPI shutdown event handler.
+async def shutdown_event() -> None:"""
+FastAPI shutdown event handler.
 
-    This function is called when the application shuts down.
-    It can be used to perform any necessary cleanup tasks.
-    """
-    logger.info("Shutting down backend...")
-    # Add shutdown logic here
-    logger.info("Backend shut down successfully")
+This function is called when the application shuts down.
+It can be used to perform any necessary cleanup tasks.
+"""
+logger.info("Shutting down backend...")
+# Add shutdown logic here
+logger.info("Backend shut down successfully")
 
-
-if __name__ == "__main__":
-    # Use 127.0.0.1 instead of 0.0.0.0 for development to avoid exposing
+if __name__ == "__main__":    # Use 127.0.0.1 instead of 0.0.0.0 for development to avoid exposing
     # In production, this should be controlled by environment variables
     asyncio.run(initialize_backend())
     uvicorn.run(

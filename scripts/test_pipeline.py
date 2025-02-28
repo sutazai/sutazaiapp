@@ -1,237 +1,237 @@
 #!/usr/bin/env python3.11
 """
-SutazAI Test Pipeline Script
+SutazAI Final System Test Script
 
-This script performs comprehensive system validation and testing.
+This script performs a comprehensive system test and validation
+of the SutazAI application.
 """
 
-import logging
+import json
 import os
-import platform
-import socket
+import subprocess
 import sys
-from typing import NoReturn
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 import psutil
 import pytest
 from loguru import logger
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
-# Configure comprehensive logging
-logging.basicConfig(
-level=logging.INFO,
-format="%(asctime)s - %(levelname)s: %(message)s",
-handlers=[
-logging.FileHandler("/opt/sutazaiapp/logs/system_validation.log"),
-logging.StreamHandler(sys.stdout),
-],
-)
+class ValidationError(Exception):    """Custom exception for validation failures."""
 
+    class SystemValidator:        """Comprehensive system validation framework."""
 
-class ValidationError(Exception):
-    """Custom exception for validation failures"""
-
-
-    class SystemValidator:
-        """Comprehensive system validation framework"""
-
-        def __init__(self):
-            """Initialize comprehensive system validation framework"""
+        def __init__(self):            """Initialize comprehensive system validation framework."""
             self.critical_dirs = [
-            "/opt/sutazaiapp/ai_agents",
-            "/opt/sutazaiapp/model_management",
-            "/opt/sutazaiapp/backend",
-            "/opt/sutazaiapp/scripts",
+                "/opt/sutazaiapp/ai_agents",
+                "/opt/sutazaiapp/model_management",
+                "/opt/sutazaiapp/backend",
+                "/opt/sutazaiapp/scripts",
             ]
-
             self.required_models = ["gpt4all", "deepseek-coder", "llama2"]
+            self.console = Console()
 
-            def validate_system_requirements(self) -> None:
-                """
-                Comprehensive system requirements validation
+            def validate_system_requirements(self) -> None:                """
+                Comprehensive system requirements validation.
 
-                Raises:
-                ValidationError: If any system requirement is not met
+                Raises:                ValidationError: If any system requirement is not met
                 """
                 logger.info("🔍 Starting Comprehensive System Validation")
 
                 # Python version check
                 logger.info("Python Version: %s", sys.version)
-                if not (sys.version_info >= (3, 11)):
-                raise ValidationError("Python 3.11+ is required")
+                if not (sys.version_info >= (3, 11)):                    raise ValidationError("Python 3.11+ is required")
 
-                # OS and Hardware Validation
-                self._validate_os_and_hardware()
+                    # OS and Hardware Validation
+                    self._validate_os_and_hardware()
 
-                # Critical Directories Check
-                self._validate_critical_directories()
+                    # Critical Directories Check
+                    self._validate_critical_directories()
 
-                # Network Configuration Check
-                self._validate_network_config()
+                    # Network Configuration Check
+                    self._validate_network_config()
 
-                logger.success("✅ System Requirements Validated Successfully")
+                    logger.success(
+                        "✅ System Requirements Validated Successfully")
 
-                def _validate_os_and_hardware(self) -> None:
-                    """
-                    Validate operating system and hardware specifications
+                    def _validate_os_and_hardware(self) -> None:                        """
+                        Validate operating system and hardware specifications.
 
-                    Raises:
-                    ValidationError: If hardware requirements are not met
-                    """
-                    logger.info("Checking OS and Hardware Configuration")
-
-                    # OS Details
-                    logger.info("Operating System: %s", platform.platform())
-                    logger.info("Machine Architecture: %s", platform.machine())
-
-                    # CPU Information
-                    cpu_count = psutil.cpu_count(logical=False)
-                    logger.info("Physical CPU Cores: %s", cpu_count)
-                    if cpu_count < 8:
-                    raise ValidationError(
-                        "Minimum 8 physical CPU cores required")
-
-                    # Memory Check
-                    total_memory = psutil.virtual_memory(
-                        ).total / (1024**3)  # GB
-                    logger.info("Total Memory: %s GB", total_memory:.2f)
-                    if total_memory < 32:
-                    raise ValidationError("Minimum 32 GB RAM required")
-
-                    def _validate_critical_directories(self) -> None:
+                        Raises:                        ValidationError: If hardware requirements are not met
                         """
-                                                Validate existence and \
-                            permissions of critical directories
+                        logger.info("Checking OS and Hardware Configuration")
 
-                        Raises:
-                        ValidationError: If any critical directory is missing
-                        """
-                        logger.info("Checking Critical Directories")
+                        # CPU Information
+                        cpu_count = psutil.cpu_count(logical=False)
+                        logger.info("Physical CPU Cores: %s", cpu_count)
+                        if cpu_count < 8:                            raise ValidationError(
+                                "Minimum 8 physical CPU cores required")
 
-                        missing_dirs = []
-                        for directory in self.critical_dirs:
-                            if not os.path.exists(directory):
-                                missing_dirs.append(directory)
-                                else:
-                                logger.info(
-                                    "Directory validated: %s",
-                                    directory)
+                            # Memory Check
+                            total_memory = psutil.virtual_memory().total / (1024**3)  # GB
+                            logger.info("Total Memory: %.2f GB", total_memory)
+                            if total_memory < 32:                                raise ValidationError(
+                                    "Minimum 32 GB RAM required")
 
-                                if missing_dirs:
-                                raise ValidationError(
-                                f"Critical directories missing: {', '.join(
-                                    missing_dirs)}",
-                                )
+                                def _validate_critical_directories(
+                                    self) -> None:                                    """
+                                    Validate existence and permissions of critical directories.
 
-                                def _validate_network_config(self) -> None:
-                                    """
-                                                                        Validate network configuration and \
-                                        connectivity
-
-                                    Raises:
-                                                                        ValidationError: If network configuration is \
-                                        invalid
+                                    Raises:                                    ValidationError: If any critical directory is missing
                                     """
                                     logger.info(
-                                        "Checking Network Configuration")
+                                        "Checking Critical Directories")
 
-                                    try:
-                                        # Hostname and IP Resolution
-                                        hostname = socket.gethostname()
-                                        ip_address = socket.gethostbyname(
-                                            hostname)
+                                    missing_dirs = []
+                                    for directory in self.critical_dirs:                                            if not os.path.exists(directory):                                            missing_dirs.append(directory)
+                                            else:                                            logger.info(
+    "Directory validated: %s", directory)
 
-                                        logger.info("Hostname: %s", hostname)
-                                        logger.info(
-                                            "IP Address: %s",
-                                            ip_address)
-                                        except OSError as e:
-                                        raise ValidationError(
-                                            f"Network configuration error: {e}") from e
+                                            if missing_dirs:                                                raise ValidationError(
+                                                    f"Critical directories missing: {', '.join(missing_dirs)}",
+                                                )
 
-                                        def validate_model_availability(
-                                            self) -> None:
-                                            """
-                                                                                        Check AI model availability and \
-                                                basic loading
+                                                def _validate_network_config(
+                                                    self) -> None:                                                    """
+                                                    Validate network configuration and connectivity.
 
-                                            Raises:
-                                            ValidationError: If required models are not available
-                                            """
-                                            logger.info(
-                                                "🤖 Validating AI Model Availability")
-
-                                            missing_models = []
-                                                                                        for model_name in \
-                                                self.required_models:
-                                                try:
-                                                    # Placeholder for actual model loading logic
+                                                    Raises:                                                    ValidationError: If network configuration is invalid
+                                                    """
                                                     logger.info(
-                                                        "Checking model: %s",
-                                                        model_name)
-                                                    # Add actual model validation here
-                                                    except Exception as e:
-                                                        missing_models.append(
-                                                            f"{model_name} ({e!s})")
+                                                        "Checking Network Configuration")
 
-                                                        if missing_models:
-                                                        raise ValidationError(
-                                                        f"Required models not available: {', '.join(
-                                                            missing_models)}",
-                                                        )
+                                                    try:                                                            # Test network connectivity using full path and safe subprocess
+                                                            # execution
+                                                        ping_path = "/bin/ping"  # Use full path
+                                                        if not os.path.exists(
+                                                            ping_path):                                                            ping_path = "/usr/bin/ping"  # Fallback path
 
-                                                        def run_comprehensive_tests(
-                                                            self) -> None:
-                                                            """
-                                                            Execute comprehensive system tests
+                                                            if not os.path.exists(
+                                                                ping_path):                                                                raise ValidationError(
+                                                                    "Ping utility not found")
 
-                                                            Raises:
-                                                            ValidationError: If any validation check fails
-                                                            SystemExit: If pytest detects test failures
-                                                            """
-                                                            try:
-                                                                self.validate_system_requirements()
-                                                                self.validate_model_availability()
-
-                                                                # Run pytest for additional testing
-                                                                pytest_result = pytest.main(
-                                                                [
-                                                                "-v",
-                                                                "--tb=short",
-                                                                "/opt/sutazaiapp/backend/tests",
-                                                                ],
+                                                                result = subprocess.run(
+                                                                    [ping_path, "-c",
+                                                                        "1", "8.8.8.8"],
+                                                                    capture_output=True,
+                                                                    text=True,
+                                                                    check=True,
+                                                                    shell=False,  # Explicitly set shell=False for security
                                                                 )
+                                                                logger.info(
+                                                                    "Network connectivity: OK")
+                                                                except subprocess.CalledProcessError as e:                                                                    raise ValidationError(
+                                                                        f"Network connectivity test failed: {e}") from e
+                                                                    except Exception as e:                                                                        raise ValidationError(
+                                                                            f"Network validation error: {e}") from e
 
-                                                                if pytest_result != 0:
-                                                                    logger.error(
-                                                                        "🚨 Pytest detected test failures")
-                                                                    sys.exit(1)
+                                                                        def validate_model_availability(
+                                                                            self) -> None:                                                                            """
+                                                                            Check AI model availability and basic loading.
 
-                                                                    logger.success(
-                                                                        "🎉 Comprehensive System Validation Complete!")
+                                                                            Raises:                                                                            ValidationError: If required models are not available
+                                                                            """
+                                                                            logger.info(
+                                                                                "🤖 Validating AI Model Availability")
 
-                                                                    except ValidationError as e:
-                                                                        logger.error(
-                                                                            "System Validation Failed: %s",
-                                                                            e)
-                                                                        sys.exit(
-                                                                            1)
-                                                                        except Exception as e:
-                                                                            logger.exception(
-                                                                                f"Unexpected error during validation: {e}")
-                                                                            sys.exit(
-                                                                                1)
+                                                                            missing_models = []
+                                                                            for model_name in self.required_models:                                                                                model_path = os.path.join(
+                                                                                    "/opt/sutazaiapp/models", model_name)
+                                                                                if not os.path.exists(
+                                                                                    model_path):                                                                                    missing_models.append(
+                                                                                        model_name)
+                                                                                    else:                                                                                    logger.info(
+                                                                                        "Model validated: %s", model_name)
 
+                                                                                    if missing_models:                                                                                        raise ValidationError(
+                                                                                            f"Required models not available: {', '.join(missing_models)}",
+                                                                                        )
 
-                                                                            def main() -> NoReturn:
-                                                                                """
-                                                                                Main entry point for system validation
+                                                                                        def run_comprehensive_tests(
+                                                                                            self) -> None:                                                                                            """
+                                                                                            Execute comprehensive system tests.
 
-                                                                                Raises:
-                                                                                SystemExit: If validation fails
-                                                                                """
-                                                                                validator = SystemValidator()
-                                                                                validator.run_comprehensive_tests()
+                                                                                            Raises:                                                                                            ValidationError: If any validation check fails
+                                                                                            SystemExit: If pytest detects test failures
+                                                                                            """
+                                                                                            try:                                                                                                self.validate_system_requirements()
+                                                                                                self.validate_model_availability()
 
+                                                                                                # Run
+                                                                                                # pytest
+                                                                                                # for
+                                                                                                # additional
+                                                                                                # testing
+                                                                                                pytest_args = [
+                                                                                                    "-v",
+                                                                                                    "--tb=short",
+                                                                                                    "--color=yes",
+                                                                                                    "/opt/sutazaiapp/backend/tests",
+                                                                                                ]
+                                                                                                pytest_result = pytest.main(
+                                                                                                    pytest_args)
 
-                                                                                if __name__ == "__main__":
-                                                                                    main()
+                                                                                                if pytest_result != 0:                                                                                                    logger.error(
+                                                                                                        "🚨 Pytest detected test failures")
+                                                                                                    sys.exit(
+                                                                                                        1)
+
+                                                                                                    logger.success(
+                                                                                                        "🎉 Comprehensive System Validation Complete!")
+
+                                                                                                    except ValidationError as e:                                                                                                        logger.error(
+                                                                                                            "System Validation Failed: %s", str(e))
+                                                                                                        sys.exit(
+                                                                                                            1)
+                                                                                                        except Exception as e:                                                                                                            logger.exception(
+                                                                                                                "Unexpected error during validation: %s", str(e))
+                                                                                                            sys.exit(
+                                                                                                                1)
+
+                                                                                                            def generate_test_report(
+                                                                                                                self) -> Dict[str, Any]:                                                                                                                """
+                                                                                                                Generate a comprehensive test report.
+
+                                                                                                                Returns:                                                                                                                Dict[str, Any]: Test report data
+                                                                                                                """
+                                                                                                                report = {
+                                                                                                                    "timestamp": datetime.now().isoformat(),
+                                                                                                                    "python_version": sys.version,
+                                                                                                                    "system_info": {
+                                                                                                                    "cpu_cores": psutil.cpu_count(logical=False),
+                                                                                                                    "memory_gb": psutil.virtual_memory().total / (1024**3),
+                                                                                                                    "disk_space_gb": psutil.disk_usage("/").free / (1024**3),
+                                                                                                                },
+                                                                                                                    "validation_results": {
+                                                                                                                    "critical_dirs": all(
+                                                                                                                    os.path.exists(d) for d in self.critical_dirs
+                                                                                                                ),
+                                                                                                                    "models": all(
+                                                                                                                    os.path.exists(os.path.join(
+                                                                                                                        "/opt/sutazaiapp/models", m))
+                                                                                                                    for m in self.required_models
+                                                                                                                ),
+                                                                                                                },
+                                                                                                                }
+
+                                                                                                                # Save
+                                                                                                                # report
+                                                                                                                # to
+                                                                                                                # file
+                                                                                                                report_path = os.path.join(
+                                                                                                                        "/opt/sutazaiapp/logs",
+                                                                                                                        f"test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                                                                                                                    )
+                                                                                                                    with open(report_path, "w", encoding="utf-8") as f:                                                                                                                        json.dump(
+                                                                                                                            report, f, indent=2)
+
+                                                                                                                    return report
+
+                                                                                                                    def main() -> None:                                                                                                                        """Main entry point for system validation."""
+                                                                                                                        validator = SystemValidator()
+                                                                                                                        validator.run_comprehensive_tests()
+
+                                                                                                                        if __name__ == "__main__":                                                                                                                            main()
