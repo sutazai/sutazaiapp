@@ -89,4 +89,25 @@ print(f'Python Implementation: {platform.python_implementation()}')
 print('=========================================================')
 " > /opt/sutazaiapp/logs/compatibility_summary.log
 
+# Update dependency installation with security checks
+install_dependencies() {
+    log "Installing Python dependencies with security checks..."
+    $PYTHON_CMD -m pip install --upgrade pip
+    $PYTHON_CMD -m pip install safety
+    
+    # Install dependencies with vulnerability scanning
+    while read package; do
+        log "INFO" "Checking $package..."
+        safety check -r <(echo "$package") || {
+            log "WARN" "Vulnerable package detected: $package"
+            log "INFO" "Attempting to find patched version..."
+            latest_version=$(pip index versions $package | grep -oP 'Latest: \K\d+\.\d+\.\d+')
+            $PYTHON_CMD -m pip install "$package==$latest_version"
+        }
+    done < /opt/sutazaiapp/requirements.txt
+    
+    # Verify all dependencies
+    $PYTHON_CMD -m pip freeze > /opt/sutazaiapp/verified_dependencies.txt
+}
+
 exit 0 

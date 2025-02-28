@@ -13,20 +13,19 @@ import logging
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any, Dict, List
+from typing import Any, dict, list
 
 import psutil
-
 from misc.utils.subprocess_utils import run_command, run_python_module
 
 # Advanced logging configuration
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    handlers=[
-        logging.FileHandler("system_comprehensive_analysis.log"),
-        logging.StreamHandler(sys.stdout),
-    ],
+level=logging.INFO,
+format="%(asctime)s | %(levelname)s | %(message)s",
+handlers=[
+logging.FileHandler("system_comprehensive_analysis.log"),
+logging.StreamHandler(sys.stdout),
+],
 )
 logger = logging.getLogger("SystemComprehensiveAnalyzer")
 
@@ -38,246 +37,322 @@ class UltraComprehensiveSystemAnalyzer:
         directory.
 
         Args:
-            base_dir (str): Root directory of the project
+        base_dir (str): Root directory of the project
         """
         self.base_dir = base_dir
-        self.analysis_results: Dict[str, Any] = {
-            "code_structure": {},
-            "dependency_analysis": {},
-            "performance_metrics": {},
-            "optimization_suggestions": [],
+        self.analysis_results: dict[str, Any] = {
+        "code_structure": {},
+        "dependency_analysis": {},
+        "performance_metrics": {},
+        "optimization_suggestions": [],
         }
 
-    def deep_code_structure_analysis(self) -> Dict[str, Any]:
-        """
-        Perform an ultra-deep analysis of code structure across all Python
-        files.
+        def deep_code_structure_analysis(self) -> dict[str, Any]:
+            """
+            Perform an ultra-deep analysis of code structure across all Python
+            files.
 
-        Returns:
-            Dict[str, Any]: Comprehensive code structure insights
-        """
-        structure_insights = {}
+            Returns:
+            dict[str, Any]: Comprehensive code structure insights
+            """
+            structure_insights = {}
 
-        for root, _, files in os.walk(self.base_dir):
-            for file in files:
-                if file.endswith(".py"):
-                    full_path = os.path.join(root, file)
-                    try:
-                        with open(full_path) as f:
+            for root, _, files in os.walk(self.base_dir):
+                for file in files:
+                    if file.endswith(".py"):
+                        full_path = os.path.join(root, file)
+                        try:
+                            with open(full_path, encoding="utf-8") as f:
                             tree = ast.parse(f.read())
 
-                        file_insights = {
+                            file_insights = {
                             "classes": [],
                             "functions": [],
                             "imports": [],
                             "complexity_metrics": {},
-                        }
+                            }
 
-                        for node in ast.walk(tree):
-                            if isinstance(node, ast.ClassDef):
-                                file_insights["classes"].append(node.name)
-                            elif isinstance(node, ast.FunctionDef):
-                                file_insights["functions"].append(node.name)
-                            elif isinstance(node, ast.Import):
-                                file_insights["imports"].extend([alias.name for alias in node.names])
+                            for node in ast.walk(tree):
+                                if isinstance(node, ast.ClassDef):
+                                    file_insights["classes"].append(node.name)
+                                    elif isinstance(node, ast.FunctionDef):
+                                    file_insights["functions"].append(
+                                        node.name)
+                                    elif isinstance(node, ast.Import):
+                                    file_insights["imports"].extend(
+                                        [alias.name for alias in node.names])
 
-                        structure_insights[full_path] = file_insights
+                                    structure_insights[full_path] = file_insights
 
-                    except Exception as e:
-                        logger.exception("Error processing file %s: %s", full_path, e)
+                                    except Exception as e:
+                                        logger.exception(
+                                            "Error processing file %s: %s",
+                                            full_path,
+                                            e)
 
-        return structure_insights
+                                    return structure_insights
 
-    def comprehensive_dependency_check(self) -> Dict[str, Any]:
-        """
-        Perform an exhaustive dependency verification and analysis.
+                                    def comprehensive_dependency_check(
+                                        self) -> dict[str, Any]:
+                                        """
+                                                                                Perform an exhaustive dependency verification and \
+                                            analysis.
 
-        Returns:
-            Dict[str, Any]: Comprehensive dependency insights
-        """
-        dependency_insights = {
-            "installed_packages": {},
-            "missing_dependencies": [],
-            "version_conflicts": [],
-        }
+                                        Returns:
+                                        dict[str, Any]: Comprehensive dependency insights
+                                        """
+                                        dependency_insights = {
+                                        "installed_packages": {},
+                                        "missing_dependencies": [],
+                                        "version_conflicts": [],
+                                        }
 
-        try:
-            # Use pip to list installed packages
-            result = run_python_module(
-                "pip",
-                ["list", "--format=json"],
-                check=False,
-            )
-            installed_packages = json.loads(result.stdout)
+                                        try:
+                                            # Use pip to list installed packages
+                                            result = run_python_module(
+                                            "pip",
+                                            ["list", "--format=json"],
+                                            check=False,
+                                            )
+                                            installed_packages = json.loads(
+                                                result.stdout)
 
-            dependency_insights["installed_packages"] = {pkg["name"]: pkg["version"] for pkg in installed_packages}
+                                                                                        dependency_insights["installed_packages"] = {pkg["name"]: pkg["version"] for pkg in \
+                                                installed_packages}
 
-            # Additional security checks
-            try:
-                # Run bandit security check
-                bandit_result = run_command(
-                    ["bandit", "-r", self.base_dir, "-f", "json"],
-                    check=False,
-                )
+                                            # Additional security checks
+                                            try:
+                                                # Run bandit security check
+                                                bandit_result = run_command(
+                                                ["bandit", "-r", self.base_dir, "-f", "json"],
+                                                check=False,
+                                                )
 
-                # Run safety dependency check
-                safety_result = run_command(
-                    ["safety", "check", "--json"],
-                    check=False,
-                )
+                                                # Run safety dependency check
+                                                safety_result = run_command(
+                                                ["safety", "check", "--json"],
+                                                check=False,
+                                                )
 
-                dependency_insights["security_issues"] = {
-                    "bandit": json.loads(bandit_result.stdout),
-                    "safety": json.loads(safety_result.stdout),
-                }
-            except Exception as e:
-                logger.warning(f"Security check failed: {e}")
-                dependency_insights["security_issues"] = {"error": str(e)}
+                                                dependency_insights["security_issues"] = {
+                                                "bandit": json.loads(
+                                                    bandit_result.stdout),
+                                                "safety": json.loads(
+                                                    safety_result.stdout),
+                                                }
+                                                except Exception as e:
+                                                    logger.warning(
+                                                        "Security check failed: %s",
+                                                        e)
+                                                    dependency_insights["security_issues"] = {"error": str(
+                                                        e)}
 
-        except Exception as e:
-            logger.exception(f"Dependency check failed: {e}")
+                                                    except Exception:
+                                                        logger.exception(
+                                                            "Dependency check failed")
 
-        return dependency_insights
+                                                    return dependency_insights
 
-    def performance_profiling(self) -> Dict[str, Any]:
-        """
-        Perform advanced performance profiling and resource analysis.
+                                                    def performance_profiling(
+                                                        self) -> dict[str, Any]:
+                                                        """
+                                                                                                                Perform advanced performance profiling and \
+                                                            resource analysis.
 
-        Returns:
-            Dict[str, Any]: Performance and resource utilization metrics
-        """
-        performance_metrics = {
-            "cpu_usage": {},
-            "memory_usage": {},
-            "disk_io": {},
-        }
+                                                        Returns:
+                                                                                                                dict[str, Any]: Performance and \
+                                                            resource utilization metrics
+                                                        """
+                                                        performance_metrics = {
+                                                        "cpu_usage": {},
+                                                        "memory_usage": {},
+                                                        "disk_io": {},
+                                                        }
 
-        try:
-            # CPU Usage
-            performance_metrics["cpu_usage"] = {
-                "total": psutil.cpu_percent(interval=1),
-                "per_core": psutil.cpu_percent(interval=1, percpu=True),
-            }
+                                                        try:
+                                                            # CPU Usage
+                                                            performance_metrics["cpu_usage"] = {
+                                                            "total": psutil.cpu_percent(
+                                                                interval=1),
+                                                            "per_core": psutil.cpu_percent(
+                                                                interval=1,
+                                                                percpu=True),
+                                                            }
 
-            # Memory Usage
-            memory = psutil.virtual_memory()
-            performance_metrics["memory_usage"] = {
-                "total": memory.total,
-                "available": memory.available,
-                "percent": memory.percent,
-            }
+                                                            # Memory Usage
+                                                            memory = psutil.virtual_memory()
+                                                            performance_metrics["memory_usage"] = {
+                                                            "total": memory.total,
+                                                            "available": memory.available,
+                                                            "percent": memory.percent,
+                                                            }
 
-        except ImportError:
-            logger.warning("psutil not available for detailed performance analysis")
+                                                            except ImportError:
+                                                                logger.warning(
+                                                                    "psutil not available for detailed performance analysis")
 
-        return performance_metrics
+                                                            return performance_metrics
 
-    def monitor_resources(self) -> Dict[str, Any]:
-        """
-        Monitor system resources such as CPU and memory usage.
+                                                            def monitor_resources(
+                                                                self) -> dict[str, Any]:
+                                                                """
+                                                                                                                                Monitor system resources such as CPU and \
+                                                                    memory usage.
 
-        Returns:
-            Dict[str, Any]: Current resource usage metrics
-        """
-        return {
-            "cpu_usage": psutil.cpu_percent(interval=1),
-            "memory_usage": psutil.virtual_memory().percent,
-        }
+                                                                Returns:
+                                                                dict[str, Any]: Current resource usage metrics
+                                                                """
+                                                            return {
+                                                            "cpu_usage": psutil.cpu_percent(
+                                                                interval=1),
+                                                            "memory_usage": psutil.virtual_memory().percent,
+                                                            }
 
-    def generate_comprehensive_report(self) -> None:
-        """
-        Generate an ultra-detailed, multi-dimensional system analysis report.
-        """
-        # Parallel execution of analysis methods
-        with ThreadPoolExecutor() as executor:
-            futures = {
-                executor.submit(self.deep_code_structure_analysis): "code_structure",
-                executor.submit(self.comprehensive_dependency_check): "dependency_analysis",
-                executor.submit(self.performance_profiling): "performance_metrics",
-            }
+                                                            def generate_comprehensive_report(
+                                                                self) -> None:
+                                                                """
+                                                                Generate an ultra-detailed, multi-dimensional system analysis report.
+                                                                """
+                                                                # Parallel execution of analysis methods
+                                                                with ThreadPoolExecutor() as executor:
+                                                                futures = {
+                                                                executor.submit(
+                                                                    self.deep_code_structure_analysis): "code_structure",
+                                                                executor.submit(
+                                                                    self.comprehensive_dependency_check): "dependency_analysis",
+                                                                executor.submit(
+                                                                    self.performance_profiling): "performance_metrics",
+                                                                }
 
-            for future in as_completed(futures):
-                analysis_type = futures[future]
-                try:
-                    self.analysis_results[analysis_type] = future.result()
-                except Exception as e:
-                    logger.exception(f"Error in {analysis_type} analysis: {e}")
+                                                                for future in as_completed(
+                                                                    futures):
+                                                                    analysis_type = futures[future]
+                                                                    try:
+                                                                        self.analysis_results[analysis_type] = future.result()
+                                                                        except Exception:
+                                                                            logger.exception(
+                                                                                "Error in %s analysis",
+                                                                                analysis_type)
 
-            # Generate comprehensive JSON report
-            report_path = os.path.join(self.base_dir, "system_comprehensive_analysis_report.json")
-            with open(report_path, "w") as f:
-                json.dump(self.analysis_results, f, indent=2)
+                                                                            # Generate comprehensive JSON report
+                                                                            report_path = os.path.join(
+                                                                                self.base_dir,
+                                                                                "system_comprehensive_analysis_report.json")
+                                                                            with open(
+                                                                                report_path,
+                                                                                "w",
+                                                                                encoding="utf-8") as f:
+                                                                            json.dump(
+                                                                                self.analysis_results,
+                                                                                f,
+                                                                                indent=2)
 
-            logger.info(f"Comprehensive system analysis report generated: {report_path}")
+                                                                            logger.info(
+                                                                                "Comprehensive system analysis report generated: %s",
+                                                                                report_path)
 
-    def auto_optimization_suggestions(self) -> List[str]:
-        """
-        Generate intelligent optimization suggestions based on analysis.
+                                                                            def auto_optimization_suggestions(
+                                                                                self) -> list[str]:
+                                                                                """
+                                                                                Generate intelligent optimization suggestions based on analysis.
 
-        Returns:
-            List[str]: Optimization recommendations
-        """
-        suggestions = []
+                                                                                Returns:
+                                                                                list[str]: Optimization recommendations
+                                                                                """
+                                                                                suggestions = []
 
-        # Code structure optimization
-        for file_path, structure in self.analysis_results.get("code_structure", {}).items():
-            if len(structure.get("functions", [])) > 10:
-                suggestions.append(f"Refactor {file_path}: Too many functions, consider modularization")
+                                                                                # Code structure optimization
+                                                                                for file_path, structure in self.analysis_results.get(
+                                                                                    "code_structure",
+                                                                                    {}).items():
+                                                                                    if len(
+                                                                                        structure.get("functions", [])) > 10:
+                                                                                        suggestions.append(
+                                                                                            f"Refactor {file_path}: Too many functions,
+                                                                                            consider modularization")
 
-        # Dependency optimization
-        dependencies = self.analysis_results.get("dependency_analysis", {})
-        if dependencies.get("missing_dependencies"):
-            suggestions.append("Install missing dependencies to ensure full functionality")
+                                                                                        # Dependency optimization
+                                                                                        dependencies = self.analysis_results.get(
+                                                                                            "dependency_analysis",
+                                                                                            {})
+                                                                                        if dependencies.get(
+                                                                                            "missing_dependencies"):
+                                                                                            suggestions.append(
+                                                                                                "Install missing dependencies to ensure full functionality")
 
-        # Add specific dependencies to install
-        if dependencies.get("missing_dependencies"):
-            missing_deps = dependencies["missing_dependencies"]
-            suggestions.append(f"Install missing packages: {', '.join(missing_deps)}")
+                                                                                            # Add specific dependencies to install
+                                                                                            if dependencies.get(
+                                                                                                "missing_dependencies"):
+                                                                                                missing_deps = dependencies["missing_dependencies"]
+                                                                                                suggestions.append(
+                                                                                                    f"Install missing packages: {',
+                                                                                                    '.join(missing_deps)}")
 
-        # Performance optimization
-        performance_metrics = self.analysis_results.get("performance_metrics", {})
-        cpu_usage = performance_metrics.get("cpu_usage", {}).get("total", 0)
-        if cpu_usage > 80:
-            suggestions.append("High CPU usage detected: Optimize computational processes")
+                                                                                                # Performance optimization
+                                                                                                performance_metrics = self.analysis_results.get(
+                                                                                                    "performance_metrics",
+                                                                                                    {})
+                                                                                                cpu_usage = performance_metrics.get(
+                                                                                                    "cpu_usage",
+                                                                                                    {}).get("total",
+                                                                                                    0)
+                                                                                                if cpu_usage > 80:
+                                                                                                    suggestions.append(
+                                                                                                        "High CPU usage detected: Optimize computational processes")
 
-        return suggestions
+                                                                                                return suggestions
 
-    def execute_comprehensive_analysis(self) -> None:
-        """
-        Execute the full comprehensive system analysis workflow with resource
-        monitoring.
-        """
-        logger.info("🚀 Initiating Ultra-Comprehensive System Analysis...")
+                                                                                                def execute_comprehensive_analysis(
+                                                                                                    self) -> None:
+                                                                                                    """
+                                                                                                    Execute the full comprehensive system analysis workflow with resource
+                                                                                                    monitoring.
+                                                                                                    """
+                                                                                                    logger.info(
+                                                                                                        "🚀 Initiating Ultra-Comprehensive System Analysis...")
 
-        # Monitor resources before starting
-        initial_resources = self.monitor_resources()
-        cpu_usage = initial_resources["cpu_usage"]
-        memory_usage = initial_resources["memory_usage"]
-        logger.info(f"Initial Resources - CPU: {cpu_usage}%, Memory: {memory_usage}%")
+                                                                                                    # Monitor resources before starting
+                                                                                                    initial_resources = self.monitor_resources()
+                                                                                                    cpu_usage = initial_resources["cpu_usage"]
+                                                                                                    memory_usage = initial_resources["memory_usage"]
+                                                                                                    logger.info(
+                                                                                                        "Initial Resources - CPU: %s%%,
+                                                                                                        Memory: %s%%",
+                                                                                                        cpu_usage,
+                                                                                                        memory_usage)
 
-        self.generate_comprehensive_report()
+                                                                                                    self.generate_comprehensive_report()
 
-        # Monitor resources after analysis
-        final_resources = self.monitor_resources()
-        cpu_usage = final_resources["cpu_usage"]
-        memory_usage = final_resources["memory_usage"]
-        logger.info(f"Final Resources - CPU: {cpu_usage}%, Memory: {memory_usage}%")
+                                                                                                    # Monitor resources after analysis
+                                                                                                    final_resources = self.monitor_resources()
+                                                                                                    cpu_usage = final_resources["cpu_usage"]
+                                                                                                    memory_usage = final_resources["memory_usage"]
+                                                                                                    logger.info(
+                                                                                                        "Final Resources - CPU: %s%%,
+                                                                                                        Memory: %s%%",
+                                                                                                        cpu_usage,
+                                                                                                        memory_usage)
 
-        # Generate optimization suggestions
-        suggestions = self.auto_optimization_suggestions()
-        if suggestions:
-            logger.info("Optimization Suggestions:")
-            for suggestion in suggestions:
-                logger.info(f"- {suggestion}")
+                                                                                                    # Generate optimization suggestions
+                                                                                                    suggestions = self.auto_optimization_suggestions()
+                                                                                                    if suggestions:
+                                                                                                        logger.info(
+                                                                                                            "Optimization Suggestions:")
+                                                                                                                                                                                                                for suggestion in \
+                                                                                                            suggestions:
+                                                                                                            logger.info(
+                                                                                                                "- %s",
+                                                                                                                suggestion)
 
-        logger.info("✅ Ultra-Comprehensive System Analysis Complete!")
+                                                                                                            logger.info(
+                                                                                                                "✅ Ultra-Comprehensive System Analysis Complete!")
 
 
-def main() -> None:
-    """Main execution function"""
-    analyzer = UltraComprehensiveSystemAnalyzer()
-    analyzer.execute_comprehensive_analysis()
+                                                                                                            def main() -> None:
+                                                                                                                """Main execution function"""
+                                                                                                                analyzer = UltraComprehensiveSystemAnalyzer()
+                                                                                                                analyzer.execute_comprehensive_analysis()
 
 
-if __name__ == "__main__":
-    main()
+                                                                                                                if __name__ == "__main__":
+                                                                                                                    main()

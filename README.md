@@ -436,3 +436,64 @@ A Python 3.11 compatible application with advanced features.
 ## Usage
 
 Run the application:
+
+```
+
+# Project Development Guidelines
+
+## Code Quality Standards
+
+### Python Code
+- We use `black` for code formatting
+- `pylint` for static code analysis
+- `mypy` for type checking
+- `isort` for import sorting
+
+### TypeScript/React Code
+- ESLint for static code analysis
+- Prettier for consistent code formatting
+- TypeScript for type safety
+
+## Development Setup
+
+### Python Environment
+1. Create a virtual environment:
+   ```bash
+   python3.11 -m venv venv
+   source venv/bin/activate
+   ```
+
+2. Install development dependencies:
+   ```bash
+   pip install -r requirements.txt
+   pip install -r requirements-dev.txt
+   ```
+
+3. Run code quality checks:
+   ```bash
+   black .
+   pylint **/*.py
+   mypy .
+   ```
+
+### Web UI Setup
+1. Install Node.js dependencies:
+   ```bash
+   cd web_ui
+   npm install
+   ```
+
+2. Run code quality checks:
+   ```bash
+   npm run lint
+   npm run format
+   ```
+
+## Commit Guidelines
+- Always run code quality checks before committing
+- Write clear, descriptive commit messages
+- Reference issue numbers when applicable
+
+## Continuous Integration
+- All pull requests must pass automated code quality checks
+- Maintain 80% test coverage for new code

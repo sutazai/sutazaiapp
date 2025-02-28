@@ -5,7 +5,7 @@ Health Router Module for the SutazAI Backend.
 This module provides an endpoint to check the health status of the application.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from pydantic import BaseModel, Field
 
 health_router: APIRouter = APIRouter()
@@ -21,9 +21,8 @@ class HealthStatus(BaseModel):
 
     status: str = Field(..., description="Current health status")
 
-    model_config = {
-        "json_schema_extra": {"example": {"status": "healthy"}},
-    }
+    class Config:
+        json_schema_extra = {"example": {"status": "healthy"}}
 
     def check_health(self) -> bool:
         """
@@ -55,12 +54,12 @@ class HealthStatus(BaseModel):
         return self.status in ("critical", "error", "failed")
 
 
-@health_router.get("/health", response_model=HealthStatus, tags=["health"])
-async def get_health() -> HealthStatus:
+@health_router.get("/health", response_model=HealthStatus, response_model_exclude_unset=True, tags=["health"])
+async def get_health() -> Response:
     """
     Health check endpoint.
 
     Returns:
-        HealthStatus: The current health status.
+        Response: The current health status wrapped in a Response.
     """
-    return HealthStatus(status="healthy")
+    return Response(content=HealthStatus(status="healthy").json())

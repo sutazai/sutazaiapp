@@ -6,15 +6,27 @@ PYTHON_CMD="python3.11"
 # Verify Python version
 verify_python_version() {
     if ! command -v "$PYTHON_CMD" &> /dev/null; then
-        echo "❌ Error: Python 3.11 is not installed."
-        exit 1
+        log "ERROR" "Python 3.11 not found. Attempting to install..."
+        apt-get update && apt-get install -y python3.11 python3.11-dev
+        if [ $? -ne 0 ]; then
+            log "ERROR" "Failed to install Python 3.11"
+            exit 1
+        fi
     fi
 
     PYTHON_VERSION=$("$PYTHON_CMD" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
     if [[ "$PYTHON_VERSION" != "3.11" ]]; then
-        echo "❌ Error: Python 3.11 is required. Current version: $PYTHON_VERSION"
-        exit 1
+        log "ERROR" "Python 3.11 required. Found $PYTHON_VERSION. Updating alternatives..."
+        update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+        update-alternatives --set python3 /usr/bin/python3.11
+        # Verify again after update
+        PYTHON_VERSION=$("$PYTHON_CMD" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+        if [[ "$PYTHON_VERSION" != "3.11" ]]; then
+            log "ERROR" "Failed to set Python 3.11 as default"
+            exit 1
+        fi
     fi
+    log "SUCCESS" "Python version verified: $PYTHON_VERSION"
 }
 
 # Verify Python version before proceeding

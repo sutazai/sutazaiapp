@@ -42,10 +42,9 @@ class SystemStatus(BaseModel):
 
     status: str = Field(..., description="Overall system status", min_length=1, max_length=50)
 
-    model_config = {
-        "json_schema_extra": {"example": {"status": "ok"}},
-        "extra": "forbid",  # Prevent additional fields
-    }
+    class Config:
+        json_schema_extra = {"example": {"status": "ok"}}
+        extra = "forbid"  # Prevent additional fields
 
     def model_dump(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """
@@ -100,41 +99,34 @@ def validate_system_status(status_data: Any) -> SystemStatus:
         status_data: The raw status data.
 
     Returns:
-        SystemStatus: A validated SystemStatus instance.
+        SystemStatus: The validated SystemStatus instance.
 
     Raises:
-        HTTPException: If validation fails or input is invalid.
+        ValidationError: If the input data fails validation.
     """
-    if not isinstance(status_data, (dict, str)):
-        logger.warning("Invalid status format", extra={"type": type(status_data).__name__})
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail="Invalid status format. Must be a dictionary or string."
-        )
-
     try:
-        if isinstance(status_data, dict):
-            return SystemStatus(**status_data)
-        # Use model_validate_json for string input
-        if hasattr(SystemStatus, "model_validate_json"):
+        # Attempt to create a SystemStatus instance from the input data
+        return SystemStatus(**status_data)
+    except TypeError as e:
+        # Catch type errors and attempt to parse as JSON
+        try:
             return SystemStatus.model_validate_json(status_data)
-        # Fallback for older Pydantic versions
-        return SystemStatus.parse_raw(status_data)
-    except ValidationError as validation_error:
-        error_msg = str(validation_error)
-        logger.error("Status validation error", extra={"error": error_msg})
-        raise HTTPException(
-            status_code=HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Validation failed: {error_msg}"
-        ) from validation_error
-    except Exception as unexpected_error:
-        error_msg = str(unexpected_error)
-        logger.error("Unexpected error during status validation", extra={"error": error_msg})
-        raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=f"System status validation failed: {error_msg}"
-        ) from unexpected_error
+        except ValidationError:
+            raise
+        except Exception:
+            raise ValidationError(str(e), model=SystemStatus) from e
+    except ValidationError:
+        # Catch validation errors and attempt to parse as raw JSON
+        try:
+            return SystemStatus.parse_raw(status_data)
+        except ValidationError:
+            raise
+        except Exception as e:
+            raise ValidationError(str(e), model=SystemStatus) from e
 
 
 # -----------------------------------------------------------------------------
-# Route Definitions
+# API Endpoints
 # -----------------------------------------------------------------------------
 @core_router.get(
     "/status",
@@ -148,91 +140,101 @@ def validate_system_status(status_data: Any) -> SystemStatus:
 )
 async def get_status(_: Request) -> Dict[str, Any]:
     """
-    GET endpoint to retrieve system status.
+    Get the current system status.
 
-    Simulates retrieving system status and validates the result.
+    Performs comprehensive validation and error handling.
 
     Args:
-        _: Unused request parameter
+        _: The incoming request (unused).
 
     Returns:
-        Dict[str, Any]: JSON serializable system status.
+        Dict[str, Any]: The validated system status as a dictionary.
 
     Raises:
-        HTTPException: If status retrieval or validation fails.
+        HTTPException: If the status data fails validation.
     """
     try:
-        # Simulate retrieving system status
-        status_data = {"status": "ok"}
-        validated_status = validate_system_status(status_data)
+        # Simulate getting the raw status data (replace with actual logic)
+        raw_status = {"status": "ok"}
+
+        # Validate the status data
+        validated_status = validate_system_status(raw_status)
+
+        # Return the validated status as a dictionary
         return validated_status.model_dump()
-    except HTTPException:
-        raise
-    except Exception as unexpected_error:
-        error_msg = str(unexpected_error)
-        logger.error("Unexpected error in get_status", extra={"error": error_msg})
+
+    except ValidationError as e:
+        # Handle validation errors
         raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected error: {error_msg}"
-        ) from unexpected_error
+            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e),
+        ) from e
+
+    except Exception as e:
+        # Handle all other exceptions
+        logger.exception("Unexpected error: %s", e)
+        raise HTTPException(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred",
+        ) from e
 
 
+# -----------------------------------------------------------------------------
+# Exception Handlers
+# -----------------------------------------------------------------------------
+@core_router.exception_handler(HTTPException)
 async def custom_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
     """
     Returns a custom JSON response for HTTP exceptions.
 
-    Provides a standardized error response format.
+    Includes the exception detail in the response body.
 
     Args:
-        _: Unused request parameter
-        exc: The HTTP exception to handle
+        _: The incoming request (unused).
+        exc: The HTTPException instance.
 
     Returns:
-        JSONResponse: A formatted error response
+        JSONResponse: The custom JSON response.
     """
-    error_msg = f"{exc.status_code} - {exc.detail}"
-    logger.warning("HTTP Exception", extra={"error": error_msg})
     return JSONResponse(
         status_code=exc.status_code,
         content={
-            "error": "Request processing error",
-            "detail": str(exc.detail),
+            "error": exc.detail,
             "status_code": exc.status_code,
         },
     )
 
 
-# Note: APIRouter does not support add_exception_handler.
-# Register exception handlers on the FastAPI app instance.
-
-
+# -----------------------------------------------------------------------------
+# Router Creation and Configuration
+# -----------------------------------------------------------------------------
 def create_core_router() -> APIRouter:
     """
-    Factory method to create and configure the core router.
+    Create and configure the core router.
 
     Returns:
-        APIRouter: Configured core router with all routes and handlers.
+        APIRouter: The configured core router.
     """
+    core_router.include_router(health_router)
     return core_router
 
 
-# Generic type handling
+# -----------------------------------------------------------------------------
+# Generic Router Handler
+# -----------------------------------------------------------------------------
 T = TypeVar("T", bound=BaseModel)
 
 
 class RouterHandler(Generic[T]):
-    """
-    Generic router handler for type-safe request processing.
-
-    Provides a flexible way to handle routing with type validation.
-    """
+    """Generic router handler class for working with Pydantic models."""
 
     def __init__(self, router: APIRouter, model_type: Type[T]) -> None:
         """
         Initialize the router handler.
 
         Args:
-            router: The FastAPI router to handle
-            model_type: The Pydantic model type for validation
+            router: The APIRouter instance to use.
+            model_type: The Pydantic model type to use.
         """
         self.router = router
         self.model_type = model_type
@@ -243,30 +245,28 @@ class RouterHandler(Generic[T]):
         handler: Callable[[Request, Exception], JSONResponse],
     ) -> None:
         """
-        Stub method for adding exception handlers.
-
-        APIRouter does not support setting an exception handler.
+        Add an exception handler to the router.
 
         Args:
-            exception_class: The exception class to handle
-            handler: The handler function
+            exception_class: The exception class to handle.
+            handler: The exception handler function.
         """
-        # APIRouter doesn't support exception handlers, so we don't need to do anything
+        self.router.add_exception_handler(exception_class, handler)
 
     def get_router(self) -> APIRouter:
         """
-        Get the underlying FastAPI router.
+        Get the configured router.
 
         Returns:
-            APIRouter: The FastAPI router instance
+            APIRouter: The configured router.
         """
         return self.router
 
     def get_model_type(self) -> Type[T]:
         """
-        Get the Pydantic model type used for validation.
+        Get the Pydantic model type.
 
         Returns:
-            Type[T]: The model type
+            Type[T]: The Pydantic model type.
         """
         return self.model_type

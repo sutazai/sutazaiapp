@@ -606,6 +606,21 @@ EOL
     log "INFO" "✅ Compliance report generated: $REPORT_FILE"
 }
 
+# Add post-cleanup validation step
+validate_cleanup() {
+    log "INFO" "Running final compatibility verification..."
+    
+    # Check for remaining Python 3.11 compatibility issues
+    flake8 --select=E9,F63,F7,F82 --target-version=py311 /opt/sutazaiapp
+    black --check --target-version=py311 /opt/sutazaiapp
+    
+    # Generate final report
+    pylint --py-version=3.11 /opt/sutazaiapp > /opt/sutazaiapp/logs/final_pylint_report.txt
+    bandit -r /opt/sutazaiapp > /opt/sutazaiapp/logs/final_security_report.txt
+    
+    log "SUCCESS" "Final validation completed. Reports saved to logs directory."
+}
+
 # Main function
 main() {
     log "INFO" "🚀 Starting SutazAI Comprehensive Cleanup and Python 3.11 Compatibility Check"
@@ -630,6 +645,9 @@ main() {
     
     # Generate final report
     generate_compliance_report
+    
+    # Add post-cleanup validation step
+    validate_cleanup
     
     log "INFO" "✨ Cleanup and Python 3.11 compatibility check completed successfully!"
     log "INFO" "📋 Detailed log available at: $LOG_FILE"

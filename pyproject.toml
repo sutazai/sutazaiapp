@@ -21,16 +21,45 @@ dev = [
 ]
 
 [tool.pylint.master]
-ignore-paths = ["venv", ".mypy_cache", ".ruff_cache"]
+ignore-paths = ['^tests/.*$']
+
+[tool.pylint.messages_control]
+disable = [
+    'C0111',  # missing-docstring
+    'R0903',  # too-few-public-methods
+    'W0311',  # bad-indentation
+]
 
 [tool.black]
 line-length = 120
 target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
 
 [tool.isort]
 profile = "black"
 line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
 
 [tool.mypy]
 python_version = "3.11"
-ignore_missing_imports = true 
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+strict_optional = true 

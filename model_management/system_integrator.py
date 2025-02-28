@@ -1,6 +1,7 @@
+#!/usr/bin/env python3.11
 def integrate_system(*args, **kwargs):
     # Stub function for system integration
-    return True
+return True
 
 
 if __name__ == "__main__":

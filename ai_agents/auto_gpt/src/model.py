@@ -1,11 +1,15 @@
+from typing import Dict, List, Optional
+
+#!/usr/bin/env python3.11
 """
 Model interaction module for AutoGPT agent.
 
-This module provides classes and utilities for interacting with language models,
+This module provides classes and \
+    utilities for interacting with language models,
 including message formatting, response parsing, and error handling.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import dict, list, Optional, Union
 from dataclasses import dataclass
 import json
 import logging
@@ -28,190 +32,223 @@ class Message:
         message = {"role": self.role, "content": self.content}
         if self.name:
             message["name"] = self.name
-        if self.function_call:
-            message["function_call"] = self.function_call
-        return message
+            if self.function_call:
+                message["function_call"] = self.function_call
+            return message
 
 
-class ModelError(Exception):
-    """Base class for model-related errors."""
+            class ModelError(Exception):
+                """Base class for model-related errors."""
 
-    pass
-
-
-class ModelConfig:
-    """Configuration for model interactions."""
-
-    def __init__(
-        self,
-        model_name: str = "gpt-4",
-        temperature: float = 0.7,
-        max_tokens: int = 2000,
-        top_p: float = 1.0,
-        frequency_penalty: float = 0.0,
-        presence_penalty: float = 0.0,
-        api_key: Optional[str] = None,
-        api_base: Optional[str] = None,
-    ):
-        """
-        Initialize model configuration.
-
-        Args:
-            model_name: Name of the model to use
-            temperature: Sampling temperature (0.0 to 2.0)
-            max_tokens: Maximum number of tokens to generate
-            top_p: Nucleus sampling parameter
-            frequency_penalty: Penalty for token frequency
-            presence_penalty: Penalty for token presence
-            api_key: OpenAI API key (optional)
-            api_base: OpenAI API base URL (optional)
-        """
-        self.model_name = model_name
-        self.temperature = temperature
-        self.max_tokens = max_tokens
-        self.top_p = top_p
-        self.frequency_penalty = frequency_penalty
-        self.presence_penalty = presence_penalty
-
-        if api_key:
-            openai.api_key = api_key
-        if api_base:
-            openai.api_base = api_base
-
-    def to_dict(self) -> Dict:
-        """Convert configuration to dictionary format for API calls."""
-        return {
-            "model": self.model_name,
-            "temperature": self.temperature,
-            "max_tokens": self.max_tokens,
-            "top_p": self.top_p,
-            "frequency_penalty": self.frequency_penalty,
-            "presence_penalty": self.presence_penalty,
-        }
+            pass
 
 
-class ModelManager:
-    """Manages interactions with language models."""
+            class ModelConfig:
+                """Configuration for model interactions."""
 
-    def __init__(self, config: ModelConfig):
-        """
-        Initialize model manager.
+                def __init__(
+                    self,
+                    model_name: str = "gpt-4",
+                    temperature: float = 0.7,
+                    max_tokens: int = 2000,
+                    top_p: float = 1.0,
+                    frequency_penalty: float = 0.0,
+                    presence_penalty: float = 0.0,
+                    api_key: Optional[str] = None,
+                    api_base: Optional[str] = None,
+                    ):
+                    """
+                    Initialize model configuration.
 
-        Args:
-            config: Model configuration
-        """
-        self.config = config
-        self.conversation_history: List[Message] = []
+                    Args:
+                    model_name: Name of the model to use
+                    temperature: Sampling temperature (0.0 to 2.0)
+                    max_tokens: Maximum number of tokens to generate
+                    top_p: Nucleus sampling parameter
+                    frequency_penalty: Penalty for token frequency
+                    presence_penalty: Penalty for token presence
+                    api_key: OpenAI API key (optional)
+                    api_base: OpenAI API base URL (optional)
+                    """
+                    self.model_name = model_name
+                    self.temperature = temperature
+                    self.max_tokens = max_tokens
+                    self.top_p = top_p
+                    self.frequency_penalty = frequency_penalty
+                    self.presence_penalty = presence_penalty
 
-    def add_message(self, role: str, content: str, name: Optional[str] = None) -> None:
-        """
-        Add a message to the conversation history.
+                    if api_key:
+                        openai.api_key = api_key
+                        if api_base:
+                            openai.api_base = api_base
 
-        Args:
-            role: Role of the message sender
-            content: Content of the message
-            name: Name of the sender (optional)
-        """
-        message = Message(role=role, content=content, name=name)
-        self.conversation_history.append(message)
+                            def to_dict(self) -> Dict:
+                                """Convert configuration to dictionary format for API calls."""
+                            return {
+                            "model": self.model_name,
+                            "temperature": self.temperature,
+                            "max_tokens": self.max_tokens,
+                            "top_p": self.top_p,
+                            "frequency_penalty": self.frequency_penalty,
+                            "presence_penalty": self.presence_penalty,
+                            }
 
-    def get_messages(self) -> List[Dict]:
-        """
-        Get conversation history in format suitable for API calls.
 
-        Returns:
-            List[Dict]: List of message dictionaries
-        """
-        return [msg.to_dict() for msg in self.conversation_history]
+                            class ModelManager:
+                                """Manages interactions with language models."""
 
-    def clear_history(self) -> None:
-        """Clear the conversation history."""
-        self.conversation_history = []
+                                def __init__(self, config: ModelConfig):
+                                    """
+                                    Initialize model manager.
 
-    async def get_response(
-        self, system_prompt: Optional[str] = None, functions: Optional[List[Dict]] = None
-    ) -> Union[str, Dict]:
-        """
-        Get a response from the model.
+                                    Args:
+                                    config: Model configuration
+                                    """
+                                    self.config = config
+                                    self.conversation_history: List[Message] = []
 
-        Args:
-            system_prompt: System prompt to prepend (optional)
-            functions: Function definitions for function calling (optional)
+                                    def add_message(
+                                        self,
+                                        role: str,
+                                        content: str,
+                                        name: Optional[str] = None) -> None:
+                                        """
+                                        Add a message to the conversation history.
 
-        Returns:
-            Union[str, Dict]: Model response or function call
+                                        Args:
+                                        role: Role of the message sender
+                                        content: Content of the message
+                                        name: Name of the sender (optional)
+                                        """
+                                        message = Message(
+                                            role=role,
+                                            content=content,
+                                            name=name)
+                                        self.conversation_history.append(
+                                            message)
 
-        Raises:
-            ModelError: If the API call fails
-        """
-        messages = []
+                                        def get_messages(self) -> List[Dict]:
+                                            """
+                                                                                        Get conversation history in \
+                                                format suitable for API calls.
 
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
+                                            Returns:
+                                            List[Dict]: List of message dictionaries
+                                            """
+                                        return [msg.to_dict() for msg in self.conversation_history]
 
-        messages.extend(self.get_messages())
+                                        def clear_history(self) -> None:
+                                            """Clear the conversation history."""
+                                            self.conversation_history = []
 
-        try:
-            params = self.config.to_dict()
-            params["messages"] = messages
+                                            async def get_response(
+                                            self, system_prompt: Optional[str] = None, functions: Optional[List[Dict]] = None
+                                            ) -> Union[str, Dict]:
+                                            """
+                                            Get a response from the model.
 
-            if functions:
-                params["functions"] = functions
-                params["function_call"] = "auto"
+                                            Args:
+                                            system_prompt: System prompt to prepend (
+                                                optional)
+                                            functions: Function definitions for function calling (
+                                                optional)
 
-            response = await openai.ChatCompletion.acreate(**params)
+                                            Returns:
+                                                                                        Union[str, Dict]: Model response or \
+                                                function call
 
-            if not response.choices:
-                raise ModelError("No response choices available")
+                                            Raises:
+                                            ModelError: If the API call fails
+                                            """
+                                            messages = []
 
-            choice = response.choices[0]
-            message = choice.message
+                                            if system_prompt:
+                                                messages.append(
+                                                    {"role": "system",
+                                                    "content": system_prompt})
 
-            if message.get("function_call"):
-                return {
-                    "function": message["function_call"]["name"],
-                    "arguments": json.loads(message["function_call"]["arguments"]),
-                }
+                                                messages.extend(
+                                                    self.get_messages())
 
-            self.add_message("assistant", message.content)
-            return message.content
+                                                try:
+                                                    params = self.config.to_dict()
+                                                    params["messages"] = messages
 
-        except Exception as e:
-            logger.error(f"Model API call failed: {str(e)}", exc_info=True)
-            raise ModelError(f"Failed to get model response: {str(e)}")
+                                                    if functions:
+                                                        params["functions"] = functions
+                                                        params["function_call"] = "auto"
 
-    def format_prompt(self, template: str, **kwargs) -> str:
-        """
-        Format a prompt template with variables.
+                                                        response = await openai.ChatCompletion.acreate(
+                                                            **params)
 
-        Args:
-            template: Prompt template string
-            **kwargs: Variables to format into the template
+                                                        if not response.choices:
+                                                        raise ModelError(
+                                                            "No response choices available")
 
-        Returns:
-            str: Formatted prompt
-        """
-        try:
-            return template.format(**kwargs)
-        except KeyError as e:
-            raise ModelError(f"Missing required variable in prompt template: {str(e)}")
-        except Exception as e:
-            raise ModelError(f"Failed to format prompt template: {str(e)}")
+                                                        choice = response.choices[0]
+                                                        message = choice.message
 
-    @staticmethod
-    def count_tokens(text: str) -> int:
-        """
-        Count the number of tokens in a text string.
+                                                        if message.get(
+                                                            "function_call"):
+                                                        return {
+                                                        "function": message["function_call"]["name"],
+                                                        "arguments": json.loads(
+                                                            message["function_call"]["arguments"]),
+                                                        }
 
-        Args:
-            text: Text to count tokens in
+                                                        self.add_message(
+                                                            "assistant",
+                                                            message.content)
+                                                    return message.content
 
-        Returns:
-            int: Approximate number of tokens
+                                                    except Exception as e:
+                                                        logger.error(
+                                                            f"Model API call failed: {str(e)}",
+                                                            exc_info=True)
+                                                    raise ModelError(
+                                                        f"Failed to get model response: {str(e)}")
 
-        Note:
-            This is a very rough approximation. For accurate token counting,
-            you should use the appropriate tokenizer for your model.
-        """
-        # Rough approximation: 4 characters per token
-        return len(text) // 4
+                                                    def format_prompt(
+                                                        self,
+                                                        template: str,
+                                                        **kwargs) -> str:
+                                                        """
+                                                        Format a prompt template with variables.
+
+                                                        Args:
+                                                        template: Prompt template string
+                                                        **kwargs: Variables to format into the template
+
+                                                        Returns:
+                                                        str: Formatted prompt
+                                                        """
+                                                        try:
+                                                        return template.format(
+                                                            **kwargs)
+                                                        except KeyError as e:
+                                                        raise ModelError(
+                                                            f"Missing required variable in prompt template: {str(e)}")
+                                                        except Exception as e:
+                                                        raise ModelError(
+                                                            f"Failed to format prompt template: {str(e)}")
+
+                                                        @staticmethod
+                                                        def count_tokens(
+                                                            text: str) -> int:
+                                                            """
+                                                                                                                        Count the number of tokens in \
+                                                                a text string.
+
+                                                            Args:
+                                                            text: Text to count tokens in
+
+                                                            Returns:
+                                                            int: Approximate number of tokens
+
+                                                            Note:
+                                                                                                                        This is \
+                                                                a very rough approximation. For accurate token counting,
+                                                            you should use the appropriate tokenizer for your model.
+                                                            """
+                                                            # Rough approximation: 4 characters per token
+                                                        return len(text) // 4

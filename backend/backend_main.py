@@ -1,34 +1,43 @@
+#!/usr/bin/env python3.11
 """
-SutazAI Backend Main Module
+SutazAI Backend Main Application
 
-This module provides the main FastAPI application instance and core middleware.
+This module serves as the entry point for the SutazAI backend application.
+It sets up the FastAPI app, includes routers, and defines middleware and exception handlers.
 """
 
-import asyncio
+# Standard Library Imports
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
-import uvicorn
+# Third-Party Library Imports
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from loguru import logger
 
-from backend.routers import core_router
+# Local Imports
+from backend.config import Config
+from backend.routers.core import core_router
 from backend.routers.health import health_router
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="[%(asctime)s] [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+# Load configuration
+config = Config()
+
+# Create FastAPI app
 app = FastAPI(
     title="SutazAI Backend",
-    description="Autonomous AI Development Platform",
+    description="Backend services for the SutazAI application",
     version="0.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/docs" if config.debug else None,
+    redoc_url="/redoc" if config.debug else None,
 )
 
 # Define allowed origins
@@ -102,20 +111,45 @@ async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
         status_code=500,
         content={
             "error": "Internal Server Error",
-            "message": str(exc),
-            "type": type(exc).__name__,
+            "detail": str(exc),
         },
     )
 
 
 async def initialize_backend() -> None:
-    """Initialize the backend with any necessary setup."""
-    try:
-        # Simulate some backend initialization process
-        await asyncio.sleep(1)
-    except Exception as initialization_error:
-        logger.error(f"Backend initialization failed: {initialization_error}")
-        raise
+    """
+    Initialize the backend application.
+
+    This function is called when the application starts up.
+    It can be used to perform any necessary initialization tasks.
+    """
+    logger.info("Initializing backend...")
+    # Add initialization logic here
+    logger.info("Backend initialized successfully")
+
+
+@app.on_event("startup")
+async def startup_event() -> None:
+    """
+    FastAPI startup event handler.
+
+    This function is called when the application starts up.
+    It triggers the backend initialization process.
+    """
+    await initialize_backend()
+
+
+@app.on_event("shutdown")
+async def shutdown_event() -> None:
+    """
+    FastAPI shutdown event handler.
+
+    This function is called when the application shuts down.
+    It can be used to perform any necessary cleanup tasks.
+    """
+    logger.info("Shutting down backend...")
+    # Add shutdown logic here
+    logger.info("Backend shut down successfully")
 
 
 if __name__ == "__main__":

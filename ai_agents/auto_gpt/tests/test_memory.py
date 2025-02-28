@@ -1,10 +1,13 @@
+from typing import Dict, List
+
+#!/usr/bin/env python3.11
 """
 Tests for the memory management module of the AutoGPT agent.
 """
 
 import pytest
 from datetime import datetime
-from typing import Dict, List
+from typing import dict, list
 
 from ai_agents.auto_gpt.src.memory import Memory, Message
 
@@ -13,17 +16,19 @@ from ai_agents.auto_gpt.src.memory import Memory, Message
 def test_memory(tmp_path) -> Memory:
     """Create a test memory instance with a temporary persist path."""
     persist_path = tmp_path / "memory.json"
-    return Memory(max_messages=3, persist_path=str(persist_path))
+return Memory(max_messages=3, persist_path=str(persist_path))
 
 
 @pytest.fixture
 def test_messages() -> List[Dict]:
     """Create a list of test messages."""
-    return [
-        {"role": "user", "content": "Hello", "timestamp": datetime.now().isoformat()},
-        {"role": "assistant", "content": "Hi there!", "timestamp": datetime.now().isoformat()},
-        {"role": "user", "content": "How are you?", "timestamp": datetime.now().isoformat()},
-    ]
+return [
+{"role": "user", "content": "Hello", "timestamp": datetime.now().isoformat()},
+{"role": "assistant", "content": "Hi there!", "timestamp": datetime.now(
+    ).isoformat()},
+{"role": "user", "content": "How are you?", "timestamp": datetime.now(
+    ).isoformat()},
+]
 
 
 def test_message_creation():
@@ -44,7 +49,8 @@ def test_message_creation():
 
         def test_message_from_dict():
             """Test creating a message from dictionary format."""
-            data = {"role": "assistant", "content": "Test response", "timestamp": datetime.now().isoformat()}
+            data = {"role": "assistant", "content": "Test response", "timestamp": datetime.now(
+                ).isoformat()}
             message = Message.from_dict(data)
             assert message.role == "assistant"
             assert message.content == "Test response"
@@ -79,71 +85,96 @@ def test_message_creation():
                             def test_get_messages(test_memory, test_messages):
                                 """Test getting messages in API format."""
                                 for msg in test_messages:
-                                    test_memory.add_message(msg["role"], msg["content"])
+                                    test_memory.add_message(
+                                        msg["role"],
+                                        msg["content"])
 
                                     messages = test_memory.get_messages()
                                     assert len(messages) == 3
-                                    assert all(isinstance(msg, dict) for msg in messages)
-                                    assert all("role" in msg and "content" in msg for msg in messages)
+                                    assert all(
+                                        isinstance(msg, dict) for msg in messages)
+                                    assert all(
+                                        "role" in msg and "content" in msg for msg in messages)
 
-                                    def test_clear_messages(test_memory, test_messages):
+                                    def test_clear_messages(
+                                        test_memory,
+                                        test_messages):
                                         """Test clearing message history."""
                                         for msg in test_messages:
-                                            test_memory.add_message(msg["role"], msg["content"])
+                                            test_memory.add_message(
+                                                msg["role"],
+                                                msg["content"])
 
                                             test_memory.clear_messages()
-                                            assert len(test_memory.messages) == 0
+                                            assert len(
+                                                test_memory.messages) == 0
 
-                                            def test_memory_persistence(test_memory, test_messages):
-                                                """Test saving and loading memory state."""
+                                            def test_memory_persistence(
+                                                test_memory,
+                                                test_messages):
+                                                                                                """Test saving and \
+                                                    loading memory state."""
                                                 # Add messages and save
                                                 for msg in test_messages:
-                                                    test_memory.add_message(msg["role"], msg["content"])
+                                                    test_memory.add_message(
+                                                        msg["role"],
+                                                        msg["content"])
                                                     test_memory.save()
 
                                                     # Create new memory instance with same persist path
                                                     new_memory = Memory(
-                                                        max_messages=3, persist_path=test_memory.persist_path
+                                                    max_messages=3, persist_path=test_memory.persist_path
                                                     )
 
                                                     # Should load the saved messages
-                                                    assert len(new_memory.messages) == 3
-                                                    assert all(isinstance(msg, Message) for msg in new_memory.messages)
+                                                    assert len(
+                                                        new_memory.messages) == 3
+                                                    assert all(
+                                                        isinstance(msg, Message) for msg in new_memory.messages)
 
-                                                    def test_memory_context(test_memory):
+                                                    def test_memory_context(
+                                                        test_memory):
                                                         """Test managing context dictionary."""
                                                         # Update context
-                                                        test_memory.update_context("test_key", "test_value")
-                                                        assert test_memory.get_context("test_key") == "test_value"
+                                                        test_memory.update_context(
+                                                            "test_key",
+                                                            "test_value")
+                                                        assert test_memory.get_context(
+                                                            "test_key") == "test_value"
 
                                                         # Clear context
                                                         test_memory.clear_context()
-                                                        assert test_memory.get_context("test_key") is None
+                                                        assert test_memory.get_context(
+                                                            "test_key") is None
 
                                                         def test_invalid_persist_path():
                                                             """Test handling invalid persistence path."""
                                                             # Try to create memory with invalid path
                                                             memory = Memory(
-                                                                max_messages=3, persist_path="/invalid/path/memory.json"
+                                                            max_messages=3, persist_path="/invalid/path/memory.json"
                                                             )
 
                                                             # Should not raise error, but save() should fail silently
-                                                            memory.add_message("user", "Test message")
+                                                            memory.add_message(
+                                                                "user",
+                                                                "Test message")
                                                             memory.save()  # Should not raise error
 
-                                                            def test_memory_with_function_calls(test_memory):
+                                                            def test_memory_with_function_calls(
+                                                                test_memory):
                                                                 """Test handling messages with function calls."""
                                                                 function_call = {
-                                                                    "name": "test_function",
-                                                                    "arguments": {"arg1": "value1"},
+                                                                "name": "test_function",
+                                                                "arguments": {"arg1": "value1"},
                                                                 }
 
                                                                 message = Message(
-                                                                    role="assistant",
-                                                                    content="",
-                                                                    function_call=function_call,
+                                                                role="assistant",
+                                                                content="",
+                                                                function_call=function_call,
                                                                 )
 
                                                                 data = message.to_dict()
-                                                                assert "function_call" in data
+                                                                                                                                assert "function_call" in \
+                                                                    data
                                                                 assert data["function_call"] == function_call

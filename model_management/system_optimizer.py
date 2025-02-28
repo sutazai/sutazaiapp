@@ -1,6 +1,7 @@
+#!/usr/bin/env python3.11
 def optimize_system(*args, **kwargs):
     # Stub implementation for system optimizer
-    return True
+return True
 
 
 if __name__ == "__main__":

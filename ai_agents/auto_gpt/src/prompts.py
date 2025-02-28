@@ -1,3 +1,6 @@
+from typing import Dict, List
+
+#!/usr/bin/env python3.11
 """
 Prompt template module for AutoGPT agent.
 
@@ -5,12 +8,14 @@ This module provides templates and utilities for generating prompts
 used in interactions with language models.
 """
 
-from typing import Dict, List
+from typing import dict, list
 
 
 # System prompt template for initializing the agent
-SYSTEM_PROMPT = """You are an autonomous AI agent capable of breaking down and executing complex tasks.
-Your responses should be clear, logical, and focused on achieving the given objective.
+SYSTEM_PROMPT = """You are an autonomous AI agent capable of breaking down and \
+    executing complex tasks.
+Your responses should be clear, logical, and \
+    focused on achieving the given objective.
 
 You have access to various tools that can help you complete tasks. When using tools:
 1. Carefully validate inputs and handle errors appropriately
@@ -104,94 +109,101 @@ class PromptManager:
     def __init__(self):
         """Initialize prompt manager with default templates."""
         self.templates = {
-            "system": SYSTEM_PROMPT,
-            "task_planning": TASK_PLANNING_TEMPLATE,
-            "task_execution": TASK_EXECUTION_TEMPLATE,
-            "task_evaluation": TASK_EVALUATION_TEMPLATE,
-            "error_handling": ERROR_HANDLING_TEMPLATE,
+        "system": SYSTEM_PROMPT,
+        "task_planning": TASK_PLANNING_TEMPLATE,
+        "task_execution": TASK_EXECUTION_TEMPLATE,
+        "task_evaluation": TASK_EVALUATION_TEMPLATE,
+        "error_handling": ERROR_HANDLING_TEMPLATE,
         }
 
-    def add_template(self, name: str, template: str) -> None:
-        """
-        Add a new template or override an existing one.
+        def add_template(self, name: str, template: str) -> None:
+            """
+            Add a new template or override an existing one.
 
-        Args:
+            Args:
             name: Name of the template
             template: Template string
-        """
-        self.templates[name] = template
+            """
+            self.templates[name] = template
 
-    def get_template(self, name: str) -> str:
-        """
-        Get a template by name.
+            def get_template(self, name: str) -> str:
+                """
+                Get a template by name.
 
-        Args:
-            name: Name of the template
+                Args:
+                name: Name of the template
 
-        Returns:
-            str: Template string
+                Returns:
+                str: Template string
 
-        Raises:
-            KeyError: If template is not found
-        """
-        if name not in self.templates:
-            raise KeyError(f"Template not found: {name}")
-        return self.templates[name]
+                Raises:
+                KeyError: If template is not found
+                """
+                if name not in self.templates:
+                raise KeyError(f"Template not found: {name}")
+            return self.templates[name]
 
-    def format_template(self, name: str, **kwargs) -> str:
-        """
-        Format a template with the given variables.
+            def format_template(self, name: str, **kwargs) -> str:
+                """
+                Format a template with the given variables.
 
-        Args:
-            name: Name of the template
-            **kwargs: Variables to format into the template
+                Args:
+                name: Name of the template
+                **kwargs: Variables to format into the template
 
-        Returns:
-            str: Formatted template string
+                Returns:
+                str: Formatted template string
 
-        Raises:
-            KeyError: If template is not found
-            ValueError: If required variables are missing
-        """
-        template = self.get_template(name)
-        try:
-            return template.format(**kwargs)
-        except KeyError as e:
-            raise ValueError(f"Missing required variable in template: {str(e)}")
+                Raises:
+                KeyError: If template is not found
+                ValueError: If required variables are missing
+                """
+                template = self.get_template(name)
+                try:
+                return template.format(**kwargs)
+                except KeyError as e:
+                raise ValueError(
+                    f"Missing required variable in template: {str(e)}")
 
-    def format_tools_list(self, tools: List[Dict]) -> str:
-        """
-        Format a list of tools into a string for prompts.
+                def format_tools_list(self, tools: List[Dict]) -> str:
+                    """
+                    Format a list of tools into a string for prompts.
 
-        Args:
-            tools: List of tool information dictionaries
+                    Args:
+                    tools: List of tool information dictionaries
 
-        Returns:
-            str: Formatted tools list
-        """
-        formatted = []
-        for tool in tools:
-            params = [f"- {p['name']}: {p['description']}" for p in tool.get("parameters", [])]
-            params_str = "\n  ".join(params) if params else "  No parameters"
+                    Returns:
+                    str: Formatted tools list
+                    """
+                    formatted = []
+                    for tool in tools:
+                        params = [f"- {p['name']}: {p['description']}" for p in tool.get(
+                            "parameters",
+                            [])]
+                        params_str = "\n  ".join(
+                            params) if params else "  No parameters"
 
-            formatted.append(f"{tool['name']}: {tool['description']}\n" f"Parameters:\n  {params_str}")
+                        formatted.append(
+                            f"{tool['name']}: {tool['description']}\n" f"Parameters:\n  {params_str}")
 
-        return "\n\n".join(formatted)
+                    return "\n\n".join(formatted)
 
-    def format_steps_list(self, steps: List[Dict]) -> str:
-        """
-        Format a list of task steps into a string for prompts.
+                    def format_steps_list(self, steps: List[Dict]) -> str:
+                        """
+                        Format a list of task steps into a string for prompts.
 
-        Args:
-            steps: List of step information dictionaries
+                        Args:
+                        steps: List of step information dictionaries
 
-        Returns:
-            str: Formatted steps list
-        """
-        formatted = []
-        for i, step in enumerate(steps, 1):
-            status = step.get("status", "pending").upper()
-            result = f"\nResult: {step['result']}" if step.get("result") else ""
-            formatted.append(f"{i}. {step['description']} [{status}]{result}")
+                        Returns:
+                        str: Formatted steps list
+                        """
+                        formatted = []
+                        for i, step in enumerate(steps, 1):
+                            status = step.get("status", "pending").upper()
+                            result = f"\nResult: {step['result']}" if step.get(
+                                "result") else ""
+                            formatted.append(
+                                f"{i}. {step['description']} [{status}]{result}")
 
-        return "\n".join(formatted)
+                        return "\n".join(formatted)

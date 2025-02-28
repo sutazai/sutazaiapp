@@ -104,7 +104,7 @@ class CodeGenerationService:
             prompt = f"""
             Generate {language} code based on the following specification:
             {specification}
-            
+
             Ensure the code is:
             - Clean and readable
             - Follows best practices
