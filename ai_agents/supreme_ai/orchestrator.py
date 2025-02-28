@@ -59,7 +59,7 @@ class SupremeAIOrchestrator:
         - Validate and load compatible agents
         - Log agent loading process
         """
-        logger.info(f"🔍 Discovering AI Agents")
+        logger.info("🔍 Discovering AI Agents")
 
         try:
             for agent_name in os.listdir(self.agents_dir):

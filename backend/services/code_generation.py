@@ -1,9 +1,8 @@
 import os
 import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
-import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from loguru import logger
 import semgrep

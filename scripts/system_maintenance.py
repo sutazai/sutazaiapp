@@ -1,196 +1,114 @@
 #!/usr/bin/env python3
-"""
-System Maintenance Script
-Handles routine maintenance tasks, cleanup, and optimization.
-"""
+"""System maintenance module for SutazAI."""
 
-import asyncio
 import logging
 import os
-import sys
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Dict, List
 
-import aiohttp
-import psutil
-import redis
-from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
-
-# Load environment variables
-load_dotenv()
-
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(os.getenv("LOG_FILE_PATH", "/opt/sutazaiapp/logs/maintenance.log")),
-        logging.StreamHandler(),
-    ],
 )
-logger = logging.getLogger(__name__)
 
 
 class SystemMaintenance:
-    def __init__(self):
-        self.redis_client = redis.Redis(
-            host=os.getenv("REDIS_HOST", "localhost"),
-            port=int(os.getenv("REDIS_PORT", 6379)),
-            db=int(os.getenv("REDIS_DB", 0)),
-        )
-        self.db_engine = create_engine(
-            f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@"
-            f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
-        )
+    """Handles system maintenance tasks for SutazAI."""
 
-    async def check_disk_usage(self) -> Dict:
-        """Check disk usage and clean up if necessary."""
-        disk = psutil.disk_usage("/")
-        logger.info(f"Disk usage: {disk.percent}%")
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
+        """Initialize the system maintenance handler.
 
-        if disk.percent > 85:
-            await self.cleanup_old_files()
+        Args:
+            base_path: Base directory path for the application
+        """
+        self.logger = logging.getLogger(__name__)
+        self.base_path = base_path
+        self.log_dir = os.path.join(base_path, "logs")
+        self.backup_dir = os.path.join(base_path, "backups")
 
-        return {
-            "total": disk.total,
-            "used": disk.used,
-            "free": disk.free,
-            "percent": disk.percent,
-        }
+        # Ensure required directories exist
+        os.makedirs(self.log_dir, exist_ok=True)
+        os.makedirs(self.backup_dir, exist_ok=True)
 
-    async def cleanup_old_files(self, days: int = 30):
-        """Clean up old log and temporary files."""
-        cleanup_paths = [
-            Path("/opt/sutazaiapp/logs"),
-            Path("/opt/sutazaiapp/storage/temp"),
-            Path("/tmp"),
-        ]
+    def check_disk_space(self, min_space_gb: float = 5.0) -> bool:
+        """Check if available disk space meets minimum requirements.
 
-        cutoff_time = datetime.now() - timedelta(days=days)
+        Args:
+            min_space_gb: Minimum required disk space in GB
 
-        for path in cleanup_paths:
-            if path.exists():
-                for file in path.glob("**/*"):
-                    if file.is_file():
-                        try:
-                            stat = file.stat()
-                            if datetime.fromtimestamp(stat.st_mtime) < cutoff_time:
-                                file.unlink()
-                                logger.info(f"Deleted old file: {file}")
-                        except Exception as e:
-                            logger.exception(f"Failed to process {file}: {str(e)}")
-
-    async def optimize_database(self):
-        """Perform database maintenance and optimization."""
+        Returns:
+            bool: True if sufficient space available, False otherwise
+        """
         try:
-            with self.db_engine.connect() as conn:
-                # Analyze tables
-                conn.execute(text("ANALYZE VERBOSE"))
+            stat = os.statvfs(self.base_path)
+            available_gb = (stat.f_bavail * stat.f_frsize) / (1024**3)
 
-                # Vacuum analyze to reclaim space and update statistics
-                conn.execute(text("VACUUM ANALYZE"))
+            if available_gb < min_space_gb:
+                self.logger.warning(
+                    "Low disk space: %.2f GB available, %.2f GB required",
+                    available_gb,
+                    min_space_gb,
+                )
+                return False
 
-                # Reindex to optimize indexes
-                conn.execute(text("REINDEX DATABASE current_database()"))
-
-            logger.info("Database optimization completed successfully")
-        except Exception as e:
-            logger.exception(f"Database optimization failed: {str(e)}")
-
-    async def clear_redis_cache(self):
-        """Clear Redis cache if memory usage is high."""
-        try:
-            info = self.redis_client.info()
-            used_memory = info["used_memory"] / 1024 / 1024  # Convert to MB
-
-            if used_memory > 512:  # If using more than 512MB
-                self.redis_client.flushdb()
-                logger.info("Cleared Redis cache due to high memory usage")
-            else:
-                logger.info(f"Redis memory usage is normal: {used_memory:.2f}MB")
-        except Exception as e:
-            logger.exception(f"Redis cache cleanup failed: {str(e)}")
-
-    async def check_service_health(self) -> List[Dict]:
-        """Check health of all system services."""
-        services = [
-            {"name": "web_server", "url": "http://localhost:8000/health"},
-            {"name": "redis", "port": 6379},
-            {"name": "postgres", "port": 5432},
-            {"name": "monitoring", "port": 9090},
-        ]
-
-        results = []
-        async with aiohttp.ClientSession() as session:
-            for service in services:
-                try:
-                    if "url" in service:
-                        async with session.get(service["url"]) as response:
-                            results.append(
-                                {
-                                    "name": service["name"],
-                                    "status": "healthy" if response.status == 200 else "unhealthy",
-                                    "response_time": response.elapsed.total_seconds(),
-                                }
-                            )
-                    elif "port" in service:
-                        import socket
-
-                        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        result = sock.connect_ex(("localhost", service["port"]))
-                        sock.close()
-                        results.append(
-                            {
-                                "name": service["name"],
-                                "status": "healthy" if result == 0 else "unhealthy",
-                            }
-                        )
-                except Exception as e:
-                    results.append(
-                        {
-                            "name": service["name"],
-                            "status": "error",
-                            "error": str(e),
-                        }
-                    )
-            return results
-
-    async def run_maintenance(self):
-        """Run all maintenance tasks."""
-        try:
-            # Check disk usage
-            disk_status = await self.check_disk_usage()
-            logger.info(f"Disk status: {disk_status}")
-
-            # Check service health
-            service_status = await self.check_service_health()
-            logger.info(f"Service status: {service_status}")
-
-            # Optimize database weekly
-            if datetime.now().weekday() == 6:  # Sunday
-                await self.optimize_database()
-
-            # Clear Redis cache if needed
-            await self.clear_redis_cache()
+            self.logger.info("Sufficient disk space: %.2f GB available", available_gb)
+            return True
 
         except Exception as e:
-            logger.exception(f"Maintenance cycle failed: {str(e)}")
+            self.logger.error("Failed to check disk space: %s", str(e))
+            return False
+
+    def rotate_logs(self, max_size_mb: int = 100) -> None:
+        """Rotate log files that exceed maximum size.
+
+        Args:
+            max_size_mb: Maximum log file size in MB
+        """
+        try:
+            for log_file in os.listdir(self.log_dir):
+                log_path = os.path.join(self.log_dir, log_file)
+                if os.path.getsize(log_path) > (max_size_mb * 1024 * 1024):
+                    self.archive_log(log_path)
+
+        except Exception as e:
+            self.logger.error("Failed to rotate logs: %s", str(e))
+
+    def archive_log(self, log_path: str) -> None:
+        """Archive a log file by moving it to the backup directory.
+
+        Args:
+            log_path: Path to the log file to archive
+        """
+        try:
+            filename = os.path.basename(log_path)
+            archive_path = os.path.join(
+                self.backup_dir,
+                f"{filename}.{self.get_timestamp()}",
+            )
+
+            os.rename(log_path, archive_path)
+            self.logger.info("Archived log file: %s -> %s", log_path, archive_path)
+
+        except Exception as e:
+            self.logger.error("Failed to archive log file: %s", str(e))
+
+    def get_timestamp(self) -> str:
+        """Get current timestamp string.
+
+        Returns:
+            str: Formatted timestamp string
+        """
+        from datetime import datetime
+
+        return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
-async def main():
+def main():
+    """Main entry point for system maintenance."""
     maintenance = SystemMaintenance()
 
-    while True:
-        await maintenance.run_maintenance()
-        # Wait for the next maintenance cycle (default: 1 hour)
-        await asyncio.sleep(int(os.getenv("MAINTENANCE_INTERVAL", 3600)))
+    # Run maintenance tasks
+    maintenance.check_disk_space()
+    maintenance.rotate_logs()
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("Maintenance script stopped by user")
-        sys.exit(0)
+    main()

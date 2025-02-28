@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.11
 """
 Ultra-Comprehensive System Analysis and Improvement Framework
 
@@ -11,12 +11,13 @@ import ast
 import json
 import logging
 import os
-import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Dict, List
 
 import psutil
+
+from misc.utils.subprocess_utils import run_command, run_python_module
 
 # Advanced logging configuration
 logging.basicConfig(
@@ -62,7 +63,7 @@ class UltraComprehensiveSystemAnalyzer:
                 if file.endswith(".py"):
                     full_path = os.path.join(root, file)
                     try:
-                        with open(full_path, "r") as f:
+                        with open(full_path) as f:
                             tree = ast.parse(f.read())
 
                         file_insights = {
@@ -102,28 +103,39 @@ class UltraComprehensiveSystemAnalyzer:
 
         try:
             # Use pip to list installed packages
-            pip_output = subprocess.check_output([sys.executable, "-m", "pip", "list", "--format=json"]).decode()
-            installed_packages = json.loads(pip_output)
+            result = run_python_module(
+                "pip",
+                ["list", "--format=json"],
+                check=False,
+            )
+            installed_packages = json.loads(result.stdout)
 
             dependency_insights["installed_packages"] = {pkg["name"]: pkg["version"] for pkg in installed_packages}
 
             # Additional security checks
             try:
-                bandit_output = subprocess.check_output(["bandit", "-r", self.base_dir, "-f", "json"]).decode()
+                # Run bandit security check
+                bandit_result = run_command(
+                    ["bandit", "-r", self.base_dir, "-f", "json"],
+                    check=False,
+                )
 
-                # Safety dependency check
-                safety_output = subprocess.check_output(["safety", "check", "--json"]).decode()
+                # Run safety dependency check
+                safety_result = run_command(
+                    ["safety", "check", "--json"],
+                    check=False,
+                )
 
                 dependency_insights["security_issues"] = {
-                    "bandit": json.loads(bandit_output),
-                    "safety": json.loads(safety_output),
+                    "bandit": json.loads(bandit_result.stdout),
+                    "safety": json.loads(safety_result.stdout),
                 }
             except Exception as e:
                 logger.warning(f"Security check failed: {e}")
                 dependency_insights["security_issues"] = {"error": str(e)}
 
         except Exception as e:
-            logger.exception("Dependency check failed: {e}")
+            logger.exception(f"Dependency check failed: {e}")
 
         return dependency_insights
 
@@ -156,7 +168,7 @@ class UltraComprehensiveSystemAnalyzer:
             }
 
         except ImportError:
-            logger.warning(f"psutil not available for detailed performance analysis")
+            logger.warning("psutil not available for detailed performance analysis")
 
         return performance_metrics
 
@@ -189,7 +201,7 @@ class UltraComprehensiveSystemAnalyzer:
                 try:
                     self.analysis_results[analysis_type] = future.result()
                 except Exception as e:
-                    logger.exception("Error in {analysis_type} analysis: {e}")
+                    logger.exception(f"Error in {analysis_type} analysis: {e}")
 
             # Generate comprehensive JSON report
             report_path = os.path.join(self.base_dir, "system_comprehensive_analysis_report.json")
@@ -210,7 +222,7 @@ class UltraComprehensiveSystemAnalyzer:
         # Code structure optimization
         for file_path, structure in self.analysis_results.get("code_structure", {}).items():
             if len(structure.get("functions", [])) > 10:
-                suggestions.append(f"Refactor {file_path}: Too many functions, " f"consider modularization")
+                suggestions.append(f"Refactor {file_path}: Too many functions, consider modularization")
 
         # Dependency optimization
         dependencies = self.analysis_results.get("dependency_analysis", {})
@@ -235,13 +247,13 @@ class UltraComprehensiveSystemAnalyzer:
         Execute the full comprehensive system analysis workflow with resource
         monitoring.
         """
-        logger.info(f"🚀 Initiating Ultra-Comprehensive System Analysis...")
+        logger.info("🚀 Initiating Ultra-Comprehensive System Analysis...")
 
         # Monitor resources before starting
         initial_resources = self.monitor_resources()
         cpu_usage = initial_resources["cpu_usage"]
         memory_usage = initial_resources["memory_usage"]
-        logger.info(f"Initial Resources - CPU: {cpu_usage}%, " f"Memory: {memory_usage}%")
+        logger.info(f"Initial Resources - CPU: {cpu_usage}%, Memory: {memory_usage}%")
 
         self.generate_comprehensive_report()
 
@@ -249,18 +261,20 @@ class UltraComprehensiveSystemAnalyzer:
         final_resources = self.monitor_resources()
         cpu_usage = final_resources["cpu_usage"]
         memory_usage = final_resources["memory_usage"]
-        logger.info(f"Final Resources - CPU: {cpu_usage}%, " f"Memory: {memory_usage}%")
+        logger.info(f"Final Resources - CPU: {cpu_usage}%, Memory: {memory_usage}%")
 
-        optimization_suggestions = self.auto_optimization_suggestions()
+        # Generate optimization suggestions
+        suggestions = self.auto_optimization_suggestions()
+        if suggestions:
+            logger.info("Optimization Suggestions:")
+            for suggestion in suggestions:
+                logger.info(f"- {suggestion}")
 
-        logger.info(f"\n🔍 Optimization Suggestions:")
-        for suggestion in optimization_suggestions:
-            logger.info(f"  • {suggestion}")
-
-        logger.info(f"\n✨ Comprehensive System Analysis Complete!")
+        logger.info("✅ Ultra-Comprehensive System Analysis Complete!")
 
 
-def main():
+def main() -> None:
+    """Main execution function"""
     analyzer = UltraComprehensiveSystemAnalyzer()
     analyzer.execute_comprehensive_analysis()
 

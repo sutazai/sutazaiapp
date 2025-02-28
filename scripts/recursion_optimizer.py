@@ -8,10 +8,10 @@ This script provides advanced recursion analysis and optimization:
 - Generates optimization recommendations
 """
 
-import os
 import ast
 import logging
-from typing import List, Dict, Any, Optional
+import os
+from typing import Any, Dict, List, Optional
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -95,7 +95,7 @@ def process_file(file_path: str) -> Dict[str, Any]:
     Process a single Python file for recursion optimization.
     """
     try:
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             source = f.read()
 
         tree = ast.parse(source)

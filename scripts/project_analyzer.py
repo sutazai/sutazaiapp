@@ -3,7 +3,6 @@
 import json
 import logging
 import os
-import subprocess
 import sys
 from datetime import datetime
 from typing import Any, Dict
@@ -11,6 +10,8 @@ from typing import Any, Dict
 import networkx as nx
 from rich.console import Console
 from rich.panel import Panel
+
+from misc.utils.subprocess_utils import run_command, run_python_module
 
 
 class ProjectAnalyzer:
@@ -176,15 +177,8 @@ class ProjectAnalyzer:
                     # Security vulnerability checks
                     try:
                         # Safety check for dependency vulnerabilities
-                        safety_result = subprocess.run(
-                            [
-                                "safety",
-                                "check",
-                                "-r",
-                                os.path.join(self.base_path, "requirements.txt"),
-                            ],
-                            capture_output=True,
-                            text=True,
+                        safety_result = run_command(
+                            ["safety", "check", "-r", os.path.join(self.base_path, "requirements.txt")],
                             check=False,
                         )
 
@@ -198,10 +192,8 @@ class ProjectAnalyzer:
                             dependency_analysis["dependency_vulnerabilities"] = {"passed": True}
 
                             # Run semgrep for code security scanning
-                            semgrep_result = subprocess.run(
+                            semgrep_result = run_command(
                                 ["semgrep", "scan", "--config=auto", self.base_path],
-                                capture_output=True,
-                                text=True,
                                 check=False,
                             )
 
@@ -265,7 +257,7 @@ class ProjectAnalyzer:
         # Isolated modules
         for module in dependency_analysis.get("isolated_modules", []):
             recommendations["dependency_optimization"].append(
-                f"Isolated module detected: {module}. " f"Consider integration or removal.",
+                f"Isolated module detected: {module}. Consider integration or removal.",
             )
 
         return recommendations

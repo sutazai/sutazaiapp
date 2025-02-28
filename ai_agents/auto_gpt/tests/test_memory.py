@@ -2,8 +2,6 @@
 Tests for the memory management module of the AutoGPT agent.
 """
 
-import os
-import json
 import pytest
 from datetime import datetime
 from typing import Dict, List

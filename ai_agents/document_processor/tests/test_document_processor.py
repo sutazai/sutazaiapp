@@ -1,6 +1,6 @@
 import os
 import tempfile
-from typing import Any, Dict, Generator
+from typing import Generator
 
 import numpy as np
 import pytest

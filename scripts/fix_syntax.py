@@ -6,12 +6,13 @@ This script fixes common syntax issues in Python files by using black for format
 and performing additional syntax validation.
 """
 
+import ast
+import logging
 import os
 import sys
-import logging
-import ast
-from typing import List, Tuple, Optional
-import subprocess
+from typing import List, Optional, Tuple
+
+from misc.utils.subprocess_utils import run_command, validate_path
 
 
 def setup_logging() -> logging.Logger:
@@ -33,7 +34,9 @@ def find_python_files(directory: str) -> List[str]:
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(".py"):
-                python_files.append(os.path.join(root, file))
+                full_path = os.path.join(root, file)
+                if validate_path(full_path):
+                    python_files.append(full_path)
     return python_files
 
 
@@ -50,7 +53,7 @@ def fix_file(file_path: str, logger: logging.Logger) -> bool:
     """Fix syntax issues in a Python file using black."""
     try:
         # First validate the current syntax
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         is_valid, error = validate_syntax(content)
@@ -58,15 +61,17 @@ def fix_file(file_path: str, logger: logging.Logger) -> bool:
             logger.error(f"Invalid syntax in {file_path}: {error}")
             return False
 
-        # Run black on the file
-        result = subprocess.run(["black", file_path], capture_output=True, text=True, check=False)
-
-        if result.returncode != 0:
-            logger.error(f"Failed to fix {file_path}: {result.stderr}")
+        # Run black on the file using secure subprocess utility
+        try:
+            result = run_command(
+                ["black", file_path],
+                check=True,
+            )
+            logger.info(f"Successfully fixed {file_path}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to fix {file_path}: {e}")
             return False
-
-        logger.info(f"Successfully fixed {file_path}")
-        return True
 
     except Exception as e:
         logger.error(f"Error processing {file_path}: {e}")
@@ -97,8 +102,8 @@ def main():
     error_count = 0
 
     for directory in directories:
-        if not os.path.exists(directory):
-            logger.warning(f"Directory not found: {directory}")
+        if not validate_path(directory, must_exist=True):
+            logger.warning(f"Directory not found or invalid: {directory}")
             continue
 
         python_files = find_python_files(directory)

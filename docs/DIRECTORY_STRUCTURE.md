@@ -1,117 +1,102 @@
-# SutazAI Application Directory Structure
+# SutazAI Project Directory Structure
 
-## Core Directories
+## Overview
+This document outlines the organization and purpose of each directory in the SutazAI project.
 
-### `/ai_agents`
-- Contains AI agent implementations
-- Includes base agent classes, factory patterns, and specific agent types
-- Configuration management for agents
+## Root Directory Structure
 
-### `/model_management`
-- Model lifecycle management
-- Model versioning and updates
-- Performance monitoring
-- Configuration: `model_management/config/`
+```
+/opt/sutazaiapp/
+├── ai_agents/         # AI agent implementations and related modules
+├── model_management/  # ML model handling and versioning
+├── backend/          # FastAPI backend server and API endpoints
+├── web_ui/          # Frontend web interface
+├── scripts/         # Utility and maintenance scripts
+├── packages/        # Custom Python packages and wheels
+├── logs/           # Application and system logs
+├── doc_data/       # Documentation data and assets
+└── docs/           # Project documentation
+```
 
-### `/backend`
-- Core application backend services
-- API endpoints and routing
-- Database models and migrations
-- Configuration: `backend/config/`
+## Directory Details
 
-### `/web_ui`
-- Frontend application code
-- React/Vue components
-- Static assets
-- Build configurations
+### ai_agents/
+- Core AI agent implementations
+- Agent configuration files
+- Agent-specific utilities and helpers
+- Test suites for AI functionality
 
-## Support Directories
+### model_management/
+- Model versioning and tracking
+- Model configuration files
+- Model deployment scripts
+- Model performance metrics
 
-### `/packages`
-- Custom Python packages
-- Wheel files: `packages/wheels/`
-- Internal utilities and shared code
+### backend/
+- FastAPI application
+- API route definitions
+- Database models and schemas
+- Middleware components
+- Configuration files
+- Unit tests
 
-### `/scripts`
+### web_ui/
+- React/Vue.js frontend application
+- Static assets (images, fonts)
+- Component libraries
+- Frontend build configuration
+- Frontend tests
+
+### scripts/
 - Deployment scripts
-- Maintenance utilities
-- Development tools
-- System management scripts
+- System maintenance utilities
+- Database migration scripts
+- Health check tools
+- Performance monitoring tools
 
-### `/logs`
+### packages/
+- Custom Python package source code
+- Wheel files for offline installation
+- Package documentation
+- Package tests
+
+### logs/
 - Application logs
-- Performance metrics: `logs/performance/`
-- Security scans: `logs/security/`
-- Audit logs: `logs/audit/`
+- Error logs
+- Audit logs
+- Performance metrics logs
 
-### `/doc_data`
-- Training data: `doc_data/training/`
-- Documentation assets
-- Sample data files
-- Test fixtures
+### doc_data/
+- Documentation images
+- API documentation data
+- Training data documentation
+- Sample configurations
 
-### `/docs`
+### docs/
 - Project documentation
 - API documentation
+- Setup guides
+- Contributing guidelines
 - Architecture diagrams
 - Deployment guides
 
-## Development Directories
+## File Naming Conventions
+- Python files: lowercase with underscores (e.g., `file_name.py`)
+- Class files: PascalCase (e.g., `UserManager.py`)
+- Test files: prefix with `test_` (e.g., `test_user_manager.py`)
+- Configuration files: lowercase with descriptive names (e.g., `production_config.yaml`)
 
-### `/migrations`
-- Database migration scripts
-- Schema version control
-- Migration history
-
-### `/tests`
-- Unit tests
-- Integration tests
-- Test configurations
-- Test utilities
-
-### `/venv`
-- Python virtual environment
-- Isolated dependencies
-- Development tools
-
-## Configuration Files
-
-### Root Level
-- `requirements.txt`: Python dependencies
-- `pyproject.toml`: Project configuration
-- `alembic.ini`: Database migration config
-- `.env`: Environment variables (gitignored)
-- `.pylintrc`: Python linting rules
-- `.pre-commit-config.yaml`: Git hooks
-- `.flake8`: Flake8 configuration
-
-## Version Control
-
-### `/.git`
-- Git repository data
-- Version history
-- Branch information
-
-### `/.github`
-- GitHub workflows
-- CI/CD configurations
-- Issue templates
-
-## Security
-
-### `/secrets`
-- Secure credential storage
-- API keys (gitignored)
-- Certificates
-
-### `/backups`
-- Database backups
-- Configuration backups
-- System state backups
+## Important Files
+- `requirements.txt`: Python package dependencies
+- `setup.py`: Package installation configuration
+- `.env`: Environment variables (not in version control)
+- `.gitignore`: Git ignore patterns
+- `README.md`: Project overview and quick start
+- `CHANGELOG.md`: Version history and changes
+- `LICENSE`: Project license information
 
 ## Notes
-
-1. All sensitive data should be stored in `/secrets` and properly gitignored
-2. Logs are automatically rotated in `/logs` subdirectories
-3. Configuration files should be environment-specific
-4. Documentation should be kept up-to-date with code changes 
+- Keep configuration files in `backend/config/` or `scripts/config/`
+- Store sensitive data in environment variables, not in code
+- Follow the established directory structure when adding new components
+- Document any deviations from this structure in this file 

@@ -7,15 +7,15 @@ into a single, comprehensive solution.
 """
 
 import ast
-import importlib
 import json
 import logging
 import os
 import re
-import subprocess
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
+
+from misc.utils.subprocess_utils import run_command
 
 # Configure logging
 logging.basicConfig(
@@ -90,7 +90,7 @@ class UnifiedSystemManager:
                             "name": node.name,
                             "args": [arg.arg for arg in node.args.args],
                             "line_number": node.lineno,
-                        }
+                        },
                     )
                     structure["complexity"]["function_count"] += 1
                 elif isinstance(node, (ast.Import, ast.ImportFrom)):
@@ -114,7 +114,7 @@ class UnifiedSystemManager:
 
             # Fix imports
             content = re.sub(
-                r"import\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*,\s*" r"([a-zA-Z_][a-zA-Z0-9_]*)",
+                r"import\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*,\s*([a-zA-Z_][a-zA-Z0-9_]*)",
                 r"import \1\nimport \2",
                 content,
             )
@@ -146,10 +146,9 @@ class UnifiedSystemManager:
     def run_security_checks(self, file_path: str) -> List[Dict[str, Any]]:
         """Run security checks using bandit"""
         try:
-            result = subprocess.run(
+            result = run_command(
                 ["bandit", "-r", file_path],
                 capture_output=True,
-                text=True,
                 check=False,
             )
             return self._parse_bandit_output(result.stdout)
@@ -168,7 +167,7 @@ class UnifiedSystemManager:
                         {
                             "type": parts[0].split("[")[1].strip(),
                             "description": parts[1].strip(),
-                        }
+                        },
                     )
         return issues
 

@@ -4,8 +4,6 @@ Tests for the model interaction module of the AutoGPT agent.
 
 import json
 import pytest
-from datetime import datetime
-from typing import Dict, List
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from ai_agents.auto_gpt.src.model import Message, ModelConfig, ModelManager, ModelError

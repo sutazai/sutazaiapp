@@ -4,7 +4,6 @@ Tests for the task management module of the AutoGPT agent.
 
 import pytest
 from datetime import datetime
-from typing import Dict, List
 
 from ai_agents.auto_gpt.src.task import Task, TaskStatus, TaskStep
 

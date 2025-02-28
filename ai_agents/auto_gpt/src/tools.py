@@ -5,11 +5,9 @@ This module provides classes and utilities for managing tools that can be used b
 including tool registration, validation, and execution.
 """
 
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 from dataclasses import dataclass
 from datetime import datetime
-import inspect
-import json
 import logging
 
 logger = logging.getLogger(__name__)

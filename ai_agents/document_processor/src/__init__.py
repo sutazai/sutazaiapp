@@ -65,7 +65,7 @@ class DocumentProcessorAgent(BaseAgent):
         os.makedirs(temp_dir, exist_ok=True)
 
         # Logging configuration
-        logger.info(f"📄 Document Processor Agent initialized")
+        logger.info("📄 Document Processor Agent initialized")
 
     def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """

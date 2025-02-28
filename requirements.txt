@@ -122,3 +122,9 @@ llama-cpp-python>=0.2.20,<0.3.0; python_version == '3.11'
 transformers>=4.38.0,<4.39.0; python_version == '3.11'
 accelerate>=0.27.0,<0.28.0; python_version == '3.11'
 bitsandbytes>=0.42.0,<0.43.0; python_version == '3.11'
+
+# Essential Additional Dependency
+ra-aid>=0.1.0,<0.2.0; python_version == '3.11'
+
+# System Tools
+ripgrep>=13.0.0,<14.0.0  # Install via: sudo apt-get install ripgrep

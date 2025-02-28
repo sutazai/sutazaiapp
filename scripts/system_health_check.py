@@ -10,10 +10,11 @@ import json
 import logging
 import os
 import platform
-import subprocess
 import sys
 from datetime import datetime
 from typing import Any, Dict
+
+from misc.utils.subprocess_utils import run_command, run_python_module
 
 # Configure logging
 logging.basicConfig(
@@ -59,7 +60,8 @@ class SystemHealthChecker:
             Dict with Python version details
         """
         try:
-            version_output = subprocess.check_output(["python3", "--version"], universal_newlines=True).strip()
+            result = run_python_module("sys", ["--version"], check=False)
+            version_output = result.stdout.strip()
 
             version_parts = version_output.split()[1].split(".")
             major, minor = int(version_parts[0]), int(version_parts[1])
@@ -70,7 +72,7 @@ class SystemHealthChecker:
                 "status": "OK" if (major == 3 and minor >= 8) else "WARNING",
             }
         except Exception as e:
-            logger.exception("Python version check failed: {e}")
+            logger.exception(f"Python version check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_pip_version(self) -> Dict[str, Any]:
@@ -81,13 +83,12 @@ class SystemHealthChecker:
             Dict with pip version details
         """
         try:
-            version_output = subprocess.check_output(
-                ["python3", "-m", "pip", "--version"], universal_newlines=True
-            ).strip()
+            result = run_python_module("pip", ["--version"], check=False)
+            version_output = result.stdout.strip()
 
             return {"version": version_output, "status": "OK"}
         except Exception as e:
-            logger.exception("Pip version check failed: {e}")
+            logger.exception(f"Pip version check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_virtual_environment(self) -> Dict[str, Any]:
@@ -97,28 +98,18 @@ class SystemHealthChecker:
         Returns:
             Dict with virtual environment details
         """
-        venv_path = os.path.join(self.project_root, "venv")
-
-        if not os.path.exists(venv_path):
-            return {
-                "exists": False,
-                "status": "WARNING",
-                "message": "Virtual environment not found",
-            }
-
         try:
-            # Check if venv is properly configured
-            activate_path = os.path.join(venv_path, "bin", "activate")
-            python_path = os.path.join(venv_path, "bin", "python")
+            result = run_python_module("venv", ["--version"], check=False)
+            version_output = result.stdout.strip()
 
+            venv_path = os.environ.get("VIRTUAL_ENV")
             return {
-                "exists": True,
-                "activate_script_exists": os.path.exists(activate_path),
-                "python_executable_exists": os.path.exists(python_path),
-                "status": "OK",
+                "venv_available": bool(version_output),
+                "active_venv": venv_path if venv_path else None,
+                "status": "OK" if venv_path else "WARNING",
             }
         except Exception as e:
-            logger.exception("Virtual environment check failed: {e}")
+            logger.exception(f"Virtual environment check failed: {e}")
             return {"error": str(e), "status": "ERROR"}
 
     def _check_required_packages(self) -> Dict[str, Any]:
@@ -126,41 +117,44 @@ class SystemHealthChecker:
         Check required package installations.
 
         Returns:
-            Dict with package installation status
+            Dict with package check results
         """
         try:
-            # Read requirements from requirements.txt
-            requirements_path = os.path.join(self.project_root, "requirements.txt")
+            result = run_python_module("pip", ["list", "--format=json"], check=False)
+            installed_packages = json.loads(result.stdout)
 
-            with open(requirements_path, "r") as f:
-                required_packages = [
-                    line.split("==")[0].strip() for line in f if line.strip() and not line.startswith("#")
-                ]
-
-            # Check package installations
-            installed_packages = subprocess.check_output(
-                ["python3", "-m", "pip", "list"], universal_newlines=True
-            ).splitlines()[
-                2:
-            ]  # Skip header lines
-
-            installed_package_names = [line.split()[0] for line in installed_packages]
-
-            missing_packages = [
-                pkg
-                for pkg in required_packages
-                if not any(pkg.lower() in installed.lower() for installed in installed_package_names)
-            ]
-
-            return {
-                "total_required": len(required_packages),
-                "installed": len(required_packages) - len(missing_packages),
-                "missing_packages": missing_packages,
-                "status": "OK" if not missing_packages else "WARNING",
+            required_packages = {
+                "pylint": ">=2.17.0",
+                "black": ">=23.0.0",
+                "mypy": ">=1.0.0",
+                "ruff": ">=0.1.0",
+                "isort": ">=5.12.0",
             }
+
+            package_status = {}
+            for package, version_req in required_packages.items():
+                package_info = next(
+                    (p for p in installed_packages if p["name"].lower() == package.lower()),
+                    None,
+                )
+                if package_info:
+                    package_status[package] = {
+                        "installed": True,
+                        "version": package_info["version"],
+                        "status": "OK",
+                    }
+                else:
+                    package_status[package] = {
+                        "installed": False,
+                        "version": None,
+                        "status": "ERROR",
+                    }
+
+            return package_status
+
         except Exception as e:
-            logger.exception("Package check failed: {e}")
-            return {"error": str(e), "status": "ERROR"}
+            logger.exception(f"Package check failed: {e}")
+            return {"error": str(e)}
 
     def generate_health_report(self) -> str:
         """
@@ -200,14 +194,14 @@ def main():
         print(f"Health report generated: {report_path}")
 
         # Check for any critical issues
-        with open(report_path, "r") as f:
+        with open(report_path) as f:
             report = json.load(f)
 
         # Example of checking for critical issues
         if any(dep.get("status") == "ERROR" for dep in report["dependencies"].values()):
             sys.exit(1)
 
-    except Exception as e:
+    except Exception:
         logger.exception("System health check failed: {e}")
         sys.exit(1)
 

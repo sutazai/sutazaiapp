@@ -5,13 +5,11 @@ Python 3.11 Syntax Fixer
 This script fixes common syntax issues in Python files to make them compatible with Python 3.11.
 """
 
+import ast
+import logging
 import os
 import sys
-import logging
 from typing import List, Tuple
-import ast
-import tokenize
-from io import StringIO
 
 
 def setup_logging() -> logging.Logger:
@@ -51,7 +49,7 @@ def fix_indentation(content: str) -> str:
 
         # Check for indentation markers
         if stripped.startswith(
-            ("def ", "class ", "if ", "elif ", "else:", "try:", "except ", "finally:", "with ", "for ", "while ")
+            ("def ", "class ", "if ", "elif ", "else:", "try:", "except ", "finally:", "with ", "for ", "while "),
         ):
             indent = " " * (current_indent * 4)
             fixed_lines.append(indent + stripped)
@@ -82,7 +80,7 @@ def validate_syntax(content: str) -> Tuple[bool, str]:
 def fix_file(file_path: str, logger: logging.Logger) -> bool:
     """Fix syntax issues in a Python file."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         # Fix indentation

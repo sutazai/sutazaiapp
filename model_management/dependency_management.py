@@ -11,4 +11,4 @@ class DependencyManager:
 
         def check_dependencies(self):
             """Check system dependencies"""
-            self.logger.info(f"Checking dependencies...")
+            self.logger.info("Checking dependencies...")

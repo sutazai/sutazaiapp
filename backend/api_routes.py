@@ -129,12 +129,9 @@ class APIRouteConfig(BaseModel):
 
     enabled_routes: dict[str, bool] = Field(
         default_factory=lambda: {"status": True, "info": True},
-        description="Dictionary of route names and their enabled status"
+        description="Dictionary of route names and their enabled status",
     )
-    route_prefix: str = Field(
-        default="/api/v1",
-        description="Default route prefix for the API"
-    )
+    route_prefix: str = Field(default="/api/v1", description="Default route prefix for the API")
 
     def get_route_prefix(self) -> str:
         """

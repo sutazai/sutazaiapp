@@ -5,7 +5,6 @@ import json
 import logging
 import os
 import platform
-import subprocess
 import sys
 from datetime import datetime
 from typing import Any, Dict
@@ -14,6 +13,8 @@ import networkx as nx
 import psutil  # type: ignore
 from rich.console import Console
 from rich.panel import Panel
+
+from misc.utils.subprocess_utils import run_command, run_python_module
 
 
 def verify_python_version():
@@ -152,48 +153,97 @@ class SystemDiagnosticOptimizer:
 
         return structure_analysis
 
-    def security_vulnerability_scan(self) -> Dict[str, Any]:
+    def run_security_checks(self) -> Dict[str, Any]:
         """
-        Perform security vulnerability scanning.
+        Run comprehensive security checks.
 
         Returns:
-            Security scan results.
+            Security check results.
         """
+        security_results = {
+            "dependency_vulnerabilities": {},
+            "code_security_scan": {},
+        }
+
         try:
-            # Run dependency safety check.
-            safety_result = subprocess.run(
-                [
-                    "safety",
-                    "check",
-                    "-r",
-                    os.path.join(self.base_path, "requirements.txt"),
-                ],
-                capture_output=True,
-                text=True,
+            # Check dependencies for vulnerabilities
+            safety_result = run_command(
+                ["safety", "check", "--full-report"],
                 check=False,
             )
-
-            semgrep_result = subprocess.run(
-                ["semgrep", "scan", "--config=auto", self.base_path],
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-
-            return {
-                "safety_check": {
-                    "passed": safety_result.returncode == 0,
-                    "output": safety_result.stdout,
-                    "errors": safety_result.stderr,
-                },
-                "semgrep_scan": {
-                    "passed": semgrep_result.returncode == 0,
-                    "output": semgrep_result.stdout,
-                    "errors": semgrep_result.stderr,
-                },
+            security_results["dependency_vulnerabilities"] = {
+                "passed": safety_result.returncode == 0,
+                "details": safety_result.stdout,
             }
+
+            # Run semgrep security scan
+            semgrep_result = run_command(
+                ["semgrep", "scan", "--config=auto", self.base_path],
+                check=False,
+            )
+            security_results["code_security_scan"] = {
+                "passed": semgrep_result.returncode == 0,
+                "details": semgrep_result.stdout,
+            }
+
         except Exception as e:
-            return {"error": str(e)}
+            logging.exception(f"Security checks failed: {e}")
+            security_results["error"] = str(e)
+
+        return security_results
+
+    def run_code_quality_checks(self) -> Dict[str, Any]:
+        """
+        Run code quality checks using various tools.
+
+        Returns:
+            Code quality check results.
+        """
+        quality_results = {
+            "pylint": {},
+            "mypy": {},
+            "black": {},
+        }
+
+        try:
+            # Run pylint
+            pylint_result = run_python_module(
+                "pylint",
+                [self.base_path],
+                check=False,
+            )
+            quality_results["pylint"] = {
+                "passed": pylint_result.returncode == 0,
+                "output": pylint_result.stdout,
+            }
+
+            # Run mypy type checking
+            mypy_result = run_python_module(
+                "mypy",
+                ["--strict", self.base_path],
+                check=False,
+            )
+            quality_results["mypy"] = {
+                "passed": mypy_result.returncode == 0,
+                "output": mypy_result.stdout,
+            }
+
+            # Run black code formatting check
+            black_result = run_python_module(
+                "black",
+                ["--check", "--diff", self.base_path],
+                check=False,
+            )
+            quality_results["black"] = {
+                "passed": black_result.returncode == 0,
+                "output": black_result.stdout,
+            }
+
+        except Exception as e:
+            logging.exception(f"Code quality checks failed: {e}")
+            quality_results["error"] = str(e)
+
+        return quality_results
 
     def performance_optimization_recommendations(
         self,
@@ -282,7 +332,7 @@ class SystemDiagnosticOptimizer:
         disk_usage = f"{diagnostic_results['system_health']['resources']['disk']['usage_percent']}%"
 
         health_panel = Panel(
-            f"CPU Usage: {cpu_usage}\n" f"Memory Usage: {mem_usage}\n" f"Disk Usage: {disk_usage}",
+            f"CPU Usage: {cpu_usage}\nMemory Usage: {mem_usage}\nDisk Usage: {disk_usage}",
             title="System Resources",
             border_style="green",
         )

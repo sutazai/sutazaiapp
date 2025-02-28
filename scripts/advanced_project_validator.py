@@ -15,7 +15,7 @@ import json
 import logging
 import os
 import sys
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import networkx as nx
 
@@ -78,14 +78,15 @@ class UltraComprehensiveProjectValidator:
             "optimization_recommendations": [],
         }
 
-    def validate_project_structure(self) -> Dict[str, Any]:
+    def validate_project_structure(self) -> Tuple[bool, List[str]]:
         """
         Perform comprehensive project structure validation
 
         Returns:
-            Detailed project validation report
+            Tuple[bool, List[str]]: Success status and list of issues
         """
         self.validation_report["timestamp"] = os.times()
+        issues = []
 
         try:
             # 1. Directory Structure Analysis
@@ -106,10 +107,12 @@ class UltraComprehensiveProjectValidator:
             # Persist validation report
             self._persist_validation_report()
 
+            return True, issues
+
         except Exception as e:
             self.logger.error(f"Comprehensive project validation failed: {e}")
-
-        return self.validation_report
+            issues.append(f"Validation error: {e!s}")
+            return False, issues
 
     def _analyze_directory_structure(self):
         """
@@ -206,7 +209,7 @@ class UltraComprehensiveProjectValidator:
                         code_quality["total_files"] += 1
 
                     except Exception as e:
-                        self.logger.warning(f"Error analyzing {file_path}: {str(e)}")
+                        self.logger.warning(f"Error analyzing {file_path}: {e!s}")
 
         # Identify code quality issues
         high_complexity_files = [
@@ -471,25 +474,30 @@ def main():
         project_validator = UltraComprehensiveProjectValidator()
 
         # Perform comprehensive project validation
-        validation_report = project_validator.validate_project_structure()
+        structure_ok, structure_issues = project_validator.validate_project_structure()
 
         print("\n🔍 Ultra-Comprehensive Project Validation Results 🔍")
 
-        print("\nOptimization Recommendations:")
-        for recommendation in validation_report.get("optimization_recommendations", []):
-            print(f"- {recommendation}")
+        if structure_ok:
+            print("\nOptimization Recommendations:")
+            for recommendation in project_validator.validation_report["optimization_recommendations"]:
+                print(f"- {recommendation}")
 
-        print("\nDetailed Insights:")
-        print(
-            f"Total Directories: {validation_report['directory_structure'].get('total_directories', 0)}",
-        )
-        print(
-            f"Total Python Files: {validation_report['code_quality'].get('total_files', 0)}",
-        )
-        print()
-        print(
-            f"Documentation Gaps: {len(validation_report.get('documentation_gaps', []))}",
-        )
+            print("\nDetailed Insights:")
+            print(
+                f"Total Directories: {project_validator.validation_report['directory_structure'].get('total_directories', 0)}",
+            )
+            print(
+                f"Total Python Files: {project_validator.validation_report['code_quality'].get('total_files', 0)}",
+            )
+            print()
+            print(
+                f"Documentation Gaps: {len(project_validator.validation_report.get('documentation_gaps', []))}",
+            )
+        else:
+            print("\nProject structure issues:")
+            for issue in structure_issues:
+                print(f"- {issue}")
 
     except Exception as e:
         logging.critical(f"Project validation failed: {e}")

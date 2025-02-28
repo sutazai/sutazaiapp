@@ -283,7 +283,7 @@ class DocumentationGenerator:
         total_modules = len(project_docs)
         total_deps = dependency_graph.number_of_edges()
         doc_panel = Panel(
-            f"Total Modules Documented: {total_modules}\n" f"Total Dependency Connections: {total_deps}",
+            f"Total Modules Documented: {total_modules}\nTotal Dependency Connections: {total_deps}",
             title="Documentation Summary",
             border_style="green",
         )

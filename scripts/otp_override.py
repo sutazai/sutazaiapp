@@ -1,7 +1,7 @@
+import functools
 import os
 import sys
-import functools
-from typing import Callable, Any
+from typing import Any, Callable
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from otp_manager import OTPManager

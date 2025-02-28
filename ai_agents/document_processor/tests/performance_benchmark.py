@@ -7,10 +7,8 @@ from typing import Any, Dict, List
 import cv2
 import fitz  # type: ignore
 import numpy as np
-import pytest
 
 from ..src import DocumentProcessorAgent
-from ..utils.document_utils import DocumentUtils
 
 
 class DocumentProcessorBenchmark:

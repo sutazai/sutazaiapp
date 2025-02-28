@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 import aiofiles
 from fastapi import APIRouter, File, UploadFile, HTTPException, BackgroundTasks

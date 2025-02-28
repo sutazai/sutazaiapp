@@ -1,7 +1,7 @@
 # pylint: disable=no-member
 import hashlib
 import os
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Dict, List
 
 import cv2  # type: ignore
 import fitz  # type: ignore

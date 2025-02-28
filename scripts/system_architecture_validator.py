@@ -11,10 +11,13 @@ Comprehensive script to:
 import importlib
 import inspect
 import json
+import logging
 import os
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
+
+logger = logging.getLogger(__name__)
 
 
 class SystemArchitectureValidator:
@@ -147,8 +150,12 @@ class SystemArchitectureValidator:
                                 if line.startswith("import ") or line.startswith("from ")
                             ]
                             import_graph[file_path] = imports
-                    except Exception:
-                        pass
+                    except OSError as e:
+                        logger.warning(f"Could not analyze imports in {file_path}: {e}")
+                        import_graph[file_path] = []
+                    except Exception as e:
+                        logger.error(f"Unexpected error analyzing {file_path}: {e}")
+                        import_graph[file_path] = []
 
         dependency_analysis["import_graph"] = import_graph
 
@@ -165,6 +172,7 @@ class SystemArchitectureValidator:
         security_analysis = {
             "sensitive_files": [],
             "potential_vulnerabilities": [],
+            "unreadable_files": [],  # Track files we couldn't analyze
         }
 
         # Check for potential sensitive files
@@ -186,23 +194,38 @@ class SystemArchitectureValidator:
                         with open(file_path) as f:
                             content = f.read()
 
+                            # Check for potential code injection vulnerabilities
                             if "eval(" in content or "safe_exec(" in content:
                                 security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
-                                        "issue": "Potential code injection " "vulnerability",
+                                        "issue": "Potential code injection vulnerability",
+                                        "details": "Use of eval() or safe_exec() detected",
                                     },
                                 )
 
+                            # Check for potential shell injection vulnerabilities
                             if "subprocess.run(" in content or "os.system(" in content:
                                 security_analysis["potential_vulnerabilities"].append(
                                     {
                                         "file": file_path,
-                                        "issue": "Potential shell injection " "vulnerability",
+                                        "issue": "Potential shell injection vulnerability",
+                                        "details": "Use of subprocess.run() or os.system() without proper input validation",
+                                        "recommendation": "Use shlex.quote() for shell arguments and validate all inputs",
                                     },
                                 )
-                    except Exception:
-                        pass
+                    except OSError as e:
+                        logger.warning(f"Could not analyze security of {file_path}: {e}")
+                        security_analysis["unreadable_files"].append({
+                            "file": file_path,
+                            "error": str(e),
+                        })
+                    except Exception as e:
+                        logger.error(f"Unexpected error analyzing {file_path}: {e}")
+                        security_analysis["unreadable_files"].append({
+                            "file": file_path,
+                            "error": f"Unexpected error: {e!s}",
+                        })
 
         self.validation_report["security_analysis"] = security_analysis
         return security_analysis

@@ -1,17 +1,9 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
 
 setup(
     name="sutazai_app",
     version="0.1.0",
-    packages=[
-        "core_system",
-        "core_system.monitoring",
-        "core_system.utils",
-        "core_system.dependency_management",
-        "misc",
-        "misc.config",
-        "system_integration",
-    ],
+    packages=find_packages(),
     install_requires=[
         "langdetect>=1.0.9",
         "pyperclip>=1.8.2",

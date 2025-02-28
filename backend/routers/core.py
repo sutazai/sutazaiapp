@@ -108,8 +108,7 @@ def validate_system_status(status_data: Any) -> SystemStatus:
     if not isinstance(status_data, (dict, str)):
         logger.warning("Invalid status format", extra={"type": type(status_data).__name__})
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="Invalid status format. Must be a dictionary or string."
+            status_code=HTTP_400_BAD_REQUEST, detail="Invalid status format. Must be a dictionary or string."
         )
 
     try:
@@ -124,15 +123,13 @@ def validate_system_status(status_data: Any) -> SystemStatus:
         error_msg = str(validation_error)
         logger.error("Status validation error", extra={"error": error_msg})
         raise HTTPException(
-            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Validation failed: {error_msg}"
+            status_code=HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Validation failed: {error_msg}"
         ) from validation_error
     except Exception as unexpected_error:
         error_msg = str(unexpected_error)
         logger.error("Unexpected error during status validation", extra={"error": error_msg})
         raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"System status validation failed: {error_msg}"
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=f"System status validation failed: {error_msg}"
         ) from unexpected_error
 
 
@@ -175,8 +172,7 @@ async def get_status(_: Request) -> Dict[str, Any]:
         error_msg = str(unexpected_error)
         logger.error("Unexpected error in get_status", extra={"error": error_msg})
         raise HTTPException(
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unexpected error: {error_msg}"
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected error: {error_msg}"
         ) from unexpected_error
 
 

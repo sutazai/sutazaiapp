@@ -5,8 +5,7 @@ This module provides templates and utilities for generating prompts
 used in interactions with language models.
 """
 
-from typing import Dict, List, Optional
-import json
+from typing import Dict, List
 
 
 # System prompt template for initializing the agent

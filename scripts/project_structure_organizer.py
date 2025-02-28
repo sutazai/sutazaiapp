@@ -83,7 +83,7 @@ class UltraComprehensiveProjectOrganizer:
         """
         Create the standard project directory structure.
         """
-        logger.info(f"🏗️ Creating Comprehensive Project Structure...")
+        logger.info("🏗️ Creating Comprehensive Project Structure...")
 
         for main_dir, subdirs in self.standard_structure.items():
             full_path = os.path.join(self.base_dir, main_dir)
@@ -211,10 +211,10 @@ class UltraComprehensiveProjectOrganizer:
         validation_report = self.comprehensive_structure_validation()
 
         # Log validation results
-        logger.info(f"\n📋 Project Structure Validation Report:")
+        logger.info("\n📋 Project Structure Validation Report:")
         logger.info(json.dumps(validation_report, indent=2))
 
-        logger.info(f"\n✨ Project Structure Organization Complete!")
+        logger.info("\n✨ Project Structure Organization Complete!")
 
 
 def main():

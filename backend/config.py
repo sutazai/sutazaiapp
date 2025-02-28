@@ -26,10 +26,7 @@ class Config(BaseModel):
     host: str = Field(default="127.0.0.1", description="Host address to bind to")
     port: int = Field(default=8000, description="Port to listen on")
     debug: bool = Field(default=False, description="Enable debug mode")
-    trusted_hosts: List[str] = Field(
-        default_factory=list,
-        description="List of trusted host addresses"
-    )
+    trusted_hosts: List[str] = Field(default_factory=list, description="List of trusted host addresses")
 
     # Model configuration that works with both Pydantic v1 and v2
     if hasattr(BaseModel, "model_config"):

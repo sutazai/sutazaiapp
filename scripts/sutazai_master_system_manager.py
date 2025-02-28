@@ -8,16 +8,15 @@ optimization, and maintenance.
 
 import argparse
 import ast
-import importlib
 import json
 import logging
 import os
 import re
-import subprocess
 import sys
-import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+
+from misc.utils.subprocess_utils import run_command, run_python_module
 
 # Configure logging
 logging.basicConfig(
@@ -56,7 +55,7 @@ class SutazAIMasterSystemManager:
         """
         major, minor = sys.version_info.major, sys.version_info.minor
         if major != 3 or minor != 11:
-            logger.error(f"Unsupported Python version. " f"Required: 3.11, Current: {major}.{minor}")
+            logger.error(f"Unsupported Python version. Required: 3.11, Current: {major}.{minor}")
             return False
         return True
 
@@ -86,7 +85,7 @@ class SutazAIMasterSystemManager:
         """
         errors = []
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 source = f.read()
             ast.parse(source)
         except SyntaxError as e:
@@ -104,7 +103,7 @@ class SutazAIMasterSystemManager:
             Whether changes were made
         """
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 content = f.read()
 
             # Fix common import issues
@@ -149,10 +148,10 @@ class SutazAIMasterSystemManager:
         """
         try:
             # Run pylint
-            pylint_result = subprocess.run(["pylint", file_path], capture_output=True, text=True)
+            pylint_result = run_python_module("pylint", [file_path], check=False)
 
             # Run mypy
-            mypy_result = subprocess.run(["mypy", file_path], capture_output=True, text=True)
+            mypy_result = run_python_module("mypy", [file_path], check=False)
 
             issues = []
 
@@ -166,7 +165,7 @@ class SutazAIMasterSystemManager:
                                 "type": "pylint",
                                 "line": parts[1],
                                 "message": ":".join(parts[2:]).strip(),
-                            }
+                            },
                         )
 
             # Parse mypy output
@@ -179,7 +178,7 @@ class SutazAIMasterSystemManager:
                                 "type": "mypy",
                                 "line": parts[1],
                                 "message": ":".join(parts[2:]).strip(),
-                            }
+                            },
                         )
 
             return issues
@@ -197,11 +196,14 @@ class SutazAIMasterSystemManager:
         """
         try:
             # Run pip list to get current dependencies
-            pip_list = subprocess.run(["pip", "list", "--format=json"], capture_output=True, text=True)
+            pip_list = run_python_module("pip", ["list", "--format=json"], check=False)
             dependencies = json.loads(pip_list.stdout)
 
             # Run safety check for vulnerabilities
-            safety_result = subprocess.run(["safety", "check", "--full-report"], capture_output=True, text=True)
+            safety_result = run_command(
+                ["safety", "check", "--full-report"],
+                check=False,
+            )
 
             return {
                 "installed_packages": dependencies,
@@ -312,7 +314,7 @@ class SutazAIMasterSystemManager:
             file_path = error["file"]
             logger.info(f"Attempting to fix syntax errors in {file_path}")
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     content = f.read()
 
                 # Basic syntax fixes

@@ -11,10 +11,12 @@ import json
 import logging
 import os
 import re
-import subprocess
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List
+
+from misc.utils.subprocess_utils import run_command, validate_path
 
 # Configure logging
 logging.basicConfig(
@@ -44,7 +46,9 @@ class ComprehensiveSystemReviewer:
         for root, _, files in os.walk(self.base_path):
             for file in files:
                 if file.endswith(".py"):
-                    python_files.append(os.path.join(root, file))
+                    full_path = os.path.join(root, file)
+                    if validate_path(full_path):
+                        python_files.append(full_path)
         return python_files
 
     def analyze_code_structure(self, file_path: str) -> Dict[str, Any]:
@@ -57,6 +61,10 @@ class ComprehensiveSystemReviewer:
         Returns:
             Dictionary containing code structure details
         """
+        if not validate_path(file_path):
+            logger.error(f"Invalid file path: {file_path}")
+            return {}
+
         try:
             with open(file_path) as f:
                 source = f.read()
@@ -94,7 +102,7 @@ class ComprehensiveSystemReviewer:
                             "name": node.name,
                             "args": [arg.arg for arg in node.args.args],
                             "line_number": node.lineno,
-                        }
+                        },
                     )
                     structure["complexity"]["function_count"] += 1
 
@@ -122,6 +130,10 @@ class ComprehensiveSystemReviewer:
         Returns:
             List of detected code smells
         """
+        if not validate_path(file_path):
+            logger.error(f"Invalid file path: {file_path}")
+            return []
+
         code_smells = []
 
         try:
@@ -142,8 +154,8 @@ class ComprehensiveSystemReviewer:
                             {
                                 "type": "long_method",
                                 "line": i + 1,
-                                "description": (f"Method is too long " f"({method_lines} lines)"),
-                            }
+                                "description": (f"Method is too long ({method_lines} lines)"),
+                            },
                         )
 
             # Detect duplicate code
@@ -196,7 +208,7 @@ class ComprehensiveSystemReviewer:
                             "first_occurrence": i + 1,
                             "second_occurrence": j + 1,
                             "segment": segment1,
-                        }
+                        },
                     )
 
         return duplicates
@@ -215,7 +227,7 @@ class ComprehensiveSystemReviewer:
 
         # Regex to find complex if/elif/else statements
         complex_if_pattern = re.compile(
-            r"(if|elif)\s*\(.*\band\b.*\bor\b.*\):|" r"(if|elif)\s*\(.*\bor\b.*\band\b.*\):",
+            r"(if|elif)\s*\(.*\band\b.*\bor\b.*\):|(if|elif)\s*\(.*\bor\b.*\band\b.*\):",
         )
 
         for match in complex_if_pattern.finditer(source_code):
@@ -223,8 +235,8 @@ class ComprehensiveSystemReviewer:
                 {
                     "type": "complex_conditional",
                     "line": source_code[: match.start()].count("\n") + 1,
-                    "description": ("Complex conditional with multiple " "AND/OR operators"),
-                }
+                    "description": ("Complex conditional with multiple AND/OR operators"),
+                },
             )
 
         return complex_conditionals
@@ -239,6 +251,10 @@ class ComprehensiveSystemReviewer:
         Returns:
             Dictionary containing linter results
         """
+        if not validate_path(file_path):
+            logger.error(f"Invalid file path: {file_path}")
+            return {"error": "Invalid file path"}
+
         linter_results = {
             "flake8": [],
             "pylint": [],
@@ -247,31 +263,34 @@ class ComprehensiveSystemReviewer:
 
         try:
             # Run flake8
-            flake8_output = subprocess.run(
-                ["flake8", file_path],
-                capture_output=True,
-                text=True,
+            flake8_result = run_command(
+                ["flake8", "--format=json", file_path],
+                cwd=self.base_path,
             )
-            if flake8_output.stdout:
-                linter_results["flake8"] = flake8_output.stdout.splitlines()
+            if flake8_result.stdout:
+                try:
+                    linter_results["flake8"] = json.loads(flake8_result.stdout)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse flake8 output: {e}")
 
             # Run pylint
-            pylint_output = subprocess.run(
-                ["pylint", file_path],
-                capture_output=True,
-                text=True,
+            pylint_result = run_command(
+                ["pylint", "--output-format=json", file_path],
+                cwd=self.base_path,
             )
-            if pylint_output.stdout:
-                linter_results["pylint"] = pylint_output.stdout.splitlines()
+            if pylint_result.stdout:
+                try:
+                    linter_results["pylint"] = json.loads(pylint_result.stdout)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse pylint output: {e}")
 
             # Run mypy
-            mypy_output = subprocess.run(
-                ["mypy", file_path],
-                capture_output=True,
-                text=True,
+            mypy_result = run_command(
+                ["mypy", "--show-error-codes", "--no-error-summary", file_path],
+                cwd=self.base_path,
             )
-            if mypy_output.stdout:
-                linter_results["mypy"] = mypy_output.stdout.splitlines()
+            if mypy_result.stdout:
+                linter_results["mypy"] = mypy_result.stdout.splitlines()
 
         except Exception as e:
             logger.error(f"Error running linters on {file_path}: {e}")

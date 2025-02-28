@@ -4,7 +4,7 @@ Configuration module for AutoGPT agent.
 This module defines the configuration schema and validation for AutoGPT agents.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 from pydantic import BaseModel, Field
 
 

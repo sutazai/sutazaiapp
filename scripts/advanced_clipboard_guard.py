@@ -1,124 +1,152 @@
 #!/usr/bin/env python3
-"""
-Advanced Clipboard Guard
-Prevents specific text insertions and manages clipboard content
-"""
+"""Advanced clipboard monitoring and sanitization module for SutazAI."""
+
 import logging
 import os
 import re
-import threading
-import time
+from re import Pattern
+from typing import List, Optional
 
-import pyperclip
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
-    class AdvancedClipboardGuard:
-        def __init__(self, log_file="/var/log/advanced_clipboard_guard.log"):
-        # Ensure log directory exists
-        os.makedirs(os.path.dirname(log_file), exist_ok=True)
-        
-        # Configure logging
-        logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s: %(message)s",
-        filename=log_file,
-        filemode="a",
+class ClipboardGuard:
+    """Monitors and sanitizes clipboard content for security."""
+
+    def __init__(self, config_path: Optional[str] = None):
+        """Initialize the clipboard guard.
+
+        Args:
+            config_path: Optional path to configuration file
+        """
+        self.logger = logging.getLogger(__name__)
+        self.patterns: List[Pattern] = []
+        self.replacements: List[str] = []
+
+        if config_path and os.path.exists(config_path):
+            self._load_config(config_path)
+        else:
+            self._load_default_patterns()
+
+    def _load_config(self, config_path: str) -> None:
+        """Load patterns from configuration file.
+
+        Args:
+            config_path: Path to configuration file
+        """
+        try:
+            import yaml
+
+            with open(config_path, encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+
+            for pattern in config.get("patterns", []):
+                self.add_pattern(
+                    pattern["regex"],
+                    pattern.get("replacement", "[REDACTED]"),
+                )
+
+        except Exception as e:
+            self.logger.error("Failed to load config: %s", str(e))
+            self._load_default_patterns()
+
+    def _load_default_patterns(self) -> None:
+        """Load default security patterns."""
+        # Add default patterns
+        self.add_pattern(
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "[EMAIL]",
+        )
+        self.add_pattern(
+            r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b",
+            "[PHONE]",
+        )
+        self.add_pattern(
+            r"\b\d{16}\b",
+            "[CARD_NUMBER]",
+        )
+
+    def add_pattern(self, pattern: str, replacement: str) -> None:
+        """Add a new pattern for content sanitization.
+
+        Args:
+            pattern: Regular expression pattern
+            replacement: Replacement text
+        """
+        try:
+            compiled = re.compile(pattern)
+            self.patterns.append(compiled)
+            self.replacements.append(replacement)
+            self.logger.debug("Added pattern: %s", pattern)
+
+        except Exception as e:
+            self.logger.error("Failed to add pattern: %s", str(e))
+
+    def sanitize_content(self, content: str) -> str:
+        """Sanitize content by applying security patterns.
+
+        Args:
+            content: Content to sanitize
+
+        Returns:
+            str: Sanitized content
+        """
+        sanitized = content
+
+        try:
+            for pattern, replacement in zip(self.patterns, self.replacements):
+                sanitized = pattern.sub(replacement, sanitized)
+
+            return sanitized
+
+        except Exception as e:
+            self.logger.error("Failed to sanitize content: %s", str(e))
+            return content
+
+    def monitor_clipboard(self) -> None:
+        """Start monitoring clipboard for sensitive content."""
+        try:
+            import pyperclip
+
+            last_content = pyperclip.paste()
+
+            while True:
+                try:
+                    current_content = pyperclip.paste()
+                    if current_content != last_content:
+                        sanitized = self.sanitize_content(current_content)
+                        if sanitized != current_content:
+                            pyperclip.copy(sanitized)
+                            self.logger.info("Sanitized clipboard content")
+                        last_content = sanitized
+                except Exception as e:
+                    self.logger.error("Clipboard error: %s", str(e))
+
+        except ImportError:
+            self.logger.error(
+                "pyperclip not installed. Run: pip install pyperclip",
+            )
+        except Exception as e:
+            self.logger.error("Monitor error: %s", str(e))
+
+
+def main():
+    """Main entry point for clipboard monitoring."""
+    guard = ClipboardGuard()
+
+    # Add custom patterns if needed
+    guard.add_pattern(
+        r"\b(?:password|pwd|pass)\s*[:=]\s*\S+\b",
+        "[PASSWORD]",
     )
-    self.logger = logging.getLogger("AdvancedClipboardGuard")
-    
-    # Blocked patterns with more comprehensive matching
-    self.blocked_patterns = [
-    r"Now, I'll create a system health monitor to complement these components:",
-    r"<function_calls>",
-    r"<invoke name=\"edit_file\">",
-    r"Create an ultra-comprehensive system health monitoring framework",
-]
 
-# Last known good clipboard content
-self.last_good_content = ""
+    # Start monitoring
+    print("Starting clipboard monitor (Ctrl+C to stop)...")
+    guard.monitor_clipboard()
 
-# Monitoring control
-self.stop_monitoring = threading.Event()
-self.monitoring_thread = None
 
-    def is_suspicious_content(self, content):
-    """
-    Advanced content matching with regex and multiple strategies
-    """
-        if not content:
-        return False
-        
-        # Check for exact pattern matches
-            for pattern in self.blocked_patterns:
-                if re.search(pattern, content, re.IGNORECASE):
-                return True
-                
-                return False
-                
-                    def sanitize_clipboard(self):
-                    """
-                    Sanitize clipboard content, preventing suspicious insertions
-                    """
-                        try:
-                        current_content = pyperclip.paste()
-                        
-                            if self.is_suspicious_content(current_content):
-                            self.logger.warning(
-                            f"Blocked suspicious clipboard content: {current_content}",
-                        )
-                        
-                        # Restore to last known good content or clear clipboard
-                            if self.last_good_content:
-                            pyperclip.copy(self.last_good_content)
-                                else:
-                                pyperclip.copy("")
-                                    else:
-                                    # Update last good content
-                                    self.last_good_content = current_content
-                                    
-                                    except Exception:
-                                    self.logger.error(f"Clipboard sanitization error: {e}")
-                                    
-                                        def start_monitoring(self):
-                                        """
-                                        Start continuous clipboard monitoring
-                                        """
-                                        
-                                            def monitor_worker():
-                                                while not self.stop_monitoring.is_set():
-                                                    try:
-                                                    self.sanitize_clipboard()
-                                                    time.sleep(0.5)  # Check every half second
-                                                    except Exception:
-                                                    self.logger.error(f"Clipboard monitoring error: {e}")
-                                                    time.sleep(1)
-                                                    
-                                                    self.monitoring_thread = threading.Thread(target=monitor_worker, daemon=True)
-                                                    self.monitoring_thread.start()
-                                                    self.logger.info(f"Advanced Clipboard Guard started")
-                                                    
-                                                        def stop_monitoring(self):
-                                                        """
-                                                        Stop clipboard monitoring
-                                                        """
-                                                        self.stop_monitoring.set()
-                                                            if self.monitoring_thread:
-                                                            self.monitoring_thread.join()
-                                                            self.logger.info(f"Advanced Clipboard Guard stopped")
-                                                            
-                                                            
-                                                                def main():
-                                                                guard = AdvancedClipboardGuard()
-                                                                guard.start_monitoring()
-                                                                
-                                                                    try:
-                                                                    # Keep main thread alive
-                                                                        while True:
-                                                                        time.sleep(3600)
-                                                                        except KeyboardInterrupt:
-                                                                        guard.stop_monitoring()
-                                                                        
-                                                                        
-                                                                            if __name__ == "__main__":
-                                                                            main()
-                                                                            
+if __name__ == "__main__":
+    main()
