@@ -52,9 +52,7 @@ app.include_router(health_router, prefix="/api", tags=["health"])
 
 
 @app.middleware("http")
-async def log_requests(
-    request: Request, call_next: Callable[[Request], Awaitable[Any]]
-) -> Any:
+async def log_requests(request: Request, call_next: Callable[[Request], Awaitable[Any]]) -> Any:
     """
     Log all incoming requests for monitoring and debugging.
 

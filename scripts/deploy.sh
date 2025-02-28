@@ -13,13 +13,6 @@ CONFIG_DIR="$SUTAZAIAPP_HOME/config"
 BACKUP_DIR="$SUTAZAIAPP_HOME/backups"
 WHEELS_DIR="$SUTAZAIAPP_HOME/wheels"
 
-# Source OTP validation functions
-source /opt/sutazaiapp/scripts/otp_override.py
-
-# Logging configuration
-LOG_FILE="/var/log/sutazaiapp/deployment.log"
-BLOCKED_ATTEMPTS_LOG="/var/log/sutazaiapp/blocked_attempts.log"
-
 # Logging function
 log() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" | tee -a "$DEPLOY_LOG"
@@ -161,78 +154,43 @@ launch_services() {
     fi
 }
 
-# OTP validation function
-validate_external_call() {
-    local otp="$1"
-    
-    # Call Python OTP validation
-    python3 -c "
-from scripts.otp_override import OTPManager
-
-otp_manager = OTPManager()
-is_valid = otp_manager.validate_otp('$otp')
-
-if is_valid:
-    print('VALID')
-else:
-    print('INVALID')
-"
-}
-
-# Deployment stages with OTP validation
-deploy_stage() {
-    local stage_name="$1"
-    local otp="$2"
-    
-    log() {
-        echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
-    }
-    
-    log_message "Starting deployment stage: $stage_name"
-    
-    # Validate OTP for external calls
-    validation_result=$(validate_external_call "$otp")
-    
-    if [ "$validation_result" != "VALID" ]; then
-        log_message "OTP validation failed for $stage_name" | tee -a "$BLOCKED_ATTEMPTS_LOG"
-        echo "Error: Invalid OTP. External call blocked."
-        exit 1
-    fi
-    
-    # Perform deployment stage
-    case "$stage_name" in
-        "git_pull")
-            git pull origin main
-            ;;
-        "pip_install")
-            pip install -r requirements.txt
-            ;;
-        "database_migration")
-            alembic upgrade head
-            ;;
-        *)
-            log_message "Unknown deployment stage: $stage_name"
-            exit 1
-            ;;
-    esac
-    
-    log_message "Deployment stage $stage_name completed successfully"
-}
-
-# Main deployment function
+# Main deployment workflow
 main() {
-    # Check if OTP is provided
-    if [ $# -ne 2 ]; then
-        echo "Usage: $0 <stage_name> <otp>"
-        exit 1
+    log "Starting Sutazaiapp Deployment"
+    
+    # Optional OTP validation
+    if [[ "${1:-}" == "--otp" ]]; then
+        read -sp "Enter OTP: " OTP
+        echo
+        validate_otp "$OTP" || exit 1
     fi
     
-    local stage_name="$1"
-    local otp="$2"
+    # Rollback option
+    if [[ "${1:-}" == "--rollback" ]]; then
+        rollback
+        exit 0
+    fi
     
-    # Perform deployment with OTP validation
-    deploy_stage "$stage_name" "$otp"
+    # Create backup
+    create_backup
+    
+    # Pull latest code
+    cd "$SUTAZAIAPP_HOME"
+    git pull origin main
+    
+    # Setup virtual environment
+    python3.11 -m venv "$VENV_PATH"
+    
+    # Install dependencies
+    install_dependencies
+    
+    # Verify models
+    verify_models
+    
+    # Launch services
+    launch_services
+    
+    log "Deployment Completed Successfully 🚀"
 }
 
-# Execute main function with arguments
 main "$@" 

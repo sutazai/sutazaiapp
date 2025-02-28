@@ -1,16 +1,19 @@
 """
-Sutazaiapp AI Agents Module
+SutazAI Agents Package
 
-This module provides a comprehensive framework for AI agent management,
-including base classes, interfaces, and utility functions for agent orchestration.
+This package provides a framework for creating and managing AI agents
+that can autonomously execute tasks using language models and various tools.
 """
 
-from .base_agent import BaseAgent, AgentError
+from ai_agents.base_agent import BaseAgent, AgentError, BaseAgentImplementation
+from ai_agents.agent_factory import AgentFactory
+from ai_agents.agent_config_manager import AgentConfigManager
 
+__version__ = "0.1.0"
 __all__ = [
-    'BaseAgent',
-    'AgentError'
+    "BaseAgent",
+    "AgentError",
+    "BaseAgentImplementation",
+    "AgentFactory",
+    "AgentConfigManager",
 ]
-
-# Version of the AI Agents module
-__version__ = '0.1.0'

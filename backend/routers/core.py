@@ -40,9 +40,7 @@ class SystemStatus(BaseModel):
     Provides a standardized way to represent and validate system status.
     """
 
-    status: str = Field(
-        ..., description="Overall system status", min_length=1, max_length=50
-    )
+    status: str = Field(..., description="Overall system status", min_length=1, max_length=50)
 
     model_config = {
         "json_schema_extra": {"example": {"status": "ok"}},

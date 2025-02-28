@@ -1,20 +1,16 @@
 {
-    "agent_name": "sutazai_auto_gpt_agent",
+    "max_iterations": 25,
+    "verbose_mode": true,
+    "log_dir": "logs/auto_gpt",
     "model_config": {
-        "model_name": "deepseek-coder",
+        "model_name": "gpt-4",
         "temperature": 0.7,
-        "max_tokens": 1024
+        "max_tokens": 4096
     },
-    "task_constraints": {
-        "max_iterations": 25,
-        "time_limit_minutes": 60
-    },
-    "logging_config": {
-        "log_level": "INFO",
-        "log_to_file": true
-    },
-    "performance_tracking": {
-        "track_performance": true,
-        "performance_threshold": 0.8
-    }
+    "tools": [
+        "web_search",
+        "code_search",
+        "file_operation",
+        "terminal_command"
+    ]
 }

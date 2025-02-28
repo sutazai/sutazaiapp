@@ -1,3 +1,101 @@
+# SutazAI Application
+
+A comprehensive AI development platform featuring autonomous agents, model management, and advanced system integration.
+
+## Project Structure
+
+```
+/opt/sutazaiapp/
+├── ai_agents/               # AI Agent implementations
+│   ├── auto_gpt/           # AutoGPT agent
+│   ├── configs/            # Agent configurations
+│   └── schemas/            # JSON schemas for validation
+├── model_management/       # Model lifecycle management
+├── backend/               # Core backend services
+├── web_ui/               # Frontend application
+├── scripts/              # Utility scripts
+├── packages/             # Custom packages
+│   └── wheels/          # Python wheel files
+├── logs/                # Application logs
+├── doc_data/            # Documentation data
+└── docs/               # Project documentation
+```
+
+## Setup
+
+1. Create and activate virtual environment:
+```bash
+python3.11 -m venv venv
+source venv/bin/activate
+```
+
+2. Install dependencies:
+```bash
+pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+```
+
+3. Configure environment:
+- Copy `.env.example` to `.env`
+- Update configuration values as needed
+
+4. Initialize directories:
+```bash
+mkdir -p logs doc_data
+```
+
+## Development
+
+### Running Tests
+```bash
+pytest
+```
+
+### Code Quality
+- Linting: `pylint backend/ ai_agents/ model_management/`
+- Type checking: `mypy .`
+- Security scan: `bandit -r .`
+
+### Documentation
+- API docs available at `/docs` endpoint when running backend
+- Additional documentation in `/docs` directory
+
+## Components
+
+### AI Agents
+- Base agent framework in `ai_agents/base_agent.py`
+- AutoGPT implementation in `ai_agents/auto_gpt/`
+- Configuration management via JSON schemas
+
+### Backend Services
+- FastAPI-based REST API
+- Database migrations using Alembic
+- Comprehensive error handling and logging
+
+### Model Management
+- Model versioning and deployment
+- Performance monitoring
+- Resource optimization
+
+## Security
+
+- All sensitive data must be stored in `.env`
+- API keys and credentials never committed to repo
+- Regular security audits with Bandit
+- Input validation using Pydantic
+
+## Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Make changes following style guide
+4. Add tests for new functionality
+5. Submit pull request
+
+## License
+
+Copyright (c) 2024 SutazAI. All rights reserved.
+
 # Sutazaiapp: Comprehensive AI-Powered Development System
 
 ## Project Overview

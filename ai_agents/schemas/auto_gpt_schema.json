@@ -1,96 +1,52 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "AutoGPT Agent Configuration",
     "type": "object",
     "properties": {
-        "agent_name": {
+        "max_iterations": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Maximum number of iterations for the agent"
+        },
+        "verbose_mode": {
+            "type": "boolean",
+            "description": "Enable verbose logging"
+        },
+        "log_dir": {
             "type": "string",
-            "description": "Unique name for the AutoGPT agent instance"
+            "description": "Directory for agent logs"
         },
         "model_config": {
             "type": "object",
             "properties": {
                 "model_name": {
                     "type": "string",
-                    "enum": [
-                        "gpt-4",
-                        "gpt-3.5-turbo",
-                        "deepseek-coder"
-                    ]
+                    "enum": ["gpt-4", "gpt-3.5-turbo", "claude-3-opus", "claude-3-sonnet"],
+                    "description": "Name of the language model to use"
                 },
                 "temperature": {
                     "type": "number",
                     "minimum": 0,
                     "maximum": 2,
-                    "default": 0.7
+                    "description": "Temperature for model sampling"
                 },
                 "max_tokens": {
                     "type": "integer",
-                    "minimum": 50,
-                    "maximum": 4096,
-                    "default": 1024
+                    "minimum": 1,
+                    "maximum": 32000,
+                    "description": "Maximum tokens per model response"
                 }
             },
-            "required": [
-                "model_name"
-            ]
+            "required": ["model_name", "temperature", "max_tokens"]
         },
-        "task_constraints": {
-            "type": "object",
-            "properties": {
-                "max_iterations": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 100,
-                    "default": 25
-                },
-                "time_limit_minutes": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 1440,
-                    "default": 60
-                }
-            }
-        },
-        "logging_config": {
-            "type": "object",
-            "properties": {
-                "log_level": {
-                    "type": "string",
-                    "enum": [
-                        "DEBUG",
-                        "INFO",
-                        "WARNING",
-                        "ERROR",
-                        "CRITICAL"
-                    ],
-                    "default": "INFO"
-                },
-                "log_to_file": {
-                    "type": "boolean",
-                    "default": true
-                }
-            }
-        },
-        "performance_tracking": {
-            "type": "object",
-            "properties": {
-                "track_performance": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "performance_threshold": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1,
-                    "default": 0.8
-                }
-            }
+        "tools": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": ["web_search", "code_search", "file_operation", "terminal_command"]
+            },
+            "description": "List of tools available to the agent"
         }
     },
-    "required": [
-        "agent_name",
-        "model_config"
-    ],
-    "additionalProperties": false
+    "required": ["max_iterations", "model_config", "tools"]
 }

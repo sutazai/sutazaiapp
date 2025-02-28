@@ -18,38 +18,37 @@ logs_dir = os.path.join(os.getcwd(), "logs")
 threshold = 86400
 
 
-    def compress_old_logs():
+def compress_old_logs():
     now = time.time()
-        for root, _, files in os.walk(logs_dir):
-            for filename in files:
+    for root, _, files in os.walk(logs_dir):
+        for filename in files:
             filepath = os.path.join(root, filename)
             # Skip if already compressed
-                if filepath.endswith(".gz"):
-            continue
-                try:
+            if filepath.endswith(".gz"):
+                continue
+            try:
                 mtime = os.path.getmtime(filepath)
-                except Exception as e:
+            except Exception as e:
                 print(f"Failed to get mtime for {filepath}: {e}")
-            continue
-                if now - mtime > threshold:
+                continue
+            if now - mtime > threshold:
                 compressed_filepath = filepath + ".gz"
-                    try:
+                try:
                     with (
-                    open(filepath, "rb") as f_in,
-                    gzip.open(compressed_filepath, "wb") as f_out,
+                        open(filepath, "rb") as f_in,
+                        gzip.open(compressed_filepath, "wb") as f_out,
                     ):
-                    shutil.copyfileobj(f_in, f_out)
+                        shutil.copyfileobj(f_in, f_out)
                     os.remove(filepath)
                     print(f"Compressed and removed: {filepath}")
-                    except Exception as e:
+                except Exception as e:
                     print(f"Error compressing {filepath}: {e}")
-                    
-                    
-                        def main():
-                        compress_old_logs()
-                        print("Log cleanup completed.")
-                        
-                        
-                            if __name__ == "__main__":
-                            main()
-                            
+
+
+def main():
+    compress_old_logs()
+    print("Log cleanup completed.")
+
+
+if __name__ == "__main__":
+    main()
