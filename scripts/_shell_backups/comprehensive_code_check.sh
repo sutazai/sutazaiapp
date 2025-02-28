@@ -6,27 +6,27 @@ PYTHON_CMD="python3.11"
 # Verify Python version
 verify_python_version() {
     if ! command -v "$PYTHON_CMD" &> /dev/null; then
-        log "ERROR" "Python 3.11 not found. Attempting to install..."
+        echo "ERROR: Python 3.11 not found. Attempting to install..."
         apt-get update && apt-get install -y python3.11 python3.11-dev
         if [ $? -ne 0 ]; then
-            log "ERROR" "Failed to install Python 3.11"
+            echo "ERROR: Failed to install Python 3.11"
             exit 1
         fi
     fi
 
     PYTHON_VERSION=$("$PYTHON_CMD" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
     if [[ "$PYTHON_VERSION" != "3.11" ]]; then
-        log "ERROR" "Python 3.11 required. Found $PYTHON_VERSION. Updating alternatives..."
+        echo "ERROR: Python 3.11 required. Found $PYTHON_VERSION. Updating alternatives..."
         update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
         update-alternatives --set python3 /usr/bin/python3.11
         # Verify again after update
         PYTHON_VERSION=$("$PYTHON_CMD" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
         if [[ "$PYTHON_VERSION" != "3.11" ]]; then
-            log "ERROR" "Failed to set Python 3.11 as default"
+            echo "ERROR: Failed to set Python 3.11 as default"
             exit 1
         fi
     fi
-    log "SUCCESS" "Python version verified: $PYTHON_VERSION"
+    echo "SUCCESS: Python version verified: $PYTHON_VERSION"
 }
 
 # Verify Python version before proceeding
@@ -140,8 +140,12 @@ comprehensive_lint_check() {
 
 # Main script execution
 main() {
+    # Verify Python version
+    verify_python_version
+
     # Determine log directory
-    LOG_DIR=$(determine_log_directory)
+    LOG_DIR="/opt/sutazaiapp/logs"
+    mkdir -p "$LOG_DIR"
     
     # Setup log file paths
     LOG_FILE="$LOG_DIR/comprehensive_lint_check.log"
@@ -155,13 +159,15 @@ main() {
     DIRECTORIES_TO_CHECK=(
         "core_system"
         "misc"
-        "system_integration"
         "scripts"
+        "backend"
+        "ai_agents"
+        "model_management"
     )
 
     # Run comprehensive checks on each directory
     for dir in "${DIRECTORIES_TO_CHECK[@]}"; do
-        comprehensive_lint_check "$PROJECT_ROOT/$dir" "$LOG_FILE"
+        comprehensive_lint_check "/opt/sutazaiapp/$dir" "$LOG_FILE"
     done
 
     # Final summary

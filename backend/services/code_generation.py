@@ -1,11 +1,11 @@
-import os
 import json
 import logging
-from typing import Dict, Any, List
+import os
+from typing import Any, Dict, List
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from loguru import logger
 import semgrep
+from loguru import logger
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 class CodeGenerationService:
@@ -83,7 +83,7 @@ class CodeGenerationService:
             raise
 
     def generate_code(
-        self, specification: str, model_name: str = "deepseek-coder", language: str = "python"
+        self, specification: str, model_name: str = "deepseek-coder", language: str = "python",
     ) -> Dict[str, Any]:
         """
         Generate code from a specification

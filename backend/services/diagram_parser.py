@@ -1,7 +1,7 @@
-import os
 import json
 import logging
-from typing import Dict, Any, List
+import os
+from typing import Any, Dict, List
 
 import cv2
 import numpy as np
@@ -87,7 +87,7 @@ class DiagramParser:
                         "type": self._classify_contour(w, h),
                         "position": {"x": x, "y": y},
                         "size": {"width": w, "height": h},
-                    }
+                    },
                 )
 
         return entities
@@ -107,12 +107,11 @@ class DiagramParser:
 
         if 0.8 < aspect_ratio < 1.2:
             return "square"
-        elif aspect_ratio > 1.5:
+        if aspect_ratio > 1.5:
             return "rectangle"
-        elif aspect_ratio < 0.5:
+        if aspect_ratio < 0.5:
             return "vertical_rectangle"
-        else:
-            return "irregular"
+        return "irregular"
 
     def analyze_diagram(self, file_path: str) -> Dict[str, Any]:
         """

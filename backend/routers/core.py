@@ -8,9 +8,10 @@ comprehensive type annotations and error handling.
 
 from __future__ import annotations
 
+import logging
+
 # Standard Library Imports
 from typing import Any, Callable, Dict, Generic, Type, TypeVar
-import logging
 
 # Third-Party Library Imports
 from fastapi import APIRouter, HTTPException, Request

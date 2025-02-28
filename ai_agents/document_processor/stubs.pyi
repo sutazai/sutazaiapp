@@ -3,7 +3,7 @@ Type stubs for external libraries used in the document processor module.
 This file helps MyPy understand the types of external libraries that don't provide their own type stubs.
 """
 
-from typing import Any, Dict, List, Tuple, Callable
+from typing import Any, Callable, Dict, List, Tuple
 
 # Type stubs for fitz (PyMuPDF)
 class Rect:

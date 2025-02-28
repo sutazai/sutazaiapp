@@ -1,11 +1,11 @@
 import os
 
 import aiofiles
-from fastapi import APIRouter, File, UploadFile, HTTPException, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from backend.services.doc_processing import DocumentParser
 from backend.services.diagram_parser import DiagramParser
+from backend.services.doc_processing import DocumentParser
 
 router = APIRouter(prefix="/doc", tags=["Document Processing"])
 

@@ -4,7 +4,7 @@ Test module for the SutazAI backend main application.
 This module contains tests for the main FastAPI application endpoints.
 """
 
-from typing import AsyncGenerator, Generator
+from collections.abc import AsyncGenerator, Generator
 
 import pytest
 from fastapi.testclient import TestClient

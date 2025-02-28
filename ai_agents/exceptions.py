@@ -12,21 +12,18 @@ class DocumentProcessingError(Exception):
     """Exception raised for errors during document processing."""
 
 
-pass
 
 
 class OCRFailureError(Exception):
     """Exception raised when OCR processing fails"""
 
 
-pass
 
 
 class PDFExtractionError(Exception):
     """Exception raised during PDF text extraction"""
 
 
-pass
 
 
 class AgentError(Exception):

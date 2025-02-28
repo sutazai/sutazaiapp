@@ -8,7 +8,8 @@ It sets up the FastAPI app, includes routers, and defines middleware and excepti
 
 # Standard Library Imports
 import logging
-from typing import Any, Awaitable, Callable, Dict
+from collections.abc import Awaitable
+from typing import Any, Callable, Dict
 
 # Third-Party Library Imports
 from fastapi import FastAPI, Request

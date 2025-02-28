@@ -6,8 +6,8 @@ This module defines a configuration class using Pydantic to ensure that
 all required parameters are specified with appropriate defaults.
 """
 
-from typing import List, Dict, Any
 import os
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field
 
@@ -65,7 +65,7 @@ def load_config_from_env() -> Config:
     env_vars: Dict[str, str] = {}
     if os.path.exists(".env"):
         # Simple env file parsing (could be replaced with python-dotenv)
-        with open(".env", "r", encoding="utf-8") as env_file:
+        with open(".env", encoding="utf-8") as env_file:
             for line in env_file:
                 line = line.strip()
                 if line and not line.startswith("#"):

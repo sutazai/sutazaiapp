@@ -20,8 +20,9 @@ import logging
 import os
 import re
 import sys
+import tokenize
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Tuple
 
 # Setup logging
 logging.basicConfig(
@@ -50,263 +51,335 @@ class Python311CompatibilityFixer:
         self.files_fixed = 0
         self.skipped_files: set[str] = set()
 
-        def fix_all_files(self) -> None:
-            """Process all Python files in the specified directory."""
-            logger.info(
-                "Starting Python 3.11 compatibility fixes in %s",
-                self.directory)
+    def fix_all_files(self) -> None:
+        """Process all Python files in the specified directory."""
+        logger.info(
+            "Starting Python 3.11 compatibility fixes in %s",
+            self.directory)
 
-            for root, _, files in os.walk(self.directory):
-                for file in files:
-                    if file.endswith(".py") and not self._should_skip(file):
-                        file_path = os.path.join(root, file)
-                        self.fix_file(file_path)
+        for root, _, files in os.walk(self.directory):
+            for file in files:
+                if file.endswith(".py") and not self._should_skip(file):
+                    file_path = os.path.join(root, file)
+                    self.fix_file(file_path)
 
-                        logger.info("Completed processing %d files. Fixed: %d, Skipped: %d",
-                        self.files_processed, self.files_fixed, len(
-                            self.skipped_files))
+                    logger.info("Completed processing %d files. Fixed: %d, Skipped: %d",
+                    self.files_processed, self.files_fixed, len(
+                        self.skipped_files))
 
-                        def _should_skip(self, filename: str) -> bool:
-                            """
-                            Determine if a file should be skipped.
+    def _should_skip(self, filename: str) -> bool:
+        """
+        Determine if a file should be skipped.
 
-                            Args:
-                            filename: The filename to check
+        Args:
+        filename: The filename to check
 
-                            Returns:
-                            bool: True if the file should be skipped, False otherwise
-                            """
-                            skip_patterns = [
-                            "__pycache__",
-                            ".egg-info",
-                            "venv",
-                            ".git",
-                            "dist",
-                            "build",
-                            ]
-                        return any(
-                            pattern in filename for pattern in skip_patterns)
+        Returns:
+        bool: True if the file should be skipped, False otherwise
+        """
+        skip_patterns = [
+        "__pycache__",
+        ".egg-info",
+        "venv",
+        ".git",
+        "dist",
+        "build",
+        ]
+        return any(
+            pattern in filename for pattern in skip_patterns)
 
-                        def fix_file(self, file_path: str) -> None:
-                            """
-                            Fix compatibility issues in a single Python file.
+    def fix_file(self, file_path: str) -> None:
+        """
+        Fix compatibility issues in a single Python file.
 
-                            Args:
-                            file_path: Path to the Python file to fix
-                            """
-                            self.files_processed += 1
-                            logger.info("Processing file: %s", file_path)
+        Args:
+        file_path: Path to the Python file to fix
+        """
+        self.files_processed += 1
+        logger.info("Processing file: %s", file_path)
 
-                            try:
-                                # Read the file
-                                with open(file_path, encoding="utf-8") as f:
-                                content = f.read()
+        try:
+            # Read the file
+            with open(file_path, encoding="utf-8") as f:
+                content = f.read()
 
-                                # Apply fixes
-                                original_content = content
-                                content = self._fix_shebang(content)
-                                content = self._fix_typing_imports(content)
-                                content = self._fix_f_string_logging(content)
-                                content = self._fix_indentation(content)
+            # Apply fixes
+            original_content = content
+            content = self._fix_shebang(content)
+            content = self._fix_typing_imports(content)
+            content = self._fix_f_string_logging(content)
+            content = self._fix_indentation(content)
 
-                                # Only write if changed
-                                if content != original_content:
-                                    with open(
-                                        file_path,
-                                        "w",
-                                        encoding="utf-8") as f:
-                                    f.write(content)
-                                    self.files_fixed += 1
-                                    logger.info(
-                                        "Fixed issues in %s",
-                                        file_path)
+            # Only write if changed
+            if content != original_content:
+                with open(
+                    file_path,
+                    "w",
+                    encoding="utf-8") as f:
+                    f.write(content)
+                    self.files_fixed += 1
+                    logger.info(
+                        "Fixed issues in %s",
+                        file_path)
 
-                                    except Exception as e:
-                                        logger.error(
-                                            "Error processing %s: %s",
-                                            file_path,
-                                            e)
-                                        self.skipped_files.add(file_path)
+        except Exception as e:
+            logger.error(
+                "Error processing %s: %s",
+                file_path,
+                e)
+            self.skipped_files.add(file_path)
 
-                                        def _fix_shebang(
-                                            self,
-                                            content: str) -> str:
-                                            """
-                                            Fix the shebang line to use Python 3.11.
+    def _fix_shebang(self, content: str) -> str:
+        """
+        Fix the shebang line to use Python 3.11.
 
-                                            Args:
-                                            content: The Python file content
+        Args:
+        content: The Python file content
 
-                                            Returns:
-                                            str: The fixed content
-                                            """
-                                            # Replace Python 3 shebang with Python 3.11
-                                            if content.startswith(
-                                                "#!/usr/bin/env python3\n"):
-                                            return content.replace(
-                                                "#!/usr/bin/env python3\n",
-                                                "#!/usr/bin/env python3.11\n")
+        Returns:
+        str: The fixed content
+        """
+        # Replace Python 3 shebang with Python 3.11
+        if content.startswith(
+            "#!/usr/bin/env python3\n"):
+            return content.replace(
+                "#!/usr/bin/env python3\n",
+                "#!/usr/bin/env python3.11\n")
 
-                                            # Add shebang if missing and file is executable
-                                            if not content.startswith("#!/"):
-                                                                                        return "#!/usr/bin/env python3.11\n" + \
-                                                content
+        # Add shebang if missing and file is executable
+        if not content.startswith("#!/"):
+            return "#!/usr/bin/env python3.11\n" + \
+                content
 
-                                        return content
+        return content
 
-                                        def _fix_typing_imports(
-                                            self,
-                                            content: str) -> str:
-                                            """
-                                            Fix deprecated typing imports (
-                                                Dict -> dict,
-                                                List -> list,
-                                                etc.).
+    def _fix_typing_imports(self, content: str) -> str:
+        """
+        Fix deprecated typing imports (Dict -> dict, List -> list, etc.).
 
-                                            Args:
-                                            content: The Python file content
+        Args:
+        content: The Python file content
 
-                                            Returns:
-                                            str: The fixed content
-                                            """
-                                            # Regular expression to find typing imports
-                                            pattern = r"from\s+typing\s+import\s+(
-                                                [^#\n]*)"
+        Returns:
+        str: The fixed content
+        """
+        # Regular expression to find typing imports
+        pattern = r"from\s+typing\s+import\s+([^#\n]*)"
 
-                                            def replace_typing(match):
-                                                imports = match.group(
-                                                    1).split(",
-                                                    ")
-                                                fixed_imports = []
+        def replace_typing(match):
+            imports = match.group(1).split(",")
+            fixed_imports = []
+            for imp in imports:
+                imp = imp.strip()
+                if imp == "Dict":
+                    fixed_imports.append("dict")
+                elif imp == "List":
+                    fixed_imports.append("list")
+                elif imp == "Tuple":
+                    fixed_imports.append("tuple")
+                elif imp == "Set":
+                    fixed_imports.append("set")
+                else:
+                    fixed_imports.append(imp)
+            return f"from typing import {', '.join(fixed_imports)}"
 
-                                                for imp in imports:
-                                                    imp = imp.strip()
-                                                    if imp == "Dict":
-                                                        fixed_imports.append(
-                                                            "dict")
-                                                        elif imp == "List":
-                                                        fixed_imports.append(
-                                                            "list")
-                                                        elif imp == "Tuple":
-                                                        fixed_imports.append(
-                                                            "tuple")
-                                                        elif imp == "Set":
-                                                        fixed_imports.append(
-                                                            "set")
-                                                        else:
-                                                        fixed_imports.append(
-                                                            imp)
+        return re.sub(pattern, replace_typing, content)
 
-                                                    return f"from typing import {', '.join(
-                                                        fixed_imports)}"
+    def _fix_f_string_logging(self, content: str) -> str:
+        """
+        Fix logging statements that use f-strings instead of % formatting.
 
-                                                return re.sub(
-                                                    pattern,
-                                                    replace_typing,
-                                                    content)
+        Args:
+        content: The Python file content
 
-                                                def _fix_f_string_logging(
-                                                    self,
-                                                    content: str) -> str:
-                                                    """
-                                                    Fix logging statements that use f-strings instead of % formatting.
+        Returns:
+        str: The fixed content
+        """
+        # Regular expression to find logging f-strings
+        pattern = r'logger\.(
+            debug|info|warning|error|critical)\(f"([^"]*?)({[^}]*?})([^"]*?)"\)'
 
-                                                    Args:
-                                                    content: The Python file content
+        def replace_logging(match):
+            level, pre, var, post = match.groups()
+            var = var[1:-1]  # Remove the curly braces
+            return f'logger.{level}(
+                "{pre}%s{post}",
+                {var})'
 
-                                                    Returns:
-                                                    str: The fixed content
-                                                    """
-                                                    # Regular expression to find logging f-strings
-                                                    pattern = r'logger\.(
-                                                        debug|info|warning|error|critical)\(f"([^"]*?)({[^}]*?})([^"]*?)"\)'
+        # Apply multiple times to catch nested replacements
+        for _ in range(3):
+            content = re.sub(
+                pattern,
+                replace_logging,
+                content)
 
-                                                    def replace_logging(match):
-                                                        level, pre, var, post = match.groups()
-                                                        var = var[1:-1]  # Remove the curly braces
-                                                    return f'logger.{level}(
-                                                        "{pre}%s{post}",
-                                                        {var})'
+        return content
 
-                                                    # Apply multiple times to catch nested replacements
-                                                    for _ in range(3):
-                                                        content = re.sub(
-                                                            pattern,
-                                                            replace_logging,
-                                                            content)
+    def _fix_indentation(self, content: str) -> str:
+        """
+        Fix indentation issues.
 
-                                                    return content
+        Args:
+        content: The Python file content
 
-                                                    def _fix_indentation(
-                                                        self,
-                                                        content: str) -> str:
-                                                        """
-                                                        Fix indentation issues.
+        Returns:
+        str: The fixed content
+        """
+        try:
+            # Try to parse the content
+            ast.parse(content)
+            return content  # If parsing succeeds, no need to fix indentation
+        except SyntaxError:
+            # If parsing fails, try to fix indentation
+            lines = content.splitlines()
+            fixed_lines = []
+            indent_level = 0
 
-                                                        Args:
-                                                        content: The Python file content
+            for line in lines:
+                stripped = line.strip()
 
-                                                        Returns:
-                                                        str: The fixed content
-                                                        """
-                                                        try:
-                                                            # Try to parse the content
-                                                            ast.parse(content)
-                                                        return content  # If parsing succeeds, no need to fix indentation
-                                                        except SyntaxError:
-                                                            # If parsing fails, try to fix indentation
-                                                            lines = content.splitlines()
-                                                            fixed_lines = []
-                                                            indent_level = 0
+                # Skip empty lines
+                if not stripped:
+                    fixed_lines.append(
+                        "")
+                continue
 
-                                                            for line in lines:
-                                                                stripped = line.strip()
+                # Check for indentation markers
+                if stripped.endswith(
+                    ":"):
+                    fixed_lines.append(
+                        " " * (4 * indent_level) + stripped)
+                    indent_level += 1
+                elif stripped in (
+                    "break",
+                    "continue",
+                    "pass",
+                    "return",
+                    "raise"):
+                    fixed_lines.append(
+                        " " * (4 * indent_level) + stripped)
+                    if indent_level > 0 and not any(
+                        l.strip().startswith(("elif", "else", "except", "finally")) for l in lines[lines.index(line)+1:lines.index(line)+5] if lines.index(line)+5 < len(lines)):
+                        indent_level -= 1
+                    else:
+                        fixed_lines.append(
+                            " " * (4 * indent_level) + stripped)
 
-                                                                # Skip empty lines
-                                                                if not stripped:
-                                                                    fixed_lines.append(
-                                                                        "")
-                                                                continue
-
-                                                                # Check for indentation markers
-                                                                if stripped.endswith(
-                                                                    ":"):
-                                                                    fixed_lines.append(
-                                                                        " " * (4 * indent_level) + stripped)
-                                                                    indent_level += 1
-                                                                    elif stripped in (
-                                                                        "break",
-                                                                        "continue",
-                                                                        "pass",
-                                                                        "return",
-                                                                        "raise"):
-                                                                    fixed_lines.append(
-                                                                        " " * (4 * indent_level) + stripped)
-                                                                    if indent_level > 0 and not any(
-                                                                        l.strip().startswith(("elif", "else", "except", "finally")) for l in lines[lines.index(line)+1:lines.index(line)+5] if lines.index(line)+5 < len(lines)):
-                                                                        indent_level -= 1
-                                                                        else:
-                                                                        fixed_lines.append(
-                                                                            " " * (4 * indent_level) + stripped)
-
-                                                                    return "\n".join(
-                                                                        fixed_lines)
+            return "\n".join(
+                fixed_lines)
 
 
-                                                                    def main() -> None:
-                                                                        """Main function to run the fixer."""
-                                                                        parser = argparse.ArgumentParser(
-                                                                            description="Fix Python 3.11 compatibility issues")
-                                                                        parser.add_argument(
-                                                                            "--directory",
-                                                                            default="/opt/sutazaiapp",
-                                                                            help="Directory to process")
-                                                                        args = parser.parse_args()
+def fix_f_string_syntax(source: str) -> str:
+    """Fix f-string syntax for Python 3.11 compatibility."""
+    try:
+        # Replace old-style f-strings with new syntax
+        source = re.sub(r'f\'([^{]*){(.*?)}([^}]*?)\'', 
+                        lambda m: f'f\'{m.group(1)}{{{m.group(2)}}}{m.group(3)}\'', 
+                        source)
+        return source
+    except Exception as e:
+        print(f"Error fixing f-string: {e}")
+        return source
 
-                                                                        fixer = Python311CompatibilityFixer(
-                                                                            args.directory)
-                                                                        fixer.fix_all_files()
+def fix_indentation(source: str) -> str:
+    """Correct indentation issues."""
+    try:
+        lines = source.split('\n')
+        fixed_lines = []
+        current_indent = 0
+        for line in lines:
+            stripped = line.lstrip()
+            if stripped:
+                indent = len(line) - len(stripped)
+                if indent > current_indent:
+                    current_indent = indent
+                elif indent < current_indent:
+                    current_indent = indent
+                fixed_lines.append(' ' * current_indent + stripped)
+            else:
+                fixed_lines.append(line)
+        return '\n'.join(fixed_lines)
+    except Exception as e:
+        print(f"Error fixing indentation: {e}")
+        return source
 
+def fix_typing_imports(source: str) -> str:
+    """Fix deprecated typing imports."""
+    typing_map = {
+        "Dict": "dict",
+        "List": "list", 
+        "Tuple": "tuple", 
+        "Set": "set"
+    }
+    
+    def replace_typing(match):
+        imports = match.group(1).split(",")
+        fixed_imports = [typing_map.get(imp.strip(), imp.strip()) for imp in imports]
+        return f"from typing import {', '.join(fixed_imports)}"
+    
+    pattern = r"from\s+typing\s+import\s+([^#\n]*)"
+    return re.sub(pattern, replace_typing, source)
 
-                                                                        if __name__ == "__main__":
-                                                                            main()
+def process_file(filepath: str) -> bool:
+    """Process and fix a single Python file."""
+    try:
+        with open(filepath, 'r') as f:
+            source = f.read()
+        
+        # Apply fixes
+        source = fix_f_string_syntax(source)
+        source = fix_indentation(source)
+        source = fix_typing_imports(source)
+        
+        # Validate syntax
+        try:
+            ast.parse(source)
+        except SyntaxError as e:
+            print(f"Syntax error in {filepath}: {e}")
+            return False
+        
+        # Write back to file
+        with open(filepath, 'w') as f:
+            f.write(source)
+        
+        return True
+    except Exception as e:
+        print(f"Error processing {filepath}: {e}")
+        return False
+
+def find_python_files(directory: str) -> List[str]:
+    """Find all Python files in a directory."""
+    python_files = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py'):
+                python_files.append(os.path.join(root, file))
+    return python_files
+
+def main():
+    """Main function to process Python files."""
+    base_dir = '/opt/sutazaiapp'
+    directories_to_check = [
+        'scripts', 
+        'ai_agents', 
+        'backend', 
+        'model_management', 
+        'core_system'
+    ]
+    
+    total_files = 0
+    fixed_files = 0
+    
+    for subdir in directories_to_check:
+        full_path = os.path.join(base_dir, subdir)
+        python_files = find_python_files(full_path)
+        
+        for file in python_files:
+            total_files += 1
+            if process_file(file):
+                fixed_files += 1
+    
+    print(f"Processed {total_files} files, successfully fixed {fixed_files} files.")
+
+if __name__ == '__main__':
+    main()

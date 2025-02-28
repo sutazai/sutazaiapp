@@ -1,10 +1,10 @@
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
-from backend.services.code_generation import CodeGenerationService
 from backend.services.auth import validate_otp  # From Phase 3 OTP validation
+from backend.services.code_generation import CodeGenerationService
 
 router = APIRouter(prefix="/code", tags=["Code Generation"])
 
@@ -56,7 +56,7 @@ async def generate_code(request: CodeGenerationRequest, background_tasks: Backgr
 
         # Generate code
         result = code_gen_service.generate_code(
-            specification=request.specification, model_name=request.model_name, language=request.language
+            specification=request.specification, model_name=request.model_name, language=request.language,
         )
 
         # Check for generation errors
@@ -64,7 +64,7 @@ async def generate_code(request: CodeGenerationRequest, background_tasks: Backgr
             return CodeGenerationResponse(success=False, error=result["error"])
 
         return CodeGenerationResponse(
-            success=True, generated_code=result["code"], security_warnings=result["security_warnings"]
+            success=True, generated_code=result["code"], security_warnings=result["security_warnings"],
         )
 
     except Exception as e:

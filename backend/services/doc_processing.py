@@ -1,10 +1,10 @@
-import os
 import json
 import logging
-from typing import Dict, Any
+import os
+from typing import Any, Dict
 
-import fitz  # PyMuPDF
 import docx2txt
+import fitz  # PyMuPDF
 from loguru import logger
 
 
@@ -83,7 +83,7 @@ class DocumentParser:
                         "text": text,
                         "num_words": len(text.split()),
                         "num_characters": len(text),
-                    }
+                    },
                 )
 
             # Save parsed content
