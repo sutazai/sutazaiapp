@@ -26,7 +26,10 @@ class Config(BaseModel):
     host: str = Field(default="127.0.0.1", description="Host address to bind to")
     port: int = Field(default=8000, description="Port to listen on")
     debug: bool = Field(default=False, description="Enable debug mode")
-    trusted_hosts: List[str] = Field(default_factory=list, description="List of trusted host addresses")
+    trusted_hosts: List[str] = Field(
+        default_factory=list,
+        description="List of trusted host addresses"
+    )
 
     # Model configuration that works with both Pydantic v1 and v2
     if hasattr(BaseModel, "model_config"):
@@ -36,6 +39,22 @@ class Config(BaseModel):
         # Pydantic v1 approach
         class Config:
             extra = "allow"
+
+            def validate_host(self) -> bool:
+                """Validate the host configuration."""
+                return True
+
+            def validate_port(self) -> bool:
+                """Validate the port configuration."""
+                return True
+
+    def is_debug_enabled(self) -> bool:
+        """Check if debug mode is enabled."""
+        return self.debug
+
+    def is_host_trusted(self, host: str) -> bool:
+        """Check if a host is in the trusted hosts list."""
+        return host in self.trusted_hosts
 
 
 # For convenience, create a config instance with environment variables

@@ -34,6 +34,26 @@ class HealthStatus(BaseModel):
         """
         return self.status == "healthy"
 
+    def get_status_description(self) -> str:
+        """
+        Get a human-readable description of the health status.
+
+        Returns:
+            str: A description of the current health status
+        """
+        if self.check_health():
+            return "The system is functioning normally"
+        return "The system is experiencing issues"
+
+    def is_critical(self) -> bool:
+        """
+        Check if the current status indicates a critical issue.
+
+        Returns:
+            bool: True if the status indicates a critical issue, False otherwise
+        """
+        return self.status in ("critical", "error", "failed")
+
 
 @health_router.get("/health", response_model=HealthStatus, tags=["health"])
 async def get_health() -> HealthStatus:

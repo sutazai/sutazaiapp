@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Minimal API routes for the SutazAI backend."""
+"""
+API Routes Module for SutazAI Backend
+
+Provides centralized routing configuration and management.
+"""
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
@@ -22,6 +26,45 @@ class ApiStatus(BaseModel):
     model_config = {
         "json_schema_extra": {"example": {"status": "running", "version": "0.1.0"}},
     }
+
+    def is_running(self) -> bool:
+        """
+        Check if the API is in running state.
+
+        Returns:
+            bool: True if the API is running, False otherwise
+        """
+        return self.status.lower() == "running"
+
+    def get_version_info(self) -> dict[str, str]:
+        """
+        Get detailed version information.
+
+        Returns:
+            dict[str, str]: Dictionary containing version details
+        """
+        major, minor, patch = self.version.split(".")
+        return {
+            "version": self.version,
+            "major": major,
+            "minor": minor,
+            "patch": patch,
+        }
+
+    def get_status_description(self) -> str:
+        """
+        Get a human-readable description of the API status.
+
+        Returns:
+            str: A description of the current API status
+        """
+        status_map = {
+            "running": "The API is operational and accepting requests",
+            "starting": "The API is currently starting up",
+            "stopping": "The API is shutting down",
+            "maintenance": "The API is undergoing maintenance",
+        }
+        return status_map.get(self.status.lower(), "Unknown API status")
 
 
 def get_api_version() -> str:
@@ -77,3 +120,61 @@ def get_info() -> dict[str, object]:
 
 
 # Additional API routes can be defined here as needed.
+
+
+class APIRouteConfig(BaseModel):
+    """
+    Configuration class for API routes.
+    """
+
+    enabled_routes: dict[str, bool] = Field(
+        default_factory=lambda: {"status": True, "info": True},
+        description="Dictionary of route names and their enabled status"
+    )
+    route_prefix: str = Field(
+        default="/api/v1",
+        description="Default route prefix for the API"
+    )
+
+    def get_route_prefix(self) -> str:
+        """
+        Get the default route prefix for the API.
+
+        Returns:
+            str: The default route prefix.
+        """
+        return self.route_prefix
+
+    def is_route_enabled(self, route_name: str) -> bool:
+        """
+        Check if a specific route is enabled.
+
+        Args:
+            route_name: Name of the route to check.
+
+        Returns:
+            bool: True if the route is enabled, False otherwise.
+        """
+        return self.enabled_routes.get(route_name, True)
+
+    def enable_route(self, route_name: str) -> None:
+        """
+        Enable a specific route.
+
+        Args:
+            route_name: Name of the route to enable.
+        """
+        self.enabled_routes[route_name] = True
+
+    def disable_route(self, route_name: str) -> None:
+        """
+        Disable a specific route.
+
+        Args:
+            route_name: Name of the route to disable.
+        """
+        self.enabled_routes[route_name] = False
+
+
+# Create an instance of the route configuration
+route_config = APIRouteConfig()

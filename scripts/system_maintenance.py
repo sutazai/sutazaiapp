@@ -26,9 +26,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler(
-            os.getenv("LOG_FILE_PATH", "/opt/sutazaiapp/logs/maintenance.log")
-        ),
+        logging.FileHandler(os.getenv("LOG_FILE_PATH", "/opt/sutazaiapp/logs/maintenance.log")),
         logging.StreamHandler(),
     ],
 )
@@ -196,4 +194,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("Maintenance script stopped by user")
         sys.exit(0)
-                                                    

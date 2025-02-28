@@ -4,6 +4,7 @@ SutazAI Backend Main Module
 This module provides the main FastAPI application instance and core middleware.
 """
 
+import asyncio
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
@@ -68,8 +69,8 @@ async def log_requests(request: Request, call_next: Callable[[Request], Awaitabl
         response = await call_next(request)
         logger.info(f"Response status: {response.status_code}")
         return response
-    except Exception as e:
-        logger.exception(f"Unhandled exception in middleware: {e}")
+    except Exception as error:
+        logger.exception(f"Unhandled exception in middleware: {error}")
         raise
 
 
@@ -107,9 +108,20 @@ async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
     )
 
 
+async def initialize_backend() -> None:
+    """Initialize the backend with any necessary setup."""
+    try:
+        # Simulate some backend initialization process
+        await asyncio.sleep(1)
+    except Exception as initialization_error:
+        logger.error(f"Backend initialization failed: {initialization_error}")
+        raise
+
+
 if __name__ == "__main__":
     # Use 127.0.0.1 instead of 0.0.0.0 for development to avoid exposing
     # In production, this should be controlled by environment variables
+    asyncio.run(initialize_backend())
     uvicorn.run(
         "backend.backend_main:app",
         host="127.0.0.1",  # Localhost only, more secure than 0.0.0.0
