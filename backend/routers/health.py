@@ -5,49 +5,66 @@ Health Router Module for the SutazAI Backend.
 This module provides an endpoint to check the health status of the application.
 """
 
+from functools import lru_cache
+from typing import Dict
+
 from fastapi import APIRouter, Response
+from fastapi_cache.decorator import cache
 from pydantic import BaseModel, Field
 
 health_router: APIRouter = APIRouter()
 
 
-class HealthStatus(BaseModel):    """
+class HealthStatus(BaseModel):
+    """
     Pydantic model representing the health status.
 
-    Attributes:    status: The current health status string
+    Attributes:
+    status: The current health status string
     """
 
     status: str = Field(..., description="Current health status")
 
-    class Config:        json_schema_extra = {"example": {"status": "healthy"}}
+    model_config = {
+    "json_schema_extra": {"example": {"status": "healthy"}},
+    "frozen": True,  # Make the model immutable for better caching
+    }
 
-        def check_health(self) -> bool:            """
-            Check if the status indicates a healthy state.
-
-            Returns:            bool: True if healthy, False otherwise
-            """
+    @property
+    def is_healthy(self) -> bool:
+        """Check if the status indicates a healthy state."""
         return self.status == "healthy"
 
-        def get_status_description(self) -> str:            """
-            Get a human-readable description of the health status.
-
-            Returns:            str: A description of the current health status
-            """
-            if self.check_health():            return "The system is functioning normally"
+    @property
+    def status_description(self) -> str:
+        """Get a human-readable description of the health status."""
+        if self.is_healthy:
+            return "The system is functioning normally"
         return "The system is experiencing issues"
 
-        def is_critical(self) -> bool:            """
-            Check if the current status indicates a critical issue.
-
-            Returns:            bool: True if the status indicates a critical issue, False otherwise
-            """
+    @property
+    def is_critical(self) -> bool:
+        """Check if the current status indicates a critical issue."""
         return self.status in ("critical", "error", "failed")
 
-        @health_router.get("/health", response_model=HealthStatus,
-                        response_model_exclude_unset=True, tags=["health"])
-        async def get_health() -> Response:        """
-        Health check endpoint.
 
-        Returns:        Response: The current health status wrapped in a Response.
-        """
-    return Response(content=HealthStatus(status="healthy").json())
+    @lru_cache(maxsize=1)
+    def get_cached_health_status() -> HealthStatus:
+        """Get a cached health status instance."""
+        return HealthStatus(status="healthy")
+
+
+    @health_router.get(
+    "/health",
+    response_model=HealthStatus,
+    response_model_exclude_unset=True,
+    tags=["health"],
+    )
+    @cache(expire=30)  # Cache health status for 30 seconds
+    async def get_health() -> Dict[str, str]:
+    """
+    Health check endpoint.
+    Uses both Redis caching and local LRU cache for optimal performance.
+    """
+    status = get_cached_health_status()
+    return {"status": status.status}

@@ -1,0 +1,20 @@
+# Monitoring Configuration
+
+monitoring_interval: 300  # Check every 5 minutes instead of every minute
+critical_scripts: []     # Don't monitor any scripts by default
+
+performance_thresholds:
+  cpu_max: 50.0         # Lower CPU threshold
+  memory_max: 70.0      # Lower memory threshold
+  process_cpu_max: 80.0
+  max_process_duration: 3600  # 1 hour in seconds
+
+logging_config:
+  level: "INFO"
+  max_bytes: 5242880    # 5MB max log file size
+  backup_count: 3       # Keep fewer backup files
+
+optimization:
+  enabled: false        # Disable automatic optimization
+  torch_workers: 1      # Use only 1 worker for PyTorch
+  max_concurrent_tasks: 2 

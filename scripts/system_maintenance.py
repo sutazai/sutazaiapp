@@ -1,202 +1,130 @@
 #!/usr/bin/env python3.11
 """
-Comprehensive System Maintenance Module for SutazAI
-
-This script provides advanced system maintenance capabilities,
-including log rotation, disk space monitoring, and backup management.
+System Maintenance Module
+Handles system maintenance tasks including log rotation and disk space monitoring.
 """
-
 import logging
 import os
-import shutil
-from datetime import datetime
-from typing import List, Optional
+from typing import Dict, Optional
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("/opt/sutazaiapp/logs/system_maintenance.log"),
-    ],
+    format="%(asctime)s - %(levelname)s: %(message)s",
 )
+logger = logging.getLogger(__name__)
 
 
-class SystemMaintenance:    """
+class SystemMaintenance:
+    """
     Handles comprehensive system maintenance tasks for SutazAI.
-
-    Provides methods for:    - Disk space monitoring
+    Provides methods for:
+    - Disk space monitoring
     - Log file rotation
-    - Backup management
     """
 
-    def __init__(self, base_path: str = "/opt/sutazaiapp"):        """
+    def __init__(self, base_path: str = "/opt/sutazaiapp"):
+        """
         Initialize the system maintenance handler.
-
-        Args:        base_path: Base directory path for the application
+        Args:
+            base_path: Base directory path for the application
         """
         self.logger = logging.getLogger(__name__)
         self.base_path = base_path
         self.log_dir = os.path.join(base_path, "logs")
-        self.backup_dir = os.path.join(base_path, "backups")
-
-        # Ensure required directories exist
         os.makedirs(self.log_dir, exist_ok=True)
-        os.makedirs(self.backup_dir, exist_ok=True)
 
-        def check_disk_space(self, min_space_gb: float = 5.0) -> bool:            """
-            Check if available disk space meets minimum requirements.
+    def check_disk_space(self) -> Dict[str, float]:
+        """
+        Check disk space usage.
+        Returns:
+            Dictionary containing disk space metrics
+        """
+        try:
+            disk_info = os.statvfs(self.base_path)
+            total = disk_info.f_blocks * disk_info.f_frsize
+            free = disk_info.f_bfree * disk_info.f_frsize
+            used = total - free
 
-            Args:            min_space_gb: Minimum required disk space in GB
+            return {
+                "total_gb": total / (1024**3),
+                "used_gb": used / (1024**3),
+                "free_gb": free / (1024**3),
+                "usage_percent": (used / total) * 100,
+            }
+        except Exception as e:
+            self.logger.error("Failed to check disk space: %s", e)
+            return {}
 
-            Returns:            bool: True if sufficient space available, False otherwise
-            """
-            try:                stat = os.statvfs(self.base_path)
-                available_gb = (stat.f_bavail * stat.f_frsize) / (1024**3)
+    def rotate_logs(
+        self,
+        max_size_mb: int = 100,
+        max_log_files: int = 5,
+    ) -> None:
+        """
+        Rotate log files that exceed maximum size.
+        Args:
+            max_size_mb: Maximum log file size in MB
+            max_log_files: Maximum number of log files to keep
+        """
+        try:
+            for root, _, files in os.walk(self.log_dir):
+                for file in files:
+                    if not file.endswith(".log"):
+                        continue
 
-                if available_gb < min_space_gb:                    self.logger.warning(
-                        "Low disk space: %.2f GB available, %.2f GB required",
-                        available_gb,
-                        min_space_gb,
-                    )
-                return False
+                    file_path = os.path.join(root, file)
+                    file_size = os.path.getsize(file_path) / (1024 * 1024)  # Convert to MB
 
-                self.logger.info(
-                    "Sufficient disk space: %.2f GB available",
-                    available_gb,
-                )
-            return True
+                    if file_size > max_size_mb:
+                        # Rotate existing log files
+                        for i in range(max_log_files - 1, 0, -1):
+                            old_path = f"{file_path}.{i}"
+                            new_path = f"{file_path}.{i + 1}"
+                            if os.path.exists(old_path):
+                                os.rename(old_path, new_path)
 
-            except Exception as e:                self.logger.error("Failed to check disk space: %s", str(e))
-            return False
+                        # Rename current log file
+                        os.rename(file_path, f"{file_path}.1")
 
-            def rotate_logs(
-                    self,
-                    max_size_mb: int = 100,
-                    max_backup_count: int = 5) -> None:                """
-                Rotate log files that exceed maximum size.
+                        # Create new empty log file
+                        open(file_path, "w").close()
+                        self.logger.info("Rotated log file: %s", file_path)
 
-                Args:                max_size_mb: Maximum log file size in MB
-                max_backup_count: Maximum number of backup log files to keep
-                """
-                try:                    log_files = [
-                        os.path.join(self.log_dir, f)
-                        for f in os.listdir(self.log_dir)
-                        if os.path.isfile(os.path.join(self.log_dir, f))
-                    ]
+        except Exception as e:
+            self.logger.error("Failed to rotate logs: %s", e)
 
-                    # Sort log files by modification time
-                    log_files.sort(key=os.path.getmtime)
+    def run_maintenance(self) -> None:
+        """Execute all maintenance tasks."""
+        self.logger.info("Starting system maintenance tasks...")
 
-                    for log_path in log_files:                        try:                            if os.path.getsize(log_path) > (
-                                    max_size_mb * 1024 * 1024):                                self.archive_log(
-                                    log_path, max_backup_count)
-                                except Exception as file_error:                                    self.logger.error(
-                                        f"Error processing log file {log_path}: {file_error}")
+        # Check disk space
+        disk_space = self.check_disk_space()
+        if disk_space:
+            self.logger.info(
+                "Disk Status: %.1f%% used (%.1f/%.1f GB free)",
+                disk_space["usage_percent"],
+                disk_space["free_gb"],
+                disk_space["total_gb"],
+            )
 
-                                    except Exception as e:                                        self.logger.error(
-                                            f"Failed to rotate logs: {e}")
+            # Warn if disk usage is high
+            if disk_space["usage_percent"] > 85:
+                self.logger.warning("High disk usage detected!")
 
-                                        def archive_log(
-                                            self, log_path: str, max_backup_count: int = 5) -> None:                                            """
-                                                    Archive a log file by moving it to the backup directory.
+        # Rotate logs
+        self.rotate_logs()
 
-                                                    Args:                                                    log_path: Path to the log file to archive
-                                                    max_backup_count: Maximum number of backup log files to keep
-                                                    """
-                                                try:                                                    filename = os.path.basename(
-                                                        log_path)
-                                                    timestamp = self.get_timestamp()
-                                                    archive_path = os.path.join(
-                                                        self.backup_dir,
-                                                        f"{filename}.{timestamp}",
-                                                    )
+        self.logger.info("System maintenance completed")
 
-                                                    # Move the log file to
-                                                    # backup
-                                                    shutil.move(
-                                                        log_path, archive_path)
-                                                    self.logger.info(
-                                                        f"Archived log file: {log_path} -> {archive_path}")
 
-                                                    # Manage backup log files
-                                                    self._manage_backup_logs(
-                                                        filename, max_backup_count)
+def main() -> None:
+    """Run system maintenance."""
+    try:
+        maintenance = SystemMaintenance()
+        maintenance.run_maintenance()
+    except Exception as e:
+        logger.error("System maintenance failed: %s", e)
 
-                                                    except Exception as e:                                                        self.logger.error(
-                                                            f"Failed to archive log file {log_path}: {e}")
 
-                                                        def _manage_backup_logs(
-                                                                self,
-                                                                base_filename: str,
-                                                                max_backup_count: int) -> None:                                                            """
-                                                                Manage backup log files, keeping only the most recent ones.
-
-                                                                Args:                                                                base_filename: Base name of the log file
-                                                                max_backup_count: Maximum number of backup log files to keep
-                                                                """
-                                                            try:                                                                backup_logs = [
-                                                                    os.path.join(
-                                                                        self.backup_dir, f)
-                                                                    for f in os.listdir(self.backup_dir)
-                                                                    if f.startswith(base_filename)
-                                                                ]
-
-                                                                # Sort backup
-                                                                # logs by
-                                                                # modification
-                                                                # time
-                                                                backup_logs.sort(
-                                                                    key=os.path.getmtime, reverse=True)
-
-                                                                # Remove
-                                                                # excess
-                                                                # backup
-                                                                # logs
-                                                                for log_path in backup_logs[max_backup_count:]:                                                                    try:                                                                        os.remove(
-                                                                            log_path)
-                                                                        self.logger.info(
-                                                                            f"Removed old backup log: {log_path}")
-                                                                        except Exception as remove_error:                                                                            self.logger.error(
-                                                                                f"Failed to remove backup log {log_path}: {remove_error}")
-
-                                                                            except Exception as e:                                                                                self.logger.error(
-                                                                                    f"Failed to manage backup logs: {e}")
-
-                                                                                @staticmethod
-                                                                                def get_timestamp() -> str:                                                                                        """
-                                                                                                Get current timestamp string.
-
-                                                                                                Returns:                                                                                                str: Formatted timestamp string
-                                                                                                """
-                                                                                    return datetime.now().strftime("%Y%m%d_%H%M%S")
-
-                                                                                    def perform_maintenance(
-                                                                                            self) -> None:                                                                                        """
-                                                                                                Perform comprehensive system maintenance tasks.
-                                                                                                """
-                                                                                        self.logger.info(
-                                                                                            "Starting system maintenance...")
-
-                                                                                        try:                                                                                            # Check
-                                                                                            # disk
-                                                                                            # space
-                                                                                            if not self.check_disk_space():                                                                                                self.logger.warning(
-                                                                                                    "Low disk space detected. Consider cleaning up.")
-
-                                                                                                # Rotate
-                                                                                                # logs
-                                                                                                self.rotate_logs()
-
-                                                                                                self.logger.info(
-                                                                                                    "System maintenance completed successfully.")
-                                                                                                except Exception as e:                                                                                                    self.logger.error(
-                                                                                                        f"System maintenance failed: {e}")
-
-                                                                                                    def main() -> None:                                                                                                        """Main entry point for system maintenance."""
-                                                                                                        try:                                                                                                            maintenance = SystemMaintenance()
-                                                                                                            maintenance.perform_maintenance()
-                                                                                                            except Exception as e:                                                                                                                logging.exception(
-                                                                                                                    f"System maintenance script failed: {e}")
-
-                                                                                                                if __name__ == "__main__":                                                                                                                    main()
+if __name__ == "__main__":
+    main()

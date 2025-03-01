@@ -1,130 +1,123 @@
 #!/opt/sutazaiapp/venv/bin/python3
 import logging
 import os
-import shutil
 import subprocess
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s: %(message)s")
+    format="%(asctime)s - %(levelname)s: %(message)s",
+)
 logger = logging.getLogger(__name__)
 
 
-class AdvancedSystemMaintenance:    def __init__(self, project_root: str):        # Ensure project_root is set first
+class AdvancedSystemMaintenance:
+    def __init__(self, project_root: str):
+        # Ensure project_root is set first
         self.project_root = project_root
 
-        # Create backup and log directory paths
-        self.backup_dir = os.path.join(project_root, 'misc', 'system_backups')
-        self.log_dir = os.path.join(project_root, 'logs')
+        # Create log directory path
+        self.log_dir = os.path.join(project_root, "logs")
 
-        # Ensure backup and log directories exist
-        try:            os.makedirs(self.backup_dir, exist_ok=True)
+        # Ensure log directory exists
+        try:
             os.makedirs(self.log_dir, exist_ok=True)
-        except Exception as e:            logger.error(f"Failed to create backup or log directories: {e}")
-            # Fallback to temporary directories if creation fails
-            import tempfile
-            self.backup_dir = tempfile.mkdtemp(prefix='sutazai_backups_')
-            self.log_dir = tempfile.mkdtemp(prefix='sutazai_logs_')
-            logger.warning(
-                f"Using temporary directories: {self.backup_dir}, {self.log_dir}")
-
-    def create_comprehensive_backup(self) -> str:        """Create a comprehensive backup of the entire project."""
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_name = f"sutazai_backup_{timestamp}"
-        backup_path = os.path.join(self.backup_dir, backup_name)
-
-        try:            # Use tar for efficient compression
-            subprocess.run([
-                "tar",
-                "-czf",
-                f"{backup_path}.tar.gz",
-                "-C",
-                self.project_root,
-                ".",
-            ], check=True)
-
-            logger.info(f"Comprehensive backup created: {backup_path}.tar.gz")
-            return backup_path
-        except subprocess.CalledProcessError as e:            logger.error(f"Backup creation failed: {e}")
-            return ""
-
-    def clean_old_backups(self, days_to_keep: int = 30):        """Remove backups older than specified days."""
-        current_time = datetime.now()
-
-        for backup in os.listdir(self.backup_dir):            backup_path = os.path.join(self.backup_dir, backup)
-
-            # Skip if not a backup file
-            if not backup.startswith(
-                    "sutazai_backup_") or not backup.endswith(".tar.gz"):                continue
-
-            try:                # Extract timestamp from filename
-                timestamp_str = backup.split("_", 2)[2].split(".")[0]
-                backup_time = datetime.strptime(timestamp_str, "%Y%m%d_%H%M%S")
-
-                # Calculate age of backup
-                backup_age = (current_time - backup_time).days
-
-                if backup_age > days_to_keep:                    os.remove(backup_path)
-                    logger.info(f"Removed old backup: {backup}")
-            except Exception as e:                logger.error(f"Error processing backup {backup}: {e}")
+        except Exception as e:
+            logger.error(f"Failed to create log directory: {e}")
+            # Use a temporary directory as fallback
+            self.log_dir = os.path.join("/tmp", "sutazai_logs")
+            os.makedirs(self.log_dir, exist_ok=True)
+            logger.warning(f"Using temporary directory: {self.log_dir}")
 
     def rotate_log_files(
         self,
         max_log_size_mb: int = 100,
-        max_log_files: int = 5
-    ):        """Rotate and compress log files."""
-        for log_file in os.listdir(self.log_dir):            log_path = os.path.join(self.log_dir, log_file)
+        max_log_files: int = 5,
+    ):
+        """Rotate log files that exceed the size limit."""
+        try:
+            for root, _, files in os.walk(self.log_dir):
+                for file in files:
+                    if not file.endswith(".log"):
+                        continue
 
-            # Check log file size
-            if os.path.getsize(log_path) > max_log_size_mb * 1024 * 1024:                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                rotated_log = f"{log_file}.{timestamp}"
+                    file_path = os.path.join(root, file)
+                    file_size = os.path.getsize(file_path) / (1024 * 1024)  # Convert to MB
 
-                # Compress old log
-                subprocess.run(["gzip", log_path], check=True)
+                    if file_size > max_log_size_mb:
+                        # Rotate existing log files
+                        for i in range(max_log_files - 1, 0, -1):
+                            old_path = f"{file_path}.{i}"
+                            new_path = f"{file_path}.{i + 1}"
+                            if os.path.exists(old_path):
+                                os.rename(old_path, new_path)
 
-                # Remove excess log files
-                log_files = sorted(
-                    [f for f in os.listdir(self.log_dir)
-                    if f.startswith(log_file)],
-                    reverse=True,
-                )
-                for old_log in log_files[max_log_files:]:                    os.remove(os.path.join(self.log_dir, old_log))
+                        # Rename current log file
+                        os.rename(file_path, f"{file_path}.1")
 
-    def check_disk_health(self) -> Dict[str, Any]:        """Check disk health and usage."""
-        try:            disk_usage = shutil.disk_usage(self.project_root)
+                        # Create new empty log file
+                        open(file_path, "w").close()
+                        logger.info(f"Rotated log file: {file_path}")
+
+        except Exception as e:
+            logger.error(f"Log rotation failed: {e}")
+
+    def check_disk_health(self) -> Dict[str, Any]:
+        """Check disk space and health metrics."""
+        try:
+            disk_info = os.statvfs(self.project_root)
+            total_space = disk_info.f_blocks * disk_info.f_frsize
+            free_space = disk_info.f_bfree * disk_info.f_frsize
+            used_space = total_space - free_space
+            usage_percent = (used_space / total_space) * 100
+
             return {
-                "total": disk_usage.total,
-                "used": disk_usage.used,
-                "free": disk_usage.free,
-                "percent_used": disk_usage.used / disk_usage.total * 100,
+                "total_gb": total_space / (1024**3),
+                "used_gb": used_space / (1024**3),
+                "free_gb": free_space / (1024**3),
+                "usage_percent": usage_percent,
             }
-        except Exception as e:            logger.error(f"Disk health check failed: {e}")
+        except Exception as e:
+            logger.error(f"Disk health check failed: {e}")
             return {}
 
-    def run_maintenance(self):        """Run comprehensive system maintenance."""
-        # Create comprehensive backup
-        self.create_comprehensive_backup()
+    def run_maintenance(self):
+        """Run all maintenance tasks."""
+        logger.info("Starting system maintenance tasks...")
 
-        # Clean old backups
-        self.clean_old_backups()
+        try:
+            # Rotate log files
+            self.rotate_log_files()
 
-        # Rotate log files
-        self.rotate_log_files()
+            # Check disk health
+            disk_status = self.check_disk_health()
+            if disk_status:
+                logger.info(
+                    "Disk Status: %.1f%% used (%.1f/%.1f GB free)",
+                    disk_status["usage_percent"],
+                    disk_status["free_gb"],
+                    disk_status["total_gb"],
+                )
 
-        # Check disk health
-        disk_health = self.check_disk_health()
-        if disk_health:            logger.info("Disk Health Status:")
-            for key, value in disk_health.items():                logger.info(f"{key}: {value}")
+                # Warn if disk usage is high
+                if disk_status["usage_percent"] > 85:
+                    logger.warning("High disk usage detected!")
 
-            # Alert if disk usage is high
-            if disk_health["percent_used"] > 90:                logger.warning("CRITICAL: Disk usage exceeds 90%!")
-
-
-def main():    project_root = "/opt/sutazaiapp"
-    maintenance = AdvancedSystemMaintenance(project_root)
-    maintenance.run_maintenance()
+            logger.info("System maintenance completed")
+        except Exception as e:
+            logger.error(f"Maintenance tasks failed: {e}")
 
 
-if __name__ == "__main__":    main()
+def main():
+    """Run system maintenance."""
+    try:
+        maintenance = AdvancedSystemMaintenance("/opt/sutazaiapp")
+        maintenance.run_maintenance()
+    except Exception as e:
+        logger.error(f"System maintenance failed: {e}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
