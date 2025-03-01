@@ -38,10 +38,10 @@ class PythonCompatibilityManager:
             Boolean indicating version compatibility
         """
         current_major, current_minor = map(
-            int, self.current_version.split(".")
+            int, self.current_version.split("."),
         )
         target_major, target_minor = map(
-            int, self.target_version.split(".")
+            int, self.target_version.split("."),
         )
 
         return (current_major > target_major) or (
@@ -69,7 +69,7 @@ class PythonCompatibilityManager:
             return []
 
     def check_package_compatibility(
-        self, package_name: str
+        self, package_name: str,
     ) -> Optional[Dict[str, Any]]:
         """
         Check compatibility of a specific package.

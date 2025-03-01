@@ -3,7 +3,7 @@ import importlib.util
 import logging
 import os
 import sys
-from typing import List, Callable
+from typing import Callable, List
 
 # Configure logging
 logging.basicConfig(
