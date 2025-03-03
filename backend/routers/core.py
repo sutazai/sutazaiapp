@@ -1,183 +1,155 @@
-#!/usr/bin/env python3
-"""
-Core Router Module for SutazAI Backend
+#!/usr/bin/env python3.11
+"""Core Router Module
 
-Provides core routing and system status endpoints with
-comprehensive type annotations and error handling.
+This module provides the core API endpoints for the SutazAI backend.
 """
 
-from __future__ import annotations
+from typing import Any, Dict, List
 
-import logging
-from functools import lru_cache
+from fastapi import APIRouter, HTTPException
+from loguru import logger
 
-# Standard Library Imports
-from typing import Any, Callable, Dict, Generic, Type, TypeVar
+from ai_agents.agent_factory import AgentFactory
+from ai_agents.document_processor import DocumentProcessor
 
-# Third-Party Library Imports
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import JSONResponse
-from fastapi_cache.decorator import cache
-from pydantic import BaseModel, Field, ValidationError
+# Create router
+core_router = APIRouter()
 
-# HTTP Status Codes
-HTTP_400_BAD_REQUEST = 400
-HTTP_422_UNPROCESSABLE_ENTITY = 422
-HTTP_500_INTERNAL_SERVER_ERROR = 500
-
-# Configure logging
-logger = logging.getLogger(__name__)
-
-# -----------------------------------------------------------------------------
-# Initialize FastAPI Router
-# -----------------------------------------------------------------------------
-core_router: APIRouter = APIRouter()
+# Initialize agent factory
+agent_factory = AgentFactory()
 
 
-# -----------------------------------------------------------------------------
-# Pydantic Model Definitions and Helpers
-# -----------------------------------------------------------------------------
-class SystemStatus(BaseModel):
+@core_router.get("/agents")
+async def list_agents() -> Dict[str, List[str]]:
+    """List available agent types.
+    
+    Returns:
+        Dict containing list of available agent types
     """
-    Pydantic model representing the system status.
-    Provides a standardized way to represent and validate system status.
+    try:
+        available_agents = agent_factory.get_available_agents()
+        return {"agents": list(available_agents.keys())}
+    except Exception as e:
+        logger.error(f"Failed to list agents: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to list available agents",
+        )
+
+
+@core_router.post("/process-document")
+async def process_document(request: Dict[str, Any]) -> Dict[str, Any]:
+    """Process a document using the document processor agent.
+    
+    Args:
+        request: Dictionary containing:
+            - file_path: Path to the document to process
+            - output_format: Desired output format
+            
+    Returns:
+        Dict containing processing results
     """
-
-    status: str = Field(
-    ..., description="Overall system status", min_length=1, max_length=50,
-    )
-
-    model_config = {
-    "json_schema_extra": {"example": {"status": "ok"}},
-    "extra": "forbid",  # Prevent additional fields
-    }
-
-    def model_dump(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
-        """Return the dictionary representation of the model."""
-        if hasattr(self, "dict"):
-            return self.dict(*args, **kwargs)
-        return super().model_dump(*args, **kwargs)
-
-    @property
-    def is_ok(self) -> bool:
-        """Check if the status indicates an OK state."""
-        return self.status.lower() == "ok"
-
-    @property
-    def status_level(self) -> str:
-        """Get the severity level of the current status."""
-        status_lower = self.status.lower()
-        if status_lower == "ok":
-            return "ok"
-        if status_lower in ("warn", "warning"):
-            return "warning"
-        if status_lower in ("err", "error"):
-            return "error"
-        return "critical"
-
-
-    @lru_cache(maxsize=128)
-    def validate_system_status(status_data: Dict[str, Any]) -> SystemStatus:
-        """
-        Validates the input dictionary against the SystemStatus model.
-        Uses LRU cache to avoid repeated validation of identical data.
-        """
-        try:
-            return SystemStatus(**status_data)
-        except ValidationError:
-            raise
-            except Exception as e:
-                raise ValidationError(str(e), model=SystemStatus)
+    try:
+        # Create document processor agent
+        processor = agent_factory.create_agent(
+            "document_processor",
+            config={
+                "input_dir": "data/input",
+                "output_dir": "data/output",
+                "temp_dir": "data/temp",
+            },
+        )
+        
+        # Initialize agent
+        if not processor.initialize():
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to initialize document processor",
+            )
+            
+        # Process document
+        result = processor.execute(request)
+        
+        # Check for errors
+        if result.get("status") == "error":
+            raise HTTPException(
+                status_code=500,
+                detail=result.get("error", "Unknown error"),
+            )
+            
+        return result
+        
+    except Exception as e:
+        logger.error(f"Document processing failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
 
-                # -----------------------------------------------------------------------------
-                # API Endpoints
-                # -----------------------------------------------------------------------------
-                @core_router.get(
-                "/status",
-                response_model=SystemStatus,
-                responses={
-                200: {"description": "Successful response"},
-                400: {"description": "Bad request"},
-                422: {"description": "Validation error"},
-                500: {"description": "Internal server error"},
-                },
-                )
-                @cache(expire=30)  # Cache status for 30 seconds
-                async def get_status(_: Request) -> Dict[str, Any]:
-                """Get the current system status."""
-                try:
-                    # Get status data (replace with actual implementation)
-                    raw_status = {"status": "ok"}
+@core_router.post("/execute-task")
+async def execute_task(request: Dict[str, Any]) -> Dict[str, Any]:
+    """Execute a task using the specified agent.
+    
+    Args:
+        request: Dictionary containing:
+            - agent_type: Type of agent to use
+            - task: Task details
+            - config: Optional agent configuration
+            
+    Returns:
+        Dict containing task execution results
+    """
+    try:
+        agent_type = request.get("agent_type")
+        if not agent_type:
+            raise HTTPException(
+                status_code=400,
+                detail="agent_type is required",
+            )
+            
+        task = request.get("task")
+        if not task:
+            raise HTTPException(
+                status_code=400,
+                detail="task is required",
+            )
+            
+        # Create agent
+        agent = agent_factory.create_agent(
+            agent_type,
+            config=request.get("config"),
+        )
+        
+        # Initialize agent
+        if not agent.initialize():
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to initialize {agent_type} agent",
+            )
+            
+        # Execute task
+        result = agent.execute(task)
+        
+        # Check for errors
+        if result.get("status") == "error":
+            raise HTTPException(
+                status_code=500,
+                detail=result.get("error", "Unknown error"),
+            )
+            
+        return result
+        
+    except ValueError as e:
+        # Agent type not found
+        raise HTTPException(
+            status_code=404,
+            detail=str(e),
+        )
+    except Exception as e:
+        logger.error(f"Task execution failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
-                    # Validate and cache the status
-                    validated_status = validate_system_status(raw_status)
-                    return validated_status.model_dump()
-
-                except ValidationError as e:
-                    raise HTTPException(
-                    status_code=HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail=str(e),
-                    )
-                    except Exception as e:
-                        logger.exception("Unexpected error: %s", e)
-                        raise HTTPException(
-                        status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-                        detail="An unexpected error occurred",
-                        )
-
-
-                        # -----------------------------------------------------------------------------
-                        # Exception Handlers
-                        # -----------------------------------------------------------------------------
-                        @core_router.exception_handler(HTTPException)
-                        async def custom_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
-                        """Returns a custom JSON response for HTTP exceptions."""
-                        return JSONResponse(
-                    status_code=exc.status_code,
-                    content={
-                    "error": exc.detail,
-                    "status_code": exc.status_code,
-                    },
-                    )
-
-
-                    # -----------------------------------------------------------------------------
-                    # Generic Router Handler
-                    # -----------------------------------------------------------------------------
-                    T = TypeVar("T", bound=BaseModel)
-
-
-                    class RouterHandler(Generic[T]):
-                        """Generic router handler class for working with Pydantic models."""
-
-                        def __init__(self, router: APIRouter, model_type: Type[T]) -> None:
-                            """
-                            Initialize the router handler.
-                            Args:
-                            router: FastAPI router instance
-                            model_type: Pydantic model type
-                            """
-                            self.router = router
-                            self.model_type = model_type
-
-                            def add_exception_handler(
-                                self,
-                                exception_class: Type[Exception],
-                                    handler: Callable[[Request, Exception], JSONResponse],
-                                    ) -> None:
-                                    """
-                                    Add an exception handler to the router.
-                                    Args:
-                                    exception_class: Exception class to handle
-                                        handler: Exception handler function
-                                        """
-                                        self.router.add_exception_handler(exception_class, handler)
-
-                                        def get_router(self) -> APIRouter:
-                                            """Get the FastAPI router instance."""
-                                            return self.router
-
-                                        def get_model_type(self) -> Type[T]:
-                                            """Get the Pydantic model type."""
-                                            return self.model_type

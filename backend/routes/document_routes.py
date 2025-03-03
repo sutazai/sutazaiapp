@@ -1,136 +1,46 @@
-import os
-from typing import Any, Dict
-
-import aiofiles
-from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
-from pydantic import BaseModel, Field
-
-from backend.services.diagram_parser import DiagramParser
-from backend.services.doc_processing import DocumentParser
-
-# Initialize FastAPI router
-router = APIRouter(prefix="/doc", tags=["Document Processing"])
-
-# Initialize parsers
-doc_parser = DocumentParser()
-diagram_parser = DiagramParser()
-
-# Configuration
-UPLOAD_DIR = "/opt/sutazaiapp/doc_data/uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-class ParseResponse(BaseModel):
-    """Standardized parsing response model."""
-
-    success: bool = Field(description="Whether the parsing was successful")
-    message: str = Field(description="Status message or error description")
-    result: Dict[str, Any] = Field(
-    default_factory=dict, description="Parsing result data",
+import osfrom typing import Any, Dictimport aiofilesfrom fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFilefrom pydantic import BaseModel, Fieldfrom backend.services.diagram_parser import DiagramParserfrom backend.services.doc_processing import DocumentParser# Initialize FastAPI routerrouter = APIRouter(prefix="/doc", tags=["Document Processing"])# Initialize parsersdoc_parser = DocumentParser()diagram_parser = DiagramParser()# ConfigurationUPLOAD_DIR = "/opt/sutazaiapp/doc_data/uploads"os.makedirs(UPLOAD_DIR, exist_ok=True)class ParseResponse(BaseModel):    """Standardized parsing response model."""
+success: bool = Field(description="Whether the parsing was successful")
+message: str = Field(description="Status message or error description")
+result: Dict[str, Any] = Field(
+default_factory=dict, description="Parsing result data",
+)
+@router.post("/parse", response_model=ParseResponse)
+async def parse_document(
+background_tasks: BackgroundTasks, file: UploadFile = File(...),
+) -> ParseResponse:
+"""
+Parse uploaded document (PDF/DOCX).
+Args:
+background_tasks: Background tasks runner
+file: Uploaded document file
+Returns:
+ParseResponse with parsing result or error
+"""
+# Validate file extension
+filename = file.filename.lower()
+if not filename.endswith((".pdf", ".docx")):
+    raise HTTPException(
+    status_code=400, detail="Unsupported file type. Use PDF or DOCX.",
     )
-
-
-    @router.post("/parse", response_model=ParseResponse)
-    async def parse_document(
-    background_tasks: BackgroundTasks, file: UploadFile = File(...),
-    ) -> ParseResponse:
-    """
-    Parse uploaded document (PDF/DOCX).
-
-    Args:
-    background_tasks: Background tasks runner
-    file: Uploaded document file
-
-    Returns:
-    ParseResponse with parsing result or error
-    """
-    # Validate file extension
-    filename = file.filename.lower()
-    if not filename.endswith((".pdf", ".docx")):
-        raise HTTPException(
-        status_code=400, detail="Unsupported file type. Use PDF or DOCX.",
-        )
-
-        # Save uploaded file
-        file_path = os.path.join(UPLOAD_DIR, filename)
-        async with aiofiles.open(file_path, "wb") as out_file:
-        content = await file.read()
-        await out_file.write(content)
-
-        async def parse_file() -> Dict[str, Any]:
-        """Parse the uploaded file in the background."""
-        try:
-            if filename.endswith(".pdf"):
-                result = await doc_parser.parse_pdf(file_path)
-                else:
-                    result = await doc_parser.parse_docx(file_path)
-
-                    # Optional: Remove uploaded file after processing
-                    os.remove(file_path)
-                    return result
-                except Exception as e:
-                    return {"error": str(e)}
-
-                background_tasks.add_task(parse_file)
-                return ParseResponse(
-            success=True,
-            message="Document queued for parsing",
-            result={"filename": filename},
-            )
-
-
-            @router.post("/diagram/analyze", response_model=ParseResponse)
-            async def analyze_diagram(
-            background_tasks: BackgroundTasks, file: UploadFile = File(...),
-            ) -> ParseResponse:
-            """
-            Analyze uploaded diagram image.
-
-            Args:
-            background_tasks: Background tasks runner
-            file: Uploaded diagram image
-
-            Returns:
-            ParseResponse with diagram analysis result
-            """
-            # Validate image extensions
-            filename = file.filename.lower()
-            valid_extensions = [".png", ".jpg", ".jpeg", ".bmp", ".tiff"]
-            if not any(filename.endswith(ext) for ext in valid_extensions):
-                raise HTTPException(
-                status_code=400,
-                detail="Unsupported image type. Use PNG, JPG, JPEG, BMP, or TIFF.",
-                )
-
-                # Save uploaded file
-                file_path = os.path.join(UPLOAD_DIR, filename)
-                async with aiofiles.open(file_path, "wb") as out_file:
-                content = await file.read()
-                await out_file.write(content)
-
-                async def analyze_file() -> Dict[str, Any]:
-                """Analyze the uploaded diagram in the background."""
-                try:
-                    result = await diagram_parser.analyze_diagram(file_path)
-                    # Optional: Remove uploaded file after processing
-                    os.remove(file_path)
-                    return result
-                except Exception as e:
-                    return {"error": str(e)}
-
-                background_tasks.add_task(analyze_file)
-                return ParseResponse(
-            success=True,
-            message="Diagram queued for analysis",
-            result={"filename": filename},
-            )
-
-
-            def setup_routes(app) -> None:
-                """
+    # Save uploaded file
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    async with aiofiles.open(file_path, "wb") as out_file:
+    content = await file.read()
+    await out_file.write(content)
+    async def parse_file() -> Dict[str, Any]:
+    """Parse the uploaded file in the background."""
+    try:
+        if filename.endswith(".pdf"):
+            result = await doc_parser.parse_pdf(file_path)
+            else:
+                result = await doc_parser.parse_docx(file_path)
+                # Optional: Remove uploaded file after processing
+                os.remove(file_path)
+                return result
+            except Exception as e:                    return {"error": str(e)}                background_tasks.add_task(parse_file)                return ParseResponse(            success=True,            message="Document queued for parsing",            result={"filename": filename},            )            @router.post("/diagram/analyze", response_model=ParseResponse)            async def analyze_diagram(            background_tasks: BackgroundTasks, file: UploadFile = File(...),            ) -> ParseResponse:            """            Analyze uploaded diagram image.            Args:            background_tasks: Background tasks runner            file: Uploaded diagram image            Returns:            ParseResponse with diagram analysis result            """            # Validate image extensions            filename = file.filename.lower()            valid_extensions = [".png", ".jpg", ".jpeg", ".bmp", ".tiff"]            if not any(filename.endswith(ext) for ext in valid_extensions):                raise HTTPException(                status_code=400,                detail="Unsupported image type. Use PNG, JPG, JPEG, BMP, or TIFF.",                )                # Save uploaded file                file_path = os.path.join(UPLOAD_DIR, filename)                async with aiofiles.open(file_path, "wb") as out_file:                content = await file.read()                await out_file.write(content)                async def analyze_file() -> Dict[str, Any]:                """Analyze the uploaded diagram in the background."""                try:                    result = await diagram_parser.analyze_diagram(file_path)                    # Optional: Remove uploaded file after processing                    os.remove(file_path)                    return result                except Exception as e:                    return {"error": str(e)}                background_tasks.add_task(analyze_file)                return ParseResponse(            success=True,            message="Diagram queued for analysis",            result={"filename": filename},            )            def setup_routes(app) -> None:                """
                 Setup document processing routes.
-
                 Args:
                 app: FastAPI application instance
                 """
                 app.include_router(router)
+

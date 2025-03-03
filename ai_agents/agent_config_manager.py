@@ -1,242 +1,171 @@
-from typing import Dict, Optional
-
 #!/usr/bin/env python3.11
 """Agent Configuration Manager Module
-This module provides functionalities to load, validate, update, and \
-manage configuration files for AI agents.
+
+This module provides the AgentConfigManager class for managing agent configurations.
 """
 
 import json
 import os
-from typing import Any, cast
+from pathlib import Path
+from typing import Any, Dict, Optional
 
-import jsonschema  # type: ignore
-import yaml  # type: ignore
 from loguru import logger
 
 
 class AgentConfigManager:
+    """Manages configuration for AI agents.
+    
+    This class handles:
+    - Loading agent configurations
+    - Validating configurations
+    - Persisting configuration changes
     """
-    Comprehensive Agent Configuration Management System
-
-    Responsibilities:
-    - Load and validate agent configurations
-    - Provide dynamic configuration updates
-    - Ensure configuration integrity
-    - Support multiple configuration formats
-    """
-
-    def __init__(
-        self,
-        config_dir: str = "/opt/sutazaiapp/ai_agents/configs",
-        schema_dir: str = "/opt/sutazaiapp/ai_agents/schemas",
-    ):
-        """
-        Initialize Agent Configuration Manager
-
+    
+    def __init__(self, config_dir: str = "/opt/sutazaiapp/config/agents"):
+        """Initialize the configuration manager.
+        
         Args:
-            config_dir (str): Directory containing agent configurations
-            schema_dir (str): Directory containing JSON schemas for validation
+            config_dir: Directory containing agent configurations
         """
-        self.config_dir = config_dir
-        self.schema_dir = schema_dir
-
-        # Logging configuration
+        self.config_dir = Path(config_dir)
+        self.config_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Set up logging
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
         logger.add(
-            os.path.join(config_dir, "agent_config_manager.log"),
+            log_dir / "agent_config.log",
             rotation="10 MB",
-            level="INFO",
+            level="INFO"
         )
-
-        # Configuration cache
-        self._config_cache: Dict[str, Dict[str, Any]] = {}
-
-    def load_config(self, agent_name: str, config_type: str = "json") -> Dict[str, Any]:
-        """
-        Load configuration for a specific agent
-
+        
+    def load_config(self, agent_type: str) -> Dict[str, Any]:
+        """Load configuration for a specific agent type.
+        
         Args:
-            agent_name (str): Name of the agent
-            config_type (str): Configuration file type (json/yaml)
-
+            agent_type: Type of agent to load configuration for
+            
         Returns:
-            Dict: Loaded and validated configuration
-
+            Dict containing agent configuration
+            
         Raises:
-            FileNotFoundError: If configuration file is missing
-            jsonschema.ValidationError: If configuration fails validation
+            FileNotFoundError: If configuration file doesn't exist
         """
-        # Check cache first
-        if agent_name in self._config_cache:
-            return self._config_cache[agent_name]
-
-        # Determine file path
-        config_filename = f"{agent_name}_config.{config_type}"
-        config_path = os.path.join(self.config_dir, config_filename)
-
-        logger.info("Loading configuration for agent: %s", agent_name)
-
+        config_file = self.config_dir / f"{agent_type}.json"
+        if not config_file.exists():
+            raise FileNotFoundError(f"No configuration found for agent type: {agent_type}")
+            
         try:
-            with open(config_path, encoding="utf-8") as config_file:
-                if config_type == "json":
-                    config = json.load(config_file)
-                elif config_type == "yaml":
-                    config = yaml.safe_load(config_file)
-                else:
-                    raise ValueError(f"Unsupported configuration type: {config_type}")
-
-                # Validate configuration
-                self._validate_config(agent_name, config)
-
-                # Cache configuration
-                self._config_cache[agent_name] = config
-
-                return cast(Dict[str, Any], config)
-
-        except FileNotFoundError:
-            logger.error("Configuration file not found: %s", config_path)
-            raise
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            logger.info(f"Loaded configuration for {agent_type}")
+            return config
         except json.JSONDecodeError as e:
-            logger.error("JSON decoding error: %s", e)
+            logger.error(f"Invalid JSON in configuration file for {agent_type}: {e}")
             raise
-        except yaml.YAMLError as e:
-            logger.error("YAML parsing error: %s", e)
-            raise
-
-    def _validate_config(self, agent_name: str, config: Dict[str, Any]):
-        """
-        Validate configuration against predefined JSON schema
-
+            
+    def save_config(self, agent_type: str, config: Dict[str, Any]) -> None:
+        """Save configuration for a specific agent type.
+        
         Args:
-            agent_name (str): Name of the agent
-            config (Dict): Configuration to validate
-
-        Raises:
-            jsonschema.ValidationError: If configuration fails validation
+            agent_type: Type of agent to save configuration for
+            config: Configuration to save
         """
-        schema_path = os.path.join(self.schema_dir, f"{agent_name}_schema.json")
-
+        config_file = self.config_dir / f"{agent_type}.json"
         try:
-            with open(schema_path) as schema_file:
-                schema = json.load(schema_file)
-
-            jsonschema.validate(instance=config, schema=schema)
-            logger.info("Configuration validated successfully for %s", agent_name)
-
-        except FileNotFoundError:
-            logger.warning("No schema found for %s. Skipping validation.", agent_name)
-        except jsonschema.ValidationError as e:
-            logger.error("Configuration validation failed for %s: %s", agent_name, e)
-            raise
-
-    def update_config(
-        self,
-        agent_name: str,
-        updates: Dict[str, Any],
-        config_type: str = "json",
-    ) -> Dict[str, Any]:
-        """
-        Update configuration for a specific agent
-
-        Args:
-            agent_name (str): Name of the agent
-            updates (Dict): Configuration updates
-            config_type (str): Configuration file type
-
-        Returns:
-            Dict: Updated configuration
-        """
-        current_config = self.load_config(agent_name, config_type)
-
-        # Deep merge configuration
-        updated_config = self._deep_merge(current_config, updates)
-
-        # Validate updated configuration
-        self._validate_config(agent_name, updated_config)
-
-        # Write updated configuration
-        config_filename = f"{agent_name}_config.{config_type}"
-        config_path = os.path.join(self.config_dir, config_filename)
-
-        with open(config_path, "w") as config_file:
-            if config_type == "json":
-                json.dump(updated_config, config_file, indent=2)
-            elif config_type == "yaml":
-                yaml.safe_dump(updated_config, config_file)
-
-        # Update cache
-        self._config_cache[agent_name] = updated_config
-
-        logger.info("Configuration updated for agent: %s", agent_name)
-        return updated_config
-
-    def _deep_merge(
-        self,
-        base: Dict[str, Any],
-        updates: Dict[str, Any],
-    ) -> Dict[str, Any]:
-        """
-        Perform a deep merge of configuration dictionaries
-
-        Args:
-            base (Dict): Base configuration
-            updates (Dict): Configuration updates
-
-        Returns:
-            Dict: Merged configuration
-        """
-        merged = base.copy()
-        for key, value in updates.items():
-            if (
-                isinstance(value, dict)
-                and key in merged
-                and isinstance(merged[key], dict)
-            ):
-                merged[key] = self._deep_merge(merged[key], value)
-            else:
-                merged[key] = value
-        return merged
-
-    def get_config_schema(self, agent_name: str) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve configuration schema for an agent
-
-        Args:
-            agent_name (str): Name of the agent
-
-        Returns:
-            Optional[Dict]: JSON schema for agent configuration
-        """
-        schema_path = os.path.join(self.schema_dir, f"{agent_name}_schema.json")
-
-        try:
-            with open(schema_path) as schema_file:
-                schema = json.load(schema_file)
-                return cast(Optional[Dict[str, Any]], schema)
-        except FileNotFoundError:
-            logger.warning("No schema found for agent: %s", agent_name)
-            return None
-
-    @staticmethod
-    def main():
-        """Demonstration of Agent Configuration Management"""
-        config_manager = AgentConfigManager()
-
-        try:
-            # Load configuration
-            auto_gpt_config = config_manager.load_config("auto_gpt")
-            print("AutoGPT Configuration:", json.dumps(auto_gpt_config, indent=2))
-
-            # Update configuration
-            updated_config = config_manager.update_config(
-                "auto_gpt",
-                {"max_iterations": 10, "verbose_mode": True},
-            )
-            print("Updated Configuration:", json.dumps(updated_config, indent=2))
-
+            with open(config_file, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=4)
+            logger.info(f"Saved configuration for {agent_type}")
         except Exception as e:
-            logger.exception("Configuration management error: %s", e)
+            logger.error(f"Failed to save configuration for {agent_type}: {e}")
+            raise
+            
+    def validate_config(self, config: Dict[str, Any]) -> bool:
+        """Validate an agent configuration.
+        
+        Args:
+            config: Configuration to validate
+            
+        Returns:
+            bool: Whether the configuration is valid
+        """
+        required_fields = [
+            "model",
+            "parameters",
+            "max_retries",
+            "timeout"
+        ]
+        
+        return all(field in config for field in required_fields)
+        
+    def get_default_config(self, agent_type: str) -> Dict[str, Any]:
+        """Get default configuration for an agent type.
+        
+        Args:
+            agent_type: Type of agent to get default configuration for
+            
+        Returns:
+            Dict containing default configuration
+        """
+        return {
+            "model": "gpt-4",
+            "parameters": {
+                "temperature": 0.7,
+                "max_tokens": 2000,
+                "top_p": 1.0
+            },
+            "max_retries": 3,
+            "timeout": 30
+        }
+        
+    def list_configurations(self) -> Dict[str, Dict[str, Any]]:
+        """List all available agent configurations.
+        
+        Returns:
+            Dict mapping agent types to their configurations
+        """
+        configs = {}
+        for config_file in self.config_dir.glob("*.json"):
+            agent_type = config_file.stem
+            try:
+                configs[agent_type] = self.load_config(agent_type)
+            except Exception as e:
+                logger.error(f"Failed to load configuration for {agent_type}: {e}")
+                
+        return configs
+
+
+def main():
+    """Demonstration of configuration management."""
+    config_manager = AgentConfigManager()
+    
+    # Example configuration
+    test_config = {
+        "model": "gpt-4",
+        "parameters": {
+            "temperature": 0.7,
+            "max_tokens": 2000,
+            "top_p": 1.0
+        },
+        "max_retries": 3,
+        "timeout": 30
+    }
+    
+    try:
+        # Save test configuration
+        config_manager.save_config("test_agent", test_config)
+        
+        # Load and validate configuration
+        loaded_config = config_manager.load_config("test_agent")
+        is_valid = config_manager.validate_config(loaded_config)
+        
+        logger.info(f"Loaded configuration is valid: {is_valid}")
+        logger.info(f"Available configurations: {config_manager.list_configurations()}")
+        
+    except Exception as e:
+        logger.error(f"Configuration management failed: {e}")
 
 
 if __name__ == "__main__":
-    AgentConfigManager.main()
+    main()
+

@@ -1,21 +1,26 @@
-#!/opt/sutazaiapp/venv/bin/python3
+#!/usr/bin/env python3.11
 """
-Comprehensive Code Cleanup Module
+Comprehensive code cleanup utility.
+This script provides functionality to clean up Python code,
+including removing unused imports and fixing syntax errors.
 """
+import os
 import ast
 import logging
-import os
-from typing import Dict, List
+from typing import List
 
-logging.basicConfig(
-level=logging.INFO,
-format="%(asctime)s - %(levelname)s: %(message)s"
-)
 logger = logging.getLogger(__name__)
 
-
 class ComprehensiveCodeCleaner:
+    """
+    A comprehensive code cleanup utility for Python projects.
+    """
     def __init__(self, base_path: str):
+        """
+        Initialize the code cleaner.
+        Args:
+        base_path: Base directory of the project to clean
+        """
         self.base_path = base_path
         self.ignored_dirs = {".git", ".mypy_cache", "venv", "__pycache__"}
 
@@ -93,6 +98,7 @@ class ComprehensiveCodeCleaner:
 
                                                 for line in lines:
                                                 stripped = line.strip()
+
                                                 if not stripped:  # Empty line
                                                     fixed_lines.append("")
                                                     continue
@@ -129,6 +135,9 @@ class ComprehensiveCodeCleaner:
 
 
                                                             def main():
+                                                                """
+                                                                Main function to run comprehensive code cleanup.
+                                                                """
                                                                 base_path = "/opt/sutazaiapp"
                                                                 cleaner = ComprehensiveCodeCleaner(base_path)
                                                                 cleaner.run_comprehensive_cleanup()
@@ -137,3 +146,4 @@ class ComprehensiveCodeCleaner:
 
                                                                 if __name__ == "__main__":
                                                                     main()
+

@@ -1,172 +1,159 @@
 #!/usr/bin/env python3.11
-"""
-Configuration module for the SutazAI backend.
+"""Configuration Module
 
-This module defines a configuration class using Pydantic to ensure that
-all required parameters are specified with appropriate defaults.
+This module provides configuration management for the SutazAI backend.
 """
 
-import multiprocessing
 import os
-from typing import Any, Dict, Generic, List, Optional, TypeVar
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Optional
 
-from pydantic import BaseModel as PydanticBaseModel
-from pydantic import Field, IPvAnyAddress, ValidationError, validator
-from pydantic.generics import GenericModel
-
-
-class BaseModel(PydanticBaseModel):
-    """Base model class with common configuration."""
-
-    class Config:
-        """Pydantic configuration settings."""
-
-        arbitrary_types_allowed = True
-        extra = "allow"
+import yaml
+from loguru import logger
 
 
-        class ServerConfig(BaseModel):
-            """Server-specific configuration settings."""
-
-            workers: int = Field(
-            default=min(multiprocessing.cpu_count(), 4),
-            description="Number of worker processes",
-            )
-            timeout: int = Field(default=30, description="Request timeout in seconds")
-            keepalive: int = Field(default=5, description="Keepalive timeout")
-            max_requests: int = Field(
-            default=1000, description="Maximum requests per worker before restart",
-            )
-            max_requests_jitter: int = Field(
-            default=50,
-            description="Random jitter in max requests to prevent thundering herd",
-            )
-            limit_concurrency: int = Field(
-            default=100, description="Maximum number of concurrent connections",
-            )
-            backlog: int = Field(
-            default=128, description="Maximum number of connections to hold in backlog",
-            )
-            limit_max_requests: int = Field(
-            default=5000,
-            description="Maximum number of requests to serve before restarting worker",
-            )
+@dataclass
+class ServerConfig:
+    """Server configuration settings."""
+    workers: int = 4
+    keepalive: int = 60
+    timeout: int = 300
+    limit_max_requests: int = 0
+    max_requests_jitter: int = 0
+    limit_concurrency: int = 1000
+    backlog: int = 2048
 
 
-            class Config(BaseModel):
-                """
-                Main configuration class for the SutazAI backend.
+@dataclass
+class Config:
+    """Main configuration class for the SutazAI backend."""
+    
+    def __init__(self, config_path: Optional[str] = None):
+        """Initialize configuration.
+        
+        Args:
+            config_path: Optional path to configuration file
+        """
+        self.config_path = config_path or os.getenv(
+            "SUTAZAI_CONFIG",
+            "/opt/sutazaiapp/config/config.yml",
+        )
+        
+        # Load configuration
+        self._config = self._load_config()
+        
+        # Server settings
+        self.host = self._config.get("host", "0.0.0.0")
+        self.port = int(self._config.get("port", 8000))
+        self.debug = bool(self._config.get("debug", False))
+        
+        # Initialize server config
+        self.server = ServerConfig(
+            workers=int(self._config.get("server", {}).get("workers", 4)),
+            keepalive=int(self._config.get("server", {}).get("keepalive", 60)),
+            timeout=int(self._config.get("server", {}).get("timeout", 300)),
+            limit_max_requests=int(
+                self._config.get("server", {}).get("limit_max_requests", 0)
+            ),
+            max_requests_jitter=int(
+                self._config.get("server", {}).get("max_requests_jitter", 0)
+            ),
+            limit_concurrency=int(
+                self._config.get("server", {}).get("limit_concurrency", 1000)
+            ),
+            backlog=int(self._config.get("server", {}).get("backlog", 2048)),
+        )
+        
+        # Database settings
+        self.db_url = self._config.get(
+            "database_url",
+            "postgresql://postgres:postgres@localhost:5432/sutazai",
+        )
+        
+        # Redis settings
+        self.redis_url = self._config.get(
+            "redis_url",
+            "redis://localhost:6379/0",
+        )
+        
+        # Security settings
+        self.secret_key = self._config.get(
+            "secret_key",
+            os.getenv("SUTAZAI_SECRET_KEY", "your-secret-key"),
+        )
+        self.token_expire_minutes = int(
+            self._config.get("token_expire_minutes", 60 * 24)  # 24 hours
+        )
+        
+        # Logging settings
+        self.log_level = self._config.get("log_level", "INFO")
+        self.log_file = self._config.get(
+            "log_file",
+            "/opt/sutazaiapp/logs/backend.log",
+        )
+        
+        # Configure logging
+        self._setup_logging()
+        
+    def _load_config(self) -> Dict[str, Any]:
+        """Load configuration from file.
+        
+        Returns:
+            Dict containing configuration values
+        """
+        try:
+            config_path = Path(self.config_path)
+            if not config_path.exists():
+                logger.warning(f"Config file not found: {config_path}")
+                return {}
+                
+            with open(config_path, "r") as f:
+                config = yaml.safe_load(f)
+                
+            return config or {}
+            
+        except Exception as e:
+            logger.error(f"Failed to load config: {e}")
+            return {}
+            
+    def _setup_logging(self) -> None:
+        """Configure logging settings."""
+        log_dir = Path(self.log_file).parent
+        log_dir.mkdir(parents=True, exist_ok=True)
+        
+        logger.add(
+            self.log_file,
+            level=self.log_level,
+            rotation="10 MB",
+            compression="zip",
+            retention="1 week",
+        )
+        
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get configuration value by key.
+        
+        Args:
+            key: Configuration key
+            default: Default value if key not found
+            
+        Returns:
+            Configuration value
+        """
+        return self._config.get(key, default)
+        
+    def __str__(self) -> str:
+        """String representation of configuration."""
+        return f"Config(debug={self.debug}, host={self.host}, port={self.port})"
 
-                Attributes:
-                host: The host address to bind to
-                port: The port to listen on
-                debug: Whether to enable debug mode
-                trusted_hosts: List of trusted host addresses
-                """
 
-                host: IPvAnyAddress = Field(
-                default="127.0.0.1", description="Host address to bind to",
-                )
-                port: int = Field(default=8000, ge=1024, le=65535, description="Port to listen on")
-                debug: bool = Field(default=False, description="Enable debug mode")
-                trusted_hosts: List[str] = Field(
-                default_factory=list, description="List of trusted host addresses",
-                )
-                server: ServerConfig = Field(
-                default_factory=ServerConfig, description="Server-specific configuration",
-                )
-
-                @validator("host", pre=True)
-                @classmethod
-                def validate_host(cls, v: Any) -> str:
-                    """
-                    Validate and convert host to a valid IP address or hostname.
-
-                    Args:
-                    v: Host value to validate
-
-                    Returns:
-                    Validated host string
-                    """
-                    try:
-                        return str(IPvAnyAddress.validate(v))
-                    except ValidationError:
-                        return str(v)
-
-                    def is_debug_enabled(self) -> bool:
-                        """Check if debug mode is enabled."""
-                        return self.debug
-
-                    def is_host_trusted(self, host: str) -> bool:
-                        """
-                        Check if a host is in the trusted hosts list.
-
-                        Args:
-                        host: Host to check for trust
-
-                        Returns:
-                        Whether the host is trusted
-                        """
-                        return host in self.trusted_hosts or not self.trusted_hosts
-
-
-                    def load_config_from_env() -> Config:
-                        """
-                        Load configuration from environment variables.
-
-                        Returns:
-                        Config: Configuration object initialized from environment variables
-                        """
-                        env_vars: Dict[str, str] = {}
-
-                        # Load from .env file if it exists
-                        env_file_path = os.path.join(os.path.dirname(__file__), "..", ".env")
-                        if os.path.exists(env_file_path):
-                            with open(env_file_path, encoding="utf-8") as env_file:
-                            for line in env_file:
-                            line = line.strip()
-                            if line and not line.startswith("#"):
-                                key, value = line.split("=", 1)
-                                env_vars[key.strip()] = value.strip()
-
-                                # Override with actual environment variables
-                                env_vars.update(os.environ)
-
-                                # Extract relevant config items
-                                config_data: Dict[str, Any] = {
-                                "host": env_vars.get("HOST", "127.0.0.1"),
-                                "port": int(env_vars.get("PORT", "8000")),
-                                "debug": env_vars.get("DEBUG", "false").lower() in ("true", "1", "yes"),
-                                "trusted_hosts": [
-                                h.strip() for h in env_vars.get("TRUSTED_HOSTS", "").split(",") if h.strip()
-                                ],
-                                "server": {
-                                "workers": int(
-                                env_vars.get("WORKERS", str(min(multiprocessing.cpu_count(), 4))),
-                                ),
-                                "timeout": int(env_vars.get("TIMEOUT", "30")),
-                                "keepalive": int(env_vars.get("KEEPALIVE", "5")),
-                                "max_requests": int(env_vars.get("MAX_REQUESTS", "1000")),
-                                "max_requests_jitter": int(env_vars.get("MAX_REQUESTS_JITTER", "50")),
-                                "limit_concurrency": int(env_vars.get("LIMIT_CONCURRENCY", "100")),
-                                "backlog": int(env_vars.get("BACKLOG", "128")),
-                                "limit_max_requests": int(env_vars.get("LIMIT_MAX_REQUESTS", "5000")),
-                                },
-                                }
-
-                                return Config(**config_data)
-
-
-                            # Create a config instance
-                            config = load_config_from_env()
-
-                            if __name__ == "__main__":
-                                print("Backend configuration:")
-                                print(f"  HOST: {config.host}")
-                                print(f"  PORT: {config.port}")
-                                print(f"  DEBUG: {config.debug}")
-                                print(f"  TRUSTED_HOSTS: {config.trusted_hosts}")
-                                print(f"  WORKERS: {config.server.workers}")
-                                print(f"  TIMEOUT: {config.server.timeout}")
-                                print(f"  KEEPALIVE: {config.server.keepalive}")
-                                print(f"  MAX_REQUESTS: {config.server.max_requests}")
+def load_config(config_path: Optional[str] = None) -> Config:
+    """Load configuration from file.
+    
+    Args:
+        config_path: Optional path to configuration file
+        
+    Returns:
+        Config instance
+    """
+    return Config(config_path)

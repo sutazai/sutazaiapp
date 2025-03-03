@@ -1,13 +1,12 @@
 #!/usr/bin/env python3.11
-"""
-Comprehensive Syntax Fixer for SutazAI Project
-"""
+"""Comprehensive Syntax Fixer for SutazAI Project"""
 
 import ast
 import logging
 import os
 import re
-from typing import List, Optional
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,244 +14,182 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 class SyntaxFixer:
     def __init__(self, base_path: str = "/opt/sutazaiapp"):
-        """
-        Initialize the syntax fixer.
-
-        Args:
-            base_path: Root directory to search for Python files
-        """
+        """Initialize the syntax fixer."""
         self.base_path = base_path
         self.ignored_dirs = {
-            ".git",
-            ".venv",
-            "venv",
-            "__pycache__",
-            ".mypy_cache",
-            ".pytest_cache",
+            ".git", ".venv", "venv", "__pycache__",
+            "node_modules", "build", "dist"
         }
-
-    def find_python_files(self) -> List[str]:
-        """
-        Recursively find all Python files in the base path.
-
-        Returns:
-            List of Python file paths
-        """
-        python_files = []
-        for root, dirs, files in os.walk(self.base_path):
-            # Remove ignored directories
-            dirs[:] = [d for d in dirs if d not in self.ignored_dirs]
-
-            for file in files:
-                if file.endswith(".py"):
-                    python_files.append(os.path.join(root, file))
-        return python_files
-
-    def fix_imports(self, source: str) -> str:
-        """Fix import statements and ensure proper formatting."""
-        lines = source.split("\n")
-        fixed_lines = []
-        import_block = []
-        in_import_block = False
-
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith(("import ", "from ")):
-                # Fix common import formatting issues
-                if "as" in stripped:
-                    # Fix 'from x import y as z' format
-                    parts = stripped.split(" as ")
-                    if len(parts) == 2:
-                        base, alias = parts
-                        if base.startswith("from"):
-                            # Handle 'from x import y as z'
-                            module_parts = base.split(" import ")
-                            if len(module_parts) == 2:
-                                fixed_line = f"{module_parts[0]} import {module_parts[1].strip()} as {alias.strip()}"
-                            else:
-                                fixed_line = line
-                        else:
-                            # Handle 'import x as y'
-                            fixed_line = f"import {base.replace('import', '').strip()} as {alias.strip()}"
-                    else:
-                        fixed_line = line
-                else:
-                    fixed_line = line
-
-                in_import_block = True
-                import_block.append(fixed_line)
-            else:
-                if in_import_block:
-                    # Sort and deduplicate imports
-                    import_block.sort()
-                    import_block = list(dict.fromkeys(import_block))
-                    fixed_lines.extend(import_block)
-                    import_block = []
-                    in_import_block = False
-                fixed_lines.append(line)
-
-        if import_block:  # Handle trailing imports
-            import_block.sort()
-            import_block = list(dict.fromkeys(import_block))
-            fixed_lines.extend(import_block)
-
-        return "\n".join(fixed_lines)
-
-    def fix_indentation(self, source: str) -> str:
-        """Fix indentation issues using a more robust approach."""
-        lines = source.split("\n")
-        fixed_lines = []
-        indent_stack = [0]
-
-        # Convert tabs to spaces first
-        lines = [line.replace("\t", "    ") for line in lines]
-
-        for line in lines:
-            stripped = line.strip()
-            if not stripped:  # Empty line
-                fixed_lines.append("")
-                continue
-
-            # Calculate current indentation
-            current_indent = len(line) - len(line.lstrip())
-
-            # Normalize indentation to be a multiple of 4
-            if current_indent > 0:
-                current_indent = ((current_indent + 3) // 4) * 4
-
-            if stripped.startswith(
-                (
-                    "def ",
-                    "class ",
-                    "if ",
-                    "elif ",
-                    "else:",
-                    "try:",
-                    "except ",
-                    "finally:",
-                    "for ",
-                    "while ",
-                )
-            ):
-                # Block starter - increase indentation for next line
-                fixed_lines.append(" " * indent_stack[-1] + stripped)
-                indent_stack.append(indent_stack[-1] + 4)
-            elif (
-                stripped == "pass"
-                or stripped.startswith("return ")
-                or stripped == "break"
-                or stripped == "continue"
-            ):
-                # Block ender - decrease indentation after this line
-                if len(indent_stack) > 1:
-                    indent_stack.pop()
-                fixed_lines.append(" " * indent_stack[-1] + stripped)
-            else:
-                # Regular line - maintain current indentation
-                fixed_lines.append(" " * indent_stack[-1] + stripped)
-
-        return "\n".join(fixed_lines)
-
-    def fix_try_except(self, source: str) -> str:
-        """Fix try-except blocks to ensure proper structure."""
-        lines = source.split("\n")
-        fixed_lines = []
-        in_try_block = False
-        has_except = False
-
-        for i, line in enumerate(lines):
-            stripped = line.strip()
-
-            if stripped.startswith("try:"):
-                in_try_block = True
-                fixed_lines.append(line)
-            elif in_try_block and stripped.startswith(("except ", "except:")):
-                has_except = True
-                fixed_lines.append(line)
-            elif in_try_block and stripped.startswith("finally:"):
-                has_except = True  # finally is also valid without except
-                fixed_lines.append(line)
-            elif (
-                in_try_block
-                and not has_except
-                and not stripped.startswith(("except ", "except:", "finally:"))
-            ):
-                # Add a generic except if missing
-                indent = len(line) - len(line.lstrip())
-                fixed_lines.append(" " * indent + "except Exception as e:")
-                fixed_lines.append(" " * (indent + 4) + 'logger.error(f"Error: {e}")')
-                fixed_lines.append(line)
-                in_try_block = False
-            else:
-                if stripped and not any(
-                    stripped.startswith(x)
-                    for x in ["except ", "except:", "finally:", "else:"]
-                ):
-                    in_try_block = False
-                fixed_lines.append(line)
-
-        return "\n".join(fixed_lines)
 
     def fix_syntax_errors(self, file_path: str) -> Optional[str]:
         """Fix syntax errors in a Python file."""
         try:
-            with open(file_path, encoding="utf-8") as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 source = f.read()
 
-            # Try parsing the original source
-            try:
-                ast.parse(source)
-                return None  # No syntax errors
-            except SyntaxError:
-                # Apply fixes in sequence
-                fixed_source = source
-                fixed_source = self.fix_imports(fixed_source)
-                fixed_source = self.fix_indentation(fixed_source)
-                fixed_source = self.fix_try_except(fixed_source)
+            # Apply fixes in sequence
+            fixed_source = source
 
-                # Verify the fixed source
-                try:
-                    ast.parse(fixed_source)
-                    return fixed_source
-                except SyntaxError as e:
-                    logger.error(f"Could not fix all syntax errors in {file_path}: {e}")
-                    return None
+            # Fix unterminated triple quotes
+            fixed_source = self._fix_unterminated_quotes(fixed_source)
+
+            # Fix indentation
+            fixed_source = self._fix_indentation(fixed_source)
+
+            # Fix missing colons
+            fixed_source = self._fix_missing_colons(fixed_source)
+
+            # Fix unmatched brackets/parentheses/braces
+            fixed_source = self._fix_unmatched_brackets(fixed_source)
+
+            # Fix function definitions
+            fixed_source = self._fix_function_definitions(fixed_source)
+
+            return fixed_source
 
         except Exception as e:
             logger.error(f"Error fixing {file_path}: {e}")
             return None
 
-    def fix_project_syntax(self):
-        """Fix syntax errors across the entire project."""
-        python_files = self.find_python_files()
-        fixed_count = 0
-        error_count = 0
+    def _fix_unterminated_quotes(self, source: str) -> str:
+        """Fix unterminated triple quotes."""
+        lines = source.split('\n')
+        fixed_lines = []
+        in_docstring = False
+        docstring_start = None
+        
+        for i, line in enumerate(lines):
+            if '"""' in line:
+                count = line.count('"""')
+                if count % 2 != 0:
+                    if not in_docstring:
+                        in_docstring = True
+                        docstring_start = i
+                    else:
+                        in_docstring = False
+                        
+            fixed_lines.append(line)
+            
+        if in_docstring:
+            # Add missing closing quotes
+            fixed_lines[docstring_start] = fixed_lines[docstring_start].rstrip() + '"""'
+            
+        return '\n'.join(fixed_lines)
 
-        for file_path in python_files:
-            try:
-                fixed_source = self.fix_syntax_errors(file_path)
-                if fixed_source is not None:
-                    with open(file_path, "w", encoding="utf-8") as f:
-                        f.write(fixed_source)
-                    logger.info(f"Fixed syntax in {file_path}")
-                    fixed_count += 1
-            except Exception as e:
-                logger.error(f"Error processing {file_path}: {e}")
-                error_count += 1
+    def _fix_indentation(self, source: str) -> str:
+        """Fix indentation issues."""
+        lines = source.split('\n')
+        fixed_lines = []
+        indent_level = 0
+        
+        for line in lines:
+            stripped = line.lstrip()
+            if not stripped:  # Empty line
+                fixed_lines.append('')
+                continue
+                
+            # Adjust indent level based on line content
+            if stripped.startswith(('def ', 'class ', 'if ', 'for ', 'while ', 'try:', 'else:', 'elif ', 'except', 'finally:')):
+                indent = ' ' * (4 * indent_level)
+                fixed_lines.append(indent + stripped)
+                if stripped.endswith(':'):
+                    indent_level += 1
+            else:
+                indent = ' ' * (4 * indent_level)
+                fixed_lines.append(indent + stripped)
+                
+                # Check for block enders
+                if stripped in ['return', 'break', 'continue', 'pass'] or stripped.startswith('return '):
+                    indent_level = max(0, indent_level - 1)
+                    
+        return '\n'.join(fixed_lines)
 
-        logger.info(
-            f"Completed syntax fixing: {fixed_count} files fixed, {error_count} errors"
-        )
+    def _fix_missing_colons(self, source: str) -> str:
+        """Fix missing colons in function/class definitions and control structures."""
+        lines = source.split('\n')
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if any(stripped.startswith(x) for x in ['def ', 'class ', 'if ', 'else', 'elif ', 'try', 'except', 'finally']):
+                if not stripped.endswith(':'):
+                    lines[i] = line.rstrip() + ':'
+        return '\n'.join(lines)
 
+    def _fix_unmatched_brackets(self, source: str) -> str:
+        """Fix unmatched brackets, parentheses, and braces."""
+        pairs = {')': '(', ']': '[', '}': '{'}
+        lines = source.split('\n')
+        stack = []
+        
+        for i, line in enumerate(lines):
+            for j, char in enumerate(line):
+                if char in '([{':
+                    stack.append((char, i, j))
+                elif char in ')]}':
+                    if not stack:
+                        # Missing opening bracket
+                        lines[i] = line[:j] + pairs[char] + line[j:]
+                    else:
+                        opening = stack.pop()
+                        if opening[0] != pairs[char]:
+                            # Mismatched brackets
+                            lines[i] = line[:j] + pairs[char] + line[j+1:]
+                            
+        # Add missing closing brackets
+        while stack:
+            char, i, j = stack.pop()
+            closing = {'(': ')', '[': ']', '{': '}'}[char]
+            lines[i] = lines[i] + closing
+            
+        return '\n'.join(lines)
+
+    def _fix_function_definitions(self, source: str) -> str:
+        """Fix common function definition issues."""
+        lines = source.split('\n')
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped.startswith('def '):
+                # Ensure proper function definition format
+                if '(' not in stripped:
+                    name = stripped[4:].strip()
+                    lines[i] = line.replace(name, f"{name}()")
+                elif ')' not in stripped:
+                    lines[i] = line + ')'
+                if not stripped.endswith(':'):
+                    lines[i] = lines[i] + ':'
+                    
+        return '\n'.join(lines)
+
+    def fix_project_syntax(self) -> None:
+        """Fix syntax errors in all Python files in the project."""
+        for root, dirs, files in os.walk(self.base_path):
+            # Skip ignored directories
+            dirs[:] = [d for d in dirs if d not in self.ignored_dirs]
+            
+            for file in files:
+                if file.endswith('.py'):
+                    file_path = os.path.join(root, file)
+                    logger.info(f"Processing {file_path}")
+                    
+                    fixed_source = self.fix_syntax_errors(file_path)
+                    if fixed_source is not None:
+                        try:
+                            # Try to parse the fixed source to validate it
+                            ast.parse(fixed_source)
+                            
+                            # Write back the fixed source
+                            with open(file_path, 'w', encoding='utf-8') as f:
+                                f.write(fixed_source)
+                            logger.info(f"Fixed syntax in {file_path}")
+                        except SyntaxError as e:
+                            logger.error(f"Failed to fix {file_path}: {e}")
 
 def main():
     """Main entry point."""
     fixer = SyntaxFixer()
     fixer.fix_project_syntax()
 
-
 if __name__ == "__main__":
     main()
+

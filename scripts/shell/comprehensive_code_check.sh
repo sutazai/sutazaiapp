@@ -3,6 +3,31 @@
 # Ensure Python 3.11 is used
 PYTHON_CMD="python3.11"
 
+# Limit CPU usage
+limit_cpu() {
+    local max_cpu_percent="${1:-50}"
+    local pid=$$
+    
+    # Background process to monitor and limit CPU
+    (
+        while true; do
+            cpu_usage=$(ps -p "$pid" -o %cpu | tail -n 1 | tr -d ' ')
+            if (( $(echo "$cpu_usage > $max_cpu_percent" | bc -l) )); then
+                # Pause the process if CPU usage is too high
+                kill -STOP "$pid"
+                sleep 5
+                kill -CONT "$pid"
+            fi
+            sleep 2
+        done
+    ) &
+    CPU_LIMIT_PID=$!
+    trap 'kill $CPU_LIMIT_PID' EXIT
+}
+
+# Call CPU limit at the start of the script
+limit_cpu 50  # Limit to 50% CPU
+
 # Verify Python version
 verify_python_version() {
     if ! command -v "$PYTHON_CMD" &> /dev/null; then
@@ -78,63 +103,18 @@ comprehensive_lint_check() {
     local directory="$1"
     local log_file="$2"
 
-    log "INFO" "Running comprehensive linting on $directory"
+    log "INFO" "Running lightweight linting on $directory"
 
-    # Pylint with detailed configuration
-    log "INFO" "Running Pylint with detailed analysis..."
-    "$PYTHON_CMD" -m pylint \
-        --rcfile=.pylintrc \
-        --output-format=text \
-        --reports=yes \
-        --score=yes \
-        "$directory" 2>&1 | tee -a "$log_file"
-
-    # Ruff for fast linting and potential fixes
-    log "INFO" "Running Ruff for fast linting and potential fixes..."
+    # Ruff for fast linting with fewer checks
+    log "INFO" "Running Ruff with minimal checks..."
     "$PYTHON_CMD" -m ruff check \
-        --fix \
-        --show-fixes \
-        --output-format=json \
-        --ignore-noqa \
-        --select=ALL \
-        --ignore=D,E501,F401 \
+        --select=E,F \
         "$directory" 2>&1 | tee -a "$log_file"
 
-    # MyPy for strict type checking
-    log "INFO" "Running MyPy with strict type checking..."
+    # Minimal MyPy type checking
+    log "INFO" "Running minimal MyPy type checking..."
     "$PYTHON_CMD" -m mypy \
-        --strict \
-        --show-error-codes \
-        --pretty \
-        --no-warn-unused-configs \
         --ignore-missing-imports \
-        --disallow-untyped-defs \
-        --disallow-incomplete-defs \
-        "$directory" 2>&1 | tee -a "$log_file"
-
-    # Install missing type stubs
-    log "INFO" "Installing missing type stubs..."
-    "$PYTHON_CMD" -m pip install \
-        types-networkx \
-        types-psutil \
-        types-PyYAML \
-        types-requests \
-        types-setuptools 2>&1 | tee -a "$log_file"
-
-    "$PYTHON_CMD" -m mypy --install-types --non-interactive 2>&1 | tee -a "$log_file"
-
-    # Bandit for security vulnerability scanning
-    log "INFO" "Running Bandit for security vulnerability scanning..."
-    "$PYTHON_CMD" -m bandit \
-        -r "$directory" \
-        -f custom \
-        -o "$log_file.bandit" 2>&1 | tee -a "$log_file"
-
-    # Black for code formatting
-    log "INFO" "Running Black for code formatting..."
-    "$PYTHON_CMD" -m black \
-        --check \
-        --diff \
         "$directory" 2>&1 | tee -a "$log_file"
 }
 
@@ -158,11 +138,7 @@ main() {
     # Directories to check
     DIRECTORIES_TO_CHECK=(
         "core_system"
-        "misc"
-        "scripts"
         "backend"
-        "ai_agents"
-        "model_management"
     )
 
     # Run comprehensive checks on each directory

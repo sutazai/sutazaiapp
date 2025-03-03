@@ -15,3 +15,6 @@ __all__ = [
 "BaseAgent",
 "BaseAgentImplementation",
 ]
+
+# Package initialization for ai_agents
+from __future__ import annotations

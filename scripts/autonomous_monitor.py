@@ -14,7 +14,6 @@ from filelock import FileLock
 # Configure logging
 log_dir = Path("/opt/sutazaiapp/logs/autonomous_monitor")
 log_dir.mkdir(parents=True, exist_ok=True)
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -39,12 +38,12 @@ class MonitoringSystem:
         # Register signal handlers
         signal.signal(signal.SIGTERM, self.handle_shutdown)
         signal.signal(signal.SIGINT, self.handle_shutdown)
-    
+
     def handle_shutdown(self, signum, frame):
         """Handle shutdown signals gracefully."""
         logger.info("Received shutdown signal, cleaning up...")
         self.should_run = False
-    
+
     def load_config(self) -> Dict:
         """Load monitoring configuration with defaults."""
         default_config = {
@@ -61,38 +60,24 @@ class MonitoringSystem:
         
         try:
             if os.path.exists(CONFIG_FILE):
-                with open(CONFIG_FILE, "r") as f:
+                with open(CONFIG_FILE) as f:
                     config = json.load(f)
-                    # Update defaults with loaded config
-                    default_config.update(config)
+                # Update defaults with loaded config
+                default_config.update(config)
         except Exception as e:
             logger.error(f"Error loading config: {e}")
         
         return default_config
-    
+
     def check_single_instance(self) -> bool:
-        """Ensure only one instance is running."""
+        """Ensure only one instance of the monitor is running."""
         try:
-            if os.path.exists(PID_FILE):
-                with open(PID_FILE, "r") as f:
-                    old_pid = int(f.read().strip())
-                try:
-                    # Check if process with stored PID exists
-                    proc = psutil.Process(old_pid)
-                    if proc.is_running() and "autonomous_monitor.py" in " ".join(proc.cmdline()):
-                        logger.error(f"Monitor already running with PID {old_pid}")
-                        return False
-                except psutil.NoSuchProcess:
-                    pass
-            
-            # Write current PID
             with open(PID_FILE, "w") as f:
                 f.write(str(os.getpid()))
             return True
-            
         except Exception as e:
             logger.error(f"Error checking instance: {e}")
-                                                                                                    return False
+            return False
 
     def check_system_resources(self) -> Dict:
         """Check system resource usage."""
@@ -112,17 +97,18 @@ class MonitoringSystem:
             # Log warnings for high resource usage
             if cpu_percent > self.config["cpu_max"]:
                 logger.warning(f"High CPU usage: {cpu_percent}%")
+            
             if memory.percent > self.config["memory_max"]:
                 logger.warning(f"High memory usage: {memory.percent}%")
+            
             if disk.percent > self.config["disk_max"]:
                 logger.warning(f"High disk usage: {disk.percent}%")
             
             return status
-            
         except Exception as e:
             logger.error(f"Error checking system resources: {e}")
             return {}
-    
+
     def check_critical_processes(self) -> None:
         """Monitor critical processes and their resource usage."""
         try:
@@ -140,10 +126,9 @@ class MonitoringSystem:
                             )
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
-                    
         except Exception as e:
             logger.error(f"Error checking processes: {e}")
-    
+
     def run(self) -> None:
         """Main monitoring loop."""
         if not self.check_single_instance():
@@ -161,7 +146,7 @@ class MonitoringSystem:
                 with self.lock:
                     status = self.check_system_resources()
                     if status:
-                                                                                                                                                                    logger.info(
+                        logger.info(
                             f"System Status - CPU: {status['cpu']}%, "
                             f"Memory: {status['memory']}% "
                             f"(Used: {status['memory_used'] / 1024**3:.1f} GB/"
@@ -170,18 +155,18 @@ class MonitoringSystem:
                         )
                     
                     self.check_critical_processes()
-                    
             except Exception as e:
                 logger.error(f"Monitoring error: {e}")
             
             # Sleep for the configured interval
             time.sleep(self.config["interval"])
 
+
 def main():
     """Main entry point with error handling."""
     try:
         monitor = MonitoringSystem()
-                                                                                                                                                                                                                                monitor.run()
+        monitor.run()
     except Exception as e:
         logger.error(f"Fatal error in monitoring system: {e}")
         sys.exit(1)
@@ -195,5 +180,7 @@ def main():
         except Exception as e:
             logger.error(f"Cleanup error: {e}")
 
+
 if __name__ == "__main__":
     main()
+

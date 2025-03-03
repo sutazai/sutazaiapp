@@ -1,32 +1,124 @@
 #!/usr/bin/env python3.11
 """
 Model Management Utilities
-Provides file and configuration management utilities for the model system.
+
+This module provides utility functions for model management tasks.
 """
+
 import json
 import logging
-from pathlib import Path
+import os
 from typing import Any, Dict, Optional
-from .monitoring.advanced_logger import log_error, log_info
+
+import toml
+import yaml
+
 logger = logging.getLogger(__name__)
-def read_file_content(    file_path: str) -> Optional[str]: """Read content from a file.    Args:    file_path: Path to the file to read    Returns:    Optional[str]: File content if successful, None if failed    """    try:        with open(file_path, encoding="utf-8") as f:            return f.read()    except Exception as e:    logger.error(f"Failed to read file {file_path}: {e!s}")    return None
-    def write_file_content(        file_path: str,        content: str) -> bool: """Write content to a file.        Args:    file_path: Path to the file to write        content: Content to write to the file        Returns:    bool: True if successful, False if failed        """        try:        with open(file_path, "w", encoding="utf-8") as f:            f.write(content)
-        return True
-    except Exception as e:        logger.error(f"Failed to write to file {file_path}: {e!s}")
-        return False
-    def load_json_config(        config_path: str) -> Optional[Dict[str, Any]]: """Load JSON configuration from a file.        Args:    config_path: Path to the JSON config file        Returns:    Optional[Dict[str, Any]]: Config dictionary if successful, None if failed        """        try:        content = read_file_content(config_path)        if content is None:        return None        return json.loads(content)
-        except Exception as e:        logger.error(
-            f"Failed to load JSON config from {config_path}: {e!s}")
-            return None
-        def save_json_config(config_path: str,                        config: Dict[str,                Any]) -> bool: """Save configuration to a JSON file.        Args:    config_path: Path to save the JSON config        config: Configuration dictionary to save        Returns:    bool: True if successful, False if failed        """        try:        content = json.dumps(config, indent=2)
-            return write_file_content(config_path, content)
-        except Exception as e:        logger.error(
-            f"Failed to save JSON config to {config_path}: {e!s}")
+
+def read_file_content(file_path: str, encoding: str = "utf-8") -> Optional[str]:
+    """
+    Read content from a file with robust error handling.
+
+    Args:
+    file_path: Path to the file to read
+    encoding: File encoding (default: utf-8)
+
+    Returns:
+    File content if successful, None if failed
+    """
+    try:
+        with open(file_path, encoding=encoding) as f:
+        return f.read()
+    except OSError as e:
+        logger.error(f"Failed to read file {file_path}: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Unexpected error reading file {file_path}: {e}")
+        return None
+
+
+    def write_file_content(
+        file_path: str,
+        content: str,
+        encoding: str = "utf-8",
+        mode: str = "w",
+        ) -> bool:
+        """
+        Write content to a file with robust error handling.
+
+        Args:
+        file_path: Path to the file to write
+        content: Content to write
+        encoding: File encoding (default: utf-8)
+        mode: File write mode (default: 'w')
+
+        Returns:
+        True if write was successful, False otherwise
+        """
+        try:
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+            with open(file_path, mode, encoding=encoding) as f:
+            f.write(content)
+
+            logger.info(f"Successfully wrote to file {file_path}")
+            return True
+        except OSError as e:
+            logger.error(f"Failed to write to file {file_path}: {e}")
             return False
-        def safe_file_op(        file_path: str,        mode: str,        operation: callable) -> Any: """Execute a file operation safely with proper error handling.        Args:    file_path: Path to the file        mode: File open mode        operation: Callable that performs the file operation        Returns:    Any: Result of the operation
+        except Exception as e:
+            logger.error(f"Unexpected error writing to file {file_path}: {e}")
+            return False
+
+
+        def parse_config_file(file_path: str) -> Optional[Dict[str, Any]]:
             """
-            try:        with open(file_path, mode, encoding="utf-8") as f:            return operation(f)
-                except Exception as e:    logger.error(
-                    f"File operation failed on {file_path}: {e!s}")
-                    raise
-                    def operation_with_file(operation: callable) -> callable:                        """Decorator for operations that require file handling.        Args:    operation: The operation to wrap        Returns:    callable: Wrapped operation with file handling        """    def wrapper(file_path: str) -> Any: try: with open(file_path, "rb") as file:    return operation(file)        except Exception as e:        logger.error(            f"Error performing file operation: {e}")        return None        return wrapper
+            Parse a configuration file (JSON, YAML, or TOML).
+
+            Args:
+            file_path: Path to the configuration file
+
+            Returns:
+            Parsed configuration dictionary if successful, None otherwise
+            """
+            try:
+                file_extension = os.path.splitext(file_path)[1].lower()
+
+                content = read_file_content(file_path)
+                if not content:
+                    return None
+
+                if file_extension in (".json", ".jsonc"):
+                    return json.loads(content)
+                if file_extension in (".yaml", ".yml"):
+                    return yaml.safe_load(content)
+                if file_extension == ".toml":
+                    return toml.loads(content)
+
+                logger.error(f"Unsupported file type: {file_extension}")
+                return None
+
+            except Exception as e:
+                logger.error(f"Failed to parse configuration file {file_path}: {e}")
+                return None
+
+
+            def main():
+                """
+                Demonstration of utility functions.
+                """
+                # Example usage
+                sample_file = "/tmp/sample_config.json"
+                sample_content = '{"model": "gpt-4", "temperature": 0.7}'
+
+                # Write sample file
+                write_file_content(sample_file, sample_content)
+
+                # Read and parse file
+                config = parse_config_file(sample_file)
+                print("Parsed Configuration:", config)
+
+
+                if __name__ == "__main__":
+                    main()

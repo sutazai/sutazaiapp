@@ -1,38 +1,75 @@
 """
-Test module for the SutazAI backend main application.
-This module contains tests for the main FastAPI application endpoints.
+Tests for the main backend application.
 """
-from collections.abc import AsyncGenerator, Generator
+
 import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
+
 from backend.backend_main import app
+
+
 @pytest.fixture
-def test_client() -> Generator[TestClient, None, None]:    """    Fixture that provides a synchronous test client for the FastAPI app.    Yields:    TestClient: A test client for testing synchronous endpoints.    """    with TestClient(app) as client:        yield client        @pytest.fixture        async def async_client() -> AsyncGenerator[AsyncClient, None]:        """        Fixture that provides an async test client for the FastAPI app.
-    Yields:        AsyncClient: An async test client for testing asynchronous endpoints.
+def test_client() -> TestClient:
     """
-    async with AsyncClient(base_url="http://test") as client:            # We need to manually dispatch requests to the app
-    client.transport.app = app  # type: ignore
-    yield client
-    def test_health_check_sync(test_client: TestClient) -> None:            """            Test the health check endpoint using the synchronous client.            Args:            test_client: The test client fixture.            """            response = test_client.get("/health")            assert response.status_code == 200            assert response.json() == {"status": "healthy", "version": "0.1.0"}            @pytest.mark.asyncio
-        async def test_health_check(async_client: AsyncClient) -> None:            """
-        Test the health check endpoint using the asynchronous client.
-        Args:            async_client: The async test client fixture.
-        Raises:            AssertionError: If any test condition fails.
-        """
-        response = await async_client.get("/health")
-        assert response.status_code == 200
-        assert response.json() == {"status": "healthy", "version": "0.1.0"}
-        @pytest.mark.asyncio
-        async def test_docs_endpoint(async_client: AsyncClient) -> None:            """
-        Test the documentation endpoints.
-        Verifies:            - Swagger UI is accessible
-        - ReDoc is accessible
-        Args:            async_client: The async test client fixture.
-        Raises:            AssertionError: If documentation endpoints are not accessible.
-        """
-        swagger_response = await async_client.get("/docs")
-        redoc_response = await async_client.get("/redoc")
-        assert swagger_response.status_code == 200
-        assert redoc_response.status_code == 200
+    Fixture that provides a synchronous test client for the FastAPI app.
+    
+    Returns:
+        TestClient: A test client for testing synchronous endpoints.
+    """
+    with TestClient(app) as client:
+        yield client
+
+
+@pytest.fixture
+async def async_client() -> AsyncClient:
+    """
+    Fixture that provides an async test client for the FastAPI app.
+    
+    Returns:
+        AsyncClient: An async test client for testing asynchronous endpoints.
+    """
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        yield client
+
+
+def test_health_check_sync(test_client: TestClient) -> None:
+    """
+    Test the health check endpoint using the synchronous client.
+    
+    Args:
+        test_client: The test client fixture.
+    """
+    response = test_client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "healthy", "version": "0.1.0"}
+
+
+@pytest.mark.asyncio
+async def test_health_check_async(async_client: AsyncClient) -> None:
+    """
+    Test the health check endpoint using the asynchronous client.
+    
+    Args:
+        async_client: The async test client fixture.
+    """
+    response = await async_client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "healthy", "version": "0.1.0"}
+
+
+def test_docs_endpoints(test_client: TestClient) -> None:
+    """
+    Test that the API documentation endpoints are available in debug mode.
+    
+    Args:
+        test_client: The test client fixture.
+    """
+    # Test Swagger UI
+    swagger_response = test_client.get("/docs")
+    assert swagger_response.status_code == 200
+    
+    # Test ReDoc
+    redoc_response = test_client.get("/redoc")
+    assert redoc_response.status_code == 200
 
