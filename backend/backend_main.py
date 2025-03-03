@@ -12,20 +12,17 @@ from collections.abc import Awaitable
 from typing import Any, Callable, Dict
 
 # Third-Party Library Imports
-import redis
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from fastapi_cache.decorator import cache
 from loguru import logger
 
 # Local Imports
 from backend.config import Config
 from backend.routers.core import core_router
 from backend.routers.health import health_router
+from backend.utils import clear_cache
 
 # Configure logging
 logging.basicConfig(
@@ -84,7 +81,6 @@ async def log_requests(
 
 
 @app.get("/health")
-@cache(expire=30)  # Cache health check for 30 seconds
 async def health_check() -> Dict[str, str]:
     """Basic health check endpoint."""
     return {"status": "healthy", "version": "0.1.0"}
@@ -106,15 +102,6 @@ async def global_exception_handler(_: Request, exc: Exception) -> JSONResponse:
 async def initialize_backend() -> None:
     """Initialize the backend application."""
     logger.info("Initializing backend...")
-    
-    # Initialize Redis cache
-    redis_client = redis.from_url(
-        "redis://localhost",
-        encoding="utf8",
-        decode_responses=True,
-    )
-    FastAPICache.init(RedisBackend(redis_client), prefix="fastapi-cache")
-    
     logger.info("Backend initialized successfully")
 
 
@@ -128,8 +115,7 @@ async def startup_event() -> None:
 async def shutdown_event() -> None:
     """FastAPI shutdown event handler."""
     logger.info("Shutting down backend...")
-    # Close Redis connection
-    await FastAPICache.clear()
+    clear_cache()
     logger.info("Backend shut down successfully")
 
 
@@ -141,11 +127,5 @@ if __name__ == "__main__":
         port=config.port,
         reload=config.debug,
         workers=config.server.workers,
-        timeout_keep_alive=config.server.keepalive,
-        timeout=config.server.timeout,
-        limit_max_requests=config.server.limit_max_requests,
-        limit_max_requests_jitter=config.server.max_requests_jitter,
-        limit_concurrency=config.server.limit_concurrency,
-        backlog=config.server.backlog,
         log_level="debug" if config.debug else "info",
     )

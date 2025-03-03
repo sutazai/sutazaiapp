@@ -7,8 +7,9 @@ This module provides health check endpoints for the SutazAI backend.
 from typing import Dict
 
 from fastapi import APIRouter
-from fastapi_cache.decorator import cache
 from loguru import logger
+
+from backend.utils import cache
 
 # Create router
 health_router = APIRouter()
@@ -39,9 +40,6 @@ async def detailed_health_check() -> Dict[str, Dict[str, str]]:
         # Check database connection
         db_status = "healthy"  # Replace with actual DB check
         
-        # Check Redis connection
-        redis_status = "healthy"  # Replace with actual Redis check
-        
         # Check file system
         fs_status = "healthy"  # Replace with actual FS check
         
@@ -49,7 +47,6 @@ async def detailed_health_check() -> Dict[str, Dict[str, str]]:
             "status": {
                 "overall": "healthy",
                 "database": db_status,
-                "redis": redis_status,
                 "filesystem": fs_status,
             }
         }

@@ -1,10 +1,11 @@
 """
 SutazAI Backend Package
 
-This package provides the core functionality for the SutazAI backend service.
+This package contains the backend services for the SutazAI application.
 """
+
+from __future__ import annotations
 
 __version__ = "0.1.0"
 
 # Package initialization for backend
-from __future__ import annotations
