@@ -12,28 +12,29 @@ logger.info(f"Started %s service", name)
 # Stagger service starts to avoid resource contention
 time.sleep(2)
 except Exception:        logger.exception("Failed to start {name}: {str(e)}")
-    raise
-    def rollback_deployment() -> None:    """        Rollback deployment in case of failure.        """        logger.info(        f"Rolling back deployment due to errors...")        # Kill deployed services        try:        subprocess.run(            ["pkill", "-f", "uvicorn"],                check=False)
-        subprocess.run(
-        ["pkill", "-f", "streamlit"],
-        check=False)
-        logger.info(f"Services terminated")
-        except Exception:        logger.exception(
-            "Error during rollback: {e}")
-            def main() -> None:    """        Main deployment function.        """        try:        logger.info(            f"Starting SutazAI deployment...")        # Check Python version        if not check_python_version():        logger.warning(            f"Continuing deployment despite Python version mismatch")                        # Initialize system setup
-                system_setup = SystemSetup()
+raise
+def rollback_deployment() -> None:    """        Rollback deployment in case of failure.        """        logger.info(        f"Rolling back deployment due to errors...")        # Kill deployed services        try:        subprocess.run(            ["pkill", "-f", "uvicorn"],                check=False)
+subprocess.run(
+["pkill", "-f", "streamlit"],
+check=False)
+logger.info(f"Services terminated")
+except Exception:        logger.exception(
+"Error during rollback: {e}")
+def main() -> None:    """        Main deployment function.        """        try:        logger.info(            f"Starting SutazAI deployment...")        # Check Python version        if not check_python_version():        logger.warning(            f"Continuing deployment despite Python version mismatch")                        # Initialize system setup
+system_setup = SystemSetup()
                 # Set up the system (creates
                 # directories and checks
                 # dependencies)
-                system_setup.setup_system()
+system_setup.setup_system()
                 # Deploy services
-                deploy_services()
-                logger.info(
-                f"Deployment completed successfully")
-                except Exception as e:        logger.critical(
-                    "Deployment failed: %s",
-                    str(e))
-                    rollback_deployment()
-                    sys.exit(1)
-                    if __name__ == "__main__":        main()
+deploy_services()
+logger.info(
+f"Deployment completed successfully")
+except Exception as e:        logger.critical(
+"Deployment failed: %s",
+str(e))
+rollback_deployment()
+sys.exit(1)
+if __name__ == "__main__":        main()
 
+""""""
