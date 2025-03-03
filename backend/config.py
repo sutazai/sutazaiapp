@@ -11,6 +11,8 @@ from typing import Any, Dict, Optional
 
 import yaml
 from loguru import logger
+from typing import Union
+from typing import Optional
 
 
 @dataclass
@@ -29,7 +31,7 @@ class ServerConfig:
 class Config:
     """Main configuration class for the SutazAI backend."""
     
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize configuration.
         
         Args:
@@ -158,7 +160,7 @@ class Config:
         return f"Config(debug={self.debug}, host={self.host}, port={self.port})"
 
 
-def load_config(config_path: Optional[str] = None) -> Config:
+def load_config(config_path: str | None = None) -> Config:
     """Load configuration from file.
     
     Args:

@@ -15,6 +15,8 @@ from pydantic import BaseModel, Field
 
 from backend.services.diagram_parser import DiagramParser
 from backend.services.doc_processing import DocumentParser
+from typing import Union
+from typing import Optional
 
 # Create router
 router = APIRouter(prefix="/doc", tags=["document-processing"])
@@ -31,9 +33,9 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 class DocumentParseResponse(BaseModel):
     """Response model for document parsing."""
     success: bool = Field(..., description="Whether parsing was successful")
-    text: Optional[str] = Field(None, description="Extracted text content")
+    text: str | None = Field(None, description="Extracted text content")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Document metadata")
-    error: Optional[str] = Field(None, description="Error message if parsing failed")
+    error: str | None = Field(None, description="Error message if parsing failed")
 
 class ParseResponse(BaseModel):
     """Response model for parsing operations."""
@@ -55,7 +57,7 @@ async def parse_document(
         Parsing response with status and result
     """
     # Validate file extension
-    filename: Optional[str] = file.filename
+    filename: str | None = file.filename
     if not filename:
         raise HTTPException(
             status_code=400,
@@ -114,7 +116,7 @@ async def analyze_diagram(
         Analysis response with status and result
     """
     # Validate file extension
-    filename: Optional[str] = file.filename
+    filename: str | None = file.filename
     if not filename:
         raise HTTPException(
             status_code=400,
@@ -162,4 +164,3 @@ def setup_routes(app) -> None:
         app: FastAPI application instance
     """
     app.include_router(router)
-

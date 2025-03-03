@@ -12,6 +12,8 @@ import os
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
+from typing import Union
+from typing import Optional
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -77,7 +79,7 @@ class SystemManager:
         
         return architecture_report
     
-    def initialize_system(self, config_path: Optional[str] = None) -> bool:
+    def initialize_system(self, config_path: str | None = None) -> bool:
         """
         Initialize the system with optional configuration.
         

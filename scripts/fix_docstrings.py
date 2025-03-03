@@ -10,6 +10,8 @@ import os
 import re
 import sys
 from typing import List, Tuple, Dict, Optional
+from typing import Union
+from typing import Optional
 
 
 # ANSI color codes for pretty output
@@ -99,7 +101,7 @@ def extract_line_with_context(content: str, line_number: int, context: int = 2) 
     return "\n".join(result)
 
 
-def fix_unterminated_docstrings(content: str, error_line: Optional[int] = None) -> str:
+def fix_unterminated_docstrings(content: str, error_line: int | None = None) -> str:
     """
     Fix unterminated docstrings in Python code.
     

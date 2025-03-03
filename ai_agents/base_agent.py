@@ -13,6 +13,8 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from loguru import logger
+from typing import Union
+from typing import Optional
 
 
 class AgentError(Exception):
@@ -43,7 +45,7 @@ class BaseAgent(ABC):
     """
     def __init__(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         config: Optional[Dict[str, Any]] = None,
     ):
         """Initialize a base agent with optional name and configuration.

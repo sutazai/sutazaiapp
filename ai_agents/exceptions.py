@@ -4,12 +4,14 @@ Custom Exceptions for SutazAI Agents
 """
 
 from typing import Dict, Optional
+from typing import Union
+from typing import Optional
 
 
 class DocumentProcessingError(Exception):
     """Exception raised for errors during document processing."""
 
-    def __init__(self, message: str, task: Optional[Dict] = None):
+    def __init__(self, message: str, task: Dict | None = None):
         super().__init__(message)
         self.task = task or {}
 
@@ -27,6 +29,6 @@ class DocumentProcessingError(Exception):
                 class AgentError(Exception):
                     """Exception raised for errors in agent processing."""
 
-                    def __init__(self, message: str, task: Optional[Dict] = None):
+                    def __init__(self, message: str, task: Dict | None = None):
                         super().__init__(message)
                         self.task = task or {}

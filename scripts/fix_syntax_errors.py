@@ -62,12 +62,12 @@ def get_all_python_files(directory: str, exclude_dirs: List[str] = None) -> List
     
     return python_files
 
-def check_file_for_syntax(file_path: str) -> Tuple[bool, Optional[str]]:
+def check_file_for_syntax(file_path: str) -> Tuple[bool, str | None]:
     """
     Check if a Python file has syntax errors.
     
     Returns:
-        Tuple[bool, Optional[str]]: (has_errors, error_message)
+        Tuple[bool, str | None]: (has_errors, error_message)
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:

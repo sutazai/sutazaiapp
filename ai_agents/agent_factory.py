@@ -11,6 +11,8 @@ from typing import Any, Dict, Optional, Type
 from loguru import logger
 
 from ai_agents.base_agent import BaseAgent
+from typing import Union
+from typing import Optional
 
 
 class AgentFactory:
@@ -54,7 +56,7 @@ class AgentFactory:
     def create_agent(
         self,
         agent_type: str,
-        name: Optional[str] = None,
+        name: str | None = None,
         config: Optional[Dict[str, Any]] = None,
     ) -> BaseAgent:
         """Create a new agent instance.
@@ -127,4 +129,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

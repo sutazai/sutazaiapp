@@ -23,7 +23,7 @@ class SyntaxFixer:
             "node_modules", "build", "dist"
         }
 
-    def fix_syntax_errors(self, file_path: str) -> Optional[str]:
+    def fix_syntax_errors(self, file_path: str) -> str | None:
         """Fix syntax errors in a Python file."""
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
@@ -193,4 +193,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

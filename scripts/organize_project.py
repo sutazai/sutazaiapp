@@ -1,3 +1,4 @@
+from typing import Self
 #!/usr/bin/env python3.11"""Automatic Project Organizer for SutazAIThis script checks the project root and subdirectories for files and foldersthat are not part of the expected structure. Any extraneous files found inthe root will be moved to a 'misc' directory for further inspection.Expected structure at project root:Directories: ai_agents, model_management, backend, web_ui, scripts, packages, logs, doc_data, venvFiles: README.md, requirements.txtUsage:python3 scripts/organize_project.pyLogs operations to logs/organize.log"""import loggingimport shutilfrom datetime import datetimefrom pathlib import Pathfrom typing import Dict, List, Set# Configure loggingLOG_DIR = Path("/opt/sutazaiapp/logs")LOG_DIR.mkdir(parents=True, exist_ok=True)LOG_FILE = LOG_DIR / "organize.log"logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s: %(message)s",datefmt="%Y-%m-%d %H:%M:%S",handlers=[logging.FileHandler(LOG_FILE),logging.StreamHandler(),],)logger = logging.getLogger(__name__)class ProjectOrganizer:    """Project organization utility."""    def __init__(self, project_root: str = "/opt/sutazaiapp"):        """        Initialize the project organizer.        Args:        project_root: Root directory of the project        """        self.project_root = Path(project_root)        self.misc_dir = self.project_root / "misc"        self.expected_dirs: Set[str] = {            "ai_agents",    "model_management",}
 "backend",
 "web_ui",
@@ -20,7 +21,7 @@ self.ignored_patterns: Set[str] = {}
 ".DS_Store",
 "Thumbs.db",
 {}
-def should_ignore(self, path: Path) -> bool:            """            Check if a path should be ignored.            Args:            path: Path to check            Returns:            bool: True if path should be ignored            """            return any(            pattern in path.name or path.match(pattern)            for pattern in self.ignored_patterns        )
+def should_ignore(self, path: Path) -> Self        )
 def organize_root(self) -> Dict[str, List[str]]:            """                Organize the project root directory.                Returns:                Dict[str, List[str]]: Report of moved files and errors                """            report = {                "moved_files": [],                "errors": [],            }            logger.info("Starting organization of project root...")
 try:                    # Create misc directory if it doesn't exist
 self.misc_dir.mkdir(exist_ok=True)

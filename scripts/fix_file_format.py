@@ -59,7 +59,7 @@ def get_all_python_files(directory: str, exclude_dirs: List[str] = []) -> List[s
     
     return python_files
 
-def check_file_for_syntax(file_path: str) -> Tuple[bool, Optional[str]]:
+def check_file_for_syntax(file_path: str) -> Tuple[bool, str | None]:
     """Check if a file has syntax errors."""
     import py_compile
     import tempfile

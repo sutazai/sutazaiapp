@@ -15,7 +15,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-def read_file_content(file_path: str, encoding: str = "utf-8") -> Optional[str]:
+def read_file_content(file_path: str, encoding: str = "utf-8") -> str | None:
     """
     Read content from a file with robust error handling.
 

@@ -15,6 +15,8 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
+from typing import Union
+from typing import Optional
 
 # Get project root
 PROJECT_ROOT = Path(__file__).parent.parent.absolute()
@@ -32,7 +34,7 @@ class Colors:
     UNDERLINE = '\033[4m'
 
 
-def run_command(cmd: List[str], cwd: Optional[Path] = None) -> Tuple[int, str, str]:
+def run_command(cmd: List[str], cwd: Path | None = None) -> Tuple[int, str, str]:
     """Run a shell command and return exit code, stdout, and stderr."""
     process = subprocess.Popen(
         cmd,

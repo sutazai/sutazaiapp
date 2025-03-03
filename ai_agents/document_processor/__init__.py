@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Optional
 from loguru import logger
 
 from ai_agents.base_agent import BaseAgent
+from typing import Union
+from typing import Optional
 
 
 class DocumentProcessor(BaseAgent):
@@ -26,7 +28,7 @@ class DocumentProcessor(BaseAgent):
     
     def __init__(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         config: Optional[Dict[str, Any]] = None,
     ):
         """Initialize the document processor agent.

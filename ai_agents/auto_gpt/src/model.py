@@ -10,6 +10,8 @@ from dataclasses import dataclass
 import json
 import logging
 import openai
+from typing import Union
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +21,8 @@ class Message:
     """Represents a message in the conversation with the model."""
     role: str
     content: str
-    name: Optional[str] = None
-    function_call: Optional[Dict] = None
+    name: str | None = None
+    function_call: Dict | None = None
     
     def to_dict(self) -> Dict:
         """Convert message to dictionary format for API calls."""
@@ -47,8 +49,8 @@ class ModelConfig:
         top_p: float = 1.0,
         frequency_penalty: float = 0.0,
         presence_penalty: float = 0.0,
-        api_key: Optional[str] = None,
-        api_base: Optional[str] = None,
+        api_key: str | None = None,
+        api_base: str | None = None,
     ):
         """
         Initialize model configuration.
@@ -100,7 +102,7 @@ class ModelManager:
         self,
         role: str,
         content: str,
-        name: Optional[str] = None
+        name: str | None = None
     ) -> None:
         """
         Add a message to the conversation history.
@@ -134,16 +136,16 @@ class ModelManager:
 
     async def get_response(
         self,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
         functions: Optional[List[Dict]] = None
-    ) -> Union[str, Dict]:
+    ) -> str | Dict:
         """
         Get a response from the model.
         Args:
             system_prompt: System prompt to prepend (optional)
             functions: Function definitions for function calling (optional)
         Returns:
-            Union[str, Dict]: Model response or function call
+            str | Dict: Model response or function call
         Raises:
             ModelError: If the API call fails
         """

@@ -8,12 +8,13 @@ This module provides enhanced logging capabilities for the SutazAI system.
 import logging
 import sys
 from typing import Optional, Union
+from typing import Union
 
 
 def setup_logging(
     log_level: str = "INFO",
-    log_file: Optional[str] = None,
-    log_format: Optional[str] = None,
+    log_file: str | None = None,
+    log_format: str | None = None,
 ) -> logging.Logger:
     """
     Setup comprehensive logging configuration.
@@ -57,7 +58,7 @@ def setup_logging(
     return logger
 
 
-def log_info(message: Union[str, object], logger: Optional[logging.Logger] = None) -> None:
+def log_info(message: str | object, logger: Optional[logging.Logger] = None) -> None:
     """
     Log an informational message.
 
@@ -68,7 +69,7 @@ def log_info(message: Union[str, object], logger: Optional[logging.Logger] = Non
     (logger or logging.getLogger()).info(str(message))
 
 
-def log_warning(message: Union[str, object], logger: Optional[logging.Logger] = None) -> None:
+def log_warning(message: str | object, logger: Optional[logging.Logger] = None) -> None:
     """
     Log a warning message.
 
@@ -79,7 +80,7 @@ def log_warning(message: Union[str, object], logger: Optional[logging.Logger] = 
     (logger or logging.getLogger()).warning(str(message))
 
 
-def log_error(message: Union[str, object], logger: Optional[logging.Logger] = None) -> None:
+def log_error(message: str | object, logger: Optional[logging.Logger] = None) -> None:
     """
     Log an error message.
 
@@ -90,7 +91,7 @@ def log_error(message: Union[str, object], logger: Optional[logging.Logger] = No
     (logger or logging.getLogger()).error(str(message))
 
 
-def log_critical(message: Union[str, object], logger: Optional[logging.Logger] = None) -> None:
+def log_critical(message: str | object, logger: Optional[logging.Logger] = None) -> None:
     """
     Log a critical error message.
 
@@ -120,4 +121,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

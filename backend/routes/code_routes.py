@@ -10,6 +10,8 @@ from pydantic import BaseModel, Field
 
 from backend.services.auth import validate_otp  # From Phase 3 OTP validation
 from backend.services.code_generation import CodeGenerationService
+from typing import Union
+from typing import Optional
 
 # Initialize FastAPI router
 router = APIRouter(prefix="/code", tags=["Code Generation"])
@@ -26,11 +28,11 @@ class CodeGenerationRequest(BaseModel):
         max_length=2000, 
         description="Code generation specification",
     )
-    model_name: Optional[str] = Field(
+    model_name: str | None = Field(
         default="deepseek-coder", 
         description="Name of the code generation model to use",
     )
-    language: Optional[str] = Field(
+    language: str | None = Field(
         default="python", 
         description="Target programming language",
     )
@@ -46,7 +48,7 @@ class CodeGenerationResponse(BaseModel):
     """Response model for code generation."""
     success: bool = Field(description="Whether code generation was successful")
     message: str = Field(description="Status message or error description")
-    code: Optional[str] = Field(None, description="Generated code")
+    code: str | None = Field(None, description="Generated code")
     language: str = Field(description="Programming language of generated code")
     security_warnings: List[Dict[str, Any]] = Field(
         default_factory=list,
@@ -103,4 +105,3 @@ def setup_routes(app) -> None:
         app: FastAPI application instance
     """
     app.include_router(router)
-

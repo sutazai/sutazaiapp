@@ -5,12 +5,12 @@ def __init__(self, base_dir: str = "/opt/sutazaiapp/core_system"):        """
         base_dir: Base directory containing core system files
     """
     self.base_dir = Path(base_dir)
-    def validate_python_file(self, file_path: Path) -> Tuple[bool, Optional[str]]:            """
+    def validate_python_file(self, file_path: Path) -> Tuple[bool, str | None]:            """
     Validate a Python file for syntax errors.
     Args:
         file_path: Path to the Python file
     Returns:
-        Tuple[bool, Optional[str]]: (is_valid, error_message)
+        Tuple[bool, str | None]: (is_valid, error_message)
     """
     try:
                 with open(file_path, encoding="utf-8") as f:

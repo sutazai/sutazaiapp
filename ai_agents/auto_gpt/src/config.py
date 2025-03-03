@@ -124,7 +124,7 @@ class ModelConfig(BaseModel):
             return value
 
 
-        def validate_config(config: Optional[Union[dict, AutoGPTConfig]] = None) -> AutoGPTConfig:
+        def validate_config(config: Optional[dict | AutoGPTConfig] = None) -> AutoGPTConfig:
             """
             Validate and create an AutoGPT configuration.
 

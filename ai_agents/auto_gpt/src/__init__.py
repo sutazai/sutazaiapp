@@ -20,6 +20,8 @@ from .model import ModelConfig, ModelManager
 from .prompts import PromptManager
 from .task import Task, TaskStatus
 from .tools import Tool, registry
+from typing import Union
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +33,7 @@ class AutoGPTAgent(BaseAgent):
     
     def __init__(
         self,
-        config: Optional[Union[Dict, AutoGPTConfig]] = None,
+        config: Optional[Dict | AutoGPTConfig] = None,
         name: str = "auto_gpt",
         log_dir: str = "logs/auto_gpt",
     ):
@@ -55,7 +57,7 @@ class AutoGPTAgent(BaseAgent):
             persist_path=os.path.join(log_dir, "memory.json"),
         )
         self.prompts = PromptManager()
-        self.current_task: Optional[Task] = None
+        self.current_task: Task | None = None
     
     def _validate_config(self, config: Dict) -> AutoGPTConfig:
         """
@@ -118,7 +120,7 @@ class AutoGPTAgent(BaseAgent):
         except Exception as e:
             raise AgentError(f"Failed to shut down agent: {e!s}")
     
-    async def execute(self, task: Union[str, Dict]) -> Dict:
+    async def execute(self, task: str | Dict) -> Dict:
         """
         Execute a task using the agent.
         
@@ -250,12 +252,12 @@ class AutoGPTAgent(BaseAgent):
         except Exception as e:
             raise AgentError(f"Failed to create task plan: {e!s}")
     
-    async def _execute_step(self) -> Optional[str]:
+    async def _execute_step(self) -> str | None:
         """
         Execute the next step in the current task.
         
         Returns:
-            Optional[str]: Step execution result
+            str | None: Step execution result
         
         Raises:
             AgentError: If step execution fails
