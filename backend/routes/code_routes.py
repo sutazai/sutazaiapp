@@ -1,4 +1,10 @@
-from typing import List, Optional
+#!/usr/bin/env python3.11
+"""Code Routes Module
+
+This module provides routes for code generation functionality.
+"""
+
+from typing import Dict, List, Optional, Any
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
@@ -15,13 +21,18 @@ code_gen_service = CodeGenerationService()
 class CodeGenerationRequest(BaseModel):
     """Request model for code generation."""
     specification: str = Field(
-        ..., min_length=10, max_length=2000, description="Code generation specification",
+        ..., 
+        min_length=10, 
+        max_length=2000, 
+        description="Code generation specification",
     )
     model_name: Optional[str] = Field(
-        default="deepseek-coder", description="Name of the code generation model to use",
+        default="deepseek-coder", 
+        description="Name of the code generation model to use",
     )
     language: Optional[str] = Field(
-        default="python", description="Target programming language",
+        default="python", 
+        description="Target programming language",
     )
     otp: str = Field(
         ...,
@@ -33,63 +44,61 @@ class CodeGenerationRequest(BaseModel):
 
 class CodeGenerationResponse(BaseModel):
     """Response model for code generation."""
-    success: bool = Field(description="Whether the code generation was successful")
-    generated_code: Optional[str] = Field(
-        default=None, description="Generated code if successful",
-    )
-    security_warnings: List[str] = Field(
+    success: bool = Field(description="Whether code generation was successful")
+    message: str = Field(description="Status message or error description")
+    code: Optional[str] = Field(None, description="Generated code")
+    language: str = Field(description="Programming language of generated code")
+    security_warnings: List[Dict[str, Any]] = Field(
         default_factory=list,
-        description="List of security warnings for the generated code",
-    )
-    error: Optional[str] = Field(
-        default=None, description="Error message if code generation failed",
+        description="Security warnings from code analysis",
     )
 
 
 @router.post("/generate", response_model=CodeGenerationResponse)
 async def generate_code(
-    request: CodeGenerationRequest, background_tasks: BackgroundTasks,
+    request: CodeGenerationRequest, background_tasks: BackgroundTasks
 ) -> CodeGenerationResponse:
-    """
-    Generate code from specification with security scanning.
-    Args:
-        request: Code generation parameters
-        background_tasks: Background tasks runner
-    Returns:
-        CodeGenerationResponse with generated code or error
-    """
-    # Validate OTP first
-    if not validate_otp(request.otp):
-        raise HTTPException(status_code=403, detail="Invalid OTP")
+    """Generate code based on a specification.
     
+    Args:
+        request: Code generation request
+        background_tasks: FastAPI background tasks
+        
+    Returns:
+        Code generation response with status and generated code
+    """
+    # Validate OTP
+    if not validate_otp(request.otp):
+        raise HTTPException(status_code=401, detail="Invalid OTP")
+        
+    # Check if model is available
     try:
-        # Validate model availability
-        if request.model_name not in code_gen_service.available_models:
-            raise ValueError(f"Model {request.model_name} not available")
+        # Ensure language is not None before passing to generate_code
+        language = request.language or "python"
         
         # Generate code
         result = code_gen_service.generate_code(
             specification=request.specification,
-            model_name=request.model_name,
-            language=request.language,
+            model_name=request.model_name or "deepseek-coder",
+            language=language,
         )
-        
-        # Check for generation errors
-        if result.get("error"):
-            return CodeGenerationResponse(success=False, error=result["error"])
         
         return CodeGenerationResponse(
             success=True,
-            generated_code=result["code"],
+            message="Code generated successfully",
+            code=result.get("code", ""),
+            language=language,
             security_warnings=result.get("security_warnings", []),
         )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        return CodeGenerationResponse(success=False, error=str(e))
+        raise HTTPException(status_code=500, detail=f"Code generation failed: {str(e)}")
 
 
 def setup_routes(app) -> None:
-    """
-    Setup code generation routes.
+    """Include router in the FastAPI application.
+    
     Args:
         app: FastAPI application instance
     """

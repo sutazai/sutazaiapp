@@ -1,10 +1,13 @@
-"""
-Utility functions for the backend.
+#!/usr/bin/env python3.11
+"""Utility Module
+
+Provides utility functions for the SutazAI backend, including caching mechanisms
+and helper functions for common operations.
 """
 
 import time
 from functools import wraps
-from typing import Any, Callable, Dict
+from typing import Any, Dict
 
 # Simple in-memory cache
 cache_data: Dict[str, Any] = {}

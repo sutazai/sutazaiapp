@@ -10,7 +10,6 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 
 from ai_agents.agent_factory import AgentFactory
-from ai_agents.document_processor import DocumentProcessor
 
 # Create router
 core_router = APIRouter()

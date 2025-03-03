@@ -2,13 +2,15 @@
 """Backend Main Module
 
 This is the entry point for the SutazAI backend application.
-It sets up the FastAPI app, includes routers, and defines middleware and exception handlers.
+It sets up the FastAPI app, includes routers, and defines middleware and 
+exception handlers.
 """
 
 # Standard Library Imports
 import asyncio
 import logging
 from collections.abc import Awaitable
+from contextlib import asynccontextmanager
 from typing import Any, Callable, Dict
 
 # Third-Party Library Imports
@@ -34,6 +36,26 @@ logging.basicConfig(
 # Load configuration
 config = Config()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for FastAPI application.
+    
+    Handles startup and shutdown events.
+    """
+    # Startup
+    logger.info("Initializing backend...")
+    await initialize_backend()
+    logger.info("Backend initialized successfully")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down backend...")
+    clear_cache()
+    logger.info("Backend shut down successfully")
+
+
 # Create FastAPI app
 app = FastAPI(
     title="SutazAI Backend",
@@ -41,6 +63,7 @@ app = FastAPI(
     version="0.1.0",
     docs_url="/docs" if config.debug else None,
     redoc_url="/redoc" if config.debug else None,
+    lifespan=lifespan,
 )
 
 # Define allowed origins
@@ -103,20 +126,6 @@ async def initialize_backend() -> None:
     """Initialize the backend application."""
     logger.info("Initializing backend...")
     logger.info("Backend initialized successfully")
-
-
-@app.on_event("startup")
-async def startup_event() -> None:
-    """FastAPI startup event handler."""
-    await initialize_backend()
-
-
-@app.on_event("shutdown")
-async def shutdown_event() -> None:
-    """FastAPI shutdown event handler."""
-    logger.info("Shutting down backend...")
-    clear_cache()
-    logger.info("Backend shut down successfully")
 
 
 if __name__ == "__main__":

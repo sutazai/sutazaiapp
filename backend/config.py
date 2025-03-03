@@ -103,6 +103,10 @@ class Config:
             Dict containing configuration values
         """
         try:
+            if self.config_path is None:
+                logger.warning("Config path is None, using default empty config")
+                return {}
+                
             config_path = Path(self.config_path)
             if not config_path.exists():
                 logger.warning(f"Config file not found: {config_path}")
@@ -119,11 +123,16 @@ class Config:
             
     def _setup_logging(self) -> None:
         """Configure logging settings."""
-        log_dir = Path(self.log_file).parent
+        # Ensure log_file is not None before creating Path
+        log_file = self.log_file
+        if log_file is None:
+            log_file = "/opt/sutazaiapp/logs/backend.log"
+            
+        log_dir = Path(log_file).parent
         log_dir.mkdir(parents=True, exist_ok=True)
         
         logger.add(
-            self.log_file,
+            log_file,
             level=self.log_level,
             rotation="10 MB",
             compression="zip",

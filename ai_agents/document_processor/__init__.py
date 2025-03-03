@@ -4,6 +4,7 @@
 This module provides the DocumentProcessor agent for processing various document types.
 """
 
+import json
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional

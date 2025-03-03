@@ -1,190 +1,137 @@
 #!/usr/bin/env python3.11
-"""
-API Routes Module for SutazAI Backend
+"""API Routes Module
+
 Provides centralized routing configuration and management.
 """
-from typing import Any, Dict, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Any, Dict, Optional, List
+
+from fastapi import APIRouter
 from pydantic import BaseModel, Field, validator
 
-router = APIRouter(tags=["api"])
+# API version
+API_VERSION = "0.1.0"
 
 
-class ApiStatus(BaseModel):
+def get_api_version() -> str:
+    """Get current API version.
+    
+    Returns:
+        Current API version string
     """
-    Pydantic model representing the API status.
-    Attributes:
-    status: The current API status string
-    version: The API version string
+    return API_VERSION
+
+
+class APIRouteConfig(BaseModel):
+    """API Route Configuration Model.
+    
+    Used to configure and validate API route settings.
     """
-
-    status: str = Field(..., description="Current API status")
-    version: str = Field(default="0.1.0", description="API version")
-
-    model_config = {
-    "json_schema_extra": {"example": {"status": "running", "version": "0.1.0"}},
-    }
-
-    @validator("status")
-    @classmethod
-    def validate_status(cls, v: str) -> str:
-        """
-        Validate the API status.
-        Args:
-        v: Status string to validate
-        Returns:
-        Validated status string
-        """
-        valid_statuses = {"running", "starting", "stopping", "maintenance"}
-        if v.lower() not in valid_statuses:
-            raise ValueError(f"Invalid status. Must be one of {valid_statuses}")
-            return v.lower()
-
-        def is_running(self) -> bool:
-            """
-            Check if the API is in running state.
-            Returns:
-            bool: True if the API is running, False otherwise
-            """
-            return self.status == "running"
-
-        def get_version_info(self) -> Dict[str, str]:
-            """
-            Get detailed version information.
-            Returns:
-            Dict[str, str]: Dictionary containing version details
-            """
-            try:
-                major, minor, patch = self.version.split(".")
-                return {
-            "version": self.version,
-            "major": major,
-            "minor": minor,
-            "patch": patch,
-            }
-            except ValueError:
-                raise ValueError(f"Invalid version format: {self.version}")
-
-                def get_status_description(self) -> str:
-                    """
-                    Get a human-readable description of the API status.
-                    Returns:
-                    str: A description of the current API status
-                    """
-                    status_map = {
-                    "running": "The API is operational and accepting requests",
-                    "starting": "The API is currently starting up",
-                    "stopping": "The API is shutting down",
-                    "maintenance": "The API is undergoing maintenance",
-                    }
-                    return status_map.get(self.status, "Unknown API status")
+    prefix: str = Field(
+        default="/api",
+        description="API route prefix",
+    )
+    tags: list[str] = Field(
+        default_factory=list,
+        description="List of tags for API documentation",
+    )
+    enable_docs: bool = Field(
+        default=True,
+        description="Whether to enable API documentation for these routes",
+    )
+    rate_limit: int = Field(
+        default=100,
+        description="Rate limit for API calls per minute",
+        ge=1,
+        le=1000,
+    )
+    
+    @validator("prefix")
+    def prefix_must_start_with_slash(cls, v):
+        """Validate that prefix starts with a slash."""
+        if not v.startswith("/"):
+            raise ValueError("prefix must start with '/'")
+        return v
 
 
-                def get_api_version() -> str:
-                    """
-                    Get the current API version.
-                    Returns:
-                    str: The current API version string
-                    """
-                    return "0.1.0"
-
-
-                @router.get("/status", response_model=ApiStatus)
-                def get_status(version: str = Depends(get_api_version)) -> ApiStatus:
-                    """
-                    Get the current status of the API.
-                    Args:
-                    version: The API version from dependency
-                    Returns:
-                    ApiStatus: A model containing the API status information
-                    """
-                    return ApiStatus(status="running", version=version)
-
-
-                @router.get("/info")
-                def get_info() -> Dict[str, Any]:
-                    """
-                    Get general information about the API.
-                    Returns:
-                    Dict[str, Any]: Dictionary with API information
-                    """
-                    return {
-                "name": "SutazAI Backend API",
-                "description": "Backend API for SutazAI autonomous development platform",
-                "version": get_api_version(),
-                "endpoints": [
+def create_api_router(
+    prefix: str = "/api",
+    tags: Optional[List[str]] = None,
+    enable_docs: bool = True,
+) -> APIRouter:
+    """Create a configured API router.
+    
+    Args:
+        prefix: API route prefix
+        tags: List of tags for API documentation
+        enable_docs: Whether to enable API documentation
+        
+    Returns:
+        Configured APIRouter instance
+    """
+    tags = tags or ["api"]
+    
+    router = APIRouter(
+        prefix=prefix,
+        tags=tags,
+    )
+    
+    # Add basic informational routes
+    @router.get("/status")
+    async def get_status() -> Dict[str, Any]:
+        """Get current API status."""
+        return {
+            "status": "operational",
+            "version": get_api_version(),
+        }
+        
+    @router.get("/info")
+    async def get_info() -> Dict[str, Any]:
+        """Get API information and available endpoints."""
+        return {
+            "name": "SutazAI Backend API",
+            "description": "Backend API for SutazAI autonomous development platform",
+            "version": get_api_version(),
+            "endpoints": [
                 {"path": "/status", "method": "GET", "description": "Get API status"},
-                {"path": "/info", "method": "GET", "description": "Get API information"},
-                ],
-                }
+                {"path": "/info", "method": "GET", 
+                 "description": "Get API information"},
+            ],
+        }
+        
+    return router
 
 
-                class APIRouteConfig(BaseModel):
-                    """
-                    Configuration class for API routes.
-                    """
-
-                    enabled_routes: Dict[str, bool] = Field(
-                    default_factory=lambda: {"status": True, "info": True},
-                    description="Dictionary of route names and their enabled status",
-                    )
-                    route_prefix: str = Field(
-                    default="/api/v1", description="Default route prefix for the API",
-                    )
-
-                    @validator("route_prefix")
-                    @classmethod
-                    def validate_route_prefix(cls, v: str) -> str:
-                        """
-                        Validate the route prefix.
-                        Args:
-                        v: Route prefix to validate
-                        Returns:
-                        Validated route prefix
-                        """
-                        if not v.startswith("/"):
-                            raise ValueError("Route prefix must start with '/'")
-                            return v
-
-                        def get_route_prefix(self) -> str:
-                            """
-                            Get the default route prefix for the API.
-                            Returns:
-                            str: The default route prefix
-                            """
-                            return self.route_prefix
-
-                        def is_route_enabled(self, route_name: str) -> bool:
-                            """
-                            Check if a specific route is enabled.
-                            Args:
-                            route_name: Name of the route to check
-                            Returns:
-                            bool: True if the route is enabled, False otherwise
-                            """
-                            return self.enabled_routes.get(route_name, False)
-
-                        def enable_route(self, route_name: str) -> None:
-                            """
-                            Enable a specific route.
-                            Args:
-                            route_name: Name of the route to enable
-                            """
-                            if route_name not in self.enabled_routes:
-                                raise ValueError(f"Unknown route: {route_name}")
-                                self.enabled_routes[route_name] = True
-
-                                def disable_route(self, route_name: str) -> None:
-                                    """
-                                    Disable a specific route.
-                                    Args:
-                                    route_name: Name of the route to disable
-                                    """
-                                    if route_name not in self.enabled_routes:
-                                        raise ValueError(f"Unknown route: {route_name}")
-                                        self.enabled_routes[route_name] = False
-
-
-                                        # Create an instance of the route configuration
-                                        route_config = APIRouteConfig()
+def register_api_routes(app, routes_config=None):
+    """Register API routes with the FastAPI application.
+    
+    Args:
+        app: FastAPI application instance
+        routes_config: Optional route configuration
+    """
+    # Default configuration if none provided
+    if routes_config is None:
+        routes_config = {
+            "core": {
+                "prefix": "/api/core",
+                "tags": ["core"],
+            },
+            "users": {
+                "prefix": "/api/users",
+                "tags": ["users"],
+            },
+            "documents": {
+                "prefix": "/api/documents",
+                "tags": ["documents"],
+            },
+        }
+        
+    # Register each route group
+    for route_group, config in routes_config.items():
+        router = create_api_router(
+            prefix=config.get("prefix", f"/api/{route_group}"),
+            tags=config.get("tags", [route_group]),
+            enable_docs=config.get("enable_docs", True),
+        )
+        
+        app.include_router(router)
