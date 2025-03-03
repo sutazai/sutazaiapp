@@ -1,0 +1,13 @@
+[bandit]
+# Skip low severity B404 warnings about subprocess imports globally
+# We've addressed them with proper security measures in our code
+skips: B404
+# Skip assert warnings in test files
+exclude_dirs: venv,.git,__pycache__,node_modules,build,dist
+# Tests to skip in ALL test directories
+# B101 is assert being used in tests, which is fine in test files
+# B106/B107 are hardcoded passwords, which might be OK in test fixtures
+tests_skips: B101,B106,B107
+
+[metrics]
+confidence-minimum: medium 

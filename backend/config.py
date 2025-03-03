@@ -46,7 +46,7 @@ class Config:
         self._config = self._load_config()
         
         # Server settings
-        self.host = self._config.get("host", "0.0.0.0")
+        self.host = self._config.get("host", "127.0.0.1")
         self.port = int(self._config.get("port", 8000))
         self.debug = bool(self._config.get("debug", False))
         

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3.11
+from __future__ import annotations
 
 """AutoGPT Agent Implementation
 
 This module provides an autonomous agent capable of executing complex tasks
 using language models and various tools."""
 
-from __future__ import annotations
+
 
 import asyncio
 import json

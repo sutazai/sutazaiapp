@@ -109,7 +109,7 @@ def main() -> None:
     # Setup logging with custom configuration
     logger = setup_logging(
         log_level="DEBUG",
-        log_file="/tmp/sutazai_advanced_logger.log",
+        log_file="/opt/sutazaiapp/logs/advanced_logger.log",
     )
 
     # Demonstrate logging levels

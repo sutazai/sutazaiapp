@@ -1,3 +1,152 @@
+# SutazAI - AI-Powered Code Analysis and Generation System
+
+## Overview
+SutazAI is a comprehensive system for analyzing, maintaining, and generating code. It includes monitoring, maintenance, and deployment capabilities to ensure robust operation.
+
+## Features
+- Code analysis and quality checks
+- Security scanning and vulnerability detection
+- System monitoring and health checks
+- Automated maintenance and optimization
+- CI/CD pipeline integration
+- Comprehensive logging and alerting
+
+## Prerequisites
+- Python 3.11+
+- PostgreSQL 13+
+- Node.js 16+ (for web UI)
+- Systemd (for service management)
+
+## Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/sutazai.git
+cd sutazai
+```
+
+### 2. Set Up Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure Environment Variables
+Create a `.env` file in the project root:
+```env
+DATABASE_URL=postgresql://sutazai:sutazai@localhost:5432/sutazai
+SMTP_USER=your_smtp_user
+SMTP_PASSWORD=your_smtp_password
+```
+
+### 5. Install System Services
+```bash
+sudo ./scripts/install_services.sh
+```
+
+## Usage
+
+### Monitoring
+The monitoring service runs automatically and provides:
+- Resource usage monitoring (CPU, memory, disk)
+- Service health checks
+- Performance metrics collection
+- Alert management
+
+### Maintenance
+The maintenance service runs daily at 2:00 AM and performs:
+- System optimization
+- Security validation
+- Dependency management
+- Log rotation
+- Backup management
+
+### Code Analysis
+Run code analysis manually:
+```bash
+python scripts/code_audit.py
+```
+
+### Deployment
+Deploy to production:
+```bash
+python scripts/deploy.py
+```
+
+## Development
+
+### Running Tests
+```bash
+pytest
+```
+
+### Code Quality Checks
+```bash
+pylint .
+mypy .
+bandit -r .
+safety check
+```
+
+### Pre-commit Hooks
+The repository includes pre-commit hooks for:
+- Security scanning
+- Code quality checks
+- Type checking
+
+## Monitoring and Maintenance
+
+### Logs
+Logs are stored in `/opt/sutazaiapp/logs/`:
+- `monitoring.log`: System monitoring logs
+- `maintenance.log`: Maintenance task logs
+- `code_audit.log`: Code analysis logs
+- `deploy.log`: Deployment logs
+
+### Metrics
+Metrics are stored in `/opt/sutazaiapp/metrics/` and include:
+- Resource usage metrics
+- Performance metrics
+- Service health status
+
+### Alerts
+Alerts are sent via email when:
+- Resource usage exceeds thresholds
+- Services become unhealthy
+- Critical issues are detected
+
+## Security
+
+### Access Control
+- All services run under the `sutazaiapp_dev` user
+- SSH keys required for deployment
+- Environment variables for sensitive data
+
+### Security Scanning
+- Bandit for Python code security
+- Safety for dependency security
+- Regular security audits
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+For support, please contact:
+- Email: chrissuta01@gmail.com
+- GitHub Issues: [Project Issues](https://github.com/yourusername/sutazai/issues)
+
 # SutazAI Application
 
 A comprehensive AI development platform featuring autonomous agents, model management, and advanced system integration.

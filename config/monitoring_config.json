@@ -1,0 +1,96 @@
+{
+    "thresholds": {
+        "cpu_percent": 80,
+        "memory_percent": 80,
+        "disk_percent": 80,
+        "response_time_seconds": 2.0,
+        "error_rate_percent": 5.0
+    },
+    "alert_cooldown_minutes": 30,
+    "email_alerts": {
+        "enabled": true,
+        "recipients": [
+            "chrissuta01@gmail.com"
+        ],
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587
+    },
+    "health_check_endpoints": {
+        "backend": "http://localhost:8000/health",
+        "web_ui": "http://localhost:3000",
+        "database": "postgresql://sutazai:sutazai@localhost:5432/sutazai"
+    },
+    "log_analysis": {
+        "max_lines": 1000,
+        "error_patterns": [
+            "ERROR",
+            "CRITICAL",
+            "FATAL"
+        ],
+        "warning_patterns": [
+            "WARNING",
+            "DEPRECATED"
+        ],
+        "retention_days": 30
+    },
+    "metrics_collection": {
+        "interval_seconds": 60,
+        "retention_days": 7,
+        "aggregation": {
+            "cpu": "average",
+            "memory": "average",
+            "disk": "average",
+            "response_time": "p95"
+        }
+    },
+    "services": {
+        "backend": {
+            "name": "sutazai-backend",
+            "port": 8000,
+            "health_endpoint": "/health",
+            "restart_command": "sudo systemctl restart sutazai-backend"
+        },
+        "web_ui": {
+            "name": "sutazai-web",
+            "port": 3000,
+            "health_endpoint": "/",
+            "restart_command": "sudo systemctl restart sutazai-web"
+        },
+        "database": {
+            "name": "postgresql",
+            "port": 5432,
+            "database": "sutazai",
+            "user": "sutazai",
+            "restart_command": "sudo systemctl restart postgresql"
+        }
+    },
+    "backup": {
+        "enabled": true,
+        "schedule": "0 0 * * *",
+        "retention_days": 7,
+        "include_database": true,
+        "include_logs": true
+    },
+    "performance": {
+        "profiling": {
+            "enabled": true,
+            "interval_minutes": 60,
+            "retention_days": 7
+        },
+        "tracing": {
+            "enabled": true,
+            "sample_rate": 0.1
+        }
+    },
+    "security": {
+        "scan_interval_minutes": 60,
+        "vulnerability_check": {
+            "enabled": true,
+            "schedule": "0 0 * * *"
+        },
+        "file_permissions": {
+            "enabled": true,
+            "check_interval_minutes": 30
+        }
+    }
+} 

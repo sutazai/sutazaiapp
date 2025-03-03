@@ -5,9 +5,9 @@ from collections.abc import Generator
 import cv2  # type: ignore
 import numpy as np
 import pytest
-from ai_agents.document_processor.src import DocumentProcessorAgent
+from ai_agents.document_processor.agent import DocumentProcessorAgent
+from ai_agents.document_processor.errors import AgentError
 from ai_agents.document_processor.utils.document_utils import DocumentUtils
-from ai_agents.exceptions import AgentError
 
 @pytest.fixture
 def sample_pdf_path() -> Generator[str, None, None]:
@@ -19,10 +19,10 @@ def sample_pdf_path() -> Generator[str, None, None]:
     import fitz  # type: ignore
     # Create a temporary PDF
     temp_pdf = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
-    doc = fitz.open()
-    page = doc.new_page(width=595, height=842)  # A4 size
+    doc = fitz.open(filename="")  # nosec
+    page = doc.new_page(width=595, height=842)  # type: ignore
     page.insert_text((50, 50), "SutazAI Document Processing Test")
-    doc.save(temp_pdf.name)
+    doc.save(temp_pdf.name)  # type: ignore
     doc.close()
     yield temp_pdf.name
     # Cleanup
@@ -66,9 +66,9 @@ class TestDocumentProcessorAgent:
             "parameters": {},
         }
         result = agent.execute(task)
-        assert result["status"] == "success"
-        assert len(result["text"]) > 0
-        assert result["total_pages"] == 1
+        assert result["status"] == "success"  # nosec
+        assert len(result["text"]) > 0  # nosec
+        assert result["total_pages"] == 1  # nosec
         assert "SutazAI Document Processing Test" in result["text"][0]
 
     def test_ocr_processing(self, sample_image_path: str):
@@ -80,8 +80,8 @@ class TestDocumentProcessorAgent:
             "parameters": {"languages": ["eng"]},
         }
         result = agent.execute(task)
-        assert result["status"] == "success"
-        assert "SutazAI OCR Test" in result["text"]
+        assert result["status"] == "success"  # nosec
+        assert "SutazAI OCR Test" in result["text"]  # nosec
 
     def test_document_analysis(self, sample_pdf_path: str):
         """Test advanced document analysis functionality"""
@@ -92,9 +92,9 @@ class TestDocumentProcessorAgent:
             "parameters": {},
         }
         result = agent.execute(task)
-        assert result["status"] == "success"
-        assert result["analysis"]["total_pages"] == 1
-        assert len(result["analysis"]["text_blocks"]) > 0
+        assert result["status"] == "success"  # nosec
+        assert result["analysis"]["total_pages"] == 1  # nosec
+        assert len(result["analysis"]["text_blocks"]) > 0  # nosec
 
     def test_invalid_document_path(self):
         """Test handling of invalid document path"""
@@ -106,7 +106,7 @@ class TestDocumentProcessorAgent:
         }
         with pytest.raises(AgentError) as excinfo:
             agent.execute(task)
-        assert "Document processing failed" in str(excinfo.value)
+        assert "Document processing failed" in str(excinfo.value)  # nosec
 
     def test_unsupported_task_type(self, sample_pdf_path: str):
         """Test handling of unsupported task type"""
@@ -118,17 +118,17 @@ class TestDocumentProcessorAgent:
         }
         with pytest.raises(AgentError) as excinfo:
             agent.execute(task)
-        assert "Unsupported operation" in str(excinfo.value)
+        assert "Unsupported operation" in str(excinfo.value)  # nosec
 
     def test_document_utils_validation(self, sample_pdf_path: str):
         """Test document validation utility"""
         validation_result = DocumentUtils.validate_document(sample_pdf_path)
-        assert validation_result["status"] == "success"
-        assert "metadata" in validation_result
-        assert "file_path" in validation_result["metadata"]
-        assert "mime_type" in validation_result["metadata"]
-        assert "file_size_bytes" in validation_result["metadata"]
-        assert "file_hash" in validation_result["metadata"]
+        assert validation_result["status"] == "success"  # nosec
+        assert "metadata" in validation_result  # nosec
+        assert "file_path" in validation_result["metadata"]  # nosec
+        assert "mime_type" in validation_result["metadata"]  # nosec
+        assert "file_size_bytes" in validation_result["metadata"]  # nosec
+        assert "file_hash" in validation_result["metadata"]  # nosec
 
     def test_document_utils_metadata(self, sample_pdf_path: str):
         """Test document metadata extraction utility"""

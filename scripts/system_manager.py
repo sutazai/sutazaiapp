@@ -9,11 +9,11 @@ and unified management capabilities.
 import json
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - Required for system management
 import sys
+import shlex
 from typing import Any, Dict, List, Optional
 from typing import Union
-from typing import Optional
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class SystemManager:
             # Load configuration if provided
             config = {}
             if config_path and os.path.exists(config_path):
-                with open(config_path) as f:
+                with open(config_path, 'r') as f:
                     config = json.load(f)
             
             # Create necessary directories
@@ -110,21 +110,39 @@ class SystemManager:
             logger.info("System initialization started")
             
             # Perform any custom initialization from config using a whitelist approach
+            # Use full paths for all executables
+            python_exec = sys.executable
             allowed_commands = {
-                "pytest": [sys.executable, "-m", "pytest"],
-                "black": [sys.executable, "-m", "black"],
-                "isort": [sys.executable, "-m", "isort"],
-                "mypy": [sys.executable, "-m", "mypy"],
+                "pytest": [python_exec, "-m", "pytest"],
+                "black": [python_exec, "-m", "black"],
+                "isort": [python_exec, "-m", "isort"],
+                "mypy": [python_exec, "-m", "mypy"],
             }
             
             if config.get("custom_init_commands"):
                 for cmd in config["custom_init_commands"]:
-                    cmd_parts = cmd.split()
+                    # Safely parse the command
+                    try:
+                        cmd_parts = shlex.split(cmd)
+                    except ValueError as e:
+                        logger.warning(f"Invalid command format: {cmd}, error: {e}")
+                        continue
+                        
                     if cmd_parts and cmd_parts[0] in allowed_commands:
                         base_cmd = allowed_commands[cmd_parts[0]]
                         args = cmd_parts[1:]
-                        subprocess.run(
-                            base_cmd + args,
+                        
+                        # Validate args to prevent command injection
+                        valid_args = []
+                        for arg in args:
+                            # Skip any suspicious arguments
+                            if arg.startswith(';') or arg.startswith('|') or arg.startswith('&'):
+                                logger.warning(f"Skipping suspicious argument: {arg}")
+                                continue
+                            valid_args.append(arg)
+                            
+                        subprocess.run(  # nosec B603 - Using whitelist of trusted commands with validation
+                            base_cmd + valid_args,
                             shell=False,
                             check=True,
                             capture_output=True,

@@ -1,0 +1,17 @@
+[Unit]
+Description=SutazAI System Monitoring Service
+After=network.target postgresql.service sutazai-backend.service sutazai-web.service
+
+[Service]
+Type=simple
+User=sutazaiapp_dev
+Group=sutazaiapp_dev
+Environment=PYTHONPATH=/opt/sutazaiapp
+Environment=SMTP_USER=your_smtp_user
+Environment=SMTP_PASSWORD=your_smtp_password
+ExecStart=/opt/sutazaiapp/venv/bin/python /opt/sutazaiapp/scripts/monitoring.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,14 @@
+[Unit]
+Description=SutazAI System Maintenance Service
+After=network.target postgresql.service sutazai-backend.service sutazai-web.service
+
+[Service]
+Type=oneshot
+User=sutazaiapp_dev
+Group=sutazaiapp_dev
+Environment=PYTHONPATH=/opt/sutazaiapp
+ExecStart=/opt/sutazaiapp/venv/bin/python /opt/sutazaiapp/scripts/system_maintenance.py
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target 

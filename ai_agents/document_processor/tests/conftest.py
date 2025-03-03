@@ -3,6 +3,7 @@ import os
 import sys
 import pytest
 from loguru import logger
+import tempfile
 
 def pytest_configure(config):
     """
@@ -65,12 +66,12 @@ def test_environment(request):
         "test": {
             "debug": False,
             "log_level": log_level,
-            "temp_dir": "/tmp/sutazai_test",
+            "temp_dir": tempfile.mkdtemp(prefix="sutazai_test_"),
         },
         "dev": {
             "debug": True,
             "log_level": "DEBUG",
-            "temp_dir": "/tmp/sutazai_dev",
+            "temp_dir": tempfile.mkdtemp(prefix="sutazai_dev_"),
         },
     }
     
@@ -87,7 +88,6 @@ def temp_document_dir(test_environment):
     Returns:
         str: Path to temporary document directory
     """
-    import tempfile
     with tempfile.TemporaryDirectory(
         prefix="sutazai_doc_test_",
         dir=test_environment["temp_dir"],
