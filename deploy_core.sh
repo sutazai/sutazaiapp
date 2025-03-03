@@ -1,0 +1,2 @@
+#!/bin/bash
+expect -c "spawn rsync -av --exclude=venv --exclude=__pycache__ --exclude=.git --exclude=.pytest_cache /opt/sutazaiapp/core_system /opt/sutazaiapp/ai_agents /opt/sutazaiapp/scripts /opt/sutazaiapp/backend /opt/sutazaiapp/tests sutazaiapp_dev@192.168.100.100:/opt/sutazaiapp/; expect \"password:\"; send \"1988\r\"; expect eof"

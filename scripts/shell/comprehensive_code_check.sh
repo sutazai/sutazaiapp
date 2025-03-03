@@ -3,30 +3,11 @@
 # Ensure Python 3.11 is used
 PYTHON_CMD="python3.11"
 
-# Limit CPU usage
-limit_cpu() {
-    local max_cpu_percent="${1:-50}"
-    local pid=$$
-    
-    # Background process to monitor and limit CPU
-    (
-        while true; do
-            cpu_usage=$(ps -p "$pid" -o %cpu | tail -n 1 | tr -d ' ')
-            if (( $(echo "$cpu_usage > $max_cpu_percent" | bc -l) )); then
-                # Pause the process if CPU usage is too high
-                kill -STOP "$pid"
-                sleep 5
-                kill -CONT "$pid"
-            fi
-            sleep 2
-        done
-    ) &
-    CPU_LIMIT_PID=$!
-    trap 'kill $CPU_LIMIT_PID' EXIT
-}
-
-# Call CPU limit at the start of the script
-limit_cpu 50  # Limit to 50% CPU
+# Use nice to set process priority instead of CPU limiting
+nice -n 19 "$0" "$@" &
+parent_nice_pid=$!
+wait $parent_nice_pid
+exit $?
 
 # Verify Python version
 verify_python_version() {
