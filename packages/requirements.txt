@@ -34,7 +34,7 @@ python-multipart>=0.0.9; python_version == '3.11'
 pyjwt>=2.8.0; python_version == '3.11'
 
 # Document processing
-PyMuPDF==1.23.8; python_version == '3.11'  # fitz library for PDF processing
+PyMuPDF==1.25.3; python_version == '3.11'  # fitz library for PDF processing
 opencv-python-headless==4.9.0.80; python_version == '3.11'  # cv2 for image processing
 pytesseract>=0.3.10; python_version == '3.11'  # OCR processing
 
@@ -52,7 +52,7 @@ structlog>=23.1.0; python_version == '3.11'
 networkx>=3.0.0; python_version == '3.11'
 redis>=4.5.0; python_version == '3.11'
 spacy>=3.6.0; python_version == '3.11'
-psutil==5.9.7; python_version == '3.11'
+psutil==5.9.8; python_version == '3.11'
 pyyaml>=6.0.0; python_version == '3.11'  # For YAML parsing
 
 # Profiling and performance

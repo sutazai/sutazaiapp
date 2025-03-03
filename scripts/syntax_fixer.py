@@ -74,7 +74,8 @@ class SyntaxFixer:
             
         if in_docstring:
             # Add missing closing quotes
-            fixed_lines[docstring_start] = fixed_lines[docstring_start].rstrip() + '"""'
+            if docstring_start is not None:
+                fixed_lines[docstring_start] = fixed_lines[docstring_start].rstrip() + '"""'
             
         return '\n'.join(fixed_lines)
 

@@ -107,7 +107,9 @@ class Config:
                 logger.warning("Config path is None, using default empty config")
                 return {}
                 
-            config_path = Path(self.config_path)
+            # Ensure config_path is str before creating Path
+            config_path_str = str(self.config_path) if self.config_path is not None else ""
+            config_path = Path(config_path_str)
             if not config_path.exists():
                 logger.warning(f"Config file not found: {config_path}")
                 return {}

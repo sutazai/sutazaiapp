@@ -144,7 +144,9 @@ class DocumentProcessor(BaseAgent):
         import fitz  # PyMuPDF
         
         try:
-            doc = fitz.open(file_path)
+            # Convert Path to string if needed
+            file_path_str = str(file_path)
+            doc = fitz.open(file_path_str)
             pages = []
             
             for page_num in range(len(doc)):

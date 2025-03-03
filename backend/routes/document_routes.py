@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import aiofiles  # type: ignore # noqa
+import aiofiles  # types-aiofiles will need to be installed
 from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
 from loguru import logger
 from pydantic import BaseModel, Field
@@ -27,13 +27,19 @@ diagram_parser = DiagramParser(output_dir="/opt/sutazaiapp/data/diagrams")
 UPLOAD_DIR = "/opt/sutazaiapp/doc_data/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+# Define models
+class DocumentParseResponse(BaseModel):
+    """Response model for document parsing."""
+    success: bool = Field(..., description="Whether parsing was successful")
+    text: Optional[str] = Field(None, description="Extracted text content")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Document metadata")
+    error: Optional[str] = Field(None, description="Error message if parsing failed")
+
 class ParseResponse(BaseModel):
-    """Standardized parsing response model."""
-    success: bool = Field(description="Whether the parsing was successful")
-    message: str = Field(description="Status message or error description")
-    result: Dict[str, Any] = Field(
-        default_factory=dict, description="Parsing result data"
-    )
+    """Response model for parsing operations."""
+    success: bool = Field(..., description="Whether the operation was successful")
+    message: str = Field(..., description="Status message")
+    data: Optional[Dict[str, Any]] = Field(None, description="Parsed data if available")
 
 @router.post("/parse", response_model=ParseResponse)
 async def parse_document(
@@ -62,7 +68,7 @@ async def parse_document(
             status_code=400,
             detail=f"Unsupported file type: {file_ext}. Use PDF or DOCX.",
         )
-    
+        
     # Save file to disk
     file_path = f"/opt/sutazaiapp/data/documents/{filename}"
     async with aiofiles.open(file_path, "wb") as out_file:
@@ -91,6 +97,7 @@ async def parse_document(
     return ParseResponse(
         success=True,
         message=f"Document uploaded and being processed: {filename}",
+        data=None
     )
 
 @router.post("/diagram/analyze", response_model=ParseResponse)
@@ -145,6 +152,7 @@ async def analyze_diagram(
     return ParseResponse(
         success=True,
         message=f"Diagram uploaded and being analyzed: {filename}",
+        data=None
     )
 
 def setup_routes(app) -> None:

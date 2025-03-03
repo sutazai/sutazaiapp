@@ -7,21 +7,35 @@ This module provides functionality for extracting text from documents.
 import json
 import logging
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union, TYPE_CHECKING, cast
 
 from loguru import logger
 
-try:
-    import docx2txt  # type: ignore
-except ImportError:
-    logger.warning("docx2txt not installed, DOCX parsing will be unavailable")
-    docx2txt = None
+# Type definitions for docx2txt
+if TYPE_CHECKING:
+    import docx2txt
+    from docx2txt import _Docx2txtModule
+    docx2txt_module: Optional[_Docx2txtModule] = docx2txt
+else:
+    try:
+        import docx2txt
+        docx2txt_module = docx2txt
+    except ImportError:
+        logger.warning("docx2txt not installed, DOCX parsing will be unavailable")
+        docx2txt_module = None
 
-try:
-    import fitz  # PyMuPDF  # type: ignore
-except ImportError:
-    logger.warning("PyMuPDF (fitz) not installed, PDF parsing will be unavailable")
-    fitz = None
+# Type definitions for fitz
+if TYPE_CHECKING:
+    import fitz
+    from fitz import _FitzModule
+    fitz_module: Optional[_FitzModule] = fitz
+else:
+    try:
+        import fitz
+        fitz_module = fitz
+    except ImportError:
+        logger.warning("PyMuPDF (fitz) not installed, PDF parsing will be unavailable")
+        fitz_module = None
 
 class DocumentParser:
     """Parser for PDF and DOCX documents.
@@ -90,7 +104,7 @@ class DocumentParser:
             return {"error": "Invalid file"}
             
         try:
-            doc = fitz.open(file_path)
+            doc = fitz_module.open(file_path)
             pages = []
             
             for page_num in range(len(doc)):
@@ -139,7 +153,7 @@ class DocumentParser:
             return {"error": "Invalid file"}
             
         try:
-            text = docx2txt.process(file_path)
+            text = docx2txt_module.process(file_path)
             
             # Basic text analysis
             paragraphs = text.split("\n\n")
