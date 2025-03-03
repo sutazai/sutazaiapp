@@ -1,29 +1,52 @@
-#!/usr/bin/env python3.11"""AutoGPT Agent ImplementationThis module provides an autonomous agent capable of executing complex tasksusing language models and various tools."""from __future__ import annotationsimport asyncioimport jsonimport loggingimport osfrom datetime import datetimefrom typing import Any, Dict, List, Optional, Unionfrom ai_agents.base_agent import AgentError, BaseAgentfrom .config import AutoGPTConfigfrom .memory import Memoryfrom .model import ModelConfig, ModelManagerfrom .prompts import PromptManagerfrom .task import Task, TaskStatusfrom .tools import Tool, registrylogger = logging.getLogger(__name__)class AutoGPTAgent(BaseAgent):    """
-An autonomous agent that can execute complex tasks using language models and tools.
-"""
-def __init__(        self,
-    config: Optional[Union[Dict, AutoGPTConfig]] = None,
-    name: str = "auto_gpt",
-    log_dir: str = "logs/auto_gpt",
-    ):
+#!/usr/bin/env python3.11
+"""AutoGPT Agent Implementation
+
+This module provides an autonomous agent capable of executing complex tasks
+using language models and various tools."""
+
+from __future__ import annotations
+
+import asyncio
+import json
+import logging
+import os
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+from ai_agents.base_agent import AgentError, BaseAgent
+from .config import AutoGPTConfig
+from .memory import Memory
+from .model import ModelConfig, ModelManager
+from .prompts import PromptManager
+from .task import Task, TaskStatus
+from .tools import Tool, registry
+
+logger = logging.getLogger(__name__)
     """
-    Initialize the AutoGPT agent.
-    Args:
-    config: Agent configuration
-    name: Name of the agent instance
-    log_dir: Directory for agent logs
+    An autonomous agent that can execute complex tasks using language models and tools.
     """
-    super().__init__(name=name, log_dir=log_dir)
-    # Validate and process configuration
-    self.config = self._validate_config(config or {})
-    # Initialize core components
-    self.model = ModelManager(ModelConfig(**self.config.model_config))
-    self.memory = Memory(
-    max_messages=self.config.memory_size,
-    persist_path=os.path.join(log_dir, "memory.json"),
-    )
-    self.prompts = PromptManager()
-    self.current_task: Optional[Task] = None
+    def __init__(        self,
+        config: Optional[Union[Dict, AutoGPTConfig]] = None,
+        name: str = "auto_gpt",
+        log_dir: str = "logs/auto_gpt",
+        ):
+        """
+        Initialize the AutoGPT agent.
+        Args:
+        config: Agent configuration
+        name: Name of the agent instance
+        log_dir: Directory for agent logs
+        """
+        super().__init__(name=name, log_dir=log_dir)
+        # Validate and process configuration
+        self.config = self._validate_config(config or {})
+        # Initialize core components
+        self.model = ModelManager(ModelConfig(**self.config.model_config))
+        self.memory = Memory(
+        max_messages=self.config.memory_size,
+        persist_path=os.path.join(log_dir, "memory.json"),
+        )
+        self.prompts = PromptManager()
+        self.current_task: Optional[Task] = None
     def _validate_config(self, config: Dict) -> AutoGPTConfig:            """
         Validate the agent configuration.
         Args:
@@ -67,3 +90,4 @@ def __init__(        self,
                             try:
                                 return registry.list_tools()
                             except Exception as e:                                                                                                                                                raise AgentError(f"Failed to list tools: {e!s}")
+class AutoGPTAgent(BaseAgent):
