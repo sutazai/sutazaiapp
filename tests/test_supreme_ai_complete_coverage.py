@@ -53,10 +53,11 @@ def task_dict():
     }
 
 class TestSupremeAICompleteCoverage:
-    """Tests to ensure complete coverage of the SupremeAIOrchestrator."""
-
+    """Test class for complete coverage of SupremeAIOrchestrator."""
+    
+    @pytest.mark.asyncio
     async def test_start_exception(self, supreme_ai):
-        """Test handling exceptions during start."""
+        """Test starting the orchestrator with an exception."""
         # Mock agent_manager.start to raise an exception
         supreme_ai.agent_manager.start = AsyncMock(side_effect=Exception("test exception"))
         
@@ -68,8 +69,9 @@ class TestSupremeAICompleteCoverage:
         supreme_ai.agent_manager.start.assert_called_once()
         assert not supreme_ai.is_running
 
+    @pytest.mark.asyncio
     async def test_stop_exception(self, supreme_ai):
-        """Test handling exceptions during stop."""
+        """Test stopping the orchestrator with an exception."""
         # First start the orchestrator
         supreme_ai.is_running = True
         
@@ -86,8 +88,9 @@ class TestSupremeAICompleteCoverage:
         supreme_ai.task_queue.stop.assert_called_once()
         supreme_ai.sync_manager.stop.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_submit_task_exception(self, supreme_ai, task_dict):
-        """Test handling exceptions during task submission."""
+        """Test submitting a task with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -101,8 +104,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.task_queue.submit.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_register_agent_exception(self, supreme_ai, agent_dict):
-        """Test handling exceptions during agent registration."""
+        """Test registering an agent with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -116,8 +120,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.register_agent.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_get_agent_status_exception(self, supreme_ai):
-        """Test handling exceptions during get_agent_status."""
+        """Test getting agent status with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -131,8 +136,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.get_agent_status.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_list_agents_exception(self, supreme_ai):
-        """Test handling exceptions during list_agents."""
+        """Test listing agents with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -146,8 +152,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.list_agents.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_start_agent_exception(self, supreme_ai):
-        """Test handling exceptions during start_agent."""
+        """Test starting an agent with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -161,8 +168,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.start_agent.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_stop_agent_exception(self, supreme_ai):
-        """Test handling exceptions during stop_agent."""
+        """Test stopping an agent with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -176,8 +184,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.stop_agent.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_start_sync_exception(self, supreme_ai):
-        """Test handling exceptions during start_sync."""
+        """Test starting sync with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -191,8 +200,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.sync_manager.start.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_stop_sync_exception(self, supreme_ai):
-        """Test handling exceptions during stop_sync."""
+        """Test stopping sync with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -206,8 +216,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.sync_manager.stop.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_deploy_exception(self, supreme_ai):
-        """Test handling exceptions during deploy."""
+        """Test deploying with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -221,8 +232,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.sync_manager.deploy.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_rollback_exception(self, supreme_ai):
-        """Test handling exceptions during rollback."""
+        """Test rolling back with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -237,7 +249,7 @@ class TestSupremeAICompleteCoverage:
         supreme_ai.sync_manager.rollback.assert_called_once()
 
     def test_get_status(self, supreme_ai):
-        """Test get_status."""
+        """Test getting status."""
         # Mock attributes
         supreme_ai.is_running = True
         supreme_ai.agent_manager.get_agent_count = MagicMock(return_value=5)
@@ -250,7 +262,7 @@ class TestSupremeAICompleteCoverage:
         assert result["agent_count"] == 5
         
     def test_process_tasks(self, supreme_ai):
-        """Test process_tasks."""
+        """Test processing tasks."""
         # Mock task_queue.process
         supreme_ai.task_queue.process = MagicMock()
         
@@ -261,7 +273,7 @@ class TestSupremeAICompleteCoverage:
         supreme_ai.task_queue.process.assert_called_once()
         
     def test_sync(self, supreme_ai):
-        """Test sync."""
+        """Test syncing."""
         # Mock sync_manager.sync
         supreme_ai.sync_manager.sync = MagicMock()
         
@@ -272,7 +284,7 @@ class TestSupremeAICompleteCoverage:
         supreme_ai.sync_manager.sync.assert_called_once()
         
     def test_update_agent_heartbeat(self, supreme_ai):
-        """Test update_agent_heartbeat."""
+        """Test updating agent heartbeat."""
         # Mock agent_manager.update_heartbeat
         supreme_ai.agent_manager.update_heartbeat = MagicMock()
         
@@ -282,8 +294,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.agent_manager.update_heartbeat.assert_called_once_with("test-agent")
         
+    @pytest.mark.asyncio
     async def test_get_next_task(self, supreme_ai):
-        """Test get_next_task."""
+        """Test getting the next task."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -297,8 +310,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         assert result["id"] == "test-task"
         
+    @pytest.mark.asyncio
     async def test_get_next_task_no_task(self, supreme_ai):
-        """Test get_next_task when no task is available."""
+        """Test getting the next task when there is no task."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -311,8 +325,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         assert result == {}
         
+    @pytest.mark.asyncio
     async def test_get_next_task_exception(self, supreme_ai):
-        """Test handling exceptions during get_next_task."""
+        """Test getting the next task with an exception."""
         # Start the orchestrator
         supreme_ai.is_running = True
         
@@ -326,8 +341,9 @@ class TestSupremeAICompleteCoverage:
         # Verify
         supreme_ai.task_queue.peek_next.assert_called_once()
         
+    @pytest.mark.asyncio
     async def test_get_task_queue_size(self, supreme_ai):
-        """Test get_task_queue_size."""
+        """Test getting the task queue size."""
         # Start the orchestrator
         supreme_ai.is_running = True
         

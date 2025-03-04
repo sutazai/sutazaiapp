@@ -14,7 +14,7 @@ pip install pytest pytest-asyncio pytest-cov pytest-mock aiohttp fastapi httpx s
 mkdir -p coverage
 
 echo "Running coverage tests for targeted files..."
-python -m pytest tests/test_agent_manager_complete_coverage.py \
+python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/test_agent_manager_complete_coverage.py \
        tests/test_supreme_ai_complete_coverage.py \
        tests/test_task_queue_complete_coverage.py \
        tests/test_sync_manager_complete_coverage.py \

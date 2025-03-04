@@ -1,45 +1,22 @@
-"""Common test fixtures and configuration."""
+"""
+Pytest configuration for the test suite.
+"""
 import os
+import sys
 import pytest
-from pathlib import Path
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+import pytest_asyncio
 
-# Import your FastAPI app and database models here
-# from backend.main import app
-# from backend.database import Base
+# Add the parent directory to the path to ensure imports work
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-@pytest.fixture(scope="session")
-def test_db():
-    """Create a test database."""
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL,
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-    
-    # Create test database
-    # Base.metadata.create_all(bind=engine)
-    
-    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    
-    try:
-        yield engine
-    finally:
-        # Clean up
-        os.remove("./test.db")
+def pytest_configure(config):
+    """Configure pytest."""
+    config.addinivalue_line("markers", "asyncio: mark test as an asyncio test")
 
-@pytest.fixture
-def test_client():
-    """Create a test client for FastAPI app."""
-    # with TestClient(app) as client:
-    #     yield client
-    pass
-
-@pytest.fixture
-def test_data_dir():
-    """Provide path to test data directory."""
-    return Path(__file__).parent / "test_data"
+@pytest_asyncio.fixture
+async def orchestrator():
+    # Create and return an actual orchestrator instance
+    orchestrator_instance = Orchestrator()
+    await orchestrator_instance.initialize()
+    yield orchestrator_instance
+    await orchestrator_instance.cleanup()

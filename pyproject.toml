@@ -1,3 +1,6 @@
-[tool.bandit]
-skips = ["B101"]  # Skip assert warnings in test files
-exclude_dirs = ["venv", ".venv", "__pycache__", "node_modules", "build", "dist"] 
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+    "asyncio: mark test as an asyncio test",
+]
+asyncio_default_fixture_loop_scope = "function"

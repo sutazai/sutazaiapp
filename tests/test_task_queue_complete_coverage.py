@@ -57,10 +57,11 @@ def task_dict():
     }
 
 class TestTaskQueueCompleteCoverage:
-    """Tests to ensure complete coverage of the TaskQueue."""
+    """Test class for complete coverage of TaskQueue."""
 
+    @pytest.mark.asyncio
     async def test_process_loop_exception(self, task_queue):
-        """Test the _process_loop with an exception."""
+        """Test the process loop with an exception."""
         # Mock process to raise an exception
         task_queue.process = MagicMock(side_effect=Exception("Test exception"))
         
@@ -90,8 +91,9 @@ class TestTaskQueueCompleteCoverage:
             except asyncio.CancelledError:
                 pass
 
+    @pytest.mark.asyncio
     async def test_stop_with_mock_task(self, task_queue):
-        """Test stopping the task queue when process_task is a mock."""
+        """Test stopping the task queue with a mock task."""
         # Set up a mock process task
         mock_task = MagicMock()
         mock_task.__class__.__name__ = 'AsyncMock'
@@ -105,8 +107,9 @@ class TestTaskQueueCompleteCoverage:
         assert not task_queue.is_running
         mock_task.cancel.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_stop_with_real_task(self, task_queue):
-        """Test stopping the task queue with a real asyncio task."""
+        """Test stopping the task queue with a real task."""
         # Create a real asyncio task
         async def dummy_task():
             try:
@@ -125,6 +128,7 @@ class TestTaskQueueCompleteCoverage:
         assert not task_queue.is_running
         assert task_queue.process_task.cancelled()
 
+    @pytest.mark.asyncio
     async def test_submit_duplicate_id(self, task_queue, task_dict):
         """Test submitting a task with a duplicate ID."""
         # First submit a task
@@ -134,6 +138,7 @@ class TestTaskQueueCompleteCoverage:
         with pytest.raises(TaskError):
             await task_queue.submit(task_dict)
 
+    @pytest.mark.asyncio
     async def test_submit_queue_full(self, task_queue, task_dict):
         """Test submitting a task when the queue is full."""
         # Set max_pending_tasks to 0 to simulate a full queue
@@ -143,6 +148,7 @@ class TestTaskQueueCompleteCoverage:
         with pytest.raises(QueueFullError):
             await task_queue.submit(task_dict)
 
+    @pytest.mark.asyncio
     async def test_submit_without_id(self, task_queue):
         """Test submitting a task without an ID."""
         # Create a task dictionary without an ID
@@ -158,6 +164,7 @@ class TestTaskQueueCompleteCoverage:
         assert "id" in result
         assert task_queue.tasks[result["id"]].id == result["id"]
 
+    @pytest.mark.asyncio
     async def test_submit_without_priority(self, task_queue):
         """Test submitting a task without a priority."""
         # Create a task dictionary without a priority
@@ -174,14 +181,14 @@ class TestTaskQueueCompleteCoverage:
         assert task_queue.tasks[result["id"]].priority == 0
 
     def test_process_no_tasks(self, task_queue):
-        """Test process with no tasks in the queue."""
+        """Test processing when there are no tasks."""
         # Call process
         task_queue.process()
         
         # Nothing to verify, just ensure it doesn't fail
 
     def test_process_no_available_agents(self, task_queue, task):
-        """Test process with no available agents."""
+        """Test processing when there are no available agents."""
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
@@ -203,7 +210,7 @@ class TestTaskQueueCompleteCoverage:
         task_queue.agent_manager.get_available_agent.assert_called_once()
 
     def test_process_successfully_assigned(self, task_queue, task):
-        """Test successful task assignment in process."""
+        """Test processing when a task is successfully assigned."""
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
@@ -232,8 +239,9 @@ class TestTaskQueueCompleteCoverage:
         assert task.status == TaskStatus.IN_PROGRESS
         assert task.started_at is not None
 
+    @pytest.mark.asyncio
     async def test_process_assignment_failed(self, task_queue, task):
-        """Test process when task assignment fails."""
+        """Test processing when task assignment fails."""
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
@@ -256,11 +264,13 @@ class TestTaskQueueCompleteCoverage:
         # Task should be put back in the queue
         assert not task_queue.task_queue.empty()
 
+    @pytest.mark.asyncio
     async def test_peek_next_no_tasks(self, task_queue):
         """Test peek_next with no tasks."""
         result = await task_queue.peek_next()
         assert result is None
 
+    @pytest.mark.asyncio
     async def test_peek_next_with_tasks(self, task_queue, task):
         """Test peek_next with tasks in the queue."""
         # Add a task to the queue
@@ -275,6 +285,7 @@ class TestTaskQueueCompleteCoverage:
         # Task should still be in the queue
         assert not task_queue.task_queue.empty()
 
+    @pytest.mark.asyncio
     async def test_get_tasks_by_status(self, task_queue):
         """Test get_tasks_by_status."""
         # Create tasks with different statuses
@@ -302,6 +313,7 @@ class TestTaskQueueCompleteCoverage:
         assert len(completed_tasks) == 1
         assert completed_tasks[0].id == completed_task.id
 
+    @pytest.mark.asyncio
     async def test_update_task_priority(self, task_queue, task):
         """Test update_task_priority."""
         # Add a task to the queue
@@ -320,11 +332,13 @@ class TestTaskQueueCompleteCoverage:
         assert priority == 5
         assert task_id == task.id
 
+    @pytest.mark.asyncio
     async def test_update_task_priority_task_not_found(self, task_queue):
         """Test update_task_priority with a non-existent task."""
         with pytest.raises(TaskError):
             await task_queue.update_task_priority("non-existent-task", 5)
 
+    @pytest.mark.asyncio
     async def test_update_task_priority_not_pending(self, task_queue, task):
         """Test update_task_priority with a non-pending task."""
         # Add a task to the queue but mark it as in progress
@@ -335,6 +349,7 @@ class TestTaskQueueCompleteCoverage:
         with pytest.raises(TaskError):
             await task_queue.update_task_priority(task.id, 5)
 
+    @pytest.mark.asyncio
     async def test_clear(self, task_queue, task):
         """Test clear."""
         # Add a task to the queue
@@ -348,6 +363,7 @@ class TestTaskQueueCompleteCoverage:
         assert len(task_queue.tasks) == 0
         assert task_queue.task_queue.empty()
 
+    @pytest.mark.asyncio
     async def test_size(self, task_queue, task):
         """Test size."""
         # Add a task to the queue
@@ -364,11 +380,13 @@ class TestTaskQueueCompleteCoverage:
         # Verify - only the pending task should be counted
         assert result == 1
 
+    @pytest.mark.asyncio
     async def test_remove_task_not_found(self, task_queue):
         """Test remove with a non-existent task."""
         with pytest.raises(TaskError):
             await task_queue.remove("non-existent-task")
 
+    @pytest.mark.asyncio
     async def test_remove_in_progress_task(self, task_queue, task):
         """Test remove with an in-progress task."""
         # Add a task to the queue but mark it as in progress

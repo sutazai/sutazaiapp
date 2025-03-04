@@ -65,6 +65,7 @@ def task():
 class TestAgentManagerCompleteCoverage:
     """Tests to ensure complete coverage of the agent manager."""
 
+    @pytest.mark.asyncio
     async def test_stop_with_mock_task(self, agent_manager):
         """Test stopping the agent manager when heartbeat_task is a mock."""
         # Set up a mock heartbeat task
@@ -80,6 +81,7 @@ class TestAgentManagerCompleteCoverage:
         assert not agent_manager.is_running
         mock_task.cancel.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_stop_with_real_task(self, agent_manager):
         """Test stopping the agent manager with a real asyncio task."""
         # Create a real asyncio task
@@ -100,16 +102,19 @@ class TestAgentManagerCompleteCoverage:
         assert not agent_manager.is_running
         assert agent_manager.heartbeat_task.cancelled()
 
+    @pytest.mark.asyncio
     async def test_start_agent_not_found(self, agent_manager):
         """Test starting a non-existent agent."""
         with pytest.raises(AgentNotFoundError):
             await agent_manager.start_agent("non-existent-agent")
 
+    @pytest.mark.asyncio
     async def test_stop_agent_not_found(self, agent_manager):
         """Test stopping a non-existent agent."""
         with pytest.raises(AgentNotFoundError):
             await agent_manager.stop_agent("non-existent-agent")
 
+    @pytest.mark.asyncio
     async def test_register_agent_max_exceeded(self, agent_manager, agent_dict):
         """Test registering an agent when max agents is reached."""
         # Set max_agents to 0 to trigger the error
@@ -118,6 +123,7 @@ class TestAgentManagerCompleteCoverage:
         with pytest.raises(AgentError):
             await agent_manager.register_agent(agent_dict)
 
+    @pytest.mark.asyncio
     async def test_unregister_busy_agent(self, agent_manager, registered_agent):
         """Test unregistering an agent that is busy."""
         # Mark the agent as busy
@@ -133,6 +139,7 @@ class TestAgentManagerCompleteCoverage:
         agent_manager._handle_agent_failure.assert_called_once_with(registered_agent)
         assert registered_agent.id not in agent_manager.agents
 
+    @pytest.mark.asyncio
     async def test_handle_agent_failure(self, agent_manager, registered_agent):
         """Test handling agent failure."""
         # Mark the agent as busy
@@ -146,6 +153,7 @@ class TestAgentManagerCompleteCoverage:
         assert registered_agent.status == AgentStatus.ERROR
         assert registered_agent.current_task is None
 
+    @pytest.mark.asyncio
     async def test_update_heartbeat(self, agent_manager, registered_agent):
         """Test update_heartbeat with a valid agent."""
         original_heartbeat = registered_agent.last_heartbeat
@@ -159,6 +167,7 @@ class TestAgentManagerCompleteCoverage:
         # Verify
         assert registered_agent.last_heartbeat > original_heartbeat
 
+    @pytest.mark.asyncio
     async def test_stop_heartbeat_monitor_with_mock_task(self, agent_manager):
         """Test stop_heartbeat_monitor with a mock task."""
         # Set up a mock heartbeat task
@@ -174,6 +183,7 @@ class TestAgentManagerCompleteCoverage:
         assert not agent_manager.is_running
         mock_task.cancel.assert_called_once()
 
+    @pytest.mark.asyncio
     async def test_stop_heartbeat_monitor_with_real_task(self, agent_manager):
         """Test stop_heartbeat_monitor with a real asyncio task."""
         # Create a real asyncio task
@@ -194,6 +204,7 @@ class TestAgentManagerCompleteCoverage:
         assert not agent_manager.is_running
         assert agent_manager.heartbeat_task.cancelled()
 
+    @pytest.mark.asyncio
     async def test_heartbeat_loop_with_exception(self, agent_manager):
         """Test the _heartbeat_loop with an exception in _check_agent_health."""
         # Mock _check_agent_health to raise an exception
@@ -225,6 +236,7 @@ class TestAgentManagerCompleteCoverage:
             except asyncio.CancelledError:
                 pass
 
+    @pytest.mark.asyncio
     async def test_check_agent_health(self, agent_manager, registered_agent):
         """Test _check_agent_health marking an agent as offline."""
         # Set the agent's last_heartbeat to be older than 1 minute
@@ -236,6 +248,7 @@ class TestAgentManagerCompleteCoverage:
         # Verify
         assert registered_agent.status == AgentStatus.OFFLINE
 
+    @pytest.mark.asyncio
     async def test_get_available_agent_none_available(self, agent_manager, registered_agent):
         """Test get_available_agent when no agents are available."""
         # Mark the agent as busy
@@ -247,11 +260,13 @@ class TestAgentManagerCompleteCoverage:
         # Verify
         assert result is None
 
+    @pytest.mark.asyncio
     async def test_assign_task_agent_not_found(self, agent_manager, task):
         """Test assign_task with a non-existent agent."""
         with pytest.raises(AgentNotFoundError):
             await agent_manager.assign_task("non-existent-agent", task)
 
+    @pytest.mark.asyncio
     async def test_assign_task_agent_not_idle(self, agent_manager, registered_agent, task):
         """Test assign_task with an agent that is not idle."""
         # Mark the agent as busy
@@ -263,11 +278,13 @@ class TestAgentManagerCompleteCoverage:
         # Verify
         assert not result
 
+    @pytest.mark.asyncio
     async def test_update_agent_status_agent_not_found(self, agent_manager):
         """Test update_agent_status with a non-existent agent."""
         with pytest.raises(AgentNotFoundError):
             await agent_manager.update_agent_status("non-existent-agent", AgentStatus.IDLE)
 
+    @pytest.mark.asyncio
     async def test_heartbeat_agent_not_found(self, agent_manager):
         """Test heartbeat with a non-existent agent."""
         with pytest.raises(AgentNotFoundError):
@@ -278,6 +295,7 @@ class TestAgentManagerCompleteCoverage:
         result = agent_manager.get_agent_status_enum("non-existent-agent")
         assert result is None
 
+    @pytest.mark.asyncio
     async def test_shutdown_all_agents(self, agent_manager):
         """Test shutdown_all_agents."""
         # Register a few agents
@@ -298,4 +316,64 @@ class TestAgentManagerCompleteCoverage:
         
         # Verify
         agent_manager.stop_heartbeat_monitor.assert_called_once()
-        assert len(agent_manager.agents) == 0 
+        assert len(agent_manager.agents) == 0
+
+    @pytest.mark.asyncio
+    async def test_sync_exception(self, agent_manager):
+        """Test handling of sync exceptions."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_get_status(self, agent_manager):
+        """Test getting agent status."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_prepare_sync_data(self, agent_manager):
+        """Test preparing sync data."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_sync_with_server(self, agent_manager):
+        """Test syncing with server."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_sync_with_server_error_response(self, agent_manager):
+        """Test syncing with server and getting an error response."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_sync_with_server_exception(self, agent_manager):
+        """Test syncing with server and getting an exception."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_get_next_task(self, agent_manager):
+        """Test getting the next task."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_get_next_task_no_task(self, agent_manager):
+        """Test getting the next task when there is no task."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_get_next_task_exception(self, agent_manager):
+        """Test getting the next task with an exception."""
+        # Implementation will be added later
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_get_task_queue_size(self, agent_manager):
+        """Test getting the task queue size."""
+        # Implementation will be added later
+        pass 

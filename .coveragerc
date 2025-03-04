@@ -11,3 +11,5 @@ exclude_lines =
     if __name__ == .__main__.:
     pass
     raise ImportError
+    # Abstract methods
+    @abc.abstractmethod

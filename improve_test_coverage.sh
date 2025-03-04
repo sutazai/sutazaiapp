@@ -44,7 +44,7 @@ generate_coverage_report() {
     # Run the tests on the remote server with detailed coverage
     info "Running tests with detailed coverage reporting..."
     ssh -i ${SSH_KEY} ${REMOTE_SERVER} "cd ${REMOTE_PROJECT_PATH} && source venv/bin/activate && \
-        python -m pytest tests/ \
+        python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/ \
         -v \
         --asyncio-mode=auto \
         --cov=core_system \
@@ -354,7 +354,7 @@ run_improved_tests() {
     # Run tests again after improvements
     info "Executing tests with all improvements..."
     ssh -i ${SSH_KEY} ${REMOTE_SERVER} "cd ${REMOTE_PROJECT_PATH} && source venv/bin/activate && \
-        python -m pytest tests/ \
+        python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/ \
         -v \
         --asyncio-mode=auto \
         --cov=core_system \

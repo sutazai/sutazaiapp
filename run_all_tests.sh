@@ -7,7 +7,7 @@ echo "Activating virtual environment..."
 source venv/bin/activate || { echo "Failed to activate virtual environment"; exit 1; }
 
 echo "Running tests with coverage..."
-python -m pytest tests/ \
+python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/ \
     --cov=core_system.orchestrator \
     --cov-report=html:coverage \
     --cov-report=term \

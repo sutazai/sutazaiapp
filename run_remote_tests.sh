@@ -55,7 +55,7 @@ ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_SERVER} << EOF
     echo "Running tests for the Supreme AI Orchestrator..."
     
     # First run the regular tests
-    python -m pytest tests/ \
+    python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/ \
         --cov=core_system.orchestrator \
         --cov-report=html:coverage \
         --cov-report=term-missing \
@@ -64,7 +64,7 @@ ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_SERVER} << EOF
     echo "Running targeted coverage tests for specific components..."
     
     # Then run the special targeted coverage tests
-    python -m pytest tests/test_agent_manager_complete_coverage.py \
+    python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail tests/test_agent_manager_complete_coverage.py \
         tests/test_supreme_ai_complete_coverage.py \
         tests/test_task_queue_complete_coverage.py \
         tests/test_sync_manager_complete_coverage.py \
@@ -75,7 +75,7 @@ ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_SERVER} << EOF
     
     # Create an overall coverage report
     echo "Generating final coverage report..."
-    python -m pytest --cov=core_system.orchestrator --cov-report=html:coverage --cov-report=term
+    python -m pytest --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --no-cov-on-fail --cov=core_system.orchestrator --cov-report=html:coverage --cov-report=term
     
     echo "Tests completed!"
 EOF
