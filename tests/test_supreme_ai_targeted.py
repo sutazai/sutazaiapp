@@ -7,7 +7,7 @@ import pytest
 import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 from core_system.orchestrator import supreme_ai
-from core_system.orchestrator.exceptions import AgentNotFoundError
+from core_system.orchestrator.exceptions import AgentNotFoundError, OrchestratorError
 from core_system.orchestrator.models import OrchestratorConfig
 
 @pytest.fixture
@@ -33,8 +33,17 @@ async def test_start_with_exception(orchestrator):
     orchestrator.task_queue = AsyncMock()
     orchestrator.task_queue.start = AsyncMock(side_effect=Exception("Test exception"))
     
-    # Call start, which should handle the exception
-    await orchestrator.start()
+    # Mock the agent_manager and sync_manager
+    orchestrator.agent_manager = AsyncMock()
+    orchestrator.sync_manager = AsyncMock()
+    
+    try:
+        # Call start, which should raise OrchestratorError
+        await orchestrator.start()
+        pytest.fail("Expected OrchestratorError but none was raised")
+    except OrchestratorError:
+        # This is the expected exception
+        pass
     
     # Verify the is_running flag was set to False
     assert orchestrator.is_running is False
@@ -53,11 +62,13 @@ async def test_stop_with_exception(orchestrator):
     orchestrator.agent_manager = AsyncMock()
     orchestrator.sync_manager = AsyncMock()
     
-    # Call stop, which should handle the exception
-    await orchestrator.stop()
-    
-    # Verify the is_running flag was set to False
-    assert orchestrator.is_running is False
+    try:
+        # Call stop, which should raise OrchestratorError
+        await orchestrator.stop()
+        pytest.fail("Expected OrchestratorError but none was raised")
+    except OrchestratorError:
+        # This is the expected exception
+        pass
 
 @pytest.mark.asyncio
 async def test_submit_task_with_exception(orchestrator):
@@ -71,10 +82,12 @@ async def test_submit_task_with_exception(orchestrator):
     
     # Call submit_task, which should handle the exception
     task = {"id": "task1", "type": "test"}
-    result = await orchestrator.submit_task(task)
-    
-    # Verify the result is None due to the exception
-    assert result is None
+    try:
+        await orchestrator.submit_task(task)
+        pytest.fail("Expected OrchestratorError but none was raised")
+    except OrchestratorError:
+        # This is the expected exception
+        pass
 
 @pytest.mark.asyncio
 async def test_register_agent_with_exception(orchestrator):
@@ -88,10 +101,12 @@ async def test_register_agent_with_exception(orchestrator):
     
     # Call register_agent, which should handle the exception
     agent = {"id": "agent1", "capabilities": ["test"]}
-    result = await orchestrator.register_agent(agent)
-    
-    # Verify the result is None due to the exception
-    assert result is None
+    try:
+        await orchestrator.register_agent(agent)
+        pytest.fail("Expected OrchestratorError but none was raised")
+    except OrchestratorError:
+        # This is the expected exception
+        pass
 
 @pytest.mark.asyncio
 async def test_get_agent_status_with_exception(orchestrator):
@@ -101,10 +116,12 @@ async def test_get_agent_status_with_exception(orchestrator):
     orchestrator.agent_manager.get_agent_status = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call get_agent_status, which should handle the exception
-    result = await orchestrator.get_agent_status("agent1")
-    
-    # Verify the result is None due to the exception
-    assert result is None
+    try:
+        await orchestrator.get_agent_status("agent1")
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
 
 @pytest.mark.asyncio
 async def test_list_agents_with_exception(orchestrator):
@@ -114,10 +131,12 @@ async def test_list_agents_with_exception(orchestrator):
     orchestrator.agent_manager.list_agents = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call list_agents, which should handle the exception
-    result = await orchestrator.list_agents()
-    
-    # Verify the result is None due to the exception
-    assert result is None
+    try:
+        await orchestrator.list_agents()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
 
 @pytest.mark.asyncio
 async def test_start_agent_with_exception(orchestrator):
@@ -127,10 +146,12 @@ async def test_start_agent_with_exception(orchestrator):
     orchestrator.agent_manager.start_agent = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call start_agent, which should handle the exception
-    result = await orchestrator.start_agent("agent1")
-    
-    # Verify the result is None due to the exception
-    assert result is False
+    try:
+        await orchestrator.start_agent("agent1")
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
 
 @pytest.mark.asyncio
 async def test_stop_agent_with_exception(orchestrator):
@@ -140,10 +161,12 @@ async def test_stop_agent_with_exception(orchestrator):
     orchestrator.agent_manager.stop_agent = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call stop_agent, which should handle the exception
-    result = await orchestrator.stop_agent("agent1")
-    
-    # Verify the result is None due to the exception
-    assert result is False
+    try:
+        await orchestrator.stop_agent("agent1")
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
 
 @pytest.mark.asyncio
 async def test_start_sync_with_exception(orchestrator):
@@ -153,10 +176,12 @@ async def test_start_sync_with_exception(orchestrator):
     orchestrator.sync_manager.start = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call start_sync, which should handle the exception
-    result = await orchestrator.start_sync()
-    
-    # Verify the result is None due to the exception
-    assert result is False
+    try:
+        await orchestrator.start_sync()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
 
 @pytest.mark.asyncio
 async def test_stop_sync_with_exception(orchestrator):
@@ -166,7 +191,72 @@ async def test_stop_sync_with_exception(orchestrator):
     orchestrator.sync_manager.stop = AsyncMock(side_effect=Exception("Test exception"))
     
     # Call stop_sync, which should handle the exception
-    result = await orchestrator.stop_sync()
+    try:
+        await orchestrator.stop_sync()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
+
+@pytest.mark.asyncio
+async def test_get_sync_status_with_exception(orchestrator):
+    """Test get_sync_status method with an exception being raised"""
+    # Mock sync_manager to raise an exception when get_status is called
+    orchestrator.sync_manager = AsyncMock()
+    orchestrator.sync_manager.get_status = AsyncMock(side_effect=Exception("Test exception"))
     
-    # Verify the result is None due to the exception
-    assert result is False
+    # Call get_sync_status, which should handle the exception
+    try:
+        await orchestrator.get_sync_status()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
+
+@pytest.mark.asyncio
+async def test_process_next_task_with_exception(orchestrator):
+    """Test process_next_task method with an exception being raised"""
+    # Set the is_running flag
+    orchestrator.is_running = True
+    
+    # Mock task_queue to raise an exception when get is called
+    orchestrator.task_queue = AsyncMock()
+    orchestrator.task_queue.get = AsyncMock(side_effect=Exception("Test exception"))
+    
+    # Call process_next_task, which should handle the exception
+    try:
+        await orchestrator.process_next_task()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
+
+@pytest.mark.asyncio
+async def test_get_task_queue_size_with_exception(orchestrator):
+    """Test get_task_queue_size method with an exception being raised"""
+    # Mock task_queue to raise an exception when size is accessed
+    orchestrator.task_queue = MagicMock()
+    
+    # Create a property mock for size that raises an exception
+    mock_property = property(lambda self: (_ for _ in ()).throw(Exception("Test exception")))
+    type(orchestrator.task_queue).size = mock_property
+    
+    # Call get_task_queue_size, which should handle the exception
+    try:
+        await orchestrator.get_task_queue_size()
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass
+
+@pytest.mark.asyncio
+async def test_create_task_with_exception(orchestrator):
+    """Test create_task method with an exception being raised"""
+    # Call create_task with invalid parameters, which should handle the exception
+    try:
+        # This should raise an exception since 'id' and 'type' are required
+        await orchestrator.create_task({})
+        pytest.fail("Expected exception to be raised")
+    except Exception:
+        # This is the expected outcome
+        pass

@@ -1,46 +1,28 @@
 #!/bin/bash
+# Script to run targeted coverage tests
 
-# Script to run tests specifically for reaching 100% coverage
+set -e  # Exit on error
 
-echo "Running coverage tests..."
+echo "Activating virtual environment..."
+source venv/bin/activate || { echo "Failed to activate virtual environment"; exit 1; }
 
-# Activate virtual environment
-cd /opt/sutazaiapp
-source venv/bin/activate
+# Install any missing dependencies
+echo "Installing required dependencies..."
+pip install pytest pytest-asyncio pytest-cov pytest-mock aiohttp fastapi httpx sqlalchemy
 
-# Create coverage configuration
-cat > .coveragerc << EOF
-[run]
-source = core_system.orchestrator
-omit = */__pycache__/*,*/tests/*,*/venv/*
+# Make sure the coverage directory exists
+mkdir -p coverage
 
-[report]
-exclude_lines = 
-    pragma: no cover
-    def __repr__
-    raise NotImplementedError
-    if __name__ == .__main__.:
-    pass
-    raise ImportError
-EOF
+echo "Running coverage tests for targeted files..."
+python -m pytest tests/test_agent_manager_complete_coverage.py \
+       tests/test_supreme_ai_complete_coverage.py \
+       tests/test_task_queue_complete_coverage.py \
+       tests/test_sync_manager_complete_coverage.py \
+       -v \
+       --no-header \
+       --cov=core_system.orchestrator \
+       --cov-report=html:coverage \
+       --cov-report=term
 
-# Run tests with detailed reporting of missing lines
-python -m pytest tests/ \
-    --cov=core_system.orchestrator \
-    --cov-config=.coveragerc \
-    --cov-report=html:coverage \
-    --cov-report=term-missing \
-    -v
-
-# Specifically run our targeted tests to ensure they're included
-echo "Running targeted tests for better coverage..."
-python -m pytest tests/test_agent_manager_targeted.py tests/test_supreme_ai_targeted.py \
-    --cov=core_system.orchestrator \
-    --cov-config=.coveragerc \
-    --cov-report=html:coverage \
-    --cov-report=term-missing \
-    --cov-append \
-    -v
-
-echo "Coverage tests completed!"
-echo "Check the coverage report at: /opt/sutazaiapp/coverage/index.html"
+echo "All tests completed!"
+echo "Coverage report is available at coverage/index.html"

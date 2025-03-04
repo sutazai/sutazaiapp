@@ -8,8 +8,7 @@ and handles synchronization between servers.
 
 import asyncio
 import logging
-from typing import Dict, List, Optional
-from dataclasses import dataclass
+from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 
 from core_system.orchestrator.agent_manager import AgentManager
@@ -19,15 +18,6 @@ from core_system.orchestrator.models import Task, AgentStatus, SyncStatus, Orche
 from core_system.orchestrator.exceptions import OrchestratorError
 
 logger = logging.getLogger(__name__)
-
-@dataclass
-class OrchestratorConfig:
-    """Configuration for the Supreme AI Orchestrator"""
-    primary_server: str
-    secondary_server: str
-    sync_interval: int = 60  # seconds
-    max_agents: int = 10
-    task_timeout: int = 3600  # seconds
 
 
 class SupremeAIOrchestrator:
@@ -52,9 +42,9 @@ class SupremeAIOrchestrator:
             await self.sync_manager.start()
             self.logger.info("Orchestrator started successfully")
         except Exception as e:
-            pass  # Added for test coverage
             self.is_running = False
             self.logger.error(f"Failed to start orchestrator: {str(e)}")
+            self.logger.exception("Details of start failure:")
             raise OrchestratorError("Failed to start orchestrator") from e
 
     async def stop(self):
@@ -66,8 +56,9 @@ class SupremeAIOrchestrator:
             await self.sync_manager.stop()
             self.logger.info("Orchestrator stopped successfully")
         except Exception as e:
-            pass  # Placeholder implementation
+            self.is_running = False
             self.logger.error(f"Error stopping orchestrator: {str(e)}")
+            self.logger.exception("Details of stop failure:")
             raise OrchestratorError("Failed to stop orchestrator") from e
 
     async def submit_task(self, task: Dict):
@@ -91,68 +82,77 @@ class SupremeAIOrchestrator:
         try:
             await self.agent_manager.register_agent(agent)
             self.logger.info(f"Agent registered successfully: {agent.get('id', 'unknown')}")
+            return agent
         except Exception as e:
-            pass  # Placeholder implementation
             self.logger.error(f"Failed to register agent: {str(e)}")
+            self.logger.exception("Details of agent registration failure:")
             raise OrchestratorError("Failed to register agent") from e
 
     async def get_agent_status(self, agent_id: str) -> Dict:
         """Get the status of a specific agent."""
         try:
-            return await self.agent_manager.get_agent_status(agent_id)
+            result = await self.agent_manager.get_agent_status(agent_id)
+            self.logger.debug(f"Retrieved status for agent {agent_id}")
+            return result
         except Exception as e:
-            pass  # Placeholder implementation
             self.logger.error(f"Failed to get agent status: {str(e)}")
-            raise OrchestratorError("Failed to get agent status") from e
+            self.logger.exception("Details of agent status retrieval failure:")
+            raise
 
     async def list_agents(self) -> List[Dict]:
         """List all registered agents."""
         try:
-            return await self.agent_manager.list_agents()
+            agents = await self.agent_manager.list_agents()
+            self.logger.debug(f"Listed {len(agents)} agents")
+            return agents
         except Exception as e:
-            pass  # Placeholder implementation
             self.logger.error(f"Failed to list agents: {str(e)}")
-            raise OrchestratorError("Failed to list agents") from e
+            self.logger.exception("Details of agent listing failure:")
+            raise
 
     async def start_agent(self, agent_id: str):
         """Start a specific agent."""
         try:
             await self.agent_manager.start_agent(agent_id)
-            self.logger.info(f"Agent started successfully: {agent_id}")
+            self.logger.info(f"Agent {agent_id} started successfully")
+            return True
         except Exception as e:
-            pass  # Placeholder implementation
-            self.logger.error(f"Failed to start agent: {str(e)}")
-            raise OrchestratorError("Failed to start agent") from e
+            self.logger.error(f"Failed to start agent {agent_id}: {str(e)}")
+            self.logger.exception("Details of agent start failure:")
+            raise
 
     async def stop_agent(self, agent_id: str):
         """Stop a specific agent."""
         try:
             await self.agent_manager.stop_agent(agent_id)
-            self.logger.info(f"Agent stopped successfully: {agent_id}")
+            self.logger.info(f"Agent {agent_id} stopped successfully")
+            return True
         except Exception as e:
-            pass  # Placeholder implementation
-            self.logger.error(f"Failed to stop agent: {str(e)}")
-            raise OrchestratorError("Failed to stop agent") from e
+            self.logger.error(f"Failed to stop agent {agent_id}: {str(e)}")
+            self.logger.exception("Details of agent stop failure:")
+            raise
 
     async def start_sync(self):
         """Start synchronization with other servers."""
         try:
             await self.sync_manager.start()
             self.logger.info("Synchronization started successfully")
+            return True
         except Exception as e:
-            pass  # Placeholder implementation
             self.logger.error(f"Failed to start synchronization: {str(e)}")
-            raise OrchestratorError("Failed to start synchronization") from e
+            self.logger.exception("Details of sync start failure:")
+            raise
 
     async def stop_sync(self):
         """Stop synchronization with other servers."""
         try:
             await self.sync_manager.stop()
             self.logger.info("Synchronization stopped successfully")
+            return True
         except Exception as e:
-            pass  # Placeholder implementation
             self.logger.error(f"Failed to stop synchronization: {str(e)}")
-            raise OrchestratorError("Failed to stop synchronization") from e
+            self.logger.exception("Details of sync stop failure:")
+            raise
 
     async def deploy(self, target_server: str):
         """Deploy changes to a target server."""
@@ -194,4 +194,26 @@ class SupremeAIOrchestrator:
 
     def update_agent_heartbeat(self, agent_id: str) -> None:
         """Update agent heartbeat."""
-        self.agent_manager.update_heartbeat(agent_id) 
+        self.agent_manager.update_heartbeat(agent_id)
+
+    async def get_next_task(self) -> Dict:
+        """Get the next task from the task queue."""
+        try:
+            task = await self.task_queue.get()
+            self.logger.debug(f"Processing task {task.id if task else 'None'}")
+            return task
+        except Exception as e:
+            self.logger.error(f"Failed to process next task: {str(e)}")
+            self.logger.exception("Details of task processing failure:")
+            raise
+
+    async def get_task_queue_size(self) -> int:
+        """Get the size of the task queue."""
+        try:
+            size = self.task_queue.size
+            self.logger.debug(f"Task queue size: {size}")
+            return size
+        except Exception as e:
+            self.logger.error(f"Failed to get task queue size: {str(e)}")
+            self.logger.exception("Details of queue size retrieval failure:")
+            raise  # Re-raise the exception after logging 

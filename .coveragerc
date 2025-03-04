@@ -1,9 +1,10 @@
 [run]
 source = core_system.orchestrator
-omit = */__pycache__/*,*/tests/*,*/venv/*
+omit = */tests/*, */venv/*, */__pycache__/*
 
 [report]
-exclude_lines = 
+precision = 2
+exclude_lines =
     pragma: no cover
     def __repr__
     raise NotImplementedError

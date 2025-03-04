@@ -72,6 +72,18 @@ class SyncManager:
         """Synchronize with other servers."""
         logger.info("Synchronizing with other servers...")
         self.last_sync_time = datetime.now()
+        
+    async def get_status(self) -> Dict:
+        """Get the current synchronization status."""
+        status = {
+            "is_running": self.is_running,
+            "last_sync_time": self.last_sync_time,
+            "primary_server": self.primary_server,
+            "secondary_server": self.secondary_server,
+            "sync_interval": self.sync_interval
+        }
+        logger.debug(f"Sync status: {status}")
+        return status
 
     async def _sync_loop(self) -> None:
         """Run synchronization loop."""

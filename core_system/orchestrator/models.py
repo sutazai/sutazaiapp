@@ -5,7 +5,7 @@ Models for the Supreme AI Orchestrator
 This module defines the data models used by the orchestrator system.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 from typing import Any, Dict, Optional
@@ -60,8 +60,13 @@ class Agent:
     status: AgentStatus = AgentStatus.IDLE
     current_task: Optional[str] = None
     last_heartbeat: datetime = datetime.now()
+    last_updated: datetime = datetime.now()
     error_count: int = 0
-    metadata: Dict[str, Any] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.metadata is None:
+            self.metadata = {}
 
 
 @dataclass
@@ -83,7 +88,11 @@ class ServerConfig:
     is_primary: bool
     sync_port: int
     api_key: str
-    metadata: Dict[str, Any] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.metadata is None:
+            self.metadata = {}
 
 
 @dataclass
