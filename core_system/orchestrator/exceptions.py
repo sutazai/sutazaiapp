@@ -15,6 +15,11 @@ class AgentError(OrchestratorError):
     pass
 
 
+class AgentNotFoundError(AgentError):
+    """Exception raised when an agent is not found"""
+    pass
+
+
 class SyncError(OrchestratorError):
     """Exception raised for synchronization errors"""
     pass

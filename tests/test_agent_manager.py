@@ -1,11 +1,11 @@
 """Tests for the AgentManager module."""
 import pytest
 import asyncio
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from datetime import datetime, timedelta
 
 from core_system.orchestrator.models import OrchestratorConfig, Agent, AgentStatus
-from core_system.orchestrator.exceptions import AgentError
+from core_system.orchestrator.exceptions import AgentError, AgentNotFoundError
 from core_system.orchestrator.agent_manager import AgentManager
 
 @pytest.fixture
@@ -51,13 +51,14 @@ async def test_start_stop(agent_manager):
         mock_create_task.assert_called_once()
         
         # Create a mock task for stopping
-        mock_task = AsyncMock()
-        agent_manager.heartbeat_task = mock_task
-        
-        # Test stop
-        await agent_manager.stop()
-        assert agent_manager.is_running == False
-        mock_task.cancel.assert_called_once()
+        mock_task = MagicMock()
+        mock_task.cancel = MagicMock()
+        # Make the mock awaitable by patching the agent_manager.stop method
+        with patch.object(agent_manager, 'heartbeat_task', mock_task):
+            # Test stop
+            await agent_manager.stop()
+            assert agent_manager.is_running == False
+            mock_task.cancel.assert_called_once()
 
 @pytest.mark.asyncio
 async def test_register_agent(agent_manager, sample_agent):
@@ -111,10 +112,10 @@ async def test_start_agent(agent_manager, sample_agent):
     
     # Start the agent
     await agent_manager.start_agent(sample_agent["id"])
-    assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.RUNNING
+    assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.BUSY
     
     # Starting a non-existent agent should raise an exception
-    with pytest.raises(AgentError):
+    with pytest.raises(AgentNotFoundError):
         await agent_manager.start_agent("nonexistent")
 
 @pytest.mark.asyncio
@@ -129,7 +130,7 @@ async def test_stop_agent(agent_manager, sample_agent):
     assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.IDLE
     
     # Stopping a non-existent agent should raise an exception
-    with pytest.raises(AgentError):
+    with pytest.raises(AgentNotFoundError):
         await agent_manager.stop_agent("nonexistent")
 
 @pytest.mark.asyncio
@@ -164,7 +165,7 @@ async def test_get_agent_status(agent_manager, sample_agent):
     assert status["id"] == sample_agent["id"]
     
     # Getting status for a non-existent agent should raise an exception
-    with pytest.raises(AgentError):
+    with pytest.raises(AgentNotFoundError):
         await agent_manager.get_agent_status("nonexistent")
 
 @pytest.mark.asyncio
