@@ -11,7 +11,7 @@ requests==2.31.0
 psutil==5.9.6
 
 # Caching
-redis==4.5.0  # Downgraded to be compatible with fastapi-cache2[redis]
+redis==4.5.4  # Downgraded to be compatible with fastapi-cache2[redis]
 fastapi-cache2[redis]==0.2.1
 
 # Document Processing
