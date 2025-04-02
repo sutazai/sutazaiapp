@@ -1,0 +1,1 @@
+/opt/sutazaiapp/scripts/fix-dependencies.sh

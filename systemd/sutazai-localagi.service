@@ -1,0 +1,38 @@
+[Unit]
+Description=SutazAI Secure AGI Core
+After=network.target
+Requires=sys-fs-fuse-connections.mount
+Conflicts=shutdown.target
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+User=sutazaidev
+Group=sutazaidev
+WorkingDirectory=/opt/sutazaiapp
+Environment=PYTHONPATH=/opt/sutazaiapp
+ExecStartPre=/bin/bash -c "tpm2_load -C /opt/sutazaiapp/security/tpm/primary.ctx -u key.pub -r key.priv -c key.ctx"
+ExecStart=/opt/sutazaiapp/scripts/localagi_service.sh start --tpm-key key.ctx
+ExecStop=/opt/sutazaiapp/scripts/localagi_service.sh stop
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+MemoryDenyWriteExecute=yes
+LockPersonality=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+RestrictSUIDSGID=yes
+NoNewPrivileges=yes
+SystemCallFilter=@system-service
+CPUShares=100
+MemoryLimit=32G
+
+# Logging
+StandardOutput=append:/opt/sutazaiapp/logs/localagi/localagi.log
+StandardError=append:/opt/sutazaiapp/logs/localagi/localagi.error.log
+
+[Install]
+WantedBy=multi-user.target
+Alias=agi-core.service

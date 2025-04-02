@@ -1,0 +1,13 @@
+[tool.ruff]
+# Add other global Ruff settings here if needed
+# line-length = 88 
+
+exclude = [
+    "core/neuromorphic_pb2.py",
+    "core/neuromorphic_pb2_grpc.py",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore F403 (star-import) and F405 (undefined-name-from-star-import) 
+# specifically for the pwiz.py script within the virtual environment.
+"venv-sutazaiapp/bin/pwiz.py" = ["F403", "F405"] 

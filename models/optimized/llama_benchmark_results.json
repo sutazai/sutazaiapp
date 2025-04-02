@@ -1,0 +1,20 @@
+{
+  "model": "/path/to/llama3-70b.gguf",
+  "type": "llama",
+  "optimizations": {},
+  "error": "Model file not found: /path/to/llama3-70b.gguf",
+  "optimized_config_path": "/opt/sutazaiapp/models/optimized/llama_optimized_config.json",
+  "optimized_config": {
+    "model_path": "/path/to/llama3-70b.gguf",
+    "n_threads": 12,
+    "n_batch": 512,
+    "n_ctx": 4096,
+    "use_mlock": false,
+    "use_mmap": true
+  },
+  "benchmarks": {
+    "original": {
+      "error": "Model file not found: /path/to/llama3-70b.gguf"
+    }
+  }
+}

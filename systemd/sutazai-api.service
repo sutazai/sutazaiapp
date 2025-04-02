@@ -1,0 +1,30 @@
+[Unit]
+Description=SutazAI API Backend Service
+After=network.target postgresql.service redis.service
+Requires=postgresql.service redis.service
+
+[Service]
+Type=simple
+User=sutazaiapp
+Group=sutazaiapp
+WorkingDirectory=/opt/sutazaiapp
+Environment="PATH=/opt/sutazaiapp/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/opt/sutazaiapp/venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers 2
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sutazai-api
+TimeoutStartSec=300
+LimitNOFILE=65536
+
+# Resource controls
+CPUQuota=80%
+MemoryLimit=6G
+MemoryHigh=5G
+MemoryMax=7G
+TasksMax=100
+OOMScoreAdjust=-100
+
+[Install]
+WantedBy=multi-user.target 

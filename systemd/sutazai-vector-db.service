@@ -1,0 +1,25 @@
+`[Unit]
+Description=SutazAI Vector Database Service (Qdrant)
+After=network.target
+Before=sutazai-api.service
+
+[Service]
+Type=simple
+User=sutazaiapp
+Group=sutazaiapp
+WorkingDirectory=/opt/sutazaiapp
+ExecStart=/opt/sutazaiapp/scripts/start_qdrant.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sutazai-vector-db
+TimeoutStartSec=60
+LimitNOFILE=65536
+
+# Resource controls
+CPUQuota=50%
+MemoryLimit=4G
+
+[Install]
+WantedBy=multi-user.target 

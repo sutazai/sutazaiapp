@@ -1,0 +1,106 @@
+groups:
+  - name: sutazai_alerts
+    rules:
+      # System alerts
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage detected
+          description: CPU usage on {{ $labels.instance }} is above 80% for the last 5 minutes
+
+      - alert: HighMemoryUsage
+        expr: 100 * (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage detected
+          description: Memory usage on {{ $labels.instance }} is above 85% for the last 5 minutes
+
+      - alert: LowDiskSpace
+        expr: 100 * (node_filesystem_size_bytes - node_filesystem_avail_bytes) / node_filesystem_size_bytes > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low disk space detected
+          description: Disk usage on {{ $labels.instance }} is above 85% for the last 5 minutes
+
+      # Application alerts
+      - alert: HighRequestLatency
+        expr: histogram_quantile(0.95, sum(rate(sutazai_http_request_duration_seconds_bucket[5m])) by (le, endpoint)) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High request latency detected
+          description: 95th percentile latency for {{ $labels.endpoint }} is above 1 second for the last 5 minutes
+
+      - alert: HighErrorRate
+        expr: sum(rate(sutazai_http_requests_total{status_code=~"5.."}[5m])) / sum(rate(sutazai_http_requests_total[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High error rate detected
+          description: More than 5% of requests are resulting in 5xx errors for the last 5 minutes
+
+      # Model alerts
+      - alert: ModelInferenceLatency
+        expr: histogram_quantile(0.95, sum(rate(sutazai_model_inference_duration_seconds_bucket[5m])) by (le, model_name)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High model inference latency
+          description: 95th percentile inference latency for {{ $labels.model_name }} is above 2 seconds for the last 5 minutes
+
+      - alert: ModelErrorSpike
+        expr: sum(increase(sutazai_model_errors_total[15m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Model error spike detected
+          description: More than 10 model errors detected in the last 15 minutes
+
+      # Service alerts
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Service {{ $labels.job }} is down
+          description: Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute
+
+      - alert: InstanceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Instance {{ $labels.instance }} down
+          description: Instance {{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes
+
+      # Container alerts
+      - alert: ContainerHighCPU
+        expr: sum(rate(container_cpu_usage_seconds_total[5m])) by (container_name) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Container {{ $labels.container_name }} high CPU usage
+          description: Container {{ $labels.container_name }} has CPU usage above 80% for the last 5 minutes
+
+      - alert: ContainerHighMemory
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Container {{ $labels.container_name }} high memory usage
+          description: Container {{ $labels.container_name }} is using more than 85% of its memory limit for the last 5 minutes 

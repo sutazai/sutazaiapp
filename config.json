@@ -1,0 +1,43 @@
+{
+    "app_name": "SutazAI",
+    "version": "1.0.0",
+    "environment": "production",
+    "debug": false,
+    "log_level": "INFO",
+    "api": {
+        "host": "0.0.0.0",
+        "port": 8000,
+        "workers": 4,
+        "timeout": 300
+    },
+    "database": {
+        "type": "sqlite",
+        "path": "/opt/sutazaiapp/storage/sutazai.db"
+    },
+    "vector_store": {
+        "type": "qdrant",
+        "host": "localhost",
+        "port": 6333,
+        "collection": "sutazai_vectors"
+    },
+    "ai_models": {
+        "gpt4all": {
+            "model_path": "/opt/sutazaiapp/model_management/GPT4All/gpt4all.bin",
+            "context_length": 2048
+        },
+        "deepseek": {
+            "model_path": "/opt/sutazaiapp/model_management/DeepSeek-Coder-33B",
+            "context_length": 4096
+        }
+    },
+    "monitoring": {
+        "prometheus": {
+            "enabled": true,
+            "port": 9090
+        },
+        "node_exporter": {
+            "enabled": true,
+            "port": 9100
+        }
+    }
+} 

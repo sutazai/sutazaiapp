@@ -1,0 +1,15 @@
+# Core constraints
+PyYAML==6.0.2
+pytest==7.3.2
+
+# Pydantic ecosystem
+pydantic==1.10.8  # Required by superagi-client (includes BaseSettings)
+
+# NLP stack
+tokenizers==0.21.1  # Compatible with transformers 4.49.0
+transformers==4.49.0
+
+# Langchain compatibility
+langchain==0.0.315  # Works with langchain-core 0.1.10
+langchain-core==0.1.10
+langsmith==0.0.80  # Compatible with both

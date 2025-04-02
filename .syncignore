@@ -1,0 +1,15 @@
+# SutazAI sync exclude patterns
+.git/
+.git*
+__pycache__/
+*.pyc
+venv/
+node_modules/
+*.log
+.DS_Store
+.env
+backups/
+model_management/GPT4All/*.bin
+model_management/GPT4All/*.gguf
+model_management/DeepSeek-Coder-33B/*.bin
+model_management/DeepSeek-Coder-33B/*.gguf

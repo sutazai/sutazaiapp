@@ -1,0 +1,56 @@
+2025-03-26 21:37:28,682 - numexpr.utils - INFO - Note: NumExpr detected 20 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+2025-03-26 21:37:28,682 - numexpr.utils - INFO - NumExpr defaulting to 16 threads.
+2025-03-26 21:37:28,862 - database - INFO - Database connection established successfully
+2025-03-26 21:37:28,876 - pdf_processor - INFO - Starting PDF Processor initialization...
+2025-03-26 21:37:28,877 - pdf_processor - INFO - Python sys.executable: /opt/venv-sutazaiapp/bin/python
+2025-03-26 21:37:28,877 - pdf_processor - INFO - Python sys.path: ['/opt/sutazaiapp', '/opt/sutazaiapp', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/opt/venv-sutazaiapp/lib/python3.11/site-packages', '/opt/sutazaiapp/ai_agents/superagi']
+2025-03-26 21:37:28,877 - pdf_processor - INFO - Added /opt/sutazaiapp/venv/lib/python3.11/site-packages to Python path: /opt/sutazaiapp/venv/lib/python3.11/site-packages
+2025-03-26 21:37:28,877 - pdf_processor - INFO - Updated sys.path: ['/opt/sutazaiapp', '/opt/sutazaiapp', '/usr/lib/python311.zip', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload', '/opt/venv-sutazaiapp/lib/python3.11/site-packages', '/opt/sutazaiapp/ai_agents/superagi', '/opt/sutazaiapp/venv/lib/python3.11/site-packages']
+2025-03-26 21:37:28,877 - pdf_processor - INFO - Successfully imported fitz. Version: 1.25.3, File: /opt/venv-sutazaiapp/lib/python3.11/site-packages/fitz/__init__.py
+2025-03-26 21:37:31,837 - docx_processor - INFO - DOCX Processor initialized
+2025-03-26 21:37:31,837 - vector_store - INFO - Initializing embedding model: all-MiniLM-L6-v2
+2025-03-26 21:37:31,920 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cuda
+2025-03-26 21:37:31,920 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-03-26 21:37:34,022 - vector_store - INFO - Embedding model initialized successfully
+2025-03-26 21:37:34,531 - httpx - INFO - HTTP Request: GET http://localhost:6333 "HTTP/1.1 200 OK"
+2025-03-26 21:37:34,534 - httpx - INFO - HTTP Request: GET http://localhost:6333/collections "HTTP/1.1 200 OK"
+2025-03-26 21:37:34,535 - vector_store - INFO - Successfully connected to Qdrant at localhost:6333
+2025-03-26 21:37:34,535 - vector_store - INFO - Initialized VectorStore with storage path: /opt/sutazaiapp/data/vectors
+2025-03-26 21:37:34,546 - validation_service - INFO - Validation service initialized
+2025-03-26 21:37:34,548 - safety_service - INFO - Safety service initialized
+2025-03-26 21:37:34,549 - compliance_service - INFO - Compliance service initialized
+2025-03-26 21:37:34,552 - agent_communication - INFO - Agent communication service initialized
+2025-03-26 21:37:34,641 - ai_agents.dependencies - INFO - Initializing agent communication...
+2025-03-26 21:37:34,642 - ai_agents.protocols.agent_communication - INFO - Agent communication system started
+2025-03-26 21:37:34,642 - ai_agents.dependencies - INFO - Agent communication initialized and started
+2025-03-26 21:37:34,642 - ai_agents.dependencies - INFO - Initializing agent manager...
+2025-03-26 21:37:34,645 - supreme_agent_init - INFO - Attempting to import SuperAGI as installed package
+2025-03-26 21:37:34,646 - supreme_agent_init - WARNING - Could not import SuperAGI as installed package: No module named 'superagi.agent'
+2025-03-26 21:37:34,646 - supreme_agent_init - INFO - Attempting to import SuperAGI from local directory
+2025-03-26 21:37:34,646 - supreme_agent_init - INFO - Created fallback SuperAGI implementation
+2025-03-26 21:37:34,646 - ai_agents.health_check - INFO - Registered health check: system_resources
+2025-03-26 21:37:34,647 - ai_agents.health_check - INFO - Registered health check: python_runtime
+2025-03-26 21:37:34,647 - ai_agents.health_check - INFO - Registered health check: network_connectivity
+2025-03-26 21:37:34,647 - ai_agents.memory.shared_memory - INFO - Initialized shared memory 'global' with capacity for 1000 entries
+2025-03-26 21:37:34,647 - ai_agents.dependencies - INFO - Agent manager initialized
+2025-03-26 21:37:34,647 - ai_agents.dependencies - INFO - Initializing performance metrics...
+2025-03-26 21:37:34,647 - ai_agents.dependencies - INFO - Performance metrics initialized
+2025-03-26 21:37:34,647 - ai_agents.dependencies - INFO - Initializing interaction manager...
+2025-03-26 21:37:34,649 - ai_agents.interaction.human_interaction - INFO - Interaction manager started
+2025-03-26 21:37:34,649 - ai_agents.dependencies - INFO - Interaction manager initialized and started
+2025-03-26 21:37:34,649 - ai_agents.dependencies - INFO - Initializing workflow engine...
+2025-03-26 21:37:34,649 - ai_agents.orchestrator.workflow_engine - INFO - Workflow engine started
+2025-03-26 21:37:34,649 - ai_agents.dependencies - INFO - Workflow engine initialized and started
+2025-03-26 21:37:34,649 - ai_agents.dependencies - INFO - All dependencies initialized successfully
+2025-03-26 21:37:34,650 - SupremeOrchestrator - INFO - Loaded configuration from /opt/sutazaiapp/config/orchestrator.json
+2025-03-26 21:37:34,653 - SupremeOrchestrator - INFO - Loaded 7 agent definitions
+2025-03-26 21:37:34,658 - SupremeOrchestrator - INFO - Loaded 7 task definitions
+2025-03-26 21:37:34,658 - root - INFO - Successfully initialized SupremeOrchestrator for health monitoring
+2025-03-26 21:37:34,689 - agent_router - INFO - Loaded 1 agent definitions from config
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/sutazaiapp/backend/main.py", line 194, in <module>
+    if os.path.exists(settings.STATIC_DIR):
+                      ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Settings' object has no attribute 'STATIC_DIR'

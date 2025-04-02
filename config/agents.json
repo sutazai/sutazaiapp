@@ -1,0 +1,226 @@
+{
+  "agents": {
+    "document_agent": {
+      "name": "Document Agent",
+      "description": "Agent for processing and analyzing documents using Tesseract",
+      "type": "document_processor",
+      "framework": "custom",
+      "capabilities": [
+        "document_processing", 
+        "text_generation"
+      ],
+      "model_id": "local_model",
+      "tools": [
+        "extract_text", 
+        "analyze_document"
+      ],
+      "parameters": {
+         "tesseract_config": {
+           "lang": "eng",
+           "config": "--oem 3 --psm 6"
+         },
+         "metadata": {
+           "description": "Agent for processing and analyzing documents",
+           "author": "SutazaiApp Team",
+           "created_at": "2024-03-20T00:00:00Z"
+         }
+       }
+    },
+    "diagram_agent": {
+      "name": "Diagram Agent",
+      "description": "Agent for parsing and analyzing diagrams",
+      "type": "diagram_processor",
+      "framework": "custom",
+      "capabilities": [
+        "document_processing",
+        "reasoning"
+      ],
+      "model_id": "local_model",
+      "tools": [
+         "detect_shapes", 
+         "extract_text", 
+         "analyze_diagram"
+      ],
+      "parameters": {
+        "min_shape_area": 100,
+        "max_shape_area": 10000,
+        "metadata": {
+          "description": "Agent for parsing and analyzing diagrams",
+          "author": "SutazaiApp Team",
+          "created_at": "2024-03-20T00:00:00Z"
+        }
+      }
+    },
+    "autogpt_agent": {
+      "name": "AutoGPT Task Agent",
+      "description": "Autonomous agent for multi-step task execution using AutoGPT framework.",
+      "type": "autogpt",
+      "framework": "autogpt",
+      "capabilities": [
+        "planning",
+        "reasoning",
+        "tool_use",
+        "memory"
+      ],
+      "model_id": "local_model", 
+      "tools": ["search_local_docs", "write_file", "read_file", "execute_code"], 
+      "parameters": {}
+    },
+    "localagi_agent": {
+      "name": "LocalAGI Assistant",
+      "description": "Lightweight, offline-first agent based on LocalAGI framework.",
+      "type": "localagi",
+      "framework": "localagi",
+      "capabilities": [
+        "planning",
+        "memory",
+        "reasoning"
+      ],
+      "model_id": "local_model",
+      "tools": ["read_memory", "write_memory", "plan_steps"],
+      "parameters": {}
+    },
+    "langchain_chat_agent": {
+      "name": "LangChain Chat Agent",
+      "description": "Conversational agent using LangChain for dialogue and tool orchestration, focused on the SutazAI codebase.",
+      "type": "langchain",
+      "framework": "langchain",
+      "capabilities": [
+        "text_generation",
+        "tool_use",
+        "memory",
+        "reasoning",
+        "code_understanding" 
+      ],
+      "model_id": "llama3-8b",
+      "tools": [
+          "codebase_search", 
+          "read_file", 
+          "list_dir", 
+          "grep_search",
+          "file_search"
+      ], 
+      "parameters": {
+        "temperature": 0.5, 
+        "max_iterations": 10 
+      }
+    },
+    "agentzero_executor": {
+      "name": "AgentZero Executor",
+      "description": "Agent for executing complex tasks and code via AgentZero framework.",
+      "type": "agentzero",
+      "framework": "custom",
+      "capabilities": [
+        "code_execution",
+        "planning",
+        "tool_use"
+      ],
+      "model_id": "local_model",
+      "tools": ["run_code_sandbox", "use_cli_tool"],
+      "parameters": {
+        "sandbox_image": "sutazai_sandbox:latest" 
+      }
+    },
+    "autogen_coordinator": {
+      "name": "AutoGen Coordinator",
+      "description": "Coordinates collaborative tasks between multiple agents using AutoGen.",
+      "type": "autogen",
+      "framework": "autogen",
+      "capabilities": [
+        "collaboration",
+        "planning"
+      ],
+      "model_id": "local_model",
+      "tools": ["assign_task", "request_critique"],
+      "parameters": {
+         "agent_config_path": "config/autogen_agents.json" 
+       }
+    },
+    "tabbyml_completer": {
+      "name": "TabbyML Code Completer",
+      "description": "Provides local code completion suggestions using TabbyML.",
+      "type": "tabbyml",
+      "framework": "custom",
+      "capabilities": [
+        "code_generation" 
+      ],
+      "model_id": "tabby_model",
+      "tools": ["get_code_completion"],
+      "parameters": {
+        "service_url": "http://localhost:5000"
+      }
+    },
+    "semgrep_scanner": {
+      "name": "Semgrep Code Scanner",
+      "description": "Scans code for bugs and security issues using Semgrep.",
+      "type": "semgrep",
+      "framework": "custom",
+      "capabilities": [],
+      "model_id": "none",
+      "tools": ["scan_code_semgrep"],
+      "parameters": {
+         "ruleset": "p/default"
+       }
+    },
+    "skyvern_browser": {
+      "name": "Skyvern Browser Automator",
+      "description": "Automates interactions with local web content using Skyvern.",
+      "type": "skyvern",
+      "framework": "custom",
+      "capabilities": [
+         "tool_use"
+      ],
+      "model_id": "local_model",
+      "tools": ["navigate_url", "click_element", "extract_data"],
+      "parameters": {
+         "service_url": "http://localhost:7777"
+       }
+    },
+    "gpt_engineer_builder": {
+      "name": "GPT-Engineer Code Builder",
+      "description": "Generates codebases from natural language using GPT-Engineer.",
+      "type": "gpt_engineer",
+      "framework": "custom",
+      "capabilities": [
+        "code_generation",
+        "planning"
+      ],
+      "model_id": "local_model",
+      "tools": ["generate_project"],
+      "parameters": {}
+    },
+    "aider_editor": {
+      "name": "Aider Code Editor",
+      "description": "Edits code in local git repositories conversationally using Aider.",
+      "type": "aider",
+      "framework": "custom",
+      "capabilities": [
+        "code_generation",
+        "tool_use"
+      ],
+      "model_id": "local_model",
+      "tools": ["apply_code_diff"],
+      "parameters": {}
+    },
+    "document_processor": {
+      "name": "Document Processor",
+      "description": "Processes various document formats",
+      "type": "document_processor",
+      "framework": "custom",
+      "capabilities": [
+        "document_processing",
+        "text_generation"
+      ],
+      "model_id": "llama3-8b",
+      "tools": [
+        "extract_text",
+        "parse_pdf",
+        "ocr_image"
+      ],
+      "parameters": {
+        "temperature": 0.3,
+        "max_document_size_mb": 20
+      }
+    }
+  }
+} 

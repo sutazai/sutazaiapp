@@ -1,0 +1,8 @@
+storage:
+  storage_path: /opt/sutazaiapp/data/qdrant/storage
+  
+service:
+  host: 0.0.0.0
+  port: 6333
+  
+telemetry_disabled: false
