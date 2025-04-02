@@ -87,5 +87,4 @@ sutazaiapp.git/
 **/*.pack.old
 
 # Thevenv directory
-thevenv/
 venv-sutazaiapp/ 
