@@ -1,3 +1,6 @@
-# SutazAI Core Module
+"""Core module for SutazAI."""
 
-__all__ = []
+from typing import List
+
+__version__ = "0.1.0"
+__all__: List[str] = []  # Add more specific modules if needed

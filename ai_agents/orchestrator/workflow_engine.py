@@ -295,7 +295,7 @@ class WorkflowEngine:
         self.max_concurrent_tasks = max_concurrent_tasks
         self.workflows: Dict[str, Workflow] = {}
         self.active_workflows: Dict[str, threading.Thread] = {}
-        self.task_queue = queue.PriorityQueue()
+        self.task_queue: queue.PriorityQueue = queue.PriorityQueue()
         self.task_executors: Dict[str, threading.Thread] = {}
         self.running = False
         self.task_semaphore = threading.Semaphore(max_concurrent_tasks)

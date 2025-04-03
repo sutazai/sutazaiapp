@@ -13,6 +13,7 @@ from enum import Enum
 from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from queue import Queue, Empty
 
 from ..protocols.message_protocol import Message, MessageType, MessageProtocol
 from ..protocols.agent_communication import AgentCommunication
@@ -192,6 +193,39 @@ class HumanInteractionPoint:
         )
 
 
+class Interaction:
+    """
+    Represents a human interaction.
+    """
+
+    def __init__(
+        self,
+        interaction_id: str,
+        interaction_type: InteractionType,
+        agent_id: str,
+        user_id: Optional[str] = None,
+        callback: Optional[Callable[[InteractionResponse], None]] = None,
+        request_data: Dict[str, Any] = {},
+        timeout: Optional[int] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        self.interaction_id = interaction_id
+        self.interaction_type = interaction_type
+        self.agent_id = agent_id
+        self.user_id = user_id
+        self.callback = callback
+        self.timestamp = datetime.utcnow()
+        self.status = InteractionStatus.PENDING
+        self.request_data = request_data
+        self.timeout = timeout
+        self.metadata = metadata or {}
+        self.responses: List[InteractionResponse] = []
+
+    def add_response(self, response: "InteractionResponse") -> None:
+        """Add a response to this interaction."""
+        self.responses.append(response)
+
+
 class InteractionManager:
     """
     Manager for human interaction requests.
@@ -213,9 +247,15 @@ class InteractionManager:
         self.default_callbacks: Dict[
             InteractionType, List[Callable[[InteractionResponse], None]]
         ] = {interaction_type: [] for interaction_type in InteractionType}
+        self.active_interactions: Dict[str, Interaction] = {}
+        self.input_queue: Queue = Queue()
+        self.output_queue: Queue = Queue()
+        self._input_thread: Optional[threading.Thread] = None
+        self._output_thread: Optional[threading.Thread] = None
         self.running = False
         self.cleanup_thread = None
         self.notification_thread = None
+        self.lock = threading.Lock()
 
     def start(self) -> None:
         """Start the interaction manager."""
@@ -240,6 +280,16 @@ class InteractionManager:
         self.agent_communication.subscribe_broadcast(
             MessageType.HUMAN_INPUT_RESPONSE, self._handle_interaction_response
         )
+
+        # Start input thread
+        self._input_thread = threading.Thread(target=self._process_input, daemon=True) # type: ignore[assignment]
+        assert self._input_thread is not None
+        self._input_thread.start() # type: ignore[union-attr]
+
+        # Start output thread
+        self._output_thread = threading.Thread(target=self._process_output, daemon=True) # type: ignore[assignment]
+        assert self._output_thread is not None
+        self._output_thread.start() # type: ignore[union-attr]
 
         logger.info("Interaction manager started")
 
@@ -669,3 +719,25 @@ class InteractionManager:
             except Exception as e:
                 logger.error(f"Error in notification processing: {e}")
                 time.sleep(60)  # Sleep longer on error
+
+    def _process_input(self) -> None:
+        """Process incoming interaction requests."""
+        while self.running:
+            try:
+                # TODO: Implement input processing logic
+                time.sleep(1)  # Check every second
+
+            except Exception as e:
+                logger.error(f"Error in input processing: {e}")
+                time.sleep(5)  # Sleep longer on error
+
+    def _process_output(self) -> None:
+        """Process outgoing interaction responses."""
+        while self.running:
+            try:
+                # TODO: Implement output processing logic
+                time.sleep(1)  # Check every second
+
+            except Exception as e:
+                logger.error(f"Error in output processing: {e}")
+                time.sleep(5)  # Sleep longer on error

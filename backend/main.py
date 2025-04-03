@@ -14,7 +14,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
-import inspect
+import traceback
 
 # FastAPI imports
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -27,7 +27,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ai_agents.model_manager import ModelManager
 from ai_agents.agent_framework import AgentFramework
 from ai_agents.ethical_verifier import EthicalVerifier
-from app.sandbox.code_sandbox import CodeSandbox
+from backend.sandbox.code_sandbox import CodeSandbox
 
 # Import monitoring tools
 from utils.logging_setup import get_api_logger
@@ -140,28 +140,27 @@ async def startup_event():
     """Initialize components on startup"""
     global model_manager, agent_framework, ethical_verifier, code_sandbox
 
+    logger.info("Initializing API backend components...")
+
+    # Initialize components
+    ethical_verifier = EthicalVerifier()
+    logger.info("Ethical verifier initialized")
+
+    model_manager = ModelManager()
+    logger.info("Model manager initialized")
+
+    code_sandbox = CodeSandbox()
+    logger.info("Code sandbox initialized")
+
+    # Initialize AgentFramework (without api_client argument)
     try:
-        logger.info("Initializing API backend components...")
-        logger.info(f"Importing AgentFramework from: {inspect.getfile(AgentFramework)}")
-
-        # Initialize components
-        ethical_verifier = EthicalVerifier()
-        logger.info("Ethical verifier initialized")
-
-        model_manager = ModelManager()
-        logger.info("Model manager initialized")
-
         agent_framework = AgentFramework(model_manager)
-        logger.info("Agent framework initialized")
+        logger.info("Agent framework initialized successfully.")
+    except Exception as af_init_e:
+        logger.error(f"CRITICAL: Failed to initialize AgentFramework: {af_init_e}", exc_info=True)
+        raise RuntimeError(f"AgentFramework initialization failed: {af_init_e}")
 
-        code_sandbox = CodeSandbox()
-        logger.info("Code sandbox initialized")
-
-        logger.info("All components initialized successfully")
-
-    except Exception as e:
-        logger.error(f"Error during initialization: {str(e)}")
-        # Continue startup even with errors - components will be checked before use
+    logger.info("All components initialized successfully")
 
 
 # Shutdown event
@@ -459,17 +458,16 @@ async def analyze_document(request: DocumentAnalysisRequest):
 async def generate_code(request: CodeGenerationRequest):
     """Generate code based on requirements"""
     check_components()
+    instance_id = None  # Initialize instance_id
 
     try:
-        # Verify the requirements with ethical verifier
+        # --- Ethical Verification (Keep as is) ---
         verification = ethical_verifier.verify_content(request.requirements)
         if not verification["allowed"]:
             return JSONResponse(
                 status_code=403,
                 content={"status": "error", "message": verification["message"]},
             )
-
-        # If in edit mode, verify existing code
         if request.mode == "Edit Existing" and request.existing_code:
             verification = ethical_verifier.verify_content(request.existing_code)
             if not verification["allowed"]:
@@ -477,36 +475,84 @@ async def generate_code(request: CodeGenerationRequest):
                     status_code=403,
                     content={"status": "error", "message": verification["message"]},
                 )
+        # ---------------------------------------------
 
-        # Prepare parameters for code generation
-        params = {
+        # --- Agent Instantiation and Execution --- 
+        # Assume 'code_generator_agent' is the ID for the agent config capable of code generation
+        # This ID should match an entry in config/agents.json
+        code_agent_identifier = "code_generator_agent" # Replace if the actual ID is different
+
+        # Create an instance of the code generation agent
+        instance_id = await agent_framework.create_agent(code_agent_identifier)
+        if not instance_id:
+            logger.error(f"Failed to create agent instance for {code_agent_identifier}")
+            raise Exception("Could not create code generation agent instance")
+
+        logger.info(f"Created agent instance {instance_id} for code generation.")
+
+        # Prepare the task dictionary for the agent
+        task = {
+            "type": "code_generation", # Define a task type
             "requirements": request.requirements,
             "language": request.language,
             "mode": request.mode,
-            "parameters": request.parameters or {},
+            "generate_tests": request.generate_tests,
+            "existing_code": request.existing_code, # Will be None if not provided
+            "parameters": request.parameters or {}, # Agent-specific params
         }
 
-        # Add optional parameters
-        if request.existing_code:
-            params["existing_code"] = request.existing_code
+        # Execute the task using the agent instance
+        logger.info(f"Executing code generation task with instance {instance_id}...")
+        result = await agent_framework.execute_task(instance_id, task)
+        logger.info(f"Code generation task result from {instance_id}: {result}")
 
-        if request.generate_tests:
-            params["generate_tests"] = True
+        # Check result status from agent execution
+        if result.get("status") != "success":
+             # Use message from agent result if available, otherwise generic error
+             error_message = result.get("result", {}).get("error", "Agent execution failed")
+             logger.error(f"Code generation agent {instance_id} failed: {error_message}")
+             raise Exception(f"Code generation failed: {error_message}")
 
-        # Generate code using agent framework
-        result = await agent_framework.generate_code(params)
+        # Extract the actual generated code or response from the agent's result structure
+        # (This depends on how the specific code gen agent formats its output)
+        # Assuming the agent returns a dict with a 'result' key containing the output
+        agent_output = result.get("result", {})
+        if not agent_output or ("generated_code" not in agent_output and "response" not in agent_output):
+             logger.error(f"Agent {instance_id} returned unexpected result structure: {agent_output}")
+             raise Exception("Agent returned unexpected result format.")
 
-        # Add success status
-        result["status"] = "success"
+        # Format the final API response
+        api_response = {
+            "status": "success",
+             # Prioritize specific key, fallback to general response
+            "generated_code": agent_output.get("generated_code", agent_output.get("response"))
+        }
+        # Include test code if generated
+        if "test_code" in agent_output:
+            api_response["test_code"] = agent_output["test_code"]
 
-        return result
+        return api_response
+        # -------------------------------------------
 
     except Exception as e:
-        logger.error(f"Error generating code: {str(e)}")
+        # Ensure error logging includes traceback for better debugging
+        logger.error(f"Error in /code/generate endpoint: {str(e)}\n{traceback.format_exc()}")
         return JSONResponse(
             status_code=500,
             content={"status": "error", "message": f"Code generation error: {str(e)}"},
         )
+    finally:
+        # --- Agent Termination --- 
+        if instance_id:
+            try:
+                terminated = await agent_framework.terminate_agent(instance_id)
+                if terminated:
+                    logger.info(f"Successfully terminated agent instance {instance_id}")
+                else:
+                    logger.warning(f"Failed to terminate agent instance {instance_id}")
+            except Exception as term_e:
+                logger.error(f"Error terminating agent instance {instance_id}: {str(term_e)}")
+        # -------------------------
 
 
 @app.post("/code/execute")
@@ -745,61 +791,144 @@ async def model_control(request: ModelControlRequest):
         )
 
 
+LOG_FILE_MAP = {
+    "backend": "/opt/sutazaiapp/logs/backend.log",
+    "agent_framework": "/opt/sutazaiapp/logs/agent_framework.log",
+    "webui": "/opt/sutazaiapp/logs/streamlit_ui.log", # Assuming this is the correct web UI log
+    "model_manager": "/opt/sutazaiapp/logs/model_manager.log", # Assuming a separate log
+    "code_sandbox": "/opt/sutazaiapp/logs/code_sandbox.log", # Assuming a separate log
+    "ethical_verifier": "/opt/sutazaiapp/logs/ethical_verifier.log", # Assuming a separate log
+    "system_optimizer": "/opt/sutazaiapp/logs/system_optimizer.log",
+    # Add other potential service log files here
+}
+
+# Function to read last N lines efficiently (handles potential errors)
+def read_last_n_lines(filepath, n_lines):
+    try:
+        with open(filepath, 'rb') as f:
+            f.seek(0, os.SEEK_END)
+            file_size = f.tell()
+            lines_found = []
+            block_size = 1024
+            blocks = 0
+            
+            while len(lines_found) < n_lines + 1 and f.tell() > 0:
+                blocks += 1
+                seek_pos = max(0, file_size - blocks * block_size)
+                f.seek(seek_pos)
+                chunk = f.read(block_size + (file_size - seek_pos if blocks == 1 else 0))
+                if not chunk:
+                    break # Should not happen unless file changed?
+                    
+                # Decode carefully, replacing errors
+                lines = chunk.decode('utf-8', errors='replace').splitlines()
+                
+                # Add lines in reverse order until we have enough
+                # Keep track of what we added to avoid duplicates from block overlap
+                new_lines = lines[::-1]
+                if blocks > 1:
+                    # If overlap, remove last line from previous block if it's same as first line of current
+                    # A simpler approach: just add all and truncate later
+                    pass 
+                
+                lines_found = new_lines + lines_found # Prepend new lines
+                
+                # If the first chunk read contained the beginning of the file
+                if seek_pos == 0:
+                    break
+                    
+            # Return the last n_lines
+            return lines_found[-(n_lines):]
+    except FileNotFoundError:
+        logger.warning(f"Log file not found: {filepath}")
+        return []
+    except Exception as e:
+        logger.error(f"Error reading log file {filepath}: {e}")
+        return [f"Error reading log: {e}"]
+
+
 @app.post("/system/logs")
 async def get_logs(request: LogRequest):
-    """Get system logs"""
+    """Get system logs from actual files."""
     check_components()
 
     try:
-        # In a real system, you would query log files or a logging service
-        # Here we're creating mock logs for demonstration
-
         service = request.service
         level = request.level.upper()
-        lines = request.lines
+        lines_to_fetch = request.lines
+        
+        target_files = []
+        if service == "All":
+            target_files = list(LOG_FILE_MAP.values())
+        elif service in LOG_FILE_MAP:
+            target_files = [LOG_FILE_MAP[service]]
+        else:
+            # Attempt to find a match ignoring case or common variations
+            found = False
+            for key, path in LOG_FILE_MAP.items():
+                if service.lower() == key.lower() or service.lower() in key.lower():
+                    target_files = [path]
+                    logger.info(f"Matched requested service '{service}' to log file '{path}'")
+                    found = True
+                    break
+            if not found:
+                logger.warning(f"Unknown service requested for logs: {service}")
+                return JSONResponse(
+                    status_code=404,
+                    content={"status": "error", "message": f"Unknown service: {service}"},
+                )
 
-        # Mock logs
-        log_levels = ["DEBUG", "INFO", "WARNING", "ERROR"]
-        services = [
-            "backend",
-            "model_manager",
-            "agent_framework",
-            "ethical_verifier",
-            "code_sandbox",
-        ]
-
+        all_log_lines = []
+        for filepath in target_files:
+            if Path(filepath).exists():
+                 # Read slightly more lines initially to allow for filtering
+                 raw_lines = read_last_n_lines(filepath, lines_to_fetch + 50) 
+                 all_log_lines.extend(raw_lines)
+            else:
+                 logger.warning(f"Log file specified but not found: {filepath}")
+                 all_log_lines.append(f"INFO: Log file not found at {filepath}")
+                 
+        # Sort lines by timestamp (assuming YYYY-MM-DD HH:MM:SS format at start)
+        # Handle lines that might not have a timestamp correctly
+        def get_timestamp(line):
+            try:
+                return datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return datetime.min # Put lines without timestamp first
+        
+        all_log_lines.sort(key=get_timestamp)
+        
         # Filter by level
-        if level != "ALL":
-            level_index = log_levels.index(level)
-            filtered_levels = log_levels[level_index:]
+        filtered_logs = []
+        if level == "ALL":
+            filtered_logs = all_log_lines
         else:
-            filtered_levels = log_levels
+            allowed_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+            try:
+                min_level_index = allowed_levels.index(level)
+                valid_levels = set(allowed_levels[min_level_index:])
+                for line in all_log_lines:
+                    # Basic parsing: assumes format like 'YYYY-MM-DD HH:MM:SS - service - LEVEL - message'
+                    parts = line.split(' - ', 3)
+                    if len(parts) >= 3 and parts[2].strip() in valid_levels:
+                        filtered_logs.append(line)
+                    elif len(parts) < 3: # Append lines that don't fit the format if level is ALL/DEBUG/INFO?
+                        # Or maybe only if level is DEBUG? Decide based on desired verbosity.
+                        if level in ["ALL", "DEBUG", "INFO"]: # Append non-standard lines for lower levels
+                             filtered_logs.append(line)
+            except ValueError:
+                 logger.warning(f"Invalid log level specified: {level}. Returning all levels.")
+                 filtered_logs = all_log_lines # Fallback to all if level invalid
 
-        # Filter by service
-        if service != "All":
-            filtered_services = [service]
-        else:
-            filtered_services = services
-
-        # Generate mock logs
-        logs = []
-        for i in range(lines):
-            service_name = filtered_services[i % len(filtered_services)]
-            level_name = filtered_levels[i % len(filtered_levels)]
-            timestamp = (datetime.now().timestamp() - (i * 60)) * 1000
-            formatted_time = datetime.fromtimestamp(timestamp / 1000).strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
-
-            log_entry = f"{formatted_time} - {service_name} - {level_name} - Mock log entry {i + 1}"
-            logs.append(log_entry)
+        # Return the last N lines *after* filtering and sorting
+        final_logs = filtered_logs[-lines_to_fetch:]
 
         return {
             "status": "success",
-            "logs": logs,
+            "logs": final_logs, # Return the actual filtered log lines
             "service": service,
             "level": level,
-            "lines": len(logs),
+            "lines": len(final_logs),
         }
 
     except Exception as e:
@@ -828,4 +957,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
 
     # Start server
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True, log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")

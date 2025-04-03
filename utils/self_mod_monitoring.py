@@ -13,7 +13,7 @@ import hashlib
 import difflib
 import subprocess
 import shutil
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
@@ -226,7 +226,7 @@ class SelfModificationMonitor:
         Returns:
             Dictionary mapping change types to lists of modified files
         """
-        changes = {"added": [], "modified": [], "deleted": []}
+        changes: Dict[str, List[str]] = {"added": [], "modified": [], "deleted": []}
 
         components_to_check = [component] if component else self.components
 
@@ -345,7 +345,7 @@ class SelfModificationMonitor:
 
     def verify_in_sandbox(
         self, component: str, tests: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+    ) -> Dict[str, Union[bool, int, float, Optional[str], Dict[str, Any]]]:
         """
         Verify a modification in the sandbox environment.
 
@@ -359,7 +359,7 @@ class SelfModificationMonitor:
         start_time = time.time()
         sandbox_comp_dir = os.path.join(self.sandbox_dir, component)
 
-        results = {
+        results: Dict[str, Union[bool, int, float, Optional[str], Dict[str, Any]]] = {
             "success": False,
             "tests_run": 0,
             "tests_passed": 0,
@@ -396,14 +396,24 @@ class SelfModificationMonitor:
                 # Extract number of tests from pytest output
                 import re
 
+                results["tests_run"] = 0 # Initialize tests_run
+
                 match = re.search(r"(\d+) passed", process.stdout)
                 if match:
                     results["tests_passed"] = int(match.group(1))
-                    results["tests_run"] = results["tests_passed"]
+                    results["tests_run"] = results["tests_passed"] # Assign passed tests
 
                 match = re.search(r"(\d+) failed", process.stdout)
                 if match:
-                    results["tests_run"] += int(match.group(1))
+                    failed_count: int = int(match.group(1))
+                    # Ensure results["tests_run"] is treated as int
+                    current_tests_run = results.get("tests_run", 0)
+                    if isinstance(current_tests_run, (int, float)): # Check if numeric
+                       results["tests_run"] = int(current_tests_run) + failed_count
+                    else:
+                        # Handle case where tests_run might be non-numeric (shouldn't happen with init)
+                        logger.warning(f"Non-numeric value found for tests_run: {current_tests_run}. Setting failed count directly.")
+                        results["tests_run"] = failed_count # Or handle as error
 
             if PROMETHEUS_AVAILABLE:
                 # Record verification time
@@ -672,7 +682,7 @@ class SelfModificationMonitor:
 def create_self_mod_monitor(
     system_id: str,
     base_dir: str,
-    components: List[str] = None,
+    components: Optional[List[str]] = None,
     log_dir: Optional[str] = None,
 ) -> SelfModificationMonitor:
     """Create and return a new self-modification monitor."""

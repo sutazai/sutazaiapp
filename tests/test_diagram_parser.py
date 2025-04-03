@@ -9,7 +9,6 @@ import unittest
 from pathlib import Path
 
 import sys
-import pytest
 
 sys.path.append("/opt/sutazaiapp")
 

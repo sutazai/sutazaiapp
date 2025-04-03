@@ -136,6 +136,7 @@ watchdog
 rich
 jinja2
 pyyaml
+types-requests
 
 # Model formats
 einops
@@ -170,3 +171,6 @@ qdrant-client
 
 # Added gunicorn
 gunicorn
+
+# Added langchain-ollama
+langchain-ollama # For updated ChatOllama integration

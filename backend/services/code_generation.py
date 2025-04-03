@@ -47,7 +47,7 @@ class CodeGenerationRequest(BaseModel):
     )
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "spec_text": "Create a function that calculates the Fibonacci sequence up to n terms",
                 "language": "python",
@@ -69,7 +69,7 @@ class CodeGenerationResponse(BaseModel):
     )
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "language": "python",
@@ -86,7 +86,7 @@ class CodeImprovementRequest(BaseModel):
     language: str = Field("python", description="Programming language of the code")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "code": "def fibonacci(n):\n    result = []\n    a, b = 0, 1\n    for i in range(n):\n        result.append(a)\n        a, b = b, a + b\n    return result",
                 "issues": ["Function lacks docstring", "Variable 'i' is not used"],

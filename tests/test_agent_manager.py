@@ -9,19 +9,14 @@ import json
 import unittest
 import time
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 import pytest
 
 import sys
 
 sys.path.append("/opt/sutazaiapp")
 
-from ai_agents.agent_manager import AgentManager, AgentStatus, AgentMetrics
+from ai_agents.agent_manager import AgentManager, AgentStatus
 from ai_agents.agent_factory import AgentFactory
-from ai_agents.base_agent import AgentError, BaseAgent
-from ai_agents.protocols.agent_communication import AgentCommunication
-from ai_agents.health_check import HealthCheck
-from ai_agents.memory.agent_memory import MemoryManager
 
 
 class TestAgentManager(unittest.TestCase):

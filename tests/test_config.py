@@ -14,7 +14,7 @@ import sys
 
 sys.path.append("/opt/sutazaiapp")
 
-from backend.core.config import Settings, ROOT_DIR
+from backend.core.config import Settings
 
 
 class TestCoreConfig(unittest.TestCase):
@@ -63,11 +63,13 @@ class TestCoreConfig(unittest.TestCase):
             if key in os.environ:
                 del os.environ[key]
 
-        # Clean up temporary directory and file
+        # Clean up temporary directory
         shutil.rmtree(self.temp_dir, ignore_errors=True)
         # Clean up test DB files if they exist
-        if os.path.exists("./test_db.sqlite"): os.remove("./test_db.sqlite")
-        if os.path.exists("./test_db_sqlalchemy.sqlite"): os.remove("./test_db_sqlalchemy.sqlite")
+        if os.path.exists("./test_db.sqlite"):
+            os.remove("./test_db.sqlite")
+        if os.path.exists("./test_db_sqlalchemy.sqlite"):
+            os.remove("./test_db_sqlalchemy.sqlite")
 
     def test_settings_initialization(self):
         """Test settings initialization."""

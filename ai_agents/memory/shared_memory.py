@@ -14,6 +14,7 @@ import sys
 from enum import Enum
 from typing import Dict, List, Any, Optional, Set, Callable
 from dataclasses import dataclass, field, asdict
+from collections import defaultdict
 
 
 # Configure logging
@@ -113,6 +114,11 @@ class SharedMemory:
         self.total_size_bytes = 0
         self.created_at = time.time()
 
+        # Add history tracking per entry
+        self._entry_history: Dict[str, List[SharedMemoryEntry]] = defaultdict(list)
+        # Index entries created by each agent
+        self._agent_entries: Dict[str, Set[str]] = defaultdict(set)
+
         logger.info(
             f"Initialized shared memory '{name}' with capacity for {max_entries} entries"
         )
@@ -147,12 +153,9 @@ class SharedMemory:
             try:
                 # Check if we're at capacity
                 if len(self.entries) >= self.max_entries:
-                    # Try to make space by removing least important entries
-                    self._cleanup_old_entries()
-
-                    # If still at capacity, raise an error
-                    if len(self.entries) >= self.max_entries:
-                        raise ValueError(f"Shared memory '{self.name}' is full")
+                    # Try to make space by removing least important/oldest entries
+                    if not self._cleanup_entries():
+                        raise ValueError(f"Shared memory '{self.name}' is full and couldn't make space")
 
                 # Create entry
                 entry = SharedMemoryEntry(
@@ -175,6 +178,12 @@ class SharedMemory:
                     if tag not in self.tags_index:
                         self.tags_index[tag] = set()
                     self.tags_index[tag].add(entry.entry_id)
+
+                # Add to agent index
+                self._agent_entries[creator_id].add(entry.entry_id)
+
+                # Add to history
+                self._entry_history[entry.entry_id].append(entry)
 
                 # Notify watchers
                 self._notify_watchers("add", entry.entry_id, entry.to_dict())
@@ -213,7 +222,7 @@ class SharedMemory:
             # Check access control if agent_id is provided
             if agent_id and not self._check_access(agent_id, entry, AccessLevel.READ):
                 logger.warning(
-                    f"Access denied for agent {agent_id} to entry {entry_id}"
+                    f"Access denied for agent {agent_id} to read entry {entry_id}"
                 )
                 return None
 
@@ -255,7 +264,7 @@ class SharedMemory:
                 # Check access control
                 if not self._check_access(agent_id, entry, AccessLevel.WRITE):
                     logger.warning(
-                        f"Write access denied for agent {agent_id} to entry {entry_id}"
+                        f"Access denied for agent {agent_id} to update entry {entry_id}"
                     )
                     return False
 
@@ -294,11 +303,14 @@ class SharedMemory:
                         logger.warning(f"Invalid importance value: {importance}")
 
                 # Update timestamp and calculate new size
-                entry.last_accessed = time.time()
+                entry.timestamp = time.time()
                 new_size = entry.calculate_size()
 
                 # Update total size
                 self.total_size_bytes = self.total_size_bytes - original_size + new_size
+
+                # Store previous version in history
+                self._entry_history[entry_id].append(entry)
 
                 # Notify watchers
                 self._notify_watchers("update", entry_id, entry.to_dict())
@@ -326,16 +338,15 @@ class SharedMemory:
             if not entry:
                 return False
 
-            # Check delete access
-            if entry.access_control:
-                permission = entry.access_control.get(
-                    agent_id, entry.access_control.get("*")
+            # Check access control
+            if not self._check_access(agent_id, entry, AccessLevel.WRITE):
+                logger.warning(
+                    f"Access denied for agent {agent_id} to delete entry {entry_id}"
                 )
-                if permission != "owner" and agent_id != entry.creator_id:
-                    logger.warning(
-                        f"Agent {agent_id} attempted to delete entry {entry_id} without permission"
-                    )
-                    return False
+                return False
+
+            # Store final state in history before deleting
+            self._entry_history[entry_id].append(entry)
 
             # Remove entry from tag indexes
             for tag in entry.tags:
@@ -345,13 +356,10 @@ class SharedMemory:
                         del self.tags_index[tag]
 
             # Remove entry from agent index
-            if (
-                entry.creator_id in self.agent_entries
-                and entry_id in self.agent_entries[entry.creator_id]
-            ):
-                self.agent_entries[entry.creator_id].remove(entry_id)
-                if not self.agent_entries[entry.creator_id]:
-                    del self.agent_entries[entry.creator_id]
+            if entry.creator_id in self._agent_entries and entry_id in self._agent_entries[entry.creator_id]:
+                self._agent_entries[entry.creator_id].remove(entry_id)
+                if not self._agent_entries[entry.creator_id]:
+                    del self._agent_entries[entry.creator_id]
 
             # Remove entry
             del self.entries[entry_id]
@@ -370,49 +378,30 @@ class SharedMemory:
             require_all: Whether all tags must match (True) or any tag (False)
 
         Returns:
-            List[SharedMemoryEntry]: Matching entries
+            List[SharedMemoryEntry]: List of matching entries
         """
+        matching_entries = []
         with self.lock:
-            # Find entry IDs matching tags
+            # Find entries with all required tags or any tag
+            candidate_ids = set()
             if require_all:
-                # Entry must have all tags
-                if not tags:
-                    matching_ids = set(self.entries.keys())
-                else:
-                    tag = next(iter(tags))
-                    matching_ids = self.tags_index.get(tag, set()).copy()
+                # Start with the set from the first tag, then intersect
+                if tags:
+                    first_tag = next(iter(tags))
+                    candidate_ids = self.tags_index.get(first_tag, set()).copy()
                     for tag in tags:
-                        tag_entries = self.tags_index.get(tag, set())
-                        matching_ids &= tag_entries
-                        if not matching_ids:
-                            break
+                        candidate_ids.intersection_update(self.tags_index.get(tag, set()))
             else:
-                # Entry must have any tag
-                matching_ids = set()
+                # Union of sets for each tag
                 for tag in tags:
-                    tag_entries = self.tags_index.get(tag, set())
-                    matching_ids |= tag_entries
+                    candidate_ids.update(self.tags_index.get(tag, set()))
 
-            # Filter by access control and collect entries
-            results = []
-            for entry_id in matching_ids:
-                entry = self.entries.get(entry_id)
-                if not entry:
-                    continue
-
-                # Check access control if agent_id is provided
-                if agent_id and entry.access_control:
-                    if (
-                        agent_id not in entry.access_control
-                        and "*" not in entry.access_control
-                    ):
-                        continue
-
-                # Update access stats
-                entry.update_access_stats()
-                results.append(entry)
-
-            return results
+            # Retrieve and filter by access control
+            for entry_id in candidate_ids:
+                entry = self.get_entry(entry_id, agent_id=agent_id, update_stats=False)
+                if entry:
+                    matching_entries.append(entry)
+        return matching_entries
 
     def search_by_content(
         self, query: str, agent_id: Optional[str] = None
@@ -456,20 +445,17 @@ class SharedMemory:
             agent_id: ID of the agent
 
         Returns:
-            List[SharedMemoryEntry]: Entries created by the agent
+            List[SharedMemoryEntry]: List of entries created by the agent
         """
+        agent_created_entries = []
         with self.lock:
-            results = []
-
-            entry_ids = self.agent_entries.get(agent_id, set())
+            entry_ids = self._agent_entries.get(agent_id, set())
             for entry_id in entry_ids:
-                entry = self.entries.get(entry_id)
-                if entry:
-                    # Update access stats
-                    entry.update_access_stats()
-                    results.append(entry)
-
-            return results
+                # Check access before adding
+                accessible_entry = self.get_entry(entry_id, agent_id=agent_id, update_stats=False)
+                if accessible_entry:
+                     agent_created_entries.append(accessible_entry)
+        return agent_created_entries
 
     def update_access_control(
         self, entry_id: str, agent_id: str, access_control: Dict[str, str]
@@ -543,26 +529,18 @@ class SharedMemory:
             agent_id: ID of the agent requesting history (for access control)
 
         Returns:
-            Optional[List[Dict[str, Any]]]: Version history or None if entry not found or access denied
+            Optional[List[Dict[str, Any]]]: History of the entry, or None if not found/denied
         """
         with self.lock:
-            entry = self.entries.get(entry_id)
-            if not entry:
-                return None
+            # First, check if the requester can even read the *current* entry
+            current_entry = self.get_entry(entry_id, agent_id=agent_id, update_stats=False)
+            if not current_entry:
+                 logger.warning(f"Denied access or entry {entry_id} not found for history request by {agent_id}")
+                 return None
 
-            # Check access control if agent_id is provided
-            if agent_id and entry.access_control:
-                if (
-                    agent_id not in entry.access_control
-                    and "*" not in entry.access_control
-                ):
-                    return None
-
-            # Update access stats
-            entry.update_access_stats()
-
-            # Return version history
-            return entry.previous_versions
+            # Return history if available
+            history_list = self._entry_history.get(entry_id, [])
+            return [entry.to_dict() for entry in history_list]
 
     def clear(self) -> int:
         """
@@ -575,9 +553,115 @@ class SharedMemory:
             count = len(self.entries)
             self.entries.clear()
             self.tags_index.clear()
-            self.agent_entries.clear()
+            self._agent_entries.clear()
+            self._entry_history.clear()
             self.total_size_bytes = 0
             return count
+
+    # --- Watcher Methods ---
+
+    def add_watcher(
+        self, event_type: str, callback: Callable[[str, Dict[str, Any]], None]
+    ):
+        """Add a watcher for a specific event type (e.g., 'add', 'update', 'delete')."""
+        with self.lock:
+            if event_type not in self.watchers:
+                self.watchers[event_type] = []
+            self.watchers[event_type].append(callback)
+
+    def remove_watcher(
+        self, event_type: str, callback: Callable[[str, Dict[str, Any]], None]
+    ):
+        """Remove a watcher."""
+        with self.lock:
+            if event_type in self.watchers and callback in self.watchers[event_type]:
+                self.watchers[event_type].remove(callback)
+                if not self.watchers[event_type]:
+                    del self.watchers[event_type]
+
+    def _notify_watchers(
+        self, event_type: str, entry_id: str, entry_data: Dict[str, Any]
+    ):
+        """Notify registered watchers about an event."""
+        with self.lock:
+            if event_type in self.watchers:
+                for callback in self.watchers[event_type]:
+                    try:
+                        callback(entry_id, entry_data)
+                    except Exception as e:
+                        logger.error(
+                            f"Error in watcher callback for event {event_type}: {e}"
+                        )
+
+    # --- Internal Helper Methods ---
+
+    def _cleanup_entries(self, num_to_remove: int = 10) -> bool:
+        """
+        Remove oldest or least important entries to make space.
+
+        Args:
+            num_to_remove: Number of entries to attempt removing.
+
+        Returns:
+            bool: True if space was successfully made, False otherwise.
+        """
+        if len(self.entries) < self.max_entries:
+            return True  # No need to clean up
+
+        # Sort entries by importance (lowest first) and then timestamp (oldest first)
+        sorted_entries = sorted(
+            self.entries.values(), key=lambda e: (e.importance, e.timestamp)
+        )
+
+        removed_count = 0
+        for entry in sorted_entries[:num_to_remove]:
+            # Attempt to delete the entry (requires ADMIN or owner rights generally)
+            # For cleanup, assume system has rights - or implement specific cleanup logic
+            if self.delete_entry(entry.entry_id, agent_id="system_cleanup"): # Use a system ID
+                removed_count += 1
+
+        logger.info(f"Cleaned up {removed_count} entries from shared memory '{self.name}'")
+        return removed_count > 0
+
+    def _check_access(self, agent_id: str, entry: SharedMemoryEntry, required_level: AccessLevel) -> bool:
+        """
+        Check if an agent has the required access level for an entry.
+
+        Args:
+            agent_id: ID of the agent requesting access
+            entry: The shared memory entry
+            required_level: The required access level (READ, WRITE, ADMIN)
+
+        Returns:
+            bool: True if access is granted, False otherwise
+        """
+        if not entry.access_control:  # No specific controls = public access
+            return True
+
+        agent_level_str = entry.access_control.get(agent_id)
+        wildcard_level_str = entry.access_control.get("*") # Check for wildcard
+
+        # Determine the highest level granted (agent specific or wildcard)
+        effective_level_str = agent_level_str or wildcard_level_str
+
+        if not effective_level_str:
+            return False # No access defined for this agent or wildcard
+
+        try:
+            effective_level = AccessLevel(effective_level_str)
+        except ValueError:
+            logger.warning(f"Invalid access level string '{effective_level_str}' in entry {entry.entry_id}")
+            return False
+
+        # Check if the effective level meets the required level
+        if required_level == AccessLevel.READ:
+            return effective_level in [AccessLevel.READ, AccessLevel.WRITE, AccessLevel.ADMIN]
+        elif required_level == AccessLevel.WRITE:
+            return effective_level in [AccessLevel.WRITE, AccessLevel.ADMIN]
+        elif required_level == AccessLevel.ADMIN:
+            return effective_level == AccessLevel.ADMIN
+
+        return False # Should not be reached
 
 
 class SharedMemoryManager:

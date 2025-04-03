@@ -97,9 +97,10 @@ if SENTRY_AVAILABLE and SENTRY_DSN:
 def _sanitize_log_data(data: Dict[str, Any]) -> Dict[str, Any]:
     """Redact sensitive information from log data."""
     if not isinstance(data, dict):
-        return data
+        # If data is not a dict, return it as is (or handle differently if needed)
+        return data # Ensure non-dict data is returned
 
-    sanitized = {}
+    sanitized: Dict[str, Any] = {}
     for key, value in data.items():
         if any(field in key.lower() for field in REDACT_FIELDS):
             sanitized[key] = "***REDACTED***"
@@ -168,7 +169,7 @@ if PROMETHEUS_AVAILABLE and PUSH_GATEWAY_URL:
 
 
 def setup_logger(
-    name: str, log_file: Optional[str] = None, level: Union[int, str] = None
+    name: str, log_file: Optional[str] = None, level: Optional[Union[int, str]] = None
 ) -> logging.Logger:
     """
     Set up and configure a logger with console and file handlers.

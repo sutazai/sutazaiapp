@@ -106,29 +106,34 @@ stop_service "localagi"
 # Stop all Ollama model runner processes managed by start_all.sh
 print_message "Stopping Ollama model processes..." "info"
 
-# Find all ollama model PID files
-find "$PIDS_DIR" -name 'ollama_model_*.pid' -print0 | while IFS= read -r -d $'\0' pid_file; do
-    if [ -f "$pid_file" ]; then
-        model_pid=$(cat "$pid_file")
-        model_name=$(basename "$pid_file" | sed -e 's/ollama_model_//' -e 's/.pid//') # Extract sanitized name
-        print_message "-- Found PID file for model $model_name ($pid_file)" "info"
-        if ps -p "$model_pid" > /dev/null; then
-            print_message "   Stopping process (PID: $model_pid)" "info"
-            kill "$model_pid" # Try graceful first
-            sleep 2
-            if ps -p "$model_pid" > /dev/null; then
-                print_message "   Force killing process (PID: $model_pid)" "warning"
-                kill -9 "$model_pid"
+# --- New Graceful Stop Logic ---
+if command -v ollama &> /dev/null; then
+    # Get list of currently loaded models from ollama ps (NAME column)
+    # Skip the header line (NAME...), extract first field (model name before :) 
+    mapfile -t loaded_models < <(ollama ps 2>/dev/null | awk 'NR>1 {split($1,a,":"); print a[1]}' | sort -u)
+    
+    if [ ${#loaded_models[@]} -gt 0 ]; then
+        print_message "Found loaded Ollama models: ${loaded_models[*]}" "info"
+        print_message "Attempting graceful stop using 'ollama stop'..." "info"
+        for model_name in "${loaded_models[@]}"; do
+            if [[ -n "$model_name" ]]; then # Ensure model name is not empty
+                print_message "  Stopping: ollama stop $model_name" "info"
+                ollama stop "$model_name" 
+                # No need for long sleep, stop should be relatively quick
             fi
-            print_message "   Process stopped." "info"
-        else
-            print_message "   Process (PID: $model_pid from file) not found." "warning"
-        fi
-        rm -f "$pid_file"
+        done
+        print_message "Ollama graceful stop commands issued." "info"
+        sleep 5 # Give a few seconds for models to unload
+    else
+        print_message "No models reported as loaded by 'ollama ps'." "info"
     fi
-done
+else
+    print_message "Ollama command not found. Skipping graceful Ollama stop." "warning"
+fi
+# --- End of New Logic ---
 
 # Fallback: Kill any remaining 'ollama run' processes just in case
+print_message "Checking for remaining 'ollama run' processes (fallback)..." "info"
 pids=$(pgrep -f "ollama run")
 if [ -n "$pids" ]; then
     print_message "Found remaining 'ollama run' processes via pgrep. Attempting to stop..." "warning"

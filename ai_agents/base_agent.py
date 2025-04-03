@@ -11,7 +11,6 @@ from typing import Dict, Any, List, Optional
 from abc import ABC, abstractmethod
 from datetime import datetime
 import threading
-from enum import Enum
 
 # Import AgentStatus from its new location
 # from .agent_manager import AgentStatus

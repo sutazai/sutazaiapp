@@ -11,7 +11,7 @@ import socket
 import logging
 import platform
 import threading
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, Union
 from datetime import datetime
 import psutil
 
@@ -48,12 +48,13 @@ class HealthCheck:
             "response_time": {"warning": 2.0, "critical": 5.0},
         }
         self._stop_monitoring = False
-        self._monitor_thread = None
+        self._monitor_thread: Optional[threading.Thread] = None
         self._register_default_checks()
 
     def start(self) -> None:
         """Start the health check monitoring."""
         if self._monitor_thread is not None and self._monitor_thread.is_alive():
+            logger.warning("Health check monitor thread already running.")
             return
 
         self._stop_monitoring = False
@@ -259,14 +260,14 @@ class HealthCheck:
         python_version = sys.version
 
         # Refined GC stats check
-        gc_stats = {}
+        gc_stats: Dict[str, Any] = {}
         try:
             import gc
 
             gc_stats["objects_count"] = len(gc.get_objects())
             # Check if get_thresholds exists before calling
             if hasattr(gc, 'get_thresholds'):
-                gc_stats["thresholds"] = gc.get_thresholds()
+                gc_stats["thresholds"] = list(gc.get_thresholds())
             else:
                 gc_stats["thresholds"] = "Not Available"
             gc_stats["garbage_count"] = len(gc.garbage)

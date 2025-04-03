@@ -865,46 +865,77 @@ def system_monitoring_tab():
     # Models tab
     with system_tabs[2]:
         if "models" in system_info:
-            models = system_info["models"]
+            models_data = system_info["models"] # Get the raw dict
+
+            # Convert the dictionary of models into a list of dictionaries
+            # This is suitable for pd.DataFrame, ensuring model_id is a column
+            models_list = []
+            for model_id, model_info in models_data.items():
+                if isinstance(model_info, dict): # Ensure it's a dict
+                     model_info['model_id'] = model_id # Add model_id as a field
+                     models_list.append(model_info)
+                else:
+                     logger.warning(f"Skipping invalid model data for {model_id}: {model_info}")
+
+            if not models_list:
+                 st.warning("No valid model data found.")
+                 return # Exit this tab if no data
 
             # Create dataframe for models
-            models_df = pd.DataFrame(models)
+            models_df = pd.DataFrame(models_list)
 
-            # Display models dataframe
+            # --- Convert ALL complex columns to strings for display --- 
+            # Iterate through all columns
+            for col in models_df.columns:
+                 # Check if any cell in the column contains a dict or list
+                 if any(isinstance(x, (dict, list)) for x in models_df[col]):
+                     logger.info(f"Converting complex column '{col}' to JSON strings for display.")
+                     try:
+                        # Apply conversion to the entire column
+                        models_df[col] = models_df[col].apply(
+                            lambda x: json.dumps(x, indent=2) if isinstance(x, (dict, list)) else str(x)
+                        )
+                     except Exception as e:
+                          logger.error(f"Error converting column '{col}' to string: {e}")
+                          # Fallback: Convert entire column to string representations
+                          models_df[col] = models_df[col].astype(str)
+            # --------------------------------------------------------
+
+            # Define columns to display - ensure model_id is included
+            # Let's display all columns found after conversion for clarity
+            existing_display_columns = models_df.columns.tolist()
+            # display_columns = ['model_id', 'name', 'type', 'framework', 'capabilities', 'parameters']
+            # existing_display_columns = [col for col in display_columns if col in models_df.columns]
+
             st.dataframe(
-                models_df,
-                column_config={
-                    "name": "Model Name",
-                    "type": "Type",
-                    "size_gb": "Size (GB)",
-                    "loaded": "Loaded",
-                    "quantization": "Quantization",
-                    "vram_usage_mb": "VRAM Usage (MB)",
-                },
+                models_df[existing_display_columns], # Display all processed columns
                 use_container_width=True,
             )
 
-            # Model loading/unloading interface
+            # Model loading/unloading interface (ensure it uses model_id)
             st.subheader("Model Management")
 
             model_mgmt_cols = st.columns(3)
 
             with model_mgmt_cols[0]:
+                # Use the model_id from the DataFrame for selection
+                available_model_ids = models_df['model_id'].tolist()
                 model_to_manage = st.selectbox(
-                    "Select Model", 
-                    options=[model["name"] for model in models if isinstance(model, dict) and "name" in model],
+                    "Select Model ID", 
+                    options=available_model_ids,
                     key="selected_model_monitor"
                 )
 
             with model_mgmt_cols[1]:
-                model_action = st.selectbox("Action", options=["Load", "Unload"])
+                model_action = st.selectbox("Action", options=["Load", "Unload"], key="model_action_select")
 
             with model_mgmt_cols[2]:
                 execute_model_action = st.button("Execute Model Action")
 
                 if execute_model_action:
+                    # The API endpoint likely expects the model_id
                     model_request = {
-                        "model": model_to_manage,
+                        "model": model_to_manage, # Send the model_id
                         "action": model_action.lower(),
                     }
 
@@ -915,10 +946,15 @@ def system_monitoring_tab():
                             st.success(
                                 f"{model_action} action on {model_to_manage} was successful"
                             )
+                            # Refresh data after action
+                            st.cache_data.clear() 
+                            st.rerun()
                         else:
                             st.error(
                                 f"Failed to {model_action.lower()} {model_to_manage}: {response.get('message', 'Unknown error')}"
                             )
+        else:
+             st.warning("Model information not available from system status.")
 
     # Logs tab
     with system_tabs[3]:

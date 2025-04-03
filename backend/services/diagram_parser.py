@@ -76,7 +76,7 @@ class DiagramParsingResult(BaseModel):
     )
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "diagram_id": "diag_12345",
                 "filename": "architecture.png",
@@ -128,7 +128,7 @@ class DiagramUploadResponse(BaseModel):
     upload_timestamp: datetime = Field(..., description="Timestamp of the upload")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "diagram_id": "diag_12345",
                 "filename": "architecture.png",
@@ -658,3 +658,33 @@ async def get_supported_diagram_types():
     }
 
     return supported
+
+
+class GenerateDiagramRequest(BaseModel):
+    description: str = Field(..., description="Detailed description of the diagram to generate")
+    diagram_type: str = Field(..., description="Type of diagram (e.g., 'flowchart', 'sequence', 'class', 'mermaid')")
+    output_format: Optional[str] = Field("mermaid", description="Desired output format (e.g., 'mermaid', 'plantuml', 'dot')")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "description": "Diagram illustrating the login process for a web application, including user input, server validation, and session creation.",
+                "diagram_type": "sequence",
+                "output_format": "mermaid"
+            }
+        }
+
+
+class ParseDiagramRequest(BaseModel):
+    diagram_code: str = Field(..., description="The diagram code (e.g., Mermaid, PlantUML, DOT)")
+    input_format: str = Field(..., description="Format of the input diagram code")
+    output_format: str = Field("json", description="Desired output format for parsed data (e.g., 'json', 'yaml')")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "diagram_code": "sequenceDiagram\\n    participant User\\n    participant Server\\n    User->>Server: Login Request\\n    Server-->>User: Authentication Success",
+                "input_format": "mermaid",
+                "output_format": "json"
+            }
+        }

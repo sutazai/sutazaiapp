@@ -4,13 +4,9 @@ Minimal LocalAGI Server
 This is a simplified LocalAGI server that provides basic AGI endpoints.
 """
 
-import os
 import sys
-import json
 import logging
-from typing import Dict, Any, List, Optional
 import argparse
-from pathlib import Path
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description='Minimal LocalAGI Server')
@@ -35,7 +31,7 @@ except ImportError:
     logger.error("Required packages not found. Installing...")
     import subprocess
     subprocess.check_call([sys.executable, "-m", "pip", "install", "fastapi", "uvicorn"])
-    from fastapi import FastAPI, HTTPException, Request
+    from fastapi import FastAPI, Request
     from fastapi.responses import JSONResponse
     import uvicorn
 

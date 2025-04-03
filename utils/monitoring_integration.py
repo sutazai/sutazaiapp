@@ -10,10 +10,14 @@ import time
 from typing import Dict, List, Any, Optional, Callable
 from datetime import datetime
 from functools import wraps
+import threading
+import platform
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
+from starlette.requests import Request
+from starlette.responses import Response
 
 # Try to import optional dependencies
 try:
@@ -25,6 +29,7 @@ except ImportError:
 
 # Import our monitoring modules
 from utils.logging_setup import get_app_logger
+from utils.logging_setup import log_request
 from utils.neural_monitoring import (
     create_spiking_network_monitor,
     create_attention_monitor,
@@ -39,6 +44,7 @@ from utils.self_mod_monitoring import create_self_mod_monitor
 from utils.hardware_monitoring import (
     create_hardware_monitor,
     get_current_hardware_profile,
+    HardwareProfile,
 )
 from utils.security_monitoring import create_security_monitor
 
@@ -83,7 +89,7 @@ class MonitoringSystem:
         os.makedirs(self.log_dir, exist_ok=True)
 
         # Initialize monitoring components
-        self.components = {}
+        self.components: Dict[str, Any] = {}
         self._initialize_components()
 
         # Track model inferences
@@ -410,7 +416,7 @@ class MonitoringSystem:
 
     # Ethics monitoring utilities
     def check_ethical_boundary(
-        self, boundary_id: str, value: float, context: Dict[str, Any] = None
+        self, boundary_id: str, value: float, context: Optional[Dict[str, Any]] = None
     ) -> bool:
         """Check if a value falls within an ethical boundary."""
         if "ethics" not in self.components:
@@ -419,7 +425,7 @@ class MonitoringSystem:
         return self.components["ethics"].check_decision(boundary_id, value, context)
 
     def verify_ethical_property(
-        self, property_id: str, context: Dict[str, Any] = None
+        self, property_id: str, context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """Verify a formal ethical property."""
         if "ethics" not in self.components:
@@ -539,77 +545,54 @@ class MonitoringSystem:
         }
 
 
-class RequestMonitoringMiddleware(BaseHTTPMiddleware):
-    """Middleware for monitoring FastAPI requests."""
-
+# ASGI Middleware for Request Monitoring
+class RequestMonitoringMiddleware:
     def __init__(self, app: FastAPI, monitoring_system: MonitoringSystem):
-        super().__init__(app)
+        self.app = app
         self.monitoring_system = monitoring_system
+        self.logger = get_app_logger()
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
-        """Process a request and collect monitoring metrics."""
-        # Get initial timestamp
+    async def __call__(self, scope: dict, receive: Callable, send: Callable):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        request = Request(scope, receive)
         start_time = time.time()
+        status_code = 500  # Default to 500 in case of exception before response
 
-        # Process the request
+        async def send_wrapper(message):
+            nonlocal status_code
+            if message["type"] == "http.response.start":
+                status_code = message["status"]
+            await send(message)
+
         try:
-            response = await call_next(request)
+            await self.app(scope, receive, send_wrapper)
         except Exception as e:
-            # Log error
-            self.monitoring_system.logger.error(f"Error processing request: {e}")
-
-            # Log security event for server error
-            if "security" in self.monitoring_system.components:
-                self.monitoring_system.log_security_event(
-                    event_type="SYSTEM_CHANGE",
-                    severity="HIGH",
-                    summary=f"Server error: {str(e)}",
-                    details={"path": request.url.path, "method": request.method},
-                    source="request_middleware",
-                )
-
-            # Re-raise the exception
-            raise
-
-        # Calculate duration
-        duration = time.time() - start_time
-
-        # Record metrics
-        if PROMETHEUS_AVAILABLE and self.monitoring_system.api_requests:
-            self.monitoring_system.api_requests.labels(
-                method=request.method,
-                endpoint=request.url.path,
-                status=response.status_code,
-            ).inc()
-
-            self.monitoring_system.api_request_duration.labels(
-                method=request.method, endpoint=request.url.path
-            ).observe(duration)
-
-        # Log suspicious requests
-        if (
-            response.status_code >= 400
-            and "security" in self.monitoring_system.components
-        ):
-            severity = "LOW"
-            if response.status_code >= 500:
-                severity = "HIGH"
-            elif response.status_code >= 401:
-                severity = "MEDIUM"
-
-            self.monitoring_system.log_security_event(
-                event_type="ACCESS_ATTEMPT",
-                severity=severity,
-                summary=f"HTTP {response.status_code} response for {request.method} {request.url.path}",
-                source="request_middleware",
-                result="error"
-                if response.status_code >= 500
-                else "denied"
-                if response.status_code in [401, 403]
-                else "failed",
+            # Log exception if it occurs before response is sent
+            duration_ms = (time.time() - start_time) * 1000
+            endpoint = request.url.path
+            log_request(
+                component="api_gateway",
+                endpoint=endpoint,
+                duration=duration_ms,
+                status_code=status_code,
+                error=str(e),
             )
-
-        return response
+            # Reraise the exception so Starlette/FastAPI can handle it
+            raise e
+        finally:
+            # Log request after response is sent (or exception handled)
+            if status_code != 500: # Avoid double logging if exception occurred before response
+                duration_ms = (time.time() - start_time) * 1000
+                endpoint = request.url.path
+                log_request(
+                    component="api_gateway",
+                    endpoint=endpoint,
+                    duration=duration_ms,
+                    status_code=status_code,
+                )
 
 
 # Decorator for monitoring model inferences
@@ -644,7 +627,7 @@ def monitor_inference(model_id: str, endpoint: str = "unknown"):
             result = await func(*args, **kwargs)
 
             # Record metrics
-            if monitoring_system and monitoring_system.model_inferences:
+            if monitoring_system and monitoring_system.model_inferences is not None:
                 monitoring_system.model_inferences.labels(
                     model_id=model_id, endpoint=endpoint
                 ).inc()

@@ -6,7 +6,7 @@ Interfaces with local LLMs to generate code based on specifications
 import os
 import logging
 import time
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 from backend.core.config import get_settings
 
@@ -59,7 +59,7 @@ class CodeGenerator:
         """
         Discover available LLM models in the models directory
         """
-        models = {}
+        models: Dict[str, Dict[str, Any]] = {}
 
         # Define known model types and their paths
         model_configs = [
@@ -79,9 +79,11 @@ class CodeGenerator:
 
         # Check which models are available
         for config in model_configs:
-            if os.path.exists(config["path"]):
+            # Explicitly cast path to str for os.path.exists
+            model_path = str(config["path"])
+            if os.path.exists(model_path):
                 models[config["name"]] = {
-                    "path": config["path"],
+                    "path": model_path,
                     "type": config["type"],
                     "handler": config["handler"],
                 }
@@ -92,7 +94,7 @@ class CodeGenerator:
         return models
 
     def generate_code(
-        self, spec_text: str, language: str = "python", model: str = None
+        self, spec_text: str, language: str = "python", model: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Generate code based on a specification using a local LLM

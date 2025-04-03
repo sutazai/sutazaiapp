@@ -15,6 +15,7 @@ import json
 import argparse
 import threading
 from datetime import datetime
+from typing import Optional, Any
 
 # Add parent directory to the Python path
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,8 +34,8 @@ logging.basicConfig(
 logger = logging.getLogger("test_monitoring")
 
 try:
-    from utils.neural_monitoring import NeuralMonitor
-    from utils.ethics_verification import EthicsVerifier
+    # from utils.neural_monitoring import NeuralMonitor # Commenting out - class doesn't exist
+    from utils.ethics_verification import EthicalConstraintMonitor # Correct class name
     from utils.self_mod_monitoring import SelfModificationMonitor
     from utils.hardware_monitor import HardwareMonitor
     from utils.security_monitoring import SecurityMonitor
@@ -396,10 +397,8 @@ def get_monitoring_modules(base_dir):
     system_id = "sutazai_test"
 
     if MODULES_AVAILABLE:
-        neural_monitor = NeuralMonitor(
-            system_id=system_id, log_dir=os.path.join(log_dir, "neural")
-        )
-        ethics_verifier = EthicsVerifier(
+        # neural_monitor: Optional[Any] = None
+        ethics_verifier = EthicalConstraintMonitor(
             system_id=system_id,
             log_dir=os.path.join(log_dir, "ethics"),
             alert_on_violation=True,
@@ -420,9 +419,7 @@ def get_monitoring_modules(base_dir):
             integrity_check_interval=60.0,
         )
     else:
-        neural_monitor = MockNeuralMonitor(
-            system_id=system_id, log_dir=os.path.join(log_dir, "neural")
-        )
+        # neural_monitor = MockNeuralMonitor(SYSTEM_ID, neural_log_dir)
         ethics_verifier = MockEthicsVerifier(
             system_id=system_id,
             log_dir=os.path.join(log_dir, "ethics"),
@@ -445,7 +442,7 @@ def get_monitoring_modules(base_dir):
         )
 
     return {
-        "neural": neural_monitor,
+        "neural": None,
         "ethics": ethics_verifier,
         "self_mod": self_mod_monitor,
         "hardware": hardware_monitor,

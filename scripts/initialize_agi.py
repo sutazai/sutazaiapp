@@ -27,6 +27,7 @@ from typing import Dict, Any
 import psutil
 from datetime import datetime
 import platform
+from neuromorphic.engine import serve as start_neuromorphic_engine
 
 # Configure root logger
 logging.basicConfig(
@@ -42,7 +43,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import system components
 try:
-    from neuromorphic.core import serve as start_neuromorphic_engine
     from ai_agents.protocols.self_modification import SelfModificationControl
     from ai_agents.agent_manager import AgentManager
 except ImportError as e:

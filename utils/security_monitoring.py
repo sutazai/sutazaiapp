@@ -16,7 +16,7 @@ import logging
 import threading
 import subprocess
 import shutil
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Callable, Set, Union
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
@@ -186,8 +186,9 @@ class SecurityMonitor:
         self.airgap_status: bool = True  # Assume valid until proven otherwise
 
         # Initialize monitoring threads
-        self.stop_monitoring = False
-        self.monitoring_thread = None
+        self._stop_event = threading.Event()
+        self._last_check_time: Optional[float] = None
+        self._monitor_thread: Optional[threading.Thread] = None
 
         self.logger.info(f"Initialized security monitor for system {system_id}")
 
@@ -207,32 +208,31 @@ class SecurityMonitor:
             self.file_manifest = {}
             self.logger.info("Initialized new file manifest")
 
-    def start_monitoring(self, check_interval: float = 300.0) -> None:
+    def start(self, check_interval: float = 300.0) -> None:
         """
         Start security monitoring in a background thread.
 
         Args:
             check_interval: Interval in seconds between checks
         """
-        if self.monitoring_thread and self.monitoring_thread.is_alive():
+        if self._monitor_thread and self._monitor_thread.is_alive():
             self.logger.warning("Security monitoring already running")
             return
 
-        self.stop_monitoring = False
-        self.monitoring_thread = threading.Thread(
-            target=self._monitoring_loop, args=(check_interval,), daemon=True
-        )
-        self.monitoring_thread.start()
-        self.logger.info(f"Started security monitoring for system {self.system_id}")
+        self._stop_event.clear()
+        self._monitor_thread = threading.Thread(target=self._monitor_loop, args=(check_interval,), daemon=True)
+        if self._monitor_thread:
+            self._monitor_thread.start()
+        logger.info("Security monitoring started")
 
-    def stop_monitoring_thread(self) -> None:
+    def stop(self) -> None:
         """Stop the security monitoring thread."""
-        self.stop_monitoring = True
-        if self.monitoring_thread:
-            self.monitoring_thread.join(timeout=10.0)
+        self._stop_event.set()
+        if self._monitor_thread:
+            self._monitor_thread.join(timeout=10.0)
         self.logger.info(f"Stopped security monitoring for system {self.system_id}")
 
-    def _monitoring_loop(self, check_interval: float) -> None:
+    def _monitor_loop(self, check_interval: float) -> None:
         """Main monitoring loop that runs in a background thread."""
         last_full_check = 0.0
         last_quick_check = 0.0
@@ -240,7 +240,7 @@ class SecurityMonitor:
             60.0, check_interval / 5
         )  # At least 60 seconds between quick checks
 
-        while not self.stop_monitoring:
+        while not self._stop_event.is_set():
             try:
                 current_time = time.time()
 
@@ -449,7 +449,7 @@ class SecurityMonitor:
         Returns:
             Dictionary mapping file paths to checksums
         """
-        manifest = {}
+        manifest: Dict[str, str] = {}
 
         # Default patterns
         include_patterns = include_patterns or [
@@ -569,9 +569,9 @@ class SecurityMonitor:
                 continue
 
             manifest = self.file_manifest[component]
-            modified_files = []
-            missing_files = []
-            new_files = []
+            modified_files: List[str] = []
+            missing_files: List[str] = []
+            new_files: List[str] = []
 
             # Check existing files
             for rel_path, expected_checksum in manifest.items():
@@ -678,7 +678,7 @@ class SecurityMonitor:
         """
         start_time = time.time()
 
-        result = {
+        result: Dict[str, Any] = {
             "timestamp": start_time,
             "is_airgapped": True,
             "active_connections": [],
@@ -720,7 +720,7 @@ class SecurityMonitor:
             ]
 
             if external_interfaces:
-                result["is_airgapped"] = False
+                result["is_airgapped"] = bool(False)
                 result["issues"].append(
                     f"Found active external network interfaces: {', '.join(external_interfaces)}"
                 )
@@ -740,7 +740,7 @@ class SecurityMonitor:
                 [ss_path, "-tuln"], capture_output=True, text=True, check=False
             )
 
-            connections = []
+            connections: List[Dict[str, str]] = []
             for line in netstat_output.stdout.splitlines()[1:]:  # Skip header
                 parts = line.split()
                 if len(parts) >= 5:
@@ -796,6 +796,7 @@ class SecurityMonitor:
                 1 if self.airgap_status else 0
             )
 
+            assert isinstance(result["active_connections"], list)
             NETWORK_CONNECTIONS.labels(
                 system_id=self.system_id, connection_type="total"
             ).set(len(result["active_connections"]))

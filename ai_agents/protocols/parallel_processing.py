@@ -163,10 +163,10 @@ class ParallelTaskProcessor:
             return
 
         self.running = True
-        self.processing_thread = threading.Thread(
+        self.processing_thread = threading.Thread( # type: ignore[assignment]
             target=self._process_tasks, daemon=True
         )
-        self.processing_thread.start()
+        self.processing_thread.start() # type: ignore[union-attr]
         logger.info("Parallel task processor started")
 
     def stop(self) -> None:
@@ -665,7 +665,7 @@ class ParallelTaskProcessor:
         # Aggregate based on specified method
         if task.result_aggregation == "sum":
             # Sum numeric values with the same keys
-            combined = {}
+            combined: Dict[str, Any] = {}
             for result in results:
                 for key, value in result.items():
                     if isinstance(value, (int, float)):
@@ -674,8 +674,8 @@ class ParallelTaskProcessor:
 
         elif task.result_aggregation == "average":
             # Average numeric values with the same keys
-            combined = {}
-            counts = {}
+            combined: Dict[str, Any] = {}
+            counts: Dict[str, Any] = {}
 
             for result in results:
                 for key, value in result.items():
@@ -688,6 +688,16 @@ class ParallelTaskProcessor:
                     combined[key] = combined[key] / counts[key]
 
             return combined
+
+        elif task.result_aggregation == "concatenate_list":
+            # Use a distinct variable name for this block
+            combined_list: List[Any] = []
+            for r in results:
+                if isinstance(r, list):
+                    combined_list.extend(r)
+                elif r is not None:
+                    combined_list.append(r)
+            combined = combined_list # type: ignore[assignment]
 
         elif task.result_aggregation == "concat":
             # Concatenate list values with the same keys

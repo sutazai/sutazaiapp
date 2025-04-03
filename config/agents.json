@@ -51,6 +51,29 @@
         }
       }
     },
+    "code_generator_agent": {
+      "name": "Deepseek Code Generator",
+      "description": "Generates and modifies code using the deepseek-coder model.",
+      "framework": "custom",
+      "capabilities": [
+        "code_generation", 
+        "reasoning", 
+        "file_operations",
+        "code_understanding"
+      ],
+      "model_id": "deepseek-coder",
+      "tools": [
+        "read_file", 
+        "write_file",
+        "list_dir",
+        "grep_search"
+      ],
+      "parameters": {
+        "temperature": 0.2,
+        "max_tokens": 2048,
+        "stop_sequences": []
+      }
+    },
     "autogpt_agent": {
       "name": "AutoGPT Task Agent",
       "description": "Autonomous agent for multi-step task execution using AutoGPT framework.",

@@ -40,6 +40,17 @@ export NUMEXPR_MAX_THREADS=12
 echo "Starting SutazAI backend..."
 cd "$APP_ROOT" || exit 1
 
+# --- Activate Virtual Environment ---
+VENV_PATH="$APP_ROOT/venv-sutazaiapp"
+if [ -d "$VENV_PATH" ] && [ -f "$VENV_PATH/bin/activate" ]; then
+    echo "Activating virtual environment: $VENV_PATH"
+    source "$VENV_PATH/bin/activate"
+else
+    echo "Error: Virtual environment not found at $VENV_PATH"
+    exit 1
+fi
+# ----------------------------------
+
 # Check if uvicorn is installed (should be in venv)
 if ! command -v uvicorn &> /dev/null; then
     echo "Error: uvicorn not found in the current environment (should be in venv)."

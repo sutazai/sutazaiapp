@@ -7,7 +7,7 @@ including spiking neural networks, attention mechanisms, and synaptic plasticity
 
 import time
 import threading
-from typing import Any, Optional
+from typing import Any, Optional, Dict, Union
 
 # Try to import optional dependencies
 try:
@@ -98,7 +98,7 @@ class SpikingNetworkMonitor:
         self.logger = logger
         self.running = False
         self.monitor_thread = None
-        self.spike_counts = {}
+        self.spike_counts: Dict[str, Dict[str, Union[int, float]]] = {}
 
     def start(self):
         """Start the monitoring thread."""
@@ -234,7 +234,7 @@ class SynapticPlasticityMonitor:
         """
         self.network_id = network_id
         self.logger = logger
-        self.previous_weights = {}
+        self.previous_weights: Dict[str, np.ndarray] = {}
 
     def record_weight_changes(
         self, connection_type: str, weights: Any, module: str = "default"

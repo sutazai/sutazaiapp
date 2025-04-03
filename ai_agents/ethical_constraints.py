@@ -106,10 +106,10 @@ class EthicalConstraint:
 
     # The verification function takes a context dictionary and returns
     # a tuple of (is_satisfied, explanation, evaluation_details)
-    verification_fn: Callable[[Dict[str, Any]], Tuple[bool, str, List[str]]] = None
+    verification_fn: Optional[Callable[[Dict[str, Any]], Tuple[bool, str, List[str]]]] = None
 
     # Hash of the verification function for integrity checking
-    verification_fn_hash: str = None
+    verification_fn_hash: Optional[str] = None
 
     def __post_init__(self):
         """Calculate hash after initialization if not provided"""
@@ -119,7 +119,7 @@ class EthicalConstraint:
     def _compute_function_hash(self) -> str:
         """Compute cryptographic hash of the verification function"""
         if self.verification_fn is None:
-            return None
+            return ""
 
         fn_source = inspect.getsource(self.verification_fn)
         return hashlib.sha256(fn_source.encode()).hexdigest()
@@ -190,10 +190,10 @@ class EthicalConstraint:
 
     @classmethod
     def from_dict(
-        cls, data: Dict[str, Any], verification_fn: Callable = None
+        cls, data: Dict[str, Any], verification_fn: Optional[Callable] = None
     ) -> "EthicalConstraint":
         """Create constraint from dictionary representation"""
-        return cls(
+        constraint = cls(
             id=data["id"],
             name=data["name"],
             description=data["description"],
@@ -204,6 +204,14 @@ class EthicalConstraint:
             verification_fn=verification_fn,
             verification_fn_hash=data.get("verification_fn_hash"),
         )
+        # Verify integrity if function was provided
+        if verification_fn is not None and not constraint.verify_integrity():
+            logger.warning(f"Integrity check failed for provided verification_fn for constraint {data['id']}. Hash mismatch.")
+            # Decide whether to raise error or just warn
+        elif verification_fn is None and constraint.verification_fn_hash is not None:
+            logger.warning(f"Constraint {data['id']} has a verification hash but no function was provided.")
+
+        return constraint
 
 
 class EthicalConstraintSystem:
@@ -659,56 +667,48 @@ class EthicalConstraintSystem:
         return self.violations.copy()
 
     def get_human_readable_report(self) -> str:
-        """Generate a human-readable report of the constraint system"""
-        lines = [
-            "=== Ethical Constraint System Report ===",
-            f"Total constraints: {len(self.constraints)}",
-            f"Total violations recorded: {len(self.violations)}",
-            "",
-            "Constraints by category:",
-        ]
+        """
+        Generate a human-readable summary report of the constraints and violations
 
-        # Group constraints by category
-        by_category = {}
-        for c in self.constraints.values():
-            category = c.category.value
-            if category not in by_category:
-                by_category[category] = []
-            by_category[category].append(c)
+        Returns:
+            String containing the report
+        """
+        report = []
+        report.append(f"Ethical Constraint System Report ({datetime.now().isoformat()})")
+        report.append("=========================================")
+        report.append(f"Total constraints: {len(self.constraints)}")
+        report.append(f"Total violations recorded: {len(self.violations)}")
+        report.append("")
 
-        for category, constraints in by_category.items():
-            lines.append(f"  {category}: {len(constraints)}")
+        report.append("--- Constraints by Category ---")
+        by_category: Dict[ConstraintCategory, int] = {cat: 0 for cat in ConstraintCategory}
+        for constraint in self.constraints.values():
+            by_category[constraint.category] += 1
+        for category, count in by_category.items():
+            report.append(f"- {category.value.capitalize()}: {count}")
+        report.append("")
 
-        lines.append("")
-        lines.append("Constraints by severity:")
+        report.append("--- Constraints by Severity ---")
+        by_severity: Dict[ConstraintSeverity, int] = {sev: 0 for sev in ConstraintSeverity}
+        for constraint in self.constraints.values():
+            by_severity[constraint.severity] += 1
+        for severity, count in by_severity.items():
+            report.append(f"- {severity.value.capitalize()}: {count}")
+        report.append("")
 
-        # Group constraints by severity
-        by_severity = {}
-        for c in self.constraints.values():
-            severity = c.severity.value
-            if severity not in by_severity:
-                by_severity[severity] = []
-            by_severity[severity].append(c)
-
-        for severity, constraints in by_severity.items():
-            lines.append(f"  {severity}: {len(constraints)}")
-
-        lines.append("")
-        lines.append("Recent violations:")
-
-        # List recent violations
+        report.append("Recent violations:")
         recent_violations = sorted(
             self.violations, key=lambda v: v.timestamp, reverse=True
         )[:10]
-
         for v in recent_violations:
-            constraint = self.constraints.get(v.constraint_id)
-            constraint_name = constraint.name if constraint else "Unknown constraint"
-            lines.append(
+            # Rename inner variable to avoid collision with loop variable
+            violation_constraint: Optional[EthicalConstraint] = self.constraints.get(v.constraint_id)
+            constraint_name = violation_constraint.name if violation_constraint else "Unknown constraint"
+            report.append(
                 f"  [{v.timestamp.isoformat()}] {constraint_name}: {v.violation_details}"
             )
 
-        return "\n".join(lines)
+        return "\n".join(report)
 
 
 # Example utility functions for formal verification

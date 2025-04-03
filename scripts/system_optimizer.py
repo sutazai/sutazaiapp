@@ -237,63 +237,88 @@ class SystemOptimizer:
 
         # Check config.py for Pydantic v2 compatibility
         config_file = APP_ROOT / "backend" / "core" / "config.py"
+        updated_config = False
         if config_file.exists():
-            with open(config_file, "r") as f:
-                config_content = f.read()
+            try:
+                with open(config_file, "r") as f:
+                    config_content = f.read()
 
-            # Check for proper imports
-            if (
-                "from pydantic import BaseSettings" in config_content
-                and "pydantic_settings" not in config_content
-            ):
-                logger.warning("Outdated BaseSettings import in config.py")
-                self.issues_found.append("Outdated Pydantic imports in config.py")
-
-                # Fix the import
-                new_content = config_content.replace(
-                    "from pydantic import BaseSettings",
-                    "try:\n    from pydantic_settings import BaseSettings\nexcept ImportError:\n    from pydantic import BaseSettings",
-                )
-
-                # Fix model_config for pydantic v2
-                if "class Config:" in new_content and "model_config" not in new_content:
-                    new_content = new_content.replace(
-                        "class Config:",
-                        'try:\n        model_config = {\n            "env_file": ".env",\n            "env_file_encoding": "utf-8",\n            "case_sensitive": True,\n            "extra": "ignore"\n        }\n    except ImportError:\n        class Config:',
-                    )
-
-                with open(config_file, "w") as f:
-                    f.write(new_content)
-
-                logger.info("Fixed Pydantic imports and configuration in config.py")
-                self.issues_fixed.append(
-                    "Updated config.py for Pydantic v2 compatibility"
-                )
-
-        # Check and fix systemd service files
-        for service in self.services:
-            service_file = SYSTEMD_DIR / f"{service}.service"
-            if service_file.exists():
-                with open(service_file, "r") as f:
-                    service_content = f.read()
-
-                # Check for proper paths
+                # Check for proper imports and fix if necessary
                 if (
-                    "/opt/sutazai/" in service_content
-                    and "/opt/sutazaiapp/" not in service_content
+                    "from pydantic import BaseSettings" in config_content
+                    and "from pydantic_settings import BaseSettings" not in config_content
                 ):
-                    logger.warning(f"Incorrect path in {service}.service")
-                    self.issues_found.append(f"Incorrect path in {service}.service")
-
-                    # Fix the path
-                    new_content = service_content.replace(
-                        "/opt/sutazai/", "/opt/sutazaiapp/"
+                    logger.warning(
+                        "Outdated BaseSettings import found in config.py. Attempting fix."
                     )
-                    with open(service_file, "w") as f:
-                        f.write(new_content)
+                    self.issues_found.append(
+                        "Outdated Pydantic V1 BaseSettings import in config.py"
+                    )
+                    # Replace the import
+                    config_content = config_content.replace(
+                        "from pydantic import BaseSettings",
+                        "from pydantic_settings import BaseSettings",
+                    )
+                    updated_config = True
 
-                    logger.info(f"Fixed path in {service}.service")
-                    self.issues_fixed.append(f"Fixed path in {service}.service")
+                # Check for SettingsConfigDict if pydantic-settings is used
+                if "from pydantic_settings import BaseSettings" in config_content and \
+                   "from pydantic import Field, validator" in config_content and \
+                   "from pydantic import SettingsConfigDict" not in config_content:
+                     # Add the import if needed for model_config
+                     # This is a guess, might need adjustment based on actual usage
+                     if "model_config = SettingsConfigDict(" in config_content:
+                        logger.info("Adding missing SettingsConfigDict import.")
+                        # Find the line with pydantic imports and add to it
+                        lines = config_content.splitlines()
+                        import_line_index = -1
+                        for i, line in enumerate(lines):
+                            if line.strip().startswith("from pydantic import"):
+                                import_line_index = i
+                                break
+                        if import_line_index != -1:
+                            lines[import_line_index] += ", SettingsConfigDict"
+                            config_content = "\n".join(lines)
+                            updated_config = True
+                        else: # Add as a new import line if needed
+                            lines.insert(0, "from pydantic import SettingsConfigDict")
+                            config_content = "\n".join(lines)
+                            updated_config = True
+
+                if updated_config:
+                    with open(config_file, "w") as f:
+                        f.write(config_content)
+                    logger.info("Successfully updated imports in config.py")
+                    self.issues_fixed.append("Updated Pydantic imports in config.py")
+
+            except Exception as e:
+                logger.error(f"Error processing config.py: {str(e)}")
+                self.issues_found.append(f"Error processing config.py: {str(e)}")
+
+        # Check essential config files
+        essential_configs = [
+            CONFIG_DIR / "database.json",
+            CONFIG_DIR / "models.json",
+            CONFIG_DIR / "agent_framework.json",
+        ]
+
+        for cfg_path in essential_configs:
+            if not cfg_path.exists():
+                logger.error(f"Missing essential config file: {cfg_path}")
+                self.issues_found.append(f"Missing essential config: {cfg_path.name}")
+            else:
+                try:
+                    with open(cfg_path, "r") as f:
+                        json.load(f)
+                    logger.info(f"Checked config file: {cfg_path.name}")
+                except json.JSONDecodeError:
+                    logger.error(f"Invalid JSON in config file: {cfg_path}")
+                    self.issues_found.append(f"Invalid JSON in {cfg_path.name}")
+                except Exception as e:
+                    logger.error(f"Error reading config file {cfg_path}: {str(e)}")
+                    self.issues_found.append(
+                        f"Error reading config {cfg_path.name}: {str(e)}"
+                    )
 
     def clean_stale_pid_files(self) -> None:
         """Clean stale PID files."""
@@ -416,128 +441,126 @@ class SystemOptimizer:
             logger.info("No SQLite database found")
 
     def optimize_storage(self) -> None:
-        """Optimize storage usage."""
-        logger.info("Checking and optimizing storage")
+        """Optimize storage usage by cleaning up logs and temporary files."""
+        logger.info("Optimizing storage usage")
 
-        # Check for log files
-        log_files = list(LOGS_DIR.glob("*.log"))
-        large_log_files = []
+        # --- Log File Cleanup --- 
+        log_files_deleted = 0
+        log_bytes_deleted = 0
+        cutoff_days = 7
+        cutoff_time = time.time() - (cutoff_days * 24 * 60 * 60)
 
-        for log_file in log_files:
-            file_size_mb = log_file.stat().st_size / (1024 * 1024)
-            if file_size_mb > 10:
-                large_log_files.append((log_file, file_size_mb))
-
-        if large_log_files:
-            logger.warning(f"Found {len(large_log_files)} large log files")
-            self.issues_found.append("Large log files detected, may impact storage")
-
-            # Rotate large log files
-            for log_file, size_mb in large_log_files:
-                try:
-                    rotated_file = log_file.with_suffix(
-                        f".log.{datetime.now().strftime('%Y%m%d')}"
-                    )
-                    shutil.move(log_file, rotated_file)
-                    with open(log_file, "w") as f:
-                        f.write(f"Log rotated at {datetime.now().isoformat()}\n")
-
-                    logger.info(
-                        f"Rotated large log file: {log_file.name} ({size_mb:.2f} MB)"
-                    )
-                    self.issues_fixed.append(f"Rotated large log file: {log_file.name}")
-                except Exception as e:
-                    logger.error(f"Failed to rotate log file {log_file.name}: {str(e)}")
-
-        # Check for temporary files
-        temp_dir = APP_ROOT / "tmp"
-        if temp_dir.exists():
-            temp_files = list(temp_dir.glob("*"))
-            old_files = []
-
-            for temp_file in temp_files:
-                file_age_days = (time.time() - temp_file.stat().st_mtime) / (
-                    60 * 60 * 24
-                )
-                if file_age_days > 7:
-                    old_files.append(temp_file)
-
-            if old_files:
-                logger.warning(f"Found {len(old_files)} old temporary files")
-                self.issues_found.append("Old temporary files detected, cleaning up")
-
-                # Remove old temporary files
-                for old_file in old_files:
+        try:
+            logger.info(f"Cleaning log files older than {cutoff_days} days in {LOGS_DIR}")
+            for item in LOGS_DIR.glob('*.log*'): # Include rotated logs like .log.1
+                if item.is_file():
                     try:
-                        if old_file.is_file():
-                            old_file.unlink()
-                        elif old_file.is_dir():
-                            shutil.rmtree(old_file)
+                        file_mod_time = item.stat().st_mtime
+                        if file_mod_time < cutoff_time:
+                            file_size = item.stat().st_size
+                            item.unlink() # Delete the file
+                            log_files_deleted += 1
+                            log_bytes_deleted += file_size
                     except Exception as e:
-                        logger.error(
-                            f"Failed to remove old file {old_file.name}: {str(e)}"
-                        )
+                        logger.warning(f"Could not process log file {item}: {str(e)}")
+            logger.info(f"Deleted {log_files_deleted} old log files, freeing {log_bytes_deleted / (1024*1024):.2f} MB")
+            if log_files_deleted > 0:
+                 self.issues_fixed.append(f"Deleted {log_files_deleted} old log files")
+        except Exception as e:
+            logger.error(f"Error during log cleanup: {str(e)}")
+            self.issues_found.append(f"Error during log cleanup: {str(e)}")
 
-                logger.info(f"Removed {len(old_files)} old temporary files")
-                self.issues_fixed.append(
-                    f"Cleaned up {len(old_files)} old temporary files"
-                )
+        # --- Temporary File Cleanup --- 
+        tmp_dir = APP_ROOT / "tmp"
+        tmp_files_deleted = 0
+        tmp_bytes_deleted = 0
+        if tmp_dir.exists() and tmp_dir.is_dir():
+            logger.info(f"Cleaning temporary directory: {tmp_dir}")
+            try:
+                for item in tmp_dir.iterdir():
+                    try:
+                        item_size = item.stat().st_size if item.is_file() else 0
+                        if item.is_file():
+                            item.unlink()
+                        elif item.is_dir():
+                            # Recursively get size before deleting
+                            dir_size = sum(f.stat().st_size for f in item.glob('**/*') if f.is_file())
+                            shutil.rmtree(item)
+                            item_size = dir_size # Use calculated size for reporting
+                        tmp_files_deleted += 1 # Count files and dirs
+                        tmp_bytes_deleted += item_size
+                    except Exception as e:
+                         logger.warning(f"Could not remove item {item} from tmp: {str(e)}")
+                logger.info(f"Deleted {tmp_files_deleted} items from tmp, freeing {tmp_bytes_deleted / (1024*1024):.2f} MB")
+                if tmp_files_deleted > 0:
+                    self.issues_fixed.append(f"Deleted {tmp_files_deleted} items from tmp directory")
+            except Exception as e:
+                logger.error(f"Error cleaning tmp directory: {str(e)}")
+                self.issues_found.append(f"Error cleaning tmp directory: {str(e)}")
+        else:
+             logger.info("Temporary directory not found, skipping cleanup.")
+
+        # --- General Disk Usage Check --- 
+        try:
+            # Log disk usage for key directories
+            dirs_to_check = {
+                "logs": LOGS_DIR,
+                "data": APP_ROOT / "data",
+                "models": APP_ROOT / "models",
+                "tmp": APP_ROOT / "tmp",
+                "vector_storage": APP_ROOT / "vector_storage",
+            }
+            total_app_size = 0
+
+            for name, path in dirs_to_check.items():
+                if path.exists():
+                    dir_size = sum(f.stat().st_size for f in path.glob('**/*') if f.is_file())
+                    logger.info(
+                        f"Disk usage for {name} ({path}): {dir_size / (1024*1024):.2f} MB"
+                    )
+                    total_app_size += dir_size
+                else:
+                     logger.info(f"Directory not found: {path}")
+
+            logger.info(
+                f"Approximate total disk usage for checked directories: {total_app_size / (1024*1024):.2f} MB"
+            )
+
+            # Log overall disk usage for the partition
+            usage = shutil.disk_usage(APP_ROOT)
+            logger.info(
+                f"Overall disk usage for {APP_ROOT}: "
+                f"{usage.used / (1024**3):.2f} GB used / "
+                f"{usage.total / (1024**3):.2f} GB total "
+                f"({usage.free / (1024**3):.2f} GB free)"
+            )
+        except Exception as e:
+            logger.error(f"Error checking disk usage: {str(e)}")
+            self.issues_found.append(f"Error checking disk usage: {str(e)}")
 
     def run_transformer_optimizations(self) -> None:
-        """Run transformer model optimizations."""
-        logger.info("Checking for transformer model optimizations")
-
-        # Check if optimization script exists
-        optimize_script = SCRIPTS_DIR / "optimize_transformers.py"
-        if optimize_script.exists():
-            logger.info("Found transformer optimization script")
-
-            # Check if models directory exists
-            models_dir = APP_ROOT / "models"
-            if models_dir.exists() and list(models_dir.glob("*")):
-                logger.info("Found models directory with models")
-
-                # Run the optimization script if models are found
-                try:
-                    # Define required arguments
-                    model_dir = str(models_dir)
-                    output_dir = str(models_dir / "optimized") # Example output dir
-                    os.makedirs(output_dir, exist_ok=True)
-                    
-                    cmd = [
-                        sys.executable, 
-                        str(optimize_script),
-                        "--model_dir", model_dir,
-                        "--output_dir", output_dir
-                        # Add other args like --model_type if needed, or make them optional
-                    ]
-                    subprocess.run(
-                        cmd,
-                        check=True,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                    )
-                    logger.info(f"Ran transformer optimization script: {' '.join(cmd)}")
-                    self.issues_fixed.append(
-                        "Optimized transformer models for better performance"
-                    )
-                except subprocess.CalledProcessError as e:
-                    logger.error(
-                        f"Failed to run transformer optimizations: {e.stderr.decode()}"
-                    )
-                    # Add specific handling for OSError (like tokenizer not found)
-                    self.issues_found.append(f"Transformer optimization failed: {e.stderr.decode()}")
-                except FileNotFoundError:
-                    logger.error(f"Optimization script not found or Python executable issue.")
-                    self.issues_found.append(f"Transformer optimization script not found.")
-                # Add a general exception catch
-                except Exception as e:
-                    logger.error(f"An unexpected error occurred during transformer optimization: {str(e)}")
-                    self.issues_found.append(f"Unexpected transformer optimization error: {str(e)}")
+        """Run optimizations related to transformer models."""
+        # Check cache size, etc.
+        logger.info("Running transformer optimizations (Placeholder)")
+        # Example: Check Hugging Face cache size
+        try:
+            from transformers import file_utils
+            cache_dir = Path(file_utils.default_cache_path)
+            if cache_dir.exists():
+                cache_size = sum(f.stat().st_size for f in cache_dir.glob('**/*') if f.is_file())
+                logger.info(f"Hugging Face cache directory: {cache_dir}")
+                logger.info(f"Hugging Face cache size: {cache_size / (1024**3):.2f} GB")
+                # Potentially add logic to clear cache if it exceeds a threshold
+                # Be careful with clearing cache as it requires redownloading models
+                # if cache_size > SOME_THRESHOLD:
+                #    logger.warning("Cache size exceeds threshold. Consider clearing.")
             else:
-                logger.info("No models found to optimize")
-        else:
-            logger.info("Transformer optimization script not found.")
+                logger.info("Hugging Face cache directory not found.")
+        except ImportError:
+            logger.warning("'transformers' library not found. Skipping cache check.")
+        except Exception as e:
+            logger.error(f"Error checking Hugging Face cache: {str(e)}")
+            self.issues_found.append(f"Error checking HF cache: {str(e)}")
 
     def run_code_quality_checks(self) -> None:
         """Run code quality checks."""

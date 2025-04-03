@@ -33,16 +33,18 @@ class AgentCommunication:
         Args:
             max_queue_size: Maximum size of the message queue
         """
-        self.message_queue = queue.PriorityQueue(maxsize=max_queue_size)
+        self.message_queue: queue.PriorityQueue[tuple[int, Message]] = queue.PriorityQueue(maxsize=max_queue_size)
         self.subscribers: Dict[
             MessageType, Dict[str, List[Callable[[Message], None]]]
         ] = defaultdict(lambda: defaultdict(list))
         self.broadcast_subscribers: Dict[
             MessageType, List[Callable[[Message], None]]
         ] = defaultdict(list)
-        self.running = False
-        self.processing_thread = None
+        self.running = True
+        self.processing_thread = threading.Thread(target=self._process_messages, daemon=True)
+        self.processing_thread.start()
         self.agent_ids: Set[str] = set()
+        logger.info("Agent communication system started")
 
     def start(self) -> None:
         """Start the message processing thread."""
@@ -50,9 +52,7 @@ class AgentCommunication:
             return
 
         self.running = True
-        self.processing_thread = threading.Thread(
-            target=self._process_messages, daemon=True
-        )
+        self.processing_thread = threading.Thread(target=self._process_messages, daemon=True)
         self.processing_thread.start()
         logger.info("Agent communication system started")
 

@@ -125,7 +125,7 @@ class Memory:
         self.max_short_term_entries = max_short_term_entries
         self.max_long_term_entries = max_long_term_entries
         self.entries: Dict[str, MemoryEntry] = {}
-        self.short_term_queue = deque(maxlen=max_short_term_entries)
+        self.short_term_queue: deque[str] = deque(maxlen=max_short_term_entries)
         self.long_term_entries: Dict[str, MemoryEntry] = {}
         self.working_memory: Dict[str, MemoryEntry] = {}
         self.episodic_memory: Dict[str, List[MemoryEntry]] = {}

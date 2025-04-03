@@ -111,6 +111,44 @@ if [ -x "$BIN_DIR/start_backend.sh" ]; then
         # exit 1 
     else
         print_message "start_backend.sh completed successfully." "info"
+        # --- Start Ollama Models (Added Section) ---
+        print_message "Attempting to pre-load Ollama models..." "info"
+        if command -v ollama &> /dev/null; then
+            # Wait a moment for ollama serve (started within start_backend.sh or elsewhere) to be ready
+            sleep 5 
+            
+            # Check if ollama serve is actually running (optional but recommended)
+            if pgrep -f "ollama serve" > /dev/null; then
+                print_message "Ollama service detected. Getting list of local models..." "info"
+                
+                # Get list of models (extract only the name part before the colon)
+                mapfile -t local_models < <(ollama list | awk -F: '{print $1}' | grep -v '^NAME' | sort -u)
+                
+                if [ ${#local_models[@]} -gt 0 ]; then
+                    print_message "Found local models: ${local_models[*]}" "info"
+                    print_message "Starting 'ollama run' for each model in the background..." "warning"
+                    print_message "(This may consume significant RAM/VRAM)" "warning"
+                    
+                    for model_name in "${local_models[@]}"; do
+                        if [[ -n "$model_name" ]]; then # Ensure model name is not empty
+                            print_message "  Starting: ollama run $model_name \"\" &" "info"
+                            # Run the model with an empty prompt to load it, in the background
+                            # Redirect stdout and stderr to /dev/null to suppress output
+                            ollama run "$model_name" "" > /dev/null 2>&1 &
+                            sleep 2 # Small delay between starting each model
+                        fi
+                    done
+                    print_message "Ollama model pre-loading initiated." "info"
+                else
+                    print_message "No local Ollama models found via 'ollama list'." "warning"
+                fi
+            else
+                print_message "Ollama service (ollama serve) does not appear to be running. Skipping model pre-loading." "error"
+            fi
+        else
+            print_message "Ollama command not found. Skipping Ollama model pre-loading." "warning"
+        fi
+        # --- End of Added Section ---
     fi
 else
     print_message "Error: start_backend.sh not found or not executable!" "error"

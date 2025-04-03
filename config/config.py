@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 
 class Config:
@@ -6,7 +7,7 @@ class Config:
 
     DEBUG = False
     TESTING = False
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key-please-change-in-production")
+    SECRET_KEY: Optional[str] = os.environ.get("SECRET_KEY", "dev-key-please-change-in-production")
     SQLALCHEMY_DATABASE_URI = "sqlite:////opt/sutazaiapp/database.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

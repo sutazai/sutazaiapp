@@ -10,7 +10,7 @@ import os
 import json
 import logging
 import re
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from urllib.parse import urlparse
 
 # Configure logging
@@ -192,7 +192,7 @@ class EthicalVerifier:
         return {"allowed": True, "message": "Content verification passed"}
 
     def verify_action(
-        self, action: str, parameters: Dict[str, Any] = None
+        self, action: str, parameters: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Verify a proposed action against ethical constraints.

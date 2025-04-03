@@ -1,7 +1,6 @@
 import pytest
 import time
-from unittest.mock import MagicMock, patch
-import asyncio
+from unittest.mock import MagicMock
 
 from ai_agents.orchestrator.orchestrator import (
     AIOrchestrator,
@@ -9,7 +8,6 @@ from ai_agents.orchestrator.orchestrator import (
     # SystemState, # Assuming this might also be problematic if related
     # SelfImprovement, # Commented out - Class not found in orchestrator.py
 )
-from ai_agents.base_agent import BaseAgent
 # from ai_agents.ai_models.model_wrappers import BaseModelWrapper # Commented out - Module not found
 
 

@@ -17,7 +17,7 @@ from functools import lru_cache
 logger = logging.getLogger("semgrep_integration")
 
 # Cache for semgrep results to avoid duplicate scans
-RESULTS_CACHE = {}
+RESULTS_CACHE: Dict[str, tuple[Dict[str, Any], float]] = {}
 CACHE_TTL = 3600  # 1 hour cache TTL
 
 

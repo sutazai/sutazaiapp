@@ -10,19 +10,14 @@ import os
 import json
 import logging
 from enum import Enum
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional
 import threading
 import time
-import subprocess
 import torch
 import faiss
-from huggingface_hub import hf_hub_download, HfApi
+from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import RepositoryNotFoundError, EntryNotFoundError
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import SentenceTransformerEmbeddings
-from langchain_community.chat_models import ChatOllama
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from langchain_core.outputs import LLMResult
+from langchain_ollama import ChatOllama
 
 logger = logging.getLogger("ModelManager")
 
@@ -225,13 +220,14 @@ class ModelManager:
                             raise ValueError(f"Missing 'model' parameter for Ollama config: {model_id}")
 
                         logger.info(f"Creating ChatOllama instance for model '{ollama_model_name}' at {base_url}")
-                        # Ensure ChatOllama is imported
-                        try:
-                            from langchain_community.chat_models import ChatOllama
-                        except ImportError:
-                             logger.error("ChatOllama not available. Please install langchain-community.")
-                             raise
+                        # Ensure ChatOllama is imported (already done above)
+                        # try:
+                        #     from langchain_community.chat_models import ChatOllama # Old import
+                        # except ImportError:
+                        #      logger.error("ChatOllama not available. Please install langchain-community.")
+                        #      raise
 
+                        # Use updated ChatOllama from langchain_ollama
                         instance = ChatOllama(
                             model=ollama_model_name,
                             base_url=base_url,
@@ -569,342 +565,186 @@ class ModelManager:
                 return False
 
     def run_inference(
-        self, model_id: str, inputs: Any, parameters: Optional[Dict[str, Any]] = None
+        self, model_id: str, input_data: Any, parameters: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
-        Run inference with a model
+        Run inference using a loaded model.
 
         Args:
-            model_id: ID of the model to use
-            inputs: Input data for the model
-            parameters: Optional parameters for inference
+            model_id: ID of the loaded model
+            input_data: Input data (e.g., prompt string, document content, query)
+            parameters: Optional dictionary of inference parameters
 
         Returns:
-            Dictionary with inference results
+            Dictionary containing the inference result or an error
         """
         if model_id not in self.loaded_models:
-            logger.warning(f"Model {model_id} not loaded, attempting to load")
-            if not self.load_model(model_id):
-                return {"error": f"Failed to load model {model_id}"}
+            logger.error(f"Model {model_id} not loaded for inference.")
+            return {"error": f"Model {model_id} not loaded."}
 
-        model_data = self.loaded_models[model_id]
-        model_type = model_data["type"]
+        model_info = self.loaded_models[model_id]
+        instance = model_info["instance"]
+        model_type = model_info["type"]
+        framework = model_info.get("framework") # Framework might not exist for all types
 
-        try:
-            # Handle different model types
-            if model_type == "large_language_model" or model_type == "code_model":
-                return self._run_llm_inference(model_id, inputs, parameters)
-            elif model_type == "vector_database":
-                return self._run_vector_db_query(model_id, inputs, parameters)
-            else:
-                return {"error": f"Unsupported model type: {model_type}"}
+        # Get default parameters from config and override with runtime params
+        config_params = self.models.get(model_id, {}).get("parameters", {})
+        combined_params = config_params.copy()
+        if parameters:
+            combined_params.update(parameters)
 
-        except Exception as e:
-            logger.error(f"Error running inference with model {model_id}: {str(e)}")
-            import traceback
-
-            logger.error(traceback.format_exc())
-            return {"error": f"Inference error: {str(e)}"}
-
-    def _run_llm_inference(
-        self,
-        model_id: str,
-        inputs: Union[str, List[Dict[str, str]]],
-        parameters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """Run inference with an LLM"""
-        model_data = self.loaded_models[model_id]
-        framework = model_data["framework"]
-        model = model_data["instance"]
-
-        # Get parameters with defaults from model config
-        model_config = self.models.get(model_id, {})
-        default_params = model_config.get("parameters", {})
-        # Combine default model params with runtime params
-        # Runtime params take precedence
-        params = {**default_params, **(parameters or {})}
-
-        # Process inputs - Note: Formatting moved to specific inference functions
-        # if isinstance(inputs, str):
-        #     prompt = inputs
-        # elif isinstance(inputs, list):
-        #     # Assume chat format
-        #     prompt = self._format_chat_messages(inputs, framework)
-        # else:
-        #     return {"error": "Invalid input format"}
-
-        # Run inference based on framework
-        if framework == "llama.cpp":
-            # Format messages specifically for llama.cpp if needed
-            if isinstance(inputs, list):
-                 prompt = self._format_chat_messages(inputs, framework)
-            else:
-                 prompt = inputs # Assume string input is already formatted
-            output = self._run_llamacpp_inference(model, prompt, params)
-        elif framework == "gpt4all":
-            # Format messages specifically for gpt4all if needed
-            if isinstance(inputs, list):
-                 prompt = self._format_chat_messages(inputs, framework)
-            else:
-                 prompt = inputs # Assume string input is already formatted
-            output = self._run_gpt4all_inference(model, prompt, params)
-        elif framework == "ollama":
-            # Pass the raw inputs (str or list of dicts) to the ollama inference function
-            # along with the ChatOllama instance (model)
-            output = self._run_ollama_inference(model, inputs, params)
-        else:
-            logger.error(f"Unsupported LLM framework in _run_llm_inference: {framework}")
-            return {"error": f"Unsupported framework: {framework}"}
-
-        logger.debug(f"Raw LLM inference output for {model_id}: {output}")
-        return output
-
-    def _format_chat_messages(
-        self, messages: List[Dict[str, str]], framework: str
-    ) -> str:
-        """Format chat messages for different frameworks"""
-        if framework == "llama.cpp":
-            formatted = ""
-            for msg in messages:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                if role == "system":
-                    formatted += f"<|system|>\n{content}\n"
-                elif role == "user":
-                    formatted += f"<|user|>\n{content}\n"
-                elif role == "assistant":
-                    formatted += f"<|assistant|>\n{content}\n"
-            formatted += "<|assistant|>\n"
-            return formatted
-
-        elif framework == "gpt4all":
-            # Simple formatting for GPT4All
-            formatted = ""
-            for msg in messages:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                if role == "system":
-                    formatted += f"System: {content}\n"
-                elif role == "user":
-                    formatted += f"User: {content}\n"
-                elif role == "assistant":
-                    formatted += f"Assistant: {content}\n"
-            formatted += "Assistant: "
-            return formatted
-
-        elif framework == "ollama":
-            # Ollama handles this natively
-            return messages
-
-        else:
-            # Default formatting
-            formatted = ""
-            for msg in messages:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                formatted += f"{role.capitalize()}: {content}\n"
-            formatted += "Assistant: "
-            return formatted
-
-    def _run_llamacpp_inference(
-        self, model, prompt: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Run inference with llama.cpp model"""
-        temperature = params.get("temperature", 0.7)
-        max_tokens = params.get("max_tokens", 2048)
-        top_p = params.get("top_p", 0.9)
-
-        # Run inference
-        output = model(
-            prompt, max_tokens=max_tokens, temperature=temperature, top_p=top_p
+        logger.debug(
+            f"Running inference on model {model_id} (Type: {model_type}, Framework: {framework}) with params: {combined_params}"
         )
 
-        return {
-            "text": output["choices"][0]["text"],
-            "usage": {
-                "prompt_tokens": len(prompt.split()),
-                "completion_tokens": len(output["choices"][0]["text"].split()),
-                "total_tokens": len(prompt.split())
-                + len(output["choices"][0]["text"].split()),
-            },
-        }
-
-    def _run_gpt4all_inference(
-        self, model, prompt: str, params: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Run inference with GPT4All model"""
-        temperature = params.get("temperature", 0.7)
-        max_tokens = params.get("max_tokens", 2048)
-
-        # Run inference
-        output = model.generate(prompt, max_tokens=max_tokens, temp=temperature)
-
-        return {
-            "text": output,
-            "usage": {
-                "prompt_tokens": len(prompt.split()),
-                "completion_tokens": len(output.split()),
-                "total_tokens": len(prompt.split()) + len(output.split()),
-            },
-        }
-
-    def _run_ollama_inference(
-        self,
-        model_instance: ChatOllama,
-        inputs: Union[str, List[Dict[str, str]]],
-        params: Dict[str, Any],
-    ) -> Dict[str, Any]:
-        """Run inference with Ollama model using the ChatOllama instance."""
-        temperature = params.get("temperature", 0.7)
-        top_p = params.get("top_p", 1.0)
-        num_ctx = params.get("num_ctx", None)
-
         try:
-            # Prepare arguments for invoke
-            invoke_args = {
-                "temperature": temperature,
-                "top_p": top_p,
-            }
-            if num_ctx is not None:
-                invoke_args["num_ctx"] = num_ctx
+            # --- Handle different model types ---
+            if model_type == "ollama" and framework == "langchain":
+                # Input data is expected to be a string prompt
+                if not isinstance(input_data, str):
+                    return {"error": "Invalid input data for Ollama model. Expected a string prompt."}
+                prompt = input_data
 
-            # Prepare input format for ChatOllama
-            if isinstance(inputs, str):
-                langchain_input = inputs
-            elif isinstance(inputs, list):
-                langchain_messages = []
-                for msg in inputs:
-                    role = msg.get("role", "user").lower()
-                    content = msg.get("content", "")
-                    if role == "system":
-                        langchain_messages.append(SystemMessage(content=content))
-                    elif role == "assistant":
-                        langchain_messages.append(AIMessage(content=content))
-                    else:
-                        langchain_messages.append(HumanMessage(content=content))
-                langchain_input = langchain_messages
+                # Call the invoke method of the ChatOllama instance
+                # We can pass some parameters directly if ChatOllama supports them
+                # Otherwise, they might need to be set during instance creation or are handled internally
+                # Example: Passing temperature if available in params
+                invoke_params = {}
+                if "temperature" in combined_params:
+                    invoke_params["temperature"] = combined_params["temperature"]
+                if "top_p" in combined_params:
+                    invoke_params["top_p"] = combined_params["top_p"]
+                if "max_tokens" in combined_params:
+                    # Note: ChatOllama might not directly support max_tokens in invoke,
+                    # it's often controlled by num_predict or other settings. Check documentation.
+                    logger.warning("max_tokens might not be directly applicable to ChatOllama invoke, check model parameters.")
+                    # Example if a specific parameter exists:
+                    # if "num_predict" in combined_params:
+                    #     invoke_params["num_predict"] = combined_params["num_predict"]
+
+                # Use LangChain's standard invoke which returns an AIMessage
+                # For compatibility, we extract the content string
+                logger.debug(f"Invoking ChatOllama {model_id} with prompt: '{prompt[:100]}...' and params: {invoke_params}")
+                response_message = instance.invoke(prompt, **invoke_params)
+
+                # Extract the text content from the AIMessage
+                if hasattr(response_message, 'content'):
+                     output_text = response_message.content
+                else:
+                     logger.error(f"Ollama response format unexpected: {response_message}")
+                     output_text = str(response_message) # Fallback
+
+                logger.debug(f"Ollama model {model_id} generated response snippet: {output_text[:100]}...")
+                return {"text": output_text, "status": "success"} # Match expected format
+
+            elif model_type == "large_language_model":
+                # Assuming input_data is a string prompt for LLMs
+                if not isinstance(input_data, str):
+                    return {"error": "Invalid input data for LLM. Expected a string prompt."}
+                prompt = input_data
+
+                if framework == "llama.cpp":
+                    # llama.cpp specific inference call
+                    # instance should be the Llama object
+                    # Adjust parameters based on llama-cpp-python API
+                    llm_params = {
+                        "temperature": combined_params.get("temperature", 0.8),
+                        "top_p": combined_params.get("top_p", 0.95),
+                        "top_k": combined_params.get("top_k", 40),
+                        "max_tokens": combined_params.get("max_tokens", 512),
+                        # Add other relevant llama.cpp params
+                    }
+                    logger.debug(f"Calling llama.cpp create_completion for {model_id} with params: {llm_params}")
+                    # Example: Assuming instance is a Llama object from llama-cpp-python
+                    completion = instance.create_completion(prompt, **llm_params)
+                    output_text = completion["choices"][0]["text"]
+                    logger.debug(f"llama.cpp model {model_id} generated: {output_text[:100]}...")
+                    return {"text": output_text, "status": "success"} # Return text key
+
+                elif framework == "gpt4all":
+                    # GPT4All specific inference call
+                    # instance should be the GPT4All object
+                    # Adjust parameters based on GPT4All API
+                    gpt4all_params = {
+                        "temp": combined_params.get("temperature", 0.7),
+                        "top_p": combined_params.get("top_p", 0.4),
+                        "top_k": combined_params.get("top_k", 40),
+                        "max_tokens": combined_params.get("max_tokens", 200),
+                        # Add other relevant gpt4all params
+                    }
+                    logger.debug(f"Calling gpt4all generate for {model_id} with params: {gpt4all_params}")
+                    output_text = instance.generate(prompt, **gpt4all_params)
+                    logger.debug(f"gpt4all model {model_id} generated: {output_text[:100]}...")
+                    return {"text": output_text, "status": "success"} # Return text key
+
+                else:
+                    return {"error": f"Unsupported LLM framework for inference: {framework}"}
+
+            elif model_type == "code_model":
+                 # Example for a custom code model framework
+                 if framework == "deepseek":
+                      # Assuming deepseek models loaded via llama.cpp currently
+                      if isinstance(instance, self._get_llama_cpp_class()):
+                           if not isinstance(input_data, str):
+                               return {"error": "Invalid input data for Deepseek/Llama model. Expected a string prompt."}
+                           prompt = input_data
+                           llm_params = {
+                               "temperature": combined_params.get("temperature", 0.2),
+                               "top_p": combined_params.get("top_p", 0.95),
+                               "max_tokens": combined_params.get("max_tokens", 1024),
+                           }
+                           logger.debug(f"Calling deepseek/llama.cpp create_completion for {model_id} with params: {llm_params}")
+                           completion = instance.create_completion(prompt, **llm_params)
+                           output_text = completion["choices"][0]["text"]
+                           logger.debug(f"deepseek/llama.cpp model {model_id} generated: {output_text[:100]}...")
+                           return {"text": output_text, "status": "success"}
+                      else:
+                           return {"error": f"Deepseek framework expected Llama.cpp instance, got {type(instance)}"}
+                 else:
+                      return {"error": f"Unsupported code model framework for inference: {framework}"}
+
+
+            elif model_type == "vector_database":
+                # Input data is expected to be a query string
+                if not isinstance(input_data, str):
+                    return {"error": "Invalid input data for vector DB. Expected a query string."}
+                query = input_data
+                k = combined_params.get("k", 5) # Number of results
+
+                if framework == "chromadb":
+                    # instance should be the ChromaDB collection object
+                    logger.debug(f"Querying ChromaDB collection '{instance.name}' for '{query}' (k={k})")
+                    results = instance.query(query_texts=[query], n_results=k)
+                    # Format results (Chroma returns dict with ids, distances, metadatas, documents)
+                    # Return the whole structure or format it as needed by the caller
+                    logger.debug(f"ChromaDB query returned {len(results.get('ids', [[]])[0])} results.")
+                    return {"results": results, "status": "success"} # Return raw Chroma results
+
+                elif framework == "faiss":
+                    # Requires embedding function and index instance
+                    index = instance["index"]
+                    embed_func = instance["embedding_function"]
+                    logger.debug(f"Querying FAISS index for '{query}' (k={k})")
+                    # Embed the query
+                    query_vector = embed_func.encode([query])
+                    # Search the index
+                    distances, indices = index.search(query_vector, k)
+                    # Need to map indices back to actual documents/metadata (stored separately)
+                    # This part depends heavily on how FAISS index is managed
+                    logger.warning("FAISS result formatting needs implementation (mapping indices to data).")
+                    # Placeholder return structure
+                    return {"results": {"distances": distances.tolist(), "indices": indices.tolist()}, "status": "success"}
+
+                else:
+                    return {"error": f"Unsupported vector DB framework for inference: {framework}"}
+
             else:
-                logger.error(f"Invalid input type for Ollama inference: {type(inputs)}")
-                return {"error": "Invalid input type for Ollama"}
-
-            # Run inference using the ChatOllama instance
-            logger.debug(f"Invoking ChatOllama model with args: {invoke_args}, input type: {type(langchain_input)}")
-            response = model_instance.invoke(langchain_input, **invoke_args)
-
-            # Extract results
-            text_output = response.content
-            usage = {
-                "prompt_tokens": 0,
-                "completion_tokens": 0,
-                "total_tokens": 0,
-            }
-
-            # Try to extract token usage from response metadata
-            if response.response_metadata:
-                 usage["prompt_tokens"] = response.response_metadata.get("prompt_eval_count", 0)
-                 # Ollama API seems to use 'eval_count' for completion tokens in chat
-                 # and generate endpoints, but langchain might map differently.
-                 # Checking common keys.
-                 completion_tokens = response.response_metadata.get("eval_count", 0)
-                 if completion_tokens == 0:
-                     completion_tokens = response.response_metadata.get("completion_tokens", 0)
-                 usage["completion_tokens"] = completion_tokens
-                 usage["total_tokens"] = usage["prompt_tokens"] + usage["completion_tokens"]
-
-                 # Log if usage data seems incomplete
-                 if usage["prompt_tokens"] == 0 and usage["completion_tokens"] == 0:
-                    logger.warning(f"Could not extract token usage from Ollama response metadata: {response.response_metadata}")
-
-            return {
-                "text": text_output,
-                "usage": usage,
-            }
+                # This case should ideally not be reached if all types are handled
+                 return {"error": f"Inference not implemented for model type: {model_type}"}
 
         except Exception as e:
-            logger.error(f"Error during Ollama inference: {str(e)}")
-            import traceback
-            logger.error(traceback.format_exc())
-            return {"error": f"Ollama inference failed: {str(e)}"}
-
-    def _run_vector_db_query(
-        self,
-        model_id: str,
-        query: Union[str, List[float], Dict[str, Any]],
-        parameters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """Query a vector database"""
-        model_data = self.loaded_models[model_id]
-        framework = model_data["framework"]
-        instance = model_data["instance"]
-
-        params = parameters or {}
-        k = params.get("k", 5)  # Number of results
-
-        if framework == "chromadb":
-            return self._query_chromadb(instance, query, k)
-        elif framework == "faiss":
-            return self._query_faiss(instance, query, k)
-        else:
-            return {"error": f"Unsupported vector database: {framework}"}
-
-    def _query_chromadb(
-        self, instance: Dict[str, Any], query: Union[str, List[float]], k: int
-    ) -> Dict[str, Any]:
-        """Query ChromaDB"""
-        collection = instance["collection"]
-        embedding_model = instance["embedding_model"]
-
-        # Convert query to embedding if it's a string
-        if isinstance(query, str):
-            query_embedding = embedding_model.encode(query).tolist()
-        else:
-            query_embedding = query
-
-        # Run query
-        results = collection.query(query_embeddings=[query_embedding], n_results=k)
-
-        return {
-            "ids": results["ids"][0],
-            "documents": results["documents"][0] if "documents" in results else [],
-            "metadatas": results["metadatas"][0] if "metadatas" in results else [],
-            "distances": results["distances"][0],
-        }
-
-    def _query_faiss(
-        self, instance: Dict[str, Any], query: Union[str, List[float]], k: int
-    ) -> Dict[str, Any]:
-        """Query FAISS index"""
-        import numpy as np
-
-        index = instance["index"]
-        metadata = instance["metadata"]
-
-        # Convert query to numpy array
-        if isinstance(query, str):
-            # Need to convert string to embedding first
-            # This would require an embedding model
-            return {
-                "error": "String queries not supported for FAISS without embedding model"
-            }
-        elif isinstance(query, list):
-            query_vector = np.array([query], dtype=np.float32)
-        else:
-            return {"error": "Invalid query format for FAISS"}
-
-        # Run query
-        distances, indices = index.search(query_vector, k)
-
-        # Get metadata for results
-        result_ids = [str(idx) for idx in indices[0] if idx >= 0]
-        result_metadatas = [
-            metadata.get(str(idx), {}) for idx in indices[0] if idx >= 0
-        ]
-
-        return {
-            "ids": result_ids,
-            "metadatas": result_metadatas,
-            "distances": distances[0].tolist(),
-        }
+            logger.error(f"Error during inference with model {model_id}: {e}", exc_info=True)
+            return {"error": f"Inference failed: {str(e)}"}
 
     def list_models(self) -> Dict[str, Dict[str, Any]]:
         """List all available models"""
@@ -1068,7 +908,7 @@ class ModelManager:
         config = self.get_model_info(model_id)
         return config.get("capabilities", []) if config else []
 
-    def cleanup(self):
+    async def cleanup(self):
         """Perform cleanup actions, e.g., unloading models (if applicable)."""
         # Currently, models are loaded on demand and might be unloaded automatically
         # or managed by the underlying frameworks (like LangChain/Ollama).

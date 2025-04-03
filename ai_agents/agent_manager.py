@@ -10,7 +10,6 @@ import threading
 import time
 import psutil
 from typing import Dict, List, Any, Optional, Callable
-from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass, field
 
@@ -614,7 +613,8 @@ class AgentManager:
                 current_agents = self.agents.copy()
                 for agent_id, agent in current_agents.items():
                     # Ensure agent status exists before checking
-                    if agent_id not in self.agent_status: continue
+                    if agent_id not in self.agent_status:
+                        continue
 
                     if self.agent_status[agent_id] == AgentStatus.RUNNING:
                         try:
@@ -631,10 +631,10 @@ class AgentManager:
                             metrics = self.agent_metrics[agent_id]
                             # metrics.cpu_percent = process.cpu_percent()
                             # metrics.memory_percent = process.memory_percent()
-                            metrics.last_active = datetime.utcnow() # Still useful to update activity time
+                            metrics.last_active = datetime.utcnow()  # Still useful to update activity time
 
                         except psutil.NoSuchProcess:
-                             logger.warning(f"Process for agent {agent_id} not found. Skipping metrics.")
+                            logger.warning(f"Process for agent {agent_id} not found. Skipping metrics.")
                         except Exception as e:
                             logger.error(f"Error monitoring agent {agent_id}: {str(e)}")
 
@@ -668,14 +668,14 @@ class AgentManager:
                                     metrics.error_count = 0 # Reset error count on successful recovery simulation
                                     logger.info(f"Simulated recovery for agent: {agent_id}, status set to READY")
 
-                            except Exception as e:
+                            except Exception as _e:
                                 metrics.error_count += 1
 
                 # Sleep for retry delay
                 time.sleep(self._retry_delay)
 
-            except Exception as e:
-                logger.error(f"Error in agent recovery: {str(e)}")
+            except Exception as _e:
+                logger.error(f"Error in agent recovery: {str(_e)}")
                 time.sleep(self._retry_delay)
 
     def _handle_agent_error(self, agent_id: str, error: Exception) -> None:

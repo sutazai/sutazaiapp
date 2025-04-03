@@ -7,6 +7,7 @@ This module provides API routes for AI model management and inference.
 import os
 import logging
 from fastapi import APIRouter, Body
+from pydantic import BaseModel, Field
 
 from ..core.config import get_settings
 
@@ -21,6 +22,15 @@ settings = get_settings()
 
 # Define model directory
 MODEL_DIR = os.path.join(os.getcwd(), "data", "models")
+
+
+# Define request body model for download endpoint
+class DownloadModelRequest(BaseModel):
+    model_id: str = Field(..., description="The ID of the model to download")
+    force: bool = Field(False, description="Force download even if model exists")
+
+    class Config:
+        protected_namespaces = ()
 
 
 @router.get("/", summary="List available models")
@@ -113,13 +123,16 @@ async def model_status():
 
 
 @router.post("/download", summary="Download a model")
-async def download_model(model_id: str = Body(...), force: bool = Body(False)):
+async def download_model(request: DownloadModelRequest):
     """
     Download a model for local use.
 
     This is a placeholder - in a real implementation, it would handle
     downloading model weights from a repository.
     """
+    model_id = request.model_id
+    force = request.force
+
     # Check if model directory exists
     os.makedirs(MODEL_DIR, exist_ok=True)
 

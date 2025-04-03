@@ -58,44 +58,6 @@ fi
 # Change to the web_ui directory
 cd "$FINAL_WEBUI_DIR"
 
-# Check if node_modules exists, install dependencies if not
-if [ ! -d "node_modules" ]; then
-    echo "Installing dependencies..."
-    npm install
-fi
-
-# Check if we need to build the app
-if [ ! -d ".next" ] || [ "$NODE_ENV" = "production" ]; then
-    echo "Building the app..."
-    npm run build
-fi
-
-# Set up environment for the Next.js app
-export NEXT_PUBLIC_API_URL="$API_URL"
-export PORT="$PORT"  # Set PORT explicitly to 3000
-export HOSTNAME="$HOST"  # Set the hostname environment variable
-
-# Start the app based on environment
-if [ "$NODE_ENV" = "production" ]; then
-    echo "Starting in production mode..."
-    # Start Next.js in production mode with specific host and port
-    npm run start -- -H "$HOST" -p "$PORT" 2>&1 | tee -a "$WEBUI_LOG_DIR/webui.log" &
-    WEBUI_PID=$!
-    # Store PID in both locations for backward compatibility
-    echo $WEBUI_PID > "$LOG_DIR/webui.pid"
-    echo $WEBUI_PID > "/opt/sutazaiapp/.webui.pid"
-    echo "Web UI started with PID: $WEBUI_PID"
-else
-    echo "Starting in development mode..."
-    # Use development server with specific host and port
-    npm run dev -- -H "$HOST" -p "$PORT" 2>&1 | tee -a "$WEBUI_LOG_DIR/webui.log" &
-    WEBUI_PID=$!
-    # Store PID in both locations for backward compatibility
-    echo $WEBUI_PID > "$LOG_DIR/webui.pid"
-    echo $WEBUI_PID > "/opt/sutazaiapp/.webui.pid"
-    echo "Web UI started with PID: $WEBUI_PID"
-fi
-
 # Navigate to the project root directory
 cd "$(dirname "$0")/.."
 PROJECT_ROOT=$(pwd)
@@ -119,107 +81,77 @@ if [ ! -f "app/.env.local" ]; then
     fi
 fi
 
-# Kill existing webui process if running
-if [ -f ".webui.pid" ]; then
-    OLD_PID=$(cat .webui.pid)
-    if ps -p "$OLD_PID" > /dev/null; then
-        echo "Stopping existing Web UI process (PID: $OLD_PID)..."
-        kill "$OLD_PID" 2>/dev/null || true
-        sleep 2
-        # Force kill if still running
-        kill -9 "$OLD_PID" 2>/dev/null || true
-        echo "Previous Web UI process stopped."
+# --- Improved Process Killing for Streamlit ---
+STREAMLIT_PORT=${PORT:-8501} # Use default 8501 if PORT not set
+STREAMLIT_APP_PATH="streamlit_app.py" # Adjust if your main app file is different
+
+echo "Attempting to stop any existing Streamlit processes on port $STREAMLIT_PORT or running $STREAMLIT_APP_PATH..."
+
+# Method 1: Kill processes listening on the port
+# Use pkill to be more robust than kill $(lsof...)
+pkill -f ":$STREAMLIT_PORT"
+
+# Method 2: Kill processes matching the streamlit run command
+# This catches processes even if they haven't bound to the port yet
+pkill -f "streamlit run $STREAMLIT_APP_PATH"
+
+sleep 2 # Give processes time to terminate
+
+# Method 3: Force kill any remaining stubborn processes (use with caution)
+# pkill -9 -f "streamlit run $STREAMLIT_APP_PATH"
+
+echo "Finished attempting to stop existing Streamlit processes."
+# --- End Improved Process Killing ---
+
+
+# --- Set Streamlit Config Environment Variables ---
+export STREAMLIT_SERVER_ENABLE_CORS=true
+export STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=true
+export STREAMLIT_BROWSER_GATHER_USAGE_STATS=false # Also disable usage stats
+# --- End Config Env Vars ---
+
+# Navigate to the app directory # Assuming streamlit app is in project root or a specific dir?
+# Let's assume streamlit_app.py is in the PROJECT_ROOT for now
+# cd app || { echo "Error: app directory not found"; exit 1; }
+# Check if streamlit_app.py exists
+if [ ! -f "$PROJECT_ROOT/$STREAMLIT_APP_PATH" ]; then
+    echo "Error: Streamlit app '$STREAMLIT_APP_PATH' not found in project root '$PROJECT_ROOT'."
+    # Attempt to find it in common locations
+    if [ -f "$PROJECT_ROOT/app/$STREAMLIT_APP_PATH" ]; then
+       STREAMLIT_APP_PATH="app/$STREAMLIT_APP_PATH"
+       echo "Found Streamlit app in: $PROJECT_ROOT/$STREAMLIT_APP_PATH"
+    elif [ -f "$PROJECT_ROOT/ui/$STREAMLIT_APP_PATH" ]; then
+        STREAMLIT_APP_PATH="ui/$STREAMLIT_APP_PATH"
+        echo "Found Streamlit app in: $PROJECT_ROOT/$STREAMLIT_APP_PATH"
     else
-        echo "Stale Web UI PID file found. Cleaning up..."
-    fi
-    rm -f ".webui.pid"
-fi
-
-# Check if port 3000 is already in use by a different process
-if netstat -tuln | grep -q ":3000 "; then
-    PID=$(lsof -i :3000 -t 2>/dev/null || echo "unknown")
-    if [ "$PID" != "unknown" ]; then
-        # Check if it's our own process
-        OUR_PROCESS=$(ps -p "$PID" -o cmd= 2>/dev/null | grep -q "node.*next" && echo "yes" || echo "no")
-        if [ "$OUR_PROCESS" = "yes" ]; then
-            echo "Web UI is already running with PID: $PID"
-            # Update PID file
-            echo $PID > "$LOGS_DIR/webui.pid"
-            # Use sudo if needed to ensure we can write the PID file
-            if [ -w "." ]; then
-                echo $PID > ".webui.pid"
-            else
-                echo "Using sudo to write PID file (may prompt for password)..."
-                sudo sh -c "echo $PID > \"$PROJECT_ROOT/.webui.pid\""
-            fi
-            echo "Web UI PID files updated. Access at: http://localhost:3000"
-            exit 0
-        else
-            echo "Error: Port 3000 is already in use by another process (PID: $PID)."
-            echo "Please stop that process first and try again."
-            exit 1
-        fi
-    else
-        echo "Error: Port 3000 is already in use, but cannot determine the process."
-        echo "Please free up port 3000 and try again."
-        exit 1
+       echo "Could not find Streamlit app. Please ensure STREAMLIT_APP_PATH is set correctly."
+       exit 1
     fi
 fi
 
-# Navigate to the app directory
-cd app || { echo "Error: app directory not found"; exit 1; }
-
-# Check if package.json exists in app directory
-if [ ! -f "package.json" ]; then
-    echo "Error: package.json not found in app directory. Cannot start the Web UI."
-    exit 1
-fi
-
-# Install Node.js dependencies if node_modules doesn't exist or if npm-shrinkwrap.json is newer
-if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ] || [ -f "npm-shrinkwrap.json" -a "npm-shrinkwrap.json" -nt "node_modules" ]; then
-    echo "Installing Node.js dependencies..."
-    npm install
-    # Check if installation was successful
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to install Node.js dependencies."
-        exit 1
-    fi
-fi
-
-# Build the Next.js application if .next doesn't exist or if source files are newer
-if [ ! -d ".next" ] || [ -n "$(find src -newer .next -type f -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" 2>/dev/null)" ]; then
-    echo "Building Next.js application..."
-    npx next build
-    # Check if build was successful
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to build Next.js application."
-        exit 1
-    fi
-fi
-
-# Start the Next.js server
-echo "Starting SutazAI Web UI..."
-npx next start > "../$LOGS_DIR/webui.log" 2>&1 &
+# Start Streamlit directly (assuming streamlit_app.py is the entry point)
+# Use specified port and run headless
+echo "Starting Streamlit UI..."
+# Ensure we are in the project root before running streamlit
+cd "$PROJECT_ROOT"
+streamlit run "$STREAMLIT_APP_PATH" --server.port "$STREAMLIT_PORT" --server.headless true > "$LOGS_DIR/webui.log" 2>&1 &
+# Note: Removed the old npx next start command
 WEBUI_PID=$!
 
 # Store PID for future reference
-cd ..
-echo $WEBUI_PID > "$LOGS_DIR/webui.pid"
-# Use sudo if needed to ensure we can write the PID file
-if [ -w "." ]; then
-    echo $WEBUI_PID > ".webui.pid"
-else
-    echo "Using sudo to write PID file (may prompt for password)..."
-    sudo sh -c "echo $WEBUI_PID > \"$PROJECT_ROOT/.webui.pid\""
-fi
+# cd .. # No need to cd back if we start from project root
+# Use the specific pids directory
+echo $WEBUI_PID > "$PROJECT_ROOT/pids/webui.pid"
 
-echo "Web UI started with PID: $WEBUI_PID"
+echo "Web UI (Streamlit) started with PID: $WEBUI_PID"
 echo "Logs are being written to: $LOGS_DIR/webui.log"
 
 # Verify Web UI has started correctly
-sleep 3
-if ! ps -p $WEBUI_PID > /dev/null; then
-    echo "Error: Web UI process failed to start or terminated immediately."
+sleep 5 # Increased sleep time slightly
+
+# Check based on port listening as PID might be the launcher
+if ! ss -tulnp | grep -q ":$STREAMLIT_PORT"; then
+    echo "Error: Streamlit UI process failed to start or bind to port $STREAMLIT_PORT."
     echo "Check the logs at $LOGS_DIR/webui.log for details."
     if [ -f "$LOGS_DIR/webui.log" ]; then
         echo "Last 10 lines of log:"
@@ -229,5 +161,5 @@ if ! ps -p $WEBUI_PID > /dev/null; then
 fi
 
 echo "Web UI successfully started!"
-echo "Access the Web UI at: http://localhost:3000"
-echo "To stop the Web UI, run: scripts/stop_webui.sh" 
+echo "Access the Web UI at: http://localhost:$STREAMLIT_PORT"
+echo "To stop the Web UI, run: scripts/stop_webui.sh" # Assuming this script exists 

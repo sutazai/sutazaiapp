@@ -22,9 +22,9 @@ REPORT_DIR="reports/code_quality"
 mkdir -p "$REPORT_DIR"
 
 # Check if virtual environment exists and activate it
-if [ -d "venv" ]; then
+if [ -d "venv-sutazaiapp" ]; then
     echo -e "${GREEN}Activating virtual environment...${NC}"
-    source venv/bin/activate
+    source venv-sutazaiapp/bin/activate
 fi
 
 # Function to check if a command exists
@@ -66,14 +66,14 @@ ruff check . --output-file "$REPORT_DIR/ruff_report.txt" || {
 
 # Run Mypy for type checking
 echo -e "${GREEN}Running Mypy type checker...${NC}"
-mypy --ignore-missing-imports --exclude venv --exclude node_modules --python-version 3.11 . > "$REPORT_DIR/mypy_report.txt" || {
+mypy --ignore-missing-imports --exclude venv-sutazaiapp --exclude node_modules --python-version 3.11 . > "$REPORT_DIR/mypy_report.txt" || {
     echo -e "${RED}Mypy found issues. See $REPORT_DIR/mypy_report.txt for details.${NC}"
     FAILED=1
 }
 
 # Run Bandit for security checks
 echo -e "${GREEN}Running Bandit security checker...${NC}"
-bandit -r . -x venv,node_modules -f txt -o "$REPORT_DIR/bandit_report.txt" || {
+bandit -r . -x venv-sutazaiapp,node_modules -f txt -o "$REPORT_DIR/bandit_report.txt" || {
     echo -e "${RED}Bandit found security issues. See $REPORT_DIR/bandit_report.txt for details.${NC}"
     FAILED=1
 }
@@ -89,8 +89,8 @@ echo -e "${GREEN}Generating summary report...${NC}"
     echo "# Code Quality Report $(date)"
     echo
     echo "## File counts"
-    echo "- Python files: $(find . -name "*.py" -not -path "*/venv/*" -not -path "*/node_modules/*" | wc -l)"
-    echo "- Total lines of Python code: $(find . -name "*.py" -not -path "*/venv/*" -not -path "*/node_modules/*" -exec cat {} \; | wc -l)"
+    echo "- Python files: $(find . -name "*.py" -not -path "*/venv-sutazaiapp/*" -not -path "*/node_modules/*" | wc -l)"
+    echo "- Total lines of Python code: $(find . -name "*.py" -not -path "*/venv-sutazaiapp/*" -not -path "*/node_modules/*" -exec cat {} \; | wc -l)"
     echo
     
     echo "## Linting Issues"

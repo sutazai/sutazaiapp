@@ -7,9 +7,7 @@ This module contains tests for the document parser service.
 import os
 import unittest
 from pathlib import Path
-import pytest
 import tempfile
-import shutil
 
 import sys
 
@@ -18,9 +16,9 @@ sys.path.append("/opt/sutazaiapp")
 # from backend.services.document_parser import DocumentParser # Commented out - Class not found
 from backend.core.exceptions import ServiceError
 
-# Mock ServiceError if it's not available
-class ServiceError(Exception):
-    pass
+# Mock ServiceError if it's not available - Removed Redefinition F811
+# class ServiceError(Exception):
+#     pass
 
 class TestDocumentParser(unittest.TestCase):
     """Tests for DocumentParser service."""

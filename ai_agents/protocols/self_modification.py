@@ -20,7 +20,7 @@ import logging
 import tempfile
 import subprocess
 from enum import Enum
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Optional, Union, Tuple, Callable, Set
 from dataclasses import dataclass, field
 from datetime import datetime
 import uuid
@@ -170,7 +170,7 @@ class SelfModificationControl:
         log_dir: str = "logs/modifications",
         max_sandbox_time: int = 30,
         auto_approve: bool = False,
-        forbidden_imports: List[str] = None,
+        forbidden_imports: Optional[List[str]] = None,
         max_changes_per_event: int = 10,
     ):
         """
@@ -395,11 +395,16 @@ class SelfModificationControl:
                 # Create directories if needed
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
                 with open(full_path, "w", encoding="utf-8") as f:
-                    f.write(change.new_content)
+                    f.write(change.new_content if change.new_content is not None else "")
 
             elif change.modification_type == ModificationType.MODIFICATION:
-                with open(full_path, "w", encoding="utf-8") as f:
-                    f.write(change.new_content)
+                if os.path.exists(full_path):
+                    with open(full_path, "w", encoding="utf-8") as f:
+                        f.write(change.new_content if change.new_content is not None else "")
+                else:
+                    logger.warning(
+                        f"Attempted to modify non-existent file in sandbox: {change.file_path}"
+                    )
 
             elif change.modification_type == ModificationType.DELETION:
                 if os.path.exists(full_path):
@@ -483,26 +488,18 @@ class SelfModificationControl:
                     # Create directories if needed
                     os.makedirs(os.path.dirname(abs_path), exist_ok=True)
                     with open(abs_path, "w", encoding="utf-8") as f:
-                        f.write(change.new_content)
+                        f.write(change.new_content if change.new_content is not None else "")
+                    logger.info(f"Added file: {change.file_path}")
 
                 elif change.modification_type == ModificationType.MODIFICATION:
-                    # Verify hash of existing content matches original hash
                     if os.path.exists(abs_path):
-                        with open(abs_path, "r", encoding="utf-8") as f:
-                            current_content = f.read()
-                            current_hash = secure_hash(current_content)
-
-                        if (
-                            change.original_hash
-                            and current_hash != change.original_hash
-                        ):
-                            logger.error(
-                                f"File has been modified since change was proposed: {change.file_path}"
-                            )
-                            return False
-
-                    with open(abs_path, "w", encoding="utf-8") as f:
-                        f.write(change.new_content)
+                        with open(abs_path, "w", encoding="utf-8") as f:
+                            f.write(change.new_content if change.new_content is not None else "")
+                        logger.info(f"Modified file: {change.file_path}")
+                    else:
+                        logger.error(
+                            f"Attempted to modify non-existent file in sandbox: {change.file_path}"
+                        )
 
                 elif change.modification_type == ModificationType.DELETION:
                     if os.path.exists(abs_path):
@@ -524,7 +521,7 @@ class SelfModificationControl:
 
     def _load_history(self) -> List[ModificationEvent]:
         """Load modification history from log files"""
-        history = []
+        history: List[ModificationEvent] = []
 
         if not os.path.exists(self.log_dir):
             return history

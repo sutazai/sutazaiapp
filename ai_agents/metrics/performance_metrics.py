@@ -292,7 +292,7 @@ class PerformanceMetrics:
             )
 
             # Calculate last active time
-            all_points = []
+            all_points: List[MetricPoint] = []
             for metric_type in MetricType:
                 all_points.extend(self.metrics[agent_id][metric_type])
 
@@ -302,7 +302,7 @@ class PerformanceMetrics:
 
             # Calculate token usage
             token_points = list(self.metrics[agent_id][MetricType.TOKEN_USAGE])
-            token_usage = sum([p.value for p in token_points]) if token_points else 0
+            token_usage = int(sum([p.value for p in token_points])) if token_points else 0
 
             # Check for anomalies
             anomalies = self.detect_anomalies(agent_id)
@@ -336,7 +336,7 @@ class PerformanceMetrics:
             active_agents = 0
 
             for agent_id in self.metrics:
-                all_points = []
+                all_points: List[MetricPoint] = []
                 for metric_type in MetricType:
                     all_points.extend(self.metrics[agent_id][metric_type])
 
@@ -399,7 +399,7 @@ class PerformanceMetrics:
         Returns:
             List[Dict[str, Any]]: List of detected anomalies
         """
-        anomalies = []
+        anomalies: List[Dict[str, Any]] = []
 
         if agent_id not in self.metrics:
             return anomalies
@@ -451,7 +451,7 @@ class PerformanceMetrics:
         Returns:
             List[Dict[str, Any]]: List of performance suggestions
         """
-        suggestions = []
+        suggestions: List[Dict[str, Any]] = []
 
         if agent_id not in self.metrics:
             return suggestions
@@ -529,8 +529,8 @@ class PerformanceMetrics:
             timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
             filename = os.path.join(self.metrics_dir, f"metrics_{timestamp}.json")
 
-            # Prepare data for serialization
-            data = {
+            # Prepare data for serialization with explicit type hint
+            data: Dict[str, Any] = {
                 "timestamp": datetime.utcnow().isoformat(),
                 "system_metrics": self.get_system_metrics(),
                 "agent_metrics": {},
@@ -588,13 +588,17 @@ class PerformanceMetrics:
         Returns:
             Dict[str, Any]: Performance report
         """
-        report = {
+        # Explicitly type hint the report structure
+        report: Dict[str, Any] = {
             "timestamp": datetime.utcnow().isoformat(),
             "system_metrics": self.get_system_metrics(),
             "agents": {},
-            "anomalies": [],
-            "suggestions": [],
+            "anomalies": [],  # Type will be inferred as List[Any]
+            "suggestions": [], # Type will be inferred as List[Any]
         }
+        # Ensure correct types for the lists that will be appended to
+        report["anomalies"] = []
+        report["suggestions"] = []
 
         # Generate agent-specific metrics and suggestions
         for agent_id in self.metrics:
@@ -696,7 +700,7 @@ class MetricsAnalyzer:
             denominator = sum((norm_ts[i] - mean_x) ** 2 for i in range(n))
 
             if denominator == 0:
-                slope = 0
+                slope = 0.0
             else:
                 slope = numerator / denominator
 
@@ -709,7 +713,7 @@ class MetricsAnalyzer:
             ss_residual = sum((values[i] - y_pred[i]) ** 2 for i in range(n))
 
             if ss_total == 0:
-                r_squared = 0
+                r_squared = 0.0
             else:
                 r_squared = 1 - (ss_residual / ss_total)
 
@@ -749,7 +753,7 @@ class MetricsAnalyzer:
         Returns:
             List[Dict[str, Any]]: Detected correlations
         """
-        correlations = []
+        correlations: List[Dict[str, Any]] = []
 
         with self.metrics.lock:
             if agent_id not in self.metrics.metrics:
@@ -889,7 +893,7 @@ class MetricsAnalyzer:
             denominator = sum((norm_ts[i] - mean_x) ** 2 for i in range(n))
 
             if denominator == 0:
-                slope = 0
+                slope = 0.0
             else:
                 slope = numerator / denominator
 

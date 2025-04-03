@@ -1,14 +1,11 @@
 import pytest
 import tempfile
-import json
 from pathlib import Path
 import shutil
 from unittest.mock import patch, MagicMock
 import numpy as np
-import os
 
 from backend.services.vector_store.vector_service import VectorStore
-from backend.services.vector_store import vector_service
 from qdrant_client import models
 
 

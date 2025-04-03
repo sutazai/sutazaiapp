@@ -8,7 +8,6 @@ import os
 import shutil
 import logging
 import json
-from pathlib import Path
 import time
 
 logger = logging.getLogger(__name__)

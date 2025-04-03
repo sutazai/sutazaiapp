@@ -53,7 +53,8 @@ class AgentFactory:
             with open(config_path, "r") as f:
                 config = json.load(f)
 
-            for agent_id, agent_config in config.items():
+            # Iterate over the agent configurations within the "agents" key
+            for agent_id, agent_config in config.get("agents", {}).items():
                 try:
                     self._validate_config(agent_config)
                     self.agents[agent_id] = agent_config
