@@ -82,7 +82,8 @@ class CodeGenerator:
             # Explicitly cast path to str for os.path.exists
             model_path = str(config["path"])
             if os.path.exists(model_path):
-                models[config["name"]] = {
+                # Assuming config['name'] is str, but ignore potential Mypy confusion
+                models[config["name"]] = { # type: ignore[index]
                     "path": model_path,
                     "type": config["type"],
                     "handler": config["handler"],
