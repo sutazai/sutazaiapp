@@ -14,9 +14,10 @@ import logging
 import sqlite3
 import threading
 import datetime
+import random
 from typing import Dict, List, Optional, Any, Callable, Set
-from dataclasses import dataclass
-from threading import Thread
+from dataclasses import dataclass, field
+from threading import Thread, Event
 
 # Internal imports
 try:
@@ -48,7 +49,7 @@ DEFAULT_MONITOR_DB_PATH = os.path.join(
 )
 MONITORING_INTERVAL_SEC = 3600  # Default to hourly monitoring
 PERFORMANCE_THRESHOLD = 0.15  # 15% degradation threshold for automatic retraining
-MAX_INFERENCE_TIME_INCREASE = 0.3  # 30% increase in inference time threshold
+MAX_INFERENCE_TIME_INCREASE = 0.20  # 20% increase in inference time threshold
 
 
 @dataclass
@@ -58,30 +59,31 @@ class ModelPerformanceMetrics:
     model_id: str
     version: str
     timestamp: datetime.datetime
+    latency_ms: Optional[float] = None
+    throughput_tokens_sec: Optional[float] = None
+    memory_usage_mb: Optional[float] = None
+    cpu_usage_percent: Optional[float] = None
     accuracy: Optional[float] = None
     perplexity: Optional[float] = None
-    inference_time_ms: Optional[float] = None
-    memory_usage_mb: Optional[float] = None
-    tokens_per_second: Optional[float] = None
     failed_requests: int = 0
     total_requests: int = 0
-    avg_request_time_ms: Optional[float] = None
     drift_score: Optional[float] = None
-    metadata: Dict[str, Any] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
     @property
     def success_rate(self) -> float:
         """Calculate success rate of the model"""
         if self.total_requests == 0:
             return 1.0
-        return (self.total_requests - self.failed_requests) / self.total_requests
+        failed = self.failed_requests or 0
+        return (self.total_requests - failed) / self.total_requests
 
     @property
     def is_healthy(self) -> bool:
         """Determine if the model is healthy based on metrics"""
         if self.success_rate < 0.95:  # Below 95% success rate
             return False
-        if self.drift_score and self.drift_score > 0.5:  # Significant drift
+        if self.drift_score is not None and self.drift_score > 0.5:  # Significant drift
             return False
         return True
 
@@ -107,14 +109,14 @@ class ModelMonitorDB:
                 model_id TEXT NOT NULL,
                 version TEXT NOT NULL,
                 timestamp TEXT NOT NULL,
+                latency_ms REAL,
+                throughput_tokens_sec REAL,
+                memory_usage_mb REAL,
+                cpu_usage_percent REAL,
                 accuracy REAL,
                 perplexity REAL,
-                inference_time_ms REAL,
-                memory_usage_mb REAL,
-                tokens_per_second REAL,
                 failed_requests INTEGER,
                 total_requests INTEGER,
-                avg_request_time_ms REAL,
                 drift_score REAL,
                 metadata TEXT,
                 UNIQUE(model_id, version, timestamp)
@@ -159,23 +161,23 @@ class ModelMonitorDB:
             cursor.execute(
                 """
             INSERT OR REPLACE INTO performance_metrics
-            (model_id, version, timestamp, accuracy, perplexity, inference_time_ms,
-             memory_usage_mb, tokens_per_second, failed_requests, total_requests,
-             avg_request_time_ms, drift_score, metadata)
+            (model_id, version, timestamp, latency_ms, throughput_tokens_sec,
+             memory_usage_mb, cpu_usage_percent, accuracy, perplexity, failed_requests,
+             total_requests, drift_score, metadata)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     metrics.model_id,
                     metrics.version,
                     metrics.timestamp.isoformat(),
+                    metrics.latency_ms,
+                    metrics.throughput_tokens_sec,
+                    metrics.memory_usage_mb,
+                    metrics.cpu_usage_percent,
                     metrics.accuracy,
                     metrics.perplexity,
-                    metrics.inference_time_ms,
-                    metrics.memory_usage_mb,
-                    metrics.tokens_per_second,
                     metrics.failed_requests,
                     metrics.total_requests,
-                    metrics.avg_request_time_ms,
                     metrics.drift_score,
                     json.dumps(metrics.metadata) if metrics.metadata else None,
                 ),
@@ -216,14 +218,14 @@ class ModelMonitorDB:
                     model_id=row["model_id"],
                     version=row["version"],
                     timestamp=datetime.datetime.fromisoformat(row["timestamp"]),
+                    latency_ms=row["latency_ms"],
+                    throughput_tokens_sec=row["throughput_tokens_sec"],
+                    memory_usage_mb=row["memory_usage_mb"],
+                    cpu_usage_percent=row["cpu_usage_percent"],
                     accuracy=row["accuracy"],
                     perplexity=row["perplexity"],
-                    inference_time_ms=row["inference_time_ms"],
-                    memory_usage_mb=row["memory_usage_mb"],
-                    tokens_per_second=row["tokens_per_second"],
                     failed_requests=row["failed_requests"],
                     total_requests=row["total_requests"],
-                    avg_request_time_ms=row["avg_request_time_ms"],
                     drift_score=row["drift_score"],
                     metadata=json.loads(row["metadata"]) if row["metadata"] else None,
                 )
@@ -254,14 +256,14 @@ class ModelMonitorDB:
                     model_id=row["model_id"],
                     version=row["version"],
                     timestamp=datetime.datetime.fromisoformat(row["timestamp"]),
+                    latency_ms=row["latency_ms"],
+                    throughput_tokens_sec=row["throughput_tokens_sec"],
+                    memory_usage_mb=row["memory_usage_mb"],
+                    cpu_usage_percent=row["cpu_usage_percent"],
                     accuracy=row["accuracy"],
                     perplexity=row["perplexity"],
-                    inference_time_ms=row["inference_time_ms"],
-                    memory_usage_mb=row["memory_usage_mb"],
-                    tokens_per_second=row["tokens_per_second"],
                     failed_requests=row["failed_requests"],
                     total_requests=row["total_requests"],
-                    avg_request_time_ms=row["avg_request_time_ms"],
                     drift_score=row["drift_score"],
                     metadata=json.loads(row["metadata"]) if row["metadata"] else None,
                 )
@@ -438,7 +440,7 @@ class ModelMonitor:
         self._models_being_monitored: Set[str] = set()
         self._last_check_time: Dict[str, float] = {}
         self._monitoring_thread: Optional[Thread] = None
-        self._stop_event = threading.Event()
+        self._stop_event = Event()
         self._monitor_db = monitor_db
 
     def start_monitoring(self, model_ids: Optional[List[str]] = None):
@@ -523,8 +525,8 @@ class ModelMonitor:
         latency_threshold = 1000 # ms (example)
         throughput_threshold = 10 # tokens/sec (example)
 
-        current_latency = metrics.get("latency_ms", float('inf'))
-        current_throughput = metrics.get("throughput_tokens_sec", 0.0)
+        current_latency = metrics.latency_ms if metrics.latency_ms is not None else float('inf')
+        current_throughput = metrics.throughput_tokens_sec if metrics.throughput_tokens_sec is not None else 0.0
 
         alert_triggered = False
         alert_message = ""
@@ -551,30 +553,27 @@ class ModelMonitor:
         # This should call actual benchmark functions
         evaluation_result = {
             "latency_ms": random.uniform(50, 150),
-            "throughput": random.uniform(20, 60),
-            "memory_mb": random.uniform(500, 2000),
-            "cpu_percent": random.uniform(10, 90),
+            "throughput_tokens_sec": random.uniform(20, 60),
+            "memory_usage_mb": random.uniform(500, 2000),
+            "cpu_usage_percent": random.uniform(10, 90),
             "metadata": {"evaluation_type": "manual"},
+            "model_id": model_id,
+            "version": "manual",
+            "timestamp": datetime.datetime.now()
         }
 
         # Log results
         logger.info(f"Manual evaluation for {model_id}: {evaluation_result}")
 
         # Add to monitoring database
-        self.monitor_db.add_metric(
-            ModelPerformanceMetrics(
-                model_id=model_id,
-                version="manual", # Use manual as version
-                timestamp=datetime.now(),
-                latency_ms=evaluation_result.get("latency_ms", 0.0),
-                throughput_tokens_sec=evaluation_result.get("throughput", 0.0),
-                memory_usage_mb=evaluation_result.get("memory_mb", 0.0),
-                cpu_usage_percent=evaluation_result.get("cpu_percent", 0.0),
-                metadata=evaluation_result.get("metadata") or {}, # Ensure metadata is dict
-            )
-        )
+        try:
+            metric_obj = ModelPerformanceMetrics(**evaluation_result)
+            self.monitor_db.insert_metrics(metric_obj)
+        except Exception as e:
+            logger.error(f"Failed to add manual evaluation metric to DB: {e}")
 
-        return evaluation_result
+        # Return evaluation dict (excluding timestamp, model_id, version if not needed)
+        return {k:v for k,v in evaluation_result.items() if k not in ["model_id", "version", "timestamp"]}
 
     def _trigger_alert(self, model_id: str, alert_type: str, message: str, details: Optional[Dict[str, Any]] = None):
         """Trigger an alert and call registered handlers."""
@@ -642,9 +641,10 @@ if __name__ == "__main__":
         metrics = monitor.manually_evaluate_model(args.evaluate)
         if metrics:
             print("Evaluation complete - Results:")
-            print(f"  Inference time: {metrics.inference_time_ms:.2f} ms")
-            print(f"  Tokens per second: {metrics.tokens_per_second:.2f}")
+            print(f"  Inference time: {metrics.latency_ms:.2f} ms")
+            print(f"  Tokens per second: {metrics.throughput_tokens_sec:.2f}")
             print(f"  Memory usage: {metrics.memory_usage_mb:.2f} MB")
+            print(f"  CPU usage: {metrics.cpu_usage_percent:.2f}%")
             print(f"  Success rate: {metrics.success_rate:.2%}")
         else:
             print("Evaluation failed")

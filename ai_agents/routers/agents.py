@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
 
-from ..agent_manager import AgentManager
+from ai_agents.dependencies import get_agent_manager
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
@@ -45,22 +45,17 @@ class AgentMetricsResponse(BaseModel):
     avg_execution_time: float
 
 
-@router.post("/", response_model=str)
-async def create_agent(
-    config: AgentConfig, manager: AgentManager = Depends(get_agent_manager)
-) -> str:
-    """
-    Create a new agent.
-
-    Args:
-        config: Agent configuration
-        manager: Agent manager instance
-
-    Returns:
-        str: Agent ID
-    """
+@router.post("/", response_model=AgentInfo, status_code=201)
+def create_agent(
+    config: AgentConfigCreate,
+    agent_manager: AgentManager = Depends(get_agent_manager),
+):
+    """Create and initialize a new agent based on configuration."""
     try:
-        return manager.create_agent(config.type, config.config)
+        agent_info = agent_manager.create_and_initialize_agent(config)
+        return agent_info
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

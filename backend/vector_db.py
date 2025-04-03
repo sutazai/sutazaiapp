@@ -11,7 +11,7 @@ import sys
 import argparse
 import logging
 import time
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 
 # Set up logging
 logging.basicConfig(
@@ -59,6 +59,7 @@ from sentence_transformers import SentenceTransformer
 from backend.core.config import settings
 from backend.core.exceptions import DatabaseError, ResourceNotFoundError
 from backend.models.base_models import Document, DocumentChunk
+from qdrant_client import QdrantClient, models
 
 logger = logging.getLogger(__name__)
 
@@ -74,13 +75,14 @@ def get_qdrant_client() -> QdrantClient:
     global client
     if client is None:
         try:
+            logger.info(f"Initializing Qdrant client: host={settings.QDRANT_HOST}, port={settings.QDRANT_PORT}")
             client = QdrantClient(
                 host=settings.QDRANT_HOST,
                 port=settings.QDRANT_PORT,
-                api_key=settings.QDRANT_API_KEY,
-                https=settings.QDRANT_HTTPS,
+                api_key=settings.QDRANT_API_KEY if hasattr(settings, 'QDRANT_API_KEY') else None,
+                https=settings.QDRANT_HTTPS if hasattr(settings, 'QDRANT_HTTPS') else None,
             )
-            # Verify connection
+            # Verify connection by trying to get collections
             client.get_collections()
             logger.info("Qdrant client initialized successfully.")
         except Exception as e:
@@ -93,9 +95,13 @@ def get_embedding_model() -> SentenceTransformer:
     global embedding_model
     if embedding_model is None:
         try:
-            logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL_NAME}")
+            # Use default model if setting is not present
+            model_name = settings.EMBEDDING_MODEL_NAME if hasattr(settings, 'EMBEDDING_MODEL_NAME') else "all-MiniLM-L6-v2"
+            logger.info(f"Loading embedding model: {model_name}")
             # Initialize SentenceTransformer with the model name only
-            embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
+            embedding_model = SentenceTransformer(model_name)
+            # Attempt to get embedding dimension to confirm model loaded
+            embedding_model.get_sentence_embedding_dimension()
             logger.info("Embedding model loaded successfully.")
         except Exception as e:
             logger.error(f"Failed to load embedding model: {e}")
@@ -159,43 +165,140 @@ class VectorStore:
         self.embedding_model = get_embedding_model()
         self.doc_collection = settings.QDRANT_COLLECTION
         self.chunk_collection = settings.QDRANT_CHUNK_COLLECTION
+        self._ensure_collections_exist()
+
+    def _ensure_collections_exist(self):
+        """Ensures the document and chunk collections exist in Qdrant."""
+        dim = self.embedding_model.get_sentence_embedding_dimension()
+        if dim is None:
+             raise ValueError("Embedding model dimension could not be determined.")
+
+        try:
+            self.get_or_create_collection(self.doc_collection, dim)
+            self.get_or_create_collection(self.chunk_collection, dim)
+        except Exception as e:
+            logger.error(f"Failed to ensure Qdrant collections exist: {e}")
+            raise DatabaseError("Failed to create or verify Qdrant collections") from e
 
     def _embed_text(self, text: str) -> Embedding:
         """Embeds a single string of text."""
-        # Pass only the model name string
+        # Use the initialized model
         embeddings = self.embedding_model.encode(text, convert_to_tensor=False)
         # Ensure the output is List[float]
+        if isinstance(embeddings, np.ndarray):
+            embeddings = embeddings.tolist() # Convert numpy array to list
+
         if isinstance(embeddings, list) and all(isinstance(x, float) for x in embeddings):
             return embeddings
-        elif hasattr(embeddings, 'tolist'): # Handle numpy arrays or tensors
-             return embeddings.tolist()
         else:
-             logger.error(f"Unexpected embedding type: {type(embeddings)}")
-             # Return a default embedding or raise error based on desired behavior
-             # For now, returning a zero vector of expected dimension
-             dim = self.embedding_model.get_sentence_embedding_dimension()
-             return [0.0] * dim
+            logger.error(f"Unexpected embedding type: {type(embeddings)} for text: '{text[:50]}...'")
+            dim = self.embedding_model.get_sentence_embedding_dimension()
+            # Provide a default zero vector if conversion fails
+            return [0.0] * (dim if dim is not None else 384) # Use default dim if None
 
 
     def _embed_texts(self, texts: List[str]) -> List[Embedding]:
         """Embeds a list of texts."""
-        # Pass only the model name string
+        # Use the initialized model
         embeddings = self.embedding_model.encode(texts, convert_to_tensor=False)
+
         # Ensure the output is List[List[float]]
+        if isinstance(embeddings, np.ndarray):
+            embeddings = embeddings.tolist() # Convert numpy array to list of lists
+
         if isinstance(embeddings, list) and all(isinstance(emb, list) and all(isinstance(x, float) for x in emb) for emb in embeddings):
             return embeddings
-        elif hasattr(embeddings, 'tolist'): # Handle numpy arrays or tensors
-            list_embeddings = embeddings.tolist()
-            if isinstance(list_embeddings, list) and all(isinstance(emb, list) for emb in list_embeddings):
-                 return list_embeddings
-            else:
-                 logger.error(f"Unexpected nested embedding type after tolist: {type(list_embeddings)}")
-                 dim = self.embedding_model.get_sentence_embedding_dimension()
-                 return [[0.0] * dim] * len(texts)
         else:
             logger.error(f"Unexpected embedding type for batch: {type(embeddings)}")
             dim = self.embedding_model.get_sentence_embedding_dimension()
-            return [[0.0] * dim] * len(texts)
+            # Provide a default zero vector list if conversion fails
+            fallback_dim = dim if dim is not None else 384
+            return [[0.0] * fallback_dim] * len(texts)
+
+    def get_or_create_collection(self, collection_name: str, vector_dim: int):
+        """Gets a collection or creates it if it doesn't exist."""
+        try:
+            self.client.get_collection(collection_name=collection_name) # type: ignore[no-untyped-call]
+            logger.info(f"Collection '{collection_name}' already exists.")
+        except Exception: # Catches specific Qdrant client exception for non-existent collection if available, else generic
+            logger.info(f"Collection '{collection_name}' not found, creating...")
+            self.client.create_collection( # type: ignore[no-untyped-call]
+                collection_name=collection_name,
+                vectors_config=models.VectorParams(size=vector_dim, distance=models.Distance.COSINE) # type: ignore[attr-defined]
+            )
+            # Create payload indexes for potentially filterable fields
+            # Use try-except for each index creation as fields might not always exist
+            try:
+                self.client.create_payload_index(collection_name=collection_name, field_name="doc_id", field_schema="keyword") # type: ignore[no-untyped-call]
+            except Exception as e:
+                 logger.warning(f"Could not create payload index for 'doc_id' in {collection_name}: {e}")
+            try:
+                self.client.create_payload_index(collection_name=collection_name, field_name="source", field_schema="keyword") # type: ignore[no-untyped-call]
+            except Exception as e:
+                 logger.warning(f"Could not create payload index for 'source' in {collection_name}: {e}")
+            try:
+                # Index 'page' only if it's expected to be consistently present and numeric
+                self.client.create_payload_index(collection_name=collection_name, field_name="page", field_schema="integer") # type: ignore[no-untyped-call]
+            except Exception as e:
+                 logger.warning(f"Could not create payload index for 'page' in {collection_name}: {e}")
+
+            logger.info(f"Collection '{collection_name}' created with vector dimension {vector_dim}.")
+
+    def delete_collection(self, collection_name: str):
+        """Deletes a collection."""
+        try:
+            self.client.delete_collection(collection_name=collection_name) # type: ignore[no-untyped-call]
+            logger.info(f"Collection '{collection_name}' deleted.")
+        except Exception as e:
+            logger.error(f"Failed to delete collection '{collection_name}': {e}")
+            raise DatabaseError(f"Failed to delete collection {collection_name}") from e
+
+    def add_documents(self, collection_name: str, documents: List[DocumentInput]) -> List[str]:
+        """Adds documents to the specified collection."""
+        ids = [doc.id for doc in documents]
+        texts = [doc.text for doc in documents]
+        payloads = [doc.metadata or {} for doc in documents] # Ensure payload is a dict
+
+        try:
+            vectors = self._embed_texts(texts)
+            if len(ids) != len(vectors) or len(ids) != len(payloads):
+                 raise ValueError("Mismatch between number of ids, vectors, and payloads.")
+
+            points = [
+                 models.PointStruct(id=ids[i], vector=vectors[i], payload=payloads[i]) # type: ignore[attr-defined]
+                 for i in range(len(ids))
+            ]
+
+            self.client.upsert(collection_name=collection_name, points=points, wait=True) # type: ignore[no-untyped-call]
+            logger.info(f"Added/updated {len(documents)} documents in collection '{collection_name}'.")
+            return ids
+        except Exception as e:
+            logger.error(f"Failed to add documents to collection '{collection_name}': {e}")
+            raise DatabaseError("Failed to add documents") from e
+
+    def query(self, collection_name: str, query_text: str, n_results: int = 10) -> List[Dict[str, Any]]:
+        """Queries the collection for similar documents."""
+        try:
+            query_vector = self._embed_text(query_text)
+            search_result = self.client.search( # type: ignore[no-untyped-call]
+                collection_name=collection_name,
+                query_vector=query_vector,
+                limit=n_results,
+                # with_payload=True # Include payload in results
+            )
+            # Format results
+            results = [
+                {"id": hit.id, "score": hit.score, "payload": hit.payload} # type: ignore[attr-defined]
+                for hit in search_result
+            ]
+            return results
+        except Exception as e:
+             # Check if the error is due to collection not found (needs specific exception handling if Qdrant provides one)
+             if "not found" in str(e).lower():
+                 logger.warning(f"Query failed because collection '{collection_name}' does not exist.")
+                 raise ResourceNotFoundError(f"Collection '{collection_name}' not found.") from e
+             logger.error(f"Failed to query collection '{collection_name}': {e}")
+             raise DatabaseError("Failed to query documents") from e
 
 # Helper function (consider moving to a utils module)
 def create_point(id: str, vector: Embedding, payload: Optional[dict] = None) -> PointStruct:
@@ -205,20 +308,19 @@ def create_point(id: str, vector: Embedding, payload: Optional[dict] = None) -> 
 
 # Define API models
 class DocumentInput(BaseModel):
+    id: str
     text: str
-    metadata: Dict[str, Any] = Field(default_factory=dict)
-    id: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 
 class QueryInput(BaseModel):
+    collection: str
     query: str
-    n_results: int = 5
-    collection: str = "default"
+    n_results: int = 10
 
 
 class CollectionInput(BaseModel):
     name: str
-    metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
 # Create FastAPI app
@@ -411,8 +513,9 @@ async def health():
 @app.get("/collections")
 async def get_collections():
     try:
-        collections = vector_db.get_collections()
-        return {"collections": collections}
+        store = VectorStore()
+        collections = store.client.get_collections()
+        return {"collections": [col.name for col in collections.collections]}
     except Exception as e:
         logger.error(f"Error getting collections: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -486,12 +589,17 @@ def main():
 
     logger.info(f"Starting Vector Database Service on {args.host}:{args.port}")
 
-    # Check if we have at least one vector database backend
-    if not CHROMA_AVAILABLE and not FAISS_AVAILABLE:
-        logger.error(
-            "No vector database backend available. Please install either chromadb or faiss."
-        )
+    # Initialize Qdrant and embedding model on startup
+    try:
+        initialize_vector_db()
+    except DatabaseError as e:
+        logger.critical(f"Failed to initialize vector database components: {e}. Exiting.")
         sys.exit(1)
+
+    # Check if we have at least one vector database backend (optional, depends on VectorDB wrapper needs)
+    # if not CHROMA_AVAILABLE and not FAISS_AVAILABLE:
+    #     logger.error("No vector database backend available. Please install either chromadb or faiss.")
+    #     sys.exit(1)
 
     # Run the FastAPI application
     uvicorn.run(app, host=args.host, port=args.port)

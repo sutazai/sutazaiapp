@@ -11,15 +11,16 @@ from fastapi import APIRouter, HTTPException, Depends, Query, Path, Body, status
 from pydantic import BaseModel, Field, validator
 from enum import Enum
 
-from ..agent_manager import AgentManager
-from ..dependencies import get_agent_manager
-from ..memory.agent_memory import MemoryType
+from ai_agents.agent_manager import AgentManager
+from ai_agents.dependencies import get_agent_manager
+from ai_agents.memory.memory_models import MemoryItem, MemoryQuery, MemoryUpdate
+from ai_agents.memory.shared_memory_models import SharedMemoryItem, SharedMemoryQuery
 
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router = APIRouter(prefix="/memory", tags=["memory"])
 
 
 class MemoryTypeEnum(str, Enum):
@@ -127,786 +128,188 @@ class SharedMemorySpace(BaseModel):
 # Agent Memory Endpoints
 
 
-@router.post(
-    "/agents/{agent_id}",
-    response_model=AgentMemoryResponse,
-    status_code=status.HTTP_201_CREATED,
-)
-async def add_agent_memory(
-    agent_id: str = Path(..., description="Agent ID"),
-    memory: AgentMemoryCreate = Body(..., description="Memory to add"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Add a new memory entry for an agent.
-    """
+@router.post("/agents/{agent_id}", response_model=MemoryItem)
+def add_agent_memory(
+    agent_id: str,
+    item: MemoryItem,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> MemoryItem:
+    """Add an item to an agent's memory."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
     try:
-        # Convert enum to string for memory_type
-        memory_type_str = memory.memory_type.value
-
-        # Convert tags list to set if provided
-
-        logger.info(f"Adding memory for agent {agent_id}, type: {memory_type_str}")
-
-        entry_id = agent_manager.add_agent_memory(
-            agent_id=agent_id,
-            content=memory.content,
-            memory_type=memory_type_str,
-            tags=memory.tags,
-            importance=memory.importance,
-        )
-
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            logger.error(f"Memory not found for agent: {agent_id}")
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Memory not found for agent: {agent_id}",
-            )
-
-        # Get the entry
-        entry = memory_agent.get_memory(entry_id)
-        if not entry:
-            logger.error(f"Memory entry not found: {entry_id}")
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Memory entry not found: {entry_id}",
-            )
-
-        # Convert to response model
-        response = {
-            "entry_id": entry.entry_id,
-            "content": entry.content,
-            "tags": list(entry.tags),
-            "memory_type": entry.memory_type.value,
-            "importance": entry.importance,
-            "source": entry.source,
-            "timestamp": entry.timestamp,
-            "last_accessed": entry.last_accessed,
-            "access_count": entry.access_count,
-        }
-
-        logger.info(f"Successfully added memory entry {entry_id} for agent {agent_id}")
-        return response
-    except ValueError as ve:
-        # Handle validation errors
-        logger.error(f"Validation error adding memory for agent {agent_id}: {str(ve)}")
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(ve)
-        )
+        added_item = memory.add_memory(item)
+        return added_item
     except Exception as e:
-        # Handle other errors
-        logger.error(f"Error adding memory for agent {agent_id}: {str(e)}")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to add memory: {e}")
 
 
-@router.get("/agents/{agent_id}", response_model=List[AgentMemoryResponse])
-async def get_agent_memories(
-    agent_id: str = Path(..., description="Agent ID"),
-    memory_type: Optional[MemoryTypeEnum] = Query(
-        None, description="Filter by memory type"
-    ),
-    limit: int = Query(10, description="Maximum number of entries to return"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Get memory entries for an agent.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Convert enum to MemoryType if provided
-        memory_type_enum = None
-        if memory_type:
-            try:
-                memory_type_enum = MemoryType(memory_type.value)
-            except ValueError:
-                raise HTTPException(
-                    status_code=400, detail=f"Invalid memory type: {memory_type}"
-                )
-
-        # Get recent memories
-        entries = memory_agent.get_recent_memories(
-            limit=limit, memory_type=memory_type_enum
-        )
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "memory_type": entry.memory_type.value,
-                "importance": entry.importance,
-                "source": entry.source,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.get("/agents/{agent_id}", response_model=List[MemoryItem])
+def get_agent_memory(
+    agent_id: str,
+    limit: int = Query(100, ge=1, le=1000),
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[MemoryItem]:
+    """Get memory items for an agent."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
+    return memory.get_memory(limit=limit)
 
 
-@router.get("/agents/{agent_id}/entries/{entry_id}", response_model=AgentMemoryResponse)
-async def get_agent_memory_entry(
-    agent_id: str = Path(..., description="Agent ID"),
-    entry_id: str = Path(..., description="Memory entry ID"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Get a specific memory entry for an agent.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Get the entry
-        entry = memory_agent.get_memory(entry_id)
-        if not entry:
-            raise HTTPException(
-                status_code=404, detail=f"Memory entry not found: {entry_id}"
-            )
-
-        # Convert to response model
-        return {
-            "entry_id": entry.entry_id,
-            "content": entry.content,
-            "tags": list(entry.tags),
-            "memory_type": entry.memory_type.value,
-            "importance": entry.importance,
-            "source": entry.source,
-            "timestamp": entry.timestamp,
-            "last_accessed": entry.last_accessed,
-            "access_count": entry.access_count,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/agents/{agent_id}/search", response_model=List[MemoryItem])
+def search_agent_memory(
+    agent_id: str,
+    query: MemoryQuery,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[MemoryItem]:
+    """Search an agent's memory."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
+    return memory.search_memory(query.query, query.limit, query.threshold)
 
 
-@router.delete("/agents/{agent_id}/entries/{entry_id}", response_model=Dict[str, Any])
-async def delete_agent_memory_entry(
-    agent_id: str = Path(..., description="Agent ID"),
-    entry_id: str = Path(..., description="Memory entry ID"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Delete a specific memory entry for an agent.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Delete the entry
-        success = memory_agent.delete_memory(entry_id)
-        if not success:
-            raise HTTPException(
-                status_code=404, detail=f"Memory entry not found: {entry_id}"
-            )
-
-        return {"success": True, "message": f"Memory entry {entry_id} deleted"}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.put("/agents/{agent_id}/{memory_id}", response_model=MemoryItem)
+def update_agent_memory(
+    agent_id: str,
+    memory_id: str,
+    update: MemoryUpdate,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> MemoryItem:
+    """Update a specific memory item for an agent."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
+    updated = memory.update_memory(memory_id, update.content, update.metadata)
+    if not updated:
+         raise HTTPException(status_code=404, detail=f"Memory item {memory_id} not found")
+    return updated # Assuming update_memory returns the updated item
 
 
-@router.get("/agents/{agent_id}/search", response_model=List[AgentMemoryResponse])
-async def search_agent_memory(
-    agent_id: str = Path(..., description="Agent ID"),
-    query: str = Query(..., description="Search query"),
-    memory_type: Optional[MemoryTypeEnum] = Query(
-        None, description="Filter by memory type"
-    ),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Search memory entries for an agent.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Convert enum to MemoryType if provided
-        memory_type_enum = None
-        if memory_type:
-            try:
-                memory_type_enum = MemoryType(memory_type.value)
-            except ValueError:
-                raise HTTPException(
-                    status_code=400, detail=f"Invalid memory type: {memory_type}"
-                )
-
-        # Search by content
-        entries = memory_agent.search_by_content(
-            query=query, memory_type=memory_type_enum
-        )
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "memory_type": entry.memory_type.value,
-                "importance": entry.importance,
-                "source": entry.source,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.delete("/agents/{agent_id}/{memory_id}", status_code=204)
+def delete_agent_memory(
+    agent_id: str,
+    memory_id: str,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> None:
+    """Delete a specific memory item for an agent."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
+    if not memory.delete_memory(memory_id):
+         raise HTTPException(status_code=404, detail=f"Memory item {memory_id} not found")
+    return None
 
 
-@router.get("/agents/{agent_id}/tags", response_model=List[AgentMemoryResponse])
-async def search_agent_memory_by_tags(
-    agent_id: str = Path(..., description="Agent ID"),
-    tags: List[str] = Query(..., description="Tags to search for"),
-    require_all: bool = Query(False, description="Whether all tags must match"),
-    memory_type: Optional[MemoryTypeEnum] = Query(
-        None, description="Filter by memory type"
-    ),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Search memory entries for an agent by tags.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Convert enum to MemoryType if provided
-        memory_type_enum = None
-        if memory_type:
-            try:
-                memory_type_enum = MemoryType(memory_type.value)
-            except ValueError:
-                raise HTTPException(
-                    status_code=400, detail=f"Invalid memory type: {memory_type}"
-                )
-
-        # Search by tags
-        entries = memory_agent.search_by_tags(
-            tags=set(tags), memory_type=memory_type_enum, require_all=require_all
-        )
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "memory_type": entry.memory_type.value,
-                "importance": entry.importance,
-                "source": entry.source,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.get("/agents/{agent_id}/summary", response_model=MemorySummary)
-async def get_agent_memory_summary(
-    agent_id: str = Path(..., description="Agent ID"),
-    memory_type: Optional[MemoryTypeEnum] = Query(
-        None, description="Filter by memory type"
-    ),
-    max_entries: int = Query(
-        20, description="Maximum number of entries to include in summary"
-    ),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Get a summary of memory entries for an agent.
-    """
-    try:
-        # Get the memory agent
-        memory_agent = agent_manager.get_memory(agent_id)
-        if not memory_agent:
-            raise HTTPException(
-                status_code=404, detail=f"Memory not found for agent: {agent_id}"
-            )
-
-        # Convert enum to MemoryType if provided
-        memory_type_enum = None
-        if memory_type:
-            try:
-                memory_type_enum = MemoryType(memory_type.value)
-            except ValueError:
-                raise HTTPException(
-                    status_code=400, detail=f"Invalid memory type: {memory_type}"
-                )
-
-        # Get summary
-        summary = memory_agent.summarize_memory(
-            memory_type=memory_type_enum, max_entries=max_entries
-        )
-
-        return summary
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/agents/{agent_id}/clear")
+def clear_agent_memory(
+    agent_id: str,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> Dict[str, str]:
+    """Clear all memory for an agent."""
+    memory = agent_manager.get_agent_memory(agent_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail=f"Memory not found for agent {agent_id}")
+    memory.clear_memory()
+    return {"status": "success", "message": f"Memory cleared for agent {agent_id}"}
 
 
 # Shared Memory Endpoints
 
 
-@router.post("/shared", response_model=Dict[str, Any])
-async def create_shared_memory_space(
-    memory_space: SharedMemorySpace = Body(
-        ..., description="Shared memory space to create"
-    ),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Create a new shared memory space.
-    """
+@router.post("/shared", response_model=SharedMemoryItem)
+def add_shared_memory(
+    item: SharedMemoryItem,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> SharedMemoryItem:
+    """Add an item to the shared memory."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
     try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Create shared memory space
-        shared_memory = shared_manager.create_memory(
-            name=memory_space.name,
-            description=memory_space.description,
-            max_entries=memory_space.max_entries,
-        )
-
-        return {
-            "name": shared_memory.name,
-            "description": shared_memory.description,
-            "max_entries": shared_memory.max_entries,
-            "created_at": shared_memory.created_at,
-        }
+        added_item = shared_memory.add_item(item)
+        return added_item
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to add shared memory: {e}")
 
 
-@router.get("/shared", response_model=List[Dict[str, Any]])
-async def list_shared_memory_spaces(
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    List all shared memory spaces.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get all memory spaces
-        memory_names = shared_manager.get_memory_names()
-        memories = []
-
-        for name in memory_names:
-            memory = shared_manager.get_memory(name)
-            if memory:
-                memories.append(
-                    {
-                        "name": memory.name,
-                        "description": memory.description,
-                        "max_entries": memory.max_entries,
-                        "created_at": memory.created_at,
-                        "entry_count": len(memory.entries),
-                    }
-                )
-
-        return memories
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.get("/shared/{item_key}", response_model=SharedMemoryItem)
+def get_shared_memory(
+    item_key: str,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> SharedMemoryItem:
+    """Get an item from shared memory by key."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    item = shared_memory.get_item(item_key)
+    if not item:
+        raise HTTPException(status_code=404, detail=f"Shared memory item '{item_key}' not found")
+    return item
 
 
-@router.post("/shared/{memory_name}", response_model=SharedMemoryResponse)
-async def add_shared_memory_entry(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    memory: SharedMemoryCreate = Body(..., description="Memory to add"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Add a new entry to a shared memory space.
-    """
-    try:
-        # Convert tags list to set if provided
-
-        entry_id = agent_manager.add_shared_memory(
-            memory_space=memory_name,
-            content=memory.content,
-            creator_id=memory.creator_id,
-            tags=memory.tags,
-            importance=memory.importance,
-            access_control=memory.access_control,
-        )
-
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Get the entry
-        entry = shared_memory.get_entry(entry_id, agent_id=memory.creator_id)
-        if not entry:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory entry not found: {entry_id}"
-            )
-
-        # Convert to response model
-        return {
-            "entry_id": entry.entry_id,
-            "content": entry.content,
-            "tags": list(entry.tags),
-            "importance": entry.importance,
-            "source": entry.source,
-            "creator_id": entry.creator_id,
-            "timestamp": entry.timestamp,
-            "last_accessed": entry.last_accessed,
-            "access_count": entry.access_count,
-            "version": entry.version,
-            "access_control": entry.access_control,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.put("/shared/{item_key}", response_model=SharedMemoryItem)
+def update_shared_memory(
+    item_key: str,
+    item_update: SharedMemoryItem, # Assume full item replacement for simplicity
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> SharedMemoryItem:
+    """Update an item in shared memory."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    updated = shared_memory.update_item(item_key, item_update)
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Shared memory item '{item_key}' not found for update")
+    return updated
 
 
-@router.get("/shared/{memory_name}", response_model=List[SharedMemoryResponse])
-async def get_shared_memory_entries(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    agent_id: str = Query(..., description="ID of the agent requesting the entries"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Get entries from a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Get all entries
-        entries = shared_memory.get_all_entries(agent_id=agent_id)
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "importance": entry.importance,
-                "source": entry.source,
-                "creator_id": entry.creator_id,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-                "version": entry.version,
-                "access_control": entry.access_control,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.delete("/shared/{item_key}", status_code=204)
+def delete_shared_memory(
+    item_key: str,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> None:
+    """Delete an item from shared memory."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    if not shared_memory.delete_item(item_key):
+        raise HTTPException(status_code=404, detail=f"Shared memory item '{item_key}' not found")
+    return None
 
 
-@router.get(
-    "/shared/{memory_name}/entries/{entry_id}", response_model=SharedMemoryResponse
-)
-async def get_shared_memory_entry(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    entry_id: str = Path(..., description="Memory entry ID"),
-    agent_id: str = Query(..., description="ID of the agent requesting the entry"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Get a specific entry from a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Get the entry
-        entry = shared_memory.get_entry(entry_id, agent_id=agent_id)
-        if not entry:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory entry not found: {entry_id}"
-            )
-
-        # Convert to response model
-        return {
-            "entry_id": entry.entry_id,
-            "content": entry.content,
-            "tags": list(entry.tags),
-            "importance": entry.importance,
-            "source": entry.source,
-            "creator_id": entry.creator_id,
-            "timestamp": entry.timestamp,
-            "last_accessed": entry.last_accessed,
-            "access_count": entry.access_count,
-            "version": entry.version,
-            "access_control": entry.access_control,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/shared/search", response_model=List[SharedMemoryItem])
+def search_shared_memory(
+    query: SharedMemoryQuery,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[SharedMemoryItem]:
+    """Search the shared memory based on tags or content."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    return shared_memory.search_items(query.query, query.tags, query.limit)
 
 
-@router.put(
-    "/shared/{memory_name}/entries/{entry_id}", response_model=SharedMemoryResponse
-)
-async def update_shared_memory_entry(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    entry_id: str = Path(..., description="Memory entry ID"),
-    memory: MemoryEntryBase = Body(..., description="Updated memory"),
-    agent_id: str = Query(..., description="ID of the agent updating the entry"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Update a specific entry in a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Convert tags list to set if provided
-
-        # Update the entry
-        success = shared_memory.update_entry(
-            entry_id=entry_id,
-            content=memory.content,
-            agent_id=agent_id,
-            tags=memory.tags,
-            importance=memory.importance,
-        )
-
-        if not success:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Failed to update shared memory entry: {entry_id}",
-            )
-
-        # Get the updated entry
-        entry = shared_memory.get_entry(entry_id, agent_id=agent_id)
-        if not entry:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory entry not found: {entry_id}"
-            )
-
-        # Convert to response model
-        return {
-            "entry_id": entry.entry_id,
-            "content": entry.content,
-            "tags": list(entry.tags),
-            "importance": entry.importance,
-            "source": entry.source,
-            "creator_id": entry.creator_id,
-            "timestamp": entry.timestamp,
-            "last_accessed": entry.last_accessed,
-            "access_count": entry.access_count,
-            "version": entry.version,
-            "access_control": entry.access_control,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.get("/shared/keys", response_model=List[str])
+def list_shared_memory_keys(
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[str]:
+    """List all keys currently in shared memory."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    return shared_memory.list_keys()
 
 
-@router.delete(
-    "/shared/{memory_name}/entries/{entry_id}", response_model=Dict[str, Any]
-)
-async def delete_shared_memory_entry(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    entry_id: str = Path(..., description="Memory entry ID"),
-    agent_id: str = Query(..., description="ID of the agent deleting the entry"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Delete a specific entry from a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Delete the entry
-        success = shared_memory.delete_entry(entry_id, agent_id=agent_id)
-        if not success:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Failed to delete shared memory entry: {entry_id}",
-            )
-
-        return {"success": True, "message": f"Shared memory entry {entry_id} deleted"}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.get("/shared/{memory_name}/search", response_model=List[SharedMemoryResponse])
-async def search_shared_memory(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    query: str = Query(..., description="Search query"),
-    agent_id: str = Query(..., description="ID of the agent searching"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Search entries in a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Search by content
-        entries = shared_memory.search_by_content(query=query, agent_id=agent_id)
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "importance": entry.importance,
-                "source": entry.source,
-                "creator_id": entry.creator_id,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-                "version": entry.version,
-                "access_control": entry.access_control,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.get("/shared/{memory_name}/tags", response_model=List[SharedMemoryResponse])
-async def search_shared_memory_by_tags(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    tags: List[str] = Query(..., description="Tags to search for"),
-    require_all: bool = Query(False, description="Whether all tags must match"),
-    agent_id: str = Query(..., description="ID of the agent searching"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Search entries in a shared memory space by tags.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Get the shared memory space
-        shared_memory = shared_manager.get_memory(memory_name)
-        if not shared_memory:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        # Search by tags
-        entries = shared_memory.search_by_tags(
-            tags=set(tags), agent_id=agent_id, require_all=require_all
-        )
-
-        # Convert to response models
-        return [
-            {
-                "entry_id": entry.entry_id,
-                "content": entry.content,
-                "tags": list(entry.tags),
-                "importance": entry.importance,
-                "source": entry.source,
-                "creator_id": entry.creator_id,
-                "timestamp": entry.timestamp,
-                "last_accessed": entry.last_accessed,
-                "access_count": entry.access_count,
-                "version": entry.version,
-                "access_control": entry.access_control,
-            }
-            for entry in entries
-        ]
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.delete("/shared/{memory_name}", response_model=Dict[str, Any])
-async def delete_shared_memory_space(
-    memory_name: str = Path(..., description="Shared memory space name"),
-    agent_manager: AgentManager = Depends(get_agent_manager),
-):
-    """
-    Delete a shared memory space.
-    """
-    try:
-        # Get the shared memory manager
-        shared_manager = agent_manager.get_shared_memory_manager()
-
-        # Delete the memory space
-        success = shared_manager.delete_memory(memory_name)
-        if not success:
-            raise HTTPException(
-                status_code=404, detail=f"Shared memory space not found: {memory_name}"
-            )
-
-        return {
-            "success": True,
-            "message": f"Shared memory space {memory_name} deleted",
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@router.post("/shared/clear")
+def clear_shared_memory(
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> Dict[str, str]:
+    """Clear all items from shared memory."""
+    shared_memory = agent_manager.shared_memory_manager
+    if not shared_memory:
+         raise HTTPException(status_code=503, detail="Shared memory manager not available")
+    shared_memory.clear_all()
+    return {"status": "success", "message": "Shared memory cleared"}

@@ -11,7 +11,12 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
 
-from ..agent_manager import AgentManager
+from ai_agents.agent_manager import AgentManager
+from ai_agents.dependencies import get_agent_manager
+from ai_agents.agent_factory import AgentFactory
+from ai_agents.utils.models import AgentConfigCreate, AgentConfigUpdate, AgentConfigResponse
+from ai_agents.utils.enums import AgentStatus
+from ai_agents.base_agent import BaseAgent
 
 router = APIRouter(prefix="/config", tags=["config"])
 
@@ -327,3 +332,84 @@ async def restore_configurations(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/agents", response_model=AgentConfigResponse, status_code=201)
+def create_agent_config(
+    config_create: AgentConfigCreate,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> AgentConfigResponse:
+    """Create a new agent configuration."""
+    try:
+        config = agent_manager.create_agent_config(config_create.dict())
+        return AgentConfigResponse(**config.dict())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create agent config: {e}")
+
+
+@router.get("/agents/{agent_id}", response_model=AgentConfigResponse)
+def get_agent_config(
+    agent_id: str,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> AgentConfigResponse:
+    """Get the configuration for a specific agent."""
+    config = agent_manager.get_agent_config(agent_id)
+    if not config:
+        raise HTTPException(status_code=404, detail=f"Agent config {agent_id} not found")
+    return AgentConfigResponse(**config.dict())
+
+
+@router.put("/agents/{agent_id}", response_model=AgentConfigResponse)
+def update_agent_config(
+    agent_id: str,
+    agent_factory: AgentFactory = Depends(lambda: AgentFactory(get_agent_manager())),
+) -> AgentConfigResponse:
+    """Update the configuration for a specific agent."""
+    try:
+        if agent_id not in agent_factory.agent_classes:
+            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
+
+        agent_class = agent_factory.get_agent_class(agent_id)
+        config = agent_class.get_config()
+        metadata = agent_class.get_metadata()
+
+        # Stop the agent if it's running
+        if agent_factory.agent_status[agent_id] in ["running", "paused"]:
+            agent_factory.stop_agent(agent_id)
+
+        # Update configuration
+        config_update = ConfigUpdate(config=config, metadata=metadata)
+        agent_factory.update_agent_config(agent_id, config_update)
+
+        # Reinitialize the agent
+        agent_factory.initialize_agent(agent_id)
+        agent_factory.agent_status[agent_id] = "ready"
+
+        return AgentConfigResponse(
+            type=agent_id,
+            config=config,
+            metadata=metadata,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/types", response_model=List[Dict[str, str]])
+def list_available_agent_types(
+    agent_factory: AgentFactory = Depends(lambda: AgentFactory(get_agent_manager()))
+) -> List[Dict[str, str]]:
+    """List all available agent types and their descriptions."""
+    types_info = []
+    agent_types = agent_factory.list_available_agent_types()
+    for agent_type in agent_types:
+        try:
+            agent_class = agent_factory.get_agent_class(agent_type)
+            description = getattr(agent_class, '__doc__', 'No description available').strip().split('\n')[0]
+            types_info.append({"type": agent_type, "description": description})
+        except Exception:
+            types_info.append({"type": agent_type, "description": "Error loading description"})
+    return types_info

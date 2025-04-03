@@ -7,7 +7,7 @@ This module provides dependency injection functions for FastAPI routes.
 import logging
 import threading
 from typing import Optional
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
 
 from .agent_manager import AgentManager
@@ -34,6 +34,12 @@ _health_check: Optional[HealthCheck] = None
 
 # Thread lock for safe initialization
 _init_lock = threading.RLock()
+
+# Global instances (populated during app startup)
+llm_service_instance: Optional[LLMService] = None
+tool_registry_instance: Optional[ToolRegistry] = None
+vector_store_instance: Optional[VectorStore] = None
+app_state_instance: Optional[AppState] = None
 
 
 def initialize_dependencies():
@@ -207,3 +213,46 @@ def get_health_check() -> HealthCheck:
     if _health_check is None:
         initialize_dependencies()
     return _health_check
+
+
+def initialize_dependencies(
+    llm_service: LLMService,
+    tool_registry: ToolRegistry,
+    vector_store: VectorStore,
+    app_state: AppState
+):
+    global llm_service_instance, tool_registry_instance, vector_store_instance, app_state_instance
+    logger.info("Initializing AI Agents dependencies...")
+    llm_service_instance = llm_service
+    tool_registry_instance = tool_registry
+    vector_store_instance = vector_store
+    app_state_instance = app_state
+    logger.info("AI Agents dependencies initialized.")
+
+
+def get_llm_service() -> LLMService:
+    if llm_service_instance is None:
+        logger.error("LLMService dependency requested but not initialized.")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="LLM Service not available")
+    return llm_service_instance
+
+
+def get_tool_registry() -> ToolRegistry:
+    if tool_registry_instance is None:
+        logger.error("ToolRegistry dependency requested but not initialized.")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Tool Registry not available")
+    return tool_registry_instance
+
+
+def get_vector_store() -> VectorStore:
+    if vector_store_instance is None:
+        logger.error("VectorStore dependency requested but not initialized.")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Vector Store not available")
+    return vector_store_instance
+
+
+def get_app_state() -> AppState:
+    if app_state_instance is None:
+        logger.error("AppState dependency requested but not initialized.")
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Application State not available")
+    return app_state_instance

@@ -9,8 +9,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
 
-from ..agent_manager import AgentManager
-from ..health_check import HealthStatus
+from ai_agents.agent_manager import AgentManager
+from ai_agents.dependencies import get_agent_manager, get_health_check
+from ai_agents.utils.health_check import HealthCheck, HealthStatus, AgentHealthStatus, SystemHealthStatus
 
 router = APIRouter(prefix="/health", tags=["health"])
 
@@ -50,250 +51,76 @@ class SystemHealth(BaseModel):
     last_update: datetime
 
 
-@router.get("/agents", response_model=List[AgentHealth])
-async def get_all_agent_health(
-    manager: AgentManager = Depends(get_agent_manager),
-) -> List[AgentHealth]:
-    """
-    Get health status for all agents.
-
-    Args:
-        manager: Agent manager instance
-
-    Returns:
-        List[AgentHealth]: List of agent health statuses
-    """
-    try:
-        health_statuses = []
-        for agent_id, agent in manager.agents.items():
-            checks = manager.health_check.check_agent(agent_id)
-            status = (
-                "healthy"
-                if all(c["status"] == HealthStatus.OK for c in checks)
-                else "unhealthy"
-            )
-
-            health_statuses.append(
-                AgentHealth(
-                    agent_id=agent_id,
-                    status=status,
-                    checks=[
-                        HealthCheck(
-                            check_id=f"{agent_id}_{i}",
-                            name=check["name"],
-                            status=check["status"],
-                            message=check["message"],
-                            details=check.get("details"),
-                            last_check=datetime.utcnow(),
-                        )
-                        for i, check in enumerate(checks)
-                    ],
-                    last_update=datetime.utcnow(),
-                )
-            )
-        return health_statuses
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/", response_model=HealthStatus)
+def get_overall_health(
+    agent_manager: AgentManager = Depends(get_agent_manager),
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> HealthStatus:
+    """Get the overall health status of the agent system."""
+    return health_checker.get_overall_status()
 
 
-@router.get("/agents/{agent_id}", response_model=AgentHealth)
-async def get_agent_health(
-    agent_id: str, manager: AgentManager = Depends(get_agent_manager)
-) -> AgentHealth:
-    """
-    Get health status for a specific agent.
-
-    Args:
-        agent_id: Agent ID to get health for
-        manager: Agent manager instance
-
-    Returns:
-        AgentHealth: Agent health status
-    """
-    try:
-        if agent_id not in manager.agents:
-            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
-
-        checks = manager.health_check.check_agent(agent_id)
-        status = (
-            "healthy"
-            if all(c["status"] == HealthStatus.OK for c in checks)
-            else "unhealthy"
-        )
-
-        return AgentHealth(
-            agent_id=agent_id,
-            status=status,
-            checks=[
-                HealthCheck(
-                    check_id=f"{agent_id}_{i}",
-                    name=check["name"],
-                    status=check["status"],
-                    message=check["message"],
-                    details=check.get("details"),
-                    last_check=datetime.utcnow(),
-                )
-                for i, check in enumerate(checks)
-            ],
-            last_update=datetime.utcnow(),
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/agents", response_model=Dict[str, AgentHealthStatus])
+def get_all_agents_health(
+    agent_manager: AgentManager = Depends(get_agent_manager),
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> Dict[str, AgentHealthStatus]:
+    """Get health status for all agents."""
+    return health_checker.get_all_agent_statuses()
 
 
-@router.get("/system", response_model=SystemHealth)
-async def get_system_health(
-    manager: AgentManager = Depends(get_agent_manager),
-) -> SystemHealth:
-    """
-    Get system-wide health status.
-
-    Args:
-        manager: Agent manager instance
-
-    Returns:
-        SystemHealth: System health status
-    """
-    try:
-        # Get system checks
-        system_checks = manager.health_check.check_system()
-
-        # Get agent health statuses
-        agent_health = []
-        for agent_id, agent in manager.agents.items():
-            checks = manager.health_check.check_agent(agent_id)
-            status = (
-                "healthy"
-                if all(c["status"] == HealthStatus.OK for c in checks)
-                else "unhealthy"
-            )
-
-            agent_health.append(
-                AgentHealth(
-                    agent_id=agent_id,
-                    status=status,
-                    checks=[
-                        HealthCheck(
-                            check_id=f"{agent_id}_{i}",
-                            name=check["name"],
-                            status=check["status"],
-                            message=check["message"],
-                            details=check.get("details"),
-                            last_check=datetime.utcnow(),
-                        )
-                        for i, check in enumerate(checks)
-                    ],
-                    last_update=datetime.utcnow(),
-                )
-            )
-
-        # Determine overall system status
-        all_checks = system_checks + [
-            check for agent in agent_health for check in agent.checks
-        ]
-        status = (
-            "healthy"
-            if all(c["status"] == HealthStatus.OK for c in all_checks)
-            else "unhealthy"
-        )
-
-        return SystemHealth(
-            status=status,
-            checks=[
-                HealthCheck(
-                    check_id=f"system_{i}",
-                    name=check["name"],
-                    status=check["status"],
-                    message=check["message"],
-                    details=check.get("details"),
-                    last_check=datetime.utcnow(),
-                )
-                for i, check in enumerate(system_checks)
-            ],
-            agents=agent_health,
-            last_update=datetime.utcnow(),
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/agents/{agent_id}", response_model=AgentHealthStatus)
+def get_agent_health(
+    agent_id: str,
+    agent_manager: AgentManager = Depends(get_agent_manager),
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> AgentHealthStatus:
+    """Get health status for a specific agent."""
+    health_status = health_checker.check_agent_health(agent_id)
+    if not health_status:
+        raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
+    return health_status
 
 
-@router.post("/agents/{agent_id}/check")
-async def run_agent_health_check(
-    agent_id: str, manager: AgentManager = Depends(get_agent_manager)
-) -> Dict[str, str]:
-    """
-    Run health check for a specific agent.
-
-    Args:
-        agent_id: Agent ID to check
-        manager: Agent manager instance
-
-    Returns:
-        Dict[str, str]: Check status
-    """
-    try:
-        if agent_id not in manager.agents:
-            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
-
-        # Run health check
-        checks = manager.health_check.check_agent(agent_id)
-        status = (
-            "healthy"
-            if all(c["status"] == HealthStatus.OK for c in checks)
-            else "unhealthy"
-        )
-
-        return {
-            "status": "success",
-            "message": f"Health check completed for agent {agent_id}",
-            "agent_status": status,
-        }
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/system", response_model=SystemHealthStatus)
+def get_system_health(
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> SystemHealthStatus:
+    """Get health status of system components (dependencies, resources)."""
+    return health_checker.check_system_health()
 
 
-@router.post("/system/check")
-async def run_system_health_check(
-    manager: AgentManager = Depends(get_agent_manager),
-) -> Dict[str, str]:
-    """
-    Run system-wide health check.
+@router.post("/check/agent/{agent_id}", response_model=AgentHealthStatus)
+def run_agent_health_check(
+    agent_id: str,
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> AgentHealthStatus:
+    """Manually trigger a health check for a specific agent."""
+    health_status = health_checker.check_agent_health(agent_id, force_check=True)
+    if not health_status:
+        raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
+    return health_status
 
-    Args:
-        manager: Agent manager instance
 
-    Returns:
-        Dict[str, str]: Check status
-    """
-    try:
-        # Run system health check
-        system_checks = manager.health_check.check_system()
+@router.post("/check/system", response_model=SystemHealthStatus)
+def run_system_health_check(
+    health_checker: HealthCheck = Depends(get_health_check)
+) -> SystemHealthStatus:
+    """Manually trigger a health check for system components."""
+    return health_checker.check_system_health(force_check=True)
 
-        # Run agent health checks
-        agent_checks = []
-        for agent_id in manager.agents:
-            checks = manager.health_check.check_agent(agent_id)
-            agent_checks.extend(checks)
 
-        # Determine overall status
-        all_checks = system_checks + agent_checks
-        status = (
-            "healthy"
-            if all(c["status"] == HealthStatus.OK for c in all_checks)
-            else "unhealthy"
-        )
-
-        return {
-            "status": "success",
-            "message": "System health check completed",
-            "system_status": status,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# Example: Endpoint to get detailed dependency status
+@router.get("/dependencies", response_model=Dict[str, Any])
+def get_dependency_status(
+     health_checker: HealthCheck = Depends(get_health_check)
+) -> Dict[str, Any]:
+     """Get detailed status of external dependencies."""
+     # Assuming HealthCheck has a method for this
+     if hasattr(health_checker, 'check_dependencies'):
+         return health_checker.check_dependencies()
+     else:
+         return {"status": "ok", "detail": "Dependency check method not implemented"}
 
 
 @router.get("/checks", response_model=List[HealthCheck])

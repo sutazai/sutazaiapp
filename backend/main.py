@@ -15,12 +15,15 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 import traceback
+import logging
 
 # FastAPI imports
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlmodel import Session
 
 # Custom components
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -83,6 +86,18 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 DOCUMENT_DIR.mkdir(parents=True, exist_ok=True)
 CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
+# Add project root to Python path if running as a script
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Import necessary models and schemas
+from backend.models.base_models import User, Document
+from backend.schemas import Token, UserCreate, DocumentCreate
+from backend.crud import user_crud, document_crud
+from backend.dependencies import get_db, get_current_active_user
+from backend.core.security import create_access_token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from backend.core.exceptions import UserAlreadyExistsError, AuthenticationError
 
 # API Models
 class ChatMessage(BaseModel):
@@ -948,6 +963,94 @@ app.include_router(agent_interaction_router, prefix="/agents", tags=["Agent Inte
 app.include_router(agent_analytics_router, prefix="/analytics", tags=["Agent Analytics"])
 app.include_router(diagrams_router, prefix="/diagrams", tags=["Diagrams"])
 # Add other routers as needed, checking they exist and are imported correctly first
+
+# --- Authentication Endpoints --- #
+
+@app.post("/token", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    try:
+        user = authenticate_user(db, form_data.username, form_data.password)
+        if not user:
+             # This path might not be reachable if authenticate_user raises AuthenticationError
+             # but added for robustness / clarity
+             raise HTTPException(
+                 status_code=status.HTTP_401_UNAUTHORIZED,
+                 detail="Incorrect username or password",
+                 headers={"WWW-Authenticate": "Bearer"},
+             )
+        access_token = create_access_token(data={"sub": user.username})
+        return {"access_token": access_token, "token_type": "bearer"}
+    except AuthenticationError as e:
+        logger.warning(f"Authentication failed for user {form_data.username}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from e
+
+
+# --- User Endpoints --- #
+
+@app.post("/users/", response_model=User) # Use User model directly if it includes necessary fields
+async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
+    try:
+        # Convert UserCreate schema to User model for CRUD operation if needed
+        # or adjust user_crud.create_user to accept UserCreate
+        user_model_data = User(**user.dict()) # Convert Pydantic model to dict then to User model
+        db_user = user_crud.create_user(db=db, user_in=user_model_data)
+        return db_user
+    except UserAlreadyExistsError as e:
+        logger.warning(f"Attempted to create existing user: {user.username}")
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Exception as e: # Catch unexpected errors
+        logger.error(f"Error creating user {user.username}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error during user creation.")
+
+
+@app.get("/users/me", response_model=User) # Use User model
+async def read_users_me(current_user: User = Depends(get_current_active_user)):
+    # The dependency already fetches and validates the user
+    return current_user
+
+# --- Document Endpoints --- #
+# Assuming document_crud functions exist and work with Document model
+
+@app.post("/documents/", response_model=Document) # Use Document model
+async def create_document_endpoint(
+    document: DocumentCreate, # Use schema for input
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user) # Protect endpoint
+):
+    try:
+        # Convert DocumentCreate to Document model if necessary
+        doc_model_data = Document(**document.dict(), owner_id=current_user.id) # Add owner_id
+        db_document = document_crud.create_document(db=db, document=doc_model_data)
+        return db_document
+    except Exception as e:
+        logger.error(f"Error creating document: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error during document creation.")
+
+
+@app.get("/documents/{document_id}", response_model=Document) # Use Document model
+async def read_document_endpoint(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user) # Protect endpoint
+):
+    db_document = document_crud.get_document(db=db, document_id=document_id)
+    if db_document is None:
+        raise HTTPException(status_code=404, detail="Document not found")
+    # Optional: Check if current_user owns the document
+    if db_document.owner_id != current_user.id and not current_user.is_superuser:
+         raise HTTPException(status_code=403, detail="Not authorized to access this document")
+    return db_document
+
+# Add other endpoints (list, update, delete documents) as needed
+
+# Root endpoint
+@app.get("/")
+async def root():
+    return {"message": "Welcome to SutazAI Backend"}
 
 # Main entry point
 if __name__ == "__main__":
