@@ -9,7 +9,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
 
-from ..agent_manager import AgentManager
+from ai_agents.agent_manager import AgentManager
+from ai_agents.dependencies import get_agent_manager
+from ai_agents.utils.models import AgentMetrics, SystemMetrics, OverallMetrics
+from ai_agents.utils.enums import AgentStatus
 
 router = APIRouter(prefix="/monitoring", tags=["monitoring"])
 
@@ -57,166 +60,141 @@ class Alert(BaseModel):
     status: str
 
 
-@router.get("/agents/metrics", response_model=List[AgentMetrics])
-async def get_all_agent_metrics(
-    manager: AgentManager = Depends(get_agent_manager),
-) -> List[AgentMetrics]:
-    """
-    Get metrics for all agents.
-
-    Args:
-        manager: Agent manager instance
-
-    Returns:
-        List[AgentMetrics]: List of agent metrics
-    """
-    try:
-        metrics = []
-        for agent_id, agent in manager.agents.items():
-            agent_metrics = manager.get_agent_metrics(agent_id)
-            metrics.append(
-                AgentMetrics(
-                    agent_id=agent_id,
-                    cpu_usage=agent_metrics.cpu_usage,
-                    memory_usage=agent_metrics.memory_usage,
-                    last_active=agent_metrics.last_active,
-                    execution_count=agent_metrics.execution_count,
-                    error_count=agent_metrics.error_count,
-                    avg_execution_time=agent_metrics.avg_execution_time,
-                    status=manager.agent_status[agent_id],
-                )
-            )
-        return metrics
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+@router.get("/agents", response_model=Dict[str, AgentMetrics])
+def get_all_agents_metrics(
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> Dict[str, AgentMetrics]:
+    """Get performance metrics for all active agents."""
+    metrics = agent_manager.get_all_agent_metrics()
+    # Convert AgentStatus enum to string for response model compatibility
+    for agent_id in metrics:
+         if hasattr(metrics[agent_id], 'status') and isinstance(metrics[agent_id].status, AgentStatus):
+              metrics[agent_id] = metrics[agent_id].copy(update={'status': metrics[agent_id].status.value})
+    return metrics
 
 
-@router.get("/agents/{agent_id}/metrics", response_model=AgentMetrics)
-async def get_agent_metrics(
-    agent_id: str, manager: AgentManager = Depends(get_agent_manager)
-) -> AgentMetrics:
-    """
-    Get metrics for a specific agent.
-
-    Args:
-        agent_id: Agent ID to get metrics for
-        manager: Agent manager instance
-
-    Returns:
-        AgentMetrics: Agent metrics
-    """
-    try:
-        if agent_id not in manager.agents:
-            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
-
-        agent_metrics = manager.get_agent_metrics(agent_id)
-        return AgentMetrics(
-            agent_id=agent_id,
-            cpu_usage=agent_metrics.cpu_usage,
-            memory_usage=agent_metrics.memory_usage,
-            last_active=agent_metrics.last_active,
-            execution_count=agent_metrics.execution_count,
-            error_count=agent_metrics.error_count,
-            avg_execution_time=agent_metrics.avg_execution_time,
-            status=manager.agent_status[agent_id],
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/system/metrics", response_model=SystemMetrics)
-async def get_system_metrics(
-    manager: AgentManager = Depends(get_agent_manager),
-) -> SystemMetrics:
-    """
-    Get system-wide metrics.
-
-    Args:
-        manager: Agent manager instance
-
-    Returns:
-        SystemMetrics: System metrics
-    """
-    try:
-        total_agents = len(manager.agents)
-        active_agents = len(
-            [
-                agent_id
-                for agent_id, status in manager.agent_status.items()
-                if status in ["running", "paused"]
-            ]
-        )
-
-        total_cpu = 0.0
-        total_memory = 0.0
-        total_errors = 0
-        total_executions = 0
-        total_time = 0.0
-
-        for agent_id in manager.agents:
-            metrics = manager.get_agent_metrics(agent_id)
-            total_cpu += metrics.cpu_usage
-            total_memory += metrics.memory_usage
-            total_errors += metrics.error_count
-            total_executions += metrics.execution_count
-            total_time += metrics.avg_execution_time * metrics.execution_count
-
-        return SystemMetrics(
-            total_agents=total_agents,
-            active_agents=active_agents,
-            total_cpu_usage=total_cpu,
-            total_memory_usage=total_memory,
-            error_rate=total_errors / total_executions if total_executions > 0 else 0,
-            avg_response_time=total_time / total_executions
-            if total_executions > 0
-            else 0,
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/agents/{agent_id}/metrics/history", response_model=List[AgentMetrics])
-async def get_agent_metrics_history(
+@router.get("/agents/{agent_id}", response_model=AgentMetrics)
+def get_agent_metrics(
     agent_id: str,
-    window: Optional[int] = 100,
-    manager: AgentManager = Depends(get_agent_manager),
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> AgentMetrics:
+    """Get performance metrics for a specific agent."""
+    metrics = agent_manager.get_agent_metrics(agent_id)
+    if not metrics:
+        raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found or no metrics available")
+    # Convert AgentStatus enum to string
+    if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+         metrics = metrics.copy(update={'status': metrics.status.value})
+    return metrics
+
+
+@router.get("/system", response_model=SystemMetrics)
+def get_system_metrics(
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> SystemMetrics:
+    """Get overall system performance metrics."""
+    return agent_manager.get_system_metrics()
+
+
+@router.get("/overall", response_model=OverallMetrics)
+def get_overall_metrics(
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> OverallMetrics:
+    """Get combined agent and system metrics."""
+    all_metrics = agent_manager.get_overall_metrics()
+    # Convert AgentStatus enum to string for response model compatibility
+    if all_metrics and hasattr(all_metrics, 'agents') and all_metrics.agents:
+         updated_agents = {}
+         for agent_id, metrics in all_metrics.agents.items():
+             if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+                 updated_agents[agent_id] = metrics.copy(update={'status': metrics.status.value})
+             else:
+                 updated_agents[agent_id] = metrics
+         all_metrics = all_metrics.copy(update={'agents': updated_agents})
+    return all_metrics
+
+
+# Add routes for historical data, filtering, etc.
+@router.get("/history/{agent_id}")
+def get_agent_history(
+    agent_id: str,
+    limit: int = 100,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+):
+    """Get historical performance metrics for an agent."""
+    # This would likely involve querying a time-series DB or logs
+    history = agent_manager.get_agent_metric_history(agent_id, limit)
+    if not history:
+         raise HTTPException(status_code=404, detail=f"No history found for agent {agent_id}")
+    return history
+
+
+@router.get("/agents/status/{status}", response_model=List[AgentMetrics])
+def get_agents_by_status(
+    status: AgentStatus, # Use Enum for path parameter
+    agent_manager: AgentManager = Depends(get_agent_manager)
 ) -> List[AgentMetrics]:
-    """
-    Get historical metrics for a specific agent.
+    """Get agents by their current status."""
+    agents = agent_manager.get_agents_by_status(status)
+    # Convert AgentStatus enum to string for response model compatibility
+    result = []
+    for metrics in agents:
+         if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+             result.append(metrics.copy(update={'status': metrics.status.value}))
+         else:
+             result.append(metrics)
+    return result
 
-    Args:
-        agent_id: Agent ID to get history for
-        window: Number of historical points to return
-        manager: Agent manager instance
 
-    Returns:
-        List[AgentMetrics]: Historical metrics
-    """
-    try:
-        if agent_id not in manager.agents:
-            raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
+@router.get("/agents/top/cpu", response_model=List[AgentMetrics])
+def get_top_cpu_agents(
+    limit: int = 5,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[AgentMetrics]:
+    """Get agents consuming the most CPU."""
+    agents = agent_manager.get_top_agents_by_metric("cpu_usage", limit, descending=True)
+    # Convert AgentStatus enum to string
+    result = []
+    for metrics in agents:
+         if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+             result.append(metrics.copy(update={'status': metrics.status.value}))
+         else:
+             result.append(metrics)
+    return result
 
-        # TODO: Implement metrics history storage and retrieval
-        # For now, return current metrics
-        agent_metrics = manager.get_agent_metrics(agent_id)
-        return [
-            AgentMetrics(
-                agent_id=agent_id,
-                cpu_usage=agent_metrics.cpu_usage,
-                memory_usage=agent_metrics.memory_usage,
-                last_active=agent_metrics.last_active,
-                execution_count=agent_metrics.execution_count,
-                error_count=agent_metrics.error_count,
-                avg_execution_time=agent_metrics.avg_execution_time,
-                status=manager.agent_status[agent_id],
-            )
-        ]
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/agents/top/memory", response_model=List[AgentMetrics])
+def get_top_memory_agents(
+    limit: int = 5,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[AgentMetrics]:
+    """Get agents consuming the most Memory."""
+    agents = agent_manager.get_top_agents_by_metric("memory_usage", limit, descending=True)
+    # Convert AgentStatus enum to string
+    result = []
+    for metrics in agents:
+         if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+             result.append(metrics.copy(update={'status': metrics.status.value}))
+         else:
+             result.append(metrics)
+    return result
+
+
+@router.get("/agents/errors/rate", response_model=List[AgentMetrics])
+def get_agents_by_error_rate(
+    limit: int = 5,
+    agent_manager: AgentManager = Depends(get_agent_manager)
+) -> List[AgentMetrics]:
+    """Get agents with the highest error rate."""
+    agents = agent_manager.get_top_agents_by_metric("error_rate", limit, descending=True)
+    # Convert AgentStatus enum to string
+    result = []
+    for metrics in agents:
+         if hasattr(metrics, 'status') and isinstance(metrics.status, AgentStatus):
+             result.append(metrics.copy(update={'status': metrics.status.value}))
+         else:
+             result.append(metrics)
+    return result
 
 
 @router.get("/alerts", response_model=List[Alert])

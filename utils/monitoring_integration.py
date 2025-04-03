@@ -10,22 +10,16 @@ import time
 from typing import Dict, List, Any, Optional, Callable
 from datetime import datetime
 from functools import wraps
-import threading
-import platform
 
-from fastapi import FastAPI, Request, Response
-from fastapi.middleware.base import BaseHTTPMiddleware
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
-from starlette.requests import Request
-from starlette.responses import Response
 
 # Try to import optional dependencies
 try:
     from prometheus_client import Counter, Histogram, make_asgi_app
-
-    PROMETHEUS_AVAILABLE = True
+    MONITORING_AVAILABLE = True
 except ImportError:
-    PROMETHEUS_AVAILABLE = False
+    MONITORING_AVAILABLE = False
 
 # Import our monitoring modules
 from utils.logging_setup import get_app_logger
@@ -44,9 +38,10 @@ from utils.self_mod_monitoring import create_self_mod_monitor
 from utils.hardware_monitoring import (
     create_hardware_monitor,
     get_current_hardware_profile,
-    HardwareProfile,
 )
 from utils.security_monitoring import create_security_monitor
+from utils.settings import Settings
+from utils.metrics_collector import MetricsCollector
 
 logger = get_app_logger()
 
@@ -99,7 +94,7 @@ class MonitoringSystem:
                 "Total number of model inferences",
                 ["model_id", "endpoint"],
             )
-            if PROMETHEUS_AVAILABLE
+            if MONITORING_AVAILABLE
             else None
         )
 
@@ -110,7 +105,7 @@ class MonitoringSystem:
                 "Total number of API requests",
                 ["method", "endpoint", "status"],
             )
-            if PROMETHEUS_AVAILABLE
+            if MONITORING_AVAILABLE
             else None
         )
 
@@ -120,7 +115,7 @@ class MonitoringSystem:
                 "API request duration in seconds",
                 ["method", "endpoint"],
             )
-            if PROMETHEUS_AVAILABLE
+            if MONITORING_AVAILABLE
             else None
         )
 
@@ -226,7 +221,7 @@ class MonitoringSystem:
         app.add_middleware(RequestMonitoringMiddleware, monitoring_system=self)
 
         # Add Prometheus metrics endpoint if available
-        if PROMETHEUS_AVAILABLE:
+        if MONITORING_AVAILABLE:
             metrics_app = make_asgi_app()
             app.mount(self.settings.prometheus_metrics_path, metrics_app)
             self.logger.info(

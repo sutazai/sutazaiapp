@@ -12,6 +12,7 @@ import psutil
 from typing import Dict, List, Any, Optional, Callable
 from datetime import datetime
 from dataclasses import dataclass, field
+import traceback
 
 # Import the Enum from its new location
 from .agent_status import AgentStatus
@@ -19,12 +20,12 @@ from .agent_status import AgentStatus
 from .agent_factory import AgentFactory
 from .health_check import HealthCheck
 from .protocols.agent_communication import AgentCommunication
-from .protocols.message_protocol import MessageType
+from .protocols.message_protocol import MessageType, Message, MessageProtocol
 from .memory.agent_memory import MemoryManager
 from .memory.shared_memory import SharedMemoryManager
-from .interaction.human_interaction import InteractionManager
+from .interaction.human_interaction import InteractionManager, InteractionCallback, InteractionResponse
 from .orchestrator.workflow_engine import WorkflowEngine
-from .message_protocol import MessageProtocol
+from .utils.performance_metrics import PerformanceMetrics
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -92,8 +93,8 @@ class AgentManager:
 
         # Monitoring and recovery
         self._stop_monitoring = False
-        self._monitor_thread = None
-        self._recovery_thread = None
+        self._monitor_thread: Optional[threading.Thread] = None
+        self._recovery_thread: Optional[threading.Thread] = None
         self._max_retries = 3
         self._retry_delay = 5  # seconds
 
@@ -394,7 +395,7 @@ class AgentManager:
         data: Optional[Dict[str, Any]] = None,
         options: Optional[List[Dict[str, Any]]] = None,
         timeout: Optional[int] = None,
-        callback: Optional[Callable[[Dict[str, Any]], None]] = None,
+        callback: Optional[InteractionCallback] = None,
     ) -> str:
         """
         Create a human interaction request.
@@ -432,9 +433,10 @@ class AgentManager:
         )
 
         # Create interaction
-        return self.interaction_manager.create_interaction(
+        interaction = self.interaction_manager.create_interaction(
             interaction_point=interaction_point, callback=callback
         )
+        return interaction.interaction_id
 
     def get_agent_status(self, agent_id: str) -> Dict[str, Any]:
         """

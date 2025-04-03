@@ -177,12 +177,12 @@ def chat_tab():
 
         # Chat options
         st.subheader("Chat Options")
-        temperature = st.slider(
-            "Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1
-        )
-        max_tokens = st.slider(
-            "Max Response Length", min_value=50, max_value=4000, value=1000, step=50
-        )
+        # temperature = st.slider(
+        #     "Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1
+        # )
+        # max_tokens = st.slider(
+        #     "Max Response Length", min_value=50, max_value=4000, value=1000, step=50
+        # )
 
         # Current agent details
         st.subheader("Current Agent Details")
@@ -234,7 +234,7 @@ def chat_tab():
 
     # Check if the last message was from the user and needs a response
     if st.session_state.chat_history and st.session_state.chat_history[-1]["role"] == "user":
-        user_input_for_api = st.session_state.chat_history[-1]["content"]
+        # user_input_for_api = st.session_state.chat_history[-1]["content"]
         
         # Show loading indicator
         with st.spinner("AI is thinking..."):
@@ -243,8 +243,8 @@ def chat_tab():
                 "agent": st.session_state.current_agent,
                 "messages": st.session_state.chat_history, # Send full history
                 "parameters": {
-                    "temperature": st.session_state.get("temperature", 0.7), 
-                    "max_tokens": st.session_state.get("max_tokens", 1000)
+                    # "temperature": st.session_state.get("temperature", 0.7), 
+                    # "max_tokens": st.session_state.get("max_tokens", 1000)
                  },
             }
 
@@ -518,9 +518,9 @@ def code_generation_tab():
         # Advanced options
         st.subheader("Advanced Options")
 
-        temp = st.slider(
-            "Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1
-        )
+        # temp = st.slider(
+        #     "Temperature", min_value=0.1, max_value=1.0, value=0.7, step=0.1
+        # )
 
         top_p = st.slider("Top P", min_value=0.1, max_value=1.0, value=0.95, step=0.01)
 
@@ -562,7 +562,7 @@ def code_generation_tab():
                     "language": code_language,
                     "mode": generation_mode,
                     "parameters": {
-                        "temperature": temp,
+                        # "temperature": temp,
                         "top_p": top_p,
                         "use_comments": use_comments,
                     },

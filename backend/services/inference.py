@@ -12,6 +12,8 @@ from typing import Dict, List, Any, Optional
 import torch
 import hashlib
 import subprocess
+from sentence_transformers import SentenceTransformer
+from multiprocessing.pool import ThreadPool
 
 logger = logging.getLogger("sutazai.inference")
 
@@ -28,11 +30,11 @@ class MemoryMonitor:
         """
         self.update_interval = update_interval
         self.last_update = 0
-        self.memory_stats = {}
+        self.memory_stats: Dict[str, Any] = {}
         self.update_memory_stats()
 
         # Memory usage history for trend analysis
-        self.history = []
+        self.history: List[Dict[str, Any]] = []
         self.history_max_size = 100
 
         # Start background monitoring thread
@@ -188,9 +190,9 @@ class ModelManager:
             models_dir: Directory containing models
         """
         self.models_dir = models_dir
-        self.loaded_models = {}
-        self.model_metadata = {}
-        self.model_locks = {}
+        self.loaded_models: Dict[str, Dict[str, Any]] = {}
+        self.model_metadata: Dict[str, Dict[str, Any]] = {}
+        self.model_locks: Dict[str, threading.RLock] = {}
         self.memory_monitor = MemoryMonitor()
 
         # Load model metadata
@@ -816,7 +818,7 @@ class MemoryEfficientInference:
         )
 
         # Locks for concurrent model usage
-        self.model_usage_locks = {}
+        self.model_usage_locks: Dict[str, threading.RLock] = {}
 
         logger.info(
             f"Initialized memory-efficient inference with model dir: {models_dir}"

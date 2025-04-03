@@ -276,7 +276,8 @@ async def save_upload_file_streaming(file: UploadFile) -> Path:
     """
     # Generate secure random filename
     file_id = uuid.uuid4().hex
-    file_ext = os.path.splitext(file.filename)[1]
+    # Use default extension if filename is None
+    file_ext = os.path.splitext(file.filename)[1] if file.filename else ".tmp"
     secure_filename = f"{file_id}{file_ext}"
     temp_path = TEMP_DIR / secure_filename
 
@@ -346,6 +347,12 @@ async def parse_document(
             filename=file.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
+            metadata=None,
+            text=None,
+            pages=None,
+            structure=None,
+            tables=None,
+            images=None,
         )
 
     try:
@@ -376,11 +383,18 @@ async def parse_document(
                 filename=file.filename,
                 request_id=request_id,
                 processing_time=processing_time,
+                metadata=None,
+                text=None,
+                pages=None,
+                structure=None,
+                tables=None,
+                images=None,
             )
 
         # Process successful result
         response = DocumentResponse(
             success=True,
+            message=None,
             filename=file.filename,
             metadata=result.get("metadata", {}),
             text=result.get("full_text", ""),
@@ -405,7 +419,13 @@ async def parse_document(
             filename=file.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
-        )
+            metadata=None,
+            text=None,
+            pages=None,
+            structure=None,
+            tables=None,
+            images=None,
+        )  # type: ignore[call-arg]
 
 
 @router.post(
@@ -433,6 +453,12 @@ async def parse_document_base64(
             filename=document_request.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
+            metadata=None,
+            text=None,
+            pages=None,
+            structure=None,
+            tables=None,
+            images=None,
         )
 
     try:
@@ -446,6 +472,12 @@ async def parse_document_base64(
                 filename=document_request.filename,
                 request_id=request_id,
                 processing_time=time.time() - start_time,
+                metadata=None,
+                text=None,
+                pages=None,
+                structure=None,
+                tables=None,
+                images=None,
             )
 
         # Use sanitized filename
@@ -470,11 +502,18 @@ async def parse_document_base64(
                 filename=safe_filename,
                 request_id=request_id,
                 processing_time=processing_time,
+                metadata=None,
+                text=None,
+                pages=None,
+                structure=None,
+                tables=None,
+                images=None,
             )
 
         # Process successful result
         response = DocumentResponse(
             success=True,
+            message=None,
             filename=safe_filename,
             metadata=result.get("metadata", {}),
             text=result.get("full_text", ""),
@@ -496,7 +535,13 @@ async def parse_document_base64(
             filename=document_request.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
-        )
+            metadata=None,
+            text=None,
+            pages=None,
+            structure=None,
+            tables=None,
+            images=None,
+        )  # type: ignore[call-arg]
 
 
 @router.post(
@@ -528,6 +573,7 @@ async def extract_text(
             filename=file.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
+            text=None,
         )
 
     try:
@@ -545,6 +591,7 @@ async def extract_text(
 
         return TextExtractionResponse(
             success=True,
+            message=None,
             filename=file.filename,
             text=text,
             request_id=request_id,
@@ -562,7 +609,8 @@ async def extract_text(
             filename=file.filename,
             request_id=request_id,
             processing_time=time.time() - start_time,
-        )
+            text=None,
+        )  # type: ignore[call-arg]
 
 
 @router.post(
@@ -585,12 +633,17 @@ async def extract_metadata(
             success=False,
             message="Document parsing service is not available",
             filename=file.filename,
+            metadata=None,
+            request_id=None,
+            processing_time=None,
         )
 
     try:
         # Create a temporary file
+        # Use default suffix if filename is None
+        suffix = os.path.splitext(file.filename)[1] if file.filename else ".tmp"
         with tempfile.NamedTemporaryFile(
-            delete=False, suffix=os.path.splitext(file.filename)[1]
+            delete=False, suffix=suffix
         ) as temp:
             # Write uploaded file to temp file
             content = await file.read()
@@ -603,12 +656,28 @@ async def extract_metadata(
         # Extract metadata
         metadata = document_service.extract_metadata(file_path=temp_path)
 
-        return MetadataResponse(success=True, filename=file.filename, metadata=metadata)
+        # Calculate processing time
+        # start_time variable is not available here, so processing_time cannot be calculated
+        # request_id is also not available here from the request object
+
+        return MetadataResponse(
+            success=True,
+            message=None,
+            filename=file.filename,
+            metadata=metadata,
+            request_id=None,  # Set to None as request_id is not available
+            processing_time=None,  # Set to None as start_time is not available
+        )
 
     except Exception as e:
         logger.error(f"Error extracting metadata: {str(e)}")
-        raise HTTPException(
-            status_code=500, detail=f"Error extracting metadata: {str(e)}"
+        return MetadataResponse(
+            success=False,
+            message=f"Error extracting metadata: {str(e)}",
+            filename=file.filename if file else None,
+            metadata=None,
+            request_id=None,
+            processing_time=None,
         )
 
 

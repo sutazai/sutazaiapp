@@ -21,13 +21,19 @@ from typing import List, Optional
 from datetime import datetime
 import pytesseract
 import fitz
+import asyncio
+from pathlib import Path
 
-from backend.core.config import get_settings
+from backend.core.config import get_settings, settings
 from backend.core.database import get_db
-from backend.models.base_models import Document, DocumentChunk
+from backend.models.base_models import Document, DocumentChunk, DocumentStatus
 from backend.services.document_processing.pdf_processor import PDFProcessor
 from backend.services.document_processing.docx_processor import DOCXProcessor
-from backend.services.vector_store.vector_service import VectorStore
+from backend.services.vector_store.vector_service import VectorStore, get_vector_store_service
+from backend.services.document_parsing import parse_document
+from backend.services.text_processing import chunk_text
+from backend.core.exceptions import FileProcessingException, DatabaseError, ResourceNotFoundError
+from backend.services.database import SessionLocal
 
 router = APIRouter()
 settings = get_settings()
@@ -42,13 +48,164 @@ docx_processor = DOCXProcessor(document_store_path=settings.DOCUMENT_STORE_PATH)
 
 vector_store = VectorStore(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
 
+# Ensure document store path exists
+doc_store_path = Path(settings.DOCUMENT_STORE_PATH)
+doc_store_path.mkdir(parents=True, exist_ok=True)
 
-# F821: Added basic ProcessingError class definition
-class ProcessingError(Exception):
-    """Custom exception for document processing errors."""
+class DocumentProcessor:
+    """Handles the end-to-end processing of documents."""
 
-    pass
+    def __init__(self, vector_store: Optional[VectorStoreService] = None):
+        self.vector_store = vector_store or get_vector_store_service()
+        self.ocr_enabled = settings.OCR_ENABLED
+        self.document_store_path = Path(settings.DOCUMENT_STORE_PATH)
 
+    async def process_uploaded_file(
+        self,
+        background_tasks: BackgroundTasks,
+        file: UploadFile = File(...),
+        process_now: bool = False,
+        db: Session = Depends(get_db),
+    ):
+        """
+        Upload a document for processing.
+
+        If process_now is True, the document will be processed immediately.
+        Otherwise, it will be queued for background processing.
+        """
+        # Check if file is supported
+        supported_types = {
+            "application/pdf": ".pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ".docx",
+        }
+
+        if file.content_type not in supported_types:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported file type: {file.content_type}. Supported types are PDF and DOCX.",
+            )
+
+        # Create unique filename with proper extension
+        original_filename = file.filename
+        ext = supported_types[file.content_type]
+        unique_filename = f"{uuid.uuid4()}{ext}"
+
+        # Create upload directory if it doesn't exist
+        upload_dir = self.document_store_path / "uploads"
+        upload_dir.mkdir(exist_ok=True)
+
+        # Save the file
+        file_path = upload_dir / unique_filename
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        # Create database record
+        document = Document(
+            filename=original_filename,
+            content_type=file.content_type,
+            size=os.path.getsize(file_path),
+            path=str(file_path),
+            processed=False,
+            metadata={},
+        )
+
+        db.add(document)
+        db.commit()
+        db.refresh(document)
+
+        # Process document immediately or in background
+        if process_now:
+            await self.process_document(document.id, file_path, file.content_type, db)
+        else:
+            background_tasks.add_task(
+                self.process_document, document.id, file_path, file.content_type, db
+            )
+
+        return {
+            "document_id": document.id,
+            "filename": original_filename,
+            "status": "processing" if process_now else "queued",
+        }
+
+    async def process_document(self, document_id: int, file_path: str, content_type: str, db: Session):
+        """Process a document and store its chunks in the vector store."""
+        try:
+            logger.info(f"Processing document {document_id} ({file_path})")
+
+            # Get document from database
+            document = db.query(Document).filter(Document.id == document_id).first()
+            if not document:
+                logger.error(f"Document {document_id} not found in database")
+                return
+
+            # Process document based on content type
+            if content_type == "application/pdf":
+                processed_data = pdf_processor.process_pdf(file_path)
+            elif (
+                content_type
+                == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            ):
+                processed_data = docx_processor.process_docx(file_path)
+            else:
+                logger.error(f"Unsupported content type: {content_type}")
+                return
+
+            # Save metadata to document
+            document.doc_metadata = processed_data.get("metadata", {})
+            document.processed = True
+            db.commit()
+
+            # Create document chunks
+            chunks = self.vector_store._create_text_chunks(processed_data.get("full_text", ""))
+
+            # Store chunks in database
+            db_chunks = []
+            for i, chunk in enumerate(chunks):
+                db_chunk = DocumentChunk(
+                    document_id=document_id, content=chunk, chunk_index=i, metadata={}
+                )
+                db.add(db_chunk)
+                db_chunks.append(db_chunk)
+
+            db.commit()
+
+            # Store in vector store
+            processed_data["document_id"] = str(document_id)
+            self.vector_store.store_document(processed_data)
+
+            logger.info(
+                f"Successfully processed document {document_id} with {len(chunks)} chunks"
+            )
+
+            document.doc_metadata = {
+                **(document.doc_metadata or {}),
+                "processing_started_at": datetime.now().isoformat(),
+                "status": "processing",
+            }
+
+        except Exception as e:
+            logger.error(f"Error processing document {document_id}: {str(e)}")
+            # Update document status to indicate error
+            document = db.query(Document).filter(Document.id == document_id).first()
+            if document:
+                document.doc_metadata = {
+                    **(document.doc_metadata or {}),
+                    "processing_error": str(e),
+                    "error_time": datetime.now().isoformat(),
+                }
+                db.commit()
+
+    async def search_similar_chunks(self, query: str, doc_id: int, limit: Optional[int] = None, threshold: float = 0.5):
+        logger.info(f"Searching for similar chunks for query: '{query[:50]}...'")
+        vector_store = get_vector_store_service()
+        results = await asyncio.to_thread(
+            vector_store.search_chunks,
+            query=query,
+            doc_id=str(doc_id),
+            limit=limit or 10,
+            threshold=threshold
+        )
+        return results
 
 @router.post("/upload", status_code=status.HTTP_202_ACCEPTED)
 async def upload_document(

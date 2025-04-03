@@ -12,21 +12,11 @@ import json
 import logging
 import hashlib
 import sqlite3
-import concurrent.futures
-from typing import Dict, List, Optional, Any
+import subprocess
+import shutil
+from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
-
-import requests
-from tqdm import tqdm
-
-try:
-    from huggingface_hub import hf_hub_download, login, HfApi
-    from huggingface_hub.utils import RepositoryNotFoundError, RevisionNotFoundError
-
-    HF_AVAILABLE = True
-except ImportError:
-    HF_AVAILABLE = False
 
 # Set up logging
 logger = logging.getLogger("sutazai.model_downloader")
@@ -38,37 +28,52 @@ DEFAULT_MODELS_DIR = os.path.join(
 DEFAULT_DATABASE_PATH = os.path.join(
     os.path.expanduser("~"), ".cache", "sutazai", "model_registry.db"
 )
-DEFAULT_CHUNK_SIZE = 8 * 1024 * 1024  # 8MB chunks for parallel download
-DEFAULT_MAX_WORKERS = 4
-HUGGINGFACE_MODELS = {
+OLLAMA_MODELS = {
     "llama3-70b": {
-        "repo_id": "TheBloke/Llama-3-70B-GGUF",
-        "filename": "llama-3-70b.Q4_0.gguf",
+        "model_name": "llama3:70b",
         "size_gb": 39.2,
         "memory_req_gb": 48,
-        "source": "huggingface",
+        "source": "ollama",
         "quantization": "Q4_0",
         "sha256": None,  # Will be updated on first download
     },
     "llama3-8b": {
-        "repo_id": "TheBloke/Llama-3-8B-GGUF",
-        "filename": "llama-3-8b.Q4_0.gguf",
+        "model_name": "llama3:8b",
         "size_gb": 4.8,
         "memory_req_gb": 8,
-        "source": "huggingface",
+        "source": "ollama",
         "quantization": "Q4_0",
         "sha256": None,
     },
     "mistral-7b": {
-        "repo_id": "TheBloke/Mistral-7B-v0.1-GGUF",
-        "filename": "mistral-7b-v0.1.Q4_0.gguf",
+        "model_name": "mistral:7b",
         "size_gb": 4.1,
         "memory_req_gb": 8,
-        "source": "huggingface",
+        "source": "ollama",
+        "quantization": "Q4_0",
+        "sha256": None,
+    },
+    "llama3-chatqa": {
+        "model_name": "llama3-chatqa",
+        "size_gb": 4.7,
+        "memory_req_gb": 8,
+        "source": "ollama",
+        "quantization": "Q4_0",
+        "sha256": None,
+    },
+    "deepseek-coder": {
+        "model_name": "deepseek-coder",
+        "size_gb": 0.8,
+        "memory_req_gb": 4,
+        "source": "ollama",
         "quantization": "Q4_0",
         "sha256": None,
     },
 }
+
+# Startup and shutdown scripts
+OLLAMA_START_SCRIPT = "/opt/sutazaiapp/bin/start_all.sh"
+OLLAMA_STOP_SCRIPT = "/opt/sutazaiapp/bin/stop_all.sh"
 
 
 @dataclass
@@ -82,7 +87,7 @@ class ModelVersion:
     size_bytes: int
     sha256: str
     is_active: bool = True
-    config: Dict[str, Any] = None
+    config: Optional[Dict[str, Any]] = None
 
 
 class ModelRegistry:
@@ -116,7 +121,7 @@ class ModelRegistry:
             """)
             conn.commit()
 
-    def register_model(self, model: ModelVersion) -> int:
+    def register_model(self, model: ModelVersion) -> Optional[int]:
         """Register a model version in the database"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -264,33 +269,25 @@ class ModelRegistry:
 
 
 class EnterpriseModelDownloader:
-    """Enterprise-grade model downloader with parallel processing and integrity checking"""
+    """Enterprise-grade model downloader using Ollama"""
 
     def __init__(
         self,
         models_dir: str = DEFAULT_MODELS_DIR,
         registry: Optional[ModelRegistry] = None,
-        max_workers: int = DEFAULT_MAX_WORKERS,
-        chunk_size: int = DEFAULT_CHUNK_SIZE,
-        hf_token: Optional[str] = None,
     ):
         """Initialize the model downloader"""
         self.models_dir = models_dir
         self.registry = registry or ModelRegistry()
-        self.max_workers = max_workers
-        self.chunk_size = chunk_size
-        self.hf_token = hf_token
 
         # Create models directory if it doesn't exist
         os.makedirs(self.models_dir, exist_ok=True)
 
-        # Initialize HuggingFace if available
-        if HF_AVAILABLE and hf_token:
-            try:
-                login(token=hf_token)
-                logger.info("Logged into Hugging Face Hub")
-            except Exception as e:
-                logger.warning(f"Failed to log into Hugging Face Hub: {e}")
+        # Check if ollama is installed
+        try:
+            subprocess.run(["ollama", "--version"], check=True, capture_output=True)
+        except (subprocess.SubprocessError, FileNotFoundError):
+            logger.error("Ollama is not installed or not in PATH. Please install Ollama first.")
 
     def _calculate_sha256(self, file_path: str) -> str:
         """Calculate SHA256 hash of a file"""
@@ -300,144 +297,67 @@ class EnterpriseModelDownloader:
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
 
-    def _download_chunk(
-        self,
-        url: str,
-        start_byte: int,
-        end_byte: int,
-        output_file: str,
-        position: int,
-        progress_bar: tqdm,
-    ) -> bool:
-        """Download a specific chunk of a file"""
-        headers = {"Range": f"bytes={start_byte}-{end_byte}"}
+    def download_from_ollama(self, model_name: str) -> bool:
+        """Download a model using Ollama CLI"""
         try:
-            response = requests.get(url, headers=headers, stream=True, timeout=30)
-            response.raise_for_status()
-
-            with open(output_file, "r+b") as f:
-                f.seek(position)
-                f.write(response.content)
-
-            progress_bar.update(end_byte - start_byte + 1)
+            logger.info(f"Downloading {model_name} using Ollama")
+            result = subprocess.run(
+                ["ollama", "pull", model_name],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            logger.info(f"Successfully downloaded {model_name}")
+            logger.debug(result.stdout)
+            
+            # Ensure the model is included in the startup script
+            self._update_startup_scripts(model_name)
+            
             return True
-        except Exception as e:
-            logger.error(f"Failed to download chunk {start_byte}-{end_byte}: {e}")
+        except subprocess.SubprocessError as e:
+            logger.error(f"Failed to download model {model_name} using Ollama: {e}")
+            if hasattr(e, 'stderr'):
+                logger.error(f"Ollama error: {e.stderr}")
             return False
 
-    def download_file_parallel(self, url: str, output_path: str) -> bool:
-        """Download a file in parallel chunks for improved performance"""
+    def _update_startup_scripts(self, model_name: str) -> None:
+        """Update startup and shutdown scripts to include the model"""
         try:
-            # Get file size
-            response = requests.head(url, timeout=10)
-            response.raise_for_status()
-            file_size = int(response.headers.get("content-length", 0))
-
-            if file_size == 0:
-                logger.error("Failed to determine file size")
-                return False
-
-            # Create progress bar
-            progress_bar = tqdm(
-                total=file_size,
-                unit="B",
-                unit_scale=True,
-                desc=f"Downloading {os.path.basename(output_path)}",
-            )
-
-            # Create empty file of the required size
-            with open(output_path, "wb") as f:
-                f.seek(file_size - 1)
-                f.write(b"\0")
-
-            # Calculate chunk sizes
-            chunk_size = self.chunk_size
-            num_chunks = file_size // chunk_size + (
-                1 if file_size % chunk_size > 0 else 0
-            )
-
-            # Download chunks in parallel
-            with concurrent.futures.ThreadPoolExecutor(
-                max_workers=self.max_workers
-            ) as executor:
-                futures = []
-                for i in range(num_chunks):
-                    start_byte = i * chunk_size
-                    end_byte = min(start_byte + chunk_size - 1, file_size - 1)
-                    position = start_byte
-
-                    futures.append(
-                        executor.submit(
-                            self._download_chunk,
-                            url,
-                            start_byte,
-                            end_byte,
-                            output_path,
-                            position,
-                            progress_bar,
-                        )
-                    )
-
-                # Check if all chunks were downloaded successfully
-                for future in concurrent.futures.as_completed(futures):
-                    if not future.result():
-                        logger.error("Failed to download one or more chunks")
-                        return False
-
-            progress_bar.close()
-            return True
-        except Exception as e:
-            logger.error(f"Failed to download file: {e}")
-            return False
-
-    def download_from_huggingface(
-        self, repo_id: str, filename: str, output_dir: str, revision: str = "main"
-    ) -> Optional[str]:
-        """Download a model from the Hugging Face Hub"""
-        if not HF_AVAILABLE:
-            logger.error("huggingface_hub package not installed")
-            return None
-
-        try:
-            logger.info(f"Downloading {filename} from {repo_id}")
-
-            # Get the download URL
-            api = HfApi()
-            model_info = api.model_info(repo_id, revision=revision)
-            file_info = next(
-                (f for f in model_info.siblings if f.rfilename == filename), None
-            )
-
-            if file_info is None:
-                logger.error(f"File {filename} not found in {repo_id}")
-                return None
-
-            # Create full output path
-            output_path = os.path.join(output_dir, filename)
-            os.makedirs(output_dir, exist_ok=True)
-
-            # Download the file
-            if self.download_file_parallel(file_info.download_url, output_path):
-                logger.info(f"Successfully downloaded {filename}")
-                return output_path
+            # Ensure start script exists
+            if not os.path.exists(os.path.dirname(OLLAMA_START_SCRIPT)):
+                os.makedirs(os.path.dirname(OLLAMA_START_SCRIPT), exist_ok=True)
+            
+            # Create or update start script
+            if not os.path.exists(OLLAMA_START_SCRIPT):
+                with open(OLLAMA_START_SCRIPT, 'w') as f:
+                    f.write("#!/bin/bash\n\n")
+                    f.write("# Auto-generated by SutazAI Model Downloader\n")
+                    f.write("# Start all Ollama models\n\n")
+                    f.write(f"ollama serve &\n")
+                    f.write(f"sleep 5\n")
+                    f.write(f"ollama run {model_name} &\n")
+                os.chmod(OLLAMA_START_SCRIPT, 0o755)
             else:
-                # Fallback to standard HF download
-                logger.info("Falling back to standard Hugging Face download")
-                return hf_hub_download(
-                    repo_id=repo_id,
-                    filename=filename,
-                    revision=revision,
-                    local_dir=output_dir,
-                    local_dir_use_symlinks=False,
-                    token=self.hf_token,
-                )
-
-        except (RepositoryNotFoundError, RevisionNotFoundError) as e:
-            logger.error(f"Repository or revision not found: {e}")
-            return None
+                # Check if model is already in the script
+                with open(OLLAMA_START_SCRIPT, 'r') as f:
+                    content = f.read()
+                
+                if f"ollama run {model_name}" not in content:
+                    with open(OLLAMA_START_SCRIPT, 'a') as f:
+                        f.write(f"ollama run {model_name} &\n")
+            
+            # Create or update stop script
+            if not os.path.exists(OLLAMA_STOP_SCRIPT):
+                with open(OLLAMA_STOP_SCRIPT, 'w') as f:
+                    f.write("#!/bin/bash\n\n")
+                    f.write("# Auto-generated by SutazAI Model Downloader\n")
+                    f.write("# Stop all Ollama processes\n\n")
+                    f.write("pkill -f 'ollama'\n")
+                os.chmod(OLLAMA_STOP_SCRIPT, 0o755)
+            
+            logger.info(f"Updated startup/shutdown scripts to include {model_name}")
         except Exception as e:
-            logger.error(f"Failed to download from Hugging Face: {e}")
-            return None
+            logger.error(f"Failed to update startup scripts: {e}")
 
     def get_model(
         self, model_id: str, force_download: bool = False, version: Optional[str] = None
@@ -451,79 +371,59 @@ class EnterpriseModelDownloader:
             version: Specific version to get, or None for the latest
 
         Returns:
-            Path to the model file, or None if failed
+            Path to the model, or None if failed
         """
         # Check if model exists in registry
         if not force_download:
             model_version = self.registry.get_model(model_id, version)
-            if model_version and os.path.exists(model_version.path):
+            if model_version:
                 logger.info(
                     f"Using existing model: {model_id} ({model_version.version})"
                 )
                 return model_version.path
 
         # Look up model in catalog
-        if model_id not in HUGGINGFACE_MODELS:
+        if model_id not in OLLAMA_MODELS:
             logger.error(f"Model {model_id} not found in catalog")
             return None
 
-        model_info = HUGGINGFACE_MODELS[model_id]
-        model_dir = os.path.join(self.models_dir, model_id)
-        os.makedirs(model_dir, exist_ok=True)
-
-        # Download based on source
-        if model_info["source"] == "huggingface":
-            output_path = self.download_from_huggingface(
-                repo_id=model_info["repo_id"],
-                filename=model_info["filename"],
-                output_dir=model_dir,
-            )
-
-            if not output_path:
+        model_info = OLLAMA_MODELS[model_id]
+        
+        # Download using Ollama
+        if model_info["source"] == "ollama":
+            if not self.download_from_ollama(model_info["model_name"]):
                 logger.error(f"Failed to download {model_id}")
                 return None
-
-            # Calculate SHA256 for integrity verification
-            sha256 = self._calculate_sha256(output_path)
-
-            # If we have a known SHA256, verify it
-            if model_info["sha256"] and sha256 != model_info["sha256"]:
-                logger.error(
-                    f"SHA256 mismatch for {model_id}. Expected {model_info['sha256']}, got {sha256}"
-                )
-                # Consider renaming or removing the downloaded file
-                return None
-            elif not model_info["sha256"]:
-                # Update the catalog with the SHA256
-                model_info["sha256"] = sha256
-                logger.info(f"Updated SHA256 for {model_id}: {sha256}")
-
+            
+            # Ollama stores models in its own directory, so we'll just reference it
+            # The actual path is managed by Ollama
+            ollama_path = f"ollama://{model_info['model_name']}"
+            
             # Get version information
-            model_version = datetime.now().strftime("%Y%m%d")
+            effective_version = datetime.now().strftime("%Y%m%d")
             if version:
-                model_version = version
+                effective_version = version
 
             # Register in registry
             model_entry = ModelVersion(
                 model_id=model_id,
-                version=model_version,
-                path=output_path,
+                version=effective_version,
+                path=ollama_path,
                 download_date=datetime.now(),
-                size_bytes=os.path.getsize(output_path),
-                sha256=sha256,
+                size_bytes=int(float(model_info["size_gb"]) * 1024 * 1024 * 1024),  # Cast to float first, then int
+                sha256="managed_by_ollama",  # Ollama manages integrity
                 is_active=True,
                 config={
-                    "repo_id": model_info["repo_id"],
-                    "filename": model_info["filename"],
+                    "model_name": model_info["model_name"],
                     "quantization": model_info["quantization"],
                     "memory_req_gb": model_info["memory_req_gb"],
                 },
             )
 
             self.registry.register_model(model_entry)
-            logger.info(f"Registered {model_id} ({model_version}) in registry")
+            logger.info(f"Registered {model_id} ({effective_version}) in registry")
 
-            return output_path
+            return ollama_path
         else:
             logger.error(f"Unsupported source type: {model_info['source']}")
             return None
@@ -538,12 +438,14 @@ class EnterpriseModelDownloader:
         Returns:
             Model ID of a compatible model, or None if none fits
         """
-        compatible_models = []
+        compatible_models: List[Tuple[str, float]] = []
 
-        for model_id, info in HUGGINGFACE_MODELS.items():
-            # Add a safety margin - model needs ~1.2x its size in memory
-            if info["memory_req_gb"] <= available_memory_gb:
-                compatible_models.append((model_id, info["memory_req_gb"]))
+        for model_id, info in OLLAMA_MODELS.items():
+            memory_req = info.get("memory_req_gb")
+            # Check if memory_req is a number and meets criteria
+            # Cast memory_req to float for comparison
+            if isinstance(memory_req, (int, float)) and float(memory_req) <= available_memory_gb:
+                compatible_models.append((model_id, float(memory_req)))
 
         if not compatible_models:
             logger.warning(
@@ -557,7 +459,7 @@ class EnterpriseModelDownloader:
 
     def delete_model(self, model_id: str, version: Optional[str] = None) -> bool:
         """
-        Delete a model from disk and registry.
+        Delete a model from Ollama and registry.
 
         Args:
             model_id: ID of the model to delete
@@ -567,33 +469,32 @@ class EnterpriseModelDownloader:
             True if successful, False otherwise
         """
         try:
-            if version:
-                # Delete specific version
-                model_version = self.registry.get_model(model_id, version)
-                if model_version and os.path.exists(model_version.path):
-                    os.remove(model_version.path)
-                    self.registry.remove_model(model_id, version)
-                    logger.info(f"Deleted {model_id} ({version})")
-                    return True
+            if model_id not in OLLAMA_MODELS:
+                logger.error(f"Model {model_id} not found in catalog")
                 return False
+                
+            model_info = OLLAMA_MODELS[model_id]
+            model_name = model_info["model_name"]
+            
+            # Delete from Ollama
+            try:
+                subprocess.run(
+                    ["ollama", "rm", model_name],
+                    check=True,
+                    capture_output=True
+                )
+                logger.info(f"Deleted {model_name} from Ollama")
+            except subprocess.SubprocessError as e:
+                logger.error(f"Failed to delete model {model_name} from Ollama: {e}")
+                return False
+            
+            # Delete from registry
+            if version:
+                self.registry.remove_model(model_id, version)
             else:
-                # Delete all versions
-                versions = self.registry.list_versions(model_id)
-                if not versions:
-                    return False
-
-                for version in versions:
-                    if os.path.exists(version.path):
-                        os.remove(version.path)
-
-                # Delete directory if empty
-                model_dir = os.path.join(self.models_dir, model_id)
-                if os.path.exists(model_dir) and not os.listdir(model_dir):
-                    os.rmdir(model_dir)
-
                 self.registry.remove_model(model_id)
-                logger.info(f"Deleted all versions of {model_id}")
-                return True
+                
+            return True
 
         except Exception as e:
             logger.error(f"Failed to delete model {model_id}: {e}")
@@ -656,16 +557,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--force", action="store_true", help="Force download even if model exists"
     )
-    parser.add_argument("--token", type=str, help="Hugging Face token")
     args = parser.parse_args()
 
-    downloader = EnterpriseModelDownloader(hf_token=args.token)
+    downloader = EnterpriseModelDownloader()
 
     if args.list:
         print("Available models:")
-        for model_id, info in HUGGINGFACE_MODELS.items():
+        for model_id, info in OLLAMA_MODELS.items():
             print(
-                f"  {model_id}: {info['repo_id']} - {info['filename']} ({info['size_gb']:.1f} GB)"
+                f"  {model_id}: {info['model_name']} ({info['size_gb']:.1f} GB)"
             )
 
         print("\nDownloaded models:")
@@ -675,7 +575,7 @@ if __name__ == "__main__":
                 active = next((v for v in versions if v.is_active), None)
                 if active:
                     print(
-                        f"  {model_id}: {active.version} - {active.path} ({active.size_bytes / (1024**3):.1f} GB)"
+                        f"  {model_id}: {active.version} - {active.path} ({float(active.size_bytes) / (1024**3):.1f} GB)"
                     )
                 else:
                     print(

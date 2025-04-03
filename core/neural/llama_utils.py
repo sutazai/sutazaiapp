@@ -12,7 +12,7 @@ import os
 import logging
 import time
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 import torch
 
@@ -56,9 +56,9 @@ class CPUOptimizedLlama:
 
     def __init__(
         self,
-        model_path: str = None,
-        model_id: str = None,
-        config_path: str = None,
+        model_path: Optional[str] = None,
+        model_id: Optional[str] = None,
+        config_path: Optional[str] = None,
         n_ctx: int = 4096,
         n_batch: int = 512,
         n_gpu_layers: int = 0,
@@ -252,6 +252,8 @@ class CPUOptimizedLlama:
         """
         if not self._model_initialized:
             self._initialize()
+        # Ensure model is initialized after the call
+        assert self._model is not None
 
         # Log memory usage before inference
         memory_before = self._get_memory_usage()
@@ -332,9 +334,9 @@ class CPUOptimizedLlama:
 
 
 def get_optimized_model(
-    model_id_or_path: str = None,
+    model_id_or_path: Optional[str] = None,
     force_download: bool = False,
-    config_path: str = None,
+    config_path: Optional[str] = None,
     thread_count: int = 12,
 ) -> CPUOptimizedLlama:
     """
@@ -356,6 +358,8 @@ def get_optimized_model(
     """
     if not LLAMA_CPP_AVAILABLE:
         raise ImportError("llama-cpp-python is not installed")
+
+    model_path: Optional[str] = None
 
     # If config file provided, use it directly
     if config_path:
@@ -379,6 +383,12 @@ def get_optimized_model(
     if not model_id and MODEL_DOWNLOADER_AVAILABLE:
         model_id = get_optimal_model_for_e5_2640()
         logger.info(f"No model specified, using optimal model for E5-2640: {model_id}")
+
+    # Ensure model_id is set before attempting download
+    if model_id is None:
+        raise ValueError(
+            "Could not determine a model ID to download or load. Please specify a model ID or path."
+        )
 
     if MODEL_DOWNLOADER_AVAILABLE:
         if force_download:
@@ -476,8 +486,8 @@ if __name__ == "__main__":
     else:
         print("Please specify a model with --model")
         if MODEL_DOWNLOADER_AVAILABLE:
-            print("\nAvailable models:")
-            from core.neural.model_downloader import HUGGINGFACE_MODELS
+            print("\nAvailable models (Ollama):")
+            from core.neural.model_downloader import OLLAMA_MODELS
 
-            for model_id, info in HUGGINGFACE_MODELS.items():
-                print(f"  {model_id}: {info['repo_id']} ({info['size_gb']:.1f} GB)")
+            for model_id, info in OLLAMA_MODELS.items():
+                print(f"  {model_id}: {info['model_name']} ({info['size_gb']:.1f} GB)")

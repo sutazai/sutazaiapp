@@ -151,7 +151,7 @@ class ParallelTaskProcessor:
         self.lock = threading.RLock()
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_workers)
         self.running = False
-        self.processing_thread = None
+        self.processing_thread: Optional[threading.Thread] = None
         self.callbacks: Dict[str, Callable[[ParallelTask], None]] = {}
         self.agent_load: Dict[
             str, int
@@ -163,10 +163,10 @@ class ParallelTaskProcessor:
             return
 
         self.running = True
-        self.processing_thread = threading.Thread( # type: ignore[assignment]
+        self.processing_thread = threading.Thread(
             target=self._process_tasks, daemon=True
         )
-        self.processing_thread.start() # type: ignore[union-attr]
+        self.processing_thread.start()
         logger.info("Parallel task processor started")
 
     def stop(self) -> None:
@@ -674,20 +674,20 @@ class ParallelTaskProcessor:
 
         elif task.result_aggregation == "average":
             # Average numeric values with the same keys
-            combined: Dict[str, Any] = {}
+            combined_avg: Dict[str, Any] = {}
             counts: Dict[str, Any] = {}
 
             for result in results:
                 for key, value in result.items():
                     if isinstance(value, (int, float)):
-                        combined[key] = combined.get(key, 0) + value
+                        combined_avg[key] = combined_avg.get(key, 0) + value
                         counts[key] = counts.get(key, 0) + 1
 
-            for key in combined:
+            for key in combined_avg:
                 if counts[key] > 0:
-                    combined[key] = combined[key] / counts[key]
+                    combined_avg[key] = combined_avg[key] / counts[key]
 
-            return combined
+            return combined_avg
 
         elif task.result_aggregation == "concatenate_list":
             # Use a distinct variable name for this block
@@ -697,28 +697,29 @@ class ParallelTaskProcessor:
                     combined_list.extend(r)
                 elif r is not None:
                     combined_list.append(r)
-            combined = combined_list # type: ignore[assignment]
+            return {"results": combined_list}
 
         elif task.result_aggregation == "concat":
             # Concatenate list values with the same keys
-            combined = {}
+            combined_concat: Dict[str, List[Any]] = {}
 
             for result in results:
                 for key, value in result.items():
-                    if key not in combined:
-                        combined[key] = []
+                    if key not in combined_concat:
+                        combined_concat[key] = []
 
                     if isinstance(value, list):
-                        combined[key].extend(value)
+                        combined_concat[key].extend(value)
                     else:
-                        combined[key].append(value)
+                        combined_concat[key].append(value)
 
-            return combined
+            return combined_concat
 
         else:
             # Default: return list of all results
-            return {
+            default_result = {
                 "results": results,
                 "successful_count": len(completed_tasks),
                 "failed_count": task.failed_count(),
             }
+            return default_result

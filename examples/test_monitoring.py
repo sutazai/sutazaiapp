@@ -15,7 +15,6 @@ import json
 import argparse
 import threading
 from datetime import datetime
-from typing import Optional, Any
 
 # Add parent directory to the Python path
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

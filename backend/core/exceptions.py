@@ -7,10 +7,10 @@ across the application.
 
 import logging
 import uuid
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional, List, Awaitable
 
 from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
@@ -229,7 +229,7 @@ def create_error_response(
         "request_id": request_id,
     }
 
-    if details and (settings.debug or error_code != "INTERNAL_ERROR"):
+    if details and (settings.DEBUG or error_code != "INTERNAL_ERROR"):
         response["details"] = details
 
     return response
@@ -237,7 +237,7 @@ def create_error_response(
 
 async def sutazai_exception_handler(
     request: Request, exc: SutazaiException
-) -> JSONResponse:
+) -> Response:
     """Handler for SutazaiException and its subclasses"""
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
 
@@ -261,7 +261,7 @@ async def sutazai_exception_handler(
 
 async def http_exception_handler(
     request: Request, exc: StarletteHTTPException
-) -> JSONResponse:
+) -> Response:
     """Handler for FastAPI and Starlette HTTP exceptions"""
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
 
@@ -295,7 +295,7 @@ async def http_exception_handler(
 
 async def validation_exception_handler(
     request: Request, exc: RequestValidationError
-) -> JSONResponse:
+) -> Response:
     """Handler for request validation errors"""
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
 
@@ -329,7 +329,7 @@ async def validation_exception_handler(
     )
 
 
-async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+async def general_exception_handler(request: Request, exc: Exception) -> Response:
     """Handler for all unhandled exceptions"""
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
 
@@ -337,7 +337,7 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
     logger.exception(f"Unhandled exception: {str(exc)} - Request ID: {request_id}")
 
     # Only include detailed error message in debug mode
-    error_message = str(exc) if settings.debug else "An unexpected error occurred"
+    error_message = str(exc) if settings.DEBUG else "An unexpected error occurred"
 
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -352,14 +352,14 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
 def register_exception_handlers(app: FastAPI) -> None:
     """Register all exception handlers with the FastAPI app"""
     # Custom exception handlers
-    app.add_exception_handler(SutazaiException, sutazai_exception_handler)
+    app.add_exception_handler(SutazaiException, sutazai_exception_handler) # type: ignore [arg-type]
 
     # Standard FastAPI exception handlers
-    app.add_exception_handler(StarletteHTTPException, http_exception_handler)
-    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_exception_handler(StarletteHTTPException, http_exception_handler) # type: ignore [arg-type]
+    app.add_exception_handler(RequestValidationError, validation_exception_handler) # type: ignore [arg-type]
 
     # Catch-all handler for unhandled exceptions
-    app.add_exception_handler(Exception, general_exception_handler)
+    app.add_exception_handler(Exception, general_exception_handler) # type: ignore [arg-type]
 
 
 class ServiceError(Exception):

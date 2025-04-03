@@ -12,7 +12,7 @@ import platform
 import tempfile
 import time
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional, Union, Mapping
 
 import torch
 import psutil
@@ -52,6 +52,8 @@ except ImportError:
 
 logger = logging.getLogger("sutazai.optimizer")
 
+# Define a type alias for benchmark results, allowing for error strings
+BenchmarkResultType = Optional[Dict[str, Union[float, int, str]]]
 
 class TransformerOptimizer:
     """
@@ -61,7 +63,7 @@ class TransformerOptimizer:
     inference performance on CPU, specifically targeting the E5-2640 processors.
     """
 
-    def __init__(self, output_dir: str = None):
+    def __init__(self, output_dir: Optional[str] = None):
         """
         Initialize the transformer optimizer.
 
@@ -172,7 +174,10 @@ class TransformerOptimizer:
         logger.info(f"Transformers version: {transformers.__version__}")
 
     def optimize_model(
-        self, model_path: str, optimizations: List[str] = None, benchmark: bool = True
+        self,
+        model_path: str,
+        optimizations: Optional[List[str]] = None,
+        benchmark: bool = True,
     ) -> Dict[str, Any]:
         """
         Apply selected optimizations to a transformer model and benchmark the results.
@@ -281,7 +286,10 @@ class TransformerOptimizer:
         return results
 
     def optimize_llama_model(
-        self, model_path: str, optimizations: List[str] = None, benchmark: bool = True
+        self,
+        model_path: str,
+        optimizations: Optional[List[str]] = None,
+        benchmark: bool = True,
     ) -> Dict[str, Any]:
         """
         Optimize a Llama3 model for inference on E5-2640 CPUs.
@@ -675,11 +683,11 @@ class TransformerOptimizer:
             raise
 
     def _find_best_optimization(
-        self, benchmark_results: Dict[str, Dict[str, Any]]
+        self, benchmark_results: Mapping[str, BenchmarkResultType]
     ) -> str:
         """Find the best optimization based on benchmark results."""
         best_opt = "original"
-        best_throughput = 0
+        best_throughput = 0.0 # Initialize as float
 
         for opt, results in benchmark_results.items():
             if results is None:
@@ -690,8 +698,10 @@ class TransformerOptimizer:
                 continue
 
             throughput = results.get("tokens_per_second", 0)
-            if throughput > best_throughput:
-                best_throughput = throughput
-                best_opt = opt
+            # Check if throughput is numeric before comparison
+            if isinstance(throughput, (int, float)):
+                if throughput > best_throughput:
+                    best_throughput = throughput # Assigns float or int
+                    best_opt = opt
 
         return best_opt

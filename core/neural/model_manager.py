@@ -19,7 +19,7 @@ from datetime import datetime
 
 # Import core components
 try:
-    from core.neural.model_downloader import ModelRegistry
+    from core.neural.model_downloader import ModelRegistry, EnterpriseModelDownloader
 
     MODEL_DOWNLOADER_AVAILABLE = True
 except ImportError:
@@ -106,31 +106,23 @@ class ModelManager:
 
         # Initialize registry
         if MODEL_DOWNLOADER_AVAILABLE:
-            self.registry = ModelRegistry()
-            # F821: EnterpriseModelDownloader was removed in llama_utils.py,
-            #       so downloader needs re-evaluation or removal here.
-            # self.downloader = EnterpriseModelDownloader(models_dir=models_dir, registry=self.registry)
-            self.downloader = None  # Temporarily set to None
+            self.model_registry = ModelRegistry()
+            self.model_downloader = EnterpriseModelDownloader(registry=self.model_registry)
+            self.model_optimizer = TransformerOptimizer()
+            self.model_monitor_db = ModelMonitorDB()
+            self.model_monitor = ModelMonitor(self.model_monitor_db)
+            self.llama_model_class = CPUOptimizedLlama
             logger.info("Model Downloader initialized.")
         else:
-            self.registry = None
-            self.downloader = None
+            self.model_registry = None
+            self.model_downloader = None
+            self.model_optimizer = None
+            self.model_monitor_db = None
+            self.model_monitor = None
+            self.llama_model_class = None
             logger.warning(
                 "Model Downloader dependencies not found. Download functionality disabled."
             )
-
-        # Initialize monitor
-        if MODEL_MONITOR_AVAILABLE:
-            self.monitor_db = ModelMonitorDB()
-            self.monitor = ModelMonitor(
-                model_registry=self.registry,
-                monitor_db=self.monitor_db,
-                auto_retrain=self.auto_retrain,
-                alert_handlers=[self._handle_alert],
-            )
-        else:
-            self.monitor_db = None
-            self.monitor = None
 
         # Create directories
         os.makedirs(models_dir, exist_ok=True)
@@ -196,19 +188,19 @@ class ModelManager:
             return False
 
         # Get list of models to monitor
-        if self.registry:
-            model_ids = self.registry.list_models()
+        if self.model_registry:
+            model_ids = self.model_registry.list_models()
             if model_ids:
                 logger.info(
                     f"Starting automatic monitoring for {len(model_ids)} models"
                 )
-                self.monitor.monitoring_interval = self.config.get(
+                self.model_monitor.monitoring_interval = self.config.get(
                     "monitoring_interval_sec", 3600
                 )
-                self.monitor.performance_threshold = self.config.get(
+                self.model_monitor.performance_threshold = self.config.get(
                     "performance_threshold", 0.15
                 )
-                self.monitor.start_monitoring(model_ids)
+                self.model_monitor.start_monitoring(model_ids)
                 return True
 
         logger.warning("No models found to monitor")
@@ -254,8 +246,8 @@ class ModelManager:
         logger.info(f"Retraining would be triggered here for {model_id}")
 
         # Record in monitoring DB if available
-        if self.monitor_db:
-            metrics = self.monitor_db.get_latest_metrics(model_id, version)
+        if self.model_monitor_db:
+            metrics = self.model_monitor_db.get_latest_metrics(model_id, version)
             metrics_dict = None
             if metrics:
                 metrics_dict = {
@@ -264,7 +256,7 @@ class ModelManager:
                     "success_rate": metrics.success_rate,
                 }
 
-            event_id = self.monitor_db.record_retraining_event(
+            event_id = self.model_monitor_db.record_retraining_event(
                 model_id=model_id,
                 old_version=version,
                 reason=f"Auto-retraining due to: {json.dumps(degradation_details)}",
@@ -272,7 +264,7 @@ class ModelManager:
             )
 
             # Update event status
-            self.monitor_db.update_retraining_event(
+            self.model_monitor_db.update_retraining_event(
                 event_id=event_id, status="SCHEDULED"
             )
 
@@ -309,7 +301,7 @@ class ModelManager:
 
         try:
             # Check if we already have this model
-            model_version = self.registry.get_model(model_id)
+            model_version = self.model_registry.get_model(model_id)
             model_path = None
 
             if (
@@ -323,7 +315,7 @@ class ModelManager:
             else:
                 # Download model
                 logger.info(f"Downloading model: {model_id}")
-                model_path = self.downloader.get_model(
+                model_path = self.model_downloader.get_model(
                     model_id, force_download=force_download
                 )
 
@@ -348,9 +340,9 @@ class ModelManager:
                     result["optimization_scheduled"] = True
 
             # If monitoring enabled, schedule evaluation
-            if self.auto_monitor and MODEL_MONITOR_AVAILABLE and self.monitor:
+            if self.auto_monitor and MODEL_MONITOR_AVAILABLE and self.model_monitor:
                 if wait:
-                    metrics = self.monitor.manually_evaluate_model(model_id)
+                    metrics = self.model_monitor.manually_evaluate_model(model_id)
                     if metrics:
                         result["metrics"] = {
                             "inference_time_ms": metrics.inference_time_ms,
@@ -360,7 +352,7 @@ class ModelManager:
                 else:
                     # Schedule evaluation in background
                     self._executor.submit(
-                        self.monitor.manually_evaluate_model, model_id
+                        self.model_monitor.manually_evaluate_model, model_id
                     )
                     result["evaluation_scheduled"] = True
 
@@ -417,7 +409,7 @@ class ModelManager:
             config_path = os.path.join(output_dir, "optimized_config.json")
 
             # Load model with optimal settings for E5-2640
-            model = CPUOptimizedLlama(
+            model = self.llama_model_class(
                 model_path=model_path,
                 n_threads=12,  # E5-2640 has 12 cores total
                 n_ctx=4096,
@@ -491,11 +483,11 @@ class ModelManager:
         models = []
 
         # Get all models from registry
-        model_ids = self.registry.list_models()
+        model_ids = self.model_registry.list_models()
         for model_id in model_ids:
             try:
                 # Get active version
-                model_version = self.registry.get_model(model_id)
+                model_version = self.model_registry.get_model(model_id)
                 if not model_version:
                     continue
 
@@ -530,8 +522,8 @@ class ModelManager:
                         model_info["optimized"] = False
 
                     # Add monitoring metrics if available
-                    if MODEL_MONITOR_AVAILABLE and self.monitor_db:
-                        metrics = self.monitor_db.get_latest_metrics(
+                    if MODEL_MONITOR_AVAILABLE and self.model_monitor_db:
+                        metrics = self.model_monitor_db.get_latest_metrics(
                             model_id, model_version.version
                         )
                         if metrics:
@@ -544,7 +536,7 @@ class ModelManager:
                             }
 
                             # Check for active alerts
-                            alerts = self.monitor_db.get_active_alerts(model_id)
+                            alerts = self.model_monitor_db.get_active_alerts(model_id)
                             if alerts:
                                 model_info["alerts"] = len(alerts)
                                 model_info["alert_severity"] = alerts[0]["severity"]
@@ -590,7 +582,7 @@ class ModelManager:
 
         try:
             # Get model version
-            model_version = self.registry.get_model(model_id)
+            model_version = self.model_registry.get_model(model_id)
             if not model_version:
                 return {
                     "error": f"Model {model_id} not found in registry",
@@ -613,7 +605,7 @@ class ModelManager:
                 result["config"] = model_version.config
 
             # Get all versions
-            versions = self.registry.list_versions(model_id)
+            versions = self.model_registry.list_versions(model_id)
             result["total_versions"] = len(versions)
 
             # Add optimization info
@@ -631,9 +623,9 @@ class ModelManager:
                 result["optimized"] = False
 
             # Add monitoring metrics if available
-            if MODEL_MONITOR_AVAILABLE and self.monitor_db:
+            if MODEL_MONITOR_AVAILABLE and self.model_monitor_db:
                 # Get most recent metrics
-                metrics = self.monitor_db.get_latest_metrics(
+                metrics = self.model_monitor_db.get_latest_metrics(
                     model_id, model_version.version
                 )
                 if metrics:
@@ -648,7 +640,7 @@ class ModelManager:
                     }
 
                 # Get performance history
-                metrics_history = self.monitor_db.get_metrics_history(model_id, days=7)
+                metrics_history = self.model_monitor_db.get_metrics_history(model_id, days=7)
                 if metrics_history:
                     result["metrics_history"] = {
                         "days": 7,
@@ -669,7 +661,7 @@ class ModelManager:
                     }
 
                 # Get alerts
-                alerts = self.monitor_db.get_active_alerts(model_id)
+                alerts = self.model_monitor_db.get_active_alerts(model_id)
                 if alerts:
                     result["alerts"] = [
                         {
@@ -735,8 +727,8 @@ class ModelManager:
         logger.info("Cleaning up model manager resources")
 
         # Stop monitoring
-        if MODEL_MONITOR_AVAILABLE and self.monitor:
-            self.monitor.stop_monitoring()
+        if MODEL_MONITOR_AVAILABLE and self.model_monitor:
+            self.model_monitor.stop_monitoring()
 
         # Shutdown thread pool
         if self._executor:

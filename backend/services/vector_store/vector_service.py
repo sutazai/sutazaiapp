@@ -12,9 +12,12 @@ import time
 from sentence_transformers import SentenceTransformer
 import uuid
 import traceback
-
-# Import core settings
+from qdrant_client import QdrantClient
+from qdrant_client.models import PointStruct, Distance, VectorParams, Filter, FieldCondition, Range, SearchRequest, ScoredPoint
 from backend.core.config import get_settings
+from backend.core.exceptions import DatabaseError, ResourceNotFoundError
+from backend.models.base_models import Document, DocumentChunk
+from backend.vector_db import get_qdrant_client, get_embedding_model, create_point, Embedding
 
 # Configure logging
 logger = logging.getLogger("vector_store")
@@ -22,6 +25,8 @@ logger = logging.getLogger("vector_store")
 # Get application settings
 settings = get_settings()
 
+# Default similarity threshold
+DEFAULT_SIMILARITY_THRESHOLD = 0.75
 
 class VectorStore:
     """
@@ -54,7 +59,7 @@ class VectorStore:
         self.vectors_dir.mkdir(parents=True, exist_ok=True)
 
         # In-memory fallback storage
-        self._documents = {}
+        self._documents: Dict[str, Dict[str, Any]] = {}
 
         # Initialize the embedding model
         try:
@@ -459,3 +464,322 @@ class VectorStore:
             status["qdrant_available"] = self._qdrant_available
 
         return status
+
+class VectorStoreService:
+    """Service for interacting with the Qdrant vector store."""
+    def __init__(self):
+        self.client: Optional[QdrantClient] = get_qdrant_client()
+        self.embedding_model: Optional[SentenceTransformer] = get_embedding_model()
+        self.doc_collection = settings.QDRANT_COLLECTION
+        self.chunk_collection = settings.QDRANT_CHUNK_COLLECTION
+        self._ensure_collections_exist()
+
+    def _ensure_collections_exist(self):
+        """Ensure the necessary collections exist in Qdrant."""
+        if not self.client:
+            logger.error("Qdrant client not initialized.")
+            return
+        try:
+            # Check if collections exist
+            self.client.get_collection(collection_name=self.doc_collection)
+            self.client.get_collection(collection_name=self.chunk_collection)
+        except Exception:
+            logger.info("One or more collections not found, attempting to create...")
+            # If not, use the creation logic from vector_db.py
+            from backend.vector_db import create_collections
+            try:
+                create_collections()
+            except Exception as e:
+                 logger.error(f"Failed to create collections during initialization: {e}")
+                 # Depending on requirements, maybe raise or just log
+
+    def add_document(self, document: Document) -> str:
+        """Adds a document and its metadata (without chunks) to the vector store."""
+        if not self.client or not self.embedding_model:
+            raise DatabaseError("Vector store client or embedding model not initialized.")
+
+        doc_id = document.id
+        # Embedding for the document might be based on title/summary or averaged chunks
+        # For now, let's assume a placeholder or no vector for the main document entry
+        # Or embed the entire document content if feasible
+        doc_vector: Embedding = [0.0] * self.embedding_model.get_sentence_embedding_dimension()
+        if document.content:
+             try:
+                 doc_vector = self.embedding_model.encode(document.content[:1000]) # Embed first 1k chars
+                 if hasattr(doc_vector, 'tolist'): doc_vector = doc_vector.tolist()
+             except Exception as e:
+                  logger.warning(f"Could not embed document {doc_id} content: {e}")
+
+        doc_payload = document.dict(exclude={"content", "chunks", "embedding"})
+        doc_payload["created_at"] = document.created_at.isoformat()
+        doc_payload["updated_at"] = document.updated_at.isoformat()
+
+        point = create_point(id=doc_id, vector=doc_vector, payload=doc_payload)
+
+        try:
+            self.client.upsert(collection_name=self.doc_collection, points=[point], wait=True)
+            logger.info(f"Added/Updated document {doc_id} metadata in collection '{self.doc_collection}'.")
+            return doc_id
+        except Exception as e:
+            logger.error(f"Failed to add document {doc_id} to Qdrant: {e}")
+            raise DatabaseError("Failed to add document") from e
+
+    def add_document_chunks(self, doc_id: str, chunks: List[DocumentChunk]) -> List[str]:
+        """Adds document chunks to the vector store."""
+        if not chunks:
+            return []
+
+        chunk_texts = [chunk.content for chunk in chunks]
+        chunk_vectors = self._embed_texts(chunk_texts)
+
+        points = []
+        chunk_ids = []
+        for i, chunk in enumerate(chunks):
+            chunk_id = f"{doc_id}_chunk_{chunk.chunk_index}"
+            payload = chunk.dict(exclude={"content", "embedding"})
+            payload["doc_id"] = doc_id # Add doc_id to payload for filtering
+            point = create_point(id=chunk_id, vector=chunk_vectors[i], payload=payload)
+            points.append(point)
+            chunk_ids.append(chunk_id)
+
+        try:
+            self.client.upsert(collection_name=self.chunk_collection, points=points, wait=True)
+            logger.info(f"Added {len(chunks)} chunks for document {doc_id} to collection '{self.chunk_collection}'.")
+            return chunk_ids
+        except Exception as e:
+            logger.error(f"Failed to add chunks for document {doc_id} to Qdrant: {e}")
+            raise DatabaseError("Failed to add document chunks") from e
+
+    def get_document(self, doc_id: str) -> Optional[Document]:
+        """Retrieves a document by its ID."""
+        try:
+            points = self.client.retrieve(
+                collection_name=self.doc_collection,
+                ids=[doc_id],
+                with_payload=True,
+                with_vectors=False # Usually don't need the vector itself
+            )
+            if points:
+                payload = points[0].payload
+                if payload:
+                    # Reconstruct the Document object
+                    # Need to handle potential type mismatches if payload isn't perfect
+                    payload["id"] = doc_id # Ensure id is present
+                    # Convert ISO strings back to datetime if needed, handle missing keys gracefully
+                    payload["created_at"] = datetime.fromisoformat(payload["created_at"]) if payload.get("created_at") else None
+                    payload["updated_at"] = datetime.fromisoformat(payload["updated_at"]) if payload.get("updated_at") else None
+                    # Add other necessary fields if they are stored in payload
+                    return Document(**payload)
+            return None
+        except Exception as e:
+            # Handle case where document is not found vs other DB errors
+            if "not found" in str(e).lower():
+                 logger.warning(f"Document {doc_id} not found in collection '{self.doc_collection}'.")
+                 return None
+            logger.error(f"Failed to retrieve document {doc_id} from Qdrant: {e}")
+            raise DatabaseError("Failed to retrieve document") from e
+
+    def get_document_chunks(self, doc_id: str) -> List[DocumentChunk]:
+        """Retrieves all chunks for a specific document."""
+        try:
+            # Use scroll API for potentially large number of chunks
+            all_points: List[ScoredPoint] = [] # Use ScoredPoint or Record based on client version
+            offset = None
+            while True:
+                response = self.client.scroll(
+                    collection_name=self.chunk_collection,
+                    scroll_filter=Filter(
+                        must=[FieldCondition(key="metadata.doc_id", match={"value": doc_id})]
+                    ),
+                    limit=100, # Adjust batch size as needed
+                    offset=offset,
+                    with_payload=True,
+                    with_vectors=False,
+                )
+                points = response[0] # Records are the first element in the tuple
+                offset = response[1] # Next page offset is the second element
+                all_points.extend(points)
+                if offset is None:
+                    break # No more pages
+
+            chunks = []
+            for point in all_points:
+                payload = point.payload
+                if payload:
+                    payload["id"] = point.id # Ensure id is present
+                    # Add other fields if needed
+                    chunks.append(DocumentChunk(**payload))
+
+            # Sort chunks by index
+            chunks.sort(key=lambda chunk: chunk.chunk_index)
+            return chunks
+
+        except Exception as e:
+            logger.error(f"Failed to retrieve chunks for document {doc_id} from Qdrant: {e}")
+            raise DatabaseError("Failed to retrieve document chunks") from e
+
+    def search_documents(self, query: str, limit: int = 10, filters: Optional[Dict] = None) -> List[Dict[str, Any]]:
+        """Searches for documents based on a query string."""
+        query_vector = self._embed_text(query)
+
+        search_filter = self._build_qdrant_filter(filters)
+
+        try:
+            search_result = self.client.search(
+                collection_name=self.doc_collection,
+                query_vector=query_vector,
+                query_filter=search_filter,
+                limit=limit,
+                with_payload=True,
+            )
+            return [{"id": hit.id, "score": hit.score, "payload": hit.payload} for hit in search_result]
+        except Exception as e:
+            logger.error(f"Error searching documents in Qdrant: {e}")
+            raise DatabaseError("Document search failed") from e
+
+    def search_chunks(self, query: str, doc_id: Optional[str] = None, limit: int = 10, threshold: Optional[float] = None, filters: Optional[Dict] = None) -> List[Dict[str, Any]]:
+        """Searches for document chunks based on a query string, optionally filtered by doc_id."""
+        query_vector = self._embed_text(query)
+
+        search_filter_conditions = []
+        if doc_id:
+            search_filter_conditions.append(
+                FieldCondition(key="metadata.doc_id", match={"value": doc_id})
+            )
+
+        # Add other filters
+        additional_filter = self._build_qdrant_filter(filters)
+        if additional_filter and additional_filter.must:
+            search_filter_conditions.extend(additional_filter.must)
+
+        search_filter = Filter(must=search_filter_conditions) if search_filter_conditions else None
+
+        try:
+            search_result = self.client.search(
+                collection_name=self.chunk_collection,
+                query_vector=query_vector,
+                query_filter=search_filter,
+                score_threshold=threshold or DEFAULT_SIMILARITY_THRESHOLD,
+                limit=limit,
+                with_payload=True,
+            )
+            # Sort results by score descending
+            sorted_hits = sorted(search_result, key=lambda hit: hit.score, reverse=True)
+            return [{"id": hit.id, "score": hit.score, "payload": hit.payload} for hit in sorted_hits]
+        except Exception as e:
+            logger.error(f"Error searching chunks in Qdrant: {e}")
+            raise DatabaseError("Chunk search failed") from e
+
+    def delete_document(self, doc_id: str) -> bool:
+        """Deletes a document and all its associated chunks."""
+        try:
+            # Delete document entry
+            self.client.delete(
+                collection_name=self.doc_collection,
+                points_selector=[doc_id],
+                wait=True,
+            )
+            logger.info(f"Deleted document {doc_id} from collection '{self.doc_collection}'.")
+
+            # Delete associated chunks
+            # Use delete_by_filter for efficiency
+            delete_result = self.client.delete(
+                collection_name=self.chunk_collection,
+                points_selector=Filter(
+                    must=[FieldCondition(key="metadata.doc_id", match={"value": doc_id})]
+                ),
+                wait=True,
+            )
+            logger.info(f"Attempted deletion of chunks for document {doc_id}. Result: {delete_result}")
+            return True
+
+        except Exception as e:
+             # Handle case where document/chunks might not exist gracefully
+            if "not found" in str(e).lower():
+                 logger.warning(f"Document {doc_id} or its chunks not found for deletion.")
+                 return False # Indicate not found rather than error
+            logger.error(f"Failed to delete document {doc_id} or its chunks from Qdrant: {e}")
+            raise DatabaseError("Failed to delete document") from e
+
+    def _embed_texts(self, texts: List[str]) -> List[Embedding]:
+        """Embeds a list of texts using the configured embedding model."""
+        try:
+            # Note: SentenceTransformer batch encodes directly
+            embeddings = self.embedding_model.encode(texts, convert_to_numpy=False)
+            # Ensure return type is List[List[float]]
+            if isinstance(embeddings, list) and all(isinstance(e, list) for e in embeddings):
+                return embeddings
+            elif hasattr(embeddings, 'tolist'): # Handle numpy/torch tensors
+                 list_embeddings = embeddings.tolist()
+                 if isinstance(list_embeddings, list) and all(isinstance(e, list) for e in list_embeddings):
+                      return list_embeddings
+            logger.error(f"Unexpected embedding type: {type(embeddings)}")
+            # Fallback: return list of zero vectors
+            dim = self.embedding_model.get_sentence_embedding_dimension()
+            return [[0.0] * dim] * len(texts)
+
+        except Exception as e:
+            logger.error(f"Failed to embed texts: {e}")
+            raise DatabaseError("Text embedding failed") from e
+
+    def _build_qdrant_filter(self, filters: Optional[Dict]) -> Optional[Filter]:
+        """Builds a Qdrant Filter object from a dictionary."""
+        if not filters:
+            return None
+
+        must_conditions = []
+        for key, value in filters.items():
+            # Assuming simple key-value matches for now
+            # More complex conditions (range, geo) would need specific handling
+            if isinstance(value, dict) and "gte" in value or "lte" in value:
+                 must_conditions.append(
+                     FieldCondition(key=f"metadata.{key}", range=Range(**value))
+                 )
+            else:
+                 must_conditions.append(
+                     FieldCondition(key=f"metadata.{key}", match={"value": value})
+                 )
+
+        return Filter(must=must_conditions) if must_conditions else None
+
+    def get_collection_info(self, collection_name: str) -> Dict[str, Any]:
+        """Gets information about a specific collection."""
+        try:
+            info = self.client.get_collection(collection_name=collection_name)
+            # Convert info object to dict if needed (depends on client version)
+            if hasattr(info, "dict"):
+                 return info.dict()
+            elif isinstance(info, dict):
+                 return info
+            else:
+                 # Attempt basic conversion
+                 return {
+                      "vectors_count": getattr(info, 'vectors_count', None),
+                      "indexed_vectors_count": getattr(info, 'indexed_vectors_count', None),
+                      "points_count": getattr(info, 'points_count', None),
+                      "status": str(getattr(info, 'status', None)),
+                      "optimizer_status": str(getattr(info, 'optimizer_status', None)),
+                  }
+        except Exception as e:
+            logger.error(f"Failed to get info for collection '{collection_name}': {e}")
+            raise DatabaseError(f"Could not get collection info for {collection_name}") from e
+
+    def list_collections(self) -> List[str]:
+        """Lists all collections in the Qdrant instance."""
+        try:
+            collections_response = self.client.get_collections()
+            return [col.name for col in collections_response.collections]
+        except Exception as e:
+            logger.error(f"Failed to list collections from Qdrant: {e}")
+            raise DatabaseError("Failed to list collections") from e
+
+def get_vector_store_service() -> VectorStoreService:
+    """Provides a singleton instance of the VectorStoreService."""
+    # Basic singleton pattern, consider dependency injection for robust applications
+    global _vector_store_instance
+    if _vector_store_instance is None:
+        _vector_store_instance = VectorStoreService()
+    return _vector_store_instance
+
+# Initialize singleton instance
+_vector_store_instance: Optional[VectorStoreService] = None

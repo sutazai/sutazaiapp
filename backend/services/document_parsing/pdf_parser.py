@@ -8,11 +8,14 @@ import os
 import re
 import tempfile
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Callable, Union
 from dataclasses import dataclass
+from pathlib import PurePath
 
 # Required dependencies (pip install pypdf pillow)
 from pypdf import PdfReader
+from PIL import Image as PILImage
+from PIL.Image import Image
 
 # Optional dependencies with fallbacks
 TESSERACT_AVAILABLE = False
@@ -24,16 +27,23 @@ except ImportError:
     pytesseract = None
 
 PDF2IMAGE_AVAILABLE = False
+# Define types for optional imports before try block
+ConvertFromPathType = Optional[Callable[..., List[Image]]]
+ConvertFromBytesType = Optional[Callable[..., List[Image]]]
+
+convert_from_path: ConvertFromPathType = None
+convert_from_bytes: ConvertFromBytesType = None
 try:
     from pdf2image import (
-        convert_from_path,
-        convert_from_bytes,
+        convert_from_path as pdf2image_convert_from_path,
+        convert_from_bytes as pdf2image_convert_from_bytes,
     )  # For converting PDF pages to images
-
+    convert_from_path = pdf2image_convert_from_path
+    convert_from_bytes = pdf2image_convert_from_bytes
     PDF2IMAGE_AVAILABLE = True
 except ImportError:
-    convert_from_path = None
-    convert_from_bytes = None
+    # Variables remain None as initialized
+    pass
 
 TABULA_AVAILABLE = False
 try:
@@ -271,12 +281,12 @@ class PDFParser:
         Returns:
             Extracted text from the page
         """
-        if not self.enable_ocr or not TESSERACT_AVAILABLE or not PDF2IMAGE_AVAILABLE:
+        if not self.enable_ocr or not TESSERACT_AVAILABLE or not PDF2IMAGE_AVAILABLE or convert_from_bytes is None:
             logger.warning("OCR requested but not available. Returning empty text.")
             return ""
 
         try:
-            # Convert PDF page to image
+            # Convert PDF page to image (check if callable)
             images = convert_from_bytes(
                 pdf_data, first_page=page_num, last_page=page_num
             )
@@ -354,7 +364,7 @@ class PDFParser:
         Returns:
             List of extracted images as dictionaries
         """
-        if not self.extract_images or not PDF2IMAGE_AVAILABLE:
+        if not self.extract_images or not PDF2IMAGE_AVAILABLE or convert_from_bytes is None:
             logger.debug("Image extraction not available or disabled")
             return []
 
@@ -363,7 +373,7 @@ class PDFParser:
             # you would extract the actual embedded images from the PDF
             # using a library like PyMuPDF
 
-            # Convert the page to an image
+            # Convert the page to an image (check if callable)
             images = convert_from_bytes(
                 pdf_data, first_page=page_num, last_page=page_num
             )
@@ -405,7 +415,7 @@ class PDFParser:
         Returns:
             List of potential headers
         """
-        headers = []
+        headers = [] # type: ignore[var-annotated]
 
         if not text:
             return headers
@@ -431,7 +441,7 @@ class PDFParser:
         Returns:
             List of potential footers
         """
-        footers = []
+        footers = [] # type: ignore[var-annotated]
 
         if not text:
             return footers
@@ -484,7 +494,9 @@ class PDFParser:
         Returns:
             Dictionary with document structure information
         """
-        structure = {"title": "", "sections": [], "possible_headings": []}
+        structure: Dict[str, Union[str, List[Dict[str, Any]]]] = {
+            "title": "", "sections": [], "possible_headings": []
+        }
 
         if not text:
             return structure
@@ -537,22 +549,28 @@ class PDFParser:
                 heading = possible_headings[i]
 
                 # Determine section content (text until next heading)
-                start_line = heading["line_number"] + 1
+                line_num = heading.get("line_number")
+                assert isinstance(line_num, int)
+                start_line = line_num + 1 # Use asserted int
                 end_line = len(lines)
 
                 if i < len(possible_headings) - 1:
-                    end_line = possible_headings[i + 1]["line_number"]
+                    next_line_num = possible_headings[i + 1].get("line_number")
+                    assert isinstance(next_line_num, int)
+                    end_line = next_line_num # Use asserted int
 
                 section_content = "\n".join(lines[start_line:end_line])
 
+                # Assert heading['text'] is a string before splitting
+                heading_text = heading.get("text", "")
+                assert isinstance(heading_text, str)
+                level = 1 if heading.get("type") == "numbered" and len(heading_text.split(".")[0]) == 1 else 2
+
                 sections.append(
                     {
-                        "heading": heading["text"],
+                        "heading": heading_text,
                         "content": section_content.strip(),
-                        "level": 1
-                        if heading["type"] == "numbered"
-                        and len(heading["text"].split(".")[0]) == 1
-                        else 2,
+                        "level": level,
                     }
                 )
 

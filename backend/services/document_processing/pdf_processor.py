@@ -97,7 +97,7 @@ class PDFProcessor:
                 if len(text.strip()) < 100 and self.ocr_enabled:
                     # Convert page to image
                     pix = page.get_pixmap(matrix=fitz.Matrix(300 / 72, 300 / 72))
-                    img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
 
                     # Perform OCR
                     ocr_text = pytesseract.image_to_string(img)

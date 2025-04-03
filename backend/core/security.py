@@ -122,7 +122,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any
         HTTPException: If token is invalid or user not found
     """
     payload = decode_token(token)
-    username: str = payload.get("sub")
+    username: Optional[str] = payload.get("sub")
 
     if username is None:
         raise HTTPException(

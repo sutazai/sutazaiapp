@@ -18,6 +18,9 @@ import faiss
 from huggingface_hub import hf_hub_download
 from huggingface_hub.utils import RepositoryNotFoundError, EntryNotFoundError
 from langchain_ollama import ChatOllama
+from concurrent.futures import ThreadPoolExecutor
+import chromadb
+from sentence_transformers import SentenceTransformer
 
 logger = logging.getLogger("ModelManager")
 
@@ -77,9 +80,9 @@ class ModelManager:
         logger.info(f"Using device: {self.device}")
 
         # Initialize model registry
-        self.models = {}
-        self.loaded_models = {}
-        self.model_locks = {}
+        self.models: Dict[str, Dict[str, Any]] = {}
+        self.loaded_models: Dict[str, Dict[str, Any]] = {}
+        self.model_locks: Dict[str, threading.Lock] = {}
 
         # Load model configurations
         self._load_model_configs()
@@ -838,7 +841,7 @@ class ModelManager:
         model_config = self.models[model_id]
         repo_id = model_config.get("repo_id")
         filename = model_config.get("path") # Use path as filename
-        quantization = model_config.get("quantization") # Optional: For selecting specific files
+        # quantization = model_config.get("quantization") # Optional: For selecting specific files
 
         if not repo_id:
             logger.error(f"Cannot download {model_id}: Missing 'repo_id' in configuration.")
@@ -877,7 +880,7 @@ class ModelManager:
                  # A more robust check would involve inspecting hf_hub_download's return value or cache structure
                  logger.warning(f"Download reported success, but file not found at target {target_path}. Checking cache area {cached_path_guess}...")
                  # Basic check - if *any* file was downloaded recently in the likely cache subdir
-                 found_in_cache = False
+                 # found_in_cache = False
                  if os.path.exists(cached_path_guess):
                       for root, _, files in os.walk(cached_path_guess):
                            for file in files:
@@ -919,6 +922,15 @@ class ModelManager:
         #     logger.info(f"Unloading model {model_id}...")
         #     # Add specific unloading logic based on model type
         # self.loaded_models.clear()
+
+    def _get_llama_cpp_class(self):
+        """Return the Llama class from llama_cpp if available."""
+        try:
+            from llama_cpp import Llama
+            return Llama
+        except ImportError:
+            logger.warning("Llama.cpp not available, cannot return Llama class.")
+            return None
 
 
 if __name__ == "__main__":

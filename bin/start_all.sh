@@ -2,6 +2,9 @@
 # SutazAI Complete System Startup
 # This script starts all components of the SutazAI system
 
+# Prevent Python from writing bytecode files
+export PYTHONDONTWRITEBYTECODE=1
+
 APP_ROOT="/opt/sutazaiapp"
 BIN_DIR="$APP_ROOT/bin"
 SCRIPTS_DIR="$APP_ROOT/scripts"

@@ -63,8 +63,8 @@ class ModelController:
         self.initialized = False
         self.auto_download = auto_download
         self.auto_optimize = auto_optimize
-        self._model_manager = None
-        self._loaded_models = {}
+        self._model_manager: Optional[ModelManager] = None
+        self._loaded_models: Dict[str, Dict[str, Any]] = {}
 
         # Auto-initialize if requested
         if auto_initialize:
@@ -116,6 +116,7 @@ class ModelController:
         """
         if not self.ensure_initialized():
             return {"success": False, "error": "Controller not initialized"}
+        assert self._model_manager is not None  # Ensure manager is initialized
 
         try:
             # Get recommended model if none specified
@@ -315,6 +316,7 @@ class ModelController:
         """
         if not self.ensure_initialized():
             return {"success": False, "error": "Controller not initialized"}
+        assert self._model_manager is not None  # Ensure manager is initialized
 
         try:
             models = self._model_manager.list_models(include_details=True)
@@ -362,6 +364,7 @@ class ModelController:
         """
         if not self.ensure_initialized():
             return {"success": False, "error": "Controller not initialized"}
+        assert self._model_manager is not None  # Ensure manager is initialized
 
         try:
             model_id = self._model_manager.get_recommended_model()

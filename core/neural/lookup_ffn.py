@@ -39,6 +39,9 @@ class LookupFFN(nn.Module):
         self.num_centroids = num_centroids
         self.dtype = dtype
 
+        # Declare activation attribute with broader type
+        self.activation: nn.Module
+
         # Initialize centroid tables
         self.register_buffer(
             "input_centroids", torch.randn(num_centroids, input_dim, dtype=dtype) * 0.02
@@ -107,12 +110,12 @@ class LookupFFN(nn.Module):
             # Convert bit array to integers
             hash_values = torch.zeros(self.num_centroids, dtype=torch.long)
             for i in range(self.lsh_hash_size):
-                hash_values = hash_values | (hash_codes[:, i].long() << i)
+                hash_values = hash_values | (hash_codes[:, i].long() << i) # type: ignore [index, operator]
 
             # Add centroids to hash buckets
             for centroid_idx in range(self.num_centroids):
-                hash_val = hash_values[centroid_idx].item()
-                self.lsh_centroids[table_idx, hash_val, centroid_idx] = 1
+                hash_val = hash_values[centroid_idx].item() # type: ignore [index]
+                self.lsh_centroids[table_idx, hash_val, centroid_idx] = 1 # type: ignore [index]
 
     def _find_nearest_centroids(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -142,11 +145,11 @@ class LookupFFN(nn.Module):
                 # Convert bit array to integer
                 hash_value = 0
                 for j in range(self.lsh_hash_size):
-                    hash_value |= hash_code[j].item() << j
+                    hash_value |= hash_code[j].item() << j # type: ignore [index, operator]
 
                 # Get all centroids in this bucket
                 centroid_indices = torch.nonzero(
-                    self.lsh_centroids[table_idx, hash_value], as_tuple=True
+                    self.lsh_centroids[table_idx, hash_value], as_tuple=True # type: ignore [index]
                 )[0]
                 candidates_for_vector.update(centroid_indices.tolist())
 
@@ -165,7 +168,7 @@ class LookupFFN(nn.Module):
             vectors_subset = x_flat[mask]
 
             # Only consider candidate centroids
-            candidate_centroids_tensor = self.input_centroids[list(candidate_set)]
+            candidate_centroids_tensor = self.input_centroids[list(candidate_set)] # type: ignore [index]
 
             # Compute distances and find nearest
             distances = torch.cdist(vectors_subset, candidate_centroids_tensor)
@@ -200,7 +203,7 @@ class LookupFFN(nn.Module):
         for b in range(batch_size):
             for s in range(seq_len):
                 centroid_idx = nearest_centroids[b, s].item()
-                hidden_vecs[b, s] = self.lookup_table_fc1[centroid_idx]
+                hidden_vecs[b, s] = self.lookup_table_fc1[centroid_idx] # type: ignore [index]
 
         # Add bias and apply activation
         hidden_vecs = hidden_vecs + self.fc1_bias
@@ -215,7 +218,7 @@ class LookupFFN(nn.Module):
         for b in range(batch_size):
             for s in range(seq_len):
                 centroid_idx = nearest_centroids[b, s].item()
-                output_vecs[b, s] = self.lookup_table_fc2[centroid_idx]
+                output_vecs[b, s] = self.lookup_table_fc2[centroid_idx] # type: ignore [index]
 
         # Add bias
         output_vecs = output_vecs + self.fc2_bias
@@ -278,7 +281,7 @@ class LookupFFN(nn.Module):
         # Create lookup table
         for c in range(num_centroids):
             # Simple approximation - in practice needs proper clustering
-            lookup_ffn.lookup_table_fc1[c] = original_outputs[c % 10000]
+            lookup_ffn.lookup_table_fc1[c] = original_outputs[c % 10000] # type: ignore [index, operator]
 
         # Similar approach for second layer
         fc2_weight = ffn_module.fc2.weight.detach()
@@ -288,7 +291,7 @@ class LookupFFN(nn.Module):
         )
 
         for c in range(num_centroids):
-            lookup_ffn.lookup_table_fc2[c] = original_outputs2[c % 10000]
+            lookup_ffn.lookup_table_fc2[c] = original_outputs2[c % 10000] # type: ignore [index, operator]
 
         # Copy biases
         lookup_ffn.fc1_bias.data.copy_(ffn_module.fc1.bias.data)

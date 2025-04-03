@@ -108,7 +108,7 @@ class TestCoreConfig(unittest.TestCase):
 
     def test_directory_creation(self):
         """Test directory creation."""
-        settings = Settings()
+        # settings = Settings()
 
         # Check that upload directory was created
         self.assertTrue(self.temp_upload_dir.exists())

@@ -37,12 +37,13 @@ class AgentError(Exception):
 class BaseAgent(ABC):
     """Base class for all AI agents."""
 
-    def __init__(self, config: AgentConfig):
+    def __init__(self, config: AgentConfig, agent_manager=None):
         """
         Initialize the base agent.
 
         Args:
             config: Agent configuration object (AgentConfig dataclass)
+            agent_manager: Agent manager instance
         """
         self.config = config
         # Access attributes directly from the AgentConfig object
@@ -50,13 +51,21 @@ class BaseAgent(ABC):
         self.capabilities = [cap.value for cap in config.capabilities] # Store as strings
         self.metadata = {"name": config.name, "description": config.description}
         self.status = AgentStatus.INITIALIZING
-        self._is_initialized = False
+        self._initialized = False
         self._is_running = False
         self._stop_event = threading.Event()
         self.execution_log: List[Dict[str, Any]] = []
         self.error_log: List[Dict[str, Any]] = []
         self.history: List[Dict[str, Any]] = []
         self._last_heartbeat: Optional[float] = None  # Initialize to None
+
+    @property
+    def is_initialized(self) -> bool:
+        """Check if the agent is initialized."""
+        if not self._initialized:
+            logger.warning(f"Agent {self.model_id} is not initialized.")
+            return False
+        return True
 
     def initialize(self) -> None:
         """
@@ -68,12 +77,13 @@ class BaseAgent(ABC):
         Raises:
             AgentError: If initialization fails
         """
-        if self._is_initialized:
-            raise AgentError("Agent already initialized")
+        if self.is_initialized:
+            logger.info(f"Agent {self.model_id} already initialized.")
+            return
 
         try:
             self._initialize()
-            self._is_initialized = True
+            self._initialized = True
             logger.info(f"Agent {self.metadata.get('agent_id', 'unknown')} initialized")
         except Exception as e:
             logger.error(f"Error initializing agent: {str(e)}")
@@ -92,7 +102,7 @@ class BaseAgent(ABC):
         Raises:
             AgentError: If execution fails
         """
-        if not self._is_initialized:
+        if not self.is_initialized:
             raise AgentError("Agent not initialized")
 
         if self._is_running:
@@ -130,12 +140,12 @@ class BaseAgent(ABC):
         Raises:
             AgentError: If cleanup fails
         """
-        if not self._is_initialized:
+        if not self.is_initialized:
             return
 
         try:
             self._cleanup()
-            self._is_initialized = False
+            self._initialized = False
             logger.info(f"Agent {self.metadata.get('agent_id', 'unknown')} cleaned up")
         except Exception as e:
             logger.error(f"Error cleaning up agent: {str(e)}")
@@ -179,15 +189,6 @@ class BaseAgent(ABC):
             Dict[str, Any]: Model information dictionary
         """
         return {"model_id": self.model_id}
-
-    def is_initialized(self) -> bool:
-        """
-        Check if agent is initialized.
-
-        Returns:
-            bool: True if agent is initialized
-        """
-        return self._is_initialized
 
     def is_running(self) -> bool:
         """
@@ -242,6 +243,24 @@ class BaseAgent(ABC):
         """Internal cleanup method to be implemented by subclasses."""
         pass
 
+    def reset(self):
+        """Reset the agent."""
+        self._initialized = False
+
+    def shutdown(self):
+        """Shutdown the agent."""
+        self._initialized = False
+
+    def get_status(self) -> AgentStatus:
+        """Get the current status of the agent."""
+        return self.config.initial_status or AgentStatus.IDLE
+
+    def get_avg_execution_time(self) -> float:
+        """Calculate the average execution time."""
+        if not self.performance_metrics["execution_count"]:
+            return 0.0
+        return float(self.performance_metrics["total_execution_time"]) / self.performance_metrics["execution_count"]
+
 
 class BaseAgentImplementation(BaseAgent):
     """Concrete implementation of BaseAgent for testing purposes."""
@@ -276,7 +295,7 @@ class BaseAgentImplementation(BaseAgent):
             self.is_initialized = True
             logger.info(f"Agent {self.metadata.get('agent_id', 'unknown')} initialized")
 
-    def execute(self, task: Dict[str, Any] = None) -> Dict[str, Any]:
+    def execute(self, task: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Execute a test task."""
         if not task:
             task = {"type": "test", "parameters": {}}
@@ -347,7 +366,10 @@ class BaseAgentImplementation(BaseAgent):
         logger.info("Test agent cleaned up")
 
     def _log_execution(
-        self, success: bool, result: Dict[str, Any] = None, error: str = None
+        self,
+        success: bool,
+        result: Optional[Dict[str, Any]] = None,
+        error: Optional[str] = None,
     ) -> None:
         """Log execution details."""
         execution_log = {

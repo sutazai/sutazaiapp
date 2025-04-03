@@ -423,7 +423,10 @@ def save_uploaded_diagram(file: UploadFile, diagram_id: str) -> str:
     """Save an uploaded diagram file to disk and return the path"""
     # In a real implementation, this would save the file to disk or cloud storage
     # For this example, we'll just return a mock path
-    file_type = get_file_type(file.filename)
+    if file.filename is None:
+        file_type = "unknown"
+    else:
+        file_type = get_file_type(file.filename)
     return f"./uploads/{diagram_id}.{file_type}"
 
 
@@ -504,6 +507,13 @@ async def upload_diagram(
     """
     Upload a diagram for parsing
     """
+    # Ensure filename exists
+    if file.filename is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Filename cannot be empty."
+        )
+
     try:
         # Generate a unique ID for the diagram
         diagram_id = f"diag_{uuid.uuid4().hex[:8]}"
@@ -530,7 +540,7 @@ async def upload_diagram(
 
         # In a real implementation, the parsing would be queued
         # For now, parse synchronously (or mock)
-
+        assert file.filename is not None # Ensured by check above
         return DiagramUploadResponse(
             diagram_id=diagram_id,
             filename=file.filename,
@@ -566,21 +576,23 @@ async def get_diagram_status(diagram_id: str):
     if diagram_id.startswith("diag_"):
         # For demo purposes, let's say even IDs are completed, odd are processing
         if int(diagram_id[-1]) % 2 == 0:
-            status = "completed"
+            current_status = "completed"
         else:
-            status = "processing"
+            current_status = "processing"
+        # Moved return inside the if block
+        return {
+            "diagram_id": diagram_id,
+            "status": current_status, # Use a different variable name to avoid potential confusion
+            "message": statuses[current_status],
+            "last_updated": datetime.now().isoformat(),
+        }
     else:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Diagram with ID {diagram_id} not found",
         )
 
-    return {
-        "diagram_id": diagram_id,
-        "status": status,
-        "message": statuses[status],
-        "last_updated": datetime.now().isoformat(),
-    }
+    # Return statement moved inside the if block above
 
 
 @router.get(

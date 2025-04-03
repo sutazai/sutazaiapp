@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import datetime
 
 from .base_agent import BaseAgent, AgentError
+from .agent_config import AgentConfig
 
 logger = logging.getLogger(__name__)
 
@@ -269,3 +270,38 @@ class AgentFactory:
 
         except Exception:
             return False
+
+    def _create_agent_instance(self, agent_class: type[BaseAgent], config: AgentConfig) -> BaseAgent:
+        """Create an instance of the agent."""
+        try:
+            # Pass AgentConfig object directly
+            agent = agent_class(config=config, agent_manager=self) # Pass self as agent_manager
+            logger.info(f"Successfully created agent instance: {config.agent_id}")
+            return agent
+        except Exception as e:
+            logger.error(f"Error creating agent instance: {str(e)}")
+            raise AgentError(f"Failed to create agent instance: {str(e)}")
+
+    def _validate_config(self, config: AgentConfig) -> None:
+        """Validate the agent configuration."""
+        # Basic validation, extend as needed
+        required_fields = ['agent_id', 'agent_type', 'name'] # Example required fields
+        for field in required_fields:
+             if not getattr(config, field, None):
+                 raise ValueError(f"Missing required configuration field: {field}")
+
+        # Add more specific validations based on agent_type if needed
+        logger.debug(f"Configuration for agent {config.agent_id} validated.")
+
+    def load_config_from_file(self, config_path: str) -> AgentConfig:
+        """Load agent configuration from a file path."""
+        config_path_obj = Path(config_path) # Ensure Path object
+        if not config_path_obj.exists():
+            raise FileNotFoundError(f"Agent configuration file not found: {config_path}")
+
+        # Validate required fields
+        if config.config_path:
+            # Load config from path if provided
+            config_path = Path(str(config.config_path)) # Ensure input is str
+            if not config_path.exists():
+                raise AgentError(f"Configuration file not found: {config_path}")

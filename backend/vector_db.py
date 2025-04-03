@@ -54,6 +54,154 @@ except ImportError:
     logger.error("Run: pip install fastapi uvicorn")
     sys.exit(1)
 
+from qdrant_client.models import PointStruct, Distance, VectorParams, Filter, FieldCondition, Range
+from sentence_transformers import SentenceTransformer
+from backend.core.config import settings
+from backend.core.exceptions import DatabaseError, ResourceNotFoundError
+from backend.models.base_models import Document, DocumentChunk
+
+logger = logging.getLogger(__name__)
+
+# Define a type alias for embedding results
+Embedding = List[float]
+
+# Global Qdrant client instance
+client: Optional[QdrantClient] = None
+embedding_model: Optional[SentenceTransformer] = None
+
+def get_qdrant_client() -> QdrantClient:
+    """Initializes and returns the Qdrant client."""
+    global client
+    if client is None:
+        try:
+            client = QdrantClient(
+                host=settings.QDRANT_HOST,
+                port=settings.QDRANT_PORT,
+                api_key=settings.QDRANT_API_KEY,
+                https=settings.QDRANT_HTTPS,
+            )
+            # Verify connection
+            client.get_collections()
+            logger.info("Qdrant client initialized successfully.")
+        except Exception as e:
+            logger.error(f"Failed to initialize Qdrant client: {e}")
+            raise DatabaseError("Qdrant connection failed") from e
+    return client
+
+def get_embedding_model() -> SentenceTransformer:
+    """Initializes and returns the sentence transformer model."""
+    global embedding_model
+    if embedding_model is None:
+        try:
+            logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL_NAME}")
+            # Initialize SentenceTransformer with the model name only
+            embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
+            logger.info("Embedding model loaded successfully.")
+        except Exception as e:
+            logger.error(f"Failed to load embedding model: {e}")
+            raise DatabaseError("Embedding model loading failed") from e
+    return embedding_model
+
+def initialize_vector_db():
+    """Initialize vector database connections and collections."""
+    get_qdrant_client() # Ensure client is initialized
+    get_embedding_model() # Ensure embedding model is initialized
+    create_collections()
+
+def create_collections():
+    """Create necessary Qdrant collections if they don't exist."""
+    client = get_qdrant_client()
+    embedding_dim = get_embedding_model().get_sentence_embedding_dimension()
+
+    collections = [settings.QDRANT_COLLECTION, settings.QDRANT_CHUNK_COLLECTION]
+    for collection_name in collections:
+        try:
+            client.get_collection(collection_name=collection_name)
+            logger.info(f"Collection '{collection_name}' already exists.")
+        except Exception: # Catch specific exception if known, else general Exception
+            logger.info(f"Collection '{collection_name}' not found, creating...")
+            client.create_collection(
+                collection_name=collection_name,
+                vectors_config=VectorParams(size=embedding_dim, distance=Distance.COSINE),
+            )
+            logger.info(f"Collection '{collection_name}' created.")
+
+            # Create payload indexes for faster filtering
+            if collection_name == settings.QDRANT_COLLECTION:
+                client.create_payload_index( # type: ignore [attr-defined]
+                    collection_name=collection_name,
+                    field_name="metadata.doc_id",
+                    field_schema="keyword"
+                )
+                client.create_payload_index( # type: ignore [attr-defined]
+                    collection_name=collection_name,
+                    field_name="metadata.created_at",
+                    field_schema="datetime"
+                )
+            elif collection_name == settings.QDRANT_CHUNK_COLLECTION:
+                client.create_payload_index( # type: ignore [attr-defined]
+                    collection_name=collection_name,
+                    field_name="metadata.doc_id",
+                    field_schema="keyword"
+                )
+                client.create_payload_index( # type: ignore [attr-defined]
+                    collection_name=collection_name,
+                    field_name="metadata.chunk_index",
+                    field_schema="integer"
+                )
+
+
+class VectorStore:
+    """Interface for interacting with the vector database."""
+
+    def __init__(self):
+        self.client = get_qdrant_client()
+        self.embedding_model = get_embedding_model()
+        self.doc_collection = settings.QDRANT_COLLECTION
+        self.chunk_collection = settings.QDRANT_CHUNK_COLLECTION
+
+    def _embed_text(self, text: str) -> Embedding:
+        """Embeds a single string of text."""
+        # Pass only the model name string
+        embeddings = self.embedding_model.encode(text, convert_to_tensor=False)
+        # Ensure the output is List[float]
+        if isinstance(embeddings, list) and all(isinstance(x, float) for x in embeddings):
+            return embeddings
+        elif hasattr(embeddings, 'tolist'): # Handle numpy arrays or tensors
+             return embeddings.tolist()
+        else:
+             logger.error(f"Unexpected embedding type: {type(embeddings)}")
+             # Return a default embedding or raise error based on desired behavior
+             # For now, returning a zero vector of expected dimension
+             dim = self.embedding_model.get_sentence_embedding_dimension()
+             return [0.0] * dim
+
+
+    def _embed_texts(self, texts: List[str]) -> List[Embedding]:
+        """Embeds a list of texts."""
+        # Pass only the model name string
+        embeddings = self.embedding_model.encode(texts, convert_to_tensor=False)
+        # Ensure the output is List[List[float]]
+        if isinstance(embeddings, list) and all(isinstance(emb, list) and all(isinstance(x, float) for x in emb) for emb in embeddings):
+            return embeddings
+        elif hasattr(embeddings, 'tolist'): # Handle numpy arrays or tensors
+            list_embeddings = embeddings.tolist()
+            if isinstance(list_embeddings, list) and all(isinstance(emb, list) for emb in list_embeddings):
+                 return list_embeddings
+            else:
+                 logger.error(f"Unexpected nested embedding type after tolist: {type(list_embeddings)}")
+                 dim = self.embedding_model.get_sentence_embedding_dimension()
+                 return [[0.0] * dim] * len(texts)
+        else:
+            logger.error(f"Unexpected embedding type for batch: {type(embeddings)}")
+            dim = self.embedding_model.get_sentence_embedding_dimension()
+            return [[0.0] * dim] * len(texts)
+
+# Helper function (consider moving to a utils module)
+def create_point(id: str, vector: Embedding, payload: Optional[dict] = None) -> PointStruct:
+    """Creates a Qdrant PointStruct."""
+    return PointStruct(id=id, vector=vector, payload=payload or {})
+
 
 # Define API models
 class DocumentInput(BaseModel):
@@ -98,12 +246,12 @@ class VectorDB:
         if CHROMA_AVAILABLE:
             logger.info("Using ChromaDB as vector database")
             self.client = chromadb.PersistentClient(path=persist_dir)
-            self.collections = {}
+            self.collections: Dict[str, Any] = {}
         elif FAISS_AVAILABLE:
             logger.info("Using FAISS as vector database")
-            self.faiss_indexes = {}
-            self.faiss_documents = {}
-            self.faiss_ids = {}
+            self.faiss_indexes: Dict[str, faiss.Index] = {}
+            self.faiss_documents: Dict[str, List[DocumentInput]] = {}
+            self.faiss_ids: Dict[str, List[str]] = {}
         else:
             raise RuntimeError("No vector database backend available")
 

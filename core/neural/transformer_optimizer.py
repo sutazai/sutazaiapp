@@ -13,7 +13,7 @@ import tempfile
 import time
 import argparse
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional, Union, Mapping
 
 import torch
 import psutil
@@ -56,6 +56,9 @@ except ImportError:
 
 logger = logging.getLogger("sutazai.optimizer")
 
+# Define a type alias for benchmark results, allowing for error strings
+BenchmarkResultType = Optional[Dict[str, Union[float, int, str]]]
+
 
 class TransformerOptimizer:
     """
@@ -65,7 +68,7 @@ class TransformerOptimizer:
     inference performance on CPU, specifically targeting the E5-2640 processors.
     """
 
-    def __init__(self, output_dir: str = None):
+    def __init__(self, output_dir: Optional[str] = None):
         """
         Initialize the transformer optimizer.
 
@@ -179,7 +182,10 @@ class TransformerOptimizer:
             logger.info("Transformers package not available")
 
     def optimize_model(
-        self, model_path: str, optimizations: List[str] = None, benchmark: bool = True
+        self,
+        model_path: str,
+        optimizations: Optional[List[str]] = None,
+        benchmark: bool = True,
     ) -> Dict[str, Any]:
         """
         Apply selected optimizations to a transformer model and benchmark the results.
@@ -213,7 +219,7 @@ class TransformerOptimizer:
         if benchmark:
             logger.info("Benchmarking original model...")
             benchmark_results["original"] = benchmark_original(model_path)
-            results["benchmarks"] = benchmark_results
+            results["benchmarks"]: Dict[str, BenchmarkResultType] = benchmark_results
 
         # Apply optimizations
         optimized_model_paths = {}
@@ -226,7 +232,7 @@ class TransformerOptimizer:
                 optimized_model_paths["int8"] = int8_path
 
                 if benchmark:
-                    benchmark_results["int8"] = benchmark_int8(model_path)
+                    benchmark_results["int8"] = benchmark_int8(model_path, output_path=int8_path)[0]
 
             # FP16 Quantization
             if "fp16" in optimizations:
@@ -235,7 +241,7 @@ class TransformerOptimizer:
                 optimized_model_paths["fp16"] = fp16_path
 
                 if benchmark:
-                    benchmark_results["fp16"] = benchmark_fp16(model_path)
+                    benchmark_results["fp16"] = benchmark_fp16(model_path, output_path=fp16_path)[0]
 
             # BetterTransformer
             if "bettertransformer" in optimizations:
@@ -245,7 +251,7 @@ class TransformerOptimizer:
 
                 if benchmark:
                     benchmark_results["bettertransformer"] = (
-                        benchmark_bettertransformer(model_path)
+                        benchmark_bettertransformer(model_path, output_path=bt_path)[0]
                     )
 
             # LookupFFN
@@ -255,7 +261,7 @@ class TransformerOptimizer:
                 optimized_model_paths["lookupffn"] = lookupffn_path
 
                 if benchmark:
-                    benchmark_results["lookupffn"] = benchmark_lookupffn(model_path)
+                    benchmark_results["lookupffn"] = benchmark_lookupffn(model_path, output_path=lookupffn_path)[0]
 
             # ONNX conversion
             if "onnx" in optimizations:
@@ -264,7 +270,7 @@ class TransformerOptimizer:
                 optimized_model_paths["onnx"] = onnx_path
 
                 if benchmark:
-                    benchmark_results["onnx"] = benchmark_onnx(model_path)
+                    benchmark_results["onnx"] = benchmark_onnx(model_path, output_path=onnx_path)[0]
 
         except Exception as e:
             logger.error(f"Error during optimization: {str(e)}")
@@ -288,7 +294,10 @@ class TransformerOptimizer:
         return results
 
     def optimize_llama_model(
-        self, model_path: str, optimizations: List[str] = None, benchmark: bool = True
+        self,
+        model_path: str,
+        optimizations: Optional[List[str]] = None,
+        benchmark: bool = True,
     ) -> Dict[str, Any]:
         """
         Optimize a Llama3 model for inference on E5-2640 CPUs.
@@ -336,7 +345,7 @@ class TransformerOptimizer:
                 benchmark_results["original"] = {
                     "time_seconds": latency,
                     "memory_mb": memory_used,
-                    "tokens_per_second": 50 / latency if latency > 0 else 0,
+                    "tokens_per_second": 50 / latency if latency > 0 else 0.0,
                 }
 
                 del model
@@ -354,7 +363,7 @@ class TransformerOptimizer:
             if "cpu_threads" in optimizations:
                 thread_configs = [1, 4, 6, 8, 12]  # Test different thread counts
                 best_threads = 12  # Default to physical core count
-                best_tokens_per_second = 0
+                best_tokens_per_second = 0.0
 
                 for n_threads in thread_configs:
                     logger.info(f"Testing with {n_threads} threads...")
@@ -428,7 +437,7 @@ class TransformerOptimizer:
                 # Find optimal batch size
                 batch_sizes = [32, 64, 128, 256, 512]
                 best_batch_size = 512  # Default
-                best_tokens_per_second = 0
+                best_tokens_per_second = 0.0
 
                 # Only test a couple of batch sizes to save time
                 for batch_size in batch_sizes[:3]:  # Test the first 3 sizes
@@ -446,7 +455,7 @@ class TransformerOptimizer:
                     model.generate(prompt=test_prompt, max_tokens=50, temperature=0.7)
                     latency = time.time() - start_time
 
-                    tokens_per_second = 50 / latency if latency > 0 else 0
+                    tokens_per_second = 50.0 / latency if latency > 0 else 0.0
 
                     logger.info(
                         f"Batch size: {batch_size}, Tokens/sec: {tokens_per_second:.2f}"
@@ -466,6 +475,8 @@ class TransformerOptimizer:
                 benchmark_results["batch_size"] = {
                     "tokens_per_second": best_tokens_per_second,
                     "batch_size": best_batch_size,
+                    "time_seconds": latency,
+                    "memory_mb": memory_used,
                 }
 
         except Exception as e:
@@ -682,11 +693,11 @@ class TransformerOptimizer:
             raise
 
     def _find_best_optimization(
-        self, benchmark_results: Dict[str, Dict[str, Any]]
+        self, benchmark_results: Mapping[str, BenchmarkResultType]
     ) -> str:
         """Find the best optimization based on benchmark results."""
         best_opt = "original"
-        best_throughput = 0
+        best_throughput = 0.0
 
         for opt, results in benchmark_results.items():
             if results is None:
@@ -697,9 +708,11 @@ class TransformerOptimizer:
                 continue
 
             throughput = results.get("tokens_per_second", 0)
-            if throughput > best_throughput:
-                best_throughput = throughput
-                best_opt = opt
+            # Check if throughput is numeric before comparison
+            if isinstance(throughput, (int, float)):
+                if throughput > best_throughput:
+                    best_throughput = throughput
+                    best_opt = opt
 
         return best_opt
 

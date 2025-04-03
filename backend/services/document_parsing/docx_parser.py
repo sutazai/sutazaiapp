@@ -8,7 +8,7 @@ import os
 import logging
 import base64
 import tempfile
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass
 
 # Required dependencies (pip install python-docx lxml pillow)
@@ -159,7 +159,7 @@ class DocxParser:
         # Additional metadata
         custom_properties = {}
         try:
-            for prop in doc.custom_properties:
+            for prop in doc.custom_properties:  # type: ignore [attr-defined]
                 custom_properties[prop.name] = prop.value
         except Exception as e:
             logger.debug(f"Could not extract custom properties: {e}")
@@ -180,7 +180,7 @@ class DocxParser:
         Returns:
             Dictionary with content elements
         """
-        content = {
+        content: Dict[str, List[Any]] = {
             "paragraphs": [],
             "tables": [],
             "paragraphs_with_style": [],
@@ -272,7 +272,7 @@ class DocxParser:
 
         # Process table row by row
         for i, row in enumerate(table.rows):
-            row_data = []
+            row_data: List[Dict[str, Any]] = []
 
             for j, cell in enumerate(row.cells):
                 # Get cell text (joining paragraphs)
@@ -296,7 +296,9 @@ class DocxParser:
                     )
                     pass
 
-                row_data.append(cell_data)
+                # Explicit check to help mypy
+                if isinstance(row_data, list):
+                    row_data.append(cell_data) # Add check and ignore potentially incorrect attr-defined
 
             table_data["rows"].append(row_data)
 
@@ -395,7 +397,7 @@ class DocxParser:
         Returns:
             Dictionary with document structure information
         """
-        structure = {"title": "", "sections": []}
+        structure: Dict[str, Any] = {"title": "", "sections": []}
 
         # Find document title
         if content["paragraphs_with_style"] and content["paragraphs_with_style"][0][
@@ -405,7 +407,7 @@ class DocxParser:
 
         # Build a list of all headings with their content
         current_section = None
-        current_section_content = []
+        current_section_content: List[str] = []
         current_level = 0
 
         for para in content["paragraphs_with_style"]:
@@ -413,6 +415,7 @@ class DocxParser:
                 # If we already have a section, save it before starting a new one
                 if current_section:
                     section_text = "\n".join(current_section_content)
+                    assert current_section is not None # Ensure current_section is not None before use
                     section = DocxSection(
                         heading=current_section,
                         level=current_level,
@@ -433,12 +436,13 @@ class DocxParser:
         # Don't forget to add the last section
         if current_section:
             section_text = "\n".join(current_section_content)
+            assert current_section is not None # Ensure current_section is not None before use
             section = DocxSection(
                 heading=current_section,
                 level=current_level,
                 content=section_text,
                 paragraphs=current_section_content,
-                tables=[],  # Will fill tables later
+                tables=content["tables"],
             )
             structure["sections"].append(vars(section))
 

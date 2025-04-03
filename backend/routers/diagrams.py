@@ -91,7 +91,7 @@ async def parse_diagram(
     analyze_relationships: bool = True,
 ) -> JSONResponse:
     """
-    Parse a diagram file and extract its elements.
+    Parse a diagram file and extract components and relationships.
 
     Args:
         background_tasks: FastAPI BackgroundTasks for cleanup
@@ -107,6 +107,13 @@ async def parse_diagram(
     """
     temp_file_path = None
     request_id = str(uuid.uuid4())
+
+    # Ensure filename exists
+    if file.filename is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Filename cannot be empty."
+        )
 
     try:
         # Validate file
@@ -133,11 +140,11 @@ async def parse_diagram(
             f"Request {request_id}: Processing diagram {file.filename}, size: {len(content) / 1024:.2f}KB"
         )
 
-        # Parse diagram
+        # Parse diagram - remove extra args
         result = diagram_parser.parse_diagram(
             file_path=temp_file_path,
-            extract_elements=extract_elements,
-            analyze_relationships=analyze_relationships,
+            # extract_elements=extract_elements, # Removed - not in parser method signature
+            # analyze_relationships=analyze_relationships, # Removed
         )
 
         # Add request ID to result
@@ -210,6 +217,13 @@ async def validate_diagram(
     """
     temp_file_path = None
     request_id = str(uuid.uuid4())
+
+    # Ensure filename exists
+    if file.filename is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Filename cannot be empty."
+        )
 
     try:
         # Validate file
@@ -290,6 +304,13 @@ async def analyze_diagram(
     Raises:
         HTTPException: If analysis fails
     """
+    # Ensure filename exists
+    if file.filename is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Filename cannot be empty."
+        )
+
     try:
         # Create upload directory if it doesn't exist
         upload_dir = Path(settings.UPLOAD_DIR) / "diagrams"

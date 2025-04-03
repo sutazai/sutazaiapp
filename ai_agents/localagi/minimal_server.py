@@ -7,6 +7,7 @@ This is a simplified LocalAGI server that provides basic AGI endpoints.
 import sys
 import logging
 import argparse
+from typing import Optional, Dict
 
 # Set up command line arguments
 parser = argparse.ArgumentParser(description='Minimal LocalAGI Server')
@@ -24,7 +25,7 @@ logging.basicConfig(
 logger = logging.getLogger("LocalAGI")
 
 try:
-    from fastapi import FastAPI, HTTPException, Request
+    from fastapi import FastAPI, Request
     from fastapi.responses import JSONResponse
     import uvicorn
 except ImportError:

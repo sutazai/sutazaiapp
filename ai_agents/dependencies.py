@@ -7,6 +7,7 @@ This module provides dependency injection functions for FastAPI routes.
 import logging
 import threading
 from typing import Optional
+from fastapi import HTTPException
 
 
 from .agent_manager import AgentManager
@@ -117,7 +118,7 @@ def get_agent_manager() -> AgentManager:
         RuntimeError: If initialization fails
     """
     if _agent_manager is None:
-        initialize_dependencies()
+        raise HTTPException(status_code=503, detail="AgentManager not initialized")
     return _agent_manager
 
 

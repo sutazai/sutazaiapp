@@ -12,8 +12,9 @@ import time
 from enum import Enum
 from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from queue import Queue, Empty
+from datetime import datetime, timedelta, timezone
+from queue import Queue
+from collections import defaultdict
 
 from ..protocols.message_protocol import Message, MessageType, MessageProtocol
 from ..protocols.agent_communication import AgentCommunication
@@ -239,23 +240,30 @@ class InteractionManager:
         Initialize the interaction manager.
 
         Args:
-            agent_communication: Agent communication system
+            agent_communication: Agent communication interface
         """
         self.agent_communication = agent_communication
         self.requests: Dict[str, InteractionRequest] = {}
         self.callbacks: Dict[str, Callable[[InteractionResponse], None]] = {}
         self.default_callbacks: Dict[
             InteractionType, List[Callable[[InteractionResponse], None]]
-        ] = {interaction_type: [] for interaction_type in InteractionType}
-        self.active_interactions: Dict[str, Interaction] = {}
-        self.input_queue: Queue = Queue()
-        self.output_queue: Queue = Queue()
+        ] = defaultdict(list)
+
+        self.running = False
+        self.cleanup_thread: Optional[threading.Thread] = None
+        self.notification_thread: Optional[threading.Thread] = None
         self._input_thread: Optional[threading.Thread] = None
         self._output_thread: Optional[threading.Thread] = None
-        self.running = False
-        self.cleanup_thread = None
-        self.notification_thread = None
-        self.lock = threading.Lock()
+
+        # Queues for input and output processing
+        self._input_queue: Queue[InteractionRequest] = Queue()
+        self._output_queue: Queue[InteractionResponse] = Queue()
+
+        # Configuration
+        self.default_timeout = timedelta(minutes=30)
+        self.cleanup_interval = timedelta(minutes=5)
+
+        logger.info("Interaction manager initialized")
 
     def start(self) -> None:
         """Start the interaction manager."""
@@ -282,14 +290,22 @@ class InteractionManager:
         )
 
         # Start input thread
-        self._input_thread = threading.Thread(target=self._process_input, daemon=True) # type: ignore[assignment]
-        assert self._input_thread is not None
-        self._input_thread.start() # type: ignore[union-attr]
+        if not self._input_thread or not self._input_thread.is_alive():
+            self._input_thread = threading.Thread(
+                target=self._process_input, daemon=True
+            )
+            if self._input_thread is not None:
+                assert isinstance(self._input_thread, threading.Thread)
+                self._input_thread.start()
 
         # Start output thread
-        self._output_thread = threading.Thread(target=self._process_output, daemon=True) # type: ignore[assignment]
-        assert self._output_thread is not None
-        self._output_thread.start() # type: ignore[union-attr]
+        if not self._output_thread or not self._output_thread.is_alive():
+            self._output_thread = threading.Thread(
+                target=self._process_output, daemon=True
+            )
+            if self._output_thread is not None:
+                assert isinstance(self._output_thread, threading.Thread)
+                self._output_thread.start()
 
         logger.info("Interaction manager started")
 

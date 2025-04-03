@@ -10,7 +10,7 @@ import os
 import time
 import json
 import threading
-from typing import Dict, List, Any, Optional, Tuple, Union
+from typing import Dict, List, Any, Optional, Tuple, Union, SupportsFloat
 from dataclasses import dataclass, field
 from datetime import datetime
 import platform
@@ -150,7 +150,7 @@ class ModelOptimizationResult:
     optimization_level: str  # "none", "quantized", "pruned", "distilled", etc.
     inference_time_seconds: float
     memory_usage_bytes: int
-    accuracy_metrics: Dict[str, float]
+    accuracy_metrics: Dict[str, SupportsFloat]
     timestamp: float = field(default_factory=time.time)
     additional_metrics: Dict[str, Any] = field(default_factory=dict)
 
@@ -182,7 +182,7 @@ class HardwareMonitor:
         self.logger = logger
         self.collection_interval = collection_interval
         self.stop_flag = False
-        self.collection_thread = None
+        self.collection_thread: Optional[threading.Thread] = None
         self.lock = threading.Lock()
         self.log_dir = log_dir or os.path.join(
             os.environ.get("SUTAZAI_LOG_DIR", "/opt/sutazaiapp/logs"), "hardware"
@@ -215,9 +215,9 @@ class HardwareMonitor:
 
         # Start Prometheus push thread if enabled
         if PROMETHEUS_AVAILABLE and self.push_gateway_url:
-            self.push_thread = threading.Thread(target=self._push_metrics_loop, daemon=True) # type: ignore[assignment]
-            assert self.push_thread is not None # Assert before starting
-            self.push_thread.start() # type: ignore[union-attr]
+            self.push_thread = threading.Thread(target=self._push_metrics_loop, daemon=True)
+            assert self.push_thread is not None
+            self.push_thread.start()
             self.logger.info(f"Started Prometheus push thread to {self.push_gateway_url}")
 
     def _detect_hardware(self) -> Dict[str, Any]:
@@ -1508,7 +1508,7 @@ class ModelOptimizer:
         optimization_level: str,
         hardware_profile: HardwareProfile,
         num_runs: int = 10,
-    ) -> Dict[str, Any]:
+    ) -> ModelOptimizationResult:
         """
         Benchmark model performance on specific hardware.
 
@@ -1518,7 +1518,7 @@ class ModelOptimizer:
             num_runs: Number of benchmark runs
 
         Returns:
-            Dictionary with benchmark results
+            Optimization result
         """
         # This would contain the actual benchmarking logic
         # Currently a placeholder implementation
@@ -1529,7 +1529,7 @@ class ModelOptimizer:
         )
 
         # Create dummy benchmark results
-        benchmark_results = {
+        benchmark_results: Dict[str, Any] = {
             "model_id": self.model_id,
             "hardware_profile": {
                 "device_id": hardware_profile.device_id,
@@ -1566,7 +1566,44 @@ class ModelOptimizer:
                     metric_name=metric_name,
                 ).set(value)
 
-        return benchmark_results
+        result = ModelOptimizationResult(
+            model_id=self.model_id,
+            hardware_profile=hardware_profile,
+            optimization_level=optimization_level,
+            inference_time_seconds=benchmark_results["mean_inference_time"],
+            memory_usage_bytes=benchmark_results["mean_memory_usage"],
+            accuracy_metrics=benchmark_results["accuracy_metrics"],
+            additional_metrics=benchmark_results.get("additional_metrics", {}),
+        )
+
+        # Ensure accuracy_metrics is a dictionary
+        assert isinstance(result.accuracy_metrics, dict)
+
+        # Log result
+        self._log_optimization_result(result)
+
+        if PROMETHEUS_AVAILABLE:
+            MODEL_INFERENCE_TIME.labels(
+                model_id=self.model_id,
+                hardware_id=hardware_profile.device_id,
+                optimization_level=optimization_level,
+            ).observe(result.inference_time_seconds)
+
+            MODEL_MEMORY_USAGE.labels(
+                model_id=self.model_id,
+                hardware_id=hardware_profile.device_id,
+                optimization_level=optimization_level,
+            ).set(result.memory_usage_bytes)
+
+            for metric_name, value in result.accuracy_metrics.items():
+                MODEL_ACCURACY.labels(
+                    model_id=self.model_id,
+                    hardware_id=hardware_profile.device_id,
+                    optimization_level=optimization_level,
+                    metric_name=metric_name,
+                ).set(value)
+
+        return result
 
     def _log_optimization_result(self, result: ModelOptimizationResult) -> None:
         """Log optimization result to a file."""

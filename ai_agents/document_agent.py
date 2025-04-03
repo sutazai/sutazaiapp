@@ -6,14 +6,16 @@ It includes capabilities for text extraction, OCR, and document analysis.
 """
 
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from pathlib import Path
 import pytesseract
 from PIL import Image
 import pdf2image
 import numpy as np
+import importlib.metadata
 
-from .base_agent import BaseAgent, AgentError
+from ai_agents.base_agent import BaseAgent, AgentConfig, AgentError
+from backend.services.doc_processing import DocumentProcessor, get_document_processor
 
 logger = logging.getLogger(__name__)
 
@@ -21,16 +23,18 @@ logger = logging.getLogger(__name__)
 class DocumentAgent(BaseAgent):
     """Agent specialized for document processing tasks."""
 
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: AgentConfig, agent_manager=None):
         """
         Initialize the document agent.
 
         Args:
             config: Agent configuration dictionary
+            agent_manager: Agent manager instance
         """
-        super().__init__(config)
+        super().__init__(config, agent_manager)
         self.supported_formats = ["pdf", "png", "jpg", "jpeg", "tiff"]
         self.tesseract_config = config.get("tesseract_config", {})
+        self.doc_processor = get_document_processor()
         self._check_dependencies()
 
     def _check_dependencies(self) -> None:
@@ -71,6 +75,15 @@ class DocumentAgent(BaseAgent):
         # Initialize PDF processing if available
         if self.pdf2image_available:
             logger.info("PDF processing initialized")
+
+    def _get_version(self) -> str:
+        """Get the agent version."""
+        # Could potentially get version from a package or file
+        try:
+            # Example: Assuming version is stored in a standard place
+            return importlib.metadata.version("sutazaiapp")  # Replace with actual package name
+        except importlib.metadata.PackageNotFoundError:
+            return "0.1.0"  # Default version
 
     def _execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a document processing task."""

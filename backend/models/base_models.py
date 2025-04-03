@@ -9,7 +9,9 @@ from sqlalchemy import (
     JSON,
 )
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column
+from sqlalchemy.ext.declarative import declared_attr
+from typing import Any, List, Optional, Dict
 
 from backend.core.database import Base
 
@@ -85,19 +87,19 @@ class Document(Base, TimestampMixin):
     __tablename__ = "documents"
     __table_args__ = {"extend_existing": True}
 
-    id = Column(Integer, primary_key=True, index=True)
-    filename = Column(String)
-    content_type = Column(String)
-    size = Column(Integer)
-    path = Column(String)
-    processed = Column(Boolean, default=False)
-    doc_metadata = Column(JSON, nullable=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    filename: Mapped[Optional[str]] = mapped_column(String)
+    content_type: Mapped[Optional[str]] = mapped_column(String)
+    size: Mapped[Optional[int]] = mapped_column(Integer)
+    path: Mapped[Optional[str]] = mapped_column(String)
+    processed: Mapped[bool] = mapped_column(Boolean, default=False)
+    doc_metadata: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    project_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("projects.id"))
 
     # Relationships
-    project = relationship("Project", back_populates="documents")
-    chunks = relationship(
-        "DocumentChunk", back_populates="document", cascade="all, delete-orphan"
+    project: Mapped[Optional["Project"]] = relationship(back_populates="documents")
+    chunks: Mapped[List["DocumentChunk"]] = relationship(
+        back_populates="document", cascade="all, delete-orphan"
     )
 
 
@@ -106,14 +108,14 @@ class DocumentChunk(Base, TimestampMixin):
 
     __tablename__ = "document_chunks"
 
-    id = Column(Integer, primary_key=True, index=True)
-    document_id = Column(Integer, ForeignKey("documents.id"))
-    content = Column(Text)
-    chunk_index = Column(Integer)
-    doc_metadata = Column(JSON, nullable=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    document_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("documents.id"))
+    content: Mapped[Optional[str]] = mapped_column(Text)
+    chunk_index: Mapped[Optional[int]] = mapped_column(Integer)
+    doc_metadata: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSON, nullable=True)
 
     # Relationships
-    document = relationship("Document", back_populates="chunks")
+    document: Mapped[Optional["Document"]] = relationship(back_populates="chunks")
 
 
 class CodeGeneration(Base, TimestampMixin):

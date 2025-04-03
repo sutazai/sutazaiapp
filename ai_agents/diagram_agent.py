@@ -13,7 +13,8 @@ import numpy as np
 from PIL import Image
 import pytesseract
 
-from .base_agent import BaseAgent, AgentError
+from ai_agents.base_agent import BaseAgent, AgentConfig, AgentError
+from backend.services.diagram_generator import DiagramGenerator, DiagramType
 
 logger = logging.getLogger(__name__)
 
@@ -21,14 +22,10 @@ logger = logging.getLogger(__name__)
 class DiagramAgent(BaseAgent):
     """Agent specialized for diagram parsing and analysis."""
 
-    def __init__(self, config: Dict[str, Any]):
-        """
-        Initialize the diagram agent.
-
-        Args:
-            config: Agent configuration dictionary
-        """
-        super().__init__(config)
+    def __init__(self, config: AgentConfig, agent_manager=None):
+        """Initialize the DiagramAgent."""
+        super().__init__(config, agent_manager)
+        self.diagram_generator = DiagramGenerator()
         self.supported_formats = ["png", "jpg", "jpeg", "svg"]
         self.min_shape_area = config.get("min_shape_area", 100)
         self.max_shape_area = config.get("max_shape_area", 10000)

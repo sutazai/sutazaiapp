@@ -78,12 +78,12 @@ check_service() {
 
 # Check each service
 check_service "Backend API" 8000
-check_service "Web UI" 3000
+check_service "Web UI" 8501
 check_service "Vector Database" 6333
 check_service "LocalAGI" 8090
 
 print_message "System check completed" "info"
-print_message "Access the web interface at: http://localhost:3000" "info"
+print_message "Access the web interface at: http://localhost:8501" "info"
 print_message "API endpoints available at: http://localhost:8000" "info"
 
 echo "=== SutazAI System Starter Complete ===" 

@@ -74,12 +74,20 @@ async def upload_document(
     """
     Upload a new document to the system.
     """
-    # Verify file type is allowed
-    file_extension = os.path.splitext(file.filename)[1].lower().lstrip(".")
-    if file_extension not in settings.ALLOWED_EXTENSIONS:
+    # Ensure filename exists
+    if file.filename is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"File type not allowed. Supported types: {', '.join(settings.ALLOWED_EXTENSIONS)}",
+            detail="Filename cannot be empty."
+        )
+
+    # Verify file type is allowed
+    file_extension = os.path.splitext(file.filename)[1].lower().lstrip(".")
+    supported_extensions = settings.SUPPORTED_DOC_TYPES.split(',')
+    if file_extension not in supported_extensions:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"File type not allowed. Supported types: {', '.join(supported_extensions)}",
         )
 
     # Generate a unique filename
@@ -180,11 +188,20 @@ async def download_document(document_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
 
-    if not os.path.exists(doc.path):
+    # Check if path exists in DB record
+    if doc.path is None:
+        logger.error(f"Document record {document_id} has no associated file path.")
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Document file not found"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Document file path missing in database",
         )
 
+    if not os.path.exists(doc.path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document file not found on disk"
+        )
+
+    assert doc.path is not None # Ensure path is not None for FileResponse
     return FileResponse(doc.path, filename=doc.filename, media_type=doc.content_type)
 
 
@@ -199,12 +216,14 @@ async def delete_document(document_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
 
-    # Delete file if it exists
-    if os.path.exists(doc.path):
+    # Delete file if path exists in DB record and file exists on disk
+    if doc.path and os.path.exists(doc.path):
         try:
+            # We already confirmed doc.path exists, assert for mypy
+            assert doc.path is not None
             os.unlink(doc.path)
         except Exception as e:
-            logger.error(f"Error deleting file: {str(e)}")
+            logger.error(f"Error deleting file {doc.path}: {str(e)}")
             # Continue with record deletion even if file deletion fails
 
     # Delete record

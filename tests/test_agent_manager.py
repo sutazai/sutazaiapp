@@ -112,7 +112,7 @@ class TestAgentManager(unittest.TestCase):
         # Simulate agent failure by directly calling the handler
         # This sets the status to ERROR and increments error count
         self.manager._handle_agent_error(agent_id, Exception("Simulated failure"))
-        initial_error_count = self.manager.get_agent_metrics(agent_id)['error_count']
+        # initial_error_count = self.manager.get_agent_metrics(agent_id)['error_count']
         # Compare against the Enum value
         self.assertEqual(self.manager.get_agent_status(agent_id)['status'], AgentStatus.ERROR.value)
 

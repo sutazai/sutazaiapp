@@ -14,7 +14,7 @@ import threading
 import uuid
 import asyncio
 from enum import Enum
-from typing import Dict, List, Any, Optional, Callable, Tuple
+from typing import Dict, List, Any, Optional, Callable, Tuple, Coroutine
 from dataclasses import dataclass, field
 from pathlib import Path
 import math # For calculator tool
@@ -30,7 +30,7 @@ from ai_agents.model_manager import ModelManager
 try:
     from langchain.agents import AgentExecutor, create_react_agent
     from langchain_core.prompts import PromptTemplate
-    from langchain.tools import Tool
+    from langchain.tools import Tool, BaseTool
     from langchain.memory import ConversationBufferMemory
     LANGCHAIN_AVAILABLE = True
 except ImportError:
@@ -248,6 +248,11 @@ class AgentFramework:
         logger.info(
             f"Agent framework initialized with {len(self.agent_configs)} agent configs and {len(self.tools)} tools"
         )
+
+        # Explicitly initialize instance attributes in __init__
+        self.agent_executor_instance: Optional[AgentExecutor] = None
+        self.tool_instance: Optional[BaseTool] = None
+        self.memory_instance: Optional[ConversationBufferMemory] = None
 
     # --- Configuration Loading ---
 
@@ -1441,11 +1446,11 @@ Thought:{{agent_scratchpad}}"""
 
         try:
             # Get the default inputs (tools and tool_names) that were set during agent creation
-            default_inputs = getattr(agent_executor, "_default_run_inputs", {})
+            # default_inputs = getattr(agent_executor, "_default_run_inputs", {})
             
             # Get tool descriptions from the agent executor's attributes
-            tool_descriptions = getattr(agent_executor, "_tool_descriptions", "")
-            tool_names = getattr(agent_executor, "_tool_names", "")
+            # tool_descriptions = getattr(agent_executor, "_tool_descriptions", "")
+            # tool_names = getattr(agent_executor, "_tool_names", "")
             
             # Create a clean input dictionary with just the input text for memory handling
             clean_inputs = {"input": input_str}
@@ -1510,7 +1515,8 @@ Thought:{{agent_scratchpad}}"""
                  # Extract primary output, remove from top level, place in result dict
                  output = result.pop("output", result.pop("response", "No output key found"))
                  # Create the nested 'result' dictionary if it doesn't exist
-                 if "result" not in result: result["result"] = {}
+                 if "result" not in result:
+                     result["result"] = {}
                  result["result"]["response"] = output
                  return result # Return the modified dict
             else:

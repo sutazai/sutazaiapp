@@ -10,7 +10,7 @@ import os
 import json
 import time
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Callable
 from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
@@ -164,7 +164,7 @@ class EthicalConstraintMonitor:
         )
 
     def check_decision(
-        self, boundary_id: str, value: float, context: Dict[str, Any] = None
+        self, boundary_id: str, value: float, context: Optional[Dict[str, Any]] = None
     ) -> bool:
         """
         Check if a decision falls within ethical boundaries.
@@ -237,7 +237,7 @@ class EthicalConstraintMonitor:
         return not violation
 
     def verify_property(
-        self, property_id: str, context: Dict[str, Any] = None
+        self, property_id: str, context: Optional[Dict[str, Any]] = None
     ) -> EthicalVerificationResult:
         """
         Verify a formal ethical property.

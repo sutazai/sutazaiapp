@@ -11,7 +11,7 @@ import socket
 import logging
 import platform
 import threading
-from typing import Dict, Any, Optional, Callable, Union
+from typing import Dict, Any, Optional, Callable
 from datetime import datetime
 import psutil
 
