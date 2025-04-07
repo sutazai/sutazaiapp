@@ -124,15 +124,6 @@ dmypy.json
 # Pyre type checker
 +.pyre/
 
-# Environments
-+.env
-+.venv
-+env/
-+venv/
-+ENV/
-+env.bak/
-+venv.bak/
-
 # IDE settings
 +.idea/
 +.vscode/
@@ -152,4 +143,19 @@ dmypy.json
 
 # OS generated files
 +.DS_Store
-+Thumbs.db 
++Thumbs.db
+
+# Python virtual environment
+/venv/
+/env/
+/.venv/
+/.env/
+/lib/
+/bin/
+/include/
+/lib64
+/pyvenv.cfg
+
+# Large files
+*.so
+*.log 
