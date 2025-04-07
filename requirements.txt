@@ -1,0 +1,56 @@
+# Core Dependencies
+fastapi
+uvicorn[standard] # Includes websockets, httptools
+streamlit
+python-dotenv
+pyyaml
+
+# LLM & Agent Frameworks
+langchain
+langchain-community # For community integrations if needed
+langchain-core
+# ollama # Python client for Ollama
+ollama
+pyautogen # For AutoGen
+# Add other agent framework dependencies as needed (e.g., autogpt, agentzero - check their requirements)
+
+# Memory
+chromadb
+faiss-cpu # Or faiss-gpu if GPU is consistently available and configured
+# sentence-transformers # Often needed for embeddings with ChromaDB
+
+# Document Processing
+pypdf2 # Or pymupdf / pdfplumber
+python-docx
+unstructured # Powerful library for various doc types
+# Consider OCR library if not using unstructured's capabilities: pytesseract
+
+# Coding Tools Integration (Placeholders - verify actual packages)
+# tabby-ml-client # Example, check TabbyML docs for official client
+# semgrep # Usually installed as a binary, but might have a Python API
+# aider-chat # Example, check Aider docs
+# gpt-engineer # Check GPT-Engineer docs
+# skyvern # Check Skyvern docs
+
+# Data Handling & Analysis
+pandas
+numpy
+matplotlib # For plotting in reports
+plotly # For interactive plots
+
+# Security & Authentication
+python-jose[cryptography] # For JWT
+passlib[bcrypt] # For password hashing
+
+# Optional: Add GPU support if needed
+# torch # If using PyTorch-based models directly or for FAISS-GPU
+# tensorflow # If using TensorFlow-based models
+# accelerate # For Hugging Face model loading optimizations
+# bitsandbytes # For 8-bit/4-bit quantization
+numexpr # For safe evaluation of math expressions
+
+# Development & Testing
+pytest
+requests # For testing API endpoints
+httpx # Async requests
+sse-starlette 

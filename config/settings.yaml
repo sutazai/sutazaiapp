@@ -1,0 +1,55 @@
+# Basic System Settings
+log_level: INFO  # DEBUG, INFO, WARNING, ERROR
+# Allowlist of hosts for CORS (FastAPI) - '*' allows all, restrict in production
+cors_origins:
+  - "*" 
+
+# Model Management Configuration
+# Ollama connection details (assumes default)
+ollama_base_url: http://127.0.0.1:11434
+
+# Default models to be used by agents/services
+# Ensure these models are pulled via 'ollama pull <model_name>'
+default_llm_model: "llama2" 
+default_coding_model: "deepseek-coder:33b" # Specify size if needed
+default_embedding_model: "llama2" # Or a dedicated embedding model like 'nomic-embed-text'
+
+# Model parameters (examples, adjust as needed)
+model_parameters:
+  temperature: 0.7
+  top_k: 40
+  top_p: 0.9
+  # Add other Ollama parameters if needed
+
+# Memory Configuration
+vector_store:
+  provider: chromadb
+  persist_directory: "data/chroma_db" # Relative to project root
+  # Default collection name for general knowledge/chat history
+  default_collection: "sutazai_main_memory" 
+
+# Agent & Tool Settings (can be overridden in agents.yaml)
+agent_defaults:
+  max_iterations: 10 # Default max iterations for agents like AutoGPT
+  # Add other default agent parameters
+
+# Service-Specific Settings
+document_processing:
+  # Path to Tesseract executable if needed and not in PATH
+  # tesseract_cmd: /usr/bin/tesseract 
+  allowed_upload_extensions: ["pdf", "docx", "txt", "md"]
+
+code_tools:
+  # Paths to executables if not in PATH
+  # semgrep_cmd: /path/to/semgrep
+  # tabby_api_url: http://localhost:8080 # Default TabbyML API URL
+  # aider_command: aider # Command to invoke aider
+  # gpt_engineer_command: gpt-engineer # Command to invoke gpt-engineer
+  sandbox_type: docker # 'docker' or 'subprocess' (less secure)
+
+# Security Settings
+jwt_secret_key: "PLEASE_CHANGE_ME_IN_A_REAL_DEPLOYMENT" # Load from env variable in production
+jwt_algorithm: "HS256"
+jwt_expire_minutes: 60
+
+# Add other settings as the project evolves 

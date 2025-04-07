@@ -1,0 +1,149 @@
+# Configuration for AI Agents and their tools
+
+agents:
+  - name: ToolAgent
+    type: langchain
+    description: "Agent capable of general conversation, file system operations (read, write, list), and executing shell commands."
+    enabled: true
+    model: default
+    tools:
+      - file_reader
+      - file_writer
+      - directory_lister
+      - shell_command
+    langchain_config:
+      agent_type: structured-chat
+      verbose: false
+      max_iterations: 5
+
+  - name: SimpleChatAgent
+    type: langchain
+    description: "A conversational agent for general chat, without access to file system or execution tools."
+    enabled: true
+    model: default
+    tools: []
+    langchain_config:
+      agent_type: structured-chat
+      verbose: false
+      max_iterations: 3
+      system_prompt: "You are a helpful and friendly chat assistant."
+
+  - name: RouterAgent
+    type: langchain
+    description: "Classifies user requests and routes them to the appropriate specialist agent (ToolAgent or SimpleChatAgent)."
+    enabled: true
+    model: default
+    tools: []
+    langchain_config:
+      agent_type: structured-chat
+      verbose: false
+      max_iterations: 1
+      system_prompt: |
+        Your task is to classify the user's latest request and determine the best agent to handle it.
+        Available agents:
+        - ToolAgent: Handles requests requiring file system access (read, write, list files/directories), shell command execution, or complex multi-step reasoning that might benefit from tools. Use for coding tasks, file management, system interaction.
+        - SimpleChatAgent: Handles general conversation, questions, creative writing, summarization, and other tasks that do NOT require accessing local files or running commands.
+
+        Based on the user's latest message, output ONLY the name of the single best agent to use. Your output must be exactly "ToolAgent" or "SimpleChatAgent".
+
+  - name: "AutoGen Multi-Agent"
+    description: "Collaborative multi-agent system using AutoGen."
+    type: autogen
+    enabled: false # Disabled by default, enable when implemented
+    # AutoGen specific config (example structure)
+    autogen_config:
+      # Define the agents (e.g., planner, executor, critic)
+      agent_definitions:
+        - name: "Planner"
+          model: null # Use default LLM
+          system_message: "You are a helpful planning agent..."
+        - name: "Executor"
+          model: "deepseek-coder:33b" # Use coding model
+          system_message: "You execute tasks..."
+      # Define the workflow or conversation pattern
+      workflow_type: "groupchat" # or "sequential"
+    tools: [] # Tools available to AutoGen agents
+
+  - name: "AutoGPT Task Agent"
+    description: "Autonomous agent for achieving complex goals using AutoGPT logic."
+    type: autogpt
+    enabled: false # Disabled by default
+    model: null
+    # AutoGPT specific config (example structure)
+    autogpt_config:
+      ai_name: "SutazAI-AutoGPT"
+      ai_role: "An autonomous AI assistant to achieve user goals."
+      max_iterations: 15 # Override default from settings.yaml
+    tools:
+      - search_local_docs
+      - execute_python_code # Needs sandbox
+      - manage_files # Needs sandbox & careful permissions
+
+  - name: "LocalAGI Agent"
+    description: "Simple, local-first agent based on LocalAGI principles."
+    type: localagi
+    enabled: false # Disabled by default
+    model: null
+    tools:
+      - search_local_docs
+      - simple_memory_read_write
+
+  # Add configurations for other agents from the blueprint as they get implemented:
+  # AgentZero, BigAGI, Skyvern, GPT-Engineer, Aider etc.
+  # - name: "...
+  #   type: ...
+  #   enabled: false
+  #   model: ...
+  #   config: ...
+  #   tools: [...]
+
+# Tool Definitions (mapping names used above to implementation details)
+# Actual tool functions/classes are defined in sutazai_agi.agents.tool_library
+tools:
+  search_local_docs:
+    description: "Searches the local knowledge base (vector store) for relevant documents or text snippets based on a query."
+    # Parameters expected by the tool function
+    parameters:
+      query: "The search query string."
+      top_k: "Number of results to return (default: 3)."
+    # Corresponds to a function/method in tool_library.py
+    implementation: "search_vector_store" 
+
+  summarize_text:
+    description: "Summarizes a given piece of text."
+    parameters:
+      text: "The text to summarize."
+      max_length: "Desired maximum length of the summary (optional)."
+    implementation: "summarize_with_llm"
+
+  calculator:
+    description: "Calculates the result of a mathematical expression."
+    parameters:
+      expression: "The mathematical expression string (e.g., '2 + 2 * 4')."
+    implementation: "safe_calculator"
+
+  execute_python_code:
+    description: "Executes a given snippet of Python code in a sandboxed environment. Use with caution."
+    parameters:
+      code: "The Python code string to execute."
+    implementation: "execute_code_in_sandbox" # Requires security/sandbox module
+
+  manage_files:
+    description: "Allows reading, writing, or listing files within a designated sandboxed workspace directory. Use with extreme caution."
+    parameters:
+      action: "'read', 'write', or 'list'."
+      path: "The relative path within the workspace."
+      content: "Content to write (only for 'write' action)."
+    implementation: "manage_files_in_sandbox" # Requires security/sandbox module
+
+  simple_memory_read_write:
+    description: "Reads or writes simple key-value pairs to a persistent agent memory."
+    parameters:
+      action: "'read' or 'write'."
+      key: "The key for the memory entry."
+      value: "The value to write (only for 'write' action)."
+    implementation: "localagi_memory_tool" # Needs specific implementation
+
+  # Add definitions for other tools as needed:
+  # get_code_completion (TabbyML), scan_code_semgrep (Semgrep), 
+  # browse_local_page (Skyvern), generate_codebase (GPT-Engineer), edit_code_file (Aider)

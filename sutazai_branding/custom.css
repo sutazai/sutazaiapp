@@ -1,0 +1,86 @@
+/* Custom CSS for OpenWebUI Branding */
+
+/* Attempt to find the container for the top-left brand/logo area in the sidebar */
+/* This selector might need adjustment! Inspect the OpenWebUI HTML. */
+#sidebar > div > button.flex.items-center, /* A common structure for sidebar headers */
+#sidebar .flex.items-center /* Previous attempt */
+{
+    /* Make space if needed, ensure parent has layout */
+    min-height: 40px;
+    position: relative; /* Needed for absolute positioning of pseudo-elements if used */
+}
+
+/* Try to hide the original "OI" text/logo specifically */
+/* This is highly dependent on the actual HTML - inspect needed! */
+#sidebar > div > button.flex.items-center > span, /* If OI is in a span */
+#sidebar .flex.items-center > :first-child /* Hide whatever is first inside */
+{
+    display: none !important; /* Hide the original */
+}
+
+/* Add the ASCII art before the container */
+#sidebar > div > button.flex.items-center::before,
+#sidebar .flex.items-center::before
+{
+    content: '  _________       __                   _____  .__  \A /   _____/__ ___/  |______  ________ /  _  \ |__| \A \\_____  \\|  |  \\   __\\__  \\ \\___   //  /_\\  \\|  | \A /        \\  |  /|  |  / __ \\_/    //    |    \\  | \A/_______  /____/ |__| (____  /_____ \\____|__  /__| \A        \\/                 \\/      \\/       \\/     '; /* ASCII art */
+    white-space: pre;
+    font-family: monospace;
+    display: block;
+    color: var(--sidebar-text-color, #CCC);
+    padding: 5px; /* Reduced padding */
+    font-size: 8px; /* Smaller font size */
+    line-height: 1.1; /* Tighter line height */
+    position: absolute; /* Try absolute positioning */
+    top: 0;
+    left: 5px; /* Adjust positioning */
+    z-index: 10; /* Ensure it's visible */
+}
+
+/* Also hide the splash screen image if it uses #logo */
+#logo {
+    display: none !important;
+}
+/* And attempt to add art to splash screen */
+#splash-screen::before {
+     content: '  _________       __                   _____  .__  \A /   _____/__ ___/  |______  ________ /  _  \ |__| \A \\_____  \\|  |  \\   __\\__  \\ \\___   //  /_\\  \\|  | \A /        \\  |  /|  |  / __ \\_/    //    |    \\  | \A/_______  /____/ |__| (____  /_____ \\____|__  /__| \A        \\/                 \\/      \\/       \\/     '; /* ASCII art */
+    white-space: pre;
+    font-family: monospace;
+    display: block;
+    color: #CCC; /* Adjust color for splash */
+    padding: 20px;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center; /* Center on splash */
+    margin-top: 20px; /* Push down */
+}
+
+/* Target the main logo element - This selector might need adjustment! */
+/* Common selectors could be '.logo', 'img[alt="Logo"]', a specific ID like '#logo' */
+/* Inspect the OpenWebUI HTML to find the correct selector */
+.brand-logo img, /* Attempt to hide the original image */
+img[src*='splash'], /* Another common pattern */
+#logo /* ID used in splash screen from logs */
+{
+    display: none !important; /* Hide the original image logo */
+}
+
+/* Add the ASCII art before the element that normally contains the logo */
+/* Adjust the selector if needed */
+.brand-logo::before, /* Example selector */
+#sidebar .flex.items-center::before, /* Another potential parent element */
+#splash-screen::before /* Target splash screen specifically? */
+{
+    content: '  _________       __                   _____  .__  \A /   _____/__ ___/  |______  ________ /  _  \ |__| \A \\_____  \\|  |  \\   __\\__  \\ \\___   //  /_\\  \\|  | \A /        \\  |  /|  |  / __ \\_/    //    |    \\  | \A/_______  /____/ |__| (____  /_____ \\____|__  /__| \A        \\/                 \\/      \\/       \\/     '; /* Updated ASCII art */
+    white-space: pre; /* Preserve whitespace and line breaks */
+    font-family: monospace; /* Use a fixed-width font */
+    display: block; /* Ensure it takes up space */
+    color: var(--sidebar-text-color, #CCC); /* Use UI variable or default color */
+    padding: 10px; /* Add some spacing */
+    font-size: 10px; /* Adjust size as needed */
+    line-height: 1.2; /* Adjust line height */
+}
+
+/* Specific attempt for the top-left sidebar logo area */
+#sidebar .flex.items-center {
+    min-height: 40px; /* Ensure space for the text */
+} 
