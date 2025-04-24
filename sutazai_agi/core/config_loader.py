@@ -2,23 +2,96 @@ import yaml
 import os
 from dotenv import load_dotenv
 import logging
+import logging.config # Import config
 from typing import Dict, Any, List, Optional
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Configure logging
-log_level = os.getenv("LOG_LEVEL", "INFO").upper()
-logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# --- Logging Configuration ---
+
+# Define project root and log directory relative to this file's location
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+BACKEND_LOG_FILE = os.path.join(LOG_DIR, "backend.log")
+AGENT_FRAMEWORK_LOG_FILE = os.path.join(LOG_DIR, "agent_framework.log")
+
+# Ensure the log directory exists
+os.makedirs(LOG_DIR, exist_ok=True)
+
+# Get log level from environment or default to INFO
+log_level_str = os.getenv("LOG_LEVEL", "INFO").upper()
+
+# Define logging configuration using dictConfig schema
+LOGGING_CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False, # Keep existing loggers (like Uvicorn's) active
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        },
+    },
+    "handlers": {
+        "backend_file": {
+            "level": log_level_str,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BACKEND_LOG_FILE,
+            "maxBytes": 10 * 1024 * 1024, # 10 MB
+            "backupCount": 5,
+            "formatter": "standard",
+        },
+        "agent_file": {
+            "level": log_level_str,
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": AGENT_FRAMEWORK_LOG_FILE,
+            "maxBytes": 10 * 1024 * 1024, # 10 MB
+            "backupCount": 5,
+            "formatter": "standard",
+        },
+        # Optional: Console handler for seeing logs in terminal
+        # "console": {
+        #     "level": log_level_str,
+        #     "class": "logging.StreamHandler",
+        #     "formatter": "standard",
+        # },
+    },
+    "loggers": {
+        # Configure root logger to use file handlers
+        # Uvicorn/FastAPI might use their own specific loggers (e.g., 'uvicorn', 'uvicorn.error')
+        # but configuring the root logger should capture logs from the application code.
+        "": { # Root logger
+            "handlers": ["backend_file", "agent_file"], # Add "console" here if uncommented above
+            "level": log_level_str,
+            "propagate": True, # Important for libraries using standard logging
+        },
+        # Example: Quieten overly verbose libraries if needed
+        # "httpx": { 
+        #     "handlers": ["backend_file", "agent_file"],
+        #     "level": "WARNING",
+        #     "propagate": False,
+        # },
+    }
+}
+
+# Apply the logging configuration
+try:
+    logging.config.dictConfig(LOGGING_CONFIG)
+    logger = logging.getLogger(__name__) # Get logger instance *after* config is applied
+    logger.info(f"Logging configured using dictConfig. Level: {log_level_str}. Log directory: {LOG_DIR}")
+except Exception as e:
+    # Fallback basic config if dictConfig fails (shouldn't happen ideally)
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+    logger.critical(f"Failed to apply dictConfig for logging: {e}. Falling back to basicConfig.", exc_info=True)
+
 
 # --- Configuration Loading ---
 
 _settings: Optional[Dict[str, Any]] = None
 _agents_config: Optional[Dict[str, Any]] = None
 
-# Define default paths relative to the project root
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+# Define default paths relative to the project root (PROJECT_ROOT defined above)
+# PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")) # Redundant now
 DEFAULT_SETTINGS_PATH = os.path.join(PROJECT_ROOT, "config", "settings.yaml")
 DEFAULT_AGENTS_PATH = os.path.join(PROJECT_ROOT, "config", "agents.yaml")
 

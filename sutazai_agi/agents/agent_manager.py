@@ -1,251 +1,153 @@
 import logging
-from typing import Dict, Any, Optional, List, Callable, Union, AsyncGenerator
+from typing import Dict, Any, Optional, List, Type
 
-from sutazai_agi.core.config_loader import get_all_agent_configs, get_agent_config
-from sutazai_agi.core.ethical_verifier import get_verifier
-from sutazai_agi.models.llm_interface import get_llm_interface
-from sutazai_agi.memory.vector_store import get_vector_store
-from .tool_library import load_tool # Assuming tools are loaded from tool_library
+from sutazai_agi.core.config_loader import load_agent_config, get_setting
+from sutazai_agi.agents.tool_library import ToolLibrary, _TOOL_IMPLEMENTATIONS, _not_implemented_tool
+from sutazai_agi.memory.vector_store import VectorStoreInterface
+from sutazai_agi.models.llm_interface import LLMInterface
+from sutazai_agi.core.ethical_verifier import EthicalVerifier # Import new verifier
 
-# Import specific agent implementations
-from .impl.langchain_agent import execute_langchain_task, stream_langchain_task # Import stream version
-# from .impl.autogen_agent import execute_autogen_task
-# from .impl.autogpt_agent import execute_autogpt_task
-# ... import others as they are implemented
+# Import agent execution functions
+from sutazai_agi.agents.impl.langchain_agent import execute_langchain_task
+from sutazai_agi.agents.impl.autogen_agent import execute_autogen_task
+from sutazai_agi.agents.impl.localagi_agent import execute_localagi_task
+from sutazai_agi.agents.integrations.autogpt import run_autogpt
+from sutazai_agi.agents.integrations.gpt_engineer import run_gpt_engineer
+from sutazai_agi.agents.integrations.agentzero import run_agentzero # New
+from sutazai_agi.agents.integrations.skyvern import run_skyvern # New
+from sutazai_agi.agents.integrations.aider import run_aider # New
+# Add imports for other agent types if they have dedicated execution functions
 
 logger = logging.getLogger(__name__)
+
+# Mapping from agent type (in config) to the function that executes it
+_AGENT_EXECUTION_MAP = {
+    "langchain": execute_langchain_task,
+    "autogen": execute_autogen_task,
+    "localagi": execute_localagi_task,
+    "autogpt": run_autogpt, # Now mapped
+    "gpt-engineer": run_gpt_engineer, # Now mapped
+    "agentzero": run_agentzero, # Now mapped
+    "skyvern": run_skyvern, # Now mapped
+    "aider": run_aider, # Now mapped
+    # Add other agent types here
+}
 
 class AgentManager:
     """Manages the lifecycle and execution of different AI agents."""
 
-    def __init__(self):
-        logger.info("Initializing AgentManager...")
-        self.agent_configs = get_all_agent_configs()
-        self.available_agents = {cfg['name']: cfg for cfg in self.agent_configs if cfg.get('enabled', False)}
-        self.verifier = get_verifier()
-        # Eagerly initialize LLM and Vector Store to catch connection errors early
-        try:
-            self.llm_interface = get_llm_interface()
-            self.vector_store = get_vector_store()
-            logger.info(f"AgentManager initialized with {len(self.available_agents)} enabled agents.")
-        except Exception as e:
-             logger.critical(f"Failed to initialize core components (LLM/VectorStore) for AgentManager: {e}", exc_info=True)
-             # Depending on design, either raise here or handle missing components during execution
-             self.available_agents = {} # No agents can run without core components
-             raise RuntimeError("AgentManager could not initialize core dependencies.") from e
-
-    def list_enabled_agents(self) -> List[Dict[str, Any]]:
-        """Returns configuration details of enabled agents."""
-        return list(self.available_agents.values())
-
-    async def execute_task(self, agent_name: str, task_input: Dict[str, Any]) -> Dict[str, Any]:
-        """Executes a task using the specified agent.
-
-        Handles non-streaming requests.
-        For streaming, the caller should use specific stream_task methods if available.
+    def __init__(
+        self,
+        llm_interface: LLMInterface,
+        vector_store: VectorStoreInterface,
+        tool_library: ToolLibrary,
+        ethical_verifier: EthicalVerifier # Inject verifier
+    ):
+        """Initializes the AgentManager.
 
         Args:
-            agent_name: The name of the agent to use (must be enabled).
-            task_input: A dictionary containing the input for the agent's task 
-                        (e.g., {'query': 'user message'} or {'goal': 'complex objective'}).
+            llm_interface: Interface for interacting with LLMs.
+            vector_store: Interface for interacting with the vector store.
+            tool_library: Library containing available tools.
+            ethical_verifier: Instance for performing safety checks.
+        """
+        self.llm_interface = llm_interface
+        self.vector_store = vector_store
+        self.tool_library = tool_library
+        self.ethical_verifier = ethical_verifier # Store verifier
+        self.agents_config = load_agent_config()
+        logger.info(f"AgentManager initialized with {len(self.agents_config)} agent configurations.")
+
+    def list_agents(self) -> List[Dict[str, Any]]:
+        """Lists available agent configurations."""
+        return list(self.agents_config.values())
+
+    def get_agent_config(self, agent_name: str) -> Optional[Dict[str, Any]]:
+        """Gets the configuration for a specific agent."""
+        return self.agents_config.get(agent_name)
+
+    async def execute_task(
+        self,
+        agent_name: str,
+        user_input: str,
+        session_id: Optional[str] = None # Optional session ID for context/memory
+    ) -> Dict[str, Any]:
+        """Executes a task using the specified agent.
+
+        Args:
+            agent_name: The name of the agent to use (must match config/agents.yaml).
+            user_input: The user's input or task description.
+            session_id: Optional session identifier for stateful operations.
 
         Returns:
-            A dictionary containing the agent's result or an error message.
-            Example: {'status': 'success', 'output': 'Agent response...'} or
-                     {'status': 'error', 'message': 'Agent failed...'}
+            A dictionary containing the execution result (status, output/message).
         """
-        logger.info(f"Received task for agent '{agent_name}'. Input keys: {list(task_input.keys())}")
+        agent_config = self.get_agent_config(agent_name)
+        if not agent_config:
+            logger.error(f"Agent '{agent_name}' not found in configuration.")
+            return {"status": "error", "message": f"Agent '{agent_name}' not found."}
 
-        if agent_name not in self.available_agents:
-            logger.error(f"Agent '{agent_name}' is not available or not enabled.")
-            return {"status": "error", "message": f"Agent '{agent_name}' not found or disabled."}
-
-        agent_config = self.available_agents[agent_name]
         agent_type = agent_config.get("type")
+        if not agent_type:
+            logger.error(f"Agent '{agent_name}' configuration missing 'type'.")
+            return {"status": "error", "message": f"Agent '{agent_name}' configuration invalid."}
 
-        # Check if streaming is requested via task_input (though this method shouldn't handle it)
-        is_streaming = task_input.get("stream", False)
-        if is_streaming:
-            # This standard execute_task is NOT for streaming.
-            # Caller (API endpoint) should detect stream=True and call a dedicated streaming function.
-            logger.error(f"execute_task called for agent '{agent_name}' with stream=True. This is not supported here.")
-            return {"status": "error", "message": "Streaming tasks should be initiated via a dedicated streaming endpoint/method."}
+        execution_func = _AGENT_EXECUTION_MAP.get(agent_type)
+        if not execution_func:
+            logger.error(f"Execution function not found for agent type '{agent_type}' (Agent: '{agent_name}').")
+            return {"status": "error", "message": f"Unsupported agent type '{agent_type}'."}
 
-        # --- Ethical Pre-Check (Optional - depends on policy) ---
-        # Could add a check here based on task_input if needed, 
-        # though checks usually happen per-tool call within the agent execution.
+        # Prepare tools available to this agent
+        available_tool_names = agent_config.get("tools", [])
+        available_tools = self.tool_library.get_tools_by_name(available_tool_names)
 
-        # --- Agent Execution Logic (Non-Streaming) ---
+        logger.info(f"Executing task for agent '{agent_name}' (Type: {agent_type}) with {len(available_tools)} tools.")
         try:
-            # --- Load Tools for the Agent --- 
-            tools_dict: Dict[str, Callable] = {}
-            configured_tool_names = agent_config.get("tools", [])
-            if configured_tool_names:
-                logger.debug(f"Loading tools for agent '{agent_name}': {configured_tool_names}")
-                for tool_name in configured_tool_names:
-                    tool_func = load_tool(tool_name) # Get the actual function/class based on implementation name in agents.yaml tools section
-                    if tool_func:
-                        # Use the tool name from the agent's config as the key
-                        tools_dict[tool_name] = tool_func 
-                    else:
-                        logger.warning(f"Tool '{tool_name}' configured for agent '{agent_name}' not found in tool library. Skipping.")
+            # Pass necessary components to the execution function
+            # The signature of execution functions needs to be standardized or handled here
+            # Common args likely include: agent_config, user_input, available_tools, llm_interface, vector_store
+            if agent_type in ["langchain", "autogen"]:
+                # These might need LLM/vector store directly
+                result = await execution_func(
+                    agent_config=agent_config,
+                    user_input=user_input,
+                    available_tools=available_tools,
+                    llm_interface=self.llm_interface,
+                    vector_store=self.vector_store
+                )
+            elif agent_type in ["localagi"]:
+                 # LocalAGI might need tools passed differently or not at all if subprocess
+                 result = await execution_func(
+                    agent_config=agent_config,
+                    user_input=user_input,
+                    available_tools=available_tools # Pass for consistency, even if unused by subprocess impl
+                 )
             else:
-                logger.debug(f"No tools configured for agent '{agent_name}'")
-
-            if agent_type == "langchain":
-                # Call the non-streaming, async-compatible function
-                # Assuming execute_langchain_task is now properly async or handles its own loop
-                result = await self._execute_langchain_non_streaming(agent_config, task_input, tools_dict)
-            
-            elif agent_type == "autogen":
-                # TODO: Implement async execution if needed
-                logger.warning(f"Execution logic for agent type '{agent_type}' is not yet implemented.")
-                result = {"status": "error", "message": f"Agent type '{agent_type}' execution not implemented."}
-            
-            elif agent_type == "autogpt":
-                # TODO: Implement async execution if needed
-                logger.warning(f"Execution logic for agent type '{agent_type}' is not yet implemented.")
-                result = {"status": "error", "message": f"Agent type '{agent_type}' execution not implemented."}
-            
-            # Add async elif blocks for other agent types as needed
-            
-            else:
-                logger.error(f"Unknown agent type '{agent_type}' configured for agent '{agent_name}'.")
-                result = {"status": "error", "message": f"Unknown agent type: {agent_type}"}
-
-            # --- Ethical Post-Check --- 
-            # Check the final output if the agent succeeded
-            if result.get("status") == "success" and "output" in result:
-                 final_output = result["output"]
-                 # Ensure output is string for simple check, adapt if complex objects
-                 if not isinstance(final_output, str):
-                      try:
-                           final_output_str = str(final_output)
-                      except: 
-                           final_output_str = "[Non-string output]"
-                 else:
-                      final_output_str = final_output
-                 
-                 if not self.verifier.check_output(agent_name, final_output_str):
-                      logger.warning(f"Final output from agent '{agent_name}' blocked by ethical verifier.")
-                      # Decide how to handle blocked output (return error, generic message, etc.)
-                      return {"status": "error", "message": "Output blocked by ethical policy."}
-
-            logger.info(f"Task execution finished for agent '{agent_name}'. Status: {result.get('status')}")
-            return result
+                 # Subprocess-based agents (AutoGPT, GPT-Engineer, AgentZero etc.)
+                 # Assume they primarily need config and input, timeout can be passed via config
+                 timeout = agent_config.get("timeout_seconds") # Allow overriding timeout per agent
+                 result = await execution_func(
+                     agent_config=agent_config,
+                     user_input=user_input,
+                     timeout=timeout
+                     # Pass other specific args if needed (e.g., files_to_edit for Aider)
+                 )
 
         except Exception as e:
-            logger.error(f"An unexpected error occurred during '{agent_name}' execution: {e}", exc_info=True)
-            return {"status": "error", "message": f"Internal server error during agent execution: {e}"}
+            logger.error(f"Error executing task for agent '{agent_name}': {e}", exc_info=True)
+            return {"status": "error", "message": f"Agent execution failed: {e}"}
 
-    # --- Add Helper for specific agent calls to keep execute_task cleaner --- 
-    async def _execute_langchain_non_streaming(self, agent_config, task_input, tools_dict):
-        # This ensures we call the correct non-streaming function from langchain_agent
-        return execute_langchain_task( # No await needed IF execute_langchain_task handles its async call internally
-            agent_config=agent_config,
-            task_input=task_input,
-            llm_interface=self.llm_interface, 
-            vector_store=self.vector_store, 
-            available_tools=tools_dict,
-            verifier=self.verifier
-        )
+        # Perform ethical check on the final output/result
+        output_content = result.get("output")
+        if isinstance(output_content, str):
+             is_safe = await self.ethical_verifier.check(content=output_content, agent_name=agent_name)
+             if not is_safe:
+                  logger.warning(f"Ethical verifier blocked output from agent '{agent_name}'.")
+                  # Decide how to handle blocked output (return generic message, etc.)
+                  return {"status": "error",
+                          "message": "Output blocked by safety policy.",
+                          "original_result": result # Optionally include original for admin review
+                         }
 
-    # --- Add a specific method for streaming LangChain tasks --- 
-    async def stream_langchain_task_manager( 
-        self, 
-        agent_name: str, 
-        task_input: Dict[str, Any]
-    ) -> AsyncGenerator[Dict[str, Any], None]:
-        """Initiates and yields results from a streaming LangChain task."""
-        logger.info(f"Initiating stream for agent '{agent_name}'.")
-        if agent_name not in self.available_agents:
-            logger.error(f"Agent '{agent_name}' is not available or not enabled for streaming.")
-            yield {"type": "error", "message": f"Agent '{agent_name}' not found or disabled."}
-            return
-
-        agent_config = self.available_agents[agent_name]
-        agent_type = agent_config.get("type")
-
-        if agent_type != "langchain":
-            logger.error(f"Streaming only implemented for 'langchain' type, agent '{agent_name}' is '{agent_type}'")
-            yield {"type": "error", "message": f"Streaming not supported for agent type '{agent_type}'."}
-            return
-
-        # Load tools for the agent (same logic as execute_task)
-        tools_dict: Dict[str, Callable] = {}
-        configured_tool_names = agent_config.get("tools", [])
-        if configured_tool_names:
-            for tool_name in configured_tool_names:
-                tool_func = load_tool(tool_name)
-                if tool_func:
-                    tools_dict[tool_name] = tool_func
-                else:
-                    logger.warning(f"Tool '{tool_name}' for agent '{agent_name}' not found. Skipping for stream.")
-
-        # Call the dedicated streaming function from the implementation
-        try:
-            async for chunk in stream_langchain_task(
-                agent_config=agent_config,
-                task_input=task_input,
-                llm_interface=self.llm_interface, 
-                vector_store=self.vector_store, 
-                available_tools=tools_dict,
-                verifier=self.verifier
-            ):
-                yield chunk # Yield the structured chunk directly
-        except Exception as e:
-            logger.error(f"Unexpected error during '{agent_name}' streaming setup or execution: {e}", exc_info=True)
-            yield {"type": "error", "message": f"Internal server error during agent stream: {e}"}
-
-    def get_available_agent_names(self) -> List[str]:
-        """Returns a list of names of all configured and enabled agents."""
-        return [agent_config['name'] for agent_config in self.agent_configs if agent_config.get('enabled', True)]
-
-# --- Global Agent Manager Instance --- 
-_agent_manager: Optional[AgentManager] = None
-
-def get_agent_manager() -> AgentManager:
-    """Returns a singleton instance of the AgentManager."""
-    global _agent_manager
-    if _agent_manager is None:
-        try:
-             _agent_manager = AgentManager()
-        except RuntimeError as e:
-             logger.critical(f"AgentManager initialization failed: {e}. Agents will not be available.")
-             _agent_manager = None # Ensure it stays None if init fails
-             raise # Re-raise critical error
-        except Exception as e:
-             logger.critical(f"Unexpected error initializing AgentManager: {e}", exc_info=True)
-             _agent_manager = None
-             raise
-
-    if _agent_manager is None:
-         raise RuntimeError("AgentManager initialization failed previously. Cannot provide manager.")
-         
-    return _agent_manager
-
-# Example Usage (needs adaptation for async execute_task):
-# async def main_example():
-#     try:
-#         manager = get_agent_manager()
-#         print("Enabled Agents:", [agent['name'] for agent in manager.list_enabled_agents()])
-#         
-#         # Example non-streaming task
-#         task = {"query": "What is ChromaDB? Summarize it briefly.", "stream": False}
-#         result = await manager.execute_task("LangChain Chat Agent", task)
-#         print("\nNon-Streaming Task Result:", result)
-
-#         # Example streaming task
-#         stream_task = {"query": "Tell me a short story about a robot.", "stream": True}
-#         print("\nStreaming Task Result:")
-#         async for chunk in manager.stream_langchain_task_manager("LangChain Chat Agent", stream_task):
-#             print(chunk)
-#             
-#     except RuntimeError as e:
-#          print(f"Error: {e}")
-#     except Exception as e:
-#          print(f"An unexpected error occurred: {e}")
-
-# if __name__ == '__main__':
-#     import asyncio
-#     asyncio.run(main_example()) 
+        logger.info(f"Task execution completed for agent '{agent_name}'. Status: {result.get('status')}")
+        return result

@@ -1,11 +1,16 @@
 import logging
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from contextlib import asynccontextmanager
 import asyncio # Added for async middleware
+import traceback
 
 # Import routers and other necessary components
 from .api.endpoints import router as api_router
+from .api.code_assistant_api import router as code_assistant_router # Import the new router
 from sutazai_agi.core.config_loader import get_setting, load_settings, load_agents_config
 from sutazai_agi.models.llm_interface import get_llm_interface # To initialize early
 from sutazai_agi.memory.vector_store import get_vector_store # To initialize early
@@ -56,6 +61,43 @@ app = FastAPI(
     lifespan=lifespan # Use the lifespan context manager
 )
 
+# --- Exception Handlers ---
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Global exception handler for unhandled exceptions."""
+    error_detail = {
+        "error": str(exc),
+        "type": type(exc).__name__,
+        "traceback": traceback.format_exc()
+    }
+    logger.error(f"Unhandled exception: {exc}", exc_info=True)
+    logger.error(f"Request path: {request.url.path}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "error_info": error_detail},
+    )
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    """Handle HTTP exceptions with detailed logs."""
+    logger.error(f"HTTP exception {exc.status_code}: {exc.detail}")
+    logger.error(f"Request path: {request.url.path}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors with detailed logs."""
+    logger.error(f"Validation error: {exc}")
+    logger.error(f"Request path: {request.url.path}")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "Validation error", "errors": exc.errors()},
+    )
+
 # --- Middleware Configuration --- 
 
 # CORS (Cross-Origin Resource Sharing)
@@ -84,6 +126,9 @@ async def log_requests(request: Request, call_next):
 
 # Include the main API router
 app.include_router(api_router, prefix="/api/v1") # Add version prefix
+
+# Include the code assistant router
+app.include_router(code_assistant_router, prefix="/api/v1/code", tags=["Code Assistant"]) # Add specific prefix and tags
 
 # --- Root Endpoint --- 
 

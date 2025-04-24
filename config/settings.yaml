@@ -2,19 +2,19 @@
 log_level: INFO  # DEBUG, INFO, WARNING, ERROR
 # Allowlist of hosts for CORS (FastAPI) - '*' allows all, restrict in production
 cors_origins:
-  - "*" 
+  - "*"
 
 # Model Management Configuration
-# Ollama connection details (assumes default)
+# Ollama connection details
 ollama_base_url: http://127.0.0.1:11434
 
 # Default models to be used by agents/services
 # Ensure these models are pulled via 'ollama pull <model_name>'
-default_llm_model: "llama2" 
+default_llm_model: "llama3-chatqa:latest"
 default_coding_model: "deepseek-coder:33b" # Specify size if needed
-default_embedding_model: "llama2" # Or a dedicated embedding model like 'nomic-embed-text'
+default_embedding_model: "llama3-chatqa:latest" # Or a dedicated embedding model like 'nomic-embed-text'
 
-# Model parameters (examples, adjust as needed)
+# Default Model parameters (can be overridden by agent config or API call)
 model_parameters:
   temperature: 0.7
   top_k: 40
@@ -24,27 +24,50 @@ model_parameters:
 # Memory Configuration
 vector_store:
   provider: chromadb
-  persist_directory: "data/chroma_db" # Relative to project root
+  persist_directory: "./data/chroma_db" # Relative to project root
   # Default collection name for general knowledge/chat history
-  default_collection: "sutazai_main_memory" 
+  default_collection: "sutazai_main_memory"
+  # embedding_model: "ollama/nomic-embed-text" # Define embedding model here or use default_embedding_model? Using default_embedding_model for now.
 
-# Agent & Tool Settings (can be overridden in agents.yaml)
+# Agent & Tool Settings
 agent_defaults:
   max_iterations: 10 # Default max iterations for agents like AutoGPT
+  temperature: 0.7 # Default LLM temperature for agents
+  max_tokens: 1500 # Default max tokens for agents
   # Add other default agent parameters
+
+# Agent Workspace Configuration
+# Main workspace directory (used by file tools, terminal)
+agent_workspace: "/opt/v3/workspace"
+# Specific sub-directories for tool outputs (relative to agent_workspace or absolute)
+workspace:
+  # agentzero_dir: "./workspace/agentzero_runs" # Example if needed later
+  # skyvern_dir: "./workspace/skyvern_runs" # Example if needed later
+  gpt_engineer_dir: "./workspace/gpt_engineer_runs" # Relative to project root for now, consistent with gpt_engineer.py
+  # aider_dir: "./workspace/aider_runs" # Example if needed later
+  localagi_dir: "./workspace/localagi_runs" # Base directory for LocalAGI temporary runs
 
 # Service-Specific Settings
 document_processing:
+  upload_directory: "document_uploads" # Relative to agent_workspace
   # Path to Tesseract executable if needed and not in PATH
-  # tesseract_cmd: /usr/bin/tesseract 
-  allowed_upload_extensions: ["pdf", "docx", "txt", "md"]
+  # tesseract_cmd: /usr/bin/tesseract
+  allowed_upload_extensions: [".pdf", ".docx", ".txt", ".md"]
+  # Default vector store collection for documents
+  vector_collection: "sutazai_documents"
 
 code_tools:
   # Paths to executables if not in PATH
   # semgrep_cmd: /path/to/semgrep
-  # tabby_api_url: http://localhost:8080 # Default TabbyML API URL
-  # aider_command: aider # Command to invoke aider
-  # gpt_engineer_command: gpt-engineer # Command to invoke gpt-engineer
+  tabby_api_url: http://localhost:8080 # Default TabbyML API URL
+  aici_controller_url: http://127.0.0.1:8080/v1 # AICI controller URL
+  # aici_api_key: null # Optional AICI API key
+  aider_command: aider # Command to invoke aider
+  gpt_engineer_command: gpt-engineer # Command to invoke gpt-engineer
+  autogpt_command: autogpt # Command to invoke AutoGPT (e.g., python -m autogpt)
+  agentzero_command: agentzero # Command to invoke AgentZero
+  skyvern_command: skyvern # Command to invoke Skyvern
+  localagi_command: "localagi_run_script.py" # Command to invoke LocalAGI (placeholder)
   sandbox_type: docker # 'docker' or 'subprocess' (less secure)
 
 # Security Settings
@@ -52,4 +75,55 @@ jwt_secret_key: "PLEASE_CHANGE_ME_IN_A_REAL_DEPLOYMENT" # Load from env variable
 jwt_algorithm: "HS256"
 jwt_expire_minutes: 60
 
-# Add other settings as the project evolves 
+# Logging Configuration (defined here for completeness, but primarily configured in config_loader.py)
+# logging:
+#   level: "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL
+#   log_file: "./logs/sutazai_agi.log" # Relative to project root
+#   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Deprecated/Unused (Remove or comment out if confirmed unused)
+# code_assistant:
+#   workspace_path: "./workspace/code_assistant" # Seems replaced by specific tool dirs
+
+# API Keys (Define as environment variables, do not commit secrets here)
+# Example format for reference:
+# api_keys:
+#   openai: ${OPENAI_API_KEY}
+#   anthropic: ${ANTHROPIC_API_KEY}
+
+# Sutazai AGI Configuration
+
+# API Keys - Use environment variables for sensitive keys (e.g., OPENAI_API_KEY)
+# Example:
+# api_keys:
+#   openai: ${OPENAI_API_KEY}
+#   anthropic: ${ANTHROPIC_API_KEY}
+
+# Agent Defaults
+agent_defaults:
+  default_model: "ollama/llama3" # Example: Choose a default model for agents
+  temperature: 0.7
+  max_tokens: 1500
+
+# Vector Store Configuration
+vector_store:
+  type: "chroma" # 'chroma' or 'faiss'
+  persist_directory: "./data/chroma_db"
+  embedding_model: "ollama/nomic-embed-text" # Model used for embeddings, ensure it's compatible with store/retrieval
+
+# Logging Configuration
+logging:
+  level: "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_file: "./logs/sutazai_agi.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Code Assistant Workspace
+code_assistant:
+  workspace_path: "./workspace/code_assistant" # Adjusted path for consistency with integrations
+
+# Add other configurations as needed (e.g., specific tool settings, UI settings)
+
+integrations:
+  # ... other integrations ...
+  localagi:
+    api_url: "http://localhost:8001/localagi/run" # Default URL, adjust as needed 

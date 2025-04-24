@@ -3,18 +3,45 @@
 agents:
   - name: ToolAgent
     type: langchain
-    description: "Agent capable of general conversation, file system operations (read, write, list), and executing shell commands."
+    description: "Agent capable of general conversation, file system operations (read, write, list), executing shell commands, and generating/editing code."
     enabled: true
-    model: default
+    model: llama3-chatqa:latest
     tools:
-      - file_reader
-      - file_writer
-      - directory_lister
-      - shell_command
+      - manage_file
+      - terminal_tool
+      - detect_objects_in_image_tool
+      - web_search_tool
+      - get_code_completion
+      - scan_code_semgrep
+      - generate_code_gptengineer
+      - edit_code_aider
     langchain_config:
       agent_type: structured-chat
-      verbose: false
-      max_iterations: 5
+      verbose: true
+      max_iterations: 10
+      system_prompt: |
+        You are a helpful AI assistant named ToolAgent.
+        You can engage in general conversation and assist with tasks using available tools.
+        
+        **Workspace Restriction:** You can ONLY access files and directories within the `/opt/v3/workspace` directory using the `manage_file` tool. The `terminal_tool` also operates within this workspace.
+        
+        Your available tools allow you to:
+        - Manage files (read, write, list_dir) using `manage_file`
+        - Execute terminal commands (`terminal_tool` - use safely!)
+        - Detect objects in images (`detect_objects_in_image_tool`)
+        - Search the web (`web_search_tool`)
+        - Get code completions (`get_code_completion`)
+        - Scan code for issues (`scan_code_semgrep`)
+        - Generate entire codebases from prompts (`generate_code_gptengineer`)
+        - Edit existing code files based on instructions (`edit_code_aider`)
+        
+        IMPORTANT: Only use the capabilities listed. Refer to the exact tool names when needed.
+        
+        **Enhanced Error Handling:**
+        When a tool returns an error message, interpret it and explain the likely cause clearly to the user, suggesting corrections.
+        
+        When asked about files, use `manage_file` with action='list_dir', then action='read' if needed, and summarize.
+        Follow the output format required by the structured-chat agent.
 
   - name: SimpleChatAgent
     type: langchain
@@ -30,7 +57,7 @@ agents:
 
   - name: RouterAgent
     type: langchain
-    description: "Classifies user requests and routes them to the appropriate specialist agent (ToolAgent or SimpleChatAgent)."
+    description: "Classifies user requests and routes them to the appropriate specialist agent."
     enabled: true
     model: default
     tools: []
@@ -39,111 +66,90 @@ agents:
       verbose: false
       max_iterations: 1
       system_prompt: |
-        Your task is to classify the user's latest request and determine the best agent to handle it.
+        Your task is to classify the user's latest request and determine the single best agent to handle it.
         Available agents:
-        - ToolAgent: Handles requests requiring file system access (read, write, list files/directories), shell command execution, or complex multi-step reasoning that might benefit from tools. Use for coding tasks, file management, system interaction.
-        - SimpleChatAgent: Handles general conversation, questions, creative writing, summarization, and other tasks that do NOT require accessing local files or running commands.
+        - DeepResearchAgent: Handles complex research topics requiring web search, data analysis, and synthesis into reports.
+        - ToolAgent: Handles general tasks requiring local file system access, simple shell commands, image analysis, and code generation/editing.
+        - AutoGen Multi-Agent: Handles complex, multi-step tasks requiring planning and execution using multiple tools (filesystem, terminal, web search, code tools).
+        - SimpleChatAgent: Handles general conversation, simple questions, creative writing, and other tasks not requiring tools or complex planning.
 
-        Based on the user's latest message, output ONLY the name of the single best agent to use. Your output must be exactly "ToolAgent" or "SimpleChatAgent".
+        Based on the user's latest message, output ONLY the name of the single best agent to use. Your output must be exactly one of: "DeepResearchAgent", "ToolAgent", "AutoGen Multi-Agent", or "SimpleChatAgent".
 
   - name: "AutoGen Multi-Agent"
     description: "Collaborative multi-agent system using AutoGen."
     type: autogen
-    enabled: false # Disabled by default, enable when implemented
-    # AutoGen specific config (example structure)
+    enabled: true
     autogen_config:
-      # Define the agents (e.g., planner, executor, critic)
       agent_definitions:
         - name: "Planner"
-          model: null # Use default LLM
-          system_message: "You are a helpful planning agent..."
+          model: null
+          system_message: |
+            You are a meticulous planner. Analyze the user's request and break it down into a clear, step-by-step plan.
+            Consider potential issues and edge cases. Delegate execution steps to the Executor.
+            Provide the plan to the group chat.
         - name: "Executor"
-          model: "deepseek-coder:33b" # Use coding model
-          system_message: "You execute tasks..."
-      # Define the workflow or conversation pattern
-      workflow_type: "groupchat" # or "sequential"
-    tools: [] # Tools available to AutoGen agents
+          model: null
+          system_message: |
+            You are a diligent executor. Follow the plan provided by the Planner.
+            Use the available tools to execute the plan steps.
+            Report the results of each step, including any errors encountered.
+            Use the `terminal_tool` tool only for safe, simple commands like `ls`, `cat`, `echo` within the workspace `/opt/v3/workspace`.
+            All file operations must also be within `/opt/v3/workspace`.
+            If a tool fails due to permissions, report that it was likely outside the workspace.
+      workflow_type: "groupchat"
+    tools:
+      - manage_file
+      - terminal_tool
+      - web_search_tool
+      - scan_code_semgrep
+      - get_code_completion
+      - generate_code_gptengineer
+      - edit_code_aider
 
   - name: "AutoGPT Task Agent"
     description: "Autonomous agent for achieving complex goals using AutoGPT logic."
     type: autogpt
-    enabled: false # Disabled by default
+    enabled: false
     model: null
-    # AutoGPT specific config (example structure)
     autogpt_config:
       ai_name: "SutazAI-AutoGPT"
       ai_role: "An autonomous AI assistant to achieve user goals."
-      max_iterations: 15 # Override default from settings.yaml
+      max_iterations: 15
     tools:
-      - search_local_docs
-      - execute_python_code # Needs sandbox
-      - manage_files # Needs sandbox & careful permissions
+      - search_local_documents
+      - execute_python_code
+      - manage_file
+      - web_search_tool
 
   - name: "LocalAGI Agent"
     description: "Simple, local-first agent based on LocalAGI principles."
     type: localagi
-    enabled: false # Disabled by default
+    enabled: false
     model: null
     tools:
-      - search_local_docs
-      - simple_memory_read_write
+      - search_local_documents
+      - localagi_memory_tool
 
-  # Add configurations for other agents from the blueprint as they get implemented:
-  # AgentZero, BigAGI, Skyvern, GPT-Engineer, Aider etc.
-  # - name: "...
-  #   type: ...
-  #   enabled: false
-  #   model: ...
-  #   config: ...
-  #   tools: [...]
-
-# Tool Definitions (mapping names used above to implementation details)
-# Actual tool functions/classes are defined in sutazai_agi.agents.tool_library
-tools:
-  search_local_docs:
-    description: "Searches the local knowledge base (vector store) for relevant documents or text snippets based on a query."
-    # Parameters expected by the tool function
-    parameters:
-      query: "The search query string."
-      top_k: "Number of results to return (default: 3)."
-    # Corresponds to a function/method in tool_library.py
-    implementation: "search_vector_store" 
-
-  summarize_text:
-    description: "Summarizes a given piece of text."
-    parameters:
-      text: "The text to summarize."
-      max_length: "Desired maximum length of the summary (optional)."
-    implementation: "summarize_with_llm"
-
-  calculator:
-    description: "Calculates the result of a mathematical expression."
-    parameters:
-      expression: "The mathematical expression string (e.g., '2 + 2 * 4')."
-    implementation: "safe_calculator"
-
-  execute_python_code:
-    description: "Executes a given snippet of Python code in a sandboxed environment. Use with caution."
-    parameters:
-      code: "The Python code string to execute."
-    implementation: "execute_code_in_sandbox" # Requires security/sandbox module
-
-  manage_files:
-    description: "Allows reading, writing, or listing files within a designated sandboxed workspace directory. Use with extreme caution."
-    parameters:
-      action: "'read', 'write', or 'list'."
-      path: "The relative path within the workspace."
-      content: "Content to write (only for 'write' action)."
-    implementation: "manage_files_in_sandbox" # Requires security/sandbox module
-
-  simple_memory_read_write:
-    description: "Reads or writes simple key-value pairs to a persistent agent memory."
-    parameters:
-      action: "'read' or 'write'."
-      key: "The key for the memory entry."
-      value: "The value to write (only for 'write' action)."
-    implementation: "localagi_memory_tool" # Needs specific implementation
-
-  # Add definitions for other tools as needed:
-  # get_code_completion (TabbyML), scan_code_semgrep (Semgrep), 
-  # browse_local_page (Skyvern), generate_codebase (GPT-Engineer), edit_code_file (Aider)
+  - name: DeepResearchAgent
+    type: langchain
+    description: "Advanced research agent that conducts comprehensive multi-step research on complex topics using web search and synthesis techniques."
+    enabled: true
+    model: default
+    tools:
+      - deep_research_tool
+      - web_search_tool
+      - summarize_text
+    langchain_config:
+      agent_type: structured-chat
+      verbose: false
+      max_iterations: 8
+      system_prompt: |
+        You are an advanced research assistant specializing in comprehensive investigation of complex topics.
+        Your capabilities include breaking down research questions, gathering information, analyzing, and synthesizing reports.
+        
+        When asked to research a topic:
+        - For simple factual questions, use the `web_search_tool` tool directly.
+        - For complex topics requiring in-depth analysis, use the `deep_research_tool` tool.
+        - For very long content that needs summarization, use the `summarize_text` tool.
+        
+        Provide thorough, nuanced analysis, maintain objectivity, and acknowledge limitations.

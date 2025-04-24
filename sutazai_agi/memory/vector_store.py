@@ -187,44 +187,96 @@ class VectorStoreInterface:
               query_texts: List[str],
               n_results: int = 3,
               where: Optional[Dict[str, Any]] = None, # For metadata filtering
+              where_document: Optional[Dict[str, Any]] = None, # For document content filtering
+              include: List[str] = ['documents', 'metadatas', 'distances'], # Default includes
               collection_name: Optional[str] = None
-              ) -> Optional[Dict[str, List[Any]]]: # Changed return format slightly
+              ) -> Optional[Dict[str, List[Any]]]:
         """Queries the collection for documents similar to the query texts.
 
         Args:
             query_texts: A list of query strings.
             n_results: The number of results to return per query.
             where: Optional metadata filter dictionary (e.g., {"source": "wiki"}).
+            where_document: Optional document content filter dictionary (e.g., {"$contains": "search term"}).
+            include: List of fields to include in the result (e.g., ['documents', 'metadatas', 'distances']).
             collection_name: The name of the collection. Defaults to the default collection.
         
         Returns:
-            A dictionary containing the query results (documents, metadatas, distances, ids) 
-            structured per query, or None if an error occurs.
-            Example ChromaDB query result format:
-            {
-                'ids': [[id1, id2], [id3, id4]], 
-                'distances': [[d1, d2], [d3, d4]], 
-                'metadatas': [[m1, m2], [m3, m4]], 
-                'embeddings': None, # Usually not needed unless include=['embeddings']
-                'documents': [[doc1, doc2], [doc3, doc4]]
-            }
+            A dictionary containing the query results or None if an error occurs.
         """
         collection = self._get_or_create_collection(collection_name)
         if not collection:
             return None
 
-        logger.info(f"Querying collection '{collection.name}' with {len(query_texts)} queries, n_results={n_results}, where={where}")
+        logger.info(f"Querying collection '{collection.name}' with {len(query_texts)} queries, n_results={n_results}, where={where}, where_document={where_document}")
         try:
             results = collection.query(
                 query_texts=query_texts,
                 n_results=n_results,
                 where=where,
-                include=['documents', 'metadatas', 'distances'] # Specify what to include
+                where_document=where_document,
+                include=include
             )
             logger.debug(f"Query successful. Retrieved results for {len(query_texts)} queries.")
             return results
         except Exception as e:
             logger.error(f"Failed to query collection '{collection.name}': {e}", exc_info=True)
+            return None
+
+    def get(self, 
+            ids: Optional[List[str]] = None, 
+            where: Optional[Dict[str, Any]] = None, 
+            where_document: Optional[Dict[str, Any]] = None, 
+            limit: Optional[int] = None, 
+            offset: Optional[int] = None, 
+            include: List[str] = ['documents', 'metadatas'], # Default includes for get
+            collection_name: Optional[str] = None
+            ) -> Optional[Dict[str, Any]]:
+        """Retrieves documents from the collection by ID or filters.
+
+        Args:
+            ids: Optional list of document IDs to retrieve.
+            where: Optional metadata filter dictionary.
+            where_document: Optional document content filter dictionary.
+            limit: Optional maximum number of documents to return.
+            offset: Optional offset for pagination.
+            include: List of fields to include in the result (e.g., ['documents', 'metadatas']).
+            collection_name: The name of the collection. Defaults to the default collection.
+
+        Returns:
+            A dictionary containing the retrieved documents and metadata, or None if an error occurs.
+            Example ChromaDB get result format:
+            {
+                'ids': [id1, id2], 
+                'metadatas': [m1, m2],
+                'documents': [doc1, doc2],
+                'embeddings': None # Unless included
+            }
+        """
+        collection = self._get_or_create_collection(collection_name)
+        if not collection:
+            return None
+            
+        if not ids and not where and not where_document:
+            logger.warning("'get' called without specific ids or filters. This might retrieve the entire collection (up to limit).")
+            # Potentially add a safeguard here to prevent accidental large fetches
+            # if collection.count() > (limit or 1000): 
+            #     return {"error": "Please provide IDs or filters to avoid fetching too many documents."}
+
+        logger.info(f"Getting documents from collection '{collection.name}' with ids={ids}, where={where}, limit={limit}")
+        try:
+            results = collection.get(
+                ids=ids,
+                where=where,
+                where_document=where_document,
+                limit=limit,
+                offset=offset,
+                include=include
+            )
+            logger.debug(f"Get successful. Retrieved {len(results.get('ids', []))} documents.")
+            return results
+        except Exception as e:
+            logger.error(f"Failed to get documents from collection '{collection.name}': {e}", exc_info=True)
             return None
 
     def delete_documents(self, ids: List[str], collection_name: Optional[str] = None) -> bool:
@@ -254,6 +306,17 @@ class VectorStoreInterface:
         except Exception as e:
              logger.error(f"Failed to list collections: {e}", exc_info=True)
              return []
+
+    def count_documents(self, collection_name: Optional[str] = None) -> Optional[int]:
+        """Counts the number of documents in the collection."""
+        collection = self._get_or_create_collection(collection_name)
+        if not collection:
+            return None
+        try:
+            return collection.count()
+        except Exception as e:
+            logger.error(f"Failed to count documents in collection '{collection.name}': {e}", exc_info=True)
+            return None
 
 # --- Global Vector Store Instance --- 
 _vector_store_interface: Optional[VectorStoreInterface] = None

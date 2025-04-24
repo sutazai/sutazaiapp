@@ -9,9 +9,11 @@ pyyaml
 langchain
 langchain-community # For community integrations if needed
 langchain-core
+langsmith
 # ollama # Python client for Ollama
 ollama
 pyautogen # For AutoGen
+docker
 # Add other agent framework dependencies as needed (e.g., autogpt, agentzero - check their requirements)
 
 # Memory
@@ -20,17 +22,18 @@ faiss-cpu # Or faiss-gpu if GPU is consistently available and configured
 # sentence-transformers # Often needed for embeddings with ChromaDB
 
 # Document Processing
-pypdf2 # Or pymupdf / pdfplumber
-python-docx
-unstructured # Powerful library for various doc types
+# pypdf2 # Or pymupdf / pdfplumber
+# python-docx
+unstructured # Powerful library for various doc types. Use `pip install unstructured[local-inference]` for OCR etc.
+python-magic # Dependency for unstructured
 # Consider OCR library if not using unstructured's capabilities: pytesseract
 
 # Coding Tools Integration (Placeholders - verify actual packages)
-# tabby-ml-client # Example, check TabbyML docs for official client
-# semgrep # Usually installed as a binary, but might have a Python API
-# aider-chat # Example, check Aider docs
-# gpt-engineer # Check GPT-Engineer docs
-# skyvern # Check Skyvern docs
+tabby-ml-client # Example, check TabbyML docs for official client
+semgrep # Usually installed as a binary, but might have a Python API
+aider-chat # Example, check Aider docs
+gpt-engineer # Check GPT-Engineer docs
+skyvern # Check Skyvern docs
 
 # Data Handling & Analysis
 pandas
@@ -53,4 +56,27 @@ numexpr # For safe evaluation of math expressions
 pytest
 requests # For testing API endpoints
 httpx # Async requests
-sse-starlette 
+sse-starlette
+watchfiles
+websockets
+yarl
+# Add YOLO dependencies
+ultralytics
+opencv-python-headless
+
+# Web Search
+duckduckgo-search 
+
+# Streamlit UI
+tornado==6.4.2 # Pinning tornado version for streamlit compatibility
+watchdog # Required by streamlit
+
+# Tools & Integrations
+wikipedia
+
+# Code Generation / Editing
+aider-chat
+gpt-engineer
+
+# Optional: For specific data handling or analysis
+# seaborn 

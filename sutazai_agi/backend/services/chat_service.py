@@ -1,101 +1,64 @@
 import logging
-from typing import Dict, Any, Optional, AsyncGenerator, Union
+from typing import Dict, Any, Optional, AsyncGenerator, Union, List
 
 from sutazai_agi.agents.agent_manager import get_agent_manager, AgentManager
+from sutazai_agi.vector_store.vector_store_interface import VectorStoreInterface
 
 logger = logging.getLogger(__name__)
 
-# --- Define the Router Agent Name (must match config/agents.yaml) ---
-ROUTER_AGENT_NAME = "RouterAgent"
-# Define allowed specialist agents the router can choose
-ALLOWED_SPECIALIST_AGENTS = {"ToolAgent", "SimpleChatAgent"}
-
 class ChatService:
     """Handles the business logic for chat interactions, including routing."""
-    def __init__(self, agent_manager: AgentManager):
+    def __init__(self, agent_manager: AgentManager, vector_store: VectorStoreInterface):
         self.agent_manager = agent_manager
-        # Check if router and target agents exist
-        if ROUTER_AGENT_NAME not in self.agent_manager.available_agents:
-            logger.critical(f"Router agent '{ROUTER_AGENT_NAME}' not found or not enabled! Auto-routing disabled.")
-            # Fallback or raise error - For now, log critical and routing will fail
-        for agent_name in ALLOWED_SPECIALIST_AGENTS:
-            if agent_name not in self.agent_manager.available_agents:
-                logger.warning(f"Specialist agent '{agent_name}' for router not found or not enabled.")
+        self.vector_store = vector_store
+        # TODO: Consider initializing default agent or managing agent sessions here
 
-    async def process_message_or_stream(
-        self, 
-        query: str, 
-        session_id: str, 
-        stream: bool = False, 
-        requested_agent_name: Optional[str] = None
-    ) -> Union[Dict[str, Any], AsyncGenerator[Dict[str, Any], None]]:
-        """Processes a user message, potentially routing it first, handles streaming."""
-        
-        if requested_agent_name:
-            # User explicitly requested an agent, bypass router
-            target_agent_name = requested_agent_name
-            logger.info(f"User explicitly selected agent: {target_agent_name}")
-        else:
-            # --- Use Router Agent --- 
-            logger.info(f"Routing query for session '{session_id}'. Query: '{query[:50]}...'")
-            router_task_input = {"query": query, "session_id": f"{session_id}_router"} # Separate router session?
-            
-            try:
-                # Execute the Router Agent (non-streaming)
-                router_result = await self.agent_manager.execute_task(ROUTER_AGENT_NAME, router_task_input)
-                
-                if router_result.get("status") == "success":
-                    chosen_agent = router_result.get("output", "").strip()
-                    if chosen_agent in ALLOWED_SPECIALIST_AGENTS:
-                        target_agent_name = chosen_agent
-                        logger.info(f"Router chose agent: {target_agent_name}")
-                    else:
-                        logger.warning(f"RouterAgent returned invalid agent name: '{chosen_agent}'. Falling back.")
-                        target_agent_name = next(iter(ALLOWED_SPECIALIST_AGENTS)) # Fallback to first specialist
-                else:
-                    logger.error(f"RouterAgent failed: {router_result.get('message')}. Falling back.")
-                    target_agent_name = next(iter(ALLOWED_SPECIALIST_AGENTS)) # Fallback
+    async def process_message(self, agent_name: str, messages: List[Dict[str, str]], session_id: Optional[str] = None, stream: bool = False) -> Union[Dict[str, Any], AsyncGenerator[Dict[str, Any], None]]:
+        """Processes an incoming chat message using the specified agent."""
+        if not messages:
+            raise HTTPException(status_code=400, detail="Messages list cannot be empty.")
 
-            except Exception as route_err:
-                logger.error(f"Error during routing: {route_err}", exc_info=True)
-                target_agent_name = next(iter(ALLOWED_SPECIALIST_AGENTS)) # Fallback
-        
-        # --- Prepare Input for Specialist Agent --- 
-        specialist_task_input = {
-            "query": query,
-            "session_id": session_id, # Use original session for specialist
-            "stream": stream
-            # Add any other necessary parameters
-        }
-        
-        # --- Execute or Stream with Chosen Specialist Agent --- 
-        logger.info(f"Dispatching task to agent '{target_agent_name}'. Streaming: {stream}")
+        # Extract the latest user message as the primary input for non-LangChain agents
+        # LangChain agents usually process the whole message history
+        last_user_message = next((msg["content"] for msg in reversed(messages) if msg.get("role") == "user"), None)
+        if last_user_message is None:
+             raise HTTPException(status_code=400, detail="No user message found in the messages list.")
+
+        # TODO: Enhance agent selection logic. Maybe allow default or route based on query?
+        # TODO: Improve context/memory handling. Fetch relevant history from vector store based on session_id/user_id before calling agent.
+        # TODO: Pass message history correctly, especially for LangChain agents. Non-LangChain agents might just need the last message (`last_user_message`).
+        # TODO: Ensure the tools passed to the agent_manager align with the selected agent's capabilities defined in agents.yaml.
+
+        logger.info(f"Processing message for agent '{agent_name}'. Streaming: {stream}")
+
         if stream:
-            # Call the streaming method of AgentManager
-            # Ensure the chosen agent type supports streaming (currently checked in stream_langchain_task_manager)
-            try:
-                # Using stream_langchain_task_manager as example, adapt if AgentManager gets a generic stream_task
-                agent_config = self.agent_manager.available_agents.get(target_agent_name)
-                if not agent_config or agent_config.get("type") != "langchain": # Example check
-                    logger.error(f"Streaming not supported for chosen agent '{target_agent_name}'")
-                    # Yield an error chunk
-                    async def error_stream(): 
-                        yield {"type": "error", "message": f"Streaming not supported for agent '{target_agent_name}'."}
-                        # Need to yield StopAsyncIteration? Check generator protocol
-                    return error_stream()
-                
-                return self.agent_manager.stream_langchain_task_manager(target_agent_name, specialist_task_input)
-            except Exception as stream_err:
-                 logger.error(f"Failed to initiate stream for '{target_agent_name}': {stream_err}", exc_info=True)
-                 async def error_stream(): 
-                    yield {"type": "error", "message": f"Failed to start stream: {stream_err}"}
-                 return error_stream()
+            # TODO: Implement streaming logic if agent manager supports it
+            # Currently, agent manager's execute_task is non-streaming. Need a stream_task method.
+            async def not_implemented_stream():
+                 yield {"type": "error", "message": "Streaming not yet implemented for this service."}
+            logger.warning("Streaming requested but not implemented in ChatService.")
+            return not_implemented_stream()
+            # Example for future streaming:
+            # return self.agent_manager.stream_task(agent_name=agent_name, user_input=last_user_message, session_id=session_id) # Assuming stream_task exists
         else:
-            # Call the non-streaming method
-            result = await self.agent_manager.execute_task(target_agent_name, specialist_task_input)
-            # Add agent name to result for clarity
-            result["agent_name"] = target_agent_name 
-            return result
+            # Non-streaming execution
+            result = await self.agent_manager.execute_task(
+                agent_name=agent_name,
+                user_input=last_user_message, # Pass last message as primary input
+                session_id=session_id
+                # TODO: Pass full message history if needed by agent type (e.g., inside agent_config or context?)
+            )
+            
+            # TODO: Process the result - e.g., add AI response back to conversation history in vector store?
+            
+            if result.get("status") == "error":
+                 # Don't raise HTTPException here, let the API layer handle it based on the status
+                 logger.error(f"Agent execution failed: {result.get('message')}")
+                 # Return the error dict for the API layer
+                 return result
+                 # raise HTTPException(status_code=500, detail=result.get("message", "Agent execution failed"))
+
+            return result # Return the successful result dictionary
 
 
 # --- Global Chat Service Instance --- 
