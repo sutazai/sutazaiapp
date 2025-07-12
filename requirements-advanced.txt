@@ -1,0 +1,133 @@
+# Advanced ML/AI Frameworks for SutazAI v3+
+
+# Core Deep Learning Frameworks (Already in requirements-ml.txt)
+torch>=2.0.0
+tensorflow>=2.13.0
+transformers>=4.30.0
+
+# Computer Vision Frameworks
+opencv-python>=4.8.0
+opencv-contrib-python>=4.8.0
+pillow>=10.0.0
+
+# Caffe (Computer Vision - Optional, requires compilation)
+# caffe-cpu>=1.0.0  # Uncomment if needed
+
+# Fast Neural Networks
+fann2>=1.0.7
+pyfann>=0.3.2
+
+# Dynamic Computational Graphs
+chainer>=7.8.1
+cupy>=12.0.0  # GPU acceleration for Chainer
+
+# Advanced NLP Libraries
+allennlp>=2.10.0
+allennlp-models>=2.10.0
+polyglot>=16.7.4
+textstat>=0.7.3
+
+# Specialized NLP Tools
+jellyfish>=0.11.0  # String similarity
+python-Levenshtein>=0.21.0
+rapidfuzz>=3.1.0
+
+# Language Detection and Processing
+langdetect>=1.0.9
+langid.py>=1.1.6
+cld2-cffi>=0.1.4
+
+# Advanced Text Processing
+newspaper3k>=0.2.8  # Article extraction
+readability>=0.3.1  # Text readability metrics
+yake>=0.4.8  # Keyword extraction
+
+# Computer Vision Specialized
+face-recognition>=1.3.0
+mediapipe>=0.10.0
+dlib>=19.24.0
+
+# Audio Processing (for multimedia AI)
+librosa>=0.10.0
+soundfile>=0.12.0
+speechrecognition>=3.10.0
+pydub>=0.25.0
+
+# Time Series Analysis
+statsmodels>=0.14.0
+prophet>=1.1.0
+pyod>=1.0.9  # Outlier detection
+
+# Graph Neural Networks
+torch-geometric>=2.3.0
+networkx>=3.1.0
+igraph>=0.10.0
+
+# Reinforcement Learning
+gym>=0.26.0
+stable-baselines3>=2.0.0
+ray[rllib]>=2.5.0
+
+# Model Optimization
+onnxmltools>=1.11.0
+tensorrt>=8.6.0  # NVIDIA TensorRT (if available)
+openvino>=2023.0.0  # Intel OpenVINO
+
+# Distributed Computing
+ray>=2.5.0
+dask[complete]>=2023.6.0
+horovod>=0.28.0  # Distributed training
+
+# AutoML
+auto-sklearn>=0.15.0
+flaml>=2.0.0
+optuna>=3.2.0
+
+# Data Processing
+modin[ray]>=0.20.0  # Faster pandas
+cudf>=23.06.0  # GPU DataFrames (RAPIDS)
+
+# Visualization and Monitoring
+wandb>=0.15.0
+tensorboard>=2.13.0
+plotly>=5.15.0
+seaborn>=0.12.0
+
+# Model Serving and Deployment
+tritonclient[all]>=2.34.0
+bentoml>=1.0.0
+mlflow>=2.4.0
+
+# Cloud and Edge AI
+azure-cognitiveservices-vision-computervision>=0.9.0
+google-cloud-aiplatform>=1.28.0
+boto3>=1.26.0  # AWS SDK
+
+# Specialized Libraries
+scikit-image>=0.21.0
+imageio>=2.31.0
+nibabel>=5.1.0  # Medical imaging
+pydicom>=2.4.0  # DICOM medical files
+
+# Hardware Acceleration
+numba>=0.57.0
+cupy>=12.0.0
+jax[cuda]>=0.4.13  # JAX with CUDA
+
+# Development and Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+hypothesis>=6.80.0
+
+# Security and Privacy
+cryptography>=41.0.0
+differential-privacy>=1.1.4
+
+# Documentation and Metadata
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Note: Some packages may conflict or require specific system dependencies
+# Install in stages and test compatibility
+# GPU packages require appropriate CUDA/ROCm installations
+# Some packages like Caffe may require manual compilation
