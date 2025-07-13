@@ -9,7 +9,6 @@ import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
 from datetime import datetime
 
-from core_system.orchestrator.models import (
     OrchestratorConfig, SyncData, ServerConfig, SyncStatus,
     Agent, Task, AgentStatus, TaskStatus
 )
@@ -57,32 +56,32 @@ def sync_data():
 
 class TestSyncManagerCompleteCoverage:
     """Test class for complete coverage of SyncManager."""
-    
+
     @pytest.mark.asyncio
     async def test_sync_loop_exception(self, sync_manager):
         """Test the sync loop with an exception."""
         # Mock sync to raise an exception
         sync_manager.sync = MagicMock(side_effect=Exception("Test exception"))
-        
+
         # Override asyncio.sleep to make the test faster
         with patch("asyncio.sleep", new=AsyncMock()) as mock_sleep:
             # Set is_running to True, then False after one iteration
             sync_manager.is_running = True
-            
+
             async def stop_after_one_iteration():
                 await asyncio.sleep(0.05)
                 sync_manager.is_running = False
-            
+
             stop_task = asyncio.create_task(stop_after_one_iteration())
-            
+
             # Run the sync loop
             await sync_manager._sync_loop()
-            
+
             # Verify
             sync_manager.sync.assert_called_once()
             # Should call sleep with the sync_interval
             mock_sleep.assert_called_with(sync_manager.sync_interval)
-            
+
             # Clean up
             stop_task.cancel()
             try:
@@ -98,10 +97,10 @@ class TestSyncManagerCompleteCoverage:
         mock_task.__class__.__name__ = 'AsyncMock'
         sync_manager.sync_task = mock_task
         sync_manager.is_running = True
-        
+
         # Call stop method
         await sync_manager.stop()
-        
+
         # Verify
         assert not sync_manager.is_running
         mock_task.cancel.assert_called_once()
@@ -116,13 +115,13 @@ class TestSyncManagerCompleteCoverage:
                     await asyncio.sleep(0.1)
             except asyncio.CancelledError:
                 pass
-        
+
         sync_manager.is_running = True
         sync_manager.sync_task = asyncio.create_task(dummy_task())
-        
+
         # Call stop method
         await sync_manager.stop()
-        
+
         # Verify
         assert not sync_manager.is_running
         assert sync_manager.sync_task.cancelled()
@@ -132,11 +131,11 @@ class TestSyncManagerCompleteCoverage:
         """Test deploying with an exception."""
         # Mock dependency
         sync_manager._sync_with_server = AsyncMock(side_effect=Exception("Test exception"))
-        
+
         # Call deploy
         with pytest.raises(SyncError):
             await sync_manager.deploy("test-server")
-        
+
         # Verify
         sync_manager._sync_with_server.assert_called_once_with("test-server")
 
@@ -145,11 +144,11 @@ class TestSyncManagerCompleteCoverage:
         """Test rolling back with an exception."""
         # Mock dependency
         sync_manager._sync_with_server = AsyncMock(side_effect=Exception("Test exception"))
-        
+
         # Call rollback
         with pytest.raises(SyncError):
             await sync_manager.rollback("test-server")
-        
+
         # Verify
         sync_manager._sync_with_server.assert_called_once_with("test-server")
 
@@ -167,10 +166,10 @@ class TestSyncManagerCompleteCoverage:
         # Set some data for testing
         sync_manager.last_sync_time = datetime.now()
         sync_manager.last_sync_status = SyncStatus.SUCCESS
-        
+
         # Call get_status
         result = await sync_manager.get_status()
-        
+
         # Verify
         assert "last_sync_time" in result
         assert "status" in result
@@ -182,27 +181,27 @@ class TestSyncManagerCompleteCoverage:
         # Mock dependencies
         task_queue = MagicMock()
         agent_manager = MagicMock()
-        
+
         # Create some mock tasks and agents
         tasks = {
             "task1": Task(id="task1", type="test", parameters={}),
             "task2": Task(id="task2", type="test", parameters={})
         }
-        
+
         agents = {
             "agent1": Agent(id="agent1", type="test", capabilities=[]),
             "agent2": Agent(id="agent2", type="test", capabilities=[])
         }
-        
+
         task_queue.get_all_tasks.return_value = list(tasks.values())
         sync_manager.task_queue = task_queue
-        
+
         sync_manager.agent_manager = agent_manager
         sync_manager.agent_manager.agents = agents
-        
+
         # Call _prepare_sync_data
         result = sync_manager._prepare_sync_data()
-        
+
         # Verify
         assert isinstance(result, SyncData)
         assert len(result.tasks) == 2
@@ -219,11 +218,11 @@ class TestSyncManagerCompleteCoverage:
         mock_response.status = 200
         mock_response.json = AsyncMock(return_value={"status": "success"})
         mock_session.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
-        
+
         with patch("aiohttp.ClientSession", return_value=mock_session):
             # Call _sync_with_server
             await sync_manager._sync_with_server("test-server", sync_data)
-            
+
             # Verify
             mock_session.__aenter__.return_value.post.assert_called_once()
 
@@ -236,12 +235,12 @@ class TestSyncManagerCompleteCoverage:
         mock_response.status = 500
         mock_response.text = AsyncMock(return_value="Internal Server Error")
         mock_session.__aenter__.return_value.post = AsyncMock(return_value=mock_response)
-        
+
         with patch("aiohttp.ClientSession", return_value=mock_session):
             # Call _sync_with_server
             with pytest.raises(SyncError):
                 await sync_manager._sync_with_server("test-server", sync_data)
-            
+
             # Verify
             mock_session.__aenter__.return_value.post.assert_called_once()
 
@@ -251,10 +250,10 @@ class TestSyncManagerCompleteCoverage:
         # Mock aiohttp ClientSession to raise an exception
         mock_session = AsyncMock()
         mock_session.__aenter__.return_value.post = AsyncMock(side_effect=Exception("Test exception"))
-        
+
         with patch("aiohttp.ClientSession", return_value=mock_session):
             # Call _sync_with_server
             with pytest.raises(SyncError):
                 await sync_manager._sync_with_server("test-server", sync_data)
-            
+
             # Verify

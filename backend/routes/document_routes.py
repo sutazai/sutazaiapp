@@ -8,14 +8,12 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import aiofiles  # types-aiofiles will need to be installed
 from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
 from loguru import logger
 from pydantic import BaseModel, Field
 
 from backend.services.diagram_parser import DiagramParser
 from backend.services.doc_processing import DocumentParser
-from typing import Union
 from typing import Optional
 
 # Create router
@@ -30,6 +28,7 @@ UPLOAD_DIR = "/opt/sutazaiapp/doc_data/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Define models
+
 class DocumentParseResponse(BaseModel):
     """Response model for document parsing."""
     success: bool = Field(..., description="Whether parsing was successful")
@@ -48,11 +47,11 @@ async def parse_document(
     background_tasks: BackgroundTasks, file: UploadFile = File(...)
 ) -> ParseResponse:
     """Parse uploaded documents (PDF/DOCX).
-    
+
     Args:
         background_tasks: FastAPI background tasks
         file: Uploaded file
-        
+
     Returns:
         Parsing response with status and result
     """
@@ -63,21 +62,22 @@ async def parse_document(
             status_code=400,
             detail="No filename provided in the upload."
         )
-        
+
     file_ext = os.path.splitext(filename)[1].lower()
     if file_ext not in [".pdf", ".docx"]:
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported file type: {file_ext}. Use PDF or DOCX.",
         )
-        
+
     # Save file to disk
     file_path = f"/opt/sutazaiapp/data/documents/{filename}"
     async with aiofiles.open(file_path, "wb") as out_file:
         content = await file.read()
         await out_file.write(content)
-        
+
     # Create background task for parsing
+
     def parse_file() -> Dict[str, Any]:
         """Parse the uploaded document in the background."""
         try:
@@ -85,17 +85,17 @@ async def parse_document(
                 result = doc_parser.parse_pdf(file_path)
             else:
                 result = doc_parser.parse_docx(file_path)
-                
+
             # Optional: Remove uploaded file after processing
             os.remove(file_path)
             return result
         except Exception as e:
             logger.error(f"Error parsing document: {e}")
             return {"error": str(e)}
-            
+
     # Add task to background tasks
     background_tasks.add_task(parse_file)
-    
+
     return ParseResponse(
         success=True,
         message=f"Document uploaded and being processed: {filename}",
@@ -107,11 +107,11 @@ async def analyze_diagram(
     background_tasks: BackgroundTasks, file: UploadFile = File(...)
 ) -> ParseResponse:
     """Analyze uploaded diagram images.
-    
+
     Args:
         background_tasks: FastAPI background tasks
         file: Uploaded diagram image
-        
+
     Returns:
         Analysis response with status and result
     """
@@ -122,21 +122,22 @@ async def analyze_diagram(
             status_code=400,
             detail="No filename provided in the upload."
         )
-        
+
     file_ext = os.path.splitext(filename)[1].lower()
     if file_ext not in [".png", ".jpg", ".jpeg"]:
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported file type: {file_ext}. Use PNG or JPG/JPEG.",
         )
-        
+
     # Save file to disk
     file_path = f"/opt/sutazaiapp/data/diagrams/{filename}"
     async with aiofiles.open(file_path, "wb") as out_file:
         content = await file.read()
         await out_file.write(content)
-    
+
     # Create background task for analysis
+
     def analyze_file() -> Dict[str, Any]:
         """Analyze the uploaded diagram in the background."""
         try:
@@ -147,10 +148,10 @@ async def analyze_diagram(
         except Exception as e:
             logger.error(f"Error analyzing diagram: {e}")
             return {"error": str(e)}
-            
+
     # Add task to background tasks
     background_tasks.add_task(analyze_file)
-    
+
     return ParseResponse(
         success=True,
         message=f"Diagram uploaded and being analyzed: {filename}",
@@ -159,7 +160,7 @@ async def analyze_diagram(
 
 def setup_routes(app) -> None:
     """Include router in the FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
     """

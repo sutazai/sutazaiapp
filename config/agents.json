@@ -1,0 +1,145 @@
+{
+  "ollama_agent": {
+    "type": "ollama",
+    "enabled": true,
+    "description": "Local Ollama LLM agent for text generation and chat",
+    "config": {
+      "host": "localhost",
+      "port": 11434,
+      "model": "llama3.1:8b",
+      "timeout": 60
+    },
+    "capabilities": ["text_generation", "chat", "code_generation", "embeddings"]
+  },
+  "ml_nlp_service": {
+    "type": "ml_nlp",
+    "enabled": true,
+    "description": "Multi-framework ML/NLP processing service",
+    "config": {
+      "frameworks": ["transformers", "spacy", "nltk"]
+    },
+    "capabilities": ["sentiment_analysis", "ner", "classification", "summarization", "text_embedding"]
+  },
+  "document_processor": {
+    "type": "document_processor",
+    "enabled": true,
+    "description": "Document analysis and processing agent",
+    "config": {
+      "max_file_size": "50MB",
+      "supported_formats": ["pdf", "docx", "txt", "md", "html"],
+      "ocr_enabled": true
+    },
+    "capabilities": ["document_analysis", "text_extraction", "ocr", "file_processing"]
+  },
+  "code_generator": {
+    "type": "code_generator",
+    "enabled": true,
+    "description": "AI-powered code generation and analysis",
+    "config": {
+      "supported_languages": ["python", "javascript", "typescript", "java", "cpp", "rust"],
+      "max_code_length": 10000,
+      "include_tests": true
+    },
+    "capabilities": ["code_generation", "code_analysis", "test_generation", "documentation"]
+  },
+  "auto_gpt": {
+    "type": "auto_gpt",
+    "enabled": false,
+    "description": "AutoGPT autonomous agent",
+    "config": {
+      "model": "gpt-4",
+      "max_tokens": 4000,
+      "temperature": 0.7
+    },
+    "capabilities": ["autonomous_tasks", "web_browsing", "file_operations", "planning"]
+  },
+  "local_agi": {
+    "type": "local_agi",
+    "enabled": false,
+    "description": "Local AGI autonomous system",
+    "config": {
+      "model_path": "models/local_agi",
+      "max_memory": "8GB"
+    },
+    "capabilities": ["reasoning", "planning", "learning", "adaptation"]
+  },
+  "browser_agent": {
+    "type": "browser_use",
+    "enabled": false,
+    "description": "Web browsing and automation agent",
+    "config": {
+      "headless": true,
+      "timeout": 30
+    },
+    "capabilities": ["web_browsing", "form_filling", "data_extraction", "automation"]
+  },
+  "skyvern_agent": {
+    "type": "skyvern",
+    "enabled": false,
+    "description": "Skyvern web automation agent",
+    "config": {
+      "api_endpoint": "http://localhost:8080"
+    },
+    "capabilities": ["web_automation", "browser_control", "task_execution"]
+  },
+  "tabby_ml": {
+    "type": "tabby_ml",
+    "enabled": false,
+    "description": "TabbyML code completion agent",
+    "config": {
+      "model": "TabbyML/StarCoder-1B",
+      "port": 8080
+    },
+    "capabilities": ["code_completion", "code_suggestions", "inline_completion"]
+  },
+  "semgrep_agent": {
+    "type": "semgrep",
+    "enabled": false,
+    "description": "Semgrep static code analysis agent",
+    "config": {
+      "rules_path": "config/semgrep-rules",
+      "severity": ["error", "warning"]
+    },
+    "capabilities": ["static_analysis", "security_scanning", "code_quality", "vulnerability_detection"]
+  },
+  "autogen_agent": {
+    "type": "autogen",
+    "enabled": false,
+    "description": "Microsoft AutoGen multi-agent conversation system",
+    "config": {
+      "max_round": 10,
+      "human_input_mode": "NEVER"
+    },
+    "capabilities": ["multi_agent_conversation", "collaborative_problem_solving", "code_execution"]
+  },
+  "agent_zero": {
+    "type": "agent_zero",
+    "enabled": false,
+    "description": "Agent Zero autonomous system",
+    "config": {
+      "memory_size": "4GB",
+      "planning_depth": 5
+    },
+    "capabilities": ["autonomous_reasoning", "tool_usage", "memory_management", "learning"]
+  },
+  "big_agi": {
+    "type": "big_agi",
+    "enabled": false,
+    "description": "BigAGI conversational AI system",
+    "config": {
+      "model": "gpt-4",
+      "persona": "assistant"
+    },
+    "capabilities": ["conversation", "reasoning", "creative_writing", "analysis"]
+  },
+  "open_webui": {
+    "type": "open_webui",
+    "enabled": false,
+    "description": "OpenWebUI interface agent",
+    "config": {
+      "host": "localhost",
+      "port": 3000
+    },
+    "capabilities": ["web_interface", "chat_ui", "model_switching", "conversation_management"]
+  }
+}

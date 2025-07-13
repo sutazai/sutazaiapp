@@ -7,7 +7,6 @@ capabilities across the project.
 """
 
 import ast
-import importlib.util
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -130,4 +129,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

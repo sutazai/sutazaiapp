@@ -5,9 +5,7 @@ import pytest
 import json
 from unittest.mock import Mock, patch
 from typing import Dict, Any, List
-from datetime import datetime
 
-from ai_agents.auto_gpt.src.network import (
     HTTPClient,
     HTTPRequest,
     HTTPResponse,
@@ -67,7 +65,7 @@ def test_http_request():
     assert request.params is None
     assert request.data is None
     assert request.json is None
-    
+
     # Test request with parameters
     request = HTTPRequest(
         method="POST",
@@ -93,7 +91,7 @@ def test_http_response():
     assert response.headers == {"Content-Type": "application/json"}
     assert response.json() == {"key": "value"}
     assert response.text == '{"key": "value"}'
-    
+
     # Test error response
     response = HTTPResponse(
         status_code=404,
@@ -123,17 +121,17 @@ def test_http_client_request(http_client, mock_response):
         assert response.status_code == 200
         assert response.json() == {"key": "value"}
         mock_request.assert_called_once()
-        
+
         # Test POST request
         response = http_client.post("/test", json={"data": "test"})
         assert response.status_code == 200
         mock_request.assert_called()
-        
+
         # Test PUT request
         response = http_client.put("/test", data={"field": "value"})
         assert response.status_code == 200
         mock_request.assert_called()
-        
+
         # Test DELETE request
         response = http_client.delete("/test")
         assert response.status_code == 200
@@ -146,17 +144,17 @@ def test_http_client_error_handling(http_client):
         # Test network error
         with pytest.raises(NetworkError):
             http_client.get("/test")
-        
+
         # Test timeout error
         with patch("requests.request", side_effect=TimeoutError("Timeout")):
             with pytest.raises(TimeoutError):
                 http_client.get("/test")
-        
+
         # Test authentication error
         with patch("requests.request", side_effect=AuthenticationError("Auth failed")):
             with pytest.raises(AuthenticationError):
                 http_client.get("/test")
-        
+
         # Test rate limit error
         with patch("requests.request", side_effect=RateLimitError("Rate limit exceeded")):
             with pytest.raises(RateLimitError):
@@ -170,17 +168,17 @@ def test_retry_strategy():
         backoff_factor=2,
         status_codes=[500, 502, 503, 504],
     )
-    
+
     # Test retry decision
     assert strategy.should_retry(500) is True
     assert strategy.should_retry(404) is False
     assert strategy.should_retry(200) is False
-    
+
     # Test retry count
     assert strategy.retry_count == 0
     strategy.increment_retry()
     assert strategy.retry_count == 1
-    
+
     # Test max retries
     for _ in range(3):
         strategy.increment_retry()
@@ -193,15 +191,15 @@ def test_circuit_breaker():
         failure_threshold=3,
         reset_timeout=1,
     )
-    
+
     # Test initial state
     assert breaker.is_open() is False
-    
+
     # Test failure handling
     for _ in range(3):
         breaker.record_failure()
     assert breaker.is_open() is True
-    
+
     # Test reset
     breaker.reset()
     assert breaker.is_open() is False
@@ -210,7 +208,7 @@ def test_circuit_breaker():
 def test_request_interceptor():
     """Test request interceptor functionality."""
     interceptor = RequestInterceptor()
-    
+
     # Test request modification
     request = HTTPRequest(
         method="GET",
@@ -219,13 +217,14 @@ def test_request_interceptor():
     )
     modified = interceptor.intercept(request)
     assert modified == request
-    
+
     # Test custom interceptor
+
     class CustomInterceptor(RequestInterceptor):
         def intercept(self, request: HTTPRequest) -> HTTPRequest:
             request.headers["Custom-Header"] = "value"
             return request
-    
+
     interceptor = CustomInterceptor()
     modified = interceptor.intercept(request)
     assert modified.headers["Custom-Header"] == "value"
@@ -234,7 +233,7 @@ def test_request_interceptor():
 def test_response_interceptor():
     """Test response interceptor functionality."""
     interceptor = ResponseInterceptor()
-    
+
     # Test response modification
     response = HTTPResponse(
         status_code=200,
@@ -243,13 +242,14 @@ def test_response_interceptor():
     )
     modified = interceptor.intercept(response)
     assert modified == response
-    
+
     # Test custom interceptor
+
     class CustomInterceptor(ResponseInterceptor):
         def intercept(self, response: HTTPResponse) -> HTTPResponse:
             response.headers["Custom-Header"] = "value"
             return response
-    
+
     interceptor = CustomInterceptor()
     modified = interceptor.intercept(response)
     assert modified.headers["Custom-Header"] == "value"
@@ -258,21 +258,23 @@ def test_response_interceptor():
 def test_http_client_interceptors(http_client):
     """Test HTTP client interceptor handling."""
     # Add request interceptor
+
     class RequestHeaderInterceptor(RequestInterceptor):
         def intercept(self, request: HTTPRequest) -> HTTPRequest:
             request.headers["X-Test-Header"] = "test"
             return request
-    
+
     # Add response interceptor
+
     class ResponseHeaderInterceptor(ResponseInterceptor):
         def intercept(self, response: HTTPResponse) -> HTTPResponse:
             response.headers["X-Processed-By"] = "test"
             return response
-    
+
     http_client.add_interceptor(RequestHeaderInterceptor())
     http_client.add_interceptor(ResponseHeaderInterceptor())
-    
+
     with patch("requests.request", return_value=Mock()) as mock_request:
         http_client.get("/test")
         call_args = mock_request.call_args[1]
-        assert call_args["headers"]["X-Test-Header"] == "test" 
+        assert call_args["headers"]["X-Test-Header"] == "test"

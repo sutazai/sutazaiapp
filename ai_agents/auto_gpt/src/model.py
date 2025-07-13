@@ -10,7 +10,6 @@ from dataclasses import dataclass
 import json
 import logging
 import openai
-from typing import Union
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ class Message:
     content: str
     name: str | None = None
     function_call: Dict | None = None
-    
+
     def to_dict(self) -> Dict:
         """Convert message to dictionary format for API calls."""
         message = {"role": self.role, "content": self.content}
@@ -41,6 +40,7 @@ class ModelError(Exception):
 
 class ModelConfig:
     """Configuration for model interactions."""
+
     def __init__(
         self,
         model_name: str = "gpt-4",
@@ -89,6 +89,7 @@ class ModelConfig:
 
 class ModelManager:
     """Manages interactions with language models."""
+
     def __init__(self, config: ModelConfig):
         """
         Initialize model manager.

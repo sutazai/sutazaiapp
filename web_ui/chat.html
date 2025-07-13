@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SutazAI Chat - Interactive AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            min-height: 400px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .message.system {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            text-align: center;
+            margin: 0 auto;
+            font-style: italic;
+        }
+        
+        .message-meta {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .send-btn {
+            background: linear-gradient(45deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .model-selector {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .model-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            outline: none;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        .tools-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .tools-panel.active {
+            display: block;
+        }
+        
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SutazAI Interactive Chat</h1>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span id="connection-status">Connected to Local AI</span>
+        </div>
+    </div>
+    
+    <div class="chat-container">
+        <div class="model-selector">
+            <label>Model:</label>
+            <select class="model-select" id="model-select">
+                <option value="llama3-chatqa">Llama3 ChatQA</option>
+                <option value="llama3">Llama3 Base</option>
+                <option value="codellama">CodeLlama</option>
+                <option value="custom">Custom Model</option>
+            </select>
+            <button class="tool-btn" onclick="toggleTools()">🛠️ Tools</button>
+            <button class="tool-btn" onclick="clearChat()">🗑️ Clear</button>
+        </div>
+        
+        <div class="tools-panel" id="tools-panel">
+            <h4>Quick Actions:</h4>
+            <button class="tool-btn" onclick="sendQuickMessage('Explain how SutazAI works')">📖 About SutazAI</button>
+            <button class="tool-btn" onclick="sendQuickMessage('Show me the system status')">📊 System Status</button>
+            <button class="tool-btn" onclick="sendQuickMessage('Help me write Python code')">💻 Code Help</button>
+            <button class="tool-btn" onclick="sendQuickMessage('Analyze this codebase')">🔍 Code Analysis</button>
+        </div>
+        
+        <div class="chat-messages" id="chat-messages">
+            <div class="message system">
+                <div>Welcome to SutazAI! I'm your local AI assistant. Ask me anything about coding, analysis, or system operations.</div>
+                <div class="message-meta">System initialized</div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typing-indicator">
+            <span>AI is thinking</span>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" id="send-btn" onclick="sendMessage()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m22 2-7 20-4-9-9-4Z"/>
+                    <path d="M22 2 11 13"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let isTyping = false;
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.getElementById('typing-indicator');
+        
+        function addMessage(content, type = 'user', timestamp = new Date()) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const timeStr = timestamp.toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <div>${content}</div>
+                <div class="message-meta">${timeStr}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTyping() {
+            isTyping = true;
+            typingIndicator.style.display = 'flex';
+            sendBtn.disabled = true;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function hideTyping() {
+            isTyping = false;
+            typingIndicator.style.display = 'none';
+            sendBtn.disabled = false;
+        }
+        
+        async function sendMessage(message = null) {
+            const content = message || chatInput.value.trim();
+            if (!content || isTyping) return;
+            
+            // Add user message
+            addMessage(content, 'user');
+            if (!message) chatInput.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            try {
+                // API call to backend
+                const response = await fetch('http://127.0.0.1:8000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: content,
+                        model: document.getElementById('model-select').value
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    hideTyping();
+                    addMessage(data.response || 'Response received from SutazAI', 'assistant');
+                } else {
+                    // Fallback response for demo
+                    setTimeout(() => {
+                        hideTyping();
+                        let response = generateDemoResponse(content);
+                        addMessage(response, 'assistant');
+                    }, 1500);
+                }
+            } catch (error) {
+                // Fallback response for demo
+                setTimeout(() => {
+                    hideTyping();
+                    let response = generateDemoResponse(content);
+                    addMessage(response, 'assistant');
+                }, 1500);
+            }
+        }
+        
+        function generateDemoResponse(userMessage) {
+            const responses = {
+                'hello': 'Hello! I\'m SutazAI, your local AI assistant. How can I help you today?',
+                'status': 'SutazAI is running optimally. All systems are operational including the local LLM, database, and API services.',
+                'help': 'I can assist you with:\n• Code analysis and generation\n• System monitoring\n• Documentation\n• Problem solving\n• And much more!',
+                'code': 'I\'d be happy to help with your code! Please share what you\'d like to work on.',
+                'default': `I understand you're asking about "${userMessage}". As your local AI assistant, I'm here to help with coding, analysis, and system operations. What specific task can I assist you with?`
+            };
+            
+            const lowerMsg = userMessage.toLowerCase();
+            for (const [key, response] of Object.entries(responses)) {
+                if (lowerMsg.includes(key)) {
+                    return response;
+                }
+            }
+            return responses.default;
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function sendQuickMessage(message) {
+            sendMessage(message);
+        }
+        
+        function toggleTools() {
+            const toolsPanel = document.getElementById('tools-panel');
+            toolsPanel.classList.toggle('active');
+        }
+        
+        function clearChat() {
+            chatMessages.innerHTML = `
+                <div class="message system">
+                    <div>Chat cleared. Welcome back to SutazAI!</div>
+                    <div class="message-meta">System ready</div>
+                </div>
+            `;
+        }
+        
+        // Auto-focus on input
+        chatInput.focus();
+        
+        // Check connection status
+        setInterval(async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/health');
+                const statusElement = document.getElementById('connection-status');
+                const statusDot = document.querySelector('.status-dot');
+                
+                if (response.ok) {
+                    statusElement.textContent = 'Connected to Local AI';
+                    statusDot.style.background = '#4caf50';
+                } else {
+                    statusElement.textContent = 'Connection Issues';
+                    statusDot.style.background = '#ff9800';
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('connection-status');
+                const statusDot = document.querySelector('.status-dot');
+                statusElement.textContent = 'Offline Mode';
+                statusDot.style.background = '#f44336';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

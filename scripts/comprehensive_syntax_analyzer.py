@@ -15,6 +15,7 @@ class SyntaxAnalyzer:
     """
     Advanced syntax analyzer for Python projects.
     """
+
     def __init__(
         self,
         base_path: str = "/opt/sutazaiapp",
@@ -29,7 +30,7 @@ class SyntaxAnalyzer:
         self.base_path = base_path
         self.log_file = log_file
         self.syntax_issues: Dict[str, List[Dict[str, Any]]] = {}
-        
+
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s: %(message)s",
@@ -62,7 +63,7 @@ class SyntaxAnalyzer:
         try:
             with open(file_path, encoding="utf-8") as f:
                 source_code = f.read()
-            
+
             # AST-based syntax parsing
             try:
                 ast.parse(source_code)
@@ -74,13 +75,13 @@ class SyntaxAnalyzer:
                     "text": str(e),
                     "severity": "high",
                 })
-            
+
             # Tokenization-based analysis
             try:
                 tokens = list(
                     tokenize.generate_tokens(io.StringIO(source_code).readline)
                 )
-                
+
                 # Check for indentation inconsistencies
                 last_indent = 0
                 for token in tokens:
@@ -96,7 +97,7 @@ class SyntaxAnalyzer:
                         last_indent = current_indent
                     elif token[0] == tokenize.DEDENT:
                         last_indent = 0
-                
+
                 # Check for potential syntax issues in tokens
                 for i, token in enumerate(tokens):
                     if token[0] == tokenize.ERRORTOKEN:
@@ -106,7 +107,7 @@ class SyntaxAnalyzer:
                             "text": f"Unexpected token: {token[1]}",
                             "severity": "high",
                         })
-            
+
             except tokenize.TokenError as e:
                 issues.append({
                     "type": "Tokenization Error",
@@ -119,14 +120,14 @@ class SyntaxAnalyzer:
                     "text": str(e),
                     "severity": "critical",
                 })
-        
+
         except Exception as e:
             issues.append({
                 "type": "File Read Error",
                 "text": str(e),
                 "severity": "critical",
             })
-        
+
         return issues
 
     def analyze_project_syntax(self) -> Dict[str, List[Dict[str, Any]]]:
@@ -146,7 +147,7 @@ class SyntaxAnalyzer:
                     )
             except Exception as e:
                 self.logger.error(f"Error analyzing {file_path}: {e}")
-        
+
         return self.syntax_issues
 
     def generate_report(self) -> str:
@@ -156,17 +157,17 @@ class SyntaxAnalyzer:
         Formatted report string
         """
         report = ["Comprehensive Syntax Analysis Report", "=" * 40]
-        
+
         if not self.syntax_issues:
             report.append("No syntax issues found in the project.")
             return "\n".join(report)
-        
+
         report.append(f"Total files with issues: {len(self.syntax_issues)}")
-        
+
         for file_path, issues in self.syntax_issues.items():
             report.append(f"\nFile: {file_path}")
             report.append("-" * (len(file_path) + 6))
-            
+
             for issue in issues:
                 report.append(f"  - Type: {issue['type']}")
                 report.append(f"    Severity: {issue['severity']}")
@@ -175,7 +176,7 @@ class SyntaxAnalyzer:
                 )
                 if "line" in issue:
                     report.append(f"    Line: {issue['line']}")
-        
+
         return "\n".join(report)
 
 
@@ -187,15 +188,14 @@ def main():
     analyzer.analyze_project_syntax()
     report = analyzer.generate_report()
     print(report)
-    
+
     # Optionally, write the report to a file
     report_path = "/opt/sutazaiapp/logs/syntax_analysis_report.txt"
     with open(report_path, "w") as f:
         f.write(report)
-    
+
     print(f"\nDetailed report saved to {report_path}")
 
 
 if __name__ == "__main__":
     main()
-

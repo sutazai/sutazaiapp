@@ -13,6 +13,7 @@ from typing import List, Tuple
 
 
 # ANSI color codes for pretty output
+
 class Colors:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -48,15 +49,15 @@ def get_python_files(directory: str) -> List[str]:
     """Get all Python files in the directory tree."""
     python_files = []
     exclude_dirs = ["venv", ".git", "__pycache__", "node_modules", ".pytest_cache"]
-    
+
     for root, dirs, files in os.walk(directory):
         # Skip excluded directories
         dirs[:] = [d for d in dirs if d not in exclude_dirs]
-        
+
         for file in files:
             if file.endswith(".py"):
                 python_files.append(os.path.join(root, file))
-    
+
     return python_files
 
 
@@ -65,7 +66,7 @@ def check_for_syntax(file_path: str) -> Tuple[bool, str]:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         # Use Python's built-in compile function to check for syntax errors
         compile(content, file_path, 'exec')
         return True, ""
@@ -79,21 +80,21 @@ def fix_unterminated_triple_quotes(content: str) -> str:
     """Fix unterminated triple-quoted strings."""
     # Find triple quote positions
     triple_quote_positions = []
-    
+
     # Find all triple quotes (both """ and ''')
     for triple_quote in ['"""', "'''"]:
         positions = [match.start() for match in re.finditer(re.escape(triple_quote), content)]
         for pos in positions:
             triple_quote_positions.append((pos, triple_quote))
-    
+
     # Sort by position
     triple_quote_positions.sort(key=lambda x: x[0])
-    
+
     # If we have an odd number of triple quotes, we have an unterminated string
     if len(triple_quote_positions) % 2 == 1:
         # Get the last triple quote type
         last_pos, last_quote = triple_quote_positions[-1]
-        
+
         # Add the missing closing quote at the end of the line or before the next code
         next_line_pos = content.find('\n', last_pos)
         if next_line_pos != -1:
@@ -102,7 +103,7 @@ def fix_unterminated_triple_quotes(content: str) -> str:
         else:
             # No newline found, add at the end of the file
             return content + last_quote
-    
+
     # Process each pair of triple quotes to find unterminated strings
     current_quote = None
     for i, (pos, quote_type) in enumerate(triple_quote_positions):
@@ -113,7 +114,7 @@ def fix_unterminated_triple_quotes(content: str) -> str:
             if quote_type != current_quote:
                 # Mismatched quotes, insert the correct one
                 return content[:pos] + current_quote + content[pos:]
-    
+
     return content
 
 
@@ -124,19 +125,19 @@ def process_file(file_path: str) -> bool:
         is_valid, error_msg = check_for_syntax(file_path)
         if is_valid:
             return False  # No changes needed
-        
+
         # Read the file
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         # Fix unterminated triple quotes
         fixed_content = fix_unterminated_triple_quotes(content)
-        
+
         # If file was modified, write it back
         if fixed_content != content:
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(fixed_content)
-            
+
             # Check if the fix resolved the syntax error
             is_valid_now, _ = check_for_syntax(file_path)
             if is_valid_now:
@@ -144,9 +145,9 @@ def process_file(file_path: str) -> bool:
             else:
                 print_warning(f"  Triple quote fix didn't resolve all syntax errors in {file_path}")
                 return True  # Still made changes
-        
+
         return False  # No changes needed
-    
+
     except Exception as e:
         print_error(f"  Error processing {file_path}: {str(e)}")
         return False
@@ -157,15 +158,15 @@ def main() -> None:
     if len(sys.argv) < 2:
         print_error("Usage: python fix_triple_quotes.py <directory>")
         sys.exit(1)
-    
+
     directory = sys.argv[1]
     print_header(f"Starting triple quote fix on {directory}")
-    
+
     python_files = get_python_files(directory)
     print_info(f"Found {len(python_files)} Python files")
-    
+
     files_fixed = 0
-    
+
     for file_path in python_files:
         # Check for syntax errors first
         is_valid, error_msg = check_for_syntax(file_path)
@@ -174,10 +175,10 @@ def main() -> None:
             if process_file(file_path):
                 print_success(f"✓ Fixed: {file_path}")
                 files_fixed += 1
-    
+
     print_header("\nTriple Quote Fix Summary")
     print_info(f"Fixed {files_fixed} files")
 
 
 if __name__ == "__main__":
-    main() 
+    main()

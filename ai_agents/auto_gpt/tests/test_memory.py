@@ -89,7 +89,7 @@ def test_memory_limit(test_memory):
     # Add more messages than the limit
     for i in range(5):
         test_memory.add_message("user", f"Message {i}")
-        
+
     # Should only keep the last 3 messages
     assert len(test_memory.messages) == 3
     assert test_memory.messages[0].content == "Message 2"
@@ -101,7 +101,7 @@ def test_get_messages(test_memory, test_messages):
     """Test getting messages in API format."""
     for msg in test_messages:
         test_memory.add_message(msg["role"], msg["content"])
-        
+
     messages = test_memory.get_messages()
     assert len(messages) == 3
     assert all(isinstance(msg, dict) for msg in messages)
@@ -112,7 +112,7 @@ def test_clear_messages(test_memory, test_messages):
     """Test clearing message history."""
     for msg in test_messages:
         test_memory.add_message(msg["role"], msg["content"])
-        
+
     test_memory.clear_messages()
     assert len(test_memory.messages) == 0
 
@@ -123,13 +123,13 @@ def test_memory_persistence(test_memory, test_messages):
     for msg in test_messages:
         test_memory.add_message(msg["role"], msg["content"])
     test_memory.save()
-    
+
     # Create new memory instance with same persist path
     new_memory = Memory(
         max_messages=3,
         persist_path=test_memory.persist_path,
     )
-    
+
     # Should load the saved messages
     assert len(new_memory.messages) == 3
     assert all(isinstance(msg, Message) for msg in new_memory.messages)
@@ -140,7 +140,7 @@ def test_memory_context(test_memory):
     # Update context
     test_memory.update_context("test_key", "test_value")
     assert test_memory.get_context("test_key") == "test_value"
-    
+
     # Clear context
     test_memory.clear_context()
     assert test_memory.get_context("test_key") is None
@@ -153,7 +153,7 @@ def test_invalid_persist_path():
         max_messages=3,
         persist_path="/invalid/path/memory.json",
     )
-    
+
     # Should not raise error, but save() should fail silently
     memory.add_message("user", "Test message")
     memory.save()  # Should not raise error
@@ -167,10 +167,10 @@ def test_memory_with_function_calls(test_memory):
             "arg1": "value1"
         },
     }
-    
+
     # Add message with function call
     test_memory.add_message("assistant", "Calling function", function_call)
-    
+
     # Verify function call was stored
     assert len(test_memory.messages) == 1
     assert test_memory.messages[0].function_call == function_call

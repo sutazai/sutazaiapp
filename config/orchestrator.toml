@@ -1,11 +1,12 @@
 # Supreme AI Orchestrator Configuration
+# Security Note: Sensitive values are now loaded from environment variables
 
 [primary_server]
 id = "primary-01"
 host = "localhost"
 port = 8000
 sync_port = 8001
-api_key = "REPLACE_WITH_SECURE_KEY"
+# API key loaded from environment variable PRIMARY_API_KEY
 is_primary = true
 
 [secondary_server]
@@ -13,7 +14,7 @@ id = "secondary-01"
 host = "localhost"
 port = 8010
 sync_port = 8011
-api_key = "REPLACE_WITH_SECURE_KEY"
+# API key loaded from environment variable SECONDARY_API_KEY
 is_primary = false
 
 [orchestrator]
@@ -48,20 +49,20 @@ host = "localhost"
 port = 5432
 name = "sutazai"
 user = "sutazai"
-password = "REPLACE_WITH_SECURE_PASSWORD"
+# Password loaded from environment variable POSTGRES_PASSWORD
 max_connections = 20
 
 [redis]
 host = "localhost"
 port = 6379
-password = "REPLACE_WITH_SECURE_PASSWORD"
+# Password loaded from environment variable REDIS_PASSWORD
 db = 0
 max_connections = 10
 
 [agents]
 types = [
     "text_processing",
-    "image_processing",
+    "image_processing", 
     "code_analysis",
     "data_processing"
 ]

@@ -8,7 +8,6 @@ This module provides enhanced logging capabilities for the SutazAI system.
 import logging
 import sys
 from typing import Optional, Union
-from typing import Union
 
 
 def setup_logging(

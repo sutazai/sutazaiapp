@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SutazAI - Comprehensive AGI/ASI System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4ecdc4;
+        }
+        
+        .service-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .service-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .service-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+        }
+        
+        .status-online {
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-offline {
+            background: #f44336;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .system-stats {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 SutazAI - Comprehensive AGI/ASI System</h1>
+        <p>Advanced Artificial General Intelligence with Multi-Agent Orchestration</p>
+    </div>
+    
+    <div class="main-grid">
+        <!-- Chat Interface -->
+        <div class="service-card">
+            <div class="service-icon">💬</div>
+            <h3 class="service-title">Interactive Chat</h3>
+            <p class="service-description">
+                Converse with advanced AI agents including LangChain, AutoGPT, and LocalAGI.
+                Multi-modal conversations with document understanding.
+            </p>
+            <a href="chat.html" class="service-button">Start Chatting</a>
+        </div>
+        
+        <!-- Document Processing -->
+        <div class="service-card">
+            <div class="service-icon">📄</div>
+            <h3 class="service-title">Document Analysis</h3>
+            <p class="service-description">
+                Upload and analyze documents with AI. Extract insights, summaries, 
+                and answer questions about your documents.
+            </p>
+            <button class="service-button" onclick="openDocumentAnalysis()">Analyze Documents</button>
+        </div>
+        
+        <!-- Code Generation -->
+        <div class="service-card">
+            <div class="service-icon">⚡</div>
+            <h3 class="service-title">Code Generation</h3>
+            <p class="service-description">
+                Generate, analyze, and debug code using advanced AI models.
+                Supports multiple programming languages and frameworks.
+            </p>
+            <button class="service-button" onclick="openCodeGenerator()">Generate Code</button>
+        </div>
+        
+        <!-- Vector Search -->
+        <div class="service-card">
+            <div class="service-icon">🔍</div>
+            <h3 class="service-title">Knowledge Search</h3>
+            <p class="service-description">
+                Search through your knowledge base using advanced vector similarity.
+                Find relevant information from documents and conversations.
+            </p>
+            <button class="service-button" onclick="openVectorSearch()">Search Knowledge</button>
+        </div>
+        
+        <!-- Agent Management -->
+        <div class="service-card">
+            <div class="service-icon">🤖</div>
+            <h3 class="service-title">Agent Orchestration</h3>
+            <p class="service-description">
+                Manage and coordinate multiple AI agents. Monitor performance,
+                assign tasks, and configure agent behaviors.
+            </p>
+            <button class="service-button" onclick="openAgentManager()">Manage Agents</button>
+        </div>
+        
+        <!-- Financial Analysis -->
+        <div class="service-card">
+            <div class="service-icon">📊</div>
+            <h3 class="service-title">Financial Analysis</h3>
+            <p class="service-description">
+                Analyze financial data, generate reports, and get insights
+                using specialized AI models for financial intelligence.
+            </p>
+            <button class="service-button" onclick="openFinanceAnalysis()">Analyze Finance</button>
+        </div>
+        
+        <!-- API Gateway -->
+        <div class="service-card">
+            <div class="service-icon">🔗</div>
+            <h3 class="service-title">API Gateway</h3>
+            <p class="service-description">
+                Access comprehensive API documentation and test endpoints.
+                Explore all available services and their capabilities.
+            </p>
+            <a href="http://localhost:8000/docs" target="_blank" class="service-button">API Docs</a>
+        </div>
+        
+        <!-- System Monitoring -->
+        <div class="service-card">
+            <div class="service-icon">📈</div>
+            <h3 class="service-title">System Monitor</h3>
+            <p class="service-description">
+                Monitor system health, agent performance, and resource usage.
+                Real-time insights into system operations.
+            </p>
+            <button class="service-button" onclick="openSystemMonitor()">Monitor System</button>
+        </div>
+    </div>
+    
+    <!-- System Status -->
+    <div class="system-stats">
+        <h3>System Status</h3>
+        <div class="status-grid" id="statusGrid">
+            <!-- Status items will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <script>
+        // System status monitoring
+        async function updateSystemStatus() {
+            try {
+                const response = await fetch('/api/v1/system/status');
+                const status = await response.json();
+                
+                const statusGrid = document.getElementById('statusGrid');
+                statusGrid.innerHTML = '';
+                
+                // Backend API Status
+                const backendStatus = document.createElement('div');
+                backendStatus.className = 'status-item';
+                backendStatus.innerHTML = `
+                    <div class="status-indicator status-online"></div>
+                    <div>Backend API</div>
+                    <small>Online</small>
+                `;
+                statusGrid.appendChild(backendStatus);
+                
+                // Agents Status
+                if (status.agents) {
+                    Object.entries(status.agents.agents || {}).forEach(([name, agentStatus]) => {
+                        const agentItem = document.createElement('div');
+                        agentItem.className = 'status-item';
+                        const isOnline = agentStatus.status === 'active' || agentStatus.status === 'healthy';
+                        agentItem.innerHTML = `
+                            <div class="status-indicator ${isOnline ? 'status-online' : 'status-offline'}"></div>
+                            <div>${name}</div>
+                            <small>${agentStatus.status || 'Unknown'}</small>
+                        `;
+                        statusGrid.appendChild(agentItem);
+                    });
+                }
+                
+                // Vector Database Status
+                if (status.vector_database) {
+                    const vectorItem = document.createElement('div');
+                    vectorItem.className = 'status-item';
+                    const isHealthy = status.vector_database.status === 'healthy';
+                    vectorItem.innerHTML = `
+                        <div class="status-indicator ${isHealthy ? 'status-online' : 'status-offline'}"></div>
+                        <div>Vector DB</div>
+                        <small>${status.vector_database.total_documents || 0} docs</small>
+                    `;
+                    statusGrid.appendChild(vectorItem);
+                }
+                
+            } catch (error) {
+                console.error('Failed to update system status:', error);
+            }
+        }
+        
+        // Service functions
+        function openDocumentAnalysis() {
+            window.open('/api/v1/documents/analyze', '_blank');
+        }
+        
+        function openCodeGenerator() {
+            window.open('/api/v1/code/generate', '_blank');
+        }
+        
+        function openVectorSearch() {
+            window.open('/api/v1/vector/search', '_blank');
+        }
+        
+        function openAgentManager() {
+            window.open('/api/v1/agents', '_blank');
+        }
+        
+        function openFinanceAnalysis() {
+            window.open('/api/v1/finance/analyze', '_blank');
+        }
+        
+        function openSystemMonitor() {
+            window.open('/api/v1/system/status', '_blank');
+        }
+        
+        // Initialize
+        updateSystemStatus();
+        setInterval(updateSystemStatus, 30000); // Update every 30 seconds
+    </script>
+</body>
+</html>

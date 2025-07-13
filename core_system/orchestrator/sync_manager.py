@@ -59,7 +59,7 @@ class SyncManager:
         # 2. Transfer to target server
         # 3. Execute remote installation
         # 4. Verify deployment
-        
+
     async def rollback(self, target_server: str) -> None:
         """Rollback changes on a target server."""
         logger.info(f"Rolling back on {target_server}")
@@ -72,7 +72,7 @@ class SyncManager:
         """Synchronize with other servers."""
         logger.info("Synchronizing with other servers...")
         self.last_sync_time = datetime.now()
-        
+
     async def get_status(self) -> Dict:
         """Get the current synchronization status."""
         status = {

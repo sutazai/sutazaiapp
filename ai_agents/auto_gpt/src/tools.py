@@ -7,7 +7,6 @@ including tool registration, validation, and execution.
 
 import logging
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any, Callable, Dict, List
 
 logger = logging.getLogger(__name__)
@@ -33,18 +32,18 @@ class Tool:
 
     def validate_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """Validate parameters against tool's parameter specifications.
-        
+
         Args:
             params: Parameters to validate
-            
+
         Returns:
             Dict[str, Any]: Validated and processed parameters
-            
+
         Raises:
             ValueError: If required parameters are missing or invalid
         """
         validated = {}
-        
+
         # Check for required parameters
         for param in self.parameters:
             if param.name not in params:
@@ -75,18 +74,18 @@ class Tool:
                         validated[param.name] = value
                 except (ValueError, TypeError) as e:
                     raise ValueError(f"Invalid value for parameter {param.name}: {e!s}")
-                    
+
         return validated
 
     def execute(self, **kwargs) -> Any:
         """Execute the tool with the given parameters.
-        
+
         Args:
             **kwargs: Parameters to pass to the tool function
-            
+
         Returns:
             Any: Result of tool execution
-            
+
         Raises:
             ValueError: If parameters are invalid
             Exception: If tool execution fails
@@ -108,10 +107,10 @@ class ToolRegistry:
 
     def register(self, tool: Tool) -> None:
         """Register a new tool.
-        
+
         Args:
             tool: Tool to register
-            
+
         Raises:
             ValueError: If tool with same name already exists
         """
@@ -121,10 +120,10 @@ class ToolRegistry:
 
     def unregister(self, name: str) -> None:
         """Unregister a tool by name.
-        
+
         Args:
             name: Name of tool to unregister
-            
+
         Raises:
             KeyError: If tool not found
         """
@@ -134,13 +133,13 @@ class ToolRegistry:
 
     def get_tool(self, name: str) -> Tool:
         """Get a tool by name.
-        
+
         Args:
             name: Name of tool to get
-            
+
         Returns:
             Tool: The requested tool
-            
+
         Raises:
             KeyError: If tool not found
         """
@@ -150,7 +149,7 @@ class ToolRegistry:
 
     def list_tools(self) -> List[Dict[str, Any]]:
         """Get a list of all registered tools.
-        
+
         Returns:
             List[Dict[str, Any]]: List of tool information dictionaries
         """
@@ -174,14 +173,14 @@ class ToolRegistry:
 
     def execute_tool(self, name: str, **kwargs) -> Any:
         """Execute a tool by name.
-        
+
         Args:
             name: Name of tool to execute
             **kwargs: Parameters to pass to the tool
-            
+
         Returns:
             Any: Result of tool execution
-            
+
         Raises:
             KeyError: If tool not found
             ValueError: If parameters are invalid

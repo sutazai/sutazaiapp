@@ -6,10 +6,8 @@ This module implements the Supreme AI Orchestrator that manages AI agents
 and handles synchronization between servers.
 """
 
-import asyncio
 import logging
 from typing import Dict, List, Optional, Any, Union
-from datetime import datetime
 
 from core_system.orchestrator.agent_manager import AgentManager
 from core_system.orchestrator.sync_manager import SyncManager
@@ -65,7 +63,7 @@ class SupremeAIOrchestrator:
         """Submit a task to the task queue."""
         if not self.is_running:
             raise OrchestratorError("Orchestrator is not running")
-            
+
         try:
             await self.task_queue.submit(task)
             self.logger.info(f"Task submitted successfully: {task.get('id', 'unknown')}")
@@ -78,7 +76,7 @@ class SupremeAIOrchestrator:
         """Register a new agent with the orchestrator."""
         if not self.is_running:
             raise OrchestratorError("Orchestrator is not running")
-            
+
         try:
             await self.agent_manager.register_agent(agent)
             self.logger.info(f"Agent registered successfully: {agent.get('id', 'unknown')}")
@@ -216,4 +214,4 @@ class SupremeAIOrchestrator:
         except Exception as e:
             self.logger.error(f"Failed to get task queue size: {str(e)}")
             self.logger.exception("Details of queue size retrieval failure:")
-            raise  # Re-raise the exception after logging 
+            raise  # Re-raise the exception after logging

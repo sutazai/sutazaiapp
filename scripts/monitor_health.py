@@ -66,7 +66,7 @@ class HealthMonitor:
         """Start the health monitoring process"""
         logger.info("Starting health monitoring")
         self._session = aiohttp.ClientSession()
-        
+
         try:
             while True:
                 await self.check_health()
@@ -83,24 +83,24 @@ class HealthMonitor:
             primary_health = await self._check_server_health(self.primary_url)
             if primary_health:
                 self._update_metrics(primary_health, is_primary=True)
-            
+
             # Check secondary server
             secondary_health = await self._check_server_health(self.secondary_url)
             if secondary_health:
                 self._update_metrics(secondary_health, is_primary=False)
-            
+
             # Check system resources
             self._check_system_resources()
-            
+
             # Reset error count on successful check
             if primary_health and secondary_health:
                 self.error_count = 0
                 ORCHESTRATOR_UP.set(1)
             else:
                 self._handle_health_check_failure()
-            
+
             self.last_check = datetime.now()
-            
+
         except Exception as e:
             logger.error(f"Health check failed: {e}")
             ERROR_COUNT.inc()
@@ -122,13 +122,13 @@ class HealthMonitor:
     def _update_metrics(self, health_data: Dict, is_primary: bool):
         """Update Prometheus metrics"""
         server_type = "primary" if is_primary else "secondary"
-        
+
         # Update agent count
         AGENT_COUNT.labels(server=server_type).set(health_data.get('agent_count', 0))
-        
+
         # Update task queue size
         TASK_QUEUE_SIZE.labels(server=server_type).set(health_data.get('queue_size', 0))
-        
+
         # Update sync status
         sync_status = 1 if health_data.get('sync_status') == 'SUCCESS' else 0
         SYNC_STATUS.labels(server=server_type).set(sync_status)
@@ -138,22 +138,22 @@ class HealthMonitor:
         try:
             # Get process
             process = psutil.Process(os.getpid())
-            
+
             # Memory usage
             memory_info = process.memory_info()
             MEMORY_USAGE.set(memory_info.rss)
-            
+
             # CPU usage
             cpu_percent = process.cpu_percent(interval=1)
             CPU_USAGE.set(cpu_percent)
-            
+
             # Check thresholds
             if memory_info.rss > self.config['monitoring'].get('max_memory_bytes', 1024 * 1024 * 1024):
                 logger.warning("Memory usage exceeds threshold")
-            
+
             if cpu_percent > self.config['monitoring'].get('max_cpu_percent', 80):
                 logger.warning("CPU usage exceeds threshold")
-                
+
         except Exception as e:
             logger.error(f"Failed to check system resources: {e}")
 
@@ -161,7 +161,7 @@ class HealthMonitor:
         """Handle health check failures"""
         self.error_count += 1
         ORCHESTRATOR_UP.set(0)
-        
+
         if self.error_count >= self.alert_threshold:
             self._send_alert(
                 f"Orchestrator health check failed {self.error_count} times"
@@ -177,11 +177,11 @@ async def main():
     try:
         # Start Prometheus metrics server
         start_http_server(9090)
-        
+
         # Create and start monitor
         monitor = HealthMonitor('config/orchestrator.toml')
         await monitor.start_monitoring()
-        
+
     except KeyboardInterrupt:
         logger.info("Monitoring stopped by user")
     except Exception as e:
@@ -189,4 +189,4 @@ async def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

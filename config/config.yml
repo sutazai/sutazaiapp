@@ -1,1 +1,258 @@
+# SutazAI Application Configuration
 app_name: SutazAI
+version: "1.0.0"
+description: "Advanced AI Agent System with Comprehensive Capabilities"
+
+# Application Settings
+app:
+  debug: false
+  environment: "production"
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  max_request_size: 100MB
+  request_timeout: 300
+  cors_origins:
+    - "http://localhost:3000"
+    - "https://sutazai.com"
+    - "https://app.sutazai.com"
+
+# Database Configuration
+database:
+  type: "postgresql"  # postgresql or sqlite
+  host: "localhost"
+  port: 5432
+  name: "sutazai"
+  username: "sutazai"
+  password: "${POSTGRES_PASSWORD}"
+  path: "data/sutazai.db"  # For SQLite
+  pool_size: 10
+  max_overflow: 20
+  pool_recycle: 300
+
+# Redis Configuration
+redis:
+  host: "localhost"
+  port: 6379
+  password: "${REDIS_PASSWORD}"
+  db: 0
+  max_connections: 20
+
+# Security Configuration
+security:
+  secret_key: "${SECRET_KEY}"
+  algorithm: "HS256"
+  access_token_expire_minutes: 30
+  refresh_token_expire_days: 7
+  password_min_length: 8
+  max_login_attempts: 5
+  account_lock_duration_minutes: 30
+
+# Email Configuration
+email:
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+  use_tls: true
+  username: "${EMAIL_USERNAME}"
+  password: "${EMAIL_PASSWORD}"
+  from_address: "noreply@sutazai.com"
+  from_name: "SutazAI System"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "[{time:YYYY-MM-DD HH:mm:ss}] [{level}] {name}:{function}:{line} - {message}"
+  rotation: "1 day"
+  retention: "30 days"
+  compression: "gz"
+  file_path: "logs/sutazai.log"
+  enable_console: true
+  enable_file: true
+
+# AI Agent Configuration
+agents:
+  max_concurrent: 10
+  default_timeout: 300
+  health_check_interval: 30
+  retry_attempts: 3
+  
+  # AutoGPT Configuration
+  auto_gpt:
+    enabled: true
+    model: "gpt-4"
+    max_tokens: 4000
+    temperature: 0.7
+    api_key: "${OPENAI_API_KEY}"
+  
+  # LocalAGI Configuration
+  local_agi:
+    enabled: true
+    model_path: "models/local_agi"
+    max_memory: "8GB"
+  
+  # Document Processor Configuration
+  document_processor:
+    enabled: true
+    max_file_size: "50MB"
+    supported_formats: ["pdf", "docx", "txt", "md", "html"]
+    ocr_enabled: true
+    extract_images: true
+  
+  # Code Generator Configuration
+  code_generator:
+    enabled: true
+    supported_languages: ["python", "javascript", "typescript", "java", "cpp", "rust"]
+    max_code_length: 10000
+    include_tests: true
+    include_documentation: true
+  
+  # Ollama Local LLM Configuration
+  ollama:
+    enabled: true
+    host: "localhost"
+    port: 11434
+    default_model: "llama3.1:8b"
+    timeout: 60
+    max_retries: 3
+    auto_pull_models: true
+    recommended_models:
+      - "llama3.1:8b"      # General purpose
+      - "codellama:7b"     # Code generation
+      - "mistral:7b"       # Chat and conversation
+      - "phi3:mini"        # Lightweight model
+      - "nomic-embed-text" # Embeddings
+    generation_params:
+      temperature: 0.7
+      top_p: 0.9
+      top_k: 40
+      repeat_penalty: 1.1
+      context_length: 4096
+      max_tokens: 512
+
+# Task Management
+tasks:
+  max_queue_size: 1000
+  default_priority: 5
+  cleanup_completed_after_days: 30
+  max_execution_time: 3600
+  progress_update_interval: 10
+
+# File Storage
+storage:
+  type: "local"  # local, s3, gcs
+  local_path: "data/uploads"
+  max_file_size: "100MB"
+  allowed_extensions: [
+    "pdf", "doc", "docx", "txt", "md", "html", "rtf",
+    "jpg", "jpeg", "png", "gif", "bmp", "tiff",
+    "py", "js", "ts", "java", "cpp", "h", "hpp", "rs",
+    "json", "xml", "csv", "xlsx", "zip", "tar", "gz"
+  ]
+  
+  # AWS S3 Configuration (if type is s3)
+  s3:
+    bucket: "${S3_BUCKET}"
+    region: "${S3_REGION}"
+    access_key: "${AWS_ACCESS_KEY_ID}"
+    secret_key: "${AWS_SECRET_ACCESS_KEY}"
+
+# Vector Database Configuration
+vector_db:
+  type: "chromadb"  # chromadb, qdrant, pgvector
+  chromadb:
+    persist_directory: "data/chromadb"
+    collection_name: "sutazai_embeddings"
+  qdrant:
+    host: "localhost"
+    port: 6333
+    api_key: "${QDRANT_API_KEY}"
+    collection_name: "sutazai_embeddings"
+  pgvector:
+    table_name: "embeddings"
+    dimension: 1536
+
+# ML/AI Configuration
+ml:
+  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+  text_splitter_chunk_size: 1000
+  text_splitter_overlap: 200
+  max_context_length: 4000
+  similarity_threshold: 0.7
+
+# Monitoring Configuration
+monitoring:
+  enable_metrics: true
+  metrics_endpoint: "/metrics"
+  health_endpoint: "/health"
+  enable_profiling: false
+  log_requests: true
+  log_responses: false
+  
+  # Prometheus Configuration
+  prometheus:
+    enabled: false
+    host: "localhost"
+    port: 9090
+  
+  # Sentry Configuration
+  sentry:
+    enabled: false
+    dsn: "${SENTRY_DSN}"
+    environment: "${ENVIRONMENT}"
+
+# Rate Limiting
+rate_limiting:
+  enabled: true
+  requests_per_minute: 60
+  burst_size: 10
+  cleanup_interval: 300
+
+# Cache Configuration
+cache:
+  type: "redis"  # redis, memory
+  default_ttl: 3600
+  max_size: 1000  # For memory cache
+  
+# Development Settings
+development:
+  auto_reload: true
+  debug_toolbar: true
+  sql_echo: false
+  mock_email: true
+  mock_ai_responses: false
+
+# Feature Flags
+features:
+  user_registration: true
+  email_verification: true
+  two_factor_auth: false
+  api_rate_limiting: true
+  file_uploads: true
+  real_time_updates: true
+  advanced_analytics: false
+
+# API Configuration
+api:
+  prefix: "/api/v1"
+  title: "SutazAI API"
+  description: "Advanced AI Agent System API"
+  version: "1.0.0"
+  docs_url: "/docs"
+  redoc_url: "/redoc"
+  include_in_schema: true
+
+# WebSocket Configuration
+websocket:
+  enabled: true
+  max_connections: 100
+  heartbeat_interval: 30
+  connection_timeout: 300
+
+# Backup Configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention_days: 30
+  include_uploads: true
+  destination: "backups/"
+  compress: true

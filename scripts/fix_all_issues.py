@@ -3,7 +3,7 @@
 Comprehensive Issue Fixer for SutazAI
 
 This script fixes all identified issues in the SutazAI codebase:
-1. Installs missing dependencies
+    1. Installs missing dependencies
 2. Fixes __future__ imports
 3. Fixes the run_all_optimizations.py script
 4. Sets up the correct PYTHONPATH
@@ -37,7 +37,7 @@ def run_command(command, check=True):
 def fix_dependencies():
     """Install all required dependencies."""
     print_header("Installing Dependencies")
-    
+
     # Core dependencies
     dependencies = [
         "fastapi>=0.115.0",
@@ -56,17 +56,17 @@ def fix_dependencies():
         "mypy>=1.8.0",
         "PyMuPDF>=1.25.0",  # Provides fitz module
     ]
-    
+
     for dep in dependencies:
         run_command(f"pip install {dep}")
-    
+
     # Fix problematic packages
     print_header("Fixing problematic packages")
-    
+
     # Fix pluggy package which often has syntax errors
     run_command("pip uninstall -y pluggy")
     run_command("pip install pluggy==1.2.0")
-    
+
     # Fix docx2txt which often fails to build
     run_command("pip uninstall -y docx2txt")
     run_command("pip install git+https://github.com/ankushshah89/python-docx2txt.git")
@@ -81,15 +81,15 @@ def setup_pythonpath():
     """Set up the PYTHONPATH environment variable."""
     print_header("Setting up PYTHONPATH")
     project_root = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    
+
     # Set for this session
     os.environ["PYTHONPATH"] = str(project_root)
     sys.path.insert(0, str(project_root))
-    
+
     print(f"PYTHONPATH set to: {os.environ.get('PYTHONPATH')}")
     print("\nTo permanently set PYTHONPATH, add the following to your .bashrc or equivalent:")
     print(f"export PYTHONPATH={project_root}")
-    
+
     # Create a helper script to set PYTHONPATH
     helper_script = project_root / "set_pythonpath.sh"
     with open(helper_script, "w") as f:
@@ -98,7 +98,7 @@ def setup_pythonpath():
 export PYTHONPATH={project_root}
 echo "PYTHONPATH set to $PYTHONPATH"
 """)
-    
+
     os.chmod(helper_script, 0o755)
     print(f"\nCreated helper script: {helper_script}")
     print("You can run 'source set_pythonpath.sh' before running your application")
@@ -106,95 +106,85 @@ echo "PYTHONPATH set to $PYTHONPATH"
 def check_application():
     """Check if the application can run without errors."""
     print_header("Checking application")
-    
+
     # Check if backend is already running
     result = run_command("curl -s http://localhost:8000/api/health", check=False)
     if result.returncode == 0:
         print("Backend is already running and responding to health checks.")
         return
-    
+
     # Try to run a simple import test
     test_script = """
 import sys
 print("Python version:", sys.version)
 
 try:
-    import fastapi
     print("✅ fastapi imported successfully")
 except ImportError as e:
     print("❌ Failed to import fastapi:", e)
 
 try:
-    import uvicorn
     print("✅ uvicorn imported successfully")
 except ImportError as e:
     print("❌ Failed to import uvicorn:", e)
 
 try:
-    import loguru
     print("✅ loguru imported successfully")
 except ImportError as e:
     print("❌ Failed to import loguru:", e)
 
 try:
-    import numpy
     print("✅ numpy imported successfully")
 except ImportError as e:
     print("❌ Failed to import numpy:", e)
 
 try:
-    import cv2
     print("✅ cv2 imported successfully")
 except ImportError as e:
     print("❌ Failed to import cv2:", e)
 
 try:
-    import fitz  # PyMuPDF
     print("✅ fitz (PyMuPDF) imported successfully")
 except ImportError as e:
     print("❌ Failed to import fitz:", e)
 
 try:
-    import docx
     print("✅ docx imported successfully")
 except ImportError as e:
     print("❌ Failed to import docx:", e)
 
 try:
-    import docx2txt
     print("✅ docx2txt imported successfully")
 except ImportError as e:
     print("❌ Failed to import docx2txt:", e)
 
 try:
-    import transformers
     print("✅ transformers imported successfully")
 except ImportError as e:
     print("❌ Failed to import transformers:", e)
 
 try:
-    import semgrep
     print("✅ semgrep imported successfully")
 except ImportError as e:
     print("❌ Failed to import semgrep:", e)
 """
-    
+
     test_file = Path(os.path.dirname(os.path.abspath(__file__))) / "import_test.py"
     with open(test_file, "w") as f:
         f.write(test_script)
-    
+
     run_command(f"python {test_file}")
 
 def main():
     """Main function to run all fixes."""
     print_header("Starting Comprehensive Issue Fixer for SutazAI")
-    
+
     # Run all fixes
     fix_dependencies()
     run_fix_future_imports()
     setup_pythonpath()
     check_application()
-    
+
     print_header("All fixes completed")
     print("\nTo run your application with the correct Python path:")
     project_root = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -204,4 +194,4 @@ def main():
     print("python backend/backend_main.py")
 
 if __name__ == "__main__":
-    main() 
+    main()

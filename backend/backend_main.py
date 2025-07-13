@@ -2,7 +2,7 @@
 """Backend Main Module
 
 This is the entry point for the SutazAI backend application.
-It sets up the FastAPI app, includes routers, and defines middleware and 
+It sets up the FastAPI app, includes routers, and defines middleware and
 exception handlers.
 """
 
@@ -24,7 +24,14 @@ from loguru import logger
 from backend.config import Config
 from backend.routers.core import core_router
 from backend.routers.health import health_router
+from backend.routes.chat_routes import router as chat_router
 from backend.utils import clear_cache
+
+from backend.routes.enhanced_api_routes import router as enhanced_api_router
+from backend.services.vector_database import vector_db
+from backend.services.agent_manager import agent_manager
+
+from fastapi.staticfiles import StaticFiles
 
 # Configure logging
 logging.basicConfig(
@@ -40,16 +47,16 @@ config = Config()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for FastAPI application.
-    
+
     Handles startup and shutdown events.
     """
     # Startup
     logger.info("Initializing backend...")
     await initialize_backend()
     logger.info("Backend initialized successfully")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down backend...")
     clear_cache()
@@ -61,8 +68,8 @@ app = FastAPI(
     title="SutazAI Backend",
     description="Backend services for the SutazAI application",
     version="0.1.0",
-    docs_url="/docs" if config.debug else None,
-    redoc_url="/redoc" if config.debug else None,
+    docs_url="/docs",
+    redoc_url="/redoc",
     lifespan=lifespan,
 )
 
@@ -85,6 +92,30 @@ app.add_middleware(
 # Include routers
 app.include_router(core_router, prefix="/api", tags=["core"])
 app.include_router(health_router, prefix="/api", tags=["health"])
+app.include_router(chat_router, prefix="/api", tags=["chat"])
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="web_ui"), name="static")
+
+
+@app.get("/")
+async def root():
+    """Root endpoint - serve web interface"""
+    from fastapi.responses import FileResponse
+    return FileResponse("web_ui/index.html")
+
+
+@app.get("/docs")
+async def docs_redirect():
+    """Redirect to API documentation"""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/health")
+async def health_check():
+    """Main health check endpoint"""
+    return {"status": "healthy", "version": "0.1.0"}
 
 
 @app.middleware("http")

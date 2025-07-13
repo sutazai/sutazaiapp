@@ -9,13 +9,13 @@ import pytest
 from unittest.mock import MagicMock, patch, AsyncMock
 from datetime import datetime, timedelta
 
-from core_system.orchestrator.models import (
     OrchestratorConfig, Task, TaskStatus, AgentStatus
 )
 from core_system.orchestrator.task_queue import TaskQueue
 from core_system.orchestrator.exceptions import TaskError
 
 # Import QueueFullError class
+
 class QueueFullError(Exception):
     """Exception raised when the task queue is full."""
     pass
@@ -64,26 +64,26 @@ class TestTaskQueueCompleteCoverage:
         """Test the process loop with an exception."""
         # Mock process to raise an exception
         task_queue.process = MagicMock(side_effect=Exception("Test exception"))
-        
+
         # Override asyncio.sleep to make the test faster
         with patch("asyncio.sleep", new=AsyncMock()) as mock_sleep:
             # Set is_running to True, then False after one iteration
             task_queue.is_running = True
-            
+
             async def stop_after_one_iteration():
                 await asyncio.sleep(0.05)
                 task_queue.is_running = False
-            
+
             stop_task = asyncio.create_task(stop_after_one_iteration())
-            
+
             # Run the process loop
             await task_queue._process_loop()
-            
+
             # Verify
             task_queue.process.assert_called_once()
             # Should call sleep with 1 after an error
             assert mock_sleep.call_args_list[-1][0][0] == 1
-            
+
             # Clean up
             stop_task.cancel()
             try:
@@ -99,10 +99,10 @@ class TestTaskQueueCompleteCoverage:
         mock_task.__class__.__name__ = 'AsyncMock'
         task_queue.process_task = mock_task
         task_queue.is_running = True
-        
+
         # Call stop method
         await task_queue.stop()
-        
+
         # Verify
         assert not task_queue.is_running
         mock_task.cancel.assert_called_once()
@@ -117,13 +117,13 @@ class TestTaskQueueCompleteCoverage:
                     await asyncio.sleep(0.1)
             except asyncio.CancelledError:
                 pass
-        
+
         task_queue.is_running = True
         task_queue.process_task = asyncio.create_task(dummy_task())
-        
+
         # Call stop method
         await task_queue.stop()
-        
+
         # Verify
         assert not task_queue.is_running
         assert task_queue.process_task.cancelled()
@@ -133,7 +133,7 @@ class TestTaskQueueCompleteCoverage:
         """Test submitting a task with a duplicate ID."""
         # First submit a task
         await task_queue.submit(task_dict)
-        
+
         # Try to submit another task with the same ID
         with pytest.raises(TaskError):
             await task_queue.submit(task_dict)
@@ -143,7 +143,7 @@ class TestTaskQueueCompleteCoverage:
         """Test submitting a task when the queue is full."""
         # Set max_pending_tasks to 0 to simulate a full queue
         task_queue.max_pending_tasks = 0
-        
+
         # Try to submit a task
         with pytest.raises(QueueFullError):
             await task_queue.submit(task_dict)
@@ -156,10 +156,10 @@ class TestTaskQueueCompleteCoverage:
             "type": "test",
             "parameters": {"param1": "value1"}
         }
-        
+
         # Submit the task
         result = await task_queue.submit(task_dict)
-        
+
         # Verify an ID was generated
         assert "id" in result
         assert task_queue.tasks[result["id"]].id == result["id"]
@@ -173,10 +173,10 @@ class TestTaskQueueCompleteCoverage:
             "type": "test",
             "parameters": {"param1": "value1"}
         }
-        
+
         # Submit the task
         result = await task_queue.submit(task_dict)
-        
+
         # Verify default priority was set
         assert task_queue.tasks[result["id"]].priority == 0
 
@@ -184,7 +184,7 @@ class TestTaskQueueCompleteCoverage:
         """Test processing when there are no tasks."""
         # Call process
         task_queue.process()
-        
+
         # Nothing to verify, just ensure it doesn't fail
 
     def test_process_no_available_agents(self, task_queue, task):
@@ -192,11 +192,11 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Mock agent_manager.get_available_agent to return None
         task_queue.agent_manager = MagicMock()
         task_queue.agent_manager.get_available_agent = AsyncMock(return_value=None)
-        
+
         # Create a fake event loop and run the process method
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -205,7 +205,7 @@ class TestTaskQueueCompleteCoverage:
         finally:
             loop.close()
             asyncio.set_event_loop(None)
-        
+
         # Verify
         task_queue.agent_manager.get_available_agent.assert_called_once()
 
@@ -214,16 +214,16 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Mock agent_manager methods
         agent = MagicMock()
         agent.id = "test-agent"
         agent.status = AgentStatus.IDLE
-        
+
         task_queue.agent_manager = MagicMock()
         task_queue.agent_manager.get_available_agent = AsyncMock(return_value=agent)
         task_queue.agent_manager.assign_task = AsyncMock(return_value=True)
-        
+
         # Create a fake event loop and run the process method
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -232,7 +232,7 @@ class TestTaskQueueCompleteCoverage:
         finally:
             loop.close()
             asyncio.set_event_loop(None)
-        
+
         # Verify
         task_queue.agent_manager.get_available_agent.assert_called_once()
         task_queue.agent_manager.assign_task.assert_called_once_with(agent.id, task)
@@ -245,19 +245,19 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Mock agent_manager methods
         agent = MagicMock()
         agent.id = "test-agent"
         agent.status = AgentStatus.IDLE
-        
+
         task_queue.agent_manager = MagicMock()
         task_queue.agent_manager.get_available_agent = AsyncMock(return_value=agent)
         task_queue.agent_manager.assign_task = AsyncMock(return_value=False)
-        
+
         # Call _process_next
         await task_queue._process_next()
-        
+
         # Verify
         task_queue.agent_manager.get_available_agent.assert_called_once()
         task_queue.agent_manager.assign_task.assert_called_once_with(agent.id, task)
@@ -276,10 +276,10 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Call peek_next
         result = await task_queue.peek_next()
-        
+
         # Verify
         assert result.id == task.id
         # Task should still be in the queue
@@ -292,24 +292,24 @@ class TestTaskQueueCompleteCoverage:
         pending_task = Task(id="pending-task", type="test", parameters={}, status=TaskStatus.PENDING)
         in_progress_task = Task(id="in-progress-task", type="test", parameters={}, status=TaskStatus.IN_PROGRESS)
         completed_task = Task(id="completed-task", type="test", parameters={}, status=TaskStatus.COMPLETED)
-        
+
         # Add tasks to the queue
         task_queue.tasks[pending_task.id] = pending_task
         task_queue.tasks[in_progress_task.id] = in_progress_task
         task_queue.tasks[completed_task.id] = completed_task
-        
+
         # Call get_tasks_by_status
         pending_tasks = task_queue.get_tasks_by_status(TaskStatus.PENDING)
         in_progress_tasks = task_queue.get_tasks_by_status(TaskStatus.IN_PROGRESS)
         completed_tasks = task_queue.get_tasks_by_status(TaskStatus.COMPLETED)
-        
+
         # Verify
         assert len(pending_tasks) == 1
         assert pending_tasks[0].id == pending_task.id
-        
+
         assert len(in_progress_tasks) == 1
         assert in_progress_tasks[0].id == in_progress_task.id
-        
+
         assert len(completed_tasks) == 1
         assert completed_tasks[0].id == completed_task.id
 
@@ -319,10 +319,10 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Call update_task_priority
         await task_queue.update_task_priority(task.id, 5)
-        
+
         # Verify
         assert task_queue.tasks[task.id].priority == 5
         # Task should be requeued with new priority
@@ -344,7 +344,7 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue but mark it as in progress
         task.status = TaskStatus.IN_PROGRESS
         task_queue.tasks[task.id] = task
-        
+
         # Call update_task_priority
         with pytest.raises(TaskError):
             await task_queue.update_task_priority(task.id, 5)
@@ -355,10 +355,10 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Call clear
         task_queue.clear()
-        
+
         # Verify
         assert len(task_queue.tasks) == 0
         assert task_queue.task_queue.empty()
@@ -369,14 +369,14 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue
         task_queue.tasks[task.id] = task
         task_queue.task_queue.put_nowait((task.priority, task.id))
-        
+
         # Add another task with a different status
         completed_task = Task(id="completed-task", type="test", parameters={}, status=TaskStatus.COMPLETED)
         task_queue.tasks[completed_task.id] = completed_task
-        
+
         # Call size
         result = task_queue.size()
-        
+
         # Verify - only the pending task should be counted
         assert result == 1
 
@@ -392,9 +392,9 @@ class TestTaskQueueCompleteCoverage:
         # Add a task to the queue but mark it as in progress
         task.status = TaskStatus.IN_PROGRESS
         task_queue.tasks[task.id] = task
-        
+
         # Call remove
         await task_queue.remove(task.id)
-        
+
         # Verify
-        assert task.id not in task_queue.tasks 
+        assert task.id not in task_queue.tasks

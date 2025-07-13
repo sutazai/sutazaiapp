@@ -4,7 +4,6 @@
 import ast
 import logging
 import os
-import re
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -59,7 +58,7 @@ class SyntaxFixer:
         fixed_lines = []
         in_docstring = False
         docstring_start = None
-        
+
         for i, line in enumerate(lines):
             if '"""' in line:
                 count = line.count('"""')
@@ -69,14 +68,14 @@ class SyntaxFixer:
                         docstring_start = i
                     else:
                         in_docstring = False
-                        
+
             fixed_lines.append(line)
-            
+
         if in_docstring:
             # Add missing closing quotes
             if docstring_start is not None:
                 fixed_lines[docstring_start] = fixed_lines[docstring_start].rstrip() + '"""'
-            
+
         return '\n'.join(fixed_lines)
 
     def _fix_indentation(self, source: str) -> str:
@@ -84,13 +83,13 @@ class SyntaxFixer:
         lines = source.split('\n')
         fixed_lines = []
         indent_level = 0
-        
+
         for line in lines:
             stripped = line.lstrip()
             if not stripped:  # Empty line
                 fixed_lines.append('')
                 continue
-                
+
             # Adjust indent level based on line content
             if stripped.startswith(('def ', 'class ', 'if ', 'for ', 'while ', 'try:', 'else:', 'elif ', 'except', 'finally:')):
                 indent = ' ' * (4 * indent_level)
@@ -100,11 +99,11 @@ class SyntaxFixer:
             else:
                 indent = ' ' * (4 * indent_level)
                 fixed_lines.append(indent + stripped)
-                
+
                 # Check for block enders
                 if stripped in ['return', 'break', 'continue', 'pass'] or stripped.startswith('return '):
                     indent_level = max(0, indent_level - 1)
-                    
+
         return '\n'.join(fixed_lines)
 
     def _fix_missing_colons(self, source: str) -> str:
@@ -122,7 +121,7 @@ class SyntaxFixer:
         pairs = {')': '(', ']': '[', '}': '{'}
         lines = source.split('\n')
         stack = []
-        
+
         for i, line in enumerate(lines):
             for j, char in enumerate(line):
                 if char in '([{':
@@ -136,13 +135,13 @@ class SyntaxFixer:
                         if opening[0] != pairs[char]:
                             # Mismatched brackets
                             lines[i] = line[:j] + pairs[char] + line[j+1:]
-                            
+
         # Add missing closing brackets
         while stack:
             char, i, j = stack.pop()
             closing = {'(': ')', '[': ']', '{': '}'}[char]
             lines[i] = lines[i] + closing
-            
+
         return '\n'.join(lines)
 
     def _fix_function_definitions(self, source: str) -> str:
@@ -159,7 +158,7 @@ class SyntaxFixer:
                     lines[i] = line + ')'
                 if not stripped.endswith(':'):
                     lines[i] = lines[i] + ':'
-                    
+
         return '\n'.join(lines)
 
     def fix_project_syntax(self) -> None:
@@ -167,18 +166,18 @@ class SyntaxFixer:
         for root, dirs, files in os.walk(self.base_path):
             # Skip ignored directories
             dirs[:] = [d for d in dirs if d not in self.ignored_dirs]
-            
+
             for file in files:
                 if file.endswith('.py'):
                     file_path = os.path.join(root, file)
                     logger.info(f"Processing {file_path}")
-                    
+
                     fixed_source = self.fix_syntax_errors(file_path)
                     if fixed_source is not None:
                         try:
                             # Try to parse the fixed source to validate it
                             ast.parse(fixed_source)
-                            
+
                             # Write back the fixed source
                             with open(file_path, 'w', encoding='utf-8') as f:
                                 f.write(fixed_source)

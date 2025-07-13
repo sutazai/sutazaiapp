@@ -6,7 +6,6 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 
-from ai_agents.auto_gpt.src.validation import (
     validate_string,
     validate_number,
     validate_boolean,
@@ -44,7 +43,7 @@ def test_string_validation():
     assert validate_string("test") == "test"
     assert validate_string("") == ""
     assert validate_string("123") == "123"
-    
+
     # Test invalid strings
     with pytest.raises(ValidationError):
         validate_string(123)
@@ -60,7 +59,7 @@ def test_number_validation():
     assert validate_number(42) == 42
     assert validate_number(42.5) == 42.5
     assert validate_number(0) == 0
-    
+
     # Test invalid numbers
     with pytest.raises(ValidationError):
         validate_number("42")
@@ -75,7 +74,7 @@ def test_boolean_validation():
     # Test valid booleans
     assert validate_boolean(True) is True
     assert validate_boolean(False) is False
-    
+
     # Test invalid booleans
     with pytest.raises(ValidationError):
         validate_boolean(1)
@@ -90,12 +89,12 @@ def test_datetime_validation():
     # Test valid datetime
     now = datetime.now()
     assert validate_datetime(now) == now
-    
+
     # Test string datetime
     dt_str = "2023-01-01T12:00:00"
     dt = datetime.fromisoformat(dt_str)
     assert validate_datetime(dt_str) == dt
-    
+
     # Test invalid datetime
     with pytest.raises(ValidationError):
         validate_datetime("invalid")
@@ -111,7 +110,7 @@ def test_list_validation():
     assert validate_list([1, 2, 3]) == [1, 2, 3]
     assert validate_list([]) == []
     assert validate_list(["a", "b", "c"]) == ["a", "b", "c"]
-    
+
     # Test invalid lists
     with pytest.raises(ValidationError):
         validate_list("not a list")
@@ -127,7 +126,7 @@ def test_dict_validation():
     assert validate_dict({"key": "value"}) == {"key": "value"}
     assert validate_dict({}) == {}
     assert validate_dict({"nested": {"key": "value"}}) == {"nested": {"key": "value"}}
-    
+
     # Test invalid dictionaries
     with pytest.raises(ValidationError):
         validate_dict("not a dict")
@@ -143,7 +142,7 @@ def test_email_validation():
     assert validate_email("test@example.com") == "test@example.com"
     assert validate_email("user.name@domain.co.uk") == "user.name@domain.co.uk"
     assert validate_email("test+tag@example.com") == "test+tag@example.com"
-    
+
     # Test invalid emails
     with pytest.raises(ValidationError):
         validate_email("invalid")
@@ -159,7 +158,7 @@ def test_url_validation():
     assert validate_url("https://example.com") == "https://example.com"
     assert validate_url("http://example.com") == "http://example.com"
     assert validate_url("ftp://example.com") == "ftp://example.com"
-    
+
     # Test invalid URLs
     with pytest.raises(ValidationError):
         validate_url("invalid")
@@ -175,7 +174,7 @@ def test_ip_address_validation():
     assert validate_ip_address("192.168.1.1") == "192.168.1.1"
     assert validate_ip_address("10.0.0.0") == "10.0.0.0"
     assert validate_ip_address("172.16.0.0") == "172.16.0.0"
-    
+
     # Test invalid IP addresses
     with pytest.raises(ValidationError):
         validate_ip_address("invalid")
@@ -190,7 +189,7 @@ def test_uuid_validation():
     # Test valid UUIDs
     valid_uuid = "123e4567-e89b-12d3-a456-426614174000"
     assert validate_uuid(valid_uuid) == valid_uuid
-    
+
     # Test invalid UUIDs
     with pytest.raises(ValidationError):
         validate_uuid("invalid")
@@ -205,7 +204,7 @@ def test_json_validation():
     # Test valid JSON
     json_str = '{"key": "value", "number": 42}'
     assert validate_json(json_str) == {"key": "value", "number": 42}
-    
+
     # Test invalid JSON
     with pytest.raises(ValidationError):
         validate_json("invalid json")
@@ -228,7 +227,7 @@ def test_schema_validation():
     }
     data = {"name": "John", "age": 30}
     assert validate_schema(data, schema) == data
-    
+
     # Test invalid schema
     with pytest.raises(ValidationError):
         validate_schema({"name": "John"}, schema)  # Missing required field
@@ -239,17 +238,17 @@ def test_schema_validation():
 def test_field_validator():
     """Test FieldValidator functionality."""
     validator = FieldValidator()
-    
+
     # Test string field validation
     assert validator.validate_field("name", "John", str) == "John"
     with pytest.raises(ValidationError):
         validator.validate_field("name", 123, str)
-    
+
     # Test number field validation
     assert validator.validate_field("age", 30, int) == 30
     with pytest.raises(ValidationError):
         validator.validate_field("age", "30", int)
-    
+
     # Test optional field validation
     assert validator.validate_field("optional", None, str, required=False) is None
     with pytest.raises(ValidationError):
@@ -259,7 +258,7 @@ def test_field_validator():
 def test_schema_validator():
     """Test SchemaValidator functionality."""
     validator = SchemaValidator()
-    
+
     # Test data class validation
     user = TestUser(
         name="John",
@@ -272,7 +271,7 @@ def test_schema_validator():
     )
     validated = validator.validate(user)
     assert validated == user
-    
+
     # Test invalid data class
     with pytest.raises(ValidationError):
         validator.validate({
@@ -283,4 +282,4 @@ def test_schema_validator():
             "created_at": "invalid",  # Invalid datetime
             "tags": "not a list",  # Invalid type
             "metadata": "not a dict",  # Invalid type
-        }) 
+        })

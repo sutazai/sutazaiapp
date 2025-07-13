@@ -63,7 +63,7 @@ class Task:
         persist_path: str | None = None,
     ):
         """Initialize a new task.
-        
+
         Args:
             objective: The main objective of the task
             context: Additional context for the task (optional)
@@ -78,7 +78,7 @@ class Task:
         self.created_at = datetime.now()
         self.started_at: datetime | None = None
         self.completed_at: datetime | None = None
-        
+
         if persist_path and os.path.exists(persist_path):
             self.load()
 
@@ -97,100 +97,100 @@ class Task:
 
     def add_step(self, description: str) -> TaskStep:
         """Add a new step to the task.
-        
+
         Args:
             description: Description of the step
-            
+
         Returns:
             The created step
-            
+
         Raises:
             ValueError: If maximum number of steps would be exceeded
         """
         if len(self.steps) >= self.max_steps:
             raise ValueError(f"Cannot add more steps: maximum {self.max_steps} steps allowed")
-            
+
         step = TaskStep(description=description)
         self.steps.append(step)
-        
+
         if self.persist_path:
             self.save()
-            
+
         return step
 
     def start_step(self, index: int) -> None:
         """Mark a step as in progress.
-        
+
         Args:
             index: Index of the step to start
-            
+
         Raises:
             IndexError: If index is out of range
             ValueError: If step is not in PENDING status
         """
         if not 0 <= index < len(self.steps):
             raise IndexError(f"Step index {index} out of range")
-            
+
         step = self.steps[index]
         if step.status != TaskStatus.PENDING:
             raise ValueError(f"Cannot start step: status is {step.status}")
-            
+
         step.status = TaskStatus.IN_PROGRESS
         step.started_at = datetime.now()
-        
+
         if self.started_at is None:
             self.started_at = datetime.now()
-            
+
         if self.persist_path:
             self.save()
 
     def complete_step(self, index: int, result: str | None = None) -> None:
         """Mark a step as completed.
-        
+
         Args:
             index: Index of the step to complete
             result: Result of the step execution (optional)
-            
+
         Raises:
             IndexError: If index is out of range
             ValueError: If step is not in IN_PROGRESS status
         """
         if not 0 <= index < len(self.steps):
             raise IndexError(f"Step index {index} out of range")
-            
+
         step = self.steps[index]
         if step.status != TaskStatus.IN_PROGRESS:
             raise ValueError(f"Cannot complete step: status is {step.status}")
-            
+
         step.status = TaskStatus.COMPLETED
         step.result = result
         step.completed_at = datetime.now()
-        
+
         if self.persist_path:
             self.save()
 
     def fail_step(self, index: int, error: str | None = None) -> None:
         """Mark a step as failed.
-        
+
         Args:
             index: Index of the step to fail
             error: Error message (optional)
-            
+
         Raises:
             IndexError: If index is out of range
             ValueError: If step is not in IN_PROGRESS status
         """
         if not 0 <= index < len(self.steps):
             raise IndexError(f"Step index {index} out of range")
-            
+
         step = self.steps[index]
         if step.status != TaskStatus.IN_PROGRESS:
             raise ValueError(f"Cannot fail step: status is {step.status}")
-            
+
         step.status = TaskStatus.FAILED
         step.result = error
         step.completed_at = datetime.now()
-        
+
         if self.persist_path:
             self.save()
 
@@ -209,7 +209,7 @@ class Task:
     def save(self) -> None:
         """Save task state to disk."""
         data = self.to_dict()
-        
+
         os.makedirs(os.path.dirname(self.persist_path), exist_ok=True)
         with open(self.persist_path, "w") as f:
             json.dump(data, f, indent=2)
@@ -218,7 +218,7 @@ class Task:
         """Load task state from disk."""
         with open(self.persist_path, "r") as f:
             data = json.load(f)
-            
+
         self.objective = data["objective"]
         self.context = data["context"]
         self.max_steps = data["max_steps"]

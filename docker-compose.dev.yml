@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  sutazai-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: sutazai-dev
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+      - "11434:11434"
+      - "5678:5678"  # Debug port
+    volumes:
+      - .:/app
+      - /app/venv
+    environment:
+      - DATABASE_URL=postgresql://sutazai:sutazai@postgres:5432/sutazaidb
+      - REDIS_URL=redis://redis:6379/0
+      - PYTHONPATH=/app
+      - DEBUG=true
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - sutazai-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: sutazai-postgres-dev
+    environment:
+      - POSTGRES_DB=sutazaidb
+      - POSTGRES_USER=sutazai
+      - POSTGRES_PASSWORD=sutazai
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - sutazai-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-redis-dev
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - sutazai-network
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  sutazai-network:
+    driver: bridge

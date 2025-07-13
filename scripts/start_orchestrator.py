@@ -85,7 +85,7 @@ async def main():
 
         # Initialize and start orchestrator
         orchestrator = SupremeAIOrchestrator(orchestrator_config)
-        
+
         logger.info("Starting Supreme AI Orchestrator...")
         await orchestrator.start()
 
@@ -102,4 +102,4 @@ async def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

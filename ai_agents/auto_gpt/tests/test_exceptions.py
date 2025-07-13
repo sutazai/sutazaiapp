@@ -1,10 +1,8 @@
 #!/usr/bin/env python3.11
 """Tests for the custom exceptions module."""
 
-import pytest
 from typing import Dict, Any, List
 
-from ai_agents.auto_gpt.src.exceptions import (
     AutoGPTError,
     ConfigError,
     ModelError,
@@ -29,12 +27,12 @@ def test_base_exception():
     error = AutoGPTError("Test error")
     assert str(error) == "Test error"
     assert error.message == "Test error"
-    
+
     # Test exception with details
     details = {"key": "value"}
     error = AutoGPTError("Test error", details=details)
     assert error.details == details
-    
+
     # Test exception with cause
     cause = ValueError("Original error")
     error = AutoGPTError("Test error", cause=cause)
@@ -47,7 +45,7 @@ def test_config_exception():
     error = ConfigError("Invalid configuration")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Invalid configuration"
-    
+
     # Test config error with details
     details = {"missing_fields": ["name", "version"]}
     error = ConfigError("Missing required fields", details=details)
@@ -60,7 +58,7 @@ def test_model_exception():
     error = ModelError("Model initialization failed")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Model initialization failed"
-    
+
     # Test model error with cause
     cause = ValueError("Invalid model parameters")
     error = ModelError("Model error", cause=cause)
@@ -73,7 +71,7 @@ def test_memory_exception():
     error = MemoryError("Memory limit exceeded")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Memory limit exceeded"
-    
+
     # Test memory error with details
     details = {"current_size": 1000, "max_size": 500}
     error = MemoryError("Memory limit exceeded", details=details)
@@ -86,7 +84,7 @@ def test_task_exception():
     error = TaskError("Task execution failed")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Task execution failed"
-    
+
     # Test task error with task details
     task_details = {"task_id": "123", "status": "failed"}
     error = TaskError("Task failed", details=task_details)
@@ -99,7 +97,7 @@ def test_tool_exception():
     error = ToolError("Tool execution failed")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Tool execution failed"
-    
+
     # Test tool error with tool details
     tool_details = {"tool_name": "test_tool", "error_type": "validation"}
     error = ToolError("Tool error", details=tool_details)
@@ -112,7 +110,7 @@ def test_validation_exception():
     error = ValidationError("Invalid input")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Invalid input"
-    
+
     # Test validation error with field errors
     field_errors = {
         "name": "Name is required",
@@ -128,7 +126,7 @@ def test_network_exception():
     error = NetworkError("Connection failed")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Connection failed"
-    
+
     # Test network error with response details
     response_details = {"status_code": 500, "url": "https://example.com"}
     error = NetworkError("Server error", details=response_details)
@@ -141,7 +139,7 @@ def test_file_exception():
     error = FileError("File not found")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "File not found"
-    
+
     # Test file error with file details
     file_details = {"path": "/test/file.txt", "operation": "read"}
     error = FileError("File operation failed", details=file_details)
@@ -154,7 +152,7 @@ def test_timeout_exception():
     error = TimeoutError("Operation timed out")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Operation timed out"
-    
+
     # Test timeout error with timing details
     timing_details = {"timeout": 30, "elapsed": 35}
     error = TimeoutError("Timeout exceeded", details=timing_details)
@@ -167,7 +165,7 @@ def test_authentication_exception():
     error = AuthenticationError("Invalid credentials")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Invalid credentials"
-    
+
     # Test authentication error with auth details
     auth_details = {"service": "api", "reason": "expired_token"}
     error = AuthenticationError("Auth failed", details=auth_details)
@@ -180,7 +178,7 @@ def test_rate_limit_exception():
     error = RateLimitError("Rate limit exceeded")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Rate limit exceeded"
-    
+
     # Test rate limit error with limit details
     limit_details = {"limit": 100, "remaining": 0, "reset": 3600}
     error = RateLimitError("Rate limit reached", details=limit_details)
@@ -193,7 +191,7 @@ def test_resource_not_found_exception():
     error = ResourceNotFoundError("Resource not found")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Resource not found"
-    
+
     # Test resource not found error with resource details
     resource_details = {"type": "model", "id": "123"}
     error = ResourceNotFoundError("Resource missing", details=resource_details)
@@ -206,7 +204,7 @@ def test_resource_conflict_exception():
     error = ResourceConflictError("Resource conflict")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Resource conflict"
-    
+
     # Test resource conflict error with conflict details
     conflict_details = {"resource": "task", "conflict_type": "duplicate"}
     error = ResourceConflictError("Conflict detected", details=conflict_details)
@@ -219,11 +217,11 @@ def test_resource_validation_exception():
     error = ResourceValidationError("Invalid resource")
     assert isinstance(error, AutoGPTError)
     assert str(error) == "Invalid resource"
-    
+
     # Test resource validation error with validation details
     validation_details = {
         "resource": "config",
         "errors": ["missing required field", "invalid value type"],
     }
     error = ResourceValidationError("Validation failed", details=validation_details)
-    assert error.details == validation_details 
+    assert error.details == validation_details

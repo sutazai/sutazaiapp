@@ -1,6 +1,5 @@
 """Tests for the SupremeAIOrchestrator class."""
 import pytest
-import asyncio
 from unittest.mock import Mock, AsyncMock, patch
 
 from core_system.orchestrator.models import OrchestratorConfig
@@ -46,7 +45,7 @@ async def test_start_stop():
         max_agents=10,
         task_timeout=3600,
     )
-    
+
     # Create mocks for the components
     with patch("core_system.orchestrator.task_queue.TaskQueue.start", new_callable=AsyncMock) as mock_task_start, \
          patch("core_system.orchestrator.task_queue.TaskQueue.stop", new_callable=AsyncMock) as mock_task_stop, \
@@ -54,17 +53,17 @@ async def test_start_stop():
          patch("core_system.orchestrator.agent_manager.AgentManager.stop", new_callable=AsyncMock) as mock_agent_stop, \
          patch("core_system.orchestrator.sync_manager.SyncManager.start", new_callable=AsyncMock) as mock_sync_start, \
          patch("core_system.orchestrator.sync_manager.SyncManager.stop", new_callable=AsyncMock) as mock_sync_stop:
-        
+
         # Create the orchestrator
         orchestrator = SupremeAIOrchestrator(config)
-        
+
         # Test start
         await orchestrator.start()
         assert orchestrator.is_running == True
         mock_task_start.assert_called_once()
         mock_agent_start.assert_called_once()
         mock_sync_start.assert_called_once()
-        
+
         # Test stop
         await orchestrator.stop()
         assert orchestrator.is_running == False
@@ -90,10 +89,10 @@ async def test_submit_task_not_running():
         max_agents=10,
         task_timeout=3600,
     )
-    
+
     orchestrator = SupremeAIOrchestrator(config)
     orchestrator.is_running = False
-    
+
     with pytest.raises(OrchestratorError):
         await orchestrator.submit_task({"id": "task1", "type": "test"})
 
@@ -115,10 +114,10 @@ async def test_register_agent_not_running():
         max_agents=10,
         task_timeout=3600,
     )
-    
+
     orchestrator = SupremeAIOrchestrator(config)
     orchestrator.is_running = False
-    
+
     with pytest.raises(OrchestratorError):
         await orchestrator.register_agent({"id": "agent1", "type": "test"})
 
@@ -190,4 +189,4 @@ async def test_error_handling(orchestrator):
     with patch("core_system.orchestrator.task_queue.TaskQueue.submit", new_callable=AsyncMock) as mock_submit:
         mock_submit.side_effect = Exception("Test error")
         with pytest.raises(OrchestratorError):
-            await orchestrator.submit_task({"id": "task1"}) 
+            await orchestrator.submit_task({"id": "task1"})

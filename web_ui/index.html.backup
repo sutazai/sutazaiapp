@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SutazAI - Local AI Agent System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .status {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #4ecdc4;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .endpoint {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">SutazAI</div>
+        <div class="subtitle">Local AI Agent System</div>
+        
+        <div class="status">
+            <span class="status-indicator"></span>
+            <strong>System Status: ONLINE</strong>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🤖 Local LLM</h3>
+                <p>Ollama-powered local language models</p>
+            </div>
+            <div class="feature">
+                <h3>🗄️ Database</h3>
+                <p>PostgreSQL with Redis caching</p>
+            </div>
+            <div class="feature">
+                <h3>🧠 ML/NLP</h3>
+                <p>Advanced processing capabilities</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Multi-Agent</h3>
+                <p>Distributed AI agent system</p>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="/docs" class="btn btn-primary">API Documentation</a>
+            <a href="/health" class="btn">Health Check</a>
+            <a href="/api/health" class="btn">API Health</a>
+        </div>
+        
+        <div class="info">
+            <h4>🔧 Available Endpoints:</h4>
+            <div class="endpoint">GET /</div> - Main dashboard<br>
+            <div class="endpoint">GET /docs</div> - Interactive API documentation<br>
+            <div class="endpoint">GET /health</div> - System health status<br>
+            <div class="endpoint">GET /api/health</div> - API health check<br>
+            <div class="endpoint">GET /api/*</div> - API endpoints<br>
+        </div>
+        
+        <div class="info" style="margin-top: 20px;">
+            <h4>🚀 Quick Start:</h4>
+            <p>Welcome to SutazAI! This is your local AI system running without external API dependencies. 
+            All processing is done locally using Ollama for language models, PostgreSQL for data storage, 
+            and Redis for caching. Click "API Documentation" above to explore available endpoints and start 
+            building with SutazAI.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh status every 30 seconds
+        setInterval(async () => {
+            try {
+                const response = await fetch('/health');
+                const status = response.ok ? 'ONLINE' : 'OFFLINE';
+                const indicator = document.querySelector('.status-indicator');
+                const statusText = document.querySelector('.status strong');
+                
+                if (status === 'ONLINE') {
+                    indicator.style.background = '#4caf50';
+                    statusText.textContent = 'System Status: ONLINE';
+                } else {
+                    indicator.style.background = '#f44336';
+                    statusText.textContent = 'System Status: OFFLINE';
+                }
+            } catch (error) {
+                console.log('Health check failed:', error);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

@@ -38,10 +38,10 @@ async def test_task_queue_start(task_queue_fixture):
     """Test for start function in task_queue."""
     # Set initial state
     task_queue_fixture.is_running = False
-    
+
     # Start task queue
     await task_queue_fixture.start()
-    
+
     # Verify it's running
     assert task_queue_fixture.is_running is True
 
@@ -52,10 +52,10 @@ async def test_task_queue_stop(task_queue_fixture):
     # Set up the fixture
     task_queue_fixture.is_running = True
     task_queue_fixture.processing_task = AsyncMock()
-    
+
     # Call stop
     await task_queue_fixture.stop()
-    
+
     # Verify it's stopped
     assert task_queue_fixture.is_running is False
 
@@ -65,17 +65,17 @@ async def test_task_queue_process_loop(task_queue_fixture):
     """Test for _process_loop function in task_queue."""
     # Set initial state
     task_queue_fixture.is_running = True
-    
+
     # Mock methods to control execution flow
     task_queue_fixture.process_next_task = AsyncMock()
     task_queue_fixture.process_next_task.side_effect = [None, Exception("Test exception")]
-    
+
     # Run the process loop with a controlled exit
     try:
         await task_queue_fixture._process_loop()
     except Exception:
         pass
-    
+
     # Verify process_next_task was called
     assert task_queue_fixture.process_next_task.call_count > 0
 
@@ -85,15 +85,15 @@ async def test_task_queue_put(task_queue_fixture):
     """Test for put function in task_queue."""
     # Create a test task
     test_task = Task(
-        id="test-task", 
-        type="test", 
+        id="test-task",
+        type="test",
         parameters={},
         priority=1
     )
-    
+
     # Add to queue
     await task_queue_fixture.put(test_task)
-    
+
     # Verify task was added
     assert task_queue_fixture.size() > 0
 
@@ -103,16 +103,16 @@ async def test_task_queue_get(task_queue_fixture):
     """Test for get function in task_queue."""
     # Create and add a test task
     test_task = Task(
-        id="test-task", 
-        type="test", 
+        id="test-task",
+        type="test",
         parameters={},
         priority=1
     )
     await task_queue_fixture.put(test_task)
-    
+
     # Get task
     result = await task_queue_fixture.get()
-    
+
     # Verify we got a task
     assert result is not None
     assert result.id == "test-task"
@@ -131,24 +131,24 @@ async def test_task_queue_get_by_type(task_queue_fixture):
     """Test for get_tasks_by_type function in task_queue."""
     # Create and add test tasks of different types
     test_task1 = Task(
-        id="test-task-1", 
-        type="type1", 
+        id="test-task-1",
+        type="type1",
         parameters={},
         priority=1
     )
     test_task2 = Task(
-        id="test-task-2", 
-        type="type2", 
+        id="test-task-2",
+        type="type2",
         parameters={},
         priority=1
     )
-    
+
     await task_queue_fixture.put(test_task1)
     await task_queue_fixture.put(test_task2)
-    
+
     # Get tasks by type
     result = await task_queue_fixture.get_tasks_by_type("type1")
-    
+
     # Verify we got the right tasks
     assert len(result) > 0
     assert all(task.type == "type1" for task in result)

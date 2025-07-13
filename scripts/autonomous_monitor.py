@@ -34,7 +34,7 @@ class MonitoringSystem:
         self.config = self.load_config()
         self.lock = FileLock(LOCK_FILE)
         self.should_run = True
-        
+
         # Register signal handlers
         signal.signal(signal.SIGTERM, self.handle_shutdown)
         signal.signal(signal.SIGINT, self.handle_shutdown)
@@ -57,7 +57,7 @@ class MonitoringSystem:
                 "performance_manager.py",
             ],
         }
-        
+
         try:
             if os.path.exists(CONFIG_FILE):
                 with open(CONFIG_FILE) as f:
@@ -66,7 +66,7 @@ class MonitoringSystem:
                 default_config.update(config)
         except Exception as e:
             logger.error(f"Error loading config: {e}")
-        
+
         return default_config
 
     def check_single_instance(self) -> bool:
@@ -85,7 +85,7 @@ class MonitoringSystem:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage("/")
-            
+
             status = {
                 "cpu": cpu_percent,
                 "memory": memory.percent,
@@ -93,17 +93,17 @@ class MonitoringSystem:
                 "memory_total": memory.total,
                 "disk": disk.percent,
             }
-            
+
             # Log warnings for high resource usage
             if cpu_percent > self.config["cpu_max"]:
                 logger.warning(f"High CPU usage: {cpu_percent}%")
-            
+
             if memory.percent > self.config["memory_max"]:
                 logger.warning(f"High memory usage: {memory.percent}%")
-            
+
             if disk.percent > self.config["disk_max"]:
                 logger.warning(f"High disk usage: {disk.percent}%")
-            
+
             return status
         except Exception as e:
             logger.error(f"Error checking system resources: {e}")
@@ -116,7 +116,7 @@ class MonitoringSystem:
                 try:
                     proc_cpu = proc.info["cpu_percent"]
                     cmdline = " ".join(proc.info["cmdline"] or [])
-                    
+
                     # Check if process is critical
                     if any(svc in cmdline for svc in self.config["critical_services"]):
                         if proc_cpu > self.config["process_cpu_max"]:
@@ -133,14 +133,14 @@ class MonitoringSystem:
         """Main monitoring loop."""
         if not self.check_single_instance():
             sys.exit(1)
-        
+
         logger.info("Starting lightweight monitoring system")
         logger.info(
             f"Configured with: interval={self.config['interval']}s, "
             f"cpu_max={self.config['cpu_max']}%, "
             f"memory_max={self.config['memory_max']}%"
         )
-        
+
         while self.should_run:
             try:
                 with self.lock:
@@ -153,11 +153,11 @@ class MonitoringSystem:
                             f"Total: {status['memory_total'] / 1024**3:.1f} GB), "
                             f"Disk: {status.get('disk', 'N/A')}%"
                         )
-                    
+
                     self.check_critical_processes()
             except Exception as e:
                 logger.error(f"Monitoring error: {e}")
-            
+
             # Sleep for the configured interval
             time.sleep(self.config["interval"])
 
@@ -183,4 +183,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

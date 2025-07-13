@@ -5,7 +5,6 @@ import pytest
 from datetime import datetime
 from unittest.mock import Mock, patch
 
-from ai_agents.auto_gpt.src.agent import (
     AutoGPTAgent,
     AgentConfig,
     AgentState,
@@ -78,12 +77,12 @@ def test_agent_start_task(test_agent, mock_memory):
         objective="Test objective",
         context={"test_key": "test_value"},
     )
-    
+
     test_agent.start_task(task)
     assert test_agent.current_task == task
     assert test_agent.state == AgentState.WORKING
     assert test_agent.step_count == 0
-    
+
     # Verify memory was updated
     mock_memory.add_message.assert_called_once()
 
@@ -95,15 +94,15 @@ def test_agent_execute_step(test_agent, mock_model, mock_memory):
         context={"test_key": "test_value"},
     )
     test_agent.start_task(task)
-    
+
     # Execute a step
     result = test_agent.execute_step()
     assert result == "Test response"
     assert test_agent.step_count == 1
-    
+
     # Verify model was called
     mock_model.generate_response.assert_called_once()
-    
+
     # Verify memory was updated
     mock_memory.add_message.assert_called()
 
@@ -115,11 +114,11 @@ def test_agent_max_steps(test_agent, mock_model):
         context={"test_key": "test_value"},
     )
     test_agent.start_task(task)
-    
+
     # Execute steps up to limit
     for _ in range(test_agent.max_steps):
         test_agent.execute_step()
-    
+
     # Try to execute one more step
     with pytest.raises(AgentError):
         test_agent.execute_step()
@@ -132,10 +131,10 @@ def test_agent_task_completion(test_agent, mock_model, mock_memory):
         context={"test_key": "test_value"},
     )
     test_agent.start_task(task)
-    
+
     # Mock model to indicate task completion
     mock_model.generate_response.return_value = "Task completed successfully"
-    
+
     # Execute step
     result = test_agent.execute_step()
     assert result == "Task completed successfully"
@@ -151,14 +150,14 @@ def test_agent_task_failure(test_agent, mock_model):
         context={"test_key": "test_value"},
     )
     test_agent.start_task(task)
-    
+
     # Mock model to simulate error
     mock_model.generate_response.side_effect = Exception("Test error")
-    
+
     # Execute step
     with pytest.raises(AgentError):
         test_agent.execute_step()
-    
+
     assert test_agent.state == AgentState.ERROR
     assert test_agent.current_task.status == TaskStatus.FAILED
 
@@ -170,7 +169,7 @@ def test_agent_memory_management(test_agent, mock_memory):
         context={"test_key": "test_value"},
     )
     test_agent.start_task(task)
-    
+
     # Add messages to memory
     messages = [
         Message(
@@ -185,7 +184,7 @@ def test_agent_memory_management(test_agent, mock_memory):
         ),
     ]
     mock_memory.get_recent_messages.return_value = messages
-    
+
     # Verify memory access
     recent_messages = test_agent.get_recent_messages()
     assert recent_messages == messages
@@ -195,7 +194,7 @@ def test_agent_memory_management(test_agent, mock_memory):
 def test_agent_state_transitions(test_agent):
     """Test agent state transitions."""
     assert test_agent.state == AgentState.IDLE
-    
+
     # Start task
     task = Task(
         objective="Test objective",
@@ -203,14 +202,14 @@ def test_agent_state_transitions(test_agent):
     )
     test_agent.start_task(task)
     assert test_agent.state == AgentState.WORKING
-    
+
     # Complete task
     test_agent.current_task.status = TaskStatus.COMPLETED
     test_agent._update_state()
     assert test_agent.state == AgentState.IDLE
-    
+
     # Fail task
     test_agent.start_task(task)
     test_agent.current_task.status = TaskStatus.FAILED
     test_agent._update_state()
-    assert test_agent.state == AgentState.ERROR 
+    assert test_agent.state == AgentState.ERROR

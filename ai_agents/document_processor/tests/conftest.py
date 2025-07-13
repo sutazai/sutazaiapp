@@ -16,14 +16,14 @@ def pytest_configure(config):
         os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."),
     )
     sys.path.insert(0, project_root)
-    
+
     # Configure logging
     logger.add(
         os.path.join(project_root, "logs", "document_processor_tests.log"),
         rotation="10 MB",
         level="INFO",
     )
-    
+
     # Add custom markers
     config.addinivalue_line(
         "markers",
@@ -60,7 +60,7 @@ def test_environment(request):
     """
     env = request.config.getoption("--env")
     log_level = request.config.getoption("--log-level")
-    
+
     # Environment-specific configurations
     environments = {
         "test": {
@@ -74,7 +74,7 @@ def test_environment(request):
             "temp_dir": tempfile.mkdtemp(prefix="sutazai_dev_"),
         },
     }
-    
+
     # Create temp directory if not exists
     os.makedirs(environments[env]["temp_dir"], exist_ok=True)
     return environments[env]
@@ -138,5 +138,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    

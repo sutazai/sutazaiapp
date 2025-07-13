@@ -2,7 +2,6 @@
 import os
 import tempfile
 from collections.abc import Generator
-import cv2  # type: ignore
 import numpy as np
 import pytest
 from ai_agents.document_processor.agent import DocumentProcessorAgent
@@ -16,7 +15,6 @@ def sample_pdf_path() -> Generator[str, None, None]:
     Returns:
         str: Path to the sample PDF
     """
-    import fitz  # type: ignore
     # Create a temporary PDF
     temp_pdf = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
     doc = fitz.open(filename="")  # nosec
@@ -57,6 +55,7 @@ class TestDocumentProcessorAgent:
     Comprehensive Test Suite for Document Processor Agent
     Covers various scenarios and edge cases for document processing
     """
+
     def test_document_extraction(self, sample_pdf_path: str):
         """Test PDF text extraction functionality"""
         agent = DocumentProcessorAgent()
@@ -161,5 +160,3 @@ if __name__ == "__main__":
             "--tb=short",  # Shorter traceback format
         ],
     )
-
-            

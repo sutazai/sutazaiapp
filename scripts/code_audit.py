@@ -3,7 +3,7 @@
 Comprehensive Code Audit Script for SutazAI
 
 This script performs a thorough audit of the codebase including:
-- Security scanning
+    - Security scanning
 - Code quality checks
 - Dependency analysis
 - Performance profiling
@@ -42,14 +42,14 @@ class CodeAuditor:
             "performance": [],
             "documentation": [],
         }
-        
+
         # Create necessary directories
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
     def run_security_scan(self) -> None:
         """Run security scanning tools."""
         logger.info("Running security scan...")
-        
+
         # Run Bandit
         try:
             result = subprocess.run(
@@ -67,7 +67,7 @@ class CodeAuditor:
     def run_quality_checks(self) -> None:
         """Run code quality checks."""
         logger.info("Running quality checks...")
-        
+
         # Run Pylint
         try:
             result = subprocess.run(
@@ -85,7 +85,7 @@ class CodeAuditor:
     def check_dependencies(self) -> None:
         """Analyze project dependencies."""
         logger.info("Checking dependencies...")
-        
+
         # Check requirements.txt
         req_file = self.project_root / "requirements.txt"
         if req_file.exists():
@@ -117,14 +117,14 @@ class CodeAuditor:
     def check_performance(self) -> None:
         """Run performance profiling."""
         logger.info("Running performance checks...")
-        
+
         # Run cProfile on main modules
         main_modules = [
             "backend/main.py",
             "ai_agents/base_agent.py",
             "model_management/model_manager.py",
         ]
-        
+
         for module in main_modules:
             module_path = self.project_root / module
             if module_path.exists():
@@ -155,7 +155,7 @@ class CodeAuditor:
     def check_documentation(self) -> None:
         """Validate documentation completeness."""
         logger.info("Checking documentation...")
-        
+
         # Check for missing docstrings
         try:
             result = subprocess.run(
@@ -193,11 +193,11 @@ class CodeAuditor:
     def generate_report(self) -> None:
         """Generate a comprehensive audit report."""
         report_path = self.log_dir / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        
+
         try:
             # Ensure log directory exists
             self.log_dir.mkdir(parents=True, exist_ok=True)
-            
+
             with open(report_path, "w") as f:
                 json.dump(self.audit_results, f, indent=2)
             logger.info(f"Audit report generated: {report_path}")
@@ -207,14 +207,14 @@ class CodeAuditor:
     def run_audit(self) -> None:
         """Run all audit checks."""
         logger.info("Starting comprehensive code audit...")
-        
+
         self.run_security_scan()
         self.run_quality_checks()
         self.check_dependencies()
         self.check_performance()
         self.check_documentation()
         self.generate_report()
-        
+
         logger.info("Code audit completed")
 
 def main():
@@ -223,4 +223,4 @@ def main():
     auditor.run_audit()
 
 if __name__ == "__main__":
-    main() 
+    main()

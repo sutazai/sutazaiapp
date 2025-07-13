@@ -25,6 +25,7 @@ def test_tool_parameter_creation():
 
 def test_tool_creation():
     """Test creating a tool."""
+
     def test_function(param1: str, param2: int = 42) -> str:
         return f"Result: {param1}, {param2}"
 
@@ -59,6 +60,7 @@ def test_tool_creation():
 
 def test_tool_parameter_validation():
     """Test parameter validation in tools."""
+
     def test_function(param1: str, param2: int = 42) -> str:
         return f"Result: {param1}, {param2}"
 
@@ -101,6 +103,7 @@ def test_tool_parameter_validation():
 
 def test_tool_execution():
     """Test tool execution."""
+
     def test_function(param1: str, param2: int = 42) -> str:
         return f"Result: {param1}, {param2}"
 
@@ -141,6 +144,7 @@ def test_tool_registry():
     registry = ToolRegistry()
 
     # Create a test tool
+
     def test_function(param1: str) -> str:
         return f"Result: {param1}"
 
@@ -190,6 +194,7 @@ def test_tool_registry_list_tools():
     registry = ToolRegistry()
 
     # Create and register multiple tools
+
     def test_function1(param1: str) -> str:
         return f"Result 1: {param1}"
 
@@ -271,4 +276,4 @@ def test_tool_registry_execution():
 
     # Test execution of non-existent tool
     with pytest.raises(KeyError, match="not found"):
-        registry.execute_tool("non_existent_tool", param1="test") 
+        registry.execute_tool("non_existent_tool", param1="test")

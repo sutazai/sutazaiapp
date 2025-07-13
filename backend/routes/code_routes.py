@@ -8,9 +8,7 @@ from typing import Dict, List, Optional, Any
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
-from backend.services.auth import validate_otp  # From Phase 3 OTP validation
 from backend.services.code_generation import CodeGenerationService
-from typing import Union
 from typing import Optional
 
 # Initialize FastAPI router
@@ -23,17 +21,17 @@ code_gen_service = CodeGenerationService()
 class CodeGenerationRequest(BaseModel):
     """Request model for code generation."""
     specification: str = Field(
-        ..., 
-        min_length=10, 
-        max_length=2000, 
+        ...,
+        min_length=10,
+        max_length=2000,
         description="Code generation specification",
     )
     model_name: str | None = Field(
-        default="deepseek-coder", 
+        default="deepseek-coder",
         description="Name of the code generation model to use",
     )
     language: str | None = Field(
-        default="python", 
+        default="python",
         description="Target programming language",
     )
     otp: str = Field(
@@ -61,30 +59,30 @@ async def generate_code(
     request: CodeGenerationRequest, background_tasks: BackgroundTasks
 ) -> CodeGenerationResponse:
     """Generate code based on a specification.
-    
+
     Args:
         request: Code generation request
         background_tasks: FastAPI background tasks
-        
+
     Returns:
         Code generation response with status and generated code
     """
     # Validate OTP
     if not validate_otp(request.otp):
         raise HTTPException(status_code=401, detail="Invalid OTP")
-        
+
     # Check if model is available
     try:
         # Ensure language is not None before passing to generate_code
         language = request.language or "python"
-        
+
         # Generate code
         result = code_gen_service.generate_code(
             specification=request.specification,
             model_name=request.model_name or "deepseek-coder",
             language=language,
         )
-        
+
         return CodeGenerationResponse(
             success=True,
             message="Code generated successfully",
@@ -100,7 +98,7 @@ async def generate_code(
 
 def setup_routes(app) -> None:
     """Include router in the FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
     """

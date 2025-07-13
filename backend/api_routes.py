@@ -15,7 +15,7 @@ API_VERSION = "0.1.0"
 
 def get_api_version() -> str:
     """Get current API version.
-    
+
     Returns:
         Current API version string
     """
@@ -24,7 +24,7 @@ def get_api_version() -> str:
 
 class APIRouteConfig(BaseModel):
     """API Route Configuration Model.
-    
+
     Used to configure and validate API route settings.
     """
     prefix: str = Field(
@@ -45,7 +45,7 @@ class APIRouteConfig(BaseModel):
         ge=1,
         le=1000,
     )
-    
+
     @validator("prefix")
     def prefix_must_start_with_slash(cls, v):
         """Validate that prefix starts with a slash."""
@@ -60,22 +60,22 @@ def create_api_router(
     enable_docs: bool = True,
 ) -> APIRouter:
     """Create a configured API router.
-    
+
     Args:
         prefix: API route prefix
         tags: List of tags for API documentation
         enable_docs: Whether to enable API documentation
-        
+
     Returns:
         Configured APIRouter instance
     """
     tags = tags or ["api"]
-    
+
     router = APIRouter(
         prefix=prefix,
         tags=tags,
     )
-    
+
     # Add basic informational routes
     @router.get("/status")
     async def get_status() -> Dict[str, Any]:
@@ -84,7 +84,7 @@ def create_api_router(
             "status": "operational",
             "version": get_api_version(),
         }
-        
+
     @router.get("/info")
     async def get_info() -> Dict[str, Any]:
         """Get API information and available endpoints."""
@@ -94,17 +94,17 @@ def create_api_router(
             "version": get_api_version(),
             "endpoints": [
                 {"path": "/status", "method": "GET", "description": "Get API status"},
-                {"path": "/info", "method": "GET", 
+                {"path": "/info", "method": "GET",
                  "description": "Get API information"},
             ],
         }
-        
+
     return router
 
 
 def register_api_routes(app, routes_config=None):
     """Register API routes with the FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
         routes_config: Optional route configuration
@@ -125,7 +125,7 @@ def register_api_routes(app, routes_config=None):
                 "tags": ["documents"],
             },
         }
-        
+
     # Register each route group
     for route_group, config in routes_config.items():
         router = create_api_router(
@@ -133,5 +133,5 @@ def register_api_routes(app, routes_config=None):
             tags=config.get("tags", [route_group]),
             enable_docs=config.get("enable_docs", True),
         )
-        
+
         app.include_router(router)

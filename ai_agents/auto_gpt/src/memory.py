@@ -47,7 +47,7 @@ class Memory:
 
     def __init__(self, max_messages: int = 100, persist_path: Optional[str] = None):
         """Initialize memory manager.
-        
+
         Args:
             max_messages: Maximum number of messages to keep in history
             persist_path: Optional path to persist memory to disk
@@ -56,24 +56,24 @@ class Memory:
         self.persist_path = persist_path
         self.messages: List[Message] = []
         self.context: Dict = {}
-        
+
         if persist_path and os.path.exists(persist_path):
             self.load()
 
     def add_message(self, role: str, content: str) -> None:
         """Add a new message to the conversation history.
-        
+
         Args:
             role: Role of the message sender (e.g., "user", "assistant")
             content: Content of the message
         """
         message = Message(role=role, content=content)
         self.messages.append(message)
-        
+
         # Maintain maximum message limit
         if len(self.messages) > self.max_messages:
             self.messages = self.messages[-self.max_messages:]
-            
+
         if self.persist_path:
             self.save()
 
@@ -83,7 +83,7 @@ class Memory:
 
     def update_context(self, key: str, value: any) -> None:
         """Update a value in the context dictionary.
-        
+
         Args:
             key: Context key to update
             value: New value for the key
@@ -108,7 +108,7 @@ class Memory:
             "messages": [msg.to_dict() for msg in self.messages],
             "context": self.context
         }
-        
+
         os.makedirs(os.path.dirname(self.persist_path), exist_ok=True)
         with open(self.persist_path, "w") as f:
             json.dump(data, f, indent=2)
@@ -117,6 +117,6 @@ class Memory:
         """Load memory state from disk."""
         with open(self.persist_path, "r") as f:
             data = json.load(f)
-            
+
         self.messages = [Message.from_dict(msg) for msg in data["messages"]]
         self.context = data["context"]

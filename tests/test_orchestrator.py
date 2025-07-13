@@ -5,7 +5,6 @@ Tests for Supreme AI Orchestrator
 This module contains comprehensive tests for the orchestrator system.
 """
 
-import asyncio
 import os
 import pytest
 from datetime import datetime, timedelta
@@ -203,4 +202,4 @@ async def test_get_agent_status(orchestrator):
         mock_status.assert_called_once_with(agent_id)
 
 if __name__ == "__main__":
-    pytest.main([__file__]) 
+    pytest.main([__file__])

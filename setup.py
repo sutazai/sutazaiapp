@@ -13,4 +13,4 @@ setup(
         "pytest-html",
     ],
     python_requires=">=3.11",
-) 
+)

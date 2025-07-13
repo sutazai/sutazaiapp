@@ -3,7 +3,6 @@ Pytest configuration for the test suite.
 """
 import os
 import sys
-import pytest
 import pytest_asyncio
 
 # Add the parent directory to the path to ensure imports work

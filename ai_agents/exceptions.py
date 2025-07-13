@@ -4,7 +4,6 @@ Custom Exceptions for SutazAI Agents
 """
 
 from typing import Dict, Optional
-from typing import Union
 from typing import Optional
 
 
@@ -20,10 +19,8 @@ class DocumentProcessingError(Exception):
             """Exception raised when OCR processing fails"""
 
 
-
             class PDFExtractionError(Exception):
                 """Exception raised during PDF text extraction"""
-
 
 
                 class AgentError(Exception):

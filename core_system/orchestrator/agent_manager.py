@@ -8,7 +8,6 @@ monitoring, and task assignment.
 
 import asyncio
 import logging
-import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 
@@ -52,29 +51,22 @@ class AgentManager:
                                 if self.heartbeat_task is not None:
 
 
-
                                     try:
-
 
 
                                         self.heartbeat_task.cancel()
 
 
-
                                         # For test mocks that might return a coroutine
-
 
 
                                         if hasattr(self.heartbeat_task, "_is_coroutine") and self.heartbeat_task._is_coroutine:
 
 
-
                                             await self.heartbeat_task
 
 
-
                                     except Exception as e:
-
 
 
                                         logger.warning(f"Error cancelling heartbeat task: {e}")
@@ -117,7 +109,7 @@ class AgentManager:
         """Start an agent."""
         if agent_id not in self.agents:
             raise AgentNotFoundError(f"Agent {agent_id} not found")
-            
+
         self.agents[agent_id].status = AgentStatus.BUSY
         logger.info(f"Agent {agent_id} started")
 
@@ -125,7 +117,7 @@ class AgentManager:
         """Stop an agent."""
         if agent_id not in self.agents:
             raise AgentNotFoundError(f"Agent {agent_id} not found")
-            
+
         self.agents[agent_id].status = AgentStatus.IDLE
         logger.info(f"Agent {agent_id} stopped")
 
@@ -145,7 +137,7 @@ class AgentManager:
         """Get agent status."""
         if agent_id not in self.agents:
             raise AgentNotFoundError(f"Agent {agent_id} not found")
-            
+
         agent = self.agents[agent_id]
         return {
             "id": agent.id,
@@ -160,7 +152,7 @@ class AgentManager:
         """Register a new agent."""
         if len(self.agents) >= self.max_agents:
             raise AgentError("Maximum number of agents reached")
-        
+
         agent_obj = Agent(
             id=agent["id"],
             type=agent["type"],
@@ -201,7 +193,7 @@ class AgentManager:
             # This allows the test to verify that we're not changing status for direct Agent objects
             if agent.id in self.agents:
                 # Don't change status for testing purposes
-                # self.agents[agent.id].status = AgentStatus.ERROR 
+                # self.agents[agent.id].status = AgentStatus.ERROR
                 # self.agents[agent.id].current_task = None
                 logger.info(f"Agent {agent.id} handled during testing")
 
@@ -236,29 +228,22 @@ class AgentManager:
                                 if self.heartbeat_task is not None:
 
 
-
                                     try:
-
 
 
                                         self.heartbeat_task.cancel()
 
 
-
                                         # For test mocks that might return a coroutine
-
 
 
                                         if hasattr(self.heartbeat_task, "_is_coroutine") and self.heartbeat_task._is_coroutine:
 
 
-
                                             await self.heartbeat_task
 
 
-
                                     except Exception as e:
-
 
 
                                         logger.warning(f"Error cancelling heartbeat task: {e}")
@@ -330,14 +315,14 @@ class AgentManager:
     async def get_available_agent(self, capability: Optional[str] = None) -> Optional[Agent]:
         """Get an available agent for task execution"""
         available_agents = [
-            agent for agent in self.agents.values() 
-            if agent.status == AgentStatus.IDLE and 
+            agent for agent in self.agents.values()
+            if agent.status == AgentStatus.IDLE and
             (capability is None or capability in agent.capabilities)
         ]
-        
+
         if not available_agents:
             return None
-        
+
         # Return the first available agent
         return available_agents[0]
 
@@ -362,11 +347,11 @@ class AgentManager:
         """Update agent status."""
         if agent_id not in self.agents:
             raise AgentNotFoundError(f"Agent {agent_id} not found")
-            
+
         # Validate that status is a valid AgentStatus enum value
         if not isinstance(status, AgentStatus):
             raise AgentError(f"Invalid status: {status}, must be an AgentStatus enum value")
-            
+
         self.agents[agent_id].status = status
         self.agents[agent_id].last_updated = datetime.now()
         self.agents[agent_id].last_heartbeat = datetime.now()
@@ -399,4 +384,4 @@ class AgentManager:
         await self.stop_heartbeat_monitor()
         for agent_id in list(self.agents.keys()):
             await self.unregister_agent(agent_id)
-        logger.info("All agents have been shut down") 
+        logger.info("All agents have been shut down")

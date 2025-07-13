@@ -1,312 +1,251 @@
-#!/usr/bin/env python3.11
+#!/usr/bin/env python3
 """
-SutazAI Deployment Script
-
-This script handles the deployment process between the Code Server (192.168.100.28)
-and Deployment Server (192.168.100.100), including:
-- Code synchronization
-- Environment setup
-- Service deployment
-- Health checks
-- Rollback capabilities
+SutazAI Enterprise Deployment Script
+Complete automated deployment and setup
 """
 
-import json
-import logging
 import os
-import subprocess
 import sys
-from datetime import datetime
+import subprocess
+import time
+import requests
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+import logging
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s: %(message)s",
-    handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/deploy.log"),
-        logging.StreamHandler(),
-    ],
-)
-logger = logging.getLogger("SutazAI.Deploy")
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-class Deployer:
+PROJECT_ROOT = Path("/opt/sutazaiapp")
+
+class SutazAIDeployer:
     def __init__(self):
-        self.code_server = "192.168.100.28"
-        self.deploy_server = "192.168.100.100"
-        self.project_root = "/opt/sutazaiapp"
-        self.backup_dir = f"{self.project_root}/backups"
-        self.deploy_user = "sutazaiapp_dev"
-        self.ssh_key = f"/home/{self.deploy_user}/.ssh/sutazai_deploy"
+        self.project_root = PROJECT_ROOT
+        self.venv_path = self.project_root / "venv"
+        self.logs_dir = self.project_root / "logs"
         
-        # Ensure backup directory exists
-        os.makedirs(self.backup_dir, exist_ok=True)
-
-    def validate_environment(self) -> bool:
-        """Validate deployment environment."""
-        logger.info("Validating deployment environment...")
+    def run_command(self, command, cwd=None, check=True):
+        """Run shell command with logging"""
+        try:
+            logger.info(f"Running: {command}")
+            result = subprocess.run(
+                command, 
+                shell=True, 
+                cwd=cwd or self.project_root,
+                capture_output=True, 
+                text=True,
+                check=check
+            )
+            
+            if result.stdout:
+                logger.info(f"Output: {result.stdout.strip()}")
+            
+            return result.returncode == 0
+            
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Command failed: {command}")
+            logger.error(f"Error: {e.stderr}")
+            return False
+    
+    def setup_environment(self):
+        """Setup Python virtual environment"""
+        logger.info("🐍 Setting up Python environment...")
         
-        # Check SSH key
-        if not os.path.exists(self.ssh_key):
-            logger.error(f"SSH key not found: {self.ssh_key}")
+        # Create virtual environment if it doesn't exist
+        if not self.venv_path.exists():
+            if not self.run_command(f"python3 -m venv {self.venv_path}"):
+                logger.error("Failed to create virtual environment")
+                return False
+        
+        # Activate and upgrade pip
+        activate_cmd = f"source {self.venv_path}/bin/activate"
+        if not self.run_command(f"{activate_cmd} && pip install --upgrade pip"):
+            logger.error("Failed to upgrade pip")
             return False
-            
-        # Check project directory
-        if not os.path.exists(self.project_root):
-            logger.error(f"Project directory not found: {self.project_root}")
+        
+        # Install requirements
+        if not self.run_command(f"{activate_cmd} && pip install -r requirements.txt"):
+            logger.error("Failed to install requirements")
             return False
-            
-        # Check virtual environment
-        venv_path = f"{self.project_root}/venv"
-        if not os.path.exists(venv_path):
-            logger.error(f"Virtual environment not found: {venv_path}")
-            return False
-            
+        
+        logger.info("✅ Python environment setup complete")
         return True
-
-    def create_backup(self) -> Optional[str]:
-        """Create a backup of the current deployment."""
-        logger.info("Creating deployment backup...")
+    
+    def setup_directories(self):
+        """Setup necessary directories"""
+        logger.info("📁 Setting up directories...")
         
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_name = f"backup_{timestamp}"
-        backup_path = f"{self.backup_dir}/{backup_name}"
+        directories = [
+            "data", "logs", "cache", "models/ollama", 
+            "temp", "run", "backup"
+        ]
         
+        for dir_name in directories:
+            dir_path = self.project_root / dir_name
+            dir_path.mkdir(parents=True, exist_ok=True)
+            logger.info(f"  ✅ Created: {dir_name}")
+        
+        return True
+    
+    def setup_database(self):
+        """Setup database"""
+        logger.info("🗄️ Setting up database...")
+        
+        activate_cmd = f"source {self.venv_path}/bin/activate"
+        if not self.run_command(f"{activate_cmd} && python scripts/setup_database.py"):
+            logger.error("Database setup failed")
+            return False
+        
+        logger.info("✅ Database setup complete")
+        return True
+    
+    def validate_system(self):
+        """Validate system requirements"""
+        logger.info("🔍 Validating system...")
+        
+        # Check Python version
+        python_version = sys.version_info
+        if python_version.major != 3 or python_version.minor < 8:
+            logger.error(f"Python 3.8+ required, found {python_version.major}.{python_version.minor}")
+            return False
+        
+        # Check disk space (need at least 1GB)
+        stat = os.statvfs(self.project_root)
+        free_space = stat.f_bavail * stat.f_frsize / (1024**3)  # GB
+        if free_space < 1:
+            logger.error(f"Insufficient disk space: {free_space:.1f}GB available, need 1GB+")
+            return False
+        
+        logger.info("✅ System validation passed")
+        return True
+    
+    def start_services(self):
+        """Start all services"""
+        logger.info("🚀 Starting SutazAI services...")
+        
+        # Use the start_all.sh script
+        if not self.run_command("./bin/start_all.sh"):
+            logger.error("Failed to start services")
+            return False
+        
+        # Wait for services to be ready
+        time.sleep(10)
+        
+        # Verify services
+        return self.verify_deployment()
+    
+    def verify_deployment(self):
+        """Verify deployment is working"""
+        logger.info("✅ Verifying deployment...")
+        
+        services = [
+            ("Backend API", "http://127.0.0.1:8000/health"),
+            ("Ollama AI", "http://127.0.0.1:11434/health"),
+            ("Web UI", "http://127.0.0.1:3000"),
+        ]
+        
+        all_good = True
+        for service_name, url in services:
+            try:
+                response = requests.get(url, timeout=5)
+                if response.status_code == 200:
+                    logger.info(f"  ✅ {service_name}: OK")
+                else:
+                    logger.error(f"  ❌ {service_name}: HTTP {response.status_code}")
+                    all_good = False
+            except Exception as e:
+                logger.error(f"  ❌ {service_name}: {e}")
+                all_good = False
+        
+        # Test chat API
         try:
-            # Create backup directory
-            os.makedirs(backup_path, exist_ok=True)
-            
-            # Copy project files
-            subprocess.run(
-                ["rsync", "-av", "--exclude=venv", "--exclude=__pycache__",
-                 f"{self.project_root}/", f"{backup_path}/"],
-                check=True,
+            chat_response = requests.post(
+                "http://127.0.0.1:8000/api/chat",
+                json={"message": "Test deployment"},
+                timeout=10
             )
-            
-            # Backup database if exists
-            if os.path.exists(f"{self.project_root}/data/db"):
-                subprocess.run(
-                    ["pg_dump", "-U", "sutazai", "sutazai", "-f", f"{backup_path}/db_backup.sql"],
-                    check=True,
-                )
-            
-            logger.info(f"Backup created successfully: {backup_path}")
-            return backup_path
-            
+            if chat_response.status_code == 200:
+                logger.info("  ✅ Chat API: Working")
+            else:
+                logger.error(f"  ❌ Chat API: HTTP {chat_response.status_code}")
+                all_good = False
         except Exception as e:
-            logger.error(f"Error creating backup: {e}")
-            return None
+            logger.error(f"  ❌ Chat API: {e}")
+            all_good = False
+        
+        return all_good
+    
+    def create_systemd_service(self):
+        """Create systemd service for auto-start"""
+        logger.info("⚙️ Creating systemd service...")
+        
+        service_content = f"""[Unit]
+Description=SutazAI Enterprise System
+After=network.target
 
-    def sync_code(self) -> bool:
-        """Synchronize code between servers."""
-        logger.info("Synchronizing code between servers...")
+[Service]
+Type=forking
+User=root
+WorkingDirectory={self.project_root}
+ExecStart={self.project_root}/bin/start_all.sh
+ExecStop={self.project_root}/bin/stop_all.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+"""
         
         try:
-            # Pull latest changes on code server
-            subprocess.run(
-                ["git", "-C", self.project_root, "pull", "origin", "main"],
-                check=True,
-            )
+            service_file = Path("/etc/systemd/system/sutazai.service")
+            with open(service_file, 'w') as f:
+                f.write(service_content)
             
-            # Sync to deployment server
-            subprocess.run(
-                ["rsync", "-av", "--delete", "--exclude=venv", "--exclude=__pycache__",
-                 f"{self.project_root}/", f"{self.deploy_user}@{self.deploy_server}:{self.project_root}/"],
-                check=True,
-            )
+            # Reload systemd and enable service
+            self.run_command("systemctl daemon-reload")
+            self.run_command("systemctl enable sutazai.service")
             
-            logger.info("Code synchronization completed successfully")
+            logger.info("✅ Systemd service created and enabled")
             return True
             
         except Exception as e:
-            logger.error(f"Error synchronizing code: {e}")
+            logger.warning(f"⚠️ Could not create systemd service: {e}")
             return False
-
-    def setup_deployment_server(self) -> bool:
-        """Set up the deployment server environment."""
-        logger.info("Setting up deployment server...")
+    
+    def deploy(self):
+        """Main deployment function"""
+        logger.info("🚀 Starting SutazAI Enterprise Deployment...")
         
-        try:
-            # Create virtual environment on deployment server
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 f"cd {self.project_root} && python3.11 -m venv venv"],
-                check=True,
-            )
-            
-            # Install dependencies
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 f"cd {self.project_root} && source venv/bin/activate && pip install -r requirements.txt"],
-                check=True,
-            )
-            
-            # Set up environment variables
-            env_file = f"{self.project_root}/.env"
-            if os.path.exists(env_file):
-                subprocess.run(
-                    ["scp", env_file, f"{self.deploy_user}@{self.deploy_server}:{self.project_root}/"],
-                    check=True,
-                )
-            
-            logger.info("Deployment server setup completed successfully")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error setting up deployment server: {e}")
-            return False
-
-    def deploy_services(self) -> bool:
-        """Deploy services on the deployment server."""
-        logger.info("Deploying services...")
+        steps = [
+            ("System Validation", self.validate_system),
+            ("Directory Setup", self.setup_directories),
+            ("Environment Setup", self.setup_environment),
+            ("Database Setup", self.setup_database),
+            ("Service Startup", self.start_services),
+            ("Systemd Service", self.create_systemd_service),
+        ]
         
-        try:
-            # Stop existing services
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 "sudo systemctl stop sutazai-backend sutazai-web"],
-                check=True,
-            )
-            
-            # Deploy backend
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 f"cd {self.project_root} && source venv/bin/activate && python -m backend.main"],
-                check=True,
-            )
-            
-            # Deploy web UI
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 f"cd {self.project_root}/web_ui && npm install && npm run build"],
-                check=True,
-            )
-            
-            # Start services
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 "sudo systemctl start sutazai-backend sutazai-web"],
-                check=True,
-            )
-            
-            logger.info("Services deployed successfully")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error deploying services: {e}")
-            return False
-
-    def run_health_checks(self) -> bool:
-        """Run health checks on deployed services."""
-        logger.info("Running health checks...")
-        
-        try:
-            # Check backend health
-            result = subprocess.run(
-                ["curl", "-f", f"http://{self.deploy_server}:8000/health"],
-                capture_output=True,
-                text=True,
-            )
-            if result.returncode != 0:
-                logger.error("Backend health check failed")
+        for step_name, step_func in steps:
+            logger.info(f"📋 {step_name}...")
+            if not step_func():
+                logger.error(f"❌ {step_name} failed!")
                 return False
-                
-            # Check web UI
-            result = subprocess.run(
-                ["curl", "-f", f"http://{self.deploy_server}:3000"],
-                capture_output=True,
-                text=True,
-            )
-            if result.returncode != 0:
-                logger.error("Web UI health check failed")
-                return False
-                
-            logger.info("Health checks passed successfully")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error running health checks: {e}")
-            return False
-
-    def rollback(self, backup_path: str) -> bool:
-        """Rollback to a previous deployment."""
-        logger.info(f"Rolling back to backup: {backup_path}")
+            logger.info(f"✅ {step_name} completed")
         
-        try:
-            # Stop services
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 "sudo systemctl stop sutazai-backend sutazai-web"],
-                check=True,
-            )
-            
-            # Restore files
-            subprocess.run(
-                ["rsync", "-av", "--delete",
-                 f"{backup_path}/", f"{self.deploy_user}@{self.deploy_server}:{self.project_root}/"],
-                check=True,
-            )
-            
-            # Restore database if backup exists
-            if os.path.exists(f"{backup_path}/db_backup.sql"):
-                subprocess.run(
-                    ["scp", f"{backup_path}/db_backup.sql",
-                     f"{self.deploy_user}@{self.deploy_server}:{self.project_root}/"],
-                    check=True,
-                )
-                subprocess.run(
-                    ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                     f"psql -U sutazai sutazai < {self.project_root}/db_backup.sql"],
-                    check=True,
-                )
-            
-            # Start services
-            subprocess.run(
-                ["ssh", f"{self.deploy_user}@{self.deploy_server}",
-                 "sudo systemctl start sutazai-backend sutazai-web"],
-                check=True,
-            )
-            
-            logger.info("Rollback completed successfully")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error during rollback: {e}")
-            return False
-
-    def deploy(self) -> bool:
-        """Run the complete deployment process."""
-        logger.info("Starting deployment process...")
+        logger.info("🎉 SutazAI Enterprise Deployment Complete!")
+        logger.info("🌐 Access Points:")
+        logger.info("  • Main Dashboard: http://127.0.0.1:3000")
+        logger.info("  • Chat Interface: http://127.0.0.1:3000/chat.html")
+        logger.info("  • API Documentation: http://127.0.0.1:8000/docs")
+        logger.info("  • System Health: http://127.0.0.1:8000/health")
         
-        if not self.validate_environment():
-            return False
-            
-        backup_path = self.create_backup()
-        if not backup_path:
-            return False
-            
-        if not self.sync_code():
-            return False
-            
-        if not self.setup_deployment_server():
-            return False
-            
-        if not self.deploy_services():
-            return False
-            
-        if not self.run_health_checks():
-            logger.error("Deployment failed health checks, initiating rollback...")
-            return self.rollback(backup_path)
-            
-        logger.info("Deployment completed successfully")
         return True
 
 def main():
-    """Main entry point."""
-    deployer = Deployer()
+    """Main function"""
+    deployer = SutazAIDeployer()
     success = deployer.deploy()
-    sys.exit(0 if success else 1)
+    return 0 if success else 1
 
 if __name__ == "__main__":
-    main() 
+    sys.exit(main())

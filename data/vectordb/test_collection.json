@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "description": "Collection for test_collection"
+  },
+  "documents": [
+    {
+      "id": "fddbc6b4-115c-4bdc-ad58-ede8e757c660",
+      "content": "This is a test document",
+      "metadata": {},
+      "timestamp": 1752436330.3756533
+    },
+    {
+      "id": "899664d1-3063-43b4-a677-9be27cd3151e",
+      "content": "Another document about AI",
+      "metadata": {},
+      "timestamp": 1752436330.3756552
+    },
+    {
+      "id": "678fc20c-ebbf-4504-9c5f-203516c29e98",
+      "content": "Python programming guide",
+      "metadata": {},
+      "timestamp": 1752436330.3756561
+    }
+  ]
+}

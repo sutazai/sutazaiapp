@@ -12,13 +12,12 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
 from core_system.orchestrator.models import OrchestratorConfig, Task, TaskStatus
-from core_system.orchestrator.exceptions import QueueError
 
 logger = logging.getLogger(__name__)
 
 class TaskQueue:
     """Manages task queue."""
-    
+
     def __init__(self, config: OrchestratorConfig):
         self.config = config
         self.tasks: List[Task] = []
@@ -78,7 +77,7 @@ class TaskQueue:
                     task = self.tasks.pop(0)
                     task.status = TaskStatus.IN_PROGRESS
                     task.started_at = datetime.now()
-                    
+
                     try:
                         # Process task
                         await asyncio.sleep(0.1)  # Simulate processing
@@ -88,7 +87,7 @@ class TaskQueue:
                         task.status = TaskStatus.FAILED
                         task.error = str(e)
                         logger.error(f"Error processing task {task.id}: {e}")
-                
+
                 await asyncio.sleep(0.1)  # Prevent busy loop
             except Exception as e:
                 logger.error(f"Error in task processing loop: {e}")
@@ -251,7 +250,7 @@ class TaskQueue:
                 (p, c, t) for p, c, t in self._queue
                 if t.status == TaskStatus.FAILED
             ]
-            
+
             for _, created_at, task in failed_tasks:
                 await self.remove(task.id)
                 task.status = TaskStatus.PENDING
@@ -261,4 +260,4 @@ class TaskQueue:
 
         if requeued:
             logger.info(f"Requeued {requeued} failed tasks")
-        return requeued 
+        return requeued

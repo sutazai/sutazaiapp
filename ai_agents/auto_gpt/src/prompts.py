@@ -10,24 +10,24 @@ from typing import Dict, List
 
 # System prompt template for initializing the agent
 SYSTEM_PROMPT = """You are an autonomous AI agent capable of breaking down and \
-executing complex tasks.
+    executing complex tasks.
 
 Your responses should be clear, logical, and \
-focused on achieving the given objective.
+    focused on achieving the given objective.
 
 You have access to various tools that can help you complete tasks. When using tools:
-1. Carefully validate inputs and handle errors appropriately
+    1. Carefully validate inputs and handle errors appropriately
 2. Maintain context between steps of a task
 3. Keep track of progress and adjust plans as needed
 
 Your responses should follow this format:
-1. THOUGHT: Explain your reasoning about the current situation
+    1. THOUGHT: Explain your reasoning about the current situation
 2. PLAN: List the next steps to take (if starting a new task or changing plans)
 3. ACTION: Specify the tool to use and its parameters
 4. OBSERVATION: Analyze the results of your action
 
 Remember:
-- Stay focused on the main objective
+    - Stay focused on the main objective
 - Be thorough but efficient
 - Learn from failed attempts
 - Ask for clarification if needed
@@ -65,7 +65,7 @@ REMAINING STEPS: {remaining_steps}
 
 Please evaluate the progress and determine if any adjustments are needed.
 Consider:
-1. Are we on track to achieve the objective?
+    1. Are we on track to achieve the objective?
 2. Have any new challenges or opportunities emerged?
 3. Should the remaining plan be modified?
 """
@@ -78,7 +78,7 @@ CURRENT STATE: {current_state}
 
 Please analyze this error and suggest how to proceed.
 Consider:
-1. What caused the error?
+    1. What caused the error?
 2. Can it be resolved with available tools?
 3. Should we try a different approach?
 4. Do we need to modify the overall plan?
@@ -100,7 +100,7 @@ class PromptManager:
 
     def add_template(self, name: str, template: str) -> None:
         """Add a new template or override an existing one.
-        
+
         Args:
             name: Name of the template
             template: Template string
@@ -109,13 +109,13 @@ class PromptManager:
 
     def get_template(self, name: str) -> str:
         """Get a template by name.
-        
+
         Args:
             name: Name of the template
-            
+
         Returns:
             str: Template string
-            
+
         Raises:
             KeyError: If template is not found
         """
@@ -125,14 +125,14 @@ class PromptManager:
 
     def format_template(self, name: str, **kwargs) -> str:
         """Format a template with the given variables.
-        
+
         Args:
             name: Name of the template
             **kwargs: Variables to format into the template
-            
+
         Returns:
             str: Formatted template string
-            
+
         Raises:
             KeyError: If template is not found
             ValueError: If required variables are missing
@@ -145,10 +145,10 @@ class PromptManager:
 
     def format_tools_list(self, tools: List[Dict]) -> str:
         """Format a list of tools into a string for prompts.
-        
+
         Args:
             tools: List of tool information dictionaries
-            
+
         Returns:
             str: Formatted tools list
         """
@@ -159,10 +159,10 @@ class PromptManager:
 
     def format_steps_list(self, steps: List[Dict]) -> str:
         """Format a list of task steps into a string for prompts.
-        
+
         Args:
             steps: List of step information dictionaries
-            
+
         Returns:
             str: Formatted steps list
         """

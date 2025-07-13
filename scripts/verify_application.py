@@ -18,6 +18,7 @@ project_root = Path(__file__).parent.parent.absolute()
 sys.path.insert(0, str(project_root))
 
 # Set up colored output
+
 class Colors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -43,7 +44,7 @@ def check_python_version() -> Tuple[bool, str]:
     """Check if the Python version meets requirements."""
     min_version = (3, 10)
     current_version = sys.version_info[:2]
-    
+
     if current_version >= min_version:
         return True, f"Python {'.'.join(map(str, current_version))}"
     else:
@@ -58,9 +59,9 @@ def check_environment_variables() -> Tuple[bool, str]:
         "SUTAZAI_LOG_LEVEL",
         "SUTAZAI_ENV",
     ]
-    
+
     missing_vars = [var for var in env_vars if not os.getenv(var)]
-    
+
     if not missing_vars:
         return True, "All environment variables are set"
     else:
@@ -74,7 +75,7 @@ def check_directories() -> Tuple[bool, Dict[str, bool]]:
         "uploads": (project_root / "uploads").exists(),
         "data": (project_root / "data").exists(),
     }
-    
+
     return all(directories.values()), directories
 
 def check_imports() -> Tuple[bool, Dict[str, List[Tuple[str, bool, str]]]]:
@@ -91,10 +92,10 @@ def check_imports() -> Tuple[bool, Dict[str, List[Tuple[str, bool, str]]]]:
             "ai_agents.agent_config_manager",
         ],
     }
-    
+
     results = {}
     all_successful = True
-    
+
     for category, module_list in modules.items():
         category_results = []
         for module_name in module_list:
@@ -104,9 +105,9 @@ def check_imports() -> Tuple[bool, Dict[str, List[Tuple[str, bool, str]]]]:
             except Exception as e:
                 category_results.append((module_name, False, str(e)))
                 all_successful = False
-        
+
         results[category] = category_results
-    
+
     return all_successful, results
 
 def check_config() -> Tuple[bool, str]:
@@ -123,11 +124,10 @@ def check_database_connection() -> Tuple[bool, str]:
     try:
         from backend.config import Config
         config = Config()
-        
+
         # Simple import test for SQLAlchemy
-        import sqlalchemy
         from sqlalchemy import create_engine
-        
+
         # Don't actually connect, just check that the URL is valid
         engine = create_engine(config.db_url)
         return True, f"Database URL validated: {config.db_url.split('@')[-1]}"
@@ -137,32 +137,32 @@ def check_database_connection() -> Tuple[bool, str]:
 def main() -> None:
     """Run all verification checks."""
     start_time = time.time()
-    
+
     print_header("SutazAI Application Verification")
-    
+
     # Check Python version
     success, details = check_python_version()
     print_result("Python Version", success, details)
-    
+
     # Check environment variables
     success, details = check_environment_variables()
     print_result("Environment Variables", success, details)
-    
+
     # Check directories
     success, directories = check_directories()
     print_result("Directories", success)
     for dir_name, exists in directories.items():
         status = f"{Colors.OKGREEN}✓{Colors.ENDC}" if exists else f"{Colors.WARNING}?{Colors.ENDC}"
         print(f"  {status} {dir_name}/")
-    
+
     # Check configuration
     success, details = check_config()
     print_result("Configuration", success, details)
-    
+
     # Check imports
     print_header("Import Checks")
     success, import_results = check_imports()
-    
+
     for category, results in import_results.items():
         print(f"{Colors.BOLD}{category}{Colors.ENDC}")
         for module_name, module_success, error in results:
@@ -170,16 +170,16 @@ def main() -> None:
             print(f"  {status} {module_name}")
             if not module_success:
                 print(f"    {Colors.WARNING}{error}{Colors.ENDC}")
-    
+
     # Check database connection
     print_header("Database Checks")
     success, details = check_database_connection()
     print_result("Database Connection", success, details)
-    
+
     # Print summary
     elapsed_time = time.time() - start_time
     print_header("Verification Summary")
-    
+
     all_checks_passed = all([
         check_python_version()[0],
         check_environment_variables()[0],
@@ -188,14 +188,14 @@ def main() -> None:
         check_imports()[0],
         check_database_connection()[0],
     ])
-    
+
     if all_checks_passed:
         print(f"{Colors.OKGREEN}{Colors.BOLD}All checks passed successfully!{Colors.ENDC}")
     else:
         print(f"{Colors.WARNING}{Colors.BOLD}Some checks failed. Please review the results above.{Colors.ENDC}")
-    
+
     print(f"\nVerification completed in {elapsed_time:.2f} seconds.")
-    
+
     # Return instructions
     print_header("Next Steps")
     print("To run the application, use the following command:")
@@ -204,4 +204,4 @@ def main() -> None:
     print(f"{Colors.BOLD}cd {project_root} && python -m pytest{Colors.ENDC}")
 
 if __name__ == "__main__":
-    main() 
+    main()

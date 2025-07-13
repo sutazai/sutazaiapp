@@ -45,7 +45,7 @@ def test_message_to_dict():
         "role": "user",
         "content": "Test message",
     }
-    
+
     # Message with name
     message = Message(
         role="assistant",
@@ -58,7 +58,7 @@ def test_message_to_dict():
         "content": "Test response",
         "name": "helper",
     }
-    
+
     # Message with function call
     function_call = {
         "name": "test_function",
@@ -153,7 +153,7 @@ async def test_get_response_text(test_manager):
             )
         )
     ]
-    
+
     with patch(
         "openai.ChatCompletion.acreate",
         AsyncMock(return_value=mock_response),
@@ -161,7 +161,7 @@ async def test_get_response_text(test_manager):
         response = await test_manager.get_response(
             system_prompt="You are a helpful assistant.",
         )
-        
+
         assert response == "Test response"
         assert len(test_manager.conversation_history) == 1
         assert test_manager.conversation_history[0].role == "assistant"
@@ -186,7 +186,7 @@ async def test_get_response_function_call(test_manager):
             )
         )
     ]
-    
+
     with patch(
         "openai.ChatCompletion.acreate",
         AsyncMock(return_value=mock_response),
@@ -194,7 +194,7 @@ async def test_get_response_function_call(test_manager):
         response = await test_manager.get_response(
             system_prompt="You are a helpful assistant.",
         )
-        
+
         assert response == function_call
         assert len(test_manager.conversation_history) == 1
         assert test_manager.conversation_history[0].role == "assistant"
@@ -229,7 +229,7 @@ def test_format_prompt(test_manager):
 def test_count_tokens():
     """Test token counting approximation."""
     text = "This is \
-a test message with approximately 12 tokens."
+    a test message with approximately 12 tokens."
     token_count = ModelManager.count_tokens(
         text
     )
@@ -241,7 +241,7 @@ a test message with approximately 12 tokens."
 
     # Test longer text
     long_text = "This is \
-a much longer text that should have more tokens. " * 10
+    a much longer text that should have more tokens. " * 10
     assert ModelManager.count_tokens(long_text) > ModelManager.count_tokens(text)
 
 """"""
