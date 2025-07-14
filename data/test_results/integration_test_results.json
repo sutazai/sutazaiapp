@@ -1,0 +1,11 @@
+{
+  "test_completed_at": 1752479396.9209254,
+  "success": false,
+  "test_summary": "Comprehensive Sutazai system integration test",
+  "components_tested": [
+    "sutazai_core",
+    "knowledge_graph",
+    "code_generation_module",
+    "authorization_control_module"
+  ]
+}

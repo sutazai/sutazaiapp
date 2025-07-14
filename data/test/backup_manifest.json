@@ -1,0 +1,13 @@
+{
+  "backup_id": "test_backup_1",
+  "created_at": 1752479448.1865044,
+  "components_backed_up": [
+    "cgm",
+    "kg",
+    "acm",
+    "core"
+  ],
+  "records_count": 5,
+  "total_size": 1024,
+  "integrity_hash": "7f0c41e9b16113ce439e9c5797601c964a0808363f66135fc58c3487ceb0e6fb"
+}

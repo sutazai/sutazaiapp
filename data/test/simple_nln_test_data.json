@@ -1,0 +1,134 @@
+{
+  "nodes": [
+    {
+      "id": "memory_1",
+      "name": "Working Memory",
+      "type": "memory",
+      "activation": 0.8,
+      "connections": 1,
+      "history_length": 29
+    },
+    {
+      "id": "concept_1",
+      "name": "Learning Concept",
+      "type": "concept",
+      "activation": 0.5675999999999991,
+      "connections": 1,
+      "history_length": 27
+    },
+    {
+      "id": "pattern_1",
+      "name": "Pattern Recognition",
+      "type": "pattern",
+      "activation": 0.4389407798345484,
+      "connections": 1,
+      "history_length": 7
+    }
+  ],
+  "links": [
+    {
+      "id": "link_1",
+      "source": "memory_1",
+      "target": "concept_1",
+      "weight": 0.7099999999999989,
+      "type": "excitatory",
+      "transmissions": 25
+    },
+    {
+      "id": "link_2",
+      "source": "concept_1",
+      "target": "pattern_1",
+      "weight": 0.8099999999999989,
+      "type": "excitatory",
+      "transmissions": 3
+    },
+    {
+      "id": "link_3",
+      "source": "pattern_1",
+      "target": "memory_1",
+      "weight": 0.6099999999999989,
+      "type": "modulatory",
+      "transmissions": 5
+    }
+  ],
+  "synapses": [
+    {
+      "id": "syn_1",
+      "presynaptic": "memory_1",
+      "postsynaptic": "concept_1",
+      "strength": 0.9,
+      "type": "chemical",
+      "transmissions": 9,
+      "nt_level": 0.98285125
+    },
+    {
+      "id": "syn_2",
+      "presynaptic": "concept_1",
+      "postsynaptic": "pattern_1",
+      "strength": 0.8,
+      "type": "electrical",
+      "transmissions": 2,
+      "nt_level": 0.9615
+    },
+    {
+      "id": "syn_3",
+      "presynaptic": "pattern_1",
+      "postsynaptic": "memory_1",
+      "strength": 0.7,
+      "type": "chemical",
+      "transmissions": 2,
+      "nt_level": 1.0
+    }
+  ],
+  "network_status": {
+    "nodes": 3,
+    "links": 3,
+    "synapses": 3,
+    "simulation_steps": 10,
+    "current_activity": 1.0420033690211317,
+    "history_length": 10
+  },
+  "activity_history": [
+    {
+      "step": 5,
+      "timestamp": 1752480211.5558982,
+      "total_activity": 0.7872003542844851,
+      "active_nodes": 3
+    },
+    {
+      "step": 6,
+      "timestamp": 1752480211.56702,
+      "total_activity": 0.7905192728468999,
+      "active_nodes": 3
+    },
+    {
+      "step": 7,
+      "timestamp": 1752480211.5782363,
+      "total_activity": 1.2628111686098729,
+      "active_nodes": 3
+    },
+    {
+      "step": 8,
+      "timestamp": 1752480211.5895672,
+      "total_activity": 1.057646999973715,
+      "active_nodes": 3
+    },
+    {
+      "step": 9,
+      "timestamp": 1752480211.6008468,
+      "total_activity": 1.0420033690211317,
+      "active_nodes": 3
+    }
+  ],
+  "test_metadata": {
+    "test_completed_at": 1752480211.612446,
+    "test_duration": 0.1093447208404541,
+    "components_tested": [
+      "nodes",
+      "links",
+      "synapses",
+      "network",
+      "learning"
+    ]
+  }
+}

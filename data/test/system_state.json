@@ -1,0 +1,25 @@
+{
+  "sutazai_core": {
+    "active": true,
+    "mode": "learning",
+    "improvement_enabled": true
+  },
+  "components": {
+    "cgm": {
+      "initialized": true
+    },
+    "kg": {
+      "initialized": true
+    },
+    "acm": {
+      "initialized": true
+    }
+  },
+  "metrics": {
+    "uptime": 0,
+    "tasks_completed": 0,
+    "improvements_made": 0
+  },
+  "authorized_user": "chrissuta01@gmail.com",
+  "last_updated": 1752479448.186323
+}

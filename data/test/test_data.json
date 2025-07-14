@@ -1,0 +1,12 @@
+{
+  "system": "sutazai",
+  "version": "1.0.0",
+  "components": [
+    "cgm",
+    "kg",
+    "acm",
+    "core"
+  ],
+  "authorized_user": "chrissuta01@gmail.com",
+  "test_timestamp": 1752479448.1807082
+}

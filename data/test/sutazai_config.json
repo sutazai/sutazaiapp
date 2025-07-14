@@ -1,0 +1,28 @@
+{
+  "sutazai": {
+    "version": "1.0.0",
+    "authorized_user": "chrissuta01@gmail.com",
+    "components": {
+      "cgm": {
+        "enabled": true,
+        "strategies": [
+          "template",
+          "neural",
+          "meta_learning"
+        ]
+      },
+      "kg": {
+        "enabled": true,
+        "max_nodes": 10000
+      },
+      "acm": {
+        "enabled": true,
+        "security_level": "maximum"
+      }
+    },
+    "self_improvement": {
+      "enabled": true,
+      "interval": 3600
+    }
+  }
+}
