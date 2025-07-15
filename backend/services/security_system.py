@@ -92,7 +92,7 @@ class SecuritySystem:
     
     # Hardcoded authorized super admin
     SUPER_ADMIN = {
-        "email": "chrissuta01@gmail.com",
+        "email": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
         "name": "Chris Suta",
         "security_level": SecurityLevel.SUPER_ADMIN,
         "permissions": ["*"]  # All permissions
@@ -469,7 +469,7 @@ class SecuritySystem:
                 elif credentials.get("type") == "password":
                     # For demo purposes, accept a hardcoded secure password for super admin
                     # In production, this would validate against a secure hash
-                    if credentials.get("password") == "SutazAI_SuperAdmin_2024!":
+                    if credentials.get("password") == "os.getenv("SUPER_ADMIN_KEY", "changeme")":
                         return {
                             "valid": True,
                             "user": {

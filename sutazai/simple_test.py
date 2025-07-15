@@ -61,7 +61,7 @@ async def simple_test():
             "system": "sutazai",
             "version": "1.0.0",
             "components": ["cgm", "kg", "acm", "core"],
-            "authorized_user": "chrissuta01@gmail.com",
+            "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
             "test_timestamp": time.time()
         }
         
@@ -101,7 +101,7 @@ async def simple_test():
         config_data = {
             "sutazai": {
                 "version": "1.0.0",
-                "authorized_user": "chrissuta01@gmail.com",
+                "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
                 "components": {
                     "cgm": {
                         "enabled": True,
@@ -176,7 +176,7 @@ async def simple_test():
         # ACM session structure
         acm_session = {
             "session_id": "test_session_1",
-            "user_email": "chrissuta01@gmail.com",
+            "user_email": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
             "created_at": time.time(),
             "expires_at": time.time() + 3600
         }
@@ -209,7 +209,7 @@ async def simple_test():
                 "tasks_completed": 0,
                 "improvements_made": 0
             },
-            "authorized_user": "chrissuta01@gmail.com",
+            "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
             "last_updated": time.time()
         }
         
@@ -290,7 +290,7 @@ async def simple_test():
         integration_report = {
             "test_completed_at": time.time(),
             "sutazai_version": "1.0.0",
-            "authorized_user": "chrissuta01@gmail.com",
+            "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
             "components_tested": {
                 "cgm": "Code Generation Module with meta-learning",
                 "kg": "Knowledge Graph centralized repository", 

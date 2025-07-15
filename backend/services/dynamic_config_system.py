@@ -78,7 +78,7 @@ class DynamicConfigSystem:
     """
     
     # Authorized user for critical changes
-    AUTHORIZED_USER = "chrissuta01@gmail.com"
+    AUTHORIZED_USER = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
     
     def __init__(self, config_dir: str = "/opt/sutazaiapp/config"):
         self.config_dir = Path(config_dir)

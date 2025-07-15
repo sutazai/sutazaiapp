@@ -5,7 +5,7 @@ Core module initialization
 
 __version__ = "1.0.0"
 __author__ = "Chris Suta"
-__email__ = "chrissuta01@gmail.com"
+__email__ = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
 
 # Core system components - import modules first, then classes
 from . import cgm

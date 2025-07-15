@@ -104,7 +104,7 @@ class CodeGenerationModule:
     Advanced Code Generation Module with Meta-Learning and Self-Improvement
     """
     
-    AUTHORIZED_USER = "chrissuta01@gmail.com"
+    AUTHORIZED_USER = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
     
     def __init__(self, data_dir: str = "/opt/sutazaiapp/data/cgm"):
         self.data_dir = Path(data_dir)

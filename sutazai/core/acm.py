@@ -114,7 +114,7 @@ class AuthorizationControlModule:
     
     # Hardcoded authorized super admin - only user who can shut down system
     SUPER_ADMIN = {
-        "email": "chrissuta01@gmail.com",
+        "email": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
         "name": "Chris Suta",
         "id": "chrissuta01",
         "permission_level": PermissionLevel.SUPER_ADMIN,

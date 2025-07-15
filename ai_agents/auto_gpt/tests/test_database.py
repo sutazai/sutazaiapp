@@ -26,7 +26,7 @@ def db_config():
         port=5432,
         database="test_db",
         username="test_user",
-        password="test_password",
+        password=os.getenv("PASSWORD"),
     )
 
 
@@ -51,7 +51,7 @@ def postgres_db():
         port=5432,
         database="test_db",
         username="test_user",
-        password="test_password",
+        password=os.getenv("PASSWORD"),
     )
 
 
@@ -63,7 +63,7 @@ def mysql_db():
         port=3306,
         database="test_db",
         username="test_user",
-        password="test_password",
+        password=os.getenv("PASSWORD"),
     )
 
 
@@ -76,7 +76,7 @@ def test_database_config():
         port=5432,
         database="test_db",
         username="test_user",
-        password="test_password",
+        password=os.getenv("PASSWORD"),
     )
     assert config.type == "sqlite"
     assert config.host == "localhost"
@@ -106,7 +106,7 @@ def test_database_connection():
         port=5432,
         database="test_db",
         username="test_user",
-        password="test_password",
+        password=os.getenv("PASSWORD"),
     )
     assert connection.is_connected() is False
 

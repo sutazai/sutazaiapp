@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SutazAI Main Application Entry Point
-Comprehensive AI Agent System with Advanced Capabilities
+Enterprise-Grade AI Agent System with Advanced Capabilities
 """
 
 import sys
@@ -9,16 +9,33 @@ import os
 import asyncio
 import argparse
 from pathlib import Path
+import signal
+import time
 
 # Add project root to Python path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
 from backend.config import Config
 from backend.database.connection import init_database, create_tables, check_database_connection
 from backend.backend_main import app
 from loguru import logger
 import uvicorn
+
+# Enterprise security imports
+try:
+    from backend.auth.enterprise_auth import enterprise_auth, role_manager
+    from backend.middleware.security import SecurityMiddleware
+    from backend.logging.audit_logger import audit_logger
+except ImportError:
+    logger.warning("Enterprise security modules not available, using basic security")
+    enterprise_auth = None
+    SecurityMiddleware = None
+    audit_logger = None
 
 
 def setup_logging():
@@ -94,19 +111,21 @@ async def initialize_system():
         logger.error(f"❌ Database initialization failed: {e}")
         return False
     
-    # TODO: Initialize AI agents
+    # Initialize AI agents
     try:
-        # from ai_agents.agent_factory import AgentFactory
-        # agent_factory = AgentFactory()
-        # await agent_factory.initialize_agents()
-        logger.info("✅ AI agents initialization ready")
+        from sutazai.core.sutazai_core import SutazaiCore
+        global_sutazai_core = SutazaiCore()
+        await global_sutazai_core.initialize()
+        logger.info("✅ AI agents and core system initialized")
     except Exception as e:
         logger.warning(f"⚠️ AI agents initialization skipped: {e}")
     
-    # TODO: Initialize vector database
+    # Initialize vector database
     try:
-        # Initialize ChromaDB, Qdrant, or PGVector based on config
-        logger.info("✅ Vector database initialization ready")
+        from sutazai.core.kg import KnowledgeGraph
+        global_kg = KnowledgeGraph()
+        await global_kg.initialize()
+        logger.info("✅ Vector database and knowledge graph initialized")
     except Exception as e:
         logger.warning(f"⚠️ Vector database initialization skipped: {e}")
     
@@ -159,12 +178,25 @@ def run_database_migration():
     logger.info("🔄 Running database migrations")
     
     try:
-        # TODO: Implement Alembic migrations
-        from alembic.config import Config as AlembicConfig
-        from alembic import command
-        
-        alembic_cfg = AlembicConfig("alembic.ini")
-        command.upgrade(alembic_cfg, "head")
+        # Check if alembic is available
+        try:
+            from alembic.config import Config as AlembicConfig
+            from alembic import command
+            
+            alembic_ini = Path("alembic.ini")
+            if alembic_ini.exists():
+                alembic_cfg = AlembicConfig(str(alembic_ini))
+                command.upgrade(alembic_cfg, "head")
+                logger.info("✅ Alembic migrations completed")
+            else:
+                logger.warning("⚠️ Alembic configuration not found, creating tables directly")
+                raise ImportError("Alembic not configured")
+                
+        except ImportError:
+            # Fallback to direct table creation
+            init_database()
+            create_tables()
+            logger.info("✅ Database tables created directly")
         
         logger.info("✅ Database migrations completed")
     except Exception as e:
@@ -186,7 +218,7 @@ def create_admin_user():
             db=db,
             username="admin",
             email="admin@sutazai.com",
-            password="admin123",
+            password=os.getenv("ADMIN_PASSWORD", "changeme"),
             full_name="System Administrator"
         )
         admin_user.role = UserRole.ADMIN

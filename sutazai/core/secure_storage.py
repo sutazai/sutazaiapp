@@ -78,7 +78,7 @@ class SecureStorageSystem:
     """
     
     # Hardcoded authorization
-    AUTHORIZED_USER = "chrissuta01@gmail.com"
+    AUTHORIZED_USER = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
     
     def __init__(self, storage_dir: str = "/opt/sutazaiapp/data/secure_storage"):
         self.storage_dir = Path(storage_dir)

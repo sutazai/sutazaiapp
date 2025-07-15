@@ -5,7 +5,7 @@ Main package initialization with Neural Link Networks integration
 
 __version__ = "1.0.0"
 __author__ = "Chris Suta"
-__email__ = "chrissuta01@gmail.com"
+__email__ = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
 
 # Import core components
 from .core import (
@@ -40,7 +40,7 @@ SYSTEM_INFO = {
     "name": "Sutazai",
     "version": __version__,
     "description": "Advanced Self-Improving AGI/ASI System with Neural Link Networks",
-    "authorized_user": "chrissuta01@gmail.com",
+    "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
     "components": {
         "cgm": "Code Generation Module with meta-learning",
         "kg": "Knowledge Graph centralized repository",

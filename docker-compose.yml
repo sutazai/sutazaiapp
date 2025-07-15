@@ -14,7 +14,7 @@ services:
       - ./models:/app/models
       - ./cache:/app/cache
     environment:
-      - DATABASE_URL=postgresql://sutazai:sutazai@postgres:5432/sutazaidb
+      - DATABASE_URL=postgresql://sutazai:DEC35pcbMUKfHtvZ-AwsLg@postgres:5432/sutazaidb
       - REDIS_URL=redis://redis:6379/0
       - PYTHONPATH=/app
     depends_on:
@@ -30,7 +30,7 @@ services:
     environment:
       - POSTGRES_DB=sutazaidb
       - POSTGRES_USER=sutazai
-      - POSTGRES_PASSWORD=sutazai
+      - POSTGRES_PASSWORD=DEC35pcbMUKfHtvZ-AwsLg
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql

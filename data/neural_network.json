@@ -1,0 +1,9 @@
+{
+  "network_state": {
+    "total_nodes": 100,
+    "total_connections": 500,
+    "global_activity": 0.5,
+    "learning_rate": 0.01
+  },
+  "initialized_at": "2024-01-01T00:00:00Z"
+}

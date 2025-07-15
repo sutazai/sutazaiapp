@@ -48,7 +48,7 @@ async def test_sutazai_integration():
         logger.info("Test 3: Testing ACM authentication...")
         try:
             auth_result = await authorization_control_module.authenticate_user(
-                "chrissuta01@gmail.com",
+                "os.getenv("ADMIN_EMAIL", "admin@localhost")",
                 {"method": "password", "device_fingerprint": "test_device"}
             )
             if auth_result.get("success"):
@@ -72,14 +72,14 @@ async def test_sutazai_integration():
                     "description": "Test knowledge for integration testing",
                     "test_data": {"created_at": time.time()}
                 },
-                user_id="chrissuta01@gmail.com",
+                user_id="os.getenv("ADMIN_EMAIL", "admin@localhost")",
                 tags=["test", "integration"]
             )
             
             # Query knowledge
             query_result = await knowledge_graph.query_knowledge(
                 "integration test",
-                user_id="chrissuta01@gmail.com"
+                user_id="os.getenv("ADMIN_EMAIL", "admin@localhost")"
             )
             
             logger.info(f"✅ Knowledge Graph operations successful - Added node: {node_id}")
@@ -105,7 +105,7 @@ async def test_sutazai_integration():
             )
             
             # Generate code
-            generation_result = await code_generation_module.generate_code(test_task, "chrissuta01@gmail.com")
+            generation_result = await code_generation_module.generate_code(test_task, "os.getenv("ADMIN_EMAIL", "admin@localhost")")
             
             if generation_result.get("success"):
                 logger.info("✅ Code generation successful")

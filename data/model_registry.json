@@ -1,0 +1,23 @@
+{
+  "models": {
+    "local-assistant": {
+      "name": "Local Assistant",
+      "type": "chat",
+      "status": "available",
+      "capabilities": [
+        "text_generation",
+        "conversation"
+      ]
+    },
+    "code-helper": {
+      "name": "Code Helper",
+      "type": "code",
+      "status": "available",
+      "capabilities": [
+        "code_generation",
+        "code_review"
+      ]
+    }
+  },
+  "initialized_at": "2024-01-01T00:00:00Z"
+}

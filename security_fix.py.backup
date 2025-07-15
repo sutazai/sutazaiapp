@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""
+Quick Security Fix Script for SutazAI
+Addresses critical vulnerabilities identified in the codebase
+"""
+import os
+import re
+import secrets
+import shutil
+from pathlib import Path
+import json
+
+def generate_secure_password(length=32):
+    """Generate a cryptographically secure password"""
+    return secrets.token_urlsafe(length)
+
+def backup_file(filepath):
+    """Create backup of file before modification"""
+    backup_path = str(filepath) + '.backup'
+    shutil.copy2(filepath, backup_path)
+    return backup_path
+
+def fix_docker_compose():
+    """Fix hardcoded credentials in docker-compose.yml"""
+    docker_file = Path('/opt/sutazaiapp/docker-compose.yml')
+    if docker_file.exists():
+        content = docker_file.read_text()
+        
+        # Generate secure credentials
+        db_password = generate_secure_password(16)
+        
+        # Replace hardcoded credentials
+        content = content.replace('POSTGRES_PASSWORD=sutazai', f'POSTGRES_PASSWORD={db_password}')
+        content = content.replace('postgresql://sutazai:sutazai@', f'postgresql://sutazai:{db_password}@')
+        
+        # Write updated content
+        docker_file.write_text(content)
+        print("✅ Fixed docker-compose.yml credentials")
+        
+        # Save credentials to secure file
+        creds_file = Path('/opt/sutazaiapp/secrets/db_credentials.json')
+        creds_file.parent.mkdir(exist_ok=True)
+        creds_file.write_text(json.dumps({
+            'db_password': db_password,
+            'db_user': 'sutazai',
+            'db_name': 'sutazaidb'
+        }))
+        creds_file.chmod(0o600)
+        print("✅ Saved secure credentials to secrets/db_credentials.json")
+
+def fix_hardcoded_credentials():
+    """Remove hardcoded credentials from Python files"""
+    patterns_to_replace = [
+        (r'chrissuta01@gmail\.com', 'os.getenv("ADMIN_EMAIL", "admin@localhost")'),
+        (r'admin123', 'os.getenv("ADMIN_PASSWORD", "changeme")'),
+        (r'SutazAI_SuperAdmin_2024!', 'os.getenv("SUPER_ADMIN_KEY", "changeme")'),
+        (r'password\s*=\s*["\'][^"\']+["\']', 'password=os.getenv("PASSWORD")'),
+        (r'secret\s*=\s*["\'][^"\']+["\']', 'secret=os.getenv("SECRET")')
+    ]
+    
+    python_files = list(Path('/opt/sutazaiapp').rglob('*.py'))
+    fixed_files = []
+    
+    for py_file in python_files:
+        try:
+            content = py_file.read_text()
+            original_content = content
+            
+            for pattern, replacement in patterns_to_replace:
+                content = re.sub(pattern, replacement, content)
+            
+            if content != original_content:
+                backup_file(py_file)
+                py_file.write_text(content)
+                fixed_files.append(str(py_file))
+                
+        except Exception as e:
+            print(f"⚠️  Error processing {py_file}: {e}")
+    
+    print(f"✅ Fixed hardcoded credentials in {len(fixed_files)} files")
+    return fixed_files
+
+def create_env_template():
+    """Create .env template with secure defaults"""
+    env_template = """# SutazAI Environment Configuration
+# Copy this file to .env and update with your values
+
+# Database Configuration
+DB_PASSWORD=your_secure_db_password_here
+DB_USER=sutazai
+DB_NAME=sutazaidb
+DB_HOST=localhost
+DB_PORT=5432
+
+# Security Configuration
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=your_secure_admin_password_here
+SUPER_ADMIN_KEY=your_secure_super_admin_key_here
+JWT_SECRET=your_jwt_secret_here
+ENCRYPTION_KEY=your_encryption_key_here
+
+# API Configuration
+API_SECRET=your_api_secret_here
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=60
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379/0
+
+# Application Configuration
+DEBUG=False
+LOG_LEVEL=INFO
+"""
+    
+    env_file = Path('/opt/sutazaiapp/.env.template')
+    env_file.write_text(env_template)
+    print("✅ Created .env.template with secure configuration")
+
+def main():
+    """Execute security fixes"""
+    print("🔒 Starting Critical Security Fixes for SutazAI")
+    
+    # Create necessary directories
+    os.makedirs('/opt/sutazaiapp/secrets', mode=0o700, exist_ok=True)
+    os.makedirs('/opt/sutazaiapp/config', exist_ok=True)
+    
+    # Fix docker-compose credentials
+    fix_docker_compose()
+    
+    # Fix hardcoded credentials in Python files
+    fix_hardcoded_credentials()
+    
+    # Create environment template
+    create_env_template()
+    
+    print("\n🎯 Security fixes completed successfully!")
+    print("📋 Next steps:")
+    print("1. Copy .env.template to .env and update with your values")
+    print("2. Review fixed files and test functionality")
+    print("3. Run system tests to verify everything works")
+    print("4. Continue with full optimization plan")
+
+if __name__ == "__main__":
+    main()

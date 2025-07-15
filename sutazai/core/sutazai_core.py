@@ -73,7 +73,7 @@ class SutazaiCore:
     """
     
     # Hardcoded authorization
-    AUTHORIZED_USER = "chrissuta01@gmail.com"
+    AUTHORIZED_USER = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
     
     def __init__(self, data_dir: str = "/opt/sutazaiapp/data/sutazai_core"):
         self.data_dir = Path(data_dir)

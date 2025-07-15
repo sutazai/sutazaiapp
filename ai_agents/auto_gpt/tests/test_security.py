@@ -65,7 +65,7 @@ def test_encryption_decryption():
 def test_password_hashing():
     """Test password hashing and verification."""
     # Test password hashing
-    password = "test_password"
+    password=os.getenv("PASSWORD")
     hashed = hash_password(password)
     assert hashed != password
     assert len(hashed) > 0

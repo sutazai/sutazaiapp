@@ -95,7 +95,7 @@ class KnowledgeGraph:
     """
     
     # Hardcoded authorization
-    AUTHORIZED_USER = "chrissuta01@gmail.com"
+    AUTHORIZED_USER = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
     
     def __init__(self, data_dir: str = "/opt/sutazaiapp/data/knowledge_graph"):
         self.data_dir = Path(data_dir)
@@ -231,7 +231,7 @@ class KnowledgeGraph:
                         "knowledge_type": KnowledgeType.PATTERN,
                         "content": {
                             "description": "Hardcoded authorization for system control",
-                            "authorized_user": "chrissuta01@gmail.com",
+                            "authorized_user": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
                             "permissions": ["system_shutdown", "critical_changes", "data_access"],
                             "verification_methods": ["email_check", "session_validation", "mfa"],
                             "security_level": "maximum"

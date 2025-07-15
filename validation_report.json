@@ -1,0 +1,149 @@
+{
+  "validation_report": {
+    "timestamp": "2025-07-15T16:01:48.645026",
+    "total_time": 0.035967350006103516,
+    "summary": {
+      "total_tests": 19,
+      "passed": 18,
+      "failed": 0,
+      "warnings": 1,
+      "success_rate": 94.73684210526315,
+      "status": "PASS"
+    },
+    "detailed_results": [
+      {
+        "test": "Python Version",
+        "status": "PASS",
+        "message": "Python 3.12.11 is compatible",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609203"
+      },
+      {
+        "test": "Directories",
+        "status": "PASS",
+        "message": "All 10 required directories present",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609365"
+      },
+      {
+        "test": "File Structure",
+        "status": "PASS",
+        "message": "All 12 required files present",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609505"
+      },
+      {
+        "test": "Disk Space",
+        "status": "PASS",
+        "message": "900.59GB available",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609585"
+      },
+      {
+        "test": "Write Permissions",
+        "status": "PASS",
+        "message": "Can write to installation directory",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609736"
+      },
+      {
+        "test": "Config config/settings.json",
+        "status": "WARN",
+        "message": "File not found (may be created on first run)",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609830"
+      },
+      {
+        "test": "Config data/model_registry.json",
+        "status": "PASS",
+        "message": "Valid JSON with 2 keys",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.609928"
+      },
+      {
+        "test": "Config data/neural_network.json",
+        "status": "PASS",
+        "message": "Valid JSON with 2 keys",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.610026"
+      },
+      {
+        "test": "Import core.agi_system",
+        "status": "PASS",
+        "message": "Successfully imported IntegratedAGISystem",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.642768"
+      },
+      {
+        "test": "Import core.security",
+        "status": "PASS",
+        "message": "Successfully imported SecurityManager",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.642864"
+      },
+      {
+        "test": "Import core.exceptions",
+        "status": "PASS",
+        "message": "Successfully imported SutazaiException",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.642901"
+      },
+      {
+        "test": "Import api.agi_api_simple",
+        "status": "PASS",
+        "message": "Successfully imported AGIAPISystem",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.643141"
+      },
+      {
+        "test": "Import models.local_model_manager_simple",
+        "status": "PASS",
+        "message": "Successfully imported LocalModelManager",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.643404"
+      },
+      {
+        "test": "Import monitoring.observability_simple",
+        "status": "PASS",
+        "message": "Successfully imported ObservabilitySystem",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.643720"
+      },
+      {
+        "test": "Import deployment.docker_deployment_simple",
+        "status": "PASS",
+        "message": "Successfully imported DockerDeploymentManager",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.643978"
+      },
+      {
+        "test": "Import deployment.kubernetes_deployment_simple",
+        "status": "PASS",
+        "message": "Successfully imported KubernetesDeploymentManager",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.644134"
+      },
+      {
+        "test": "AGI Task Creation",
+        "status": "PASS",
+        "message": "Can create AGI tasks",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.644234"
+      },
+      {
+        "test": "Security Validation",
+        "status": "PASS",
+        "message": "Security manager functional",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.644898"
+      },
+      {
+        "test": "Exception Handling",
+        "status": "PASS",
+        "message": "Exception system functional",
+        "details": null,
+        "timestamp": "2025-07-15T16:01:48.644998"
+      }
+    ]
+  }
+}

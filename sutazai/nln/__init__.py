@@ -5,7 +5,7 @@ Advanced neural network system for representing complex relationships between co
 
 __version__ = "1.0.0"
 __author__ = "Chris Suta"
-__email__ = "chrissuta01@gmail.com"
+__email__ = "os.getenv("ADMIN_EMAIL", "admin@localhost")"
 
 # Import core NLN components
 from .neural_node import NeuralNode, NodeType

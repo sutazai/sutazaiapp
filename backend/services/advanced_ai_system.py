@@ -77,7 +77,7 @@ class AdvancedAISystem:
     
     # Hardcoded authorized user
     AUTHORIZED_USER = {
-        "email": "chrissuta01@gmail.com",
+        "email": "os.getenv("ADMIN_EMAIL", "admin@localhost")",
         "name": "Chris Suta",
         "role": "super_admin",
         "permissions": ["system_shutdown", "code_modification", "agent_control", "all_access"]
