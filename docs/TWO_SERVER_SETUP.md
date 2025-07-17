@@ -28,7 +28,7 @@ The **Supreme AI Orchestrator** runs on the Code Server and manages communicatio
 │    Code Server      │                 │  Deployment Server  │
 │                     │                 │                     │
 │  ┌───────────────┐  │     Secure      │  ┌───────────────┐  │
-│  │ Supreme AI    │  │      SSH        │  │ SutazAI       │  │
+│  │ LocalAGI AI    │  │      SSH        │  │ SutazAI       │  │
 │  │ Orchestrator  │──┼─────────────────┼─▶│ Application   │  │
 │  └───────────────┘  │   Connection    │  └───────────────┘  │
 │                     │                 │                     │
@@ -247,25 +247,4 @@ If deployment fails:
    ```bash
    cat logs/orchestrator.log
    ssh -i ~/.ssh/sutazaiapp_deploy root@<deployment-server-ip> "cat /opt/sutazaiapp/logs/deploy.log"
-   ```
-
-2. Verify that all required services and dependencies are installed on the Deployment Server
-
-3. Try restarting services:
-   ```bash
-   scripts/orchestrator.sh restart --server=deployment
-   ```
-
-#### Monitoring Not Working
-
-If monitoring is not functioning correctly:
-
-1. Verify that the Python virtual environment is properly set up
-2. Check the orchestrator log file for errors:
-   ```bash
-   cat logs/orchestrator.log
-   ```
-3. Ensure the Orchestrator script has execute permissions:
-   ```bash
-   chmod +x ai_agents/supreme_orchestrator.py
    ``` 

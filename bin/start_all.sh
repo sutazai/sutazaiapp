@@ -5,13 +5,18 @@
 # Prevent Python from writing bytecode files
 export PYTHONDONTWRITEBYTECODE=1
 
+# Determine the absolute path of the script itself
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Assume the script is in 'bin', so the root is one level up
+APP_ROOT="$(dirname "$SCRIPT_DIR")"
+
 APP_ROOT="/opt/sutazaiapp"
 BIN_DIR="$APP_ROOT/bin"
 SCRIPTS_DIR="$APP_ROOT/scripts"
 LOGS_DIR="$APP_ROOT/logs"
 STATUS_FILE="$LOGS_DIR/system_status.json"
 PIDS_DIR="$APP_ROOT/pids"
-BACKEND_LOG="/home/sutazaidev/sutazai_backend.log"
+BACKEND_LOG="$LOGS_DIR/backend.log"
 WEBUI_LOG="$LOGS_DIR/webui.log"
 OPTIMIZER_LOG="$LOGS_DIR/optimizer.log"
 SYSTEM_STATUS_FILE="$LOGS_DIR/system_status.json"
@@ -44,14 +49,19 @@ fi
 
 # Run system optimizer first
 print_message "Running system optimizer..." "info"
-if [ -f "$SCRIPTS_DIR/system_optimizer.py" ]; then
+OPTIMIZER_SCRIPT="$SCRIPTS_DIR/system_optimizer.py"
+if [ -f "$OPTIMIZER_SCRIPT" ]; then
     # Activate the virtual environment
-    source "$APP_ROOT/venv-sutazaiapp/bin/activate"
-    cd "$APP_ROOT" && python3 "$SCRIPTS_DIR/system_optimizer.py"
-    # Deactivate after use (optional, but good practice)
-    # deactivate # <-- REMOVED: Keep venv active for subsequent scripts
+    VENV_PATH="$APP_ROOT/venv-sutazaiapp"
+    if [ -f "$VENV_PATH/bin/activate" ]; then
+        source "$VENV_PATH/bin/activate"
+    else
+        print_message "Error: Virtual environment not found at $VENV_PATH" "error"
+        exit 1
+    fi
+    cd "$APP_ROOT" && python3 "$OPTIMIZER_SCRIPT"
 else
-    print_message "System optimizer not found. Skipping optimization." "warning"
+    print_message "System optimizer '$OPTIMIZER_SCRIPT' not found. Skipping optimization." "warning"
 fi
 
 # Start services in the correct order (Ensure they run in VENV)

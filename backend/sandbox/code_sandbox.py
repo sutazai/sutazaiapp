@@ -256,8 +256,17 @@ print(json.dumps(result))
 
                 # Parse the JSON result from the output
                 try:
-                    result_data = json.loads(output)
-                    return result_data
+                    result_data_any = json.loads(output)
+                    if isinstance(result_data_any, dict):
+                        # Ensure keys are strings if necessary, though json.loads typically does
+                        # We assume the structure is Dict[str, Any] as per the function signature
+                        return result_data_any
+                    else:
+                        return {
+                            "status": "error",
+                            "error": "Output format error: Expected JSON object/dictionary",
+                            "output": output,
+                        }
                 except json.JSONDecodeError:
                     return {
                         "status": "error",
@@ -336,8 +345,15 @@ print(json.dumps(result))
 
                     # Parse output
                     try:
-                        result_data = json.loads(stdout.decode("utf-8"))
-                        return result_data
+                        result_data_any = json.loads(stdout.decode("utf-8"))
+                        if isinstance(result_data_any, dict):
+                            return result_data_any
+                        else:
+                            return {
+                                "status": "error",
+                                "error": "Output format error: Expected JSON object/dictionary",
+                                "output": stdout.decode("utf-8"),
+                            }
                     except json.JSONDecodeError:
                         return {
                             "status": "error",

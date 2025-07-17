@@ -1,1 +1,0 @@
-# Code Quality Report Summary\n\nThis directory contains reports from the code quality checks.\n\nReports include:\n- Linting (ruff_report.txt)\n- Type checking (mypy_report.txt)\n- Security analysis (bandit_report.txt)\n- Code complexity (radon_complexity.txt, radon_maintainability.txt)\n- Summary (summary.md)

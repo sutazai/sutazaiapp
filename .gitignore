@@ -30,6 +30,7 @@ var/
 venv/
 .venv/
 .pytest_cache/
+.mypy_cache/
 
 # Environment variables
 .env

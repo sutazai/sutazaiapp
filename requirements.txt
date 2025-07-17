@@ -137,6 +137,12 @@ rich
 jinja2
 pyyaml
 types-requests
+types-psutil
+types-python-jose 
+types-passlib
+types-protobuf
+sqlmodel
+
 
 # Model formats
 einops

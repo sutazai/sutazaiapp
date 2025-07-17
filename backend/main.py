@@ -12,29 +12,25 @@ import json
 import time
 import uuid
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Union
 from pathlib import Path
-import traceback
+import asyncio
 import logging
 
 # FastAPI imports
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Depends, status
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel import Session
 
 # Custom components
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ai_agents.model_manager import ModelManager
-from ai_agents.agent_framework import AgentFramework
-from ai_agents.ethical_verifier import EthicalVerifier
+from backend.ai_agents.model_manager import ModelManager
+from backend.ai_agents.agent_framework import AgentFramework
+from backend.ai_agents.ethical_verifier import EthicalVerifier
 from backend.sandbox.code_sandbox import CodeSandbox
 
 # Import monitoring tools
-from utils.logging_setup import get_api_logger
-from utils.monitoring import setup_monitoring
+from backend.utils.logging_setup import get_api_logger
+from backend.monitoring.monitoring import setup_monitoring
 
 # Import routers from the backend/routers directory
 from backend.routers.auth_router import router as auth_router
@@ -51,6 +47,9 @@ from backend.routers.diagrams import router as diagrams_router # Added based on 
 # Configure logging
 logger = get_api_logger()
 
+# Get settings instance
+settings = get_settings()
+
 # Initialize FastAPI app
 app = FastAPI(
     title="SutazAI API",
@@ -61,13 +60,20 @@ app = FastAPI(
 # Set up monitoring
 setup_monitoring(app)
 
-# Add CORS middleware
+# SECURITY FIX: Secure CORS configuration
+from backend.security.secure_config import get_allowed_origins
+from backend.security.rate_limiter import RateLimitMiddleware
+
+# Add rate limiting middleware first
+app.add_middleware(RateLimitMiddleware, default_limit="100/minute")
+
+# Add secure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development - restrict this in production
+    allow_origins=get_allowed_origins(),  # Environment-specific origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Restrict methods
+    allow_headers=["Content-Type", "Authorization", "X-API-Key"],  # Restrict headers
 )
 
 # Global variables for component instances
@@ -92,125 +98,170 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 # Import necessary models and schemas
-from backend.models.base_models import User, Document
-from backend.schemas import Token, UserCreate, DocumentCreate
-from backend.crud import user_crud, document_crud
-from backend.dependencies import get_db, get_current_active_user
-from backend.core.security import create_access_token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES
-from backend.core.exceptions import UserAlreadyExistsError, AuthenticationError
 
-# API Models
-class ChatMessage(BaseModel):
-    role: str
-    content: str
+# Add SQLModel Session import for type hinting
 
+# Import schemas from the new central location
+from backend.schemas import (
+    ChatRequest, DocumentAnalysisRequest,
+    CodeGenerationRequest, CodeExecutionRequest, ServiceControlRequest, ModelControlRequest, LogRequest
+)
 
-class ChatRequest(BaseModel):
-    agent: str
-    messages: List[ChatMessage]
-    parameters: Optional[Dict[str, Any]] = None
-
-
-class DocumentAnalysisRequest(BaseModel):
-    document_id: str
-    analysis_type: str
-    extraction_fields: Optional[List[str]] = None
-    question: Optional[str] = None
-
-
-class CodeGenerationRequest(BaseModel):
-    requirements: str
-    language: str
-    mode: str
-    existing_code: Optional[str] = None
-    generate_tests: Optional[bool] = False
-    parameters: Optional[Dict[str, Any]] = None
-
-
-class CodeExecutionRequest(BaseModel):
-    code: str
-    language: str = "python"
-    timeout: Optional[int] = 30
-
-
-class ServiceControlRequest(BaseModel):
-    service: str
-    action: str
-
-
-class ModelControlRequest(BaseModel):
-    model: str
-    action: str
-
-
-class LogRequest(BaseModel):
-    service: str = "All"
-    level: str = "ALL"
-    lines: int = 50
-
+# Import settings for log directory path
 
 # Startup event
 @app.on_event("startup")
-async def startup_event():
+async def startup_event() -> None:
     """Initialize components on startup"""
     global model_manager, agent_framework, ethical_verifier, code_sandbox
 
-    logger.info("Initializing API backend components...")
+    logger.info("--- Starting API Backend Initialization ---")
 
-    # Initialize components
-    ethical_verifier = EthicalVerifier()
-    logger.info("Ethical verifier initialized")
-
-    model_manager = ModelManager()
-    logger.info("Model manager initialized")
-
-    code_sandbox = CodeSandbox()
-    logger.info("Code sandbox initialized")
-
-    # Initialize AgentFramework (without api_client argument)
+    # Initialize core and agent components (replace with actual initializations)
+    # These initializations might depend on settings, database connections, etc.
+    logger.info("Initializing core components...")
     try:
-        agent_framework = AgentFramework(model_manager)
-        logger.info("Agent framework initialized successfully.")
-    except Exception as af_init_e:
-        logger.error(f"CRITICAL: Failed to initialize AgentFramework: {af_init_e}", exc_info=True)
-        raise RuntimeError(f"AgentFramework initialization failed: {af_init_e}")
+        # Example Initializations (Replace with actual logic)
+        # Store initialized instances on app.state
+        app.state.app_state = AppState() # Needs actual init
+        app.state.llm_service = LLMService() # Needs actual init
+        app.state.tool_registry = ToolRegistry() # Needs actual init
+        app.state.vector_store = VectorStore() # Needs actual init
+        app.state.ethical_verifier = EthicalVerifier() # Use app.state
+        app.state.code_sandbox = CodeSandbox() # Use app.state
+        app.state.model_manager = ModelManager() # Use app.state
+
+        logger.info("Core components initialized.")
+
+        logger.info("Initializing AI agent components...")
+        # Assuming AgentFramework initialization depends on ModelManager
+        app.state.agent_framework = AgentFramework(app.state.model_manager)
+
+        # Initialize other agent components (these need actual init logic)
+        app.state.agent_communication = AgentCommunication()
+        app.state.interaction_manager = InteractionManager()
+        app.state.performance_metrics = PerformanceMetrics()
+        app.state.workflow_engine = WorkflowEngine()
+        app.state.memory_manager = MemoryManager()
+        app.state.shared_memory_manager = SharedMemoryManager()
+        app.state.health_check = HealthCheck()
+
+        # Initialize AgentManager (depends on many other components)
+        app.state.agent_manager = AgentManager(
+             agent_communication=app.state.agent_communication,
+             interaction_manager=app.state.interaction_manager,
+             workflow_engine=app.state.workflow_engine,
+             memory_manager=app.state.memory_manager,
+             shared_memory_manager=app.state.shared_memory_manager,
+             health_check=app.state.health_check,
+             # Add other necessary dependencies for AgentManager init
+        )
+        logger.info("AI agent components initialized.")
+
+        # --- Call the consolidated dependency initializer --- 
+        # Pass instances from app.state to set up global references for injectors
+        initialize_dependencies(
+            llm_service=app.state.llm_service,
+            tool_registry=app.state.tool_registry,
+            vector_store=app.state.vector_store,
+            app_state=app.state.app_state,
+            agent_communication=app.state.agent_communication,
+            interaction_manager=app.state.interaction_manager,
+            performance_metrics=app.state.performance_metrics,
+            workflow_engine=app.state.workflow_engine,
+            memory_manager=app.state.memory_manager,
+            shared_memory_manager=app.state.shared_memory_manager,
+            health_check=app.state.health_check,
+            agent_manager=app.state.agent_manager,
+            # Pass other initialized components ONLY IF initialize_dependencies needs them
+            # ethical_verifier=app.state.ethical_verifier, # Example if needed
+            # code_sandbox=app.state.code_sandbox,     # Example if needed
+        )
+        logger.info("Global dependencies set via initialize_dependencies.")
+
+    except Exception as e:
+        logger.error(f"CRITICAL: Failed to initialize components: {e}", exc_info=True)
+        raise RuntimeError(f"Component initialization failed: {e}")
 
     logger.info("All components initialized successfully")
 
 
 # Shutdown event
 @app.on_event("shutdown")
-async def shutdown_event():
+async def shutdown_event() -> None:
     """Clean up on shutdown"""
     logger.info("Shutting down API backend...")
-
-    # Clean up components
+    # Retrieve components from app.state for cleanup
+    
+    # Model Manager Cleanup
+    model_manager = getattr(app.state, 'model_manager', None)
     if model_manager:
         try:
-            await model_manager.cleanup()
+            # Check if cleanup is async or sync
+            if asyncio.iscoroutinefunction(model_manager.cleanup):
+                await model_manager.cleanup() 
+            else:
+                 model_manager.cleanup()
             logger.info("Model manager cleaned up")
         except Exception as e:
-            logger.error(f"Error cleaning up model manager: {str(e)}")
+            logger.error(f"Error cleaning up model manager: {str(e)}", exc_info=True)
 
+    # Agent Framework Cleanup
+    agent_framework = getattr(app.state, 'agent_framework', None)
     if agent_framework:
         try:
-            await agent_framework.cleanup()
+            if asyncio.iscoroutinefunction(agent_framework.cleanup):
+                await agent_framework.cleanup()
+            else:
+                 agent_framework.cleanup()
             logger.info("Agent framework cleaned up")
         except Exception as e:
-            logger.error(f"Error cleaning up agent framework: {str(e)}")
-
+            logger.error(f"Error cleaning up agent framework: {str(e)}", exc_info=True)
+            
+    # Code Sandbox Cleanup
+    code_sandbox = getattr(app.state, 'code_sandbox', None)
     if code_sandbox:
         try:
-            code_sandbox.cleanup()
+            if asyncio.iscoroutinefunction(code_sandbox.cleanup):
+                await code_sandbox.cleanup()
+            else:
+                 code_sandbox.cleanup()
             logger.info("Code sandbox cleaned up")
         except Exception as e:
-            logger.error(f"Error cleaning up code sandbox: {str(e)}")
+            logger.error(f"Error cleaning up code sandbox: {str(e)}", exc_info=True)
+
+    # Add cleanup for other components stored in app.state as needed...
+    # Example: LLM Service
+    llm_service = getattr(app.state, 'llm_service', None)
+    if llm_service and hasattr(llm_service, 'cleanup'):
+        try:
+            logger.info("Cleaning up LLM Service...")
+            if asyncio.iscoroutinefunction(llm_service.cleanup):
+                await llm_service.cleanup()
+            else:
+                llm_service.cleanup()
+            logger.info("LLM Service cleaned up.")
+        except Exception as e:
+            logger.error(f"Error cleaning up LLM Service: {e}", exc_info=True)
+            
+    # Example: Vector Store (if it needs cleanup)
+    vector_store = getattr(app.state, 'vector_store', None)
+    if vector_store and hasattr(vector_store, 'close'): # Assuming a 'close' method
+         try:
+             logger.info("Closing Vector Store connection...")
+             if asyncio.iscoroutinefunction(vector_store.close):
+                  await vector_store.close()
+             else:
+                  vector_store.close()
+             logger.info("Vector Store connection closed.")
+         except Exception as e:
+             logger.error(f"Error closing Vector Store: {e}", exc_info=True)
 
     logger.info("API backend shutdown complete")
 
 
 # Helper functions
-def check_components():
+def check_components() -> None:
     """Check if all components are initialized"""
     if not model_manager:
         raise HTTPException(status_code=503, detail="Model manager not initialized")
@@ -224,7 +275,7 @@ def check_components():
 
 # Health check endpoint
 @app.get("/health")
-async def health_check():
+async def health_check() -> Dict[str, Any]:
     """Check if the API is running"""
     status = "ok"
     components_status = {
@@ -246,9 +297,11 @@ async def health_check():
 
 # Chat endpoints
 @app.post("/chat")
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest) -> Union[Dict[str, Any], JSONResponse]:
     """Process a chat request"""
     check_components()
+    assert ethical_verifier is not None
+    assert agent_framework is not None
 
     try:
         # Validate chat content with ethical verifier
@@ -334,9 +387,10 @@ async def chat(request: ChatRequest):
 
 
 @app.get("/agents/list")
-async def list_agents():
-    """List available agents"""
+async def list_agents() -> Union[Dict[str, Any], JSONResponse]:
+    """List available agents and their details"""
     check_components()
+    assert agent_framework is not None
 
     try:
         # Corrected: Removed await for synchronous call
@@ -355,11 +409,18 @@ async def list_agents():
 
 # Document processing endpoints
 @app.post("/documents/upload")
-async def upload_document(file: UploadFile = File(...)):
+async def upload_document(file: UploadFile = File(...)) -> Union[Dict[str, Any], JSONResponse]:
     """Upload a document for processing"""
     check_components()
 
     try:
+        # --- Handle potential None filename --- #
+        filename = file.filename
+        if filename is None:
+            filename = f"upload_{uuid.uuid4()}.dat" # Generate a fallback filename
+            logger.warning(f"Uploaded file has no filename, using generated: {filename}")
+        # --------------------------------------- #
+
         # Generate unique ID for document
         document_id = str(uuid.uuid4())
 
@@ -368,7 +429,7 @@ async def upload_document(file: UploadFile = File(...)):
         document_dir.mkdir(exist_ok=True)
 
         # Save the file
-        file_path = document_dir / file.filename
+        file_path = document_dir / filename # Use potentially updated filename
         with open(file_path, "wb") as f:
             content = await file.read()
             f.write(content)
@@ -376,7 +437,7 @@ async def upload_document(file: UploadFile = File(...)):
         # Save metadata
         metadata = {
             "document_id": document_id,
-            "filename": file.filename,
+            "filename": filename, # Use potentially updated filename
             "content_type": file.content_type,
             "size": len(content),
             "upload_time": datetime.now().isoformat(),
@@ -388,7 +449,7 @@ async def upload_document(file: UploadFile = File(...)):
         return {
             "status": "success",
             "document_id": document_id,
-            "filename": file.filename,
+            "filename": filename, # Use potentially updated filename
         }
 
     except Exception as e:
@@ -400,9 +461,10 @@ async def upload_document(file: UploadFile = File(...)):
 
 
 @app.post("/documents/analyze")
-async def analyze_document(request: DocumentAnalysisRequest):
-    """Analyze an uploaded document"""
+async def analyze_document(request: DocumentAnalysisRequest) -> Union[Dict[str, Any], JSONResponse]:
+    """Analyze a previously uploaded document"""
     check_components()
+    assert agent_framework is not None
 
     try:
         # Check if document exists
@@ -450,130 +512,92 @@ async def analyze_document(request: DocumentAnalysisRequest):
             params["question"] = request.question
 
         # Call agent framework for document analysis
-        result = await agent_framework.process_document(params)
+        analysis_results = agent_framework.analyze_document(
+            document_id=request.document_id,
+            analysis_type=request.analysis_type,
+            extraction_fields=request.extraction_fields,
+            question=request.question,
+        )
+        return analysis_results # type: ignore[no-any-return]
 
-        # Add success status to result
-        result["status"] = "success"
-
-        return result
-
-    except Exception as e:
-        logger.error(f"Error analyzing document: {str(e)}")
+    except FileNotFoundError as e:
+        logger.error(f"Document not found for analysis: {request.document_id} - {e}")
+        return JSONResponse(
+            status_code=404,
+            content={
+                "status": "error",
+                "message": f"Document not found: {request.document_id}",
+            },
+        )
+    except Exception as gen_e: # Use different variable name
+        logger.error(f"Error analyzing document: {str(gen_e)}")
         return JSONResponse(
             status_code=500,
             content={
                 "status": "error",
-                "message": f"Document analysis error: {str(e)}",
+                "message": f"Document analysis error: {str(gen_e)}", # Use different variable name
             },
         )
 
 
 # Code generation and execution endpoints
 @app.post("/code/generate")
-async def generate_code(request: CodeGenerationRequest):
+async def generate_code(request: CodeGenerationRequest) -> Union[Dict[str, Any], JSONResponse]:
     """Generate code based on requirements"""
     check_components()
-    instance_id = None  # Initialize instance_id
+    assert ethical_verifier is not None
+    assert agent_framework is not None
+    instance_id = None
 
     try:
-        # --- Ethical Verification (Keep as is) ---
-        verification = ethical_verifier.verify_content(request.requirements)
-        if not verification["allowed"]:
+        # Verify prompt with ethical verifier
+        if not ethical_verifier.verify_content(request.requirements):
             return JSONResponse(
-                status_code=403,
-                content={"status": "error", "message": verification["message"]},
+                status_code=400, content={"status": "error", "message": "Request violates ethical guidelines"}
             )
-        if request.mode == "Edit Existing" and request.existing_code:
-            verification = ethical_verifier.verify_content(request.existing_code)
-            if not verification["allowed"]:
-                return JSONResponse(
-                    status_code=403,
-                    content={"status": "error", "message": verification["message"]},
-                )
-        # ---------------------------------------------
 
-        # --- Agent Instantiation and Execution --- 
-        # Assume 'code_generator_agent' is the ID for the agent config capable of code generation
-        # This ID should match an entry in config/agents.json
-        code_agent_identifier = "code_generator_agent" # Replace if the actual ID is different
+        # Create a temporary agent instance for this task
+        # Choose agent config based on request (e.g., language, mode)
+        # Simplified: use a default coder agent config ID
+        coder_config_id = "coder_agent"
+        params = request.parameters or {}
+        instance_id = await agent_framework.create_agent(coder_config_id, params)
 
-        # Create an instance of the code generation agent
-        instance_id = await agent_framework.create_agent(code_agent_identifier)
         if not instance_id:
-            logger.error(f"Failed to create agent instance for {code_agent_identifier}")
-            raise Exception("Could not create code generation agent instance")
+             raise HTTPException(status_code=500, detail="Failed to create code generation agent instance.")
 
-        logger.info(f"Created agent instance {instance_id} for code generation.")
-
-        # Prepare the task dictionary for the agent
         task = {
-            "type": "code_generation", # Define a task type
-            "requirements": request.requirements,
+            "id": f"codegen-{uuid.uuid4().hex[:6]}",
+            "instruction": request.requirements,
             "language": request.language,
             "mode": request.mode,
+            "existing_code": request.existing_code,
             "generate_tests": request.generate_tests,
-            "existing_code": request.existing_code, # Will be None if not provided
-            "parameters": request.parameters or {}, # Agent-specific params
         }
-
-        # Execute the task using the agent instance
-        logger.info(f"Executing code generation task with instance {instance_id}...")
         result = await agent_framework.execute_task(instance_id, task)
-        logger.info(f"Code generation task result from {instance_id}: {result}")
+        return result # type: ignore[no-any-return]
 
-        # Check result status from agent execution
-        if result.get("status") != "success":
-             # Use message from agent result if available, otherwise generic error
-             error_message = result.get("result", {}).get("error", "Agent execution failed")
-             logger.error(f"Code generation agent {instance_id} failed: {error_message}")
-             raise Exception(f"Code generation failed: {error_message}")
-
-        # Extract the actual generated code or response from the agent's result structure
-        # (This depends on how the specific code gen agent formats its output)
-        # Assuming the agent returns a dict with a 'result' key containing the output
-        agent_output = result.get("result", {})
-        if not agent_output or ("generated_code" not in agent_output and "response" not in agent_output):
-             logger.error(f"Agent {instance_id} returned unexpected result structure: {agent_output}")
-             raise Exception("Agent returned unexpected result format.")
-
-        # Format the final API response
-        api_response = {
-            "status": "success",
-             # Prioritize specific key, fallback to general response
-            "generated_code": agent_output.get("generated_code", agent_output.get("response"))
-        }
-        # Include test code if generated
-        if "test_code" in agent_output:
-            api_response["test_code"] = agent_output["test_code"]
-
-        return api_response
-        # -------------------------------------------
-
-    except Exception as e:
-        # Ensure error logging includes traceback for better debugging
-        logger.error(f"Error in /code/generate endpoint: {str(e)}\n{traceback.format_exc()}")
+    except Exception as gen_e: # Use different variable name
+        logger.error(f"Error generating code: {str(gen_e)}", exc_info=True)
         return JSONResponse(
             status_code=500,
-            content={"status": "error", "message": f"Code generation error: {str(e)}"},
+            content={
+                "status": "error",
+                "message": f"Code generation error: {str(gen_e)}", # Use different variable name
+            },
         )
     finally:
-        # --- Agent Termination --- 
+        # Ensure agent instance is terminated
         if instance_id:
-            try:
-                terminated = await agent_framework.terminate_agent(instance_id)
-                if terminated:
-                    logger.info(f"Successfully terminated agent instance {instance_id}")
-                else:
-                    logger.warning(f"Failed to terminate agent instance {instance_id}")
-            except Exception as term_e:
-                logger.error(f"Error terminating agent instance {instance_id}: {str(term_e)}")
-        # -------------------------
+            await agent_framework.terminate_agent(instance_id)
 
 
 @app.post("/code/execute")
-async def execute_code(request: CodeExecutionRequest):
-    """Execute code in a sandbox environment"""
+async def execute_code(request: CodeExecutionRequest) -> Union[Dict[str, Any], JSONResponse]:
+    """Execute code in a sandboxed environment"""
     check_components()
+    assert ethical_verifier is not None
+    assert code_sandbox is not None
 
     try:
         # Verify the code with ethical verifier
@@ -607,9 +631,10 @@ async def execute_code(request: CodeExecutionRequest):
 
 # System monitoring endpoints
 @app.get("/system/status")
-async def system_status():
-    """Get system status information"""
+async def system_status() -> Union[Dict[str, Any], JSONResponse]:
+    """Get overall system status and resource usage"""
     check_components()
+    assert model_manager is not None
 
     try:
         # Get basic system info
@@ -733,8 +758,8 @@ async def system_status():
 
 
 @app.post("/system/service_control")
-async def service_control(request: ServiceControlRequest):
-    """Control system services"""
+async def service_control(request: ServiceControlRequest) -> Union[Dict[str, Any], JSONResponse]:
+    """Control system services (start, stop, restart)"""
     check_components()
 
     try:
@@ -769,9 +794,10 @@ async def service_control(request: ServiceControlRequest):
 
 
 @app.post("/system/model_control")
-async def model_control(request: ModelControlRequest):
-    """Control model loading/unloading"""
+async def model_control(request: ModelControlRequest) -> Union[Dict[str, Any], JSONResponse]:
+    """Load or unload models dynamically"""
     check_components()
+    assert model_manager is not None
 
     try:
         model = request.model
@@ -818,246 +844,141 @@ LOG_FILE_MAP = {
 }
 
 # Function to read last N lines efficiently (handles potential errors)
-def read_last_n_lines(filepath, n_lines):
+def read_last_n_lines(file_path: Path, n: int) -> List[str]:
+    """Reads the last N lines of a file efficiently."""
     try:
-        with open(filepath, 'rb') as f:
+        with open(file_path, 'rb') as f:
             f.seek(0, os.SEEK_END)
-            file_size = f.tell()
-            lines_found = []
-            block_size = 1024
-            blocks = 0
-            
-            while len(lines_found) < n_lines + 1 and f.tell() > 0:
-                blocks += 1
-                seek_pos = max(0, file_size - blocks * block_size)
-                f.seek(seek_pos)
-                chunk = f.read(block_size + (file_size - seek_pos if blocks == 1 else 0))
-                if not chunk:
-                    break # Should not happen unless file changed?
-                    
-                # Decode carefully, replacing errors
-                lines = chunk.decode('utf-8', errors='replace').splitlines()
-                
-                # Add lines in reverse order until we have enough
-                # Keep track of what we added to avoid duplicates from block overlap
-                new_lines = lines[::-1]
-                if blocks > 1:
-                    # If overlap, remove last line from previous block if it's same as first line of current
-                    # A simpler approach: just add all and truncate later
-                    pass 
-                
-                lines_found = new_lines + lines_found # Prepend new lines
-                
-                # If the first chunk read contained the beginning of the file
-                if seek_pos == 0:
-                    break
-                    
-            # Return the last n_lines
-            return lines_found[-(n_lines):]
+            buffer_size = 1024
+            buffer = b''
+            while f.tell() > 0 and buffer.count(b'\n') < n + 1:
+                seek_pos = min(f.tell(), buffer_size)
+                f.seek(-seek_pos, os.SEEK_CUR)
+                buffer = f.read(seek_pos) + buffer
+                f.seek(-seek_pos, os.SEEK_CUR)
+            lines = buffer.decode('utf-8', errors='ignore').splitlines()
+            return lines[-n:]
     except FileNotFoundError:
-        logger.warning(f"Log file not found: {filepath}")
-        return []
+        return [f"Error: File not found at {file_path}"]
     except Exception as e:
-        logger.error(f"Error reading log file {filepath}: {e}")
-        return [f"Error reading log: {e}"]
+        return [f"Error reading file {file_path}: {e}"]
 
+
+# Helper function to robustly parse timestamps for sorting
+def _parse_log_timestamp(line: str) -> datetime:
+    try:
+        ts_str = line.split(" - ")[0]
+        for fmt in ("%Y-%m-%d %H:%M:%S,%f", "%Y-%m-%d %H:%M:%S"):
+            try:
+                return datetime.strptime(ts_str, fmt)
+            except ValueError:
+                continue
+        # If no format matched, return datetime.min
+        return datetime.min
+    except Exception:
+        # On any other error, return min
+        return datetime.min
 
 @app.post("/system/logs")
-async def get_logs(request: LogRequest):
-    """Get system logs from actual files."""
+async def get_logs(request: LogRequest) -> Union[Dict[str, Any], JSONResponse]:
+    """Retrieve system or service logs"""
     check_components()
+    # No component usage here
 
     try:
-        service = request.service
-        level = request.level.upper()
-        lines_to_fetch = request.lines
-        
-        target_files = []
-        if service == "All":
-            target_files = list(LOG_FILE_MAP.values())
-        elif service in LOG_FILE_MAP:
-            target_files = [LOG_FILE_MAP[service]]
-        else:
-            # Attempt to find a match ignoring case or common variations
-            found = False
-            for key, path in LOG_FILE_MAP.items():
-                if service.lower() == key.lower() or service.lower() in key.lower():
-                    target_files = [path]
-                    logger.info(f"Matched requested service '{service}' to log file '{path}'")
-                    found = True
-                    break
-            if not found:
-                logger.warning(f"Unknown service requested for logs: {service}")
-                return JSONResponse(
-                    status_code=404,
-                    content={"status": "error", "message": f"Unknown service: {service}"},
-                )
+        # Determine log file path based on service
+        log_file_path: Optional[str] = None
+        log_dir = Path(settings.LOG_DIR)
 
+        if request.service.lower() == "all":
+            # Read from multiple known log files if 'all' is requested
+            target_files = [str(log_dir / f) for f in ["backend.log", "agent_framework.log", "webui.log"]]
+        elif request.service.lower() == "backend":
+            target_files = [str(log_dir / "backend.log")]
+        elif request.service.lower() == "agent_framework":
+            target_files = [str(log_dir / "agent_framework.log")]
+        elif request.service.lower() == "webui":
+             target_files = [str(log_dir / "webui.log")]
+        # Add cases for specific agent logs if needed, e.g.:
+        # elif request.service.startswith("agent_"):
+        #     target_files = [str(log_dir / f"{request.service}.log")]
+        else:
+             # Assume service is a specific log file name if not recognized
+             target_files = [str(log_dir / f"{request.service}.log")]
+             logger.warning(f"Requested logs for potentially unknown service/file: {request.service}")
+
+        lines_to_fetch = request.lines
+
+        # Read last N lines from target files
         all_log_lines = []
         for filepath in target_files:
-            if Path(filepath).exists():
-                 # Read slightly more lines initially to allow for filtering
-                 raw_lines = read_last_n_lines(filepath, lines_to_fetch + 50) 
-                 all_log_lines.extend(raw_lines)
+            path_obj = Path(filepath)
+            if path_obj.exists():
+                 try:
+                     # Read slightly more lines initially to allow for filtering
+                     raw_lines = read_last_n_lines(path_obj, lines_to_fetch + 50)
+                     all_log_lines.extend(raw_lines)
+                 except Exception as read_err:
+                      logger.error(f"Error reading log file {filepath}: {read_err}")
+                      all_log_lines.append(f"ERROR: Could not read log file {filepath}: {read_err}")
             else:
                  logger.warning(f"Log file specified but not found: {filepath}")
                  all_log_lines.append(f"INFO: Log file not found at {filepath}")
-                 
-        # Sort lines by timestamp (assuming YYYY-MM-DD HH:MM:SS format at start)
-        # Handle lines that might not have a timestamp correctly
-        def get_timestamp(line):
-            try:
-                return datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
-            except ValueError:
-                return datetime.min # Put lines without timestamp first
-        
-        all_log_lines.sort(key=get_timestamp)
-        
-        # Filter by level
-        filtered_logs = []
-        if level == "ALL":
-            filtered_logs = all_log_lines
-        else:
-            allowed_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-            try:
-                min_level_index = allowed_levels.index(level)
-                valid_levels = set(allowed_levels[min_level_index:])
+
+        # Sort lines by timestamp using the helper function
+        all_log_lines.sort(key=_parse_log_timestamp)
+
+        # Apply filtering by level (case-insensitive)
+        filtered_lines = []
+        if request.level and request.level.upper() != "ALL":
+            min_level_val = logging.getLevelName(request.level.upper())
+            if isinstance(min_level_val, int): # Check if level name was valid
                 for line in all_log_lines:
-                    # Basic parsing: assumes format like 'YYYY-MM-DD HH:MM:SS - service - LEVEL - message'
-                    parts = line.split(' - ', 3)
-                    if len(parts) >= 3 and parts[2].strip() in valid_levels:
-                        filtered_logs.append(line)
-                    elif len(parts) < 3: # Append lines that don't fit the format if level is ALL/DEBUG/INFO?
-                        # Or maybe only if level is DEBUG? Decide based on desired verbosity.
-                        if level in ["ALL", "DEBUG", "INFO"]: # Append non-standard lines for lower levels
-                             filtered_logs.append(line)
-            except ValueError:
-                 logger.warning(f"Invalid log level specified: {level}. Returning all levels.")
-                 filtered_logs = all_log_lines # Fallback to all if level invalid
+                    try:
+                        # Attempt to extract level (e.g., after timestamp and ' - ')
+                        level_str = line.split(" - ")[2].split(" - ")[0].strip() # Fragile parsing
+                        if logging.getLevelName(level_str) >= min_level_val:
+                            filtered_lines.append(line.strip())
+                    except IndexError:
+                        filtered_lines.append(line.strip()) # Include line if parsing fails
+                    except Exception:
+                        filtered_lines.append(line.strip()) # Include line on other errors
+            else:
+                 logger.warning(f"Invalid log level specified: {request.level}")
+                 filtered_lines = [line.strip() for line in all_log_lines]
+        else:
+            filtered_lines = [line.strip() for line in all_log_lines]
 
-        # Return the last N lines *after* filtering and sorting
-        final_logs = filtered_logs[-lines_to_fetch:]
+        # Return the last N requested lines from the potentially filtered and sorted list
+        final_lines = filtered_lines[-lines_to_fetch:]
 
-        return {
-            "status": "success",
-            "logs": final_logs, # Return the actual filtered log lines
-            "service": service,
-            "level": level,
-            "lines": len(final_logs),
-        }
+        return {"status": "success", "logs": final_lines}
 
-    except Exception as e:
-        logger.error(f"Error getting logs: {str(e)}")
+    except Exception as gen_e:
+        logger.error(f"Error retrieving logs: {str(gen_e)}", exc_info=True)
         return JSONResponse(
             status_code=500,
-            content={"status": "error", "message": f"Error getting logs: {str(e)}"},
+            content={"status": "error", "message": f"Log retrieval error: {str(gen_e)}"},
         )
 
 
 # Include API routers
-app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
-app.include_router(model_router, prefix="/models", tags=["Models"])
-app.include_router(document_router, prefix="/documents", tags=["Documents"])
-app.include_router(code_router, prefix="/code", tags=["Code"])
-app.include_router(agent_interaction_router, prefix="/agents", tags=["Agent Interaction"])
-app.include_router(agent_analytics_router, prefix="/analytics", tags=["Agent Analytics"])
-app.include_router(diagrams_router, prefix="/diagrams", tags=["Diagrams"])
-# Add other routers as needed, checking they exist and are imported correctly first
+app.include_router(auth_router, prefix="/auth", tags=["auth"]) # Standard prefix for auth
+app.include_router(code_router, prefix="/code", tags=["code"])
+app.include_router(document_router, prefix="/documents", tags=["documents"])
+app.include_router(model_router, prefix="/models", tags=["models"])
+app.include_router(agent_interaction_router, prefix="/agents/interaction", tags=["agent-interaction"])
+app.include_router(agent_analytics_router, prefix="/agents/analytics", tags=["agent-analytics"])
+app.include_router(diagrams_router, prefix="/diagrams", tags=["diagrams"])
 
-# --- Authentication Endpoints --- #
-
-@app.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    try:
-        user = authenticate_user(db, form_data.username, form_data.password)
-        if not user:
-             # This path might not be reachable if authenticate_user raises AuthenticationError
-             # but added for robustness / clarity
-             raise HTTPException(
-                 status_code=status.HTTP_401_UNAUTHORIZED,
-                 detail="Incorrect username or password",
-                 headers={"WWW-Authenticate": "Bearer"},
-             )
-        access_token = create_access_token(data={"sub": user.username})
-        return {"access_token": access_token, "token_type": "bearer"}
-    except AuthenticationError as e:
-        logger.warning(f"Authentication failed for user {form_data.username}: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(e),
-            headers={"WWW-Authenticate": "Bearer"},
-        ) from e
-
-
-# --- User Endpoints --- #
-
-@app.post("/users/", response_model=User) # Use User model directly if it includes necessary fields
-async def create_user_endpoint(user: UserCreate, db: Session = Depends(get_db)):
-    try:
-        # Convert UserCreate schema to User model for CRUD operation if needed
-        # or adjust user_crud.create_user to accept UserCreate
-        user_model_data = User(**user.dict()) # Convert Pydantic model to dict then to User model
-        db_user = user_crud.create_user(db=db, user_in=user_model_data)
-        return db_user
-    except UserAlreadyExistsError as e:
-        logger.warning(f"Attempted to create existing user: {user.username}")
-        raise HTTPException(status_code=400, detail=str(e)) from e
-    except Exception as e: # Catch unexpected errors
-        logger.error(f"Error creating user {user.username}: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Internal server error during user creation.")
-
-
-@app.get("/users/me", response_model=User) # Use User model
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    # The dependency already fetches and validates the user
-    return current_user
-
-# --- Document Endpoints --- #
-# Assuming document_crud functions exist and work with Document model
-
-@app.post("/documents/", response_model=Document) # Use Document model
-async def create_document_endpoint(
-    document: DocumentCreate, # Use schema for input
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user) # Protect endpoint
-):
-    try:
-        # Convert DocumentCreate to Document model if necessary
-        doc_model_data = Document(**document.dict(), owner_id=current_user.id) # Add owner_id
-        db_document = document_crud.create_document(db=db, document=doc_model_data)
-        return db_document
-    except Exception as e:
-        logger.error(f"Error creating document: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Internal server error during document creation.")
-
-
-@app.get("/documents/{document_id}", response_model=Document) # Use Document model
-async def read_document_endpoint(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user) # Protect endpoint
-):
-    db_document = document_crud.get_document(db=db, document_id=document_id)
-    if db_document is None:
-        raise HTTPException(status_code=404, detail="Document not found")
-    # Optional: Check if current_user owns the document
-    if db_document.owner_id != current_user.id and not current_user.is_superuser:
-         raise HTTPException(status_code=403, detail="Not authorized to access this document")
-    return db_document
-
-# Add other endpoints (list, update, delete documents) as needed
-
-# Root endpoint
-@app.get("/")
-async def root():
-    return {"message": "Welcome to SutazAI Backend"}
-
-# Main entry point
+# Add uvicorn entry point for running directly
 if __name__ == "__main__":
     import uvicorn
-
-    # Get port from environment or use default
-    port = int(os.environ.get("PORT", 8000))
-
-    # Start server
-    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")
+    logger.info(f"Starting SutazAI backend server directly via Uvicorn on host={settings.SERVER_HOST} port={settings.SERVER_PORT}")
+    uvicorn.run(
+        "main:app", 
+        host=settings.SERVER_HOST, 
+        port=settings.SERVER_PORT, 
+        reload=settings.DEBUG_MODE, # Use reload only in debug mode
+        log_level=settings.LOG_LEVEL.lower()
+    )

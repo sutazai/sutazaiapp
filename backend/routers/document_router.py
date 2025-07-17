@@ -7,7 +7,7 @@ This module provides API routes for document uploading, processing, and retrieva
 import os
 import uuid
 import shutil
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 import logging
 from fastapi import (
     APIRouter,
@@ -20,12 +20,14 @@ from fastapi import (
     Query,
 )
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session as SQLModelSession, select as sqlmodel_select
 
-from ..core.database import get_db
-from ..models.base_models import Document
-from ..core.config import get_settings
-from ..core.storage import get_document_store_path
+from backend.core.database import get_db
+from backend.models.base_models import Document, User
+from backend.core.config import get_settings
+from backend.dependencies import get_current_active_user
+from backend.schemas import DocumentRead
+from backend.crud import document_crud
 
 # Set up logging
 logger = logging.getLogger("document_router")
@@ -36,40 +38,50 @@ router = APIRouter()
 # Get application settings
 settings = get_settings()
 
+# Use UPLOAD_DIR from settings
+# UPLOAD_DIR = settings.UPLOAD_DIR # No longer needed directly here if CRUD handles paths
 
-@router.get("/", summary="List all documents", response_model=List[Dict[str, Any]])
+
+@router.get("/", summary="List all documents", response_model=List[DocumentRead])
 async def list_documents(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db),
+    db: SQLModelSession = Depends(get_db),
+    project_id: Optional[int] = Query(None),
+    q: Optional[str] = Query(None),
+    tags: Optional[List[str]] = Query(None),
 ):
     """
-    Retrieve a list of uploaded documents.
+    Retrieve a list of uploaded documents, optionally filtered.
     """
-    documents = db.query(Document).offset(skip).limit(limit).all()
-    return [
-        {
-            "id": doc.id,
-            "filename": doc.filename,
-            "content_type": doc.content_type,
-            "size": doc.size,
-            "processed": doc.processed,
-            "created_at": doc.created_at,
-            "updated_at": doc.updated_at,
-            "metadata": doc.doc_metadata,
-        }
-        for doc in documents
-    ]
+    query = sqlmodel_select(Document)
+    if project_id:
+        query = query.where(Document.project_id == project_id)
+
+    if q and Document.filename is not None:
+        search_pattern = f"%{q}%"
+        query = query.where(Document.filename.ilike(search_pattern)) # type: ignore[attr-defined]
+
+    if tags:
+        # Assuming tags are stored in metadata (e.g., metadata["tags"]) - adjust field name
+        pass
+
+    documents = db.exec(query.offset(skip).limit(limit)).all()
+    return documents # Return SQLModel objects directly, FastAPI handles validation via response_model
 
 
 @router.post(
-    "/upload", summary="Upload a document", status_code=status.HTTP_201_CREATED
+    "/upload", 
+    summary="Upload a document", 
+    response_model=DocumentRead, # Return created document info
+    status_code=status.HTTP_201_CREATED
 )
 async def upload_document(
     file: UploadFile = File(...),
     title: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
-    db: Session = Depends(get_db),
+    db: SQLModelSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Upload a new document to the system.
@@ -81,8 +93,9 @@ async def upload_document(
             detail="Filename cannot be empty."
         )
 
-    # Verify file type is allowed
-    file_extension = os.path.splitext(file.filename)[1].lower().lstrip(".")
+    # Verify file type is allowed 
+    original_filename = file.filename
+    file_extension = os.path.splitext(original_filename)[1].lower().lstrip(".")
     supported_extensions = settings.SUPPORTED_DOC_TYPES.split(',')
     if file_extension not in supported_extensions:
         raise HTTPException(
@@ -93,12 +106,11 @@ async def upload_document(
     # Generate a unique filename
     unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
 
-    # Get document store path
-    doc_store_path = get_document_store_path()
-    file_path = os.path.join(doc_store_path, unique_filename)
+    # Use DOCUMENT_DIR from settings for storage location
+    file_path = settings.DOCUMENT_DIR / unique_filename 
 
     # Ensure directory exists
-    os.makedirs(doc_store_path, exist_ok=True)
+    settings.DOCUMENT_DIR.mkdir(parents=True, exist_ok=True)
 
     # Save file
     try:
@@ -111,25 +123,25 @@ async def upload_document(
             detail="Could not save the file",
         )
 
-    # Create document record
-    doc = Document(
-        filename=file.filename,
+    # Create document record using CRUD
+    doc_data = Document(
+        filename=original_filename, # Store original filename
         content_type=file.content_type,
-        size=os.path.getsize(file_path),
-        path=file_path,
+        size=os.path.getsize(file_path), # Get size after saving
+        path=str(file_path), # Store path as string
         processed=False,
         doc_metadata={
-            "original_filename": file.filename,
+            "saved_filename": unique_filename, # Store the unique name used on disk
             "file_type": file_extension,
-            "title": title or file.filename,
+            "title": title or original_filename,
             "description": description,
+            "uploader_id": current_user.id # Link to uploading user
         },
+        owner_id=current_user.id # Set owner
     )
 
     try:
-        db.add(doc)
-        db.commit()
-        db.refresh(doc)
+        created_doc = document_crud.create_document(db=db, document=doc_data)
     except Exception as e:
         logger.error(f"Error creating document record: {str(e)}")
         os.unlink(file_path)  # Delete the file if record creation fails
@@ -138,51 +150,29 @@ async def upload_document(
             detail="Error creating document record",
         )
 
-    # Return the created document
-    return {
-        "message": "Document uploaded successfully",
-        "document": {
-            "id": doc.id,
-            "filename": doc.filename,
-            "content_type": doc.content_type,
-            "size": doc.size,
-            "processed": doc.processed,
-            "created_at": doc.created_at,
-            "updated_at": doc.updated_at,
-            "metadata": doc.doc_metadata,
-        },
-    }
+    return created_doc # Return the created document (validated by response_model)
 
 
-@router.get("/{document_id}", summary="Get document details")
-async def get_document(document_id: int, db: Session = Depends(get_db)):
+@router.get("/{document_id}", summary="Get document details", response_model=DocumentRead)
+async def get_document(document_id: int, db: SQLModelSession = Depends(get_db)):
     """
     Retrieve a specific document by ID.
     """
-    doc = db.query(Document).filter(Document.id == document_id).first()
+    doc = document_crud.get_document(db=db, document_id=document_id) # Use CRUD
     if not doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
 
-    return {
-        "id": doc.id,
-        "filename": doc.filename,
-        "content_type": doc.content_type,
-        "size": doc.size,
-        "processed": doc.processed,
-        "created_at": doc.created_at,
-        "updated_at": doc.updated_at,
-        "metadata": doc.doc_metadata,
-    }
+    return doc # Return the document object (validated by response_model)
 
 
 @router.get("/download/{document_id}", summary="Download a document")
-async def download_document(document_id: int, db: Session = Depends(get_db)):
+async def download_document(document_id: int, db: SQLModelSession = Depends(get_db)):
     """
     Download a document file by ID.
     """
-    doc = db.query(Document).filter(Document.id == document_id).first()
+    doc = document_crud.get_document(db=db, document_id=document_id)
     if not doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
@@ -201,16 +191,16 @@ async def download_document(document_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Document file not found on disk"
         )
 
-    assert doc.path is not None # Ensure path is not None for FileResponse
+    assert doc.path is not None
     return FileResponse(doc.path, filename=doc.filename, media_type=doc.content_type)
 
 
-@router.delete("/{document_id}", summary="Delete a document")
-async def delete_document(document_id: int, db: Session = Depends(get_db)):
+@router.delete("/{document_id}", summary="Delete a document", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_document(document_id: int, db: SQLModelSession = Depends(get_db)):
     """
     Delete a document and its file.
     """
-    doc = db.query(Document).filter(Document.id == document_id).first()
+    doc = document_crud.get_document(db=db, document_id=document_id) # Use CRUD
     if not doc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
@@ -219,22 +209,21 @@ async def delete_document(document_id: int, db: Session = Depends(get_db)):
     # Delete file if path exists in DB record and file exists on disk
     if doc.path and os.path.exists(doc.path):
         try:
-            # We already confirmed doc.path exists, assert for mypy
             assert doc.path is not None
             os.unlink(doc.path)
         except Exception as e:
             logger.error(f"Error deleting file {doc.path}: {str(e)}")
             # Continue with record deletion even if file deletion fails
 
-    # Delete record
-    try:
-        db.delete(doc)
-        db.commit()
-    except Exception as e:
-        logger.error(f"Error deleting document record: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error deleting document record",
-        )
+    # Delete record using CRUD
+    deleted = document_crud.delete_document(db=db, document_id=document_id)
+    if not deleted:
+        # This case might happen if the document was deleted between get and delete calls
+        logger.warning(f"Attempted to delete document {document_id}, but it was already gone from DB.")
+        # Return success anyway as the desired state (deleted) is achieved
+        
+    # No content is returned on success due to status_code=204
+    return None
 
-    return {"message": "Document deleted successfully"}
+# TODO: Add endpoints for updating and deleting document metadata if needed.
+# TODO: Consider adding an endpoint specifically for uploading the document file content.

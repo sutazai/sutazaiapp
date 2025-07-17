@@ -12,12 +12,19 @@ from datetime import datetime
 from fastapi import APIRouter, Request
 from fastapi.responses import PlainTextResponse
 from prometheus_client import (
-    Counter,
     Gauge,
+    Counter,
     Histogram,
     generate_latest,
     CONTENT_TYPE_LATEST,
 )
+
+# Try to import prometheus_client, but handle if it's not installed
+try:
+    import prometheus_client
+    PROMETHEUS_AVAILABLE = True
+except ImportError:
+    PROMETHEUS_AVAILABLE = False
 
 # Define Prometheus metrics
 REQUEST_COUNT = Counter(

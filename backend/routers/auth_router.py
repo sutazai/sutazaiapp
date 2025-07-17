@@ -15,9 +15,13 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
-from ..core.database import get_db
-from ..models.user_model import User
-from ..core.config import get_settings
+from backend.core.database import get_db
+from backend.models.user_model import User
+from backend.core.config import get_settings
+from backend.core.security import create_access_token, authenticate_user
+from backend.dependencies import get_current_active_user
+from backend.schemas import Token, TokenData, UserRead, UserCreate, UserUpdate
+from backend.crud import user_crud
 
 # Set up logging
 logger = logging.getLogger("auth_router")
@@ -51,6 +55,16 @@ class UserCreate(BaseModel):
     last_name: Optional[str] = None
 
 
+class UserUpdate(BaseModel):
+    """Schema for updating user data."""
+    email: Optional[str] = None
+    password: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None # Allow updating admin status
+
+
 class UserResponse(BaseModel):
     id: int
     username: str
@@ -59,6 +73,10 @@ class UserResponse(BaseModel):
     last_name: Optional[str] = None
     is_active: bool
     is_admin: bool
+
+
+# Alias UserResponse as UserRead for consistency if used elsewhere
+UserRead = UserResponse
 
 
 # Helper functions
@@ -96,82 +114,63 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 # User endpoints
 @router.post(
-    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+    "/register", 
+    response_model=UserRead, # Use UserRead from schemas
+    status_code=status.HTTP_201_CREATED,
+    summary="Register new user"
 )
-async def register_user(user: UserCreate, db: Session = Depends(get_db)):
+async def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     """
     Register a new user.
+    - **username**: Unique username.
+    - **email**: Unique email.
+    - **password**: User password.
     """
     # Check if username already exists
-    db_user = db.query(User).filter(User.username == user.username).first()
-    if db_user:
+    existing_user = user_crud.get_user_by_username(db, username=user_in.username)
+    if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already registered",
         )
 
     # Check if email already exists
-    db_user = db.query(User).filter(User.email == user.email).first()
-    if db_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
-        )
+    # TODO: Add crud function get_user_by_email
+    # existing_email_user = user_crud.get_user_by_email(db, email=user_in.email)
+    # if existing_email_user:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+    #     )
 
-    # Create new user
-    hashed_password = get_password_hash(user.password)
-    db_user = User(
-        username=user.username,
-        email=user.email,
-        password_hash=hashed_password,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        is_active=True,
-        is_admin=False,  # Default is not admin
-    )
-
+    # Create new user using CRUD function
     try:
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
+        db_user = user_crud.create_user(db=db, user_in=user_in)
     except Exception as e:
-        logger.error(f"Error creating user: {str(e)}")
-        db.rollback()
+        # Catch potential DB errors during creation
+        logger.error(f"Error creating user in DB: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error creating user",
+            detail="Error occurred during user registration."
         )
+    
+    return db_user # UserRead conversion happens automatically via response_model
 
-    return db_user
 
-
-@router.post("/token", response_model=Token)
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
-):
-    """
-    Get an access token for authentication.
-    """
-    user = authenticate_user(db, form_data.username, form_data.password)
+@router.post("/token", summary="Get access token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)) -> Token:
+    """Authenticate user and return access token."""
+    user = await authenticate_user(db=db, username=form_data.username, password=form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User is inactive",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-
-    return {"access_token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token, token_type="bearer")
 
 
 # Dependencies for protected routes
@@ -191,9 +190,10 @@ async def get_current_user(
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        username: str = payload.get("sub")
-        if username is None:
+        subject = payload.get("sub")
+        if not isinstance(subject, str):
             raise credentials_exception
+        username: str = subject
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
@@ -215,7 +215,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 
 # Protected routes
-@router.get("/users/me", response_model=UserResponse)
+@router.get("/users/me", response_model=UserRead, summary="Get current user")
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     """
     Get information about the currently authenticated user.
@@ -223,27 +223,37 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-@router.get("/users/{user_id}", response_model=UserResponse)
+@router.get("/users/{user_id}", response_model=UserRead, summary="Get user by ID")
 async def read_user(
     user_id: int,
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_active_superuser), # Require superuser to read arbitrary users
     db: Session = Depends(get_db),
 ):
     """
-    Get information about a specific user.
-    Only admins can access other users' information.
+    Get information about a specific user by ID.
+    Requires superuser privileges.
     """
-    # Allow users to access their own information, or admins to access any user
-    if user_id != current_user.id and not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to access this user's information",
-        )
-
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-
+    user = user_crud.get_user_by_id(db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
     return user
+
+@router.patch("/users/{user_id}", response_model=UserRead, summary="Update user")
+async def update_user_endpoint(
+    user_id: int,
+    user_in: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_superuser), # Require superuser to update
+):
+    """Update user details. Requires superuser privileges."""
+    db_user = user_crud.get_user_by_id(db, user_id=user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    updated_user = user_crud.update_user(db=db, db_user=db_user, user_in=user_in)
+    return updated_user
+
+# Add delete endpoint if needed
+# @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+# async def delete_user_endpoint(...):
+#    ...

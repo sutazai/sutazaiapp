@@ -246,25 +246,4 @@ bash scripts/reset_environment.sh [options]
 4. **Monitor logs** for any errors or warnings that might indicate issues.
 5. **Use the deployment scripts** for controlled and reproducible deployments.
 
-## Troubleshooting Common Issues
-
-### Service Won't Start
-
-1. Check the logs in the `logs/` directory for error messages.
-2. Run `scripts/health_check.sh` to identify any issues.
-3. Verify your environment configuration in `.env`.
-4. Ensure all required directories exist and have the correct permissions.
-
-### Deployment Failures
-
-1. Check `logs/deploy.log` for detailed error information.
-2. Verify that you have the necessary permissions to deploy.
-3. Ensure your git workspace is clean or use `--force` if needed.
-4. Check for connectivity issues if deploying to a remote environment.
-
-### Performance Issues
-
-1. Run `scripts/health_check.sh` to check system resources.
-2. Check log files for any growing errors or warnings.
-3. Consider restarting services using the stop/start scripts.
-4. Verify that model files are correctly installed and accessible. 
+## Troubleshooting Common Issues 

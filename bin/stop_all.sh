@@ -2,7 +2,12 @@
 # SutazAI Complete System Shutdown
 # This script stops all components of the SutazAI system
 
-APP_ROOT="/opt/sutazaiapp"
+# Determine the absolute path of the script itself
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Assume the script is in 'bin', so the root is one level up
+APP_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# APP_ROOT="/opt/sutazaiapp" # REMOVED Hardcoded path
 PIDS_DIR="$APP_ROOT/pids"
 LOGS_DIR="$APP_ROOT/logs"
 
@@ -25,6 +30,7 @@ print_message() {
 # Function to stop a service
 stop_service() {
     local service_name=$1
+    # Use dynamic PIDS_DIR
     local pid_file="$PIDS_DIR/$service_name.pid"
     
     print_message "Stopping $service_name..." "info"
@@ -33,13 +39,14 @@ stop_service() {
         local pid=$(cat "$pid_file")
         if ps -p "$pid" > /dev/null; then
             print_message "Stopping $service_name (PID: $pid)" "info"
-            sudo kill "$pid"
+            # Consider removing sudo if not strictly necessary or handle permissions properly
+            kill "$pid" # Attempt graceful kill
             sleep 2
             
             # Check if still running
             if ps -p "$pid" > /dev/null; then
                 print_message "Force killing $service_name (PID: $pid)" "warning"
-                sudo kill -9 "$pid"
+                kill -9 "$pid" # Force kill
                 sleep 1
             fi
             
@@ -55,38 +62,44 @@ stop_service() {
         # Remove PID file
         rm -f "$pid_file"
     else
-        print_message "No PID file found for $service_name" "warning"
+        print_message "No PID file found for $service_name at $pid_file" "warning" # Updated message
         
-        # Try to find and kill by pattern
+        # Try to find and kill by pattern (patterns might need adjustment based on actual process names)
         local pids
         case "$service_name" in
             "backend")
-                # Find both uvicorn and gunicorn processes running the backend app
-                pids=$(pgrep -f "(uvicorn|gunicorn).*backend.main:app")
+                # Update pattern if necessary to match how the backend is actually started (e.g., by start_backend.sh)
+                pids=$(pgrep -f "(uvicorn|gunicorn).*$APP_ROOT/backend/main:app")
                 ;;
             "webui")
-                pids=$(pgrep -f "webui\\|web_ui\\|npm run start")
+                # Update pattern for Node.js/Next.js if needed
+                pids=$(pgrep -f "node .*next dev.*$APP_ROOT/backend/ui")
                 ;;
             "vector-db")
-                pids=$(pgrep -f "qdrant\\|vector-db")
+                pids=$(pgrep -f "qdrant/qdrant") # Keep this if Qdrant runs as a separate binary
+                # Add pgrep for python script if it runs that way
+                pids+=$(pgrep -f "python.*run_qdrant.py")
                 ;;
             "localagi")
-                pids=$(pgrep -f "localagi\\|minimal_server")
+                # Update pattern if necessary
+                pids=$(pgrep -f "python.*minimal_server.py.*$APP_ROOT") 
                 ;;
+             # Add cases for other services stopped by this script if applicable
         esac
         
         if [ -n "$pids" ]; then
+            print_message "Found potential $service_name process(es) by pattern: $pids" "info"
             for pid in $pids; do
                 print_message "Stopping $service_name process (PID: $pid)" "info"
-                sudo kill "$pid" 2>/dev/null
+                kill "$pid" 2>/dev/null
                 sleep 1
                 if ps -p "$pid" > /dev/null; then
-                    sudo kill -9 "$pid" 2>/dev/null
+                    kill -9 "$pid" 2>/dev/null
                 fi
             done
-            print_message "$service_name processes stopped" "info"
+            print_message "$service_name processes stopped via pattern matching" "info"
         else
-            print_message "No running processes found for $service_name" "warning"
+            print_message "No running processes found for $service_name via pattern matching" "warning"
         fi
     fi
 }

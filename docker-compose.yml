@@ -1,67 +1,466 @@
 version: '3.8'
 
+networks:
+  sutazai-network:
+    driver: bridge
+
+volumes:
+  models-data:
+  vector-data:
+  chroma-data:
+  qdrant-data:
+  postgres-data:
+  redis-data:
+  grafana-data:
+  prometheus-data:
+  ollama-data:
+  workspace-data:
+  logs-data:
+
 services:
-  backend:
-    build: 
-      context: .
-      dockerfile: docker/backend.Dockerfile
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./storage:/opt/sutazaiapp/storage
-      - ./logs:/opt/sutazaiapp/logs
-      - ./workspace:/opt/sutazaiapp/workspace
-      - ./outputs:/opt/sutazaiapp/outputs
-      - ./uploads:/opt/sutazaiapp/uploads
+  # Core Infrastructure
+  postgres:
+    image: postgres:15
+    container_name: sutazai-postgres
     environment:
-      - DATABASE_URL=sqlite:///storage/sutazai.db
-      - VECTOR_STORE_URL=http://qdrant:6333
-    depends_on:
-      - qdrant
-
-  webui:
-    build:
-      context: ./web_ui
-      dockerfile: ../docker/webui.Dockerfile
-    ports:
-      - "3000:3000"
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai_password
     volumes:
-      - ./web_ui:/app
-      - /app/node_modules
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-    depends_on:
-      - backend
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Vector Databases
   qdrant:
     image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant
     ports:
       - "6333:6333"
+      - "6334:6334"
     volumes:
-      - ./data/qdrant:/qdrant/storage
+      - qdrant-data:/qdrant/storage
     environment:
-      - QDRANT_ALLOW_RECOVERY=true
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__LOG_LEVEL: INFO
+    networks:
+      - sutazai-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
 
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: sutazai-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      CHROMA_SERVER_HOST: 0.0.0.0
+      CHROMA_SERVER_HTTP_PORT: 8000
+      CHROMA_SERVER_CORS_ALLOW_ORIGINS: '["*"]'
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Model Management
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: "*"
+    networks:
+      - sutazai-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # AI Agents
+  autogpt:
+    image: significant/autogpt:latest
+    container_name: sutazai-autogpt
+    ports:
+      - "8080:8080"
+    volumes:
+      - workspace-data:/app/autogpt/auto_gpt_workspace
+      - logs-data:/app/logs
+    environment:
+      OPENAI_API_KEY: "local"
+      OPENAI_API_BASE: "http://ollama:11434/v1"
+      WEAVIATE_URL: "http://qdrant:6333"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+      - qdrant
+
+  localagi:
+    build:
+      context: ./backend/~/localagi
+      dockerfile: Dockerfile
+    container_name: sutazai-localagi
+    ports:
+      - "8082:8080"
+    volumes:
+      - models-data:/models
+      - workspace-data:/workspace
+    environment:
+      LOCALAI_ADDRESS: "0.0.0.0:8080"
+      LOCALAI_WATCHDOG_IDLE: "true"
+      LOCALAI_WATCHDOG_BUSY: "true"
+    networks:
+      - sutazai-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  tabby:
+    image: tabbyml/tabby:latest
+    container_name: sutazai-tabby
+    ports:
+      - "8081:8080"
+    volumes:
+      - models-data:/data
+    environment:
+      TABBY_MODEL: "CodeLlama-7B"
+      TABBY_DEVICE: "cuda"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  semgrep:
+    image: returntocorp/semgrep:latest
+    container_name: sutazai-semgrep
+    volumes:
+      - workspace-data:/src
+    command: ["semgrep", "--config=auto", "/src"]
+    networks:
+      - sutazai-network
+
+  # Browser Automation
+  browser-use:
+    build:
+      context: ./docker/browser-use
+      dockerfile: Dockerfile
+    container_name: sutazai-browser-use
+    ports:
+      - "8083:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      DISPLAY: ":99"
+      BROWSER_HEADLESS: "true"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  skyvern:
+    build:
+      context: ./docker/skyvern
+      dockerfile: Dockerfile
+    container_name: sutazai-skyvern
+    ports:
+      - "8084:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      SKYVERN_API_KEY: "local"
+      SKYVERN_BASE_URL: "http://localhost:8084"
+    networks:
+      - sutazai-network
+    depends_on:
+      - postgres
+      - redis
+
+  # Document Processing
+  documind:
+    build:
+      context: ./docker/documind
+      dockerfile: Dockerfile
+    container_name: sutazai-documind
+    ports:
+      - "8085:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      DOCUMIND_API_KEY: "local"
+      DOCUMIND_STORAGE_PATH: "/workspace/documents"
+    networks:
+      - sutazai-network
+
+  # Financial Analysis
+  finrobot:
+    build:
+      context: ./docker/finrobot
+      dockerfile: Dockerfile
+    container_name: sutazai-finrobot
+    ports:
+      - "8086:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      FINROBOT_DATA_PATH: "/workspace/financial_data"
+    networks:
+      - sutazai-network
+    depends_on:
+      - postgres
+      - redis
+
+  # Code Generation
+  gpt-engineer:
+    build:
+      context: ./docker/gpt-engineer
+      dockerfile: Dockerfile
+    container_name: sutazai-gpt-engineer
+    ports:
+      - "8087:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      OPENAI_API_KEY: "local"
+      OPENAI_API_BASE: "http://ollama:11434/v1"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  aider:
+    build:
+      context: ./docker/aider
+      dockerfile: Dockerfile
+    container_name: sutazai-aider
+    ports:
+      - "8088:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      AIDER_OPENAI_API_KEY: "local"
+      AIDER_OPENAI_API_BASE: "http://ollama:11434/v1"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  # OpenWebUI
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: sutazai-open-webui
+    ports:
+      - "8089:8080"
+    volumes:
+      - workspace-data:/app/backend/data
+    environment:
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      WEBUI_SECRET_KEY: "sutazai-secret-key"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  # BigAGI
+  bigagi:
+    build:
+      context: ./docker/bigagi
+      dockerfile: Dockerfile
+    container_name: sutazai-bigagi
+    ports:
+      - "8090:3000"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: "http://sutazai-backend:8000"
+      OPENAI_API_KEY: "local"
+      OPENAI_API_BASE: "http://ollama:11434/v1"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  # AgentZero
+  agentzero:
+    build:
+      context: ./docker/agentzero
+      dockerfile: Dockerfile
+    container_name: sutazai-agentzero
+    ports:
+      - "8091:8080"
+    volumes:
+      - workspace-data:/workspace
+    environment:
+      AGENTZERO_API_KEY: "local"
+      AGENTZERO_MODEL_URL: "http://ollama:11434"
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+
+  # Main SutazAI Backend
+  sutazai-backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend.Dockerfile
+    container_name: sutazai-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - workspace-data:/workspace
+      - logs-data:/logs
+      - models-data:/models
+    environment:
+      - DATABASE_URL=postgresql://sutazai:sutazai_password@postgres:5432/sutazai
+      - REDIS_URL=redis://redis:6379
+      - QDRANT_URL=http://qdrant:6333
+      - CHROMADB_URL=http://chromadb:8000
+      - OLLAMA_URL=http://ollama:11434
+      - AUTOGPT_URL=http://autogpt:8080
+      - LOCALAGI_URL=http://localagi:8080
+      - TABBY_URL=http://tabby:8080
+      - BROWSER_USE_URL=http://browser-use:8080
+      - SKYVERN_URL=http://skyvern:8080
+      - DOCUMIND_URL=http://documind:8080
+      - FINROBOT_URL=http://finrobot:8080
+      - GPT_ENGINEER_URL=http://gpt-engineer:8080
+      - AIDER_URL=http://aider:8080
+      - OPEN_WEBUI_URL=http://open-webui:8080
+      - BIGAGI_URL=http://bigagi:3000
+      - AGENTZERO_URL=http://agentzero:8080
+    networks:
+      - sutazai-network
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+      - chromadb
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Streamlit Web UI
+  sutazai-streamlit:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/streamlit.Dockerfile
+    container_name: sutazai-streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app
+      - workspace-data:/workspace
+    environment:
+      - BACKEND_URL=http://sutazai-backend:8000
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    networks:
+      - sutazai-network
+    depends_on:
+      - sutazai-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Monitoring
   prometheus:
     image: prom/prometheus:latest
+    container_name: sutazai-prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./config/prometheus:/etc/prometheus
-      - ./data/prometheus:/prometheus
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - sutazai-network
+    depends_on:
+      - sutazai-backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sutazai-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/etc/grafana
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+    networks:
+      - sutazai-network
+    depends_on:
+      - prometheus
 
   node-exporter:
     image: prom/node-exporter:latest
+    container_name: sutazai-node-exporter
     ports:
       - "9100:9100"
     volumes:
@@ -72,16 +471,178 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - sutazai-network
 
-  grafana:
-    image: grafana/grafana:latest
+  # Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: sutazai-nginx
     ports:
-      - "3001:3000"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./config/grafana:/etc/grafana
-      - ./data/grafana:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    networks:
+      - sutazai-network
     depends_on:
-      - prometheus 
+      - sutazai-backend
+      - sutazai-streamlit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Additional AI Services
+  langflow:
+    build:
+      context: ./docker/langflow
+      dockerfile: Dockerfile
+    container_name: sutazai-langflow
+    ports:
+      - "7860:7860"
+    environment:
+      - LANGFLOW_DATABASE_URL=sqlite:///./langflow.db
+      - LANGFLOW_HOST=0.0.0.0
+      - LANGFLOW_PORT=7860
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dify:
+    build:
+      context: ./docker/dify
+      dockerfile: Dockerfile
+    container_name: sutazai-dify
+    ports:
+      - "5001:5001"
+    environment:
+      - EDITION=COMMUNITY
+      - DEPLOY_ENV=PRODUCTION
+      - DATABASE_URL=postgresql://sutazai:sutazai_password@postgres:5432/sutazai
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  autogen:
+    build:
+      context: ./docker/autogen
+      dockerfile: Dockerfile
+    container_name: sutazai-autogen
+    ports:
+      - "8092:8080"
+    environment:
+      - AUTOGEN_USE_DOCKER=False
+      - OPENAI_API_KEY=local
+      - OPENAI_API_BASE=http://ollama:11434/v1
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  pytorch:
+    build:
+      context: ./docker/pytorch
+      dockerfile: Dockerfile
+    container_name: sutazai-pytorch
+    ports:
+      - "8093:8085"
+    environment:
+      - TRANSFORMERS_CACHE=/data/transformers
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+    volumes:
+      - models-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  tensorflow:
+    build:
+      context: ./docker/tensorflow
+      dockerfile: Dockerfile
+    container_name: sutazai-tensorflow
+    ports:
+      - "8094:8086"
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
+    volumes:
+      - models-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  jax:
+    build:
+      context: ./docker/jax
+      dockerfile: Dockerfile
+    container_name: sutazai-jax
+    ports:
+      - "8095:8087"
+    environment:
+      - JAX_PLATFORM_NAME=cpu
+      - JAX_ENABLE_X64=True
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8087/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Health Check Service
+  health-check:
+    build:
+      context: ./docker/health-check
+      dockerfile: Dockerfile
+    container_name: sutazai-health-check
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CHECK_INTERVAL=30
+      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax
+    networks:
+      - sutazai-network
+    depends_on:
+      - sutazai-backend

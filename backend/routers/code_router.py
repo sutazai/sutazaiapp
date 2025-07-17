@@ -7,12 +7,14 @@ This module provides API routes for code generation, snippets, and management.
 import logging
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Body, Query
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from sqlmodel import Session as SQLModelSession
 
-from ..core.database import get_db
-from ..models.code_model import CodeSnippet
-from ..core.config import get_settings
+from backend.core.database import get_db
+from backend.models.base_models import User
+from backend.core.config import get_settings
+from backend.dependencies import get_current_active_user
+from backend.schemas import CodeSnippetCreate, CodeSnippetUpdate, CodeSnippetRead
+from backend.crud import code_crud
 
 # Set up logging
 logger = logging.getLogger("code_router")
@@ -24,173 +26,191 @@ router = APIRouter()
 settings = get_settings()
 
 
-# Pydantic models for request/response
-class CodeSnippetCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
-    language: str
-    code_content: str
-    is_public: bool = False
-    tags: Optional[str] = None
-
-
-class CodeSnippetResponse(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-    language: str
-    code_content: str
-    user_id: Optional[int] = None
-    is_public: bool
-    tags: List[str]
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-
-
 @router.get(
     "/snippets",
     summary="List all code snippets",
-    response_model=List[CodeSnippetResponse],
+    response_model=List[CodeSnippetRead],
 )
 async def list_snippets(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     language: Optional[str] = None,
     tag: Optional[str] = None,
-    db: Session = Depends(get_db),
+    db: SQLModelSession = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_active_user),
 ):
     """
     Retrieve a list of code snippets with optional filtering.
+    Currently lists public snippets and snippets owned by the current user (if authenticated).
     """
-    query = db.query(CodeSnippet)
-
-    # Apply filters if specified
-    if language:
-        query = query.filter(CodeSnippet.language == language)
-
-    if tag:
-        # Filter by tag (simple contains)
-        query = query.filter(CodeSnippet.tags.contains(tag))
-
-    # Get results with pagination
-    snippets = query.offset(skip).limit(limit).all()
-    return [snippet.as_dict for snippet in snippets]
+    # TODO: Refine permission logic (e.g., admin sees all?)
+    # TODO: Move visibility filtering logic into CRUD function?
+    owner_id = current_user.id if current_user else None
+    
+    # Use CRUD function
+    snippets = code_crud.list_snippets(
+        db=db, 
+        skip=skip, 
+        limit=limit, 
+        # owner_id=owner_id, # Filter by owner in CRUD?
+        language=language,
+        tag=tag
+        # is_public=None # Fetch both initially, filter visibility below
+    )
+    
+    # Filter for visibility (public or owned by current user)
+    visible_snippets = []
+    for snippet in snippets:
+        if snippet.is_public or (current_user and snippet.owner_id == current_user.id):
+            visible_snippets.append(snippet)
+            
+    return visible_snippets # FastAPI handles validation via response_model
 
 
 @router.post(
     "/snippets",
     summary="Create a code snippet",
-    response_model=CodeSnippetResponse,
+    response_model=CodeSnippetRead,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_snippet(snippet: CodeSnippetCreate, db: Session = Depends(get_db)):
+async def create_snippet(
+    snippet_in: CodeSnippetCreate, 
+    db: SQLModelSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user) # Require logged-in user
+):
     """
-    Create a new code snippet.
+    Create a new code snippet, associated with the current user.
     """
-    db_snippet = CodeSnippet(
-        title=snippet.title,
-        description=snippet.description,
-        language=snippet.language,
-        code_content=snippet.code_content,
-        is_public=snippet.is_public,
-        tags=snippet.tags,
-    )
-
     try:
-        db.add(db_snippet)
-        db.commit()
-        db.refresh(db_snippet)
+        # Use CRUD function, passing owner_id
+        created_snippet = code_crud.create_snippet(
+            db=db, snippet_in=snippet_in, owner_id=current_user.id
+        )
     except Exception as e:
-        logger.error(f"Error creating code snippet: {str(e)}")
-        db.rollback()
+        logger.error(f"Error creating code snippet: {str(e)}", exc_info=True)
+        # db.rollback() should happen in CRUD function or get_db dependency
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error creating code snippet",
         )
-
-    return db_snippet.as_dict
+    
+    return created_snippet # Return ORM object for automatic validation
 
 
 @router.get(
     "/snippets/{snippet_id}",
     summary="Get code snippet details",
-    response_model=CodeSnippetResponse,
+    response_model=CodeSnippetRead,
 )
-async def get_snippet(snippet_id: int, db: Session = Depends(get_db)):
+async def get_snippet(
+    snippet_id: int, 
+    db: SQLModelSession = Depends(get_db),
+    current_user: Optional[User] = Depends(get_current_active_user) # Allow potential anonymous access to public
+):
     """
     Retrieve a specific code snippet by ID.
+    Returns the snippet if it's public or owned by the current user.
     """
-    snippet = db.query(CodeSnippet).filter(CodeSnippet.id == snippet_id).first()
+    snippet = code_crud.get_snippet(db=db, snippet_id=snippet_id)
     if not snippet:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Code snippet not found"
         )
-
-    return snippet.as_dict
+    
+    # Check permissions
+    # TODO: Consider admin override
+    if not snippet.is_public and (not current_user or snippet.owner_id != current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to access this snippet"
+        )
+        
+    return snippet # Return ORM object
 
 
 @router.put(
     "/snippets/{snippet_id}",
     summary="Update a code snippet",
-    response_model=CodeSnippetResponse,
+    response_model=CodeSnippetRead,
 )
 async def update_snippet(
-    snippet_id: int, snippet_update: CodeSnippetCreate, db: Session = Depends(get_db)
+    snippet_id: int, 
+    snippet_in: CodeSnippetUpdate, # Use Update schema
+    db: SQLModelSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user) # Require user
 ):
     """
-    Update an existing code snippet.
+    Update an existing code snippet. Only the owner can update.
     """
-    db_snippet = db.query(CodeSnippet).filter(CodeSnippet.id == snippet_id).first()
+    db_snippet = code_crud.get_snippet(db=db, snippet_id=snippet_id)
     if not db_snippet:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Code snippet not found"
         )
-
-    # Update fields
-    db_snippet.title = snippet_update.title
-    db_snippet.description = snippet_update.description
-    db_snippet.language = snippet_update.language
-    db_snippet.code_content = snippet_update.code_content
-    db_snippet.is_public = snippet_update.is_public
-    db_snippet.tags = snippet_update.tags
+        
+    # Check ownership
+    # TODO: Consider admin override
+    if db_snippet.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this snippet"
+        )
 
     try:
-        db.commit()
-        db.refresh(db_snippet)
+        # Use CRUD function
+        updated_snippet = code_crud.update_snippet(
+            db=db, db_snippet=db_snippet, snippet_in=snippet_in
+        )
     except Exception as e:
         logger.error(f"Error updating code snippet: {str(e)}")
-        db.rollback()
+        # Rollback should happen in CRUD/dependency
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error updating code snippet",
         )
+    
+    return updated_snippet # Return ORM object
 
-    return db_snippet.as_dict
 
-
-@router.delete("/snippets/{snippet_id}", summary="Delete a code snippet")
-async def delete_snippet(snippet_id: int, db: Session = Depends(get_db)):
+@router.delete("/snippets/{snippet_id}", summary="Delete a code snippet", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_snippet(
+    snippet_id: int, 
+    db: SQLModelSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user) # Require user
+):
     """
-    Delete a code snippet.
+    Delete a code snippet. Only the owner can delete.
     """
-    db_snippet = db.query(CodeSnippet).filter(CodeSnippet.id == snippet_id).first()
+    db_snippet = code_crud.get_snippet(db=db, snippet_id=snippet_id)
     if not db_snippet:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Code snippet not found"
         )
+    
+    # Check ownership
+    # TODO: Consider admin override
+    if db_snippet.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this snippet"
+        )
 
     try:
-        db.delete(db_snippet)
-        db.commit()
+        # Use CRUD function
+        deleted = code_crud.delete_snippet(db=db, snippet_id=snippet_id)
+        if not deleted:
+             # Should not happen if get_snippet succeeded, but handle defensively
+             raise HTTPException(status_code=404, detail="Snippet not found during delete attempt")
     except Exception as e:
         logger.error(f"Error deleting code snippet: {str(e)}")
-        db.rollback()
+        # Rollback should happen in CRUD/dependency
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error deleting code snippet",
         )
-
-    return {"message": "Code snippet deleted successfully"}
+    
+    # Return None for 204 No Content status
+    return None 
 
 
 @router.post("/generate", summary="Generate code from description")

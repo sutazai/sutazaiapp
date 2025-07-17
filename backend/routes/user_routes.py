@@ -3,6 +3,9 @@ from .models import User
 from fastapi import APIRouter
 from backend.controllers.user_controller import UserController
 
+
+# Assuming models are in backend.models
+
 # Create a blueprint for user routes
 user_bp = Blueprint("user", __name__, url_prefix="/api/users")
 
