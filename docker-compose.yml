@@ -121,7 +121,7 @@ services:
 
   # AI Agents
   autogpt:
-    image: significant/autogpt:latest
+    image: significantgravitas/autogpt:latest
     container_name: sutazai-autogpt
     ports:
       - "8080:8080"
@@ -369,6 +369,7 @@ services:
       - REDIS_URL=redis://redis:6379
       - QDRANT_URL=http://qdrant:6333
       - CHROMADB_URL=http://chromadb:8000
+      - FAISS_URL=http://faiss:8088
       - OLLAMA_URL=http://ollama:11434
       - AUTOGPT_URL=http://autogpt:8080
       - LOCALAGI_URL=http://localagi:8080
@@ -382,6 +383,15 @@ services:
       - OPEN_WEBUI_URL=http://open-webui:8080
       - BIGAGI_URL=http://bigagi:3000
       - AGENTZERO_URL=http://agentzero:8080
+      - LANGFLOW_URL=http://langflow:7860
+      - DIFY_URL=http://dify:5001
+      - AUTOGEN_URL=http://autogen:8080
+      - PYTORCH_URL=http://pytorch:8085
+      - TENSORFLOW_URL=http://tensorflow:8086
+      - JAX_URL=http://jax:8087
+      - FAISS_SERVICE_URL=http://faiss:8088
+      - AWESOME_CODE_AI_URL=http://awesome-code-ai:8089
+      - ENHANCED_MODEL_MANAGER_URL=http://enhanced-model-manager:8090
     networks:
       - sutazai-network
     depends_on:
@@ -631,6 +641,74 @@ services:
       timeout: 10s
       retries: 3
 
+  # FAISS Vector Similarity Search
+  faiss:
+    build:
+      context: ./docker/faiss
+      dockerfile: Dockerfile
+    container_name: sutazai-faiss
+    ports:
+      - "8096:8088"
+    environment:
+      - FAISS_DATA_PATH=/data/faiss_indexes
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Awesome Code AI Integration
+  awesome-code-ai:
+    build:
+      context: ./docker/awesome-code-ai
+      dockerfile: Dockerfile
+    container_name: sutazai-awesome-code-ai
+    ports:
+      - "8097:8089"
+    environment:
+      - CODE_AI_DATA_PATH=/data/code_analysis
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Enhanced Model Manager
+  enhanced-model-manager:
+    build:
+      context: ./docker/enhanced-model-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-enhanced-model-manager
+    ports:
+      - "8098:8090"
+    environment:
+      - MODEL_CACHE_PATH=/data/models
+      - DEEPSEEK_MODEL_PATH=/data/models/deepseek-coder
+      - LLAMA_MODEL_PATH=/data/models/llama2
+    volumes:
+      - models-data:/data/models
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # Health Check Service
   health-check:
     build:
@@ -641,7 +719,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - CHECK_INTERVAL=30
-      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax
+      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax,faiss,awesome-code-ai,enhanced-model-manager
     networks:
       - sutazai-network
     depends_on:

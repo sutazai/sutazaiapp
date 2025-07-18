@@ -48,6 +48,7 @@ from backend.routers.diagrams import router as diagrams_router # Added based on 
 logger = get_api_logger()
 
 # Get settings instance
+from backend.config.settings import get_settings
 settings = get_settings()
 
 # Initialize FastAPI app

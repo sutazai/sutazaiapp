@@ -1,0 +1,265 @@
+{
+  "timestamp": 1752815366.6099608,
+  "version": "2.0.0",
+  "services": {
+    "backend": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "frontend": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8501 ssl:default [Connect call failed ('127.0.0.1', 8501)]"
+    },
+    "postgres": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "redis": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "chromadb": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8001 ssl:default [Connect call failed ('127.0.0.1', 8001)]"
+    },
+    "qdrant": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:6333 ssl:default [Connect call failed ('127.0.0.1', 6333)]"
+    },
+    "faiss": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8096 ssl:default [Connect call failed ('127.0.0.1', 8096)]"
+    },
+    "ollama": {
+      "status": "unhealthy",
+      "response_time": 0.008759737014770508,
+      "error": "HTTP 404"
+    },
+    "enhanced_model_manager": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8098 ssl:default [Connect call failed ('127.0.0.1', 8098)]"
+    },
+    "autogpt": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8080 ssl:default [Connect call failed ('127.0.0.1', 8080)]"
+    },
+    "localagi": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8082 ssl:default [Connect call failed ('127.0.0.1', 8082)]"
+    },
+    "tabby": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8081 ssl:default [Connect call failed ('127.0.0.1', 8081)]"
+    },
+    "awesome_code_ai": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8097 ssl:default [Connect call failed ('127.0.0.1', 8097)]"
+    },
+    "browser_use": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8083 ssl:default [Connect call failed ('127.0.0.1', 8083)]"
+    },
+    "skyvern": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8084 ssl:default [Connect call failed ('127.0.0.1', 8084)]"
+    },
+    "documind": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8085 ssl:default [Connect call failed ('127.0.0.1', 8085)]"
+    },
+    "finrobot": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8086 ssl:default [Connect call failed ('127.0.0.1', 8086)]"
+    },
+    "gpt_engineer": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8087 ssl:default [Connect call failed ('127.0.0.1', 8087)]"
+    },
+    "aider": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8088 ssl:default [Connect call failed ('127.0.0.1', 8088)]"
+    },
+    "open_webui": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8089 ssl:default [Connect call failed ('127.0.0.1', 8089)]"
+    },
+    "bigagi": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8090 ssl:default [Connect call failed ('127.0.0.1', 8090)]"
+    },
+    "agentzero": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8091 ssl:default [Connect call failed ('127.0.0.1', 8091)]"
+    },
+    "langflow": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:7860 ssl:default [Connect call failed ('127.0.0.1', 7860)]"
+    },
+    "dify": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:5001 ssl:default [Connect call failed ('127.0.0.1', 5001)]"
+    },
+    "autogen": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8092 ssl:default [Connect call failed ('127.0.0.1', 8092)]"
+    },
+    "pytorch": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8093 ssl:default [Connect call failed ('127.0.0.1', 8093)]"
+    },
+    "tensorflow": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8094 ssl:default [Connect call failed ('127.0.0.1', 8094)]"
+    },
+    "jax": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8095 ssl:default [Connect call failed ('127.0.0.1', 8095)]"
+    },
+    "prometheus": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:9090 ssl:default [Connect call failed ('127.0.0.1', 9090)]"
+    },
+    "grafana": {
+      "status": "healthy",
+      "response_time": 0.02002549171447754,
+      "details": {
+        "status": "healthy",
+        "note": "Non-JSON response"
+      }
+    },
+    "node_exporter": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:9100 ssl:default [Connect call failed ('127.0.0.1', 9100)]"
+    },
+    "nginx": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:80 ssl:default [Connect call failed ('127.0.0.1', 80)]"
+    }
+  },
+  "api_endpoints": {
+    "system_health": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "ai_services_status": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "faiss_indexes": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "awesome_ai_tools": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "enhanced_models": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "self_improvement_stats": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "service_summary": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "knowledge_graph_stats": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    },
+    "evolution_stats": {
+      "status": "error",
+      "error": "Cannot connect to host localhost:8000 ssl:default [Connect call failed ('127.0.0.1', 8000)]"
+    }
+  },
+  "functional_tests": {
+    "test_faiss_integration": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_awesome_code_ai": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_deepseek_integration": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_knowledge_graph": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_self_improvement": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_batch_processing": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    }
+  },
+  "integration_tests": {
+    "test_model_vector_integration": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_ai_services_orchestration": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    },
+    "test_cross_service_communication": {
+      "status": "failed",
+      "details": {
+        "success": false
+      }
+    }
+  },
+  "performance_tests": {
+    "test_response_times": {
+      "status": "failed",
+      "error": "No successful responses"
+    },
+    "test_concurrent_requests": {
+      "status": "completed",
+      "concurrent_requests": 20,
+      "successful_requests": 0,
+      "success_rate": 0.0,
+      "performance_rating": "needs_improvement"
+    },
+    "test_memory_usage": {
+      "status": "skipped",
+      "reason": "psutil not available"
+    }
+  },
+  "summary": {
+    "total_services": 32,
+    "healthy_services": 1,
+    "unhealthy_services": 31,
+    "total_endpoints": 9,
+    "working_endpoints": 0,
+    "failed_endpoints": 9,
+    "overall_score": 0.03819444444444444,
+    "total_tests": 12,
+    "passed_tests": 1,
+    "test_success_rate": 0.08333333333333333,
+    "system_status": "needs_improvement"
+  }
+}
