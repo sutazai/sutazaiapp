@@ -14,6 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-EXPOSE 8088
+EXPOSE 8084
 
-CMD ["python", "browser_use_server.py"]
+CMD ["python", "langchain_agent_server.py"]

@@ -1,40 +1,18 @@
 {
-  "timestamp": 1752817259.2341866,
-  "version": "SutazAI v8 (2.0.0)",
-  "tests": {
-    "Python Environment Setup": {
-      "status": "PASSED",
-      "details": true
-    },
-    "Backend Health Check": {
-      "status": "PASSED",
-      "details": true
-    },
-    "FAISS Vector Search": {
-      "status": "PASSED",
-      "details": true
-    },
-    "ChromaDB Integration": {
-      "status": "PASSED",
-      "details": true
-    },
-    "System Status": {
-      "status": "PASSED",
-      "details": true
-    },
-    "Frontend Accessibility": {
-      "status": "PASSED",
-      "details": true
-    },
-    "Qdrant Service": {
-      "status": "PASSED",
-      "details": true
-    }
-  },
-  "summary": {
-    "total_tests": 7,
-    "passed_tests": 7,
-    "failed_tests": 0,
-    "success_rate": 100.0
+  "postgres_health": true,
+  "redis_health": true,
+  "qdrant_health": true,
+  "chromadb_health": true,
+  "ollama_health": true,
+  "qdrant_collection_create": true,
+  "qdrant_collection_info": true,
+  "ollama_version": "0.9.6",
+  "ollama_models": [],
+  "ollama_models_count": 0,
+  "validation_timestamp": "2025-07-18T14:53:54.496083",
+  "validation_summary": {
+    "healthy_services": 5,
+    "total_services": 5,
+    "overall_health": 100.0
   }
 }

@@ -1,0 +1,23 @@
+[server]
+# Enable CORS for development
+enableCORS = true
+enableXsrfProtection = false
+
+# Allow websocket connections
+allowRunOnSave = true
+
+# Browser settings
+headless = false
+
+[browser]
+# Enable automatic browser opening
+serverAddress = "0.0.0.0"
+serverPort = 8501
+gatherUsageStats = false
+
+[theme]
+# Optional: Custom theme
+primaryColor = "#FF6B6B"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#262730"
