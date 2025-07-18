@@ -237,9 +237,19 @@ elif page == "💬 Chat Interface":
     col1, col2 = st.columns([3, 1])
     
     with col1:
+        # Get available models from backend
+        try:
+            available_models = interface.get_models()
+            if available_models:
+                model_names = [model["name"] for model in available_models]
+            else:
+                model_names = ["deepseek-coder:33b", "llama2:13b", "codellama:7b", "mistral:7b"]
+        except:
+            model_names = ["deepseek-coder:33b", "llama2:13b", "codellama:7b", "mistral:7b"]
+        
         selected_model = st.selectbox(
             "Select Model",
-            ["deepseek-coder:33b", "llama2:13b", "codellama:7b", "mistral:7b"],
+            model_names,
             key="chat_model"
         )
     
@@ -267,8 +277,20 @@ elif page == "💬 Chat Interface":
             # Get AI response
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
-                    # Simulate AI response
-                    response = f"This is a response from {selected_model} to: {prompt}"
+                    # Get real AI response from backend
+                    try:
+                        chat_response = interface.make_request(
+                            "/api/chat",
+                            method="POST",
+                            data={"message": prompt, "model": selected_model}
+                        )
+                        if chat_response and "response" in chat_response:
+                            response = chat_response["response"]
+                        else:
+                            response = f"Error: Could not get response from {selected_model}"
+                    except Exception as e:
+                        response = f"Error connecting to {selected_model}: {str(e)}"
+                    
                     st.markdown(response)
                     
                     # Add assistant response
