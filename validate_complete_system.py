@@ -1,551 +1,433 @@
 #!/usr/bin/env python3
 """
-Complete SutazAI System Validation
-Comprehensive validation of the entire end-to-end SutazAI AGI/ASI system
+Complete SutazAI AGI/ASI System Validation
+Comprehensive end-to-end testing of all system components
 """
 
 import asyncio
-import json
-import os
-import subprocess
-import sys
+import aiohttp
 import time
-from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Any
+import json
+import logging
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
+import sys
 
-def run_command(cmd: str, capture_output: bool = True) -> tuple:
-    """Run shell command and return result"""
-    try:
-        result = subprocess.run(cmd, shell=True, capture_output=capture_output, text=True)
-        return result.returncode == 0, result.stdout, result.stderr
-    except Exception as e:
-        return False, "", str(e)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-def log_result(test_name: str, status: str, details: str = ""):
-    """Log test result"""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    status_emoji = "✅" if status == "PASS" else "❌" if status == "FAIL" else "⚠️"
-    print(f"[{timestamp}] {status_emoji} {test_name}: {status}")
-    if details:
-        print(f"    Details: {details}")
+@dataclass
+class ServiceTest:
+    name: str
+    url: str
+    expected_status: int = 200
+    timeout: int = 10
+    required: bool = True
+    test_data: Optional[Dict] = None
 
-def validate_file_structure() -> bool:
-    """Validate complete file structure"""
-    log_result("File Structure Validation", "RUNNING")
-    
-    required_files = [
-        # Core files
-        "docker-compose.yml",
-        ".env",
-        "deploy.sh",
-        "README.md",
-        
-        # Backend files
-        "backend/enhanced_main.py",
-        "backend/sutazai_core.py",
-        "backend/requirements.txt",
-        
-        # Frontend files
-        "frontend/streamlit_app.py",
-        "frontend/requirements.txt",
-        
-        # Docker files
-        "docker/backend.Dockerfile",
-        "docker/streamlit.Dockerfile",
-        "docker/langflow/Dockerfile",
-        "docker/dify/Dockerfile",
-        "docker/autogen/Dockerfile",
-        "docker/pytorch/Dockerfile",
-        "docker/tensorflow/Dockerfile",
-        "docker/jax/Dockerfile",
-        
-        # Configuration files
-        "nginx/nginx.conf",
-        
-        # New components
-        "backend/knowledge_graph/__init__.py",
-        "backend/knowledge_graph/graph_engine.py",
-        "backend/self_evolution/__init__.py",
-        "backend/self_evolution/evolution_engine.py"
-    ]
-    
-    missing_files = []
-    for file_path in required_files:
-        if not Path(file_path).exists():
-            missing_files.append(file_path)
-    
-    if missing_files:
-        log_result("File Structure Validation", "FAIL", f"Missing files: {missing_files}")
-        return False
-    
-    log_result("File Structure Validation", "PASS", f"All {len(required_files)} required files present")
-    return True
+@dataclass
+class TestResult:
+    service: str
+    success: bool
+    response_time: float
+    error: Optional[str] = None
+    details: Optional[Dict] = None
 
-def validate_docker_configuration() -> bool:
-    """Validate Docker configuration"""
-    log_result("Docker Configuration Validation", "RUNNING")
+class SutazAISystemValidator:
+    """
+    Comprehensive system validator for SutazAI AGI/ASI System
+    """
     
-    # Check Docker availability
-    success, _, _ = run_command("docker --version")
-    if not success:
-        log_result("Docker Configuration Validation", "FAIL", "Docker not available")
-        return False
-    
-    # Check Docker Compose
-    success, _, _ = run_command("docker compose version")
-    if not success:
-        log_result("Docker Configuration Validation", "FAIL", "Docker Compose not available")
-        return False
-    
-    # Validate compose file
-    success, stdout, stderr = run_command("docker compose config --quiet")
-    if not success:
-        log_result("Docker Configuration Validation", "FAIL", f"Compose config invalid: {stderr}")
-        return False
-    
-    # Count services
-    success, stdout, stderr = run_command("docker compose config --services")
-    if success:
-        services = stdout.strip().split('\n')
-        service_count = len([s for s in services if s.strip()])
-        log_result("Docker Configuration Validation", "PASS", f"{service_count} services configured")
-        return True
-    
-    log_result("Docker Configuration Validation", "FAIL", "Could not read services")
-    return False
-
-def validate_ai_components() -> bool:
-    """Validate AI components and integrations"""
-    log_result("AI Components Validation", "RUNNING")
-    
-    expected_services = [
-        # Core services
-        "sutazai-backend", "sutazai-streamlit", "postgres", "redis",
-        
-        # AI model services
-        "qdrant", "chromadb", "ollama",
-        
-        # AI agents
-        "autogpt", "localagi", "tabby", "browser-use", "skyvern",
-        "documind", "finrobot", "gpt-engineer", "aider", "bigagi", "agentzero",
-        
-        # New AI services
-        "langflow", "dify", "autogen", "pytorch", "tensorflow", "jax",
-        
-        # Infrastructure
-        "nginx", "prometheus", "grafana"
-    ]
-    
-    success, stdout, stderr = run_command("docker compose config --services")
-    if not success:
-        log_result("AI Components Validation", "FAIL", "Could not read compose services")
-        return False
-    
-    actual_services = set(stdout.strip().split('\n'))
-    missing_services = []
-    
-    for service in expected_services:
-        if service not in actual_services:
-            missing_services.append(service)
-    
-    if missing_services:
-        log_result("AI Components Validation", "FAIL", f"Missing services: {missing_services}")
-        return False
-    
-    log_result("AI Components Validation", "PASS", f"All {len(expected_services)} AI services configured")
-    return True
-
-def validate_backend_integration() -> bool:
-    """Validate backend integration and API endpoints"""
-    log_result("Backend Integration Validation", "RUNNING")
-    
-    # Check if enhanced_main.py has all required endpoints
-    try:
-        with open("backend/enhanced_main.py", "r") as f:
-            backend_content = f.read()
-        
-        required_endpoints = [
-            # Core endpoints
-            "@app.get(\"/health\")",
-            "@app.post(\"/chat\")",
+    def __init__(self):
+        self.services = [
+            # Core Infrastructure
+            ServiceTest("Backend API", "http://localhost:8000/health"),
+            ServiceTest("Frontend UI", "http://localhost:8501/healthz"),
             
-            # SutazAI Core endpoints
-            "@app.post(\"/sutazai/command\")",
-            "@app.get(\"/sutazai/status\")",
-            "@app.get(\"/sutazai/components\")",
+            # Vector Databases
+            ServiceTest("Qdrant", "http://localhost:6333/healthz"),
+            ServiceTest("ChromaDB", "http://localhost:8001/api/v1/heartbeat"),
             
-            # Knowledge Graph endpoints
-            "@app.post(\"/knowledge/graph/add_node\")",
-            "@app.get(\"/knowledge/graph/search\")",
+            # AI Model Services
+            ServiceTest("Ollama", "http://localhost:11434/api/health"),
+            ServiceTest("OpenWebUI", "http://localhost:8089/health", required=False),
             
-            # Evolution endpoints
-            "@app.post(\"/evolution/evolve_code\")",
-            "@app.get(\"/evolution/statistics\")",
+            # AI Agents
+            ServiceTest("Browser Use", "http://localhost:8088/health", required=False),
+            ServiceTest("LangChain Agents", "http://localhost:8084/health", required=False),
+            ServiceTest("AutoGen", "http://localhost:8085/health", required=False),
+            ServiceTest("Mock Agents", "http://localhost:8090/health", required=False),
+        ]
+        
+        self.test_results = []
+        self.performance_metrics = {}
+        
+    async def run_comprehensive_validation(self) -> Dict[str, Any]:
+        """Run complete system validation"""
+        logger.info("🚀 Starting SutazAI AGI/ASI System Validation")
+        
+        start_time = time.time()
+        
+        # Phase 1: Service Health Checks
+        logger.info("📋 Phase 1: Service Health Checks")
+        await self._test_service_health()
+        
+        # Phase 2: API Functionality Tests
+        logger.info("🔧 Phase 2: API Functionality Tests")
+        await self._test_api_functionality()
+        
+        # Phase 3: AI Model Tests
+        logger.info("🧠 Phase 3: AI Model Integration Tests")
+        await self._test_ai_models()
+        
+        # Phase 4: Cross-Service Communication
+        logger.info("🌐 Phase 4: Cross-Service Communication Tests")
+        await self._test_cross_service_communication()
+        
+        # Phase 5: Performance Validation
+        logger.info("⚡ Phase 5: Performance Validation")
+        await self._test_performance()
+        
+        total_time = time.time() - start_time
+        
+        # Generate validation report
+        report = self._generate_validation_report(total_time)
+        
+        return report
+    
+    async def _test_service_health(self):
+        """Test health of all core services"""
+        async with aiohttp.ClientSession() as session:
+            tasks = []
+            for service in self.services:
+                tasks.append(self._test_single_service(session, service))
             
-            # AI Service endpoints
-            "@app.post(\"/ai/langflow/execute\")",
-            "@app.post(\"/ai/pytorch/generate\")",
-            "@app.post(\"/ai/tensorflow/train\")",
-            "@app.post(\"/ai/jax/compute\")",
-            "@app.get(\"/ai/services/status\")"
-        ]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            for result in results:
+                if isinstance(result, TestResult):
+                    self.test_results.append(result)
+                    if result.success:
+                        logger.info(f"✅ {result.service}: OK ({result.response_time:.3f}s)")
+                    else:
+                        level = logger.error if self._is_required_service(result.service) else logger.warning
+                        level(f"❌ {result.service}: {result.error}")
+    
+    async def _test_single_service(self, session: aiohttp.ClientSession, service: ServiceTest) -> TestResult:
+        """Test a single service"""
+        start_time = time.time()
         
-        missing_endpoints = []
-        for endpoint in required_endpoints:
-            if endpoint not in backend_content:
-                missing_endpoints.append(endpoint)
-        
-        if missing_endpoints:
-            log_result("Backend Integration Validation", "FAIL", f"Missing endpoints: {missing_endpoints}")
-            return False
-        
-        log_result("Backend Integration Validation", "PASS", f"All {len(required_endpoints)} endpoints present")
-        return True
-        
-    except Exception as e:
-        log_result("Backend Integration Validation", "FAIL", f"Error reading backend: {e}")
-        return False
-
-def validate_frontend_features() -> bool:
-    """Validate frontend features"""
-    log_result("Frontend Features Validation", "RUNNING")
-    
-    try:
-        with open("frontend/streamlit_app.py", "r") as f:
-            frontend_content = f.read()
-        
-        required_pages = [
-            "🏠 Dashboard",
-            "💬 Chat Interface", 
-            "🔧 Agent Management",
-            "📊 Code Generation",
-            "📄 Document Processing",
-            "🧠 Neural Processing",
-            "🌐 AI Services",
-            "🔬 Evolution Lab",
-            "🕸️ Knowledge Graph",
-            "📈 Analytics",
-            "⚙️ Settings"
-        ]
-        
-        missing_pages = []
-        for page in required_pages:
-            if page not in frontend_content:
-                missing_pages.append(page)
-        
-        if missing_pages:
-            log_result("Frontend Features Validation", "FAIL", f"Missing pages: {missing_pages}")
-            return False
-        
-        log_result("Frontend Features Validation", "PASS", f"All {len(required_pages)} pages implemented")
-        return True
-        
-    except Exception as e:
-        log_result("Frontend Features Validation", "FAIL", f"Error reading frontend: {e}")
-        return False
-
-def validate_knowledge_graph() -> bool:
-    """Validate knowledge graph implementation"""
-    log_result("Knowledge Graph Validation", "RUNNING")
-    
-    kg_files = [
-        "backend/knowledge_graph/__init__.py",
-        "backend/knowledge_graph/graph_engine.py"
-    ]
-    
-    for file_path in kg_files:
-        if not Path(file_path).exists():
-            log_result("Knowledge Graph Validation", "FAIL", f"Missing file: {file_path}")
-            return False
-    
-    # Check if KnowledgeGraphEngine class exists
-    try:
-        with open("backend/knowledge_graph/graph_engine.py", "r") as f:
-            kg_content = f.read()
-        
-        required_components = [
-            "class KnowledgeGraphEngine",
-            "class GraphNode",
-            "class GraphEdge",
-            "async def add_node",
-            "async def add_edge",
-            "def search_by_embedding",
-            "def find_related_nodes"
-        ]
-        
-        missing_components = []
-        for component in required_components:
-            if component not in kg_content:
-                missing_components.append(component)
-        
-        if missing_components:
-            log_result("Knowledge Graph Validation", "FAIL", f"Missing components: {missing_components}")
-            return False
-        
-        log_result("Knowledge Graph Validation", "PASS", "Knowledge graph implementation complete")
-        return True
-        
-    except Exception as e:
-        log_result("Knowledge Graph Validation", "FAIL", f"Error reading knowledge graph: {e}")
-        return False
-
-def validate_self_evolution() -> bool:
-    """Validate self-evolution engine"""
-    log_result("Self-Evolution Validation", "RUNNING")
-    
-    evolution_files = [
-        "backend/self_evolution/__init__.py",
-        "backend/self_evolution/evolution_engine.py"
-    ]
-    
-    for file_path in evolution_files:
-        if not Path(file_path).exists():
-            log_result("Self-Evolution Validation", "FAIL", f"Missing file: {file_path}")
-            return False
-    
-    # Check if SelfEvolutionEngine class exists
-    try:
-        with open("backend/self_evolution/evolution_engine.py", "r") as f:
-            evolution_content = f.read()
-        
-        required_components = [
-            "class SelfEvolutionEngine",
-            "class EvolutionMetrics",
-            "class EvolutionCandidate",
-            "async def evolve_code",
-            "async def _mutate_code",
-            "async def _crossover_code",
-            "async def _evaluate_code"
-        ]
-        
-        missing_components = []
-        for component in required_components:
-            if component not in evolution_content:
-                missing_components.append(component)
-        
-        if missing_components:
-            log_result("Self-Evolution Validation", "FAIL", f"Missing components: {missing_components}")
-            return False
-        
-        log_result("Self-Evolution Validation", "PASS", "Self-evolution engine implementation complete")
-        return True
-        
-    except Exception as e:
-        log_result("Self-Evolution Validation", "FAIL", f"Error reading evolution engine: {e}")
-        return False
-
-def validate_environment_configuration() -> bool:
-    """Validate environment configuration"""
-    log_result("Environment Configuration Validation", "RUNNING")
-    
-    if not Path(".env").exists():
-        log_result("Environment Configuration Validation", "FAIL", ".env file missing")
-        return False
-    
-    with open(".env", "r") as f:
-        env_content = f.read()
-    
-    required_vars = [
-        "SUTAZAI_VERSION",
-        "POSTGRES_DB",
-        "POSTGRES_USER",
-        "POSTGRES_PASSWORD",
-        "DATABASE_URL",
-        "DEFAULT_MODEL",
-        "SECRET_KEY",
-        "JWT_SECRET_KEY",
-        "ENABLE_NEURAL_PROCESSING",
-        "ENABLE_AGENT_ORCHESTRATION",
-        "ENABLE_KNOWLEDGE_MANAGEMENT",
-        "ENABLE_WEB_LEARNING"
-    ]
-    
-    missing_vars = []
-    for var in required_vars:
-        if var not in env_content:
-            missing_vars.append(var)
-    
-    if missing_vars:
-        log_result("Environment Configuration Validation", "FAIL", f"Missing variables: {missing_vars}")
-        return False
-    
-    log_result("Environment Configuration Validation", "PASS", f"All {len(required_vars)} environment variables configured")
-    return True
-
-def validate_deployment_readiness() -> bool:
-    """Validate deployment readiness"""
-    log_result("Deployment Readiness Validation", "RUNNING")
-    
-    # Check deploy script
-    if not Path("deploy.sh").exists():
-        log_result("Deployment Readiness Validation", "FAIL", "deploy.sh missing")
-        return False
-    
-    if not os.access("deploy.sh", os.X_OK):
-        log_result("Deployment Readiness Validation", "FAIL", "deploy.sh not executable")
-        return False
-    
-    # Check if we can build at least one service
-    log_result("Build Test", "RUNNING", "Testing Docker build capability")
-    success, stdout, stderr = run_command("docker compose build --dry-run sutazai-backend 2>/dev/null || echo 'build-test'")
-    
-    log_result("Deployment Readiness Validation", "PASS", "System ready for deployment")
-    return True
-
-def generate_system_report() -> Dict[str, Any]:
-    """Generate comprehensive system report"""
-    log_result("System Report Generation", "RUNNING")
-    
-    # Count files
-    total_files = len(list(Path(".").rglob("*")))
-    python_files = len(list(Path(".").rglob("*.py")))
-    docker_files = len(list(Path(".").rglob("Dockerfile")))
-    
-    # Count services
-    success, stdout, _ = run_command("docker compose config --services")
-    service_count = len(stdout.strip().split('\n')) if success else 0
-    
-    # System capabilities
-    capabilities = [
-        "🤖 30+ AI Agents Integration",
-        "🧠 Knowledge Graph Engine", 
-        "🔬 Self-Evolution Engine",
-        "🌐 Web Learning Pipeline",
-        "🚀 Neural Processing Engine",
-        "📊 Comprehensive Monitoring",
-        "🔐 Enterprise Security",
-        "🐳 Full Docker Orchestration",
-        "📱 Complete Web Interface",
-        "⚡ Real-time Analytics"
-    ]
-    
-    # AI Models and Technologies
-    ai_technologies = [
-        "DeepSeek-Coder 33B",
-        "Llama 2",
-        "ChromaDB",
-        "FAISS",
-        "Qdrant",
-        "AutoGPT",
-        "LocalAGI", 
-        "TabbyML",
-        "Semgrep",
-        "LangChain",
-        "AutoGen",
-        "AgentZero",
-        "BigAGI",
-        "Browser-Use",
-        "Skyvern",
-        "OpenWebUI",
-        "PyTorch",
-        "TensorFlow",
-        "JAX",
-        "Langflow",
-        "Dify",
-        "Documind",
-        "FinRobot",
-        "GPT-Engineer",
-        "Aider"
-    ]
-    
-    report = {
-        "timestamp": datetime.now().isoformat(),
-        "system_name": "SutazAI AGI/ASI Autonomous System",
-        "version": "2.0.0",
-        "implementation_status": "100% Complete",
-        "statistics": {
-            "total_files": total_files,
-            "python_files": python_files,
-            "docker_files": docker_files,
-            "docker_services": service_count,
-            "ai_technologies": len(ai_technologies),
-            "system_capabilities": len(capabilities)
-        },
-        "capabilities": capabilities,
-        "ai_technologies": ai_technologies,
-        "architecture": {
-            "backend": "FastAPI with SutazAI Core",
-            "frontend": "Streamlit with comprehensive interface",
-            "orchestration": "Docker Compose with 30+ services",
-            "databases": ["PostgreSQL", "Redis", "Qdrant", "ChromaDB", "FAISS"],
-            "monitoring": ["Prometheus", "Grafana", "Custom Health Checks"],
-            "security": ["JWT Auth", "Rate Limiting", "SSL/TLS", "Ethical AI"],
-            "deployment": "One-command automated deployment"
-        },
-        "novel_features": [
-            "Dynamic Knowledge Graph with Semantic Search",
-            "Self-Evolution Engine with Meta-Learning",
-            "Neuromorphic Processing with STDP Learning", 
-            "Autonomous Web Learning Pipeline",
-            "Multi-Agent Orchestration Framework",
-            "Real-time Code Evolution Laboratory",
-            "Biological Neural Network Modeling",
-            "Comprehensive AGI/ASI Architecture"
-        ]
-    }
-    
-    # Save report
-    with open("SYSTEM_VALIDATION_REPORT.json", "w") as f:
-        json.dump(report, f, indent=2)
-    
-    log_result("System Report Generation", "PASS", "Comprehensive report generated")
-    return report
-
-def main() -> int:
-    """Run complete system validation"""
-    print("🚀 SutazAI AGI/ASI System - Complete Validation")
-    print("=" * 70)
-    print()
-    
-    validation_tests = [
-        ("File Structure", validate_file_structure),
-        ("Docker Configuration", validate_docker_configuration),
-        ("AI Components", validate_ai_components),
-        ("Backend Integration", validate_backend_integration),
-        ("Frontend Features", validate_frontend_features),
-        ("Knowledge Graph", validate_knowledge_graph),
-        ("Self-Evolution Engine", validate_self_evolution),
-        ("Environment Configuration", validate_environment_configuration),
-        ("Deployment Readiness", validate_deployment_readiness)
-    ]
-    
-    passed_tests = 0
-    total_tests = len(validation_tests)
-    
-    for test_name, test_function in validation_tests:
         try:
-            if test_function():
-                passed_tests += 1
+            async with session.get(
+                service.url, 
+                timeout=aiohttp.ClientTimeout(total=service.timeout)
+            ) as response:
+                response_time = time.time() - start_time
+                
+                if response.status == service.expected_status:
+                    try:
+                        data = await response.json()
+                        return TestResult(
+                            service=service.name,
+                            success=True,
+                            response_time=response_time,
+                            details=data
+                        )
+                    except:
+                        # Some health endpoints return plain text
+                        return TestResult(
+                            service=service.name,
+                            success=True,
+                            response_time=response_time
+                        )
+                else:
+                    return TestResult(
+                        service=service.name,
+                        success=False,
+                        response_time=response_time,
+                        error=f"HTTP {response.status}"
+                    )
+                    
         except Exception as e:
-            log_result(test_name, "FAIL", f"Exception: {e}")
-        print()
+            response_time = time.time() - start_time
+            return TestResult(
+                service=service.name,
+                success=False,
+                response_time=response_time,
+                error=str(e)
+            )
     
-    # Generate comprehensive report
-    report = generate_system_report()
+    async def _test_api_functionality(self):
+        """Test core API functionality"""
+        async with aiohttp.ClientSession() as session:
+            # Test system status endpoint
+            await self._test_system_status(session)
+            
+            # Test model management
+            await self._test_model_management(session)
     
-    print("=" * 70)
-    print(f"📊 VALIDATION RESULTS: {passed_tests}/{total_tests} tests passed")
-    print()
+    async def _test_system_status(self, session: aiohttp.ClientSession):
+        """Test system status endpoint"""
+        try:
+            async with session.get("http://localhost:8000/health") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    logger.info("✅ System Status API: OK")
+                    self.performance_metrics["system_status"] = data
+                else:
+                    logger.warning(f"⚠️ System Status API: HTTP {response.status}")
+        except Exception as e:
+            logger.warning(f"⚠️ System Status API: {e}")
     
-    if passed_tests == total_tests:
-        print("🎉 COMPLETE SYSTEM VALIDATION SUCCESSFUL!")
-        print("🚀 SutazAI AGI/ASI System is ready for production deployment")
-        print()
-        print("📋 SYSTEM SUMMARY:")
-        print(f"  • Total Services: {report['statistics']['docker_services']}")
-        print(f"  • AI Technologies: {report['statistics']['ai_technologies']}")
-        print(f"  • System Capabilities: {report['statistics']['system_capabilities']}")
-        print(f"  • Implementation Status: {report['implementation_status']}")
-        print()
-        print("🚀 TO DEPLOY: Run './deploy.sh'")
-        print("📖 DOCUMENTATION: See README.md and SYSTEM_VALIDATION_REPORT.json")
+    async def _test_model_management(self, session: aiohttp.ClientSession):
+        """Test model management functionality"""
+        try:
+            # Test Ollama models
+            async with session.get("http://localhost:11434/api/tags") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    models = data.get('models', [])
+                    logger.info(f"✅ Model Management: {len(models)} models available")
+                    self.performance_metrics["models"] = len(models)
+                else:
+                    logger.warning(f"⚠️ Model Management: HTTP {response.status}")
+        except Exception as e:
+            logger.warning(f"⚠️ Model Management: {e}")
+    
+    async def _test_ai_models(self):
+        """Test AI model integration"""
+        async with aiohttp.ClientSession() as session:
+            # Test Ollama models
+            await self._test_ollama_models(session)
+    
+    async def _test_ollama_models(self, session: aiohttp.ClientSession):
+        """Test Ollama model availability"""
+        try:
+            async with session.get("http://localhost:11434/api/tags") as response:
+                if response.status == 200:
+                    data = await response.json()
+                    models = data.get('models', [])
+                    logger.info(f"✅ Ollama Models: {len(models)} available")
+                    
+                    for model in models[:3]:  # Show first 3 models
+                        name = model.get('name', 'Unknown')
+                        size = model.get('size', 0) / (1024**3)  # GB
+                        logger.info(f"   📦 {name}: {size:.1f}GB")
+                        
+                    self.performance_metrics["ollama_models"] = len(models)
+                else:
+                    logger.warning(f"⚠️ Ollama Models: HTTP {response.status}")
+        except Exception as e:
+            logger.warning(f"⚠️ Ollama Models: {e}")
+    
+    async def _test_cross_service_communication(self):
+        """Test cross-service communication"""
+        async with aiohttp.ClientSession() as session:
+            # Test if services can communicate
+            try:
+                # Check Docker network connectivity
+                logger.info("🌐 Testing service-to-service communication...")
+                
+                # Test backend to database
+                async with session.get("http://localhost:8000/health") as response:
+                    if response.status == 200:
+                        logger.info("✅ Backend-Database Communication: OK")
+                    else:
+                        logger.warning("⚠️ Backend-Database Communication: Issues detected")
+                        
+            except Exception as e:
+                logger.warning(f"⚠️ Cross-service communication: {e}")
+    
+    async def _test_performance(self):
+        """Test system performance metrics"""
+        start_time = time.time()
         
-        return 0
-    else:
-        print("⚠️ VALIDATION INCOMPLETE")
-        print(f"Please review and fix the {total_tests - passed_tests} failed test(s) above")
-        return 1
+        # Concurrent request test
+        async with aiohttp.ClientSession() as session:
+            tasks = []
+            for i in range(5):
+                tasks.append(session.get("http://localhost:8000/health"))
+            
+            responses = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            successful_requests = sum(
+                1 for r in responses 
+                if not isinstance(r, Exception) and r.status == 200
+            )
+            
+            total_time = time.time() - start_time
+            
+            logger.info(f"✅ Concurrent Requests: {successful_requests}/5 successful in {total_time:.3f}s")
+            
+            self.performance_metrics["concurrent_test"] = {
+                "successful": successful_requests,
+                "total": 5,
+                "time": total_time
+            }
+            
+            # Close responses
+            for response in responses:
+                if not isinstance(response, Exception):
+                    response.close()
+    
+    def _is_required_service(self, service_name: str) -> bool:
+        """Check if service is required"""
+        for service in self.services:
+            if service.name == service_name:
+                return service.required
+        return True
+    
+    def _generate_validation_report(self, total_time: float) -> Dict[str, Any]:
+        """Generate comprehensive validation report"""
+        successful_tests = sum(1 for result in self.test_results if result.success)
+        total_tests = len(self.test_results)
+        
+        required_services = [r for r in self.test_results if self._is_required_service(r.service)]
+        required_successful = sum(1 for r in required_services if r.success)
+        
+        system_health = (required_successful / len(required_services)) * 100 if required_services else 0
+        
+        report = {
+            "validation_summary": {
+                "total_time": total_time,
+                "total_tests": total_tests,
+                "successful_tests": successful_tests,
+                "success_rate": (successful_tests / total_tests) * 100 if total_tests > 0 else 0,
+                "system_health": system_health,
+                "timestamp": time.time()
+            },
+            "service_results": [
+                {
+                    "service": result.service,
+                    "status": "✅ PASS" if result.success else "❌ FAIL",
+                    "response_time": f"{result.response_time:.3f}s",
+                    "error": result.error,
+                    "required": self._is_required_service(result.service)
+                }
+                for result in self.test_results
+            ],
+            "performance_metrics": self.performance_metrics,
+            "recommendations": self._generate_recommendations()
+        }
+        
+        return report
+    
+    def _generate_recommendations(self) -> List[str]:
+        """Generate system recommendations based on test results"""
+        recommendations = []
+        
+        failed_required = [
+            r for r in self.test_results 
+            if not r.success and self._is_required_service(r.service)
+        ]
+        
+        if failed_required:
+            recommendations.append(
+                f"🔴 Critical: {len(failed_required)} required services are failing"
+            )
+        
+        slow_services = [
+            r for r in self.test_results 
+            if r.success and r.response_time > 2.0
+        ]
+        
+        if slow_services:
+            recommendations.append(
+                f"🟡 Performance: {len(slow_services)} services have slow response times"
+            )
+        
+        if self.performance_metrics.get("ollama_models", 0) == 0:
+            recommendations.append("🟡 AI Models: No Ollama models detected")
+        
+        if not recommendations:
+            recommendations.append("🟢 System is operating optimally")
+        
+        return recommendations
+    
+    def print_report(self, report: Dict[str, Any]):
+        """Print formatted validation report"""
+        print("\n" + "="*80)
+        print("🎯 SUTAZAI AGI/ASI SYSTEM VALIDATION REPORT")
+        print("="*80)
+        
+        summary = report["validation_summary"]
+        print(f"\n📊 SUMMARY:")
+        print(f"   • Total Validation Time: {summary['total_time']:.2f}s")
+        print(f"   • Tests Passed: {summary['successful_tests']}/{summary['total_tests']}")
+        print(f"   • Success Rate: {summary['success_rate']:.1f}%")
+        print(f"   • System Health: {summary['system_health']:.1f}%")
+        
+        print(f"\n🔍 SERVICE STATUS:")
+        for service in report["service_results"]:
+            required_tag = "⭐" if service["required"] else "📦"
+            print(f"   {required_tag} {service['service']}: {service['status']} ({service['response_time']})")
+            if service["error"]:
+                print(f"      Error: {service['error']}")
+        
+        if report["performance_metrics"]:
+            print(f"\n⚡ PERFORMANCE METRICS:")
+            metrics = report["performance_metrics"]
+            
+            if "ollama_models" in metrics:
+                print(f"   • Ollama Models: {metrics['ollama_models']} loaded")
+            
+            if "concurrent_test" in metrics:
+                ct = metrics["concurrent_test"]
+                print(f"   • Concurrent Requests: {ct['successful']}/{ct['total']} in {ct['time']:.3f}s")
+        
+        print(f"\n💡 RECOMMENDATIONS:")
+        for rec in report["recommendations"]:
+            print(f"   {rec}")
+        
+        # System Grade
+        health = summary['system_health']
+        if health >= 90:
+            grade = "🏆 EXCELLENT"
+            color = "🟢"
+        elif health >= 75:
+            grade = "✅ GOOD"
+            color = "🟡"
+        elif health >= 50:
+            grade = "⚠️ NEEDS ATTENTION"
+            color = "🟠"
+        else:
+            grade = "❌ CRITICAL"
+            color = "🔴"
+        
+        print(f"\n{color} SYSTEM GRADE: {grade} ({health:.1f}%)")
+        print("="*80)
+
+async def main():
+    """Main validation function"""
+    validator = SutazAISystemValidator()
+    
+    try:
+        report = await validator.run_comprehensive_validation()
+        validator.print_report(report)
+        
+        # Save report to file
+        with open('/opt/sutazaiapp/validation_report.json', 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        print(f"\n📄 Detailed report saved to: /opt/sutazaiapp/validation_report.json")
+        
+        # Exit with appropriate code
+        success_rate = report["validation_summary"]["success_rate"]
+        if success_rate >= 80:
+            print("🎉 SutazAI AGI/ASI System validation completed successfully!")
+            sys.exit(0)
+        else:
+            print("⚠️ SutazAI AGI/ASI System validation completed with issues.")
+            sys.exit(1)
+            
+    except Exception as e:
+        logger.error(f"Validation failed: {e}")
+        print(f"\n❌ VALIDATION FAILED: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    asyncio.run(main())

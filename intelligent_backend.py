@@ -31,6 +31,8 @@ from multi_agent_orchestrator import MultiAgentOrchestrator
 # Import external agent integration
 from external_agents_integration import external_agent_manager
 from docker_external_agents import DockerExternalAgentManager
+# Import performance monitoring
+from performance_monitor import performance_monitor, track_performance
 
 # FastAPI app
 app = FastAPI(
@@ -313,32 +315,70 @@ class IntelligentChatBot:
     
     async def chat_with_llm(self, message: str, model: str) -> str:
         """Chat with local LLM via Ollama"""
+        start_time = time.time()
+        tokens_used = 0
+        success = True
+        
         try:
             # Try to connect to Ollama
             ollama_url = f"{SERVICES['ollama']}/api/generate"
+            # Use streaming for larger models to avoid timeouts
+            use_stream = "8b" in model or "7b" in model
             payload = {
                 "model": model,
                 "prompt": message,
-                "stream": False,
+                "stream": use_stream,
                 "options": {
                     "temperature": 0.7,
-                    "top_p": 0.9,
-                    "max_tokens": 1000
+                    "top_p": 0.9
                 }
             }
             
-            response = requests.post(ollama_url, json=payload, timeout=30)
+            # Adjust timeout based on model size
+            timeout = 60 if "8b" in model or "7b" in model else 30
+            response = requests.post(ollama_url, json=payload, timeout=timeout)
             
             if response.status_code == 200:
-                result = response.json()
-                return result.get("response", "No response from model")
+                if use_stream:
+                    # Handle streaming response
+                    full_response = ""
+                    for line in response.iter_lines():
+                        if line:
+                            try:
+                                chunk = json.loads(line.decode('utf-8'))
+                                if 'response' in chunk:
+                                    full_response += chunk['response']
+                                if chunk.get('done', False):
+                                    break
+                            except json.JSONDecodeError:
+                                continue
+                    tokens_used = len(full_response.split()) if full_response else 0
+                    return full_response or "No response from model"
+                else:
+                    # Handle non-streaming response
+                    result = response.json()
+                    response_text = result.get("response", "No response from model")
+                    tokens_used = len(response_text.split())
+                    return response_text
             else:
                 return f"🤖 I'm currently setting up the AI models. The response would normally come from {model}."
                 
+        except requests.exceptions.Timeout:
+            success = False
+            # If larger model times out, try with smaller model
+            if "8b" in model or "7b" in model:
+                return await self.chat_with_llm(f"[Using fast model] {message}", "llama3.2:1b")
+            return f"🤖 Model {model} is taking longer than expected. Try the faster llama3.2:1b model."
         except requests.exceptions.ConnectionError:
+            success = False
             return "🤖 AI models are initializing. I can still help with system commands and code generation!"
         except Exception as e:
+            success = False
             return f"🤖 Model is loading. Here's what I understand from your message: {message}"
+        finally:
+            # Record model performance metrics
+            response_time = time.time() - start_time
+            performance_monitor.record_model_usage(model, response_time, tokens_used, success)
     
     async def get_system_status(self) -> str:
         """Get comprehensive system status"""
@@ -462,6 +502,7 @@ async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 @app.post("/api/chat")
+@track_performance("chat")
 async def chat(request: ChatRequest):
     """Intelligent chat endpoint"""
     try:
@@ -709,6 +750,85 @@ async def get_complete_system_status():
         "timestamp": datetime.now().isoformat()
     }
 
+# Performance Monitoring Endpoints
+@app.get("/api/performance/current")
+async def get_current_performance():
+    """Get current performance metrics"""
+    return performance_monitor.get_current_metrics()
+
+@app.get("/api/performance/summary")
+async def get_performance_summary():
+    """Get performance summary and health status"""
+    return performance_monitor.get_performance_summary()
+
+@app.get("/api/performance/history")
+async def get_performance_history(minutes: int = 60):
+    """Get performance history for specified time period"""
+    return {
+        "history": performance_monitor.get_metrics_history(minutes),
+        "period_minutes": minutes,
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.get("/api/performance/alerts")
+async def get_performance_alerts():
+    """Get current performance alerts and warnings"""
+    current_metrics = performance_monitor.get_current_metrics()
+    if not current_metrics:
+        return {"alerts": [], "status": "No monitoring data available"}
+    
+    alerts = []
+    
+    # Check system metrics for alerts
+    system = current_metrics.get("system", {})
+    cpu_percent = system.get("cpu", {}).get("percent", 0)
+    memory_percent = system.get("memory", {}).get("percent", 0)
+    
+    if cpu_percent > 90:
+        alerts.append({"type": "critical", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage critically high"})
+    elif cpu_percent > 70:
+        alerts.append({"type": "warning", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage high"})
+    
+    if memory_percent > 95:
+        alerts.append({"type": "critical", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage critically high"})
+    elif memory_percent > 80:
+        alerts.append({"type": "warning", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage high"})
+    
+    # Check API metrics
+    api = current_metrics.get("api", {})
+    error_rate = api.get("error_rate", 0)
+    avg_response_time = api.get("average_response_time", 0)
+    
+    if error_rate > 0.15:
+        alerts.append({"type": "critical", "metric": "Error Rate", "value": f"{error_rate:.1%}", "message": "API error rate critically high"})
+    elif error_rate > 0.05:
+        alerts.append({"type": "warning", "metric": "Error Rate", "value": f"{error_rate:.1%}", "message": "API error rate elevated"})
+    
+    if avg_response_time > 5.0:
+        alerts.append({"type": "critical", "metric": "Response Time", "value": f"{avg_response_time:.2f}s", "message": "API response time critically slow"})
+    elif avg_response_time > 2.0:
+        alerts.append({"type": "warning", "metric": "Response Time", "value": f"{avg_response_time:.2f}s", "message": "API response time slow"})
+    
+    return {
+        "alerts": alerts,
+        "alert_count": len(alerts),
+        "critical_count": sum(1 for alert in alerts if alert["type"] == "critical"),
+        "warning_count": sum(1 for alert in alerts if alert["type"] == "warning"),
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.post("/api/performance/start")
+async def start_performance_monitoring():
+    """Start performance monitoring"""
+    await performance_monitor.start_monitoring()
+    return {"status": "Performance monitoring started", "timestamp": datetime.now().isoformat()}
+
+@app.post("/api/performance/stop")
+async def stop_performance_monitoring():
+    """Stop performance monitoring"""
+    await performance_monitor.stop_monitoring()
+    return {"status": "Performance monitoring stopped", "timestamp": datetime.now().isoformat()}
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize orchestrator and external agents on startup"""
@@ -725,11 +845,18 @@ async def startup_event():
     except Exception as e:
         logger.error(f"Failed to initialize external agents: {e}")
     
+    # Start performance monitoring
+    logger.info("Starting performance monitoring...")
+    await performance_monitor.start_monitoring()
+    
     logger.info("SutazAI AGI/ASI system fully initialized")
 
 @app.on_event("shutdown") 
 async def shutdown_event():
     """Cleanup orchestrator on shutdown"""
+    logger.info("Stopping performance monitoring...")
+    await performance_monitor.stop_monitoring()
+    
     logger.info("Stopping multi-agent orchestrator...")
     await orchestrator.stop_orchestration()
     logger.info("Orchestrator stopped successfully")

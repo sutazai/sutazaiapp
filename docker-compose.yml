@@ -106,13 +106,6 @@ services:
       OLLAMA_ORIGINS: "*"
     networks:
       - sutazai-network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/health"]
       interval: 30s
@@ -154,13 +147,6 @@ services:
       LOCALAI_WATCHDOG_BUSY: "true"
     networks:
       - sutazai-network
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
 
   tabby:
     image: tabbyml/tabby:latest
@@ -176,13 +162,6 @@ services:
       - sutazai-network
     depends_on:
       - ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
 
   semgrep:
     image: returntocorp/semgrep:latest
@@ -392,6 +371,9 @@ services:
       - FAISS_SERVICE_URL=http://faiss:8088
       - AWESOME_CODE_AI_URL=http://awesome-code-ai:8089
       - ENHANCED_MODEL_MANAGER_URL=http://enhanced-model-manager:8090
+      - CONTEXT_ENGINEERING_URL=http://context-engineering:8000
+      - FMS_FSDP_URL=http://fms-fsdp:8000
+      - REALTIMESTT_URL=http://realtimestt:8000
     networks:
       - sutazai-network
     depends_on:
@@ -683,7 +665,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # Enhanced Model Manager
+  # Enhanced Model Manager with DeepSeek R1, Qwen3, and additional models
   enhanced-model-manager:
     build:
       context: ./docker/enhanced-model-manager
@@ -694,7 +676,11 @@ services:
     environment:
       - MODEL_CACHE_PATH=/data/models
       - DEEPSEEK_MODEL_PATH=/data/models/deepseek-coder
+      - DEEPSEEK_R1_MODEL_PATH=/data/models/deepseek-r1
+      - QWEN3_MODEL_PATH=/data/models/qwen3
       - LLAMA_MODEL_PATH=/data/models/llama2
+      - OLLAMA_URL=http://ollama:11434
+      - AUTO_PULL_MODELS=true
     volumes:
       - models-data:/data/models
       - workspace-data:/data
@@ -709,6 +695,74 @@ services:
       timeout: 10s
       retries: 3
 
+  # Context Engineering Framework
+  context-engineering:
+    build:
+      context: ./docker/context-engineering
+      dockerfile: Dockerfile
+    container_name: sutazai-context-engineering
+    ports:
+      - "8099:8000"
+    environment:
+      - CONTEXT_ENGINE_HOST=0.0.0.0
+      - CONTEXT_ENGINE_PORT=8000
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Foundation Model Stack FSDP
+  fms-fsdp:
+    build:
+      context: ./docker/fms-fsdp
+      dockerfile: Dockerfile
+    container_name: sutazai-fms-fsdp
+    ports:
+      - "8100:8000"
+    environment:
+      - FSDP_MODEL_PATH=/data/models
+      - TORCH_DISTRIBUTED_DEBUG=INFO
+    volumes:
+      - models-data:/data/models
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # RealtimeSTT Speech-to-Text
+  realtimestt:
+    build:
+      context: ./docker/realtimestt
+      dockerfile: Dockerfile
+    container_name: sutazai-realtimestt
+    ports:
+      - "8101:8000"
+    environment:
+      - STT_ENGINE=openai-whisper
+      - STT_HOST=0.0.0.0
+      - STT_PORT=8000
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # Health Check Service
   health-check:
     build:
@@ -719,7 +773,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - CHECK_INTERVAL=30
-      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax,faiss,awesome-code-ai,enhanced-model-manager
+      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax,faiss,awesome-code-ai,enhanced-model-manager,context-engineering,fms-fsdp,realtimestt
     networks:
       - sutazai-network
     depends_on:

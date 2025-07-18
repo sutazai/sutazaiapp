@@ -1,53 +1,17 @@
-# FAISS (Fast Similarity Search) Docker Container
 FROM python:3.11-slim
 
-LABEL maintainer="SutazAI Team"
-LABEL description="FAISS vector similarity search service for SutazAI"
+WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    curl \
-    wget \
-    libopenblas-dev \
+    gcc \
+    g++ \
+    libblas-dev \
     liblapack-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
+RUN pip install faiss-cpu numpy scipy flask
 
-# Install FAISS and dependencies
-RUN pip install --no-cache-dir \
-    faiss-cpu \
-    fastapi \
-    uvicorn \
-    numpy \
-    pydantic \
-    httpx \
-    python-multipart \
-    aiofiles
+COPY faiss_service.py .
 
-# Copy FAISS service code
-COPY faiss_service.py /app/
-COPY requirements.txt /app/
-
-# Create data directories
-RUN mkdir -p /data/faiss_indexes /logs
-
-# Health check script
-COPY health_check.py /app/
-
-# Set permissions
-RUN chmod +x /app/faiss_service.py
-
-# Expose port
-EXPOSE 8088
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python health_check.py || exit 1
-
-# Start FAISS service
+EXPOSE 8000
 CMD ["python", "faiss_service.py"]
