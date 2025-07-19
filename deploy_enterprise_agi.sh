@@ -93,8 +93,8 @@ check_requirements() {
     fi
     
     # Check Docker Compose
-    if docker compose version &> /dev/null; then
-        compose_version=$(docker compose version | awk '{print $4}')
+    if docker-compose version &> /dev/null; then
+        compose_version=$(docker-compose version | awk '{print $4}')
         info "✓ Docker Compose version: $compose_version"
     else
         error "Docker Compose is not installed."
@@ -385,7 +385,7 @@ deploy_services() {
     
     # Start core infrastructure first
     log "Starting core infrastructure..."
-    docker compose -f "$COMPOSE_FILE" up -d \
+    docker-compose -f "$COMPOSE_FILE" up -d \
         consul vault postgres-master redis-master neo4j elasticsearch
     
     # Wait for infrastructure to be ready
@@ -394,18 +394,18 @@ deploy_services() {
     
     # Start AI services
     log "Starting AI services..."
-    docker compose -f "$COMPOSE_FILE" up -d \
+    docker-compose -f "$COMPOSE_FILE" up -d \
         ollama-cluster reasoning-engine knowledge-manager \
         self-improvement metacognition agent-orchestrator
     
     # Start monitoring
     log "Starting monitoring services..."
-    docker compose -f "$COMPOSE_FILE" up -d \
+    docker-compose -f "$COMPOSE_FILE" up -d \
         prometheus grafana jaeger logstash
     
     # Start all remaining services
     log "Starting remaining services..."
-    docker compose -f "$COMPOSE_FILE" up -d
+    docker-compose -f "$COMPOSE_FILE" up -d
     
     log "All services deployed"
 }
@@ -475,19 +475,19 @@ create_access_script() {
 
 case "$1" in
     start)
-        docker compose up -d
+        docker-compose up -d
         ;;
     stop)
-        docker compose down
+        docker-compose down
         ;;
     restart)
-        docker compose restart
+        docker-compose restart
         ;;
     logs)
-        docker compose logs -f ${2:-}
+        docker-compose logs -f ${2:-}
         ;;
     status)
-        docker compose ps
+        docker-compose ps
         ;;
     shell)
         docker exec -it ${2:-sutazai-agent-orchestrator} bash
