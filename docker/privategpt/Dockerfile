@@ -6,20 +6,19 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    wget \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone LocalAGI
-RUN git clone https://github.com/mudler/LocalAGI.git .
+# Clone PrivateGPT
+RUN git clone https://github.com/imartinez/privateGPT.git .
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python app.py --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Copy configuration
+COPY settings.yaml settings.yaml
 
-EXPOSE 8080
+EXPOSE 8001
 
-CMD ["./start.sh"]
+CMD ["python", "-m", "scripts.setup", "--profile", "local"]
+EOF < /dev/null

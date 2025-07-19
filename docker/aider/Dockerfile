@@ -1,33 +1,25 @@
 FROM python:3.11-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    git \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set work directory
 WORKDIR /app
 
-# Clone and install Aider
-RUN git clone https://github.com/Aider-AI/aider.git . \
-    && pip install -e .
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create necessary directories
-RUN mkdir -p /workspace /logs
+# Clone Aider
+RUN git clone https://github.com/Aider-AI/aider.git .
 
-# Set environment variables
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
+# Install dependencies
+RUN pip install --no-cache-dir -e .
 
-# Expose port
+# Create startup script
+RUN echo '#!/bin/bash\n\
+aider --api --host 0.0.0.0 --port 8080\n\
+' > start.sh && chmod +x start.sh
+
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Run application
-CMD ["python", "-m", "uvicorn", "aider.web.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["./start.sh"]

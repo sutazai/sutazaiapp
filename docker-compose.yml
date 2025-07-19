@@ -9,6 +9,7 @@ volumes:
   vector-data:
   chroma-data:
   qdrant-data:
+  qdrant-data-secondary:
   postgres-data:
   redis-data:
   grafana-data:
@@ -16,6 +17,7 @@ volumes:
   ollama-data:
   workspace-data:
   logs-data:
+  agent-data:
 
 services:
   # Core Infrastructure
@@ -96,6 +98,14 @@ services:
   # Model Management
   ollama:
     image: ollama/ollama:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 2G
     container_name: sutazai-ollama
     ports:
       - "11434:11434"
@@ -133,7 +143,7 @@ services:
 
   localagi:
     build:
-      context: ./backend/~/localagi
+      context: ./docker/localagi
       dockerfile: Dockerfile
     container_name: sutazai-localagi
     ports:
@@ -277,21 +287,6 @@ services:
     depends_on:
       - ollama
 
-  # OpenWebUI
-  open-webui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: sutazai-open-webui
-    ports:
-      - "8089:8080"
-    volumes:
-      - workspace-data:/app/backend/data
-    environment:
-      OLLAMA_BASE_URL: "http://ollama:11434"
-      WEBUI_SECRET_KEY: "sutazai-secret-key"
-    networks:
-      - sutazai-network
-    depends_on:
-      - ollama
 
   # BigAGI
   bigagi:
@@ -359,7 +354,6 @@ services:
       - FINROBOT_URL=http://finrobot:8080
       - GPT_ENGINEER_URL=http://gpt-engineer:8080
       - AIDER_URL=http://aider:8080
-      - OPEN_WEBUI_URL=http://open-webui:8080
       - BIGAGI_URL=http://bigagi:3000
       - AGENTZERO_URL=http://agentzero:8080
       - LANGFLOW_URL=http://langflow:7860
@@ -506,6 +500,133 @@ services:
       - sutazai-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # CrewAI Multi-Agent System
+  crewai:
+    build:
+      context: ./docker/crewai
+      dockerfile: Dockerfile
+    container_name: sutazai-crewai
+    ports:
+      - "8102:8080"
+    environment:
+      - OPENAI_API_KEY=local
+      - OPENAI_API_BASE=http://ollama:11434/v1
+      - CREWAI_TELEMETRY=false
+    volumes:
+      - workspace-data:/data
+      - logs-data:/logs
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AgentGPT
+  agentgpt:
+    build:
+      context: ./docker/agentgpt
+      dockerfile: Dockerfile
+    container_name: sutazai-agentgpt
+    ports:
+      - "8103:3000"
+    environment:
+      - DATABASE_URL=postgresql://sutazai:sutazai_password@postgres:5432/sutazai
+      - NEXTAUTH_SECRET=sutazai-secret
+      - OPENAI_API_KEY=local
+      - OPENAI_API_BASE=http://ollama:11434/v1
+    volumes:
+      - workspace-data:/data
+    networks:
+      - sutazai-network
+    depends_on:
+      - postgres
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PrivateGPT
+  privategpt:
+    build:
+      context: ./docker/privategpt
+      dockerfile: Dockerfile
+    container_name: sutazai-privategpt
+    ports:
+      - "8104:8001"
+    environment:
+      - PGPT_PROFILES=local
+      - PGPT_VECTORSTORE_DATABASE=qdrant
+      - QDRANT_URL=http://qdrant:6333
+    volumes:
+      - workspace-data:/data
+      - models-data:/models
+    networks:
+      - sutazai-network
+    depends_on:
+      - qdrant
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # LlamaIndex
+  llamaindex:
+    build:
+      context: ./docker/llamaindex
+      dockerfile: Dockerfile
+    container_name: sutazai-llamaindex
+    ports:
+      - "8105:8080"
+    environment:
+      - OPENAI_API_KEY=local
+      - OPENAI_API_BASE=http://ollama:11434/v1
+      - LLAMA_INDEX_CACHE_DIR=/data/cache
+    volumes:
+      - workspace-data:/data
+      - models-data:/models
+    networks:
+      - sutazai-network
+    depends_on:
+      - ollama
+      - qdrant
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # FlowiseAI
+  flowise:
+    build:
+      context: ./docker/flowise
+      dockerfile: Dockerfile
+    container_name: sutazai-flowise
+    ports:
+      - "8106:3000"
+    environment:
+      - DATABASE_PATH=/data/database.sqlite
+      - APIKEY_PATH=/data/api.key
+      - SECRETKEY_PATH=/data/secret.key
+      - LOG_PATH=/data/logs
+      - LOG_LEVEL=info
+    volumes:
+      - workspace-data:/data
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -763,6 +884,28 @@ services:
       timeout: 10s
       retries: 3
 
+  # Qdrant Vector Database (Additional Instance)
+  qdrant-secondary:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant-secondary
+    ports:
+      - "6335:6333"
+      - "6336:6334"
+    volumes:
+      - qdrant-data-secondary:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__LOG_LEVEL: INFO
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
   # Health Check Service
   health-check:
     build:
@@ -773,7 +916,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - CHECK_INTERVAL=30
-      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax,faiss,awesome-code-ai,enhanced-model-manager,context-engineering,fms-fsdp,realtimestt
+      - SERVICES_TO_CHECK=sutazai-backend,sutazai-streamlit,postgres,redis,qdrant,chromadb,ollama,langflow,dify,autogen,pytorch,tensorflow,jax,faiss,awesome-code-ai,enhanced-model-manager,context-engineering,fms-fsdp,realtimestt,crewai,agentgpt,privategpt,llamaindex,flowise
     networks:
       - sutazai-network
     depends_on:

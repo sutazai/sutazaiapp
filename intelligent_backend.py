@@ -26,13 +26,13 @@ sys.path.insert(0, '/opt/sutazaiapp')
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Import multi-agent orchestrator
-from multi_agent_orchestrator import MultiAgentOrchestrator
-# Import external agent integration
-from external_agents_integration import external_agent_manager
-from docker_external_agents import DockerExternalAgentManager
+# Import enhanced agent orchestrator
+from enhanced_agent_orchestrator import get_orchestrator, TaskPriority
 # Import performance monitoring
 from performance_monitor import performance_monitor, track_performance
+# Import agent managers
+from backend.external_agent_manager import get_external_agent_manager
+from backend.docker_agent_manager import get_docker_agent_manager
 
 # FastAPI app
 app = FastAPI(
@@ -98,9 +98,12 @@ system_status = {
     "services": {}
 }
 
-# Initialize multi-agent orchestrator
-orchestrator = MultiAgentOrchestrator()
-docker_agent_manager = DockerExternalAgentManager()
+# Initialize enhanced agent orchestrator
+orchestrator = get_orchestrator()
+
+# Initialize agent managers
+external_agent_manager = get_external_agent_manager()
+docker_agent_manager = get_docker_agent_manager()
 
 class IntelligentChatBot:
     """Advanced chatbot with system integration and voice capabilities"""

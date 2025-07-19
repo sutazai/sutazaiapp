@@ -91,9 +91,14 @@ All requested AI agents successfully integrated:
 
 ## 🚀 **Deployment Instructions**
 
-### Quick Start (Single Command)
+### Quick Start (Real Agents - Single Command)
 ```bash
-./deploy.sh
+./deploy_automated_sutazai_system.sh
+```
+
+### Daily Startup (Real Agents)
+```bash
+./start_sutazai_with_real_agents.sh
 ```
 
 ### Manual Deployment
