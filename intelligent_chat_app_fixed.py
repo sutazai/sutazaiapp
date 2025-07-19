@@ -491,25 +491,35 @@ class UIComponents:
                 
                 with col1:
                     st.subheader("🖥️ System")
-                    system_summary = summary.get("system_summary", {})
+                    
+                    # Handle both new and old backend formats
+                    if "system" in summary:
+                        # New backend format
+                        system_data = summary.get("system", {})
+                        cpu_current = system_data.get('cpu_usage', 0)
+                        mem_current = system_data.get('memory_usage', 0)
+                        proc_current = system_data.get('processes', 0)
+                    else:
+                        # Old format fallback
+                        system_summary = summary.get("system_summary", {})
+                        cpu_current = system_summary.get('cpu_percent', 0)
+                        mem_current = system_summary.get('memory_percent', 0)
+                        proc_current = system_summary.get('process_count', 0)
                     
                     # Get previous values for delta calculation
                     prev_metrics = st.session_state.get("prev_performance_metrics", {})
                     
                     # CPU with delta
-                    cpu_current = system_summary.get('cpu_percent', 0)
                     cpu_prev = prev_metrics.get('cpu_percent', cpu_current)
                     cpu_delta = cpu_current - cpu_prev
                     st.metric("CPU Usage", f"{cpu_current:.1f}%", delta=f"{cpu_delta:+.1f}%" if abs(cpu_delta) > 0.1 else None)
                     
                     # Memory with delta
-                    mem_current = system_summary.get('memory_percent', 0)
                     mem_prev = prev_metrics.get('memory_percent', mem_current)
                     mem_delta = mem_current - mem_prev
                     st.metric("Memory Usage", f"{mem_current:.1f}%", delta=f"{mem_delta:+.1f}%" if abs(mem_delta) > 0.1 else None)
                     
                     # Processes with delta
-                    proc_current = system_summary.get('process_count', 0)
                     proc_prev = prev_metrics.get('process_count', proc_current)
                     proc_delta = proc_current - proc_prev
                     st.metric("Processes", proc_current, delta=f"{proc_delta:+d}" if proc_delta != 0 else None)
@@ -523,45 +533,99 @@ class UIComponents:
                 
                 with col2:
                     st.subheader("🌐 API")
-                    api_summary = summary.get("api_summary", {})
-                    st.metric("Total Requests", api_summary.get('total_requests', 0))
-                    st.metric("Error Rate", f"{api_summary.get('error_rate', 0):.1%}")
-                    st.metric("Avg Response", f"{api_summary.get('average_response_time', 0):.2f}s")
-                    st.metric("Requests/Min", api_summary.get('requests_per_minute', 0))
+                    
+                    # Handle both new and old backend formats for API
+                    if "api" in summary:
+                        # New backend format
+                        api_data = summary.get("api", {})
+                        total_requests = api_data.get('total_requests', 0)
+                        error_rate = api_data.get('error_rate', 0)
+                        avg_response = api_data.get('avg_response', 0)
+                        requests_per_min = api_data.get('requests_per_minute', 0)
+                    else:
+                        # Old format fallback
+                        api_summary = summary.get("api_summary", {})
+                        total_requests = api_summary.get('total_requests', 0)
+                        error_rate = api_summary.get('error_rate', 0)
+                        avg_response = api_summary.get('average_response_time', 0)
+                        requests_per_min = api_summary.get('requests_per_minute', 0)
+                    
+                    st.metric("Total Requests", total_requests)
+                    st.metric("Error Rate", f"{error_rate:.1f}%")
+                    st.metric("Avg Response", f"{avg_response:.2f}s")
+                    st.metric("Requests/Min", f"{requests_per_min:.1f}")
                 
                 with col3:
                     st.subheader("🤖 Agents & Models")
-                    model_summary = summary.get("model_summary", {})
-                    agent_summary = summary.get("agent_summary", {})
-                    st.metric("Active Models", model_summary.get('active_models', 0))
-                    st.metric("Tokens Processed", model_summary.get('total_tokens_processed', 0))
-                    st.metric("Active Agents", agent_summary.get('active_agents', 0))
-                    st.metric("Tasks Completed", agent_summary.get('tasks_completed', 0))
+                    
+                    # Handle both new and old backend formats for models/agents
+                    if "models" in summary:
+                        # New backend format
+                        models_data = summary.get("models", {})
+                        active_models = models_data.get('active_models', 0)
+                        tokens_processed = models_data.get('tokens_processed', 0)
+                        # Agent data not available in new format yet
+                        active_agents = 0  
+                        tasks_completed = len(st.session_state.get('messages', []))
+                    else:
+                        # Old format fallback
+                        model_summary = summary.get("model_summary", {})
+                        agent_summary = summary.get("agent_summary", {})
+                        active_models = model_summary.get('active_models', 0)
+                        tokens_processed = model_summary.get('total_tokens_processed', 0)
+                        active_agents = agent_summary.get('active_agents', 0)
+                        tasks_completed = agent_summary.get('tasks_completed', 0)
+                    
+                    st.metric("Active Models", active_models)
+                    st.metric("Tokens Processed", tokens_processed)
+                    st.metric("Active Agents", active_agents)
+                    st.metric("Tasks Completed", tasks_completed)
                 
-                # Performance alerts - generate locally if API not available
+                # Performance alerts - handle both API and local generation
                 alerts_result = APIClient.make_request("/api/performance/alerts", timeout=5)
-                if not alerts_result["success"]:
-                    # Generate alerts locally
-                    alerts_result = UIComponents._generate_local_alerts(summary)
                 
                 if alerts_result["success"]:
-                    alerts_data = alerts_result["data"]
-                    alerts = alerts_data.get("alerts", [])
+                    # Check if backend returns plain array or structured response
+                    if isinstance(alerts_result["data"], list):
+                        # Backend returns plain array of alerts
+                        alerts = alerts_result["data"]
+                    else:
+                        # Structured response with data field
+                        alerts_data = alerts_result["data"]
+                        alerts = alerts_data.get("alerts", [])
+                else:
+                    # Generate alerts locally if API not available
+                    local_alerts_result = UIComponents._generate_local_alerts(summary)
+                    if local_alerts_result["success"]:
+                        alerts_data = local_alerts_result["data"]
+                        alerts = alerts_data.get("alerts", [])
+                    else:
+                        alerts = []
                     
-                    if alerts:
-                        st.subheader("⚠️ Performance Alerts")
-                        for alert in alerts:
+                if alerts:
+                    st.subheader("⚠️ Performance Alerts")
+                    for alert in alerts:
+                        # Handle both old format (type/metric/value) and new format (level/category)
+                        if "level" in alert:
+                            # New backend format
+                            alert_type = alert.get("level", "info")
+                            metric = alert.get("category", "System").title()
+                            value = ""
+                            message = alert.get("message", "")
+                        else:
+                            # Old format
                             alert_type = alert.get("type", "info")
                             metric = alert.get("metric", "Unknown")
                             value = alert.get("value", "")
                             message = alert.get("message", "")
                             
-                            if alert_type == "critical":
-                                st.error(f"🔴 **{metric}**: {value} - {message}")
-                            elif alert_type == "warning":
-                                st.warning(f"🟡 **{metric}**: {value} - {message}")
-                            else:
-                                st.info(f"🔵 **{metric}**: {value} - {message}")
+                        # Display alert with appropriate styling
+                        if alert_type in ["critical", "error"]:
+                            st.error(f"🔴 **{metric}**: {value} {message}".strip())
+                        elif alert_type == "warning":
+                            st.warning(f"🟡 **{metric}**: {value} {message}".strip())
+                        else:
+                            st.info(f"🔵 **{metric}**: {value} {message}".strip())
                     else:
                         st.success("✅ No performance alerts")
                 
@@ -754,48 +818,99 @@ class UIComponents:
     
     @staticmethod
     def _generate_local_alerts(summary: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate performance alerts locally"""
+        """Generate performance alerts locally with robust type checking"""
         alerts = []
         
-        system_summary = summary.get("system_summary", {})
-        cpu_percent = system_summary.get("cpu_percent", 0)
-        memory_percent = system_summary.get("memory_percent", 0)
-        disk_percent = system_summary.get("disk_percent", 0)
-        
-        # CPU alerts
-        if cpu_percent > 90:
-            alerts.append({"type": "critical", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage critically high"})
-        elif cpu_percent > 70:
-            alerts.append({"type": "warning", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage high"})
-        
-        # Memory alerts
-        if memory_percent > 95:
-            alerts.append({"type": "critical", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage critically high"})
-        elif memory_percent > 80:
-            alerts.append({"type": "warning", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage high"})
-        
-        # Disk alerts
-        if disk_percent > 90:
-            alerts.append({"type": "critical", "metric": "Disk", "value": f"{disk_percent:.1f}%", "message": "Disk usage critically high"})
-        elif disk_percent > 75:
-            alerts.append({"type": "warning", "metric": "Disk", "value": f"{disk_percent:.1f}%", "message": "Disk usage high"})
-        
-        # Service alerts
-        services = summary.get("services", {})
-        for service, status in services.items():
-            if status != "healthy":
-                alerts.append({"type": "warning", "metric": f"{service.title()} Service", "value": status, "message": f"{service.title()} service is {status}"})
-        
-        return {
-            "success": True,
-            "data": {
-                "alerts": alerts,
-                "alert_count": len(alerts),
-                "critical_count": sum(1 for alert in alerts if alert["type"] == "critical"),
-                "warning_count": sum(1 for alert in alerts if alert["type"] == "warning"),
-                "timestamp": datetime.now().isoformat()
+        try:
+            # Type safety check - ensure summary is a dictionary
+            if not isinstance(summary, dict):
+                logger.warning(f"Expected dict for summary, got {type(summary)}: {summary}")
+                # Return empty alerts if invalid type
+                return {
+                    "success": True,
+                    "data": {
+                        "alerts": [{"type": "warning", "metric": "Data", "value": "Invalid", "message": "Performance data format error"}],
+                        "alert_count": 1,
+                        "critical_count": 0,
+                        "warning_count": 1,
+                        "timestamp": datetime.now().isoformat()
+                    }
+                }
+            
+            # Handle both new and old backend formats
+            if "system" in summary:
+                # New backend format
+                system_data = summary.get("system", {})
+                if not isinstance(system_data, dict):
+                    system_data = {}
+                cpu_percent = system_data.get("cpu_usage", 0)
+                memory_percent = system_data.get("memory_usage", 0)
+                disk_percent = system_data.get("disk_usage", 0)
+            else:
+                # Old format fallback
+                system_summary = summary.get("system_summary", {})
+                if not isinstance(system_summary, dict):
+                    system_summary = {}
+                cpu_percent = system_summary.get("cpu_percent", 0)
+                memory_percent = system_summary.get("memory_percent", 0)
+                disk_percent = system_summary.get("disk_percent", 0)
+            
+            # Ensure numeric values
+            try:
+                cpu_percent = float(cpu_percent) if cpu_percent is not None else 0
+                memory_percent = float(memory_percent) if memory_percent is not None else 0
+                disk_percent = float(disk_percent) if disk_percent is not None else 0
+            except (ValueError, TypeError):
+                cpu_percent = memory_percent = disk_percent = 0
+            
+            # CPU alerts
+            if cpu_percent > 90:
+                alerts.append({"type": "critical", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage critically high"})
+            elif cpu_percent > 70:
+                alerts.append({"type": "warning", "metric": "CPU", "value": f"{cpu_percent:.1f}%", "message": "CPU usage high"})
+            
+            # Memory alerts
+            if memory_percent > 95:
+                alerts.append({"type": "critical", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage critically high"})
+            elif memory_percent > 80:
+                alerts.append({"type": "warning", "metric": "Memory", "value": f"{memory_percent:.1f}%", "message": "Memory usage high"})
+            
+            # Disk alerts
+            if disk_percent > 90:
+                alerts.append({"type": "critical", "metric": "Disk", "value": f"{disk_percent:.1f}%", "message": "Disk usage critically high"})
+            elif disk_percent > 75:
+                alerts.append({"type": "warning", "metric": "Disk", "value": f"{disk_percent:.1f}%", "message": "Disk usage high"})
+            
+            # Service alerts with type safety
+            services = summary.get("services", {})
+            if isinstance(services, dict):
+                for service, status in services.items():
+                    if isinstance(status, str) and status != "healthy":
+                        alerts.append({"type": "warning", "metric": f"{service.title()} Service", "value": status, "message": f"{service.title()} service is {status}"})
+            
+            return {
+                "success": True,
+                "data": {
+                    "alerts": alerts,
+                    "alert_count": len(alerts),
+                    "critical_count": sum(1 for alert in alerts if alert["type"] == "critical"),
+                    "warning_count": sum(1 for alert in alerts if alert["type"] == "warning"),
+                    "timestamp": datetime.now().isoformat()
+                }
             }
-        }
+            
+        except Exception as e:
+            # Return error alert if something goes wrong
+            return {
+                "success": True,
+                "data": {
+                    "alerts": [{"type": "error", "metric": "Alert System", "value": "Error", "message": f"Alert generation failed: {str(e)}"}],
+                    "alert_count": 1,
+                    "critical_count": 0,
+                    "warning_count": 0,
+                    "timestamp": datetime.now().isoformat()
+                }
+            }
     
     @staticmethod
     def _update_performance_cache():

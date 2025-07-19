@@ -404,64 +404,124 @@ def log_context(message: str, category: str = "app", **kwargs):
 
 # Streamlit UI Components for real-time logging
 def display_log_viewer():
-    """Display real-time log viewer in Streamlit"""
+    """Display real-time log viewer in Streamlit with working filters"""
+    import streamlit as st
+    
     st.subheader("🔍 Real-Time System Logs")
     
-    # Log controls
+    # Log controls with unique keys to maintain state
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        log_limit = st.selectbox("Show entries", [50, 100, 200, 500], index=1)
+        log_limit = st.selectbox(
+            "Show entries", 
+            [50, 100, 200, 500], 
+            index=1,
+            key="log_limit_filter"
+        )
     
     with col2:
         level_filter = st.selectbox(
             "Filter by level", 
-            ["All", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+            ["All", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+            key="log_level_filter"
         )
     
     with col3:
         category_filter = st.selectbox(
             "Filter by category",
-            ["All", "app", "api", "ui", "system", "error"]
+            ["All", "app", "api", "ui", "system", "error"],
+            key="log_category_filter"
         )
     
-    # Get filtered logs
-    level_filter = None if level_filter == "All" else level_filter
-    recent_logs = sutazai_logger.get_recent_logs(limit=log_limit, level_filter=level_filter)
+    # Get logs with proper filtering
+    level_filter_value = None if level_filter == "All" else level_filter
+    recent_logs = sutazai_logger.get_recent_logs(limit=log_limit, level_filter=level_filter_value)
     
+    # Apply category filter
     if category_filter != "All":
         recent_logs = [log for log in recent_logs if log["category"] == category_filter]
     
+    # Display log statistics
+    stats = sutazai_logger.get_log_stats()
+    filtered_stats = {
+        "total": len(recent_logs),
+        "errors": len([log for log in recent_logs if log["level"] == "ERROR"]),
+        "warnings": len([log for log in recent_logs if log["level"] == "WARNING"]),
+        "session": stats.get("session_id", "unknown")[-8:]
+    }
+    
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Total Logs", filtered_stats["total"])
+    col2.metric("Errors", filtered_stats["errors"])
+    col3.metric("Warnings", filtered_stats["warnings"])
+    col4.metric("Session", filtered_stats["session"])
+    
     # Display logs
     if recent_logs:
-        # Log statistics
-        stats = sutazai_logger.get_log_stats()
+        # Sort by timestamp descending (most recent first)
+        sorted_logs = sorted(recent_logs, key=lambda x: x["timestamp"], reverse=True)
         
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Total Logs", stats["total"])
-        col2.metric("Errors", stats["by_level"].get("ERROR", 0))
-        col3.metric("Warnings", stats["by_level"].get("WARNING", 0))
-        col4.metric("Session", stats["session_id"][-8:])
+        # Limit display to prevent UI slowdown
+        display_logs = sorted_logs[:min(50, len(sorted_logs))]
         
-        # Log entries
-        for log_entry in reversed(recent_logs[-50:]):  # Show most recent first
-            level = log_entry["level"]
-            
-            # Color coding
-            if level == "ERROR":
-                st.error(f"🔴 **{log_entry['timestamp']}** | {log_entry['category'].upper()} | {log_entry['message']}")
-            elif level == "WARNING":
-                st.warning(f"🟡 **{log_entry['timestamp']}** | {log_entry['category'].upper()} | {log_entry['message']}")
-            elif level == "INFO":
-                st.info(f"🔵 **{log_entry['timestamp']}** | {log_entry['category'].upper()} | {log_entry['message']}")
-            else:
-                st.text(f"⚪ **{log_entry['timestamp']}** | {log_entry['category'].upper()} | {log_entry['message']}")
+        # Create a container for logs
+        log_container = st.container()
+        
+        with log_container:
+            for log_entry in display_logs:
+                level = log_entry["level"]
+                timestamp = log_entry["timestamp"]
+                category = log_entry["category"].upper()
+                message = log_entry["message"]
+                
+                # Format timestamp for display
+                try:
+                    if isinstance(timestamp, str):
+                        # Extract time part if it's ISO format
+                        time_part = timestamp.split('T')[1][:12] if 'T' in timestamp else timestamp[-12:]
+                    else:
+                        time_part = str(timestamp)[-12:]
+                except:
+                    time_part = str(timestamp)
+                
+                # Color coding and icons
+                if level == "ERROR":
+                    st.error(f"❌ **{time_part}** | {category} | {message}")
+                elif level == "WARNING":
+                    st.warning(f"⚠️ **{time_part}** | {category} | {message}")
+                elif level == "INFO":
+                    st.info(f"ℹ️ **{time_part}** | {category} | {message}")
+                elif level == "DEBUG":
+                    st.text(f"🔍 **{time_part}** | {category} | {message}")
+                else:
+                    st.text(f"⚪ **{time_part}** | {category} | {message}")
     else:
-        st.info("No logs available with current filters")
+        st.info("📭 No logs match the current filters")
+        
+        # Show suggestion based on filters
+        if level_filter != "All" or category_filter != "All":
+            st.caption(f"💡 Try changing filters: Level='{level_filter}', Category='{category_filter}'")
     
-    # Auto-refresh
-    if st.button("🔄 Refresh Logs"):
-        st.rerun()
+    # Auto-refresh controls
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔄 Refresh Logs Now", key="refresh_logs_btn"):
+            st.rerun()
+    
+    with col2:
+        auto_refresh_logs = st.checkbox("🔄 Auto-refresh logs", value=True, key="auto_refresh_logs")
+        
+    # Auto-refresh mechanism (less aggressive)
+    if auto_refresh_logs:
+        # Only refresh if there are new logs or every 5 seconds
+        import time
+        current_time = time.time()
+        last_log_refresh = st.session_state.get("last_log_refresh", 0)
+        
+        if current_time - last_log_refresh > 5.0:  # Refresh every 5 seconds instead of 0.5
+            st.session_state.last_log_refresh = current_time
+            st.rerun()
 
 def display_log_stats():
     """Display logging statistics"""
