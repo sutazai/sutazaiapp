@@ -57,9 +57,13 @@ class TestSecurityHardening:
         
         for pattern in secret_patterns:
             try:
-                # Use grep to search for patterns
-                cmd = f"grep -r '{pattern}' {codebase_root} --exclude-dir=.git --exclude-dir=__pycache__ --exclude='*.pyc'"
-                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                # Use grep to search for patterns - SECURE VERSION
+                # Use safe subprocess call without shell=True
+                cmd_args = [
+                    "grep", "-r", pattern, str(codebase_root),
+                    "--exclude-dir=.git", "--exclude-dir=__pycache__", "--exclude=*.pyc"
+                ]
+                result = subprocess.run(cmd_args, capture_output=True, text=True)
                 
                 if result.returncode == 0:  # Found matches
                     lines = result.stdout.strip().split('\n')
@@ -161,10 +165,10 @@ class TestSecurityHardening:
             assert cert_perms == "600" or cert_perms == "644", f"Certificate permissions incorrect: {cert_perms}"
             assert key_perms == "600", f"Private key permissions incorrect: {key_perms}"
             
-            # Check that certificate is valid
+            # Check that certificate is valid - SECURE VERSION
             try:
-                cmd = f"openssl x509 -in {cert_file} -text -noout"
-                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                cmd_args = ["openssl", "x509", "-in", str(cert_file), "-text", "-noout"]
+                result = subprocess.run(cmd_args, capture_output=True, text=True)
                 assert result.returncode == 0, "Certificate is not valid"
             except Exception as e:
                 pytest.skip(f"Could not validate certificate: {e}")

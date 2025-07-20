@@ -1,182 +1,158 @@
-# Core dependencies
-torch
-transformers
 accelerate
-bitsandbytes
-optimum
-onnx
-onnxruntime
-onnxruntime-gpu; platform_system != "Darwin"
-
-# Llama model support
-llama-cpp-python
-huggingface-hub
-tqdm
-
-# System monitoring and utilities
-psutil
-numpy
-pandas
-matplotlib
-requests
-
-# Intel optimizations
-intel-extension-for-pytorch
-mkl-service
-intel-openmp
-
-# Optional but recommended packages
-scipy
-tensorboard
-
-# Memory optimization packages
-safetensors
-
-# E5-2640 specific optimizations
-onednn
-mkl
-
-# Neuromorphic computing
-torchvision
-torchaudio
-pytest
-astunparse
-
-# Monitoring and profiling
-py-cpuinfo
-pynvml
-
-# Security and cryptography
-cryptography
-pyopenssl
-passlib
-pyjwt
-bcrypt
-python-jose
-
-# Vector storage and search
-faiss-cpu
-chromadb
+aiohttp
+aiosqlite
+altair==5.5.0
+annotated-types==0.7.0
 annoy
-sentence-transformers
+anyio==4.9.0
+astunparse
+attrs==25.3.0
+bcrypt
+bitsandbytes
+black
+blinker==1.9.0
+cachetools==6.1.0
+certifi==2025.7.14
+charset-normalizer==3.4.2
+chromadb
 chroma-hnswlib
-
-# NLP and language models
-tokenizers
-sentencepiece
-peft
+click==8.2.1
+crewai
+cryptography
+docker
+docx2txt
+einops
+faiss-cpu
+fastapi==0.116.1
+gitdb==4.0.12
+GitPython==3.1.44
 gpt4all
-llama-index
-ollama
-
-# Agent frameworks
+GPUtil
+gradio
+grpcio-tools
+gunicorn
+h11==0.16.0
+httpx
+huggingface-hub
+hypothesis
+idna==3.10
+intel-extension-for-pytorch
+intel-openmp
+isort
+Jinja2==3.1.6
+joblib==1.5.1
+jsonschema==4.24.1
+jsonschema-specifications==2025.4.1
 langchain
 langchain-community
 langchain-experimental
-pyautogen
+llama-cpp-python
+llama-index
 localagi
-crewai
-semgrep
-
-# Web and API
-fastapi
-uvicorn
-httpx
-starlette
-pydantic
-pydantic-core
-aiohttp
-python-multipart
-
-# Storage and databases
-sqlalchemy
-aiosqlite
-redis
+locust
+loguru
+MarkupSafe==3.0.2
+matplotlib
+mkl
+mkl-service
+mypy
+narwhals==1.47.1
+nbsphinx
+numpy==2.2.6
+ollama
+onednn
+onnx
+onnxruntime
+onnxruntime-gpu; platform_system != "Darwin"
+opencv-python-headless==4.12.0.88
+opentelemetry-api
+opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-instrumentation
+opentelemetry-instrumentation-asgi
+opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-requests
+opentelemetry-sdk
+opentelemetry-semantic-conventions
+opentelemetry-util-http
+optimum
+packaging==25.0
+pandas==2.3.1
+passlib
+pdf2image
+peft
+pillow==11.3.0
+plotly==6.2.0
+pre-commit
+protobuf==6.31.1
+psutil
+psycopg2-binary==2.9.10
+pyarrow==21.0.0
+pyautogen
+py-cpuinfo
+pydantic==2.11.7
+pydantic_core==2.33.2
+pydantic-settings==2.10.1
+pydeck==0.9.1
+pyjwt
 pymongo
-
-# UI
-streamlit
-tornado
-gradio
-plotly
-pillow
-
-# Testing and verification
+pynvml
+pyopenssl
+pypdf
+pytesseract
+pytest
 pytest-asyncio
 pytest-cov
-hypothesis
-
-# Documentation
+python-dateutil==2.9.0.post0
+python-docx
+python-dotenv==1.1.1
+python-jose
+python-multipart
+pytz==2025.2
+pyyaml
+qdrant-client
+redis==6.2.0
+referencing==0.36.2
+requests==2.32.4
+rich
+rpds-py==0.26.0
+ruff
+safetensors
+scikit-learn==1.7.1
+scipy==1.16.0
+semgrep
+sentencepiece
+sentence-transformers
+six==1.17.0
+smmap==5.0.2
+sniffio==1.3.1
 sphinx
 sphinx-rtd-theme
-nbsphinx
-
-# Development tools
-black
-mypy
-ruff
-pre-commit
-
-# Document Processing
-pypdf
-unstructured
-docx2txt
-pytesseract
-pdf2image
-
-# Code Execution and Sandboxing
-docker
-GPUtil
-
-# Utilities
-python-dotenv
-loguru
+sqlalchemy
+sqlmodel
+starlette==0.47.1
+streamlit==1.47.0
+tenacity==9.1.2
+tensorboard
+threadpoolctl==3.6.0
+tokenizers
+toml==0.10.2
+torch
+torchaudio
+torchvision
+tornado==6.5.1
+tqdm
+transformers
 typer
-watchdog
-rich
-jinja2
-pyyaml
-types-requests
-types-psutil
-types-python-jose 
 types-passlib
 types-protobuf
-sqlmodel
-
-
-# Model formats
-einops
-
-# Testing and Development (optional)
-isort
-
-# OpenTelemetry
-opentelemetry-api
-opentelemetry-sdk
-opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-instrumentation-fastapi
-opentelemetry-instrumentation-asgi
-opentelemetry-semantic-conventions
-opentelemetry-instrumentation
-opentelemetry-instrumentation-requests
-opentelemetry-util-http
+types-psutil
+types-python-jose
+types-requests
+typing_extensions==4.14.1
+typing-inspection==0.4.1
+tzdata==2025.2
+unstructured
+urllib3==2.5.0
+uvicorn==0.35.0
 virtualenv
-
-# Added missing test/runtime dependencies
-opencv-python-headless
-PyMuPDF # For fitz
-python-docx
-grpcio-tools
-
-# Testing Dependencies
-pytest
-qdrant-client
-
-# Vector Store Clients
-qdrant-client
-
-# Added gunicorn
-gunicorn
-
-# Added langchain-ollama
-langchain-ollama # For updated ChatOllama integration
+watchdog==6.0.0

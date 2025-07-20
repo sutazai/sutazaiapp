@@ -1,0 +1,399 @@
+version: '3.9'
+
+# ====================================================================================
+# SutazAI AGI/ASI Autonomous System - Unified Master Orchestration File
+# ====================================================================================
+# This file is the single source of truth for the entire SutazAI architecture.
+# It combines services from all previous docker-compose files and is designed
+# to be managed by the ./manage.sh script.
+
+networks:
+  sutazai-net:
+    driver: bridge
+    name: sutazai-net
+
+volumes:
+  postgres_data:
+  redis_data:
+  chromadb_data:
+  qdrant_data:
+  ollama_data:
+  neo4j_data:
+  workspace_data:
+  logs_data:
+  prometheus_data:
+  grafana_data:
+  consul_data:
+  vault_data:
+  agent_data:
+  elasticsearch_data:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  replication_password:
+    file: ./secrets/replication_password.txt
+  grafana_password:
+    file: ./secrets/grafana_password.txt
+  vault_token:
+    file: ./secrets/vault_token.txt
+
+x-common-env: &common-env
+  TZ: UTC
+  LOG_LEVEL: INFO
+  VAULT_ADDR: http://vault:8200
+  CONSUL_ADDR: http://consul:8500
+
+x-healthcheck: &default-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 60s
+
+services:
+
+  # ===================================
+  # CORE INFRASTRUCTURE & SERVICE MESH
+  # ===================================
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: sutazai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/letsencrypt:ro
+      - logs_data:/var/log/nginx
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  consul:
+    image: consul:1.17
+    container_name: sutazai-consul
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    volumes:
+      - consul_data:/consul/data
+    networks:
+      - sutazai-net
+    environment:
+      <<: *common-env
+      CONSUL_LOCAL_CONFIG: |
+        {
+          "datacenter": "sutazai-dc1",
+          "log_level": "INFO",
+          "server": true,
+          "ui": true,
+          "connect": { "enabled": true }
+        }
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "consul", "info"]
+    restart: unless-stopped
+
+  vault:
+    image: vault:1.15
+    container_name: sutazai-vault
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/data
+      - ./config/vault:/vault/config
+    networks:
+      - sutazai-net
+    environment:
+      <<: *common-env
+      VAULT_DEV_ROOT_TOKEN_ID: "sutazai-root-token"
+    command: server -dev -dev-root-token-id="sutazai-root-token"
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "vault", "status"]
+    restart: unless-stopped
+
+  # ===================================
+  # DATABASE, CACHING & STORAGE
+  # ===================================
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: sutazai-postgres
+    environment:
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    secrets:
+      - postgres_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  # ===================================
+  # AI, VECTOR & MODEL SERVING
+  # ===================================
+
+  chromadb:
+    image: chromadb/chroma:0.4.24
+    container_name: sutazai-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - ANONYMIZED_TELEMETRY=false
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: sutazai-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  neo4j:
+    image: neo4j:5.15-enterprise
+    container_name: sutazai-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    environment:
+      NEO4J_AUTH: neo4j/sutazaipassword
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:8.11.3
+    container_name: sutazai-elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  # ===================================
+  # CORE APPLICATION & AGENT ORCHESTRATOR
+  # ===================================
+
+  backend:
+    container_name: sutazai-backend
+    build:
+      context: .
+      dockerfile: ./docker/backend.Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend:/app/backend
+      - ./app/intelligent_backend_final.py:/app/main.py
+      - ./app/multi_agent_orchestrator.py:/app/orchestrator.py
+      - workspace_data:/workspace
+      - logs_data:/logs
+    environment:
+      DATABASE_URL: postgresql://sutazai@postgres:5432/sutazai
+      REDIS_URL: redis://redis:6379
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_URL: http://ollama:11434
+      NEO4J_URI: bolt://neo4j:7687
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      PYTHONUNBUFFERED: 1
+    secrets:
+      - postgres_password
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      chromadb: { condition: service_started }
+      qdrant: { condition: service_started }
+      ollama: { condition: service_started }
+      neo4j: { condition: service_started }
+      elasticsearch: { condition: service_started }
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  frontend:
+    container_name: sutazai-frontend
+    build:
+      context: .
+      dockerfile: ./docker/streamlit.Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./app/enhanced_streamlit_app.py:/app/main.py
+    environment:
+      BACKEND_URL: http://backend:8000
+      STREAMLIT_SERVER_PORT: 8501
+    depends_on:
+      - backend
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  # ===================================
+  # AUTONOMOUS AGENT SERVICES
+  # ===================================
+
+  aider:
+    container_name: sutazai-aider
+    build:
+      context: .
+      dockerfile: ./docker/aider.Dockerfile
+    volumes:
+      - workspace_data:/app/src
+    networks:
+      - sutazai-net
+    restart: on-failure
+
+  gpt-engineer:
+    container_name: sutazai-gpt-engineer
+    build:
+      context: .
+      dockerfile: ./docker/gpt-engineer.Dockerfile
+    volumes:
+      - workspace_data:/app/projects
+    networks:
+      - sutazai-net
+    restart: on-failure
+
+  semgrep:
+    container_name: sutazai-semgrep
+    build:
+      context: .
+      dockerfile: ./docker/semgrep.Dockerfile
+    command: ["scan", "--config", "auto", "--sarif", "-o", "/app/semgrep.sarif", "/app"]
+    volumes:
+      - workspace_data:/app
+    networks:
+      - sutazai-net
+    restart: "no"
+
+  autogpt:
+    container_name: sutazai-autogpt
+    build:
+      context: .
+      dockerfile: ./docker/autogpt.Dockerfile
+    volumes:
+      - workspace_data:/app/auto_gpt_workspace
+    networks:
+      - sutazai-net
+    restart: on-failure
+
+  crewai:
+    container_name: sutazai-crewai
+    build:
+      context: .
+      dockerfile: ./docker/crewai.Dockerfile
+    volumes:
+      - workspace_data:/app/crewai_workspace
+    networks:
+      - sutazai-net
+    restart: on-failure
+
+  # ===================================
+  # MONITORING & OBSERVABILITY
+  # ===================================
+
+  prometheus:
+    image: prom/prometheus:v2.47.2
+    container_name: sutazai-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: sutazai-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_password
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    secrets:
+      - grafana_password
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - sutazai-net
+    restart: unless-stopped

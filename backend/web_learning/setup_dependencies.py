@@ -11,13 +11,21 @@ import platform
 from pathlib import Path
 
 def run_command(command, description=""):
-    """Run a system command with error handling"""
+    """Run a system command with error handling - SECURE VERSION"""
     print(f"Running: {command}")
     if description:
         print(f"Description: {description}")
     
     try:
-        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        # Convert string commands to secure list format
+        if isinstance(command, str):
+            # Parse command string into safe list - basic shlex splitting
+            import shlex
+            command_list = shlex.split(command)
+        else:
+            command_list = command
+            
+        result = subprocess.run(command_list, check=True, capture_output=True, text=True)
         print(f"✓ Success: {description}")
         return True
     except subprocess.CalledProcessError as e:

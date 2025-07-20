@@ -1,0 +1,301 @@
+version: '3.8'
+
+services:
+  # Core Database Services with strict memory limits
+  postgresql:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai2024
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c work_mem=4MB
+      -c maintenance_work_mem=64MB
+      -c effective_cache_size=512MB
+      -c max_connections=50
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai -d sutazai"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+      --tcp-keepalive 300
+      --timeout 0
+      --tcp-backlog 128
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Vector Database with optimized memory usage
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - ./config/qdrant.yaml:/qdrant/config/production.yaml:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    environment:
+      QDRANT__SERVICE__MAX_REQUEST_SIZE_MB: 32
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Ollama with aggressive memory constraints
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./scripts/ollama-startup-optimized.sh:/opt/ollama-startup.sh:ro
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_PORT: 11434
+      OLLAMA_NUM_PARALLEL: 1
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_KEEP_ALIVE: 1m
+      OLLAMA_MAX_QUEUE: 1
+      OLLAMA_FLASH_ATTENTION: false
+      OLLAMA_LLM_LIBRARY: cpu
+      OLLAMA_DEBUG: false
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '2'
+        reservations:
+          memory: 1G
+          cpus: '1'
+    entrypoint: ["/bin/bash", "/opt/ollama-startup.sh"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # Backend API with memory optimization
+  sutazai-backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: postgresql://sutazai:sutazai2024@postgresql:5432/sutazai
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_URL: http://ollama:11434
+      LOG_LEVEL: INFO
+      MAX_WORKERS: 1
+      MEMORY_LIMIT: 1G
+      PYTHONOPTIMIZE: 2
+      PYTHONDONTWRITEBYTECODE: 1
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./logs:/app/logs
+      - backend_uploads:/app/uploads
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+          cpus: '0.75'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # Streamlit with strict memory limits
+  streamlit-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      BACKEND_URL: http://sutazai-backend:8001
+      STREAMLIT_SERVER_MAX_MESSAGE_SIZE: 50
+      STREAMLIT_SERVER_MAX_UPLOAD_SIZE: 50
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: false
+      STREAMLIT_SERVER_ENABLE_CORS: false
+      STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: false
+      STREAMLIT_SERVER_FILE_WATCHER_TYPE: none
+      STREAMLIT_SERVER_RUN_ON_SAVE: false
+      PYTHONOPTIMIZE: 2
+      PYTHONDONTWRITEBYTECODE: 1
+    volumes:
+      - ./intelligent_chat_app_fixed.py:/app/app.py:ro
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: '1'
+        reservations:
+          memory: 384M
+          cpus: '0.5'
+    depends_on:
+      sutazai-backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # System Monitor with minimal footprint
+  system-monitor:
+    build:
+      context: .
+      dockerfile: docker/monitoring.Dockerfile
+    volumes:
+      - ./monitoring:/app/monitoring:ro
+      - ./logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    environment:
+      MONITOR_INTERVAL: 30
+      MEMORY_THRESHOLD: 80
+      RESTART_THRESHOLD: 90
+      CLEANUP_THRESHOLD: 85
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.25'
+        reservations:
+          memory: 64M
+          cpus: '0.125'
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  ollama_data:
+    driver: local
+  backend_uploads:
+    driver: local
+
+networks:
+  default:
+    name: sutazai-stable
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

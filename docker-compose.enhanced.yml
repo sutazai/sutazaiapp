@@ -1,0 +1,903 @@
+version: '3.9'
+
+# ====================================================================================
+# SutazAI AGI/ASI Enhanced System - Complete Production Deployment
+# ====================================================================================
+# This is the comprehensive Docker Compose file for the complete SutazAI system
+# with all AI models, agents, and enterprise features
+
+networks:
+  sutazai-net:
+    driver: bridge
+    name: sutazai-net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+  redis_data:
+  chromadb_data:
+  qdrant_data:
+  ollama_data:
+  neo4j_data:
+  elasticsearch_data:
+  workspace_data:
+  logs_data:
+  prometheus_data:
+  grafana_data:
+  vault_data:
+  consul_data:
+  agent_data:
+  model_cache:
+  vector_cache:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  grafana_password:
+    file: ./secrets/grafana_password.txt
+  vault_token:
+    file: ./secrets/vault_token.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+
+x-common-env: &common-env
+  TZ: UTC
+  LOG_LEVEL: INFO
+  PYTHONUNBUFFERED: 1
+  VAULT_ADDR: http://vault:8200
+  CONSUL_ADDR: http://consul:8500
+
+x-resource-limits: &default-resources
+  cpus: '2'
+  memory: 4G
+
+x-healthcheck: &default-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 60s
+
+services:
+
+  # ===================================
+  # INFRASTRUCTURE & SERVICE MESH
+  # ===================================
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: sutazai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - logs_data:/var/log/nginx
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
+
+  consul:
+    image: consul:1.16
+    container_name: sutazai-consul
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0 -data-dir=/consul/data
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    volumes:
+      - consul_data:/consul/data
+    networks:
+      - sutazai-net
+    environment:
+      <<: *common-env
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "consul", "info"]
+    restart: unless-stopped
+
+  vault:
+    image: vault:1.15
+    container_name: sutazai-vault
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/data
+      - ./config/vault:/vault/config
+    networks:
+      - sutazai-net
+    environment:
+      <<: *common-env
+      VAULT_DEV_ROOT_TOKEN_ID: "sutazai-vault-token"
+    command: server -dev -dev-root-token-id="sutazai-vault-token"
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "vault", "status"]
+    restart: unless-stopped
+
+  # ===================================
+  # DATABASES & STORAGE
+  # ===================================
+
+  postgres:
+    image: postgres:16.1
+    container_name: sutazai-postgres
+    environment:
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    secrets:
+      - postgres_password
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: sutazai-redis
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: unless-stopped
+
+  # ===================================
+  # VECTOR DATABASES & SEARCH
+  # ===================================
+
+  chromadb:
+    image: chromadb/chroma:0.4.24
+    container_name: sutazai-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - ANONYMIZED_TELEMETRY=false
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: sutazai-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+      - ./config/qdrant.yaml:/qdrant/config/production.yaml
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:8.11.3
+    container_name: sutazai-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - cluster.name=sutazai-cluster
+      - node.name=sutazai-node
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: sutazai-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    environment:
+      NEO4J_AUTH: neo4j/sutazaipassword
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+      NEO4J_dbms_memory_heap_initial__size: 1G
+      NEO4J_dbms_memory_heap_max__size: 2G
+      NEO4J_dbms_memory_pagecache_size: 1G
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "sutazaipassword", "MATCH () RETURN count(*) as count"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # ===================================
+  # AI MODEL SERVING
+  # ===================================
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - model_cache:/tmp/ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_MAX_LOADED_MODELS=5
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_QUEUE=10
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # TabbyML for code completion
+  tabbyml:
+    image: tabbyml/tabby:latest
+    container_name: sutazai-tabbyml
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./data/tabbyml:/data
+    command: serve --model StarCoder-1B --host 0.0.0.0 --port 8080
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ===================================
+  # CORE APPLICATION SERVICES
+  # ===================================
+
+  backend:
+    container_name: sutazai-backend
+    build:
+      context: .
+      dockerfile: ./docker/backend.Dockerfile
+      args:
+        PYTHON_VERSION: 3.11
+    ports:
+      - "8000:8000"
+    command: python -m uvicorn backend.api.enhanced_main:app --host 0.0.0.0 --port 8000 --workers 4 --reload
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend:/app/backend
+      - ./backend/api/enhanced_main.py:/app/main.py
+      - workspace_data:/workspace
+      - logs_data:/logs
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql://sutazai@postgres:5432/sutazai
+      REDIS_URL: redis://redis:6379
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_URL: http://ollama:11434
+      NEO4J_URI: bolt://neo4j:7687
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      TABBYML_URL: http://tabbyml:8080
+      MAX_WORKERS: 4
+      MAX_CONCURRENT_TASKS: 100
+      CACHE_ENABLED: true
+      AUTO_SCALING_ENABLED: true
+    secrets:
+      - postgres_password
+      - jwt_secret
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      chromadb: { condition: service_healthy }
+      qdrant: { condition: service_healthy }
+      ollama: { condition: service_healthy }
+      elasticsearch: { condition: service_healthy }
+      neo4j: { condition: service_healthy }
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+    restart: unless-stopped
+
+  frontend:
+    container_name: sutazai-frontend
+    build:
+      context: .
+      dockerfile: ./docker/streamlit.Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./frontend/streamlit_app.py:/app/main.py
+    environment:
+      BACKEND_URL: http://backend:8000
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: false
+      STREAMLIT_SERVER_ENABLE_CORS: true
+      STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: false
+    depends_on:
+      - backend
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    restart: unless-stopped
+
+  # ===================================
+  # AI AGENTS ECOSYSTEM
+  # ===================================
+
+  # AutoGPT for task automation
+  autogpt:
+    container_name: sutazai-autogpt
+    build:
+      context: ./external_agents/AutoGPT/classic
+      dockerfile: Dockerfile.autogpt
+    volumes:
+      - workspace_data:/app/auto_gpt_workspace
+      - agent_data:/app/data
+    environment:
+      OPENAI_API_KEY: "local-sutazai"
+      OPENAI_API_BASE: "http://backend:8000/api/v1/chat"
+      AUTO_GPT_WORKSPACE: "/app/auto_gpt_workspace"
+      MEMORY_BACKEND: "redis"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+    networks:
+      - sutazai-net
+    depends_on:
+      - backend
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # CrewAI for multi-agent collaboration
+  crewai:
+    container_name: sutazai-crewai
+    build:
+      context: .
+      dockerfile: ./docker/crewai.Dockerfile
+    volumes:
+      - workspace_data:/app/crewai_workspace
+      - agent_data:/app/data
+    environment:
+      OPENAI_API_KEY: "local-sutazai"
+      OPENAI_API_BASE: "http://backend:8000/api/v1/chat"
+      CREWAI_WORKSPACE: "/app/crewai_workspace"
+    networks:
+      - sutazai-net
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # Aider for AI-powered code editing
+  aider:
+    container_name: sutazai-aider
+    build:
+      context: .
+      dockerfile: ./docker/aider.Dockerfile
+    volumes:
+      - workspace_data:/app/workspace
+      - agent_data:/app/data
+    environment:
+      OPENAI_API_KEY: "local-sutazai"
+      OPENAI_API_BASE: "http://backend:8000/api/v1/chat"
+      AIDER_WORKSPACE: "/app/workspace"
+    networks:
+      - sutazai-net
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # GPT-Engineer for project scaffolding
+  gpt-engineer:
+    container_name: sutazai-gpt-engineer
+    build:
+      context: .
+      dockerfile: ./docker/gpt-engineer.Dockerfile
+    volumes:
+      - workspace_data:/app/projects
+      - agent_data:/app/data
+    environment:
+      OPENAI_API_KEY: "local-sutazai"
+      OPENAI_API_BASE: "http://backend:8000/api/v1/chat"
+      GPT_ENGINEER_WORKSPACE: "/app/projects"
+    networks:
+      - sutazai-net
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # Semgrep for security analysis
+  semgrep:
+    container_name: sutazai-semgrep
+    image: semgrep/semgrep:latest
+    volumes:
+      - workspace_data:/src
+      - agent_data:/tmp/semgrep
+    networks:
+      - sutazai-net
+    command: ["semgrep", "--config=auto", "--sarif", "-o", "/tmp/semgrep/results.sarif", "/src"]
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+    restart: "no"
+
+  # Document processing service
+  documind:
+    container_name: sutazai-documind
+    build:
+      context: ./external_agents/documind
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8000"
+    volumes:
+      - workspace_data:/app/documents
+      - agent_data:/app/data
+    environment:
+      DATABASE_URL: postgresql://sutazai@postgres:5432/sutazai
+      REDIS_URL: redis://redis:6379
+      DOCUMIND_STORAGE_PATH: "/app/documents"
+    networks:
+      - sutazai-net
+    depends_on:
+      - postgres
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # Browser automation service
+  browser-use:
+    container_name: sutazai-browser-use
+    build:
+      context: ./docker/browser-use
+      dockerfile: Dockerfile
+    volumes:
+      - workspace_data:/app/workspace
+      - agent_data:/app/data
+    environment:
+      DISPLAY: ":99"
+      OPENAI_API_KEY: "local-sutazai"
+      OPENAI_API_BASE: "http://backend:8000/api/v1/chat"
+    networks:
+      - sutazai-net
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # ===================================
+  # MONITORING & OBSERVABILITY
+  # ===================================
+
+  prometheus:
+    image: prom/prometheus:v2.48.1
+    container_name: sutazai-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: sutazai-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_password
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: "grafana-piechart-panel,grafana-worldmap-panel"
+      GF_FEATURE_TOGGLES_ENABLE: "publicDashboards"
+    secrets:
+      - grafana_password
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - sutazai-net
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: unless-stopped
+
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: sutazai-node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - sutazai-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+  # Loki for log aggregation
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: sutazai-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/monitoring/loki-config.yaml:/etc/loki/local-config.yaml
+      - logs_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - sutazai-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+    restart: unless-stopped
+
+  # Promtail for log collection
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: sutazai-promtail
+    volumes:
+      - ./config/monitoring/promtail-config.yaml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - logs_data:/var/log/sutazai:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - sutazai-net
+    depends_on:
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+  # ===================================
+  # MESSAGE QUEUE & TASK PROCESSING
+  # ===================================
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: sutazai-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: sutazai
+      RABBITMQ_DEFAULT_PASS: sutazai123
+      RABBITMQ_DEFAULT_VHOST: /
+    networks:
+      - sutazai-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: unless-stopped
+
+  # Celery worker for distributed task processing
+  celery-worker:
+    container_name: sutazai-celery-worker
+    build:
+      context: .
+      dockerfile: ./docker/backend.Dockerfile
+    command: celery -A backend.core.orchestrator worker --loglevel=info --concurrency=4
+    volumes:
+      - ./backend:/app/backend
+      - workspace_data:/workspace
+      - logs_data:/logs
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql://sutazai@postgres:5432/sutazai
+      REDIS_URL: redis://redis:6379
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    networks:
+      - sutazai-net
+    depends_on:
+      - redis
+      - postgres
+      - backend
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # Celery Flower for monitoring
+  celery-flower:
+    container_name: sutazai-celery-flower
+    build:
+      context: .
+      dockerfile: ./docker/backend.Dockerfile
+    command: celery -A backend.core.orchestrator flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      <<: *common-env
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    networks:
+      - sutazai-net
+    depends_on:
+      - redis
+      - celery-worker
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    restart: unless-stopped
+
+  # ===================================
+  # BACKUP & MAINTENANCE
+  # ===================================
+
+  # Automated backup service
+  backup-service:
+    container_name: sutazai-backup
+    build:
+      context: ./docker/backup
+      dockerfile: Dockerfile
+    volumes:
+      - postgres_data:/backup/postgres:ro
+      - chromadb_data:/backup/chromadb:ro
+      - qdrant_data:/backup/qdrant:ro
+      - ./backups:/backups
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      BACKUP_SCHEDULE: "0 2 * * *"  # Daily at 2 AM
+      BACKUP_RETENTION_DAYS: 30
+    secrets:
+      - postgres_password
+    networks:
+      - sutazai-net
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: unless-stopped
+
+# ===================================
+# HEALTH CHECKS & DEPENDENCIES
+# ===================================
+
+# Global health check service
+healthcheck:
+  image: alpine/curl:latest
+  container_name: sutazai-healthcheck
+  command: |
+    sh -c '
+    while true; do
+      echo "=== SutazAI Health Check $(date) ==="
+      curl -f http://backend:8000/health || echo "Backend: UNHEALTHY"
+      curl -f http://frontend:8501/_stcore/health || echo "Frontend: UNHEALTHY"
+      curl -f http://ollama:11434/api/tags || echo "Ollama: UNHEALTHY"
+      curl -f http://chromadb:8000/api/v1/heartbeat || echo "ChromaDB: UNHEALTHY"
+      curl -f http://qdrant:6333/health || echo "Qdrant: UNHEALTHY"
+      curl -f http://prometheus:9090/-/healthy || echo "Prometheus: UNHEALTHY"
+      curl -f http://grafana:3000/api/health || echo "Grafana: UNHEALTHY"
+      sleep 300  # Check every 5 minutes
+    done'
+  networks:
+    - sutazai-net
+  depends_on:
+    - backend
+    - frontend
+    - ollama
+    - chromadb
+    - qdrant
+    - prometheus
+    - grafana
+  deploy:
+    resources:
+      limits:
+        cpus: '0.1'
+        memory: 128M
+  restart: unless-stopped

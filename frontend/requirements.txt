@@ -1,8 +1,14 @@
-# Streamlit Frontend Requirements
-streamlit>=1.29.0
-requests>=2.31.0
-pandas>=2.0.0
-plotly>=5.17.0
-numpy>=1.24.0
-websocket-client>=1.6.0
-python-dotenv>=1.0.0
+# SutazAI Frontend Dependencies
+# -----------------------------------
+# This file is managed by the development team.
+# Only add packages that are essential for the Streamlit UI to run.
+
+# Core UI Framework
+streamlit
+
+# Data & Visualization
+pandas
+plotly
+
+# API Communication
+requests
