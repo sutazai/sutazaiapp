@@ -19,22 +19,23 @@ def agent_management(BACKEND_URL):
             st.error(f"Connection error: {str(e)}")
     
     # Agent status grid
-    agent_data = st.session_state.agent_status.get("agents", {})
+    agent_data = st.session_state.agent_status.get("agents", [])
     
     if agent_data:
         # Create columns for agent cards
         cols = st.columns(3)
         
-        for idx, (agent_name, agent_info) in enumerate(agent_data.items()):
+        for idx, agent_info in enumerate(agent_data):
             col = cols[idx % 3]
+            agent_id = agent_info.get('id', f'agent_{idx}')
             
             with col:
                 status = agent_info.get("status", "unknown")
-                status_color = "🟢" if status == "healthy" else "🔴"
+                status_color = "🟢" if status in ["available", "healthy"] else "🔴"
                 
                 st.markdown(f"""
                 <div class="agent-card">
-                    <h4>{status_color} {agent_info.get('name', agent_name)}</h4>
+                    <h4>{status_color} {agent_info.get('name', agent_id)}</h4>
                     <p><strong>Type:</strong> {agent_info.get('type', 'Unknown')}</p>
                     <p><strong>Status:</strong> {status}</p>
                     <p><strong>Capabilities:</strong> {', '.join(agent_info.get('capabilities', []))}</p>
@@ -44,10 +45,10 @@ def agent_management(BACKEND_URL):
                 # Agent actions
                 col1, col2 = st.columns(2)
                 with col1:
-                    if st.button(f"Test", key=f"test_{agent_name}"):
-                        st.info(f"Testing {agent_name}...")
+                    if st.button(f"Test", key=f"test_{agent_id}"):
+                        st.info(f"Testing {agent_info.get('name', agent_id)}...")
                 with col2:
-                    if st.button(f"Restart", key=f"restart_{agent_name}"):
-                        st.warning(f"Restarting {agent_name}...")
+                    if st.button(f"Restart", key=f"restart_{agent_id}"):
+                        st.warning(f"Restarting {agent_info.get('name', agent_id)}...")
     else:
         st.info("No agent data available. Click refresh to load.")

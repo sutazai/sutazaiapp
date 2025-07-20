@@ -1,0 +1,101 @@
+{
+  "timestamp": "2025-07-20T13:40:39.082885",
+  "tests": {
+    "File Structure": {
+      "status": "passed",
+      "weight": 2,
+      "details": {
+        "total_files": 7,
+        "status": "all_present"
+      }
+    },
+    "Docker Files": {
+      "status": "passed",
+      "weight": 2,
+      "details": {}
+    },
+    "Python Imports": {
+      "status": "passed",
+      "weight": 1,
+      "details": {
+        "importable_modules": 0,
+        "total_modules": 3,
+        "status": "failed"
+      }
+    },
+    "Setup Script": {
+      "status": "passed",
+      "weight": 2,
+      "details": {
+        "executable": true,
+        "functions_found": 4,
+        "total_functions": 4,
+        "line_count": 824
+      }
+    },
+    "Configuration Files": {
+      "status": "passed",
+      "weight": 1,
+      "details": {
+        "valid_configs": 5,
+        "config_details": [
+          "env_template",
+          "docker_compose",
+          "requirements_requirements.txt",
+          "requirements_backend_requirements.txt",
+          "requirements_frontend_requirements.txt"
+        ]
+      }
+    },
+    "Agent Definitions": {
+      "status": "passed",
+      "weight": 3,
+      "details": {
+        "agent_score": 6,
+        "max_score": 6,
+        "status": "passed"
+      }
+    },
+    "Frontend Components": {
+      "status": "passed",
+      "weight": 2,
+      "details": {
+        "components_found": 5,
+        "components": [
+          "streamlit",
+          "tabs",
+          "chat",
+          "agents",
+          "monitoring"
+        ],
+        "line_count": 661
+      }
+    },
+    "Docker Services": {
+      "status": "passed",
+      "weight": 3,
+      "details": {
+        "services_found": 13,
+        "total_expected": 13,
+        "coverage": 1.0
+      }
+    },
+    "API Endpoints": {
+      "status": "passed",
+      "weight": 2,
+      "details": {
+        "endpoints_found": 5,
+        "endpoints": [
+          "health",
+          "execute",
+          "chat",
+          "code_generation",
+          "agents"
+        ]
+      }
+    }
+  },
+  "overall_status": "excellent",
+  "score": 18,
+  "max_score": 18
+}

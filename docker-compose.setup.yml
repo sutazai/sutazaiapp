@@ -1,0 +1,44 @@
+version: '3.9'
+
+# Docker Compose for SutazAI Setup Container
+# This runs the setup script in an isolated environment
+
+networks:
+  setup-net:
+    driver: bridge
+
+services:
+  sutazai-setup:
+    build:
+      context: .
+      dockerfile: ./docker/setup.Dockerfile
+    container_name: sutazai-setup-container
+    privileged: true  # Required for Docker-in-Docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./logs:/opt/sutazaiapp/logs
+      - ./data:/opt/sutazaiapp/data
+      - ./backups:/opt/sutazaiapp/backups
+      - ./secrets:/opt/sutazaiapp/secrets
+      - ./configs:/opt/sutazaiapp/configs
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - SUTAZAI_HOME=/opt/sutazaiapp
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=test
+    networks:
+      - setup-net
+    ports:
+      - "18501:8501"  # Frontend
+      - "18000:8000"  # Backend
+      - "13000:3000"  # Grafana
+      - "19090:9090"  # Prometheus
+      - "21434:11434" # Ollama
+    restart: "no"  # Don't restart automatically
+    command: |
+      bash -c "
+        echo 'Starting SutazAI setup in container...'
+        ./setup_complete_agi_system.sh
+        echo 'Setup completed. Container will remain running for testing.'
+        tail -f /dev/null
+      "

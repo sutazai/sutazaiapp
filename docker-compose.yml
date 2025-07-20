@@ -257,6 +257,16 @@ services:
       - sutazai-net
     restart: on-failure
 
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: sutazai-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - sutazai-net
+    restart: unless-stopped
+
   # ===================================
   # MONITORING & OBSERVABILITY
   # ===================================
