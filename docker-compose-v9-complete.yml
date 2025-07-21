@@ -2,7 +2,7 @@ version: '3.9'
 
 x-common-variables: &common-variables
   TZ: ${TZ:-UTC}
-  
+
 x-gpu-config: &gpu-config
   deploy:
     resources:
@@ -21,18 +21,18 @@ volumes:
   postgres-replica-data:
   redis-data:
   redis-replica-data:
-  
+
   # Model volumes
   ollama-models:
   model-cache:
   deepseek-models:
   qwen-models:
-  
+
   # Vector DB volumes
   chromadb-data:
   qdrant-data:
   faiss-data:
-  
+
   # Agent volumes
   gpt-engineer-data:
   autogpt-data:
@@ -52,7 +52,7 @@ volumes:
   flowise-data:
   shellgpt-data:
   pentestgpt-data:
-  
+
   # Service volumes
   documind-data:
   finrobot-data:
@@ -61,21 +61,21 @@ volumes:
   context-engineering-data:
   fsdp-data:
   realtimestt-data:
-  
+
   # ML Framework volumes
   pytorch-data:
   tensorflow-data:
   jax-data:
-  
+
   # Workflow volumes
   langflow-data:
   dify-data:
-  
+
   # Monitoring volumes
   prometheus-data:
   grafana-data:
   elasticsearch-data:
-  
+
   # Infrastructure volumes
   consul-data:
   vault-data:

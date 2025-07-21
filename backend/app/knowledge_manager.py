@@ -7,8 +7,10 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 import json
 import asyncio
+import os
 from dataclasses import dataclass
 import httpx
+from neo4j import AsyncGraphDatabase
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +32,11 @@ class KnowledgeManager:
         self.knowledge_base = {}
         self.relationships = {}
         self.semantic_index = {}
-        self.neo4j_url = "http://neo4j:7474"
-        self.chromadb_url = "http://chromadb:8000"
+        self.neo4j_uri = os.getenv("NEO4J_URI", "bolt://neo4j:7687")
+        self.neo4j_auth = (os.getenv("NEO4J_USER", "neo4j"), os.getenv("NEO4J_PASSWORD", "sutazai_neo4j_password"))
+        self.neo4j_driver = None
+        self.chromadb_url = os.getenv("CHROMADB_URL", "http://chromadb:8000")
+        self.qdrant_url = os.getenv("QDRANT_URL", "http://qdrant:6333")
         self.initialized = False
         
     async def initialize(self):
@@ -53,11 +58,33 @@ class KnowledgeManager:
     async def _init_knowledge_graph(self):
         """Initialize Neo4j knowledge graph"""
         try:
-            # Test connection to Neo4j
-            async with httpx.AsyncClient() as client:
-                response = await client.get(f"{self.neo4j_url}/db/data/")
-                if response.status_code == 200:
+            self.neo4j_driver = AsyncGraphDatabase.driver(
+                self.neo4j_uri,
+                auth=self.neo4j_auth
+            )
+            
+            # Verify connection
+            async with self.neo4j_driver.session() as session:
+                result = await session.run("RETURN 1 as test")
+                record = await result.single()
+                if record:
                     logger.info("Connected to Neo4j knowledge graph")
+                    
+            # Create indexes for better performance
+            async with self.neo4j_driver.session() as session:
+                # Create index on Knowledge id
+                await session.run("""
+                    CREATE INDEX knowledge_id IF NOT EXISTS
+                    FOR (k:Knowledge) ON (k.id)
+                """)
+                
+                # Create index on Knowledge type
+                await session.run("""
+                    CREATE INDEX knowledge_type IF NOT EXISTS
+                    FOR (k:Knowledge) ON (k.type)
+                """)
+                
+                logger.info("Neo4j indexes created")
         except Exception as e:
             logger.warning(f"Neo4j not available: {e}")
             
@@ -170,23 +197,41 @@ class KnowledgeManager:
         
     async def _add_to_graph(self, knowledge: Knowledge):
         """Add knowledge to Neo4j graph"""
+        if not self.neo4j_driver:
+            logger.warning("Neo4j driver not initialized, skipping graph storage")
+            return
+            
         try:
-            # Create node in graph
-            cypher_query = f"""
-            CREATE (k:Knowledge {{
-                id: '{knowledge.id}',
-                content: '{knowledge.content}',
-                type: '{knowledge.type}',
-                source: '{knowledge.source}',
-                timestamp: '{knowledge.timestamp.isoformat()}'
-            }})
-            """
-            
-            # Execute query (simplified for example)
-            logger.info(f"Added knowledge {knowledge.id} to graph")
-            
+            async with self.neo4j_driver.session() as session:
+                    # Create node in graph
+                    cypher_query = """
+                    CREATE (k:Knowledge {
+                        id: $id,
+                        content: $content,
+                        type: $type,
+                        source: $source,
+                        timestamp: $timestamp,
+                        embedding_id: $embedding_id
+                    })
+                    RETURN k
+                    """
+                    
+                    result = await session.run(
+                        cypher_query,
+                        id=knowledge.id,
+                        content=knowledge.content,
+                        type=knowledge.type,
+                        source=knowledge.source,
+                        timestamp=knowledge.timestamp.isoformat(),
+                        embedding_id=knowledge.metadata.get("embedding_id", "")
+                    )
+                    
+                    record = await result.single()
+                    if record:
+                        logger.info(f"Added knowledge {knowledge.id} to Neo4j graph")
+                    
         except Exception as e:
-            logger.error(f"Error adding to graph: {e}")
+            logger.error(f"Error adding to Neo4j graph: {e}")
             
     async def _add_to_vector_store(self, knowledge: Knowledge):
         """Add knowledge to vector store"""
@@ -264,10 +309,44 @@ class KnowledgeManager:
         
     async def _graph_query(self, query: str) -> List[Dict[str, Any]]:
         """Perform graph-based query"""
-        # Simplified graph query
+        if not self.neo4j_driver:
+            logger.warning("Neo4j driver not initialized")
+            return []
+            
         results = []
-        
-        # Find starting nodes based on query
+        try:
+            async with self.neo4j_driver.session() as session:
+                # Find starting nodes based on query
+                cypher_query = """
+                MATCH (k:Knowledge)
+                WHERE toLower(k.content) CONTAINS toLower($query)
+                   OR toLower(k.type) CONTAINS toLower($query)
+                OPTIONAL MATCH (k)-[r:RELATES_TO]-(related:Knowledge)
+                RETURN k, collect(DISTINCT related) as related_nodes
+                ORDER BY k.timestamp DESC
+                LIMIT 10
+                """
+                
+                result = await session.run(cypher_query, query=query)
+                
+                async for record in result:
+                    node = record["k"]
+                    related = record["related_nodes"]
+                    
+                    results.append({
+                        "id": node["id"],
+                        "content": node["content"],
+                        "type": node["type"],
+                        "source": node["source"],
+                        "timestamp": node["timestamp"],
+                        "related_count": len(related),
+                        "score": 1.0 + (0.1 * len(related))  # Boost score based on connections
+                    })
+                    
+        except Exception as e:
+            logger.error(f"Error in graph query: {e}")
+            
+        # Continue with existing logic for in-memory search
         for knowledge_id, knowledge in self.knowledge_base.items():
             if query.lower() in knowledge.content.lower():
                 # Traverse relationships
@@ -394,10 +473,29 @@ class KnowledgeManager:
                 
     async def health_check(self) -> Dict[str, Any]:
         """Check knowledge manager health"""
+        neo4j_status = "disconnected"
+        if self.neo4j_driver:
+            try:
+                async with self.neo4j_driver.session() as session:
+                    result = await session.run("RETURN 1")
+                    if await result.single():
+                        neo4j_status = "connected"
+            except:
+                neo4j_status = "error"
+                
         return {
             "status": "healthy" if self.initialized else "initializing",
             "knowledge_count": len(self.knowledge_base),
-            "relationship_count": sum(len(rels) for rels in self.relationships.values()),
+            "relationship_count": sum(len(k.relationships) for k in self.knowledge_base.values()),
             "vector_store": "connected",
-            "graph_store": "connected"
-        } 
+            "graph_store": neo4j_status
+        }
+    
+    async def cleanup(self):
+        """Cleanup resources"""
+        if self.neo4j_driver:
+            await self.neo4j_driver.close()
+            
+    async def get_knowledge_count(self) -> int:
+        """Get total knowledge count"""
+        return len(self.knowledge_base) 

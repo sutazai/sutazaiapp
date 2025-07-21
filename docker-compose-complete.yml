@@ -787,56 +787,56 @@ services:
       # Database Configuration
       - DATABASE_URL=postgresql://sutazai:sutazai_password@postgres:5432/sutazai
       - REDIS_URL=redis://redis:6379
-      
+
       # Vector Databases
       - QDRANT_URL=http://qdrant:6333
       - CHROMADB_URL=http://chromadb:8000
       - FAISS_URL=http://faiss:8000
-      
+
       # Model Management
       - OLLAMA_URL=http://ollama:11434
       - ENHANCED_MODEL_MANAGER_URL=http://enhanced-model-manager:8000
-      
+
       # Core AI Agents
       - AUTOGPT_URL=http://autogpt:8000
       - LOCALAGI_URL=http://localagi:8080
       - TABBYML_URL=http://tabbyml:8080
       - SEMGREP_URL=http://semgrep:8000
-      
+
       # Agent Frameworks
       - LANGCHAIN_AGENTS_URL=http://langchain-agents:8000
       - AUTOGEN_URL=http://autogen-agents:8000
       - AGENTZERO_URL=http://agentzero:8000
       - BIGAGI_URL=http://bigagi:3000
-      
+
       # Web Automation
       - BROWSER_USE_URL=http://browser-use:8000
       - SKYVERN_URL=http://skyvern:8000
-      
+
       # Document & Financial
       - DOCUMIND_URL=http://documind:8000
       - FINROBOT_URL=http://finrobot:8000
-      
+
       # Code Generation
       - GPT_ENGINEER_URL=http://gpt-engineer:8000
       - AIDER_URL=http://aider:8000
-      
+
       # UI Interfaces
       - OPEN_WEBUI_URL=http://open-webui:8080
       - LANGFLOW_URL=http://langflow:7860
       - DIFY_URL=http://dify:5001
-      
+
       # ML Frameworks
       - PYTORCH_URL=http://pytorch:8000
       - TENSORFLOW_URL=http://tensorflow:8000
       - JAX_URL=http://jax:8000
-      
+
       # Additional Services
       - AWESOME_CODE_AI_URL=http://awesome-code-ai:8000
       - NEUROMORPHIC_ENGINE_URL=http://neuromorphic-engine:8000
       - SELF_IMPROVEMENT_ENGINE_URL=http://self-improvement-engine:8000
       - WEB_LEARNING_ENGINE_URL=http://web-learning-engine:8000
-      
+
       # System Configuration
       - SUTAZAI_ENV=production
       - API_VERSION=v1
@@ -844,7 +844,7 @@ services:
       - ENABLE_SELF_IMPROVEMENT=true
       - ENABLE_WEB_LEARNING=true
       - ENABLE_NEUROMORPHIC=true
-      
+
     networks:
       sutazai-network:
         ipv4_address: 172.20.0.100

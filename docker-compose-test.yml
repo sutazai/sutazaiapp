@@ -68,32 +68,32 @@ services:
     environment:
       # Database
       DATABASE_URL: postgresql://sutazai_test:testpassword123@test-postgres:5432/sutazai_test
-      
+
       # Redis
       REDIS_URL: redis://:testredispass123@test-redis:6379/0
-      
+
       # Vector DB
       QDRANT_URL: http://test-qdrant:6333
       QDRANT_API_KEY: test-api-key
-      
+
       # Application settings
       APP_ENV: test
       DEBUG: "true"
       TESTING: "true"
       LOG_LEVEL: DEBUG
-      
+
       # Security (test values)
       SECRET_KEY: test-secret-key-for-testing-only
       JWT_SECRET_KEY: test-jwt-secret-key
       API_KEY: test-api-key
-      
+
       # Model settings
       MODEL_PATH: /app/models
       USE_GPU: "false"
-      
+
       # Service URLs
       FRONTEND_URL: http://test-frontend:8501
-      
+
       # Testing specific
       PYTEST_CURRENT_TEST: "true"
       COVERAGE_PROCESS_START: .coveragerc

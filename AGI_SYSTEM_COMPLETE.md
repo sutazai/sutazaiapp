@@ -4,6 +4,19 @@
 
 We have successfully transformed SutazAI into a fully autonomous, enterprise-grade AGI/ASI system with complete local operation and self-improvement capabilities.
 
+### 🚀 Quick Deployment
+
+```bash
+# One-command deployment of the entire AGI/ASI system
+sudo ./deploy_agi_complete.sh
+
+# Or for quick start after initial deployment
+sudo ./start_agi_system.sh
+
+# To test the system
+./test_agi_system.py
+```
+
 ## 🏗️ System Architecture
 
 ### Core AGI Components Implemented

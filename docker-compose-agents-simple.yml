@@ -70,21 +70,21 @@ services:
       python -c \"
       from fastapi import FastAPI
       import uvicorn
-      
+
       app = FastAPI()
-      
+
       @app.get('/health')
       def health():
           return {'status': 'healthy', 'service': 'mock-agents'}
-      
+
       @app.get('/api/status')
       def status():
           return {'status': 'active', 'agents': ['semgrep', 'tabbyml', 'openwebui']}
-      
+
       @app.post('/api/execute')
       def execute(request: dict):
-          return {'result': f'Mock execution for: {request.get(\"task\", \"unknown\")}'} 
-      
+          return {'result': f'Mock execution for: {request.get(\"task\", \"unknown\")}'}
+
       if __name__ == '__main__':
           uvicorn.run(app, host='0.0.0.0', port=8083)
       \"

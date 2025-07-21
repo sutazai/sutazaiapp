@@ -61,7 +61,7 @@ services:
   # ====================
   # Infrastructure Layer
   # ====================
-  
+
   # Service Discovery
   consul:
     image: consul:1.17
@@ -147,7 +147,7 @@ services:
   # ====================
   # Data Layer (HA)
   # ====================
-  
+
   # PostgreSQL Master
   postgres-master:
     image: postgres:15-alpine
@@ -283,7 +283,7 @@ services:
   # ====================
   # AI Core Services
   # ====================
-  
+
   # Enhanced Ollama with Model Management
   ollama-cluster:
     build:
@@ -412,7 +412,7 @@ services:
   # ====================
   # Enhanced Agent Layer
   # ====================
-  
+
   # Master Agent Orchestrator
   agent-orchestrator:
     build:
@@ -471,7 +471,7 @@ services:
   # ====================
   # Monitoring Stack
   # ====================
-  
+
   # Prometheus with Federation
   prometheus:
     image: prom/prometheus:latest
@@ -568,7 +568,7 @@ services:
   # ====================
   # Security Services
   # ====================
-  
+
   # API Gateway with Auth
   kong:
     image: kong:3.5
