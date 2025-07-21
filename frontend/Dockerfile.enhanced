@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Additional UI dependencies
+RUN pip install --no-cache-dir \
+    streamlit-chat \
+    streamlit-aggrid \
+    streamlit-elements \
+    streamlit-ace \
+    plotly \
+    altair \
+    bokeh \
+    pandas \
+    httpx
+
+# Copy application
+COPY . .
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+
+CMD ["streamlit", "run", "app_enhanced.py", "--server.port", "8501", "--server.address", "0.0.0.0"] 

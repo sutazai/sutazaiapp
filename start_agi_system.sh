@@ -1,11 +1,7 @@
 #!/bin/bash
 
-###############################################################################
-# Streamlined AGI System Startup for SutazAI
-# Optimized for current system constraints
-###############################################################################
-
-set -euo pipefail
+echo "🚀 Starting SutazAI AGI/ASI System"
+echo "=================================="
 
 # Colors
 GREEN='\033[0;32m'
