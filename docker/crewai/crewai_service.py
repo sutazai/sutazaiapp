@@ -1,175 +1,202 @@
-#\!/usr/bin/env python3
 """
-CrewAI Multi-Agent Service for SutazAI
-Provides multi-agent collaboration and task orchestration
+CrewAI Service for SutazAI
+Provides multi-agent collaboration capabilities
 """
-
-import asyncio
-import json
-import logging
-from datetime import datetime
-from typing import Dict, Any, List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import requests
+from typing import List, Dict, Any, Optional
+import logging
+from crewai import Agent, Task, Crew, Process
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="SutazAI CrewAI Service", version="1.0.0")
+# Create FastAPI app
+app = FastAPI(
+    title="SutazAI CrewAI Service",
+    description="Multi-agent collaboration service",
+    version="1.0.0"
+)
 
-class TaskRequest(BaseModel):
-    task: str
-    agents: List[str] = ["researcher", "writer", "analyst"]
-    task_type: str = "collaboration"
-    parameters: Dict[str, Any] = {}
-
-class CrewAIService:
-    """CrewAI multi-agent service implementation"""
+# Request/Response models
+class AgentConfig(BaseModel):
+    role: str
+    goal: str
+    backstory: str
     
+class TaskConfig(BaseModel):
+    description: str
+    agent_role: str
+    expected_output: Optional[str] = None
+
+class CrewRequest(BaseModel):
+    agents: List[AgentConfig]
+    tasks: List[TaskConfig]
+    process: str = "sequential"  # sequential or hierarchical
+
+class CrewResponse(BaseModel):
+    status: str
+    result: Any
+    execution_time: float
+
+# Global crew manager
+class CrewManager:
     def __init__(self):
-        self.ollama_url = "http://ollama:11434"
-        self.service_name = "CrewAI"
-        self.available_agents = {
-            "researcher": {
-                "role": "Research Specialist",
-                "goal": "Gather comprehensive information on any topic",
-                "backstory": "Expert researcher with deep analytical skills"
-            },
-            "writer": {
-                "role": "Content Writer", 
-                "goal": "Create clear, engaging content",
-                "backstory": "Skilled writer who can adapt to any writing style"
-            },
-            "analyst": {
-                "role": "Data Analyst",
-                "goal": "Analyze data and provide insights",
-                "backstory": "Experienced analyst with strong problem-solving skills"
-            },
-            "coder": {
-                "role": "Software Developer",
-                "goal": "Write high-quality code and solutions",
-                "backstory": "Senior developer with expertise in multiple languages"
-            },
-            "manager": {
-                "role": "Project Manager",
-                "goal": "Coordinate tasks and ensure successful completion",
-                "backstory": "Experienced manager with strong leadership skills"
-            }
+        self.llm_config = {
+            "base_url": os.getenv("OPENAI_API_BASE", "http://ollama:11434/v1"),
+            "api_key": os.getenv("OPENAI_API_KEY", "local"),
+            "model": "deepseek-r1:8b"
         }
         
-    async def execute_crew_task(self, task: str, agent_names: List[str] = None, **kwargs) -> Dict[str, Any]:
-        """Execute a task using multi-agent simulation"""
+    def create_agents(self, agent_configs: List[AgentConfig]) -> Dict[str, Agent]:
+        """Create agents from configurations"""
+        agents = {}
+        
+        for config in agent_configs:
+            agent = Agent(
+                role=config.role,
+                goal=config.goal,
+                backstory=config.backstory,
+                verbose=True,
+                allow_delegation=True,
+                llm_config=self.llm_config
+            )
+            agents[config.role] = agent
+            
+        return agents
+    
+    def create_tasks(self, task_configs: List[TaskConfig], agents: Dict[str, Agent]) -> List[Task]:
+        """Create tasks from configurations"""
+        tasks = []
+        
+        for config in task_configs:
+            if config.agent_role not in agents:
+                raise ValueError(f"Agent with role '{config.agent_role}' not found")
+                
+            task = Task(
+                description=config.description,
+                agent=agents[config.agent_role],
+                expected_output=config.expected_output
+            )
+            tasks.append(task)
+            
+        return tasks
+    
+    def execute_crew(self, request: CrewRequest) -> Dict[str, Any]:
+        """Execute a crew of agents"""
+        import time
+        start_time = time.time()
+        
         try:
-            logger.info(f"CrewAI executing task: {task}")
+            # Create agents
+            agents = self.create_agents(request.agents)
             
-            if not agent_names:
-                agent_names = ["researcher", "writer", "analyst"]
+            # Create tasks
+            tasks = self.create_tasks(request.tasks, agents)
             
-            # Multi-agent simulation using local LLM
-            agents_context = ", ".join([
-                f"{name} ({self.available_agents.get(name, {}).get('role', 'Agent')})"
-                for name in agent_names
-            ])
+            # Create crew
+            process = Process.sequential if request.process == "sequential" else Process.hierarchical
             
-            prompt = f"""
-As a multi-agent system with specialized agents: {agents_context}, work together to address this task:
-
-{task}
-
-Each agent should contribute their expertise:
-- Researcher: Gather and analyze information
-- Writer: Structure and communicate findings clearly  
-- Analyst: Provide data insights and recommendations
-- Coder: Provide technical solutions if needed
-- Manager: Coordinate and summarize
-
-Provide a comprehensive collaborative response.
-"""
-            
-            response = requests.post(
-                f"{self.ollama_url}/api/generate",
-                json={
-                    "model": "llama3.2:1b",
-                    "prompt": prompt,
-                    "stream": False
-                },
-                timeout=30
+            crew = Crew(
+                agents=list(agents.values()),
+                tasks=tasks,
+                process=process,
+                verbose=True
             )
             
-            if response.status_code == 200:
-                result = response.json()
-                return {
-                    "success": True,
-                    "result": result.get("response", "Task completed using multi-agent approach"),
-                    "agents_used": agent_names,
-                    "task_type": "multi_agent_collaboration",
-                    "service": "CrewAI"
-                }
-            else:
-                return {
-                    "success": False,
-                    "error": f"LLM request failed with status {response.status_code}"
-                }
-                
-        except Exception as e:
-            logger.error(f"CrewAI task execution failed: {e}")
+            # Execute crew
+            result = crew.kickoff()
+            
+            execution_time = time.time() - start_time
+            
             return {
-                "success": False,
-                "error": f"Task execution failed: {str(e)}"
+                "status": "success",
+                "result": str(result),
+                "execution_time": execution_time
+            }
+            
+        except Exception as e:
+            logger.error(f"Crew execution failed: {e}")
+            return {
+                "status": "failed",
+                "result": str(e),
+                "execution_time": time.time() - start_time
             }
 
-# Initialize service
-crewai_service = CrewAIService()
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "service": "CrewAI",
-        "available_agents": list(crewai_service.available_agents.keys()),
-        "timestamp": datetime.now().isoformat()
-    }
-
-@app.post("/execute")
-async def execute_task(request: TaskRequest):
-    """Execute a multi-agent task"""
-    try:
-        result = await crewai_service.execute_crew_task(
-            request.task,
-            request.agents,
-            **request.parameters
-        )
-        
-        return {
-            "success": result.get("success", True),
-            "result": result,
-            "service": "CrewAI",
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Task execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/agents")
-async def list_agents():
-    """List available agents"""
-    return {
-        "available_agents": list(crewai_service.available_agents.keys()),
-        "agent_details": crewai_service.available_agents,
-        "service": "CrewAI"
-    }
+# Initialize crew manager
+crew_manager = CrewManager()
 
 @app.get("/")
 async def root():
     """Root endpoint"""
     return {
-        "service": "CrewAI Multi-Agent System",
-        "status": "online",
-        "version": "1.0.0",
-        "description": "Multi-agent collaboration and task orchestration for SutazAI"
+        "service": "CrewAI",
+        "status": "operational",
+        "version": "1.0.0"
     }
-EOF < /dev/null
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy"}
+
+@app.post("/execute", response_model=CrewResponse)
+async def execute_crew(request: CrewRequest):
+    """Execute a crew of agents"""
+    try:
+        result = crew_manager.execute_crew(request)
+        return CrewResponse(**result)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Failed to execute crew: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/examples")
+async def get_examples():
+    """Get example crew configurations"""
+    return {
+        "software_development": {
+            "agents": [
+                {
+                    "role": "Product Manager",
+                    "goal": "Define clear product requirements",
+                    "backstory": "You are an experienced product manager focused on user needs"
+                },
+                {
+                    "role": "Software Engineer",
+                    "goal": "Implement high-quality code",
+                    "backstory": "You are a skilled engineer who writes clean, efficient code"
+                },
+                {
+                    "role": "QA Engineer",
+                    "goal": "Ensure code quality and test coverage",
+                    "backstory": "You are detail-oriented and passionate about quality"
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Define user stories for a task management feature",
+                    "agent_role": "Product Manager",
+                    "expected_output": "A list of well-defined user stories"
+                },
+                {
+                    "description": "Implement the backend API for task management",
+                    "agent_role": "Software Engineer",
+                    "expected_output": "Python code for the API endpoints"
+                },
+                {
+                    "description": "Write test cases for the task management API",
+                    "agent_role": "QA Engineer",
+                    "expected_output": "Comprehensive test cases"
+                }
+            ],
+            "process": "sequential"
+        }
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8080)

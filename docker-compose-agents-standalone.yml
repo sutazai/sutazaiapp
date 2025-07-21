@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  # CrewAI - Multi-agent collaboration
+  crewai:
+    build:
+      context: ./docker/crewai
+      dockerfile: Dockerfile
+    container_name: sutazai-crewai
+    restart: unless-stopped
+    environment:
+      - OPENAI_API_BASE=http://ollama:11434/v1
+      - OPENAI_API_KEY=local
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - crewai_workspace:/app/workspace
+    ports:
+      - "8102:8080"
+    networks:
+      - sutazai-network
+    external_links:
+      - sutazai-redis:redis
+      - sutazai-ollama:ollama
+
+  # AgentGPT - Browser-based autonomous AI
+  agentgpt:
+    build:
+      context: ./docker/agentgpt
+      dockerfile: Dockerfile
+    container_name: sutazai-agentgpt
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_OLLAMA_URL=http://ollama:11434
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/agentgpt
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8103:3000"
+    networks:
+      - sutazai-network
+    external_links:
+      - sutazai-postgres:postgres
+      - sutazai-redis:redis
+      - sutazai-ollama:ollama
+
+  # PrivateGPT - Document Q&A
+  privategpt:
+    build:
+      context: ./docker/privategpt
+      dockerfile: Dockerfile
+    container_name: sutazai-privategpt
+    restart: unless-stopped
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - PGPT_EMBED_MODE=ollama
+      - PGPT_QDRANT_URL=http://qdrant:6333
+    volumes:
+      - privategpt_data:/app/data
+    ports:
+      - "8104:8001"
+    networks:
+      - sutazai-network
+    external_links:
+      - sutazai-qdrant:qdrant
+      - sutazai-ollama:ollama
+
+  # LlamaIndex - Data framework
+  llamaindex:
+    build:
+      context: ./docker/llamaindex
+      dockerfile: Dockerfile
+    container_name: sutazai-llamaindex
+    restart: unless-stopped
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - VECTOR_STORE_TYPE=qdrant
+      - QDRANT_URL=http://qdrant:6333
+    volumes:
+      - llamaindex_data:/app/data
+    ports:
+      - "8105:8080"
+    networks:
+      - sutazai-network
+    external_links:
+      - sutazai-qdrant:qdrant
+      - sutazai-ollama:ollama
+
+  # FlowiseAI - Visual workflow builder
+  flowise:
+    image: flowiseai/flowise:latest
+    container_name: sutazai-flowise
+    restart: unless-stopped
+    environment:
+      - FLOWISE_USERNAME=admin
+      - FLOWISE_PASSWORD=flowise123
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=flowise
+    volumes:
+      - flowise_data:/root/.flowise
+    ports:
+      - "8106:3000"
+    networks:
+      - sutazai-network
+    external_links:
+      - sutazai-postgres:postgres
+
+volumes:
+  crewai_workspace:
+  agentgpt_data:
+  privategpt_data:
+  llamaindex_data:
+  flowise_data:
+
+networks:
+  sutazai-network:
+    external: true

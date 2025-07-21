@@ -7,4 +7,3 @@ aiohttp
 openai
 pydantic
 python-multipart
-EOF < /dev/null

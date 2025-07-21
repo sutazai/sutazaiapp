@@ -24,4 +24,3 @@ COPY llamaindex_service.py .
 EXPOSE 8080
 
 CMD ["uvicorn", "llamaindex_service:app", "--host", "0.0.0.0", "--port", "8080"]
-EOF < /dev/null

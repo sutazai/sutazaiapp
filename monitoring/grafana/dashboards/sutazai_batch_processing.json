@@ -1,0 +1,337 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "SutazAI v9 Batch Processing",
+    "tags": ["sutazai", "batch", "processing", "performance"],
+    "style": "dark",
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Batch Processing Overview",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+        "collapsed": false
+      },
+      {
+        "id": 2,
+        "title": "Active Batch Jobs",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 0, "y": 1},
+        "targets": [
+          {
+            "expr": "batch_active_jobs",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 10},
+                {"color": "red", "value": 25}
+              ]
+            },
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Batch Queue Size",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 6, "y": 1},
+        "targets": [
+          {
+            "expr": "batch_queue_size",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 100},
+                {"color": "red", "value": 500}
+              ]
+            },
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Files Processed (Last Hour)",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 12, "y": 1},
+        "targets": [
+          {
+            "expr": "increase(batch_files_processed_total[1h])",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Success Rate",
+        "type": "stat",
+        "gridPos": {"h": 6, "w": 6, "x": 18, "y": 1},
+        "targets": [
+          {
+            "expr": "(increase(batch_files_processed_total[1h]) - increase(batch_processing_failures_total[1h])) / increase(batch_files_processed_total[1h]) * 100",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 90},
+                {"color": "green", "value": 95}
+              ]
+            },
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Batch Processing Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 7},
+        "targets": [
+          {
+            "expr": "rate(batch_files_processed_total[5m]) * 60",
+            "refId": "A",
+            "legendFormat": "Files per minute"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Processing Duration Distribution",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 7},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(batch_processing_duration_seconds_bucket[5m])) by (le))",
+            "refId": "A",
+            "legendFormat": "95th percentile"
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(batch_processing_duration_seconds_bucket[5m])) by (le))",
+            "refId": "B",
+            "legendFormat": "50th percentile"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(batch_processing_duration_seconds_bucket[5m])) by (le))",
+            "refId": "C",
+            "legendFormat": "99th percentile"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "s"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Processing by Operation Type",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 15},
+        "targets": [
+          {
+            "expr": "rate(batch_operations_total[5m]) * 60",
+            "refId": "A",
+            "legendFormat": "{{operation}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "ops"
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "table", "placement": "bottom"}
+        }
+      },
+      {
+        "id": 9,
+        "title": "Resource Utilization During Batch Processing",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 15},
+        "targets": [
+          {
+            "expr": "batch_cpu_usage_percent",
+            "refId": "A",
+            "legendFormat": "CPU Usage %"
+          },
+          {
+            "expr": "batch_memory_usage_percent",
+            "refId": "B",
+            "legendFormat": "Memory Usage %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Batch Processing Errors",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 23},
+        "targets": [
+          {
+            "expr": "rate(batch_processing_failures_total[5m]) * 60",
+            "refId": "A",
+            "legendFormat": "{{error_type}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "Worker Pool Utilization",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 23},
+        "targets": [
+          {
+            "expr": "batch_worker_pool_active / batch_worker_pool_size * 100",
+            "refId": "A",
+            "legendFormat": "{{pool_type}} utilization"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 12,
+        "title": "File Size Distribution",
+        "type": "heatmap",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 31},
+        "targets": [
+          {
+            "expr": "sum(rate(batch_file_size_bytes_bucket[5m])) by (le)",
+            "refId": "A",
+            "format": "heatmap",
+            "legendFormat": "{{le}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "spectrum"},
+            "unit": "bytes"
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "Concurrent Batch Jobs",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 31},
+        "targets": [
+          {
+            "expr": "batch_concurrent_jobs",
+            "refId": "A",
+            "legendFormat": "Concurrent jobs"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "Top File Types Processed",
+        "type": "piechart",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 39},
+        "targets": [
+          {
+            "expr": "topk(10, sum(increase(batch_files_by_type_total[1h])) by (file_type))",
+            "refId": "A",
+            "legendFormat": "{{file_type}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "short"
+          }
+        },
+        "options": {
+          "legend": {"displayMode": "table", "placement": "right"}
+        }
+      },
+      {
+        "id": 15,
+        "title": "Processing Speed by File Size",
+        "type": "scattergraph",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 39},
+        "targets": [
+          {
+            "expr": "batch_processing_speed_mbps",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"},
+            "unit": "Mbps"
+          }
+        }
+      }
+    ]
+  }
+}

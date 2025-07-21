@@ -218,4 +218,4 @@ async def root():
         "version": "1.0.0",
         "description": "Document indexing and retrieval for SutazAI"
     }
-EOF < /dev/null
+

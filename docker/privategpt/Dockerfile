@@ -21,4 +21,3 @@ COPY settings.yaml settings.yaml
 EXPOSE 8001
 
 CMD ["python", "-m", "scripts.setup", "--profile", "local"]
-EOF < /dev/null

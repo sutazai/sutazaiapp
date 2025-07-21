@@ -35,6 +35,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Import AI Repository Manager
+sys.path.append("/opt/sutazaiapp")
+try:
+    from ai_repository_manager import AIRepositoryManager, ServiceType
+    AI_REPO_MANAGER_AVAILABLE = True
+except ImportError:
+    logger.warning("AI Repository Manager not available")
+    AIRepositoryManager = None
+    ServiceType = None
+    AI_REPO_MANAGER_AVAILABLE = False
+
 # Thread pools for different workloads
 executor = ThreadPoolExecutor(max_workers=8)  # Increased from 4
 cpu_executor = ProcessPoolExecutor(max_workers=4)  # For CPU-intensive tasks
@@ -827,6 +838,138 @@ async def batch_process(requests: List[ChatRequest]):
         "results": responses
     }
 
+# AI Repository Management Endpoints
+@app.get("/api/ai-services/")
+async def get_ai_services():
+    """Get all AI services managed by the repository manager"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    services = []
+    for name, repo in ai_manager.repositories.items():
+        services.append({
+            "name": name,
+            "type": repo.service_type.value,
+            "status": repo.status.value,
+            "port": repo.port,
+            "capabilities": repo.capabilities,
+            "health_endpoint": f"http://localhost:{repo.port}{repo.health_endpoint}",
+            "last_health_check": repo.last_health_check,
+            "startup_time": repo.startup_time,
+            "error_message": repo.error_message
+        })
+    
+    return {
+        "total_services": len(services),
+        "running_services": len([s for s in services if s["status"] == "running"]),
+        "services": services
+    }
+
+@app.get("/api/ai-services/{service_name}")
+async def get_ai_service_details(service_name: str):
+    """Get detailed information about a specific AI service"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    if service_name not in ai_manager.repositories:
+        raise HTTPException(status_code=404, detail=f"Service {service_name} not found")
+    
+    repo = ai_manager.repositories[service_name]
+    return {
+        "name": repo.name,
+        "type": repo.service_type.value,
+        "status": repo.status.value,
+        "port": repo.port,
+        "capabilities": repo.capabilities,
+        "dependencies": repo.dependencies,
+        "config": repo.config,
+        "container_id": repo.container_id,
+        "startup_time": repo.startup_time,
+        "error_message": repo.error_message,
+        "path": repo.path,
+        "dockerfile_path": repo.dockerfile_path
+    }
+
+@app.post("/api/ai-services/{service_name}/start")
+async def start_ai_service(service_name: str, background_tasks: BackgroundTasks):
+    """Start a specific AI service"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    if service_name not in ai_manager.repositories:
+        raise HTTPException(status_code=404, detail=f"Service {service_name} not found")
+    
+    # Start service in background
+    background_tasks.add_task(ai_manager.start_service, service_name)
+    
+    return {
+        "message": f"Starting AI service {service_name}",
+        "status": "initiated",
+        "service": service_name
+    }
+
+@app.post("/api/ai-services/{service_name}/stop")
+async def stop_ai_service(service_name: str, background_tasks: BackgroundTasks):
+    """Stop a specific AI service"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    if service_name not in ai_manager.repositories:
+        raise HTTPException(status_code=404, detail=f"Service {service_name} not found")
+    
+    # Stop service in background
+    background_tasks.add_task(ai_manager.stop_service, service_name)
+    
+    return {
+        "message": f"Stopping AI service {service_name}",
+        "status": "initiated",
+        "service": service_name
+    }
+
+@app.get("/api/ai-services/health-check")
+async def check_all_ai_services_health():
+    """Perform health checks on all running AI services"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    health_results = await ai_manager.health_check_all()
+    return {
+        "timestamp": time.time(),
+        "total_checked": len(health_results),
+        "healthy_services": len([r for r in health_results if r.get("healthy", False)]),
+        "results": health_results
+    }
+
+@app.get("/api/ai-services/by-capability/{capability}")
+async def get_ai_services_by_capability(capability: str):
+    """Get AI services that have a specific capability"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    services = ai_manager.get_services_by_capability(capability)
+    return {
+        "capability": capability,
+        "services": services,
+        "count": len(services)
+    }
+
+@app.get("/api/ai-services/by-type/{service_type}")
+async def get_ai_services_by_type(service_type: str):
+    """Get AI services of a specific type"""
+    if not ai_manager:
+        raise HTTPException(status_code=503, detail="AI Repository Manager not available")
+    
+    try:
+        svc_type = ServiceType(service_type)
+        services = ai_manager.get_services_by_type(svc_type)
+        return {
+            "service_type": service_type,
+            "services": services,
+            "count": len(services)
+        }
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid service type: {service_type}")
+
 # System information endpoint
 @app.get("/api/system/info")
 async def system_info():
@@ -867,9 +1010,14 @@ async def system_info():
         }
     }
 
+# Global AI Repository Manager
+ai_manager: Optional[AIRepositoryManager] = None
+
 # Startup message
 @app.on_event("startup")
 async def startup_event():
+    global ai_manager
+    
     logger.info("=" * 60)
     logger.info("SutazAI Enterprise Backend v10.0 Starting")
     logger.info("=" * 60)
@@ -878,6 +1026,30 @@ async def startup_event():
     logger.info(f"Thread Pool Workers: {executor._max_workers}")
     logger.info(f"Process Pool Workers: {cpu_executor._max_workers}")
     logger.info("Features: Caching ✓ | WebSocket ✓ | Agents ✓ | Monitoring ✓")
+    
+    # Initialize AI Repository Manager
+    if AI_REPO_MANAGER_AVAILABLE:
+        ai_manager = AIRepositoryManager()
+        logger.info(f"AI Repository Manager initialized with {len(ai_manager.repositories)} services")
+        
+        # Create Docker network
+        await ai_manager.create_service_network()
+        logger.info("Docker service network created")
+        
+        # Start key services
+        key_services = ["enhanced-model-manager", "crewai", "documind", "langchain-agents"]
+        for service in key_services:
+            if service in ai_manager.repositories:
+                try:
+                    success = await ai_manager.start_service(service)
+                    logger.info(f"Started {service}: {'✅' if success else '❌'}")
+                except Exception as e:
+                    logger.error(f"Failed to start {service}: {e}")
+        
+        logger.info("AI Repository Integration: ✓")
+    else:
+        logger.warning("AI Repository Manager not available")
+    
     logger.info("=" * 60)
 
 # Graceful shutdown
