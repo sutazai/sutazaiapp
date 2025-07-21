@@ -4,29 +4,27 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
+    git \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN pip install --no-cache-dir \
-    crewai \
-    crewai-tools \
-    fastapi \
-    uvicorn \
-    requests \
-    openai \
-    pydantic \
-    python-multipart
-
-# Copy service files
-COPY crewai_service.py .
 COPY requirements.txt .
-
-# Install additional requirements if any
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy application code
+COPY . .
+
+# Create workspace directory
+RUN mkdir -p /workspace
+
+# Expose port
 EXPOSE 8080
 
-CMD ["uvicorn", "crewai_service:app", "--host", "0.0.0.0", "--port", "8080"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Run application
+CMD ["python", "main.py"]

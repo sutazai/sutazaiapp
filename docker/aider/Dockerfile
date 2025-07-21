@@ -4,22 +4,28 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
-    wget \
+    git \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone Aider
-RUN git clone https://github.com/Aider-AI/aider.git .
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -e .
+# Copy application code
+COPY . .
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-aider --api --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Create workspace directory
+RUN mkdir -p /workspace
 
-EXPOSE 8080
+# Configure git (required for aider)
+RUN git config --global user.email "aider@sutazai.local" && \
+    git config --global user.name "SutazAI Aider"
 
-CMD ["./start.sh"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD echo "Aider service is running"
+
+# Run application
+CMD ["python", "main.py"]

@@ -4,22 +4,29 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
-    wget \
+    git \
+    build-essential \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone GPT-Engineer
-RUN git clone https://github.com/AntonOsika/gpt-engineer.git .
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -e .
+# Copy application code
+COPY . .
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python -m gpt_engineer.server --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Create workspace directory
+RUN mkdir -p /workspace/projects
 
+# Expose port
 EXPOSE 8080
 
-CMD ["./start.sh"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Run application
+CMD ["python", "main.py"]

@@ -4,23 +4,29 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
-    wget \
+    git \
     build-essential \
+    chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone AutoGPT
-RUN git clone https://github.com/Significant-Gravitas/AutoGPT.git .
-
 # Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python -m autogpt.app.main --ai-settings ai_settings.yaml\n\
-' > start.sh && chmod +x start.sh
+# Copy application code
+COPY . .
 
-EXPOSE 8080
+# Create workspace directory
+RUN mkdir -p /workspace
 
-CMD ["./start.sh"]
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run application
+CMD ["python", "main.py"]
