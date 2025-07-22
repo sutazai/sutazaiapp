@@ -59,11 +59,13 @@ if 'system_metrics' not in st.session_state:
     st.session_state.system_metrics = {}
 
 # API configuration
-API_BASE_URL = "http://localhost:8000"
+import os
+API_BASE_URL = os.getenv("BACKEND_URL", "http://backend-agi:8000")
 
 async def call_api(endpoint: str, method: str = "GET", data: Dict = None):
-    """Call backend API"""
-    async with httpx.AsyncClient() as client:
+    """Call backend API with extended timeout for CPU inference"""
+    timeout = 90.0  # Increased timeout for CPU-based model inference
+    async with httpx.AsyncClient(timeout=timeout) as client:
         try:
             if method == "GET":
                 response = await client.get(f"{API_BASE_URL}{endpoint}")
@@ -75,6 +77,9 @@ async def call_api(endpoint: str, method: str = "GET", data: Dict = None):
             else:
                 st.error(f"API Error: {response.status_code}")
                 return None
+        except httpx.TimeoutException:
+            st.error("⏰ Request timed out - AI models are running on CPU and may be slow")
+            return None
         except Exception as e:
             st.error(f"Connection Error: {str(e)}")
             return None
@@ -90,7 +95,7 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.image("https://via.placeholder.com/300x100?text=SutazAI+Logo", use_column_width=True)
+        st.image("https://via.placeholder.com/300x100?text=SutazAI+Logo", use_container_width=True)
         st.markdown("---")
         
         # System Status
@@ -142,17 +147,26 @@ def show_dashboard():
     """Show main dashboard"""
     st.header("System Dashboard")
     
+    # Fetch real metrics from backend
+    metrics_data = asyncio.run(call_api("/metrics"))
+    agents_data = asyncio.run(call_api("/agents"))
+    health_data = asyncio.run(call_api("/health"))
+    
     # Metrics row
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Active Agents", "22", "+3")
+        active_agents = len([a for a in agents_data.get("agents", []) if a.get("status") == "active"]) if agents_data else 0
+        st.metric("Active Agents", str(active_agents), "")
     with col2:
-        st.metric("Tasks Completed", "1,247", "+58")
+        tasks_completed = metrics_data.get("agents", {}).get("tasks_completed", 0) if metrics_data else 0
+        st.metric("Tasks Completed", str(tasks_completed), "")
     with col3:
-        st.metric("Knowledge Entries", "15.2K", "+342")
+        embeddings = metrics_data.get("ai_metrics", {}).get("embeddings_generated", 0) if metrics_data else 0
+        st.metric("Embeddings Generated", f"{embeddings:,}", "")
     with col4:
-        st.metric("System Health", "98%", "+2%")
+        cpu_percent = health_data.get("system", {}).get("cpu_percent", 0) if health_data else 0
+        st.metric("CPU Usage", f"{cpu_percent:.1f}%", "")
     
     # Charts
     col1, col2 = st.columns(2)
@@ -161,58 +175,78 @@ def show_dashboard():
         # Agent activity chart
         st.subheader("Agent Activity")
         
-        # Sample data
-        agent_data = pd.DataFrame({
-            'Agent': ['AutoGPT', 'CrewAI', 'GPT-Engineer', 'Aider', 'BigAGI'],
-            'Tasks': [234, 189, 156, 142, 98]
-        })
-        
-        fig = px.bar(agent_data, x='Agent', y='Tasks', 
-                     title="Tasks by Agent (Last 24h)")
-        st.plotly_chart(fig, use_container_width=True)
+        # Real agent data
+        if agents_data and agents_data.get("agents"):
+            agent_names = [a.get("name", "Unknown") for a in agents_data["agents"]]
+            agent_statuses = [1 if a.get("status") == "active" else 0 for a in agents_data["agents"]]
+            
+            agent_df = pd.DataFrame({
+                'Agent': agent_names,
+                'Active': agent_statuses
+            })
+            
+            fig = px.bar(agent_df, x='Agent', y='Active', 
+                         title="Agent Status",
+                         color='Active',
+                         color_continuous_scale=['red', 'green'])
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No agent data available")
     
     with col2:
         # System performance
         st.subheader("System Performance")
         
-        # Create gauge chart
-        fig = go.Figure(go.Indicator(
-            mode = "gauge+number+delta",
-            value = 92,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Overall Performance"},
-            delta = {'reference': 85},
-            gauge = {
-                'axis': {'range': [None, 100]},
-                'bar': {'color': "darkblue"},
-                'steps': [
-                    {'range': [0, 50], 'color': "lightgray"},
-                    {'range': [50, 80], 'color': "gray"}],
-                'threshold': {
-                    'line': {'color': "red", 'width': 4},
-                    'thickness': 0.75,
-                    'value': 90}}))
-        
-        st.plotly_chart(fig, use_container_width=True)
+        # Real performance data
+        if health_data:
+            memory_percent = health_data.get("system", {}).get("memory_percent", 0)
+            
+            # Create gauge chart
+            fig = go.Figure(go.Indicator(
+                mode = "gauge+number+delta",
+                value = memory_percent,
+                domain = {'x': [0, 1], 'y': [0, 1]},
+                title = {'text': "Memory Usage %"},
+                gauge = {
+                    'axis': {'range': [None, 100]},
+                    'bar': {'color': "darkblue"},
+                    'steps': [
+                        {'range': [0, 50], 'color': "lightgreen"},
+                        {'range': [50, 80], 'color': "yellow"}],
+                    'threshold': {
+                        'line': {'color': "red", 'width': 4},
+                        'thickness': 0.75,
+                        'value': 90}}))
+            
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No performance data available")
     
     # Recent activity
     st.subheader("Recent System Activity")
     
-    activities = [
-        {"time": "2 min ago", "event": "AutoGPT completed task: Market analysis", "type": "success"},
-        {"time": "5 min ago", "event": "Knowledge base updated with 45 new entries", "type": "info"},
-        {"time": "12 min ago", "event": "Self-improvement: Code optimization applied", "type": "warning"},
-        {"time": "18 min ago", "event": "CrewAI team completed collaborative task", "type": "success"},
-        {"time": "25 min ago", "event": "System backup completed successfully", "type": "info"}
-    ]
-    
-    for activity in activities:
-        if activity["type"] == "success":
-            st.success(f"🟢 {activity['time']}: {activity['event']}")
-        elif activity["type"] == "warning":
-            st.warning(f"🟡 {activity['time']}: {activity['event']}")
-        else:
-            st.info(f"🔵 {activity['time']}: {activity['event']}")
+    # Show real system status
+    if health_data:
+        services = health_data.get("services", {})
+        timestamp = health_data.get("timestamp", "")
+        
+        # Service status
+        for service, status in services.items():
+            if status == "connected" or status == "available":
+                st.success(f"🟢 {service}: {status}")
+            elif status == "disconnected" or status == "unavailable":
+                st.error(f"🔴 {service}: {status}")
+            else:
+                st.info(f"🔵 {service}: {status}")
+        
+        # System info
+        system_info = health_data.get("system", {})
+        if system_info:
+            st.info(f"💻 CPU: {system_info.get('cpu_percent', 0):.1f}% | Memory: {system_info.get('memory_percent', 0):.1f}% | GPU: {'Available' if system_info.get('gpu_available') else 'Not Available'}")
+        
+        st.caption(f"Last updated: {timestamp}")
+    else:
+        st.warning("No activity data available")
 
 def show_ai_chat():
     """Show AI chat interface"""
@@ -260,14 +294,13 @@ def show_ai_chat():
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         # Get AI response
-        with st.spinner("Thinking..."):
+        with st.spinner("🤖 AI is thinking... (this may take 10-60 seconds on CPU)"):
             if model == "AGI Brain (Multi-Model)":
                 response = asyncio.run(call_api("/think", "POST", {"query": prompt}))
             else:
-                response = asyncio.run(call_api("/chat", "POST", {
-                    "message": prompt,
-                    "model": model.lower().replace(" ", "-"),
-                    "agent": agent if agent != "None (Direct Model)" else None
+                # Use simple-chat for faster response with optimized models
+                response = asyncio.run(call_api("/simple-chat", "POST", {
+                    "message": prompt
                 }))
             
             if response:

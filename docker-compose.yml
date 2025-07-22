@@ -1,4 +1,4 @@
-version: '3.9'
+# Version field removed as it's obsolete in modern Docker Compose
 
 x-common-variables: &common-variables
   TZ: ${TZ:-UTC}
@@ -6,11 +6,9 @@ x-common-variables: &common-variables
 x-gpu-config: &gpu-config
   deploy:
     resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
+      limits:
+        cpus: '4'
+        memory: 8G
 
 services:
   # Core Infrastructure
@@ -101,6 +99,7 @@ services:
     image: ollama/ollama:latest
     container_name: sutazai-ollama
     restart: unless-stopped
+    <<: *gpu-config
     volumes:
       - ollama_data:/root/.ollama
       - ./models:/models
@@ -135,6 +134,16 @@ services:
       OLLAMA_URL: http://ollama:11434
       CHROMADB_URL: http://chromadb:8000
       QDRANT_URL: http://qdrant:6333
+      # Additional host configurations
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: ${POSTGRES_USER:-sutazai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai_password}
+      POSTGRES_DB: ${POSTGRES_DB:-sutazai}
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      CHROMADB_HOST: chromadb
+      QDRANT_HOST: qdrant
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
     ports:
       - "8000:8000"
     depends_on:
@@ -150,7 +159,7 @@ services:
         condition: service_started
     networks:
       - sutazai-network
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.working_main:app --host 0.0.0.0 --port 8000 --reload
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s

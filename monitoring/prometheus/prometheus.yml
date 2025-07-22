@@ -1,73 +1,35 @@
-# Prometheus configuration for SutazAI monitoring
-
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
-  external_labels:
-    cluster: 'sutazai-production'
-    environment: 'prod'
 
-# Alertmanager configuration
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets:
-            - alertmanager:9093
-
-# Load rules
-rule_files:
-  - "alerts.yml"
-
-# Scrape configurations
 scrape_configs:
-  # Prometheus self-monitoring
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-
-  # SutazAI Backend
   - job_name: 'sutazai-backend'
+    static_configs:
+      - targets: ['backend-agi:8000']
     metrics_path: '/metrics'
-    scrape_interval: 10s
+    scrape_interval: 30s
+    
+  - job_name: 'sutazai-agents'
     static_configs:
-      - targets: ['backend:8000']
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
-        replacement: 'backend'
+      - targets: 
+        - 'autogpt:8080'
+        - 'crewai:8080'
+        - 'aider:8080'
+        - 'gpt-engineer:8080'
+    scrape_interval: 60s
+    
+  - job_name: 'sutazai-infrastructure' 
+    static_configs:
+      - targets:
+        - 'postgres:5432'
+        - 'redis:6379'
+        - 'neo4j:7474'
+        - 'chromadb:8000'
+        - 'qdrant:6333'
+        - 'ollama:11434'
+    scrape_interval: 30s
 
-  # PostgreSQL Exporter
-  - job_name: 'postgres'
+  - job_name: 'sutazai-health-monitor'
     static_configs:
-      - targets: ['postgres-exporter:9187']
-
-  # Redis Exporter
-  - job_name: 'redis'
-    static_configs:
-      - targets: ['redis-exporter:9121']
-
-  # Node Exporter (system metrics)
-  - job_name: 'node'
-    static_configs:
-      - targets: ['node-exporter:9100']
-
-  # cAdvisor (container metrics)
-  - job_name: 'cadvisor'
-    static_configs:
-      - targets: ['cadvisor:8080']
-
-  # Ollama metrics
-  - job_name: 'ollama'
-    metrics_path: '/api/metrics'
-    static_configs:
-      - targets: ['ollama:11434']
-
-  # Vector databases
-  - job_name: 'chromadb'
-    static_configs:
-      - targets: ['chromadb:8001']
-  
-  - job_name: 'qdrant'
-    metrics_path: '/metrics'
-    static_configs:
-      - targets: ['qdrant:6333']
+      - targets: ['health-monitor:8000']
+    scrape_interval: 15s

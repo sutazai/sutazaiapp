@@ -1,6 +1,7 @@
 # AGI/ASI System Specific Requirements
 
 # Core AGI Dependencies
+neo4j>=5.14.0
 torch>=2.0.0
 transformers>=4.35.0
 sentence-transformers>=2.2.0
@@ -15,7 +16,6 @@ qdrant-client>=1.7.0
 faiss-cpu>=1.7.4
 
 # Knowledge Graph
-neo4j>=5.14.0
 py2neo>=2021.2.3
 
 # LLM Integration

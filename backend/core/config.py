@@ -16,7 +16,7 @@ class AppSettings(BaseSettings):
     PROJECT_NAME: str = "SutazAI"
     PROJECT_VERSION: str = "1.0.0" # Default version, could be loaded from version.txt
     DEBUG_MODE: bool = Field(False, env="DEBUG_MODE")
-    SECRET_KEY: str = Field(..., env="SECRET_KEY") # Require secret key in production
+    SECRET_KEY: str = Field("dev-secret-key-change-in-production", env="SECRET_KEY")
 
     # --- API Settings ---
     API_V1_STR: str = "/api/v1"
@@ -39,14 +39,19 @@ class AppSettings(BaseSettings):
         raise ValueError(v)
 
     # --- Database ---
-    POSTGRES_SERVER: str = Field(..., env="POSTGRES_SERVER")
-    POSTGRES_USER: str = Field(..., env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field(..., env="POSTGRES_PASSWORD")
-    POSTGRES_DB: str = Field(..., env="POSTGRES_DB")
+    POSTGRES_SERVER: str = Field("postgres", env="POSTGRES_HOST")
+    POSTGRES_USER: str = Field("sutazai", env="POSTGRES_USER") 
+    POSTGRES_PASSWORD: str = Field("sutazai_password", env="POSTGRES_PASSWORD")
+    POSTGRES_DB: str = Field("sutazai", env="POSTGRES_DB")
+    DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     DATABASE_URI: Optional[PostgresDsn] = None # Assembled below
 
     @validator("DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+        # If DATABASE_URL is provided, use it directly
+        if values.get("DATABASE_URL"):
+            return values.get("DATABASE_URL")
+        # Otherwise build from components
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -59,11 +64,11 @@ class AppSettings(BaseSettings):
 
     # --- Paths ---
     # Define paths relative to the project root
-    LOG_DIR: Path = Field(PROJECT_ROOT / "logs")
-    DATA_DIR: Path = Field(PROJECT_ROOT / "data")
-    UPLOAD_DIR: Path = Field(DATA_DIR / "uploads")
-    DOCUMENT_DIR: Path = Field(DATA_DIR / "documents")
-    CONFIG_DIR: Path = Field(PROJECT_ROOT / "backend/config") # Points to the backend config folder
+    LOG_DIR: Path = Field(default_factory=lambda: PROJECT_ROOT / "logs")
+    DATA_DIR: Path = Field(default_factory=lambda: PROJECT_ROOT / "data")
+    UPLOAD_DIR: Path = Field(default_factory=lambda: PROJECT_ROOT / "data" / "uploads")
+    DOCUMENT_DIR: Path = Field(default_factory=lambda: PROJECT_ROOT / "data" / "documents")
+    CONFIG_DIR: Path = Field(default_factory=lambda: PROJECT_ROOT / "backend" / "config")
 
     # --- File Uploads ---
     SUPPORTED_DOC_TYPES: str = Field("pdf,docx,txt,md,csv", env="SUPPORTED_DOC_TYPES") # Comma-separated

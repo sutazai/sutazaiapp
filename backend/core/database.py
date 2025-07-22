@@ -4,7 +4,7 @@ from typing import Generator # Import Generator
 from sqlmodel import create_engine, Session, SQLModel
 from sqlalchemy.orm import sessionmaker
 
-from backend.core.config import get_settings
+from core.config import get_settings
 
 settings = get_settings()
 

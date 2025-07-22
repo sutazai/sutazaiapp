@@ -6,53 +6,29 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     isDefault: true
-    editable: true
-    jsonData:
-      timeInterval: "15s"
-      queryTimeout: "60s"
-      httpMethod: POST
     
   - name: Loki
     type: loki
     access: proxy
     url: http://loki:3100
-    editable: true
-    jsonData:
-      maxLines: 5000
-      derivedFields:
-        - datasourceUid: tempo
-          matcherRegex: '"trace_id":"(\w+)"'
-          name: TraceID
-          url: '$${__value.raw}'
-          
-  - name: Tempo
-    type: tempo
-    access: proxy
-    url: http://tempo:3200
-    editable: true
-    jsonData:
-      httpMethod: GET
-      tracesToLogs:
-        datasourceUid: loki
-        filterByTraceID: true
-        filterBySpanID: false
-        mapTagNamesEnabled: true
-        mappedTags:
-          - key: service.name
-            value: service
-            
+    
   - name: PostgreSQL
     type: postgres
-    access: proxy
     url: postgres:5432
-    database: sutazai_main
+    database: sutazai
     user: sutazai
     secureJsonData:
       password: ${POSTGRES_PASSWORD}
-    jsonData:
-      sslmode: 'disable'
-      maxOpenConns: 0
-      maxIdleConns: 2
-      connMaxLifetime: 14400
-      postgresVersion: 1500
-      timescaledb: false
+      
+  - name: Redis
+    type: redis-datasource
+    url: redis:6379
+    secureJsonData:
+      password: ${REDIS_PASSWORD}
+      
+  - name: Neo4j
+    type: neo4j-datasource
+    url: neo4j:7687
+    user: neo4j
+    secureJsonData:
+      password: ${NEO4J_PASSWORD}
