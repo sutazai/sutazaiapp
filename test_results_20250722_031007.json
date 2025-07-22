@@ -1,0 +1,148 @@
+{
+  "total_tests": 20,
+  "passed": 9,
+  "failed": 11,
+  "warnings": 0,
+  "test_details": [
+    {
+      "test": "PostgreSQL Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 5432 is accessible",
+      "timestamp": "2025-07-22T03:10:07.453599"
+    },
+    {
+      "test": "Redis Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 6379 is accessible",
+      "timestamp": "2025-07-22T03:10:07.454307"
+    },
+    {
+      "test": "Neo4j Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 7687 is accessible",
+      "timestamp": "2025-07-22T03:10:07.454527"
+    },
+    {
+      "test": "ChromaDB Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 8001 is accessible",
+      "timestamp": "2025-07-22T03:10:07.454713"
+    },
+    {
+      "test": "Qdrant Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 6333 is accessible",
+      "timestamp": "2025-07-22T03:10:07.454896"
+    },
+    {
+      "test": "Ollama Connection",
+      "passed": true,
+      "warning": false,
+      "details": "Port 11434 is accessible",
+      "timestamp": "2025-07-22T03:10:07.455049"
+    },
+    {
+      "test": "API Health Check",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.531833"
+    },
+    {
+      "test": "API Root Endpoint",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.534261"
+    },
+    {
+      "test": "AGI Brain - Thinking",
+      "passed": false,
+      "warning": false,
+      "details": "",
+      "timestamp": "2025-07-22T03:10:07.557515"
+    },
+    {
+      "test": "Agent Listing",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.580320"
+    },
+    {
+      "test": "Task Execution",
+      "passed": false,
+      "warning": false,
+      "details": "",
+      "timestamp": "2025-07-22T03:10:07.586476"
+    },
+    {
+      "test": "Knowledge Addition",
+      "passed": false,
+      "warning": false,
+      "details": "",
+      "timestamp": "2025-07-22T03:10:07.611130"
+    },
+    {
+      "test": "Reasoning - Deductive",
+      "passed": false,
+      "warning": false,
+      "details": "",
+      "timestamp": "2025-07-22T03:10:07.636822"
+    },
+    {
+      "test": "Self-Improvement",
+      "passed": false,
+      "warning": false,
+      "details": "",
+      "timestamp": "2025-07-22T03:10:07.658710"
+    },
+    {
+      "test": "Prometheus",
+      "passed": true,
+      "warning": false,
+      "details": "Status: 200",
+      "timestamp": "2025-07-22T03:10:07.687975"
+    },
+    {
+      "test": "Grafana",
+      "passed": true,
+      "warning": false,
+      "details": "Status: 302",
+      "timestamp": "2025-07-22T03:10:07.691873"
+    },
+    {
+      "test": "Metrics Endpoint",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.697406"
+    },
+    {
+      "test": "Frontend UI",
+      "passed": true,
+      "warning": false,
+      "details": "Status: 200",
+      "timestamp": "2025-07-22T03:10:07.723182"
+    },
+    {
+      "test": "API Response Time",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.746653"
+    },
+    {
+      "test": "Concurrent Requests",
+      "passed": false,
+      "warning": false,
+      "details": "Server disconnected without sending a response.",
+      "timestamp": "2025-07-22T03:10:07.758766"
+    }
+  ]
+}
