@@ -6,6 +6,8 @@ transformers>=4.35.0
 sentence-transformers>=2.2.0
 langchain>=0.1.0
 langchain-community>=0.0.10
+langchain-experimental>=0.0.1
+langchain-openai>=0.0.1
 
 # Vector Databases
 chromadb>=0.4.20
@@ -18,10 +20,11 @@ py2neo>=2021.2.3
 
 # LLM Integration
 ollama>=0.1.7
-openai>=1.6.0  # For API compatibility layer
+litellm>=1.0.0
+openai>=1.0.0
 
 # Agent Frameworks
-autogen>=0.2.0
+ag2>=0.9.0
 crewai>=0.1.0
 letta>=0.1.0
 
@@ -35,10 +38,10 @@ GitPython>=3.1.40
 
 # Document Processing
 pypdf>=3.17.0
-python-docx>=1.1.0
-python-pptx>=0.6.23
+python-docx>=1.0.0
+python-pptx>=0.6.0
 pandas>=2.1.0
-openpyxl>=3.1.2
+openpyxl>=3.1.0
 
 # Web Automation
 playwright>=1.40.0
@@ -65,12 +68,13 @@ seaborn>=0.13.0
 
 # Natural Language Processing
 spacy>=3.7.0
-nltk>=3.8.1
-textblob>=0.17.1
+nltk>=3.8.0
+textblob>=0.15.0
 
 # Reasoning & Logic
 pyswip>=0.2.10  # Prolog integration
-z3-solver>=4.12.0  # SMT solver
+z3-solver>=4.8.0  # SMT solver
+sympy>=1.12.0
 
 # Multi-Agent Communication
 pydantic-settings>=2.1.0
@@ -103,9 +107,9 @@ ta>=0.11.0
 pandas-ta>=0.3.14b0
 
 # Audio Processing (for RealtimeSTT)
-pyaudio>=0.2.13
-sounddevice>=0.4.6
+# pyaudio>=0.2.13  # Removed due to system dependencies
 webrtcvad>=2.0.10
+sounddevice>=0.4.6
 whisper>=1.1.10
 
 # Code Generation Tools
