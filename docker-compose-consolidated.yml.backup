@@ -178,7 +178,7 @@ services:
 
   faiss:
     build:
-      context: ./docker/faiss
+      context: ./services/faiss
       dockerfile: Dockerfile
     container_name: sutazai-faiss
     restart: unless-stopped
@@ -301,7 +301,7 @@ services:
   # AutoGPT Agent
   autogpt:
     build:
-      context: ./docker/autogpt
+      context: ./agents/autogpt
       dockerfile: Dockerfile
     container_name: sutazai-autogpt
     restart: unless-stopped
@@ -322,7 +322,7 @@ services:
   # CrewAI Multi-Agent System
   crewai:
     build:
-      context: ./docker/crewai
+      context: ./agents/crewai
       dockerfile: Dockerfile
     container_name: sutazai-crewai
     restart: unless-stopped
@@ -345,7 +345,7 @@ services:
   # Letta (MemGPT) Agent
   letta:
     build:
-      context: ./docker/letta
+      context: ./agents/letta
       dockerfile: Dockerfile
     container_name: sutazai-letta
     restart: unless-stopped
@@ -366,7 +366,7 @@ services:
   # Aider Code Assistant
   aider:
     build:
-      context: ./docker/aider
+      context: ./agents/aider
       dockerfile: Dockerfile
     container_name: sutazai-aider
     restart: unless-stopped
@@ -388,7 +388,7 @@ services:
   # GPT-Engineer
   gpt-engineer:
     build:
-      context: ./docker/gpt-engineer
+      context: ./agents/gpt-engineer
       dockerfile: Dockerfile
     container_name: sutazai-gpt-engineer
     restart: unless-stopped
@@ -417,7 +417,7 @@ services:
       <<: *common-variables
     ports:
       - "8093:8080"
-    command: serve --model StarCoder-1B
+    command: serve --model TabbyML/StarCoder-1B --chat-model TabbyML/StarCoder-1B
     networks:
       - sutazai-network
 
@@ -425,21 +425,21 @@ services:
   semgrep:
     image: returntocorp/semgrep:latest
     container_name: sutazai-semgrep
-    restart: "no"
+    restart: unless-stopped
     volumes:
       - ./backend:/src/backend:ro
       - ./frontend:/src/frontend:ro
       - agent_outputs:/outputs
     environment:
       <<: *common-variables
-    command: ["semgrep", "--config=auto", "--output=/outputs/semgrep-report.json", "--json", "/src"]
+    command: --config=auto --output=/outputs/semgrep-report.json --json /src
     networks:
       - sutazai-network
 
   # Browser Use Agent
   browser-use:
     build:
-      context: ./docker/browser-use
+      context: ./agents/browser-use
       dockerfile: Dockerfile
     container_name: sutazai-browser-use
     restart: unless-stopped
@@ -459,7 +459,7 @@ services:
   # Skyvern Web Automation
   skyvern:
     build:
-      context: ./docker/skyvern
+      context: ./agents/skyvern
       dockerfile: Dockerfile
     container_name: sutazai-skyvern
     restart: unless-stopped
@@ -476,7 +476,7 @@ services:
   # LocalAGI Orchestrator
   localagi:
     build:
-      context: ./docker/localagi
+      context: ./agents/localagi
       dockerfile: Dockerfile
     container_name: sutazai-localagi
     restart: unless-stopped
@@ -497,7 +497,7 @@ services:
   # AgentGPT
   agentgpt:
     build:
-      context: ./docker/agentgpt
+      context: ./agents/agentgpt
       dockerfile: Dockerfile
     container_name: sutazai-agentgpt
     restart: unless-stopped
@@ -516,7 +516,7 @@ services:
   # PrivateGPT
   privategpt:
     build:
-      context: ./docker/privategpt
+      context: ./agents/privategpt
       dockerfile: Dockerfile
     container_name: sutazai-privategpt
     restart: unless-stopped
@@ -571,7 +571,7 @@ services:
   # LlamaIndex
   llamaindex:
     build:
-      context: ./docker/llamaindex
+      context: ./services/llamaindex
       dockerfile: Dockerfile
     container_name: sutazai-llamaindex
     restart: unless-stopped
@@ -591,7 +591,7 @@ services:
   # ShellGPT
   shellgpt:
     build:
-      context: ./docker/shellgpt
+      context: ./agents/shellgpt
       dockerfile: Dockerfile
     container_name: sutazai-shellgpt
     restart: unless-stopped
@@ -611,7 +611,7 @@ services:
   # PentestGPT Security Testing
   pentestgpt:
     build:
-      context: ./docker/pentestgpt
+      context: ./agents/pentestgpt
       dockerfile: Dockerfile
     container_name: sutazai-pentestgpt
     restart: unless-stopped
@@ -633,7 +633,7 @@ services:
 
   documind:
     build:
-      context: ./docker/documind
+      context: ./services/documind
       dockerfile: Dockerfile
     container_name: sutazai-documind
     restart: unless-stopped
@@ -653,7 +653,7 @@ services:
 
   pytorch:
     build:
-      context: ./docker/pytorch
+      context: ./services/pytorch
       dockerfile: Dockerfile
     container_name: sutazai-pytorch
     restart: unless-stopped
@@ -671,7 +671,7 @@ services:
 
   tensorflow:
     build:
-      context: ./docker/tensorflow
+      context: ./services/tensorflow
       dockerfile: Dockerfile
     container_name: sutazai-tensorflow
     restart: unless-stopped
@@ -688,7 +688,7 @@ services:
 
   jax:
     build:
-      context: ./docker/jax
+      context: ./services/jax
       dockerfile: Dockerfile
     container_name: sutazai-jax
     restart: unless-stopped
@@ -737,6 +737,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-sutazai_grafana}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=redis-datasource,neo4j-datasource
     ports:
       - "3000:3000"
     depends_on:
@@ -799,7 +800,7 @@ services:
 
   health-monitor:
     build:
-      context: ./docker/health-check
+      context: ./services/health-monitor
       dockerfile: Dockerfile
     container_name: sutazai-health-monitor
     restart: unless-stopped

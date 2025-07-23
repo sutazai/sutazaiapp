@@ -10,17 +10,21 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone AutoGPT
-RUN git clone https://github.com/Significant-Gravitas/AutoGPT.git .
+# Clone AutoGPT and install from the classic directory
+RUN git clone https://github.com/Significant-Gravitas/AutoGPT.git autogpt_repo && \
+    cd autogpt_repo/classic/original_autogpt && \
+    pip install --no-cache-dir -e .
 
-# Install Python dependencies
+# Copy service files
+COPY autogpt_service.py .
+COPY requirements.txt .
+
+# Install service dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python -m autogpt.app.main --ai-settings ai_settings.yaml\n\
-' > start.sh && chmod +x start.sh
+# Create workspace
+RUN mkdir -p /app/workspace
 
 EXPOSE 8080
 
-CMD ["./start.sh"]
+CMD ["uvicorn", "autogpt_service:app", "--host", "0.0.0.0", "--port", "8080"]

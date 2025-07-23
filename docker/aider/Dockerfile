@@ -7,19 +7,22 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone Aider
-RUN git clone https://github.com/Aider-AI/aider.git .
+# Install Aider from PyPI
+RUN pip install --no-cache-dir aider-chat
 
-# Install dependencies
-RUN pip install --no-cache-dir -e .
+# Copy service files
+COPY aider_service.py .
+COPY requirements.txt .
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-aider --api --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Install service dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create workspace
+RUN mkdir -p /app/workspace
 
 EXPOSE 8080
 
-CMD ["./start.sh"]
+CMD ["uvicorn", "aider_service:app", "--host", "0.0.0.0", "--port", "8080"]

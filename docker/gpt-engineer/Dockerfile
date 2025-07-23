@@ -7,19 +7,22 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone GPT-Engineer
-RUN git clone https://github.com/AntonOsika/gpt-engineer.git .
+# Install GPT-Engineer from PyPI
+RUN pip install --no-cache-dir gpt-engineer
 
-# Install dependencies
-RUN pip install --no-cache-dir -e .
+# Copy service files
+COPY gpt_engineer_service.py .
+COPY requirements.txt .
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python -m gpt_engineer.server --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Install service dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create workspace
+RUN mkdir -p /app/workspace
 
 EXPOSE 8080
 
-CMD ["./start.sh"]
+CMD ["uvicorn", "gpt_engineer_service:app", "--host", "0.0.0.0", "--port", "8080"]
