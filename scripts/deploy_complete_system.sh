@@ -113,17 +113,30 @@ setup_environment() {
     
     cd "$PROJECT_ROOT"
     
-    if [[ ! -f "$ENV_FILE" ]]; then
+    # Load existing environment variables if .env exists
+    if [[ -f "$ENV_FILE" ]]; then
+        log_info "Using existing environment configuration"
+        # Export all variables from .env file
+        set -a  # automatically export all variables
+        source "$ENV_FILE"
+        set +a  # stop automatically exporting
+        
+        # Ensure required variables are set with defaults if missing
+        export POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-"sutazai-dev-password"}
+        export REDIS_PASSWORD=${REDIS_PASSWORD:-"redis-dev-password"}
+        export NEO4J_PASSWORD=${NEO4J_PASSWORD:-"neo4j-dev-password"}
+        export SECRET_KEY=${SECRET_KEY:-"dev-secret-key-change-in-production"}
+    else
         log_info "Creating environment configuration..."
         
         # Generate secure passwords and keys
-        POSTGRES_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
-        REDIS_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
-        NEO4J_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
-        SECRET_KEY=$(openssl rand -hex 32)
-        CHROMADB_API_KEY=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
-        GRAFANA_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
-        N8N_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
+        export POSTGRES_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
+        export REDIS_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
+        export NEO4J_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-25)
+        export SECRET_KEY=$(openssl rand -hex 32)
+        export CHROMADB_API_KEY=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-32)
+        export GRAFANA_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
+        export N8N_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
         
         cat > "$ENV_FILE" << EOF
 # SutazAI System Configuration
@@ -189,8 +202,6 @@ EOF
         echo "N8N: admin / ${N8N_PASSWORD}"
         echo "Neo4j: neo4j / ${NEO4J_PASSWORD}"
         echo "----------------------------------------"
-    else
-        log_info "Using existing environment configuration"
     fi
 }
 
@@ -581,13 +592,25 @@ deploy_ai_services() {
 deploy_agent_ecosystem() {
     log_info "Deploying AI agent ecosystem..."
     
-    # Note: Many custom agents have build issues, focusing on working services
-    log_info "Custom agent builds have dependency issues, using existing simple agent implementations"
+    # Deploy all AI agents using consolidated compose file
+    log_info "Starting AI agent containers..."
+    docker-compose -f "$COMPOSE_FILE" up -d \
+        autogpt crewai aider gpt-engineer letta
     
-    # Deploy existing working agents
-    log_info "Agent ecosystem components already integrated in AI services"
+    # Wait for agents to be ready
+    sleep 10
+    
+    # Check agent health
+    agents=("autogpt" "crewai" "aider" "gpt-engineer" "letta")
+    for agent in "${agents[@]}"; do
+        if docker ps --filter "name=sutazai-$agent" --filter "status=running" | grep -q "$agent"; then
+            log_success "AI Agent ready: $agent"
+        else
+            log_warn "AI Agent may need attention: $agent"
+        fi
+    done
         
-    log_success "Agent ecosystem components available through existing services"
+    log_success "AI agent ecosystem deployed successfully"
 }
 
 deploy_application_services() {

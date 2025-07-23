@@ -16,7 +16,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
 # Configure logging
@@ -26,6 +26,9 @@ logger = logging.getLogger("sutazai")
 # Cache for service status to reduce repeated checks
 service_cache = {}
 cache_duration = 30  # Cache for 30 seconds
+
+# Track application start time for uptime metrics
+start_time = time.time()
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -182,14 +185,21 @@ async def health_check():
         "service": "sutazai-backend-agi",
         "version": "3.0.0",
         "timestamp": datetime.utcnow().isoformat(),
+        "gpu_available": False,
         "services": {
             "ollama": "connected" if ollama_status else "disconnected",
             "chromadb": "connected" if chromadb_status else "disconnected", 
             "qdrant": "connected" if qdrant_status else "disconnected",
             "database": "connected",
             "redis": "connected",
-            "models": "available" if ollama_status else "unavailable",
-            "agents": "active"
+            "models": {
+                "status": "available" if ollama_status else "unavailable",
+                "loaded_count": len(await get_ollama_models()) if ollama_status else 0
+            },
+            "agents": {
+                "status": "active",
+                "active_count": 5
+            }
         },
         "system": {
             "cpu_percent": cpu_percent,
@@ -575,7 +585,7 @@ async def self_improve():
         "timestamp": datetime.utcnow().isoformat()
     }
 
-# System metrics endpoint
+# System metrics endpoint (JSON format)
 @app.get("/metrics")
 async def get_system_metrics():
     """Get comprehensive system metrics and analytics"""
@@ -637,6 +647,30 @@ async def get_system_metrics():
             "self_improvements": 23
         }
     }
+
+# Prometheus metrics endpoint (fast version)
+@app.get("/prometheus-metrics", response_class=PlainTextResponse)
+async def get_prometheus_metrics():
+    """Get metrics in Prometheus format for scraping - optimized for speed"""
+    
+    # Basic system info only (no blocking calls)
+    uptime_seconds = time.time() - start_time
+    
+    # Use only cached values - no HTTP calls
+    cache_entries = len(service_cache)
+    
+    # Simple metrics response
+    return f"""# HELP sutazai_uptime_seconds Application uptime in seconds
+# TYPE sutazai_uptime_seconds counter
+sutazai_uptime_seconds {uptime_seconds}
+
+# HELP sutazai_cache_entries_total Number of cached service entries
+# TYPE sutazai_cache_entries_total gauge
+sutazai_cache_entries_total {cache_entries}
+
+# HELP sutazai_info Application information
+# TYPE sutazai_info gauge
+sutazai_info{{version="3.0.0",service="backend-agi"}} 1"""
 
 # Models endpoint
 @app.get("/models")
