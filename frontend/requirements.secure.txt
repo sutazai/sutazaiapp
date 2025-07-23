@@ -1,4 +1,4 @@
-# SutazAI Frontend Requirements - Updated 2025-07-23
+# SutazAI Secure Requirements - Updated 2025-07-23
 # Security vulnerabilities fixed
 
 streamlit>=1.36.0
@@ -26,10 +26,3 @@ aiohttp>=3.9.5
 fastapi>=0.111.0
 uvicorn>=0.30.1
 python-multipart>=0.0.6
-
-# Additional security packages
-urllib3>=2.2.2
-pillow>=10.4.0
-cryptography>=42.0.8
-jinja2>=3.1.4
-websockets>=12.0

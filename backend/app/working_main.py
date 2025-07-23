@@ -185,16 +185,22 @@ async def get_agents():
     """Get list of available AI agents"""
     agent_status = {}
     
-    # Check if agent containers are running
-    try:
-        import docker
-        client = docker.from_env()
-        containers = client.containers.list(all=True)
-        for container in containers:
-            if "sutazai-" in container.name:
-                agent_status[container.name] = container.status
-    except:
-        pass
+    # Check agent health via HTTP endpoints
+    agent_endpoints = {
+        "sutazai-autogpt": "http://autogpt:8080/health",
+        "sutazai-crewai": "http://crewai:8080/health", 
+        "sutazai-aider": "http://aider:8080/health",
+        "sutazai-gpt-engineer": "http://gpt-engineer:8080/health",
+        "sutazai-letta": "http://letta:8080/health"
+    }
+    
+    for container_name, endpoint in agent_endpoints.items():
+        try:
+            async with httpx.AsyncClient(timeout=3.0) as client:
+                response = await client.get(endpoint)
+                agent_status[container_name] = "running" if response.status_code == 200 else "stopped"
+        except:
+            agent_status[container_name] = "stopped"
     
     return {
         "agents": [
