@@ -13,6 +13,20 @@ import plotly.express as px
 import plotly.graph_objects as go
 from typing import Dict, List, Any
 import time
+import sys
+import os
+
+# Add components to path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'components'))
+
+try:
+    from enter_key_handler import add_enter_key_handler, show_enter_key_hint
+except ImportError:
+    # Fallback if component not available
+    def add_enter_key_handler():
+        pass
+    def show_enter_key_hint(message=""):
+        pass
 
 # Page configuration
 st.set_page_config(
@@ -47,8 +61,150 @@ st.markdown("""
         background-color: #f8d7da;
         color: #721c24;
     }
+    
+    /* Enhanced input styling with Enter key hint */
+    .stTextInput > div > div > input {
+        border: 2px solid #e1e5e9 !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+    }
+    .stTextInput > div > div > input:focus {
+        border-color: #1f77b4 !important;
+        box-shadow: 0 0 0 2px rgba(31, 119, 180, 0.2) !important;
+    }
+    .stTextArea > div > div > textarea {
+        border: 2px solid #e1e5e9 !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+    }
+    .stTextArea > div > div > textarea:focus {
+        border-color: #1f77b4 !important;
+        box-shadow: 0 0 0 2px rgba(31, 119, 180, 0.2) !important;
+    }
+    
+    /* Hint text for Enter key */
+    .enter-hint {
+        font-size: 0.8em;
+        color: #666;
+        margin-top: 4px;
+        font-style: italic;
+    }
 </style>
+
+<script>
+// Enhanced Enter key functionality for all inputs
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to add Enter key listener
+    function addEnterKeyListener(element, buttonSelector) {
+        element.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                const button = document.querySelector(buttonSelector);
+                if (button && !button.disabled) {
+                    button.click();
+                }
+            }
+        });
+    }
+    
+    // Function to observe and attach listeners to new elements
+    function attachEnterListeners() {
+        // Chat input
+        const chatInput = document.querySelector('[data-testid="stChatInput"] input');
+        if (chatInput && !chatInput.hasEnterListener) {
+            chatInput.hasEnterListener = true;
+            chatInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    // Trigger the chat input's built-in submission
+                    const submitEvent = new KeyboardEvent('keydown', {
+                        key: 'Enter',
+                        code: 'Enter',
+                        keyCode: 13,
+                        which: 13,
+                        bubbles: true
+                    });
+                    this.dispatchEvent(submitEvent);
+                }
+            });
+        }
+        
+        // Task description textarea
+        const taskTextarea = document.querySelector('textarea[placeholder*="Describe the task"]');
+        if (taskTextarea && !taskTextarea.hasEnterListener) {
+            taskTextarea.hasEnterListener = true;
+            addEnterKeyListener(taskTextarea, 'button[kind="primary"]:contains("🚀 Execute Task")');
+        }
+        
+        // Problem description textarea
+        const problemTextarea = document.querySelector('textarea[placeholder*="Problem Description"]');
+        if (problemTextarea && !problemTextarea.hasEnterListener) {
+            problemTextarea.hasEnterListener = true;
+            addEnterKeyListener(problemTextarea, 'button:contains("🧠 Solve Problem")');
+        }
+        
+        // Knowledge content textarea
+        const knowledgeTextarea = document.querySelector('textarea[placeholder*="Knowledge Content"]');
+        if (knowledgeTextarea && !knowledgeTextarea.hasEnterListener) {
+            knowledgeTextarea.hasEnterListener = true;
+            addEnterKeyListener(knowledgeTextarea, 'button:contains("📚 Add Knowledge")');
+        }
+        
+        // Search query input
+        const searchInput = document.querySelector('input[placeholder*="Search Query"]');
+        if (searchInput && !searchInput.hasEnterListener) {
+            searchInput.hasEnterListener = true;
+            addEnterKeyListener(searchInput, 'button:contains("🔍 Search")');
+        }
+        
+        // All other text inputs and textareas
+        const allInputs = document.querySelectorAll('input[type="text"], textarea');
+        allInputs.forEach(input => {
+            if (!input.hasEnterListener && !input.disabled) {
+                input.hasEnterListener = true;
+                input.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                        // Find the closest submit button
+                        let container = this.closest('.stForm, .element-container, [data-testid="column"]');
+                        if (!container) container = document;
+                        
+                        const submitButton = container.querySelector('button[kind="primary"], button[type="submit"], button:contains("Submit"), button:contains("Send"), button:contains("Execute"), button:contains("Add"), button:contains("Search"), button:contains("Generate")');
+                        
+                        if (submitButton && !submitButton.disabled) {
+                            event.preventDefault();
+                            submitButton.click();
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
+    // Initial attachment
+    attachEnterListeners();
+    
+    // Use MutationObserver to handle dynamically added elements
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                setTimeout(attachEnterListeners, 100);
+            }
+        });
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    // Periodic recheck for new elements
+    setInterval(attachEnterListeners, 2000);
+});
+</script>
 """, unsafe_allow_html=True)
+
+# Add enhanced Enter key handler
+add_enter_key_handler()
 
 # Initialize session state
 if 'messages' not in st.session_state:
@@ -288,7 +444,8 @@ def show_ai_chat():
                         for trace in message["cognitive_trace"]:
                             st.caption(f"{trace['module']}: {trace['result']}")
     
-    # Input
+    # Input with Enter key hint
+    show_enter_key_hint("💡 Tip: Press Enter to send your message")
     if prompt := st.chat_input("Ask anything..."):
         # Add user message
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -321,7 +478,12 @@ def show_agent_control():
     st.header("AI Agent Control Center")
     
     # Get agent status
-    agents = asyncio.run(call_api("/agents"))
+    agents_response = asyncio.run(call_api("/agents"))
+    
+    if agents_response and isinstance(agents_response, dict):
+        agents = agents_response.get("agents", [])
+    else:
+        agents = []
     
     if agents:
         # Tabs for different agent groups
@@ -338,7 +500,9 @@ def show_agent_control():
             
             task_agents = ["AutoGPT", "CrewAI", "LocalAGI", "AutoGen"]
             for i, agent_name in enumerate(task_agents):
-                agent = next((a for a in agents if a["name"] == agent_name), None)
+                agent = None
+                if isinstance(agents, list):
+                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
                 if agent:
                     with col1 if i % 2 == 0 else col2:
                         show_agent_card(agent)
@@ -349,7 +513,9 @@ def show_agent_control():
             
             code_agents = ["GPT-Engineer", "Aider", "TabbyML", "Semgrep"]
             for i, agent_name in enumerate(code_agents):
-                agent = next((a for a in agents if a["name"] == agent_name), None)
+                agent = None
+                if isinstance(agents, list):
+                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
                 if agent:
                     with col1 if i % 2 == 0 else col2:
                         show_agent_card(agent)
@@ -360,7 +526,9 @@ def show_agent_control():
             
             web_agents = ["BrowserUse", "Skyvern", "AgentGPT"]
             for i, agent_name in enumerate(web_agents):
-                agent = next((a for a in agents if a["name"] == agent_name), None)
+                agent = None
+                if isinstance(agents, list):
+                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
                 if agent:
                     with col1 if i % 2 == 0 else col2:
                         show_agent_card(agent)
@@ -371,7 +539,9 @@ def show_agent_control():
             
             special_agents = ["Documind", "FinRobot", "BigAGI", "AgentZero"]
             for i, agent_name in enumerate(special_agents):
-                agent = next((a for a in agents if a["name"] == agent_name), None)
+                agent = None
+                if isinstance(agents, list):
+                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
                 if agent:
                     with col1 if i % 2 == 0 else col2:
                         show_agent_card(agent)
@@ -384,6 +554,7 @@ def show_agent_control():
     with col1:
         task_desc = st.text_area("Task Description:", 
                                 placeholder="Describe the task you want to execute...")
+        show_enter_key_hint("💡 Tip: Press Enter to execute task")
     with col2:
         task_type = st.selectbox("Task Type:", [
             "General",
@@ -461,6 +632,7 @@ def show_agi_brain():
     ])
     
     problem_desc = st.text_area("Problem Description:")
+    show_enter_key_hint("💡 Tip: Press Enter to solve problem")
     
     if st.button("🧠 Solve Problem"):
         if problem_desc:
@@ -488,6 +660,7 @@ def show_knowledge_base():
         col1, col2 = st.columns([3, 1])
         with col1:
             knowledge_content = st.text_area("Knowledge Content:")
+            show_enter_key_hint("💡 Tip: Press Enter to add knowledge")
         with col2:
             knowledge_type = st.selectbox("Type:", [
                 "General",
@@ -511,6 +684,7 @@ def show_knowledge_base():
     col1, col2 = st.columns([3, 1])
     with col1:
         search_query = st.text_input("Search Query:")
+        show_enter_key_hint("💡 Tip: Press Enter to search")
     with col2:
         search_type = st.selectbox("Search Type:", [
             "Semantic",

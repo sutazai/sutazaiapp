@@ -125,7 +125,7 @@ async def query_ollama(model: str, prompt: str):
     try:
         for host in ["ollama:11434", "sutazai-ollama:11434"]:
             try:
-                async with httpx.AsyncClient(timeout=60.0) as client:
+                async with httpx.AsyncClient(timeout=90.0) as client:
                     response = await client.post(f"http://{host}/api/generate", json={
                         "model": model,
                         "prompt": prompt,

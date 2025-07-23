@@ -65,6 +65,19 @@ validate_system() {
         exit 1
     fi
     
+    # Check if compose file exists
+    if [[ ! -f "$COMPOSE_FILE" ]]; then
+        log_error "Docker compose file not found: $COMPOSE_FILE"
+        exit 1
+    fi
+    
+    # Validate compose file syntax
+    if ! docker-compose -f "$COMPOSE_FILE" config >/dev/null 2>&1; then
+        log_error "Docker compose file has syntax errors"
+        docker-compose -f "$COMPOSE_FILE" config
+        exit 1
+    fi
+    
     # Check available disk space (need at least 20GB)
     available_space=$(df -BG . | awk 'NR==2 {print $4}' | tr -d 'G')
     if [ "$available_space" -lt 20 ]; then
@@ -144,8 +157,9 @@ N8N_PASSWORD=${N8N_PASSWORD}
 HEALTH_ALERT_WEBHOOK=
 
 # Model Configuration
-DEFAULT_MODEL=deepseek-r1:8b
+DEFAULT_MODEL=llama3.2:1b
 EMBEDDING_MODEL=nomic-embed-text
+FALLBACK_MODELS=qwen2.5:3b,codellama:7b,deepseek-r1:8b
 
 # Resource Limits
 MAX_CONCURRENT_AGENTS=10
@@ -243,24 +257,32 @@ setup_directories() {
 # ===============================================
 
 stop_existing_services() {
-    log_info "Stopping existing services..."
+    log_info "Stopping existing SutazAI services..."
     
-    # Stop any running containers
-    if docker ps -q | grep -q .; then
-        docker stop $(docker ps -q) 2>/dev/null || true
-        docker rm $(docker ps -aq) 2>/dev/null || true
+    # Stop SutazAI containers specifically
+    local sutazai_containers=$(docker ps -q --filter "name=sutazai-")
+    if [[ -n "$sutazai_containers" ]]; then
+        log_info "Stopping SutazAI containers..."
+        docker stop $sutazai_containers 2>/dev/null || true
+        docker rm $sutazai_containers 2>/dev/null || true
     fi
     
-    # Clean up networks
-    docker network prune -f 2>/dev/null || true
+    # Remove SutazAI-specific compose services
+    if [[ -f "$COMPOSE_FILE" ]]; then
+        log_info "Stopping compose services..."
+        docker-compose -f "$COMPOSE_FILE" down 2>/dev/null || true
+    fi
+    
+    # Clean up SutazAI networks only
+    docker network ls --filter "name=sutazai" -q | xargs -r docker network rm 2>/dev/null || true
     
     # Clean up volumes (only if requested)
     if [[ "${CLEAN_VOLUMES:-false}" == "true" ]]; then
-        log_warn "Cleaning up existing volumes..."
-        docker volume prune -f 2>/dev/null || true
+        log_warn "Cleaning up SutazAI volumes..."
+        docker volume ls --filter "name=sutazai" -q | xargs -r docker volume rm 2>/dev/null || true
     fi
     
-    log_success "Existing services stopped"
+    log_success "Existing SutazAI services stopped"
 }
 
 # ===============================================
@@ -283,12 +305,13 @@ setup_ollama_models() {
         sleep 10
     done
     
-    # List of models to install
+    # List of models to install (CPU-optimized order)
     models=(
-        "deepseek-r1:8b"
-        "qwen3:8b"
-        "codellama:7b"
-        "nomic-embed-text"
+        "llama3.2:1b"        # Fastest model for CPU
+        "qwen2.5:3b"         # Good balance 
+        "codellama:7b"       # For code tasks
+        "nomic-embed-text"   # For embeddings
+        "deepseek-r1:8b"     # More capable but slower
     )
     
     for model in "${models[@]}"; do
@@ -501,7 +524,25 @@ deploy_core_services() {
     
     # Wait for core services to be healthy
     log_info "Waiting for core services to be ready..."
-    sleep 30
+    
+    # Wait for PostgreSQL specifically
+    local max_attempts=30
+    local attempt=0
+    while ! docker exec sutazai-postgres pg_isready -U postgres >/dev/null 2>&1; do
+        if [ $attempt -ge $max_attempts ]; then
+            log_error "PostgreSQL not ready after ${max_attempts} attempts"
+            break
+        fi
+        log_info "Waiting for PostgreSQL... (attempt $((++attempt)))"
+        sleep 5
+    done
+    
+    # Initialize database if needed
+    log_info "Initializing database..."
+    docker exec sutazai-postgres psql -U postgres -c "CREATE DATABASE sutazai;" 2>/dev/null || echo "Database may already exist"
+    docker exec sutazai-postgres psql -U postgres -c "CREATE USER sutazai WITH PASSWORD '${POSTGRES_PASSWORD}';" 2>/dev/null || echo "User may already exist"
+    docker exec sutazai-postgres psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sutazai TO sutazai;" 2>/dev/null
+    docker exec sutazai-postgres psql -U postgres -c "ALTER USER sutazai CREATEDB;" 2>/dev/null
     
     # Check service health
     services=("postgres" "redis" "neo4j" "chromadb" "qdrant")
@@ -797,13 +838,13 @@ run_health_checks() {
     
     # Test API endpoints
     api_endpoints=(
-        "http://localhost:8000/health:Backend API"
-        "http://localhost:8501:Frontend"
-        "http://localhost:9090:Prometheus"
-        "http://localhost:3000:Grafana"
-        "http://localhost:11434/api/tags:Ollama API"
-        "http://localhost:6333/cluster:Qdrant"
-        "http://localhost:8001/api/v1/heartbeat:ChromaDB"
+        "http://172.31.77.193:8000/health:Backend API"
+        "http://172.31.77.193:8501:Frontend"
+        "http://172.31.77.193:9090:Prometheus"
+        "http://172.31.77.193:3000:Grafana"
+        "http://172.31.77.193:11434/api/tags:Ollama API"
+        "http://172.31.77.193:6333/cluster:Qdrant"
+        "http://172.31.77.193:8001/api/v1/heartbeat:ChromaDB"
     )
     
     for endpoint_desc in "${api_endpoints[@]}"; do
@@ -859,33 +900,34 @@ main() {
         echo ""
         echo "=============================================="
         echo "🌐 Access Points:"
-        echo "   • Frontend:    http://localhost:8501"
-        echo "   • Backend API: http://localhost:8000"
-        echo "   • API Docs:    http://localhost:8000/docs"
-        echo "   • Prometheus:  http://localhost:9090" 
-        echo "   • Grafana:     http://localhost:3000"
-        echo "   • LangFlow:    http://localhost:8090"
-        echo "   • FlowiseAI:   http://localhost:8099"
-        echo "   • N8N:         http://localhost:5678"
+        echo "   • Frontend:    http://172.31.77.193:8501"
+        echo "   • Backend API: http://172.31.77.193:8000"
+        echo "   • API Docs:    http://172.31.77.193:8000/docs"
+        echo "   • Prometheus:  http://172.31.77.193:9090" 
+        echo "   • Grafana:     http://172.31.77.193:3000"
+        echo "   • LangFlow:    http://172.31.77.193:8090"
+        echo "   • FlowiseAI:   http://172.31.77.193:8099"
+        echo "   • N8N:         http://172.31.77.193:5678"
         echo ""
         echo "🤖 AI Agents:"
-        echo "   • CrewAI:      http://localhost:8096"
-        echo "   • Aider:       http://localhost:8095"
-        echo "   • GPT Engineer: http://localhost:8097"
-        echo "   • LlamaIndex:  http://localhost:8098"
-        echo "   • AgentGPT:    http://localhost:8091"
-        echo "   • PrivateGPT:  http://localhost:8092"
-        echo "   • TabbyML:     http://localhost:8093"
-        echo "   • ShellGPT:    http://localhost:8102"
+        echo "   • CrewAI:      http://172.31.77.193:8096"
+        echo "   • Aider:       http://172.31.77.193:8095"
+        echo "   • GPT Engineer: http://172.31.77.193:8097"
+        echo "   • LlamaIndex:  http://172.31.77.193:8098"
+        echo "   • AgentGPT:    http://172.31.77.193:8091"
+        echo "   • PrivateGPT:  http://172.31.77.193:8092"
+        echo "   • TabbyML:     http://172.31.77.193:8093"
+        echo "   • ShellGPT:    http://172.31.77.193:8102"
         echo ""
-        echo "📊 System Status: http://localhost:8100"
+        echo "📊 System Status: http://172.31.77.193:8100"
         echo "=============================================="
         echo ""
         echo "📋 Next Steps:"
-        echo "   1. Install AI models: ./scripts/install_models.sh"
-        echo "   2. Load sample data: ./scripts/load_sample_data.sh"
-        echo "   3. Configure agents: ./scripts/configure_agents.sh"
-        echo "   4. Run tests: ./scripts/run_tests.sh"
+        echo "   1. Access the system: http://172.31.77.193:8501"
+        echo "   2. Check AI Chat functionality"
+        echo "   3. Review logs: ./scripts/live_logs.sh"
+        echo "   4. Monitor system: ./scripts/live_logs.sh --overview"
+        echo "   5. For database issues: ./scripts/live_logs.sh --init-db"
         echo ""
     else
         log_error "❌ Deployment completed with some issues"
@@ -898,6 +940,31 @@ main() {
 # ===============================================
 # SCRIPT EXECUTION
 # ===============================================
+
+# Show usage information
+show_usage() {
+    echo "SutazAI Complete System Deployment Script"
+    echo ""
+    echo "Usage: $0 [COMMAND] [OPTIONS]"
+    echo ""
+    echo "Commands:"
+    echo "  deploy                 - Deploy complete SutazAI system (default)"
+    echo "  stop                   - Stop all SutazAI services"
+    echo "  restart                - Restart the complete system"
+    echo "  status                 - Show status of all services"
+    echo "  logs [service]         - Show logs for all services or specific service"
+    echo "  help                   - Show this help message"
+    echo ""
+    echo "Environment Variables:"
+    echo "  CLEAN_VOLUMES=true     - Clean existing volumes during deployment"
+    echo ""
+    echo "Examples:"
+    echo "  $0 deploy              # Deploy complete system"
+    echo "  $0 stop                # Stop all services"
+    echo "  $0 logs backend-agi    # Show backend logs"
+    echo "  CLEAN_VOLUMES=true $0 deploy  # Clean deployment"
+    echo ""
+}
 
 # Handle script arguments
 case "${1:-deploy}" in
@@ -925,8 +992,13 @@ case "${1:-deploy}" in
         cd "$PROJECT_ROOT"
         docker-compose -f "$COMPOSE_FILE" logs -f "${2:-}"
         ;;
+    "help"|"--help"|"-h")
+        show_usage
+        ;;
     *)
-        echo "Usage: $0 {deploy|stop|restart|status|logs [service]}"
+        echo "Unknown command: $1"
+        echo ""
+        show_usage
         exit 1
         ;;
 esac
