@@ -10,6 +10,7 @@ import logging
 import httpx
 import psutil
 import json
+import time
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 
@@ -21,6 +22,10 @@ from pydantic import BaseModel, Field
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sutazai")
+
+# Cache for service status to reduce repeated checks
+service_cache = {}
+cache_duration = 30  # Cache for 30 seconds
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -62,15 +67,30 @@ class KnowledgeRequest(BaseModel):
     type: str = "text"
 
 # Service connectivity helpers
+async def cached_service_check(service_name: str, check_func):
+    """Cache service check results to avoid repeated HTTP calls"""
+    current_time = time.time()
+    
+    # Check if we have a cached result that's still valid
+    if service_name in service_cache:
+        cached_time, cached_result = service_cache[service_name]
+        if current_time - cached_time < cache_duration:
+            return cached_result
+    
+    # Perform the actual check
+    result = await check_func()
+    service_cache[service_name] = (current_time, result)
+    return result
+
 async def check_ollama():
     """Check if Ollama service is available"""
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
+        async with httpx.AsyncClient(timeout=3.0) as client:  # Reduced timeout
             response = await client.get("http://ollama:11434/api/tags")
             return response.status_code == 200
     except:
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
+            async with httpx.AsyncClient(timeout=3.0) as client:  # Reduced timeout
                 response = await client.get("http://sutazai-ollama:11434/api/tags")
                 return response.status_code == 200
         except:
@@ -147,10 +167,11 @@ async def query_ollama(model: str, prompt: str):
 # Health check endpoint
 @app.get("/health")
 async def health_check():
-    """Comprehensive system health check"""
-    ollama_status = await check_ollama()
-    chromadb_status = await check_chromadb()
-    qdrant_status = await check_qdrant()
+    """Comprehensive system health check with caching"""
+    # Use cached checks to avoid repeated HTTP calls
+    ollama_status = await cached_service_check("ollama", check_ollama)
+    chromadb_status = await cached_service_check("chromadb", check_chromadb)
+    qdrant_status = await cached_service_check("qdrant", check_qdrant)
     
     # Get system metrics
     cpu_percent = psutil.cpu_percent()
@@ -180,12 +201,25 @@ async def health_check():
     }
 
 # Agent management endpoints
+async def check_agent_status(agent_name: str, endpoint: str) -> tuple:
+    """Check individual agent status"""
+    try:
+        async with httpx.AsyncClient(timeout=2.0) as client:  # Fast timeout for agents
+            response = await client.get(endpoint)
+            return agent_name, "running" if response.status_code == 200 else "stopped"
+    except:
+        return agent_name, "stopped"
+
 @app.get("/agents")
 async def get_agents():
-    """Get list of available AI agents"""
-    agent_status = {}
+    """Get list of available AI agents with concurrent health checks"""
+    # Check if we have cached agent status
+    if "agents" in service_cache:
+        cached_time, cached_result = service_cache["agents"]
+        if time.time() - cached_time < cache_duration:
+            return cached_result
     
-    # Check agent health via HTTP endpoints
+    # Check agent health via HTTP endpoints concurrently
     agent_endpoints = {
         "sutazai-autogpt": "http://autogpt:8080/health",
         "sutazai-crewai": "http://crewai:8080/health", 
@@ -194,15 +228,21 @@ async def get_agents():
         "sutazai-letta": "http://letta:8080/health"
     }
     
-    for container_name, endpoint in agent_endpoints.items():
-        try:
-            async with httpx.AsyncClient(timeout=3.0) as client:
-                response = await client.get(endpoint)
-                agent_status[container_name] = "running" if response.status_code == 200 else "stopped"
-        except:
-            agent_status[container_name] = "stopped"
+    # Make all agent health checks concurrently
+    tasks = [check_agent_status(name, endpoint) for name, endpoint in agent_endpoints.items()]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
     
-    return {
+    # Process results
+    agent_status = {}
+    for result in results:
+        if isinstance(result, tuple):
+            agent_name, status = result
+            agent_status[agent_name] = status
+        else:
+            # Handle exceptions
+            logger.warning(f"Agent check failed: {result}")
+    
+    response = {
         "agents": [
             {
                 "id": "agi-brain",
@@ -260,6 +300,10 @@ async def get_agents():
             }
         ]
     }
+    
+    # Cache the result
+    service_cache["agents"] = (time.time(), response)
+    return response
 
 # Chat endpoint
 @app.post("/chat")

@@ -632,16 +632,22 @@ show_system_overview() {
     echo "│ Container           │ Status │ Health   │ Ports       │"
     echo "├─────────────────────┼────────┼──────────┼─────────────┤"
     
-    containers=(
-        "sutazai-postgres:5432"
-        "sutazai-redis:6379"
-        "sutazai-neo4j:7474,7687"
-        "sutazai-chromadb:8001"
-        "sutazai-qdrant:6333"
-        "sutazai-ollama:11434"
-        "sutazai-backend-agi:8000"
-        "sutazai-frontend-agi:8501"
-    )
+    # Automatically discover all SutazAI containers
+    containers=()
+    while IFS= read -r container_name; do
+        # Get port mappings for this container
+        ports=$(docker port "$container_name" 2>/dev/null | grep '0.0.0.0:' | awk '{print $3}' | cut -d':' -f2 | sort -n -u | tr '\n' ',' | sed 's/,$//')
+        if [ -z "$ports" ]; then
+            ports="-"
+        fi
+        containers+=("${container_name}:${ports}")
+    done < <(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sort)
+    
+    # If no SutazAI containers found, show message
+    if [ ${#containers[@]} -eq 0 ]; then
+        echo -e "${RED}No SutazAI containers found. Please start the system first.${NC}"
+        return
+    fi
     
     for container_info in "${containers[@]}"; do
         IFS=':' read -r container ports <<< "$container_info"
@@ -679,10 +685,66 @@ show_system_overview() {
     
     echo ""
     echo -e "${PURPLE}Access URLs:${NC}"
-    echo "• Frontend: http://172.31.77.193:8501"
-    echo "• Backend API: http://172.31.77.193:8000"
-    echo "• API Docs: http://172.31.77.193:8000/docs"
+    
+    # Dynamically discover web interfaces
+    urls_found=0
+    while IFS= read -r container_name; do
+        service=$(echo "$container_name" | sed 's/sutazai-//')
+        port=$(docker port "$container_name" 2>/dev/null | grep '0.0.0.0:' | head -1 | awk '{print $3}' | cut -d':' -f2)
+        
+        if [ -n "$port" ]; then
+            case "$service" in
+                "frontend-agi")
+                    echo "• Frontend: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "backend-agi")
+                    echo "• Backend API: http://172.31.77.193:${port}"
+                    echo "• API Docs: http://172.31.77.193:${port}/docs"
+                    urls_found=1
+                    ;;
+                "grafana")
+                    echo "• Grafana: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "prometheus")
+                    echo "• Prometheus: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "n8n")
+                    echo "• N8N Workflows: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "langflow")
+                    echo "• LangFlow: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "flowise")
+                    echo "• Flowise: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+                "neo4j")
+                    echo "• Neo4j Browser: http://172.31.77.193:${port}"
+                    urls_found=1
+                    ;;
+            esac
+        fi
+    done < <(docker ps --filter "name=sutazai-" --format "{{.Names}}")
+    
+    if [ $urls_found -eq 0 ]; then
+        echo -e "${RED}No web interfaces found. Please start the system first.${NC}"
+    fi
     echo ""
+}
+
+# Function to log with color and service prefix
+log_with_color() {
+    local color="$1"
+    local service="$2"
+    local message="$3"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    echo -e "${color}[${timestamp}] [${service}]${NC} ${message}"
 }
 
 # Function to show live logs
@@ -693,30 +755,47 @@ show_live_logs() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    # Start background log monitoring
-    (
-        docker logs -f sutazai-backend-agi 2>&1 | while IFS= read -r line; do
-            log_with_color "$GREEN" "BACKEND" "$line"
-        done
-    ) &
-    BACKEND_PID=$!
+    # Automatically discover and monitor all SutazAI containers
+    log_pids=()
+    container_colors=("$GREEN" "$BLUE" "$YELLOW" "$PURPLE" "$CYAN" "$RED" "$GREEN" "$BLUE" "$YELLOW" "$PURPLE" "$CYAN" "$RED")
+    color_index=0
     
-    (
-        docker logs -f sutazai-frontend-agi 2>&1 | while IFS= read -r line; do
-            log_with_color "$BLUE" "FRONTEND" "$line"
-        done
-    ) &
-    FRONTEND_PID=$!
+    # Get list of running SutazAI containers
+    running_containers=($(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sort))
     
-    (
-        docker logs -f sutazai-ollama 2>&1 | while IFS= read -r line; do
-            log_with_color "$YELLOW" "OLLAMA" "$line"
-        done
-    ) &
-    OLLAMA_PID=$!
+    if [ ${#running_containers[@]} -eq 0 ]; then
+        echo -e "${RED}No SutazAI containers found for log monitoring.${NC}"
+        return
+    fi
     
-    # Wait for interrupt
-    trap 'kill $BACKEND_PID $FRONTEND_PID $OLLAMA_PID 2>/dev/null; exit 0' INT TERM
+    echo -e "${GREEN}Monitoring logs from ${#running_containers[@]} containers:${NC}"
+    for container in "${running_containers[@]}"; do
+        # Create short display name
+        display_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
+        echo "  • $container → $display_name"
+    done
+    echo ""
+    
+    # Start log monitoring for each container
+    for container in "${running_containers[@]}"; do
+        # Create short display name
+        display_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
+        
+        # Get color for this container
+        color=${container_colors[$((color_index % ${#container_colors[@]}))]}
+        ((color_index++))
+        
+        # Start background log monitoring
+        (
+            docker logs -f "$container" 2>&1 | while IFS= read -r line; do
+                log_with_color "$color" "$display_name" "$line"
+            done
+        ) &
+        log_pids+=($!)
+    done
+    
+    # Wait for interrupt and kill all background processes
+    trap "kill ${log_pids[*]} 2>/dev/null; exit 0" INT TERM
     wait
 }
 
@@ -727,26 +806,71 @@ test_api_endpoints() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    endpoints=(
-        "GET:http://172.31.77.193:8000/health:Health Check"
-        "GET:http://172.31.77.193:8000/:System Info"
-        "GET:http://172.31.77.193:8000/agents:Agent List"
-        "GET:http://172.31.77.193:8000/models:Model List"
-        "POST:http://172.31.77.193:8000/simple-chat:Simple Chat"
-    )
+    # Automatically discover endpoints based on running containers
+    endpoints=()
+    
+    # Core backend endpoints (always test if backend is running)
+    if docker ps --filter "name=sutazai-backend" --format "{{.Names}}" | grep -q .; then
+        endpoints+=(
+            "GET|http://172.31.77.193:8000/health|Backend Health"
+            "GET|http://172.31.77.193:8000/agents|Agent List"
+            "GET|http://172.31.77.193:8000/models|Model List"
+            "POST|http://172.31.77.193:8000/simple-chat|Simple Chat"
+        )
+    fi
+    
+    # Dynamically add agent endpoints based on running containers
+    while IFS= read -r container_name; do
+        # Extract service name and get its port
+        service=$(echo "$container_name" | sed 's/sutazai-//')
+        port=$(docker port "$container_name" 2>/dev/null | grep '0.0.0.0:' | head -1 | awk '{print $3}' | cut -d':' -f2)
+        
+        if [ -n "$port" ]; then
+            case "$service" in
+                "letta"|"crewai"|"autogpt"|"aider"|"gpt-engineer"|"faiss")
+                    endpoints+=("GET|http://172.31.77.193:${port}/health|${service^} Health")
+                    ;;
+                "ollama")
+                    endpoints+=("GET|http://172.31.77.193:${port}/api/tags|Ollama Models")
+                    ;;
+                "grafana")
+                    endpoints+=("GET|http://172.31.77.193:${port}/api/health|Grafana Health")
+                    ;;
+                "prometheus")
+                    endpoints+=("GET|http://172.31.77.193:${port}/-/healthy|Prometheus Health")
+                    ;;
+            esac
+        fi
+    done < <(docker ps --filter "name=sutazai-" --format "{{.Names}}")
+    
+    # If no endpoints found, show message
+    if [ ${#endpoints[@]} -eq 0 ]; then
+        echo -e "${RED}No API endpoints found to test. Please start the system first.${NC}"
+        return
+    fi
+    
+    echo -e "${GREEN}Testing ${#endpoints[@]} discovered endpoints:${NC}"
+    echo ""
     
     for endpoint_info in "${endpoints[@]}"; do
-        IFS=':' read -r method url description <<< "$endpoint_info"
+        IFS='|' read -r method url description <<< "$endpoint_info"
         echo -n "Testing $description ($method $url)... "
         
         if [ "$method" = "GET" ]; then
-            if curl -f "$url" >/dev/null 2>&1; then
+            # Use longer timeout for model-related endpoints
+            timeout=10
+            if [[ "$url" == *"/models"* ]] || [[ "$url" == *"simple-chat"* ]]; then
+                timeout=30
+            fi
+            
+            if curl -f --connect-timeout 5 --max-time $timeout "$url" >/dev/null 2>&1; then
                 echo -e "${GREEN}✓ OK${NC}"
             else
                 echo -e "${RED}✗ FAILED${NC}"
             fi
         elif [ "$method" = "POST" ]; then
-            if curl -f -X POST "$url" -H "Content-Type: application/json" -d '{"message":"test"}' >/dev/null 2>&1; then
+            # POST requests typically take longer (LLM processing)
+            if curl -f --connect-timeout 5 --max-time 30 -X POST "$url" -H "Content-Type: application/json" -d '{"message":"test"}' >/dev/null 2>&1; then
                 echo -e "${GREEN}✓ OK${NC}"
             else
                 echo -e "${RED}✗ FAILED${NC}"
@@ -929,6 +1053,84 @@ show_debug_menu() {
     esac
 }
 
+# Function to show unified live logs (all containers in one stream)
+show_unified_live_logs() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                 SUTAZAI UNIFIED LIVE LOGS                   ║${NC}"
+    echo -e "${CYAN}║                  Press Ctrl+C to return                     ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Get list of running SutazAI containers
+    running_containers=($(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sort))
+    
+    if [ ${#running_containers[@]} -eq 0 ]; then
+        echo -e "${RED}No SutazAI containers found for log monitoring.${NC}"
+        read -p "Press Enter to return to menu..."
+        show_menu
+        return
+    fi
+    
+    echo -e "${GREEN}🔍 Monitoring ${#running_containers[@]} containers in unified stream${NC}"
+    echo ""
+    
+    # Define colors for different containers
+    colors=(31 32 33 34 35 36 91 92 93 94 95 96)
+    
+    # Set up cleanup function
+    cleanup_unified_logs() {
+        echo ""
+        echo -e "${YELLOW}🛑 Stopping unified log monitoring...${NC}"
+        jobs -p | xargs -r kill 2>/dev/null
+        echo -e "${GREEN}✓ Returned to main menu${NC}"
+        show_menu
+    }
+    
+    # Set signal trap
+    trap cleanup_unified_logs INT TERM
+    
+    # Start streaming logs from all containers
+    echo -e "${CYAN}════════════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}📡 LIVE UNIFIED LOG STREAM - Press Ctrl+C to stop${NC}"
+    echo -e "${CYAN}════════════════════════════════════════════════════════════════${NC}"
+    
+    # Use docker compose logs with follow for real unified streaming
+    if command -v docker-compose &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
+        # Use docker-compose logs for true unified streaming
+        cd /opt/sutazaiapp
+        docker-compose logs -f --tail=5 2>/dev/null || {
+            # Fallback to individual container streaming
+            echo -e "${YELLOW}Docker compose not available, using individual streams...${NC}"
+            individual_streaming
+        }
+    else
+        individual_streaming
+    fi
+}
+
+# Fallback function for individual container streaming
+individual_streaming() {
+    local color_index=0
+    local colors=(31 32 33 34 35 36 91 92 93 94 95 96)
+    
+    for container in "${running_containers[@]}"; do
+        local short_name=$(echo "$container" | sed 's/sutazai-//' | tr '[:lower:]' '[:upper:]' | cut -c1-8)
+        local color_code=${colors[$((color_index % ${#colors[@]}))]}
+        
+        # Stream each container's logs in background with color and formatting
+        {
+            docker logs -f --tail=2 "$container" 2>&1 | while IFS= read -r line; do
+                printf "\033[%sm[%s] [%s]\033[0m %s\n" "$color_code" "$(date '+%H:%M:%S')" "$short_name" "$line"
+            done
+        } &
+        
+        ((color_index++))
+    done
+    
+    # Wait for all background processes
+    wait
+}
+
 # Main menu
 show_menu() {
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -944,9 +1146,10 @@ show_menu() {
     echo "7. Database Repair"
     echo "8. System Repair"
     echo "9. Restart All Services"
+    echo "10. Unified Live Logs (All in One)"
     echo "0. Exit"
     echo ""
-    read -p "Select option (0-9): " choice
+    read -p "Select option (0-10): " choice
     
     case $choice in
         1) show_system_overview; read -p "Press Enter to continue..."; show_menu ;;
@@ -964,6 +1167,7 @@ show_menu() {
             read -p "Press Enter to continue..."
             show_menu
             ;;
+        10) show_unified_live_logs ;;
         0) echo "Goodbye!"; exit 0 ;;
         *) echo "Invalid option"; show_menu ;;
     esac

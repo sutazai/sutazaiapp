@@ -220,7 +220,7 @@ API_BASE_URL = os.getenv("BACKEND_URL", "http://backend-agi:8000")
 
 async def call_api(endpoint: str, method: str = "GET", data: Dict = None):
     """Call backend API with extended timeout for CPU inference"""
-    timeout = 90.0  # Increased timeout for CPU-based model inference
+    timeout = 5.0 if endpoint in ["/health", "/agents", "/metrics"] else 30.0  # Fast timeout for status checks
     async with httpx.AsyncClient(timeout=timeout) as client:
         try:
             if method == "GET":
@@ -254,8 +254,20 @@ def main():
         st.image("https://via.placeholder.com/300x100?text=SutazAI+Logo", use_container_width=True)
         st.markdown("---")
         
-        # System Status
-        status = asyncio.run(call_api("/health"))
+        # System Status with caching and refresh button
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            if st.button("🔄 Refresh", key="sidebar_refresh"):
+                st.session_state.pop('cached_status', None)
+                st.session_state.pop('status_time', None)
+                st.rerun()
+        
+        with col1:
+            if 'cached_status' not in st.session_state or time.time() - st.session_state.get('status_time', 0) > 15:  # Reduced cache time
+                st.session_state.cached_status = asyncio.run(call_api("/health"))
+                st.session_state.status_time = time.time()
+        
+        status = st.session_state.cached_status
         if status:
             st.success("🟢 System Online")
             with st.expander("System Components"):
@@ -303,10 +315,27 @@ def show_dashboard():
     """Show main dashboard"""
     st.header("System Dashboard")
     
-    # Fetch real metrics from backend
-    metrics_data = asyncio.run(call_api("/metrics"))
-    agents_data = asyncio.run(call_api("/agents"))
-    health_data = asyncio.run(call_api("/health"))
+    # Add refresh button to dashboard
+    col1, col2, col3, col4 = st.columns([2, 2, 2, 1])
+    with col4:
+        if st.button("🔄 Refresh Data", key="dashboard_refresh"):
+            st.session_state.pop('cached_metrics', None)
+            st.session_state.pop('cached_agents', None)
+            st.session_state.pop('cached_health', None)
+            st.session_state.pop('metrics_time', None)
+            st.rerun()
+    
+    # Fetch real metrics from backend with caching
+    if 'cached_metrics' not in st.session_state or time.time() - st.session_state.get('metrics_time', 0) > 30:  # Reduced to 30 seconds
+        with st.spinner("Loading system data..."):
+            st.session_state.cached_metrics = asyncio.run(call_api("/metrics"))
+            st.session_state.cached_agents = asyncio.run(call_api("/agents"))
+            st.session_state.cached_health = asyncio.run(call_api("/health"))
+            st.session_state.metrics_time = time.time()
+    
+    metrics_data = st.session_state.cached_metrics
+    agents_data = st.session_state.cached_agents
+    health_data = st.session_state.cached_health
     
     # Metrics row
     col1, col2, col3, col4 = st.columns(4)

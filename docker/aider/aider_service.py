@@ -39,7 +39,7 @@ class AiderManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "model": "ollama/deepseek-r1:8b",
+            "model": "ollama/llama3.2:1b",
             "api_base": "http://ollama:11434",
             "api_key": "local"
         }
@@ -58,13 +58,15 @@ class AiderManager:
             env = os.environ.copy()
             env.update({
                 "OPENAI_API_BASE": self.config["api_base"],
-                "OPENAI_API_KEY": self.config["api_key"]
+                "OPENAI_API_KEY": self.config["api_key"],
+                "OLLAMA_API_BASE": self.config["api_base"],
+                "OLLAMA_API_KEY": self.config["api_key"]
             })
             
             # Build Aider command
             cmd = [
                 "aider",
-                "--model", f"ollama/{request.model or 'deepseek-r1:8b'}",
+                "--model", f"ollama/{request.model or 'llama3.2:1b'}",
                 "--openai-api-base", self.config["api_base"] + "/v1",
                 "--openai-api-key", self.config["api_key"],
                 "--message", request.message,

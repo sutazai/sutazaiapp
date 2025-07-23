@@ -39,7 +39,7 @@ class AutoGPTManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "ai_model": "deepseek-r1:8b",
+            "ai_model": "llama3.2:1b",
             "api_base": "http://ollama:11434/v1",
             "api_key": "local"
         }
@@ -71,12 +71,13 @@ class AutoGPTManager:
             # Create AI settings
             settings_path = self.create_ai_settings(request.task)
             
-            # Set environment variables
+            # Set environment variables for local Ollama
             env = os.environ.copy()
             env.update({
-                "OPENAI_API_BASE": self.config["api_base"],
-                "OPENAI_API_KEY": self.config["api_key"],
-                "AUTOGPT_WORKSPACE": request.workspace
+                "OPENAI_API_BASE": "http://ollama:11434/v1",
+                "OPENAI_API_KEY": "ollama",  # Ollama doesn't need real API key
+                "AUTOGPT_WORKSPACE": request.workspace,
+                "LLM_MODEL": "llama3.2:1b"
             })
             
             # Change to autogpt classic directory

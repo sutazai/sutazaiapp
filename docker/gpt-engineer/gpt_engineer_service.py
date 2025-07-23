@@ -68,18 +68,19 @@ class GPTEngineerManager:
             # Create prompt file
             prompt_path = self.create_project_prompt(request.prompt, project_path)
             
-            # Set environment variables
+            # Set environment variables for local Ollama
             env = os.environ.copy()
             env.update({
-                "OPENAI_API_BASE": self.config["api_base"],
-                "OPENAI_API_KEY": self.config["api_key"],
-                "OPENAI_API_MODEL": request.model or self.config["model"]
+                "OPENAI_API_BASE": "http://ollama:11434/v1",
+                "OPENAI_API_KEY": "ollama",  # Ollama doesn't need real API key
+                "OPENAI_API_MODEL": request.model or "deepseek-r1:8b"
             })
             
-            # Execute GPT-Engineer
+            # Execute GPT-Engineer with local model
             cmd = [
                 "gpt-engineer",
                 project_path,
+                "--model", request.model or "deepseek-r1:8b",
                 "--temperature", "0.7"
             ]
             
