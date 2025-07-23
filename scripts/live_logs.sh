@@ -70,16 +70,23 @@ print_header() {
 show_usage() {
     echo -e "${GREEN}Usage: $0 [COMMAND] [OPTIONS]${NC}"
     echo ""
-    echo -e "${YELLOW}Commands:${NC}"
+    echo -e "${YELLOW}Primary Commands:${NC}"
     echo "  live                    - Start live log monitoring"
     echo "  follow [service]        - Follow specific service logs"
-    echo "  cleanup                 - Clean old logs and reset"
+    echo "  cleanup [days]          - Clean old logs (default: 7 days)"
     echo "  reset                   - Reset all logs (DANGEROUS)"
     echo "  debug [on|off]          - Toggle debugging mode"
     echo "  level [DEBUG|INFO|WARN] - Set log level"
     echo "  config                  - Show current configuration"
     echo "  status                  - Show log status and disk usage"
     echo "  archive                 - Archive old logs"
+    echo ""
+    echo -e "${YELLOW}System Management:${NC}"
+    echo "  --init-db               - Initialize SutazAI database"
+    echo "  --repair                - Complete system repair"
+    echo "  --overview              - System overview (non-interactive)"
+    echo "  --test                  - Test API endpoints"
+    echo "  --stats                 - Container statistics"
     echo ""
     echo -e "${YELLOW}Live Monitoring Options:${NC}"
     echo "  --filter [pattern]      - Filter logs by pattern"
@@ -90,9 +97,10 @@ show_usage() {
     echo -e "${YELLOW}Examples:${NC}"
     echo "  $0 live --service backend --filter error"
     echo "  $0 follow sutazai-backend"
-    echo "  $0 cleanup --older-than 3d"
-    echo "  $0 debug on"
-    echo "  $0 reset --confirm"
+    echo "  $0 cleanup 3            # Clean logs older than 3 days"
+    echo "  $0 debug on             # Enable debug mode"
+    echo "  $0 --repair             # Fix database and restart services"
+    echo "  $0 --init-db            # Initialize database only"
 }
 
 # Get container logs
@@ -583,18 +591,7 @@ main() {
     esac
 }
 
-# Execute main function
-main "$@"
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
-
-# Function to print colored output
-log_with_color() {
-    local color=$1
-    local service=$2
-    local message=$3
-    echo -e "${color}[$(date +'%H:%M:%S')] [${service}]${NC} ${message}"
-}
+# Note: main function execution removed - using direct case statement below
 
 # Function to check container status
 check_container_status() {
@@ -779,6 +776,159 @@ show_container_stats() {
         sutazai-qdrant sutazai-ollama sutazai-backend-agi sutazai-frontend-agi 2>/dev/null
 }
 
+# Log management menu
+show_log_management_menu() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                     LOG MANAGEMENT                          ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Show current log status
+    show_status
+    echo ""
+    
+    echo "1. Cleanup Old Logs (7+ days)"
+    echo "2. Cleanup Old Logs (Custom days)"
+    echo "3. Reset All Logs (DANGEROUS)"
+    echo "4. Archive Old Logs"
+    echo "5. View Log Status"
+    echo "6. Rotate Large Logs"
+    echo "7. Clear Docker Logs"
+    echo "8. Back to Main Menu"
+    echo ""
+    read -p "Select option (1-8): " choice
+    
+    case $choice in
+        1) 
+            cleanup_logs "7d" "false"
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        2)
+            read -p "Enter number of days (e.g., 3): " days
+            if [[ "$days" =~ ^[0-9]+$ ]]; then
+                cleanup_logs "${days}d" "false"
+            else
+                echo -e "${RED}Invalid input. Please enter a number.${NC}"
+            fi
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        3)
+            echo -e "${RED}WARNING: This will delete ALL logs permanently!${NC}"
+            read -p "Type 'CONFIRM' to proceed: " confirm
+            if [[ "$confirm" == "CONFIRM" ]]; then
+                reset_logs "true"
+            else
+                echo "Reset cancelled."
+            fi
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        4)
+            archive_logs
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        5)
+            show_status
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        6)
+            rotate_large_logs
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        7)
+            echo "Clearing Docker container logs..."
+            docker system prune -f --filter "until=24h" >/dev/null 2>&1
+            echo -e "${GREEN}Docker logs cleared${NC}"
+            read -p "Press Enter to continue..."
+            show_log_management_menu
+            ;;
+        8) show_menu ;;
+        *) echo "Invalid option"; show_log_management_menu ;;
+    esac
+}
+
+# Debug control menu
+show_debug_menu() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                      DEBUG CONTROLS                         ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Show current debug status
+    echo -e "${YELLOW}Current Configuration:${NC}"
+    echo "  Debug Mode: $DEBUG_MODE"
+    echo "  Log Level: $LOG_LEVEL"
+    echo ""
+    
+    echo "1. Enable Debug Mode"
+    echo "2. Disable Debug Mode"
+    echo "3. Set Log Level to DEBUG"
+    echo "4. Set Log Level to INFO"
+    echo "5. Set Log Level to WARN"
+    echo "6. Set Log Level to ERROR"
+    echo "7. Show Current Config"
+    echo "8. Reset to Defaults"
+    echo "9. Back to Main Menu"
+    echo ""
+    read -p "Select option (1-9): " choice
+    
+    case $choice in
+        1)
+            toggle_debug "on"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        2)
+            toggle_debug "off"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        3)
+            set_log_level "DEBUG"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        4)
+            set_log_level "INFO"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        5)
+            set_log_level "WARN"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        6)
+            set_log_level "ERROR"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        7)
+            show_config
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        8)
+            DEBUG_MODE="$DEFAULT_DEBUG_MODE"
+            LOG_LEVEL="$DEFAULT_LOG_LEVEL"
+            MAX_LOG_SIZE="$DEFAULT_MAX_LOG_SIZE"
+            MAX_LOG_FILES="$DEFAULT_MAX_LOG_FILES"
+            CLEANUP_DAYS="$DEFAULT_CLEANUP_DAYS"
+            save_config
+            echo -e "${GREEN}Configuration reset to defaults${NC}"
+            read -p "Press Enter to continue..."
+            show_debug_menu
+            ;;
+        9) show_menu ;;
+        *) echo "Invalid option"; show_debug_menu ;;
+    esac
+}
+
 # Main menu
 show_menu() {
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -789,40 +939,123 @@ show_menu() {
     echo "2. Live Logs (All Services)"
     echo "3. Test API Endpoints"
     echo "4. Container Statistics"
-    echo "5. Restart All Services"
-    echo "6. Exit"
+    echo "5. Log Management"
+    echo "6. Debug Controls"
+    echo "7. Database Repair"
+    echo "8. System Repair"
+    echo "9. Restart All Services"
+    echo "0. Exit"
     echo ""
-    read -p "Select option (1-6): " choice
+    read -p "Select option (0-9): " choice
     
     case $choice in
         1) show_system_overview; read -p "Press Enter to continue..."; show_menu ;;
         2) show_live_logs ;;
         3) test_api_endpoints; read -p "Press Enter to continue..."; show_menu ;;
         4) show_container_stats; read -p "Press Enter to continue..."; show_menu ;;
-        5) 
+        5) show_log_management_menu ;;
+        6) show_debug_menu ;;
+        7) init_database; read -p "Press Enter to continue..."; show_menu ;;
+        8) repair_system; read -p "Press Enter to continue..."; show_menu ;;
+        9) 
             echo "Restarting all SutazAI services..."
             docker-compose -f /opt/sutazaiapp/docker-compose-consolidated.yml restart
             echo "All services restarted!"
             read -p "Press Enter to continue..."
             show_menu
             ;;
-        6) echo "Goodbye!"; exit 0 ;;
+        0) echo "Goodbye!"; exit 0 ;;
         *) echo "Invalid option"; show_menu ;;
     esac
 }
 
+# Database initialization function
+init_database() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                    DATABASE INITIALIZATION                  ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    echo "Initializing SutazAI database..."
+    
+    # Wait for PostgreSQL to be ready
+    echo "Waiting for PostgreSQL to be ready..."
+    for i in {1..30}; do
+        if docker exec sutazai-postgres pg_isready -U postgres >/dev/null 2>&1; then
+            echo -e "${GREEN}PostgreSQL is ready${NC}"
+            break
+        fi
+        echo -n "."
+        sleep 2
+    done
+    
+    # Create database
+    echo "Creating sutazai database..."
+    docker exec sutazai-postgres psql -U postgres -c "CREATE DATABASE sutazai;" 2>/dev/null || echo "Database may already exist"
+    
+    # Create user
+    echo "Creating sutazai user..."
+    docker exec sutazai-postgres psql -U postgres -c "CREATE USER sutazai WITH PASSWORD 'sutazai_password';" 2>/dev/null || echo "User may already exist"
+    
+    # Grant permissions
+    echo "Granting permissions..."
+    docker exec sutazai-postgres psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE sutazai TO sutazai;" 2>/dev/null
+    docker exec sutazai-postgres psql -U postgres -c "ALTER USER sutazai CREATEDB;" 2>/dev/null
+    
+    echo -e "${GREEN}Database initialization completed!${NC}"
+}
+
+# System repair function
+repair_system() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                      SYSTEM REPAIR                          ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    echo "Running system repair operations..."
+    
+    # Initialize database
+    init_database
+    
+    # Restart services in correct order
+    echo "Restarting services in dependency order..."
+    
+    services=("postgres" "redis" "neo4j" "chromadb" "qdrant" "ollama" "backend-agi" "frontend-agi")
+    
+    for service in "${services[@]}"; do
+        echo "Restarting sutazai-${service}..."
+        docker restart "sutazai-${service}" >/dev/null 2>&1 || echo "Service sutazai-${service} not found"
+        sleep 5
+    done
+    
+    echo -e "${GREEN}System repair completed!${NC}"
+}
+
 # Start the monitoring system
-if [ "${1:-}" = "--overview" ]; then
-    show_system_overview
-elif [ "${1:-}" = "--logs" ]; then
-    show_live_logs
-elif [ "${1:-}" = "--test" ]; then
-    test_api_endpoints
-elif [ "${1:-}" = "--stats" ]; then
-    show_container_stats
-elif [ $# -eq 0 ]; then
-    show_menu
-else
-    # Run main function with parameters
-    main "$@"
-fi
+case "${1:-}" in
+    "--overview")
+        show_system_overview
+        ;;
+    "--logs")
+        show_live_logs
+        ;;
+    "--test")
+        test_api_endpoints
+        ;;
+    "--stats")
+        show_container_stats
+        ;;
+    "--init-db")
+        init_database
+        ;;
+    "--repair")
+        repair_system
+        ;;
+    "")
+        show_menu
+        ;;
+    *)
+        # Run main function with parameters
+        main "$@"
+        ;;
+esac
