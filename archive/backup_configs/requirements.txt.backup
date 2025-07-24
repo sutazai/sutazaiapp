@@ -1,182 +1,26 @@
-# Core dependencies
-torch
-transformers
-accelerate
-bitsandbytes
-optimum
-onnx
-onnxruntime
-onnxruntime-gpu; platform_system != "Darwin"
-
-# Llama model support
-llama-cpp-python
-huggingface-hub
-tqdm
-
-# System monitoring and utilities
-psutil
-numpy
-pandas
-matplotlib
-requests
-
-# Intel optimizations
-intel-extension-for-pytorch
-mkl-service
-intel-openmp
-
-# Optional but recommended packages
-scipy
-tensorboard
-
-# Memory optimization packages
-safetensors
-
-# E5-2640 specific optimizations
-onednn
-mkl
-
-# Neuromorphic computing
-torchvision
-torchaudio
-pytest
-astunparse
-
-# Monitoring and profiling
-py-cpuinfo
-pynvml
-
-# Security and cryptography
-cryptography
-pyopenssl
-passlib
-pyjwt
-bcrypt
-python-jose
-
-# Vector storage and search
-faiss-cpu
-chromadb
-annoy
-sentence-transformers
-chroma-hnswlib
-
-# NLP and language models
-tokenizers
-sentencepiece
-peft
-gpt4all
-llama-index
-ollama
-
-# Agent frameworks
-langchain
-langchain-community
-langchain-experimental
-pyautogen
-localagi
-crewai
-semgrep
-
-# Web and API
-fastapi
-uvicorn
-httpx
-starlette
-pydantic
-pydantic-core
-aiohttp
-python-multipart
-
-# Storage and databases
-sqlalchemy
-aiosqlite
-redis
-pymongo
-
-# UI
-streamlit
-tornado
-gradio
-plotly
-pillow
-
-# Testing and verification
-pytest-asyncio
-pytest-cov
-hypothesis
-
-# Documentation
-sphinx
-sphinx-rtd-theme
-nbsphinx
-
-# Development tools
-black
-mypy
-ruff
-pre-commit
-
-# Document Processing
-pypdf
-unstructured
-docx2txt
-pytesseract
-pdf2image
-
-# Code Execution and Sandboxing
-docker
-GPUtil
-
-# Utilities
-python-dotenv
-loguru
-typer
-watchdog
-rich
-jinja2
-pyyaml
-types-requests
-types-psutil
-types-python-jose 
-types-passlib
-types-protobuf
-sqlmodel
-
-
-# Model formats
-einops
-
-# Testing and Development (optional)
-isort
-
-# OpenTelemetry
-opentelemetry-api
-opentelemetry-sdk
-opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-instrumentation-fastapi
-opentelemetry-instrumentation-asgi
-opentelemetry-semantic-conventions
-opentelemetry-instrumentation
-opentelemetry-instrumentation-requests
-opentelemetry-util-http
-virtualenv
-
-# Added missing test/runtime dependencies
-opencv-python-headless
-PyMuPDF # For fitz
-python-docx
-grpcio-tools
-
-# Testing Dependencies
-pytest
-qdrant-client
-
-# Vector Store Clients
-qdrant-client
-
-# Added gunicorn
-gunicorn
-
-# Added langchain-ollama
-langchain-ollama # For updated ChatOllama integration
+# Streamlit Frontend Requirements
+streamlit>=1.32.0
+streamlit-ace>=0.1.1
+streamlit-aggrid>=0.3.4
+streamlit-elements>=0.1.0
+streamlit-webrtc>=0.47.0
+requests>=2.31.0
+pandas>=2.0.0
+plotly>=5.18.0
+websocket-client>=1.7.0
+python-dotenv>=1.0.0
+numpy>=1.24.0
+altair>=5.0.0
+pydeck>=0.8.0
+streamlit-chat>=0.1.1
+streamlit-option-menu>=0.3.6
+streamlit-extras>=0.3.6
+streamlit-lottie>=0.0.5
+st-pages>=0.4.5
+pymongo>=4.6.0
+redis>=5.0.0
+asyncio>=3.4.3
+aiohttp>=3.9.0
+fastapi>=0.109.0
+uvicorn>=0.27.0
+python-multipart>=0.0.6
