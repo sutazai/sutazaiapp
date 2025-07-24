@@ -4,16 +4,21 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
+    git \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install AutoGen with all features
+RUN pip install --no-cache-dir \
+    'ag2[all]' \
+    fastapi \
+    uvicorn \
+    httpx \
+    redis
 
-# Copy application code
-COPY . .
+# Copy service implementation
+COPY autogen_service.py /app/
 
-EXPOSE 8085
+EXPOSE 8080
 
-CMD ["python", "autogen_agent_server.py"]
+CMD ["uvicorn", "autogen_service:app", "--host", "0.0.0.0", "--port", "8080"]

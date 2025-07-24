@@ -17,7 +17,12 @@ def run_command(command, description=""):
         print(f"Description: {description}")
     
     try:
-        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        # Fix shell injection vulnerability by using shell=False with command list
+        if isinstance(command, str):
+            command_list = command.split()
+        else:
+            command_list = command
+        result = subprocess.run(command_list, shell=False, check=True, capture_output=True, text=True)
         print(f"✓ Success: {description}")
         return True
     except subprocess.CalledProcessError as e:

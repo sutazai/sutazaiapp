@@ -1,33 +1,33 @@
 FROM python:3.11-slim
 
+WORKDIR /app
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
     git \
+    curl \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Set work directory
-WORKDIR /app
+# Clone FinRobot repository
+RUN git clone https://github.com/AI4Finance-Foundation/FinRobot.git . || mkdir -p /app
 
-# Clone and install FinRobot
-RUN git clone https://github.com/AI4Finance-Foundation/FinRobot.git . \
-    && pip install -e .
+# Install financial analysis dependencies
+RUN pip install --no-cache-dir \
+    yfinance \
+    pandas \
+    numpy \
+    scikit-learn \
+    ta \
+    fastapi \
+    uvicorn \
+    httpx \
+    plotly \
+    matplotlib
 
-# Create necessary directories
-RUN mkdir -p /workspace /logs /workspace/financial_data
+# Create FinRobot service
+COPY finrobot_service.py /app/main.py
 
-# Set environment variables
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-
-# Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Run application
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

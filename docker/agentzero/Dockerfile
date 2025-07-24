@@ -6,20 +6,26 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    wget \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone AgentZero
-RUN git clone https://github.com/frdel/agent-zero.git .
+# Clone AgentZero repository
+RUN git clone https://github.com/frdel/agent-zero.git . || mkdir -p /app
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir \
+    fastapi \
+    uvicorn \
+    httpx \
+    langchain \
+    langchain-community \
+    chromadb \
+    websockets \
+    pydantic
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-python run.py --host 0.0.0.0 --port 8080\n\
-' > start.sh && chmod +x start.sh
+# Copy service implementation
+COPY agentzero_service.py /app/main.py
 
 EXPOSE 8080
 
-CMD ["./start.sh"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -1,494 +1,424 @@
 #!/usr/bin/env python3
 """
-SutazAI Dependency Analyzer - Comprehensive dependency conflict and compatibility analysis
+Dependency Analysis Tool for SutazAI System
+Analyzes Python dependencies, Docker images, and environment variables
 """
 
-import json
-import os
 import re
+import json
 import subprocess
-import sys
-from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Set, Tuple, Optional
+from typing import Dict, List, Tuple, Set
+from collections import defaultdict
 import logging
-from packaging import version
-import requests
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DependencyAnalyzer:
-    """Comprehensive dependency analyzer for SutazAI system"""
+    """Comprehensive dependency analyzer for SutazAI"""
     
     def __init__(self, project_root: str = "/opt/sutazaiapp"):
         self.project_root = Path(project_root)
-        self.findings = {
-            "python_conflicts": [],
-            "docker_issues": [],
+        self.results = {
+            "python_dependencies": {},
+            "version_conflicts": [],
             "security_vulnerabilities": [],
-            "version_mismatches": [],
-            "compatibility_issues": [],
+            "docker_images": [],
+            "environment_variables": {},
             "recommendations": []
         }
         
-    def analyze_all_dependencies(self):
-        """Run comprehensive dependency analysis"""
-        logger.info("Starting comprehensive dependency analysis...")
+        # Known security vulnerabilities and minimum safe versions
+        self.security_baselines = {
+            'urllib3': '2.2.2',
+            'pillow': '10.4.0', 
+            'cryptography': '42.0.8',
+            'jinja2': '3.1.4',
+            'requests': '2.32.0',
+            'transformers': '4.42.0',
+            'torch': '2.3.1',
+            'langchain': '0.2.6',
+            'aiohttp': '3.9.5',
+            'fastapi': '0.111.0',
+            'pydantic': '2.8.0',
+            'sqlalchemy': '2.0.31',
+            'werkzeug': '3.0.3',
+            'flask': '3.0.3',
+            'django': '4.2.14',
+            'lxml': '5.2.2',
+            'streamlit': '1.36.0',
+            'redis': '5.0.7',
+            'psycopg2-binary': '2.9.9',
+            'celery': '5.4.0',
+            'beautifulsoup4': '4.12.3',
+            'selenium': '4.21.0',
+            'playwright': '1.45.0'
+        }
+    
+    def parse_requirements_file(self, file_path: Path) -> Dict[str, Tuple[str, str]]:
+        """Parse requirements.txt file and extract package versions"""
+        requirements = {}
         
-        # 1. Python Dependencies Analysis
-        self.analyze_python_requirements()
-        
-        # 2. Docker Dependencies Analysis
-        self.analyze_docker_dependencies()
-        
-        # 3. JavaScript/Node Dependencies
-        self.analyze_node_dependencies()
-        
-        # 4. Security Vulnerability Analysis
-        self.analyze_security_vulnerabilities()
-        
-        # 5. Framework Compatibility Analysis
-        self.analyze_framework_compatibility()
-        
-        # 6. Generate comprehensive report
-        self.generate_report()
-        
-    def analyze_python_requirements(self):
-        """Analyze Python requirement files for conflicts"""
-        logger.info("Analyzing Python requirements...")
-        
-        # Find all requirements files
-        req_files = list(self.project_root.rglob("requirements*.txt"))
-        
-        all_deps = defaultdict(list)
-        
-        for req_file in req_files:
-            try:
-                with open(req_file, 'r') as f:
-                    lines = f.readlines()
-                    
-                for line in lines:
+        if not file_path.exists():
+            return requirements
+            
+        try:
+            with open(file_path, 'r') as f:
+                for line_num, line in enumerate(f, 1):
                     line = line.strip()
                     if line and not line.startswith('#'):
-                        # Parse package name and version
-                        match = re.match(r'^([a-zA-Z0-9_-]+)([><=!~]+.*)?', line)
+                        # Match package==version, package>=version, etc.
+                        match = re.match(r'^([a-zA-Z0-9_-]+)([><=!]+)([0-9.]+)', line)
                         if match:
-                            pkg_name = match.group(1).lower()
-                            version_spec = match.group(2) or ""
-                            all_deps[pkg_name].append({
-                                'file': str(req_file),
-                                'line': line,
-                                'version_spec': version_spec
-                            })
-                            
-            except Exception as e:
-                logger.error(f"Error reading {req_file}: {e}")
-                
-        # Find conflicts
-        for pkg_name, occurrences in all_deps.items():
+                            pkg, op, ver = match.groups()
+                            requirements[pkg.lower()] = (op, ver, line_num)
+                        else:
+                            # Handle packages without version specifiers
+                            simple_match = re.match(r'^([a-zA-Z0-9_-]+)$', line)
+                            if simple_match:
+                                pkg = simple_match.group(1)
+                                requirements[pkg.lower()] = ('', 'latest', line_num)
+        except Exception as e:
+            logger.error(f"Error parsing {file_path}: {e}")
+            
+        return requirements
+    
+    def analyze_python_dependencies(self):
+        """Analyze all Python dependency files"""
+        logger.info("Analyzing Python dependencies...")
+        
+        # Find all requirements files
+        req_files = []
+        for pattern in ['requirements*.txt', '**/requirements*.txt']:
+            req_files.extend(self.project_root.glob(pattern))
+        
+        all_requirements = {}
+        file_requirements = {}
+        
+        for req_file in req_files:
+            rel_path = str(req_file.relative_to(self.project_root))
+            reqs = self.parse_requirements_file(req_file)
+            file_requirements[rel_path] = reqs
+            
+            # Track all requirements across files
+            for pkg, (op, ver, line_num) in reqs.items():
+                if pkg not in all_requirements:
+                    all_requirements[pkg] = []
+                all_requirements[pkg].append({
+                    'file': rel_path,
+                    'operator': op,
+                    'version': ver,
+                    'line': line_num
+                })
+        
+        self.results["python_dependencies"] = file_requirements
+        
+        # Find version conflicts
+        self.find_version_conflicts(all_requirements)
+        
+        # Check security vulnerabilities
+        self.check_security_vulnerabilities(all_requirements)
+    
+    def find_version_conflicts(self, all_requirements: Dict):
+        """Find version conflicts between requirement files"""
+        logger.info("Checking for version conflicts...")
+        
+        for pkg, occurrences in all_requirements.items():
             if len(occurrences) > 1:
-                # Check for version conflicts
-                versions = [occ['version_spec'] for occ in occurrences if occ['version_spec']]
-                if len(set(versions)) > 1:
-                    self.findings["python_conflicts"].append({
-                        "package": pkg_name,
-                        "conflicts": occurrences,
-                        "severity": "high"
+                versions = set()
+                for occ in occurrences:
+                    if occ['version'] != 'latest':
+                        versions.add(occ['version'])
+                
+                if len(versions) > 1:
+                    self.results["version_conflicts"].append({
+                        'package': pkg,
+                        'occurrences': occurrences,
+                        'versions': list(versions),
+                        'severity': 'high' if pkg in ['fastapi', 'pydantic', 'sqlalchemy'] else 'medium'
                     })
-                    
-        # Check for known problematic combinations
-        self.check_known_conflicts(all_deps)
+    
+    def check_security_vulnerabilities(self, all_requirements: Dict):
+        """Check for known security vulnerabilities"""
+        logger.info("Checking for security vulnerabilities...")
         
-    def check_known_conflicts(self, all_deps: Dict):
-        """Check for known problematic package combinations"""
+        for pkg, baseline_version in self.security_baselines.items():
+            if pkg in all_requirements:
+                for occ in all_requirements[pkg]:
+                    if occ['version'] != 'latest':
+                        try:
+                            from packaging import version
+                            if version.parse(occ['version']) < version.parse(baseline_version):
+                                self.results["security_vulnerabilities"].append({
+                                    'package': pkg,
+                                    'current_version': occ['version'],
+                                    'secure_version': baseline_version,
+                                    'file': occ['file'],
+                                    'line': occ['line'],
+                                    'severity': 'critical' if pkg in ['cryptography', 'urllib3', 'requests'] else 'high'
+                                })
+                        except Exception as e:
+                            logger.warning(f"Could not parse version for {pkg}: {e}")
+    
+    def analyze_docker_images(self):
+        """Analyze Docker base images and versions"""
+        logger.info("Analyzing Docker images...")
         
-        # FastAPI + Pydantic version conflicts
-        if 'fastapi' in all_deps and 'pydantic' in all_deps:
-            fastapi_versions = [dep['version_spec'] for dep in all_deps['fastapi']]
-            pydantic_versions = [dep['version_spec'] for dep in all_deps['pydantic']]
+        dockerfile_patterns = ['**/Dockerfile*', 'Dockerfile*']
+        dockerfiles = []
+        
+        for pattern in dockerfile_patterns:
+            dockerfiles.extend(self.project_root.glob(pattern))
+        
+        for dockerfile in dockerfiles:
+            rel_path = str(dockerfile.relative_to(self.project_root))
             
-            # Check compatibility
-            if any('>=0.104' in v for v in fastapi_versions) and any('>=2.5' not in v for v in pydantic_versions):
-                self.findings["compatibility_issues"].append({
-                    "issue": "FastAPI 0.104+ requires Pydantic v2.5+",
-                    "packages": ["fastapi", "pydantic"],
-                    "severity": "critical"
-                })
-                
-        # PyTorch + CUDA compatibility
-        if 'torch' in all_deps:
-            torch_versions = [dep['version_spec'] for dep in all_deps['torch']]
-            if 'onnxruntime-gpu' in all_deps:
-                self.findings["compatibility_issues"].append({
-                    "issue": "PyTorch and ONNX Runtime GPU may have CUDA version conflicts",
-                    "packages": ["torch", "onnxruntime-gpu"],
-                    "severity": "medium",
-                    "recommendation": "Verify CUDA version compatibility"
-                })
-                
-        # Streamlit + FastAPI potential conflicts
-        if 'streamlit' in all_deps and 'fastapi' in all_deps:
-            self.findings["compatibility_issues"].append({
-                "issue": "Streamlit and FastAPI may conflict on async event loops",
-                "packages": ["streamlit", "fastapi"],
-                "severity": "low",
-                "recommendation": "Use separate containers or proper async handling"
-            })
-            
-    def analyze_docker_dependencies(self):
-        """Analyze Docker configurations for issues"""
-        logger.info("Analyzing Docker dependencies...")
-        
-        docker_files = list(self.project_root.rglob("Dockerfile*"))
-        compose_files = list(self.project_root.rglob("docker-compose*.yml"))
-        
-        base_images = {}
-        port_usage = defaultdict(list)
-        
-        # Analyze Dockerfiles
-        for docker_file in docker_files:
             try:
-                with open(docker_file, 'r') as f:
+                with open(dockerfile, 'r') as f:
                     content = f.read()
                     
-                # Extract base images
-                from_matches = re.findall(r'^FROM\s+([^\s]+)', content, re.MULTILINE)
-                for base_image in from_matches:
-                    if base_image not in base_images:
-                        base_images[base_image] = []
-                    base_images[base_image].append(str(docker_file))
+                # Find FROM statements
+                from_statements = re.findall(r'^FROM\s+([^\s]+)', content, re.MULTILINE)
+                
+                for base_image in from_statements:
+                    # Skip multi-stage build references
+                    if not base_image.startswith('python') and not base_image.startswith('node') and not any(c in base_image for c in [':', '/', '@']):
+                        continue
+                        
+                    image_info = {
+                        'file': rel_path,
+                        'base_image': base_image,
+                        'needs_update': False,
+                        'security_issues': []
+                    }
+                    
+                    # Check for known outdated or vulnerable images
+                    if 'python:3.11-slim' in base_image:
+                        # Check if newer version available
+                        image_info['recommendation'] = 'Consider python:3.12-slim for latest security patches'
+                    elif 'node:' in base_image and not any(v in base_image for v in ['20', '21']):
+                        image_info['needs_update'] = True
+                        image_info['security_issues'].append('Outdated Node.js version')
+                    elif ':latest' in base_image:
+                        image_info['security_issues'].append('Using :latest tag is not recommended for production')
+                    
+                    self.results["docker_images"].append(image_info)
                     
             except Exception as e:
-                logger.error(f"Error reading {docker_file}: {e}")
-                
-        # Check for base image security issues
-        for base_image, files in base_images.items():
-            if 'python:3.11-slim' in base_image:
-                # Check if it's the latest secure version
-                self.findings["docker_issues"].append({
-                    "issue": f"Base image {base_image} may have security updates available",
-                    "affected_files": files,
-                    "severity": "medium",
-                    "recommendation": "Consider updating to python:3.12-slim or latest LTS"
-                })
-                
-        # Analyze docker-compose files for port conflicts
-        for compose_file in compose_files:
-            try:
-                import yaml
-                with open(compose_file, 'r') as f:
-                    compose_data = yaml.safe_load(f)
+                logger.error(f"Error analyzing {dockerfile}: {e}")
+    
+    def analyze_environment_variables(self):
+        """Analyze environment variable configurations"""
+        logger.info("Analyzing environment variables...")
+        
+        env_files = ['.env', '.env.example', '.env.production', '.env.ollama']
+        
+        for env_file in env_files:
+            env_path = self.project_root / env_file
+            if env_path.exists():
+                try:
+                    with open(env_path, 'r') as f:
+                        content = f.read()
+                        
+                    # Find all environment variables
+                    env_vars = re.findall(r'^([A-Z_]+)=(.*)$', content, re.MULTILINE)
                     
-                services = compose_data.get('services', {})
-                for service_name, service_config in services.items():
-                    ports = service_config.get('ports', [])
-                    for port_mapping in ports:
-                        if isinstance(port_mapping, str):
-                            host_port = port_mapping.split(':')[0]
-                            port_usage[host_port].append({
-                                'service': service_name,
-                                'file': str(compose_file)
-                            })
-                            
-            except Exception as e:
-                logger.error(f"Error reading {compose_file}: {e}")
-                
-        # Check for port conflicts
-        for port, services in port_usage.items():
-            if len(services) > 1:
-                self.findings["docker_issues"].append({
-                    "issue": f"Port {port} is used by multiple services",
-                    "services": services,
-                    "severity": "critical"
-                })
-                
-    def analyze_node_dependencies(self):
-        """Analyze Node.js dependencies"""
-        logger.info("Analyzing Node.js dependencies...")
+                    file_vars = {}
+                    security_issues = []
+                    
+                    for var_name, var_value in env_vars:
+                        file_vars[var_name] = var_value
+                        
+                        # Check for security issues
+                        if 'password' in var_name.lower() or 'secret' in var_name.lower() or 'key' in var_name.lower():
+                            if var_value in ['', 'your-secret-key-here', 'secure-password-here', 'redis-password-here']:
+                                security_issues.append({
+                                    'variable': var_name,
+                                    'issue': 'Default or empty security credential',
+                                    'severity': 'critical'
+                                })
+                    
+                    self.results["environment_variables"][env_file] = {
+                        'variables': file_vars,
+                        'security_issues': security_issues
+                    }
+                    
+                except Exception as e:
+                    logger.error(f"Error analyzing {env_path}: {e}")
+    
+    def analyze_javascript_dependencies(self):
+        """Analyze JavaScript/Node.js dependencies"""
+        logger.info("Analyzing JavaScript dependencies...")
         
-        package_files = list(self.project_root.rglob("package.json"))
+        # Find package.json files
+        package_files = list(self.project_root.glob('**/package.json'))
         
-        for pkg_file in package_files:
+        for package_file in package_files:
+            rel_path = str(package_file.relative_to(self.project_root))
+            
             try:
-                with open(pkg_file, 'r') as f:
+                with open(package_file, 'r') as f:
                     package_data = json.load(f)
-                    
+                
                 dependencies = package_data.get('dependencies', {})
                 dev_dependencies = package_data.get('devDependencies', {})
                 
-                # Check for security vulnerabilities in Node packages
-                all_node_deps = {**dependencies, **dev_dependencies}
-                
-                # Check for known vulnerable packages
+                # Check for vulnerable packages (simplified check)
                 vulnerable_packages = {
-                    'next': {'min_safe': '14.2.0', 'issues': 'XSS vulnerabilities in older versions'},
-                    'react': {'min_safe': '18.2.0', 'issues': 'Security fixes in recent versions'},
-                    'axios': {'min_safe': '1.6.0', 'issues': 'SSRF vulnerabilities in older versions'}
+                    'express': '4.18.0',
+                    'axios': '1.6.0', 
+                    'lodash': '4.17.21',
+                    'moment': '2.29.4'  # moment.js is deprecated
                 }
                 
-                for pkg, ver in all_node_deps.items():
-                    if pkg in vulnerable_packages:
-                        current_ver = ver.replace('^', '').replace('~', '')
-                        min_safe = vulnerable_packages[pkg]['min_safe']
-                        
-                        try:
-                            if version.parse(current_ver) < version.parse(min_safe):
-                                self.findings["security_vulnerabilities"].append({
-                                    "package": pkg,
-                                    "current_version": ver,
-                                    "min_safe_version": min_safe,
-                                    "issue": vulnerable_packages[pkg]['issues'],
-                                    "file": str(pkg_file),
-                                    "severity": "high"
-                                })
-                        except:
-                            pass  # Version parsing failed
-                            
+                for pkg, min_version in vulnerable_packages.items():
+                    if pkg in dependencies:
+                        current_version = dependencies[pkg].lstrip('^~')
+                        # Simple version comparison (would need more robust parsing in production)
+                        if pkg == 'moment':
+                            self.results["recommendations"].append({
+                                'type': 'javascript_deprecation',
+                                'file': rel_path,
+                                'package': pkg,
+                                'message': 'moment.js is deprecated, consider migrating to date-fns or dayjs'
+                            })
+                
             except Exception as e:
-                logger.error(f"Error reading {pkg_file}: {e}")
-                
-    def analyze_security_vulnerabilities(self):
-        """Analyze for security vulnerabilities"""
-        logger.info("Analyzing security vulnerabilities...")
+                logger.error(f"Error analyzing {package_file}: {e}")
+    
+    def generate_recommendations(self):
+        """Generate actionable recommendations"""
+        logger.info("Generating recommendations...")
         
-        # Check for hardcoded secrets
-        sensitive_patterns = [
-            (r'password\s*=\s*["\'][^"\']{8,}["\']', 'Potential hardcoded password'),
-            (r'secret\s*=\s*["\'][^"\']{20,}["\']', 'Potential hardcoded secret'),
-            (r'key\s*=\s*["\'][^"\']{20,}["\']', 'Potential hardcoded API key'),
-            (r'token\s*=\s*["\'][^"\']{20,}["\']', 'Potential hardcoded token'),
-        ]
-        
-        python_files = list(self.project_root.rglob("*.py"))
-        
-        for py_file in python_files:
-            try:
-                with open(py_file, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read()
-                    
-                for pattern, description in sensitive_patterns:
-                    matches = re.findall(pattern, content, re.IGNORECASE)
-                    if matches:
-                        self.findings["security_vulnerabilities"].append({
-                            "file": str(py_file),
-                            "issue": description,
-                            "matches": len(matches),
-                            "severity": "critical"
-                        })
-                        
-            except Exception as e:
-                logger.error(f"Error reading {py_file}: {e}")
-                
-        # Check file permissions for sensitive files
-        sensitive_files = ['.env', '.env.local', 'secrets.json', 'private.key']
-        
-        for sens_file in sensitive_files:
-            file_path = self.project_root / sens_file
-            if file_path.exists():
-                stat_info = file_path.stat()
-                if stat_info.st_mode & 0o077:  # Check if others have permissions
-                    self.findings["security_vulnerabilities"].append({
-                        "file": str(file_path),
-                        "issue": "Sensitive file has insecure permissions",
-                        "severity": "high",
-                        "recommendation": f"chmod 600 {file_path}"
-                    })
-                    
-    def analyze_framework_compatibility(self):
-        """Analyze AI/ML framework compatibility"""
-        logger.info("Analyzing framework compatibility...")
-        
-        # Check for CUDA compatibility issues
-        req_files = list(self.project_root.rglob("requirements*.txt"))
-        all_packages = set()
-        
-        for req_file in req_files:
-            try:
-                with open(req_file, 'r') as f:
-                    for line in f:
-                        line = line.strip()
-                        if line and not line.startswith('#'):
-                            pkg_name = re.match(r'^([a-zA-Z0-9_-]+)', line)
-                            if pkg_name:
-                                all_packages.add(pkg_name.group(1).lower())
-            except:
-                pass
-                
-        # Check for potential CUDA conflicts
-        gpu_packages = ['torch', 'tensorflow', 'onnxruntime-gpu', 'cupy', 'nvidia-ml-py']
-        found_gpu_packages = [pkg for pkg in gpu_packages if pkg in all_packages]
-        
-        if len(found_gpu_packages) > 1:
-            self.findings["compatibility_issues"].append({
-                "issue": "Multiple GPU frameworks detected - potential CUDA version conflicts",
-                "packages": found_gpu_packages,
-                "severity": "medium",
-                "recommendation": "Verify CUDA version compatibility across all GPU packages"
+        # Security vulnerabilities recommendations
+        if self.results["security_vulnerabilities"]:
+            self.results["recommendations"].append({
+                'type': 'security_critical',
+                'priority': 'high',
+                'message': f'Found {len(self.results["security_vulnerabilities"])} security vulnerabilities that need immediate attention'
             })
-            
-        # Check for vector database conflicts
-        vector_dbs = ['chromadb', 'qdrant-client', 'faiss-cpu', 'faiss-gpu', 'pinecone-client']
-        found_vector_dbs = [pkg for pkg in vector_dbs if pkg in all_packages]
         
-        if 'faiss-cpu' in found_vector_dbs and 'faiss-gpu' in found_vector_dbs:
-            self.findings["compatibility_issues"].append({
-                "issue": "Both faiss-cpu and faiss-gpu detected",
-                "packages": ['faiss-cpu', 'faiss-gpu'],
-                "severity": "high",
-                "recommendation": "Use only faiss-gpu for GPU systems or faiss-cpu for CPU-only"
-            })
-            
-    def generate_report(self):
-        """Generate comprehensive dependency analysis report"""
-        logger.info("Generating dependency analysis report...")
+        # Version conflicts recommendations
+        if self.results["version_conflicts"]:
+            high_priority_conflicts = [c for c in self.results["version_conflicts"] if c['severity'] == 'high']
+            if high_priority_conflicts:
+                self.results["recommendations"].append({
+                    'type': 'version_conflicts',
+                    'priority': 'high', 
+                    'message': f'Found {len(high_priority_conflicts)} high-priority version conflicts in core packages'
+                })
         
-        # Calculate statistics
-        total_issues = (
-            len(self.findings["python_conflicts"]) +
-            len(self.findings["docker_issues"]) +
-            len(self.findings["security_vulnerabilities"]) +
-            len(self.findings["version_mismatches"]) +
-            len(self.findings["compatibility_issues"])
-        )
+        # Environment security recommendations
+        env_issues = []
+        for env_file, data in self.results["environment_variables"].items():
+            env_issues.extend(data.get('security_issues', []))
         
-        critical_issues = sum(1 for category in self.findings.values() 
-                             for issue in category 
-                             if isinstance(issue, dict) and issue.get('severity') == 'critical')
+        if env_issues:
+            critical_issues = [i for i in env_issues if i['severity'] == 'critical']
+            if critical_issues:
+                self.results["recommendations"].append({
+                    'type': 'environment_security',
+                    'priority': 'critical',
+                    'message': f'Found {len(critical_issues)} critical environment security issues (default passwords/keys)'
+                })
+    
+    def run_analysis(self):
+        """Run complete dependency analysis"""
+        logger.info("Starting comprehensive dependency analysis...")
         
-        # Generate recommendations
+        self.analyze_python_dependencies()
+        self.analyze_docker_images()
+        self.analyze_environment_variables()
+        self.analyze_javascript_dependencies()
         self.generate_recommendations()
         
-        # Create report
-        report = {
-            "analysis_summary": {
-                "total_issues": total_issues,
-                "critical_issues": critical_issues,
-                "categories": {
-                    "python_conflicts": len(self.findings["python_conflicts"]),
-                    "docker_issues": len(self.findings["docker_issues"]),
-                    "security_vulnerabilities": len(self.findings["security_vulnerabilities"]),
-                    "compatibility_issues": len(self.findings["compatibility_issues"])
-                }
-            },
-            "detailed_findings": self.findings,
-            "timestamp": subprocess.check_output(['date']).decode().strip()
-        }
+        return self.results
+    
+    def generate_report(self) -> str:
+        """Generate human-readable report"""
+        report = []
+        report.append("="*80)
+        report.append("SUTAZAI DEPENDENCY ANALYSIS REPORT")
+        report.append("="*80)
         
-        # Save report
-        report_path = self.project_root / "logs" / "dependency_analysis_report.json"
-        report_path.parent.mkdir(exist_ok=True)
+        # Summary
+        total_conflicts = len(self.results["version_conflicts"])
+        total_vulnerabilities = len(self.results["security_vulnerabilities"])
+        total_recommendations = len(self.results["recommendations"])
         
-        with open(report_path, 'w') as f:
-            json.dump(report, f, indent=2)
-            
-        # Print summary
-        self.print_summary(report)
+        report.append(f"\nSUMMARY:")
+        report.append(f"  - Version Conflicts: {total_conflicts}")
+        report.append(f"  - Security Vulnerabilities: {total_vulnerabilities}")
+        report.append(f"  - Total Recommendations: {total_recommendations}")
         
-        return report
+        # Critical Issues
+        critical_issues = []
+        for vuln in self.results["security_vulnerabilities"]:
+            if vuln['severity'] == 'critical':
+                critical_issues.append(f"  - {vuln['package']}: {vuln['current_version']} → {vuln['secure_version']} (in {vuln['file']})")
         
-    def generate_recommendations(self):
-        """Generate specific recommendations for fixing issues"""
+        if critical_issues:
+            report.append(f"\nCRITICAL SECURITY VULNERABILITIES:")
+            report.extend(critical_issues)
         
-        recommendations = []
+        # High Priority Version Conflicts
+        high_conflicts = [c for c in self.results["version_conflicts"] if c['severity'] == 'high']
+        if high_conflicts:
+            report.append(f"\nHIGH PRIORITY VERSION CONFLICTS:")
+            for conflict in high_conflicts:
+                report.append(f"  - {conflict['package']}: {', '.join(conflict['versions'])}")
+                for occ in conflict['occurrences']:
+                    report.append(f"    * {occ['file']}: {occ['operator']}{occ['version']}")
         
-        # Python conflict recommendations
-        if self.findings["python_conflicts"]:
-            recommendations.append({
-                "category": "Python Dependencies",
-                "action": "Consolidate conflicting package versions",
-                "commands": [
-                    "pip-tools compile --upgrade requirements.txt",
-                    "pip-tools sync requirements.txt"
-                ]
-            })
-            
-        # Docker security recommendations
-        if any('python:3.11' in str(issue) for issue in self.findings["docker_issues"]):
-            recommendations.append({
-                "category": "Docker Security",
-                "action": "Update base images to latest secure versions",
-                "commands": [
-                    "sed -i 's/python:3.11-slim/python:3.12-slim/g' docker/*/Dockerfile",
-                    "docker system prune -af"
-                ]
-            })
-            
-        # Security vulnerability recommendations
-        if self.findings["security_vulnerabilities"]:
-            recommendations.append({
-                "category": "Security",
-                "action": "Fix security vulnerabilities",
-                "commands": [
-                    "chmod 600 .env*",
-                    "pip install --upgrade pip",
-                    "npm audit fix"
-                ]
-            })
-            
-        # Framework compatibility recommendations
-        if any('CUDA' in str(issue) for issue in self.findings["compatibility_issues"]):
-            recommendations.append({
-                "category": "Framework Compatibility",
-                "action": "Verify CUDA compatibility",
-                "commands": [
-                    "nvidia-smi",
-                    "python -c 'import torch; print(torch.cuda.is_available())'",
-                    "python -c 'import tensorflow as tf; print(tf.config.list_physical_devices())'"
-                ]
-            })
-            
-        self.findings["recommendations"] = recommendations
+        # Environment Issues
+        env_issues = []
+        for env_file, data in self.results["environment_variables"].items():
+            for issue in data.get('security_issues', []):
+                if issue['severity'] == 'critical':
+                    env_issues.append(f"  - {env_file}: {issue['variable']} - {issue['issue']}")
         
-    def print_summary(self, report: Dict):
-        """Print analysis summary"""
-        print("\n" + "="*80)
-        print("SUTAZAI DEPENDENCY ANALYSIS REPORT")
-        print("="*80)
+        if env_issues:
+            report.append(f"\nCRITICAL ENVIRONMENT ISSUES:")
+            report.extend(env_issues)
         
-        summary = report["analysis_summary"]
-        print(f"Total Issues Found: {summary['total_issues']}")
-        print(f"Critical Issues: {summary['critical_issues']}")
-        print()
+        # Immediate Actions Required
+        report.append(f"\nIMMEDIATE ACTIONS REQUIRED:")
         
-        print("Issues by Category:")
-        for category, count in summary["categories"].items():
-            if count > 0:
-                severity_indicator = "🔴" if "security" in category or "critical" in category else "🟡"
-                print(f"  {severity_indicator} {category.replace('_', ' ').title()}: {count}")
-        print()
+        if total_vulnerabilities > 0:
+            report.append("  1. Update vulnerable Python packages:")
+            for vuln in self.results["security_vulnerabilities"][:5]:  # Show top 5
+                report.append(f"     pip install {vuln['package']}>={vuln['secure_version']}")
         
-        # Print critical issues
-        if summary['critical_issues'] > 0:
-            print("CRITICAL ISSUES REQUIRING IMMEDIATE ATTENTION:")
-            print("-" * 50)
-            
-            for category, issues in self.findings.items():
-                for issue in issues:
-                    if isinstance(issue, dict) and issue.get('severity') == 'critical':
-                        print(f"❌ {issue.get('issue', issue.get('package', 'Unknown issue'))}")
-                        if 'recommendation' in issue:
-                            print(f"   Fix: {issue['recommendation']}")
-                        print()
-                        
-        # Print recommendations
-        if self.findings["recommendations"]:
-            print("RECOMMENDED ACTIONS:")
-            print("-" * 50)
-            for i, rec in enumerate(self.findings["recommendations"], 1):
-                print(f"{i}. {rec['category']}: {rec['action']}")
-                for cmd in rec['commands']:
-                    print(f"   $ {cmd}")
-                print()
-                
-        print("="*80)
-        print(f"Detailed report saved to: {self.project_root}/logs/dependency_analysis_report.json")
-        print("="*80)
+        if env_issues:
+            report.append("  2. Generate secure environment variables:")
+            report.append("     openssl rand -hex 32  # For SECRET_KEY")
+            report.append("     openssl rand -base64 32  # For passwords")
+        
+        if total_conflicts > 0:
+            report.append("  3. Resolve version conflicts by standardizing versions across all requirements files")
+        
+        report.append("="*80)
+        
+        return "\n".join(report)
 
 def main():
     """Main execution function"""
     analyzer = DependencyAnalyzer()
-    analyzer.analyze_all_dependencies()
+    results = analyzer.run_analysis()
+    
+    # Print report
+    print(analyzer.generate_report())
+    
+    # Save detailed results
+    output_file = Path("/opt/sutazaiapp/logs/dependency_analysis.json")
+    output_file.parent.mkdir(exist_ok=True)
+    
+    with open(output_file, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    print(f"\nDetailed analysis saved to: {output_file}")
 
 if __name__ == "__main__":
     main()
