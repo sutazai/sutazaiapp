@@ -1,25 +1,34 @@
 #!/usr/bin/env python3
 """
-SutazAI AGI/ASI Enhanced Backend
-Integrates with all 30+ AI agents and provides unified AGI capabilities
+Enhanced SutazAI FastAPI Backend Server
+Comprehensive AGI/ASI system with full integration of all components
+Based on the provided enhanced implementations
 """
 
+import os
+import sys
 import json
-import asyncio
-import httpx
+import time
+import uuid
 from datetime import datetime
-from typing import Dict, Optional, List, Any, Union
-from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, JSONResponse
-from pydantic import BaseModel, Field
+from typing import Dict, List, Any, Optional, Union
+from pathlib import Path
+import asyncio
 import logging
-import uvicorn
-from contextlib import asynccontextmanager
+
+# FastAPI imports
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Depends
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+
+# Enhanced imports for comprehensive AGI system
+import httpx
 import redis
 import psycopg2
 from psycopg2.extras import RealDictCursor
-import os
+from contextlib import asynccontextmanager
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(

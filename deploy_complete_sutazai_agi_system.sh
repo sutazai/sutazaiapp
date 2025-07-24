@@ -183,8 +183,42 @@ validate_system() {
         while read -r name memory; do
             log_info "GPU: $name (${memory}MB VRAM)"
         done
+        
+        # Check for NVIDIA Container Toolkit
+        if docker run --rm --gpus all nvidia/cuda:11.0.3-base-ubuntu20.04 nvidia-smi &>/dev/null; then
+            log_success "NVIDIA Container Toolkit is properly configured"
+        else
+            log_warn "NVIDIA Container Toolkit may not be configured properly"
+            log_info "GPU acceleration may not be available in containers"
+        fi
     else
         log_warn "No NVIDIA GPU detected - running in CPU-only mode"
+    fi
+    
+    # Validate existing backend and frontend integration
+    log_info "Validating backend/frontend integration..."
+    
+    # Check if main backend file exists
+    if [[ -f "backend/app/working_main.py" ]]; then
+        log_success "Primary backend file found: backend/app/working_main.py"
+    else
+        log_error "Primary backend file not found: backend/app/working_main.py"
+        exit 1
+    fi
+    
+    # Check if frontend file exists
+    if [[ -f "frontend/app.py" ]]; then
+        log_success "Primary frontend file found: frontend/app.py"
+    else
+        log_error "Primary frontend file not found: frontend/app.py"
+        exit 1
+    fi
+    
+    # Validate self-improvement system exists
+    if [[ -f "backend/app/self_improvement.py" ]]; then
+        log_success "Self-improvement system found"
+    else
+        log_warn "Self-improvement system not found - autonomous features may be limited"
     fi
     
     # Get service count
@@ -795,6 +829,96 @@ run_comprehensive_health_checks() {
 }
 
 # ===============================================
+# INTEGRATION TESTING
+# ===============================================
+
+run_integration_tests() {
+    log_phase "Post-Deployment Integration Testing"
+    
+    # Test backend API connectivity
+    log_info "Testing backend API connectivity..."
+    if retry_command 3 5 "curl -f -s http://localhost:8000/health" "Backend API health"; then
+        log_success "Backend API is responding"
+        
+        # Test specific endpoints
+        if curl -f -s "http://localhost:8000/docs" > /dev/null; then
+            log_success "API documentation accessible"
+        else
+            log_warn "API documentation not accessible"
+        fi
+    else
+        log_error "Backend API not responding - check logs"
+    fi
+    
+    # Test frontend connectivity
+    log_info "Testing frontend connectivity..."
+    if retry_command 3 5 "curl -f -s http://localhost:8501" "Frontend health"; then
+        log_success "Frontend is responding"
+    else
+        log_error "Frontend not responding - check logs"
+    fi
+    
+    # Test database connectivity
+    log_info "Testing database connectivity..."
+    if docker exec sutazai-postgres pg_isready -U sutazai > /dev/null 2>&1; then
+        log_success "PostgreSQL database is ready"
+    else
+        log_warn "PostgreSQL database connection issues"
+    fi
+    
+    # Test Ollama model server
+    log_info "Testing Ollama model server..."
+    if curl -f -s "http://localhost:11434/api/tags" > /dev/null; then
+        log_success "Ollama model server is responding"
+    else
+        log_warn "Ollama model server not responding"
+    fi
+    
+    # Test vector databases
+    log_info "Testing vector databases..."
+    if curl -f -s "http://localhost:8001/api/v1/heartbeat" > /dev/null; then
+        log_success "ChromaDB is responding"
+    else
+        log_warn "ChromaDB not responding"
+    fi
+    
+    if curl -f -s "http://localhost:6333/health" > /dev/null; then
+        log_success "Qdrant is responding"
+    else
+        log_warn "Qdrant not responding"
+    fi
+    
+    # Test self-improvement system if available
+    if [[ -f "backend/app/self_improvement.py" ]]; then
+        log_info "Testing self-improvement system integration..."
+        # Test if the self-improvement system can be imported
+        if docker exec sutazai-backend-agi python -c "from app.self_improvement import SelfImprovementSystem; print('OK')" 2>/dev/null | grep -q "OK"; then
+            log_success "Self-improvement system is properly integrated"
+        else
+            log_warn "Self-improvement system integration issues"
+        fi
+    fi
+    
+    # Test monitoring stack
+    log_info "Testing monitoring stack..."
+    if curl -f -s "http://localhost:3000/api/health" > /dev/null; then
+        log_success "Grafana monitoring is responding"
+    else
+        log_warn "Grafana monitoring not responding"
+    fi
+    
+    # Test agent orchestration if available
+    log_info "Testing agent orchestration..."
+    if curl -f -s "http://localhost:8000/agents" > /dev/null; then
+        log_success "Agent orchestration endpoints are responding"
+    else
+        log_warn "Agent orchestration endpoints not responding"
+    fi
+    
+    log_success "Integration testing completed"
+}
+
+# ===============================================
 # MAIN DEPLOYMENT FLOW
 # ===============================================
 
@@ -847,6 +971,9 @@ EOF
     
     # System initialization
     initialize_system
+    
+    # Post-deployment integration test
+    run_integration_tests
     
     # Comprehensive health check
     if run_comprehensive_health_checks; then
