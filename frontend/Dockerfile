@@ -31,4 +31,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8501/healthz || exit 1
 
 # Run the application
-CMD ["streamlit", "run", "app_enhanced.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.runOnSave=false", "--browser.gatherUsageStats=false"]
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.runOnSave=false", "--browser.gatherUsageStats=false"]

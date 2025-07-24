@@ -5,4 +5,3 @@ router = APIRouter()
 @router.get("/")
 async def list_documents():
     return {"documents": [], "count": 0}
-EOF < /dev/null
