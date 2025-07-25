@@ -23,11 +23,12 @@ from typing import Dict, List, Optional, Tuple
 import shutil
 
 # Configure logging
+os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/maintenance.log"),
+        logging.FileHandler("logs/maintenance.log"),
         logging.StreamHandler(),
     ],
 )

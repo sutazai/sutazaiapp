@@ -20,18 +20,19 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 # Configure logging
+os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/code_audit.log"),
+        logging.FileHandler("logs/code_audit.log"),
         logging.StreamHandler(),
     ],
 )
 logger = logging.getLogger("SutazAI.CodeAudit")
 
 class CodeAuditor:
-    def __init__(self, project_root: str = "/opt/sutazaiapp"):
+    def __init__(self, project_root: str = "."):
         self.project_root = Path(project_root)
         self.venv_path = self.project_root / "venv"
         self.log_dir = self.project_root / "logs"

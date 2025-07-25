@@ -203,5 +203,3 @@ def test_task_to_dict(test_task):
     assert isinstance(data["created_at"], str)
     assert isinstance(data["started_at"], str)
     assert isinstance(data["completed_at"], str)
-
-"""""""""

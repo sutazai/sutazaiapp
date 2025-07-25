@@ -224,15 +224,15 @@ async def test_check_agent_health(agent_manager, sample_agent):
     await agent_manager.register_agent(sample_agent)
     
     # Check health with recent heartbeat - should remain IDLE
-    await agent_manager._check_agent_health()
+    await agent_manager._check_agent_health(sample_agent["id"])
     assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.IDLE
     
     # Set the heartbeat to a time far in the past
     agent_manager.agents[sample_agent["id"]].last_heartbeat = datetime.now() - timedelta(minutes=2)
     
-    # Check health with old heartbeat - should change to OFFLINE
-    await agent_manager._check_agent_health()
-    assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.OFFLINE
+    # Check health with old heartbeat - should change to ERROR (after handling failure)
+    await agent_manager._check_agent_health(sample_agent["id"])
+    assert agent_manager.agents[sample_agent["id"]].status == AgentStatus.ERROR
 
 @pytest.mark.asyncio
 async def test_shutdown_all_agents(agent_manager):

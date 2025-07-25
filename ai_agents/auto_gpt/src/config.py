@@ -8,7 +8,7 @@ for the AutoGPT agent's model and runtime settings.
 
 from typing import Optional, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class ModelConfig(BaseModel):
@@ -58,7 +58,7 @@ class ModelConfig(BaseModel):
     description="Presence penalty for token repetition",
     )
 
-    @validator("temperature", "top_p", "frequency_penalty", "presence_penalty")
+    @field_validator("temperature", "top_p", "frequency_penalty", "presence_penalty")
     @classmethod
     def validate_model_params(cls, value):
         """
@@ -76,95 +76,95 @@ class ModelConfig(BaseModel):
         return value
 
 
-    class AutoGPTConfig(BaseModel):
-        """
-        Configuration for the AutoGPT agent.
+class AutoGPTConfig(BaseModel):
+    """
+    Configuration for the AutoGPT agent.
 
-        Attributes:
-        model_config: Configuration for the language model
-        memory_size: Maximum number of messages to keep in memory
-        max_iterations: Maximum number of iterations for task execution
-        verbose_mode: Enable verbose logging
-        """
+    Attributes:
+    llm_config: Configuration for the language model
+    memory_size: Maximum number of messages to keep in memory
+    max_iterations: Maximum number of iterations for task execution
+    verbose_mode: Enable verbose logging
+    """
 
-        model_config: ModelConfig = Field(
-        default_factory=ModelConfig,
+    llm_config: ModelConfig = Field(
+        default_factory=lambda: ModelConfig(),
         description="Configuration for the language model",
-        )
-        memory_size: int = Field(
+    )
+    memory_size: int = Field(
         default=10,
         ge=1,
         description="Maximum number of messages to keep in memory",
-        )
-        max_iterations: int = Field(
+    )
+    max_iterations: int = Field(
         default=5,
         ge=1,
         description="Maximum number of iterations for task execution",
-        )
-        verbose_mode: bool = Field(
+    )
+    verbose_mode: bool = Field(
         default=False,
         description="Enable verbose logging",
-        )
+    )
 
-        @validator("memory_size", "max_iterations")
-        @classmethod
-        def validate_agent_params(cls, value):
-            """
-            Validate agent parameters to ensure they are within acceptable ranges.
+    @field_validator("memory_size", "max_iterations")
+    @classmethod
+    def validate_agent_params(cls, value):
+        """
+        Validate agent parameters to ensure they are within acceptable ranges.
 
-            Args:
-            value: Parameter value to validate
+        Args:
+        value: Parameter value to validate
 
-            Returns:
-            Validated parameter value
+        Returns:
+        Validated parameter value
 
-            Raises:
-            ValueError: If parameter is outside acceptable range
-            """
-            return value
-
-
-        def validate_config(config: Optional[dict | AutoGPTConfig] = None) -> AutoGPTConfig:
-            """
-            Validate and create an AutoGPT configuration.
-
-            Args:
-            config: Configuration dictionary or AutoGPTConfig instance
-
-            Returns:
-            Validated AutoGPTConfig instance
-            """
-            if config is None:
-                return AutoGPTConfig()
-
-            if isinstance(config, dict):
-                return AutoGPTConfig(**config)
-
-            if isinstance(config, AutoGPTConfig):
-                return config
-
-            raise ValueError("Invalid configuration type. Must be dict or AutoGPTConfig.")
+        Raises:
+        ValueError: If parameter is outside acceptable range
+        """
+        return value
 
 
-            def main():
-                """
-                Demonstration of configuration validation.
-                """
-                # Example usage
-                sample_config = {
-                "model_config": {
-                "model_name": "gpt-4",
-                "temperature": 0.7,
-                "max_tokens": 2000,
-                },
-                "memory_size": 15,
-                "max_iterations": 10,
-                "verbose_mode": True,
-                }
+def validate_config(config: Optional[dict | AutoGPTConfig] = None) -> AutoGPTConfig:
+    """
+    Validate and create an AutoGPT configuration.
 
-                validated_config = validate_config(sample_config)
-                print("Validated Configuration:", validated_config)
+    Args:
+    config: Configuration dictionary or AutoGPTConfig instance
+
+    Returns:
+    Validated AutoGPTConfig instance
+    """
+    if config is None:
+        return AutoGPTConfig()
+
+    if isinstance(config, dict):
+        return AutoGPTConfig(**config)
+
+    if isinstance(config, AutoGPTConfig):
+        return config
+
+    raise ValueError("Invalid configuration type. Must be dict or AutoGPTConfig.")
 
 
-                if __name__ == "__main__":
-                    main()
+def main():
+    """
+    Demonstration of configuration validation.
+    """
+    # Example usage
+    sample_config = {
+        "llm_config": {
+            "model_name": "gpt-4",
+            "temperature": 0.7,
+            "max_tokens": 2000,
+        },
+        "memory_size": 15,
+        "max_iterations": 10,
+        "verbose_mode": True,
+    }
+
+    validated_config = validate_config(sample_config)
+    print("Validated Configuration:", validated_config)
+
+
+if __name__ == "__main__":
+    main()
