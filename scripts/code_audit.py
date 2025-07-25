@@ -20,18 +20,25 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 # Configure logging
+# Use project relative paths
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/code_audit.log"),
+        logging.FileHandler(os.path.join(LOG_DIR, "code_audit.log")),
         logging.StreamHandler(),
     ],
 )
 logger = logging.getLogger("SutazAI.CodeAudit")
 
 class CodeAuditor:
-    def __init__(self, project_root: str = "/opt/sutazaiapp"):
+    def __init__(self, project_root: str = None):
+        if project_root is None:
+            project_root = PROJECT_ROOT
         self.project_root = Path(project_root)
         self.venv_path = self.project_root / "venv"
         self.log_dir = self.project_root / "logs"

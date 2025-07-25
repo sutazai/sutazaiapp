@@ -65,7 +65,7 @@ def create_conftest_py():
     """Create or update the conftest.py file with pytest fixtures."""
     file_path = Path("/opt/sutazaiapp/tests/conftest.py")
     
-    conftest_content = """import pytest
+    conftest_content = '''import pytest
 import asyncio
 from unittest.mock import MagicMock, patch
 
@@ -114,7 +114,7 @@ def agent_manager():
         manager.heartbeat_task = MagicMock()
         
         return manager
-"""
+'''
     
     try:
         # Create directory if it doesn't exist

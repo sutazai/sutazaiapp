@@ -23,11 +23,16 @@ from typing import Dict, List, Optional, Tuple
 import shutil
 
 # Configure logging
+# Use project relative paths
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/maintenance.log"),
+        logging.FileHandler(os.path.join(LOG_DIR, "maintenance.log")),
         logging.StreamHandler(),
     ],
 )
@@ -43,8 +48,8 @@ class SystemMaintainer:
             with open(config_path, 'r') as f:
                 return json.load(f)
         return {
-            'log_dir': '/opt/sutazaiapp/logs',
-            'backup_dir': '/opt/sutazaiapp/backups',
+            'log_dir': LOG_DIR,
+            'backup_dir': os.path.join(PROJECT_ROOT, 'backups'),
             'max_log_age_days': 7,
             'max_backup_age_days': 30,
             'backup_retention': 5
@@ -146,7 +151,7 @@ class SystemMaintainer:
                 "-av",
                 "--exclude=venv",
                 "--exclude=__pycache__",
-                "/opt/sutazaiapp/",
+                PROJECT_ROOT + "/",
                 backup_path
             ], check=True)
             
@@ -211,9 +216,9 @@ class SystemMaintainer:
         try:
             # Check file permissions
             critical_paths = [
-                '/opt/sutazaiapp/config',
-                '/opt/sutazaiapp/logs',
-                '/opt/sutazaiapp/backups'
+                os.path.join(PROJECT_ROOT, 'config'),
+                os.path.join(PROJECT_ROOT, 'logs'),
+                os.path.join(PROJECT_ROOT, 'backups')
             ]
             
             for path in critical_paths:

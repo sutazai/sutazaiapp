@@ -24,11 +24,18 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 # Configure logging
+import os
+
+# Use project relative paths
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s: %(message)s",
     handlers=[
-        logging.FileHandler("/opt/sutazaiapp/logs/monitoring.log"),
+        logging.FileHandler(os.path.join(LOG_DIR, "monitoring.log")),
         logging.StreamHandler(),
     ],
 )
@@ -46,7 +53,7 @@ class SystemMonitor:
             with open(config_path, 'r') as f:
                 return json.load(f)
         return {
-            'log_dir': '/opt/sutazaiapp/logs',
+            'log_dir': LOG_DIR,
             'alert_cooldown': 3600,  # 1 hour in seconds
             'thresholds': {
                 'cpu': 90,
