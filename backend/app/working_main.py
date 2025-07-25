@@ -24,13 +24,13 @@ from pydantic import BaseModel, Field
 
 # Import enterprise components
 try:
-    from backend.core.config import get_settings
-    from backend.monitoring.monitoring import setup_monitoring, gather_system_metrics
-    from backend.agent_orchestration.orchestrator import AgentOrchestrator
-    from backend.ai_agents.agent_manager import AgentManager
-    from backend.neural_engine.reasoning_engine import ReasoningEngine
-    from backend.routers.agent_interaction import router as agent_interaction_router
-    from backend.app.self_improvement import SelfImprovementSystem
+    from app.core.config import settings
+    from monitoring.monitoring import MonitoringService
+    from agent_orchestration.orchestrator import AgentOrchestrator
+    from ai_agents.agent_manager import AgentManager
+    from neural_engine.reasoning_engine import ReasoningEngine
+    from routers.agent_interaction import router as agent_interaction_router
+    from app.self_improvement import SelfImprovementSystem
     
     # Enterprise components available
     ENTERPRISE_FEATURES = True
@@ -42,10 +42,8 @@ except ImportError as e:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sutazai")
 
-# Load settings if available
-try:
-    settings = get_settings() if ENTERPRISE_FEATURES else None
-except:
+# Settings are already imported above
+if not ENTERPRISE_FEATURES:
     settings = None
     logger.warning("Settings could not be loaded")
 
@@ -69,10 +67,11 @@ app = FastAPI(
 security = HTTPBearer() if ENTERPRISE_FEATURES else None
 
 # Initialize enterprise components
-orchestrator: Optional[AgentOrchestrator] = None
-agent_manager: Optional[AgentManager] = None
-reasoning_engine: Optional[ReasoningEngine] = None
-self_improvement: Optional[SelfImprovementSystem] = None
+orchestrator: Optional["AgentOrchestrator"] = None
+agent_manager: Optional["AgentManager"] = None
+reasoning_engine: Optional["ReasoningEngine"] = None
+self_improvement: Optional["SelfImprovementSystem"] = None
+monitoring_service: Optional["MonitoringService"] = None
 
 # Add CORS middleware
 app.add_middleware(
@@ -97,16 +96,33 @@ if ENTERPRISE_FEATURES:
     except Exception as e:
         logger.warning(f"Agent interaction router setup failed: {e}")
 
+# Helper function to gather system metrics
+def gather_system_metrics() -> Dict[str, Any]:
+    """Gather system metrics for monitoring"""
+    return {
+        "cpu_percent": psutil.cpu_percent(interval=0.1),
+        "memory_percent": psutil.virtual_memory().percent,
+        "disk_percent": psutil.disk_usage('/').percent,
+        "processes": len(psutil.pids()),
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():
     """Initialize enterprise components on startup"""
-    global orchestrator, agent_manager, reasoning_engine, self_improvement
+    global orchestrator, agent_manager, reasoning_engine, self_improvement, monitoring_service
     
     logger.info("Starting SutazAI AGI System v17.0.0...")
     
     if ENTERPRISE_FEATURES:
         try:
+            # Initialize monitoring service
+            monitoring_service = MonitoringService()
+            monitoring_service.setup_app(app)
+            monitoring_service.start()
+            logger.info("Monitoring service initialized")
+            
             # Initialize agent orchestrator
             orchestrator = AgentOrchestrator()
             await orchestrator.initialize()

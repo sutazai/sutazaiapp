@@ -1,0 +1,40 @@
+{
+  "models": {
+    "main": {
+      "provider": "ollama",
+      "modelId": "llama2:7b",
+      "maxTokens": 4096,
+      "temperature": 0.2,
+      "baseURL": "http://localhost:11434"
+    },
+    "research": {
+      "provider": "ollama",
+      "modelId": "qwen2.5:3b",
+      "maxTokens": 2048,
+      "temperature": 0.1,
+      "baseURL": "http://localhost:11434"
+    },
+    "fallback": {
+      "provider": "ollama",
+      "modelId": "codellama:7b",
+      "maxTokens": 4096,
+      "temperature": 0.2,
+      "baseURL": "http://localhost:11434"
+    }
+  },
+  "global": {
+    "logLevel": "info",
+    "debug": false,
+    "defaultNumTasks": 50,
+    "defaultSubtasks": 10,
+    "defaultPriority": "medium",
+    "projectName": "SutazAI",
+    "ollamaBaseURL": "http://localhost:11434",
+    "bedrockBaseURL": "https://bedrock.us-east-1.amazonaws.com",
+    "responseLanguage": "English",
+    "defaultTag": "master",
+    "azureOpenaiBaseURL": "https://your-endpoint.openai.azure.com/",
+    "userId": "1234567890"
+  },
+  "claudeCode": {}
+}

@@ -109,10 +109,17 @@ class ModelManager:
         model = model or self.default_model
         
         try:
+            # Add optimization parameters
             data = {
                 "model": model,
                 "prompt": prompt,
                 "stream": False,
+                "options": {
+                    "num_thread": 20,
+                    "num_ctx": 2048,
+                    "num_batch": 512,
+                    "num_gpu": 0
+                },
                 **kwargs
             }
             
@@ -136,10 +143,17 @@ class ModelManager:
         model = model or self.default_model
         
         try:
+            # Add optimization parameters
             data = {
                 "model": model,
                 "messages": messages,
                 "stream": False,
+                "options": {
+                    "num_thread": 20,
+                    "num_ctx": 2048,
+                    "num_batch": 512,
+                    "num_gpu": 0
+                },
                 **kwargs
             }
             

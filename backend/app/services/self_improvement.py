@@ -76,7 +76,7 @@ class SelfImprovementService:
         self.improvement_history: List[Dict[str, Any]] = []
         
         # Batch processing settings
-        self.batch_size = settings.get("SELF_IMPROVEMENT_BATCH_SIZE", 50)
+        self.batch_size = getattr(settings, "SELF_IMPROVEMENT_BATCH_SIZE", 50)
         self.min_confidence_threshold = 0.7
         self.max_concurrent_improvements = 5
         

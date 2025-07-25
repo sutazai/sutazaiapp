@@ -1,8 +1,8 @@
 #!/bin/bash
 # title        :start_sutazai.sh
-# description  :This script starts all SutazAI services
+# description  :This script starts all SutazAI services using Docker Compose
 # author       :SutazAI Team
-# version      :2.3
+# version      :3.0
 # usage        :bash scripts/start_sutazai.sh [--debug] [--gpu] [--skip-model-check]
 
 # Change to the project root directory
@@ -156,67 +156,65 @@ start_service() {
     return 0
 }
 
-# Check for AI models only if SKIP_MODEL_CHECK is false
-if [ "$SKIP_MODEL_CHECK" = false ]; then
-    log "Checking AI models..."
-    if [ -f "scripts/setup_models.py" ]; then
-        python scripts/setup_models.py --list > /dev/null
-        if [ $? -ne 0 ]; then
-            log "ERROR: Model check failed. Please run setup_models.py to download required models."
-            exit 1
-        fi
-    else
-        log "WARNING: setup_models.py not found. Skipping model check."
-    fi
-else
-    log "Skipping model check as requested"
+# Check if Docker is running
+if ! docker info >/dev/null 2>&1; then
+    log "ERROR: Docker is not running. Please start Docker first."
+    exit 1
+fi
+
+# Check if docker-compose.yml exists
+if [ ! -f "docker-compose.yml" ]; then
+    log "ERROR: docker-compose.yml not found in $PROJECT_ROOT"
+    exit 1
 fi
 
 # Create necessary directories
-mkdir -p logs data tmp web_ui
+mkdir -p logs data tmp
 
-# Set environment variables
-export DEBUG_MODE=$DEBUG
-export LOG_LEVEL=$([ "$DEBUG" = true ] && echo "DEBUG" || echo "INFO")
-export TMP_DIR="${PROJECT_ROOT}/tmp"
-export LOG_DIR="${PROJECT_ROOT}/logs"
-export DATA_DIR="${PROJECT_ROOT}/data"
+# Start services using Docker Compose
+log "Starting SutazAI services with Docker Compose..."
 
-# Set service ports
-export BACKEND_PORT=8000
-export WEBUI_PORT=8501
-export VECTOR_DB_PORT=8502
+# Start core infrastructure first
+log "Starting core infrastructure..."
+docker compose up -d postgres redis neo4j chromadb qdrant ollama
 
-# Export URLs for services to use
-export BACKEND_URL="http://localhost:$BACKEND_PORT"
-export VECTOR_DB_URL="http://localhost:$VECTOR_DB_PORT"
+# Wait for core services to be ready
+log "Waiting for core services to initialize..."
+sleep 20
 
-# Start vector database service
-start_service "vector-db" "python -m backend.vector_db --port $VECTOR_DB_PORT" "python.*vector_db" "$VECTOR_DB_PORT"
-wait_for_service "Vector Database" "$VECTOR_DB_PORT" 30
+# Start application services
+log "Starting application services..."
+docker compose up -d backend-agi frontend-agi
 
-# Start backend API service
-start_service "backend" "python -m backend.main --port $BACKEND_PORT" "python.*backend.main" "$BACKEND_PORT"
-wait_for_service "Backend API" "$BACKEND_PORT" 30
+# Wait for services to be ready
+sleep 10
 
-# Start web UI if streamlit is installed
-if command -v streamlit >/dev/null 2>&1; then
-    start_service "webui" "streamlit run web_ui/app.py --server.port $WEBUI_PORT" "streamlit run web_ui/app.py" "$WEBUI_PORT"
-    wait_for_service "Web UI" "$WEBUI_PORT" 30
-else
-    log "Streamlit not found. Web UI will not be started."
-    log "Install streamlit with: pip install streamlit"
+# Start monitoring if requested
+if [ "$DEBUG" = true ]; then
+    log "Starting monitoring services..."
+    docker compose up -d prometheus grafana loki promtail
 fi
 
+# Show service status
+log "Checking service status..."
+docker compose ps
+
 # Display service URLs
-log "Services started successfully"
-log "------------------------------"
-log "Backend API: http://localhost:$BACKEND_PORT"
-log "Web UI:     http://localhost:$WEBUI_PORT"
-log "Vector DB:  http://localhost:$VECTOR_DB_PORT"
-log "------------------------------"
-log "Logs are available in ${LOG_DIR}"
-log "PID files are in ${PROJECT_ROOT}/pids"
-log "To stop all services, run: ./scripts/stop_sutazai.sh"
+log ""
+log "==========================================="
+log "SutazAI Services Started Successfully!"
+log "==========================================="
+log "🌐 Main Interface:    http://localhost:8501"
+log "📚 API Documentation: http://localhost:8000/docs"
+log "📊 Backend Health:    http://localhost:8000/health"
+log "🗄️  Knowledge Graph:   http://localhost:7474"
+log "🔍 Vector DB:         http://localhost:6333/dashboard"
+if [ "$DEBUG" = true ]; then
+    log "📈 Monitoring:        http://localhost:3000"
+fi
+log "==========================================="
+log ""
+log "To view logs: docker compose logs -f [service-name]"
+log "To stop all services: ./scripts/stop_sutazai.sh"
 
 exit 0
