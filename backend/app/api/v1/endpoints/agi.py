@@ -9,9 +9,18 @@ from typing import Dict, Any, Optional, List
 import logging
 from datetime import datetime
 
-from ....ai_agents.reasoning import AGIOrchestrator, AdvancedReasoningEngine, SelfImprovementEngine
-from ....ai_agents.agent_manager import AgentManager
-from ....ai_agents.orchestrator.workflow_engine import WorkflowEngine
+try:
+    from app.ai_agents.reasoning.agi_orchestrator import AGIOrchestrator
+    from app.ai_agents.reasoning import AdvancedReasoningEngine, SelfImprovementEngine
+    from app.ai_agents.agent_manager import AgentManager
+    from app.ai_agents.orchestrator.workflow_engine import WorkflowEngine
+except ImportError:
+    # Fallback imports if modules don't exist
+    AGIOrchestrator = None
+    AdvancedReasoningEngine = None
+    SelfImprovementEngine = None
+    AgentManager = None
+    WorkflowEngine = None
 
 logger = logging.getLogger(__name__)
 
@@ -235,10 +244,7 @@ async def get_reasoning_explanation(chain_id: str):
         raise HTTPException(status_code=500, detail=f"Explanation retrieval failed: {str(e)}")
 
 @router.post("/initialize")
-async def initialize_agi_system(
-    agent_manager: AgentManager = None,
-    workflow_engine: WorkflowEngine = None
-):
+async def initialize_agi_system():
     """
     Initialize the AGI orchestrator system
     
@@ -247,9 +253,30 @@ async def initialize_agi_system(
     global agi_orchestrator
     
     try:
-        if not agent_manager or not workflow_engine:
-            # In production, these would be injected via dependency injection
-            raise HTTPException(status_code=400, detail="Missing required components")
+        # Create required components with minimal dependencies for testing
+        from ai_agents.health_check import HealthCheck
+        from ai_agents.protocols.agent_communication import AgentCommunication
+        from ai_agents.memory.agent_memory import MemoryManager
+        from ai_agents.memory.shared_memory import SharedMemoryManager
+        from ai_agents.interaction.human_interaction import InteractionManager
+        
+        # Initialize components
+        health_check = HealthCheck()
+        agent_communication = AgentCommunication()
+        memory_manager = MemoryManager()
+        shared_memory_manager = SharedMemoryManager()
+        interaction_manager = InteractionManager()
+        workflow_engine = WorkflowEngine()
+        
+        # Create agent manager with all required dependencies
+        agent_manager = AgentManager(
+            agent_communication=agent_communication,
+            interaction_manager=interaction_manager,
+            workflow_engine=workflow_engine,
+            memory_manager=memory_manager,
+            shared_memory_manager=shared_memory_manager,
+            health_check=health_check
+        )
             
         agi_orchestrator = AGIOrchestrator(
             agent_manager=agent_manager,

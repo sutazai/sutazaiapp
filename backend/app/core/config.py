@@ -60,9 +60,23 @@ class Settings(BaseSettings):
     
     # Model Configuration
     OLLAMA_HOST: str = "http://ollama:11434"
-    DEFAULT_MODEL: str = "deepseek-r1:8b"
+    DEFAULT_MODEL: str = "qwen2.5:3b"  # Faster 3B model for better response times
+    FALLBACK_MODEL: str = "deepseek-r1:8b"  # Larger model for complex tasks
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
+    
+    # Performance optimization settings
+    MODEL_PRELOAD_ENABLED: bool = True
+    MODEL_CACHE_SIZE: int = 2  # Number of models to keep in memory
+    
+    @validator("OLLAMA_HOST", pre=True)
+    def validate_ollama_host(cls, v: str) -> str:
+        """Ensure OLLAMA_HOST has proper format"""
+        if v == "0.0.0.0" or v == "ollama":
+            return "http://ollama:11434"
+        if not v.startswith("http"):
+            return f"http://{v}:11434"
+        return v
     
     # GPU Configuration
     ENABLE_GPU: bool = True

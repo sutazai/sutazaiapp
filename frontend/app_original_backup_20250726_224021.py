@@ -698,7 +698,7 @@ def render_enterprise_header():
                 <div style="font-size: 2rem;">🧠</div>
                 <div>
                     <h1 style="margin: 0; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SutazAI AGI/ASI System</h1>
-                    <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">Enterprise Autonomous Intelligence Platform</p>
+                    <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">Enterprise Autonomous Intelligence Platform v17.0</p>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 1rem;">

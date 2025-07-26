@@ -132,6 +132,27 @@ class SelfImprovementService:
         self._start_monitoring = False
         logger.info("Stopping self-improvement monitoring")
     
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get current metrics for monitoring system"""
+        try:
+            return {
+                "status": "active" if self._start_monitoring else "inactive",
+                "metrics_collected": len(self.metrics_buffer),
+                "improvements_applied": len(self.improvement_history),
+                "last_analysis": datetime.now().isoformat(),
+                "confidence_threshold": self.min_confidence_threshold,
+                "batch_size": self.batch_size,
+                "monitoring_active": self._start_monitoring
+            }
+        except Exception as e:
+            logger.error(f"Error getting self-improvement metrics: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "metrics_collected": 0,
+                "improvements_applied": 0
+            }
+    
     async def _monitor_performance(self):
         """Monitor system performance metrics"""
         while self._start_monitoring:

@@ -31,6 +31,11 @@ class ModelManager:
             logger.info("Ollama connection established")
             # List available models
             await self.list_models()
+            
+            # Preload default model for performance optimization
+            if getattr(settings, 'MODEL_PRELOAD_ENABLED', True):
+                logger.info(f"Preloading default model: {self.default_model}")
+                await self._preload_model(self.default_model)
         else:
             logger.warning("Ollama service not available")
     
@@ -46,6 +51,45 @@ class ModelManager:
                 return response.status == 200
         except Exception as e:
             logger.error(f"Failed to connect to Ollama: {e}")
+            return False
+    
+    async def _preload_model(self, model_name: str) -> bool:
+        """Preload a model to reduce cold start time"""
+        try:
+            logger.info(f"Warming up model: {model_name}")
+            
+            # Send a small test prompt to warm up the model
+            warmup_data = {
+                "model": model_name,
+                "prompt": "Hello",
+                "stream": False,
+                "options": {
+                    "num_predict": 1,  # Minimal prediction
+                    "temperature": 0,
+                    "top_p": 1,
+                    "num_ctx": 512  # Small context window for warmup
+                }
+            }
+            
+            timeout = aiohttp.ClientTimeout(total=60)  # 60s timeout for warmup
+            async with self._session.post(
+                f"{self.ollama_host}/api/generate",
+                json=warmup_data,
+                timeout=timeout
+            ) as response:
+                if response.status == 200:
+                    await response.json()  # Consume the response
+                    logger.info(f"✅ Model {model_name} successfully preloaded and warmed up")
+                    return True
+                else:
+                    logger.warning(f"⚠️ Model warmup failed for {model_name}: HTTP {response.status}")
+                    return False
+                    
+        except asyncio.TimeoutError:
+            logger.warning(f"⚠️ Model warmup timeout for {model_name}")
+            return False
+        except Exception as e:
+            logger.error(f"❌ Error preloading model {model_name}: {e}")
             return False
     
     async def list_models(self) -> List[Dict[str, Any]]:

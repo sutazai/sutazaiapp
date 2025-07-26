@@ -9,11 +9,12 @@ from app.services.agent_orchestrator import AgentOrchestrator
 _model_manager: ModelManager = None
 _agent_orchestrator: AgentOrchestrator = None
 
-def get_model_manager() -> ModelManager:
+async def get_model_manager() -> ModelManager:
     """Get model manager instance"""
     global _model_manager
     if _model_manager is None:
         _model_manager = ModelManager()
+        await _model_manager.initialize()
     return _model_manager
 
 def get_agent_orchestrator() -> AgentOrchestrator:
