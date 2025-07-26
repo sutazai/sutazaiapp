@@ -16,7 +16,7 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request, Depends, Security
+from fastapi import FastAPI, HTTPException, Request, Depends, Security, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials

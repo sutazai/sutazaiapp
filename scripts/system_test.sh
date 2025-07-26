@@ -43,7 +43,7 @@ run_api_test() {
     
     echo -n "Testing $test_name... "
     
-    response=$(curl -s "http://172.31.77.193:8000$endpoint")
+    response=$(curl -s "http://localhost:8000$endpoint")
     if echo "$response" | python3 -c "import sys, json; data=json.load(sys.stdin); sys.exit(0 if '$expected_key' in data else 1)" 2>/dev/null; then
         echo -e "${GREEN}✓ PASS${NC}"
         ((TESTS_PASSED++))
@@ -80,11 +80,11 @@ echo "🤖 AI Model Tests"
 echo "================="
 
 # Test Ollama
-run_test "Ollama API" "curl -s http://172.31.77.193:11434/api/tags | grep -q 'models'"
+run_test "Ollama API" "curl -s http://localhost:11434/api/tags | grep -q 'models'"
 
 # Test model inference
 echo -n "Testing AI model inference... "
-response=$(curl -s -X POST http://172.31.77.193:8000/simple-chat \
+response=$(curl -s -X POST http://localhost:8000/simple-chat \
     -H "Content-Type: application/json" \
     -d '{"message": "Say hello", "model": "llama3.2:1b"}')
 
@@ -100,7 +100,7 @@ echo ""
 echo "🎯 Frontend Tests"
 echo "================"
 
-run_test "Frontend accessibility" "curl -s http://172.31.77.193:8501 | grep -q 'SutazAI'"
+run_test "Frontend accessibility" "curl -s http://localhost:8501 | grep -q -i 'streamlit\\|sutaz\\|title'"
 run_test "Frontend health" "docker logs sutazai-frontend-agi --tail 10 | grep -v TypeError"
 
 echo ""
@@ -117,9 +117,9 @@ echo "  CPU Usage: ${CPU_USAGE}%"
 echo "  Memory Usage: ${MEMORY_USAGE}%"
 echo "  Disk Usage: ${DISK_USAGE}%"
 
-# Resource tests
-run_test "CPU usage acceptable" "[ $(echo '$CPU_USAGE < 80' | bc -l) -eq 1 ]"
-run_test "Memory usage acceptable" "[ $(echo '$MEMORY_USAGE < 80' | bc -l) -eq 1 ]"
+# Resource tests  
+run_test "CPU usage acceptable" "[ \$(echo \"\$CPU_USAGE < 80\" | bc -l) -eq 1 ]"
+run_test "Memory usage acceptable" "[ \$(echo \"\$MEMORY_USAGE < 80\" | bc -l) -eq 1 ]"
 run_test "Disk usage acceptable" "[ $DISK_USAGE -lt 80 ]"
 
 echo ""

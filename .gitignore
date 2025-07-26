@@ -1,3 +1,34 @@
+# SECURITY: Sensitive files and credentials
+*.env
+.env*
+*.key
+*.pem
+*.p12
+*.pfx
+*.cert
+*.crt
+secrets/
+credentials/
+config/secrets/
+.aws/
+.ssh/
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# SECURITY: Database files
+*.sqlite
+*.sqlite3
+*.db
+*.dbf
+data/*.db
+
+# SECURITY: Log files that may contain sensitive data
+*.log
+logs/
+*.log.*
+
 # Node.js dependencies
 node_modules/
 npm-debug.log
