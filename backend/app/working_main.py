@@ -260,7 +260,7 @@ async def shutdown_event():
 # Request/Response Models
 class ChatRequest(BaseModel):
     message: str
-    model: Optional[str] = "agi-brain"
+    model: Optional[str] = None  # Let backend auto-select best available model
     agent: Optional[str] = None
     temperature: Optional[float] = 0.7
 
@@ -376,6 +376,7 @@ async def query_ollama(model: str, prompt: str):
     try:
         for host in ["ollama:11434", "sutazai-ollama:11434"]:
             try:
+                logger.info(f"Attempting to query Ollama at {host} with model {model}")
                 async with httpx.AsyncClient(timeout=90.0) as client:
                     response = await client.post(f"http://{host}/api/generate", json={
                         "model": model,
@@ -389,9 +390,15 @@ async def query_ollama(model: str, prompt: str):
                             "num_predict": 256  # Limit response length for CPU efficiency
                         }
                     })
+                    logger.info(f"Ollama response status: {response.status_code}")
                     if response.status_code == 200:
-                        return response.json().get("response", "No response generated")
-            except:
+                        result = response.json().get("response", "No response generated")
+                        logger.info(f"Ollama response received: {result[:100]}...")
+                        return result
+                    else:
+                        logger.warning(f"Ollama returned non-200 status: {response.status_code}")
+            except Exception as e:
+                logger.warning(f"Failed to connect to {host}: {e}")
                 continue
     except Exception as e:
         logger.error(f"Error querying Ollama: {e}")
@@ -882,6 +889,7 @@ async def chat_with_ai(request: ChatRequest):
             "qwen2.5:3b" if "qwen2.5:3b" in models else (
                 "codellama:7b" if "codellama:7b" in models else (
                     models[0] if models else None
+                )
             )
         )
     )

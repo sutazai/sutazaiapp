@@ -67,7 +67,19 @@ class Settings(BaseSettings):
     
     # Performance optimization settings
     MODEL_PRELOAD_ENABLED: bool = True
-    MODEL_CACHE_SIZE: int = 2  # Number of models to keep in memory
+    MODEL_CACHE_SIZE: int = 3  # Number of models to keep in memory
+    
+    # Advanced Model Manager settings
+    ADVANCED_CACHING_ENABLED: bool = True
+    BATCH_SIZE: int = 8  # Default batch size for request batching
+    BATCH_TIMEOUT_MS: int = 100  # Batch timeout in milliseconds
+    STREAMING_ENABLED: bool = True  # Enable streaming responses
+    GPU_ACCELERATION: bool = True  # Enable GPU acceleration when available
+    
+    # Cache management
+    CACHE_WARMUP_ON_STARTUP: bool = True
+    CACHE_ARTIFACT_RETENTION_DAYS: int = 7
+    PERFORMANCE_MONITORING: bool = True
     
     @validator("OLLAMA_HOST", pre=True)
     def validate_ollama_host(cls, v: str) -> str:
