@@ -1,5 +1,5 @@
 # SECURITY HARDENED - Updated 2025-07-26
-FROM python:3.12.8-slim AS base
+FROM python:3.13.5-slim AS base
 
 WORKDIR /app
 
