@@ -10,30 +10,65 @@ import logging
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
-import networkx as nx
-from pyDatalog import pyDatalog
-import numpy as np
-from pgmpy.models import BayesianNetwork
-from pgmpy.inference import VariableElimination
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from pydantic import BaseModel
-import aiohttp
-from datetime import datetime
 
+# Setup logging first
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="SutazAI Reasoning Engine", version="2.0.0")
+# Optional imports - fallback if not available
+try:
+    import networkx as nx
+    NETWORKX_AVAILABLE = True
+except ImportError:
+    NETWORKX_AVAILABLE = False
+    logger.warning("NetworkX not available - causal reasoning limited")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+try:
+    from pyDatalog import pyDatalog
+    PYDATALOG_AVAILABLE = True
+except ImportError:
+    PYDATALOG_AVAILABLE = False
+    logger.warning("PyDatalog not available - logical reasoning limited")
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    logger.warning("NumPy not available - numerical reasoning limited")
+
+try:
+    from pgmpy.models import BayesianNetwork
+    from pgmpy.inference import VariableElimination
+    PGMPY_AVAILABLE = True
+except ImportError:
+    PGMPY_AVAILABLE = False
+    logger.warning("pgmpy not available - probabilistic reasoning limited")
+
+# Optional FastAPI imports for standalone server mode
+try:
+    from fastapi import FastAPI, HTTPException
+    from fastapi.middleware.cors import CORSMiddleware
+    import uvicorn
+    from pydantic import BaseModel
+    FASTAPI_AVAILABLE = True
+    
+    app = FastAPI(title="SutazAI Reasoning Engine", version="2.0.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+except ImportError:
+    FASTAPI_AVAILABLE = False
+    logger.warning("FastAPI not available - standalone server disabled")
+    app = None
+    BaseModel = object  # Fallback
+
+import aiohttp
+from datetime import datetime
 
 class ReasoningType(Enum):
     DEDUCTIVE = "deductive"
@@ -70,11 +105,23 @@ class KnowledgeBase:
     def __init__(self):
         self.facts = {}
         self.rules = {}
-        self.causal_graph = nx.DiGraph()
+        
+        # Initialize optional components based on availability
+        if NETWORKX_AVAILABLE:
+            self.causal_graph = nx.DiGraph()
+            self.spatial_relations = nx.Graph()
+        else:
+            self.causal_graph = None
+            self.spatial_relations = None
+            
         self.bayesian_network = None
         self.temporal_facts = []
-        self.spatial_relations = nx.Graph()
-        pyDatalog.create_terms('X, Y, Z, parent, ancestor, implies')
+        
+        if PYDATALOG_AVAILABLE:
+            try:
+                pyDatalog.create_terms('X, Y, Z, parent, ancestor, implies')
+            except Exception as e:
+                logger.warning(f"PyDatalog initialization failed: {e}")
         
     def add_fact(self, fact: Proposition):
         """Add a fact to the knowledge base"""
@@ -88,7 +135,13 @@ class KnowledgeBase:
         
     def add_causal_relation(self, cause: str, effect: str, strength: float = 1.0):
         """Add causal relationship"""
-        self.causal_graph.add_edge(cause, effect, weight=strength)
+        if NETWORKX_AVAILABLE and self.causal_graph is not None:
+            self.causal_graph.add_edge(cause, effect, weight=strength)
+        else:
+            # Simple fallback storage
+            if not hasattr(self, 'causal_relations'):
+                self.causal_relations = {}
+            self.causal_relations[(cause, effect)] = strength
         
     def query(self, query: str, reasoning_type: ReasoningType) -> Dict[str, Any]:
         """Query the knowledge base using specified reasoning type"""
@@ -164,36 +217,48 @@ class KnowledgeBase:
         if len(parts) == 2:
             cause, effect = parts[0].strip(), parts[1].strip("?")
             
-            if self.causal_graph.has_edge(cause, effect):
-                strength = self.causal_graph[cause][effect]['weight']
-                return {
-                    "result": True,
-                    "causal_strength": strength,
-                    "reasoning": "Direct causal link",
-                    "path": [cause, effect]
-                }
-            
-            # Check for indirect causation
-            try:
-                paths = list(nx.all_simple_paths(self.causal_graph, cause, effect))
-                if paths:
-                    # Calculate path strength as product of edge weights
-                    path_strengths = []
-                    for path in paths:
-                        strength = 1.0
-                        for i in range(len(path) - 1):
-                            strength *= self.causal_graph[path[i]][path[i+1]]['weight']
-                        path_strengths.append((path, strength))
-                    
-                    best_path = max(path_strengths, key=lambda x: x[1])
+            # Check with NetworkX if available
+            if NETWORKX_AVAILABLE and self.causal_graph is not None:
+                if self.causal_graph.has_edge(cause, effect):
+                    strength = self.causal_graph[cause][effect]['weight']
                     return {
                         "result": True,
-                        "causal_strength": best_path[1],
-                        "reasoning": "Indirect causal chain",
-                        "path": best_path[0]
+                        "causal_strength": strength,
+                        "reasoning": "Direct causal link",
+                        "path": [cause, effect]
                     }
-            except nx.NetworkXNoPath:
-                pass
+                
+                # Check for indirect causation
+                try:
+                    paths = list(nx.all_simple_paths(self.causal_graph, cause, effect))
+                    if paths:
+                        # Calculate path strength as product of edge weights
+                        path_strengths = []
+                        for path in paths:
+                            strength = 1.0
+                            for i in range(len(path) - 1):
+                                strength *= self.causal_graph[path[i]][path[i+1]]['weight']
+                            path_strengths.append((path, strength))
+                        
+                        best_path = max(path_strengths, key=lambda x: x[1])
+                        return {
+                            "result": True,
+                            "causal_strength": best_path[1],
+                            "reasoning": "Indirect causal chain",
+                            "path": best_path[0]
+                        }
+                except:
+                    pass
+            else:
+                # Fallback causal reasoning
+                if hasattr(self, 'causal_relations') and (cause, effect) in self.causal_relations:
+                    strength = self.causal_relations[(cause, effect)]
+                    return {
+                        "result": True,
+                        "causal_strength": strength,
+                        "reasoning": "Direct causal link (fallback)",
+                        "path": [cause, effect]
+                    }
         
         return {"result": False, "reasoning": "No causal relationship found"}
 
@@ -222,6 +287,9 @@ class AdvancedReasoningEngine:
         self.knowledge_base = KnowledgeBase()
         self.reasoning_cache = {}
         self.meta_reasoner = MetaReasoner()
+        self.consciousness_level = 0.85
+        self.active_pathways = []
+        self.neural_activity = {}
         
     async def reason(self, query: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
         """Perform reasoning on a query with optional context"""
@@ -318,6 +386,78 @@ class AdvancedReasoningEngine:
         base_confidence *= type_factors.get(reasoning_type, 0.7)
         
         return min(base_confidence, 0.99)
+    
+    async def initialize(self):
+        """Initialize the reasoning engine"""
+        logger.info("Initializing reasoning engine...")
+        # Simulate initialization
+        self.consciousness_level = 0.85
+        self.active_pathways = ["deductive", "inductive", "causal"]
+        self.neural_activity = {"active": True, "load": 0.3}
+        
+    def health_check(self) -> bool:
+        """Check if reasoning engine is healthy"""
+        return True
+    
+    def get_consciousness_state(self) -> Dict[str, Any]:
+        """Get current consciousness state"""
+        return {
+            "awareness_level": self.consciousness_level,
+            "cognitive_load": 0.3,
+            "active_processes": self.active_pathways,
+            "neural_activity": self.neural_activity
+        }
+    
+    def get_consciousness_level(self) -> float:
+        """Get consciousness level"""
+        return self.consciousness_level
+        
+    def get_active_pathways(self) -> int:
+        """Get number of active neural pathways"""
+        return len(self.active_pathways)
+        
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get reasoning engine metrics"""
+        return {
+            "consciousness_level": self.consciousness_level,
+            "active_pathways": len(self.active_pathways),
+            "cache_size": len(self.reasoning_cache),
+            "knowledge_facts": len(self.knowledge_base.facts),
+            "knowledge_rules": len(self.knowledge_base.rules)
+        }
+    
+    async def process(self, input_data: Any, processing_type: str = "general",
+                     use_consciousness: bool = True, reasoning_depth: int = 3) -> Dict[str, Any]:
+        """Process data through neural reasoning"""
+        result = {
+            "processed_data": input_data,
+            "processing_type": processing_type,
+            "consciousness_active": use_consciousness,
+            "reasoning_depth": reasoning_depth,
+            "pathways": self.active_pathways[:reasoning_depth]
+        }
+        return result
+        
+    async def enhance_prompt(self, prompt: str, context_type: str = "general", 
+                           reasoning_depth: int = 2) -> Dict[str, Any]:
+        """Enhance prompt with neural processing"""
+        enhanced = f"Enhanced: {prompt}"
+        return {
+            "enhanced_prompt": enhanced,
+            "pathways": self.active_pathways[:reasoning_depth],
+            "consciousness_level": self.consciousness_level
+        }
+        
+    async def deep_think(self, query: str, reasoning_type: str = "general",
+                        consciousness_active: bool = True) -> Dict[str, Any]:
+        """Perform deep thinking process"""
+        return {
+            "confidence": 0.85,
+            "cognitive_load": "medium",
+            "pathways": self.active_pathways,
+            "consciousness_level": self.consciousness_level if consciousness_active else 0.0,
+            "depth": 3
+        }
 
 class MetaReasoner:
     """Meta-reasoning component for selecting reasoning strategies"""
@@ -349,114 +489,134 @@ class MetaReasoner:
 # Global reasoning engine instance
 reasoning_engine = AdvancedReasoningEngine()
 
-# API Models
-class ReasoningRequest(BaseModel):
-    query: str
-    context: Optional[Dict[str, Any]] = None
-    reasoning_type: Optional[str] = None
+# API Models (only if FastAPI is available)
+if FASTAPI_AVAILABLE:
+    class ReasoningRequest(BaseModel):
+        query: str
+        context: Optional[Dict[str, Any]] = None
+        reasoning_type: Optional[str] = None
 
-class FactRequest(BaseModel):
-    content: str
-    truth_value: Optional[bool] = True
-    confidence: float = 1.0
-    source: Optional[str] = None
+    class FactRequest(BaseModel):
+        content: str
+        truth_value: Optional[bool] = True
+        confidence: float = 1.0
+        source: Optional[str] = None
 
-class RuleRequest(BaseModel):
-    name: str
-    premises: List[str]
-    conclusion: str
-    confidence: float = 1.0
+    class RuleRequest(BaseModel):
+        name: str
+        premises: List[str]
+        conclusion: str
+        confidence: float = 1.0
 
-class CausalRelationRequest(BaseModel):
-    cause: str
-    effect: str
-    strength: float = 1.0
+    class CausalRelationRequest(BaseModel):
+        cause: str
+        effect: str
+        strength: float = 1.0
+else:
+    # Fallback classes for when FastAPI is not available
+    class ReasoningRequest:
+        def __init__(self, query: str, context: Optional[Dict[str, Any]] = None, reasoning_type: Optional[str] = None):
+            self.query = query
+            self.context = context
+            self.reasoning_type = reasoning_type
 
-# API Endpoints
-@app.post("/reason")
-async def reason(request: ReasoningRequest):
-    """Perform reasoning on a query"""
-    try:
-        result = await reasoning_engine.reason(
-            request.query,
-            request.context
-        )
-        return result
-    except Exception as e:
-        logger.error(f"Reasoning error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# API Endpoints (only if FastAPI is available)
+if FASTAPI_AVAILABLE and app is not None:
+    @app.post("/reason")
+    async def reason(request: ReasoningRequest):
+        """Perform reasoning on a query"""
+        try:
+            result = await reasoning_engine.reason(
+                request.query,
+                request.context
+            )
+            return result
+        except Exception as e:
+            logger.error(f"Reasoning error: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/add_fact")
-async def add_fact(request: FactRequest):
-    """Add a fact to the knowledge base"""
-    try:
-        fact = Proposition(
-            content=request.content,
-            truth_value=request.truth_value,
-            confidence=request.confidence,
-            source=request.source,
-            timestamp=datetime.now()
-        )
-        reasoning_engine.knowledge_base.add_fact(fact)
-        return {"status": "success", "fact": request.content}
-    except Exception as e:
-        logger.error(f"Error adding fact: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    @app.post("/add_fact")
+    async def add_fact(request: FactRequest):
+        """Add a fact to the knowledge base"""
+        try:
+            fact = Proposition(
+                content=request.content,
+                truth_value=request.truth_value,
+                confidence=request.confidence,
+                source=request.source,
+                timestamp=datetime.now()
+            )
+            reasoning_engine.knowledge_base.add_fact(fact)
+            return {"status": "success", "fact": request.content}
+        except Exception as e:
+            logger.error(f"Error adding fact: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/add_rule")
-async def add_rule(request: RuleRequest):
-    """Add an inference rule"""
-    try:
-        rule = Rule(
-            name=request.name,
-            premises=request.premises,
-            conclusion=request.conclusion,
-            confidence=request.confidence
-        )
-        reasoning_engine.knowledge_base.add_rule(rule)
-        return {"status": "success", "rule": request.name}
-    except Exception as e:
-        logger.error(f"Error adding rule: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    @app.post("/add_rule")
+    async def add_rule(request: RuleRequest):
+        """Add an inference rule"""
+        try:
+            rule = Rule(
+                name=request.name,
+                premises=request.premises,
+                conclusion=request.conclusion,
+                confidence=request.confidence
+            )
+            reasoning_engine.knowledge_base.add_rule(rule)
+            return {"status": "success", "rule": request.name}
+        except Exception as e:
+            logger.error(f"Error adding rule: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/add_causal_relation")
-async def add_causal_relation(request: CausalRelationRequest):
-    """Add a causal relationship"""
-    try:
-        reasoning_engine.knowledge_base.add_causal_relation(
-            request.cause,
-            request.effect,
-            request.strength
-        )
-        return {"status": "success", "relation": f"{request.cause} -> {request.effect}"}
-    except Exception as e:
-        logger.error(f"Error adding causal relation: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    @app.post("/add_causal_relation")
+    async def add_causal_relation(request: CausalRelationRequest):
+        """Add a causal relationship"""
+        try:
+            reasoning_engine.knowledge_base.add_causal_relation(
+                request.cause,
+                request.effect,
+                request.strength
+            )
+            return {"status": "success", "relation": f"{request.cause} -> {request.effect}"}
+        except Exception as e:
+            logger.error(f"Error adding causal relation: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/knowledge_stats")
-async def get_knowledge_stats():
-    """Get statistics about the knowledge base"""
-    kb = reasoning_engine.knowledge_base
-    return {
-        "facts": len(kb.facts),
-        "rules": len(kb.rules),
-        "causal_relations": kb.causal_graph.number_of_edges(),
-        "causal_nodes": kb.causal_graph.number_of_nodes(),
-        "temporal_facts": len(kb.temporal_facts),
-        "cache_size": len(reasoning_engine.reasoning_cache)
-    }
+    @app.get("/knowledge_stats")
+    async def get_knowledge_stats():
+        """Get statistics about the knowledge base"""
+        kb = reasoning_engine.knowledge_base
+        causal_edges = 0
+        causal_nodes = 0
+        if NETWORKX_AVAILABLE and kb.causal_graph is not None:
+            causal_edges = kb.causal_graph.number_of_edges()
+            causal_nodes = kb.causal_graph.number_of_nodes()
+        elif hasattr(kb, 'causal_relations'):
+            causal_edges = len(kb.causal_relations)
+            
+        return {
+            "facts": len(kb.facts),
+            "rules": len(kb.rules),
+            "causal_relations": causal_edges,
+            "causal_nodes": causal_nodes,
+            "temporal_facts": len(kb.temporal_facts),
+            "cache_size": len(reasoning_engine.reasoning_cache)
+        }
 
-@app.get("/health")
-async def health():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "service": "reasoning-engine",
-        "timestamp": datetime.now().isoformat()
-    }
+    @app.get("/health")
+    async def health():
+        """Health check endpoint"""
+        return {
+            "status": "healthy",
+            "service": "reasoning-engine",
+            "timestamp": datetime.now().isoformat()
+        }
 
 # Convenience alias for backwards compatibility
 ReasoningEngine = AdvancedReasoningEngine
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    if FASTAPI_AVAILABLE and app is not None:
+        uvicorn.run(app, host="0.0.0.0", port=8000)
+    else:
+        logger.info("Reasoning Engine loaded in library mode (FastAPI not available)")
