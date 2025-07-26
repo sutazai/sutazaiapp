@@ -455,5 +455,8 @@ async def health():
         "timestamp": datetime.now().isoformat()
     }
 
+# Convenience alias for backwards compatibility
+ReasoningEngine = AdvancedReasoningEngine
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

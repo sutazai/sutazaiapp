@@ -1478,7 +1478,7 @@ def show_self_improvement():
     st.title("🚀 Autonomous Code Generation & Self-Improvement")
     
     # Check code-improver service connectivity
-    code_improver_health = asyncio.run(check_service_health("http://localhost:8113"))
+    code_improver_health = asyncio.run(check_service_health("http://code-improver:8080"))
     
     # Status overview
     col1, col2, col3, col4 = st.columns(4)
@@ -1706,10 +1706,10 @@ class {generation_type.replace(" ", "")}:
                 with col_m1:
                     st.markdown(f"**{row['Metric']}**")
                 with col_m2:
-                    st.metric("", f"{row['Score']}/10")
+                    st.metric("Score", f"{row['Score']}/10", label_visibility="hidden")
                 with col_m3:
                     trend_color = "normal" if row['Trend'].startswith('+') else "inverse"
-                    st.metric("", row['Trend'], delta_color=trend_color)
+                    st.metric("Trend", row['Trend'], delta_color=trend_color, label_visibility="hidden")
         
         with analysis_col2:
             st.markdown("#### 🎯 Improvement Recommendations")
@@ -2634,18 +2634,20 @@ def show_enterprise_dashboard():
     # Live Service Status Matrix with real health checks
     st.markdown("### 🔄 Live Service Status")
     
-    # Define services to check
+    # Define services to check - using internal Docker service names
     service_endpoints = [
-        {"name": "AGI Brain", "url": "http://localhost:8000/health", "port": "8000"},
-        {"name": "LangFlow", "url": "http://localhost:8090/health", "port": "8090"},
-        {"name": "FlowiseAI", "url": "http://localhost:8099/health", "port": "8099"},
-        {"name": "BigAGI", "url": "http://localhost:8106/health", "port": "8106"},
-        {"name": "Dify", "url": "http://localhost:8107/health", "port": "8107"},
-        {"name": "n8n", "url": "http://localhost:5678/health", "port": "5678"},
-        {"name": "Ollama", "url": "http://localhost:11434/api/tags", "port": "11434"},
-        {"name": "ChromaDB", "url": "http://localhost:8001/api/v1/heartbeat", "port": "8001"},
-        {"name": "Qdrant", "url": "http://localhost:6333/health", "port": "6333"},
-        {"name": "Neo4j", "url": "http://localhost:7474/db/system/tx/commit", "port": "7474"}
+        {"name": "AGI Brain", "url": "http://backend-agi:8000/health", "port": "8000"},
+        {"name": "LangFlow", "url": "http://langflow:7860/health", "port": "8090"},
+        {"name": "FlowiseAI", "url": "http://flowise:3000/api/v1/ping", "port": "8099"},
+        {"name": "BigAGI", "url": "http://bigagi:3000", "port": "8106"},
+        {"name": "Dify", "url": "http://dify:5001/health", "port": "8107"},
+        {"name": "n8n", "url": "http://n8n:5678/healthz", "port": "5678"},
+        {"name": "Ollama", "url": "http://ollama:11434/api/tags", "port": "11434"},
+        {"name": "ChromaDB", "url": "http://chromadb:8000/api/v1/heartbeat", "port": "8001"},
+        {"name": "Qdrant", "url": "http://qdrant:6333", "port": "6333"},
+        {"name": "Neo4j", "url": "http://neo4j:7474", "port": "7474"},
+        {"name": "Grafana", "url": "http://grafana:3000/api/health", "port": "3000"},
+        {"name": "Prometheus", "url": "http://prometheus:9090/-/healthy", "port": "9090"}
     ]
     
     # Check service health in real-time
@@ -2850,9 +2852,11 @@ def show_ai_chat_hub():
                 # Use advanced neural processing with reasoning
                 response = asyncio.run(call_api("/api/v1/brain/think", "POST", {
                     "input_data": {"text": prompt},
-                    "reasoning_type": reasoning_type.lower().split()[0] if reasoning_type != "Automatic (Best Fit)" else "strategic",
-                    "trace_enabled": True,
-                    **cognitive_params
+                    "reasoning_type": "strategic" if reasoning_type == "Automatic (Best Fit)" else reasoning_type.lower().split()[0],
+                    "context": {
+                        "trace_enabled": True,
+                        **cognitive_params
+                    }
                 }))
             elif "Multi-Agent Consensus" in selected_model:
                 # Use multi-agent reasoning
@@ -3329,7 +3333,7 @@ def show_vector_databases():
         st.markdown("### ChromaDB Management")
         
         # Check ChromaDB health
-        chroma_health = asyncio.run(check_service_health("http://localhost:8001/api/v1/heartbeat"))
+        chroma_health = asyncio.run(check_service_health("http://chromadb:8000/api/v1/heartbeat"))
         
         if chroma_health:
             st.success("🟢 ChromaDB Online")
@@ -3427,7 +3431,7 @@ def show_vector_databases():
         st.markdown("### Qdrant Management")
         
         # Check Qdrant health
-        qdrant_health = asyncio.run(check_service_health("http://localhost:6333/health"))
+        qdrant_health = asyncio.run(check_service_health("http://qdrant:6333/health"))
         
         if qdrant_health:
             st.success("🟢 Qdrant Online")
@@ -3504,7 +3508,7 @@ def show_knowledge_graphs():
     st.title("🕸️ Knowledge Graph Management")
     
     # Check Neo4j connectivity
-    neo4j_health = asyncio.run(check_service_health("http://localhost:7474"))
+    neo4j_health = asyncio.run(check_service_health("http://neo4j:7474"))
     
     col1, col2 = st.columns([2, 1])
     
@@ -3834,8 +3838,8 @@ def show_monitoring_integration():
     st.title("📊 System Monitoring Center")
     
     # Check monitoring services
-    grafana_health = asyncio.run(check_service_health("http://localhost:3000"))
-    prometheus_health = asyncio.run(check_service_health("http://localhost:9090"))
+    grafana_health = asyncio.run(check_service_health("http://grafana:3000"))
+    prometheus_health = asyncio.run(check_service_health("http://prometheus:9090"))
     
     col1, col2 = st.columns(2)
     
@@ -4314,7 +4318,7 @@ def show_system_monitoring():
         st.markdown("#### 📈 Prometheus Metrics")
         
         # Check Prometheus connectivity
-        prometheus_health = asyncio.run(check_service_health("http://localhost:9090"))
+        prometheus_health = asyncio.run(check_service_health("http://prometheus:9090"))
         
         if prometheus_health:
             st.success("🟢 Prometheus Online")
@@ -4389,7 +4393,7 @@ def show_system_monitoring():
         st.markdown("#### 📊 Grafana Dashboards")
         
         # Check Grafana connectivity
-        grafana_health = asyncio.run(check_service_health("http://localhost:3000"))
+        grafana_health = asyncio.run(check_service_health("http://grafana:3000"))
         
         if grafana_health:
             st.success("🟢 Grafana Online")
@@ -4444,7 +4448,7 @@ def show_system_monitoring():
         st.markdown("#### 📁 Loki Log Aggregation")
         
         # Check Loki connectivity
-        loki_health = asyncio.run(check_service_health("http://localhost:3100"))
+        loki_health = asyncio.run(check_service_health("http://loki:3100"))
         
         if loki_health:
             st.success("🟢 Loki Online")
@@ -5083,7 +5087,7 @@ def show_shellgpt_interface():
         st.markdown("### ShellGPT Status")
         
         # Check if ShellGPT service is running
-        shellgpt_health = asyncio.run(check_service_health("http://localhost:8102"))
+        shellgpt_health = asyncio.run(check_service_health("http://shellgpt:8080"))
         if shellgpt_health:
             st.success("🟢 ShellGPT Online")
             if st.button("🚀 Open ShellGPT", type="primary"):
@@ -5154,7 +5158,7 @@ def show_jax_ml_interface():
     with col2:
         st.markdown("### JAX Service Status")
         
-        jax_health = asyncio.run(check_service_health("http://localhost:8089"))
+        jax_health = asyncio.run(check_service_health("http://jax:8089"))
         if jax_health:
             st.success("🟢 JAX Online")
             if st.button("🚀 Open JAX Interface", type="primary"):
@@ -5211,7 +5215,7 @@ def show_llamaindex_interface():
     with col2:
         st.markdown("### LlamaIndex Status")
         
-        llama_health = asyncio.run(check_service_health("http://localhost:8098"))
+        llama_health = asyncio.run(check_service_health("http://llamaindex:8098"))
         if llama_health:
             st.success("🟢 LlamaIndex Online")
             if st.button("🚀 Open LlamaIndex", type="primary"):
@@ -5298,7 +5302,7 @@ def show_real_ollama_management():
     st.title("🦙 Ollama Model Management")
     
     # Check Ollama service health
-    ollama_health = asyncio.run(check_service_health("http://localhost:11434/api/tags"))
+    ollama_health = asyncio.run(check_service_health("http://ollama:11434/api/tags"))
     
     if not ollama_health:
         st.error("🔴 Ollama service is not responding")
@@ -5459,23 +5463,23 @@ def show_missing_agent_integrations():
     
     # Services that are running but may not have dedicated interfaces
     services = [
-        {"name": "ShellGPT", "port": "8102", "description": "AI-powered shell command generation"},
-        {"name": "JAX ML", "port": "8089", "description": "High-performance machine learning framework"},
-        {"name": "LlamaIndex", "port": "8098", "description": "RAG system for document querying"}
+        {"name": "ShellGPT", "host": "shellgpt", "port": "8080", "external_port": "8102", "description": "AI-powered shell command generation"},
+        {"name": "JAX ML", "host": "jax", "port": "8089", "external_port": "8089", "description": "High-performance machine learning framework"},
+        {"name": "LlamaIndex", "host": "llamaindex", "port": "8098", "external_port": "8098", "description": "RAG system for document querying"}
     ]
     
     cols = st.columns(3)
     
     for i, service in enumerate(services):
         with cols[i]:
-            health = asyncio.run(check_service_health(f"http://localhost:{service['port']}"))
+            health = asyncio.run(check_service_health(f"http://{service['host']}:{service['port']}"))
             status_color = "🟢" if health else "🔴"
             
             st.markdown(f"""
                 <div style="padding: 20px; border: 1px solid #333; border-radius: 12px; text-align: center; margin-bottom: 20px;">
                     <h3>{status_color} {service['name']}</h3>
                     <p style="color: #888;">{service['description']}</p>
-                    <p><strong>Port:</strong> {service['port']}</p>
+                    <p><strong>Port:</strong> {service.get('external_port', service['port'])}</p>
                 </div>
             """, unsafe_allow_html=True)
             

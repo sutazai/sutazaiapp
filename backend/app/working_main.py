@@ -317,14 +317,26 @@ async def query_ollama(model: str, prompt: str):
         logger.error(f"Error querying Ollama: {e}")
     return "Model temporarily unavailable - please ensure Ollama is running with models installed"
 
-# Authentication helper
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)) -> Dict[str, Any]:
-    """Get current authenticated user (placeholder implementation)"""
-    if not ENTERPRISE_FEATURES or not credentials:
+# Authentication helpers
+async def get_current_user_enterprise(credentials: HTTPAuthorizationCredentials = Security(security)) -> Dict[str, Any]:
+    """Get current authenticated user for enterprise mode"""
+    if not credentials:
         return {"id": "anonymous", "role": "user"}
     
     # TODO: Implement proper JWT validation
     return {"id": "system_user", "role": "admin"}
+
+async def get_current_user_basic() -> Dict[str, Any]:
+    """Get current user for basic mode (no authentication required)"""
+    return {"id": "anonymous", "role": "user"}
+
+# Dynamic authentication dependency
+def get_current_user():
+    """Get current user based on enterprise features availability"""
+    if ENTERPRISE_FEATURES:
+        return get_current_user_enterprise
+    else:
+        return get_current_user_basic
 
 # Enterprise Agent Orchestration Endpoints
 @app.post("/api/v1/orchestration/agents")
@@ -1502,6 +1514,75 @@ async def root():
         },
         "timestamp": datetime.utcnow().isoformat()
     }
+
+# WebSocket Connection Manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+        logger.info(f"WebSocket client connected. Total connections: {len(self.active_connections)}")
+
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+        logger.info(f"WebSocket client disconnected. Total connections: {len(self.active_connections)}")
+
+    async def send_personal_message(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            try:
+                await connection.send_text(message)
+            except Exception as e:
+                logger.error(f"Failed to send message to WebSocket client: {e}")
+
+manager = ConnectionManager()
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    """WebSocket endpoint for real-time updates"""
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Keep connection alive and handle incoming messages
+            data = await websocket.receive_text()
+            
+            # Echo back or process the message
+            response = {
+                "type": "echo",
+                "message": f"Received: {data}",
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            await manager.send_personal_message(json.dumps(response), websocket)
+            
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception as e:
+        logger.error(f"WebSocket error: {e}")
+        manager.disconnect(websocket)
+
+# Optional: Broadcast system metrics periodically
+async def broadcast_system_metrics():
+    """Broadcast system metrics to all connected WebSocket clients"""
+    while True:
+        try:
+            metrics = {
+                "type": "metrics_update",
+                "data": {
+                    "cpu_percent": psutil.cpu_percent(),
+                    "memory_percent": psutil.virtual_memory().percent,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            }
+            await manager.broadcast(json.dumps(metrics))
+            await asyncio.sleep(10)  # Broadcast every 10 seconds
+        except Exception as e:
+            logger.error(f"Metrics broadcast error: {e}")
+            await asyncio.sleep(30)
 
 if __name__ == "__main__":
     import uvicorn

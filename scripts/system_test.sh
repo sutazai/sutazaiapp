@@ -62,7 +62,7 @@ echo "========================"
 CONTAINERS=("sutazai-postgres" "sutazai-redis" "sutazai-ollama" "sutazai-chromadb" "sutazai-qdrant" "sutazai-backend-agi" "sutazai-frontend-agi")
 
 for container in "${CONTAINERS[@]}"; do
-    run_test "$container health" "docker ps | grep -q '$container.*healthy'"
+    run_test "$container health" "docker ps | grep '$container' | grep -q '(healthy)'"
 done
 
 echo ""
@@ -126,7 +126,7 @@ echo ""
 echo "🛠️ Utility Scripts Tests"
 echo "========================"
 
-run_test "Live logs script" "timeout 2 /opt/sutazaiapp/scripts/live_logs.sh status"
+run_test "Live logs script" "timeout 2 /opt/sutazaiapp/scripts/live_logs.sh status | grep -q 'SutazAI'"
 run_test "Ollama health check" "/opt/sutazaiapp/scripts/ollama_health_check.sh | grep -q 'healthy'"
 run_test "Performance test script" "[ -x /opt/sutazaiapp/scripts/test_performance.sh ]"
 run_test "Monitor dashboard script" "[ -x /opt/sutazaiapp/scripts/monitor_dashboard.sh ]"
