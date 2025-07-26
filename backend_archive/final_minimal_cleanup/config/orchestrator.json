@@ -1,0 +1,24 @@
+{
+  "servers": [
+    {
+      "server_type": "code",
+      "hostname": "DESKTOP-I534C9S",
+      "ip": "127.0.0.1",
+      "ssh_key": "",
+      "root_path": "/opt/sutazaiapp",
+      "username": "sutazaidev",
+      "status": "online",
+      "last_check": "2025-03-24T22:48:05.505659"
+    },
+    {
+      "server_type": "deployment",
+      "hostname": "DESKTOP-I534C9S",
+      "ip": "127.0.0.1",
+      "ssh_key": "",
+      "root_path": "/opt/sutazaiapp",
+      "username": "sutazaidev",
+      "status": "connected",
+      "last_check": "2025-03-24T22:48:05.505677"
+    }
+  ]
+}

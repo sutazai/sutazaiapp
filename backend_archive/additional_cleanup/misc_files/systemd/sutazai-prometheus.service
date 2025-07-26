@@ -1,0 +1,25 @@
+[Unit]
+Description=SutazAI Prometheus Monitoring Service
+After=network.target
+Before=sutazai-grafana.service
+
+[Service]
+Type=simple
+User=sutazaiapp
+Group=sutazaiapp
+WorkingDirectory=/opt/sutazaiapp
+ExecStart=/opt/sutazaiapp/scripts/start_prometheus.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sutazai-prometheus
+TimeoutStartSec=60
+LimitNOFILE=65536
+
+# Resource controls
+CPUQuota=20%
+MemoryLimit=1G
+
+[Install]
+WantedBy=multi-user.target 

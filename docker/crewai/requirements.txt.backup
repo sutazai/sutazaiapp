@@ -1,0 +1,9 @@
+crewai
+crewai-tools
+fastapi
+uvicorn
+requests
+aiohttp
+openai
+pydantic
+python-multipart

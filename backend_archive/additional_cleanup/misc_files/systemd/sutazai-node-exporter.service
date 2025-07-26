@@ -1,0 +1,25 @@
+[Unit]
+Description=SutazAI Node Exporter Monitoring Service
+After=network.target
+Before=sutazai-prometheus.service
+
+[Service]
+Type=simple
+User=sutazaiapp
+Group=sutazaiapp
+WorkingDirectory=/opt/sutazaiapp
+ExecStart=/opt/sutazaiapp/scripts/start_node_exporter.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sutazai-node-exporter
+TimeoutStartSec=30
+LimitNOFILE=65536
+
+# Resource controls
+CPUQuota=10%
+MemoryLimit=256M
+
+[Install]
+WantedBy=multi-user.target 

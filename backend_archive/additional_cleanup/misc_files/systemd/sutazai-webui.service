@@ -1,0 +1,19 @@
+[Unit]
+Description=SutazAI Web UI Service
+After=network.target
+StartLimitIntervalSec=60
+
+[Service]
+Type=simple
+User=sutazaidev
+Group=sutazaidev
+WorkingDirectory=/opt/sutazaiapp
+Environment=NODE_ENV=production
+ExecStart=/opt/sutazaiapp/scripts/start_webui.sh
+Restart=always
+RestartSec=5
+StandardOutput=append:/opt/sutazaiapp/logs/webui/webui.log
+StandardError=append:/opt/sutazaiapp/logs/webui/webui.error.log
+
+[Install]
+WantedBy=multi-user.target 

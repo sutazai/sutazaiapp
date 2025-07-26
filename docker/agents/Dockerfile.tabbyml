@@ -1,0 +1,8 @@
+FROM tabbyml/tabby:latest
+
+ENV TABBY_MODEL=TabbyML/StarCoder-1B
+ENV TABBY_DEVICE=cpu
+
+EXPOSE 8080
+
+CMD ["serve", "--model", "${TABBY_MODEL}", "--device", "${TABBY_DEVICE}", "--no-webserver"]

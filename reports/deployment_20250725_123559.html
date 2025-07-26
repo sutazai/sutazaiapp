@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SutazAI AGI/ASI Deployment Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .section { background: white; margin: 20px 0; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .metric-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 10px; text-align: center; border-left: 4px solid #667eea; }
+        .metric-value { font-size: 2.5em; font-weight: bold; color: #667eea; }
+        .metric-label { color: #6c757d; font-size: 0.9em; margin-top: 5px; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .service-card { background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #28a745; }
+        .service-card.warning { border-left-color: #ffc107; }
+        .service-card.error { border-left-color: #dc3545; }
+        .service-name { font-weight: bold; margin-bottom: 5px; }
+        .service-url { color: #007bff; text-decoration: none; font-size: 0.9em; }
+        .service-url:hover { text-decoration: underline; }
+        .status-healthy { color: #28a745; font-weight: bold; }
+        .status-warning { color: #ffc107; font-weight: bold; }
+        .status-error { color: #dc3545; font-weight: bold; }
+        .next-steps { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        .credentials { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #ff9800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 SutazAI AGI/ASI System</h1>
+            <h2>Enterprise Deployment Report</h2>
+            <p>Generated: $(date +'%Y-%m-%d %H:%M:%S') | Version: $DEPLOYMENT_VERSION</p>
+            <p>System: $LOCAL_IP | Memory: ${AVAILABLE_MEMORY}GB | CPU: ${CPU_CORES} cores | Disk: ${AVAILABLE_DISK}GB</p>
+        </div>
+        <div class="section">
+            <h2>📈 System Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">22</div>
+                    <div class="metric-label">Total Services Running</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Healthy Services</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">14GB</div>
+                    <div class="metric-label">System Memory</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">20</div>
+                    <div class="metric-label">CPU Cores</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">712GB</div>
+                    <div class="metric-label">Available Disk</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">17.0</div>
+                    <div class="metric-label">Deployment Version</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🌐 Service Access Points</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-name">🖥️ SutazAI Frontend</div>
+                    <a href="http://localhost:8501" target="_blank" class="service-url">http://localhost:8501</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">📚 AGI API Documentation</div>
+                    <a href="http://localhost:8000/docs" target="_blank" class="service-url">http://localhost:8000/docs</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">📊 Grafana Monitoring</div>
+                    <a href="http://localhost:3000" target="_blank" class="service-url">http://localhost:3000</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">📈 Prometheus Metrics</div>
+                    <a href="http://localhost:9090" target="_blank" class="service-url">http://localhost:9090</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🕸️ Neo4j Knowledge Graph</div>
+                    <a href="http://localhost:7474" target="_blank" class="service-url">http://localhost:7474</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🔍 ChromaDB Vector Store</div>
+                    <a href="http://localhost:8001" target="_blank" class="service-url">http://localhost:8001</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🎯 Qdrant Dashboard</div>
+                    <a href="http://localhost:6333/dashboard" target="_blank" class="service-url">http://localhost:6333/dashboard</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🌊 LangFlow Builder</div>
+                    <a href="http://localhost:8090" target="_blank" class="service-url">http://localhost:8090</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🌸 FlowiseAI</div>
+                    <a href="http://localhost:8099" target="_blank" class="service-url">http://localhost:8099</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">💼 BigAGI Interface</div>
+                    <a href="http://localhost:8106" target="_blank" class="service-url">http://localhost:8106</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">⚡ Dify Workflows</div>
+                    <a href="http://localhost:8107" target="_blank" class="service-url">http://localhost:8107</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">🔗 n8n Automation</div>
+                    <a href="http://localhost:5678" target="_blank" class="service-url">http://localhost:5678</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section credentials">
+            <h2>🔐 System Credentials</h2>
+            <p><strong>⚠️ IMPORTANT:</strong> Save these credentials securely!</p>
+            <ul>
+                <li><strong>Grafana:</strong> admin / sutazai_grafana_2025</li>
+                <li><strong>Neo4j:</strong> neo4j / sutazai_neo4j_password_2025</li>
+                <li><strong>Database:</strong> sutazai / sutazai_secure_password_2025</li>
+                <li><strong>N8N:</strong> admin / sutazai_n8n_2025</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Container Status</h2>
+            <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.9em;">
+NAME                   IMAGE                                 COMMAND                  SERVICE        CREATED              STATUS                            PORTS
+sutazai-aider          sutazaiapp-aider                      "uvicorn aider_servi…"   aider          About a minute ago   Up About a minute                 0.0.0.0:8095->8080/tcp, [::]:8095->8080/tcp
+sutazai-autogpt        sutazaiapp-autogpt                    "uvicorn autogpt_ser…"   autogpt        About a minute ago   Up About a minute                 8080/tcp
+sutazai-backend-agi    sutazaiapp-backend-agi                "uvicorn app.working…"   backend-agi    About a minute ago   Up About a minute (healthy)       0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+sutazai-chromadb       chromadb/chroma:0.5.0                 "/docker_entrypoint.…"   chromadb       4 minutes ago        Up 4 minutes (healthy)            0.0.0.0:8001->8000/tcp, [::]:8001->8000/tcp
+sutazai-crewai         sutazaiapp-crewai                     "uvicorn crewai_serv…"   crewai         About a minute ago   Up About a minute                 0.0.0.0:8096->8080/tcp, [::]:8096->8080/tcp
+sutazai-faiss          sutazaiapp-faiss                      "python faiss_servic…"   faiss          4 minutes ago        Up 4 minutes (healthy)            0.0.0.0:8002->8000/tcp, [::]:8002->8000/tcp
+sutazai-flowise        flowiseai/flowise:latest              "flowise start"          flowise        About a minute ago   Up About a minute                 0.0.0.0:8099->3000/tcp, [::]:8099->3000/tcp
+sutazai-frontend-agi   sutazaiapp-frontend-agi               "streamlit run app_a…"   frontend-agi   57 seconds ago       Up 55 seconds (healthy)           0.0.0.0:8501->8501/tcp, [::]:8501->8501/tcp
+sutazai-gpt-engineer   sutazaiapp-gpt-engineer               "uvicorn gpt_enginee…"   gpt-engineer   About a minute ago   Up About a minute                 0.0.0.0:8097->8080/tcp, [::]:8097->8080/tcp
+sutazai-grafana        grafana/grafana:latest                "/run.sh"                grafana        56 seconds ago       Up 56 seconds                     0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+sutazai-langflow       langflowai/langflow:latest            "langflow run"           langflow       About a minute ago   Up About a minute                 0.0.0.0:8090->7860/tcp, [::]:8090->7860/tcp
+sutazai-letta          sutazaiapp-letta                      "uvicorn letta_servi…"   letta          About a minute ago   Up About a minute                 8080/tcp
+sutazai-litellm        ghcr.io/berriai/litellm:main-latest   "docker/prod_entrypo…"   litellm        24 seconds ago       Up 23 seconds                     0.0.0.0:4000->4000/tcp, [::]:4000->4000/tcp
+sutazai-loki           grafana/loki:2.9.0                    "/usr/bin/loki -conf…"   loki           57 seconds ago       Up 56 seconds                     0.0.0.0:3100->3100/tcp, [::]:3100->3100/tcp
+sutazai-n8n            n8nio/n8n:latest                      "tini -- /docker-ent…"   n8n            About a minute ago   Up About a minute                 0.0.0.0:5678->5678/tcp, [::]:5678->5678/tcp
+sutazai-neo4j          neo4j:5.13-community                  "tini -g -- /startup…"   neo4j          4 minutes ago        Up 3 seconds (health: starting)   0.0.0.0:7474->7474/tcp, [::]:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp, [::]:7687->7687/tcp
+sutazai-ollama         ollama/ollama:latest                  "/bin/ollama serve"      ollama         3 minutes ago        Up 3 minutes (healthy)            0.0.0.0:11434->11434/tcp, [::]:11434->11434/tcp
+sutazai-postgres       postgres:16.3-alpine                  "docker-entrypoint.s…"   postgres       4 minutes ago        Up 4 minutes (healthy)            0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+sutazai-prometheus     prom/prometheus:latest                "/bin/prometheus --c…"   prometheus     57 seconds ago       Up 56 seconds                     0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+sutazai-promtail       grafana/promtail:2.9.0                "/usr/bin/promtail -…"   promtail       56 seconds ago       Up 56 seconds                     
+sutazai-qdrant         qdrant/qdrant:v1.9.2                  "./entrypoint.sh"        qdrant         4 minutes ago        Up 4 minutes (healthy)            0.0.0.0:6333-6334->6333-6334/tcp, [::]:6333-6334->6333-6334/tcp
+sutazai-redis          redis:7.2-alpine                      "docker-entrypoint.s…"   redis          4 minutes ago        Up 4 minutes (healthy)            0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp
+            </pre>
+        </div>
+        
+        <div class="section next-steps">
+            <h2>🎯 Next Steps</h2>
+            <ol>
+                <li><strong>Access the system:</strong> <a href="http://localhost:8501" target="_blank">Open SutazAI Frontend</a></li>
+                <li><strong>Monitor system health:</strong> <a href="http://localhost:3000" target="_blank">Grafana Dashboard</a></li>
+                <li><strong>Download additional AI models:</strong> Use the Ollama Models section in the frontend</li>
+                <li><strong>Configure AI agents:</strong> Access the Agent Control Center</li>
+                <li><strong>Set up monitoring alerts:</strong> Configure Prometheus/Grafana alerts</li>
+                <li><strong>Explore knowledge graph:</strong> <a href="http://localhost:7474" target="_blank">Neo4j Browser</a></li>
+                <li><strong>Create workflows:</strong> Use LangFlow, Dify, or n8n for automation</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h2>🛠️ Management Commands</h2>
+            <pre style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+# View service logs
+docker compose logs [service-name]
+
+# Restart specific service
+docker compose restart [service-name]
+
+# Stop all services
+docker compose down
+
+# Update and restart system
+docker compose pull && docker compose up -d
+
+# View system status
+docker compose ps
+
+# Monitor resource usage
+docker stats
+            </pre>
+        </div>
+        
+        <div class="section">
+            <h2>📞 Support Information</h2>
+            <ul>
+                <li><strong>Logs Location:</strong> <code>logs/</code></li>
+                <li><strong>Configuration:</strong> <code>.env</code></li>
+                <li><strong>Deployment Report:</strong> <code>reports/</code></li>
+                <li><strong>Backup Location:</strong> <code>backups/</code></li>
+                <li><strong>Health Check Script:</strong> <code>./scripts/deploy_complete_system.sh health</code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

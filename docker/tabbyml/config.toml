@@ -1,0 +1,13 @@
+[model]
+kind = "ollama"
+model_id = "deepseek-r1:8b"
+api_endpoint = "http://ollama:11434"
+
+[llm]
+provider = "ollama"
+base_url = "http://ollama:11434"
+model = "deepseek-r1:8b"
+
+[embeddings]
+provider = "ollama"
+model = "nomic-embed-text"

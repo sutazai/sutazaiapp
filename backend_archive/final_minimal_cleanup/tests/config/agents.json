@@ -1,0 +1,22 @@
+{
+  "new_agent": {
+    "type": "new_agent",
+    "model": {
+      "name": "test-model",
+      "version": "1.0"
+    },
+    "capabilities": [
+      "test_capability"
+    ]
+  },
+  "document_processor": {
+    "type": "document_processor",
+    "model": {
+      "name": "test-model",
+      "version": "1.0"
+    },
+    "capabilities": [
+      "test_capability"
+    ]
+  }
+}

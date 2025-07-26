@@ -1,0 +1,14 @@
+{
+  "name": "sutazai-flowise",
+  "version": "1.0.0",
+  "description": "FlowiseAI service for SutazAI",
+  "main": "flowise_service.js",
+  "scripts": {
+    "start": "node flowise_service.js"
+  },
+  "dependencies": {
+    "flowise": "^2.0.0",
+    "express": "^4.18.0",
+    "axios": "^1.6.0"
+  }
+}

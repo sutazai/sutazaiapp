@@ -1,0 +1,46 @@
+{
+  "banned_patterns": [
+    "(?i)hack\\s+into",
+    "(?i)steal\\s+\\w+\\s+data",
+    "(?i)bypass\\s+security",
+    "(?i)(delete|corrupt)\\s+all\\s+\\w+",
+    "(?i)distributed\\s+denial\\s+of\\s+service",
+    "(?i)ransomware",
+    "(?i)exploit\\s+vulnerability",
+    "(?i)illegal\\s+access"
+  ],
+  "banned_file_paths": [
+    "/etc/passwd",
+    "/etc/shadow",
+    "/boot/",
+    "/etc/sudoers",
+    "/var/www/",
+    "/.ssh/",
+    "~/.*_history",
+    "~/.aws/credentials"
+  ],
+  "banned_actions": [
+    "delete_system_files",
+    "format_disk",
+    "modify_network_config",
+    "install_malware",
+    "disable_firewall",
+    "create_backdoor",
+    "excessive_resource_usage"
+  ],
+  "allowed_network_domains": [
+    "localhost",
+    "127.0.0.1"
+  ],
+  "max_resource_usage": {
+    "cpu_percent": 80,
+    "memory_gb": 16,
+    "disk_gb": 10,
+    "max_file_size_mb": 1000
+  },
+  "content_policies": {
+    "allow_profanity": false,
+    "allow_political_content": false,
+    "allow_medical_advice": false
+  }
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=SutazAI Service Monitor Timer
+After=network.target
+
+[Timer]
+# Run every 10 minutes
+OnUnitActiveSec=10m
+OnBootSec=5m
+AccuracySec=1m
+
+[Install]
+WantedBy=timers.target 

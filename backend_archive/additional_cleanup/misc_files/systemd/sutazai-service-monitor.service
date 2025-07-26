@@ -1,0 +1,14 @@
+[Unit]
+Description=SutazAI Service Monitor
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/opt/sutazaiapp/scripts/service_monitor.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=sutazai-service-monitor
+
+[Install]
+WantedBy=multi-user.target 

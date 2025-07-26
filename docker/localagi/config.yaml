@@ -1,0 +1,14 @@
+llm:
+  provider: ollama
+  base_url: http://ollama:11434
+  api_key: local
+  model: deepseek-r1:8b
+  
+embeddings:
+  provider: ollama
+  model: nomic-embed-text
+  
+api:
+  compatibility_mode: openai
+  base_url: http://ollama:11434/v1
+  key: dummy

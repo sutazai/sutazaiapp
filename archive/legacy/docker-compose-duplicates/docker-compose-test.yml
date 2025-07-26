@@ -1,0 +1,242 @@
+version: '3.8'
+
+services:
+  # Test Database
+  test-postgres:
+    image: postgres:16-alpine
+    container_name: sutazai-test-db
+    environment:
+      POSTGRES_USER: sutazai_test
+      POSTGRES_PASSWORD: testpassword123
+      POSTGRES_DB: sutazai_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - test-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test Redis
+  test-redis:
+    image: redis:7-alpine
+    container_name: sutazai-test-redis
+    command: redis-server --requirepass testredispass123
+    ports:
+      - "6380:6379"
+    volumes:
+      - test-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test Vector Database (Qdrant)
+  test-qdrant:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-test-qdrant
+    ports:
+      - "6334:6333"
+    volumes:
+      - test-qdrant-data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test Backend
+  test-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=test
+    container_name: sutazai-test-backend
+    environment:
+      # Database
+      DATABASE_URL: postgresql://sutazai_test:testpassword123@test-postgres:5432/sutazai_test
+
+      # Redis
+      REDIS_URL: redis://:testredispass123@test-redis:6379/0
+
+      # Vector DB
+      QDRANT_URL: http://test-qdrant:6333
+      QDRANT_API_KEY: test-api-key
+
+      # Application settings
+      APP_ENV: test
+      DEBUG: "true"
+      TESTING: "true"
+      LOG_LEVEL: DEBUG
+
+      # Security (test values)
+      SECRET_KEY: test-secret-key-for-testing-only
+      JWT_SECRET_KEY: test-jwt-secret-key
+      API_KEY: test-api-key
+
+      # Model settings
+      MODEL_PATH: /app/models
+      USE_GPU: "false"
+
+      # Service URLs
+      FRONTEND_URL: http://test-frontend:8501
+
+      # Testing specific
+      PYTEST_CURRENT_TEST: "true"
+      COVERAGE_PROCESS_START: .coveragerc
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./backend:/app
+      - test-backend-logs:/app/logs
+      - test-models:/app/models
+      - test-uploads:/app/uploads
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+      test-qdrant:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo 'Waiting for services to be ready...' &&
+        sleep 5 &&
+        echo 'Running database migrations...' &&
+        alembic upgrade head || true &&
+        echo 'Starting test server...' &&
+        pytest -v --cov=app --cov-report=html --cov-report=term --cov-report=xml
+      "
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Test Frontend (minimal for integration tests)
+  test-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sutazai-test-frontend
+    environment:
+      BACKEND_URL: http://test-backend:8000
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+      TESTING: "true"
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - test-backend
+    networks:
+      - test-network
+
+  # Test Runner (for CI/CD)
+  test-runner:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sutazai-test-runner
+    environment:
+      DATABASE_URL: postgresql://sutazai_test:testpassword123@test-postgres:5432/sutazai_test
+      REDIS_URL: redis://:testredispass123@test-redis:6379/0
+      QDRANT_URL: http://test-qdrant:6333
+      TESTING: "true"
+      CI: "true"
+    volumes:
+      - ./backend:/app
+      - ./test-results:/app/test-results
+      - ./coverage-reports:/app/coverage-reports
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+      test-qdrant:
+        condition: service_healthy
+    command: >
+      sh -c "
+        cd /app &&
+        pip install -r requirements-test.txt &&
+        echo 'Running unit tests...' &&
+        pytest tests/unit -v --junitxml=/app/test-results/unit-tests.xml &&
+        echo 'Running integration tests...' &&
+        pytest tests/integration -v --junitxml=/app/test-results/integration-tests.xml &&
+        echo 'Running all tests with coverage...' &&
+        pytest --cov=app --cov-report=html:/app/coverage-reports/html --cov-report=xml:/app/coverage-reports/coverage.xml --junitxml=/app/test-results/all-tests.xml &&
+        echo 'Tests completed!'
+      "
+    networks:
+      - test-network
+
+  # Mock External Services (for integration tests)
+  test-mock-services:
+    image: mockserver/mockserver:latest
+    container_name: sutazai-test-mocks
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_PROPERTY_FILE: /config/mockserver.properties
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializerJson.json
+    volumes:
+      - ./tests/mocks:/config
+    networks:
+      - test-network
+
+  # Selenium for E2E tests (optional)
+  test-selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: sutazai-test-selenium
+    ports:
+      - "4444:4444"
+      - "7900:7900"  # VNC server for debugging
+    shm_size: 2gb
+    environment:
+      SE_NODE_MAX_SESSIONS: 5
+      SE_NODE_SESSION_TIMEOUT: 300
+    networks:
+      - test-network
+
+  # Performance Testing with K6
+  test-k6:
+    image: grafana/k6:latest
+    container_name: sutazai-test-k6
+    volumes:
+      - ./tests/performance:/scripts
+    depends_on:
+      - test-backend
+    entrypoint: ["echo", "K6 is ready. Run with: docker-compose -f docker-compose-test.yml run test-k6 k6 run /scripts/load-test.js"]
+    networks:
+      - test-network
+
+volumes:
+  test-postgres-data:
+  test-redis-data:
+  test-qdrant-data:
+  test-backend-logs:
+  test-models:
+  test-uploads:
+
+networks:
+  test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

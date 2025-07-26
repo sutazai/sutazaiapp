@@ -1,0 +1,637 @@
+version: '3.9'
+
+networks:
+  sutazai-network:
+    driver: overlay
+    attachable: true
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
+
+volumes:
+  # Data volumes with encryption
+  postgres-master-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind,encrypt
+      device: /data/postgres-master
+  postgres-slave-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind,encrypt
+      device: /data/postgres-slave
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind,encrypt
+      device: /data/redis
+  vault-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind,encrypt
+      device: /data/vault
+  neo4j-data:
+    driver: local
+  models-data:
+    driver: local
+  vector-data:
+    driver: local
+  knowledge-data:
+    driver: local
+  logs-data:
+    driver: local
+
+x-common-env: &common-env
+  TZ: UTC
+  LOG_LEVEL: INFO
+  VAULT_ADDR: http://vault:8200
+  CONSUL_ADDR: http://consul:8500
+
+x-healthcheck: &default-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 60s
+
+services:
+  # ====================
+  # Infrastructure Layer
+  # ====================
+
+  # Service Discovery
+  consul:
+    image: consul:1.17
+    container_name: sutazai-consul
+    command: agent -server -bootstrap-expect=1 -ui -client=0.0.0.0
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    volumes:
+      - consul-data:/consul/data
+    networks:
+      - sutazai-network
+    environment:
+      <<: *common-env
+      CONSUL_LOCAL_CONFIG: |
+        {
+          "datacenter": "sutazai-dc1",
+          "log_level": "INFO",
+          "server": true,
+          "ui": true,
+          "connect": {
+            "enabled": true
+          }
+        }
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "consul", "info"]
+
+  # Secrets Management
+  vault:
+    image: vault:1.15
+    container_name: sutazai-vault
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault-data:/vault/data
+      - ./config/vault:/vault/config
+    networks:
+      - sutazai-network
+    environment:
+      <<: *common-env
+      VAULT_DEV_ROOT_TOKEN_ID: "sutazai-root-token"
+      VAULT_LOCAL_CONFIG: |
+        {
+          "backend": {
+            "file": {
+              "path": "/vault/data"
+            }
+          },
+          "listener": {
+            "tcp": {
+              "address": "0.0.0.0:8200",
+              "tls_disable": 1
+            }
+          },
+          "ui": true
+        }
+    command: server
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "vault", "status"]
+
+  # Load Balancer
+  haproxy:
+    image: haproxy:2.9-alpine
+    container_name: sutazai-haproxy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8404:8404"  # Stats
+    volumes:
+      - ./config/haproxy:/usr/local/etc/haproxy:ro
+    networks:
+      - sutazai-network
+    depends_on:
+      - consul
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "haproxy", "-c", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+
+  # ====================
+  # Data Layer (HA)
+  # ====================
+
+  # PostgreSQL Master
+  postgres-master:
+    image: postgres:15-alpine
+    container_name: sutazai-postgres-master
+    environment:
+      <<: *common-env
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai_admin
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_REPLICATION_MODE: master
+      POSTGRES_REPLICATION_USER: replicator
+      POSTGRES_REPLICATION_PASSWORD_FILE: /run/secrets/replication_password
+    volumes:
+      - postgres-master-data:/var/lib/postgresql/data
+      - ./config/postgres/master.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - sutazai-network
+    secrets:
+      - postgres_password
+      - replication_password
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD-SHELL", "pg_isready -U sutazai_admin -d sutazai"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+  # PostgreSQL Slave
+  postgres-slave:
+    image: postgres:15-alpine
+    container_name: sutazai-postgres-slave
+    environment:
+      <<: *common-env
+      POSTGRES_REPLICATION_MODE: slave
+      POSTGRES_MASTER_HOST: postgres-master
+      POSTGRES_REPLICATION_USER: replicator
+      POSTGRES_REPLICATION_PASSWORD_FILE: /run/secrets/replication_password
+    volumes:
+      - postgres-slave-data:/var/lib/postgresql/data
+    networks:
+      - sutazai-network
+    secrets:
+      - replication_password
+    depends_on:
+      - postgres-master
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD-SHELL", "pg_isready"]
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  # Redis with Sentinel
+  redis-master:
+    image: redis:7-alpine
+    container_name: sutazai-redis-master
+    command: redis-server /etc/redis/redis.conf
+    volumes:
+      - redis-data:/data
+      - ./config/redis/master.conf:/etc/redis/redis.conf
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "redis-cli", "ping"]
+
+  redis-sentinel:
+    image: redis:7-alpine
+    container_name: sutazai-redis-sentinel
+    command: redis-sentinel /etc/redis/sentinel.conf
+    volumes:
+      - ./config/redis/sentinel.conf:/etc/redis/sentinel.conf
+    networks:
+      - sutazai-network
+    depends_on:
+      - redis-master
+
+  # Knowledge Graph Database
+  neo4j:
+    image: neo4j:5.15-enterprise
+    container_name: sutazai-neo4j
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j-data:/data
+      - ./config/neo4j:/conf
+    environment:
+      <<: *common-env
+      NEO4J_AUTH: neo4j/sutazai_neo4j_2024
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+      NEO4J_server_memory_heap_initial__size: 2G
+      NEO4J_server_memory_heap_max__size: 4G
+      NEO4J_server_memory_pagecache__size: 2G
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "neo4j", "status"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+
+  # Elasticsearch Cluster
+  elasticsearch:
+    image: elasticsearch:8.11.3
+    container_name: sutazai-elasticsearch
+    environment:
+      <<: *common-env
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+
+  # ====================
+  # AI Core Services
+  # ====================
+
+  # Enhanced Ollama with Model Management
+  ollama-cluster:
+    build:
+      context: ./docker/ollama-cluster
+      dockerfile: Dockerfile
+    container_name: sutazai-ollama-cluster
+    ports:
+      - "11434:11434"
+    volumes:
+      - models-data:/models
+      - ./config/ollama:/config
+    environment:
+      <<: *common-env
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_MODELS: /models
+      OLLAMA_NUM_PARALLEL: 8
+      OLLAMA_MAX_LOADED_MODELS: 4
+      OLLAMA_FLASH_ATTENTION: 1
+      CUDA_VISIBLE_DEVICES: 0,1
+    networks:
+      - sutazai-network
+    deploy:
+      resources:
+        limits:
+          cpus: '16'
+          memory: 64G
+        reservations:
+          cpus: '8'
+          memory: 32G
+          devices:
+            - driver: nvidia
+              count: 2
+              capabilities: [gpu]
+
+  # Advanced Reasoning Engine
+  reasoning-engine:
+    build:
+      context: ./docker/reasoning-engine
+      dockerfile: Dockerfile
+    container_name: sutazai-reasoning-engine
+    ports:
+      - "8300:8000"
+    volumes:
+      - ./code/reasoning:/app
+      - knowledge-data:/data
+    environment:
+      <<: *common-env
+      NEO4J_URI: bolt://neo4j:7687
+      OLLAMA_URL: http://ollama-cluster:11434
+      POSTGRES_URL: postgresql://sutazai_admin@postgres-master:5432/sutazai
+    networks:
+      - sutazai-network
+    depends_on:
+      - neo4j
+      - ollama-cluster
+      - postgres-master
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+
+  # Knowledge Management System
+  knowledge-manager:
+    build:
+      context: ./docker/knowledge-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-knowledge-manager
+    ports:
+      - "8301:8000"
+    volumes:
+      - knowledge-data:/data
+    environment:
+      <<: *common-env
+      NEO4J_URI: bolt://neo4j:7687
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      VECTOR_DB_URL: http://qdrant:6333
+    networks:
+      - sutazai-network
+    depends_on:
+      - neo4j
+      - elasticsearch
+      - qdrant
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+
+  # Self-Improvement Pipeline
+  self-improvement:
+    build:
+      context: ./docker/self-improvement
+      dockerfile: Dockerfile
+    container_name: sutazai-self-improvement
+    ports:
+      - "8302:8000"
+    volumes:
+      - ./code:/workspace
+      - models-data:/models
+    environment:
+      <<: *common-env
+      GIT_REPO: /workspace
+      MODEL_PATH: /models
+      IMPROVEMENT_INTERVAL: 3600
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+
+  # Meta-Cognition Service
+  metacognition:
+    build:
+      context: ./docker/metacognition
+      dockerfile: Dockerfile
+    container_name: sutazai-metacognition
+    ports:
+      - "8303:8000"
+    environment:
+      <<: *common-env
+      MONITORING_INTERVAL: 60
+      SELF_AWARENESS_LEVEL: high
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+
+  # ====================
+  # Enhanced Agent Layer
+  # ====================
+
+  # Master Agent Orchestrator
+  agent-orchestrator:
+    build:
+      context: ./docker/agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-agent-orchestrator
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - agent-data:/data
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql://sutazai_admin@postgres-master:5432/sutazai
+      REDIS_URL: redis://redis-master:6379
+      CONSUL_URL: http://consul:8500
+      ENABLE_DISTRIBUTED: "true"
+      MAX_CONCURRENT_TASKS: 100
+    networks:
+      - sutazai-network
+    depends_on:
+      - consul
+      - postgres-master
+      - redis-master
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+
+  # Vector Databases (Clustered)
+  qdrant-cluster:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant-cluster
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    environment:
+      <<: *common-env
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__CLUSTER__ENABLED: "true"
+      QDRANT__CLUSTER__P2P__PORT: 6335
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+
+  # ====================
+  # Monitoring Stack
+  # ====================
+
+  # Prometheus with Federation
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sutazai-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    networks:
+      - sutazai-network
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+
+  # Grafana with Provisioning
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: sutazai-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      <<: *common-env
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_password
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-worldmap-panel
+      GF_FEATURE_TOGGLES_ENABLE: tempoSearch,tempoBackendSearch,tempoServiceGraph
+    networks:
+      - sutazai-network
+    secrets:
+      - grafana_password
+    depends_on:
+      - prometheus
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+
+  # Distributed Tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: sutazai-jaeger
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment:
+      <<: *common-env
+      COLLECTOR_ZIPKIN_HOST_PORT: ":9411"
+      SPAN_STORAGE_TYPE: elasticsearch
+      ES_SERVER_URLS: http://elasticsearch:9200
+    networks:
+      - sutazai-network
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:14269/health"]
+
+  # Log Aggregation
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.3
+    container_name: sutazai-logstash
+    volumes:
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./config/logstash/config:/usr/share/logstash/config
+    environment:
+      <<: *common-env
+      LS_JAVA_OPTS: "-Xmx1g -Xms1g"
+    networks:
+      - sutazai-network
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:9600"]
+
+  # ====================
+  # Security Services
+  # ====================
+
+  # API Gateway with Auth
+  kong:
+    image: kong:3.5
+    container_name: sutazai-kong
+    environment:
+      <<: *common-env
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres-master
+      KONG_PG_DATABASE: kong
+      KONG_PG_USER: sutazai_admin
+      KONG_PG_PASSWORD_FILE: /run/secrets/postgres_password
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    ports:
+      - "8000:8000"  # Proxy
+      - "8443:8443"  # Proxy SSL
+      - "8001:8001"  # Admin API
+      - "8444:8444"  # Admin SSL
+    networks:
+      - sutazai-network
+    secrets:
+      - postgres_password
+    depends_on:
+      - postgres-master
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "kong", "health"]
+
+  # Certificate Management
+  certbot:
+    image: certbot/certbot:latest
+    container_name: sutazai-certbot
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./webroot:/webroot
+    environment:
+      <<: *common-env
+    command: certonly --webroot --webroot-path=/webroot --email admin@sutazai.local --agree-tos --no-eff-email -d sutazai.local
+
+# ====================
+# Secrets Configuration
+# ====================
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  replication_password:
+    file: ./secrets/replication_password.txt
+  grafana_password:
+    file: ./secrets/grafana_password.txt
+  vault_token:
+    file: ./secrets/vault_token.txt
+
+# ====================
+# Additional Volumes
+# ====================
+volumes:
+  consul-data:
+  elasticsearch-data:
+  qdrant-data:
+  prometheus-data:
+  grafana-data:
+  kong-data:
+  agent-data:
