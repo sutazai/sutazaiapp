@@ -64,8 +64,7 @@ huggingface-hub>=0.27.0
 tiktoken>=0.8.0
 langchain>=0.3.11
 pyDatalog>=0.10.0
-pydantic-ai>=0.1.1
-pydantic-ai-tools>=0.1.1
+pydantic-ai>=0.4.7
 
 # Vector Databases - SECURITY UPDATES
 chromadb>=0.5.23

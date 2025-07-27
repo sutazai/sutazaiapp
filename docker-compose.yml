@@ -1099,24 +1099,6 @@ services:
       - sutazai-network
     restart: unless-stopped
 
-  # RealtimeSTT
-  realtimestt:
-    container_name: sutazai-realtimestt
-    build:
-      context: ./docker/realtimestt
-      dockerfile: Dockerfile
-    environment:
-      <<: *common-variables
-      PULSE_SERVER: unix:/tmp/pulse-socket
-    ports:
-      - "8110:8080"
-    devices:
-      - /dev/snd:/dev/snd
-    volumes:
-      - /tmp/pulse-socket:/tmp/pulse-socket
-    networks:
-      - sutazai-network
-    restart: unless-stopped
 
   # Autonomous Code Improvement
   code-improver:

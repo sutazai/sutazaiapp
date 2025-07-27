@@ -1479,7 +1479,6 @@ def main():
             "💾 Database Manager",
             
             # Audio & Communication
-            "🎤 RealtimeSTT Audio",
             "🎙️ Voice Interface",
             
             # Financial & Business
@@ -1568,8 +1567,6 @@ def main():
         show_database_manager()
     
     # Audio & Communication
-    elif page == "🎤 RealtimeSTT Audio":
-        show_realtime_stt()
     elif page == "🎙️ Voice Interface":
         show_voice_interface()
     

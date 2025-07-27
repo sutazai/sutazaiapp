@@ -9,25 +9,23 @@ x-database-resources: &database-resources
         memory: 397M
       reservations:
         cpus: '0.5'
-        memory: 1M
+        memory: 198M
     restart_policy:
       condition: unless-stopped
       delay: 5s
-      max_attempts: 3
 
 x-ai-service-resources: &ai-service-resources
   deploy:
     resources:
       limits:
         cpus: '2.0'
-        memory: 1M
+        memory: 794M
       reservations:
         cpus: '1.0'
         memory: 397M
     restart_policy:
       condition: unless-stopped
       delay: 10s
-      max_attempts: 3
 
 x-agent-resources: &agent-resources
   deploy:
@@ -41,7 +39,6 @@ x-agent-resources: &agent-resources
     restart_policy:
       condition: unless-stopped
       delay: 5s
-      max_attempts: 2
 
 x-monitoring-resources: &monitoring-resources
   deploy:
@@ -90,7 +87,7 @@ services:
           memory: 397M
         reservations:
           cpus: '0.5'
-          memory: 1M
+          memory: 198M
     
   # Monitoring Services
   prometheus:

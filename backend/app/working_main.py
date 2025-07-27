@@ -882,6 +882,7 @@ async def chat_with_ai(request: ChatRequest):
             "qwen2.5:3b" if "qwen2.5:3b" in models else (
                 "codellama:7b" if "codellama:7b" in models else (
                     models[0] if models else None
+                )
             )
         )
     )
