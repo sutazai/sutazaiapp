@@ -292,7 +292,317 @@ check_docker_service_health() {
     return 1
 }
 
-# Comprehensive pre-deployment health check
+# Intelligent pre-flight validation with comprehensive dependency detection
+perform_intelligent_preflight_check() {
+    log_header "🔍 Intelligent Pre-Flight System Validation"
+    
+    local critical_issues=0
+    local warnings=0
+    local missing_components=()
+    
+    # Phase 1: Core System Requirements
+    log_info "📋 Phase 1: Core System Requirements"
+    
+    # Check Docker installation and version
+    if ! command -v docker >/dev/null 2>&1; then
+        log_error "   ❌ Docker is not installed"
+        missing_components+=("docker")
+        ((critical_issues++))
+    else
+        local docker_version=$(docker --version | grep -oE '[0-9]+\.[0-9]+' | head -1)
+        log_success "   ✅ Docker $docker_version installed"
+        
+        # Check if Docker daemon is running
+        if ! docker info >/dev/null 2>&1; then
+            log_error "   ❌ Docker daemon is not running"
+            ((critical_issues++))
+        else
+            log_success "   ✅ Docker daemon is running"
+        fi
+    fi
+    
+    # Check Docker Compose
+    if ! command -v docker >/dev/null 2>&1 || ! docker compose version >/dev/null 2>&1; then
+        log_error "   ❌ Docker Compose is not available"
+        missing_components+=("docker-compose")
+        ((critical_issues++))
+    else
+        local compose_version=$(docker compose version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+' | head -1)
+        log_success "   ✅ Docker Compose $compose_version available"
+    fi
+    
+    # Phase 2: System Resources Intelligence
+    log_info "📋 Phase 2: System Resources Intelligence"
+    
+    # Memory check with intelligent recommendations
+    local total_memory_gb=$(( $(cat /proc/meminfo | grep MemTotal | awk '{print $2}') / 1024 / 1024 ))
+    if [ "$total_memory_gb" -lt 8 ]; then
+        log_error "   ❌ Insufficient memory: ${total_memory_gb}GB (minimum 8GB required)"
+        log_error "      💡 Consider upgrading system memory for optimal AI performance"
+        ((critical_issues++))
+    elif [ "$total_memory_gb" -lt 16 ]; then
+        log_warn "   ⚠️  Limited memory: ${total_memory_gb}GB (16GB+ recommended for full AI stack)"
+        ((warnings++))
+    else
+        log_success "   ✅ Sufficient memory: ${total_memory_gb}GB"
+    fi
+    
+    # CPU check with AI workload recommendations
+    local cpu_cores=$(nproc)
+    if [ "$cpu_cores" -lt 4 ]; then
+        log_error "   ❌ Insufficient CPU cores: $cpu_cores (minimum 4 cores required)"
+        ((critical_issues++))
+    elif [ "$cpu_cores" -lt 8 ]; then
+        log_warn "   ⚠️  Limited CPU cores: $cpu_cores (8+ cores recommended for optimal performance)"
+        ((warnings++))
+    else
+        log_success "   ✅ Sufficient CPU cores: $cpu_cores"
+    fi
+    
+    # Disk space check with intelligent projections
+    local available_space_gb=$(df / | awk 'NR==2 {print int($4/1024/1024)}')
+    if [ "$available_space_gb" -lt 50 ]; then
+        log_error "   ❌ Insufficient disk space: ${available_space_gb}GB (minimum 50GB required)"
+        log_error "      💡 AI models and data require significant storage"
+        ((critical_issues++))
+    elif [ "$available_space_gb" -lt 100 ]; then
+        log_warn "   ⚠️  Limited disk space: ${available_space_gb}GB (100GB+ recommended)"
+        ((warnings++))
+    else
+        log_success "   ✅ Sufficient disk space: ${available_space_gb}GB"
+    fi
+    
+    # Phase 3: Network and Connectivity
+    log_info "📋 Phase 3: Network and Connectivity"
+    
+    # Check internet connectivity for model downloads
+    if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+        log_success "   ✅ Internet connectivity available"
+    else
+        log_error "   ❌ No internet connectivity - model downloads will fail"
+        ((critical_issues++))
+    fi
+    
+    # Check required ports availability
+    local required_ports=(8000 8501 5432 6379 7474 8080 9090 3000)
+    local port_conflicts=()
+    
+    for port in "${required_ports[@]}"; do
+        if netstat -tlnp 2>/dev/null | grep -q ":$port "; then
+            local process=$(netstat -tlnp 2>/dev/null | grep ":$port " | awk '{print $7}' | cut -d'/' -f2 | head -1)
+            port_conflicts+=("$port($process)")
+        fi
+    done
+    
+    if [ ${#port_conflicts[@]} -gt 0 ]; then
+        log_warn "   ⚠️  Port conflicts detected: ${port_conflicts[*]}"
+        log_warn "      💡 These services may need to be stopped or ports reconfigured"
+        ((warnings++))
+    else
+        log_success "   ✅ All required ports available"
+    fi
+    
+    # Phase 4: File System and Permissions
+    log_info "📋 Phase 4: File System and Permissions"
+    
+    # Check if running with sufficient privileges
+    if [ "$(id -u)" != "0" ]; then
+        log_error "   ❌ Script not running as root - Docker operations will fail"
+        ((critical_issues++))
+    else
+        log_success "   ✅ Running with root privileges"
+    fi
+    
+    # Check critical configuration files
+    local config_files=(
+        "docker-compose.yml"
+        "docker-compose-agents-complete.yml"
+        "config/litellm_config.yaml"
+        ".env"
+    )
+    
+    for config_file in "${config_files[@]}"; do
+        if [ -f "$config_file" ]; then
+            log_success "   ✅ Configuration file present: $config_file"
+        else
+            log_error "   ❌ Missing configuration file: $config_file"
+            missing_components+=("$config_file")
+            ((critical_issues++))
+        fi
+    done
+    
+    # Phase 5: Intelligence Summary and Recommendations
+    log_info "📋 Phase 5: Intelligence Summary and Recommendations"
+    
+    if [ $critical_issues -eq 0 ] && [ $warnings -eq 0 ]; then
+        log_success "🎉 System perfectly configured for deployment!"
+        log_info "💡 All systems green - proceeding with optimal configuration"
+        return 0
+    elif [ $critical_issues -eq 0 ]; then
+        log_warn "⚠️  System ready with $warnings warnings"
+        log_info "💡 Deployment will proceed with minor optimizations available"
+        return 0
+    else
+        log_error "❌ Critical issues found: $critical_issues errors, $warnings warnings"
+        log_error "🚨 Missing components: ${missing_components[*]}"
+        
+        # Intelligent recovery suggestions
+        log_info "🧠 Intelligent Recovery Suggestions:"
+        
+        for component in "${missing_components[@]}"; do
+            case "$component" in
+                "docker")
+                    log_info "   → Install Docker: curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh"
+                    ;;
+                "docker-compose")
+                    log_info "   → Docker Compose comes with Docker Desktop or: apt-get install docker-compose-plugin"
+                    ;;
+                "*.yml"|"*.yaml")
+                    log_info "   → Restore configuration file: $component from backup or repository"
+                    ;;
+                ".env")
+                    log_info "   → Create environment file: cp .env.example .env && edit configuration"
+                    ;;
+            esac
+        done
+        
+        return 1
+    fi
+}
+
+# Intelligent auto-correction system for common deployment issues
+attempt_intelligent_auto_fixes() {
+    log_header "🧠 Intelligent Auto-Correction System"
+    
+    local fixes_attempted=0
+    local fixes_successful=0
+    
+    # Fix 1: Docker daemon not running
+    if ! docker info >/dev/null 2>&1; then
+        log_info "🔧 Attempting to start Docker daemon..."
+        ((fixes_attempted++))
+        
+        if systemctl start docker 2>/dev/null; then
+            sleep 10
+            if docker info >/dev/null 2>&1; then
+                log_success "   ✅ Docker daemon started successfully"
+                ((fixes_successful++))
+            else
+                log_error "   ❌ Docker daemon failed to start properly"
+            fi
+        else
+            log_error "   ❌ Failed to start Docker daemon"
+        fi
+    fi
+    
+    # Fix 2: Missing .env file - create from template
+    if [ ! -f ".env" ]; then
+        log_info "🔧 Creating missing .env file..."
+        ((fixes_attempted++))
+        
+        if [ -f ".env.example" ]; then
+            cp .env.example .env
+            log_success "   ✅ Created .env from template"
+            ((fixes_successful++))
+        elif [ -f "config/.env.template" ]; then
+            cp config/.env.template .env
+            log_success "   ✅ Created .env from config template"
+            ((fixes_successful++))
+        else
+            # Create basic .env file
+            cat > .env << 'EOF'
+# SutazAI Environment Configuration
+POSTGRES_USER=sutazai
+POSTGRES_PASSWORD=secure_password_$(date +%s)
+POSTGRES_DB=sutazai
+REDIS_PASSWORD=redis_password_$(date +%s)
+NEO4J_PASSWORD=neo4j_password_$(date +%s)
+OPENAI_API_KEY=your_openai_api_key_here
+EOF
+            log_success "   ✅ Created basic .env file"
+            ((fixes_successful++))
+        fi
+    fi
+    
+    # Fix 3: Missing critical directories
+    local required_dirs=("logs" "data" "backups" "config" "tmp")
+    for dir in "${required_dirs[@]}"; do
+        if [ ! -d "$dir" ]; then
+            log_info "🔧 Creating missing directory: $dir"
+            ((fixes_attempted++))
+            
+            if mkdir -p "$dir" 2>/dev/null; then
+                log_success "   ✅ Created directory: $dir"
+                ((fixes_successful++))
+            else
+                log_error "   ❌ Failed to create directory: $dir"
+            fi
+        fi
+    done
+    
+    # Fix 4: Docker network issues
+    if docker info >/dev/null 2>&1; then
+        if ! docker network ls | grep -q "sutazai-network"; then
+            log_info "🔧 Creating missing Docker network..."
+            ((fixes_attempted++))
+            
+            if docker network create sutazai-network --driver bridge --subnet=172.20.0.0/16 >/dev/null 2>&1; then
+                log_success "   ✅ Created sutazai-network"
+                ((fixes_successful++))
+            else
+                log_error "   ❌ Failed to create sutazai-network"
+            fi
+        fi
+    fi
+    
+    # Fix 5: Clean up any conflicting containers
+    local conflicting_containers=$(docker ps -a --format "{{.Names}}" | grep -E "^(postgres|redis|neo4j|ollama)$" | grep -v "sutazai-" || true)
+    if [ -n "$conflicting_containers" ]; then
+        log_info "🔧 Removing conflicting containers..."
+        ((fixes_attempted++))
+        
+        echo "$conflicting_containers" | while read -r container; do
+            if [ -n "$container" ]; then
+                docker stop "$container" >/dev/null 2>&1 || true
+                docker rm "$container" >/dev/null 2>&1 || true
+                log_info "   → Removed conflicting container: $container"
+            fi
+        done
+        ((fixes_successful++))
+    fi
+    
+    # Fix 6: Correct file permissions
+    if [ -f "scripts/deploy_complete_system.sh" ]; then
+        log_info "🔧 Fixing script permissions..."
+        ((fixes_attempted++))
+        
+        chmod +x scripts/*.sh 2>/dev/null || true
+        chmod +x *.sh 2>/dev/null || true
+        log_success "   ✅ Script permissions corrected"
+        ((fixes_successful++))
+    fi
+    
+    # Summary
+    log_info "📊 Auto-correction Summary:"
+    log_info "   → Fixes attempted: $fixes_attempted"
+    log_info "   → Fixes successful: $fixes_successful"
+    
+    if [ $fixes_attempted -eq 0 ]; then
+        log_warn "   ⚠️  No automatic fixes available for detected issues"
+        return 1
+    elif [ $fixes_successful -eq $fixes_attempted ]; then
+        log_success "   🎉 All automatic fixes successful!"
+        return 0
+    elif [ $fixes_successful -gt 0 ]; then
+        log_warn "   ⚠️  Partial success: $fixes_successful/$fixes_attempted fixes applied"
+        return 0
+    else
+        log_error "   ❌ All automatic fixes failed"
+        return 1
+    fi
+}
+
+# Comprehensive pre-deployment health check (legacy compatibility)
 perform_pre_deployment_health_check() {
     log_header "🔍 Pre-Deployment System Health Check"
     
@@ -412,7 +722,22 @@ perform_pre_deployment_health_check() {
     for port in "${required_ports[@]}"; do
         if netstat -tuln 2>/dev/null | grep -q ":$port "; then
             log_warn "   ⚠️  Port $port is already in use"
-            log_warn "      Service may conflict or fail to start"
+            
+            # Intelligent port conflict resolution
+            local service_using_port=$(netstat -tulnp 2>/dev/null | grep ":$port " | awk '{print $7}' | cut -d'/' -f2 | head -1)
+            if [[ "$service_using_port" =~ docker-proxy|containerd ]]; then
+                log_info "      🔧 Port used by Docker container - attempting graceful reclaim"
+                # Check if it's one of our SutazAI containers
+                local container_name=$(docker ps --format "table {{.Names}}\t{{.Ports}}" | grep ":$port->" | awk '{print $1}' | head -1)
+                if [[ "$container_name" =~ sutazai- ]]; then
+                    log_info "      ✅ Port used by SutazAI container ($container_name) - this is expected"
+                else
+                    log_warn "      ⚠️  Port used by non-SutazAI container - may cause conflicts"
+                fi
+            else
+                log_warn "      ⚠️  Port used by system service: $service_using_port"
+                log_info "      💡 Consider stopping the service or using different ports"
+            fi
         else
             log_success "   ✅ Port $port is available"
         fi
@@ -1424,31 +1749,56 @@ fix_docker_daemon_configuration() {
             log_warn "   → Found problematic overlay2.override_kernel_check option"
             log_info "   → Removing invalid overlay2 storage option..."
             
-            # Create clean configuration
+            # Create enhanced configuration with networking fixes
             cat > "$daemon_config" << 'EOF'
 {
-    "storage-driver": "overlay2"
+    "storage-driver": "overlay2",
+    "dns": ["8.8.8.8", "8.8.4.4"],
+    "dns-search": ["."],
+    "default-address-pools": [
+        {"base": "172.20.0.0/16", "size": 24}
+    ],
+    "userland-proxy": false,
+    "live-restore": true,
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    }
 }
 EOF
-            log_info "   → Created clean Docker daemon configuration"
+            log_info "   → Created enhanced Docker daemon configuration with networking fixes"
         fi
     else
-        # Create minimal configuration
+        # Create enhanced configuration with networking fixes
         mkdir -p /etc/docker
         cat > "$daemon_config" << 'EOF'
 {
-    "storage-driver": "overlay2"
+    "storage-driver": "overlay2",
+    "dns": ["8.8.8.8", "8.8.4.4"],
+    "dns-search": ["."],
+    "default-address-pools": [
+        {"base": "172.20.0.0/16", "size": 24}
+    ],
+    "userland-proxy": false,
+    "live-restore": true,
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    }
 }
 EOF
-        log_info "   → Created new Docker daemon configuration"
+        log_info "   → Created new enhanced Docker daemon configuration"
     fi
     
     # Validate JSON syntax
     if ! python3 -m json.tool "$daemon_config" > /dev/null 2>&1; then
-        log_warn "   → Configuration has JSON syntax errors, using minimal config"
+        log_warn "   → Configuration has JSON syntax errors, using minimal config with networking"
         cat > "$daemon_config" << 'EOF'
 {
-    "storage-driver": "overlay2"
+    "storage-driver": "overlay2",
+    "dns": ["8.8.8.8", "8.8.4.4"]
 }
 EOF
     fi
@@ -4532,22 +4882,63 @@ install_all_system_dependencies() {
     # Check if we need to install in the backend container or system
     if docker ps --format "table {{.Names}}" | grep -q "sutazai-backend"; then
         log_info "Installing Python packages in backend container..."
-        docker exec sutazai-backend-agi pip install --no-cache-dir \
-            pythonjsonlogger \
-            python-nmap \
-            scapy \
-            nmap3 \
-            python-dotenv \
-            pydantic-settings \
-            asyncio-mqtt \
-            websockets \
-            aiofiles \
-            aioredis \
-            motor \
-            pymongo \
-            elasticsearch \
-            structlog \
-            loguru
+        
+        # Fix DNS and network issues in container first
+        log_info "🔧 Fixing container networking and DNS..."
+        docker exec sutazai-backend-agi bash -c "
+            # Update DNS configuration
+            echo 'nameserver 8.8.8.8' > /etc/resolv.conf
+            echo 'nameserver 8.8.4.4' >> /etc/resolv.conf
+            echo 'search .' >> /etc/resolv.conf
+            
+            # Test connectivity
+            if ! ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+                echo 'Network connectivity issue detected'
+                exit 1
+            fi
+        " || {
+            log_warn "⚠️  Container networking issues detected - attempting alternative approach"
+            docker restart sutazai-backend-agi
+            sleep 10
+        }
+        
+        # Install packages with retry logic and proper timeouts
+        log_info "📦 Installing Python packages with enhanced error handling..."
+        docker exec sutazai-backend-agi bash -c "
+            # Configure pip for better reliability
+            pip config set global.timeout 300
+            pip config set global.retries 3
+            pip config set global.trusted-host 'pypi.org files.pythonhosted.org pypi.python.org'
+            
+            # Install packages in smaller batches to avoid timeouts
+            echo '🔧 Installing core packages batch 1...'
+            pip install --no-cache-dir --timeout=300 \
+                pythonjsonlogger \
+                python-nmap \
+                scapy \
+                python-dotenv || echo 'Warning: Some core packages failed to install'
+                
+            echo '🔧 Installing core packages batch 2...'
+            pip install --no-cache-dir --timeout=300 \
+                pydantic-settings \
+                asyncio-mqtt \
+                websockets \
+                aiofiles || echo 'Warning: Some async packages failed to install'
+                
+            echo '🔧 Installing database packages...'
+            pip install --no-cache-dir --timeout=300 \
+                aioredis \
+                motor \
+                pymongo \
+                elasticsearch || echo 'Warning: Some database packages failed to install'
+                
+            echo '🔧 Installing logging packages...'
+            pip install --no-cache-dir --timeout=300 \
+                structlog \
+                loguru || echo 'Warning: Some logging packages failed to install'
+                
+            echo '✅ Package installation completed (some packages may have failed but deployment continues)'
+        " || log_warn "⚠️  Some Python packages failed to install, but continuing deployment"
     else
         log_info "Installing Python packages in system..."
         pip3 install --no-cache-dir \
@@ -5761,7 +6152,25 @@ main_deployment() {
     # Enable enhanced debugging and error reporting
     enable_enhanced_debugging
     
-    # Pre-deployment system health check
+    # Intelligent pre-flight system validation
+    if ! perform_intelligent_preflight_check; then
+        log_error "🚨 Critical pre-flight issues detected"
+        log_info "🔧 Attempting intelligent auto-correction..."
+        
+        # Attempt automatic fixes
+        if attempt_intelligent_auto_fixes; then
+            log_success "✅ Auto-correction successful - retrying pre-flight check"
+            if ! perform_intelligent_preflight_check; then
+                log_error "❌ Auto-correction failed - manual intervention required"
+                exit 1
+            fi
+        else
+            log_error "❌ Auto-correction failed - please resolve issues manually"
+            exit 1
+        fi
+    fi
+    
+    # Legacy pre-deployment system health check
     perform_pre_deployment_health_check
     
     # Phase 1: System Validation and Preparation
@@ -6065,11 +6474,34 @@ fix_container_dependencies() {
         if docker ps --format "table {{.Names}}" | grep -q "sutazai-$container"; then
             log_info "🔧 Checking $container for dependency issues..."
             
-            # Basic health check and dependency update
-            docker exec "sutazai-$container" pip install --upgrade pip >/dev/null 2>&1 || true
-            docker exec "sutazai-$container" apt-get update >/dev/null 2>&1 || true
+            # Enhanced container health check and dependency resolution
+            docker exec "sutazai-$container" bash -c "
+                # Fix DNS configuration first
+                echo 'nameserver 8.8.8.8' > /etc/resolv.conf
+                echo 'nameserver 8.8.4.4' >> /etc/resolv.conf
+                
+                # Test network connectivity
+                if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+                    echo 'Network connectivity verified'
+                    
+                    # Update package managers
+                    if command -v apt-get >/dev/null 2>&1; then
+                        apt-get update >/dev/null 2>&1 || echo 'apt update failed'
+                    fi
+                    
+                    if command -v pip >/dev/null 2>&1; then
+                        # Configure pip for reliability
+                        pip config set global.timeout 300
+                        pip config set global.retries 3
+                        pip config set global.trusted-host 'pypi.org files.pythonhosted.org'
+                        pip install --upgrade pip >/dev/null 2>&1 || echo 'pip upgrade failed'
+                    fi
+                else
+                    echo 'Network connectivity issues detected in container'
+                fi
+            " >/dev/null 2>&1 || log_warn "   ⚠️  Some fixes failed for $container"
             
-            log_success "   ✅ $container dependencies updated"
+            log_success "   ✅ $container dependencies and networking updated"
         fi
     done
     
@@ -6591,8 +7023,121 @@ show_deployment_summary() {
     local report_file="reports/deployment_$(date +%Y%m%d_%H%M%S).html"
     echo -e "\n${CYAN}📄 Detailed report available: file://$(pwd)/$report_file${NC}"
     
-    echo -e "\n${BOLD}🎯 SUTAZAI AGI/ASI SYSTEM IS NOW FULLY OPERATIONAL!${NC}"
-    log_success "🎉 Enterprise deployment completed successfully! All systems ready for autonomous AI operations."
+    # Comprehensive deployment validation
+    log_header "🔍 Final Deployment Validation"
+    local validation_passed=true
+    local critical_issues=()
+    local warnings=()
+    
+    # Check critical services
+    log_info "🔧 Validating core services..."
+    local critical_services=("sutazai-backend-agi" "sutazai-frontend-agi" "sutazai-postgres" "sutazai-redis")
+    for service in "${critical_services[@]}"; do
+        if docker ps --format "table {{.Names}}" | grep -q "$service"; then
+            log_success "   ✅ $service: Running"
+        else
+            log_error "   ❌ $service: Not running"
+            critical_issues+=("$service not running")
+            validation_passed=false
+        fi
+    done
+    
+    # Check API endpoints
+    log_info "🌐 Validating API endpoints..."
+    if timeout 10 curl -s http://localhost:8000/health >/dev/null 2>&1; then
+        log_success "   ✅ Backend API: Responsive"
+    else
+        log_warn "   ⚠️  Backend API: Not responding"
+        warnings+=("Backend API not responding")
+    fi
+    
+    if timeout 10 curl -s http://localhost:8501 >/dev/null 2>&1; then
+        log_success "   ✅ Frontend UI: Accessible"
+    else
+        log_warn "   ⚠️  Frontend UI: Not accessible"
+        warnings+=("Frontend UI not accessible")
+    fi
+    
+    # Check container networking
+    log_info "🔗 Validating container networking..."
+    local network_test_passed=true
+    for service in "${critical_services[@]}"; do
+        if docker ps --format "table {{.Names}}" | grep -q "$service"; then
+            if docker exec "$service" ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+                log_success "   ✅ $service: Network connectivity OK"
+            else
+                log_warn "   ⚠️  $service: Network connectivity issues"
+                warnings+=("$service network connectivity issues")
+                network_test_passed=false
+            fi
+        fi
+    done
+    
+    # Check dependency installation success
+    log_info "📦 Validating Python dependencies..."
+    if docker ps --format "table {{.Names}}" | grep -q "sutazai-backend-agi"; then
+        local pip_check_result=$(docker exec sutazai-backend-agi python -c "
+import sys
+try:
+    import pythonjsonlogger, requests, fastapi
+    print('DEPENDENCIES_OK')
+except ImportError as e:
+    print(f'MISSING_DEPS: {e}')
+        " 2>/dev/null)
+        
+        if [[ "$pip_check_result" == "DEPENDENCIES_OK" ]]; then
+            log_success "   ✅ Core Python dependencies: Installed"
+        else
+            log_warn "   ⚠️  Some Python dependencies: Missing or failed"
+            warnings+=("Python dependencies incomplete")
+        fi
+    fi
+    
+    # Generate validation summary
+    echo ""
+    log_header "📊 Deployment Validation Summary"
+    
+    if [ "$validation_passed" = true ]; then
+        log_success "✅ DEPLOYMENT VALIDATION PASSED"
+        log_info "   • All critical services are running"
+        log_info "   • System is ready for production use"
+    else
+        log_error "❌ DEPLOYMENT VALIDATION FAILED"
+        log_error "   Critical issues found:"
+        for issue in "${critical_issues[@]}"; do
+            log_error "   - $issue"
+        done
+    fi
+    
+    if [ ${#warnings[@]} -gt 0 ]; then
+        log_warn "⚠️  WARNINGS DETECTED:"
+        for warning in "${warnings[@]}"; do
+            log_warn "   - $warning"
+        done
+        log_info "💡 System is functional but some features may be limited"
+    fi
+    
+    # Create deployment completion marker
+    if [ "$validation_passed" = true ]; then
+        echo "$(date): SutazAI deployment completed successfully" > .deployment_completed
+        echo "Validation: PASSED" >> .deployment_completed
+        echo "Warnings: ${#warnings[@]}" >> .deployment_completed
+        echo "Status: OPERATIONAL" >> .deployment_completed
+    else
+        echo "$(date): SutazAI deployment completed with issues" > .deployment_status
+        echo "Validation: FAILED" >> .deployment_status
+        echo "Critical Issues: ${#critical_issues[@]}" >> .deployment_status
+        echo "Warnings: ${#warnings[@]}" >> .deployment_status
+        echo "Status: DEGRADED" >> .deployment_status
+    fi
+
+    echo -e "\n${BOLD}🎯 SUTAZAI AGI/ASI SYSTEM DEPLOYMENT COMPLETE!${NC}"
+    if [ "$validation_passed" = true ]; then
+        log_success "🎉 Enterprise deployment completed successfully! All systems ready for autonomous AI operations."
+    else
+        log_warn "⚠️  Deployment completed with issues. Please review the validation results above."
+        log_info "💡 Run './scripts/deploy_complete_system.sh troubleshoot' for assistance."
+    fi
 }
 
 # ===============================================

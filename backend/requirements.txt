@@ -105,8 +105,14 @@ lxml>=5.3.0
 # MQTT & WebSocket Security
 asyncio-mqtt>=0.16.2
 
+# Logging & JSON Formatting - CRITICAL
+python-json-logger>=2.0.1
+loguru>=0.7.2
+structlog>=24.5.0
+
 # Network Reconnaissance & Security Scanning - ENTERPRISE GRADE
 python-nmap>=0.7.1
+# nmap3>=1.7.0  # Not compatible with Python 3.11 - using python-nmap instead
 scapy>=2.6.1
 netifaces>=0.11.0
 ipwhois>=1.2.0

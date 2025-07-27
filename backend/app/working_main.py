@@ -315,45 +315,42 @@ async def cached_service_check(service_name: str, check_func):
 
 async def check_ollama():
     """Check if Ollama service is available"""
-    try:
-        async with httpx.AsyncClient(timeout=3.0) as client:  # Reduced timeout
-            response = await client.get("http://ollama:11434/api/tags")
-            return response.status_code == 200
-    except:
+    urls = ["http://sutazai-ollama:11434/api/tags", "http://ollama:11434/api/tags"]
+    for url in urls:
         try:
-            async with httpx.AsyncClient(timeout=3.0) as client:  # Reduced timeout
-                response = await client.get("http://sutazai-ollama:11434/api/tags")
-                return response.status_code == 200
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(url)
+                if response.status_code == 200:
+                    return True
         except:
-            return False
+            continue
+    return False
 
 async def check_chromadb():
     """Check if ChromaDB service is available"""
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get("http://chromadb:8000/api/v1/heartbeat")
-            return response.status_code == 200
-    except:
+    urls = ["http://sutazai-chromadb:8000/api/v1/heartbeat", "http://chromadb:8000/api/v1/heartbeat"]
+    for url in urls:
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                response = await client.get("http://sutazai-chromadb:8000/api/v1/heartbeat")
-                return response.status_code == 200
+                response = await client.get(url)
+                if response.status_code == 200:
+                    return True
         except:
-            return False
+            continue
+    return False
 
 async def check_qdrant():
     """Check if Qdrant service is available"""
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get("http://qdrant:6333/cluster")
-            return response.status_code == 200
-    except:
+    urls = ["http://sutazai-qdrant:6333/cluster", "http://qdrant:6333/cluster"]
+    for url in urls:
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                response = await client.get("http://sutazai-qdrant:6333/cluster")
-                return response.status_code == 200
+                response = await client.get(url)
+                if response.status_code == 200:
+                    return True
         except:
-            return False
+            continue
+    return False
 
 async def get_ollama_models():
     """Get available models from Ollama"""

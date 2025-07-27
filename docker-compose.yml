@@ -15,7 +15,7 @@ x-gpu-config: &gpu-config
 x-ollama-config: &ollama-config
   OLLAMA_BASE_URL: http://ollama:11434
   OLLAMA_API_KEY: local
-  OLLAMA_HOST: 0.0.0.0
+  OLLAMA_HOST: ollama
   OLLAMA_ORIGINS: "*"
 
 x-vector-config: &vector-config
