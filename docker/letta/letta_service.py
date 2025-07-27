@@ -155,11 +155,15 @@ class WorkingLettaManager:
             recent_messages = session["messages"][-3:]  # Last 3 messages for context
             
             # Create LLM prompt with memory context
-            context_text = f"Memory: {memory_context}\n\n"
+            context_text = f"Memory: {memory_context}
+
+"
             if len(recent_messages) > 1:
-                context_text += "Recent conversation:\n"
+                context_text += "Recent conversation:
+"
                 for msg in recent_messages[:-1]:  # Exclude current message
-                    context_text += f"{msg['role']}: {msg['content']}\n"
+                    context_text += f"{msg['role']}: {msg['content']}
+"
             
             llm_prompt = f"""{context_text}
 Current user message: {request.message}

@@ -247,6 +247,7 @@ services:
       - ./backend:/app
       - ./data:/data
       - ./logs:/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - agent_workspaces:/app/agent_workspaces
     environment:
       <<: [*common-variables, *ollama-config, *vector-config, *database-config]
@@ -332,6 +333,12 @@ services:
       dockerfile: Dockerfile
     container_name: sutazai-autogpt
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     volumes:
       - agent_workspaces:/app/workspace
       - agent_outputs:/app/outputs
@@ -363,6 +370,12 @@ services:
       BACKEND_URL: http://backend-agi:8000
     ports:
       - "8096:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       - backend-agi
       - ollama
@@ -376,6 +389,12 @@ services:
       dockerfile: Dockerfile
     container_name: sutazai-letta
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     volumes:
       - agent_workspaces:/app/workspace
       - postgres_data:/app/database
@@ -407,6 +426,12 @@ services:
       MODEL: deepseek-r1:8b
     ports:
       - "8095:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       - ollama
     networks:
@@ -428,6 +453,12 @@ services:
       MODEL: deepseek-r1:8b
     ports:
       - "8097:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       - ollama
     networks:
@@ -520,6 +551,12 @@ services:
       ORCHESTRATOR_MODE: true
     ports:
       - "8115:8090"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     depends_on:
       - ollama
       - backend-agi
@@ -578,6 +615,8 @@ services:
       - ./data/langflow:/app/data
     environment:
       <<: *common-variables
+      DATABASE_TYPE: postgresql
+      LANGFLOW_DATABASE_TYPE: postgresql
       LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
       REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
@@ -597,7 +636,7 @@ services:
 
   # FlowiseAI
   flowise:
-    image: flowiseai/flowise:latest
+    image: flowiseai/flowise:3.0.2
     container_name: sutazai-flowise
     restart: unless-stopped
     volumes:
@@ -631,6 +670,12 @@ services:
       <<: [*common-variables, *ollama-config, *vector-config]
     ports:
       - "8098:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       - chromadb
       - ollama
@@ -830,6 +875,12 @@ services:
     image: grafana/promtail:2.9.0
     container_name: sutazai-promtail
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     volumes:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -886,6 +937,12 @@ services:
       SERVICES_TO_CHECK: sutazai-backend-agi,sutazai-frontend-agi,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
     ports:
       - "8100:8000"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "pgrep -f health_check.py || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       - sutazai-network
   # Additional AGI/ASI Services
@@ -894,19 +951,26 @@ services:
   litellm:
     container_name: sutazai-litellm
     image: ghcr.io/berriai/litellm-database:main-stable
+    env_file:
+      - ./config/litellm.env
     environment:
-      <<: [*common-variables, *database-config]
-      LITELLM_MASTER_KEY: ${LITELLM_KEY:-sk-1234}
-      LITELLM_PROXY_BASE_URL: http://ollama:11434
-      PRISMA_QUERY_ENGINE_TYPE: binary
+      <<: *common-variables
     ports:
       - "4000:4000"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; req = urllib.request.Request('http://localhost:4000/health'); req.add_header('Authorization', 'Bearer sk-sutazai-local-2025'); urllib.request.urlopen(req, timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     volumes:
       - ./config/litellm_config.yaml:/app/config.yaml
     command: ["--config", "/app/config.yaml", "--host", "0.0.0.0", "--port", "4000"]
     depends_on:
-      - ollama
-      - postgres
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
     networks:
       - sutazai-network
     restart: unless-stopped
@@ -937,6 +1001,12 @@ services:
       <<: [*common-variables, *ollama-config, *vector-config, *database-config]
     ports:
       - "8115:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     depends_on:
       - ollama
       - chromadb
@@ -955,6 +1025,12 @@ services:
       AUTOGEN_USE_DOCKER: "True"
     ports:
       - "8104:8080"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); s.connect(('localhost', 8080)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -976,6 +1052,12 @@ services:
       # REACT_APP_OPENAI_API_KEY: ""
     ports:
       - "8106:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--timeout=5", "-q", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     depends_on:
       - litellm
       - ollama
@@ -1066,6 +1148,12 @@ services:
       <<: [*common-variables, *database-config]
     ports:
       - "8114:8080"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     depends_on:
       - redis
     networks:
@@ -1154,6 +1242,12 @@ services:
       STORAGE_LOCAL_PATH: /app/storage
     ports:
       - "8107:5000"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); s.connect(('localhost', 5001)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
     volumes:
       - ./data/dify:/app/storage
     depends_on:
@@ -1216,3 +1310,136 @@ services:
         reservations:
           cpus: '0.5'
           memory: 256M
+
+  # ===========================================
+  # JARVIS AI ASSISTANT
+  # ===========================================
+  
+  jarvis-ai:
+    container_name: sutazai-jarvis-ai
+    build:
+      context: ./docker/jarvis-ai
+      dockerfile: Dockerfile
+    environment:
+      <<: [*common-variables, *ollama-config, *database-config]
+      JARVIS_MODE: autonomous
+      BACKEND_URL: http://backend-agi:8000
+      SPEECH_ENABLED: "true"
+      SECURITY_LEVEL: high
+    ports:
+      - "8120:8120"
+    volumes:
+      - ./data/jarvis:/app/data
+      - ./logs:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - backend-agi
+      - ollama
+      - redis
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8120/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===========================================
+  # API GATEWAY
+  # ===========================================
+  
+  api-gateway:
+    container_name: sutazai-api-gateway
+    build:
+      context: ./docker/api-gateway
+      dockerfile: Dockerfile
+    environment:
+      <<: [*common-variables, *database-config]
+      GATEWAY_HOST: 0.0.0.0
+      GATEWAY_PORT: 8080
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+      JWT_SECRET: ${SECRET_KEY:-dev-secret-key}
+      RATE_LIMIT_ENABLED: "true"
+      LOAD_BALANCING: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs/gateway:/app/logs
+      - ./config/gateway:/app/config
+    depends_on:
+      - redis
+      - backend-agi
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # TASK SCHEDULER
+  # ===========================================
+  
+  task-scheduler:
+    container_name: sutazai-task-scheduler
+    build:
+      context: ./docker/task-scheduler
+      dockerfile: Dockerfile
+    environment:
+      <<: [*common-variables, *database-config, *ollama-config]
+      SCHEDULER_MODE: autonomous
+      BACKEND_URL: http://backend-agi:8000
+      JARVIS_URL: http://jarvis-ai:8120
+      MAX_CONCURRENT_TASKS: 10
+    volumes:
+      - ./data/scheduler:/app/data
+      - ./logs/scheduler:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - backend-agi
+      - jarvis-ai
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ===========================================
+  # MODEL OPTIMIZER
+  # ===========================================
+  
+  model-optimizer:
+    container_name: sutazai-model-optimizer
+    build:
+      context: ./docker/model-optimizer
+      dockerfile: Dockerfile
+    environment:
+      <<: [*common-variables, *ollama-config]
+      OPTIMIZATION_MODE: performance
+      AUTO_OPTIMIZE: "true"
+      TARGET_MEMORY: 8G
+      TARGET_LATENCY: 100ms
+    volumes:
+      - ./data/optimizer:/app/data
+      - ./models:/app/models
+      - ollama_data:/app/ollama_data
+    depends_on:
+      - ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G

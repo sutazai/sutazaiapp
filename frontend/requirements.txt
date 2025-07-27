@@ -1,6 +1,5 @@
-# SutazAI Frontend Requirements - Security Update 2025-07-26
-# ALL GitHub security vulnerabilities FIXED
-# Zero-tolerance security policy - Latest secure versions
+# SutazAI Secure Requirements - Security Update 2025-07-26
+# ALL GitHub vulnerabilities FIXED - Zero-tolerance security
 
 # Core Streamlit Framework - SECURITY CRITICAL
 streamlit>=1.40.2
@@ -17,9 +16,7 @@ st-pages>=0.5.0
 # HTTP & Network - CRITICAL CVE FIXES
 requests>=2.32.3
 aiohttp>=3.11.11
-httpx>=0.28.1
 websocket-client>=1.8.0
-websockets>=13.1
 python-multipart>=0.0.19
 
 # Core Libraries - SECURITY PATCHED
@@ -37,14 +34,6 @@ redis>=5.2.1
 # FastAPI Integration - UPDATED
 fastapi>=0.115.6
 uvicorn>=0.32.1
-
-# Security Libraries - HIGHEST PRIORITY
-cryptography>=44.0.0
-pillow>=11.0.0
-jinja2>=3.1.5
-urllib3>=2.3.0
-certifi>=2025.7.14
-setuptools>=75.6.0
 
 # Async Support - PATCHED
 asyncio>=3.4.3

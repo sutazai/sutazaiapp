@@ -26,7 +26,7 @@ litellm_settings:
   
 general_settings:
   master_key: ${LITELLM_KEY:-sk-1234}
-  database_url: ${DATABASE_URL}
+  database_url: postgresql://sutazai:OkI2_5Ob_L5bVwIiyyuSBuWQv@postgres:5432/sutazai
   
 router_settings:
   routing_strategy: simple-shuffle

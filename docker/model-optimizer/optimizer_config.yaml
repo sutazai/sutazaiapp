@@ -1,0 +1,66 @@
+optimizer:
+  mode: "performance"
+  auto_optimize: true
+  target_memory: "8G"
+  target_latency: "100ms"
+  
+models:
+  cache_dir: "/app/cache"
+  models_dir: "/app/models"
+  optimized_dir: "/app/optimized_models"
+  
+optimization_strategies:
+  quantization:
+    default_precision: "int8"
+    supported_precisions: ["fp16", "int8", "int4"]
+    calibration_samples: 100
+    
+  onnx_conversion:
+    opset_version: 11
+    optimization_level: "all"
+    
+  pruning:
+    sparsity_levels: [0.1, 0.2, 0.5, 0.8]
+    structured: true
+    
+  distillation:
+    temperature: 4.0
+    alpha: 0.7
+    student_teacher_ratio: 0.5
+
+device_optimization:
+  cpu:
+    preferred_precision: "int8"
+    use_mkldnn: true
+    
+  cuda:
+    preferred_precision: "fp16"
+    use_tensorrt: true
+    
+  intel:
+    preferred_precision: "int8"
+    use_ipex: true
+
+benchmarking:
+  num_runs: 10
+  warmup_runs: 3
+  input_shapes:
+    sequence_length: 128
+    batch_size: 1
+    
+performance_targets:
+  latency_improvement: 2.0  # 2x faster
+  memory_reduction: 0.5     # 50% less memory
+  size_reduction: 0.3       # 30% smaller
+
+integrations:
+  ollama_url: "http://ollama:11434"
+  backend_url: "http://backend-agi:8000"
+  
+logging:
+  level: "INFO"
+  performance_logging: true
+  
+monitoring:
+  track_improvements: true
+  save_benchmarks: true 

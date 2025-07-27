@@ -60,6 +60,8 @@ fix_ownership "$PROJECT_ROOT/requirements.txt" "Python requirements"
 # Fix directories
 echo ""
 echo -e "${BLUE}Fixing directories...${NC}"
+fix_ownership "$PROJECT_ROOT/backend" "Backend application directory"
+fix_ownership "$PROJECT_ROOT/frontend" "Frontend application directory"
 fix_ownership "$PROJECT_ROOT/mcp_server" "MCP server directory"
 fix_ownership "$PROJECT_ROOT/logs" "Logs directory"
 fix_ownership "$PROJECT_ROOT/data" "Data directory"

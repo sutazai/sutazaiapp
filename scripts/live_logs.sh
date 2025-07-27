@@ -128,12 +128,17 @@ start_live_monitoring() {
     local error_only="${3:-false}"
     local tail_lines="${4:-100}"
     
+    # Check Docker daemon first
+    if ! check_docker_daemon; then
+        return 1
+    fi
+    
     echo -e "${GREEN}Starting live log monitoring...${NC}"
     echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
     echo ""
     
     # Get all SutazAI containers
-    local containers=($(docker ps --format "{{.Names}}" | grep "sutazai-" | sort))
+    local containers=($(docker ps --format "{{.Names}}" 2>/dev/null | grep "sutazai-" | sort))
     
     if [[ ${#containers[@]} -eq 0 ]]; then
         echo -e "${RED}No SutazAI containers found running${NC}"
@@ -593,9 +598,173 @@ main() {
 
 # Note: main function execution removed - using direct case statement below
 
+# Function to check if Docker daemon is running
+check_docker_daemon() {
+    if ! command -v docker >/dev/null 2>&1; then
+        echo -e "${RED}Error: Docker command not found. Please install Docker.${NC}"
+        echo -e "${CYAN}💡 Auto-fix: Run deployment script to auto-install Docker:${NC}"
+        echo -e "   ${CYAN}sudo ./scripts/deploy_complete_system.sh deploy${NC}"
+        return 1
+    fi
+    
+    if ! docker info >/dev/null 2>&1; then
+        echo -e "${RED}Error: Cannot connect to Docker daemon.${NC}"
+        echo -e "${YELLOW}Docker daemon troubleshooting options:${NC}"
+        echo -e "  1. Restart Docker service: ${CYAN}sudo systemctl restart docker${NC}"
+        echo -e "  2. Start Docker manually: ${CYAN}sudo dockerd >/dev/null 2>&1 &${NC}"
+        echo -e "  3. Check Docker status: ${CYAN}sudo systemctl status docker${NC}"
+        echo -e "  4. View Docker logs: ${CYAN}sudo journalctl -u docker.service${NC}"
+        echo -e "  5. Fix permissions: ${CYAN}sudo chmod 666 /var/run/docker.sock${NC}"
+        echo -e "  ${GREEN}6. Auto-fix with deployment script: ${CYAN}sudo ./scripts/deploy_complete_system.sh deploy${NC}"
+        return 1
+    fi
+    
+    return 0
+}
+
+# Function to attempt Docker daemon recovery
+attempt_docker_recovery() {
+    echo -e "${YELLOW}Attempting Docker daemon recovery...${NC}"
+    
+    # Try method 1: Restart systemd service
+    echo -e "${CYAN}Method 1: Restarting Docker service...${NC}"
+    if sudo systemctl restart docker >/dev/null 2>&1; then
+        sleep 3
+        if docker info >/dev/null 2>&1; then
+            echo -e "${GREEN}✓ Docker service restarted successfully${NC}"
+            return 0
+        fi
+    fi
+    
+    # Try method 2: Start Docker manually
+    echo -e "${CYAN}Method 2: Starting Docker daemon manually...${NC}"
+    sudo pkill -f dockerd >/dev/null 2>&1 || true
+    sleep 2
+    sudo dockerd >/dev/null 2>&1 &
+    sleep 5
+    if docker info >/dev/null 2>&1; then
+        echo -e "${GREEN}✓ Docker daemon started manually${NC}"
+        return 0
+    fi
+    
+    # Try method 3: Fix socket permissions
+    echo -e "${CYAN}Method 3: Fixing Docker socket permissions...${NC}"
+    if [[ -S /var/run/docker.sock ]]; then
+        sudo chmod 666 /var/run/docker.sock
+        if docker info >/dev/null 2>&1; then
+            echo -e "${GREEN}✓ Docker socket permissions fixed${NC}"
+            return 0
+        fi
+    fi
+    
+    echo -e "${RED}✗ All recovery methods failed. Docker requires manual intervention.${NC}"
+    return 1
+}
+
+# Docker troubleshooting menu
+docker_troubleshooting_menu() {
+    clear
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                DOCKER TROUBLESHOOTING MENU                  ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Show current Docker status
+    echo -e "${BLUE}Current Docker Status:${NC}"
+    if docker info >/dev/null 2>&1; then
+        echo -e "${GREEN}✓ Docker daemon is running${NC}"
+        echo -e "  $(docker --version)"
+        echo -e "  Running containers: $(docker ps --format "{{.Names}}" | wc -l)"
+    else
+        echo -e "${RED}✗ Docker daemon is not accessible${NC}"
+    fi
+    echo ""
+    
+    echo -e "${YELLOW}Troubleshooting Options:${NC}"
+    echo "1. Check Docker Service Status"
+    echo "2. Restart Docker Service"
+    echo "3. Start Docker Manually"
+    echo "4. Check Docker Logs"
+    echo "5. Fix Docker Socket Permissions"
+    echo "6. Automatic Recovery (All Methods)"
+    echo "7. Reset Docker Configuration"
+    echo "8. Show Docker System Information"
+    echo "9. Test Docker with Hello-World"
+    echo "0. Return to Main Menu"
+    echo ""
+    
+    read -p "Select troubleshooting option (0-9): " docker_choice
+    
+    case $docker_choice in
+        1) 
+            echo -e "${CYAN}Docker Service Status:${NC}"
+            sudo systemctl status docker --no-pager -l || true
+            ;;
+        2)
+            echo -e "${CYAN}Restarting Docker Service...${NC}"
+            sudo systemctl restart docker && echo -e "${GREEN}✓ Docker service restarted${NC}" || echo -e "${RED}✗ Failed to restart Docker service${NC}"
+            ;;
+        3)
+            echo -e "${CYAN}Starting Docker Manually...${NC}"
+            sudo pkill -f dockerd >/dev/null 2>&1 || true
+            sleep 2
+            sudo dockerd >/dev/null 2>&1 &
+            sleep 3
+            docker info >/dev/null 2>&1 && echo -e "${GREEN}✓ Docker started manually${NC}" || echo -e "${RED}✗ Failed to start Docker manually${NC}"
+            ;;
+        4)
+            echo -e "${CYAN}Docker Service Logs (last 20 lines):${NC}"
+            sudo journalctl -u docker.service --no-pager -n 20 || true
+            ;;
+        5)
+            echo -e "${CYAN}Fixing Docker Socket Permissions...${NC}"
+            if [[ -S /var/run/docker.sock ]]; then
+                sudo chmod 666 /var/run/docker.sock
+                echo -e "${GREEN}✓ Docker socket permissions fixed${NC}"
+            else
+                echo -e "${RED}✗ Docker socket not found${NC}"
+            fi
+            ;;
+        6)
+            attempt_docker_recovery
+            ;;
+        7)
+            echo -e "${CYAN}Resetting Docker Configuration...${NC}"
+            sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
+{
+    "storage-driver": "overlay2"
+}
+EOF
+            echo -e "${GREEN}✓ Minimal Docker configuration created${NC}"
+            sudo systemctl daemon-reload
+            ;;
+        8)
+            echo -e "${CYAN}Docker System Information:${NC}"
+            docker info 2>/dev/null || echo -e "${RED}Cannot retrieve Docker info - daemon not accessible${NC}"
+            ;;
+        9)
+            echo -e "${CYAN}Testing Docker with Hello-World...${NC}"
+            docker run --rm hello-world && echo -e "${GREEN}✓ Docker is working correctly${NC}" || echo -e "${RED}✗ Docker test failed${NC}"
+            ;;
+        0)
+            return 0
+            ;;
+        *)
+            echo -e "${RED}Invalid option${NC}"
+            ;;
+    esac
+}
+
 # Function to check container status
 check_container_status() {
     local container="$1"
+    
+    # First check if Docker daemon is accessible
+    if ! check_docker_daemon >/dev/null 2>&1; then
+        echo "?"
+        return 1
+    fi
+    
     if docker ps --filter "name=${container}" --format "{{.Names}}" 2>/dev/null | grep -q "^${container}$"; then
         echo "✓"
     else
@@ -606,6 +775,13 @@ check_container_status() {
 # Function to get container health
 get_container_health() {
     local container=$1
+    
+    # First check if Docker daemon is accessible
+    if ! check_docker_daemon >/dev/null 2>&1; then
+        echo "no-docker"
+        return 1
+    fi
+    
     local health=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "")
     if [ "$health" = "healthy" ]; then
         echo "healthy"
@@ -632,6 +808,27 @@ show_system_overview() {
     echo "│ Container           │ Status │ Health   │ Ports       │"
     echo "├─────────────────────┼────────┼──────────┼─────────────┤"
     
+    # Check Docker daemon first
+    if ! check_docker_daemon; then
+        echo "│ Docker daemon is not running or accessible                      │"
+        echo "└─────────────────────┴────────┴──────────┴─────────────┘"
+        echo ""
+        echo -e "${YELLOW}Would you like to attempt automatic Docker recovery? (y/N)${NC}"
+        read -r -n 1 recovery_choice
+        echo ""
+        if [[ $recovery_choice =~ ^[Yy]$ ]]; then
+            if attempt_docker_recovery; then
+                echo -e "${GREEN}Docker recovery successful! Restarting system overview...${NC}"
+                sleep 2
+                show_system_overview
+                return $?
+            else
+                echo -e "${RED}Docker recovery failed. Manual intervention required.${NC}"
+            fi
+        fi
+        return 1
+    fi
+    
     # Automatically discover all SutazAI containers
     containers=()
     while IFS= read -r container_name; do
@@ -641,13 +838,16 @@ show_system_overview() {
             ports="-"
         fi
         containers+=("${container_name}:${ports}")
-    done < <(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sort)
+    done < <(docker ps --filter "name=sutazai-" --format "{{.Names}}" 2>/dev/null | sort)
     
     # If no SutazAI containers found, show message
     if [ ${#containers[@]} -eq 0 ]; then
         echo "│ No SutazAI containers found. Please start the system first.     │"
         echo "└─────────────────────┴────────┴──────────┴─────────────┘"
-        return
+        echo ""
+        echo -e "${YELLOW}To start SutazAI system:${NC}"
+        echo -e "  ${CYAN}cd /opt/sutazaiapp && ./scripts/deploy.sh${NC}"
+        return 0
     fi
     
     for container_info in "${containers[@]}"; do
@@ -1076,11 +1276,38 @@ show_unified_live_logs() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
+    # Check Docker daemon first
+    if ! check_docker_daemon; then
+        echo -e "${RED}Docker daemon is not accessible. Cannot show unified logs.${NC}"
+        echo ""
+        echo -e "${YELLOW}Would you like to attempt Docker recovery? (y/N)${NC}"
+        read -r -n 1 recovery_choice
+        echo ""
+        if [[ $recovery_choice =~ ^[Yy]$ ]]; then
+            if attempt_docker_recovery; then
+                echo -e "${GREEN}Docker recovery successful! Restarting unified logs...${NC}"
+                sleep 2
+                show_unified_live_logs
+                return
+            else
+                echo -e "${RED}Docker recovery failed. Use option 11 for advanced troubleshooting.${NC}"
+                read -p "Press Enter to return to menu..."
+                show_menu
+                return
+            fi
+        else
+            read -p "Press Enter to return to menu..."
+            show_menu
+            return
+        fi
+    fi
+    
     # Get list of running SutazAI containers
-    running_containers=($(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sort))
+    running_containers=($(docker ps --filter "name=sutazai-" --format "{{.Names}}" 2>/dev/null | sort))
     
     if [ ${#running_containers[@]} -eq 0 ]; then
         echo -e "${RED}No SutazAI containers found for log monitoring.${NC}"
+        echo -e "${YELLOW}Tip: Start your containers first with: ${CYAN}cd /opt/sutazaiapp && docker-compose up -d${NC}"
         read -p "Press Enter to return to menu..."
         show_menu
         return
@@ -1162,9 +1389,10 @@ show_menu() {
     echo "8. System Repair"
     echo "9. Restart All Services"
     echo "10. Unified Live Logs (All in One)"
+    echo "11. Docker Troubleshooting & Recovery"
     echo "0. Exit"
     echo ""
-    read -p "Select option (0-10): " choice
+    read -p "Select option (0-11): " choice
     
     case $choice in
         1) show_system_overview; read -p "Press Enter to continue..."; show_menu ;;
@@ -1183,6 +1411,7 @@ show_menu() {
             show_menu
             ;;
         10) show_unified_live_logs ;;
+        11) docker_troubleshooting_menu; read -p "Press Enter to continue..."; show_menu ;;
         0) echo "Goodbye!"; exit 0 ;;
         *) echo "Invalid option"; show_menu ;;
     esac
