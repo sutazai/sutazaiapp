@@ -290,7 +290,7 @@ jobs:
             type=sha,prefix={{branch}}-
 
       - name: Build and push backend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           push: true
@@ -302,7 +302,7 @@ jobs:
             BUILDKIT_INLINE_CACHE=1
 
       - name: Build and push frontend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./frontend
           push: true
