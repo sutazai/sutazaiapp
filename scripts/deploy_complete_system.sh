@@ -45,6 +45,70 @@ check_root_permissions() {
 # Call root check immediately
 check_root_permissions "$@"
 
+# Configure system limits for high-performance deployment
+configure_system_limits() {
+    log_info "🔧 Configuring system limits for enterprise deployment..."
+    
+    # Configure limits.conf
+    local limits_file="/etc/security/limits.conf"
+    if [ -f "$limits_file" ]; then
+        # Remove existing SutazAI entries
+        sed -i '/# SutazAI System Limits/,/# End SutazAI System Limits/d' "$limits_file" 2>/dev/null || true
+        
+        # Add new optimized limits
+        cat >> "$limits_file" << 'EOF'
+# SutazAI System Limits
+*    soft nofile 65536
+*    hard nofile 65536
+*    soft nproc  32768
+*    hard nproc  32768
+root soft nofile 65536
+root hard nofile 65536
+root soft nproc  32768
+root hard nproc  32768
+# End SutazAI System Limits
+EOF
+        log_success "   ✅ Updated /etc/security/limits.conf"
+    fi
+    
+    # Configure systemd limits
+    local systemd_conf="/etc/systemd/system.conf"
+    if [ -f "$systemd_conf" ]; then
+        # Update systemd limits
+        sed -i 's/#DefaultLimitNOFILE=.*/DefaultLimitNOFILE=65536/' "$systemd_conf" 2>/dev/null || true
+        if ! grep -q "DefaultLimitNOFILE=65536" "$systemd_conf"; then
+            echo "DefaultLimitNOFILE=65536" >> "$systemd_conf"
+        fi
+        log_success "   ✅ Updated systemd limits"
+    fi
+    
+    # Configure Docker daemon limits
+    local docker_service_dir="/etc/systemd/system/docker.service.d"
+    mkdir -p "$docker_service_dir"
+    cat > "$docker_service_dir/limits.conf" << 'EOF'
+[Service]
+LimitNOFILE=65536
+LimitNPROC=32768
+EOF
+    log_success "   ✅ Updated Docker service limits"
+    
+    # Reload systemd if possible
+    if command -v systemctl >/dev/null 2>&1; then
+        systemctl daemon-reload >/dev/null 2>&1 || true
+        log_success "   ✅ Systemd configuration reloaded"
+    fi
+    
+    # Set current session limits
+    ulimit -n 65536 2>/dev/null || true
+    ulimit -u 32768 2>/dev/null || true
+    
+    # Export environment variables for child processes
+    export RLIMIT_NOFILE=65536
+    export RLIMIT_NPROC=32768
+    
+    log_success "🔧 System limits configured for high-performance deployment"
+}
+
 # ===============================================
 # 🛡️ SECURITY NOTICE
 # ===============================================
@@ -123,11 +187,14 @@ fix_wsl2_network_connectivity() {
         if [ -f /etc/resolv.conf ]; then
             log_info "   → Fixing DNS resolution..."
             
-            # Backup original resolv.conf
-            cp /etc/resolv.conf /etc/resolv.conf.backup || true
+            # Check if resolv.conf is immutable and remove if needed
+            chattr -i /etc/resolv.conf 2>/dev/null || true
             
-            # Create new resolv.conf with reliable DNS servers
-            cat > /etc/resolv.conf << 'EOF'
+            # Backup original resolv.conf
+            cp /etc/resolv.conf /etc/resolv.conf.backup 2>/dev/null || true
+            
+            # Try to create new resolv.conf with reliable DNS servers
+            if cat > /etc/resolv.conf << 'EOF' 2>/dev/null; then
 # Fixed DNS configuration for WSL2
 nameserver 8.8.8.8
 nameserver 1.1.1.1
@@ -135,11 +202,14 @@ nameserver 8.8.4.4
 options edns0 trust-ad
 search .
 EOF
-            
-            # Make it immutable to prevent WSL from overwriting it
-            chattr +i /etc/resolv.conf 2>/dev/null || true
-            
-            log_success "   ✅ DNS resolution fixed"
+                # Make it immutable to prevent WSL from overwriting it
+                chattr +i /etc/resolv.conf 2>/dev/null || true
+                log_success "   ✅ DNS resolution fixed"
+            else
+                log_warn "   ⚠️  Cannot modify /etc/resolv.conf (WSL managed), using alternative DNS fix"
+                # Alternative: Use Docker's DNS configuration instead
+                export DOCKER_DNS_FIX="true"
+            fi
         fi
         
         # Configure Docker daemon for WSL2 network reliability
@@ -233,6 +303,19 @@ install_packages_with_network_resilience() {
                 software-properties-common dnsutils pipx; then
                 
                 log_success "   ✅ Essential packages installed successfully"
+                
+                # Fix NVIDIA repository key deprecation warning
+                if [ -f /etc/apt/trusted.gpg ]; then
+                    log_info "   → Fixing NVIDIA repository key deprecation warning..."
+                    
+                    # Extract NVIDIA keys from legacy keyring to proper location
+                    if apt-key list 2>/dev/null | grep -q "nvidia"; then
+                        mkdir -p /etc/apt/trusted.gpg.d
+                        apt-key export 7FA2AF80 | gpg --dearmor > /etc/apt/trusted.gpg.d/nvidia.gpg 2>/dev/null || true
+                        apt-key export 42D5A192 | gpg --dearmor > /etc/apt/trusted.gpg.d/nvidia-ml.gpg 2>/dev/null || true
+                        log_success "   ✅ NVIDIA repository keys properly configured"
+                    fi
+                fi
                 
                 # Fix Ubuntu 24.04 externally-managed-environment issue
                 log_info "   → Fixing Ubuntu 24.04 Python environment restrictions..."
@@ -1805,13 +1888,29 @@ install_docker_via_apt() {
     # Set up the repository
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$ID $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
     
-    # Install Docker Engine (handle containerd conflicts)
+    # Install Docker Engine (handle containerd conflicts intelligently)
     apt-get update
     
-    # Remove conflicting containerd package if present
-    apt-get remove -y containerd >/dev/null 2>&1 || true
+    # Intelligent containerd conflict resolution
+    log_info "   → Resolving containerd package conflicts..."
     
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Remove conflicting packages that might interfere
+    apt-get remove -y containerd runc >/dev/null 2>&1 || true
+    apt-get autoremove -y >/dev/null 2>&1 || true
+    
+    # Install Docker packages with conflict resolution
+    if ! apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 2>/dev/null; then
+        log_warn "   ⚠️  Package conflict detected, applying advanced resolution..."
+        
+        # Advanced conflict resolution
+        apt-get install -y --fix-broken >/dev/null 2>&1 || true
+        dpkg --configure -a >/dev/null 2>&1 || true
+        
+        # Force resolve conflicts and retry
+        apt-get install -y -o Dpkg::Options::="--force-confnew" docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        
+        log_success "   ✅ Conflicts resolved and Docker installed"
+    fi
     
     log_success "   ✅ Docker installed via APT"
 }
@@ -3220,15 +3319,40 @@ check_prerequisites() {
         log_success "CPU cores: $CPU_CORES available"
     fi
     
-    # Validate existing Docker Compose file
-    if [ ! -f "$COMPOSE_FILE" ]; then
-        log_error "Docker Compose file not found: $COMPOSE_FILE"
-        ((failed_checks++))
-    elif ! docker compose -f "$COMPOSE_FILE" config --quiet; then
-        log_error "Invalid Docker Compose configuration in $COMPOSE_FILE"
-        ((failed_checks++))
+    # Validate Docker Compose files
+    local compose_valid=true
+    if [[ -n "${COMPOSE_FILE:-}" ]]; then
+        # Handle colon-separated compose files
+        IFS=':' read -ra compose_files <<< "$COMPOSE_FILE"
+        for file in "${compose_files[@]}"; do
+            if [ ! -f "$file" ]; then
+                log_error "Docker Compose file not found: $file"
+                ((failed_checks++))
+                compose_valid=false
+            fi
+        done
+        
+        # Validate compose configuration if all files exist
+        if [ "$compose_valid" = "true" ]; then
+            if ! docker compose config --quiet >/dev/null 2>&1; then
+                log_error "Invalid Docker Compose configuration"
+                ((failed_checks++))
+            else
+                log_success "Docker Compose configuration valid"
+            fi
+        fi
     else
-        log_success "Docker Compose configuration: Valid ($COMPOSE_FILE)"
+        # Default single file check
+        local default_compose="docker-compose.yml"
+        if [ ! -f "$default_compose" ]; then
+            log_error "Docker Compose file not found: $default_compose"
+            ((failed_checks++))
+        elif ! docker compose -f "$default_compose" config --quiet; then
+            log_error "Invalid Docker Compose configuration in $default_compose"
+            ((failed_checks++))
+        else
+            log_success "Docker Compose configuration: Valid ($default_compose)"
+        fi
     fi
     
     # Check critical ports availability
@@ -5447,19 +5571,96 @@ sequential_ollama_download() {
 optimize_network_downloads() {
     log_info "🌐 Optimizing network settings for parallel downloads..."
     
-    # Optimize TCP settings for multiple concurrent connections
-    echo 'net.core.rmem_max = 268435456' > /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.core.wmem_max = 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.ipv4.tcp_rmem = 4096 87380 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.ipv4.tcp_wmem = 4096 65536 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.ipv4.tcp_congestion_control = bbr' >> /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.core.netdev_max_backlog = 30000' >> /tmp/sutazai_network.conf 2>/dev/null || true
-    echo 'net.ipv4.tcp_max_syn_backlog = 8192' >> /tmp/sutazai_network.conf 2>/dev/null || true
+    # Check if we're in WSL2 environment
+    local is_wsl2=false
+    if grep -qi microsoft /proc/version || grep -qi wsl /proc/version; then
+        is_wsl2=true
+        log_info "   → WSL2 environment detected, applying compatible optimizations..."
+    fi
     
-    if sysctl -p /tmp/sutazai_network.conf >/dev/null 2>&1; then
-        log_success "Network settings optimized for parallel downloads"
+    # Create temporary sysctl configuration for network optimizations
+    echo '# SutazAI Network Optimizations' > /tmp/sutazai_network.conf 2>/dev/null || true
+    
+    # Apply network optimizations intelligently
+    local applied_count=0
+    local total_count=0
+    
+    # Basic buffer optimizations (usually work everywhere)
+    ((total_count++))
+    if sysctl -w net.core.rmem_max=268435456 >/dev/null 2>&1; then
+        ((applied_count++))
+        echo 'net.core.rmem_max = 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
+    fi
+    
+    ((total_count++))
+    if sysctl -w net.core.wmem_max=268435456 >/dev/null 2>&1; then
+        ((applied_count++))
+        echo 'net.core.wmem_max = 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
+    fi
+    
+    ((total_count++))
+    if sysctl -w net.ipv4.tcp_rmem="4096 87380 268435456" >/dev/null 2>&1; then
+        ((applied_count++))
+        echo 'net.ipv4.tcp_rmem = 4096 87380 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
+    fi
+    
+    ((total_count++))
+    if sysctl -w net.ipv4.tcp_wmem="4096 65536 268435456" >/dev/null 2>&1; then
+        ((applied_count++))
+        echo 'net.ipv4.tcp_wmem = 4096 65536 268435456' >> /tmp/sutazai_network.conf 2>/dev/null || true
+    fi
+    
+    # Advanced optimizations (may not work in WSL2)
+    if [ "$is_wsl2" = "false" ]; then
+        # Try to load BBR module first
+        modprobe tcp_bbr >/dev/null 2>&1 || true
+        
+        # Check if BBR is available
+        if sysctl net.ipv4.tcp_available_congestion_control 2>/dev/null | grep -q bbr; then
+            ((total_count++))
+            if sysctl -w net.ipv4.tcp_congestion_control=bbr >/dev/null 2>&1; then
+                ((applied_count++))
+                echo 'net.ipv4.tcp_congestion_control = bbr' >> /tmp/sutazai_network.conf 2>/dev/null || true
+                log_info "   ✅ BBR congestion control enabled"
+            fi
+        else
+            log_info "   ℹ️  BBR not available in kernel, using default congestion control"
+        fi
+        
+        ((total_count++))
+        if sysctl -w net.core.netdev_max_backlog=30000 >/dev/null 2>&1; then
+            ((applied_count++))
+            echo 'net.core.netdev_max_backlog = 30000' >> /tmp/sutazai_network.conf 2>/dev/null || true
+        fi
+        
+        ((total_count++))
+        if sysctl -w net.ipv4.tcp_max_syn_backlog=8192 >/dev/null 2>&1; then
+            ((applied_count++))
+            echo 'net.ipv4.tcp_max_syn_backlog = 8192' >> /tmp/sutazai_network.conf 2>/dev/null || true
+        fi
     else
-        log_warn "Could not apply all network optimizations"
+        log_info "   ℹ️  WSL2 detected: skipping advanced optimizations for compatibility"
+    fi
+    
+    # Report results with intelligence
+    if [ $applied_count -eq $total_count ]; then
+        log_success "✅ All network optimizations applied successfully ($applied_count/$total_count)"
+        export NETWORK_OPTIMIZED="full"
+    elif [ $applied_count -gt 0 ]; then
+        log_success "✅ Network partially optimized ($applied_count/$total_count optimizations applied)"
+        if [ "$is_wsl2" = "true" ]; then
+            log_info "   ℹ️  Partial optimization is expected in WSL2 environment"
+        fi
+        export NETWORK_OPTIMIZED="partial"
+    else
+        log_warn "⚠️  Limited network optimization capability in this environment"
+        export NETWORK_OPTIMIZED="limited"
+    fi
+    
+    # Save optimizations to permanent config if successful
+    if [ $applied_count -gt 0 ] && [ -f /tmp/sutazai_network.conf ]; then
+        cp /tmp/sutazai_network.conf /etc/sysctl.d/99-sutazai-network.conf 2>/dev/null || true
+        log_info "   💾 Network optimizations saved for persistence"
     fi
     
     # Use intelligent curl configuration management
