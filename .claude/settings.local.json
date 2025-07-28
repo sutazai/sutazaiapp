@@ -79,7 +79,8 @@
       "Bash(/opt/sutazaiapp/scripts/live_logs.sh:*)",
       "Bash(./scripts/system_test.sh:*)",
       "Bash(scripts/live_logs.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/live_logs.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/live_logs.sh:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   },

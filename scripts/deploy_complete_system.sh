@@ -935,7 +935,25 @@ perform_pre_deployment_health_check() {
         log_success "   ✅ File descriptor limit adequate: $max_files"
     else
         log_warn "   ⚠️  Low file descriptor limit: $max_files (65536+ recommended)"
-        log_info "      Adding ulimit optimizations to Docker configuration"
+        log_info "      🔧 Automatically fixing file descriptor limits..."
+        
+        # Attempt to increase current session limit
+        if ulimit -n 65536 2>/dev/null; then
+            log_success "      ✅ Session limit increased to 65536"
+        else
+            log_warn "      ⚠️  Cannot increase session limit, applying system-wide fix..."
+        fi
+        
+        # Apply permanent system-wide limits
+        configure_system_limits
+        
+        # Verify the fix
+        local new_limit=$(ulimit -n)
+        if [ "$new_limit" -ge 65536 ]; then
+            log_success "      ✅ File descriptor limit fixed: $new_limit"
+        else
+            log_warn "      ⚠️  System limits configured, will take effect after reboot"
+        fi
     fi
     
     # Summary
@@ -1411,7 +1429,7 @@ GPU_DEPENDENT_AGENTS=("awesome-code-ai" "code-improver")  # Services with intell
 GPU_ONLY_AGENTS=("tabbyml")  # Services that require GPU (skipped in CPU-only mode)
 PROBLEMATIC_AGENTS=()  # All issues resolved with proper research-based solutions
 WORKFLOW_AGENTS=("langflow" "flowise" "n8n" "dify" "bigagi")
-SPECIALIZED_AGENTS=("agentgpt" "privategpt" "llamaindex" "shellgpt" "pentestgpt" "finrobot" "realtimestt")
+SPECIALIZED_AGENTS=("agentgpt" "privategpt" "llamaindex" "shellgpt" "pentestgpt" "finrobot" "jarvis-agi")
 AUTOMATION_AGENTS=("browser-use" "skyvern" "localagi" "localagi-enhanced" "localagi-advanced" "documind" "opendevin")
 ML_FRAMEWORK_SERVICES=("pytorch" "tensorflow" "jax" "fsdp")
 ADVANCED_SERVICES=("litellm" "health-monitor" "autogen" "agentzero" "context-framework" "service-hub" "mcp-server" "jarvis-ai" "api-gateway" "task-scheduler" "model-optimizer")
@@ -4653,23 +4671,53 @@ deploy_service_with_enhanced_resilience() {
         deploy_output=$(docker_compose_cmd up -d --build "$service_name" 2>&1)
         echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
         
-        # Check for container name conflicts in output and auto-resolve
-        if echo "$deploy_output" | grep -q "already in use by container"; then
-            log_warn "   ⚠️  Container name conflict detected, performing intelligent cleanup..."
+        # Intelligent container conflict resolution - only remove unhealthy containers
+        if echo "$deploy_output" | grep -q "already in use by container\|Conflict\|name.*is already in use"; then
+            log_warn "   ⚠️  Container name conflict detected, checking container health..."
             
-            # Extract the conflicting container ID and remove it
-            local conflict_id=$(echo "$deploy_output" | grep -o '"[a-f0-9]\{64\}"' | tr -d '"' | head -1)
-            if [ -n "$conflict_id" ]; then
-                log_info "   → Removing conflicting container: $conflict_id"
-                docker rm -f "$conflict_id" >/dev/null 2>&1 || true
-                docker rm -f "sutazai-$service_name" >/dev/null 2>&1 || true
-                sleep 2
+            local container_name="sutazai-$service_name"
+            
+            # Check if the existing container is healthy
+            local container_health=$(docker inspect "$container_name" --format='{{.State.Health.Status}}' 2>/dev/null || echo "unknown")
+            local container_status=$(docker inspect "$container_name" --format='{{.State.Status}}' 2>/dev/null || echo "unknown")
+            
+            log_info "   → Existing container status: $container_status, health: $container_health"
+            
+            # Only remove if container is unhealthy, exited, dead, or corrupted
+            if [[ "$container_status" =~ ^(exited|dead|created|removing)$ ]] || [[ "$container_health" =~ ^(unhealthy|starting)$ ]] || [ "$container_health" = "unknown" ]; then
+                log_warn "   → Container is unhealthy/corrupt, safe to remove: $container_name"
                 
-                # Retry deployment
-                log_info "   → Retrying deployment after conflict resolution..."
-                deploy_output=$(docker_compose_cmd up -d --build "$service_name" 2>&1)
-                echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
+                # Stop container if running
+                if [ "$container_status" = "running" ]; then
+                    log_info "   → Stopping unhealthy container: $container_name"
+                    docker stop "$container_name" >/dev/null 2>&1 || true
+                fi
+                
+                # Remove unhealthy container
+                log_info "   → Removing unhealthy container: $container_name"
+                docker rm -f "$container_name" >/dev/null 2>&1 || true
+                
+                # Extract and remove any conflicting container ID from error message
+                local conflict_id=$(echo "$deploy_output" | grep -o '"[a-f0-9]\{64\}"' | tr -d '"' | head -1)
+                if [ -n "$conflict_id" ] && [ "$conflict_id" != "$container_name" ]; then
+                    # Verify this container is also unhealthy before removing
+                    local conflict_status=$(docker inspect "$conflict_id" --format='{{.State.Status}}' 2>/dev/null || echo "unknown")
+                    if [[ "$conflict_status" =~ ^(exited|dead|created|removing|unknown)$ ]]; then
+                        log_info "   → Removing conflicting unhealthy container: $conflict_id"
+                        docker rm -f "$conflict_id" >/dev/null 2>&1 || true
+                    fi
+                fi
+                
+                sleep 3
+                log_info "   → Retrying deployment after removing unhealthy containers..."
+            else
+                log_success "   ✅ Existing container is healthy ($container_status/$container_health), skipping deployment to preserve it"
+                return 0
             fi
+            
+            # Retry deployment after cleanup
+            deploy_output=$(docker_compose_cmd up -d --build "$service_name" 2>&1)
+            echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
         fi
         
         if echo "$deploy_output" | grep -q "ERROR\|Error\|error" && ! echo "$deploy_output" | grep -q "Started\|Created\|Running"; then
@@ -6157,45 +6205,94 @@ wait_for_service_health() {
     local health_endpoint="${3:-}"
     local count=0
     local allow_failure="${4:-false}"
+    local restart_attempts=0
+    local max_restarts=2
     
     log_progress "Waiting for $service_name to become healthy..."
     
     while [ $count -lt $max_wait ]; do
         # Check container status first
-        if docker compose ps "$service_name" 2>/dev/null | grep -q "healthy\|running"; then
-            # If health endpoint provided, test it
-            if [ -n "$health_endpoint" ]; then
-                if curl -s --max-time 5 "$health_endpoint" > /dev/null 2>&1; then
-                    log_success "$service_name is healthy (endpoint verified)"
-                    return 0
-                fi
-            else
-                log_success "$service_name is healthy (container status)"
-                return 0
-            fi
-        fi
+        local container_status=$(docker compose ps "$service_name" --format json 2>/dev/null | jq -r '.State' 2>/dev/null || echo "unknown")
+        local container_health=$(docker compose ps "$service_name" --format json 2>/dev/null | jq -r '.Health' 2>/dev/null || echo "unknown")
         
-        # Check for failed containers
-        if docker compose ps "$service_name" 2>/dev/null | grep -q "exited\|dead"; then
-            log_error "$service_name failed to start"
-            docker compose logs "$service_name" | tail -20
-            if [ "$allow_failure" = "true" ]; then
-                return 1  # Return error but don't exit script
-            else
-                exit 1  # Exit script for critical services
-            fi
-        fi
+        # Handle different container states
+        case "$container_status" in
+            "running")
+                # Container is running, check health
+                if [ "$container_health" = "healthy" ] || [ "$container_health" = "unknown" ]; then
+                    # If health endpoint provided, test it
+                    if [ -n "$health_endpoint" ]; then
+                        if curl -s --max-time 5 "$health_endpoint" > /dev/null 2>&1; then
+                            log_success "$service_name is healthy (endpoint verified)"
+                            return 0
+                        else
+                            log_progress "   ⚠️  $service_name container running but health check failed"
+                        fi
+                    else
+                        log_success "$service_name is healthy (container running)"
+                        return 0
+                    fi
+                elif [ "$container_health" = "starting" ]; then
+                    log_progress "   🔄 $service_name is starting up..."
+                elif [ "$container_health" = "unhealthy" ]; then
+                    log_warn "   ⚠️  $service_name container running but health check failed"
+                    
+                    # Attempt restart for unhealthy containers (limited attempts)
+                    if [ $restart_attempts -lt $max_restarts ]; then
+                        log_warn "   ⚠️  Container running but failed health check, restarting..."
+                        docker compose restart "$service_name" >/dev/null 2>&1 || true
+                        ((restart_attempts++))
+                        sleep 10
+                        continue
+                    fi
+                fi
+                ;;
+            "exited"|"dead")
+                log_error "   ❌ $service_name failed to start"
+                log_info "   📋 Last 10 lines of logs:"
+                docker compose logs --tail=10 "$service_name" 2>/dev/null || true
+                
+                if [ "$allow_failure" = "true" ]; then
+                    log_warn "   ⚠️  Service $service_name failed but continuing deployment"
+                    return 1
+                else
+                    log_error "   ❌ Service $service_name is critical, stopping deployment"
+                    exit 1
+                fi
+                ;;
+            "created"|"restarting")
+                log_progress "   🔄 $service_name is initializing..."
+                ;;
+            *)
+                log_progress "   ❓ $service_name status: $container_status"
+                ;;
+        esac
         
         sleep 3
         ((count+=3))
         
+        # Progress indicator every 15 seconds
         if [ $((count % 15)) -eq 0 ]; then
-            log_progress "Still waiting for $service_name... (${count}s/${max_wait}s)"
+            log_progress "   ⏳ Still waiting for $service_name... (${count}s/${max_wait}s)"
+            
+            # Show helpful info for specific services
+            case "$service_name" in
+                "qdrant")
+                    log_info "   💡 Qdrant may take longer to initialize vector database"
+                    ;;
+                "jarvis-agi")
+                    log_info "   💡 JARVIS AGI system loading multiple AI models - this may take time"
+                    ;;
+                "ollama")
+                    log_info "   💡 Ollama loading language models - this may take several minutes"
+                    ;;
+            esac
         fi
     done
     
-    log_warn "$service_name health check timed out after ${max_wait}s"
+    log_warn "   ⚠️  $service_name health check timed out after ${max_wait}s"
     if [ "$allow_failure" = "true" ]; then
+        log_warn "   ⚠️  Continuing deployment despite $service_name timeout"
         return 1  # Return error but don't exit script
     else
         exit 1  # Exit script for critical services
@@ -6428,25 +6525,111 @@ deploy_service_group() {
         local permanently_failed=()
         
         for failed_service in "${failed_services[@]}"; do
-            log_info "🛠️  Attempting recovery for: $failed_service"
+            log_info "🛠️  Attempting intelligent recovery for: $failed_service"
             
-            # Step 1: Clean rebuild
-            log_info "   → Step 1: Clean rebuild"
+            # Service-specific recovery strategies
+            case "$failed_service" in
+                "jarvis-agi")
+                    log_info "   🧠 JARVIS-AGI requires special recovery (AI models loading)"
+                    
+                    # Ensure sufficient resources
+                    local free_memory=$(free -g | awk '/^Mem:/{print $7}')
+                    if [ "$free_memory" -lt 4 ]; then
+                        log_warn "   ⚠️  Low memory ($free_memory GB), clearing caches"
+                        echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+                        docker system prune -f >/dev/null 2>&1 || true
+                    fi
+                    
+                    # Clean removal of conflicting containers
+                    docker stop sutazai-jarvis-agi >/dev/null 2>&1 || true
+                    docker rm -f sutazai-jarvis-agi >/dev/null 2>&1 || true
+                    
+                    # Rebuild with increased timeout
+                    log_info "   → Rebuilding JARVIS-AGI with extended timeout..."
+                    if timeout 600 docker compose build --no-cache "$failed_service" >/dev/null 2>&1; then
+                        log_info "   ✅ JARVIS-AGI rebuild successful"
+                        
+                        # Start with extended health check timeout
+                        if docker compose up -d "$failed_service" >/dev/null 2>&1; then
+                            log_info "   → JARVIS-AGI starting (may take 3-5 minutes for AI models)..."
+                            if wait_for_service_health "$failed_service" 300 "http://localhost:8084/health" "true"; then
+                                log_success "   ✅ JARVIS-AGI recovery successful"
+                                recovered_services+=("$failed_service")
+                                continue
+                            fi
+                        fi
+                    fi
+                    ;;
+                "tabbyml")
+                    log_info "   🏷️  TabbyML requires GPU/CPU mode handling"
+                    
+                    # Check if GPU is available, fallback to CPU
+                    if ! nvidia-smi >/dev/null 2>&1; then
+                        log_info "   → No GPU detected, configuring TabbyML for CPU mode"
+                        # Add CPU-specific configuration
+                        export TABBY_DEVICE="cpu"
+                        export TABBY_PARALLELISM="1"
+                    fi
+                    
+                    docker stop sutazai-tabbyml >/dev/null 2>&1 || true
+                    docker rm -f sutazai-tabbyml >/dev/null 2>&1 || true
+                    ;;
+                "qdrant")
+                    log_info "   🔍 Qdrant vector database requires data initialization"
+                    
+                    # Clean qdrant data if corrupted
+                    if [ -d "./data/qdrant" ]; then
+                        log_info "   → Cleaning potentially corrupted Qdrant data"
+                        rm -rf ./data/qdrant/* 2>/dev/null || true
+                    fi
+                    ;;
+                "letta")
+                    log_info "   🤖 Letta requires database migration handling"
+                    
+                    # Ensure database is ready
+                    wait_for_service_health "postgres" 30 "" "true" || true
+                    ;;
+            esac
+            
+            # Step 1: Service-aware clean rebuild
+            log_info "   → Step 1: Service-aware clean rebuild"
             docker_compose_cmd down "$failed_service" >/dev/null 2>&1 || true
-            docker system prune -f >/dev/null 2>&1 || true
             
-            if docker compose build --no-cache "$failed_service" >/dev/null 2>&1; then
+            # For resource-intensive services, clean more aggressively
+            if [[ "$failed_service" =~ (jarvis-agi|tabbyml|ollama) ]]; then
+                docker system prune --volumes -f >/dev/null 2>&1 || true
+            else
+                docker system prune -f >/dev/null 2>&1 || true
+            fi
+            
+            # Set appropriate timeout based on service complexity
+            local build_timeout=300
+            case "$failed_service" in
+                "jarvis-agi"|"tabbyml"|"ollama") build_timeout=900 ;;
+                "agentgpt"|"privategpt") build_timeout=600 ;;
+                *) build_timeout=300 ;;
+            esac
+            
+            if timeout $build_timeout docker compose build --no-cache "$failed_service" >/dev/null 2>&1; then
                 log_info "   ✅ Rebuild successful"
                 
-                # Step 2: Restart with fresh configuration
-                log_info "   → Step 2: Starting with fresh configuration"
+                # Step 2: Start with appropriate resource allocation
+                log_info "   → Step 2: Starting with optimized configuration"
                 if docker compose up -d "$failed_service" >/dev/null 2>&1; then
                     
-                    # Step 3: Enhanced health check
-                    log_info "   → Step 3: Enhanced health check (60s timeout)"
+                    # Step 3: Service-specific health check with appropriate timeout
+                    local health_timeout=120
+                    case "$failed_service" in
+                        "jarvis-agi") health_timeout=300 ;;
+                        "tabbyml"|"ollama") health_timeout=240 ;;
+                        "qdrant"|"chromadb") health_timeout=90 ;;
+                        *) health_timeout=120 ;;
+                    esac
+                    
+                    log_info "   → Step 3: Enhanced health check (${health_timeout}s timeout)"
                     sleep 15
                     
-                    if check_docker_service_health "$failed_service" 60; then
+                    if wait_for_service_health "$failed_service" "$health_timeout" "" "true"; then
                         log_success "   ✅ Recovery successful for $failed_service"
                         recovered_services+=("$failed_service")
                     else
@@ -6507,7 +6690,7 @@ deploy_service_group() {
                 allow_failure="true"  # Allow monitoring services to fail without stopping deployment
                 ;;
             # All AI agents should allow failure to not block deployment
-            "autogpt"|"crewai"|"letta"|"aider"|"gpt-engineer"|"tabbyml"|"semgrep"|"langflow"|"flowise"|"n8n"|"dify"|"bigagi"|"agentgpt"|"privategpt"|"llamaindex"|"shellgpt"|"pentestgpt"|"browser-use"|"skyvern"|"localagi"|"documind"|"pytorch"|"tensorflow"|"jax"|"litellm"|"health-monitor"|"autogen"|"agentzero")
+            "autogpt"|"crewai"|"letta"|"aider"|"gpt-engineer"|"tabbyml"|"semgrep"|"langflow"|"flowise"|"n8n"|"dify"|"bigagi"|"agentgpt"|"privategpt"|"llamaindex"|"shellgpt"|"pentestgpt"|"browser-use"|"skyvern"|"localagi"|"documind"|"pytorch"|"tensorflow"|"jax"|"litellm"|"health-monitor"|"autogen"|"agentzero"|"jarvis-agi")
                 timeout=60
                 allow_failure="true"  # Allow agent services to fail without stopping deployment
                 ;;
@@ -7386,7 +7569,7 @@ resume_deployment() {
     log_header "🤖 Deploying Missing AI Agents"
     
     # Group missing services by type
-    local missing_agents=$(echo "$missing_services" | grep -E "agent|gpt|crew|letta|aider|engineer|bigagi|dify|n8n|langflow|flowise|semgrep|tabby|privategpt|llamaindex|shellgpt|pentestgpt|browser-use|skyvern|localagi|documind|litellm|health-monitor|autogen|agentzero" || true)
+    local missing_agents=$(echo "$missing_services" | grep -E "agent|gpt|crew|letta|aider|engineer|bigagi|dify|n8n|langflow|flowise|semgrep|tabby|privategpt|llamaindex|shellgpt|pentestgpt|browser-use|skyvern|localagi|documind|litellm|health-monitor|autogen|agentzero|jarvis" || true)
     
     if [ -n "$missing_agents" ]; then
         log_info "🔨 Building and deploying missing AI agents with latest changes..."

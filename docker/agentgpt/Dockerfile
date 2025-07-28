@@ -14,14 +14,24 @@ WORKDIR /app/next
 # Install dependencies
 RUN npm install
 
-# Set default environment variables for build
-ENV DATABASE_URL="sqlite:///tmp/agentgpt.db"
-ENV NEXTAUTH_SECRET="default-secret-for-build"
+# Set environment variables for local LLM with Ollama
+ENV DATABASE_URL="postgresql://sutazai:OkI2_5Ob_L5bVwIiyyuSBuWQv@postgres:5432/sutazai"
+ENV NEXTAUTH_SECRET="sutazai-nextauth-secret-2024-local-llm"
 ENV NEXTAUTH_URL="http://localhost:3000"
+ENV OPENAI_API_KEY="sk-local-ollama-key"
+ENV OPENAI_API_HOST="http://ollama:11434"
+ENV OLLAMA_API_BASE="http://ollama:11434/v1"
+ENV OLLAMA_MODEL="llama2"
+
+# Create custom configuration for local LLM
+RUN echo '{"openai": {"apiKey": "sk-local-ollama-key", "baseURL": "http://ollama:11434/v1", "model": "llama2"}}' > /app/next/local-llm-config.json
 
 # Build the application
 RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Create startup script that configures local LLM
+RUN echo '#!/bin/sh\necho "🚀 Starting AgentGPT with Local LLM (Ollama)..."\necho "📡 Ollama URL: $OLLAMA_API_BASE"\necho "🤖 Model: $OLLAMA_MODEL"\nnpm start' > /app/start.sh && chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]

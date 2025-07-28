@@ -1104,6 +1104,61 @@ services:
       - sutazai-network
     restart: unless-stopped
 
+  # JARVIS Super Intelligence System
+  jarvis-agi:
+    container_name: sutazai-jarvis-agi
+    build:
+      context: ./docker/jarvis-agi
+      dockerfile: Dockerfile
+    environment:
+      <<: [*common-variables, *database-config, *ollama-config, *vector-config]
+      JARVIS_MODE: "super_intelligent"
+      JARVIS_WORKSPACE: "/app/workspaces"
+      JARVIS_MODELS_PATH: "/app/models"
+      JARVIS_DATA_PATH: "/app/data"
+      JARVIS_LOGS_PATH: "/app/logs"
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-not_set}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-not_set}
+      HUGGINGFACE_TOKEN: ${HUGGINGFACE_TOKEN:-not_set}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-not_set}
+    ports:
+      - "8080:8080"  # Web Interface
+      - "8081:8081"  # API Server
+      - "8082:8082"  # WebSocket
+      - "8083:8083"  # Gradio Interface
+      - "8084:8084"  # Health Check
+    volumes:
+      - ./data/jarvis:/app/data
+      - ./models:/app/models
+      - agent_workspaces:/app/workspaces
+      - ./logs/jarvis:/app/logs
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8084/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 12G
+        reservations:
+          cpus: '4'
+          memory: 6G
+
 
   # Autonomous Code Improvement
   code-improver:
