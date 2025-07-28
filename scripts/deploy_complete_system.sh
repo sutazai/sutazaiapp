@@ -1407,7 +1407,8 @@ MONITORING_SERVICES=("prometheus" "grafana" "loki" "promtail")
 # AI Agents - organized by deployment priority
 CORE_AI_AGENTS=("autogpt" "crewai" "letta")
 CODE_AGENTS=("aider" "gpt-engineer" "semgrep")  # Removed problematic GPU-dependent services
-GPU_DEPENDENT_AGENTS=("tabbyml" "awesome-code-ai" "code-improver")  # Services with intelligent GPU/CPU modes
+GPU_DEPENDENT_AGENTS=("awesome-code-ai" "code-improver")  # Services with intelligent GPU/CPU modes
+GPU_ONLY_AGENTS=("tabbyml")  # Services that require GPU (skipped in CPU-only mode)
 PROBLEMATIC_AGENTS=()  # All issues resolved with proper research-based solutions
 WORKFLOW_AGENTS=("langflow" "flowise" "n8n" "dify" "bigagi")
 SPECIALIZED_AGENTS=("agentgpt" "privategpt" "llamaindex" "shellgpt" "pentestgpt" "finrobot" "realtimestt")
@@ -1481,48 +1482,59 @@ detect_gpu_availability() {
 }
 
 configure_gpu_environment() {
-    log_info "🔧 Configuring GPU environment variables..."
+    log_info "🔧 Configuring intelligent GPU/CPU environment..."
     
     case "$GPU_SUPPORT_LEVEL" in
         "full")
-            # Full GPU support - enable all GPU features
+            # 🚀 SUPER INTELLIGENT GPU MODE
             export TABBY_IMAGE="tabbyml/tabby:latest"
             export TABBY_DEVICE="cuda"
             export GPU_COUNT="1"
             export COMPOSE_FILE="docker-compose.yml:docker-compose.gpu.yml"
             
-            # PyTorch GPU configuration
+            # Advanced GPU optimizations
             export PYTORCH_CUDA_ALLOC_CONF="max_split_size_mb:512"
             export TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"
             export PYTORCH_CPU_ONLY="false"
+            export TABBY_GPU_ENABLED="true"
             
-            log_success "✅ GPU environment configured for full acceleration"
-            log_info "   → Using GPU-enhanced Docker Compose configuration"
+            log_success "🚀 SUPER INTELLIGENT GPU MODE ACTIVATED"
+            log_info "   → GPU-accelerated TabbyML with CUDA support"
+            log_info "   → PyTorch GPU acceleration enabled"
+            log_info "   → Using optimized GPU Docker Compose configuration"
             ;;
         "partial")
-            # Partial GPU support - enable what we can
-            export TABBY_IMAGE="tabbyml/tabby:v0.12.0"  # Last known working version
+            # ⚡ HYBRID GPU/CPU MODE
+            export TABBY_IMAGE="tabbyml/tabby:v0.12.0"  # Stable GPU version
             export TABBY_DEVICE="cuda"
             export GPU_COUNT="1"
             export COMPOSE_FILE="docker-compose.yml:docker-compose.gpu.yml"
             export PYTORCH_CPU_ONLY="false"
+            export TABBY_GPU_ENABLED="true"
             
-            log_success "✅ GPU environment configured for partial acceleration"
-            log_warn "   → Some services may fallback to CPU if GPU fails"
+            log_success "⚡ HYBRID GPU/CPU MODE ACTIVATED"
+            log_info "   → Using stable TabbyML GPU version"
+            log_warn "   → Some services may gracefully fallback to CPU if needed"
             ;;
         "none"|*)
-            # CPU-only mode
-            export TABBY_IMAGE="tabbyml/tabby:latest"
+            # 🧠 SUPER INTELLIGENT CPU-ONLY MODE
             export TABBY_DEVICE="cpu"
             export GPU_COUNT="0"
-            export COMPOSE_FILE="docker-compose.yml"
+            export COMPOSE_FILE="docker-compose.yml:docker-compose.cpu-only.yml"
+            export TABBY_GPU_ENABLED="false"
+            export TABBY_SKIP_DEPLOY="true"  # Skip TabbyML in CPU mode due to CUDA issues
             
-            # CPU optimizations
+            # Advanced CPU optimizations
             export OMP_NUM_THREADS=$(nproc)
             export PYTORCH_CPU_ONLY="true"
+            export CUDA_VISIBLE_DEVICES=""
             
-            log_success "✅ CPU environment configured for optimal performance"
-            log_info "   → Using CPU-optimized Docker Compose configuration"
+            log_success "🧠 SUPER INTELLIGENT CPU-ONLY MODE ACTIVATED"
+            log_info "   → PyTorch CPU-only optimization enabled"
+            log_info "   → Awesome-Code-AI and Code-Improver optimized for CPU"
+            log_warn "   → TabbyML skipped due to persistent CUDA dependency issues"
+            log_info "   → Alternative: Use TabbyML VSCode extension or local installation"
+            log_info "   → Install: code --install-extension TabbyML.vscode-tabby"
             ;;
     esac
     
@@ -6904,22 +6916,50 @@ main_deployment() {
         "full")
             log_info "🚀 Deploying code agents with FULL GPU acceleration..."
             deploy_service_group "GPU-Accelerated Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            # Deploy GPU-only services
+            log_info "🚀 Deploying GPU-only code completion services..."
+            deploy_service_group "GPU-Only Code Agents" "${GPU_ONLY_AGENTS[@]}"
             ;;
         "partial")
             log_info "⚡ Deploying code agents with PARTIAL GPU support..."
             deploy_service_group "Hybrid GPU/CPU Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            # Deploy GPU-only services with fallback
+            log_info "⚡ Deploying GPU-only services (may fallback to alternatives)..."
+            deploy_service_group "GPU-Only Code Agents" "${GPU_ONLY_AGENTS[@]}"
             ;;
         "none"|*)
             log_info "🔧 Deploying code agents in CPU-OPTIMIZED mode..."
             deploy_service_group "CPU-Optimized Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            # Skip GPU-only services
+            log_info "⚠️  Skipping GPU-only services in CPU mode:"
+            for service in "${GPU_ONLY_AGENTS[@]}"; do
+                log_info "   • $service: Use VSCode extension or local installation"
+            done
             ;;
     esac
     
     # Show GPU configuration summary
     log_info "🎯 Active GPU Configuration:"
     log_info "   • GPU Support Level: $GPU_SUPPORT_LEVEL"
-    log_info "   • TabbyML Device: $TABBY_DEVICE"
     log_info "   • PyTorch Mode: ${PYTORCH_CPU_ONLY:-GPU}"
+    log_info "   • Compose Files: $COMPOSE_FILE"
+    log_info "   • CPU Cores: ${OMP_NUM_THREADS:-auto}"
+    
+    # Provide intelligent guidance
+    case "$GPU_SUPPORT_LEVEL" in
+        "full"|"partial")
+            log_info "💡 GPU Mode Notes:"
+            log_info "   • TabbyML service will be available at http://localhost:8093"
+            log_info "   • First startup downloads models (~2-5 minutes)"
+            log_info "   • Monitor with: docker logs sutazai-tabbyml"
+            ;;
+        "none"|*)
+            log_info "💡 CPU Mode Alternatives:"
+            log_info "   • TabbyML VSCode: code --install-extension TabbyML.vscode-tabby"
+            log_info "   • Continue.dev: Alternative code completion tool"
+            log_info "   • GitHub Copilot: Commercial alternative"
+            ;;
+    esac
     sleep 10
     
     deploy_service_group "Workflow Automation Agents" "${WORKFLOW_AGENTS[@]}"
