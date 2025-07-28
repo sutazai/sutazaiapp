@@ -1,0 +1,11 @@
+# SutazAI Port-Optimized Docker Compose Override
+# Auto-generated to resolve port conflicts
+version: '3.8'
+
+services:
+  redis:
+    ports:
+      - "6380:6379"
+  postgres:
+    ports:
+      - "5433:5432"

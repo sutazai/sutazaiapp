@@ -2,130 +2,121 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install essential system dependencies only
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     build-essential \
     ffmpeg \
-    alsa-utils \
     portaudio19-dev \
-    pulseaudio \
-    nodejs \
-    npm \
     tesseract-ocr \
     libtesseract-dev \
-    poppler-utils \
-    pandoc \
     wget \
-    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone and setup Dipeshpal's Jarvis AI (Core Framework)
-RUN git clone https://github.com/Dipeshpal/Jarvis_AI.git jarvis-core
-WORKDIR /app/jarvis-core
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir jarvis-ai
-
-# Clone Microsoft's JARVIS (Advanced Multi-Model Orchestration)
-WORKDIR /app
-RUN git clone https://github.com/microsoft/JARVIS.git microsoft-jarvis
-WORKDIR /app/microsoft-jarvis
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Clone DaniloFalcao's Jarvis (Web Interface & File Processing)
-WORKDIR /app
-RUN git clone https://github.com/danilofalcao/jarvis.git web-jarvis
-WORKDIR /app/web-jarvis
-RUN npm install
-RUN pip install --no-cache-dir flask flask-socketio eventlet
-
-# Clone SreejanPersonal's JARVIS-AGI (Multimodal AGI Features)
-WORKDIR /app
-RUN git clone https://github.com/SreejanPersonal/JARVIS-AGI.git jarvis-agi-core
-WORKDIR /app/jarvis-agi-core
-RUN pip install --no-cache-dir -r requirements.txt || echo "Requirements file not found, installing manually..."
-
-# Install additional AI/ML packages for super intelligence
+# Install core AI/ML packages efficiently in stages
+# Stage 1: Core packages
 RUN pip install --no-cache-dir \
-    transformers \
-    torch \
-    torchvision \
-    torchaudio \
-    whisper \
-    speech-recognition \
-    pyttsx3 \
-    opencv-python \
-    Pillow \
-    numpy \
-    pandas \
-    scikit-learn \
-    tensorflow \
-    gradio \
-    huggingface-hub \
-    openai \
-    anthropic \
-    langchain \
-    langchain-community \
-    chromadb \
-    faiss-cpu \
-    sentence-transformers \
-    spacy \
-    nltk \
-    beautifulsoup4 \
-    requests \
-    aiohttp \
-    websockets \
-    fastapi \
-    uvicorn \
-    streamlit \
-    plotly \
-    matplotlib \
-    seaborn \
-    jupyter \
-    ipykernel \
-    python-dotenv \
-    pydantic \
-    typing-extensions \
-    asyncio \
-    concurrent-futures \
-    multiprocessing-logging
+    fastapi==0.104.1 \
+    uvicorn[standard]==0.24.0 \
+    websockets==11.0.2 \
+    requests==2.31.0 \
+    aiohttp==3.9.1 \
+    python-dotenv==1.0.0 \
+    pydantic==2.5.0
 
-# Setup workspace directory
-WORKDIR /app
+# Stage 2: AI/ML Core
+RUN pip install --no-cache-dir \
+    torch==2.1.0 --index-url https://download.pytorch.org/whl/cpu \
+    torchvision==0.16.0 --index-url https://download.pytorch.org/whl/cpu \
+    torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cpu
+
+# Stage 3: NLP and Transformers
+RUN pip install --no-cache-dir \
+    transformers==4.36.0 \
+    sentence-transformers==2.2.2 \
+    openai==1.3.0 \
+    anthropic==0.7.0
+
+# Stage 4: Audio/Speech
+RUN pip install --no-cache-dir \
+    openai-whisper==20231117 \
+    SpeechRecognition==3.10.0 \
+    pyttsx3==2.90
+
+# Stage 5: Vision and Processing
+RUN pip install --no-cache-dir \
+    opencv-python-headless==4.8.1.78 \
+    Pillow==10.1.0 \
+    pytesseract==0.3.10
+
+# Stage 6: Data Science Core
+RUN pip install --no-cache-dir \
+    numpy==1.24.3 \
+    pandas==2.0.3 \
+    scikit-learn==1.3.0
+
+# Stage 7: Vector Databases (lightweight clients only)
+RUN pip install --no-cache-dir \
+    chromadb==0.4.18 \
+    faiss-cpu==1.7.4
+
+# Stage 8: Web Interface
+RUN pip install --no-cache-dir \
+    gradio==4.7.1 \
+    streamlit==1.28.1 \
+    flask==2.3.3 \
+    flask-socketio==5.3.6
+
+# Stage 9: Language Processing
+RUN pip install --no-cache-dir \
+    langchain==0.0.340 \
+    langchain-community==0.0.1 \
+    spacy==3.7.2 \
+    nltk==3.8.1
+
+# Stage 10: Utilities and Extras
+RUN pip install --no-cache-dir \
+    beautifulsoup4==4.12.2 \
+    matplotlib==3.7.2 \
+    seaborn==0.12.2 \
+    plotly==5.17.0 \
+    typing-extensions==4.8.0
+
+# Create workspace and required directories
 RUN mkdir -p workspaces brain engine playground tools logs data models
 
-# Copy our super intelligent Jarvis system
+# Copy our optimized super intelligent Jarvis system
 COPY jarvis_super_system.py .
 COPY jarvis_config.json .
-COPY requirements_super.txt .
-
-# Install super system requirements
-RUN pip install --no-cache-dir -r requirements_super.txt
 
 # Set environment variables for optimal performance
-ENV PYTHONPATH="/app:/app/jarvis-core:/app/microsoft-jarvis:/app/web-jarvis:/app/jarvis-agi-core"
+ENV PYTHONPATH="/app"
 ENV JARVIS_MODE="super_intelligent"
 ENV JARVIS_WORKSPACE="/app/workspaces"
 ENV JARVIS_MODELS_PATH="/app/models"
 ENV JARVIS_DATA_PATH="/app/data"
 ENV JARVIS_LOGS_PATH="/app/logs"
+ENV TRANSFORMERS_CACHE="/app/models/transformers"
+ENV HF_HOME="/app/models/huggingface"
 
 # Expose ports for different services
 EXPOSE 8080 8081 8082 8083 8084
 
-# Create startup script
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8084/health || exit 1
+
+# Create optimized startup script
 RUN echo '#!/bin/bash\n\
-echo "🚀 Starting JARVIS Super Intelligence System..."\n\
-echo "📡 Initializing all AI subsystems..."\n\
-echo "🧠 Core Framework: Dipeshpal Jarvis AI"\n\
-echo "🤖 Multi-Model Orchestration: Microsoft JARVIS"\n\
-echo "🌐 Web Interface: DaniloFalcao Jarvis"\n\
-echo "🧬 AGI Core: SreejanPersonal JARVIS-AGI"\n\
-echo "⚡ Super Intelligence: SutazAI Integration"\n\
+set -e\n\
+echo "🚀 Starting JARVIS Super Intelligence System v2.0..."\n\
+echo "⚡ Optimized for CPU-only deployment with minimal footprint"\n\
+echo "🧠 Advanced AI capabilities with efficient resource usage"\n\
+echo "📡 Multi-service architecture: API, Web UI, Voice, Vision"\n\
+echo "🔧 Integration with Ollama, ChromaDB, FAISS vector stores"\n\
 echo ""\n\
-echo "Starting services in parallel..."\n\
-python jarvis_super_system.py\n\
+exec python jarvis_super_system.py\n\
 ' > /app/start_jarvis.sh && chmod +x /app/start_jarvis.sh
 
 CMD ["/app/start_jarvis.sh"]

@@ -80,7 +80,12 @@
       "Bash(./scripts/system_test.sh:*)",
       "Bash(scripts/live_logs.sh:*)",
       "Bash(/opt/sutazaiapp/scripts/live_logs.sh:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(journalctl:*)",
+      "Bash(./test_simple_fix.sh:*)",
+      "Bash(./test_deployment.sh)",
+      "Bash(check_docker_service_health:*)",
+      "Bash(/dev/null)"
     ],
     "deny": []
   },

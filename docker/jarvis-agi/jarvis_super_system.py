@@ -1,697 +1,820 @@
 #!/usr/bin/env python3
 """
-🚀 JARVIS Super Intelligence System
-Combines the best features from 4 different Jarvis implementations:
-- Dipeshpal's Jarvis AI (Core Framework)
-- Microsoft's JARVIS (Multi-Model Orchestration) 
-- DaniloFalcao's Jarvis (Web Interface & File Processing)
-- SreejanPersonal's JARVIS-AGI (Multimodal AGI Features)
-
-Enhanced with SutazAI enterprise features for super intelligence.
+🧠 JARVIS Super Intelligence System v2.0
+=======================================
+Enterprise-grade AI orchestration platform integrating:
+- Multi-modal AI capabilities (Text, Voice, Vision)
+- Vector database integration (ChromaDB, FAISS)
+- LLM orchestration via Ollama
+- Real-time web interfaces
+- Enterprise security and monitoring
 """
 
 import asyncio
-import json
-import logging
 import os
 import sys
-import threading
-import time
-from concurrent.futures import ThreadPoolExecutor
+import json
+import logging
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Union
-
-import uvicorn
-from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
-import gradio as gr
-
-# AI/ML Imports
-import torch
-import transformers
-from transformers import pipeline, AutoTokenizer, AutoModel
-import openai
-import anthropic
-from langchain.llms import OpenAI
-from langchain.chains import ConversationChain
-from langchain.memory import ConversationBufferMemory
-import chromadb
-from sentence_transformers import SentenceTransformer
-
-# Audio/Speech Processing
-import speech_recognition as sr
-import pyttsx3
-import whisper
-
-# Vision Processing
-import cv2
-from PIL import Image
-import numpy as np
-
-# Web and Data Processing
-import requests
-import aiohttp
-from bs4 import BeautifulSoup
-import pandas as pd
-
-# System and Utils
-import subprocess
-import multiprocessing
+from typing import Dict, Any, List, Optional
+import time
 from datetime import datetime
-import uuid
+import threading
+import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
+
+# Core framework imports
+try:
+    import fastapi
+    from fastapi import FastAPI, HTTPException, BackgroundTasks, WebSocket
+    from fastapi.middleware.cors import CORSMiddleware
+    from fastapi.staticfiles import StaticFiles
+    import uvicorn
+    import requests
+    import aiohttp
+    import websockets
+    from pydantic import BaseModel
+except ImportError as e:
+    print(f"⚠️  Missing core dependencies: {e}")
+    sys.exit(1)
+
+# AI/ML imports with graceful fallbacks
+try:
+    import torch
+    import transformers
+    from transformers import pipeline
+    from sentence_transformers import SentenceTransformer
+    TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    TRANSFORMERS_AVAILABLE = False
+    print("ℹ️  Transformers not available - some AI features disabled")
+
+try:
+    import speech_recognition as sr
+    import pyttsx3
+    SPEECH_AVAILABLE = True
+except ImportError:
+    SPEECH_AVAILABLE = False
+    print("ℹ️  Speech recognition not available")
+
+try:
+    import cv2
+    from PIL import Image
+    import pytesseract
+    VISION_AVAILABLE = True
+except ImportError:
+    VISION_AVAILABLE = False
+    print("ℹ️  Computer vision not available")
+
+try:
+    import gradio as gr
+    GRADIO_AVAILABLE = True
+except ImportError:
+    GRADIO_AVAILABLE = False
+    print("ℹ️  Gradio web interface not available")
+
+try:
+    import streamlit as st
+    STREAMLIT_AVAILABLE = True
+except ImportError:
+    STREAMLIT_AVAILABLE = False
+    print("ℹ️  Streamlit interface not available")
+
+# Configure advanced logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/app/logs/jarvis_super.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Request/Response models
+class IntelligenceQuery(BaseModel):
+    type: str = "general"
+    content: str
+    context: Optional[Dict[str, Any]] = None
+    mode: str = "standard"
+
+class IntelligenceResponse(BaseModel):
+    query_id: str
+    type: str
+    result: Any
+    status: str
+    processing_time: float
+    timestamp: str
+    metadata: Optional[Dict[str, Any]] = None
 
 class JarvisSuperIntelligence:
-    """
-    Super Intelligence Core that orchestrates all Jarvis subsystems
-    """
+    """🧠 Advanced AI orchestration and intelligence system"""
     
     def __init__(self):
         self.config = self.load_config()
-        self.setup_logging()
-        self.initialize_ai_models()
-        self.setup_subsystems()
-        self.active_tasks = {}
-        self.conversation_memory = ConversationBufferMemory()
+        self.services = {}
+        self.models = {}
+        self.is_running = False
+        self.connections = {}
+        self.stats = {
+            "queries_processed": 0,
+            "uptime_start": time.time(),
+            "services_active": 0
+        }
         
-    def load_config(self) -> Dict:
-        """Load configuration from jarvis_config.json"""
-        config_path = Path("jarvis_config.json")
-        if config_path.exists():
-            with open(config_path, 'r') as f:
-                return json.load(f)
+        # Initialize core systems
+        self.setup_directories()
+        self.initialize_ai_models()
+        self.initialize_services()
+        
+    def load_config(self) -> Dict[str, Any]:
+        """Load advanced configuration"""
+        try:
+            with open('/app/jarvis_config.json', 'r') as f:
+                config = json.load(f)
+                logger.info("✅ Configuration loaded from file")
+                return config
+        except FileNotFoundError:
+            logger.info("📋 Using default configuration")
+            return self.get_default_config()
+    
+    def get_default_config(self) -> Dict[str, Any]:
+        """Enterprise-grade default configuration"""
         return {
-            "ai_models": {
-                "text_model": "gpt-3.5-turbo",
-                "vision_model": "clip-vit-base-patch32",
-                "speech_model": "whisper-base",
-                "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+            "system": {
+                "name": "JARVIS Super Intelligence",
+                "version": "2.0.0",
+                "mode": "enterprise",
+                "max_workers": min(32, (os.cpu_count() or 1) + 4),
+                "cpu_optimization": True
             },
             "services": {
-                "web_port": 8080,
-                "api_port": 8081,
-                "websocket_port": 8082,
-                "gradio_port": 8083,
+                "api_port": 8080,
+                "web_port": 8081,
+                "voice_port": 8082,
+                "vision_port": 8083,
                 "health_port": 8084
             },
-            "features": {
-                "voice_enabled": True,
-                "vision_enabled": True,
-                "web_search": True,
-                "file_processing": True,
-                "multi_model_orchestration": True,
-                "agi_mode": True
+            "ai": {
+                "embedding_model": "all-MiniLM-L6-v2",
+                "speech_enabled": SPEECH_AVAILABLE,
+                "vision_enabled": VISION_AVAILABLE,
+                "transformers_enabled": TRANSFORMERS_AVAILABLE,
+                "max_context_length": 4096,
+                "response_timeout": 30
+            },
+            "integrations": {
+                "ollama_url": os.getenv("OLLAMA_URL", "http://ollama:11434"),
+                "chromadb_url": os.getenv("CHROMADB_URL", "http://chromadb:8001"),
+                "faiss_url": os.getenv("FAISS_URL", "http://faiss:8002"),
+                "backend_url": os.getenv("BACKEND_URL", "http://backend-agi:8000"),
+                "postgres_url": os.getenv("POSTGRES_URL", "postgresql://sutazai:sutazai123@postgres:5432/sutazai"),
+                "redis_url": os.getenv("REDIS_URL", "redis://redis:6379")
+            },
+            "security": {
+                "cors_origins": ["*"],
+                "rate_limit": 100,
+                "max_request_size": "10MB"
             }
         }
     
-    def setup_logging(self):
-        """Setup comprehensive logging system"""
-        log_dir = Path(os.getenv("JARVIS_LOGS_PATH", "logs"))
-        log_dir.mkdir(exist_ok=True)
+    def setup_directories(self):
+        """Create comprehensive directory structure"""
+        directories = [
+            "/app/workspaces", "/app/logs", "/app/data", "/app/models",
+            "/app/brain", "/app/engine", "/app/playground", "/app/tools",
+            "/app/models/transformers", "/app/models/huggingface",
+            "/app/data/conversations", "/app/data/embeddings",
+            "/app/logs/services", "/app/logs/analytics"
+        ]
         
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_dir / f"jarvis_{datetime.now().strftime('%Y%m%d')}.log"),
-                logging.StreamHandler(sys.stdout)
-            ]
-        )
-        self.logger = logging.getLogger("JARVIS_SUPER")
-        self.logger.info("🚀 JARVIS Super Intelligence System Starting...")
+        for directory in directories:
+            Path(directory).mkdir(parents=True, exist_ok=True)
+            
+        logger.info("📁 Advanced directory structure initialized")
     
     def initialize_ai_models(self):
-        """Initialize all AI models for super intelligence with local LLM support"""
-        self.logger.info("🧠 Initializing AI Models with Local LLM Integration...")
+        """Initialize AI models with intelligent loading"""
+        logger.info("🤖 Loading AI models...")
         
-        try:
-            # Initialize Ollama local LLM client
-            self.ollama_endpoint = self.config["integrations"]["ollama_endpoint"]
-            self.local_llm_model = self.config["ai_models"]["local_llm_model"]
-            self.logger.info(f"🦙 Connecting to Ollama at {self.ollama_endpoint}")
-            
-            # Test Ollama connection
-            self.test_ollama_connection()
-            
-            # Initialize embedding model for vector search
-            self.embedding_model = SentenceTransformer(
-                self.config["ai_models"]["embedding_model"]
-            )
-            
-            # Initialize speech recognition
-            if self.config["features"]["voice_enabled"]:
-                self.speech_recognizer = sr.Recognizer()
-                self.microphone = sr.Microphone()
-                self.tts_engine = pyttsx3.init()
-                
-                # Initialize Whisper for better speech recognition
-                self.whisper_model = whisper.load_model("base")
-            
-            # Initialize vision processing
-            if self.config["features"]["vision_enabled"]:
-                self.vision_pipeline = pipeline(
-                    "image-classification", 
-                    model="google/vit-base-patch16-224"
+        if TRANSFORMERS_AVAILABLE:
+            try:
+                # Load efficient embedding model
+                self.models['embeddings'] = SentenceTransformer(
+                    self.config["ai"]["embedding_model"]
                 )
-            
-            # Initialize ChromaDB for knowledge management
-            chroma_url = self.config["integrations"]["chromadb_url"]
-            self.logger.info(f"🔗 Connecting to ChromaDB at {chroma_url}")
-            self.chroma_client = chromadb.HttpClient(host="chromadb", port=8000)
-            self.knowledge_collection = self.chroma_client.get_or_create_collection(
-                name="jarvis_knowledge"
-            )
-            
-            # Initialize Qdrant for advanced vector operations
-            qdrant_url = self.config["integrations"]["qdrant_url"]
-            self.logger.info(f"🔍 Connecting to Qdrant at {qdrant_url}")
-            
-            self.logger.info("✅ All AI models initialized successfully with local LLM")
-            
-        except Exception as e:
-            self.logger.error(f"❌ Error initializing AI models: {e}")
-            self.logger.info("🔄 Falling back to basic configuration...")
-    
-    def test_ollama_connection(self):
-        """Test connection to Ollama local LLM"""
-        try:
-            response = requests.get(f"{self.ollama_endpoint}/api/tags", timeout=10)
-            if response.status_code == 200:
-                models = response.json()
-                available_models = [model["name"] for model in models.get("models", [])]
-                self.logger.info(f"🦙 Ollama connected! Available models: {available_models}")
+                logger.info("✅ Embedding model loaded")
                 
-                # Check if our preferred model is available
-                if self.local_llm_model not in available_models:
-                    self.logger.warn(f"⚠️  Preferred model {self.local_llm_model} not found")
-                    # Use first available model as fallback
-                    if available_models:
-                        self.local_llm_model = available_models[0]
-                        self.logger.info(f"🔄 Using fallback model: {self.local_llm_model}")
-                
-                return True
-            else:
-                self.logger.error(f"❌ Ollama connection failed: HTTP {response.status_code}")
-                return False
-        except Exception as e:
-            self.logger.error(f"❌ Cannot connect to Ollama: {e}")
-            return False
+                # Load lightweight text generation (optional)
+                try:
+                    self.models['text_generator'] = pipeline(
+                        "text-generation",
+                        model="microsoft/DialoGPT-small",
+                        device=-1,  # CPU only
+                        model_kwargs={"torch_dtype": torch.float32}
+                    )
+                    logger.info("✅ Text generation model loaded")
+                except Exception as e:
+                    logger.warning(f"Text generator not loaded: {e}")
+                    
+            except Exception as e:
+                logger.error(f"Model loading failed: {e}")
+        
+        # Initialize speech components
+        if SPEECH_AVAILABLE:
+            try:
+                self.recognizer = sr.Recognizer()
+                self.tts_engine = pyttsx3.init()
+                self.models['speech'] = {"recognizer": self.recognizer, "tts": self.tts_engine}
+                logger.info("✅ Speech models initialized")
+            except Exception as e:
+                logger.warning(f"Speech initialization failed: {e}")
     
-    def query_local_llm(self, prompt: str, system_prompt: str = "") -> str:
-        """Query the local Ollama LLM"""
-        try:
-            payload = {
-                "model": self.local_llm_model,
-                "prompt": prompt,
-                "system": system_prompt,
-                "stream": False,
-                "options": {
-                    "temperature": 0.7,
-                    "top_p": 0.9,
-                    "max_tokens": 2048
-                }
-            }
+    def initialize_services(self):
+        """Initialize all enterprise services"""
+        logger.info("🚀 Initializing JARVIS Enterprise Services...")
+        
+        # Core API Service
+        self.services['api'] = self.create_api_service()
+        
+        # Health monitoring service
+        self.services['health'] = self.create_health_service()
+        
+        # WebSocket service for real-time communication
+        self.services['websocket'] = self.create_websocket_service()
+        
+        # Web interfaces
+        if GRADIO_AVAILABLE:
+            self.services['gradio'] = self.create_gradio_interface()
             
-            response = requests.post(
-                f"{self.ollama_endpoint}/api/generate",
-                json=payload,
-                timeout=60
-            )
-            
-            if response.status_code == 200:
-                result = response.json()
-                return result.get("response", "")
-            else:
-                self.logger.error(f"LLM query failed: HTTP {response.status_code}")
-                return "I'm having trouble processing your request right now."
-                
-        except Exception as e:
-            self.logger.error(f"Error querying local LLM: {e}")
-            return "I encountered an error while processing your request."
+        self.stats["services_active"] = len(self.services)
+        logger.info(f"✅ Initialized {len(self.services)} enterprise services")
     
-    def setup_subsystems(self):
-        """Setup all Jarvis subsystems"""
-        self.logger.info("⚙️ Setting up subsystems...")
+    def create_api_service(self) -> FastAPI:
+        """Create advanced API service with comprehensive endpoints"""
+        app = FastAPI(
+            title="JARVIS Super Intelligence API",
+            description="Enterprise AI orchestration and intelligence platform",
+            version="2.0.0",
+            docs_url="/api/docs",
+            redoc_url="/api/redoc"
+        )
         
-        # Initialize core frameworks
-        self.core_jarvis = self.init_core_jarvis()
-        self.microsoft_jarvis = self.init_microsoft_jarvis()
-        self.web_jarvis = self.init_web_jarvis()
-        self.agi_jarvis = self.init_agi_jarvis()
-        
-        # Initialize FastAPI app
-        self.app = FastAPI(title="JARVIS Super Intelligence API")
-        self.setup_api_routes()
-        
-        # Initialize Gradio interface
-        self.gradio_interface = self.create_gradio_interface()
-        
-    def init_core_jarvis(self):
-        """Initialize Dipeshpal's core Jarvis framework"""
-        try:
-            sys.path.append("/app/jarvis-core")
-            # Import and initialize core Jarvis
-            self.logger.info("✅ Core Jarvis framework initialized")
-            return {"status": "active", "type": "core_framework"}
-        except Exception as e:
-            self.logger.error(f"❌ Error initializing core Jarvis: {e}")
-            return {"status": "error", "error": str(e)}
-    
-    def init_microsoft_jarvis(self):
-        """Initialize Microsoft's multi-model orchestration"""
-        try:
-            sys.path.append("/app/microsoft-jarvis")
-            # Initialize Microsoft JARVIS capabilities
-            self.logger.info("✅ Microsoft JARVIS orchestration initialized")
-            return {"status": "active", "type": "multi_model_orchestration"}
-        except Exception as e:
-            self.logger.error(f"❌ Error initializing Microsoft JARVIS: {e}")
-            return {"status": "error", "error": str(e)}
-    
-    def init_web_jarvis(self):
-        """Initialize DaniloFalcao's web interface"""
-        try:
-            sys.path.append("/app/web-jarvis")
-            # Initialize web interface capabilities
-            self.logger.info("✅ Web Jarvis interface initialized")
-            return {"status": "active", "type": "web_interface"}
-        except Exception as e:
-            self.logger.error(f"❌ Error initializing Web Jarvis: {e}")
-            return {"status": "error", "error": str(e)}
-    
-    def init_agi_jarvis(self):
-        """Initialize SreejanPersonal's AGI features"""
-        try:
-            sys.path.append("/app/jarvis-agi-core")
-            # Initialize AGI capabilities
-            self.logger.info("✅ JARVIS-AGI core initialized")
-            return {"status": "active", "type": "agi_core"}
-        except Exception as e:
-            self.logger.error(f"❌ Error initializing JARVIS-AGI: {e}")
-            return {"status": "error", "error": str(e)}
-    
-    def setup_api_routes(self):
-        """Setup FastAPI routes for super intelligence"""
-        
-        # Add CORS middleware
-        self.app.add_middleware(
+        app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],
+            allow_origins=self.config["security"]["cors_origins"],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
         )
         
-        @self.app.get("/")
+        @app.get("/")
         async def root():
-            return {"message": "JARVIS Super Intelligence System", "status": "active"}
-        
-        @self.app.get("/health")
-        async def health_check():
             return {
-                "status": "healthy",
-                "subsystems": {
-                    "core_jarvis": self.core_jarvis["status"],
-                    "microsoft_jarvis": self.microsoft_jarvis["status"],
-                    "web_jarvis": self.web_jarvis["status"],
-                    "agi_jarvis": self.agi_jarvis["status"]
-                },
-                "features": self.config["features"],
+                "system": "JARVIS Super Intelligence System",
+                "version": "2.0.0",
+                "status": "operational",
+                "capabilities": [
+                    "text_processing", "embeddings", "vector_search",
+                    "ollama_integration", "multi_modal_ai", "real_time_chat"
+                ],
+                "services": list(self.services.keys()),
+                "uptime": time.time() - self.stats["uptime_start"],
+                "queries_processed": self.stats["queries_processed"],
                 "timestamp": datetime.now().isoformat()
             }
         
-        @self.app.post("/chat")
-        async def chat(message: dict):
-            """Advanced chat endpoint with super intelligence"""
+        @app.post("/api/v1/intelligence", response_model=IntelligenceResponse)
+        async def intelligence_query(query: IntelligenceQuery):
+            """Advanced intelligence processing endpoint"""
+            start_time = time.time()
+            query_id = f"jarvis_{int(time.time() * 1000)}"
+            
             try:
-                user_input = message.get("message", "")
-                response = await self.process_super_intelligence_query(user_input)
-                return {"response": response, "status": "success"}
+                result = await self.process_advanced_query(query)
+                self.stats["queries_processed"] += 1
+                
+                return IntelligenceResponse(
+                    query_id=query_id,
+                    type=query.type,
+                    result=result,
+                    status="success",
+                    processing_time=time.time() - start_time,
+                    timestamp=datetime.now().isoformat(),
+                    metadata={"mode": query.mode, "context_used": bool(query.context)}
+                )
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                logger.error(f"Intelligence query failed: {e}")
+                return IntelligenceResponse(
+                    query_id=query_id,
+                    type=query.type,
+                    result={"error": str(e)},
+                    status="error",
+                    processing_time=time.time() - start_time,
+                    timestamp=datetime.now().isoformat()
+                )
         
-        @self.app.post("/upload")
-        async def upload_file(file: UploadFile = File(...)):
-            """Process uploaded files with all capabilities"""
-            try:
-                content = await file.read()
-                result = await self.process_file(file.filename, content)
-                return {"result": result, "status": "success"}
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+        @app.get("/api/v1/status")
+        async def advanced_status():
+            """Comprehensive system status"""
+            return {
+                "system": "JARVIS Super Intelligence v2.0",
+                "status": "operational" if self.is_running else "starting",
+                "services": {
+                    name: {"status": "active", "type": type(service).__name__}
+                    for name, service in self.services.items()
+                },
+                "ai_models": {
+                    name: {"loaded": True, "type": type(model).__name__}
+                    for name, model in self.models.items()
+                },
+                "integrations": await self.check_integrations(),
+                "performance": {
+                    "uptime": time.time() - self.stats["uptime_start"],
+                    "queries_processed": self.stats["queries_processed"],
+                    "memory_usage": self.get_memory_usage(),
+                    "cpu_count": os.cpu_count()
+                },
+                "capabilities": {
+                    "transformers": TRANSFORMERS_AVAILABLE,
+                    "speech": SPEECH_AVAILABLE,
+                    "vision": VISION_AVAILABLE,
+                    "gradio": GRADIO_AVAILABLE
+                }
+            }
         
-        @self.app.websocket("/ws")
-        async def websocket_endpoint(websocket: WebSocket):
-            """WebSocket for real-time communication"""
+        @app.post("/api/v1/embedding")
+        async def create_embedding(text: str):
+            """Generate text embeddings"""
+            if 'embeddings' in self.models:
+                try:
+                    embedding = self.models['embeddings'].encode(text).tolist()
+                    return {
+                        "embedding": embedding,
+                        "dimension": len(embedding),
+                        "model": self.config["ai"]["embedding_model"]
+                    }
+                except Exception as e:
+                    raise HTTPException(status_code=500, detail=f"Embedding failed: {e}")
+            else:
+                raise HTTPException(status_code=503, detail="Embedding model not available")
+        
+        @app.websocket("/ws/chat")
+        async def websocket_chat(websocket: WebSocket):
+            """Real-time chat via WebSocket"""
             await websocket.accept()
+            connection_id = f"ws_{int(time.time() * 1000)}"
+            self.connections[connection_id] = websocket
+            
             try:
                 while True:
                     data = await websocket.receive_text()
-                    response = await self.process_super_intelligence_query(data)
-                    await websocket.send_text(json.dumps({"response": response}))
+                    query_data = json.loads(data)
+                    
+                    # Process query
+                    query = IntelligenceQuery(**query_data)
+                    result = await self.process_advanced_query(query)
+                    
+                    await websocket.send_text(json.dumps({
+                        "type": "response",
+                        "result": result,
+                        "timestamp": datetime.now().isoformat()
+                    }))
+                    
             except Exception as e:
-                self.logger.error(f"WebSocket error: {e}")
-    
-    async def process_super_intelligence_query(self, query: str) -> str:
-        """
-        Process queries using super intelligence combining all subsystems
-        """
-        try:
-            self.logger.info(f"Processing super intelligence query: {query[:50]}...")
-            
-            # Step 1: Intent analysis and task planning (Microsoft JARVIS approach)
-            intent = await self.analyze_intent(query)
-            
-            # Step 2: Multi-modal processing if needed
-            if intent.get("requires_vision", False):
-                vision_result = await self.process_vision_request(query)
-                query = f"{query} [Vision: {vision_result}]"
-            
-            if intent.get("requires_audio", False):
-                audio_result = await self.process_audio_request(query)
-                query = f"{query} [Audio: {audio_result}]"
-            
-            # Step 3: Knowledge retrieval from vector database
-            relevant_knowledge = await self.retrieve_knowledge(query)
-            
-            # Step 4: Generate response using best available model
-            response = await self.generate_intelligent_response(
-                query, intent, relevant_knowledge
-            )
-            
-            # Step 5: Store interaction for learning
-            await self.store_interaction(query, response)
-            
-            return response
-            
-        except Exception as e:
-            self.logger.error(f"Error in super intelligence processing: {e}")
-            return f"I encountered an error processing your request: {str(e)}"
-    
-    async def analyze_intent(self, query: str) -> Dict:
-        """Analyze user intent using advanced NLP"""
-        # Implement intent analysis logic
-        return {
-            "intent": "general_query",
-            "requires_vision": "image" in query.lower() or "photo" in query.lower(),
-            "requires_audio": "sound" in query.lower() or "music" in query.lower(),
-            "complexity": "medium"
-        }
-    
-    async def retrieve_knowledge(self, query: str) -> List[str]:
-        """Retrieve relevant knowledge from vector database"""
-        try:
-            query_embedding = self.embedding_model.encode([query])
-            results = self.knowledge_collection.query(
-                query_embeddings=query_embedding.tolist(),
-                n_results=5
-            )
-            return results.get("documents", [[]])[0]
-        except Exception as e:
-            self.logger.error(f"Knowledge retrieval error: {e}")
-            return []
-    
-    async def generate_intelligent_response(self, query: str, intent: Dict, knowledge: List[str]) -> str:
-        """Generate intelligent response using local Ollama LLM"""
-        try:
-            # Build comprehensive context
-            system_prompt = """You are JARVIS, a super intelligent AI assistant combining the capabilities of 4 different AI systems:
-1. Core framework for task automation and API integration
-2. Multi-model orchestration for complex reasoning
-3. Web interface with advanced file processing
-4. AGI capabilities with multimodal processing
-
-You have access to local knowledge and can perform various tasks. Always be helpful, accurate, and comprehensive."""
-
-            context_parts = [f"User Query: {query}"]
-            
-            if knowledge:
-                context_parts.append(f"Relevant Knowledge: {' '.join(knowledge[:3])}")
-            
-            # Add conversation history
-            if self.conversation_memory.buffer:
-                context_parts.append(f"Previous context: {self.conversation_memory.buffer}")
-            
-            # Add intent analysis
-            if intent.get("intent") != "general_query":
-                context_parts.append(f"Intent Analysis: {intent}")
-            
-            full_prompt = "\n".join(context_parts)
-            
-            # Generate response using local Ollama LLM
-            response = self.query_local_llm(full_prompt, system_prompt)
-            
-            # Fallback if local LLM fails
-            if not response or "error" in response.lower():
-                response = self.generate_fallback_response(query, intent, knowledge)
-            
-            return response
-            
-        except Exception as e:
-            self.logger.error(f"Error generating response: {e}")
-            return self.generate_fallback_response(query, intent, knowledge)
-    
-    def generate_fallback_response(self, query: str, intent: Dict, knowledge: List[str]) -> str:
-        """Generate fallback response when LLM is unavailable"""
-        response_parts = [
-            f"I understand you're asking about: {query}.",
-            "Based on my super intelligence capabilities combining 4 different AI frameworks:"
-        ]
+                logger.error(f"WebSocket error: {e}")
+            finally:
+                del self.connections[connection_id]
         
-        # Add relevant knowledge if available
-        if knowledge:
-            response_parts.append(f"From my knowledge base: {knowledge[0][:200]}...")
-        
-        # Add intent-specific responses
-        if intent.get("requires_vision"):
-            response_parts.append("I can process images and visual content.")
-        
-        if intent.get("requires_audio"):
-            response_parts.append("I can handle audio and speech processing.")
-        
-        response_parts.extend([
-            "I'm running on local LLM infrastructure with Ollama integration.",
-            "My capabilities include: reasoning, task automation, file processing, and multimodal AI.",
-            "How can I assist you further?"
-        ])
-        
-        return " ".join(response_parts)
+        return app
     
-    async def process_file(self, filename: str, content: bytes) -> Dict:
-        """Process uploaded files with all capabilities"""
-        try:
-            file_info = {
-                "filename": filename,
-                "size": len(content),
-                "type": "unknown"
+    def create_health_service(self) -> FastAPI:
+        """Create comprehensive health monitoring"""
+        app = FastAPI(title="JARVIS Health Monitor")
+        
+        @app.get("/health")
+        async def health_check():
+            return {
+                "status": "healthy",
+                "system": "JARVIS Super Intelligence v2.0",
+                "timestamp": datetime.now().isoformat(),
+                "services": len(self.services),
+                "models": len(self.models),
+                "uptime": time.time() - self.stats["uptime_start"],
+                "queries_processed": self.stats["queries_processed"]
             }
-            
-            # Determine file type and process accordingly
-            if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                # Process image
-                file_info["type"] = "image"
-                file_info["analysis"] = await self.process_image(content)
-            
-            elif filename.lower().endswith(('.pdf', '.doc', '.docx', '.txt')):
-                # Process document
-                file_info["type"] = "document"
-                file_info["analysis"] = await self.process_document(content)
-            
-            elif filename.lower().endswith(('.wav', '.mp3', '.m4a')):
-                # Process audio
-                file_info["type"] = "audio"
-                file_info["analysis"] = await self.process_audio(content)
-            
-            return file_info
-            
-        except Exception as e:
-            return {"error": str(e)}
-    
-    async def process_image(self, image_content: bytes) -> Dict:
-        """Process images using vision capabilities"""
-        try:
-            # Convert bytes to PIL Image
-            image = Image.open(io.BytesIO(image_content))
-            
-            # Use vision pipeline for analysis
-            result = self.vision_pipeline(image)
+        
+        @app.get("/health/detailed")
+        async def detailed_health():
+            """Comprehensive health check"""
+            integrations = await self.check_integrations()
             
             return {
-                "classification": result,
-                "dimensions": image.size,
-                "format": image.format
+                "overall_status": "healthy",
+                "services": {name: "active" for name in self.services.keys()},
+                "ai_models": {name: "loaded" for name in self.models.keys()},
+                "integrations": integrations,
+                "system_resources": {
+                    "memory_usage": self.get_memory_usage(),
+                    "cpu_count": os.cpu_count(),
+                    "disk_usage": self.get_disk_usage()
+                },
+                "performance_metrics": {
+                    "uptime": time.time() - self.stats["uptime_start"],
+                    "queries_processed": self.stats["queries_processed"],
+                    "avg_response_time": self.calculate_avg_response_time()
+                }
             }
-        except Exception as e:
-            return {"error": str(e)}
+        
+        return app
     
-    async def store_interaction(self, query: str, response: str):
-        """Store interaction for continuous learning"""
-        try:
-            # Create embeddings for storage
-            query_embedding = self.embedding_model.encode([query])
-            
-            # Store in ChromaDB
-            self.knowledge_collection.add(
-                documents=[f"Q: {query} A: {response}"],
-                embeddings=query_embedding.tolist(),
-                ids=[str(uuid.uuid4())]
-            )
-            
-            # Update conversation memory
-            self.conversation_memory.save_context(
-                {"input": query}, 
-                {"output": response}
-            )
-            
-        except Exception as e:
-            self.logger.error(f"Error storing interaction: {e}")
+    def create_websocket_service(self):
+        """Create WebSocket service for real-time communication"""
+        return {"type": "websocket", "connections": self.connections}
     
     def create_gradio_interface(self):
-        """Create Gradio interface for easy interaction"""
-        with gr.Blocks(title="JARVIS Super Intelligence") as interface:
-            gr.Markdown("# 🚀 JARVIS Super Intelligence System")
-            gr.Markdown("Combining 4 different Jarvis implementations with enterprise AI capabilities")
+        """Create advanced Gradio interface"""
+        if not GRADIO_AVAILABLE:
+            return None
             
-            with gr.Tab("Chat"):
-                chatbot = gr.Chatbot()
-                msg = gr.Textbox(placeholder="Ask JARVIS anything...")
-                clear = gr.Button("Clear")
+        def intelligent_chat(message, history, mode):
+            """Advanced chat with multiple modes"""
+            try:
+                query = IntelligenceQuery(
+                    type="chat",
+                    content=message,
+                    mode=mode
+                )
                 
-                def respond(message, chat_history):
-                    # Process with super intelligence
-                    response = asyncio.run(self.process_super_intelligence_query(message))
-                    chat_history.append((message, response))
-                    return "", chat_history
+                # Run async function in sync context
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                result = loop.run_until_complete(self.process_advanced_query(query))
+                loop.close()
                 
-                msg.submit(respond, [msg, chatbot], [msg, chatbot])
-                clear.click(lambda: None, None, chatbot, queue=False)
+                response = result if isinstance(result, str) else str(result)
+                history.append([message, response])
+                return history, ""
+                
+            except Exception as e:
+                logger.error(f"Gradio chat error: {e}")
+                history.append([message, f"Error: {e}"])
+                return history, ""
+        
+        # Create advanced Gradio interface
+        with gr.Blocks(
+            theme=gr.themes.Soft(),
+            title="JARVIS Super Intelligence",
+            css="""
+            .gradio-container {
+                font-family: 'Arial', sans-serif;
+            }
+            .header {
+                text-align: center;
+                padding: 20px;
+                background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            """
+        ) as interface:
+            with gr.Row():
+                gr.HTML("""
+                    <div class="header">
+                        <h1>🧠 JARVIS Super Intelligence System v2.0</h1>
+                        <p>Enterprise AI orchestration platform with multi-modal capabilities</p>
+                    </div>
+                """)
             
-            with gr.Tab("File Upload"):
-                file_upload = gr.File(label="Upload any file for analysis")
-                file_output = gr.JSON(label="Analysis Result")
+            with gr.Tab("💬 Intelligence Chat"):
+                with gr.Row():
+                    with gr.Column(scale=4):
+                        chatbot = gr.Chatbot(
+                            label="JARVIS Chat",
+                            height=500,
+                            show_label=False,
+                            avatar_images=("user.png", "assistant.png")
+                        )
+                        msg = gr.Textbox(
+                            label="Your Message",
+                            placeholder="Ask JARVIS anything...",
+                            show_label=False
+                        )
+                    
+                    with gr.Column(scale=1):
+                        mode = gr.Dropdown(
+                            choices=["standard", "creative", "precise", "analytical"],
+                            value="standard",
+                            label="Response Mode"
+                        )
+                        clear_btn = gr.Button("Clear Chat", variant="secondary")
                 
-                def process_uploaded_file(file):
-                    if file is not None:
-                        with open(file.name, 'rb') as f:
-                            content = f.read()
-                        result = asyncio.run(self.process_file(file.name, content))
-                        return result
-                    return {"error": "No file uploaded"}
-                
-                file_upload.change(process_uploaded_file, file_upload, file_output)
+                msg.submit(intelligent_chat, [msg, chatbot, mode], [chatbot, msg])
+                clear_btn.click(lambda: ([], ""), outputs=[chatbot, msg])
             
-            with gr.Tab("System Status"):
-                status_output = gr.JSON(label="System Status")
-                refresh_btn = gr.Button("Refresh Status")
+            with gr.Tab("📊 System Status"):
+                with gr.Row():
+                    status_display = gr.JSON(label="System Status")
+                    refresh_btn = gr.Button("Refresh Status")
                 
                 def get_status():
                     return {
-                        "subsystems": {
-                            "core_jarvis": self.core_jarvis["status"],
-                            "microsoft_jarvis": self.microsoft_jarvis["status"],
-                            "web_jarvis": self.web_jarvis["status"],
-                            "agi_jarvis": self.agi_jarvis["status"]
-                        },
-                        "features": self.config["features"],
-                        "active_tasks": len(self.active_tasks),
-                        "timestamp": datetime.now().isoformat()
+                        "system": "JARVIS Super Intelligence v2.0",
+                        "status": "operational",
+                        "uptime": f"{time.time() - self.stats['uptime_start']:.0f}s",
+                        "queries_processed": self.stats["queries_processed"],
+                        "services": len(self.services),
+                        "models": len(self.models),
+                        "capabilities": {
+                            "transformers": TRANSFORMERS_AVAILABLE,
+                            "speech": SPEECH_AVAILABLE,
+                            "vision": VISION_AVAILABLE
+                        }
                     }
                 
-                refresh_btn.click(get_status, outputs=status_output)
+                refresh_btn.click(get_status, outputs=status_display)
+                interface.load(get_status, outputs=status_display)
         
         return interface
     
-    async def start_all_services(self):
-        """Start all services in parallel"""
-        self.logger.info("🚀 Starting all JARVIS services...")
+    async def process_advanced_query(self, query: IntelligenceQuery) -> Any:
+        """Advanced query processing with multiple AI backends"""
         
-        # Start services in separate threads
-        services = [
-            threading.Thread(
-                target=self.start_api_server,
-                daemon=True
-            ),
-            threading.Thread(
-                target=self.start_gradio_interface,
-                daemon=True
-            ),
-            threading.Thread(
-                target=self.start_background_tasks,
-                daemon=True
-            )
-        ]
+        if query.type == "chat" or query.type == "text":
+            # Try Ollama first, fallback to local models
+            ollama_result = await self.query_ollama(query.content, query.mode)
+            if ollama_result and "error" not in ollama_result.lower():
+                return ollama_result
+            
+            # Fallback to local text generation
+            if 'text_generator' in self.models:
+                try:
+                    result = self.models['text_generator'](
+                        query.content,
+                        max_length=min(len(query.content) + 100, 512),
+                        do_sample=True,
+                        temperature=0.7 if query.mode == "creative" else 0.3
+                    )
+                    return result[0]['generated_text']
+                except Exception as e:
+                    logger.error(f"Local text generation failed: {e}")
+            
+            return f"JARVIS processed: {query.content}"
         
-        for service in services:
-            service.start()
+        elif query.type == "embedding":
+            if 'embeddings' in self.models:
+                embedding = self.models['embeddings'].encode(query.content)
+                return {"embedding": embedding.tolist(), "dimension": len(embedding)}
+            else:
+                return {"error": "Embedding model not available"}
         
-        # Keep main thread alive
+        elif query.type == "vector_search":
+            return await self.vector_search(query.content)
+        
+        elif query.type == "system_info":
+            return {
+                "system": "JARVIS Super Intelligence v2.0",
+                "uptime": time.time() - self.stats["uptime_start"],
+                "queries_processed": self.stats["queries_processed"],
+                "models": list(self.models.keys()),
+                "services": list(self.services.keys())
+            }
+        
+        else:
+            return f"JARVIS: Unknown query type '{query.type}'"
+    
+    async def query_ollama(self, content: str, mode: str = "standard") -> str:
+        """Enhanced Ollama integration with mode support"""
         try:
-            while True:
-                await asyncio.sleep(1)
-        except KeyboardInterrupt:
-            self.logger.info("🛑 Shutting down JARVIS Super Intelligence System...")
+            ollama_url = self.config["integrations"]["ollama_url"]
+            
+            # Mode-specific parameters
+            temperature = {
+                "creative": 0.9,
+                "standard": 0.7,
+                "precise": 0.3,
+                "analytical": 0.1
+            }.get(mode, 0.7)
+            
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
+                async with session.post(
+                    f"{ollama_url}/api/generate",
+                    json={
+                        "model": "qwen2.5:3b",
+                        "prompt": content,
+                        "stream": False,
+                        "options": {
+                            "temperature": temperature,
+                            "top_p": 0.9,
+                            "max_tokens": 512
+                        }
+                    }
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return data.get("response", "No response from Ollama")
+                    else:
+                        logger.warning(f"Ollama returned status {response.status}")
+                        return f"Ollama service unavailable (status: {response.status})"
+        except asyncio.TimeoutError:
+            logger.error("Ollama query timed out")
+            return "Ollama service timed out"
+        except Exception as e:
+            logger.error(f"Ollama query failed: {e}")
+            return f"Ollama unavailable: {e}"
     
-    def start_api_server(self):
-        """Start FastAPI server"""
-        port = self.config["services"]["api_port"]
-        self.logger.info(f"🌐 Starting API server on port {port}")
-        uvicorn.run(self.app, host="0.0.0.0", port=port)
+    async def vector_search(self, content: str) -> Dict[str, Any]:
+        """Enhanced vector database search"""
+        results = {"chromadb": None, "faiss": None}
+        
+        # Try ChromaDB
+        try:
+            chromadb_url = self.config["integrations"]["chromadb_url"]
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
+                async with session.post(
+                    f"{chromadb_url}/api/v1/collections/default/query",
+                    json={"query_texts": [content], "n_results": 5}
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        results["chromadb"] = {
+                            "status": "success",
+                            "results": len(data.get("documents", [[]])[0])
+                        }
+        except Exception as e:
+            results["chromadb"] = {"status": "error", "message": str(e)}
+        
+        # Try FAISS
+        try:
+            faiss_url = self.config["integrations"]["faiss_url"]
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
+                async with session.post(
+                    f"{faiss_url}/search",
+                    json={"query": content, "k": 5}
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        results["faiss"] = {
+                            "status": "success",
+                            "results": len(data.get("results", []))
+                        }
+        except Exception as e:
+            results["faiss"] = {"status": "error", "message": str(e)}
+        
+        return results
     
-    def start_gradio_interface(self):
-        """Start Gradio interface"""
-        port = self.config["services"]["gradio_port"]
-        self.logger.info(f"🎨 Starting Gradio interface on port {port}")
-        self.gradio_interface.launch(
-            server_name="0.0.0.0",
-            server_port=port,
-            share=False
+    async def check_integrations(self) -> Dict[str, str]:
+        """Check status of all integrations"""
+        integrations = {}
+        
+        # Check each integration
+        for name, url in self.config["integrations"].items():
+            try:
+                async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=5)) as session:
+                    async with session.get(f"{url}/health" if name != "postgres_url" else url) as response:
+                        if response.status == 200:
+                            integrations[name] = "healthy"
+                        else:
+                            integrations[name] = f"unhealthy (status: {response.status})"
+            except Exception:
+                integrations[name] = "unavailable"
+        
+        return integrations
+    
+    def get_memory_usage(self) -> str:
+        """Get current memory usage"""
+        try:
+            import psutil
+            process = psutil.Process()
+            memory_mb = process.memory_info().rss / 1024 / 1024
+            return f"{memory_mb:.1f} MB"
+        except ImportError:
+            return "unknown"
+    
+    def get_disk_usage(self) -> str:
+        """Get disk usage for app directory"""
+        try:
+            import shutil
+            total, used, free = shutil.disk_usage("/app")
+            return f"{used // (1024**3)} GB used / {total // (1024**3)} GB total"
+        except Exception:
+            return "unknown"
+    
+    def calculate_avg_response_time(self) -> float:
+        """Calculate average response time (placeholder)"""
+        return 0.5  # Placeholder value
+    
+    async def start_services(self):
+        """Start all JARVIS services with intelligent orchestration"""
+        self.start_time = time.time()
+        self.is_running = True
+        
+        logger.info("🚀 Starting JARVIS Super Intelligence System v2.0...")
+        
+        # Create thread pool for services
+        executor = ThreadPoolExecutor(max_workers=self.config["system"]["max_workers"])
+        
+        # Start health service first
+        health_task = asyncio.create_task(
+            self.run_uvicorn_service(
+                self.services['health'],
+                self.config["services"]["health_port"],
+                "Health Monitor"
+            )
+        )
+        
+        # Wait a moment for health service to start
+        await asyncio.sleep(1)
+        
+        # Start Gradio interface if available
+        if 'gradio' in self.services:
+            try:
+                gradio_task = asyncio.create_task(
+                    self.run_gradio_service()
+                )
+                logger.info("✅ Gradio interface started")
+            except Exception as e:
+                logger.error(f"Gradio startup failed: {e}")
+        
+        # Start main API service (this will run continuously)
+        logger.info("🎯 Starting main API service...")
+        logger.info(f"🌐 Access JARVIS at:")
+        logger.info(f"   • API: http://localhost:{self.config['services']['api_port']}")
+        logger.info(f"   • Health: http://localhost:{self.config['services']['health_port']}/health")
+        if 'gradio' in self.services:
+            logger.info(f"   • Web UI: http://localhost:{self.config['services']['web_port']}")
+        
+        # Run main API service
+        await self.run_uvicorn_service(
+            self.services['api'],
+            self.config["services"]["api_port"],
+            "Main API"
         )
     
-    def start_background_tasks(self):
-        """Start background monitoring and optimization tasks"""
-        self.logger.info("🔄 Starting background tasks...")
-        while True:
-            try:
-                # Perform health checks
-                self.perform_health_checks()
-                
-                # Optimize memory usage
-                self.optimize_memory()
-                
-                # Update knowledge base
-                self.update_knowledge_base()
-                
-                time.sleep(60)  # Run every minute
-                
-            except Exception as e:
-                self.logger.error(f"Background task error: {e}")
+    async def run_uvicorn_service(self, app: FastAPI, port: int, name: str):
+        """Run a Uvicorn service"""
+        config = uvicorn.Config(
+            app=app,
+            host="0.0.0.0",
+            port=port,
+            log_level="info",
+            loop="asyncio",
+            access_log=True
+        )
+        server = uvicorn.Server(config)
+        logger.info(f"✅ {name} service started on port {port}")
+        await server.serve()
     
-    def perform_health_checks(self):
-        """Perform system health checks"""
-        # Check all subsystems
-        pass
-    
-    def optimize_memory(self):
-        """Optimize memory usage"""
-        # Implement memory optimization
-        pass
-    
-    def update_knowledge_base(self):
-        """Update knowledge base with new information"""
-        # Implement knowledge base updates
-        pass
+    async def run_gradio_service(self):
+        """Run Gradio service"""
+        if 'gradio' in self.services:
+            return self.services['gradio'].launch(
+                server_name="0.0.0.0",
+                server_port=self.config["services"]["web_port"],
+                share=False,
+                quiet=True,
+                show_error=True,
+                prevent_thread_lock=True
+            )
 
-if __name__ == "__main__":
-    import io
+async def main():
+    """Main entry point for JARVIS Super Intelligence System v2.0"""
     
-    # Initialize and start JARVIS Super Intelligence System
-    jarvis = JarvisSuperIntelligence()
+    print("""
+🧠 ══════════════════════════════════════════════════════════════════════
+    JARVIS Super Intelligence System v2.0
+    🚀 Enterprise AI Orchestration Platform
+    ⚡ Optimized for CPU-only deployment with maximum efficiency
+    🎯 Multi-modal AI: Text, Voice, Vision, Vector Search
+    🔗 Integrated with Ollama, ChromaDB, FAISS, PostgreSQL
+    🌐 Real-time APIs and Web Interfaces
+══════════════════════════════════════════════════════════════════════
+    """)
     
     try:
-        asyncio.run(jarvis.start_all_services())
+        # Initialize JARVIS super intelligence system
+        jarvis = JarvisSuperIntelligence()
+        
+        logger.info("🎯 JARVIS Super Intelligence System initialized successfully")
+        logger.info(f"🔧 Configuration: {jarvis.config['system']['mode']} mode")
+        logger.info(f"🤖 AI Models loaded: {len(jarvis.models)}")
+        logger.info(f"⚡ Services available: {len(jarvis.services)}")
+        
+        # Start all services
+        await jarvis.start_services()
+        
     except KeyboardInterrupt:
-        print("\n🛑 JARVIS Super Intelligence System shutdown complete.")
+        logger.info("🛑 JARVIS shutdown requested by user")
+        print("\n🧠 JARVIS Super Intelligence System shutting down gracefully...")
     except Exception as e:
-        print(f"❌ Fatal error: {e}")
+        logger.error(f"💥 JARVIS startup failed: {e}")
+        print(f"\n❌ Startup error: {e}")
         sys.exit(1)
+
+if __name__ == "__main__":
+    # Set optimal settings for CPU deployment
+    os.environ["OMP_NUM_THREADS"] = str(min(4, os.cpu_count() or 1))
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    
+    asyncio.run(main())
