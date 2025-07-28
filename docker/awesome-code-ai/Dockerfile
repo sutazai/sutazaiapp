@@ -18,8 +18,13 @@ WORKDIR /app
 # Clone Awesome Code AI repository
 RUN git clone https://github.com/sourcegraph/awesome-code-ai.git /app/awesome-code-ai
 
-# Install Python dependencies
-RUN pip install --no-cache-dir \
+# Install Python dependencies (GPU/CPU adaptive)
+RUN if [ "${PYTORCH_CPU_ONLY:-false}" = "true" ]; then \
+        pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu; \
+    else \
+        pip install --no-cache-dir torch; \
+    fi && \
+    pip install --no-cache-dir \
     fastapi \
     uvicorn \
     requests \
@@ -27,7 +32,6 @@ RUN pip install --no-cache-dir \
     pydantic \
     python-multipart \
     transformers \
-    torch \
     openai \
     langchain \
     GitPython

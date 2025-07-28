@@ -464,9 +464,9 @@ services:
     networks:
       - sutazai-network
 
-  # TabbyML Code Completion
+  # TabbyML Code Completion - CPU-Only Mode (Research-based solution)
   tabbyml:
-    image: tabbyml/tabby:latest
+    image: ${TABBY_IMAGE:-tabbyml/tabby:latest}
     container_name: sutazai-tabbyml
     restart: unless-stopped
     volumes:
@@ -474,13 +474,18 @@ services:
     environment:
       TABBY_DISABLE_USAGE_COLLECTION: "true"
       RUST_LOG: "error"
-      CUDA_VISIBLE_DEVICES: ""
-      TABBY_DISABLE_GPU: "true"
+      TABBY_MODEL_CACHE_ROOT: "/data"
     ports:
       - "8093:8080"
-    command: ["serve", "--model", "TabbyML/StarCoder-1B", "--device", "cpu", "--no-webserver"]
-    deploy:
-      replicas: 0  # Disabled due to GPU library issues in CPU mode
+    # SOLUTION: Use tabby-cpu entrypoint to avoid CUDA dependencies
+    entrypoint: ["/opt/tabby/bin/tabby-cpu"]
+    command: ["serve", "--model", "StarCoder-1B", "--chat-model", "Qwen2-1.5B-Instruct"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s  # Extended for model download
     networks:
       - sutazai-network
 

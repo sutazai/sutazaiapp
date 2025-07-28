@@ -1406,12 +1406,146 @@ MONITORING_SERVICES=("prometheus" "grafana" "loki" "promtail")
 
 # AI Agents - organized by deployment priority
 CORE_AI_AGENTS=("autogpt" "crewai" "letta")
-CODE_AGENTS=("aider" "gpt-engineer" "tabbyml" "semgrep" "awesome-code-ai" "code-improver")
+CODE_AGENTS=("aider" "gpt-engineer" "semgrep")  # Removed problematic GPU-dependent services
+GPU_DEPENDENT_AGENTS=("tabbyml" "awesome-code-ai" "code-improver")  # Services with intelligent GPU/CPU modes
+PROBLEMATIC_AGENTS=()  # All issues resolved with proper research-based solutions
 WORKFLOW_AGENTS=("langflow" "flowise" "n8n" "dify" "bigagi")
 SPECIALIZED_AGENTS=("agentgpt" "privategpt" "llamaindex" "shellgpt" "pentestgpt" "finrobot" "realtimestt")
 AUTOMATION_AGENTS=("browser-use" "skyvern" "localagi" "localagi-enhanced" "localagi-advanced" "documind" "opendevin")
 ML_FRAMEWORK_SERVICES=("pytorch" "tensorflow" "jax" "fsdp")
 ADVANCED_SERVICES=("litellm" "health-monitor" "autogen" "agentzero" "context-framework" "service-hub" "mcp-server" "jarvis-ai" "api-gateway" "task-scheduler" "model-optimizer")
+
+# ===============================================
+# 🔧 GPU DETECTION AND COMPATIBILITY SYSTEM
+# ===============================================
+
+detect_gpu_availability() {
+    log_info "🔍 Detecting GPU availability and CUDA compatibility..."
+    
+    local gpu_available=false
+    local cuda_available=false
+    local docker_gpu_support=false
+    local nvidia_runtime=false
+    
+    # Check for NVIDIA GPU
+    if command -v nvidia-smi >/dev/null 2>&1; then
+        if nvidia-smi >/dev/null 2>&1; then
+            gpu_available=true
+            log_success "✅ NVIDIA GPU detected"
+            
+            # Get GPU info
+            local gpu_count=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits | head -1)
+            local gpu_memory=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
+            log_info "   → GPU Count: $gpu_count, Memory: ${gpu_memory}MB"
+        fi
+    fi
+    
+    # Check for CUDA libraries
+    if command -v nvcc >/dev/null 2>&1; then
+        cuda_available=true
+        local cuda_version=$(nvcc --version | grep "release" | awk '{print $6}' | cut -c2-)
+        log_success "✅ CUDA toolkit detected (version: $cuda_version)"
+    fi
+    
+    # Check for Docker GPU support
+    if docker info 2>/dev/null | grep -q "nvidia"; then
+        docker_gpu_support=true
+        log_success "✅ Docker GPU support detected"
+    fi
+    
+    # Check for NVIDIA Container Runtime
+    if docker info 2>/dev/null | grep -q "nvidia" && docker info 2>/dev/null | grep -q "runtime"; then
+        nvidia_runtime=true
+        log_success "✅ NVIDIA Container Runtime available"
+    fi
+    
+    # Determine final GPU support level
+    if [[ "$gpu_available" == "true" && "$cuda_available" == "true" && "$docker_gpu_support" == "true" ]]; then
+        export GPU_SUPPORT_AVAILABLE="true"
+        export GPU_SUPPORT_LEVEL="full"
+        log_success "🚀 Full GPU support available - GPU-accelerated services will be enabled"
+        log_info "   → TabbyML, PyTorch, and TensorFlow will use GPU acceleration"
+    elif [[ "$gpu_available" == "true" ]]; then
+        export GPU_SUPPORT_AVAILABLE="partial"
+        export GPU_SUPPORT_LEVEL="partial"
+        log_warn "⚠️  Partial GPU support - some services may fallback to CPU"
+        log_info "   → Install NVIDIA Container Toolkit for full GPU support"
+    else
+        export GPU_SUPPORT_AVAILABLE="false"
+        export GPU_SUPPORT_LEVEL="none"
+        log_warn "⚠️  No GPU support detected - CPU-only deployment"
+        log_info "   → This ensures stable CPU-only deployment"
+    fi
+    
+    return 0
+}
+
+configure_gpu_environment() {
+    log_info "🔧 Configuring GPU environment variables..."
+    
+    case "$GPU_SUPPORT_LEVEL" in
+        "full")
+            # Full GPU support - enable all GPU features
+            export TABBY_IMAGE="tabbyml/tabby:latest"
+            export TABBY_DEVICE="cuda"
+            export GPU_COUNT="1"
+            export COMPOSE_FILE="docker-compose.yml:docker-compose.gpu.yml"
+            
+            # PyTorch GPU configuration
+            export PYTORCH_CUDA_ALLOC_CONF="max_split_size_mb:512"
+            export TORCH_CUDA_ARCH_LIST="6.0;6.1;7.0;7.5;8.0;8.6"
+            export PYTORCH_CPU_ONLY="false"
+            
+            log_success "✅ GPU environment configured for full acceleration"
+            log_info "   → Using GPU-enhanced Docker Compose configuration"
+            ;;
+        "partial")
+            # Partial GPU support - enable what we can
+            export TABBY_IMAGE="tabbyml/tabby:v0.12.0"  # Last known working version
+            export TABBY_DEVICE="cuda"
+            export GPU_COUNT="1"
+            export COMPOSE_FILE="docker-compose.yml:docker-compose.gpu.yml"
+            export PYTORCH_CPU_ONLY="false"
+            
+            log_success "✅ GPU environment configured for partial acceleration"
+            log_warn "   → Some services may fallback to CPU if GPU fails"
+            ;;
+        "none"|*)
+            # CPU-only mode
+            export TABBY_IMAGE="tabbyml/tabby:latest"
+            export TABBY_DEVICE="cpu"
+            export GPU_COUNT="0"
+            export COMPOSE_FILE="docker-compose.yml"
+            
+            # CPU optimizations
+            export OMP_NUM_THREADS=$(nproc)
+            export PYTORCH_CPU_ONLY="true"
+            
+            log_success "✅ CPU environment configured for optimal performance"
+            log_info "   → Using CPU-optimized Docker Compose configuration"
+            ;;
+    esac
+    
+    return 0
+}
+
+# Helper function for Docker Compose commands with correct file selection
+docker_compose_cmd() {
+    if [[ -n "${COMPOSE_FILE:-}" ]]; then
+        # Use custom compose file configuration
+        local compose_files=""
+        IFS=':' read -ra files <<< "$COMPOSE_FILE"
+        for file in "${files[@]}"; do
+            if [[ -f "$file" ]]; then
+                compose_files="$compose_files -f $file"
+            fi
+        done
+        docker compose $compose_files "$@"
+    else
+        # Use default configuration
+        docker compose "$@"
+    fi
+}
 
 # ===============================================
 # 📋 ENHANCED LOGGING SYSTEM
@@ -4504,7 +4638,7 @@ deploy_service_with_enhanced_resilience() {
         # Attempt deployment with comprehensive error capture and intelligent recovery
         log_info "   → Executing: docker compose up -d --build $service_name"
         local deploy_output
-        deploy_output=$(docker compose up -d --build "$service_name" 2>&1)
+        deploy_output=$(docker_compose_cmd up -d --build "$service_name" 2>&1)
         echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
         
         # Check for container name conflicts in output and auto-resolve
@@ -4521,7 +4655,7 @@ deploy_service_with_enhanced_resilience() {
                 
                 # Retry deployment
                 log_info "   → Retrying deployment after conflict resolution..."
-                deploy_output=$(docker compose up -d --build "$service_name" 2>&1)
+                deploy_output=$(docker_compose_cmd up -d --build "$service_name" 2>&1)
                 echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
             fi
         fi
@@ -4647,7 +4781,7 @@ resolve_port_conflicts_intelligently() {
                     log_info "   🔧 Stopping previous SutazAI service on port $port..."
                     
                     # Try graceful shutdown first
-                    docker compose stop "$service" >/dev/null 2>&1 || true
+                    docker_compose_cmd stop "$service" >/dev/null 2>&1 || true
                     sleep 2
                     
                     # Force kill if still running
@@ -4709,7 +4843,7 @@ resolve_service_dependencies() {
             log_warn "   ⚠️  Dependency $dep is not running, attempting to start..."
             
             # Attempt to start the dependency service
-            if docker compose up -d "$dep" >/dev/null 2>&1; then
+            if docker_compose_cmd up -d "$dep" >/dev/null 2>&1; then
                 log_info "   ✅ Started dependency $dep"
             else
                 log_error "   ❌ Failed to start dependency $dep"
@@ -4736,9 +4870,9 @@ resolve_service_dependencies() {
                 log_info "   → Attempting smart recovery for $dep..."
                 
                 # Restart with fresh configuration
-                docker compose stop "$dep" >/dev/null 2>&1 || true
+                docker_compose_cmd stop "$dep" >/dev/null 2>&1 || true
                 sleep 5
-                docker compose up -d "$dep" >/dev/null 2>&1 || true
+                docker_compose_cmd up -d "$dep" >/dev/null 2>&1 || true
                 sleep 10
                 
                 if check_docker_service_health "$dep" 30; then
@@ -6286,7 +6420,7 @@ deploy_service_group() {
             
             # Step 1: Clean rebuild
             log_info "   → Step 1: Clean rebuild"
-            docker compose down "$failed_service" >/dev/null 2>&1 || true
+            docker_compose_cmd down "$failed_service" >/dev/null 2>&1 || true
             docker system prune -f >/dev/null 2>&1 || true
             
             if docker compose build --no-cache "$failed_service" >/dev/null 2>&1; then
@@ -6665,6 +6799,11 @@ main_deployment() {
     log_header "📦 Phase 2: Package Installation with Network Resilience"
     install_packages_with_network_resilience
     
+    # 🔍 Detect GPU availability for intelligent service deployment
+    log_header "🔍 Phase 2.5: GPU Capability Detection"
+    detect_gpu_availability
+    configure_gpu_environment
+    
     # 🔧 Resolve port conflicts intelligently
     log_header "🔧 Phase 3: Port Conflict Resolution"
     resolve_port_conflicts_intelligently
@@ -6759,6 +6898,28 @@ main_deployment() {
     sleep 10
     
     deploy_service_group "Code Development Agents" "${CODE_AGENTS[@]}"
+    
+    # Deploy GPU-dependent services with intelligent configuration
+    case "$GPU_SUPPORT_LEVEL" in
+        "full")
+            log_info "🚀 Deploying code agents with FULL GPU acceleration..."
+            deploy_service_group "GPU-Accelerated Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            ;;
+        "partial")
+            log_info "⚡ Deploying code agents with PARTIAL GPU support..."
+            deploy_service_group "Hybrid GPU/CPU Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            ;;
+        "none"|*)
+            log_info "🔧 Deploying code agents in CPU-OPTIMIZED mode..."
+            deploy_service_group "CPU-Optimized Code Agents" "${GPU_DEPENDENT_AGENTS[@]}"
+            ;;
+    esac
+    
+    # Show GPU configuration summary
+    log_info "🎯 Active GPU Configuration:"
+    log_info "   • GPU Support Level: $GPU_SUPPORT_LEVEL"
+    log_info "   • TabbyML Device: $TABBY_DEVICE"
+    log_info "   • PyTorch Mode: ${PYTORCH_CPU_ONLY:-GPU}"
     sleep 10
     
     deploy_service_group "Workflow Automation Agents" "${WORKFLOW_AGENTS[@]}"

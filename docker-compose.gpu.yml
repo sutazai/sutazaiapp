@@ -1,0 +1,44 @@
+# GPU-Accelerated Docker Compose Override
+# Use with: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+
+services:
+  # TabbyML Code Completion - GPU-Accelerated Mode
+  tabbyml:
+    image: ${TABBY_IMAGE:-tabbyml/tabby:latest}
+    entrypoint: ["/opt/tabby/bin/tabby"]  # Use standard entrypoint for GPU
+    command: ["serve", "--model", "StarCoder-1B", "--chat-model", "Qwen2-1.5B-Instruct", "--device", "cuda"]
+    environment:
+      TABBY_DEVICE: "cuda"
+      CUDA_VISIBLE_DEVICES: "0"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${GPU_COUNT:-1}
+              capabilities: [gpu]
+
+  # Awesome Code AI - GPU-Accelerated Mode  
+  awesome-code-ai:
+    environment:
+      PYTORCH_CPU_ONLY: "false"
+      CUDA_VISIBLE_DEVICES: "0"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${GPU_COUNT:-1}
+              capabilities: [gpu]
+
+  # Ollama - GPU-Accelerated Mode
+  ollama:
+    environment:
+      OLLAMA_GPU_ENABLED: "true"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${GPU_COUNT:-1}
+              capabilities: [gpu]
