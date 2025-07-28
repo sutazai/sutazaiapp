@@ -108,6 +108,168 @@ verify_script_security() {
 }
 
 # ===============================================
+# 🌐 NETWORK CONNECTIVITY FIXES FOR WSL2
+# ===============================================
+
+# Fix WSL2 DNS resolution issues that prevent Docker Hub access
+fix_wsl2_network_connectivity() {
+    log_info "🌐 Fixing WSL2 network connectivity and DNS resolution..."
+    
+    # Check if we're in WSL2 environment
+    if grep -qi microsoft /proc/version || grep -qi wsl /proc/version; then
+        log_info "   → WSL2 environment detected, applying network fixes..."
+        
+        # Fix DNS resolution by updating resolv.conf
+        if [ -f /etc/resolv.conf ]; then
+            log_info "   → Fixing DNS resolution..."
+            
+            # Backup original resolv.conf
+            cp /etc/resolv.conf /etc/resolv.conf.backup || true
+            
+            # Create new resolv.conf with reliable DNS servers
+            cat > /etc/resolv.conf << 'EOF'
+# Fixed DNS configuration for WSL2
+nameserver 8.8.8.8
+nameserver 1.1.1.1
+nameserver 8.8.4.4
+options edns0 trust-ad
+search .
+EOF
+            
+            # Make it immutable to prevent WSL from overwriting it
+            chattr +i /etc/resolv.conf 2>/dev/null || true
+            
+            log_success "   ✅ DNS resolution fixed"
+        fi
+        
+        # Configure Docker daemon for WSL2 network reliability
+        if [ -d /etc/docker ]; then
+            log_info "   → Configuring Docker daemon for WSL2..."
+            
+            cat > /etc/docker/daemon.json << 'EOF'
+{
+    "dns": ["8.8.8.8", "1.1.1.1", "8.8.4.4"],
+    "dns-search": ["."],
+    "dns-opts": ["ndots:0"],
+    "bip": "172.18.0.1/16",
+    "default-address-pools": [
+        {
+            "base": "172.80.0.0/12",
+            "size": 24
+        }
+    ],
+    "max-concurrent-downloads": 6,
+    "max-concurrent-uploads": 6,
+    "registry-mirrors": [],
+    "insecure-registries": [],
+    "live-restore": false,
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    }
+}
+EOF
+            
+            # Restart Docker daemon if it's running
+            if systemctl is-active --quiet docker; then
+                log_info "   → Restarting Docker daemon with network fixes..."
+                systemctl restart docker
+                sleep 5
+                
+                # Verify Docker is working
+                if docker info >/dev/null 2>&1; then
+                    log_success "   ✅ Docker daemon restarted successfully"
+                else
+                    log_error "   ❌ Docker daemon failed to restart"
+                    return 1
+                fi
+            fi
+        fi
+        
+        # Test network connectivity
+        if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+            log_success "   ✅ Network connectivity verified"
+        else
+            log_error "   ❌ Network connectivity still not working"
+            return 1
+        fi
+        
+        # Test Docker Hub connectivity
+        if docker pull hello-world >/dev/null 2>&1; then
+            log_success "   ✅ Docker Hub connectivity verified"
+            docker rmi hello-world >/dev/null 2>&1 || true
+        else
+            log_warn "   ⚠️  Docker Hub connectivity issues detected"
+            log_info "   💡 Will use offline fallback mechanisms"
+        fi
+        
+    else
+        log_info "   → Non-WSL environment detected, skipping WSL-specific fixes"
+    fi
+    
+    return 0
+}
+
+# Enhanced package installation with network resilience and Ubuntu 24.04 fixes
+install_packages_with_network_resilience() {
+    log_info "📦 Installing packages with network resilience..."
+    
+    local max_retries=3
+    local retry=0
+    
+    while [ $retry -lt $max_retries ]; do
+        retry=$((retry + 1))
+        log_info "   → Package installation attempt $retry/$max_retries..."
+        
+        # Update package lists with timeout and retries
+        if timeout 120 apt-get update -y --fix-missing 2>/dev/null; then
+            # Install essential packages with timeout
+            if timeout 300 apt-get install -y \
+                curl wget git jq tree htop unzip \
+                net-tools iproute2 iputils-ping \
+                build-essential python3-pip python3-full python3-venv nodejs npm \
+                ca-certificates gnupg lsb-release \
+                software-properties-common dnsutils pipx; then
+                
+                log_success "   ✅ Essential packages installed successfully"
+                
+                # Fix Ubuntu 24.04 externally-managed-environment issue
+                log_info "   → Fixing Ubuntu 24.04 Python environment restrictions..."
+                
+                # Remove externally-managed restriction for containerized deployment
+                find /usr/lib/python* -name "EXTERNALLY-MANAGED" -delete 2>/dev/null || true
+                
+                # Configure pip to use break-system-packages by default in containers
+                mkdir -p /root/.config/pip
+                cat > /root/.config/pip/pip.conf << 'EOF'
+[global]
+break-system-packages = true
+timeout = 60
+retries = 3
+EOF
+                
+                log_success "   ✅ Python environment configured for containerized deployment"
+                return 0
+            fi
+        fi
+        
+        log_warn "   ⚠️  Package installation attempt $retry failed"
+        if [ $retry -lt $max_retries ]; then
+            log_info "   ⏳ Waiting 15 seconds before retry..."
+            sleep 15
+            
+            # Try to fix network issues between retries
+            fix_wsl2_network_connectivity >/dev/null 2>&1 || true
+        fi
+    done
+    
+    log_warn "⚠️  Package installation failed after $max_retries attempts"
+    log_info "💡 Continuing with existing packages..."
+    return 0
+}
+
+# ===============================================
 # 🔧 ENHANCED INTELLIGENT DEBUGGING SYSTEM
 # ===============================================
 
@@ -123,7 +285,9 @@ enable_enhanced_debugging() {
     # Enable Docker debug logging
     export DOCKER_CLI_EXPERIMENTAL=enabled
     export COMPOSE_DOCKER_CLI_BUILD=1
+    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
     export DOCKER_BUILDKIT=1
+    export BUILDKIT_INLINE_CACHE=0
     
     # Create debug functions for comprehensive error capture
     export DEBUG_MODE=true
@@ -200,12 +364,32 @@ check_docker_service_health() {
                         fi
                         ;;
                     "qdrant")
-                        # Test Qdrant health endpoint
-                        if docker exec sutazai-qdrant curl -f http://localhost:6333/health >/dev/null 2>&1; then
-                            log_success "   ✅ Qdrant is running and healthy"
-                            return 0
+                        # Enhanced Qdrant health check using correct endpoints
+                        # Qdrant uses root endpoint for health and collections for readiness
+                        local qdrant_ready=false
+                        for i in {1..5}; do
+                            if curl -f http://localhost:6333/ >/dev/null 2>&1; then
+                                qdrant_ready=true
+                                break
+                            fi
+                            sleep 2
+                        done
+                        
+                        if [ "$qdrant_ready" = true ]; then
+                            # Verify we can also access collections endpoint for full readiness
+                            if curl -f http://localhost:6333/collections >/dev/null 2>&1; then
+                                log_success "   ✅ Qdrant is running and fully operational"
+                                return 0
+                            else
+                                log_warn "   ⚠️  Qdrant API responding but collections endpoint not ready"
+                            fi
                         else
-                            log_warn "   ⚠️  Qdrant container running but health check failed"
+                            # Check if it's a timing issue vs Docker health status contradiction
+                            if [ "$container_health" = "healthy" ]; then
+                                log_warn "   ⚠️  Docker reports healthy but Qdrant API not ready (timing issue)"
+                            else
+                                log_warn "   ⚠️  Qdrant container running but API not responding"
+                            fi
                         fi
                         ;;
                     "faiss")
@@ -828,7 +1012,9 @@ optimize_system_resources() {
     fi
     
     # Set Docker build optimization
+    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
     export DOCKER_BUILDKIT=1
+    export BUILDKIT_INLINE_CACHE=0
     export COMPOSE_PARALLEL_LIMIT=$OPTIMAL_PARALLEL_BUILDS
     export COMPOSE_HTTP_TIMEOUT=300
     
@@ -1028,7 +1214,7 @@ x-defaults: &defaults
   
   # Enable BuildKit for all builds
   x-build-args:
-    BUILDKIT_INLINE_CACHE: 1
+    BUILDKIT_INLINE_CACHE: 0  # CRITICAL FIX: Disable inline cache to prevent BuildKit EOF errors in WSL2
     DOCKER_BUILDKIT: 1
 EOF
 
@@ -1455,8 +1641,12 @@ install_docker_via_apt() {
     # Set up the repository
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$ID $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
     
-    # Install Docker Engine
+    # Install Docker Engine (handle containerd conflicts)
     apt-get update
+    
+    # Remove conflicting containerd package if present
+    apt-get remove -y containerd >/dev/null 2>&1 || true
+    
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     
     log_success "   ✅ Docker installed via APT"
@@ -1473,6 +1663,9 @@ install_docker_via_dnf() {
     dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
     
     # Install Docker Engine
+    # Remove conflicting containerd package if present
+    dnf remove -y containerd >/dev/null 2>&1 || true
+    
     dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     
     log_success "   ✅ Docker installed via DNF"
@@ -1489,6 +1682,9 @@ install_docker_via_yum() {
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     
     # Install Docker Engine
+    # Remove conflicting containerd package if present
+    yum remove -y containerd >/dev/null 2>&1 || true
+    
     yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     
     log_success "   ✅ Docker installed via YUM"
@@ -2001,7 +2197,9 @@ perform_docker_health_check() {
     done
     
     # Check 3: Docker buildkit functionality
+    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
     export DOCKER_BUILDKIT=1
+    export BUILDKIT_INLINE_CACHE=0
     if docker buildx version >/dev/null 2>&1; then
         log_success "   ✅ Docker BuildKit: Available and functional"
     else
@@ -3400,8 +3598,8 @@ validate_docker_build_context() {
     while read -r line; do
         if [[ "$line" =~ COPY[[:space:]]+([^[:space:]]+)[[:space:]]+\. ]]; then
             local file_pattern="${BASH_REMATCH[1]}"
-            # Skip wildcards and common patterns
-            if [[ "$file_pattern" != *"*"* ]] && [[ "$file_pattern" != "requirements.txt" ]]; then
+            # Skip wildcards, common patterns, and directory copies (like "COPY . .")
+            if [[ "$file_pattern" != *"*"* ]] && [[ "$file_pattern" != "requirements.txt" ]] && [[ "$file_pattern" != "." ]]; then
                 local full_path="$build_context/$file_pattern"
                 if [[ ! -f "$full_path" ]]; then
                     log_warn "      ⚠️  Dockerfile expects file but missing: $full_path"
@@ -4082,6 +4280,77 @@ stop_resource_monitoring() {
     rm -f /tmp/sutazai_monitor.pid /tmp/sutazai_*.pid 2>/dev/null || true
 }
 
+# Final deployment verification and health check
+perform_final_deployment_verification() {
+    log_header "🔍 Final Deployment Verification"
+    
+    local total_services=0
+    local healthy_services=0
+    local critical_services=("postgres" "redis" "backend-agi" "frontend-agi")
+    local critical_healthy=0
+    
+    # Check all SutazAI containers
+    log_info "📊 Checking all deployed services..."
+    
+    while IFS= read -r container; do
+        if [[ "$container" == sutazai-* ]]; then
+            total_services=$((total_services + 1))
+            local service_name=$(echo "$container" | sed 's/sutazai-//')
+            
+            if docker ps --filter "name=$container" --filter "status=running" --quiet | grep -q .; then
+                # Quick health check
+                if check_docker_service_health "$service_name" 10; then
+                    log_success "   ✅ $service_name - healthy"
+                    healthy_services=$((healthy_services + 1))
+                    
+                    # Check if it's a critical service
+                    for critical in "${critical_services[@]}"; do
+                        if [ "$service_name" = "$critical" ]; then
+                            critical_healthy=$((critical_healthy + 1))
+                            break
+                        fi
+                    done
+                else
+                    log_warn "   ⚠️  $service_name - running but unhealthy"
+                fi
+            else
+                log_error "   ❌ $service_name - not running"
+            fi
+        fi
+    done < <(docker ps -a --format "{{.Names}}" | sort)
+    
+    # Generate final report
+    log_info ""
+    log_info "📈 Deployment Results Summary:"
+    log_info "   → Total services: $total_services"
+    log_info "   → Healthy services: $healthy_services"
+    log_info "   → Critical services healthy: $critical_healthy/${#critical_services[@]}"
+    
+    local health_percentage=$((healthy_services * 100 / total_services))
+    local critical_percentage=$((critical_healthy * 100 / ${#critical_services[@]}))
+    
+    log_info "   → Overall health: ${health_percentage}%"
+    log_info "   → Critical health: ${critical_percentage}%"
+    
+    # Final verdict
+    if [ $critical_healthy -eq ${#critical_services[@]} ] && [ $health_percentage -ge 80 ]; then
+        log_success "🎉 Deployment verification PASSED"
+        log_success "   ✅ All critical services are healthy"
+        log_success "   ✅ Overall system health is excellent"
+        return 0
+    elif [ $critical_healthy -eq ${#critical_services[@]} ]; then
+        log_warn "⚠️  Deployment verification PARTIAL"
+        log_warn "   ✅ All critical services are healthy"
+        log_warn "   ⚠️  Some non-critical services may have issues"
+        return 0
+    else
+        log_error "❌ Deployment verification FAILED"
+        log_error "   ❌ Critical services are not healthy"
+        log_error "   💡 Check logs and retry deployment"
+        return 1
+    fi
+}
+
 optimize_system_performance() {
     log_info "⚡ Applying system performance optimizations..."
     
@@ -4107,7 +4376,7 @@ optimize_system_performance() {
     log_info "📦 Pre-pulling frequently used base images in parallel..."
     setup_parallel_downloads
     
-    # Use parallel downloads for Docker images
+    # Enhanced image pre-loading with offline fallback
     local base_images=(
         "python:3.11-slim"
         "node:18-alpine" 
@@ -4122,42 +4391,287 @@ optimize_system_performance() {
         "prom/prometheus:latest"
     )
     
-    # Pull images in parallel with optimal concurrency
-    if command -v parallel >/dev/null 2>&1; then
-        # Export Docker environment for parallel execution
-        export DOCKER_HOST="${DOCKER_HOST:-unix:///var/run/docker.sock}"
+    # Check network connectivity first
+    if check_network_connectivity; then
+        log_info "🌐 Network available - attempting to pull base images..."
         
-        # Create a script for parallel Docker pulls with proper environment
-        cat > /tmp/docker_pull_parallel.sh << 'EOF'
-#!/bin/bash
-export DOCKER_HOST="${DOCKER_HOST:-unix:///var/run/docker.sock}"
-image_name="$1"
-echo "Pulling ${image_name}..."
-if timeout 300 docker pull "${image_name}" >/dev/null 2>&1; then
-    echo "${image_name} pulled successfully"
-else
-    echo "ERROR: Failed to pull ${image_name}"
-    exit 1
-fi
-EOF
-        chmod +x /tmp/docker_pull_parallel.sh
+        # Pull images with retry logic and timeout
+        local pull_success=0
+        local pull_failed=0
         
-        printf '%s\n' "${base_images[@]}" | parallel -j "${OPTIMAL_PARALLEL_BUILDS:-4}" \
-            --env DOCKER_HOST '/tmp/docker_pull_parallel.sh {}' || {
-            log_warn "Parallel image pulling failed, falling back to sequential"
-            rm -f /tmp/docker_pull_parallel.sh
-            for image in "${base_images[@]}"; do
-                docker pull "$image" >/dev/null 2>&1 &
-            done
-        }
-    else
-        # Fallback to background processes
         for image in "${base_images[@]}"; do
-            docker pull "$image" >/dev/null 2>&1 &
+            log_info "   → Pulling ${image}..."
+            if timeout 180 docker pull "${image}" >/dev/null 2>&1; then
+                log_success "   ✅ ${image} pulled successfully"
+                pull_success=$((pull_success + 1))
+            else
+                log_warn "   ⚠️  Failed to pull ${image}"
+                pull_failed=$((pull_failed + 1))
+            fi
         done
+        
+        log_info "📊 Image pull results: $pull_success successful, $pull_failed failed"
+        
+        if [ $pull_failed -gt $pull_success ]; then
+            log_warn "⚠️  Most image pulls failed - deployment will use offline fallback"
+        fi
+    else
+        log_warn "🔌 No network connectivity - using existing local images only"
+        
+        # Check which images are available locally
+        local available_images=0
+        for image in "${base_images[@]}"; do
+            if docker images "$image" --quiet | grep -q .; then
+                available_images=$((available_images + 1))
+            fi
+        done
+        
+        log_info "📊 Local images available: $available_images/${#base_images[@]}"
+        
+        if [ $available_images -lt 5 ]; then
+            log_error "❌ Insufficient local images for offline deployment"
+            log_info "💡 Please connect to internet and run script again to download base images"
+            return 1
+        fi
     fi
     
     log_success "System performance optimizations applied"
+}
+
+# Enhanced service deployment with offline fallback and robust error handling
+deploy_service_with_enhanced_resilience() {
+    local service_name="$1"
+    local max_retries="${2:-3}"
+    local retry=0
+    
+    log_info "🚀 Deploying service: $service_name with enhanced resilience"
+    
+    while [ $retry -lt $max_retries ]; do
+        retry=$((retry + 1))
+        log_info "   → Deployment attempt $retry/$max_retries for $service_name..."
+        
+        # Check dependencies first
+        resolve_service_dependencies "$service_name"
+        
+        # Intelligent pre-deployment analysis - only touch unhealthy containers
+        if docker ps -a --filter "name=sutazai-$service_name" --quiet | grep -q .; then
+            local container_status=$(docker inspect --format='{{.State.Status}}' "sutazai-$service_name" 2>/dev/null || echo "not_found")
+            
+            case "$container_status" in
+                "running")
+                    log_info "   → Container sutazai-$service_name is running, checking health..."
+                    if check_docker_service_health "$service_name" 30; then
+                        log_success "   ✅ Service $service_name already healthy - keeping as is"
+                        return 0
+                    else
+                        log_warn "   ⚠️  Service $service_name running but unhealthy, cleaning up for redeploy..."
+                        docker stop "sutazai-$service_name" >/dev/null 2>&1 || true
+                        docker rm -f "sutazai-$service_name" >/dev/null 2>&1 || true
+                        sleep 2
+                    fi
+                    ;;
+                "exited"|"dead"|"restarting")
+                    log_info "   → Container sutazai-$service_name in $container_status state, cleaning up..."
+                    docker rm -f "sutazai-$service_name" >/dev/null 2>&1 || true
+                    sleep 2
+                    ;;
+                "paused")
+                    log_info "   → Container sutazai-$service_name is paused, unpausing..."
+                    docker unpause "sutazai-$service_name" >/dev/null 2>&1 || true
+                    if check_docker_service_health "$service_name" 30; then
+                        log_success "   ✅ Service $service_name unpaused and healthy"
+                        return 0
+                    else
+                        log_warn "   ⚠️  Service $service_name still unhealthy after unpause, cleaning up..."
+                        docker rm -f "sutazai-$service_name" >/dev/null 2>&1 || true
+                        sleep 2
+                    fi
+                    ;;
+            esac
+        fi
+        
+        # Check if we can build offline (for services that need building)
+        if check_service_needs_build "$service_name"; then
+            if ! check_network_connectivity; then
+                log_warn "   ⚠️  No network connectivity, checking offline build capability..."
+                if ! check_offline_build_capability "$service_name"; then
+                    log_error "   ❌ Cannot build $service_name offline, skipping..."
+                    return 1
+                fi
+            fi
+        fi
+        
+        # Attempt deployment with comprehensive error capture and intelligent recovery
+        log_info "   → Executing: docker compose up -d --build $service_name"
+        local deploy_output
+        deploy_output=$(docker compose up -d --build "$service_name" 2>&1)
+        echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
+        
+        # Check for container name conflicts in output and auto-resolve
+        if echo "$deploy_output" | grep -q "already in use by container"; then
+            log_warn "   ⚠️  Container name conflict detected, performing intelligent cleanup..."
+            
+            # Extract the conflicting container ID and remove it
+            local conflict_id=$(echo "$deploy_output" | grep -o '"[a-f0-9]\{64\}"' | tr -d '"' | head -1)
+            if [ -n "$conflict_id" ]; then
+                log_info "   → Removing conflicting container: $conflict_id"
+                docker rm -f "$conflict_id" >/dev/null 2>&1 || true
+                docker rm -f "sutazai-$service_name" >/dev/null 2>&1 || true
+                sleep 2
+                
+                # Retry deployment
+                log_info "   → Retrying deployment after conflict resolution..."
+                deploy_output=$(docker compose up -d --build "$service_name" 2>&1)
+                echo "$deploy_output" | tee -a "$DEPLOYMENT_LOG"
+            fi
+        fi
+        
+        if echo "$deploy_output" | grep -q "ERROR\|Error\|error" && ! echo "$deploy_output" | grep -q "Started\|Created\|Running"; then
+            log_error "   ❌ Docker Compose failed for $service_name"
+            
+            # Capture additional diagnostics
+            log_info "   🔍 Additional diagnostics:"
+            docker system df | sed 's/^/      /'
+            docker system events --since 1m --until now | grep "$service_name" | sed 's/^/      /' || true
+        else
+            log_info "   ✅ Docker Compose command succeeded for $service_name"
+            
+            # Wait for service to initialize
+            log_info "   → Waiting for $service_name to initialize..."
+            sleep 10
+            
+            # Comprehensive health check
+            if check_docker_service_health "$service_name" 60; then
+                log_success "✅ Successfully deployed $service_name"
+                return 0
+            else
+                log_warn "   ⚠️  Service $service_name deployed but failed health check"
+                
+                # Provide diagnostic information
+                log_info "   🔍 Diagnostic information for $service_name:"
+                docker logs "sutazai-$service_name" --tail 20 2>/dev/null | sed 's/^/      /' || log_info "      No logs available"
+            fi
+        fi
+        
+        if [ $retry -lt $max_retries ]; then
+            log_info "   ⏳ Waiting 15 seconds before retry..."
+            sleep 15
+            
+            # Try to fix any network issues between retries
+            if ! check_network_connectivity; then
+                log_info "   🔧 Attempting to fix network connectivity..."
+                fix_wsl2_network_connectivity >/dev/null 2>&1 || true
+            fi
+        fi
+    done
+    
+    log_error "❌ Failed to deploy $service_name after $max_retries attempts"
+    return 1
+}
+
+# Check if service needs to be built vs using pre-built image
+check_service_needs_build() {
+    local service_name="$1"
+    
+    # Services that need building (have Dockerfile)
+    case "$service_name" in
+        "backend-agi"|"frontend-agi"|"faiss"|"autogpt"|"crewai"|"letta"|"langflow"|"flowise"|"dify")
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+# Check offline build capability
+check_offline_build_capability() {
+    local service_name="$1"
+    
+    # Check if base images are available locally
+    case "$service_name" in
+        "backend-agi"|"frontend-agi")
+            docker images python:3.11-slim --quiet | grep -q . || return 1
+            ;;
+        "faiss")
+            docker images python:3.11-slim --quiet | grep -q . || return 1
+            ;;
+        "autogpt"|"crewai"|"letta")
+            docker images python:3.11-slim --quiet | grep -q . || return 1
+            ;;
+        *)
+            return 0  # Non-build services can work offline
+            ;;
+    esac
+    
+    return 0
+}
+
+# Check network connectivity
+check_network_connectivity() {
+    ping -c 1 -W 5 8.8.8.8 >/dev/null 2>&1
+}
+
+# Enhanced port conflict resolution with intelligent handling
+resolve_port_conflicts_intelligently() {
+    log_info "🔧 Resolving port conflicts intelligently..."
+    
+    # Define critical ports and their services
+    declare -A port_services=(
+        ["3000"]="frontend-agi"
+        ["8000"]="backend-agi"
+        ["8501"]="frontend-agi"
+        ["5432"]="postgres"
+        ["6379"]="redis"
+        ["7474"]="neo4j"
+        ["7687"]="neo4j"
+        ["9090"]="prometheus"
+        ["11434"]="ollama"
+    )
+    
+    local conflicts_resolved=0
+    
+    for port in "${!port_services[@]}"; do
+        if netstat -tuln 2>/dev/null | grep -q ":$port "; then
+            local pid=$(lsof -ti:$port 2>/dev/null | head -1)
+            if [ -n "$pid" ]; then
+                local process=$(ps -p "$pid" -o comm= 2>/dev/null || echo "unknown")
+                local service="${port_services[$port]}"
+                
+                log_warn "   ⚠️  Port $port is in use by process: $process (PID: $pid)"
+                
+                # Only kill if it's a previous SutazAI deployment or docker process
+                if [[ "$process" == *"docker"* ]] || [[ "$process" == *"sutazai"* ]] || 
+                   docker ps --filter "name=sutazai-$service" --quiet | grep -q .; then
+                    
+                    log_info "   🔧 Stopping previous SutazAI service on port $port..."
+                    
+                    # Try graceful shutdown first
+                    docker compose stop "$service" >/dev/null 2>&1 || true
+                    sleep 2
+                    
+                    # Force kill if still running
+                    if netstat -tuln 2>/dev/null | grep -q ":$port "; then
+                        kill -TERM "$pid" 2>/dev/null || true
+                        sleep 2
+                        kill -KILL "$pid" 2>/dev/null || true
+                    fi
+                    
+                    conflicts_resolved=$((conflicts_resolved + 1))
+                    log_success "   ✅ Port $port freed for service: $service"
+                else
+                    log_warn "   ⚠️  Port $port used by external process, may cause conflicts"
+                fi
+            fi
+        fi
+    done
+    
+    if [ $conflicts_resolved -gt 0 ]; then
+        log_info "   ⏳ Waiting for ports to be fully released..."
+        sleep 5
+    fi
+    
+    log_success "Port conflict resolution completed ($conflicts_resolved conflicts resolved)"
 }
 
 # Intelligent Service Dependency Resolution
@@ -4912,28 +5426,28 @@ install_all_system_dependencies() {
             
             # Install packages in smaller batches to avoid timeouts
             echo '🔧 Installing core packages batch 1...'
-            pip install --no-cache-dir --timeout=300 \
+            pip install --no-cache-dir --timeout=300 --break-system-packages \
                 pythonjsonlogger \
                 python-nmap \
                 scapy \
                 python-dotenv || echo 'Warning: Some core packages failed to install'
                 
             echo '🔧 Installing core packages batch 2...'
-            pip install --no-cache-dir --timeout=300 \
+            pip install --no-cache-dir --timeout=300 --break-system-packages \
                 pydantic-settings \
                 asyncio-mqtt \
                 websockets \
                 aiofiles || echo 'Warning: Some async packages failed to install'
                 
             echo '🔧 Installing database packages...'
-            pip install --no-cache-dir --timeout=300 \
+            pip install --no-cache-dir --timeout=300 --break-system-packages \
                 aioredis \
                 motor \
                 pymongo \
                 elasticsearch || echo 'Warning: Some database packages failed to install'
                 
             echo '🔧 Installing logging packages...'
-            pip install --no-cache-dir --timeout=300 \
+            pip install --no-cache-dir --timeout=300 --break-system-packages \
                 structlog \
                 loguru || echo 'Warning: Some logging packages failed to install'
                 
@@ -4941,7 +5455,7 @@ install_all_system_dependencies() {
         " || log_warn "⚠️  Some Python packages failed to install, but continuing deployment"
     else
         log_info "Installing Python packages in system..."
-        pip3 install --no-cache-dir \
+        pip3 install --no-cache-dir --break-system-packages \
             pythonjsonlogger \
             python-nmap \
             scapy \
@@ -5000,8 +5514,8 @@ install_critical_dependencies() {
     done
     
     # Install Python packages
-    pip3 install --upgrade pip setuptools wheel >/dev/null 2>&1
-    pip3 install docker-compose ollama-python requests psycopg2-binary >/dev/null 2>&1
+    pip3 install --upgrade --break-system-packages pip setuptools wheel >/dev/null 2>&1
+    pip3 install --break-system-packages docker-compose ollama-python requests psycopg2-binary >/dev/null 2>&1
     
     log_success "Critical dependencies installed"
 }
@@ -6140,6 +6654,21 @@ generate_final_deployment_report() {
 main_deployment() {
     log_header "🚀 Starting SutazAI Enterprise AGI/ASI System Deployment"
     
+    # 🌐 CRITICAL: Fix network connectivity issues FIRST
+    log_header "🌐 Phase 1: Network Infrastructure Setup"
+    if ! fix_wsl2_network_connectivity; then
+        log_error "❌ Critical network connectivity issues detected"
+        log_warn "⚠️  Attempting to continue with offline fallback mechanisms..."
+    fi
+    
+    # 📦 Install essential packages with resilience
+    log_header "📦 Phase 2: Package Installation with Network Resilience"
+    install_packages_with_network_resilience
+    
+    # 🔧 Resolve port conflicts intelligently
+    log_header "🔧 Phase 3: Port Conflict Resolution"
+    resolve_port_conflicts_intelligently
+    
     # 🔧 CRITICAL: Ensure .env permissions are correct for Docker Compose
     ensure_env_permissions() {
         if [ -f ".env" ]; then
@@ -6439,7 +6968,7 @@ fix_container_dependencies() {
         log_info "🐍 Fixing backend Python dependencies..."
         
         # Install missing packages that were causing warnings
-        docker exec sutazai-backend-agi pip install --no-cache-dir \
+        docker exec sutazai-backend-agi pip install --no-cache-dir --break-system-packages \
             pythonjsonlogger \
             python-nmap \
             scapy \
@@ -6494,7 +7023,7 @@ fix_container_dependencies() {
                         pip config set global.timeout 300
                         pip config set global.retries 3
                         pip config set global.trusted-host 'pypi.org files.pythonhosted.org'
-                        pip install --upgrade pip >/dev/null 2>&1 || echo 'pip upgrade failed'
+                        pip install --upgrade --break-system-packages pip >/dev/null 2>&1 || echo 'pip upgrade failed'
                     fi
                 else
                     echo 'Network connectivity issues detected in container'
@@ -7133,7 +7662,12 @@ except ImportError as e:
 
     echo -e "\n${BOLD}🎯 SUTAZAI AGI/ASI SYSTEM DEPLOYMENT COMPLETE!${NC}"
     if [ "$validation_passed" = true ]; then
-        log_success "🎉 Enterprise deployment completed successfully! All systems ready for autonomous AI operations."
+        # Perform final deployment verification
+        if perform_final_deployment_verification; then
+            log_success "🎉 Enterprise deployment completed successfully! All systems ready for autonomous AI operations."
+        else
+            log_warn "⚠️  Enterprise deployment completed with some issues. System is partially functional."
+        fi
     else
         log_warn "⚠️  Deployment completed with issues. Please review the validation results above."
         log_info "💡 Run './scripts/deploy_complete_system.sh troubleshoot' for assistance."

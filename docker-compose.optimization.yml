@@ -117,5 +117,5 @@ x-defaults: &defaults
   
   # Enable BuildKit for all builds
   x-build-args:
-    BUILDKIT_INLINE_CACHE: 1
+    BUILDKIT_INLINE_CACHE: 0  # CRITICAL FIX: Disable inline cache to prevent BuildKit EOF errors in WSL2
     DOCKER_BUILDKIT: 1
