@@ -137,6 +137,58 @@ init_dependencies() {
 }
 
 # Install Ollama and Models
+# 🧠 AI-Powered Model Integrity Validation (2025 Super Intelligence)
+validate_model_integrity() {
+    local model_name="$1"
+    
+    # Phase 1: Basic existence and format validation
+    if ! ollama list 2>/dev/null | grep -q "$model_name"; then
+        return 1  # Model doesn't exist
+    fi
+    
+    # Phase 2: AI-powered functional validation - try to generate a small response
+    local test_prompt="Test"
+    local validation_timeout=30
+    
+    # Test if model can actually generate responses (corruption detection)
+    if timeout $validation_timeout ollama run "$model_name" "$test_prompt" 2>/dev/null | head -1 | grep -q "."; then
+        return 0  # Model is functional
+    else
+        return 1  # Model appears corrupted or non-functional
+    fi
+}
+
+# 🧠 Background Model Integrity Validation (Optimized for Background Process)
+validate_model_integrity_bg() {
+    local model_name="$1"
+    
+    # Phase 1: Basic existence validation
+    if ! ollama list 2>/dev/null | grep -q "$model_name"; then
+        return 1  # Model doesn't exist
+    fi
+    
+    # Phase 2: Lightweight integrity check for background process
+    # Use a shorter timeout and simpler validation to avoid blocking
+    local test_prompt="Hi"
+    local validation_timeout=15
+    
+    # Quick functional test
+    if timeout $validation_timeout ollama run "$model_name" "$test_prompt" 2>/dev/null >/dev/null; then
+        return 0  # Model appears functional
+    else
+        # Additional check: Look for model files in Ollama's storage
+        local ollama_models_dir="/usr/share/ollama/.ollama/models"
+        [ -d "$ollama_models_dir" ] || ollama_models_dir="$HOME/.ollama/models"
+        
+        # Check if model directory exists and has substantial content
+        if [ -d "$ollama_models_dir" ] && find "$ollama_models_dir" -name "*${model_name%:*}*" -size +100M 2>/dev/null | grep -q .; then
+            return 0  # Model files exist and seem substantial
+        else
+            return 1  # Model appears corrupted or incomplete
+        fi
+    fi
+}
+
 install_ollama_and_models() {
     log_header "🧠 AI-Powered Ollama Installation and Model Management (2025 Super Intelligence)"
     
@@ -227,22 +279,59 @@ install_ollama_and_models() {
     # 🎯 SMART DEFAULT: Always start with llama3.2:3b for immediate functionality
     log_info "🎯 Installing smart default model first: llama3.2:3b"
     
-    if timeout 300 ollama pull llama3.2:3b >/dev/null 2>&1; then
-        log_success "✅ Smart default model (llama3.2:3b) ready in 5 minutes!"
+    # 🧠 SUPER INTELLIGENT: Check if model already exists and validate integrity
+    local default_model="llama3.2:3b"
+    local model_exists=false
+    local model_corrupted=false
+    
+    # Check if model exists
+    if ollama list 2>/dev/null | grep -q "$default_model"; then
+        log_info "🔍 Model $default_model already exists - running integrity check..."
+        model_exists=true
         
-        # Set as default model configuration
-        echo "OLLAMA_DEFAULT_MODEL=llama3.2:3b" >> /etc/environment
-        export OLLAMA_DEFAULT_MODEL=llama3.2:3b
+        # AI-powered model integrity validation
+        if validate_model_integrity "$default_model"; then
+            log_success "✅ Existing model $default_model is valid - skipping download!"
+            echo "OLLAMA_DEFAULT_MODEL=$default_model" >> /etc/environment
+            export OLLAMA_DEFAULT_MODEL=$default_model
+            log_success "🎉 System is immediately functional with existing validated model!"
+        else
+            log_warn "⚠️  Model $default_model appears corrupted - will re-download"
+            model_corrupted=true
+        fi
+    fi
+    
+    # Download only if model doesn't exist or is corrupted
+    if [ "$model_exists" = false ] || [ "$model_corrupted" = true ]; then
+        local action_text="Installing"
+        [ "$model_corrupted" = true ] && action_text="Re-downloading corrupted"
         
-        log_success "🎉 System is now fully functional with smart default model!"
-    else
-        log_warn "⚠️  Default model download took too long - using fallback strategy"
+        log_info "🔄 $action_text smart default model: $default_model"
         
-        # Try ultra-fast fallback model
-        if timeout 120 ollama pull llama3.2:1b >/dev/null 2>&1; then
-            log_success "✅ Ultra-fast fallback model (llama3.2:1b) ready!"
-            echo "OLLAMA_DEFAULT_MODEL=llama3.2:1b" >> /etc/environment
-            export OLLAMA_DEFAULT_MODEL=llama3.2:1b
+        if timeout 300 ollama pull "$default_model" >/dev/null 2>&1; then
+            log_success "✅ Smart default model ($default_model) ready in 5 minutes!"
+            
+            # Set as default model configuration
+            echo "OLLAMA_DEFAULT_MODEL=$default_model" >> /etc/environment
+            export OLLAMA_DEFAULT_MODEL=$default_model
+            
+            log_success "🎉 System is now fully functional with smart default model!"
+        else
+            log_warn "⚠️  Default model download took too long - using fallback strategy"
+            
+            # Try ultra-fast fallback model
+            local fallback_model="llama3.2:1b"
+            if ! (ollama list 2>/dev/null | grep -q "$fallback_model" && validate_model_integrity "$fallback_model"); then
+                if timeout 120 ollama pull "$fallback_model" >/dev/null 2>&1; then
+                    log_success "✅ Ultra-fast fallback model ($fallback_model) ready!"
+                    echo "OLLAMA_DEFAULT_MODEL=$fallback_model" >> /etc/environment
+                    export OLLAMA_DEFAULT_MODEL=$fallback_model
+                fi
+            else
+                log_success "✅ Using existing validated fallback model ($fallback_model)!"
+                echo "OLLAMA_DEFAULT_MODEL=$fallback_model" >> /etc/environment
+                export OLLAMA_DEFAULT_MODEL=$fallback_model
+            fi
         fi
     fi
     
@@ -272,9 +361,11 @@ install_ollama_and_models() {
         log_info "💡 Monitor progress: tail -f /var/log/ollama-background-download.log"
     fi
     
-    log_success "🎉 AI-Powered Ollama installation completed with smart defaults!"
-    log_info "🎯 System is immediately functional with llama3.2:3b model"
+    log_success "🎉 AI-Powered Ollama installation completed with super intelligent model management!"
+    log_info "🎯 System is immediately functional with smart default model"
     log_info "🚀 Additional models downloading in background for enhanced capabilities"
+    log_info "🧠 SUPER INTELLIGENT: Models are auto-detected and validated - no unnecessary re-downloads!"
+    log_info "🔍 Corrupted models will be automatically detected and re-downloaded as needed"
 }
 
 # 🧠 Create Smart Background Model Downloader (2025 AI-Powered)
@@ -296,17 +387,58 @@ bg_log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
 }
 
-bg_log "🚀 Starting AI-Powered Background Model Download Session"
-bg_log "📋 Models to download: ${MODELS[*]}"
+# 🧠 Background Model Integrity Validation (Embedded in Downloader)
+validate_model_integrity_bg() {
+    local model_name="$1"
+    
+    # Phase 1: Basic existence validation
+    if ! ollama list 2>/dev/null | grep -q "$model_name"; then
+        return 1  # Model doesn't exist
+    fi
+    
+    # Phase 2: Lightweight integrity check for background process
+    local test_prompt="Hi"
+    local validation_timeout=15
+    
+    # Quick functional test
+    if timeout $validation_timeout ollama run "$model_name" "$test_prompt" 2>/dev/null >/dev/null; then
+        return 0  # Model appears functional
+    else
+        # Additional check: Look for model files in Ollama's storage
+        local ollama_models_dir="/usr/share/ollama/.ollama/models"
+        [ -d "$ollama_models_dir" ] || ollama_models_dir="$HOME/.ollama/models"
+        
+        # Check if model directory exists and has substantial content
+        if [ -d "$ollama_models_dir" ] && find "$ollama_models_dir" -name "*${model_name%:*}*" -size +100M 2>/dev/null | grep -q .; then
+            return 0  # Model files exist and seem substantial
+        else
+            return 1  # Model appears corrupted or incomplete
+        fi
+    fi
+}
 
-# Intelligent download with adaptive strategies
+bg_log "🚀 Starting AI-Powered Background Model Download Session"
+bg_log "🧠 SUPER INTELLIGENT: Auto-detection enabled - existing models will be validated, not re-downloaded"
+bg_log "🔍 CORRUPTION DETECTION: Corrupted models will be automatically detected and re-downloaded"
+bg_log "📋 Models to process: ${MODELS[*]}"
+
+# 🧠 SUPER INTELLIGENT download with model existence detection and corruption validation
 for model in "${MODELS[@]}"; do
     bg_log "🤖 Processing model: $model"
     
-    # Check if model already exists
-    if ollama list | grep -q "$model"; then
-        bg_log "✅ Model $model already available - skipping"
-        continue
+    # Phase 1: Check if model already exists
+    if ollama list 2>/dev/null | grep -q "$model"; then
+        bg_log "🔍 Model $model already exists - running integrity validation..."
+        
+        # Phase 2: AI-powered model integrity validation
+        if validate_model_integrity_bg "$model"; then
+            bg_log "✅ Model $model is valid and complete - skipping download"
+            continue
+        else
+            bg_log "⚠️  Model $model appears corrupted or incomplete - will re-download"
+        fi
+    else
+        bg_log "📥 Model $model not found - proceeding with fresh download"
     fi
     
     # AI-powered download with timeout and retry
@@ -349,7 +481,9 @@ for model in "${MODELS[@]}"; do
     sleep 5
 done
 
-bg_log "🎉 Background model download session completed"
+bg_log "🎉 AI-Powered background model download session completed"
+bg_log "🧠 INTELLIGENCE SUMMARY: Existing models were validated and preserved"
+bg_log "🔄 Only new/corrupted models were downloaded - maximum efficiency achieved!"
 bg_log "📊 Run 'ollama list' to see all available models"
 EOF
     

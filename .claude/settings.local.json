@@ -85,7 +85,8 @@
       "Bash(./test_simple_fix.sh:*)",
       "Bash(./test_deployment.sh)",
       "Bash(check_docker_service_health:*)",
-      "Bash(/dev/null)"
+      "Bash(/dev/null)",
+      "Bash(./test_brain_functions.sh:*)"
     ],
     "deny": []
   },
