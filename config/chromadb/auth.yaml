@@ -1,0 +1,4 @@
+credentials:
+  sutazai: "$2b$12$CHANGEME" # Change this in production
+server_configuration_flags:
+  chroma_server_authn_provider: "chromadb.auth.basic_authn.BasicAuthenticationServerProvider"

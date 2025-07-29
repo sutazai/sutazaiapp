@@ -1,0 +1,24 @@
+model_list:
+  - model_name: deepseek-r1
+    litellm_params:
+      model: ollama/deepseek-r1:8b
+      api_base: http://ollama:11434
+  
+  - model_name: qwen3
+    litellm_params:
+      model: ollama/qwen2.5:7b
+      api_base: http://ollama:11434
+  
+  - model_name: codellama
+    litellm_params:
+      model: ollama/codellama:7b
+      api_base: http://ollama:11434
+  
+  - model_name: llama3
+    litellm_params:
+      model: ollama/llama3.2:3b
+      api_base: http://ollama:11434
+
+general_settings:
+  master_key: sk-sutazai-litellm-key
+  database_url: "postgresql://sutazai:sutazai_secure_password@postgres:5432/sutazai"

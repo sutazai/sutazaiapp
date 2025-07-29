@@ -1,0 +1,607 @@
+# SutazAI Enterprise AGI/ASI System - Optimized Docker Compose
+# Complete containerized deployment with all components
+
+version: '3.8'
+
+# Shared configuration
+x-common-environment: &common-environment
+  TZ: UTC
+  SUTAZAI_ENV: production
+
+x-restart-policy: &restart-policy
+  restart: unless-stopped
+
+x-logging: &default-logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+# Networks
+networks:
+  sutazai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
+# Volumes
+volumes:
+  # Core databases
+  postgres_data:
+  redis_data:
+  neo4j_data:
+  
+  # Vector databases
+  chromadb_data:
+  qdrant_data:
+  faiss_data:
+  
+  # AI models and data
+  ollama_data:
+  models_data:
+  
+  # Monitoring
+  prometheus_data:
+  grafana_data:
+  
+  # Agent workspaces
+  agent_workspaces:
+  
+  # Application data
+  app_data:
+  logs_data:
+
+services:
+  # ===========================================
+  # CORE INFRASTRUCTURE
+  # ===========================================
+  
+  postgres:
+    image: postgres:16-alpine
+    container_name: sutazai-postgres
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      POSTGRES_DB: sutazai
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai_secure_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai -d sutazai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sutazai-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-redis
+    <<: *restart-policy
+    <<: *default-logging
+    command: redis-server --requirepass sutazai_redis_password --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: sutazai-neo4j
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      NEO4J_AUTH: neo4j/sutazai_neo4j_password
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_apoc_export_file_enabled: true
+      NEO4J_apoc_import_file_enabled: true
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*,gds.*
+    volumes:
+      - neo4j_data:/data
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "sutazai_neo4j_password", "RETURN 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # VECTOR DATABASES
+  # ===========================================
+  
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: sutazai-chromadb
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      CHROMA_SERVER_AUTHN_CREDENTIALS_FILE: /chroma/auth.yaml
+      CHROMA_SERVER_AUTHN_PROVIDER: chromadb.auth.basic_authn.BasicAuthenticationServerProvider
+      ANONYMIZED_TELEMETRY: false
+    volumes:
+      - chromadb_data:/chroma/chroma
+      - ./config/chromadb/auth.yaml:/chroma/auth.yaml:ro
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: sutazai-qdrant
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # AI MODEL SERVICES
+  # ===========================================
+  
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      OLLAMA_HOST: "0.0.0.0"
+      OLLAMA_ORIGINS: "*"
+      OLLAMA_MAX_LOADED_MODELS: 4
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./models:/models
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - sutazai-network
+    # GPU support (uncomment if available)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # LiteLLM proxy for model management
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: sutazai-litellm
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      LITELLM_MASTER_KEY: sk-sutazai-litellm-key
+    volumes:
+      - ./config/litellm/config.yaml:/app/config.yaml:ro
+    ports:
+      - "4000:4000"
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    depends_on:
+      - ollama
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # AI AGENTS
+  # ===========================================
+  
+  # AutoGPT agent
+  autogpt:
+    image: significantgravitas/autogpt:latest
+    container_name: sutazai-autogpt
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      OPENAI_API_KEY: local
+      OPENAI_API_BASE: http://litellm:4000/v1
+    volumes:
+      - agent_workspaces:/app/workspace
+      - ./config/autogpt:/app/config:ro
+    depends_on:
+      - litellm
+      - postgres
+      - redis
+    networks:
+      - sutazai-network
+
+  # LocalAGI orchestration
+  localagi:
+    image: mudler/localagi:latest
+    container_name: sutazai-localagi
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      LOCALAGI_API_ENDPOINT: http://litellm:4000/v1
+    volumes:
+      - agent_workspaces:/workspace
+      - ./config/localagi:/config:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      - litellm
+    networks:
+      - sutazai-network
+
+  # TabbyML for code completion
+  tabbyml:
+    image: tabbyml/tabby:latest
+    container_name: sutazai-tabbyml
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      TABBY_MODEL: StarCoder-1B
+    volumes:
+      - models_data:/data
+    ports:
+      - "8081:8080"
+    networks:
+      - sutazai-network
+
+  # LangChain agents service
+  langchain-agents:
+    build:
+      context: ./docker/langchain
+      dockerfile: Dockerfile
+    container_name: sutazai-langchain
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      LANGCHAIN_ENDPOINT: http://litellm:4000/v1
+      LANGCHAIN_TRACING_V2: true
+      LANGCHAIN_PROJECT: sutazai
+    volumes:
+      - agent_workspaces:/workspace
+    depends_on:
+      - litellm
+      - chromadb
+      - qdrant
+    networks:
+      - sutazai-network
+
+  # Code security with Semgrep
+  semgrep:
+    image: semgrep/semgrep:latest
+    container_name: sutazai-semgrep
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      SEMGREP_APP_TOKEN: local
+    volumes:
+      - agent_workspaces:/src
+      - ./reports:/reports
+    command: ["--config=auto", "--output=/reports/semgrep-report.json", "/src"]
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # CORE APPLICATION SERVICES
+  # ===========================================
+  
+  # SutazAI Backend
+  sutazai-backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: sutazai-backend
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      DATABASE_URL: postgresql://sutazai:sutazai_secure_password@postgres:5432/sutazai
+      REDIS_URL: redis://:sutazai_redis_password@redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: sutazai_neo4j_password
+      SECRET_KEY: sutazai_backend_secret_key_2024
+    volumes:
+      - app_data:/app/data
+      - logs_data:/app/logs
+      - agent_workspaces:/app/agents
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - neo4j
+      - chromadb
+      - qdrant
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  # SutazAI Frontend
+  sutazai-frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: sutazai-frontend
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      BACKEND_URL: http://sutazai-backend:8000
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+    volumes:
+      - ./optimized_sutazai_app.py:/app/streamlit_app.py:ro
+    ports:
+      - "8501:8501"
+    depends_on:
+      - sutazai-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # MONITORING & OBSERVABILITY
+  # ===========================================
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sutazai-prometheus
+    <<: *restart-policy
+    <<: *default-logging
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - sutazai-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sutazai-grafana
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      GF_SECURITY_ADMIN_PASSWORD: sutazai_grafana_admin
+      GF_USERS_ALLOW_SIGN_UP: false
+      GF_INSTALL_PLUGINS: grafana-piechart-panel,grafana-worldmap-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - sutazai-network
+
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: sutazai-node-exporter
+    <<: *restart-policy
+    <<: *default-logging
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+    ports:
+      - "9100:9100"
+    networks:
+      - sutazai-network
+
+  # Loki for log aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: sutazai-loki
+    <<: *restart-policy
+    <<: *default-logging
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./monitoring/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+    ports:
+      - "3100:3100"
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # ADDITIONAL SERVICES
+  # ===========================================
+  
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: sutazai-nginx
+    <<: *restart-policy
+    <<: *default-logging
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - sutazai-frontend
+      - sutazai-backend
+    networks:
+      - sutazai-network
+
+  # Jupyter Lab for development
+  jupyter:
+    image: jupyter/tensorflow-notebook:latest
+    container_name: sutazai-jupyter
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      JUPYTER_ENABLE_LAB: yes
+      JUPYTER_TOKEN: sutazai_jupyter_token
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - app_data:/home/jovyan/data
+    ports:
+      - "8888:8888"
+    networks:
+      - sutazai-network
+
+  # MinIO for object storage
+  minio:
+    image: minio/minio:latest
+    container_name: sutazai-minio
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      MINIO_ROOT_USER: sutazai
+      MINIO_ROOT_PASSWORD: sutazai_minio_password
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # DEVELOPMENT TOOLS
+  # ===========================================
+  
+  # PgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sutazai-pgadmin
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      PGADMIN_DEFAULT_EMAIL: admin@sutazai.com
+      PGADMIN_DEFAULT_PASSWORD: sutazai_pgadmin_password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - sutazai-network
+
+  # Redis Commander
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: sutazai-redis-commander
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      REDIS_HOSTS: "local:redis:6379:0:sutazai_redis_password"
+    ports:
+      - "8082:8081"
+    depends_on:
+      - redis
+    networks:
+      - sutazai-network
+
+  # ===========================================
+  # HEALTH MONITORING
+  # ===========================================
+  
+  # Health check service
+  healthcheck:
+    build:
+      context: ./docker/healthcheck
+      dockerfile: Dockerfile
+    container_name: sutazai-healthcheck
+    <<: *restart-policy
+    <<: *default-logging
+    environment:
+      <<: *common-environment
+      HEALTH_CHECK_INTERVAL: 30
+    volumes:
+      - ./scripts/health_check.py:/app/health_check.py:ro
+    depends_on:
+      - sutazai-backend
+      - postgres
+      - redis
+    networks:
+      - sutazai-network
+
+# ===========================================
+# EXTERNAL NETWORKS (optional)
+# ===========================================
+# Uncomment to connect to external networks
+# networks:
+#   external-network:
+#     external: true
