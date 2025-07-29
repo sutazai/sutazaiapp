@@ -1,15 +1,15 @@
 # SutazAI Resource Optimization Override
-# Auto-generated based on system capabilities: 4 CPUs, 6663MB RAM
+# Auto-generated based on system capabilities: 20 CPUs, 20267MB RAM
 
 x-database-resources: &database-resources
   deploy:
     resources:
       limits:
         cpus: '1.0'
-        memory: 130M
+        memory: 397M
       reservations:
         cpus: '0.5'
-        memory: 65M
+        memory: 198M
     restart_policy:
       condition: unless-stopped
       delay: 5s
@@ -19,10 +19,10 @@ x-ai-service-resources: &ai-service-resources
     resources:
       limits:
         cpus: '2.0'
-        memory: 260M
+        memory: 794M
       reservations:
         cpus: '1.0'
-        memory: 130M
+        memory: 397M
     restart_policy:
       condition: unless-stopped
       delay: 10s
@@ -84,10 +84,10 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 130M
+          memory: 397M
         reservations:
           cpus: '0.5'
-          memory: 65M
+          memory: 198M
     
   # Monitoring Services
   prometheus:

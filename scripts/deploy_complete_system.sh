@@ -2986,6 +2986,268 @@ intelligent_error_handler() {
         exit $exit_code
     fi
 }
+# ===============================================
+# 🧠 SUPER INTELLIGENT SIGNAL HANDLING SYSTEM
+# ===============================================
+
+# Global state tracking for cleanup
+SCRIPT_PID=$$
+BACKGROUND_PIDS=()
+ACTIVE_DOCKER_OPERATIONS=()
+TEMP_FILES=()
+PARALLEL_OPERATIONS=()
+
+# Track background processes
+track_background_process() {
+    local pid="$1"
+    BACKGROUND_PIDS+=("$pid")
+}
+
+# Track Docker operations
+track_docker_operation() {
+    local operation="$1"
+    ACTIVE_DOCKER_OPERATIONS+=("$operation")
+}
+
+# Track temporary files
+track_temp_file() {
+    local file="$1"
+    TEMP_FILES+=("$file")
+}
+
+# Super Intelligent Cleanup Function
+super_intelligent_cleanup() {
+    local signal="${1:-EXIT}"
+    local cleanup_start_time=$(date +%s)
+    
+    log_warn "🧠 SUPER INTELLIGENT CLEANUP ACTIVATED (Signal: $signal)"
+    log_info "   → Cleanup initiated at $(date)"
+    log_info "   → Script PID: $SCRIPT_PID"
+    
+    # Stop parallel operations immediately
+    log_info "🔧 Phase 1: Stopping parallel operations..."
+    if [ ${#PARALLEL_OPERATIONS[@]} -gt 0 ]; then
+        for op in "${PARALLEL_OPERATIONS[@]}"; do
+            log_info "   → Terminating parallel operation: $op"
+            pkill -f "$op" 2>/dev/null || true
+        done
+        # Wait for operations to stop
+        sleep 2
+        # Force kill if still running
+        for op in "${PARALLEL_OPERATIONS[@]}"; do
+            pkill -9 -f "$op" 2>/dev/null || true
+        done
+    fi
+    
+    # Stop background processes
+    log_info "🔧 Phase 2: Cleaning background processes..."
+    if [ ${#BACKGROUND_PIDS[@]} -gt 0 ]; then
+        for pid in "${BACKGROUND_PIDS[@]}"; do
+            if kill -0 "$pid" 2>/dev/null; then
+                log_info "   → Terminating background process: $pid"
+                kill -TERM "$pid" 2>/dev/null || true
+            fi
+        done
+        # Wait for graceful termination
+        sleep 3
+        # Force kill if still running
+        for pid in "${BACKGROUND_PIDS[@]}"; do
+            if kill -0 "$pid" 2>/dev/null; then
+                log_warn "   → Force killing stubborn process: $pid"
+                kill -KILL "$pid" 2>/dev/null || true
+            fi
+        done
+    fi
+    
+    # Stop Docker operations
+    log_info "🔧 Phase 3: Cleaning Docker operations..."
+    if [ ${#ACTIVE_DOCKER_OPERATIONS[@]} -gt 0 ]; then
+        for op in "${ACTIVE_DOCKER_OPERATIONS[@]}"; do
+            log_info "   → Stopping Docker operation: $op"
+            case "$op" in
+                *"pull"*|*"build"*|*"push"*)
+                    # Stop Docker pull/build operations
+                    docker system events --filter type=container --format '{{.Status}}' &
+                    local events_pid=$!
+                    sleep 1
+                    kill "$events_pid" 2>/dev/null || true
+                    ;;
+                *"compose"*)
+                    # Stop Docker Compose operations gracefully
+                    docker compose kill 2>/dev/null || true
+                    ;;
+            esac
+        done
+    fi
+    
+    # Clean up Docker processes and resources
+    log_info "🔧 Phase 4: Docker resource cleanup..."
+    
+    # Kill resource-intensive Docker processes
+    pkill -f "docker.*pull" 2>/dev/null || true
+    pkill -f "docker.*build" 2>/dev/null || true
+    pkill -f "parallel.*docker" 2>/dev/null || true
+    
+    # Stop all deployment script processes
+    log_info "🔧 Phase 5: Deployment script cleanup..."
+    pkill -f "deploy.*system" 2>/dev/null || true
+    pkill -f "sutazai.*deploy" 2>/dev/null || true
+    
+    # Clean system resources
+    log_info "🔧 Phase 6: System resource optimization..."
+    
+    # Clear system caches to free memory
+    sync && echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+    
+    # Optimize swap usage
+    sysctl vm.swappiness=10 2>/dev/null || true
+    
+    # Clean temporary files
+    if [ ${#TEMP_FILES[@]} -gt 0 ]; then
+        log_info "🔧 Phase 7: Cleaning temporary files..."
+        for file in "${TEMP_FILES[@]}"; do
+            if [ -f "$file" ]; then
+                log_info "   → Removing temp file: $file"
+                rm -f "$file" 2>/dev/null || true
+            fi
+        done
+    fi
+    
+    # Final Docker cleanup
+    log_info "🔧 Phase 8: Final Docker optimization..."
+    docker system prune -f 2>/dev/null || true
+    
+    # Performance verification
+    local cleanup_end_time=$(date +%s)
+    local cleanup_duration=$((cleanup_end_time - cleanup_start_time))
+    
+    log_success "✅ SUPER INTELLIGENT CLEANUP COMPLETED"
+    log_info "   → Duration: ${cleanup_duration}s"
+    log_info "   → Memory freed, caches cleared, processes optimized"
+    log_info "   → System ready for normal operations"
+    
+    # Final system status
+    local load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
+    local available_mem=$(free -h | awk '/^Mem:/ {print $7}')
+    log_info "   → Final load average: $load_avg"
+    log_info "   → Available memory: $available_mem"
+    
+    # Save cleanup report
+    local cleanup_report="$LOG_DIR/cleanup_report_$(date +%Y%m%d_%H%M%S).json"
+    cat > "$cleanup_report" << EOF
+{
+    "cleanup_signal": "$signal",
+    "cleanup_duration": $cleanup_duration,
+    "processes_terminated": ${#BACKGROUND_PIDS[@]},
+    "docker_operations_stopped": ${#ACTIVE_DOCKER_OPERATIONS[@]},
+    "temp_files_cleaned": ${#TEMP_FILES[@]},
+    "final_load_average": "$load_avg",
+    "available_memory": "$available_mem",
+    "timestamp": "$(date -Iseconds)"
+}
+EOF
+    
+    log_info "📄 Cleanup report saved: $cleanup_report"
+}
+
+# Enhanced termination handler
+handle_termination() {
+    local signal="$1"
+    log_warn "🚨 TERMINATION SIGNAL RECEIVED: $signal"
+    log_info "🧠 Activating super intelligent cleanup and recovery..."
+    
+    # Execute super cleanup
+    super_intelligent_cleanup "$signal"
+    
+    # Restart Docker cleanly if needed
+    if ! systemctl is-active --quiet docker; then
+        log_info "🔄 Restarting Docker daemon for clean state..."
+        systemctl start containerd 2>/dev/null || true
+        sleep 2
+        systemctl start docker 2>/dev/null || true
+        sleep 2
+        
+        if systemctl is-active --quiet docker; then
+            log_success "✅ Docker daemon restarted successfully"
+        else
+            log_warn "⚠️  Docker restart needed manual intervention"
+        fi
+    fi
+    
+    # Exit gracefully
+    log_info "👋 Script termination complete - system optimized"
+    exit 0
+}
+
+# ===============================================
+# 🧠 SUPER INTELLIGENT RECOVERY DETECTION SYSTEM
+# ===============================================
+
+# Recovery detection function
+detect_previous_termination() {
+    log_info "🔍 Detecting previous deployment issues..."
+    
+    local recovery_needed=false
+    local recovery_reasons=()
+    
+    # Check for stale deployment processes
+    if pgrep -f "deploy.*system" >/dev/null 2>&1; then
+        recovery_needed=true
+        recovery_reasons+=("Stale deployment processes detected")
+    fi
+    
+    # Check for resource-intensive Docker processes
+    if pgrep -f "docker.*pull" >/dev/null 2>&1 || pgrep -f "parallel.*docker" >/dev/null 2>&1; then
+        recovery_needed=true
+        recovery_reasons+=("Resource-intensive Docker operations detected")
+    fi
+    
+    # Check system load
+    local load_avg=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
+    if (( $(echo "$load_avg > 2.0" | bc -l) )); then
+        recovery_needed=true
+        recovery_reasons+=("High system load detected ($load_avg)")
+    fi
+    
+    # Check memory usage
+    local mem_usage=$(free | awk '/^Mem:/ {printf "%.0f", ($3/$2)*100}')
+    if [ "$mem_usage" -gt 80 ]; then
+        recovery_needed=true
+        recovery_reasons+=("High memory usage detected (${mem_usage}%)")
+    fi
+    
+    # Check for previous incomplete deployment
+    if [ -f "$LOG_DIR/deployment_incomplete.flag" ]; then
+        recovery_needed=true
+        recovery_reasons+=("Previous deployment was incomplete")
+        rm -f "$LOG_DIR/deployment_incomplete.flag" 2>/dev/null || true
+    fi
+    
+    if [ "$recovery_needed" = true ]; then
+        log_warn "🚨 RECOVERY NEEDED - Previous deployment issues detected:"
+        for reason in "${recovery_reasons[@]}"; do
+            log_warn "   → $reason"
+        done
+        
+        log_info "🧠 Applying super intelligent recovery..."
+        super_intelligent_cleanup "RECOVERY"
+        
+        log_success "✅ Recovery complete - system optimized for new deployment"
+    else
+        log_success "✅ System is clean - no recovery needed"
+    fi
+    
+    # Create incomplete deployment flag (removed on successful completion)
+    touch "$LOG_DIR/deployment_incomplete.flag"
+}
+
+# Set up comprehensive signal handling
+trap 'handle_termination SIGTERM' TERM
+trap 'handle_termination SIGINT' INT
+trap 'handle_termination SIGHUP' HUP
+trap 'handle_termination SIGQUIT' QUIT
+trap 'super_intelligent_cleanup EXIT' EXIT
+
 # Set the intelligent error trap
 trap 'intelligent_error_handler ${LINENO}' ERR
 
@@ -11468,7 +11730,17 @@ optimize_system_performance() {
         
         for image in "${base_images[@]}"; do
             log_info "   → Pulling ${image}..."
-            if timeout 180 docker pull "${image}" >/dev/null 2>&1; then
+            
+            # Track Docker operation
+            track_docker_operation "docker pull ${image}"
+            
+            # Execute pull with timeout and track the process
+            timeout 180 docker pull "${image}" >/dev/null 2>&1 &
+            local pull_pid=$!
+            track_background_process $pull_pid
+            
+            # Wait for pull to complete
+            if wait $pull_pid; then
                 log_success "   ✅ ${image} pulled successfully"
                 pull_success=$((pull_success + 1))
             else
@@ -11951,6 +12223,11 @@ setup_parallel_downloads() {
     log_info "  • Max concurrent downloads: ${MAX_PARALLEL_DOWNLOADS}"
     log_info "  • GNU parallel available: $(command -v parallel >/dev/null 2>&1 && echo 'Yes' || echo 'No')"
     log_info "  • curl parallel support: ${CURL_PARALLEL}"
+    
+    # Track parallel operations for cleanup
+    if command -v parallel >/dev/null 2>&1; then
+        PARALLEL_OPERATIONS+=("parallel")
+    fi
 }
 parallel_curl_download() {
     local -n urls_ref=$1
@@ -16923,6 +17200,9 @@ deploy_complete_super_intelligent_system() {
     # Initialize the Super Intelligent Brain Core
     initialize_super_brain
     
+    # Detect previous termination and apply recovery if needed
+    detect_previous_termination
+    
     # Perform initial system analysis
     log_info "🧠 Brain: Performing initial system analysis..."
     local initial_state=$(analyze_system_state "all")
@@ -17148,10 +17428,14 @@ deploy_complete_super_intelligent_system() {
     if [ $ERROR_COUNT -eq 0 ] && [ "$final_score" -ge 95 ]; then
         log_success "🧠 Brain: PERFECT DEPLOYMENT ACHIEVED! System operating at peak intelligence."
         log_success "✅ DEPLOYMENT COMPLETED SUCCESSFULLY WITH ZERO ERRORS!"
+        # Remove incomplete deployment flag on successful completion
+        rm -f "$LOG_DIR/deployment_incomplete.flag" 2>/dev/null || true
         return 0
     elif [ $ERROR_COUNT -eq 0 ]; then
         log_success "✅ Deployment completed successfully!"
         log_info "🧠 Brain: System health at ${final_score}% - minor optimizations available"
+        # Remove incomplete deployment flag on successful completion
+        rm -f "$LOG_DIR/deployment_incomplete.flag" 2>/dev/null || true
         return 0
     else
         log_warn "⚠️ Deployment completed with $ERROR_COUNT errors and $WARNING_COUNT warnings"
