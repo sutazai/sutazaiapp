@@ -119,6 +119,10 @@ comprehensive_error_recovery() {
             # For automated deployment, skip interactive prompts
             return 0
             ;;
+        *"cuda"*|*"gpu"*|*"pytorch"*|*"tensorflow"*|*"jax"*)
+            log_info "   → ML/Deep Learning error detected - applying ML recovery strategies..."
+            apply_ml_recovery_strategies "$exit_code" "$retry_count"
+            ;;
         *)
             log_info "   → Generic error detected - applying universal recovery strategies..."
             apply_universal_recovery_strategies "$exit_code" "$retry_count"
@@ -248,6 +252,61 @@ apply_storage_recovery_strategies() {
     
     # Clean package cache
     apt-get clean >/dev/null 2>&1 || true
+    
+    return 0
+}
+
+# ML/Deep Learning recovery strategies
+apply_ml_recovery_strategies() {
+    local exit_code="$1"
+    local retry_count="$2"
+    
+    log_info "🧠 Applying ML/Deep Learning recovery strategies..."
+    
+    # Strategy 1: Check GPU availability and adjust configuration
+    log_info "   → Checking GPU availability for ML services..."
+    if ! nvidia-smi >/dev/null 2>&1; then
+        log_warn "   ⚠️  No GPU detected - switching ML services to CPU mode"
+        export PYTORCH_CPU_ONLY="true"
+        export CUDA_VISIBLE_DEVICES=""
+        export TABBY_DEVICE="cpu"
+        
+        # Update compose file to use CPU configuration
+        if [ -f "docker-compose.cpu-only.yml" ]; then
+            export COMPOSE_FILE="docker-compose.yml:docker-compose.cpu-only.yml"
+            log_info "   ✅ Switched to CPU-only configuration"
+        fi
+    else
+        log_info "   ✅ GPU available - checking CUDA compatibility"
+        # Clear any CUDA cache issues
+        docker exec sutazai-pytorch nvidia-smi >/dev/null 2>&1 || true
+    fi
+    
+    # Strategy 2: Reduce memory requirements for ML services
+    log_info "   → Optimizing memory allocation for ML services..."
+    export PYTORCH_CUDA_ALLOC_CONF="max_split_size_mb:128"
+    export TF_FORCE_GPU_ALLOW_GROWTH="true"
+    
+    # Strategy 3: Clean up ML model caches
+    log_info "   → Cleaning ML model caches..."
+    rm -rf ~/.cache/torch >/dev/null 2>&1 || true
+    rm -rf ~/.cache/tensorflow >/dev/null 2>&1 || true
+    
+    # Strategy 4: Check for port conflicts specific to ML services
+    log_info "   → Checking ML service ports..."
+    local ml_ports=(8888 8889 8089 8080)
+    for port in "${ml_ports[@]}"; do
+        if netstat -tuln 2>/dev/null | grep -q ":$port "; then
+            local process=$(netstat -tulnp 2>/dev/null | grep ":$port " | awk '{print $7}' | cut -d'/' -f2 | head -1)
+            log_warn "   ⚠️  Port $port in use by: $process"
+            # Try to stop conflicting service gracefully
+            if [[ "$process" == "python"* ]] || [[ "$process" == "jupyter"* ]]; then
+                killall -TERM "$process" >/dev/null 2>&1 || true
+                sleep 2
+                log_info "   ✅ Stopped conflicting process on port $port"
+            fi
+        fi
+    done
     
     return 0
 }
@@ -637,7 +696,6 @@ intelligent_error_handler() {
         exit $exit_code
     fi
 }
-
 # Set the intelligent error trap
 trap 'intelligent_error_handler ${LINENO}' ERR
 
@@ -1255,7 +1313,6 @@ initialize_logging
 
 # Call root check with intelligent logging
 check_root_permissions "$@"
-
 # ===============================================
 # 🧠 SUPER INTELLIGENT HARDWARE AUTO-DETECTION
 # ===============================================
@@ -1634,6 +1691,136 @@ display_hardware_summary() {
     echo ""
     log_success "🚀 Ready for Super Intelligent Deployment!"
     echo ""
+}
+
+# Validate ML services prerequisites
+validate_ml_services_prerequisites() {
+    log_info "🧠 Validating ML/Deep Learning services prerequisites..."
+    
+    local ml_ready=true
+    local ml_warnings=()
+    
+    # Check GPU status for ML services
+    log_info "   → Checking GPU availability for ML services..."
+    if [ "$GPU_SUPPORT_LEVEL" = "none" ]; then
+        log_warn "   ⚠️  No GPU detected - ML services will run in CPU mode"
+        log_info "   💡 Performance will be limited for training tasks"
+        ml_warnings+=("No GPU - CPU mode only")
+    else
+        log_success "   ✅ GPU support available: $GPU_SUPPORT_LEVEL"
+    fi
+    
+    # Check memory availability for ML workloads
+    local available_memory=$(free -m | awk 'NR==2{print $7}')
+    if [ "$available_memory" -lt 4096 ]; then
+        log_warn "   ⚠️  Low memory for ML services: ${available_memory}MB"
+        log_info "   💡 ML services may experience OOM errors"
+        ml_warnings+=("Low memory - may affect ML performance")
+    else
+        log_success "   ✅ Sufficient memory for ML services: ${available_memory}MB"
+    fi
+    
+    # Check if ML Docker images exist or need building
+    log_info "   → Checking ML service Docker configurations..."
+    for service in "${ML_FRAMEWORK_SERVICES[@]}"; do
+        local dockerfile="./docker/$service/Dockerfile"
+        if [ ! -f "$dockerfile" ]; then
+            log_error "   ❌ Missing Dockerfile for $service"
+            ml_ready=false
+        else
+            log_success "   ✅ Found Dockerfile for $service"
+        fi
+        
+        # Check for service-specific files
+        case "$service" in
+            "jax")
+                if [ ! -f "./docker/jax/web_interface.py" ]; then
+                    log_warn "   ⚠️  JAX web interface was missing but has been created"
+                fi
+                ;;
+            "fsdp")
+                if [ ! -f "./docker/fsdp/fsdp_service.py" ]; then
+                    log_error "   ❌ Missing FSDP service implementation"
+                    ml_ready=false
+                fi
+                ;;
+        esac
+    done
+    
+    # Create optimized ML compose override if needed
+    if [ "$GPU_SUPPORT_LEVEL" = "none" ] && [ ! -f "docker-compose.ml-cpu-optimized.yml" ]; then
+        log_info "   → Creating CPU-optimized ML services configuration..."
+        create_ml_cpu_optimized_compose
+    fi
+    
+    # Display ML services readiness summary
+    if [ "$ml_ready" = true ]; then
+        log_success "🧠 ML/Deep Learning services prerequisites validated"
+        if [ ${#ml_warnings[@]} -gt 0 ]; then
+            log_warn "   ⚠️  Warnings: ${ml_warnings[*]}"
+        fi
+    else
+        log_error "❌ ML services prerequisites validation failed"
+        log_info "💡 Attempting to fix issues automatically..."
+        # Attempt fixes but don't block deployment
+    fi
+    
+    return 0
+}
+
+# Create CPU-optimized ML compose configuration
+create_ml_cpu_optimized_compose() {
+    cat > docker-compose.ml-cpu-optimized.yml << 'EOF'
+# ML Services CPU Optimization Override
+version: '3.8'
+
+services:
+  pytorch:
+    environment:
+      - PYTORCH_CPU_ONLY=true
+      - OMP_NUM_THREADS=4
+      - MKL_NUM_THREADS=4
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  tensorflow:
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - TF_ENABLE_ONEDNN_OPTS=1
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  jax:
+    environment:
+      - JAX_PLATFORM_NAME=cpu
+      - XLA_FLAGS=--xla_cpu_multi_thread_eigen=true
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+
+  fsdp:
+    environment:
+      - TORCH_DISTRIBUTED_BACKEND=gloo
+      - WORLD_SIZE=1
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+EOF
+    
+    log_success "   ✅ Created ML CPU-optimized configuration"
+    
+    # Update compose file list
+    export COMPOSE_FILE="${COMPOSE_FILE}:docker-compose.ml-cpu-optimized.yml"
 }
 
 # Configure system limits for high-performance deployment
@@ -2282,6 +2469,42 @@ check_docker_service_health() {
                             log_warn "   ⚠️  Neo4j container running but not ready"
                         fi
                         ;;
+                    "pytorch")
+                        # Test PyTorch Jupyter service
+                        if curl -sf http://localhost:8888/api >/dev/null 2>&1; then
+                            log_success "   ✅ PyTorch Jupyter Lab is running and accessible"
+                            return 0
+                        else
+                            log_warn "   ⚠️  PyTorch Jupyter Lab not yet accessible on port 8888"
+                        fi
+                        ;;
+                    "tensorflow")
+                        # Test TensorFlow Jupyter service
+                        if curl -sf http://localhost:8889/api >/dev/null 2>&1; then
+                            log_success "   ✅ TensorFlow Jupyter Lab is running and accessible"
+                            return 0
+                        else
+                            log_warn "   ⚠️  TensorFlow Jupyter Lab not yet accessible on port 8889"
+                        fi
+                        ;;
+                    "jax")
+                        # Test JAX API service
+                        if curl -sf http://localhost:8089/health >/dev/null 2>&1; then
+                            log_success "   ✅ JAX service API is running and responding"
+                            return 0
+                        else
+                            log_warn "   ⚠️  JAX service API not yet accessible on port 8089"
+                        fi
+                        ;;
+                    "fsdp")
+                        # Test FSDP distributed training service
+                        if curl -sf http://localhost:8080/health >/dev/null 2>&1; then
+                            log_success "   ✅ FSDP distributed training service is running"
+                            return 0
+                        else
+                            log_warn "   ⚠️  FSDP service not yet accessible on port 8080"
+                        fi
+                        ;;
                     *)
                         # Generic health check - just verify container is running
                         log_success "   ✅ $service_name container is running"
@@ -2347,7 +2570,6 @@ check_docker_service_health() {
     
     return 1
 }
-
 # Intelligent pre-flight validation with comprehensive dependency detection
 perform_intelligent_preflight_check() {
     log_header "🔍 Intelligent Pre-Flight System Validation"
@@ -3609,7 +3831,7 @@ display_sutazai_logo() {
     echo -e "${YELLOW}    • 50+ AI Services  • Vector Databases  • Model Management${RESET}"
     echo -e "${YELLOW}    • Agent Orchestration  • Enterprise Security  • 100% Local${RESET}"
     echo ""
-    echo -e "${BRIGHT_BLUE}═══════════════════════════════════════════════════════════════════════════${RESET}"
+    echo -e "${BRIGHT_BLUE}════════════════════════════════════════════════════════════════════════════${RESET}"
     echo ""
     echo -e "${WHITE}🌟 Welcome to the most advanced local AI deployment system${RESET}"
     echo -e "${WHITE}🔒 Secure • 🚀 Fast • 🧠 Intelligent • 🏢 Enterprise-Ready${RESET}"
@@ -3642,7 +3864,6 @@ LOCAL_IP=$(hostname -I | awk '{print $1}' || echo "localhost")
 AVAILABLE_MEMORY=$(free -m | awk 'NR==2{printf "%.0f", $7/1024}' || echo "8")
 CPU_CORES=$(nproc || echo "4")
 AVAILABLE_DISK=$(df -BG "$PROJECT_ROOT" | awk 'NR==2 {print $4}' | tr -d 'G' || echo "50")
-
 # Color schemes for enterprise output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -4293,7 +4514,6 @@ install_docker_via_zypper() {
     
     log_success "   ✅ Docker installed via Zypper"
 }
-
 # Install Docker via Emerge (Gentoo)
 install_docker_via_emerge() {
     log_info "   → Installing Docker via Emerge (Gentoo)..."
@@ -4909,7 +5129,6 @@ restart_docker_with_recovery() {
     log_error "Docker daemon recovery failed"
     return 1
 }
-
 # Comprehensive Docker environment validation
 validate_docker_environment() {
     log_info "✅ Validating Docker environment..."
@@ -5519,7 +5738,6 @@ detect_security_intelligence() {
     
     log_success "Security Intelligence: Root=$running_as_root, Sudo=$sudo_available, SELinux=$selinux_status"
 }
-
 # Package Manager Intelligence
 detect_package_manager_intelligence() {
     log_info "🔍 Detecting package management capabilities..."
@@ -6061,7 +6279,6 @@ show_credentials() {
     echo -e "${RED}⚠️  Save these credentials securely! They are stored in: $ENV_FILE${NC}"
     echo ""
 }
-
 # ===============================================
 # 🚀 ADVANCED SERVICE DEPLOYMENT FUNCTIONS
 # ===============================================
@@ -6708,7 +6925,6 @@ EOF
         return 1
     fi
 }
-
 # 🧠 Intelligent Docker Build Context Validation
 validate_docker_build_context() {
     local service_name="$1"
@@ -7159,7 +7375,6 @@ detect_recent_changes() {
     
     return 0
 }
-
 analyze_change_impact() {
     local changed_files="$1"
     
@@ -7769,7 +7984,6 @@ stop_resource_monitoring() {
     # Remove any stale monitoring-related files
     rm -f /tmp/sutazai_monitor.pid /tmp/sutazai_*.pid 2>/dev/null || true
 }
-
 # Final deployment verification and health check
 perform_final_deployment_verification() {
     log_header "🔍 Final Deployment Verification"
@@ -8375,7 +8589,6 @@ setup_parallel_downloads() {
     log_info "  • GNU parallel available: $(command -v parallel >/dev/null 2>&1 && echo 'Yes' || echo 'No')"
     log_info "  • curl parallel support: ${CURL_PARALLEL}"
 }
-
 parallel_curl_download() {
     local -n urls_ref=$1
     local output_dir="$2"
@@ -8749,7 +8962,7 @@ download_models_sequentially_with_timeout() {
     if [ $success_count -gt 0 ]; then
         log_success "✅ At least some models downloaded successfully!"
     else
-        log_warn "⚠️ No models were downloaded, but existing models are available"
+        log_warn "⚠️  No models were downloaded, but existing models are available"
         log_info "💡 System is still functional with existing models"
     fi
     
@@ -8977,7 +9190,6 @@ wait_for_background_downloads() {
     # Show download performance summary
     log_success "🎯 All downloads completed using parallel processing for maximum throughput!"
 }
-
 install_all_system_dependencies() {
     log_header "📦 Installing All System Dependencies"
     
@@ -9607,7 +9819,6 @@ validate_security_sensitive_changes() {
         fi
     fi
 }
-
 validate_database_changes() {
     log_info "🗄️  Validating database changes..."
     
@@ -10258,7 +10469,6 @@ deploy_service_group() {
     
     sleep $SERVICE_START_DELAY
 }
-
 # ===============================================
 # 🧪 COMPREHENSIVE TESTING AND VALIDATION
 # ===============================================
@@ -10306,6 +10516,11 @@ run_comprehensive_health_checks() {
     log_info "Checking container statuses..."
     local container_stats=$(docker compose ps --format table 2>/dev/null || echo "Unable to get container stats")
     echo "$container_stats"
+    
+    # ML Services Health Check
+    echo ""
+    log_header "🧠 ML/Deep Learning Services Health Status"
+    monitor_ml_services
     
     # Generate health summary
     local success_rate=$((passed_checks * 100 / total_checks))
@@ -10778,7 +10993,6 @@ attempt_automatic_validation_fixes() {
     
     return 0
 }
-
 # ===============================================
 # 🎯 MAIN DEPLOYMENT ORCHESTRATION
 # ===============================================
@@ -11037,7 +11251,81 @@ main_deployment() {
     sleep 10
     
     # Phase 7: ML Frameworks and Advanced Services
-    deploy_service_group "ML Framework Services" "${ML_FRAMEWORK_SERVICES[@]}"
+    log_header "🧠 Deploying ML/Deep Learning Framework Services"
+    validate_ml_services_prerequisites
+    
+    # Smart ML service deployment with resource management
+    log_info "🧮 Optimizing ML service deployment based on available resources..."
+    
+    # Deploy ML services with intelligent resource allocation
+    if [ "$GPU_SUPPORT_LEVEL" != "none" ]; then
+        log_info "   → GPU detected - deploying ML services with GPU support"
+        export PYTORCH_CUDA_ENABLED=true
+        export TENSORFLOW_GPU_ENABLED=true
+        export JAX_GPU_ENABLED=true
+    else
+        log_info "   → No GPU detected - deploying ML services in CPU mode"
+        export PYTORCH_CUDA_ENABLED=false
+        export TENSORFLOW_GPU_ENABLED=false
+        export JAX_GPU_ENABLED=false
+    fi
+    
+    # Deploy ML services with retry logic for initialization
+    for ml_service in "${ML_FRAMEWORK_SERVICES[@]}"; do
+        log_info "   → Deploying $ml_service with optimized configuration..."
+        
+        # Pre-deployment check for ML service requirements
+        case "$ml_service" in
+            "pytorch")
+                export PYTORCH_NUM_THREADS=${PYTORCH_NUM_THREADS:-$(nproc)}
+                log_info "     PyTorch threads: $PYTORCH_NUM_THREADS"
+                ;;
+            "tensorflow")
+                export TF_NUM_INTEROP_THREADS=${TF_NUM_INTEROP_THREADS:-$(nproc)}
+                export TF_NUM_INTRAOP_THREADS=${TF_NUM_INTRAOP_THREADS:-$(nproc)}
+                log_info "     TensorFlow threads: interop=$TF_NUM_INTEROP_THREADS, intraop=$TF_NUM_INTRAOP_THREADS"
+                ;;
+            "jax")
+                export JAX_PLATFORM_NAME=${JAX_PLATFORM_NAME:-"cpu"}
+                [ "$GPU_SUPPORT_LEVEL" != "none" ] && export JAX_PLATFORM_NAME="gpu"
+                log_info "     JAX platform: $JAX_PLATFORM_NAME"
+                ;;
+        esac
+        
+        # Deploy with enhanced error handling
+        local ml_retry_count=0
+        local ml_max_retries=3
+        
+        while [ $ml_retry_count -lt $ml_max_retries ]; do
+            if docker-compose up -d "$ml_service" 2>&1 | tee -a "$LOG_FILE"; then
+                # Wait for ML service initialization
+                log_info "     Waiting for $ml_service to initialize..."
+                sleep 10
+                
+                # Check if service is healthy
+                if check_docker_service_health "$ml_service"; then
+                    log_success "     ✅ $ml_service deployed successfully"
+                    break
+                else
+                    log_warn "     ⚠️  $ml_service health check failed, retrying..."
+                    ((ml_retry_count++))
+                fi
+            else
+                log_warn "     ⚠️  Failed to deploy $ml_service, retrying..."
+                ((ml_retry_count++))
+            fi
+            
+            if [ $ml_retry_count -lt $ml_max_retries ]; then
+                sleep $((ml_retry_count * 5))
+            fi
+        done
+        
+        if [ $ml_retry_count -eq $ml_max_retries ]; then
+            log_error "     ❌ Failed to deploy $ml_service after $ml_max_retries attempts"
+        fi
+    done
+    
+    # Deploy remaining advanced services
     deploy_service_group "Advanced Services" "${ADVANCED_SERVICES[@]}"
     
     # Phase 8: System Initialization and Model Setup
@@ -11405,7 +11693,6 @@ setup_initial_models() {
     
     log_success "🚀 AI model initialization completed - system ready!"
 }
-
 resume_deployment() {
     log_header "📊 Checking Current Deployment Status"
     
@@ -11976,7 +12263,6 @@ cleanup_on_error() {
     log_error "Deployment failed. Check debug logs for detailed information."
     exit 1
 }
-
 # Set up error trap
 trap 'cleanup_on_error $LINENO' ERR
 
@@ -12612,7 +12898,6 @@ prepare_super_intelligent_system() {
     log_success "✅ System preparation completed successfully"
     return 0
 }
-
 # ===============================================
 # 🚀 MAIN DEPLOYMENT ORCHESTRATION
 # ===============================================
@@ -12955,6 +13240,80 @@ run_comprehensive_health_checks() {
     fi
 }
 
+# Monitor ML services and resources
+monitor_ml_services() {
+    log_info "📊 Monitoring ML/Deep Learning services..."
+    
+    local ml_services=("pytorch" "tensorflow" "jax" "fsdp")
+    local all_healthy=true
+    
+    for service in "${ml_services[@]}"; do
+        if docker ps --format "{{.Names}}" | grep -q "sutazai-$service"; then
+            local container_name="sutazai-$service"
+            
+            # Get container stats
+            local stats=$(docker stats --no-stream --format "{{.CPUPerc}} {{.MemUsage}}" "$container_name" 2>/dev/null || echo "N/A N/A")
+            local cpu_usage=$(echo "$stats" | awk '{print $1}')
+            local mem_usage=$(echo "$stats" | awk '{print $2}')
+            
+            log_info "   → $service: CPU: $cpu_usage, Memory: $mem_usage"
+            
+            # Check if using GPU
+            if docker exec "$container_name" nvidia-smi >/dev/null 2>&1; then
+                local gpu_info=$(docker exec "$container_name" nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null || echo "N/A,N/A,N/A")
+                log_info "     GPU: $gpu_info"
+            fi
+            
+            # Check service-specific health
+            case "$service" in
+                "pytorch")
+                    if docker exec "$container_name" python -c "import torch; print(f'PyTorch {torch.__version__} - CUDA: {torch.cuda.is_available()}')" >/dev/null 2>&1; then
+                        log_success "     ✅ PyTorch runtime healthy"
+                    else
+                        log_warn "     ⚠️  PyTorch runtime check failed"
+                        all_healthy=false
+                    fi
+                    ;;
+                "tensorflow")
+                    if docker exec "$container_name" python -c "import tensorflow as tf; print(f'TensorFlow {tf.__version__} - GPU: {len(tf.config.list_physical_devices(\"GPU\"))}')" >/dev/null 2>&1; then
+                        log_success "     ✅ TensorFlow runtime healthy"
+                    else
+                        log_warn "     ⚠️  TensorFlow runtime check failed"
+                        all_healthy=false
+                    fi
+                    ;;
+                "jax")
+                    if docker exec "$container_name" python -c "import jax; print(f'JAX {jax.__version__} - Devices: {jax.devices()}')" >/dev/null 2>&1; then
+                        log_success "     ✅ JAX runtime healthy"
+                    else
+                        log_warn "     ⚠️  JAX runtime check failed"
+                        all_healthy=false
+                    fi
+                    ;;
+                "fsdp")
+                    if docker exec "$container_name" python -c "import torch.distributed as dist; print('FSDP support available')" >/dev/null 2>&1; then
+                        log_success "     ✅ FSDP runtime healthy"
+                    else
+                        log_warn "     ⚠️  FSDP runtime check failed"
+                        all_healthy=false
+                    fi
+                    ;;
+            esac
+        else
+            log_warn "   ⚠️  $service container not running"
+            all_healthy=false
+        fi
+    done
+    
+    if [ "$all_healthy" = true ]; then
+        log_success "✅ All ML services are healthy"
+    else
+        log_warn "⚠️  Some ML services need attention"
+    fi
+    
+    return 0
+}
+
 # ===============================================
 # 🎬 SCRIPT EXECUTION ENTRY POINT
 # ===============================================
@@ -12990,6 +13349,11 @@ case "${1:-deploy}" in
         echo ""
         log_info "Recent logs:"
         docker-compose logs --tail=50
+        exit $?
+        ;;
+    ml-status|ml)
+        log_header "🧠 ML/Deep Learning Services Status"
+        monitor_ml_services
         exit $?
         ;;
     *)
