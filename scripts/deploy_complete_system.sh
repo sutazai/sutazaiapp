@@ -12653,8 +12653,39 @@ if [ $# -eq 0 ]; then
     log_info "🚀 Phase 4: Final Performance Optimizations and Validation"
     apply_final_performance_optimizations
     
-    # Phase 5: Show completion summary
-    log_info "📊 Phase 5: Deployment Summary and Results"
+    # Phase 5: AGI/ASI Brain Deployment (Optional)
+    log_info "🧠 Phase 5: AGI/ASI Brain System (Optional)"
+    
+    if [ "${DEPLOY_BRAIN:-false}" = "true" ]; then
+        log_info "   → Deploying SutazAI Brain - 100% Local AGI/ASI System..."
+        
+        # Check if Brain deployment script exists
+        if [ -f "$SCRIPT_DIR/../brain/deploy.sh" ]; then
+            log_info "   → Executing Brain deployment..."
+            bash "$SCRIPT_DIR/../brain/deploy.sh"
+            
+            # Wait for Brain to be ready
+            sleep 10
+            
+            # Check Brain health
+            if curl -f http://localhost:8888/health >/dev/null 2>&1; then
+                log_success "   ✅ Brain system deployed and healthy"
+                log_info "   → Brain API: http://localhost:8888"
+                log_info "   → Brain Status: http://localhost:8888/status"
+            else
+                log_warn "   ⚠️  Brain deployment completed but health check failed"
+            fi
+        else
+            log_warn "   ⚠️  Brain deployment script not found. Skipping Brain deployment."
+            log_info "   💡 To deploy Brain later, run: ./brain/deploy.sh"
+        fi
+    else
+        log_info "   → Brain deployment skipped (set DEPLOY_BRAIN=true to enable)"
+        log_info "   💡 To deploy Brain later, run: ./brain/deploy.sh"
+    fi
+    
+    # Phase 6: Show completion summary
+    log_info "📊 Phase 6: Deployment Summary and Results"
     display_deployment_summary
 fi
 
