@@ -1,35 +1,57 @@
 model_list:
-  - model_name: gpt-3.5-turbo
-    litellm_params:
-      model: ollama/llama3.2:3b
-      api_base: http://ollama:11434
-  - model_name: gpt-4
-    litellm_params:
-      model: ollama/qwen2.5:3b
-      api_base: http://ollama:11434
-  - model_name: gpt-4-turbo
+  - model_name: deepseek-r1
     litellm_params:
       model: ollama/deepseek-r1:8b
       api_base: http://ollama:11434
-  - model_name: text-embedding-ada-002
+      api_key: dummy
+      stream: true
+  
+  - model_name: qwen3
     litellm_params:
-      model: ollama/nomic-embed-text
+      model: ollama/qwen3:8b
       api_base: http://ollama:11434
-  - model_name: code-davinci-002
+      api_key: dummy
+      stream: true
+  
+  - model_name: codellama
     litellm_params:
       model: ollama/codellama:7b
       api_base: http://ollama:11434
+      api_key: dummy
+      stream: true
+  
+  - model_name: llama2
+    litellm_params:
+      model: ollama/llama2:7b
+      api_base: http://ollama:11434
+      api_key: dummy
+      stream: true
+
+general_settings:
+  master_key: "sk-sutazai-local-key"
+  database_url: "postgresql://sutazai:sutazai_password@postgres:5432/litellm"
+  cache: true
+  cache_params:
+    type: "redis"
+    host: "redis"
+    port: 6379
+    password: "redis_password"
+  
+  # Router settings
+  routing_strategy: "usage-based-routing"
+  num_retries: 3
+  request_timeout: 600
+  fallbacks: [{"deepseek-r1": ["qwen3", "llama2"]}]
+  
+  # Logging
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  
+  # Model defaults
+  default_model: "deepseek-r1"
+  temperature: 0.7
+  max_tokens: 2048
 
 litellm_settings:
   drop_params: true
   set_verbose: false
-  
-general_settings:
-  master_key: ${LITELLM_KEY:-sk-1234}
-  database_url: postgresql://sutazai:OkI2_5Ob_L5bVwIiyyuSBuWQv@postgres:5432/sutazai
-  
-router_settings:
-  routing_strategy: simple-shuffle
-  num_retries: 3
-  timeout: 600
-  max_parallel_requests: 100

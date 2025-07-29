@@ -1,0 +1,376 @@
+# SutazAI AGI/ASI System Docker Compose
+# Comprehensive configuration with all components
+
+version: '3.9'
+
+x-common-variables: &common-variables
+  TZ: ${TZ:-UTC}
+  SUTAZAI_ENV: production
+
+x-ollama-config: &ollama-config
+  OLLAMA_BASE_URL: http://ollama:11434
+  OLLAMA_API_KEY: local
+  OLLAMA_HOST: ollama
+  OLLAMA_ORIGINS: "*"
+
+x-vector-config: &vector-config
+  CHROMADB_URL: http://chromadb:8000
+  FAISS_INDEX_PATH: /data/faiss
+
+x-database-config: &database-config
+  DATABASE_URL: postgresql://sutazai:sutazai_password@postgres:5432/sutazai
+  REDIS_URL: redis://:redis_password@redis:6379/0
+
+networks:
+  agi-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
+volumes:
+  ollama_data:
+  chromadb_data:
+  faiss_data:
+  agent_workspaces:
+  litellm_data:
+
+services:
+  # ===========================================
+  # MODEL MANAGEMENT SERVICES
+  # ===========================================
+  
+  ollama:
+    image: ollama/ollama:latest
+    container_name: agi-ollama
+    restart: unless-stopped
+    environment:
+      <<: *ollama-config
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./data/models/ollama:/models
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - agi-network
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    container_name: agi-litellm
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *database-config
+      LITELLM_MASTER_KEY: sk-sutazai-local-key
+      DATABASE_URL: postgresql://sutazai:sutazai_password@postgres:5432/litellm
+    volumes:
+      - litellm_data:/data
+      - ./config/litellm_config.yaml:/app/config.yaml
+    ports:
+      - "4000:4000"
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - agi-network
+
+  # ===========================================
+  # VECTOR DATABASE SERVICES
+  # ===========================================
+  
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: agi-chromadb
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      CHROMA_SERVER_AUTH_PROVIDER: token
+      CHROMA_SERVER_AUTH_CREDENTIALS: sutazai-chroma-token
+      PERSIST_DIRECTORY: /chroma/chroma
+    volumes:
+      - chromadb_data:/chroma/chroma
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - agi-network
+
+  faiss-service:
+    build:
+      context: ./services/faiss
+      dockerfile: Dockerfile
+    container_name: agi-faiss
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      FAISS_INDEX_PATH: /data/index
+    volumes:
+      - faiss_data:/data
+    ports:
+      - "8100:8100"
+    networks:
+      - agi-network
+
+  # ===========================================
+  # AI AGENT SERVICES
+  # ===========================================
+  
+  letta:
+    image: letta/letta:latest
+    container_name: agi-letta
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *ollama-config
+      <<: *database-config
+      LETTA_SERVER_HOST: 0.0.0.0
+      LETTA_SERVER_PORT: 8283
+    volumes:
+      - agent_workspaces:/workspace
+      - ./data/agents/letta:/root/.letta
+    ports:
+      - "8283:8283"
+    depends_on:
+      - ollama
+      - chromadb
+    networks:
+      - agi-network
+
+  autogpt:
+    image: significantgravitas/auto-gpt:stable
+    container_name: agi-autogpt
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *ollama-config
+      <<: *database-config
+      AUTO_GPT_WORKSPACE: /workspace
+      OPENAI_API_KEY: sk-dummy  # Will use Ollama through LiteLLM
+      OPENAI_API_BASE: http://litellm:4000/v1
+    volumes:
+      - agent_workspaces:/workspace
+      - ./data/agents/autogpt:/app/data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ollama
+      - litellm
+      - redis
+    networks:
+      - agi-network
+
+  localagi:
+    build:
+      context: ./agents/localagi
+      dockerfile: Dockerfile
+    container_name: agi-localagi
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *ollama-config
+      LOCALAGI_PORT: 8090
+    volumes:
+      - agent_workspaces:/workspace
+    ports:
+      - "8090:8090"
+    depends_on:
+      - ollama
+    networks:
+      - agi-network
+
+  tabbyml:
+    image: tabbyml/tabby:latest
+    container_name: agi-tabbyml
+    restart: unless-stopped
+    command: serve --model TabbyML/StarCoder-1B --device cpu
+    environment:
+      <<: *common-variables
+    volumes:
+      - ./data/agents/tabbyml:/data
+    ports:
+      - "8085:8080"
+    networks:
+      - agi-network
+
+  semgrep-service:
+    build:
+      context: ./services/semgrep
+      dockerfile: Dockerfile
+    container_name: agi-semgrep
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+    volumes:
+      - ./:/workspace:ro
+    ports:
+      - "8087:8087"
+    networks:
+      - agi-network
+
+  langchain-orchestrator:
+    build:
+      context: ./services/langchain
+      dockerfile: Dockerfile
+    container_name: agi-langchain
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *ollama-config
+      <<: *vector-config
+      <<: *database-config
+    volumes:
+      - agent_workspaces:/workspace
+    ports:
+      - "8095:8095"
+    depends_on:
+      - ollama
+      - chromadb
+      - redis
+    networks:
+      - agi-network
+
+  # ===========================================
+  # INTEGRATION SERVICE
+  # ===========================================
+  
+  agi-orchestrator:
+    build:
+      context: ./services/orchestrator
+      dockerfile: Dockerfile
+    container_name: agi-orchestrator
+    restart: unless-stopped
+    environment:
+      <<: *common-variables
+      <<: *ollama-config
+      <<: *vector-config
+      <<: *database-config
+      STREAMLIT_APP_URL: http://sutazai-frontend-agi:8501
+      ORCHESTRATOR_PORT: 8200
+    volumes:
+      - ./config:/config
+      - agent_workspaces:/workspace
+    ports:
+      - "8200:8200"
+    depends_on:
+      - ollama
+      - litellm
+      - chromadb
+      - letta
+      - autogpt
+      - tabbyml
+      - langchain-orchestrator
+    networks:
+      - agi-network
+      - sutazai-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ===========================================
+  # SUPPORT SERVICES
+  # ===========================================
+  
+  postgres:
+    image: postgres:16.3-alpine
+    container_name: agi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai_password
+      POSTGRES_DB: sutazai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # Different port to avoid conflict
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agi-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: agi-redis
+    restart: unless-stopped
+    command: redis-server --requirepass redis_password
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6380:6379"  # Different port to avoid conflict
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agi-network
+
+  # ===========================================
+  # MONITORING
+  # ===========================================
+  
+  prometheus-agi:
+    image: prom/prometheus:latest
+    container_name: agi-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/agi/prometheus-agi.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9091:9090"  # Different port to avoid conflict
+    networks:
+      - agi-network
+
+  grafana-agi:
+    image: grafana/grafana:latest
+    container_name: agi-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: sutazai123
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/agi/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3001:3000"  # Different port to avoid conflict
+    depends_on:
+      - prometheus-agi
+    networks:
+      - agi-network
+
+# Volume definitions
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+# External network reference
+networks:
+  sutazai-network:
+    external: true
