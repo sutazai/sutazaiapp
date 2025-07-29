@@ -19,6 +19,7 @@ from ..memory.vector_memory import VectorMemory
 from ..agents.agent_router import AgentRouter
 from ..evaluator.quality_evaluator import QualityEvaluator
 from ..improver.self_improver import SelfImprover
+from .universal_learning_machine import UniversalLearningMachine
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,6 +34,9 @@ class BrainOrchestrator:
         self.router = AgentRouter(config)
         self.evaluator = QualityEvaluator(config)
         self.improver = SelfImprover(config)
+        
+        # Initialize Universal Learning Machine
+        self.ulm = UniversalLearningMachine(config)
         
         # Initialize LangGraph workflow
         self.workflow = self._build_workflow()

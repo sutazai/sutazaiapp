@@ -12659,8 +12659,11 @@ if [ $# -eq 0 ]; then
     if [ "${DEPLOY_BRAIN:-false}" = "true" ]; then
         log_info "   → Deploying SutazAI Brain - 100% Local AGI/ASI System..."
         
-        # Check if Brain deployment script exists
-        if [ -f "$SCRIPT_DIR/../brain/deploy.sh" ]; then
+        # Check if enhanced Brain deployment script exists
+        if [ -f "$SCRIPT_DIR/deploy_brain_enhanced.sh" ]; then
+            log_info "   → Executing Enhanced Brain deployment (v2.0)..."
+            bash "$SCRIPT_DIR/deploy_brain_enhanced.sh"
+        elif [ -f "$SCRIPT_DIR/../brain/deploy.sh" ]; then
             log_info "   → Executing Brain deployment..."
             bash "$SCRIPT_DIR/../brain/deploy.sh"
             
