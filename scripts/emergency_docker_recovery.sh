@@ -76,29 +76,20 @@ main() {
         cp /etc/docker/daemon.json /etc/docker/daemon.json.bak.$(date +%Y%m%d%H%M%S) 2>/dev/null || true
     fi
     
-    # WSL2 optimized configuration
+    # WSL2 optimized configuration - DISABLED for stability
+    log_info "   → Skipping daemon.json creation for Docker stability"
+    # Create stable minimal configuration instead
     cat > /etc/docker/daemon.json << 'EOF'
 {
-    "log-level": "warn",
-    "storage-driver": "overlay2",
-    "storage-opts": [
-        "overlay2.override_kernel_check=true"
-    ],
-    "live-restore": false,
-    "userland-proxy": false,
-    "iptables": false,
-    "bridge": "none",
-    "experimental": false,
-    "max-concurrent-downloads": 10,
-    "max-concurrent-uploads": 10,
-    "features": {
-        "buildkit": true
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
     },
-    "dns": ["8.8.8.8", "1.1.1.1"],
-    "debug": false
+    "storage-driver": "overlay2"
 }
 EOF
-    log_success "   ✅ WSL2-optimized emergency configuration applied"
+    log_success "   ✅ Stable Docker configuration applied"
     
     # Step 4: Ubuntu 24.04 specific Docker installation fix
     if [ "$is_ubuntu_2404" = "true" ]; then

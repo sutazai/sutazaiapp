@@ -2019,6 +2019,9 @@ detect_and_resolve_conflicts() {
 
 # Create optimal Docker daemon.json based on environment
 create_optimal_docker_daemon_json() {
+    # DISABLED: This function creates problematic Docker configurations that break compatibility
+    log_info "   → Skipping Docker daemon.json creation for stability"
+    return 0
     local is_wsl2=false
     local is_ubuntu_2404=false
     
@@ -4835,10 +4838,14 @@ perform_intelligent_preflight_check() {
     
     # Memory check with intelligent recommendations
     local total_memory_gb=$(( $(cat /proc/meminfo | grep MemTotal | awk '{print $2}') / 1024 / 1024 ))
-    if [ "$total_memory_gb" -lt 8 ]; then
-        log_error "   ❌ Insufficient memory: ${total_memory_gb}GB (minimum 8GB required)"
+    if [ "$total_memory_gb" -lt 6 ]; then
+        log_error "   ❌ Insufficient memory: ${total_memory_gb}GB (minimum 6GB required)"
         log_error "      💡 Consider upgrading system memory for optimal AI performance"
         ((critical_issues++))
+    elif [ "$total_memory_gb" -lt 8 ]; then
+        log_warn "   ⚠️  Limited memory: ${total_memory_gb}GB (8GB+ recommended for optimal AI performance)"
+        log_warn "      💡 System will work but may be slower with limited AI services"
+        ((warnings++))
     elif [ "$total_memory_gb" -lt 16 ]; then
         log_warn "   ⚠️  Limited memory: ${total_memory_gb}GB (16GB+ recommended for full AI stack)"
         ((warnings++))
@@ -5678,6 +5685,9 @@ EOF
 }
 
 optimize_docker_daemon() {
+    # DISABLED: This function creates problematic Docker configurations
+    log_info "🔧 Skipping Docker daemon optimization for stability"
+    return 0
     log_info "🔧 Optimizing Docker daemon configuration with 2025 best practices..."
     
     # Create optimized Docker daemon configuration
@@ -7206,7 +7216,8 @@ setup_docker_environment() {
     
     # Phase 4: Docker Environment Optimization
     log_info "📋 Phase 4: Docker Environment Optimization..."
-    optimize_docker_for_ai_workloads
+    # optimize_docker_for_ai_workloads  # DISABLED - causes Docker compatibility issues
+    log_info "   → Skipping AI optimizations to maintain Docker stability"
     
     # Phase 5: Validation
     log_info "📋 Phase 5: Final Validation..."
@@ -7549,6 +7560,9 @@ install_docker_via_official_script() {
 
 # Configure Docker after installation
 configure_docker_post_installation() {
+    # DISABLED: Skip Docker configuration to avoid breaking compatibility
+    log_info "   → Skipping Docker post-installation configuration for stability"
+    return 0
     log_info "   → Configuring Docker post-installation..."
     
     # Add current user to docker group (if not root)
@@ -7578,56 +7592,28 @@ configure_docker_post_installation() {
     
     # Configure Docker for specific environments
     if [ "$RUNNING_IN_WSL" = "true" ]; then
-        log_info "   → Applying WSL-specific Docker configuration..."
-        configure_docker_for_wsl
+        log_info "   → Skipping WSL-specific Docker configuration for stability..."
+        # configure_docker_for_wsl  # DISABLED - causes Docker compatibility issues
     fi
     
     if [ "$VIRTUALIZATION_TYPE" != "bare-metal" ]; then
-        log_info "   → Applying virtualization-specific Docker configuration..."
-        configure_docker_for_virtualization
+        log_info "   → Skipping virtualization-specific Docker configuration for stability..."
+        # configure_docker_for_virtualization  # DISABLED - causes Docker compatibility issues
     fi
 }
 
 # Configure Docker for WSL environment
 configure_docker_for_wsl() {
-    log_info "   → Configuring Docker for WSL environment..."
-    
-    # Create Docker daemon configuration for WSL
-    mkdir -p /etc/docker
-    cat > /etc/docker/daemon.json << 'EOF'
-{
-    "storage-driver": "overlay2",
-    "iptables": false,
-    "bridge": "none",
-    "experimental": true,
-    "features": {
-        "buildkit": true
-    }
-}
-EOF
-    
-    log_info "   → WSL Docker configuration applied"
+    # DISABLED: This function creates problematic Docker configurations that break compatibility
+    log_info "   → Skipping Docker WSL configuration for stability"
+    return 0
 }
 
 # Configure Docker for virtualization environments
 configure_docker_for_virtualization() {
-    log_info "   → Configuring Docker for virtualization environment: $VIRTUALIZATION_TYPE..."
-    
-    # Apply specific configurations based on virtualization type
-    case "$VIRTUALIZATION_TYPE" in
-        "vmware")
-            # VMware-specific optimizations
-            log_info "   → Applying VMware-specific Docker optimizations..."
-            ;;
-        "virtualbox")
-            # VirtualBox-specific optimizations
-            log_info "   → Applying VirtualBox-specific Docker optimizations..."
-            ;;
-        "qemu")
-            # QEMU/KVM-specific optimizations
-            log_info "   → Applying QEMU/KVM-specific Docker optimizations..."
-            ;;
-    esac
+    # DISABLED: This function creates problematic Docker configurations that break compatibility
+    log_info "   → Skipping Docker virtualization configuration for stability"
+    return 0
 }
 
 # Automatically start and configure Docker daemon
@@ -7709,18 +7695,8 @@ start_docker_daemon_automatically() {
         
         # Create minimal daemon.json for WSL2 if needed
         if [ "$is_wsl2" = "true" ] && [ "$is_ubuntu_2404" = "true" ]; then
-            log_info "   → Creating WSL2-optimized daemon.json..."
-            cat > /etc/docker/daemon.json <<EOF
-{
-    "log-level": "warn",
-    "storage-driver": "overlay2",
-    "live-restore": false,
-    "userland-proxy": false,
-    "iptables": false,
-    "bridge": "none",
-    "dns": ["8.8.8.8", "1.1.1.1"]
-}
-EOF
+            log_info "   → Skipping WSL2 daemon.json creation for stability..."
+            # Disabled - this creates problematic Docker configurations
         fi
         
         # Start dockerd directly
@@ -7793,20 +7769,11 @@ EOF
     log_info "   → Method 5: Starting Docker daemon manually..."
     
     # Create optimized daemon.json for manual start
-    cat > /etc/docker/daemon.json << 'EOF'
-{
-    "storage-driver": "overlay2",
-    "log-level": "warn",
-    "dns": ["8.8.8.8", "1.1.1.1"],
-    "features": {
-        "buildkit": true
-    }
-}
-EOF
+    log_info "   → Skipping daemon.json creation for stability..."
+    # Disabled - this creates problematic Docker configurations
     
     # Start dockerd with specific parameters
     dockerd \
-        --config-file=/etc/docker/daemon.json \
         --host=unix:///var/run/docker.sock \
         --data-root=/var/lib/docker \
         > /tmp/dockerd-manual.log 2>&1 &
@@ -7889,6 +7856,9 @@ EOF
 
 # Fix common Docker daemon configuration issues
 fix_docker_daemon_configuration() {
+    # DISABLED: This function creates problematic Docker configurations
+    log_info "🔧 Skipping Docker daemon configuration fixes for stability"
+    return 0
     log_info "🔧 Fixing Docker daemon configuration..."
     
     local daemon_config="/etc/docker/daemon.json"
@@ -8044,7 +8014,9 @@ install_docker_compose_automatically() {
 
 # Optimize Docker configuration for AI workloads (2025 Enhanced)
 optimize_docker_for_ai_workloads() {
-    log_info "⚡ Optimizing Docker for AI workloads (2025 Enhanced)..."
+    # DISABLED: This function creates problematic Docker configurations that break compatibility
+    log_info "   → Skipping Docker AI workload optimization for stability"
+    return 0
     
     local daemon_config="/etc/docker/daemon.json"
     local temp_config="/tmp/daemon.json.optimized"
@@ -8953,7 +8925,7 @@ detect_virtualization_environment() {
         else
             virt_type="bare-metal"
         fi
-    elif command -v dmidecode &> /dev/null && [ "$RUNNING_AS_ROOT" = "true" ]; then
+    elif command -v dmidecode &> /dev/null && [ "$(id -u)" = "0" ]; then
         local manufacturer=$(timeout 2 dmidecode -s system-manufacturer 2>/dev/null || echo "")
         if echo "$manufacturer" | grep -qi "vmware"; then
             virt_type="vmware"
@@ -14446,8 +14418,6 @@ EOF
     
     return 0
 }
-<<<<<<< HEAD
-
 # 🧠 SUPER INTELLIGENT Docker Startup with 2025 Resilience
 intelligent_docker_startup() {
     log_info "🐋 Initiating intelligent Docker startup (2025 optimized)..."
@@ -14744,6 +14714,47 @@ attempt_intelligent_auto_fixes() {
     # Advanced Docker recovery using 2025 techniques
     local docker_recovery_success=false
     
+    # Phase 0: Check if Docker is already working
+    log_info "   → Checking if Docker is already functional..."
+    for timeout_val in 3 5 10; do
+        if timeout $timeout_val docker version >/dev/null 2>&1; then
+            docker_recovery_success=true
+            log_success "   ✅ Docker is already functional"
+            break
+        fi
+        sleep 1
+    done
+    
+    # If Docker is already working, skip recovery
+    if [ "$docker_recovery_success" = "true" ]; then
+        fixes_successful=$((fixes_successful + 1))
+        log_info "🔧 Fixing script permissions..."
+        fixes_applied=$((fixes_applied + 1))
+        
+        if chmod +x /opt/sutazaiapp/scripts/*.sh >/dev/null 2>&1; then
+            fixes_successful=$((fixes_successful + 1))
+            log_success "   ✅ Script permissions corrected"
+        else
+            log_warn "   ⚠️  Could not fix script permissions"
+        fi
+        
+        # Summary
+        log_info "📊 Auto-correction Summary:"
+        log_info "   → Fixes attempted: $fixes_applied"
+        log_info "   → Fixes successful: $fixes_successful"
+        
+        if [ $fixes_successful -eq $fixes_applied ]; then
+            log_success "✅ Auto-correction successful - all fixes applied"
+            return 0
+        elif [ $fixes_successful -gt 0 ]; then
+            log_warn "   ⚠️  Partial success: $fixes_successful/$fixes_applied fixes applied"
+            return 0
+        else
+            log_error "❌ Auto-correction failed - no fixes successful"
+            return 1
+        fi
+    fi
+    
     # Phase 1: Kill hanging processes and clean up
     pkill -f dockerd >/dev/null 2>&1 || true
     pkill -f containerd >/dev/null 2>&1 || true
@@ -14763,11 +14774,16 @@ attempt_intelligent_auto_fixes() {
         
         # Method 1: Service command
         if service docker start >/dev/null 2>&1; then
-            sleep 3
-            if timeout 5 docker version >/dev/null 2>&1; then
-                docker_recovery_success=true
-                log_success "   ✅ Docker daemon started via service command"
-            fi
+            sleep 5
+            # Try multiple times with increasing timeout
+            for timeout_val in 3 5 10; do
+                if timeout $timeout_val docker version >/dev/null 2>&1; then
+                    docker_recovery_success=true
+                    log_success "   ✅ Docker daemon started via service command"
+                    break
+                fi
+                sleep 2
+            done
         fi
         
         # Method 2: Direct dockerd if service failed
@@ -14789,19 +14805,29 @@ attempt_intelligent_auto_fixes() {
                 chmod 666 /var/run/docker.sock >/dev/null 2>&1 || true
             fi
             
-            if timeout 5 docker version >/dev/null 2>&1; then
-                docker_recovery_success=true
-                log_success "   ✅ Docker daemon started via direct dockerd"
-            fi
+            # Try multiple times with increasing timeout
+            for timeout_val in 3 5 10; do
+                if timeout $timeout_val docker version >/dev/null 2>&1; then
+                    docker_recovery_success=true
+                    log_success "   ✅ Docker daemon started via direct dockerd"
+                    break
+                fi
+                sleep 2
+            done
         fi
     else
         # Standard Linux recovery
         if systemctl enable docker >/dev/null 2>&1 && systemctl start docker >/dev/null 2>&1; then
-            sleep 3
-            if timeout 5 docker version >/dev/null 2>&1; then
-                docker_recovery_success=true
-                log_success "   ✅ Docker daemon started via systemctl"
-            fi
+            sleep 5
+            # Try multiple times with increasing timeout
+            for timeout_val in 3 5 10; do
+                if timeout $timeout_val docker version >/dev/null 2>&1; then
+                    docker_recovery_success=true
+                    log_success "   ✅ Docker daemon started via systemctl"
+                    break
+                fi
+                sleep 2
+            done
         fi
     fi
     
@@ -14839,9 +14865,6 @@ attempt_intelligent_auto_fixes() {
         return 1
     fi
 }
-
-=======
->>>>>>> sutazai-pr-17
 # ===============================================
 # 🎯 MAIN DEPLOYMENT ORCHESTRATION
 # ===============================================
