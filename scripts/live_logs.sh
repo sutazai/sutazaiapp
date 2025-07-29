@@ -351,7 +351,7 @@ toggle_debug() {
     for compose_file in "${compose_files[@]}"; do
         if [[ -f "${PROJECT_ROOT}/${compose_file}" ]]; then
             echo -e "  Updating ${compose_file}..."
-            docker-compose -f "${PROJECT_ROOT}/${compose_file}" restart > /dev/null 2>&1 || true
+            docker compose -f "${PROJECT_ROOT}/${compose_file}" restart > /dev/null 2>&1 || true
         fi
     done
     
@@ -370,7 +370,7 @@ set_log_level() {
             
             # Apply to containers
             export LOG_LEVEL
-            docker-compose restart > /dev/null 2>&1 || true
+            docker compose restart > /dev/null 2>&1 || true
             ;;
         *)
             echo -e "${RED}Invalid log level: $level${NC}"
@@ -732,10 +732,15 @@ docker_troubleshooting_menu() {
             echo -e "${CYAN}Resetting Docker Configuration...${NC}"
             sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
 {
+    "log-driver": "json-file",
+    "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+    },
     "storage-driver": "overlay2"
 }
 EOF
-            echo -e "${GREEN}✓ Minimal Docker configuration created${NC}"
+            echo -e "${GREEN}✓ Stable Docker configuration created${NC}"
             sudo systemctl daemon-reload
             ;;
         8)
@@ -1337,10 +1342,10 @@ show_unified_live_logs() {
     echo -e "${CYAN}════════════════════════════════════════════════════════════════${NC}"
     
     # Use docker compose logs with follow for real unified streaming
-    if command -v docker-compose &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
-        # Use docker-compose logs for true unified streaming
+    if command -v docker &> /dev/null && [ -f "/opt/sutazaiapp/docker-compose.yml" ]; then
+        # Use docker compose logs for true unified streaming
         cd /opt/sutazaiapp
-        docker-compose logs -f --tail=5 2>/dev/null || {
+        docker compose logs -f --tail=5 2>/dev/null || {
             # Fallback to individual container streaming
             echo -e "${YELLOW}Docker compose not available, using individual streams...${NC}"
             individual_streaming
@@ -1405,7 +1410,7 @@ show_menu() {
         8) repair_system; read -p "Press Enter to continue..."; show_menu ;;
         9) 
             echo "Restarting all SutazAI services..."
-            docker-compose -f /opt/sutazaiapp/docker-compose-consolidated.yml restart
+            docker compose -f /opt/sutazaiapp/docker-compose.yml restart
             echo "All services restarted!"
             read -p "Press Enter to continue..."
             show_menu
