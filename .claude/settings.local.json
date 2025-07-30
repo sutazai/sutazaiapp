@@ -86,7 +86,14 @@
       "Bash(./test_deployment.sh)",
       "Bash(check_docker_service_health:*)",
       "Bash(/dev/null)",
-      "Bash(./test_brain_functions.sh:*)"
+      "Bash(./test_brain_functions.sh:*)",
+      "Bash(/opt/sutazaiapp/fix_docker_daemon_management.sh:*)",
+      "Bash(awk:*)",
+      "Bash(git pull:*)",
+      "Bash(stty:*)",
+      "Bash(DEBUG=true SKIP_MODEL_DOWNLOADS=true ./scripts/deploy_complete_system.sh deploy)",
+      "Bash(export DEBUG=true)",
+      "Bash(export SKIP_MODEL_DOWNLOADS=true)"
     ],
     "deny": []
   },
