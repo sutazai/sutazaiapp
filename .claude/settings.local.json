@@ -99,7 +99,11 @@
       "Bash(export SKIP_DOCKER_CHECK=true)",
       "Bash(intelligent_docker_startup)",
       "Bash(# Manual Docker cleanup and startup\npkill -f dockerd 2>/dev/null || true\nrm -f /var/run/docker.sock /var/run/docker.pid 2>/dev/null || true\n\n# WSL2 + Ubuntu 24.04 fixes\nsysctl -w kernel.apparmor_restrict_unprivileged_userns=0 >/dev/null 2>&1 || true\necho \"\"kernel.apparmor_restrict_unprivileged_userns=0\"\" > /etc/sysctl.d/60-apparmor-namespace.conf 2>/dev/null || true\n\n# Switch to iptables-legacy for Docker compatibility\nupdate-alternatives --set iptables /usr/sbin/iptables-legacy >/dev/null 2>&1 || true\nupdate-alternatives --set ip6tables /usr/sbin/ip6tables-legacy >/dev/null 2>&1 || true\n\n# Clean iptables chains\nfor chain in DOCKER DOCKER-ISOLATION-STAGE-1 DOCKER-ISOLATION-STAGE-2 DOCKER-USER; do\n    iptables -F $chain >/dev/null 2>&1 || true\n    iptables -X $chain >/dev/null 2>&1 || true\ndone\n\n# Start containerd first\nsystemctl unmask containerd.service >/dev/null 2>&1 || true\nsystemctl enable containerd.service >/dev/null 2>&1 || true\nsystemctl start containerd.service >/dev/null 2>&1 || true\n\n# Start Docker with systemctl\nsystemctl reset-failed docker >/dev/null 2>&1 || true\nsystemctl unmask docker.service >/dev/null 2>&1 || true\nsystemctl enable docker.service >/dev/null 2>&1 || true\nsystemctl start docker.service >/dev/null 2>&1 || true\n\nsleep 5\ndocker info >/dev/null 2>&1 && echo \"\"✅ Docker started successfully\"\" || echo \"\"❌ Docker failed to start\"\")",
-      "Bash(DOCKER_BUILDKIT=0 docker build ./docker/browser-use -t sutazaiapp-browser-use)"
+      "Bash(DOCKER_BUILDKIT=0 docker build ./docker/browser-use -t sutazaiapp-browser-use)",
+      "Bash(DOCKER_BUILDKIT=0 docker build ./docker/browser-use -t sutazaiapp-browser-use --no-cache)",
+      "Bash(dpkg:*)",
+      "Bash(# Remove all the junk Docker functions by line ranges\n# First, get line numbers\nstart_lines=($(grep -n \"\"^perform_ultimate_docker_recovery\\|^display_docker_troubleshooting_guide\\|^install_docker_compose_v2\\|^analyze_docker_state\\|^smart_docker\"\" /opt/sutazaiapp/scripts/deploy_complete_system.sh | cut -d: -f1))\necho \"\"Found junk functions at lines: ${start_lines[*]}\"\")",
+      "Bash(# Find where this broken function ends\ngrep -n \"\"^[a-zA-Z_].*(\"\" /opt/sutazaiapp/scripts/deploy_complete_system.sh | head -20)"
     ],
     "deny": []
   },

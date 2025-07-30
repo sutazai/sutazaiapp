@@ -1,0 +1,33 @@
+# ===============================================
+# 🚀 CLEAN DOCKER MANAGEMENT SYSTEM (MINIMAL)
+# ===============================================
+
+# Simple Docker health check
+check_docker_health() {
+    timeout 5 docker info >/dev/null 2>&1
+}
+
+# Simple Docker restart
+restart_docker() {
+    log_info "🔄 Restarting Docker service..."
+    systemctl restart docker.service
+    sleep 3
+    if check_docker_health; then
+        log_success "✅ Docker restarted successfully"
+        return 0
+    else
+        log_error "❌ Docker restart failed"
+        return 1
+    fi
+}
+
+# Minimal Docker startup check
+ensure_docker_running() {
+    if check_docker_health; then
+        log_success "✅ Docker is running"
+        return 0
+    else
+        log_info "🔄 Docker not running - attempting to start..."
+        restart_docker
+    fi
+}
