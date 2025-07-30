@@ -103,7 +103,10 @@
       "Bash(DOCKER_BUILDKIT=0 docker build ./docker/browser-use -t sutazaiapp-browser-use --no-cache)",
       "Bash(dpkg:*)",
       "Bash(# Remove all the junk Docker functions by line ranges\n# First, get line numbers\nstart_lines=($(grep -n \"\"^perform_ultimate_docker_recovery\\|^display_docker_troubleshooting_guide\\|^install_docker_compose_v2\\|^analyze_docker_state\\|^smart_docker\"\" /opt/sutazaiapp/scripts/deploy_complete_system.sh | cut -d: -f1))\necho \"\"Found junk functions at lines: ${start_lines[*]}\"\")",
-      "Bash(# Find where this broken function ends\ngrep -n \"\"^[a-zA-Z_].*(\"\" /opt/sutazaiapp/scripts/deploy_complete_system.sh | head -20)"
+      "Bash(# Find where this broken function ends\ngrep -n \"\"^[a-zA-Z_].*(\"\" /opt/sutazaiapp/scripts/deploy_complete_system.sh | head -20)",
+      "Bash(export COMPOSE_DOCKER_CLI_BUILD=1)",
+      "Bash(env)",
+      "Bash(test:*)"
     ],
     "deny": []
   },

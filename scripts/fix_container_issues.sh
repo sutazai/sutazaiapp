@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fix Container Issues Script - SutazAI v17.0
+# Fix Container Issues Script - SutazAI
 # Fixes Loki, N8N, backend-agi, and frontend-agi container issues
 
 source "$(dirname "$0")/common.sh"

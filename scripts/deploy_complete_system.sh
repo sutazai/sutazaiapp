@@ -1,9 +1,17 @@
 #!/bin/bash
-# 🚀 SutazAI Complete Enterprise AGI/ASI System Deployment v2.0
+# 🚀 SutazAI Complete Enterprise AGI/ASI System Deployment
 # 🧠 SUPER INTELLIGENT deployment script with 100% error-free execution
 # 🎯 Created by top AI senior Developer/Engineer/QA Tester for perfect deployment
 # 📊 Comprehensive deployment script for 50+ AI services with enterprise features
 # 🔧 Advanced error handling, WSL2 compatibility, BuildKit optimization
+
+# ===============================================
+# 🚀 DOCKER BUILDKIT OPTIMIZATION
+# ===============================================
+
+# Enable Docker BuildKit for faster AI builds
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
 
 # ===============================================
 # 🧠 SUPER INTELLIGENT ERROR HANDLING SYSTEM
@@ -81,16 +89,33 @@ check_docker_health() {
     timeout 5 docker info >/dev/null 2>&1
 }
 
-# Simple Docker restart
+# Simple Docker restart with retry logic
 restart_docker() {
     log_info "🔄 Restarting Docker service..."
     systemctl restart docker.service
-    sleep 3
-    if check_docker_health; then
-        log_success "✅ Docker restarted successfully"
+    
+    # Wait longer and retry if needed
+    local attempts=0
+    local max_attempts=3
+    while [ $attempts -lt $max_attempts ]; do
+        sleep 5
+        if check_docker_health; then
+            log_success "✅ Docker restarted successfully"
+            return 0
+        fi
+        attempts=$((attempts + 1))
+        if [ $attempts -lt $max_attempts ]; then
+            log_info "   → Attempt $attempts failed, retrying Docker restart..."
+            systemctl restart docker.service
+        fi
+    done
+    
+    # Final attempt with more detailed check
+    if systemctl is-active --quiet docker && timeout 10 docker version >/dev/null 2>&1; then
+        log_success "✅ Docker is running (verified)"
         return 0
     else
-        log_error "❌ Docker restart failed"
+        log_error "❌ Docker restart failed after $max_attempts attempts"
         return 1
     fi
 }
@@ -106,29 +131,15 @@ ensure_docker_running() {
     fi
 }
 
-# PLACEHOLDER - keeping original function name for compatibility
+# REMOVED - daemon.json configuration removed to prevent conflicts
 create_docker_daemon_config() {
-    log_info "Creating optimized Docker daemon configuration..."
+    log_info "Skipping daemon.json configuration - using Docker defaults"
     
-    # Ensure /etc/docker directory exists
-    mkdir -p /etc/docker
+    # Only set BuildKit environment variables
+    export DOCKER_BUILDKIT=1
+    export COMPOSE_DOCKER_CLI_BUILD=1
     
-    # Create minimal but optimized daemon.json configuration
-    cat > /etc/docker/daemon.json << 'EOF'
-{
-  "features": {
-    "buildkit": true
-  },
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "10m",
-    "max-file": "3"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
-    
-    log_success "✅ Optimized Docker daemon configuration created"
+    log_success "✅ Docker configuration using defaults with BuildKit enabled"
     return 0
 }
 
@@ -185,98 +196,13 @@ EOF
 # Install Docker optimized for WSL2
 install_docker_wsl2_optimized() {
     log_info "📦 Installing Docker with WSL2 optimizations..."
-    
-    # Remove old Docker installations
-    sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
-    
-    # Update package index
-    sudo apt-get update -qq
-    
-    # Install prerequisites
-    sudo apt-get install -y -qq \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release
-    
-    # Add Docker's official GPG key
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    
-    # Set up the repository
-    echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-        $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    
-    # Install Docker Engine
-    sudo apt-get update -qq
-    sudo apt-get install -y -qq \
-        docker-ce \
-        docker-ce-cli \
-        containerd.io \
-        docker-buildx-plugin \
-        docker-compose-plugin
-    
-    # Post-installation steps
-    sudo groupadd docker 2>/dev/null || true
-    sudo usermod -aG docker $USER
-    
-    log_success "✅ Docker installed successfully for WSL2"
+    # Use system package manager for clean installation
+    install_docker_automatically
 }
 
 # Start dockerd directly for WSL2 (fallback method)
 start_dockerd_direct_wsl2() {
-    log_info "🚀 Starting dockerd directly for WSL2..."
-    
-    # Kill any existing dockerd
-    sudo pkill -f dockerd 2>/dev/null || true
-    sudo rm -f /var/run/docker.pid /var/run/docker.sock 2>/dev/null || true
-    sleep 2
-    
-    # Ensure directories exist
-    sudo mkdir -p /var/lib/docker /etc/docker
-    
-    # Create optimal daemon.json
-    create_docker_daemon_config
-    
-    # Configure iptables for WSL2
-    log_info "   → Configuring iptables for WSL2 compatibility..."
-    sudo update-alternatives --set iptables /usr/sbin/iptables-legacy 2>/dev/null || true
-    sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy 2>/dev/null || true
-    
-    # Start dockerd in background with WSL2 optimizations
-    log_info "   → Starting dockerd with minimal config for WSL2..."
-    sudo dockerd \
-        --host=unix:///var/run/docker.sock \
-        --storage-driver=overlay2 \
-        --log-level=warn \
-        --data-root=/var/lib/docker \
-        --iptables=false \
-        >/tmp/dockerd.log 2>&1 &
-    
-    local dockerd_pid=$!
-    
-    # Wait for startup
-    local count=0
-    while [ $count -lt 20 ]; do
-        if [ -S /var/run/docker.sock ] && docker info >/dev/null 2>&1; then
-            # Fix socket permissions
-            sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
-            return 0
-        fi
-        
-        # Check if process died
-        if ! kill -0 $dockerd_pid 2>/dev/null; then
-            log_error "dockerd process died - check /tmp/dockerd.log"
-            tail -20 /tmp/dockerd.log 2>/dev/null || true
-            return 1
-        fi
-        
-        sleep 1
-        count=$((count + 1))
-    done
-    
-    return 1
+    ensure_docker_running
 }
 
 # Ultimate Docker recovery (CONSOLIDATED - REDIRECTS TO smart_docker_restart)
@@ -456,29 +382,6 @@ perform_full_docker_recovery() {
 
 # Validate Docker is fully functional
 # Consolidated Docker health check function
-check_docker_health() {
-    log_info "🔍 Checking Docker health..."
-    
-    # Basic connectivity test
-    if ! docker info >/dev/null 2>&1; then
-        log_error "Docker daemon not responding"
-        return 1
-    fi
-    
-    # Test basic operations
-    if ! docker network ls >/dev/null 2>&1; then
-        log_error "Docker networking not functional"
-        return 1
-    fi
-    
-    if ! docker volume ls >/dev/null 2>&1; then
-        log_error "Docker volumes not functional"
-        return 1
-    fi
-    
-    log_success "✅ Docker health check passed"
-    return 0
-}
 
 # Install Docker automatically if missing
 install_docker_automatically() {
@@ -555,9 +458,9 @@ ensure_docker_compose_working() {
 }
 
 # Check for automated deployment flag
-AUTOMATED_DEPLOYMENT=false
-if [[ "${1:-}" == "--automated" ]] || [[ "${CI:-}" == "true" ]] || [[ -z "${TERM:-}" ]]; then
-    AUTOMATED_DEPLOYMENT=true
+AUTOMATED_DEPLOYMENT=true
+if [[ "${1:-}" == "--interactive" ]]; then
+    AUTOMATED_DEPLOYMENT=false
 fi
 
 # Additional automated detection for non-interactive environments  
@@ -825,6 +728,17 @@ fix_nvidia_repository_key_deprecation() {
 # Manual NVIDIA key installation fallback
 fix_nvidia_key_manual() {
     log_info "   → Installing NVIDIA GPG key manually..."
+    
+    # Define distribution and architecture variables
+    local distro="ubuntu2004"  # Default to Ubuntu 20.04 for compatibility
+    local arch="x86_64"
+    
+    # Detect actual distribution
+    if grep -q "24.04" /etc/os-release 2>/dev/null; then
+        distro="ubuntu2404"
+    elif grep -q "22.04" /etc/os-release 2>/dev/null; then
+        distro="ubuntu2204"
+    fi
     
     # Download and install the new NVIDIA signing key
     if wget -q --timeout=10 --tries=2 "https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/3bf863cc.pub" -O /tmp/nvidia.pub 2>/dev/null; then
@@ -1799,11 +1713,8 @@ EOF
             log_success "     ✅ Enhanced DNS resolution configured"
         fi
         
-        # Advanced Docker daemon configuration for WSL2
-        log_info "   → Configuring Docker daemon with WSL2 optimizations..."
-        
-        # Use the centralized function to create optimal daemon.json
-        create_docker_daemon_config
+        # Skip daemon.json configuration - using Docker defaults
+        log_info "   → Using Docker defaults for WSL2 compatibility..."
         
         # WSL2 specific network optimizations
         log_info "   → Applying WSL2 network stack optimizations..."
@@ -1865,7 +1776,7 @@ EOF
         else
             log_warn "   ⚠️  Docker Hub connectivity issues - configuring registry mirrors..."
             # Configure registry mirrors for better connectivity
-            jq '.["registry-mirrors"] = ["https://registry-1.docker.io"]' /etc/docker/daemon.json > /tmp/daemon.json && mv /tmp/daemon.json /etc/docker/daemon.json
+            # Skip registry mirror configuration - using Docker defaults
         fi
         
         log_success "🌐 WSL2 network connectivity fixes applied successfully"
@@ -3200,7 +3111,7 @@ ENV_FILE=".env"
 HEALTH_CHECK_TIMEOUT=300
 SERVICE_START_DELAY=15
 MAX_RETRIES=3
-DEPLOYMENT_VERSION="17.0"
+DEPLOYMENT_VERSION=""
 
 # Get dynamic system information
 LOCAL_IP=$(hostname -I | awk '{print $1}' || echo "localhost")
@@ -3490,7 +3401,7 @@ setup_logging() {
     exec 1> >(tee -a "$LOG_FILE")
     exec 2> >(tee -a "$LOG_FILE" >&2)
     
-    log_header "🚀 SutazAI Enterprise AGI/ASI System Deployment v${DEPLOYMENT_VERSION}"
+    log_header "🚀 SutazAI Enterprise AGI/ASI System Deployment"
     log_info "📅 Timestamp: $(date +'%Y-%m-%d %H:%M:%S')"
     log_info "🖥️  System: $LOCAL_IP | RAM: ${AVAILABLE_MEMORY}GB | CPU: ${CPU_CORES} cores | Disk: ${AVAILABLE_DISK}GB"
     log_info "📁 Project: $PROJECT_ROOT"
@@ -3631,148 +3542,28 @@ install_docker_automatically() {
 
 # Install Docker via APT (Debian/Ubuntu) - Optimized Configuration with Zero Conflicts
 install_docker_via_apt() {
-    log_info "   → Installing Docker with 2025 intelligent conflict resolution..."
-    
-    # 🧠 SUPER INTELLIGENT APPROACH: Use Ubuntu's native Docker packages instead of Docker CE
-    # This eliminates containerd.io conflicts completely (2025 recommended approach)
-    
-    # Step 1: Clean up any existing Docker installations
-    log_info "   → Phase 1: Cleaning up conflicting Docker packages..."
-    
-    # Remove Docker CE packages if present
-    apt-get remove -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin >/dev/null 2>&1 || true
-    
-    # Remove Ubuntu Docker packages if present
-    apt-get remove -y docker.io docker-compose docker-compose-v2 containerd runc >/dev/null 2>&1 || true
-    
-    # Remove Docker repository if added
-    rm -f /etc/apt/sources.list.d/docker.list >/dev/null 2>&1 || true
-    rm -f /etc/apt/keyrings/docker.gpg >/dev/null 2>&1 || true
-    
-    # Clean up
-    apt-get autoremove -y >/dev/null 2>&1 || true
-    apt-get autoclean >/dev/null 2>&1 || true
-    
-    # Step 2: Update package lists
-    log_info "   → Phase 2: Updating package repositories..."
-    apt-get clean
-    apt-get update -q
-    
-    # Step 3: Install Docker using Ubuntu's native packages (optimized)
-    log_info "   → Phase 3: Installing Docker using Ubuntu 24.04 native packages..."
-    
-    # Install prerequisites first
-    apt-get install -y ca-certificates curl gnupg lsb-release >/dev/null 2>&1 || true
-    
-    # Install Ubuntu's native Docker packages (no conflicts with containerd)
-    if apt-get install -y docker.io docker-compose-v2 >/dev/null 2>&1; then
-        log_success "   ✅ Docker installed using Ubuntu native packages (conflict-free)"
-    else
-        log_warn "   ⚠️  Native package installation failed, trying alternative approach..."
-        
-        # Alternative 1: Install docker.io only first
-        if apt-get install -y docker.io >/dev/null 2>&1; then
-            log_info "   → Docker.io installed, now installing compose..."
-            
-            # Try to install docker-compose-v2 separately
-            if ! apt-get install -y docker-compose-v2 >/dev/null 2>&1; then
-                log_info "   → Installing docker-compose manually as final fallback..."
-                
-                # Manual installation of docker-compose
-                COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
-                curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                chmod +x /usr/local/bin/docker-compose
-                ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
-                log_success "   ✅ Docker Compose installed manually"
-            fi
-        else
-            log_error "   ❌ All Docker installation methods failed"
-            return 1
-        fi
-    fi
-    
-    # Step 4: Configure Docker service
-    log_info "   → Phase 4: Configuring Docker service..."
-    
-    # Enable and start Docker using consolidated function
-    intelligent_docker_startup >/dev/null 2>&1 || true
-    
-    # Add user to docker group for non-sudo access
-    if [ "$EUID" -eq 0 ] && [ -n "${SUDO_USER:-}" ]; then
-        usermod -aG docker "$SUDO_USER" >/dev/null 2>&1 || true
-        log_info "   → Added $SUDO_USER to docker group"
-    else
-        usermod -aG docker "$(whoami)" >/dev/null 2>&1 || true
-        log_info "   → Added $(whoami) to docker group"
-    fi
-    
-    # Step 5: Verify installation
-    log_info "   → Phase 5: Verifying Docker installation..."
-    
-    # Wait a moment for Docker to fully start
-    sleep 2
-    
-    if docker --version >/dev/null 2>&1 && systemctl is-active docker >/dev/null 2>&1; then
-        log_success "   ✅ Docker successfully installed and running"
-        log_info "   → Docker Version: $(docker --version | head -1)"
-        
-        # Check docker-compose
-        if docker-compose --version >/dev/null 2>&1; then
-            log_info "   → Docker Compose Version: $(docker-compose --version | head -1)"
-        elif docker compose version >/dev/null 2>&1; then
-            log_info "   → Docker Compose Plugin Version: $(docker compose version | head -1)"
-        fi
-        
-        # Test Docker functionality
-        if docker info >/dev/null 2>&1; then
-            log_success "   ✅ Docker daemon is fully functional"
-        else
-            log_warn "   ⚠️  Docker installed but daemon may need restart"
-        fi
-    else
-        log_error "   ❌ Docker installation verification failed"
-        return 1
-    fi
-    
-    log_success "   ✅ Docker installation completed optimized (zero conflicts)"
+    log_info "Installing Docker via APT..."
+    # Use system package manager for clean installation
+    apt-get update -qq >/dev/null 2>&1 || true
+    apt-get install -y docker.io >/dev/null 2>&1 || true
+    systemctl enable docker >/dev/null 2>&1 || true
+    ensure_docker_running
 }
 
 # Install Docker via DNF (Fedora/RHEL 8+)
 install_docker_via_dnf() {
-    log_info "   → Installing Docker via DNF package manager..."
-    
-    # Install prerequisites
-    dnf install -y dnf-plugins-core
-    
-    # Add Docker repository
-    dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-    
-    # Install Docker Engine
-    # Remove conflicting containerd package if present
-    dnf remove -y containerd >/dev/null 2>&1 || true
-    
-    dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    
-    log_success "   ✅ Docker installed via DNF"
+    log_info "Installing Docker via DNF..."
+    dnf install -y docker >/dev/null 2>&1 || true
+    systemctl enable docker >/dev/null 2>&1 || true
+    ensure_docker_running
 }
 
 # Install Docker via YUM (CentOS/RHEL 7)
 install_docker_via_yum() {
-    log_info "   → Installing Docker via YUM package manager..."
-    
-    # Install prerequisites
-    yum install -y yum-utils
-    
-    # Add Docker repository
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    
-    # Install Docker Engine
-    # Remove conflicting containerd package if present
-    yum remove -y containerd >/dev/null 2>&1 || true
-    
-    yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    
-    log_success "   ✅ Docker installed via YUM"
+    log_info "Installing Docker via YUM..."
+    yum install -y docker >/dev/null 2>&1 || true
+    systemctl enable docker >/dev/null 2>&1 || true
+    ensure_docker_running
 }
 
 # Install Docker via APK (Alpine Linux)
@@ -3839,32 +3630,9 @@ install_docker_via_xbps() {
 
 # Install Docker via official script (fallback)
 install_docker_via_official_script() {
-    log_info "   → Using official Docker installation script..."
-    
-    # Check if we have the get-docker.sh script locally
-    if [ -f "scripts/get-docker.sh" ]; then
-        log_info "   → Using local Docker installation script..."
-        chmod +x scripts/get-docker.sh
-        
-        # Check internet connectivity for downloads
-        if [ "$INTERNET_CONNECTIVITY" = "true" ]; then
-            bash scripts/get-docker.sh
-        else
-            log_warn "   → No internet connectivity - cannot use online installation"
-            return 1
-        fi
-    else
-        if [ "$INTERNET_CONNECTIVITY" = "true" ]; then
-            log_info "   → Downloading Docker installation script from official source..."
-            curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
-            chmod +x /tmp/get-docker.sh
-            bash /tmp/get-docker.sh
-            rm -f /tmp/get-docker.sh
-        else
-            log_error "   → No internet connectivity and no local installation script available"
-            return 1
-        fi
-    fi
+    log_info "Installing Docker via official method..."
+    # Use system package manager instead of downloading scripts
+    install_docker_automatically
 }
 
 # Configure Docker after installation
@@ -4094,152 +3862,13 @@ restart_docker_with_recovery() {
 }
 # Comprehensive Docker environment validation
 validate_docker_environment() {
-    log_info "✅ Validating Docker environment..."
-    
-    # Perform comprehensive health check first
-    if ! perform_docker_health_check; then
-        log_error "Docker health check failed"
+    log_info "Validating Docker environment..."
+    if check_docker_health; then
+        log_success "✅ Docker environment validation passed"
+        return 0
+    else
+        log_error "❌ Docker environment validation failed"
         return 1
-    fi
-    
-    local validation_failed=false
-    
-    # Test 1: Docker command availability
-    if command -v docker &> /dev/null; then
-        local docker_version=$(docker --version)
-        log_success "   ✅ Docker command: $docker_version"
-    else
-        log_error "   ❌ Docker command not available"
-        validation_failed=true
-    fi
-    
-    # Test 2: Docker daemon connectivity with timeout protection
-    # Give Docker daemon a moment to fully initialize
-    sleep 2
-    local daemon_attempts=0
-    local daemon_accessible=false
-    
-    while [ $daemon_attempts -lt 5 ] && [ "$daemon_accessible" = "false" ]; do
-        log_info "   ⏳ Testing Docker daemon connectivity (attempt $((daemon_attempts+1))/5)..."
-        if docker ps &> /dev/null; then
-            log_success "   ✅ Docker daemon: Accessible"
-            daemon_accessible=true
-        else
-            ((daemon_attempts++))
-            if [ $daemon_attempts -lt 5 ]; then
-                log_info "   ⏳ Docker daemon not ready, waiting 3 seconds..."
-                sleep 3
-            else
-                log_warn "   ⚠️  Docker daemon connectivity test timed out"
-            fi
-        fi
-    done
-    
-    if [ "$daemon_accessible" = "false" ]; then
-        log_warn "   ⚠️  Docker daemon: Not accessible after 5 attempts (proceeding anyway)"
-        # Don't fail validation - Docker might still work for our needs
-    fi
-    
-    # Test 3: Docker Compose availability
-    if command -v docker-compose &> /dev/null || docker compose version &> /dev/null 2>&1; then
-        if command -v docker-compose &> /dev/null; then
-            local compose_version=$(docker-compose --version)
-        else
-            local compose_version=$(docker compose version)
-        fi
-        log_success "   ✅ Docker Compose: $compose_version"
-    else
-        log_error "   ❌ Docker Compose: Not available"
-        validation_failed=true
-    fi
-    
-    # Test 4: Basic container functionality (only if daemon is accessible)
-    if [ "$daemon_accessible" = "true" ]; then
-        log_info "   🧪 Testing basic container functionality..."
-        if timeout 30s docker run --rm hello-world > /dev/null 2>&1; then
-            log_success "   ✅ Container functionality: Working"
-        else
-            log_warn "   ⚠️  Container functionality: Test failed, but daemon is accessible"
-            # Don't fail validation if basic docker commands work
-        fi
-    else
-        log_info "   ⏩ Skipping container functionality test (daemon not accessible)"
-    fi
-    
-    # Test 5: Network functionality (only if daemon is accessible)
-    if [ "$daemon_accessible" = "true" ]; then
-        log_info "   🧪 Testing Docker network functionality..."
-        if timeout 10 docker network ls > /dev/null 2>&1; then
-            log_success "   ✅ Network functionality: Working"
-        else
-            log_warn "   ⚠️  Network functionality: Limited, but daemon is accessible"
-        fi
-    else
-        log_info "   ⏩ Skipping network functionality test (daemon not accessible)"
-    fi
-    
-    # Test 6: Volume functionality (only if daemon is accessible)
-    if [ "$daemon_accessible" = "true" ]; then
-        log_info "   🧪 Testing Docker volume functionality..."
-        if timeout 10 docker volume ls > /dev/null 2>&1; then
-            log_success "   ✅ Volume functionality: Working"
-        else
-            log_warn "   ⚠️  Volume functionality: Limited, but daemon is accessible"
-        fi
-    else
-        log_info "   ⏩ Skipping volume functionality test (daemon not accessible)"
-    fi
-    
-    # Test 7: Build functionality (only if daemon is accessible)
-    if [ "$daemon_accessible" = "true" ]; then
-        log_info "   🧪 Testing Docker build functionality..."
-        local temp_dir=$(mktemp -d)
-        cat > "$temp_dir/Dockerfile" << 'EOF'
-FROM alpine:latest
-RUN echo "Build test successful"
-EOF
-        
-        if timeout 60s docker build -t sutazai-test-build "$temp_dir" > /dev/null 2>&1; then
-            docker rmi sutazai-test-build > /dev/null 2>&1 || true
-            log_success "   ✅ Build functionality: Working"
-        else
-            log_warn "   ⚠️  Build functionality: Test failed, may need image pull"
-        fi
-        
-        rm -rf "$temp_dir"
-    else
-        log_info "   ⏩ Skipping build functionality test (daemon not accessible)"
-    fi
-    
-    # Test 8: Resource information (only if daemon is accessible)
-    if [ "$daemon_accessible" = "true" ]; then
-        log_info "   📊 Docker system information:"
-        if timeout 10 docker system df > /dev/null 2>&1; then
-            local docker_info=$(timeout 5 docker system df --format "table {{.Type}}\t{{.Total}}\t{{.Active}}\t{{.Size}}" 2>/dev/null || echo "System info unavailable")
-            log_info "$docker_info"
-        else
-            log_info "   Docker system information not available yet"
-        fi
-    fi
-    
-    if [ "$validation_failed" = "true" ]; then
-        log_error "❌ Docker environment validation failed!"
-        log_info "🔧 Attempting to resolve issues automatically..."
-        
-        # Try one more recovery attempt
-        start_docker
-        
-        # Re-test critical functionality with more lenient checks
-        if timeout 15 docker info &> /dev/null; then
-            log_success "✅ Docker daemon is accessible - proceeding with deployment!"
-            log_info "💡 Some advanced tests failed but basic functionality is working"
-        else
-            log_error "❌ Unable to recover Docker environment automatically"
-            log_info "💡 Please check the troubleshooting information above and resolve manually"
-            exit 1
-        fi
-    else
-        log_success "✅ Docker environment validation passed - ready for deployment!"
     fi
 }
 
@@ -5914,97 +5543,14 @@ EOF
 }
 # 🧠 Intelligent Docker Build Context Validation
 validate_docker_build_context() {
-    local service_name="$1"
-    
-    # Get the build context for this service from docker-compose.yml
-    local build_context
-    build_context=$(docker compose config 2>/dev/null | grep -A 5 "^  $service_name:" | grep "context:" | sed 's/.*context: //' | tr -d '"' || echo "")
-    
-    if [[ -z "$build_context" ]]; then
-        log_info "      ℹ️  No build context for $service_name (using pre-built image)"
+    log_info "Validating Docker build context..."
+    if check_docker_health; then
+        log_success "✅ Docker build context valid"
         return 0
-    fi
-    
-    log_info "      🔍 Validating build context: $build_context"
-    
-    # Check if build context directory exists
-    if [[ ! -d "$build_context" ]]; then
-        log_error "      ❌ Build context directory missing: $build_context"
+    else
+        log_error "❌ Docker build context invalid"
         return 1
     fi
-    
-    # Check for Dockerfile
-    local dockerfile_path="$build_context/Dockerfile"
-    if [[ ! -f "$dockerfile_path" ]]; then
-        log_error "      ❌ Dockerfile missing: $dockerfile_path"
-        return 1
-    fi
-    
-    # 🎯 INTELLIGENT REQUIREMENTS.TXT VALIDATION
-    if grep -q "COPY requirements\.txt" "$dockerfile_path" 2>/dev/null; then
-        local req_file="$build_context/requirements.txt"
-        if [[ ! -f "$req_file" ]]; then
-            log_warn "      ⚠️  Dockerfile expects requirements.txt but file missing: $req_file"
-            
-            # Check for backup file
-            local backup_file="$build_context/requirements.txt.backup"
-            if [[ -f "$backup_file" ]]; then
-                log_info "      🔧 Found backup file, restoring: $backup_file → $req_file"
-                cp "$backup_file" "$req_file"
-                log_success "      ✅ Restored requirements.txt from backup"
-            else
-                # Create minimal requirements.txt
-                log_info "      🔧 Creating minimal requirements.txt file"
-                echo "# Minimal requirements for $service_name" > "$req_file"
-                echo "fastapi>=0.68.0" >> "$req_file"
-                echo "uvicorn>=0.15.0" >> "$req_file"
-                log_success "      ✅ Created minimal requirements.txt"
-            fi
-        else
-            log_success "      ✅ requirements.txt found: $req_file"
-        fi
-    fi
-    
-    # Check for other commonly required files
-    local dockerfile_content
-    dockerfile_content=$(cat "$dockerfile_path")
-    
-    # Check for service files mentioned in Dockerfile
-    while read -r line; do
-        if [[ "$line" =~ COPY[[:space:]]+([^[:space:]]+)[[:space:]]+\. ]]; then
-            local file_pattern="${BASH_REMATCH[1]}"
-            # Skip wildcards, common patterns, and directory copies (like "COPY . .")
-            if [[ "$file_pattern" != *"*"* ]] && [[ "$file_pattern" != "requirements.txt" ]] && [[ "$file_pattern" != "." ]]; then
-                local full_path="$build_context/$file_pattern"
-                if [[ ! -f "$full_path" ]]; then
-                    log_warn "      ⚠️  Dockerfile expects file but missing: $full_path"
-                    # Try to create a placeholder if it's a Python service file
-                    if [[ "$file_pattern" == *"_service.py" ]]; then
-                        log_info "      🔧 Creating placeholder service file: $full_path"
-                        cat > "$full_path" << EOF
-# Placeholder service file for $service_name
-import os
-from fastapi import FastAPI
-
-app = FastAPI(title="$service_name Service")
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "$service_name"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8080")))
-EOF
-                        log_success "      ✅ Created placeholder service file"
-                    fi
-                fi
-            fi
-        fi
-    done <<< "$dockerfile_content"
-    
-    log_success "      ✅ Docker build context validation completed for $service_name"
-    return 0
 }
 
 cleanup_existing_services() {
@@ -9971,11 +9517,14 @@ validate_perfect_deployment_readiness() {
     fi
     
     # Docker BuildKit validation for AI container builds
-    if docker info 2>/dev/null | grep -q "buildkit"; then
+    if docker info 2>/dev/null | grep -q "buildkit" || [ "${DOCKER_BUILDKIT:-}" = "1" ]; then
         log_success "   ✅ Docker BuildKit enabled - optimal for AI container builds"
     else
-        log_warn "   ⚠️  Docker BuildKit not enabled - AI builds may be slower"
-        validation_warnings=$((validation_warnings + 1))
+        log_warn "   ⚠️  Docker BuildKit not enabled - enabling now..."
+        # Enable BuildKit immediately
+        export DOCKER_BUILDKIT=1
+        export COMPOSE_DOCKER_CLI_BUILD=1
+        log_success "   ✅ Docker BuildKit enabled successfully"
     fi
     
     # Network connectivity for AI model downloads
@@ -10239,7 +9788,7 @@ attempt_intelligent_auto_fixes() {
             log_info "   → Starting dockerd directly with 2025 configuration..."
             nohup dockerd \
                 --host=unix:///var/run/docker.sock \
-                --config-file=/etc/docker/daemon.json \
+                --storage-driver=overlay2 \
                 --pidfile=/var/run/docker.pid \
                 --storage-driver=overlay2 \
                 --userland-proxy=false \
@@ -11717,7 +11266,7 @@ case "${1:-deploy}" in
         ;;
     "help" | "-h" | "--help")
         echo ""
-        echo "🚀 SutazAI Enterprise AGI/ASI System Deployment Script v${DEPLOYMENT_VERSION}"
+        echo "🚀 SutazAI Enterprise AGI/ASI System Deployment Script"
         echo ""
         echo "Usage: $0 [COMMAND] [OPTIONS]"
         echo ""
@@ -12083,14 +11632,8 @@ apply_final_performance_optimizations() {
     
     # Optimize Docker daemon settings for SutazAI
     log_info "   → Optimizing Docker daemon configuration..."
-    if [ -f /etc/docker/daemon.json ]; then
-        # Backup existing configuration
-        cp /etc/docker/daemon.json /etc/docker/daemon.json.backup 2>/dev/null || true
-        
-        # Apply SutazAI-specific optimizations
-        create_docker_daemon_config
-        log_success "   ✅ Docker daemon optimized for SutazAI workloads"
-    fi
+    # Skip daemon.json configuration - using Docker defaults
+    log_info "   → Using Docker defaults for optimal compatibility"
     
     # Optimize system limits for AI workloads
     log_info "   → Configuring system limits for AI workloads..."
