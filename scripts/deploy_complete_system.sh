@@ -114,7 +114,7 @@ track_docker_operation() {
 # Track background processes
 track_background_process() {
     local process_name="$1"
-    local pid="$2"
+    local pid="${2:-unknown}"
     echo "$(date '+%H:%M:%S') - Background: $process_name (PID: $pid)" >> logs/background_processes.log 2>/dev/null || true
 }
 
@@ -11398,8 +11398,8 @@ main_deployment() {
     detect_recent_changes
     optimize_system_resources
     optimize_system_performance
-    timeout 300 optimize_network_downloads || {
-        log_warn "⚠️  Network optimization timed out after 5 minutes - continuing with defaults"
+    optimize_network_downloads || {
+        log_warn "⚠️  Network optimization failed - continuing with defaults"
     }
     install_all_system_dependencies
     
