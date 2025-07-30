@@ -93,7 +93,11 @@
       "Bash(stty:*)",
       "Bash(DEBUG=true SKIP_MODEL_DOWNLOADS=true ./scripts/deploy_complete_system.sh deploy)",
       "Bash(export DEBUG=true)",
-      "Bash(export SKIP_MODEL_DOWNLOADS=true)"
+      "Bash(export SKIP_MODEL_DOWNLOADS=true)",
+      "Bash(DOCKER_BUILDKIT=1 docker build --help)",
+      "Bash(export DOCKER_BUILDKIT=1)",
+      "Bash(export SKIP_DOCKER_CHECK=true)",
+      "Bash(intelligent_docker_startup)"
     ],
     "deny": []
   },

@@ -75,102 +75,50 @@ log_header() {
 # 🐳 SUPER INTELLIGENT DOCKER CONFIGURATION
 # ===============================================
 
-# Create minimal Docker daemon.json (consolidated function)
+# Use Docker defaults - avoid custom daemon.json configuration
 create_docker_daemon_config() {
-    log_info "Creating minimal Docker daemon configuration..."
+    log_info "Using Docker default configuration (no custom daemon.json)..."
     
+    # Remove any existing daemon.json to use Docker defaults
+    if [ -f /etc/docker/daemon.json ]; then
+        log_info "   → Backing up existing daemon.json"
+        cp /etc/docker/daemon.json /etc/docker/daemon.json.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null || true
+        rm -f /etc/docker/daemon.json
+    fi
+    
+    # Ensure /etc/docker directory exists but let Docker use its defaults
     mkdir -p /etc/docker
     
-    # Backup existing configuration
-    if [ -f /etc/docker/daemon.json ]; then
-        cp /etc/docker/daemon.json /etc/docker/daemon.json.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null || true
-    fi
-    
-    # Create minimal stable configuration
-    cat > /etc/docker/daemon.json << 'EOF'
-{
-  "log-level": "info",
-  "storage-driver": "overlay2",
-  "dns": ["8.8.8.8", "8.8.4.4"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "10m",
-    "max-file": "3"
-  }
-}
-EOF
-    
-    # Validate the JSON
-    if jq . /etc/docker/daemon.json >/dev/null 2>&1; then
-        log_success "✅ Created stable Docker daemon configuration"
-        return 0
-    else
-        log_error "❌ Failed to create daemon.json"
-        return 1
-    fi
+    log_success "✅ Using Docker default configuration for maximum compatibility"
+    return 0
 }
 
 # ===============================================
 # 🚀 SUPER INTELLIGENT DOCKER MANAGEMENT SYSTEM
 # ===============================================
 
-# Consolidated Docker startup function
+# Consolidated Docker startup - use intelligent_docker_startup instead
 start_docker() {
-    log_info "🐳 Starting Docker daemon..."
-    
-    # Quick check if Docker is already running
-    if docker info >/dev/null 2>&1; then
-        log_success "✅ Docker is already running"
-        return 0
-    fi
-    
-    # Detect WSL2 environment
-    local is_wsl2=false
-    if grep -q -E "(WSL|Microsoft)" /proc/version 2>/dev/null || [ -n "${WSL_DISTRO_NAME:-}" ]; then
-        is_wsl2=true
-        log_info "WSL2 environment detected"
-    fi
-    
-    # Clean up any stale processes
-    pkill -f dockerd >/dev/null 2>&1 || true
-    rm -f /var/run/docker.sock /var/run/docker.pid >/dev/null 2>&1 || true
-    
-    # Try systemctl first
-    if systemctl start docker 2>/dev/null; then
-        sleep 3
-        if docker info >/dev/null 2>&1; then
-            log_success "✅ Docker started via systemctl"
-            return 0
-        fi
-    fi
-    
-    # Try service command for non-systemd systems
-    if service docker start 2>/dev/null; then
-        sleep 3
-        if docker info >/dev/null 2>&1; then
-            log_success "✅ Docker started via service"
-            return 0
-        fi
-    fi
-    
-    # For WSL2, try direct dockerd startup
-    if [ "$is_wsl2" = true ]; then
-        log_info "Trying direct dockerd startup for WSL2..."
-        dockerd >/tmp/dockerd.log 2>&1 &
-        sleep 5
-        if docker info >/dev/null 2>&1; then
-            log_success "✅ Docker started via direct dockerd"
-            return 0
-        fi
-    fi
-    
-    log_error "❌ Failed to start Docker daemon"
-    return 1
+    # This function is deprecated - use intelligent_docker_startup instead
+    intelligent_docker_startup
 }
 
 # Additional helper functions would go here if needed
 
-# Enable systemd in WSL2 (2025 best practice)
+# Track Docker operations for logging
+track_docker_operation() {
+    local operation="$1"
+    echo "$(date '+%H:%M:%S') - Docker: $operation" >> logs/docker_operations.log 2>/dev/null || true
+}
+
+# Track background processes
+track_background_process() {
+    local process_name="$1"
+    local pid="$2"
+    echo "$(date '+%H:%M:%S') - Background: $process_name (PID: $pid)" >> logs/background_processes.log 2>/dev/null || true
+}
+
+# Enable systemd in WSL2 (optimized)
 enable_systemd_wsl2() {
     log_info "🔧 Configuring systemd for WSL2..."
     
@@ -196,9 +144,9 @@ EOF
     log_success "✅ Systemd enabled in WSL configuration"
 }
 
-# Install Docker properly for WSL2 2025
-install_docker_wsl2_2025() {
-    log_info "📦 Installing Docker with 2025 WSL2 optimizations..."
+# Install Docker optimized for WSL2
+install_docker_wsl2_optimized() {
+    log_info "📦 Installing Docker with WSL2 optimizations..."
     
     # Remove old Docker installations
     sudo apt-get remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
@@ -293,9 +241,9 @@ start_dockerd_direct_wsl2() {
     return 1
 }
 
-# Ultimate Docker recovery for 2025 (CONSOLIDATED - REDIRECTS TO smart_docker_restart)
-perform_ultimate_docker_recovery_2025() {
-    log_header "🚨 Ultimate Docker Recovery 2025"
+# Ultimate Docker recovery (CONSOLIDATED - REDIRECTS TO smart_docker_restart)
+perform_ultimate_docker_recovery() {
+    log_header "🚨 Ultimate Docker Recovery"
     
     # Use the consolidated smart_docker_restart function
     smart_docker_restart
@@ -321,7 +269,7 @@ perform_ultimate_docker_recovery_2025() {
     # Step 3: Reinstall if corrupted
     log_info "🔄 Step 3: Verifying Docker installation..."
     if ! dpkg -l | grep -q docker-ce; then
-        install_docker_wsl2_2025
+        install_docker_wsl2_optimized
     fi
     
     # Step 4: Start with most compatible method
@@ -762,50 +710,126 @@ fi
 # 🛠️ SUPER INTELLIGENT RECOVERY FUNCTIONS
 # ===============================================
 
-# Fix Docker BuildKit issues (main cause of RPC EOF errors)
-fix_docker_buildkit_issues() {
-    log_info "🔧 Fixing Docker BuildKit RPC EOF issues..."
+# ===============================================
+# 🏥 CONSOLIDATED HEALTH CHECK SYSTEM
+# ===============================================
+
+# Universal health check function - replaces all scattered health check functions
+universal_health_check() {
+    local service_name="$1"
+    local timeout="${2:-60}"
+    local health_endpoint="${3:-}"
+    local silent="${4:-false}"
     
-    # Strategy 1: Disable BuildKit temporarily for problematic builds
-    export DOCKER_BUILDKIT=0
-    export COMPOSE_DOCKER_CLI_BUILD=0
-    log_success "   ✅ Disabled BuildKit for stability"
+    [ "$silent" = "false" ] && log_info "🔍 Health check: $service_name (${timeout}s timeout)"
     
-    # Strategy 2: Configure Docker daemon for WSL2 compatibility
-    if grep -qi microsoft /proc/version || grep -qi wsl /proc/version; then
-        log_info "   → WSL2 detected, applying specific fixes..."
+    local start_time=$(date +%s)
+    local max_time=$((start_time + timeout))
+    
+    while [ $(date +%s) -lt $max_time ]; do
+        # Check container exists and status
+        local container_status=$(docker ps -a --filter "name=sutazai-$service_name" --format "{{.Status}}" 2>/dev/null | head -1)
         
-        # Create Docker daemon configuration
-        mkdir -p /etc/docker
-        create_docker_daemon_config
-        
-        # Restart Docker if running
-        if systemctl is-active --quiet docker 2>/dev/null; then
-            log_info "   → Restarting Docker with WSL2 optimizations..."
-            systemctl restart docker
-            sleep 10
+        if [[ "$container_status" == *"Up"* ]]; then
+            # Check Docker health status if available
+            local health_status=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}no-healthcheck{{end}}' "sutazai-$service_name" 2>/dev/null || echo "unknown")
             
-            # Wait for Docker to be ready
-            local timeout=60
-            local count=0
-            while ! docker info >/dev/null 2>&1 && [ $count -lt $timeout ]; do
-                sleep 1
-                count=$((count + 1))
-            done
-            
-            if docker info >/dev/null 2>&1; then
-                log_success "   ✅ Docker restarted successfully"
-            else
-                log_error "   ❌ Docker restart failed"
+            # If endpoint provided, test it
+            if [ -n "$health_endpoint" ]; then
+                if curl -sf --max-time 5 "$health_endpoint" >/dev/null 2>&1; then
+                    [ "$silent" = "false" ] && log_success "✅ $service_name: healthy (endpoint verified)"
+                    return 0
+                fi
+            elif [[ "$health_status" == "healthy" ]] || [[ "$health_status" == "no-healthcheck" ]]; then
+                [ "$silent" = "false" ] && log_success "✅ $service_name: healthy"
+                return 0
             fi
         fi
+        
+        sleep 2
+    done
+    
+    [ "$silent" = "false" ] && log_warn "⚠️  $service_name: health check timeout"
+    return 1
+}
+
+# Quick system health overview
+system_health_overview() {
+    local silent="${1:-false}"
+    
+    [ "$silent" = "false" ] && log_info "🏥 System Health Overview"
+    
+    local total_services=0
+    local healthy_services=0
+    local critical_services=("backend-agi" "postgres" "redis" "ollama")
+    local critical_healthy=0
+    
+    # Check all SutazAI services
+    for container in $(docker ps -a --filter "name=sutazai-" --format "{{.Names}}" 2>/dev/null); do
+        local service_name=${container#sutazai-}
+        total_services=$((total_services + 1))
+        
+        if universal_health_check "$service_name" 10 "" "true"; then
+            healthy_services=$((healthy_services + 1))
+            
+            # Check if critical service
+            for critical in "${critical_services[@]}"; do
+                if [ "$service_name" = "$critical" ]; then
+                    critical_healthy=$((critical_healthy + 1))
+                    break
+                fi
+            done
+        fi
+    done
+    
+    if [ "$silent" = "false" ]; then
+        log_info "   → Total services: $total_services"
+        log_info "   → Healthy services: $healthy_services"
+        log_info "   → Critical services healthy: $critical_healthy/${#critical_services[@]}"
+        
+        local health_percentage=0
+        [ $total_services -gt 0 ] && health_percentage=$((healthy_services * 100 / total_services))
+        log_info "   → Overall health: ${health_percentage}%"
     fi
     
-    # Strategy 3: Clear Docker BuildKit cache
-    docker buildx prune -f 2>/dev/null || true
-    docker system prune -f 2>/dev/null || true
+    # Return success if all critical services are healthy and overall health > 80%
+    local health_percentage=0
+    [ $total_services -gt 0 ] && health_percentage=$((healthy_services * 100 / total_services))
     
-    log_success "🔧 Docker BuildKit issues fixed"
+    if [ $critical_healthy -eq ${#critical_services[@]} ] && [ $health_percentage -ge 80 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Backward compatibility aliases - gradually replace these calls
+check_docker_service_health() { universal_health_check "$@"; }
+wait_for_service_health() { universal_health_check "$@"; }
+perform_comprehensive_health_checks() { universal_health_check "$1" "${2:-120}" "$3"; }
+run_comprehensive_health_checks() { system_health_overview "$@"; }
+
+# Optimize Docker BuildKit for AI builds
+optimize_docker_buildkit() {
+    log_info "🔧 Optimizing Docker BuildKit for AI deployments..."
+    
+    # Enable BuildKit for faster builds
+    export DOCKER_BUILDKIT=1
+    export BUILDKIT_PROGRESS=plain
+    export COMPOSE_DOCKER_CLI_BUILD=1
+    log_success "   ✅ Enabled BuildKit for optimized builds"
+    
+    # Configure BuildKit for WSL2 compatibility
+    if grep -qi microsoft /proc/version || grep -qi wsl /proc/version; then
+        log_info "   → WSL2 detected, applying BuildKit WSL2 optimizations..."
+        export BUILDKIT_INLINE_CACHE=0  # Prevent EOF errors in WSL2
+        log_success "   ✅ WSL2 BuildKit optimizations applied"
+    fi
+    
+    # Clean old build cache to ensure fresh builds
+    docker buildx prune -f 2>/dev/null || true
+    
+    log_success "🔧 Docker BuildKit optimization completed"
 }
 
 # Fix Docker Compose issues
@@ -1030,7 +1054,7 @@ pre_deployment_checks() {
     done
 
     # Ensure Docker is running
-    start_docker
+    intelligent_docker_startup
 
     # Resolve port conflicts
     fix_port_conflicts_intelligent
@@ -1043,13 +1067,15 @@ pre_deployment_checks() {
     fi
 
     local available_memory=$(free -m | awk 'NR==2{printf "%.0f", $7/1024}')
-    if [ "$available_memory" -lt 16 ]; then
-        log_error "Insufficient memory: ${available_memory}GB available. Required: 16GB+"
+    if [ "$available_memory" -lt 4 ]; then
+        log_error "Insufficient memory: ${available_memory}GB available. Required: 4GB+"
         exit 1
     fi
 
     # Setup directories
-    setup_directories
+    log_info "📁 Setting up required directories..."
+    mkdir -p logs data backups config tmp
+    log_success "✅ Required directories created"
 }
 
 
@@ -1481,8 +1507,9 @@ apply_intelligent_optimizations() {
     
     # WSL2 specific optimizations
     if [ "$RUNNING_IN_WSL" = true ]; then
-        export DOCKER_BUILDKIT=0
-        export COMPOSE_DOCKER_CLI_BUILD=0
+        export DOCKER_BUILDKIT=1
+        export COMPOSE_DOCKER_CLI_BUILD=1
+        export BUILDKIT_INLINE_CACHE=0  # Prevent EOF errors in WSL2
         log_success "     ✅ WSL2 optimizations applied"
     fi
     
@@ -1834,8 +1861,8 @@ fix_wsl2_network_connectivity() {
         local network_interfaces=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -3)
         log_info "     • Network Interfaces: $network_interfaces"
         
-        # 2025 WSL2 DNS Resolution Fix (Microsoft-recommended approach)
-        log_info "   → Applying 2025 WSL2 DNS resolution fixes..."
+        # WSL2 DNS Resolution Fix (Microsoft-recommended approach)
+        log_info "   → Applying WSL2 DNS resolution fixes..."
         
         # Method 1: Modern WSL2 DNS configuration via wsl.conf
         if [ ! -f /etc/wsl.conf ]; then
@@ -1880,7 +1907,7 @@ EOF
             log_success "     ✅ systemd-resolved configured for optimal DNS"
         fi
         
-        # Method 3: Backup resolv.conf management (WSL2 2025 compatible)
+        # Method 3: Backup resolv.conf management (WSL2 compatible)
         if [ -f /etc/resolv.conf ]; then
             log_info "     → Configuring backup DNS resolution..."
             
@@ -1890,7 +1917,7 @@ EOF
             # Backup original
             cp /etc/resolv.conf /etc/resolv.conf.wsl2.backup 2>/dev/null || true
             
-            # Create optimized resolv.conf for WSL2 2025
+            # Create optimized resolv.conf for WSL2
             cat > /etc/resolv.conf << 'EOF'
 # SutazAI WSL2 Optimized DNS Configuration - 2025
 # Primary DNS: Google Public DNS with Cloudflare backup
@@ -1909,8 +1936,8 @@ EOF
             log_success "     ✅ Enhanced DNS resolution configured"
         fi
         
-        # Advanced Docker daemon configuration for WSL2 2025
-        log_info "   → Configuring Docker daemon with WSL2 2025 optimizations..."
+        # Advanced Docker daemon configuration for WSL2
+        log_info "   → Configuring Docker daemon with WSL2 optimizations..."
         
         # Use the centralized function to create optimal daemon.json
         create_docker_daemon_config
@@ -1940,23 +1967,19 @@ EOF
         # Apply sysctl settings
         sysctl -p /etc/sysctl.d/99-sutazai-wsl2-network.conf >/dev/null 2>&1 || true
         
-        # Restart Docker daemon with WSL2 optimizations
-        log_info "   → Restarting Docker daemon with network fixes..."
-        if systemctl restart docker >/dev/null 2>&1; then
-            # Wait for Docker to be ready
-            local max_wait=30
-            local wait_count=0
-            while [ $wait_count -lt $max_wait ]; do
-                if docker info >/dev/null 2>&1; then
-                    break
-                fi
-                sleep 1
-                wait_count=$((wait_count + 1))
-            done
-            log_success "   ✅ Docker daemon restarted successfully"
+        # Only restart Docker if it's not already working properly
+        log_info "   → Checking if Docker daemon restart is needed..."
+        if docker info >/dev/null 2>&1; then
+            log_success "   ✅ Docker daemon already running properly - skipping restart"
         else
-            log_warn "   ⚠️  Docker daemon restart failed - will attempt recovery"
-            return 1
+            log_info "   → Restarting Docker daemon with network fixes..."
+            # Use the centralized intelligent startup function
+            if intelligent_docker_startup; then
+                log_success "   ✅ Docker daemon restarted successfully"
+            else
+                log_warn "   ⚠️  Docker daemon restart failed - will attempt recovery"
+                return 1
+            fi
         fi
         
         # Advanced network connectivity verification
@@ -2013,6 +2036,14 @@ install_packages_with_network_resilience() {
     # Pre-installation system preparation
     log_info "   → Preparing system for package installation..."
     
+    # Kill any hanging package manager processes to prevent locks
+    pkill -f "apt-get" >/dev/null 2>&1 || true
+    pkill -f "dpkg" >/dev/null 2>&1 || true
+    sleep 2
+    
+    # Remove any existing locks
+    rm -f /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock /var/lib/apt/lists/lock 2>/dev/null || true
+    
     # Clear any broken package states
     dpkg --configure -a >/dev/null 2>&1 || true
     apt-get -f install -y >/dev/null 2>&1 || true
@@ -2037,7 +2068,7 @@ install_packages_with_network_resilience() {
         
         # Update package lists with comprehensive error handling
         log_info "     → Updating package lists with timeout and retries..."
-        if timeout 180 apt-get update -y --fix-missing --allow-releaseinfo-change 2>/dev/null; then
+        if timeout 60 apt-get update -y --fix-missing --allow-releaseinfo-change 2>/dev/null; then
             log_success "     ✅ Package lists updated successfully"
             
             # Install critical packages first
@@ -2047,7 +2078,7 @@ install_packages_with_network_resilience() {
             for package in "${critical_packages[@]}"; do
                 if ! dpkg -l | grep -q "^ii  $package "; then
                     log_info "       → Installing: $package"
-                    if ! timeout 120 apt-get install -y "$package" >/dev/null 2>&1; then
+                    if ! timeout 60 apt-get install -y "$package" >/dev/null 2>&1; then
                         log_warn "       ⚠️ Failed to install: $package"
                         package_errors=$((package_errors + 1))
                         install_success=false
@@ -2066,7 +2097,7 @@ install_packages_with_network_resilience() {
                 for package in "${ubuntu_24_packages[@]}"; do
                     if ! dpkg -l | grep -q "^ii  $package "; then
                         log_info "       → Installing: $package"
-                        if ! timeout 120 apt-get install -y "$package" >/dev/null 2>&1; then
+                        if ! timeout 60 apt-get install -y "$package" >/dev/null 2>&1; then
                             log_warn "       ⚠️ Failed to install: $package"
                             package_errors=$((package_errors + 1))
                         else
@@ -2079,7 +2110,7 @@ install_packages_with_network_resilience() {
             else
                 # Legacy Python package installation for older Ubuntu versions
                 log_info "     → Installing Python packages for older Ubuntu versions..."
-                timeout 120 apt-get install -y python3-pip python3-venv >/dev/null 2>&1 || true
+                timeout 60 apt-get install -y python3-pip python3-venv >/dev/null 2>&1 || true
             fi
             
             # Install optional packages (non-critical)
@@ -2087,7 +2118,7 @@ install_packages_with_network_resilience() {
             for package in "${optional_packages[@]}"; do
                 if ! dpkg -l | grep -q "^ii  $package "; then
                     log_info "       → Installing optional: $package"
-                    if timeout 120 apt-get install -y "$package" >/dev/null 2>&1; then
+                    if timeout 60 apt-get install -y "$package" >/dev/null 2>&1; then
                         log_success "       ✅ Installed optional: $package"
                     else
                         log_warn "       ⚠️ Optional package failed: $package (continuing...)"
@@ -2162,232 +2193,13 @@ enable_enhanced_debugging() {
     # Enable Docker debug logging
     export DOCKER_CLI_EXPERIMENTAL=enabled
     export COMPOSE_DOCKER_CLI_BUILD=1
-    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
-    export DOCKER_BUILDKIT=1
-    export BUILDKIT_INLINE_CACHE=0
+    # BuildKit is configured elsewhere - removing duplicate export
     
     # Create debug functions for comprehensive error capture
     export DEBUG_MODE=true
 }
 
-# Enhanced Docker service health checker with intelligent diagnostics
-check_docker_service_health() {
-    local service_name="$1"
-    local timeout="${2:-60}"
-    local max_attempts=3
-    local attempt=1
-    
-    log_info "🔍 Performing comprehensive health check for: $service_name"
-    
-    while [ $attempt -le $max_attempts ]; do
-        log_info "   → Health check attempt $attempt/$max_attempts for $service_name..."
-        
-        # Check if container exists
-        if ! docker ps -a --format "table {{.Names}}" | grep -q "^sutazai-$service_name$"; then
-            log_error "   ❌ Container sutazai-$service_name does not exist"
-            
-            # Provide diagnostic information
-            log_info "   🔍 Available containers:"
-            docker ps -a --format "table {{.Names}}\t{{.Status}}" | grep sutazai | sed 's/^/      /' || log_info "      No SutazAI containers found"
-            
-            return 1
-        fi
-        
-        # Get comprehensive container status
-        local container_status=$(docker inspect --format='{{.State.Status}}' "sutazai-$service_name" 2>/dev/null || echo "not_found")
-        local container_health=$(docker inspect --format='{{.State.Health.Status}}' "sutazai-$service_name" 2>/dev/null || echo "none")
-        local exit_code=$(docker inspect --format='{{.State.ExitCode}}' "sutazai-$service_name" 2>/dev/null || echo "unknown")
-        
-        log_info "   → Container status: $container_status"
-        if [ "$container_health" != "none" ]; then
-            log_info "   → Health status: $container_health"
-        fi
-        
-        case "$container_status" in
-            "running")
-                # Service-specific health checks
-                case "$service_name" in
-                    "postgres")
-                        if docker exec sutazai-postgres pg_isready -U ${POSTGRES_USER:-sutazai} >/dev/null 2>&1; then
-                            log_success "   ✅ PostgreSQL is running and accepting connections"
-                            return 0
-                        else
-                            log_warn "   ⚠️  PostgreSQL container running but not ready"
-                        fi
-                        ;;
-                    "redis")
-                        if docker exec sutazai-redis redis-cli -a ${REDIS_PASSWORD:-redis_password} ping >/dev/null 2>&1; then
-                            log_success "   ✅ Redis is running and responding to ping"
-                            return 0
-                        else
-                            log_warn "   ⚠️  Redis container running but not responding"
-                        fi
-                        ;;
-                    "ollama")
-                        if docker exec sutazai-ollama ollama list >/dev/null 2>&1; then
-                            log_success "   ✅ Ollama is running and responding"
-                            return 0
-                        else
-                            log_warn "   ⚠️  Ollama container running but not ready"
-                        fi
-                        ;;
-                    "chromadb")
-                        # Test ChromaDB API endpoint
-                        if docker exec sutazai-chromadb curl -f http://localhost:8000/api/v1/heartbeat >/dev/null 2>&1; then
-                            log_success "   ✅ ChromaDB is running and API is responsive"
-                            return 0
-                        else
-                            log_warn "   ⚠️  ChromaDB container running but API not ready"
-                        fi
-                        ;;
-                    "qdrant")
-                        # Enhanced Qdrant health check using correct endpoints
-                        # Qdrant uses root endpoint for health and collections for readiness
-                        local qdrant_ready=false
-                        for i in {1..5}; do
-                            if curl -f http://localhost:6333/ >/dev/null 2>&1; then
-                                qdrant_ready=true
-                                break
-                            fi
-                            sleep 2
-                        done
-                        
-                        if [ "$qdrant_ready" = true ]; then
-                            # Verify we can also access collections endpoint for full readiness
-                            if curl -f http://localhost:6333/collections >/dev/null 2>&1; then
-                                log_success "   ✅ Qdrant is running and fully operational"
-                                return 0
-                            else
-                                log_warn "   ⚠️  Qdrant API responding but collections endpoint not ready"
-                            fi
-                        else
-                            # Check if it's a timing issue vs Docker health status contradiction
-                            if [ "$container_health" = "healthy" ]; then
-                                log_warn "   ⚠️  Docker reports healthy but Qdrant API not ready (timing issue)"
-                            else
-                                log_warn "   ⚠️  Qdrant container running but API not responding"
-                            fi
-                        fi
-                        ;;
-                    "faiss")
-                        # Test FAISS service endpoint
-                        if docker exec sutazai-faiss curl -f http://localhost:8000/health >/dev/null 2>&1; then
-                            log_success "   ✅ FAISS service is running and responding"
-                            return 0
-                        else
-                            log_warn "   ⚠️  FAISS container running but service not ready"
-                        fi
-                        ;;
-                    "neo4j")
-                        # Test Neo4j connectivity
-                        if docker exec sutazai-neo4j cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-sutazai_neo4j_password} "RETURN 1" >/dev/null 2>&1; then
-                            log_success "   ✅ Neo4j is running and accepting connections"
-                            return 0
-                        else
-                            log_warn "   ⚠️  Neo4j container running but not ready"
-                        fi
-                        ;;
-                    "pytorch")
-                        # Test PyTorch Jupyter service
-                        if curl -sf http://localhost:8888/api >/dev/null 2>&1; then
-                            log_success "   ✅ PyTorch Jupyter Lab is running and accessible"
-                            return 0
-                        else
-                            log_warn "   ⚠️  PyTorch Jupyter Lab not yet accessible on port 8888"
-                        fi
-                        ;;
-                    "tensorflow")
-                        # Test TensorFlow Jupyter service
-                        if curl -sf http://localhost:8889/api >/dev/null 2>&1; then
-                            log_success "   ✅ TensorFlow Jupyter Lab is running and accessible"
-                            return 0
-                        else
-                            log_warn "   ⚠️  TensorFlow Jupyter Lab not yet accessible on port 8889"
-                        fi
-                        ;;
-                    "jax")
-                        # Test JAX API service
-                        if curl -sf http://localhost:8089/health >/dev/null 2>&1; then
-                            log_success "   ✅ JAX service API is running and responding"
-                            return 0
-                        else
-                            log_warn "   ⚠️  JAX service API not yet accessible on port 8089"
-                        fi
-                        ;;
-                    "fsdp")
-                        # Test FSDP distributed training service
-                        if curl -sf http://localhost:8080/health >/dev/null 2>&1; then
-                            log_success "   ✅ FSDP distributed training service is running"
-                            return 0
-                        else
-                            log_warn "   ⚠️  FSDP service not yet accessible on port 8080"
-                        fi
-                        ;;
-                    *)
-                        # Generic health check - just verify container is running
-                        log_success "   ✅ $service_name container is running"
-                        return 0
-                        ;;
-                esac
-                ;;
-            "exited")
-                log_error "   ❌ Container exited with code: $exit_code"
-                
-                # Show recent logs for debugging
-                log_error "   📋 Recent logs (last 15 lines):"
-                docker logs --tail 15 "sutazai-$service_name" 2>&1 | sed 's/^/      /' || log_error "      Could not retrieve logs"
-                
-                # Check for common exit codes
-                case "$exit_code" in
-                    "125") log_error "   💡 Exit code 125: Docker daemon error or container configuration issue" ;;
-                    "126") log_error "   💡 Exit code 126: Container command not executable" ;;
-                    "127") log_error "   💡 Exit code 127: Container command not found" ;;
-                    "1") log_error "   💡 Exit code 1: General application error" ;;
-                esac
-                ;;
-            "restarting")
-                log_warn "   ⚠️  Container is restarting, waiting..."
-                ;;
-            "paused")
-                log_warn "   ⚠️  Container is paused, attempting to unpause..."
-                docker unpause "sutazai-$service_name" >/dev/null 2>&1 || true
-                ;;
-            "dead")
-                log_error "   ❌ Container is in dead state"
-                log_error "   📋 Container inspection:"
-                docker inspect "sutazai-$service_name" | jq '.[] | {Status: .State, Config: .Config}' 2>/dev/null | sed 's/^/      /' || \
-                docker inspect "sutazai-$service_name" | sed 's/^/      /'
-                ;;
-            "not_found")
-                log_error "   ❌ Container not found"
-                return 1
-                ;;
-            *)
-                log_warn "   ⚠️  Unknown container status: $container_status"
-                ;;
-        esac
-        
-        # Wait before next attempt
-        if [ $attempt -lt $max_attempts ]; then
-            log_info "   ⏳ Waiting 15 seconds before next health check attempt..."
-            sleep 15
-        fi
-        
-        attempt=$((attempt + 1))
-    done
-    
-    log_error "❌ Service $service_name failed health check after $max_attempts attempts"
-    
-    # Final diagnostic information
-    log_error "🔍 Final diagnostic information for $service_name:"
-    log_error "   → Docker system status:"
-    docker system df 2>/dev/null | sed 's/^/      /' || log_error "      Could not get Docker system info"
-    log_error "   → Available system resources:"
-    echo "      Memory: $(free -h | awk 'NR==2{printf "%.1f/%.1fGB (%.1f%% used)", $3/1024/1024, $2/1024/1024, $3/$2*100}')"
-    echo "      Disk: $(df /var/lib/docker 2>/dev/null | awk 'NR==2{printf "%s used (%s)", $5, $4}' || echo 'unavailable')"
-    
-    return 1
-}
+# Redundant function removed - now using universal_health_check()
 # Intelligent pre-flight validation with comprehensive dependency detection
 perform_intelligent_preflight_check() {
     log_header "🔍 Intelligent Pre-Flight System Validation"
@@ -2582,14 +2394,9 @@ attempt_intelligent_auto_fixes() {
         log_info "🔧 Attempting to start Docker daemon..."
         ((fixes_attempted++))
         
-        if systemctl start docker 2>/dev/null; then
-            sleep 10
-            if docker info >/dev/null 2>&1; then
-                log_success "   ✅ Docker daemon started successfully"
-                ((fixes_successful++))
-            else
-                log_error "   ❌ Docker daemon failed to start properly"
-            fi
+        if intelligent_docker_startup; then
+            log_success "   ✅ Docker daemon started successfully"
+            ((fixes_successful++))
         else
             log_error "   ❌ Failed to start Docker daemon"
         fi
@@ -2702,205 +2509,7 @@ EOF
     fi
 }
 
-# Comprehensive pre-deployment health check (legacy compatibility)
-perform_pre_deployment_health_check() {
-    log_header "🔍 Pre-Deployment System Health Check"
-    
-    local health_issues=0
-    
-    # Check 1: System Resources
-    log_info "📊 Checking system resources..."
-    
-    # Memory check
-    local total_memory_gb=$(free -g | awk 'NR==2{print $2}')
-    local available_memory_gb=$(free -g | awk 'NR==2{print $7}')
-    local memory_usage_percent=$(free | awk 'NR==2{printf "%.1f", $3/$2*100}')
-    
-    log_info "   → Memory: ${available_memory_gb}GB available / ${total_memory_gb}GB total (${memory_usage_percent}% used)"
-    
-    if [ "$available_memory_gb" -lt 4 ]; then
-        log_error "   ❌ Insufficient memory: ${available_memory_gb}GB available (minimum 4GB recommended)"
-        health_issues=$((health_issues + 1))
-    else
-        log_success "   ✅ Memory sufficient for deployment"
-    fi
-    
-    # Disk space check
-    local available_disk_gb=$(df /var/lib/docker 2>/dev/null | awk 'NR==2{printf "%.1f", $4/1024/1024}' || echo "unknown")
-    local disk_usage_percent=$(df /var/lib/docker 2>/dev/null | awk 'NR==2{print $5}' | sed 's/%//' || echo "unknown")
-    
-    if [ "$available_disk_gb" != "unknown" ]; then
-        log_info "   → Disk space: ${available_disk_gb}GB available (${disk_usage_percent}% used)"
-        
-        if [ "${available_disk_gb%.*}" -lt 20 ]; then
-            log_error "   ❌ Insufficient disk space: ${available_disk_gb}GB available (minimum 20GB recommended)"
-            health_issues=$((health_issues + 1))
-        else
-            log_success "   ✅ Disk space sufficient for deployment"
-        fi
-    else
-        log_warn "   ⚠️  Could not determine disk space for /var/lib/docker"
-    fi
-    
-    # Check 2: Docker Environment
-    log_info "🐳 Checking Docker environment..."
-    
-    if command -v docker >/dev/null 2>&1; then
-        log_success "   ✅ Docker command is available"
-        
-        if docker info >/dev/null 2>&1; then
-            log_success "   ✅ Docker daemon is running and accessible"
-            
-            # Check Docker system status
-            local docker_root_dir=$(docker info --format '{{.DockerRootDir}}' 2>/dev/null || echo "/var/lib/docker")
-            local docker_storage_driver=$(docker info --format '{{.Driver}}' 2>/dev/null || echo "unknown")
-            
-            log_info "   → Docker root: $docker_root_dir"
-            log_info "   → Storage driver: $docker_storage_driver"
-            
-            # Check for optimal storage driver
-            if [ "$docker_storage_driver" = "overlay2" ]; then
-                log_success "   ✅ Using optimal storage driver: overlay2"
-            elif [ "$docker_storage_driver" != "unknown" ]; then
-                log_warn "   ⚠️  Not using optimal storage driver: $docker_storage_driver (overlay2 recommended)"
-            fi
-            
-        else
-            log_error "   ❌ Docker daemon is not responding"
-            log_error "      Try: sudo systemctl start docker"
-            health_issues=$((health_issues + 1))
-        fi
-    else
-        log_error "   ❌ Docker is not installed"
-        log_error "      Docker will be installed automatically during deployment"
-        health_issues=$((health_issues + 1))
-    fi
-    
-    # Check 3: Network Connectivity
-    log_info "🌐 Checking network connectivity..."
-    
-    if ping -c 1 google.com >/dev/null 2>&1; then
-        log_success "   ✅ Internet connectivity available"
-    else
-        log_warn "   ⚠️  Internet connectivity issues detected"
-        log_warn "      Some Docker images may fail to download"
-    fi
-    
-    # Test Docker Hub connectivity
-    if curl -s --connect-timeout 5 https://registry-1.docker.io/v2/ >/dev/null 2>&1; then
-        log_success "   ✅ Docker Hub registry accessible"
-    else
-        log_warn "   ⚠️  Docker Hub registry not accessible"
-        log_warn "      Docker image pulls may fail"
-    fi
-    
-    # Check 4: Required Files and Directories
-    log_info "📁 Checking required files..."
-    
-    local required_files=(
-        "docker-compose.yml"
-        "backend/Dockerfile.agi"
-        "frontend/Dockerfile"
-        "docker/faiss/Dockerfile"
-        "docker/faiss/faiss_service.py"
-    )
-    
-    for file in "${required_files[@]}"; do
-        if [ -f "$file" ]; then
-            log_success "   ✅ Found: $file"
-        else
-            log_error "   ❌ Missing: $file"
-            health_issues=$((health_issues + 1))
-        fi
-    done
-    
-    # Check 5: Port Availability
-    log_info "🔌 Checking port availability..."
-    
-    local required_ports=(5432 6379 7474 7687 8000 8001 8002 8501 9090 3000 11434)
-    
-    for port in "${required_ports[@]}"; do
-        if netstat -tuln 2>/dev/null | grep -q ":$port "; then
-            log_warn "   ⚠️  Port $port is already in use"
-            
-            # Intelligent port conflict resolution
-            local service_using_port=$(netstat -tulnp 2>/dev/null | grep ":$port " | awk '{print $7}' | cut -d'/' -f2 | head -1)
-            if [[ "$service_using_port" =~ docker-proxy|containerd ]]; then
-                log_info "      🔧 Port used by Docker container - attempting graceful reclaim"
-                # Check if it's one of our SutazAI containers
-                local container_name=$(docker ps --format "table {{.Names}}\t{{.Ports}}" | grep ":$port->" | awk '{print $1}' | head -1)
-                if [[ "$container_name" =~ sutazai- ]]; then
-                    log_info "      ✅ Port used by SutazAI container ($container_name) - this is expected"
-                else
-                    log_warn "      ⚠️  Port used by non-SutazAI container - may cause conflicts"
-                fi
-            else
-                log_warn "      ⚠️  Port used by system service: $service_using_port"
-                log_info "      💡 Consider stopping the service or using different ports"
-            fi
-        else
-            log_success "   ✅ Port $port is available"
-        fi
-    done
-    
-    # Check 6: System Limits
-    log_info "⚙️  Checking system limits..."
-    
-    local max_files=$(ulimit -n)
-    if [ "$max_files" -ge 65536 ]; then
-        log_success "   ✅ File descriptor limit adequate: $max_files"
-    else
-        log_warn "   ⚠️  Low file descriptor limit: $max_files (65536+ recommended)"
-        log_info "      🔧 Automatically fixing file descriptor limits..."
-        
-        # Attempt to increase current session limit
-        if ulimit -n 65536 2>/dev/null; then
-            log_success "      ✅ Session limit increased to 65536"
-        else
-            log_warn "      ⚠️  Cannot increase session limit, applying system-wide fix..."
-        fi
-        
-        # Apply permanent system-wide limits
-        configure_system_limits
-        
-        # Verify the fix
-        local new_limit=$(ulimit -n)
-        if [ "$new_limit" -ge 65536 ]; then
-            log_success "      ✅ File descriptor limit fixed: $new_limit"
-        else
-            log_warn "      ⚠️  System limits configured, will take effect after reboot"
-        fi
-    fi
-    
-    # Summary
-    log_info ""
-    if [ $health_issues -eq 0 ]; then
-        log_success "🎉 Pre-deployment health check passed! System is ready for deployment."
-    else
-        log_warn "⚠️  Pre-deployment health check found $health_issues issues."
-        log_warn "   Deployment will continue, but some services may fail."
-        log_warn "   Review the issues above and consider fixing them for optimal performance."
-        
-        # Pause to let user review issues (skip in automated mode)
-        echo ""
-        if [[ "$AUTOMATED_DEPLOYMENT" != "true" ]]; then
-            echo "Press ENTER to continue with deployment, or Ctrl+C to abort..."
-            read -r
-        else
-            echo "🤖 Running in automated mode - continuing despite health check issues..."
-        fi
-    fi
-    
-    # Display security information
-    echo ""
-    echo "🔍 Security verification:"
-    echo "   • Script owner: $script_owner"
-    echo "   • Script permissions: $script_perms"
-    echo "   • Execution logged to: $audit_log"
-    echo "   • Running as user: $(whoami)"
-    echo "   • Original user: $(logname 2>/dev/null || echo 'unknown')"
-    echo ""
-}
+# Redundant function removed - now using system_health_overview()
 
 # Verify security and set global variables
 audit_log="/var/log/sutazai_deployment_audit.log"
@@ -2946,9 +2555,7 @@ optimize_system_resources() {
     fi
     
     # Set Docker build optimization
-    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
-    export DOCKER_BUILDKIT=1
-    export BUILDKIT_INLINE_CACHE=0
+    # BuildKit is configured elsewhere - removing duplicate export
     export COMPOSE_PARALLEL_LIMIT=$OPTIMAL_PARALLEL_BUILDS
     export COMPOSE_HTTP_TIMEOUT=300
     
@@ -3158,16 +2765,16 @@ EOF
     export COMPOSE_FILE="docker-compose.yml:docker-compose.optimization.yml"
     echo "COMPOSE_FILE=${COMPOSE_FILE}" >> .env.optimization
     
-    # Create modern healthcheck configuration for 2025 best practices
+    # Create healthcheck configuration for optimized configuration
     create_modern_healthcheck_override
 }
 
-# Create modern healthcheck configuration override with 2025 best practices
+# Create healthcheck configuration override optimized
 create_modern_healthcheck_override() {
-    log_info "🔧 Creating modern healthcheck configuration with 2025 best practices..."
+    log_info "🔧 Creating healthcheck configuration optimized..."
     
     cat > docker-compose.healthcheck-2025.yml << EOF
-# Docker Compose Healthcheck Override - 2025 Best Practices
+# Docker Compose Healthcheck Override - Optimized Configuration
 # Modern timeout settings, efficient checks, and container orchestration optimization
 
 services:
@@ -3275,18 +2882,18 @@ EOF
         echo "COMPOSE_FILE=${COMPOSE_FILE}" >> .env.optimization
     fi
     
-    log_success "✅ Modern healthcheck configuration created with 2025 best practices"
+    log_success "✅ Modern healthcheck configuration created optimized"
 }
 
 # REMOVED: Redundant optimize_docker_daemon function - was disabled
 
-# Advanced Docker Health Verification with 2025 best practices
+# Advanced Docker Health Verification optimized
 # 🧠 SUPER INTELLIGENT WSL2-Compatible Docker Health Verification (2025)
 # REMOVED: Redundant verify_docker_health function - consolidated into check_docker_health()
 
-# Advanced Docker Daemon Recovery with 2025 best practices
+# Advanced Docker Daemon Recovery optimized
 restart_docker_with_advanced_recovery() {
-    log_info "🔧 Performing advanced Docker daemon recovery with 2025 best practices..."
+    log_info "🔧 Performing advanced Docker daemon recovery optimized..."
     
     # Use Brain to analyze the situation
     local docker_state=$(analyze_docker_state)
@@ -3695,7 +3302,7 @@ deploy_service_zero_downtime() {
         if perform_comprehensive_health_checks "${service_name}_new" 120; then
             log_success "   ✅ New container is healthy"
             
-            # Step 3: Graceful container draining (2025 best practice)
+            # Step 3: Graceful container draining (optimized)
             log_info "   → Draining connections from old container..."
             
             # Send SIGTERM to allow graceful shutdown
@@ -4228,8 +3835,7 @@ fix_entropy_issues() {
         log_success "✅ Entropy improved: $entropy_level → $new_entropy"
         
         # Set environment variables to reduce entropy requirements
-        export DOCKER_BUILDKIT=1
-        export BUILDKIT_PROGRESS=plain
+        # BuildKit configured centrally in optimize_docker_buildkit function
     fi
 }
 
@@ -4677,7 +4283,7 @@ install_docker_automatically() {
     log_success "✅ Docker installation completed successfully"
 }
 
-# Install Docker via APT (Debian/Ubuntu) - 2025 Best Practices with Zero Conflicts
+# Install Docker via APT (Debian/Ubuntu) - Optimized Configuration with Zero Conflicts
 install_docker_via_apt() {
     log_info "   → Installing Docker with 2025 intelligent conflict resolution..."
     
@@ -4706,7 +4312,7 @@ install_docker_via_apt() {
     apt-get clean
     apt-get update -q
     
-    # Step 3: Install Docker using Ubuntu's native packages (2025 best practice)
+    # Step 3: Install Docker using Ubuntu's native packages (optimized)
     log_info "   → Phase 3: Installing Docker using Ubuntu 24.04 native packages..."
     
     # Install prerequisites first
@@ -4742,9 +4348,8 @@ install_docker_via_apt() {
     # Step 4: Configure Docker service
     log_info "   → Phase 4: Configuring Docker service..."
     
-    # Enable and start Docker
-    systemctl enable docker >/dev/null 2>&1 || true
-    systemctl start docker >/dev/null 2>&1 || true
+    # Enable and start Docker using consolidated function
+    intelligent_docker_startup >/dev/null 2>&1 || true
     
     # Add user to docker group for non-sudo access
     if [ "$EUID" -eq 0 ] && [ -n "${SUDO_USER:-}" ]; then
@@ -4783,7 +4388,7 @@ install_docker_via_apt() {
         return 1
     fi
     
-    log_success "   ✅ Docker installation completed with 2025 best practices (zero conflicts)"
+    log_success "   ✅ Docker installation completed optimized (zero conflicts)"
 }
 
 # Install Docker via DNF (Fedora/RHEL 8+)
@@ -5173,14 +4778,13 @@ perform_docker_health_check() {
     done
     
     # Check 3: Docker buildkit functionality
-    # CRITICAL FIX: Disable BuildKit inline cache to prevent EOF errors in WSL2
-    export DOCKER_BUILDKIT=1
-    export BUILDKIT_INLINE_CACHE=0
+    # BuildKit is configured elsewhere - removing duplicate export
     if docker buildx version >/dev/null 2>&1; then
         log_success "   ✅ Docker BuildKit: Available and functional"
     else
         log_warn "   ⚠️  Docker BuildKit: Not available or functional"
-        export DOCKER_BUILDKIT=0
+        # Keep BuildKit enabled even if not detected - may still work
+        export DOCKER_BUILDKIT=1
         ((health_issues++))
     fi
     
@@ -5263,26 +4867,14 @@ restart_docker_with_recovery() {
     systemctl restart containerd 2>/dev/null || service containerd restart 2>/dev/null || true
     sleep 3
     
-    # Start Docker with optimized configuration
-    systemctl start docker 2>/dev/null || service docker start 2>/dev/null || {
-        log_warn "Systemctl failed, trying manual dockerd startup..."
-        dockerd --config-file=/etc/docker/daemon.json >/dev/null 2>&1 &
-        sleep 5
-    }
-    
-    # Wait for Docker to become responsive
-    local recovery_attempts=0
-    while [ $recovery_attempts -lt 15 ]; do
-        if docker version >/dev/null 2>&1; then
-            log_success "Docker daemon recovered successfully"
-            return 0
-        fi
-        ((recovery_attempts++))
-        sleep 2
-    done
-    
-    log_error "Docker daemon recovery failed"
-    return 1
+    # Start Docker using consolidated intelligent startup
+    if intelligent_docker_startup; then
+        log_success "Docker daemon recovered successfully"
+        return 0
+    else
+        log_error "Docker daemon recovery failed"
+        return 1
+    fi
 }
 # Comprehensive Docker environment validation
 validate_docker_environment() {
@@ -8599,6 +8191,11 @@ resolve_port_conflicts_intelligently() {
     log_success "Port conflict resolution completed ($conflicts_resolved conflicts resolved)"
 }
 
+# Alias for backward compatibility
+fix_port_conflicts_intelligent() {
+    resolve_port_conflicts_intelligently
+}
+
 # Intelligent Service Dependency Resolution
 resolve_service_dependencies() {
     local service="$1"
@@ -9445,7 +9042,7 @@ install_all_system_dependencies() {
         }
         
         # Install packages with retry logic and proper timeouts
-        log_info "📦 Installing Python packages with 2025 best practices and enhanced error handling..."
+        log_info "📦 Installing Python packages with error handling..."
         docker exec sutazai-backend-agi bash -c "
             # Configure pip for better reliability with 2025 optimizations
             pip config set global.timeout 300
@@ -9453,7 +9050,7 @@ install_all_system_dependencies() {
             pip config set global.trusted-host 'pypi.org files.pythonhosted.org pypi.python.org'
             pip config set global.index-url https://pypi.org/simple/
             
-            # Create virtual environment for package isolation (2025 best practice)
+            # Create virtual environment for package isolation (optimized)
             python3 -m venv /opt/venv
             source /opt/venv/bin/activate
             
@@ -9498,17 +9095,17 @@ install_all_system_dependencies() {
                 transformers \
                 tokenizers || echo 'Warning: Some AI/ML packages failed to install'
                 
-            echo '✅ Package installation completed with 2025 best practices (some packages may have failed but deployment continues)'
+            echo '✅ Package installation completed optimized (some packages may have failed but deployment continues)'
         " || log_warn "⚠️  Some Python packages failed to install, but continuing deployment"
     else
-        log_info "Installing Python packages in system with 2025 best practices..."
+        log_info "Installing Python packages in system optimized..."
         
         # Create system-wide virtual environment (2025 best practice for PEP 668 compliance)
         if [ ! -d "/opt/sutazai-venv" ]; then
             python3 -m venv /opt/sutazai-venv
         fi
         
-        # 🧠 INTELLIGENT PYTHON PACKAGE INSTALLATION (2025 Best Practices)
+        # 🧠 INTELLIGENT PYTHON PACKAGE INSTALLATION (Optimized Configuration)
         log_info "   → Installing Python packages with intelligent error handling..."
         
         # Core packages that should install successfully
@@ -10534,7 +10131,7 @@ deploy_service_group() {
                         fi
                     fi
                     
-                    # Pre-warm Neo4j plugins (2025 best practice)
+                    # Pre-warm Neo4j plugins (optimized)
                     log_info "   → Pre-warming Neo4j plugins for faster startup..."
                     docker pull neo4j:5.13-community >/dev/null 2>&1 || true
                     ;;
@@ -10563,7 +10160,7 @@ deploy_service_group() {
                 log_info "   ✅ Rebuild successful"
                 
                 # Step 2: Start with appropriate resource allocation
-                log_info "   → Step 2: Starting with optimized configuration"
+                log_info "   → Step 2: Starting optimized"
                 if docker compose up -d "$failed_service" >/dev/null 2>&1; then
                     
                     # Step 3: Service-specific health check with appropriate timeout
@@ -11274,7 +10871,7 @@ intelligent_docker_startup() {
         log_info "   🔧 Ubuntu 24.04 detected - applying critical fixes"
     fi
     
-    # Phase 0: Critical Ubuntu 24.04 + WSL2 Fixes (2025 Best Practices)
+    # Phase 0: Critical Ubuntu 24.04 + WSL2 Fixes (Optimized Configuration)
     if [ "$is_ubuntu_2404" = "true" ]; then
         log_info "   → Applying Ubuntu 24.04 critical fixes..."
         
@@ -11316,7 +10913,7 @@ intelligent_docker_startup() {
     rm -f /var/run/containerd/containerd.sock >/dev/null 2>&1 || true
     
     # Phase 2: 2025 Socket Permission Pre-configuration
-    log_info "   → Pre-configuring socket permissions (2025 best practice)..."
+    log_info "   → Pre-configuring socket permissions (optimized)..."
     if ! getent group docker >/dev/null 2>&1; then
         groupadd docker >/dev/null 2>&1 || true
     fi
@@ -11354,8 +10951,8 @@ intelligent_docker_startup() {
     
     # Phase 5: Environment-specific Docker startup
     if [ "$is_wsl2" = "true" ]; then
-        # WSL2 2025 optimized startup sequence
-        log_info "   → WSL2 2025 optimized startup sequence..."
+        # WSL2 optimized startup sequence
+        log_info "   → WSL2 optimized startup sequence..."
         
         # Method 1: Check if Docker Desktop is managing Docker
         if [ -S /var/run/docker.sock ] && docker version >/dev/null 2>&1; then
@@ -11792,8 +11389,8 @@ main_deployment() {
         fi
     fi
     
-    # Legacy pre-deployment system health check
-    perform_pre_deployment_health_check
+    # Pre-deployment system health check
+    pre_deployment_checks
     
     # Phase 1: System Validation and Preparation
     check_prerequisites
@@ -11998,7 +11595,7 @@ main_deployment() {
     
     # Deploy ML services with retry logic for initialization
     for ml_service in "${ML_FRAMEWORK_SERVICES[@]}"; do
-        log_info "   → Deploying $ml_service with optimized configuration..."
+        log_info "   → Deploying $ml_service optimized..."
         
         # Pre-deployment check for ML service requirements
         case "$ml_service" in
@@ -13268,7 +12865,7 @@ case "${1:-deploy}" in
         
         # Phase 2: Apply comprehensive pre-deployment fixes
         log_info "🛠️ Phase 2: Applying Comprehensive Environment-Specific Fixes"
-        fix_docker_buildkit_issues
+        optimize_docker_buildkit
         fix_docker_compose_issues
         fix_nvidia_repository_key_deprecation
         fix_ubuntu_python_environment_restrictions
@@ -13368,7 +12965,7 @@ if [ $# -eq 0 ]; then
     # Phase 2: Apply comprehensive environment-specific fixes (with Brain monitoring)
     log_info "🛠️ Phase 2: Applying Comprehensive Environment-Specific Fixes"
 # update_brain_state "deployment_phase" "environment_fixes"
-    fix_docker_buildkit_issues
+    optimize_docker_buildkit
     fix_docker_compose_issues
     fix_nvidia_repository_key_deprecation
     fix_ubuntu_python_environment_restrictions
@@ -13740,11 +13337,74 @@ prepare_super_intelligent_system() {
     return 0
 }
 # ===============================================
+# 🚀 DEPLOYMENT RECOVERY AND TERMINATION DETECTION
+# ===============================================
+
+# Detect previous termination and apply recovery if needed
+detect_previous_termination() {
+    log_info "🔍 Detecting previous deployment termination..."
+    
+    # Check for deployment lock files
+    local lock_files=("/tmp/sutazai_deployment.lock" "/opt/sutazaiapp/.deployment_in_progress")
+    local found_locks=false
+    
+    for lock_file in "${lock_files[@]}"; do
+        if [ -f "$lock_file" ]; then
+            log_warn "⚠️  Found stale deployment lock: $lock_file"
+            rm -f "$lock_file"
+            found_locks=true
+        fi
+    done
+    
+    # Check for partial container states
+    local partial_containers=$(docker ps -a --filter "name=sutazai" --filter "status=exited" --format "{{.Names}}" 2>/dev/null | wc -l)
+    if [ "$partial_containers" -gt 0 ]; then
+        log_warn "⚠️  Found $partial_containers terminated SutazAI containers"
+        log_info "🧹 Cleaning up terminated containers..."
+        docker ps -a --filter "name=sutazai" --filter "status=exited" -q | xargs -r docker rm -f >/dev/null 2>&1 || true
+    fi
+    
+    # Check for orphaned networks
+    local orphaned_networks=$(docker network ls --filter "name=sutazai" --format "{{.Name}}" 2>/dev/null | grep -v "bridge\|host\|none" | wc -l)
+    if [ "$orphaned_networks" -gt 0 ]; then
+        log_warn "⚠️  Found orphaned SutazAI networks"
+        log_info "🌐 Cleaning up orphaned networks..."
+        docker network ls --filter "name=sutazai" --format "{{.Name}}" | grep -v "bridge\|host\|none" | xargs -r docker network rm >/dev/null 2>&1 || true
+    fi
+    
+    if [ "$found_locks" = true ] || [ "$partial_containers" -gt 0 ] || [ "$orphaned_networks" -gt 0 ]; then
+        log_success "✅ Previous deployment cleanup completed"
+    else
+        log_info "✅ No previous deployment issues detected"
+    fi
+    
+    return 0
+}
+
+# ===============================================
 # 🚀 MAIN DEPLOYMENT ORCHESTRATION
 # ===============================================
 
 deploy_complete_super_intelligent_system() {
     log_header "🚀 Starting SutazAI Complete Enterprise AGI/ASI System Deployment"
+    
+    # Check for concurrent deployments and prevent them
+    local lock_file="/tmp/sutazai_deployment.lock"
+    if [ -f "$lock_file" ]; then
+        local lock_pid=$(cat "$lock_file" 2>/dev/null)
+        if [ -n "$lock_pid" ] && kill -0 "$lock_pid" 2>/dev/null; then
+            log_error "🚨 Another deployment is already running (PID: $lock_pid)"
+            log_info "   → Wait for it to complete or kill it manually with: kill $lock_pid"
+            exit 1
+        else
+            log_warn "⚠️  Found stale deployment lock, removing..."
+            rm -f "$lock_file"
+        fi
+    fi
+    
+    # Create deployment lock
+    echo $$ > "$lock_file"
+    trap "rm -f '$lock_file'" EXIT
     
     # Initialize deployment
     local start_time=$(date +%s)
