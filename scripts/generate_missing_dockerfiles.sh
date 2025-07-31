@@ -124,7 +124,7 @@ class ${agent_name^}Agent:
     def __init__(self):
         self.name = "$agent_name"
         self.ollama_base = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
-        self.model = os.getenv("DEFAULT_MODEL", "deepseek-r1:8b")
+        self.model = os.getenv("DEFAULT_MODEL", "qwen2.5:3b")
         
     async def process(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Process incoming request"""

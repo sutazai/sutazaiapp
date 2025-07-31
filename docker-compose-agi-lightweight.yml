@@ -1,0 +1,91 @@
+services:
+  # Core Infrastructure - Lightweight
+  postgres:
+    image: postgres:16-alpine
+    container_name: sutazai-agi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sutazai_agi
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai123
+    ports:
+      - "5432:5432"
+    volumes:
+      - agi_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai -d sutazai_agi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sutazai-agi-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - agi_redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Ollama for AI
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sutazai-agi-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - agi_ollama_data:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Simplified AGI Brain System
+  agi-brain:
+    build:
+      context: .
+      dockerfile: docker/agi-lightweight/Dockerfile
+    container_name: sutazai-agi-brain
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis  
+      - ollama
+    ports:
+      - "8900:8900"  # Main API
+      - "9200:9200"  # Health
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./brain:/app/brain:ro
+      - ./config:/app/config:ro
+      - ./logs:/app/logs
+      - agi_brain_memory:/app/memory
+    environment:
+      - POSTGRES_URL=postgresql://sutazai:sutazai123@postgres:5432/sutazai_agi
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_URL=http://ollama:11434
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+      - LEARNING_ENABLED=true
+    command: python /app/brain/simple_agi_brain.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  agi_postgres_data:
+  agi_redis_data:
+  agi_ollama_data:
+  agi_brain_memory:

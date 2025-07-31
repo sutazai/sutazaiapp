@@ -1,0 +1,90 @@
+version: '3.9'
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_default
+
+services:
+  # Hardware Resource Optimizer with fixed Docker access
+  hardware-resource-optimizer:
+    build:
+      context: ./agents/hardware-optimizer
+      dockerfile: Dockerfile
+    container_name: sutazai-hardware-optimizer
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - OPENAI_API_BASE=http://sutazai-litellm:4000/v1
+      - OPENAI_API_KEY=sk-local
+      - LOG_LEVEL=INFO
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./config/resource-optimizer:/config
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    networks:
+      - sutazai-network
+    security_opt:
+      - apparmor:unconfined
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8523/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Infrastructure DevOps Manager with fixed Docker access
+  infrastructure-devops-manager:
+    build:
+      context: ./agents/infrastructure-devops
+      dockerfile: Dockerfile
+    container_name: sutazai-devops-manager
+    restart: unless-stopped
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - OPENAI_API_BASE=http://sutazai-litellm:4000/v1
+      - OPENAI_API_KEY=sk-local
+      - LOG_LEVEL=INFO
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./config/devops:/config
+      - ./scripts:/scripts:ro
+    networks:
+      - sutazai-network
+    security_opt:
+      - apparmor:unconfined
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8522/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama Integration Specialist with fixed configuration
+  ollama-integration-specialist:
+    build:
+      context: ./agents/ollama-integration
+      dockerfile: Dockerfile
+    container_name: sutazai-ollama-specialist
+    restart: unless-stopped
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - OPENAI_API_BASE=http://sutazai-litellm:4000/v1
+      - OPENAI_API_KEY=sk-local
+      - LOG_LEVEL=INFO
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./models:/models
+      - ./config/ollama:/config
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    networks:
+      - sutazai-network
+    security_opt:
+      - apparmor:unconfined
+    privileged: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8520/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

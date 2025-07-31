@@ -58,10 +58,10 @@ class Settings(BaseSettings):
     QDRANT_PORT: int = 6333
     QDRANT_API_KEY: Optional[str] = None
     
-    # Model Configuration
+    # Model Configuration - Emergency small models to prevent freezing
     OLLAMA_HOST: str = "http://ollama:11434"
-    DEFAULT_MODEL: str = "qwen2.5:3b"  # Faster 3B model for better response times
-    FALLBACK_MODEL: str = "deepseek-r1:8b"  # Larger model for complex tasks
+    DEFAULT_MODEL: str = "tinyllama:1.1b"  # Ultra-small model to prevent system overload
+    FALLBACK_MODEL: str = "qwen2.5:3b"  # Larger model for complex tasks when resources allow
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
     

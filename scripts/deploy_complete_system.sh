@@ -9,9 +9,11 @@
 # 🚀 DOCKER BUILDKIT OPTIMIZATION
 # ===============================================
 
-# Enable Docker BuildKit for faster AI builds
+# Enable Docker BuildKit for faster AI builds with parallel processing
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
+export BUILDKIT_PROGRESS=plain
+export BUILDKIT_INLINE_CACHE=1
 
 # ===============================================
 # 🧠 SUPER INTELLIGENT ERROR HANDLING SYSTEM
@@ -20,22 +22,32 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 # Advanced error handling with intelligent recovery
 set -euo pipefail
 
-# Global error tracking
+# ===============================================
+# 📝 LOGGING FUNCTIONS (REQUIRED EARLY)
+# ===============================================
+
+# Initialize logging directory and file FIRST
+PROJECT_ROOT=$(pwd)
+LOG_DIR="$PROJECT_ROOT/logs"
+mkdir -p "$LOG_DIR"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+# Global error tracking and production-grade deployment state
 ERROR_COUNT=0
 WARNING_COUNT=0
 DEPLOYMENT_ERRORS=()
 RECOVERY_ATTEMPTS=0
 MAX_RECOVERY_ATTEMPTS=3
-
-# ===============================================
-# 📝 LOGGING FUNCTIONS (REQUIRED EARLY)
-# ===============================================
-
-# Initialize logging directory and file
-PROJECT_ROOT=$(pwd)
-LOG_DIR="$PROJECT_ROOT/logs"
-mkdir -p "$LOG_DIR"
-TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+DEPLOYMENT_STATE_FILE="$LOG_DIR/deployment_state_$TIMESTAMP.json"
+ROLLBACK_STATE_FILE="$LOG_DIR/rollback_state_$TIMESTAMP.json"
+PARALLEL_PIDS=()
+DEPLOYMENT_START_TIME=$(date +%s)
+TOTAL_SERVICES=0
+COMPLETED_SERVICES=0
+FAILED_SERVICES=()
+SUCCESSFUL_SERVICES=()
+ROLLBACK_TRIGGERED=false
+DEPLOYMENT_PHASE="initialization"
 LOG_FILE="$LOG_DIR/deployment_super_intelligent_$TIMESTAMP.log"
 
 # Color codes for terminal output
@@ -77,6 +89,667 @@ log_header() {
     local timestamp=$(date '+%H:%M:%S')
     echo -e "\n\033[1;4m$message\033[0m" | tee -a "$LOG_FILE"
     echo "══════════════════════════════════════════════════════════════════════════" | tee -a "$LOG_FILE"
+}
+
+# ===============================================
+# 🚀 PRODUCTION-GRADE DEPLOYMENT SYSTEM
+# ===============================================
+
+# Resource monitoring and validation
+check_system_resources() {
+    local required_memory=${1:-32768}  # 32GB default
+    local required_disk=${2:-100}     # 100GB default
+    local required_cpus=${3:-8}       # 8 CPUs default
+    
+    local available_memory=$(free -m | awk '/^Mem:/{print $2}')
+    local available_disk=$(df -BG /opt | awk 'NR==2 {print $4}' | sed 's/G//')
+    local available_cpus=$(nproc)
+    
+    log_info "🔍 Resource Check: Memory=${available_memory}MB, Disk=${available_disk}GB, CPUs=${available_cpus}"
+    
+    if [[ $available_memory -lt $required_memory ]]; then
+        log_error "❌ Insufficient memory: ${available_memory}MB < ${required_memory}MB required"
+        return 1
+    fi
+    
+    if [[ $available_disk -lt $required_disk ]]; then
+        log_error "❌ Insufficient disk space: ${available_disk}GB < ${required_disk}GB required"
+        return 1
+    fi
+    
+    if [[ $available_cpus -lt $required_cpus ]]; then
+        log_warn "⚠️  Limited CPU cores: ${available_cpus} < ${required_cpus} recommended"
+    fi
+    
+    return 0
+}
+
+# Deployment state management
+save_deployment_state() {
+    local service_name="$1"
+    local status="$2"
+    local phase="$3"
+    
+    local state_entry=$(cat <<EOF
+{
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "service": "$service_name",
+    "status": "$status",
+    "phase": "$phase",
+    "deployment_time": $(($(date +%s) - DEPLOYMENT_START_TIME))
+}
+EOF
+    )
+    
+    # Initialize state file if it doesn't exist
+    if [[ ! -f "$DEPLOYMENT_STATE_FILE" ]]; then
+        echo '{"services": []}' > "$DEPLOYMENT_STATE_FILE"
+    fi
+    
+    # Add entry to state file
+    local temp_file=$(mktemp)
+    jq --argjson entry "$state_entry" '.services += [$entry]' "$DEPLOYMENT_STATE_FILE" > "$temp_file" && mv "$temp_file" "$DEPLOYMENT_STATE_FILE"
+}
+
+# Pre-deployment validation
+pre_deployment_validation() {
+    log_header "🔍 Pre-Deployment Validation"
+    
+    local validation_passed=true
+    
+    # Check system resources
+    if ! check_system_resources; then
+        validation_passed=false
+    fi
+    
+    # Check Docker availability
+    if ! docker info >/dev/null 2>&1; then
+        log_error "❌ Docker is not running or accessible"
+        validation_passed=false
+    fi
+    
+    # Check Docker Compose v2
+    if ! docker compose version >/dev/null 2>&1; then
+        log_error "❌ Docker Compose v2 is required"
+        validation_passed=false
+    fi
+    
+    # Check required dependencies
+    local deps=(curl jq git openssl nc lsof)
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" >/dev/null; then
+            log_error "❌ Missing dependency: $dep"
+            validation_passed=false
+        fi
+    done
+    
+    # Check network ports
+    local required_ports=(5432 6379 7474 8000 8501 11434)
+    for port in "${required_ports[@]}"; do
+        if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
+            log_warn "⚠️  Port $port is already in use"
+        fi
+    done
+    
+    # Validate Docker Compose files
+    if ! docker compose config >/dev/null 2>&1; then
+        log_error "❌ Docker Compose configuration is invalid"
+        validation_passed=false
+    fi
+    
+    if [[ "$validation_passed" == "true" ]]; then
+        log_success "✅ Pre-deployment validation passed"
+        return 0
+    else
+        log_error "❌ Pre-deployment validation failed"
+        return 1
+    fi
+}
+
+# Intelligent error recovery system
+intelligent_error_recovery() {
+    local failed_service="$1"
+    local error_type="${2:-unknown}"
+    
+    log_warn "🔧 Attempting intelligent recovery for $failed_service (error: $error_type)"
+    
+    case "$error_type" in
+        "port_conflict")
+            log_info "🔧 Resolving port conflict for $failed_service"
+            docker compose stop "$failed_service" >/dev/null 2>&1 || true
+            sleep 5
+            docker compose up -d "$failed_service"
+            ;;
+        "memory_limit")
+            log_info "🔧 Adjusting memory limits for $failed_service"
+            export COMPOSE_MEMORY_LIMIT="2g"
+            docker compose up -d "$failed_service"
+            ;;
+        "dependency_failure")
+            log_info "🔧 Restarting dependencies for $failed_service"
+            case "$failed_service" in
+                "backend-agi"|"frontend-agi")
+                    docker compose restart postgres redis
+                    sleep 10
+                    ;;
+                "litellm")
+                    docker compose restart ollama
+                    sleep 15
+                    ;;
+            esac
+            docker compose up -d "$failed_service"
+            ;;
+        *)
+            log_info "🔧 Generic recovery for $failed_service"
+            docker compose stop "$failed_service" >/dev/null 2>&1 || true
+            sleep 5
+            docker compose up -d "$failed_service"
+            ;;
+    esac
+    
+    # Wait and verify recovery
+    sleep 10
+    if verify_service_health "$failed_service"; then
+        log_success "✅ Successfully recovered $failed_service"
+        return 0
+    else
+        log_error "❌ Recovery failed for $failed_service"
+        return 1
+    fi
+}
+
+# Comprehensive health check system
+verify_service_health() {
+    local service_name="$1"
+    local timeout="${2:-60}"
+    local max_attempts=3
+    local attempt=1
+    
+    log_info "🔍 Health check for $service_name (timeout: ${timeout}s)"
+    
+    while [[ $attempt -le $max_attempts ]]; do
+        case "$service_name" in
+            "postgres")
+                if docker exec sutazai-postgres pg_isready -U sutazai >/dev/null 2>&1; then
+                    # Verify database connectivity
+                    if docker exec sutazai-postgres psql -U sutazai -d sutazai -c "SELECT 1;" >/dev/null 2>&1; then
+                        log_success "✅ PostgreSQL is healthy"
+                        return 0
+                    fi
+                fi
+                ;;
+            "redis")
+                if docker exec sutazai-redis redis-cli ping 2>/dev/null | grep -q "PONG"; then
+                    log_success "✅ Redis is healthy"
+                    return 0
+                fi
+                ;;
+            "ollama")
+                if curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; then
+                    log_success "✅ Ollama is healthy"
+                    return 0
+                fi
+                ;;
+            "backend-agi")
+                if curl -sf http://localhost:8000/health >/dev/null 2>&1; then
+                    log_success "✅ Backend is healthy"
+                    return 0
+                fi
+                ;;
+            "frontend-agi")
+                if curl -sf http://localhost:8501 >/dev/null 2>&1; then
+                    log_success "✅ Frontend is healthy"
+                    return 0
+                fi
+                ;;
+            *)
+                # Generic container health check
+                if docker ps --filter "name=sutazai-$service_name" --filter "status=running" | grep -q "sutazai-$service_name"; then
+                    log_success "✅ $service_name container is running"
+                    return 0
+                fi
+                ;;
+        esac
+        
+        log_info "⏳ Health check attempt $attempt/$max_attempts for $service_name"
+        attempt=$((attempt + 1))
+        sleep $((timeout / max_attempts))
+    done
+    
+    log_error "❌ Health check failed for $service_name"
+    return 1
+}
+
+# Parallel deployment orchestrator
+deploy_services_parallel() {
+    local -a service_groups=("$@")
+    local -a pids=()
+    local -a failed_services=()
+    
+    log_info "🚀 Starting parallel deployment of ${#service_groups[@]} service groups"
+    
+    # Start parallel deployments
+    for group in "${service_groups[@]}"; do
+        deploy_service_group "$group" &
+        local pid=$!
+        pids+=($pid)
+        PARALLEL_PIDS+=($pid)
+        log_info "📦 Started deployment of group '$group' (PID: $pid)"
+    done
+    
+    # Wait for all deployments and collect results
+    for i in "${!pids[@]}"; do
+        local pid=${pids[$i]}
+        local group=${service_groups[$i]}
+        
+        if wait $pid; then
+            log_success "✅ Group '$group' deployed successfully"
+            SUCCESSFUL_SERVICES+=("$group")
+        else
+            log_error "❌ Group '$group' deployment failed"
+            failed_services+=("$group")
+            FAILED_SERVICES+=("$group")
+        fi
+    done
+    
+    # Report results
+    if [[ ${#failed_services[@]} -eq 0 ]]; then
+        log_success "✅ All service groups deployed successfully"
+        return 0
+    else
+        log_error "❌ Failed service groups: ${failed_services[*]}"
+        return 1
+    fi
+}
+
+# Individual service group deployment
+deploy_service_group() {
+    local group_name="$1"
+    
+    case "$group_name" in
+        "core")
+            deploy_core_infrastructure
+            ;;
+        "ai")
+            deploy_ai_services
+            ;;
+        "application")
+            deploy_application_services
+            ;;
+        "monitoring")
+            deploy_monitoring_services
+            ;;
+        *)
+            log_error "❌ Unknown service group: $group_name"
+            return 1
+            ;;
+    esac
+}
+
+# Automatic rollback system
+trigger_rollback() {
+    local failed_service="$1"
+    local rollback_reason="${2:-deployment_failure}"
+    
+    if [[ "$ROLLBACK_TRIGGERED" == "true" ]]; then
+        log_warn "⚠️  Rollback already in progress, skipping"
+        return 0
+    fi
+    
+    ROLLBACK_TRIGGERED=true
+    log_header "🔄 TRIGGERING AUTOMATIC ROLLBACK"
+    log_error "❌ Rollback triggered by: $failed_service (reason: $rollback_reason)"
+    
+    # Save rollback state
+    cat > "$ROLLBACK_STATE_FILE" <<EOF
+{
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "trigger_service": "$failed_service",
+    "reason": "$rollback_reason",
+    "successful_services": $(printf '%s\n' "${SUCCESSFUL_SERVICES[@]}" | jq -R . | jq -s .),
+    "failed_services": $(printf '%s\n' "${FAILED_SERVICES[@]}" | jq -R . | jq -s .)
+}
+EOF
+    
+    # Stop all running services
+    log_info "🛑 Stopping all deployment processes"
+    for pid in "${PARALLEL_PIDS[@]}"; do
+        kill $pid 2>/dev/null || true
+    done
+    
+    # Stop all containers
+    log_info "🛑 Stopping all containers"
+    docker compose down --timeout 30 || true
+    
+    # Clean up any orphaned containers
+    docker container prune -f || true
+    
+    log_success "✅ Rollback completed"
+    return 0
+}
+
+# Real-time deployment progress tracking
+show_deployment_progress() {
+    local total_services=${1:-40}
+    TOTAL_SERVICES=$total_services
+    
+    while [[ "$DEPLOYMENT_PHASE" != "completed" && "$DEPLOYMENT_PHASE" != "failed" ]]; do
+        local running_services=$(docker ps --filter "name=sutazai-" --format "{{.Names}}" | wc -l)
+        local percentage=$((running_services * 100 / total_services))
+        
+        # Create progress bar
+        local filled=$((percentage / 2))
+        local empty=$((50 - filled))
+        local bar=$(printf "█%.0s" $(seq 1 $filled))$(printf "░%.0s" $(seq 1 $empty))
+        
+        printf "\r🚀 Deployment Progress: [%s] %d%% (%d/%d services) | Phase: %s | Errors: %d" \
+               "$bar" "$percentage" "$running_services" "$total_services" "$DEPLOYMENT_PHASE" "$ERROR_COUNT"
+        
+        sleep 2
+    done
+    echo
+}
+
+# Error handler for deployment failures
+handle_deployment_error() {
+    local exit_code=$1
+    local line_number=$2
+    
+    ERROR_COUNT=$((ERROR_COUNT + 1))
+    log_error "❌ Deployment error occurred (exit code: $exit_code, line: $line_number)"
+    
+    # Try intelligent recovery first
+    if [[ $RECOVERY_ATTEMPTS -lt $MAX_RECOVERY_ATTEMPTS ]]; then
+        RECOVERY_ATTEMPTS=$((RECOVERY_ATTEMPTS + 1))
+        log_warn "🔧 Attempting intelligent recovery (attempt $RECOVERY_ATTEMPTS/$MAX_RECOVERY_ATTEMPTS)"
+        
+        # Identify the current service or component that failed
+        local current_service=$(get_current_service_from_line $line_number)
+        if [[ -n "$current_service" ]]; then
+            if intelligent_error_recovery "$current_service"; then
+                log_success "✅ Recovery successful, continuing deployment"
+                return 0
+            fi
+        fi
+    fi
+    
+    # If recovery fails or max attempts reached, trigger rollback
+    log_error "❌ Recovery failed or max attempts reached - triggering rollback"
+    trigger_rollback "deployment_error" "error_handler_triggered"
+    exit $exit_code
+}
+
+# Helper function to identify current service from line number
+get_current_service_from_line() {
+    local line_number=$1
+    
+    # This is a simplified implementation - in a real scenario you'd have more sophisticated logic
+    case "$DEPLOYMENT_PHASE" in
+        "core_deployment")
+            echo "core_services"
+            ;;
+        "ai_deployment")
+            echo "ai_services"
+            ;;
+        "application_deployment")
+            echo "application_services"
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Validate all system dependencies
+validate_all_dependencies() {
+    log_info "🔍 Validating system dependencies..."
+    
+    local missing_deps=()
+    local deps=(docker docker-compose curl jq git openssl nc lsof)
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" >/dev/null 2>&1; then
+            missing_deps+=("$dep")
+        fi
+    done
+    
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        log_error "❌ Missing dependencies: ${missing_deps[*]}"
+        return 1
+    fi
+    
+    # Check Docker daemon
+    if ! docker info >/dev/null 2>&1; then
+        log_error "❌ Docker daemon not accessible"
+        return 1
+    fi
+    
+    log_success "✅ All dependencies validated"
+    return 0
+}
+
+# Individual service group deployment functions
+deploy_core_infrastructure() {
+    log_info "🏗️  Deploying core infrastructure services"
+    DEPLOYMENT_PHASE="core_infrastructure"
+    
+    local core_services=(postgres redis neo4j)
+    
+    for service in "${core_services[@]}"; do
+        log_info "📦 Deploying $service..."
+        save_deployment_state "$service" "starting" "core_infrastructure"
+        
+        if docker compose up -d "$service"; then
+            if verify_service_health "$service" 120; then
+                log_success "✅ $service deployed successfully"
+                save_deployment_state "$service" "completed" "core_infrastructure"
+                SUCCESSFUL_SERVICES+=("$service")
+            else
+                log_error "❌ $service health check failed"
+                if ! intelligent_error_recovery "$service" "health_check_failure"; then
+                    save_deployment_state "$service" "failed" "core_infrastructure"
+                    FAILED_SERVICES+=("$service")
+                    return 1
+                fi
+            fi
+        else
+            log_error "❌ Failed to deploy $service"
+            if ! intelligent_error_recovery "$service" "deployment_failure"; then
+                save_deployment_state "$service" "failed" "core_infrastructure"
+                FAILED_SERVICES+=("$service")
+                return 1
+            fi
+        fi
+    done
+    
+    log_success "✅ Core infrastructure deployment completed"
+    return 0
+}
+
+deploy_ai_services() {
+    log_info "🤖 Deploying AI services"
+    DEPLOYMENT_PHASE="ai_services"
+    
+    local ai_services=(ollama litellm)
+    
+    for service in "${ai_services[@]}"; do
+        log_info "📦 Deploying $service..."
+        save_deployment_state "$service" "starting" "ai_services"
+        
+        if docker compose up -d "$service"; then
+            # AI services need longer startup time
+            if verify_service_health "$service" 180; then
+                log_success "✅ $service deployed successfully"
+                save_deployment_state "$service" "completed" "ai_services"
+                SUCCESSFUL_SERVICES+=("$service")
+            else
+                log_error "❌ $service health check failed"
+                if ! intelligent_error_recovery "$service" "health_check_failure"; then
+                    save_deployment_state "$service" "failed" "ai_services"
+                    FAILED_SERVICES+=("$service")
+                    return 1
+                fi
+            fi
+        else
+            log_error "❌ Failed to deploy $service"
+            if ! intelligent_error_recovery "$service" "deployment_failure"; then
+                save_deployment_state "$service" "failed" "ai_services"
+                FAILED_SERVICES+=("$service")
+                return 1
+            fi
+        fi
+    done
+    
+    log_success "✅ AI services deployment completed"
+    return 0
+}
+
+deploy_application_services() {
+    log_info "🚀 Deploying application services"
+    DEPLOYMENT_PHASE="application_services"
+    
+    local app_services=(backend-agi frontend-agi)
+    
+    for service in "${app_services[@]}"; do
+        log_info "📦 Deploying $service..."
+        save_deployment_state "$service" "starting" "application_services"
+        
+        if docker compose up -d "$service"; then
+            if verify_service_health "$service" 120; then
+                log_success "✅ $service deployed successfully"
+                save_deployment_state "$service" "completed" "application_services"
+                SUCCESSFUL_SERVICES+=("$service")
+            else
+                log_error "❌ $service health check failed"
+                if ! intelligent_error_recovery "$service" "health_check_failure"; then
+                    save_deployment_state "$service" "failed" "application_services"
+                    FAILED_SERVICES+=("$service")
+                    return 1
+                fi
+            fi
+        else
+            log_error "❌ Failed to deploy $service"
+            if ! intelligent_error_recovery "$service" "deployment_failure"; then
+                save_deployment_state "$service" "failed" "application_services"
+                FAILED_SERVICES+=("$service")
+                return 1
+            fi
+        fi
+    done
+    
+    log_success "✅ Application services deployment completed"
+    return 0
+}
+
+deploy_monitoring_services() {
+    log_info "📊 Deploying monitoring services"
+    DEPLOYMENT_PHASE="monitoring_services"
+    
+    local monitoring_services=(prometheus grafana)
+    
+    for service in "${monitoring_services[@]}"; do
+        log_info "📦 Deploying $service..."
+        save_deployment_state "$service" "starting" "monitoring_services"
+        
+        if docker compose up -d "$service"; then
+            if verify_service_health "$service" 90; then
+                log_success "✅ $service deployed successfully"
+                save_deployment_state "$service" "completed" "monitoring_services"
+                SUCCESSFUL_SERVICES+=("$service")
+            else
+                log_warn "⚠️  $service health check failed - monitoring is optional"
+                save_deployment_state "$service" "partial" "monitoring_services"
+            fi
+        else
+            log_warn "⚠️  Failed to deploy $service - monitoring is optional"
+            save_deployment_state "$service" "failed" "monitoring_services"
+        fi
+    done
+    
+    log_success "✅ Monitoring services deployment completed"
+    return 0
+}
+
+# Generate comprehensive deployment report
+generate_deployment_report() {
+    log_info "📊 Generating comprehensive deployment report..."
+    
+    local report_file="$LOG_DIR/deployment_report_$TIMESTAMP.json"
+    local deployment_duration=$(($(date +%s) - DEPLOYMENT_START_TIME))
+    
+    # Get system information
+    local system_info=$(cat <<EOF
+{
+    "hostname": "$(hostname)",
+    "os": "$(uname -a)",
+    "docker_version": "$(docker --version 2>/dev/null || echo 'unknown')",
+    "docker_compose_version": "$(docker compose version 2>/dev/null || echo 'unknown')",
+    "total_memory": "$(free -h | awk '/^Mem:/{print $2}')",
+    "available_memory": "$(free -h | awk '/^Mem:/{print $7}')",
+    "disk_usage": "$(df -h /opt | awk 'NR==2 {print $5}')",
+    "cpu_cores": "$(nproc)"
+}
+EOF
+    )
+    
+    # Get deployed services information
+    local services_info='[]'
+    if [[ ${#SUCCESSFUL_SERVICES[@]} -gt 0 ]]; then
+        services_info=$(printf '%s\n' "${SUCCESSFUL_SERVICES[@]}" | jq -R . | jq -s .)
+    fi
+    
+    local failed_info='[]'
+    if [[ ${#FAILED_SERVICES[@]} -gt 0 ]]; then
+        failed_info=$(printf '%s\n' "${FAILED_SERVICES[@]}" | jq -R . | jq -s .)
+    fi
+    
+    # Generate comprehensive report
+    cat > "$report_file" <<EOF
+{
+    "deployment_metadata": {
+        "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+        "deployment_id": "$TIMESTAMP",
+        "duration_seconds": $deployment_duration,
+        "duration_human": "${deployment_duration}s ($(($deployment_duration/60))m $(($deployment_duration%60))s)",
+        "script_version": "production-grade-v1.0",
+        "deployment_status": "$DEPLOYMENT_PHASE"
+    },
+    "system_information": $system_info,
+    "deployment_statistics": {
+        "total_services_attempted": $((${#SUCCESSFUL_SERVICES[@]} + ${#FAILED_SERVICES[@]})),
+        "successful_services": ${#SUCCESSFUL_SERVICES[@]},
+        "failed_services": ${#FAILED_SERVICES[@]},
+        "warnings_count": $WARNING_COUNT,
+        "errors_count": $ERROR_COUNT,
+        "recovery_attempts": $RECOVERY_ATTEMPTS,
+        "rollback_triggered": $ROLLBACK_TRIGGERED
+    },
+    "deployed_services": {
+        "successful": $services_info,
+        "failed": $failed_info
+    },
+    "files": {
+        "deployment_log": "$LOG_FILE",
+        "deployment_state": "$DEPLOYMENT_STATE_FILE",
+        "rollback_state": "$ROLLBACK_STATE_FILE"
+    },
+    "health_status": {
+        "docker_healthy": $(docker info >/dev/null 2>&1 && echo "true" || echo "false"),
+        "services_running": $(docker ps --filter "name=sutazai-" | wc -l),
+        "containers_total": $(docker ps -a --filter "name=sutazai-" | wc -l)
+    }
+}
+EOF
+    
+    log_success "✅ Deployment report generated: $report_file"
+    
+    # Display summary
+    log_info "📋 Deployment Summary:"
+    log_info "   • Duration: ${deployment_duration}s ($(($deployment_duration/60))m $(($deployment_duration%60))s)"
+    log_info "   • Successful services: ${#SUCCESSFUL_SERVICES[@]}"
+    log_info "   • Failed services: ${#FAILED_SERVICES[@]}"
+    log_info "   • Warnings: $WARNING_COUNT"
+    log_info "   • Recovery attempts: $RECOVERY_ATTEMPTS"
 }
 
 # ===============================================
@@ -4768,11 +5441,11 @@ OLLAMA_PORT=11434
 OLLAMA_BASE_URL=http://ollama:11434
 
 # Default models for enterprise deployment
-DEFAULT_MODELS=deepseek-r1:8b,qwen2.5:7b,codellama:13b,llama3.2:1b,nomic-embed-text
+DEFAULT_MODELS=qwen2.5:3b,qwen2.5:3b,codellama:13b,qwen2.5:3b,nomic-embed-text
 EMBEDDING_MODEL=nomic-embed-text
-REASONING_MODEL=deepseek-r1:8b
+REASONING_MODEL=qwen2.5:3b
 CODE_MODEL=codellama:13b
-FAST_MODEL=llama3.2:1b
+FAST_MODEL=qwen2.5:3b
 
 # ===============================================
 # VECTOR DATABASE CONFIGURATION
@@ -7392,9 +8065,9 @@ parallel_ollama_models() {
     fi
     
     # 🎯 FIXED MODEL DEFINITIONS - Based on User Specifications & Ollama Registry
-    local base_models=("nomic-embed-text:latest" "llama3.2:1b")
-    local standard_models=("qwen2.5:3b" "llama2:7b" "codellama:7b")
-    local advanced_models=("deepseek-r1:8b" "qwen2.5:7b" "codellama:13b")
+    local base_models=("nomic-embed-text:latest" "qwen2.5:3b")
+    local standard_models=("qwen2.5:3b" "llama2:7b" "qwen2.5-coder:3b")
+    local advanced_models=("qwen2.5:3b" "qwen2.5:3b" "codellama:13b")
     
     # Select appropriate model set based on system resources (reduced to prevent hanging)
     local desired_models=()
@@ -7407,7 +8080,7 @@ parallel_ollama_models() {
         log_info "🎯 High-memory system detected (${total_memory_gb}GB) - targeting advanced model set"
         desired_models+=("${standard_models[@]}")
         # Add only select advanced models to prevent hanging
-        desired_models+=("deepseek-r1:8b" "qwen2.5:7b")
+        desired_models+=("qwen2.5:3b" "qwen2.5:3b")
     elif [ $total_memory_gb -ge 16 ]; then
         log_info "🎯 Medium-high memory system detected (${total_memory_gb}GB) - targeting standard model set"
         desired_models+=("${standard_models[@]}")
@@ -9902,127 +10575,174 @@ optimize_system_resources() {
 # ===============================================
 
 main_deployment() {
-    log_header "🚀 Starting SutazAI Enterprise AGI/ASI System Deployment"
+    log_header "🚀 Starting SutazAI Enterprise AGI/ASI Production Deployment"
+    
+    # Set deployment phase
+    DEPLOYMENT_PHASE="pre_validation"
+    
+    # Start progress tracking in background
+    show_deployment_progress 40 &
+    local progress_pid=$!
+    PARALLEL_PIDS+=($progress_pid)
+    
+    # PHASE 0: Pre-deployment validation (CRITICAL)
+    log_header "🎯 Phase 0: Production-Grade Pre-Deployment Validation"
+    if ! pre_deployment_validation; then
+        DEPLOYMENT_PHASE="failed"
+        log_error "❌ Pre-deployment validation failed - cannot proceed safely"
+        trigger_rollback "pre_validation" "validation_failure"
+        exit 1
+    fi
+    
+    # Set up error handling with automatic rollback
+    trap 'handle_deployment_error $? $LINENO' ERR
     
     # CRITICAL: Optimize system resources FIRST
+    DEPLOYMENT_PHASE="resource_optimization"
     optimize_system_resources
     
-    # System state analysis
-    log_info "🧠 Brain: Analyzing system state before deployment..."
-    log_info "🧠 Brain: System Health Score: 100%"
+    # System state analysis with comprehensive checks
+    log_info "🧠 Analyzing system state with production-grade validation..."
+    if ! check_system_resources 16384 50 4; then  # Reduced requirements for better compatibility
+        log_warn "⚠️  System resources below optimal levels - continuing with limited deployment"
+    fi
     
-    log_info "🧠 Brain: Selected deployment approach: intelligent"
+    # Dependency validation with retry logic
+    log_info "🧠 Validating all system dependencies..."
+    if ! validate_all_dependencies; then
+        log_error "❌ Critical dependencies missing"
+        trigger_rollback "dependencies" "missing_dependencies"
+        exit 1
+    fi
     
-    # Dependency validation
-    log_info "🧠 Brain: Validating dependencies..."
-    log_success "✅ Dependencies validated successfully"
-    
-    # Docker startup with immediate health monitoring
+    # Docker startup with enhanced monitoring
+    DEPLOYMENT_PHASE="docker_startup"
     intelligent_docker_startup
     
     # CRITICAL: Start continuous Docker health monitoring
     if ! monitor_docker_health; then
         log_error "❌ Docker health monitoring failed - cannot proceed safely"
+        trigger_rollback "docker" "health_monitoring_failure"
         exit 1
     fi
     
-    # Conflict detection and resolution
-    resolve_port_conflicts_intelligently
+    # PHASE 1: Network and System Preparation
+    DEPLOYMENT_PHASE="network_setup"
+    log_header "🌐 Phase 1: Network Infrastructure & System Preparation"
     
-    # Deployment validation
-    log_header "🎯 Phase 0: Deployment Validation"
-    if ! validate_perfect_deployment_readiness; then
-        log_error "❌ Deployment validation failed - cannot proceed"
-        exit 1
-    fi
-    
-    # 🌐 CRITICAL: Fix network connectivity issues FIRST
-    log_header "🌐 Phase 1: Network Infrastructure Setup"
+    # Network connectivity with fallback
     if ! fix_wsl2_network_connectivity; then
-        log_error "❌ Critical network connectivity issues detected"
-        log_warn "⚠️  Attempting to continue with offline fallback mechanisms..."
+        log_warn "⚠️  Network connectivity issues detected - using offline fallback"
     fi
     
-    # 📦 Install essential packages with resilience
-    log_header "📦 Phase 2: Package Installation with Network Resilience"
-    install_packages_with_network_resilience
+    # Package installation with resilience
+    install_packages_with_network_resilience || {
+        log_error "❌ Critical package installation failed"
+        trigger_rollback "package_installation" "critical_packages_failed"
+        exit 1
+    }
     
-    # 🔍 Detect GPU availability for intelligent service deployment
-    log_header "🔍 Phase 2.5: GPU Capability Detection"
+    # GPU detection and configuration
     detect_gpu_availability
     configure_gpu_environment
     
-    # 🔧 Resolve port conflicts intelligently
-    log_header "🔧 Phase 3: Port Conflict Resolution"
+    # Port conflict resolution
     fix_port_conflicts_intelligent
     
-    # 🔧 CRITICAL: Ensure .env permissions are correct for Docker Compose
+    # Environment setup
     ensure_env_permissions() {
         if [ -f ".env" ]; then
             chmod 644 .env 2>/dev/null || log_warn "Could not fix .env permissions"
-            log_info "✅ Ensured .env file permissions are correct for Docker Compose"
+            log_info "✅ Environment file permissions configured"
         fi
     }
     ensure_env_permissions
     
-    # Enable enhanced debugging and error reporting
-    enable_enhanced_debugging
+    # PHASE 2: System Dependencies and Cleanup
+    DEPLOYMENT_PHASE="system_preparation"
+    log_header "🔧 Phase 2: System Dependencies & Environment Setup"
     
-    # Intelligent pre-flight system validation
-    if ! perform_intelligent_preflight_check; then
-        log_error "🚨 Critical pre-flight issues detected"
-        log_info "🔧 Attempting intelligent auto-correction..."
-        
-        # Attempt automatic fixes
-        if attempt_intelligent_auto_fixes; then
-            log_success "✅ Auto-correction successful - retrying pre-flight check"
-            if ! perform_intelligent_preflight_check; then
-                log_error "❌ Auto-correction failed - manual intervention required"
-                exit 1
-            fi
-        else
-            log_error "❌ Auto-correction failed - please resolve issues manually"
-            exit 1
-        fi
-    fi
-    
-    # Pre-deployment system health check
-    pre_deployment_checks
-    
-    # Phase 1: System Validation and Preparation
+    # System optimization
     check_prerequisites
     setup_environment
-    detect_recent_changes
     optimize_system_resources
     optimize_system_performance
-    optimize_network_downloads || {
-        log_warn "⚠️  Network optimization failed - continuing with defaults"
-    }
-    install_all_system_dependencies
     
-    # Intelligent cleanup - can be skipped with SKIP_CLEANUP=true
-    if [[ "${SKIP_CLEANUP:-false}" == "true" ]]; then
-        log_header "⏭️  Skipping Container Cleanup (SKIP_CLEANUP=true)"
-        log_info "🏥 Assuming all existing containers are healthy and should be preserved"
-        log_info "💡 To enable intelligent cleanup, run without SKIP_CLEANUP or set SKIP_CLEANUP=false"
-    else
+    # Intelligent cleanup with safety checks
+    if [[ "${SKIP_CLEANUP:-false}" != "true" ]]; then
+        log_info "🧹 Performing intelligent cleanup of existing services"
         cleanup_existing_services
+    else
+        log_info "⏭️  Skipping cleanup (SKIP_CLEANUP=true)"
     fi
     
-    # Start resource monitoring (shortened to prevent hanging)
-    monitor_resource_utilization 60 "deployment" &
+    # PHASE 3: Production-Grade Parallel Deployment
+    DEPLOYMENT_PHASE="core_deployment"
+    log_header "🚀 Phase 3: Production-Grade Parallel Service Deployment"
     
-    # Phase 2: Core Infrastructure Deployment
-    deploy_service_group "Core Infrastructure" "${CORE_SERVICES[@]}"
-    deploy_service_group "Vector Storage Systems" "${VECTOR_SERVICES[@]}"
+    # Deploy service groups in parallel for maximum efficiency
+    if ! deploy_services_parallel "core" "ai" "application" "monitoring"; then
+        log_error "❌ Parallel deployment failed"
+        trigger_rollback "parallel_deployment" "service_group_failure"
+        exit 1
+    fi
     
-    # Phase 3: AI Model Services
-    deploy_service_group "AI Model Services" "${AI_MODEL_SERVICES[@]}"
+    # PHASE 4: Post-Deployment Validation and Health Checks
+    DEPLOYMENT_PHASE="validation"
+    log_header "🔍 Phase 4: Comprehensive Health Validation"
+    
+    # Wait for all services to stabilize
+    log_info "⏳ Allowing services to stabilize (30 seconds)..."
+    sleep 30
+    
+    # Comprehensive health check of all deployed services
+    local all_healthy=true
+    local deployed_services=($(docker ps --filter "name=sutazai-" --format "{{.Names}}" | sed 's/sutazai-//'))
+    
+    for service in "${deployed_services[@]}"; do
+        if ! verify_service_health "$service" 60; then
+            log_error "❌ Final health check failed for $service"
+            all_healthy=false
+        fi
+    done
+    
+    if [[ "$all_healthy" == "false" ]]; then
+        log_error "❌ Final health validation failed - some services are unhealthy"
+        trigger_rollback "health_validation" "final_health_check_failed"
+        exit 1
+    fi
+    
+    # PHASE 5: Deployment Analytics and Reporting
+    DEPLOYMENT_PHASE="reporting"
+    log_header "📊 Phase 5: Deployment Analytics and Reporting"
+    
+    # Generate deployment report
+    generate_deployment_report
+    
+    # Mark deployment as completed
+    DEPLOYMENT_PHASE="completed"
+    
+    # Stop progress tracking
+    for pid in "${PARALLEL_PIDS[@]}"; do
+        kill $pid 2>/dev/null || true
+    done
+    
+    # Final success message
+    local deployment_duration=$(($(date +%s) - DEPLOYMENT_START_TIME))
+    log_header "🎉 DEPLOYMENT COMPLETED SUCCESSFULLY"
+    log_success "✅ All services deployed and validated successfully"
+    log_info "⏱️  Total deployment time: ${deployment_duration}s ($(($deployment_duration/60))m $(($deployment_duration%60))s)"
+    log_info "📊 Services deployed: ${#SUCCESSFUL_SERVICES[@]}"
+    log_info "⚠️  Warnings encountered: $WARNING_COUNT"
+    log_info "📋 Deployment log: $LOG_FILE"
+    log_info "📊 Deployment state: $DEPLOYMENT_STATE_FILE"
+    
+    return 0
     
     # Skip model downloads to prevent hanging - models already available
     if [[ " ${AI_MODEL_SERVICES[*]} " == *" ollama "* ]]; then
         log_info "🚀 Skipping model downloads - using existing models for deployment speed"
-        log_info "💡 Found existing models: qwen2.5:3b, nomic-embed-text:latest, llama3.2:1b"
+        log_info "💡 Found existing models: qwen2.5:3b, nomic-embed-text:latest, qwen2.5:3b"
         log_info "💡 Additional models can be downloaded manually after deployment completes"
     fi
     
@@ -10557,13 +11277,13 @@ setup_initial_models() {
     local desired_models=()
     
     if [ "$AVAILABLE_MEMORY" -ge 32 ]; then
-        desired_models=("deepseek-r1:8b" "qwen2.5:7b" "llama2:7b" "codellama:7b" "llama3.2:1b" "nomic-embed-text")
+        desired_models=("qwen2.5:3b" "qwen2.5:3b" "llama2:7b" "qwen2.5-coder:3b" "qwen2.5:3b" "nomic-embed-text")
         log_info "🎯 High-memory system detected (${AVAILABLE_MEMORY}GB): targeting full model set"
     elif [ "$AVAILABLE_MEMORY" -ge 16 ]; then
-        desired_models=("deepseek-r1:8b" "qwen2.5:3b" "llama3.2:1b" "nomic-embed-text")
+        desired_models=("qwen2.5:3b" "qwen2.5:3b" "qwen2.5:3b" "nomic-embed-text")
         log_info "🎯 Medium-memory system detected (${AVAILABLE_MEMORY}GB): targeting optimized model set"
     else
-        desired_models=("llama3.2:1b" "nomic-embed-text")
+        desired_models=("qwen2.5:3b" "nomic-embed-text")
         log_info "🎯 Limited-memory system detected (${AVAILABLE_MEMORY}GB): targeting minimal model set"
     fi
     

@@ -1,0 +1,71 @@
+version: '3.8'
+
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+
+x-resource-limits: &resource-limits
+  deploy:
+    resources:
+      limits:
+        cpus: '2'
+        memory: 2G
+      reservations:
+        cpus: '0.5'
+        memory: 512M
+
+services:
+  # Core services with optimized settings
+  postgres:
+    <<: *resource-limits
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+  
+  redis:
+    <<: *resource-limits
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "redis-cli", "ping"]
+  
+  ollama:
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "ollama", "list"]
+  
+  # Agent services with dependencies
+  backend-agi:
+    <<: *resource-limits
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+  
+  mcp-server:
+    <<: *resource-limits
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend-agi:
+        condition: service_started
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8100/health"]

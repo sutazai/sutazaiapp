@@ -204,8 +204,8 @@ setup_ollama_models() {
     # Define required models
     declare -a models=(
         "llama2:7b"
-        "codellama:7b"
-        "deepseek-r1:8b"
+        "qwen2.5-coder:3b"
+        "qwen2.5:3b"
         "qwen2.5:3b"
         "nomic-embed-text:latest"
     )
@@ -418,7 +418,7 @@ configure_taskmaster() {
     },
     "fallback": {
       "provider": "ollama",
-      "modelId": "codellama:7b",
+      "modelId": "qwen2.5-coder:3b",
       "maxTokens": 4096,
       "temperature": 0.2,
       "baseURL": "http://localhost:11434"

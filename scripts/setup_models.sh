@@ -50,18 +50,18 @@ pull_models() {
     # Core models
     models=(
         # DeepSeek models for reasoning
-        "deepseek-r1:8b"
+        "qwen2.5:3b"
         
         # Qwen models for general tasks
         "qwen2.5:3b"
         
         # Code generation models
-        "codellama:7b"
+        "qwen2.5-coder:3b"
         
         # General purpose models
-        "llama3.2:1b"
+        "qwen2.5:3b"
         "llama3.2:3b"
-        "mistral:7b"
+        "qwen2.5:3b"
         
         # Specialized models
         "phi3:mini"
@@ -98,14 +98,14 @@ configure_aliases() {
     
     # Create model aliases for easier access
     ollama create coding-assistant -f - <<EOF
-FROM codellama:7b
+FROM qwen2.5-coder:3b
 PARAMETER temperature 0.7
 PARAMETER top_p 0.9
 SYSTEM You are an expert coding assistant. Provide clean, efficient, and well-documented code.
 EOF
 
     ollama create reasoning-assistant -f - <<EOF
-FROM deepseek-r1:8b
+FROM qwen2.5:3b
 PARAMETER temperature 0.8
 PARAMETER top_p 0.95
 SYSTEM You are a reasoning assistant that thinks step by step through complex problems.
@@ -126,7 +126,7 @@ test_models() {
     log "Testing models..."
     
     # Test a simple query
-    if ollama run llama3.2:1b "Hello, are you working?" &> /dev/null; then
+    if ollama run qwen2.5:3b "Hello, are you working?" &> /dev/null; then
         log "✅ Models are responding correctly"
     else
         error "Models are not responding"
@@ -175,8 +175,8 @@ display_info() {
     echo -e "  • reasoning-assistant - Optimized for complex reasoning"
     echo -e "  • general-assistant - General purpose assistant"
     echo -e "\n${YELLOW}Usage Examples:${NC}"
-    echo -e "  • ollama run deepseek-r1:8b \"Explain quantum computing\""
-    echo -e "  • ollama run codellama:7b \"Write a Python web scraper\""
+    echo -e "  • ollama run qwen2.5:3b \"Explain quantum computing\""
+    echo -e "  • ollama run qwen2.5-coder:3b \"Write a Python web scraper\""
     echo -e "  • ollama run coding-assistant \"Create a REST API\""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }

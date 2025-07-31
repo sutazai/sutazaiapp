@@ -86,7 +86,7 @@ class SutazAIAgentTester:
                 test_payload={
                     "message": "Create a simple hello function",
                     "files": [],
-                    "model": "llama3.2:1b",
+                    "model": "qwen2.5:3b",
                     "workspace": "/app/workspace"
                 },
                 timeout=60
@@ -194,7 +194,7 @@ class SutazAIAgentTester:
             # Test if lightweight model responds faster
             async with aiohttp.ClientSession() as session:
                 test_payload = {
-                    "model": "llama3.2:1b",
+                    "model": "qwen2.5:3b",
                     "prompt": "Hi",
                     "stream": False
                 }

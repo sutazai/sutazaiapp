@@ -235,7 +235,7 @@ class HealthMonitor:
             # Load minimal model
             subprocess.run([
                 "docker", "exec", "sutazaiapp_ollama_1",
-                "ollama", "pull", "llama3.2:1b"
+                "ollama", "pull", "qwen2.5:3b"
             ], check=False)
             
         except Exception as e:

@@ -164,7 +164,7 @@ test_ai_models() {
     test_container "FAISS container" "sutazai-faiss" false
     
     # Test model inference
-    run_test "Ollama model inference" "curl -s -X POST http://localhost:11434/api/generate -d '{\"model\":\"llama3.2:1b\",\"prompt\":\"Hello\",\"stream\":false}' | jq -r '.response' | grep -q ."
+    run_test "Ollama model inference" "curl -s -X POST http://localhost:11434/api/generate -d '{\"model\":\"qwen2.5:3b\",\"prompt\":\"Hello\",\"stream\":false}' | jq -r '.response' | grep -q ."
 }
 
 # Test application services

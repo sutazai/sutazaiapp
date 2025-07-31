@@ -6,9 +6,9 @@ echo "=== Configuring AI Agents for Ollama ==="
 # Common Ollama configuration
 OLLAMA_BASE_URL="http://ollama:11434"
 OLLAMA_API_KEY="local"
-DEFAULT_MODEL="deepseek-r1:8b"
+DEFAULT_MODEL="qwen2.5:3b"
 EMBEDDING_MODEL="nomic-embed-text"
-CODE_MODEL="codellama:7b"
+CODE_MODEL="qwen2.5-coder:3b"
 
 # Function to configure agent
 configure_agent() {
@@ -182,7 +182,7 @@ model_list:
       api_base: $OLLAMA_BASE_URL
   - model_name: gpt-4
     litellm_params:
-      model: ollama/deepseek-r1:8b
+      model: ollama/qwen2.5:3b
       api_base: $OLLAMA_BASE_URL
   - model_name: text-embedding-ada-002
     litellm_params:

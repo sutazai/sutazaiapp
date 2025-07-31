@@ -1,0 +1,1493 @@
+# Complete AI Agent Infrastructure for SutazAI AGI/ASI System
+# 38 AI Agents with Full Service Discovery, Resource Management, and Monitoring
+# Version: 2.0 - Production Ready
+
+x-common-variables: &common-variables
+  TZ: ${TZ:-UTC}
+  SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+  REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+x-agent-defaults: &agent-defaults
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  volumes:
+    - agent_workspaces:/app/workspace
+    - agent_outputs:/app/outputs
+    - ./logs:/app/logs
+  environment:
+    <<: *common-variables
+    BACKEND_URL: http://backend-agi:8000
+    OLLAMA_BASE_URL: http://ollama:11434
+    CHROMADB_URL: http://chromadb:8000
+    QDRANT_URL: http://qdrant:6333
+    REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+    DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/${POSTGRES_DB:-sutazai}
+
+x-health-check: &health-check
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 60s
+
+x-resource-limits: &resource-limits
+  deploy:
+    resources:
+      limits:
+        cpus: '2'
+        memory: 2G
+      reservations:
+        cpus: '0.5'
+        memory: 512M
+
+networks:
+  sutazai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  agent_workspaces:
+  agent_outputs:
+  agent_configs:
+  agent_models:
+  shared_knowledge:
+
+services:
+  # ===========================================
+  # TIER 1: AUTONOMOUS SYSTEM AGENTS
+  # ===========================================
+
+  # 1. AGI System Architect
+  agi-system-architect:
+    <<: *agent-defaults
+    container_name: sutazai-agi-system-architect
+    build:
+      context: ./agents/agi-system-architect
+      dockerfile: Dockerfile
+    ports:
+      - "8201:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: agi-system-architect
+      SPECIALIZATION: system_architecture
+      CAPABILITIES: "architecture,design,optimization,documentation"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # 2. Autonomous System Controller
+  autonomous-system-controller:
+    <<: *agent-defaults
+    container_name: sutazai-autonomous-system-controller
+    build:
+      context: ./agents/autonomous-system-controller
+      dockerfile: Dockerfile
+    ports:
+      - "8202:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: autonomous-system-controller
+      SPECIALIZATION: autonomous_control
+      CAPABILITIES: "control,monitoring,self_healing,optimization"
+      CONTROL_AUTHORITY: high
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis
+      - backend-agi
+      - prometheus
+
+  # 3. AI Agent Orchestrator
+  ai-agent-orchestrator:
+    <<: *agent-defaults
+    container_name: sutazai-ai-agent-orchestrator
+    build:
+      context: ./agents/ai-agent-orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "8203:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: ai-agent-orchestrator
+      SPECIALIZATION: agent_coordination
+      CAPABILITIES: "orchestration,coordination,load_balancing,routing"
+      MAX_CONCURRENT_TASKS: 50
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # 4. Task Assignment Coordinator
+  task-assignment-coordinator:
+    <<: *agent-defaults
+    container_name: sutazai-task-assignment-coordinator
+    build:
+      context: ./agents/task-assignment-coordinator
+      dockerfile: Dockerfile
+    ports:
+      - "8204:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: task-assignment-coordinator
+      SPECIALIZATION: task_routing
+      CAPABILITIES: "task_analysis,agent_matching,workload_balancing"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ai-agent-orchestrator
+
+  # 5. AI Agent Creator
+  ai-agent-creator:
+    <<: *agent-defaults
+    container_name: sutazai-ai-agent-creator
+    build:
+      context: ./agents/ai-agent-creator
+      dockerfile: Dockerfile
+    ports:
+      - "8205:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: ai-agent-creator
+      SPECIALIZATION: agent_generation
+      CAPABILITIES: "agent_design,capability_analysis,system_gaps"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # ===========================================
+  # TIER 2: DEVELOPMENT & ENGINEERING AGENTS
+  # ===========================================
+
+  # 6. Senior AI Engineer
+  senior-ai-engineer:
+    <<: *agent-defaults
+    container_name: sutazai-senior-ai-engineer
+    build:
+      context: ./agents/senior-ai-engineer
+      dockerfile: Dockerfile
+    ports:
+      - "8206:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: senior-ai-engineer
+      SPECIALIZATION: ai_development
+      CAPABILITIES: "ai_architecture,model_integration,rag_systems"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 6G
+        reservations:
+          cpus: '2'
+          memory: 3G
+    depends_on:
+      - redis
+      - ollama
+      - chromadb
+
+  # 7. Senior Backend Developer
+  senior-backend-developer:
+    <<: *agent-defaults
+    container_name: sutazai-senior-backend-developer
+    build:
+      context: ./agents/senior-backend-developer
+      dockerfile: Dockerfile
+    ports:
+      - "8207:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: senior-backend-developer
+      SPECIALIZATION: backend_development
+      CAPABILITIES: "api_development,microservices,database_design"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - postgres
+
+  # 8. Senior Frontend Developer
+  senior-frontend-developer:
+    <<: *agent-defaults
+    container_name: sutazai-senior-frontend-developer
+    build:
+      context: ./agents/senior-frontend-developer
+      dockerfile: Dockerfile
+    ports:
+      - "8208:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: senior-frontend-developer
+      SPECIALIZATION: frontend_development
+      CAPABILITIES: "ui_development,responsive_design,user_experience"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # 9. OpenDevin Code Generator
+  opendevin-code-generator:
+    <<: *agent-defaults
+    container_name: sutazai-opendevin-code-generator
+    build:
+      context: ./agents/opendevin-code-generator
+      dockerfile: Dockerfile
+    ports:
+      - "8209:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: opendevin-code-generator
+      SPECIALIZATION: autonomous_coding
+      CAPABILITIES: "code_generation,debugging,testing,refactoring"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis
+      - ollama
+
+  # 10. Code Generation Improver
+  code-generation-improver:
+    <<: *agent-defaults
+    container_name: sutazai-code-generation-improver
+    build:
+      context: ./agents/code-generation-improver
+      dockerfile: Dockerfile
+    ports:
+      - "8210:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: code-generation-improver
+      SPECIALIZATION: code_optimization
+      CAPABILITIES: "code_analysis,refactoring,optimization,patterns"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # ===========================================
+  # TIER 3: SPECIALIZED AI AGENTS
+  # ===========================================
+
+  # 11. LocalAGI Orchestration Manager
+  localagi-orchestration-manager:
+    <<: *agent-defaults
+    container_name: sutazai-localagi-orchestration-manager
+    build:
+      context: ./agents/localagi-orchestration-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8211:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: localagi-orchestration-manager
+      SPECIALIZATION: workflow_orchestration
+      CAPABILITIES: "autonomous_workflows,multi_agent_coordination"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    depends_on:
+      - redis
+      - ollama
+      - ai-agent-orchestrator
+
+  # 12. AgentZero Coordinator
+  agentzero-coordinator:
+    <<: *agent-defaults
+    container_name: sutazai-agentzero-coordinator
+    build:
+      context: ./agents/agentzero-coordinator
+      dockerfile: Dockerfile
+    ports:
+      - "8212:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: agentzero-coordinator
+      SPECIALIZATION: general_purpose
+      CAPABILITIES: "zero_shot_learning,adaptive_reasoning,tool_usage"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ollama
+
+  # 13. AgentGPT Autonomous Executor
+  agentgpt-autonomous-executor:
+    <<: *agent-defaults
+    container_name: sutazai-agentgpt-autonomous-executor
+    build:
+      context: ./agents/agentgpt-autonomous-executor
+      dockerfile: Dockerfile
+    ports:
+      - "8213:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: agentgpt-autonomous-executor
+      SPECIALIZATION: autonomous_execution
+      CAPABILITIES: "goal_pursuit,multi_step_planning,self_direction"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ollama
+      - postgres
+
+  # 14. BigAGI System Manager
+  bigagi-system-manager:
+    <<: *agent-defaults
+    container_name: sutazai-bigagi-system-manager
+    build:
+      context: ./agents/bigagi-system-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8214:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: bigagi-system-manager
+      SPECIALIZATION: conversational_ai
+      CAPABILITIES: "multi_model_chat,conversation_management"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ollama
+
+  # 15. LangFlow Workflow Designer
+  langflow-workflow-designer:
+    <<: *agent-defaults
+    container_name: sutazai-langflow-workflow-designer
+    build:
+      context: ./agents/langflow-workflow-designer
+      dockerfile: Dockerfile
+    ports:
+      - "8215:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: langflow-workflow-designer
+      SPECIALIZATION: visual_ai_workflows
+      CAPABILITIES: "visual_programming,workflow_design,no_code_ai"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - langflow
+
+  # 16. FlowiseAI Flow Manager
+  flowiseai-flow-manager:
+    <<: *agent-defaults
+    container_name: sutazai-flowiseai-flow-manager
+    build:
+      context: ./agents/flowiseai-flow-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8216:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: flowiseai-flow-manager
+      SPECIALIZATION: langchain_workflows
+      CAPABILITIES: "visual_langchain,chatbot_building,rag_systems"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - flowise
+
+  # 17. Dify Automation Specialist
+  dify-automation-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-dify-automation-specialist
+    build:
+      context: ./agents/dify-automation-specialist
+      dockerfile: Dockerfile
+    ports:
+      - "8217:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: dify-automation-specialist
+      SPECIALIZATION: ai_automation
+      CAPABILITIES: "workflow_automation,conversational_ai,rapid_development"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - dify
+
+  # ===========================================
+  # TIER 4: INFRASTRUCTURE & DEVOPS AGENTS
+  # ===========================================
+
+  # 18. Infrastructure DevOps Manager
+  infrastructure-devops-manager:
+    <<: *agent-defaults
+    container_name: sutazai-infrastructure-devops-manager
+    build:
+      context: ./agents/infrastructure-devops
+      dockerfile: Dockerfile
+    ports:
+      - "8218:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: infrastructure-devops-manager
+      SPECIALIZATION: infrastructure_management
+      CAPABILITIES: "deployment,monitoring,container_orchestration"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - agent_workspaces:/app/workspace
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - prometheus
+      - grafana
+
+  # 19. Deployment Automation Master
+  deployment-automation-master:
+    <<: *agent-defaults
+    container_name: sutazai-deployment-automation-master
+    build:
+      context: ./agents/deployment-automation-master
+      dockerfile: Dockerfile
+    ports:
+      - "8219:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: deployment-automation-master
+      SPECIALIZATION: deployment_orchestration
+      CAPABILITIES: "zero_downtime_deployment,rollback,disaster_recovery"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./scripts:/app/scripts:ro
+      - agent_workspaces:/app/workspace
+    depends_on:
+      - redis
+      - infrastructure-devops-manager
+
+  # 20. Hardware Resource Optimizer
+  hardware-resource-optimizer:
+    <<: *agent-defaults
+    container_name: sutazai-hardware-resource-optimizer
+    build:
+      context: ./agents/hardware-optimizer
+      dockerfile: Dockerfile
+    ports:
+      - "8220:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: hardware-resource-optimizer
+      SPECIALIZATION: resource_optimization
+      CAPABILITIES: "performance_monitoring,resource_allocation,scaling"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - prometheus
+
+  # 21. System Optimizer Reorganizer
+  system-optimizer-reorganizer:
+    <<: *agent-defaults
+    container_name: sutazai-system-optimizer-reorganizer
+    build:
+      context: ./agents/system-optimizer-reorganizer
+      dockerfile: Dockerfile
+    ports:
+      - "8221:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: system-optimizer-reorganizer
+      SPECIALIZATION: system_organization
+      CAPABILITIES: "cleanup,organization,optimization,maintenance"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+
+  # ===========================================
+  # TIER 5: SECURITY & ANALYSIS AGENTS
+  # ===========================================
+
+  # 22. Semgrep Security Analyzer
+  semgrep-security-analyzer:
+    <<: *agent-defaults
+    container_name: sutazai-semgrep-security-analyzer
+    build:
+      context: ./agents/semgrep-security-analyzer
+      dockerfile: Dockerfile
+    ports:
+      - "8222:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: semgrep-security-analyzer
+      SPECIALIZATION: static_security_analysis
+      CAPABILITIES: "vulnerability_scanning,security_rules,compliance"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+
+  # 23. Security Pentesting Specialist
+  security-pentesting-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-security-pentesting-specialist
+    build:
+      context: ./agents/security-pentesting-specialist
+      dockerfile: Dockerfile
+    ports:
+      - "8223:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: security-pentesting-specialist
+      SPECIALIZATION: penetration_testing
+      CAPABILITIES: "security_assessment,vulnerability_testing,compliance"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+
+  # 24. Kali Security Specialist
+  kali-security-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-kali-security-specialist
+    build:
+      context: ./agents/kali-security-specialist
+      dockerfile: Dockerfile
+    ports:
+      - "8224:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: kali-security-specialist
+      SPECIALIZATION: advanced_security_testing
+      CAPABILITIES: "penetration_testing,forensics,exploit_development"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    depends_on:
+      - redis
+
+  # 25. Private Data Analyst
+  private-data-analyst:
+    <<: *agent-defaults
+    container_name: sutazai-private-data-analyst
+    build:
+      context: ./agents/private-data-analyst
+      dockerfile: Dockerfile
+    ports:
+      - "8225:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: private-data-analyst
+      SPECIALIZATION: privacy_preserving_analysis
+      CAPABILITIES: "confidential_analysis,gdpr_compliance,data_privacy"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    volumes:
+      - ./data/private:/app/private_data:ro
+      - agent_workspaces:/app/workspace
+    depends_on:
+      - redis
+      - privategpt
+
+  # ===========================================
+  # TIER 6: INTEGRATION & AUTOMATION AGENTS
+  # ===========================================
+
+  # 26. Ollama Integration Specialist
+  ollama-integration-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-ollama-integration-specialist
+    build:
+      context: ./agents/ollama-integration
+      dockerfile: Dockerfile
+    ports:
+      - "8226:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: ollama-integration-specialist
+      SPECIALIZATION: model_integration
+      CAPABILITIES: "model_management,optimization,api_integration"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ollama
+
+  # 27. LiteLLM Proxy Manager
+  litellm-proxy-manager:
+    <<: *agent-defaults
+    container_name: sutazai-litellm-proxy-manager
+    build:
+      context: ./agents/litellm-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8227:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: litellm-proxy-manager
+      SPECIALIZATION: api_proxy_management
+      CAPABILITIES: "api_translation,load_balancing,caching"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - litellm
+
+  # 28. Context Optimization Engineer
+  context-optimization-engineer:
+    <<: *agent-defaults
+    container_name: sutazai-context-optimization-engineer
+    build:
+      context: ./agents/context-optimizer
+      dockerfile: Dockerfile
+    ports:
+      - "8228:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: context-optimization-engineer
+      SPECIALIZATION: context_optimization
+      CAPABILITIES: "prompt_engineering,token_optimization,context_management"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ollama
+
+  # 29. Browser Automation Orchestrator
+  browser-automation-orchestrator:
+    <<: *agent-defaults
+    container_name: sutazai-browser-automation-orchestrator
+    build:
+      context: ./agents/browser-automation-orchestrator
+      dockerfile: Dockerfile
+    ports:
+      - "8229:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: browser-automation-orchestrator
+      SPECIALIZATION: browser_automation
+      CAPABILITIES: "web_scraping,ui_testing,automation"
+      DISPLAY: ":99"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - browser-use
+
+  # 30. Shell Automation Specialist
+  shell-automation-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-shell-automation-specialist
+    build:
+      context: ./agents/shell-automation-specialist
+      dockerfile: Dockerfile
+    ports:
+      - "8230:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: shell-automation-specialist
+      SPECIALIZATION: shell_automation
+      CAPABILITIES: "script_generation,system_automation,cli_tools"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - shellgpt
+
+  # ===========================================
+  # TIER 7: SPECIALIZED DOMAIN AGENTS
+  # ===========================================
+
+  # 31. Financial Analysis Specialist
+  financial-analysis-specialist:
+    <<: *agent-defaults
+    container_name: sutazai-financial-analysis-specialist
+    build:
+      context: ./agents/financial-analysis-specialist
+      dockerfile: Dockerfile
+    ports:
+      - "8231:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: financial-analysis-specialist
+      SPECIALIZATION: financial_analysis
+      CAPABILITIES: "trading_algorithms,risk_management,portfolio_optimization"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - finrobot
+
+  # 32. Document Knowledge Manager
+  document-knowledge-manager:
+    <<: *agent-defaults
+    container_name: sutazai-document-knowledge-manager
+    build:
+      context: ./agents/document-knowledge-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8232:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: document-knowledge-manager
+      SPECIALIZATION: knowledge_management
+      CAPABILITIES: "rag_systems,documentation,knowledge_graphs"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - chromadb
+      - documind
+
+  # 33. Deep Learning Brain Manager
+  deep-learning-brain-manager:
+    <<: *agent-defaults
+    container_name: sutazai-deep-learning-brain-manager
+    build:
+      context: ./agents/deep-learning-brain-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8233:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: deep-learning-brain-manager
+      SPECIALIZATION: neural_intelligence
+      CAPABILITIES: "neural_architecture,meta_learning,consciousness_modeling"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '6'
+          memory: 8G
+        reservations:
+          cpus: '3'
+          memory: 4G
+    depends_on:
+      - redis
+      - pytorch
+      - tensorflow
+
+  # 34. Complex Problem Solver
+  complex-problem-solver:
+    <<: *agent-defaults
+    container_name: sutazai-complex-problem-solver
+    build:
+      context: ./agents/complex-problem-solver
+      dockerfile: Dockerfile
+    ports:
+      - "8234:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: complex-problem-solver
+      SPECIALIZATION: problem_solving
+      CAPABILITIES: "research,synthesis,creative_solutions,analysis"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 6G
+        reservations:
+          cpus: '2'
+          memory: 3G
+    depends_on:
+      - redis
+      - ollama
+
+  # 35. Jarvis Voice Interface
+  jarvis-voice-interface:
+    <<: *agent-defaults
+    container_name: sutazai-jarvis-voice-interface
+    build:
+      context: ./agents/jarvis-voice-interface
+      dockerfile: Dockerfile
+    ports:
+      - "8235:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: jarvis-voice-interface
+      SPECIALIZATION: voice_interface
+      CAPABILITIES: "speech_recognition,text_to_speech,voice_commands"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - jarvis-agi
+
+  # ===========================================
+  # TIER 8: MANAGEMENT & COORDINATION AGENTS
+  # ===========================================
+
+  # 36. AI Product Manager
+  ai-product-manager:
+    <<: *agent-defaults
+    container_name: sutazai-ai-product-manager
+    build:
+      context: ./agents/ai-product-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8236:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: ai-product-manager
+      SPECIALIZATION: product_management
+      CAPABILITIES: "requirements_analysis,roadmap_planning,stakeholder_coordination"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+
+  # 37. AI Scrum Master
+  ai-scrum-master:
+    <<: *agent-defaults
+    container_name: sutazai-ai-scrum-master
+    build:
+      context: ./agents/ai-scrum-master
+      dockerfile: Dockerfile
+    ports:
+      - "8237:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: ai-scrum-master
+      SPECIALIZATION: agile_facilitation
+      CAPABILITIES: "sprint_planning,impediment_removal,team_facilitation"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - ai-product-manager
+
+  # 38. Testing QA Validator
+  testing-qa-validator:
+    <<: *agent-defaults
+    container_name: sutazai-testing-qa-validator
+    build:
+      context: ./agents/testing-qa-validator
+      dockerfile: Dockerfile
+    ports:
+      - "8238:8080"
+    environment:
+      <<: *common-variables
+      AGENT_TYPE: testing-qa-validator
+      SPECIALIZATION: quality_assurance
+      CAPABILITIES: "test_automation,quality_validation,performance_testing"
+    healthcheck:
+      <<: *health-check
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+
+    deploy:
+
+      resources:
+
+        limits:
+
+          cpus: '2'
+
+          memory: 2G
+
+        reservations:
+
+          cpus: '1'
+
+          memory: 1G
+    depends_on:
+      - redis
+      - backend-agi
+
+  # ===========================================
+  # AGENT COMMUNICATION HUB
+  # ===========================================
+
+  agent-message-bus:
+    container_name: sutazai-agent-message-bus
+    build:
+      context: ./agents/agent-message-bus
+      dockerfile: Dockerfile
+    ports:
+      - "8299:8080"
+    environment:
+      <<: *common-variables
+      SERVICE_TYPE: message_bus
+      REDIS_CHANNELS: "agent_communication,task_routing,system_events"
+      MAX_MESSAGE_SIZE: 10MB
+      MESSAGE_TTL: 3600
+    networks:
+      - sutazai-network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  # ===========================================
+  # AGENT REGISTRY & DISCOVERY
+  # ===========================================
+
+  agent-registry:
+    container_name: sutazai-agent-registry
+    build:
+      context: ./agents/agent-registry
+      dockerfile: Dockerfile
+    ports:
+      - "8300:8080"
+    environment:
+      <<: *common-variables
+      SERVICE_TYPE: agent_registry
+      REGISTRY_TYPE: distributed
+      HEARTBEAT_INTERVAL: 30
+      AGENT_TIMEOUT: 180
+    networks:
+      - sutazai-network
+    volumes:
+      - agent_configs:/app/configs
+      - ./agents:/app/agent_definitions:ro
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped

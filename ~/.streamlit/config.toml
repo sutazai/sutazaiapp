@@ -1,0 +1,6 @@
+[global]
+showWarningOnOperationNotAllowed = false
+
+[server]
+enableXsrfProtection = false
+enableCORS = false

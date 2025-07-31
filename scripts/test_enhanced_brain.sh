@@ -211,7 +211,7 @@ fi
 echo -e "\n${BLUE}Model Availability${NC}"
 echo "───────────────────────────────────────"
 
-models=("deepseek-r1:8b" "codellama:7b" "qwen2.5:7b")
+models=("qwen2.5:3b" "qwen2.5-coder:3b" "qwen2.5:3b")
 for model in "${models[@]}"; do
     echo -n "Checking $model... "
     if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "$model"; then

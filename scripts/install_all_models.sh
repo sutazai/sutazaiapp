@@ -30,12 +30,12 @@ pull_model() {
 
 # Core models for the AGI system
 CORE_MODELS=(
-    "deepseek-r1:8b"        # Primary reasoning model
+    "qwen2.5:3b"        # Primary reasoning model
     "qwen3:8b"              # Alternative reasoning
-    "llama3.2:1b"           # Fast inference model
+    "qwen2.5:3b"           # Fast inference model
     "llama2:7b"             # General purpose
-    "codellama:7b"          # Code generation
-    "mistral:7b"            # General purpose
+    "qwen2.5-coder:3b"          # Code generation
+    "qwen2.5:3b"            # General purpose
     "phi-2"                 # Lightweight model
 )
 

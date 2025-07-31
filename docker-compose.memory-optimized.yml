@@ -1,0 +1,362 @@
+# Memory-Optimized Docker Compose Override
+# Prevents system freezing on 15GB RAM systems
+# Uses small models by default (qwen2.5:3b, llama3.2:3b)
+
+services:
+  # Ollama - Primary AI Model Server (Optimized for Small Models)
+  ollama:
+    environment:
+      # Small model defaults - prioritize efficiency over power
+      OLLAMA_NUM_PARALLEL: 1           # Single request processing to prevent overload
+      OLLAMA_NUM_THREADS: 4            # Conservative thread count
+      OLLAMA_MAX_LOADED_MODELS: 1      # Only one small model at a time 
+      OLLAMA_KEEP_ALIVE: 30s           # Quick unload after inactivity
+      OLLAMA_MAX_QUEUE: 3              # Limit request queue
+      OLLAMA_MODELS: "qwen2.5:3b"      # Default to smallest efficient model
+      OLLAMA_FLASH_ATTENTION: false    # Disable for stability
+      OLLAMA_HOST: "0.0.0.0"
+      OLLAMA_ORIGINS: "*"
+      # Memory optimization settings
+      OLLAMA_NOPRUNE: false           # Enable automatic model pruning
+      OLLAMA_DEBUG: false             # Disable debug to save memory
+    deploy:
+      resources:
+        limits:
+          cpus: '4'                   # Reduced CPU limit for small models
+          memory: 6G                  # Strict memory limit - sufficient for 3B models
+          pids: 100                   # Limit process count
+        reservations:
+          cpus: '2'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s                   # More frequent health checks
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    sysctls:
+      - net.core.somaxconn=1024       # Optimize network connections
+    ulimits:
+      memlock: 67108864               # 64MB memory lock limit
+      nofile: 65536                   # File descriptor limit
+
+  # Backend API - Optimized for small model integration
+  backend-agi:
+    environment:
+      # Default to small models across the system
+      DEFAULT_MODEL: "qwen2.5:3b"
+      FALLBACK_MODEL: "llama3.2:3b"
+      MODEL_PREFERENCE: "small"
+      MAX_CONCURRENT_REQUESTS: 2
+      # Memory optimization
+      PYTHONHASHSEED: 0
+      PYTHONUNBUFFERED: 1
+      OMP_NUM_THREADS: 2
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+          pids: 50
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # PostgreSQL - Memory optimized
+  postgres:
+    environment:
+      # Small instance optimization
+      POSTGRES_SHARED_BUFFERS: 256MB
+      POSTGRES_EFFECTIVE_CACHE_SIZE: 1GB
+      POSTGRES_WORK_MEM: 4MB
+      POSTGRES_MAINTENANCE_WORK_MEM: 64MB
+      POSTGRES_MAX_CONNECTIONS: 50
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 100
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Redis - Conservative memory usage
+  redis:
+    environment:
+      REDIS_MAXMEMORY: 512mb
+      REDIS_MAXMEMORY_POLICY: allkeys-lru
+      REDIS_SAVE: "300 10"            # Less frequent saves
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+          pids: 25
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # ChromaDB - Minimal configuration
+  chromadb:
+    environment:
+      CHROMA_SERVER_MAX_BATCH_SIZE: 100
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 25
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Qdrant - Memory efficient
+  qdrant:
+    environment:
+      QDRANT__SERVICE__MAX_REQUEST_SIZE_MB: 16
+      QDRANT__STORAGE__PERFORMANCE__MAX_SEARCH_THREADS: 2
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 25
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Frontend - Minimal resources
+  frontend-agi:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 25
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Neo4j - Highly optimized for small datasets
+  neo4j:
+    environment:
+      # Small instance memory settings
+      NEO4J_server_memory_heap_initial__size: 256M
+      NEO4J_server_memory_heap_max__size: 512M
+      NEO4J_server_memory_pagecache_size: 256M
+      NEO4J_server_memory_off__heap_max__size: 512M
+      # Connection limits
+      NEO4J_server_bolt_thread_pool_max__size: 10
+      NEO4J_server_bolt_thread_pool_min__size: 2
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1'
+          pids: 50
+        reservations:
+          memory: 768M
+          cpus: '0.5'
+
+  # AI Agents - All configured for small models by default
+  
+  # Aider - Code assistant with small model
+  aider:
+    environment:
+      MODEL: "qwen2.5:3b"             # Small model for code tasks
+      OLLAMA_API_BASE: "http://ollama:11434"
+      EDITOR_MODEL: "qwen2.5:3b"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+          pids: 20
+
+  # CrewAI - Multi-agent with small models
+  crewai:
+    environment:
+      DEFAULT_MODEL: "qwen2.5:3b"
+      CREW_SIZE: 3                    # Reduced crew size
+      MODEL_PREFERENCE: "efficiency"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+          pids: 25
+
+  # AutoGPT - Small model configuration
+  autogpt:
+    environment:
+      LLM_MODEL: "qwen2.5:3b"
+      EMBEDDING_MODEL: "nomic-embed-text:latest"
+      MAX_MEMORY_ITEMS: 25            # Reduced memory items
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+          pids: 20
+
+  # GPT-Engineer - Small model setup
+  gpt-engineer:
+    environment:
+      MODEL: "qwen2.5:3b"
+      MAX_TOKENS: 4096                # Conservative token limit
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+          pids: 20
+
+  # BigAGI - Small model configuration
+  bigagi:
+    environment:
+      OLLAMA_MODEL: "qwen2.5:3b"
+      DEFAULT_MODEL_SIZE: "3b"
+      PERFORMANCE_MODE: "efficiency"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+          pids: 25
+
+  # LangFlow - Optimized for small models
+  langflow:
+    environment:
+      LANGFLOW_DEFAULT_MODEL: "qwen2.5:3b"
+      LANGFLOW_CACHE_SIZE: 50
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 30
+
+  # Flowise - Small model defaults
+  flowise:
+    environment:
+      DEFAULT_CHAT_MODEL: "qwen2.5:3b"
+      MODEL_SIZE_PREFERENCE: "small"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 768M
+          pids: 25
+
+  # Dify - Small model configuration
+  dify:
+    environment:
+      DEFAULT_MODEL: "qwen2.5:3b"
+      MODEL_CONFIG: "small"
+      OLLAMA_MODEL_NAME: "qwen2.5:3b"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+          pids: 30
+
+  # Hardware Resource Optimizer - Enhanced for small model systems
+  hardware-optimizer:
+    environment:
+      MAX_MEMORY_MB: 6144             # 6GB max for models
+      MEMORY_THRESHOLD: 80            # Lower threshold for safety
+      CPU_THRESHOLD: 75
+      OPTIMIZATION_INTERVAL: 30       # More frequent optimization
+      SMALL_MODEL_MODE: "true"
+      DEFAULT_MODELS: "qwen2.5:3b,llama3.2:3b"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+          pids: 10
+
+  # Context Optimizer - Small model optimization
+  context-optimizer:
+    environment:
+      MAX_CONTEXT_LENGTH: 4096        # Conservative context for small models
+      MODEL_SIZE_CATEGORY: "small"
+      MEMORY_EFFICIENT_MODE: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+          pids: 10
+
+  # LiteLLM Manager - Small model routing
+  litellm-manager:
+    environment:
+      DEFAULT_MODEL: "ollama/qwen2.5:3b"
+      FALLBACK_MODEL: "ollama/llama3.2:3b"
+      MODEL_PREFERENCE: "small"
+      MAX_BUDGET: 10                  # Conservative budget
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+          pids: 10
+
+  # Ollama Integration Specialist
+  ollama-integration:
+    environment:
+      PRIMARY_MODEL: "qwen2.5:3b"
+      SECONDARY_MODEL: "llama3.2:3b"
+      MODEL_ROTATION_ENABLED: "false" # Disable to prevent memory spikes
+      SINGLE_MODEL_MODE: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+          pids: 10
+
+  # DevOps Manager - Resource monitoring
+  devops-manager:
+    environment:
+      RESOURCE_MONITORING: "true"
+      MEMORY_ALERT_THRESHOLD: 85
+      SMALL_SYSTEM_MODE: "true"
+      AUTO_SCALE_DOWN: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+          pids: 10
+
+# Global memory optimization settings
+x-global-memory-settings: &global-memory-settings
+  sysctls:
+    - vm.swappiness=10                # Reduce swap usage
+    - vm.vfs_cache_pressure=50        # Optimize cache pressure
+    - vm.dirty_ratio=5                # Reduce dirty memory ratio
+    - vm.dirty_background_ratio=2     # Background dirty memory
+  ulimits:
+    memlock: 67108864                 # 64MB memory lock
+    nofile: 8192                      # Reasonable file limit
+    nproc: 2048                       # Process limit
+
+networks:
+  sutazai-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1500
+
+# Memory-optimized volumes
+volumes:
+  ollama_data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=2g,noatime             # 2GB tmpfs for model cache

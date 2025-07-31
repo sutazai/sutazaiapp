@@ -320,7 +320,7 @@ install_ollama_and_models() {
             log_warn "⚠️  Default model download took too long - using fallback strategy"
             
             # Try ultra-fast fallback model
-            local fallback_model="llama3.2:1b"
+            local fallback_model="qwen2.5:3b"
             if ! (ollama list 2>/dev/null | grep -q "$fallback_model" && validate_model_integrity "$fallback_model"); then
                 if timeout 120 ollama pull "$fallback_model" >/dev/null 2>&1; then
                     log_success "✅ Ultra-fast fallback model ($fallback_model) ready!"
@@ -342,10 +342,10 @@ install_ollama_and_models() {
     local background_models=()
     
     if [ "$available_memory" -ge 32 ] && [ "$disk_space" -ge 50 ]; then
-        background_models=("deepseek-r1:8b" "qwen2.5:7b" "codellama:13b" "nomic-embed-text")
+        background_models=("qwen2.5:3b" "qwen2.5:3b" "codellama:13b" "nomic-embed-text")
         log_info "🧠 High-capacity system: Queuing premium model set for background download"
     elif [ "$available_memory" -ge 16 ] && [ "$disk_space" -ge 25 ]; then
-        background_models=("deepseek-r1:8b" "qwen2.5:3b" "nomic-embed-text")
+        background_models=("qwen2.5:3b" "qwen2.5:3b" "nomic-embed-text")
         log_info "🧠 Medium-capacity system: Queuing optimized model set for background download"
     elif [ "$available_memory" -ge 8 ] && [ "$disk_space" -ge 10 ]; then
         background_models=("nomic-embed-text")
@@ -1069,9 +1069,9 @@ OLLAMA_HOST=localhost
 OLLAMA_PORT=11434
 
 # AI Models
-DEFAULT_MODELS=deepseek-r1:8b,qwen2.5:7b,llama3.2:1b,nomic-embed-text
-REASONING_MODEL=deepseek-r1:8b
-CONVERSATION_MODEL=llama3.2:1b
+DEFAULT_MODELS=qwen2.5:3b,qwen2.5:3b,qwen2.5:3b,nomic-embed-text
+REASONING_MODEL=qwen2.5:3b
+CONVERSATION_MODEL=qwen2.5:3b
 EMBEDDING_MODEL=nomic-embed-text
 
 # Feature Flags

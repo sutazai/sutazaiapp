@@ -1,3 +1,12 @@
+
+# Small model configuration for memory efficiency
+DEFAULT_MODEL = "qwen2.5:3b"
+AVAILABLE_MODELS = ["qwen2.5:3b", "llama3.2:3b", "qwen2.5-coder:3b"]
+MODEL_DESCRIPTIONS = {
+    "qwen2.5:3b": "Primary small model (2GB RAM)",
+    "llama3.2:3b": "Backup small model (2GB RAM)", 
+    "qwen2.5-coder:3b": "Coding-focused small model (2GB RAM)"
+}
 """
 SutazAI AGI/ASI System - Enhanced Frontend
 A comprehensive interface for the autonomous AI system
@@ -1771,7 +1780,7 @@ def show_ai_chat():
                 # Use models/chat for faster response with optimized models
                 response = asyncio.run(call_api("/api/v1/models/chat", "POST", {
                     "messages": [{"role": "user", "content": prompt}],
-                    "model": "llama3.2:1b"  # Use the lightweight model
+                    "model": "qwen2.5:3b"  # Use the lightweight model
                 }))
             
             if response:
@@ -2155,10 +2164,10 @@ def show_system_config():
         
         # Model settings
         st.selectbox("Default Model:", [
-            "deepseek-r1:8b",
+            "qwen2.5:3b",
             "qwen3:8b",
-            "codellama:7b",
-            "llama3.2:1b"
+            "qwen2.5-coder:3b",
+            "qwen2.5:3b"
         ])
         
         st.slider("Default Temperature:", 0.0, 1.0, 0.7)
@@ -2885,7 +2894,7 @@ def show_api_gateway():
     if method in ["POST", "PUT"]:
         request_body = st.text_area(
             "Request Body (JSON)",
-            value='{\n  "message": "Hello AGI",\n  "model": "deepseek-r1:8b"\n}',
+            value='{\n  "message": "Hello AGI",\n  "model": "qwen2.5:3b"\n}',
             height=150
         )
     
@@ -4019,9 +4028,9 @@ def show_ollama_management():
         
         models = [
             {"name": "llama2:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "45K"},
-            {"name": "codellama:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
-            {"name": "mistral:7b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
-            {"name": "deepseek-r1:8b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
+            {"name": "qwen2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
+            {"name": "qwen2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
+            {"name": "qwen2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
             {"name": "qwen2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
         ]
         
@@ -4050,7 +4059,7 @@ def show_ollama_management():
         
         running = [
             {"model": "llama2:7b", "memory": "3.2GB", "gpu": "Yes", "requests": 1247},
-            {"model": "codellama:7b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
+            {"model": "qwen2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
         ]
         
         for model in running:
@@ -6096,11 +6105,11 @@ def show_real_ollama_management():
         
         # Recommended models for SutazAI
         recommended_models = [
-            {"name": "deepseek-r1:8b", "description": "Advanced reasoning model", "size": "4.7GB"},
-            {"name": "qwen2.5:7b", "description": "Multilingual large language model", "size": "4.4GB"},
-            {"name": "codellama:7b", "description": "Code generation and understanding", "size": "3.8GB"},
+            {"name": "qwen2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
+            {"name": "qwen2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
+            {"name": "qwen2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
             {"name": "llama2:7b", "description": "General purpose conversational AI", "size": "3.8GB"},
-            {"name": "mistral:7b", "description": "High-performance language model", "size": "4.1GB"},
+            {"name": "qwen2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
             {"name": "phi3:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
         ]
         

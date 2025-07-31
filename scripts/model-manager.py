@@ -33,7 +33,7 @@ class ModelManager:
             # Priority models (always keep loaded)
             "priority": [
                 {
-                    "name": "llama3.2:1b",
+                    "name": "qwen2.5:3b",
                     "memory_mb": 1200,
                     "description": "Lightweight general model",
                     "use_cases": ["chat", "general"]
@@ -54,7 +54,7 @@ class ModelManager:
                     "use_cases": ["code", "architecture"]
                 },
                 {
-                    "name": "deepseek-r1:8b",
+                    "name": "qwen2.5:3b",
                     "memory_mb": 6000,
                     "description": "Advanced reasoning model",
                     "use_cases": ["reasoning", "analysis"]
@@ -63,7 +63,7 @@ class ModelManager:
             # Optional models (only for specific tasks)
             "optional": [
                 {
-                    "name": "qwen2.5:7b",
+                    "name": "qwen2.5:3b",
                     "memory_mb": 5000,
                     "description": "General purpose large model",
                     "use_cases": ["complex_tasks"]
