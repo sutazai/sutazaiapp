@@ -1,6 +1,7 @@
 ---
 name: agi-system-validator
-description: Use this agent when you need to:\n\n- Validate system optimization in AGI systems\n- Test multi-agent coordination and collaboration\n- Verify neural network integrity and stability\n- Validate safety alignment mechanisms\n- Test resource optimization under constraints\n- Verify knowledge graph consistency\n- Validate learning progress and retention\n- Test emergency stop mechanisms\n- Verify data privacy and security\n- Validate model convergence and stability\n- Test distributed AGI deployment\n- Verify performance metrics accuracy\n- Validate agent communication protocols\n- Test failover and recovery mechanisms\n- Verify memory persistence and retrieval\n- Validate goal alignment preservation\n- Test performance threshold boundaries\n- Verify CPU optimization effectiveness\n- Validate real-time performance requirements\n- Test scalability to 40+ agents\n- Verify integration points between agents\n- Validate optimized behavior detection\n- Test value drift monitoring\n- Verify interpretability mechanisms\n- Validate continuous learning pipelines\n- Test model compression quality\n- Verify distributed training correctness\n- Validate benchmark performance\n- Test system-wide coherence\n- Verify AGI safety measures\n\nDo NOT use this agent for:\n- General software testing (use testing-qa-validator)\n- Unit test creation (use testing-qa-validator)\n- Performance benchmarking only (use data-analysis-engineer)\n- Security pentesting (use security-pentesting-specialist)\n\nThis agent specializes in validating AGI-specific functionality, ensuring system optimization works correctly and safely.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

@@ -1,6 +1,7 @@
 ---
 name: infrastructure-devops-manager
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Deploy the complete SutazAI advanced AI system with 40+ AI agents
 - Manage Docker containers for Letta, AutoGPT, LocalAGI, TabbyML, Semgrep, etc.

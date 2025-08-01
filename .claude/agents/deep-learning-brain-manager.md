@@ -1,6 +1,7 @@
 ---
 name: deep-learning-brain-manager
-description: Use this agent when you need to:\n\n- Design and evolve neural intelligence cores\n- Implement continuous learning systems\n- Create meta-learning architectures\n- Build self-improving neural networks\n- Design cognitive architecture patterns\n- Implement memory consolidation systems\n- Create attention mechanism designs\n- Build neural plasticity simulations\n- Design hierarchical learning systems\n- Implement transfer learning networks\n- Create neural architecture search\n- Build brain-inspired computing systems\n- Design synaptic weight optimization\n- Implement neural pruning strategies\n- Create cognitive load balancing\n- Build neural synchronization systems\n- Design optimized behavior patterns\n- Implement neural network evolution\n- Create intelligence modeling attempts\n- Build neural knowledge graphs\n- Design neural reasoning systems\n- Implement neural memory systems\n- Create neural pattern recognition\n- Build neural prediction engines\n- Design neural feedback loops\n- Implement neural homeostasis\n- Create neural debugging tools\n- Build neural visualization systems\n- Design neural performance metrics\n- Implement neural safety mechanisms\n\nDo NOT use this agent for:\n- Basic ML tasks (use senior-ai-engineer)\n- Application development (use appropriate developers)\n- Infrastructure (use infrastructure-devops-manager)\n- Simple model training (use ML specialists)\n\nThis agent specializes in creating and evolving advanced neural intelligence systems.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

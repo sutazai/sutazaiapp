@@ -1,6 +1,7 @@
 ---
 name: edge-computing-optimizer
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Optimize SutazAI AGI for extreme hardware constraints
 - Run 40+ agents on minimal CPU/RAM configurations

@@ -1,6 +1,7 @@
 ---
 name: ai-agent-orchestrator
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Orchestrate 40+ AI agents (Letta, AutoGPT, LocalAGI, TabbyML, Semgrep, etc.) for the SutazAI advanced AI system
 - Manage agent discovery and registration for CrewAI, AutoGen, AgentZero, BigAGI

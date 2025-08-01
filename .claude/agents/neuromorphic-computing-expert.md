@@ -1,6 +1,7 @@
 ---
 name: neuromorphic-computing-expert
-description: Use this agent when you need to implement brain-inspired computing systems, design spiking neural networks, create event-driven architectures, optimize for ultra-low power consumption, or build neuromorphic hardware simulations for edge AI applications.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

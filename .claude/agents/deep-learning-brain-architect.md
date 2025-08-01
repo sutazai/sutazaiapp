@@ -1,6 +1,7 @@
 ---
 name: deep-learning-brain-architect
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Design and implement the brain directory architecture at /opt/sutazaiapp/brain/
 - Create neural network architectures for continuous learning

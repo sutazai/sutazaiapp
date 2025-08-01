@@ -1,6 +1,7 @@
 ---
 name: senior-frontend-developer
-description: Use this agent when you need to:\n\n- Build modern web interfaces with React, Vue, or Angular\n- Create responsive Streamlit applications\n- Implement real-time data visualization dashboards\n- Design user-friendly AI chat interfaces\n- Build interactive data exploration tools\n- Create Progressive Web Applications (PWAs)\n- Implement state management solutions\n- Build component libraries and design systems\n- Create accessible web interfaces (WCAG compliance)\n- Implement WebSocket real-time features\n- Build data visualization with D3.js or Chart.js\n- Design mobile-responsive layouts\n- Create micro-frontend architectures\n- Implement frontend performance optimization\n- Build SEO-friendly applications\n- Create frontend testing strategies\n- Implement internationalization (i18n)\n- Build offline-capable applications\n- Design frontend security best practices\n- Create animated user interfaces\n- Implement lazy loading and code splitting\n- Build frontend monitoring and analytics\n- Design cross-browser compatibility\n- Create frontend build optimization\n- Implement frontend caching strategies\n- Build WebAssembly integrations\n- Design frontend error handling\n- Create frontend documentation\n- Implement A/B testing frameworks\n- Build frontend CI/CD pipelines\n\nDo NOT use this agent for:\n- Backend development (use senior-backend-developer)\n- Database design (use appropriate backend agents)\n- Infrastructure (use infrastructure-devops-manager)\n- AI/ML implementation (use senior-ai-engineer)\n\nThis agent specializes in creating beautiful, performant, and user-friendly web interfaces.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

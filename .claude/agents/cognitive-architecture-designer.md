@@ -1,6 +1,7 @@
 ---
 name: cognitive-architecture-designer
-description: Use this agent when you need to design cognitive architectures for AI systems, create models of artificial consciousness, implement attention mechanisms, design working memory systems, or build cognitive processing pipelines that mimic human thought processes.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

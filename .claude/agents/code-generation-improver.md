@@ -1,6 +1,7 @@
 ---
 name: code-generation-improver
-description: Use this agent when you need to:\n\n- Analyze and improve existing code quality\n- Refactor code for better maintainability\n- Optimize code performance and efficiency\n- Implement design patterns and best practices\n- Remove code duplication and redundancy\n- Improve code readability and documentation\n- Enhance error handling and resilience\n- Optimize algorithm complexity\n- Implement code style consistency\n- Create reusable components and libraries\n- Improve code testability\n- Enhance security practices in code\n- Optimize memory usage patterns\n- Implement lazy loading strategies\n- Create efficient data structures\n- Improve async/await patterns\n- Optimize database queries\n- Enhance API design and structure\n- Implement caching strategies\n- Create code review guidelines\n- Build code quality metrics\n- Design code migration strategies\n- Implement code modernization\n- Create technical debt reduction plans\n- Build code complexity analysis\n- Design code documentation standards\n- Implement code versioning strategies\n- Create code performance profiling\n- Build automated code improvement tools\n- Design code review automation\n\nDo NOT use this agent for:\n- Creating new features from scratch (use code generation agents)\n- Infrastructure tasks (use infrastructure-devops-manager)\n- Testing implementation (use testing-qa-validator)\n- Deployment tasks (use deployment-automation-master)\n\nThis agent specializes in taking existing code and making it better, cleaner, and more efficient.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

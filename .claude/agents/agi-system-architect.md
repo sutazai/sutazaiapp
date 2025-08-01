@@ -1,6 +1,7 @@
 ---
 name: agi-system-architect
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Design the complete SutazAI advanced AI architecture with 40+ AI agents (Letta, AutoGPT, LocalAGI, etc.)
 - Create scalable Brain-Agent-Memory architecture at /opt/sutazaiapp/brain/

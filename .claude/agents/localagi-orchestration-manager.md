@@ -1,6 +1,7 @@
 ---
 name: localagi-orchestration-manager
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Orchestrate the SutazAI advanced AI system's 40+ AI agents autonomously
 - Create LocalAGI workflows for Letta, AutoGPT, LangChain, CrewAI coordination

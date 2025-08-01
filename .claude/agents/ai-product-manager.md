@@ -1,6 +1,7 @@
 ---
 name: ai-product-manager
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Analyze and define AI product requirements
 - Research market trends and competitor solutions

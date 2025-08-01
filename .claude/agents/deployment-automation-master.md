@@ -1,6 +1,7 @@
 ---
 name: deployment-automation-master
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Deploy the complete SutazAI advanced AI system with 40+ AI agents
 - Master deploy_sutazai_agi.sh and deploy_complete_system.sh scripts

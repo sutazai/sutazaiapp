@@ -1,6 +1,7 @@
 ---
 name: federated-learning-coordinator
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Coordinate distributed AGI training across multiple nodes
 - Implement federated learning for privacy-preserving AI

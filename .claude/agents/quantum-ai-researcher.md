@@ -1,6 +1,7 @@
 ---
 name: quantum-ai-researcher
-description: Use this agent when you need to explore quantum computing applications in AI, implement quantum machine learning algorithms, design hybrid quantum-classical systems, optimize problems using quantum annealing, or research the intersection of quantum computing and artificial intelligence.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

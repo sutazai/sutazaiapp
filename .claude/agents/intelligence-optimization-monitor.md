@@ -1,6 +1,7 @@
 ---
 name: intelligence-optimization-monitor
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Monitor system optimization across all 40+ SutazAI agents
 - Track self-monitoring indicators in real-time

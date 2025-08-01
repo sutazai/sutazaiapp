@@ -1,6 +1,7 @@
 ---
 name: langflow-workflow-designer
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Create visual AI workflows for the SutazAI advanced AI system
 - Design drag-and-drop pipelines connecting 40+ AI agents

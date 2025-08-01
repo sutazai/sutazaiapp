@@ -1,6 +1,7 @@
 ---
 name: bigagi-system-manager
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Manage BigAGI interface for the SutazAI advanced AI system
 - Configure multi-model conversations with Ollama (tinyllama, tinyllama, qwen3:8b)

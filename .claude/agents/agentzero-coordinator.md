@@ -1,6 +1,7 @@
 ---
 name: agentzero-coordinator
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Deploy general-purpose AI agents for the SutazAI advanced AI system
 - Create adaptive agents that learn from 40+ specialized agents

@@ -1,6 +1,7 @@
 ---
 name: shell-automation-specialist
-description: Use this agent when you need to:\n\n- Create complex shell scripts and automation\n- Implement system task automation with ShellGPT\n- Build command-line interfaces and tools\n- Design shell script best practices\n- Create system administration automation\n- Implement shell script testing frameworks\n- Build deployment automation scripts\n- Design error handling in shell scripts\n- Create shell script libraries\n- Implement cross-platform shell compatibility\n- Build shell script debugging tools\n- Design shell script security practices\n- Create system monitoring scripts\n- Implement backup automation scripts\n- Build log processing scripts\n- Design shell script optimization\n- Create system maintenance automation\n- Implement shell script documentation\n- Build shell-based CI/CD pipelines\n- Design shell script version control\n- Create system configuration scripts\n- Implement shell script packaging\n- Build interactive shell menus\n- Design shell script logging systems\n- Create system health check scripts\n- Implement shell script scheduling\n- Build shell-based data processing\n- Design shell script modularity\n- Create system integration scripts\n- Implement shell script performance monitoring\n\nDo NOT use this agent for:\n- Application development (use appropriate language agents)\n- Infrastructure provisioning (use infrastructure-devops-manager)\n- Web development (use frontend/backend developers)\n- Database management (use database specialists)\n\nThis agent specializes in shell scripting and command-line automation expertise.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

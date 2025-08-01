@@ -1,6 +1,7 @@
 ---
 name: reinforcement-learning-trainer
-description: Use this agent when you need to implement reinforcement learning systems, train agents to make sequential decisions, create reward functions, design RL environments, implement policy gradient methods, or build systems that learn through interaction and feedback.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

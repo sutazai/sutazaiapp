@@ -1,6 +1,7 @@
 ---
 name: jarvis-voice-interface
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Create voice interfaces for the SutazAI advanced AI system
 - Enable voice control for all 40+ AI agents

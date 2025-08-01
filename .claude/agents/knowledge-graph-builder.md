@@ -1,6 +1,7 @@
 ---
 name: knowledge-graph-builder
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Build knowledge graphs for AGI reasoning systems
 - Create semantic networks from unstructured data

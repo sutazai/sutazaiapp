@@ -1,6 +1,7 @@
 ---
 name: transformers-migration-specialist
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Migrate from Ollama to HuggingFace Transformers for better performance
 - Implement local model inference without Ollama overhead

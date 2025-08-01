@@ -1,6 +1,7 @@
 ---
 name: causal-inference-expert
-description: Use this agent when you need to establish causal relationships in data, design controlled experiments, implement causal discovery algorithms, create counterfactual reasoning systems, or build AI that understands cause and effect rather than just correlations.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

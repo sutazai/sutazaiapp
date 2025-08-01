@@ -1,6 +1,7 @@
 ---
 name: agentgpt-autonomous-executor
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Execute complex AGI goals autonomously for the SutazAI system
 - Create self-directed agents coordinating 40+ AI systems

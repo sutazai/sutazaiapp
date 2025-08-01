@@ -1,6 +1,7 @@
 ---
 name: meta-learning-specialist
-description: Use this agent when you need to implement few-shot learning systems, create models that learn how to learn, design adaptive learning algorithms, build transfer learning pipelines, or develop AI systems that can quickly adapt to new tasks with minimal examples.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

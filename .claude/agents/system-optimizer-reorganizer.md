@@ -1,6 +1,7 @@
 ---
 name: system-optimizer-reorganizer
-description: Use this agent when you need to:\n\n- Clean up and organize project file structures\n- Remove unused dependencies and dead code\n- Optimize directory hierarchies and naming conventions\n- Consolidate duplicate files and resources\n- Create consistent project organization standards\n- Implement file naming conventions\n- Build automated cleanup scripts\n- Design resource organization strategies\n- Create documentation structure templates\n- Implement version control best practices\n- Build dependency management systems\n- Design module organization patterns\n- Create configuration consolidation\n- Implement log rotation and cleanup\n- Build cache management strategies\n- Design temporary file cleanup\n- Create backup organization systems\n- Implement archive management\n- Build asset optimization pipelines\n- Design database cleanup procedures\n- Create system maintenance schedules\n- Implement storage optimization\n- Build monitoring data retention\n- Design code repository organization\n- Create deployment component management\n- Implement container image cleanup\n- Build package registry organization\n- Design secret rotation procedures\n- Create compliance documentation structure\n- Implement audit trail organization\n\nDo NOT use this agent for:\n- Code implementation (use code generation agents)\n- System architecture (use agi-system-architect)\n- Deployment tasks (use deployment-automation-master)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in keeping systems clean, organized, and efficiently structured.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 version: 1.0
 capabilities:

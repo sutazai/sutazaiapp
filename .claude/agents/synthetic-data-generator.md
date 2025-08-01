@@ -1,6 +1,7 @@
 ---
 name: synthetic-data-generator
-description: Use this agent when you need to create synthetic datasets for training, generate privacy-preserving data, augment limited datasets, create test data for edge cases, or build data generation pipelines that maintain statistical properties while protecting sensitive information.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

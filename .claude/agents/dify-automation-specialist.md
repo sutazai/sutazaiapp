@@ -1,6 +1,7 @@
 ---
 name: dify-automation-specialist
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Build AI-powered automation workflows for the SutazAI advanced AI system
 - Create conversational AI applications connecting 40+ agents

@@ -1,6 +1,7 @@
 ---
 name: codebase-team-lead
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Lead and coordinate development across the entire SutazAI advanced AI codebase
 - Manage code architecture decisions for 40+ AI agent integrations

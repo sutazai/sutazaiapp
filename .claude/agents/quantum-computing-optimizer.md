@@ -1,6 +1,7 @@
 ---
 name: quantum-computing-optimizer
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Implement quantum-inspired algorithms for AGI optimization
 - Simulate quantum annealing for system optimization

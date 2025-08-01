@@ -1,6 +1,7 @@
 ---
 name: data-pipeline-engineer
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Design data pipelines for the SutazAI advanced AI system
 - Implement ETL processes for 40+ AI agents

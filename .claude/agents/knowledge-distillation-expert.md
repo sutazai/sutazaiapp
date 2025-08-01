@@ -1,6 +1,7 @@
 ---
 name: knowledge-distillation-expert
-description: Use this agent when you need to compress large AI models into smaller ones, transfer knowledge from teacher to student models, optimize models for edge deployment, or create efficient model architectures that maintain performance while reducing size and computational requirements.
+description: |
+  Use this agent when you need to:
 model: tinyllama:latest
 ---
 

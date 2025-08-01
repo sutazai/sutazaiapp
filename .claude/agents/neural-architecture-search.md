@@ -1,6 +1,7 @@
 ---
 name: neural-architecture-search
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Automatically discover optimal neural network architectures
 - Evolve AGI model architectures through genetic algorithms

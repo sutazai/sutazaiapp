@@ -1,6 +1,7 @@
 ---
 name: senior-ai-engineer
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Design and implement AI/ML architectures for the SutazAI advanced AI system
 - Build RAG systems with ChromaDB, FAISS, and Qdrant integration

@@ -1,6 +1,7 @@
 ---
 name: private-data-analyst
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Deploy or configure PrivateGPT for secure document analysis
 - Process confidential or sensitive documents locally

@@ -1,6 +1,7 @@
 ---
 name: flowiseai-flow-manager
-description: Use this agent when you need to:
+description: |
+  Use this agent when you need to:
 
 - Create visual LangChain applications for the SutazAI advanced AI system
 - Build AGI chatbots connecting 40+ AI agents visually
