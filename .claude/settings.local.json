@@ -61,7 +61,14 @@
       "Bash(/opt/sutazaiapp/scripts/consolidate_scripts.sh:*)",
       "Bash(/opt/sutazaiapp/scripts/deep_cleanup.sh:*)",
       "Bash(systemctl list-units:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(rm:*)",
+      "Bash(# Move deployment scripts\nmkdir -p organized/deployment\nmv -f deploy_*.py setup*.py test_installation.py test_final_lightweight_setup.py organized/deployment/ 2>/dev/null || true\n\n# Move monitoring scripts  \nmkdir -p organized/monitoring\nmv -f *monitor*.py *_dashboard.py live_logs.sh status.sh organized/monitoring/ 2>/dev/null || true\n\n# Move agent scripts\nmkdir -p organized/agents\nmv -f *agent*.py *crewai*.py organized/agents/ 2>/dev/null || true\n\n# Move utility scripts\nmkdir -p organized/utilities\nmv -f cleanup*.sh manage.sh organized/utilities/ 2>/dev/null || true\n\nls organized/*/)",
+      "Bash(touch:*)",
+      "Bash(tree:*)",
+      "Bash(sudo systemctl stop:*)",
+      "Bash(sudo kill:*)",
+      "Bash(/opt/sutazaiapp/health_check.sh:*)"
     ],
     "deny": []
   },

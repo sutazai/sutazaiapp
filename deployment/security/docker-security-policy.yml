@@ -1,0 +1,287 @@
+# SutazAI Docker Security Policy
+# Enterprise-grade security configuration for containers
+
+security_policies:
+  # Container Runtime Security
+  runtime_security:
+    # User and Group Configuration
+    user_management:
+      run_as_non_root: true
+      read_only_root_filesystem: true
+      no_new_privileges: true
+      drop_capabilities:
+        - ALL
+      add_capabilities:
+        # Only essential capabilities
+        - CHOWN          # For file ownership changes
+        - DAC_OVERRIDE   # For file permission overrides
+        - FOWNER         # For file ownership
+        - SETGID         # For group ID changes
+        - SETUID         # For user ID changes
+        - NET_BIND_SERVICE # For binding to privileged ports
+
+    # Resource Limits
+    resource_limits:
+      enforce_limits: true
+      prevent_oom_killer: true
+      cpu_cfs_quota: true
+      memory_swap_disabled: true
+      pids_limit: 1024
+      
+    # Network Security
+    network_security:
+      disable_inter_container_communication: false
+      use_internal_networks: true
+      port_binding_restriction: "127.0.0.1"
+      disable_userland_proxy: true
+      
+    # Filesystem Security
+    filesystem_security:
+      read_only_containers: true
+      tmpfs_mounts:
+        - /tmp
+        - /var/run
+        - /var/log
+      volume_security:
+        no_suid: true
+        no_dev: true
+        no_exec: false  # Needed for Python execution
+
+  # Image Security
+  image_security:
+    base_image_policy:
+      allowed_registries:
+        - docker.io
+        - registry-1.docker.io
+        - gcr.io
+      minimum_distroless: false
+      scan_for_vulnerabilities: true
+      vulnerability_threshold: "HIGH"
+      
+    build_security:
+      multi_stage_builds: true
+      minimize_layers: true
+      remove_package_managers: true
+      clear_apt_cache: true
+      
+  # Secret Management
+  secret_management:
+    use_docker_secrets: true
+    environment_variable_restrictions:
+      - no_plain_text_passwords
+      - no_api_keys_in_env
+      - use_secret_files
+    secret_rotation:
+      enabled: true
+      rotation_interval: "30d"
+      
+  # Access Control
+  access_control:
+    docker_socket_access: "minimal"
+    privileged_containers: false
+    host_network_access: false
+    host_pid_namespace: false
+    host_ipc_namespace: false
+
+# Security Profiles per Service
+service_profiles:
+  # Backend API Security
+  backend:
+    security_context:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+      add: ["NET_BIND_SERVICE"]
+    seccomp_profile:
+      type: "RuntimeDefault"
+    app_armor_profile:
+      type: "runtime/default"
+      
+  # Database Security
+  postgres:
+    security_context:
+      runAsNonRoot: true
+      runAsUser: 999
+      runAsGroup: 999
+      fsGroup: 999
+      readOnlyRootFilesystem: true
+    volumes:
+      - name: postgres-data
+        mount_options: ["noexec", "nosuid", "nodev"]
+    network_policies:
+      ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: sutazai
+          ports:
+          - protocol: TCP
+            port: 5432
+
+  # Redis Security
+  redis:
+    security_context:
+      runAsNonRoot: true
+      runAsUser: 999
+      runAsGroup: 999
+      readOnlyRootFilesystem: true
+    authentication:
+      password_required: true
+      tls_enabled: false  # Internal network only
+    network_policies:
+      ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: sutazai
+
+  # Ollama Security
+  ollama:
+    security_context:
+      runAsNonRoot: true
+      runAsUser: 1000
+      allowPrivilegeEscalation: false
+    resource_limits:
+      strict_memory_limits: true
+      cpu_throttling: true
+    file_permissions:
+      model_directory: "750"
+      config_files: "640"
+
+  # Agent Security
+  agents:
+    security_context:
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccomp_profile:
+      type: "RuntimeDefault"
+    network_access:
+      egress_only: true
+      allowed_destinations:
+        - backend:8000
+        - ollama:11434
+        - redis:6379
+
+# Security Scanning Configuration
+vulnerability_scanning:
+  image_scanning:
+    enabled: true
+    scanner: "trivy"
+    scan_on_build: true
+    scan_on_push: true
+    fail_on_high: true
+    
+  container_runtime_scanning:
+    enabled: true
+    scanner: "falco"
+    monitor_syscalls: true
+    detect_anomalies: true
+    
+  dependency_scanning:
+    enabled: true
+    python_packages: true
+    npm_packages: true
+    os_packages: true
+
+# Network Security Policies
+network_policies:
+  default_deny: true
+  
+  ingress_rules:
+    # Allow external access to backend API
+    - name: backend-external
+      selector:
+        matchLabels:
+          app: backend
+      ingress:
+        - from: []  # Allow from anywhere
+          ports:
+          - protocol: TCP
+            port: 8000
+            
+    # Allow monitoring access
+    - name: monitoring-access
+      selector:
+        matchLabels:
+          app: monitoring
+      ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                name: sutazai
+                
+  egress_rules:
+    # Default allow internal communication
+    - name: internal-communication
+      selector: {}
+      egress:
+        - to:
+          - namespaceSelector:
+              matchLabels:
+                name: sutazai
+                
+    # Allow external DNS resolution
+    - name: dns-access
+      selector: {}
+      egress:
+        - to: []
+          ports:
+          - protocol: UDP
+            port: 53
+
+# Compliance and Auditing
+compliance:
+  standards:
+    - CIS_Docker_Benchmark
+    - NIST_Cybersecurity_Framework
+    - SOC2_Type_II
+    
+  audit_logging:
+    enabled: true
+    log_level: "INFO"
+    log_destination: "/var/log/audit/docker-audit.log"
+    events_to_log:
+      - container_start
+      - container_stop
+      - image_pull
+      - network_connect
+      - volume_mount
+      - secret_access
+      
+  periodic_scans:
+    daily_vulnerability_scan: true
+    weekly_compliance_check: true
+    monthly_penetration_test: false
+
+# Emergency Response
+incident_response:
+  automated_response:
+    high_severity_vulnerabilities:
+      action: "quarantine_container"
+      notification: true
+      
+    suspicious_network_activity:
+      action: "isolate_network"
+      notification: true
+      
+    resource_exhaustion:
+      action: "restart_container"
+      notification: true
+      
+  manual_response:
+    security_contacts:
+      - "security@sutazai.local"
+      - "devops@sutazai.local"
+    escalation_procedures:
+      - level_1: "Container isolation"
+      - level_2: "Service shutdown"
+      - level_3: "Full system isolation"

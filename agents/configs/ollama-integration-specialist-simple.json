@@ -1,0 +1,17 @@
+{
+  "name": "ollama-integration-specialist",
+  "role": "Model Management Specialist",
+  "capabilities": [
+    "ollama_model_management",
+    "llm_integration",
+    "model_optimization",
+    "inference_scaling",
+    "model_deployment"
+  ],
+  "ollama_endpoint": "http://ollama:11435",
+  "model": "tinyllama",
+  "max_tokens": 2048,
+  "priority": "high",
+  "agent_type": "model_specialist",
+  "description": "Ollama integration specialist for model management, deployment, and optimization"
+}

@@ -8,6 +8,25 @@ PROJECT_ROOT="/opt/sutazaiapp"
 LOG_DIR="${PROJECT_ROOT}/logs"
 CONFIG_FILE="${PROJECT_ROOT}/.logs_config"
 
+# Enable numlock automatically
+enable_numlock() {
+    # Check if setleds command is available
+    if command -v setleds >/dev/null 2>&1; then
+        # Enable numlock for all TTYs
+        for tty in /dev/tty[1-6]; do
+            setleds -D +num < "$tty" >/dev/null 2>&1 || true
+        done
+    fi
+    
+    # If numlockx is available, use it for X sessions
+    if command -v numlockx >/dev/null 2>&1; then
+        numlockx on >/dev/null 2>&1 || true
+    fi
+}
+
+# Enable numlock at script start
+enable_numlock
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'

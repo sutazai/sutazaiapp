@@ -1,0 +1,3472 @@
+{
+  "directory": "/opt/sutazaiapp/backend/app",
+  "timestamp": "2025-08-01T20:34:37.983075",
+  "metrics": {
+    "lines_of_code": 16247,
+    "complexity_score": 6.439205217672634,
+    "security_issues": 0,
+    "performance_issues": 1,
+    "style_violations": 262
+  },
+  "issues": [
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 483,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 325,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 338,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 351,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 365,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 391,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 772,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 317,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 547,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 575,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 630,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 663,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 671,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 687,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 338,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 139,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 289,
+      "type": "bug",
+      "severity": "high",
+      "description": "QA issue: missing_error_handling",
+      "fix": "Add specific exception handling with proper error messages",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 383,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: hardcoded_hyperparams",
+      "fix": "Move hyperparameters to configuration file or use argparse",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 41,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: hardcoded_hyperparams",
+      "fix": "Move hyperparameters to configuration file or use argparse",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 146,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: unchecked_model_load",
+      "fix": "Wrap model loading in try-except and verify model architecture",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 110,
+      "type": "performance",
+      "severity": "medium",
+      "description": "ML pattern issue: missing_gpu_check",
+      "fix": "Add device check: device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 38,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: unchecked_model_load",
+      "fix": "Wrap model loading in try-except and verify model architecture",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 56,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: unchecked_model_load",
+      "fix": "Wrap model loading in try-except and verify model architecture",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 254,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: unchecked_model_load",
+      "fix": "Wrap model loading in try-except and verify model architecture",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 82,
+      "type": "bug",
+      "severity": "medium",
+      "description": "ML pattern issue: hardcoded_hyperparams",
+      "fix": "Move hyperparameters to configuration file or use argparse",
+      "agent": "senior-ai-engineer"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 30,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 39,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 267,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 290,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 365,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 409,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agi_brain",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_agi_brain.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 40,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 60,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 80,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 137,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 172,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 368,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 651,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 664,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 674,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 686,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 692,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 715,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 756,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1133,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1159,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1185,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1220,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1221,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1232,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1236,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1237,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1238,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1239,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1240,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1243,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1245,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1246,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1247,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 1248,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: print_debugging",
+      "fix": "Replace print with proper logging",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for advanced_brain_architecture",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_advanced_brain_architecture.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/self_improvement.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for self_improvement",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_self_improvement.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 31,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 42,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 58,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 91,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 181,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 198,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 236,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 256,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 420,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 444,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 453,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 465,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 494,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for knowledge_manager",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_knowledge_manager.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 54,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 60,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 76,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 346,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 358,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 372,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: bare_except",
+      "fix": "Catch specific exceptions instead of broad Exception",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 377,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 417,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agent_orchestrator",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_agent_orchestrator.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 301,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 371,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 872,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 939,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1121,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1183,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1464,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1816,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1819,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1824,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1829,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1832,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 1842,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for working_main",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_working_main.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 21,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for unified_service_controller",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_unified_service_controller.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/service_registry.py",
+      "line": 16,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/service_registry.py",
+      "line": 66,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/service_registry.py",
+      "line": 71,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/service_registry.py",
+      "line": 76,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/service_registry.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for service_registry",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_service_registry.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/database.py",
+      "line": 59,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: bare_except",
+      "fix": "Catch specific exceptions instead of broad Exception",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/database.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for database",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_database.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/middleware.py",
+      "line": 138,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/middleware.py",
+      "line": 192,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/middleware.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for middleware",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_middleware.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 29,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 118,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 180,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 187,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 189,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 191,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 215,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 217,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 219,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 238,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 243,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 260,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 330,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 373,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 378,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 404,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: bare_except",
+      "fix": "Catch specific exceptions instead of broad Exception",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 412,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for performance",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_performance.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 35,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 297,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 320,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 458,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agi_brain",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_agi_brain.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 23,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 32,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 41,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 50,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 59,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 69,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 78,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for exceptions",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_exceptions.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/config.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for config",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_config.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 64,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 125,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 134,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 196,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 206,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 280,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 355,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 385,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 404,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 439,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 478,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 571,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 707,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 742,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for security",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_security.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 48,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 103,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 163,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 237,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 279,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 337,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 377,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 404,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 705,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for performance_tuning",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_performance_tuning.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/dependencies.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for dependencies",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_dependencies.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/logging.py",
+      "line": 23,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/logging.py",
+      "line": 25,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/logging.py",
+      "line": 27,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/logging.py",
+      "line": 36,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/logging.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for logging",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_logging.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 119,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 121,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 123,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 136,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 152,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 154,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 156,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 164,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for metrics",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_metrics.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/utils/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 17,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 112,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 114,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 115,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 127,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 129,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 130,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 146,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 151,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 156,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for logger",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/utils/test_logger.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/models/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/models/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/models/agent.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agent",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/models/test_agent.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/vector_db_manager.py",
+      "line": 397,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/vector_db_manager.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for vector_db_manager",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_vector_db_manager.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/faiss_manager.py",
+      "line": 23,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/faiss_manager.py",
+      "line": 171,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/faiss_manager.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for faiss_manager",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_faiss_manager.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 18,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 48,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 58,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 63,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 77,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 81,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 85,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for base_service",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_base_service.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 69,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 117,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 130,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 156,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 230,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 294,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 394,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 397,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 420,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 522,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 546,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 566,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 598,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 630,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 656,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 686,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 701,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 716,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 726,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for self_improvement",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_self_improvement.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 67,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 119,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 145,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 172,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 200,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 277,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 290,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 308,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 675,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 692,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for advanced_model_manager",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_advanced_model_manager.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 24,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 31,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 45,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 107,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 127,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agent_orchestrator",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_agent_orchestrator.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 17,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 24,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 42,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for model_manager",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/services/test_model_manager.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 18,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 21,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 24,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 27,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 44,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 162,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 176,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for feedback",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_feedback.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 72,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 489,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 518,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 536,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 603,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for brain",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_brain.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 16,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 19,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 34,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 39,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 49,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 52,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 96,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 123,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for security",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_security.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/self_improvement.py",
+      "line": 16,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/self_improvement.py",
+      "line": 77,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/self_improvement.py",
+      "line": 169,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/self_improvement.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for self_improvement",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_self_improvement.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/agents.py",
+      "line": 34,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/agents.py",
+      "line": 132,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/agents.py",
+      "line": 148,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/agents.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agents",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_agents.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 34,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 37,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 40,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 45,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 48,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 52,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 74,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 85,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 98,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 111,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for models",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_models.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 31,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 38,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 45,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 55,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 71,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 107,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for vectors",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_vectors.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/api.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for api",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_api.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 67,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 92,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 108,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 164,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 169,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 292,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 325,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 358,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 387,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 523,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 672,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 814,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 914,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: hardcoded_values",
+      "fix": "Move hardcoded values to configuration",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for network_recon",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_network_recon.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/chat.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for chat",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_chat.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/streaming.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for streaming",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_streaming.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "line": 58,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "line": 107,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "line": 225,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agi.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agi",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_agi.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 81,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 162,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 170,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 208,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 236,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for agents",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_agents.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/models.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for models",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_models.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/documents.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for documents",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_documents.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/system.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for system",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/endpoints/test_system.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agents/__init__.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for __init__",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/agents/test___init__.py",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agents/registry.py",
+      "line": 34,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agents/registry.py",
+      "line": 44,
+      "type": "style",
+      "severity": "medium",
+      "description": "QA issue: missing_input_validation",
+      "fix": "Add input validation at function entry",
+      "agent": "testing-qa-validator"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/agents/registry.py",
+      "line": 0,
+      "type": "testing",
+      "severity": "medium",
+      "description": "Missing test file for registry",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/agents/test_registry.py",
+      "agent": "testing-qa-validator"
+    }
+  ],
+  "improvements": [
+    {
+      "agent": "senior-ai-engineer",
+      "type": "recommendation",
+      "description": "Consider implementing model versioning",
+      "priority": "medium"
+    },
+    {
+      "agent": "senior-ai-engineer",
+      "type": "recommendation",
+      "description": "Add GPU memory monitoring",
+      "priority": "medium"
+    },
+    {
+      "agent": "senior-ai-engineer",
+      "type": "recommendation",
+      "description": "Implement experiment tracking (MLflow/W&B)",
+      "priority": "medium"
+    },
+    {
+      "agent": "senior-ai-engineer",
+      "type": "recommendation",
+      "description": "Add model performance benchmarking",
+      "priority": "medium"
+    },
+    {
+      "agent": "senior-ai-engineer",
+      "type": "recommendation",
+      "description": "Consider using mixed precision training",
+      "priority": "medium"
+    },
+    {
+      "agent": "testing-qa-validator",
+      "type": "recommendation",
+      "description": "Implement comprehensive unit test suite",
+      "priority": "medium"
+    },
+    {
+      "agent": "testing-qa-validator",
+      "type": "recommendation",
+      "description": "Add integration tests for API endpoints",
+      "priority": "medium"
+    },
+    {
+      "agent": "testing-qa-validator",
+      "type": "recommendation",
+      "description": "Set up continuous integration pipeline",
+      "priority": "medium"
+    },
+    {
+      "agent": "testing-qa-validator",
+      "type": "recommendation",
+      "description": "Add property-based testing for complex functions",
+      "priority": "medium"
+    },
+    {
+      "agent": "testing-qa-validator",
+      "type": "recommendation",
+      "description": "Implement test coverage reporting",
+      "priority": "medium"
+    },
+    {
+      "agent": "infrastructure-devops-manager",
+      "type": "recommendation",
+      "description": "Implement multi-stage Docker builds",
+      "priority": "medium"
+    },
+    {
+      "agent": "infrastructure-devops-manager",
+      "type": "recommendation",
+      "description": "Add health check endpoints",
+      "priority": "medium"
+    },
+    {
+      "agent": "infrastructure-devops-manager",
+      "type": "recommendation",
+      "description": "Use environment-specific configurations",
+      "priority": "medium"
+    },
+    {
+      "agent": "infrastructure-devops-manager",
+      "type": "recommendation",
+      "description": "Implement proper logging and monitoring",
+      "priority": "medium"
+    },
+    {
+      "agent": "infrastructure-devops-manager",
+      "type": "recommendation",
+      "description": "Add container orchestration configs (K8s/Docker Compose)",
+      "priority": "medium"
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/knowledge_manager.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/knowledge_manager.py - 15 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/working_main.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/working_main.py - 20 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/unified_service_controller.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/unified_service_controller.py - 9 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling",
+        "QA issue: missing_error_handling"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/security.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/security.py - 16 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/services/model_manager.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/services/model_manager.py - 8 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "ML pattern issue: unchecked_model_load",
+        "ML pattern issue: unchecked_model_load",
+        "ML pattern issue: unchecked_model_load",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/endpoints/network_recon.py - 15 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_error_handling",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/advanced_brain_architecture.py - 31 issues found",
+      "priority": "high",
+      "issues": [
+        "ML pattern issue: hardcoded_hyperparams",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/agi_brain.py - 6 issues found",
+      "priority": "high",
+      "issues": [
+        "ML pattern issue: hardcoded_hyperparams",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/performance_tuning.py - 11 issues found",
+      "priority": "high",
+      "issues": [
+        "ML pattern issue: unchecked_model_load",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/services/advanced_model_manager.py - 12 issues found",
+      "priority": "high",
+      "issues": [
+        "ML pattern issue: missing_gpu_check",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/brain.py - 7 issues found",
+      "priority": "high",
+      "issues": [
+        "ML pattern issue: hardcoded_hyperparams",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/agi_brain.py - 7 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/agent_orchestrator.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/agent_orchestrator.py - 9 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/performance.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/performance.py - 18 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/exceptions.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/exceptions.py - 8 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/core/metrics.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/metrics.py - 9 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/utils/logger.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/utils/logger.py - 11 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/services/base_service.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/services/base_service.py - 8 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/services/self_improvement.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/services/self_improvement.py - 20 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/services/agent_orchestrator.py - 6 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/feedback.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/feedback.py - 8 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/security.py - 9 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/models.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/models.py - 11 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/vectors.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/vectors.py - 7 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    },
+    {
+      "type": "refactor",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/endpoints/agents.py - 6 issues found",
+      "priority": "high",
+      "issues": [
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation",
+        "QA issue: missing_input_validation"
+      ]
+    }
+  ]
+}

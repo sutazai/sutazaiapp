@@ -25,7 +25,7 @@ st.set_page_config(
 )
 
 # Backend URL
-BACKEND_URL = "http://backend-agi:8000"
+BACKEND_URL = "http://sutazai-backend-minimal:8000"
 # For local testing, also try localhost
 BACKEND_URL_LOCAL = "http://localhost:8000"
 

@@ -1,0 +1,233 @@
+# SutazAI Prometheus Configuration
+# Comprehensive monitoring for multi-agent system
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'sutazai-local'
+    replica: 'prometheus-01'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts.yml"
+  - "recording_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+
+  # SutazAI Backend API
+  - job_name: 'sutazai-backend'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    params:
+      format: ['prometheus']
+
+  # PostgreSQL Database
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+
+  # Redis Cache
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+
+  # Ollama Model Server
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama:11434']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 15s
+
+  # AI Agents Monitoring
+  - job_name: 'sutazai-agents'
+    static_configs:
+      - targets: 
+        - 'senior-ai-engineer:8080'
+        - 'infrastructure-devops-manager:8080'
+        - 'deployment-automation-master:8080'
+        - 'testing-qa-validator:8080'
+        - 'ollama-integration-specialist:8080'
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    params:
+      module: [http_2xx]
+
+  # Node/Container Metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Docker Container Metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # Service Discovery for Dynamic Agents
+  - job_name: 'dynamic-agents'
+    consul_sd_configs:
+      - server: 'consul:8500'
+        services: ['sutazai-agent']
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        target_label: job
+      - source_labels: [__meta_consul_node]
+        target_label: node
+
+# Recording rules for efficient queries
+recording_rules:
+  - name: sutazai.aggregation
+    rules:
+      # System-level aggregations
+      - record: sutazai:cpu_usage_rate
+        expr: rate(container_cpu_usage_seconds_total{image!=""}[5m])
+        
+      - record: sutazai:memory_usage_bytes
+        expr: container_memory_usage_bytes{image!=""}
+        
+      - record: sutazai:network_io_rate
+        expr: rate(container_network_transmit_bytes_total[5m]) + rate(container_network_receive_bytes_total[5m])
+
+      # Application-level aggregations
+      - record: sutazai:api_request_rate
+        expr: rate(http_requests_total{service="sutazai-backend"}[5m])
+        
+      - record: sutazai:api_error_rate
+        expr: rate(http_requests_total{service="sutazai-backend", status=~"5.."}[5m])
+        
+      - record: sutazai:agent_task_completion_rate
+        expr: rate(agent_tasks_completed_total[5m])
+        
+      - record: sutazai:agent_task_error_rate
+        expr: rate(agent_tasks_failed_total[5m])
+
+      # Model performance
+      - record: sutazai:ollama_inference_latency
+        expr: histogram_quantile(0.95, rate(ollama_inference_duration_seconds_bucket[5m]))
+        
+      - record: sutazai:ollama_queue_depth
+        expr: ollama_queue_size
+
+      # Database performance
+      - record: sutazai:db_connection_usage
+        expr: pg_stat_database_numbackends / pg_settings_max_connections
+        
+      - record: sutazai:db_query_latency
+        expr: histogram_quantile(0.95, rate(pg_stat_statements_mean_time_bucket[5m]))
+
+# Alert rules for system health
+alert_rules:
+  - name: sutazai.alerts
+    rules:
+      # Critical System Alerts
+      - alert: SutazAIBackendDown
+        expr: up{job="sutazai-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "SutazAI Backend is down"
+          description: "Backend API server has been down for more than 1 minute"
+
+      - alert: OllamaServiceDown
+        expr: up{job="ollama"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: ollama
+        annotations:
+          summary: "Ollama service is down"
+          description: "Ollama model server has been unreachable for 2 minutes"
+
+      - alert: DatabaseConnectionHigh
+        expr: sutazai:db_connection_usage > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: postgres
+        annotations:
+          summary: "Database connection usage is high"
+          description: "Database connections are at {{ $value | humanizePercentage }} of maximum"
+
+      # Performance Alerts
+      - alert: HighAPILatency
+        expr: sutazai:api_request_latency > 2
+        for: 3m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "API response latency is high"
+          description: "95th percentile latency is {{ $value }}s for 3 minutes"
+
+      - alert: HighErrorRate
+        expr: sutazai:api_error_rate / sutazai:api_request_rate > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High API error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} for 2 minutes"
+
+      # Resource Alerts
+      - alert: HighCPUUsage
+        expr: sutazai:cpu_usage_rate > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for 10 minutes"
+
+      - alert: HighMemoryUsage
+        expr: sutazai:memory_usage_bytes / container_spec_memory_limit_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 90% for 5 minutes"
+
+      # Agent-specific Alerts
+      - alert: AgentTaskBacklog
+        expr: agent_queue_size > 50
+        for: 15m
+        labels:
+          severity: warning
+          service: agents
+        annotations:
+          summary: "Agent task backlog is high"
+          description: "Agent {{ $labels.agent_name }} has {{ $value }} queued tasks"
+
+      - alert: AgentUnresponsive
+        expr: time() - agent_last_heartbeat > 300
+        for: 0m
+        labels:
+          severity: critical
+          service: agents
+        annotations:
+          summary: "Agent is unresponsive"
+          description: "Agent {{ $labels.agent_name }} hasn't sent heartbeat for 5 minutes"

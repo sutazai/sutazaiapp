@@ -17,7 +17,7 @@ END
 $$;
 
 -- Grant permissions
-GRANT ALL PRIVILEGES ON DATABASE sutazai_unified TO sutazai;
+GRANT ALL PRIVILEGES ON DATABASE sutazai TO sutazai;
 GRANT ALL ON SCHEMA public TO sutazai;
 
 -- Set default privileges

@@ -1,14 +1,14 @@
-# SutazAI AGI/ASI System Architecture
+# SutazAI System Architecture
 
 ## System Overview
 
-SutazAI is an enterprise-grade, fully autonomous AGI/ASI system designed for local deployment with self-improvement capabilities.
+SutazAI is an enterprise-grade multi-agent task automation platform designed for local deployment with comprehensive development and operations capabilities.
 
 ## Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              SutazAI AGI/ASI System                               │
+│                         SutazAI Task Automation Platform                          │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                   │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │
@@ -141,13 +141,13 @@ SutazAI is an enterprise-grade, fully autonomous AGI/ASI system designed for loc
    - Memory optimization for large models
    - SSD storage for vector databases
 
-## Self-Improvement Architecture
+## Continuous Improvement
 
-The system implements autonomous self-improvement through:
+The system supports continuous improvement through:
 
-1. **Performance Monitoring**: Continuous metrics collection
-2. **Issue Detection**: AI-driven analysis of logs and metrics
-3. **Solution Generation**: Code generation for fixes and optimizations
+1. **Performance Monitoring**: Comprehensive metrics collection
+2. **Issue Detection**: Automated analysis of logs and metrics
+3. **Workflow Optimization**: Automated suggestions for workflow improvements
 4. **Human Approval**: Proposed changes presented for review
 5. **Automated Deployment**: Approved changes deployed via CI/CD
 

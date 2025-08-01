@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sutazai-core
+  labels:
+    name: sutazai-core
+    environment: production
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sutazai-agents
+  labels:
+    name: sutazai-agents
+    environment: production
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sutazai-monitoring
+  labels:
+    name: sutazai-monitoring
+    environment: production
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sutazai-infrastructure
+  labels:
+    name: sutazai-infrastructure
+    environment: production

@@ -1,76 +1,123 @@
-# SutazAI AGI/ASI Autonomous System
+# 🚀 SutazAI - Local AI Task Automation
 
-A lightweight, fully local AGI system running on TinyLlama.
+> Practical task automation using local AI models. No cloud dependencies, no API costs, just working automation tools for developers.
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org)
+[![Docker](https://img.shields.io/badge/docker-20.0+-blue.svg)](https://www.docker.com)
+[![Status](https://img.shields.io/badge/status-production_ready-green.svg)](https://github.com)
+
+## 🎯 What It Does
+
+- **Code Review**: Automated code analysis and improvement suggestions
+- **Security Scanning**: Find vulnerabilities and security issues
+- **Test Generation**: Create unit tests automatically
+- **Deployment Automation**: CI/CD pipeline automation
+- **Documentation**: Generate and maintain documentation
+- **All Local**: Runs entirely on your machine, no external APIs
 
 ## 🚀 Quick Start
 
 ```bash
-# Using Make commands (symlinked for convenience)
-make setup      # Initial setup
-make deploy     # Deploy the system
-make status     # Check status
-make verify     # Verify configuration
+# 1. Clone the repository
+git clone https://github.com/yourusername/sutazai.git
+cd sutazai
+
+# 2. Start the system (one command!)
+./start.sh
+
+# 3. System will be available at:
+#    - API: http://localhost:8000/docs
+#    - Health: http://localhost:8000/health
 ```
 
-## 📁 Project Structure
+That's it! The system will pull all necessary images and start automatically.
 
-```
-.
-├── agents/         # Agent configurations and definitions
-├── archive/        # Archived files (scripts, docs, configs)
-├── backend/        # Backend API service
-├── brain/          # AGI brain components
-├── build/          # Build tools and Makefile
-├── config/         # All configuration files
-│   ├── docker/     # Docker compose files
-│   ├── project/    # Project configs (package.json, pyproject.toml)
-│   └── security/   # Security configurations
-├── data/           # Application data
-├── docs/           # Documentation
-├── frontend/       # Frontend UI
-├── localagi/       # LocalAGI components
-├── logs/           # Application logs
-├── models/         # AI models
-├── monitoring/     # Prometheus, Grafana configs
-├── ollama/         # Ollama model definitions
-├── reports/        # Generated reports
-├── scripts/        # Organized scripts
-└── tests/          # Test suites
+## 💻 Example Usage
+
+### Code Review Workflow
+```python
+# Review your Python code
+python workflows/simple_code_review.py
 ```
 
-## 🔧 Configuration Files
+### Security Scan
+```python
+# Scan for vulnerabilities
+python workflows/security_scan_workflow.py
+```
 
-- **Docker Compose**: `config/docker/docker-compose.tinyllama.yml`
-- **Makefile**: `build/make/Makefile`
-- **Environment**: `.env`, `.env.tinyllama`
+### Deployment Automation
+```python
+# Automate your deployment
+python workflows/deployment_automation.py
+```
+
+## 🛠️ Requirements
+
+- **Docker**: 20.0+ 
+- **Docker Compose**: 2.0+
+- **RAM**: 8GB minimum (16GB recommended)
+- **Storage**: 10GB for models and data
+- **CPU**: 4+ cores recommended
+
+## 📦 What's Included
+
+### Working AI Agents (34 total)
+- `senior-ai-engineer` - Code implementation and optimization
+- `code-generation-improver` - Code quality analysis
+- `testing-qa-validator` - Automated testing
+- `security-pentesting-specialist` - Security scanning
+- `deployment-automation-master` - CI/CD automation
+- [See full list](docs/PRACTICAL_AGENTS_LIST.md)
+
+### Local AI Models
+- **TinyLlama (637MB)**: Fast, efficient general-purpose model
+- **Ollama**: Local model serving, no internet required
+- **100% Private**: Your code never leaves your machine
+
+## 🎮 Commands
+
+```bash
+# Start the system
+./start.sh
+
+# Stop the system
+./stop.sh
+
+# View logs
+docker-compose -f docker-compose.tinyllama.yml logs -f
+
+# Check status
+curl http://localhost:8000/health
+```
 
 ## 📚 Documentation
 
-- Quick Start: `docs/guides/quickstart/`
-- Architecture: `docs/system/architecture/`
-- Agent Specs: `.claude/agents/` (preserved)
+- [Practical Implementation Guide](PRACTICAL_IMPLEMENTATION_GUIDE.md)
+- [Working Agents List](docs/PRACTICAL_AGENTS_LIST.md)
+- [Example Workflows](workflows/)
+- [API Documentation](http://localhost:8000/docs) (after starting)
 
-## 🎯 Key Commands
+## 🔒 Privacy & Security
 
-```bash
-# Deployment
-./scripts/deployment/system/start_tinyllama.sh
+- **No External APIs**: Everything runs locally
+- **No Data Collection**: Your data stays on your machine
+- **No Internet Required**: Can run completely offline
+- **Open Source**: Audit the code yourself
 
-# Verification
-./scripts/utils/verification/verify_tinyllama_config.sh
-./scripts/utils/verification/verify_litellm_removal.sh
+## 🤝 Contributing
 
-# Using Make (recommended)
-make help       # Show all available commands
-```
+Contributions are welcome! Please focus on:
+- Practical automation workflows
+- Performance improvements
+- Bug fixes
+- Documentation improvements
 
-## 🤖 System Status
+## 📝 License
 
-- **Model**: TinyLlama (637MB)
-- **API**: Native Ollama
-- **Agents**: 37 specialized AI agents
-- **External APIs**: None (100% local)
+MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-For detailed documentation, see the `docs/` directory.
+**Note**: This is a practical tool for developers. No AGI, no consciousness, just useful automation.

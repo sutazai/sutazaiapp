@@ -1,0 +1,136 @@
+{
+  "test_execution_summary": {
+    "timestamp": "2025-08-02T01:30:38.703457",
+    "total_execution_time": 31.361562252044678,
+    "total_tests": 22,
+    "passed_tests": 20,
+    "failed_tests": 1,
+    "error_tests": 1,
+    "ai_generated_tests": 0,
+    "success_rate": 90.9090909090909,
+    "status": "PASSED"
+  },
+  "test_categories": {
+    "API Endpoints": {
+      "total": 5,
+      "passed": 5,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "AI Model Integration": {
+      "total": 3,
+      "passed": 2,
+      "success_rate": 66.66666666666666,
+      "status": "FAILED"
+    },
+    "Agent Communication": {
+      "total": 3,
+      "passed": 3,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Database Operations": {
+      "total": 1,
+      "passed": 1,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Redis Caching": {
+      "total": 1,
+      "passed": 1,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Frontend Integration": {
+      "total": 1,
+      "passed": 1,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Security Validation": {
+      "total": 2,
+      "passed": 2,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Performance Benchmarks": {
+      "total": 2,
+      "passed": 2,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Error Handling": {
+      "total": 2,
+      "passed": 2,
+      "success_rate": 100.0,
+      "status": "PASSED"
+    },
+    "Edge Cases": {
+      "total": 2,
+      "passed": 1,
+      "success_rate": 50.0,
+      "status": "FAILED"
+    }
+  },
+  "detailed_results": {
+    "API Endpoints": [
+      "TestResult(test_name='endpoint_health', status='passed', duration=0.0022470951080322266, details={'url': 'http://localhost:8000/health', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0022470951080322266, 'json_valid': True, 'response_size': 106, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '99', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 344174), error_message=None, ai_generated=False)",
+      "TestResult(test_name='endpoint_api_root', status='passed', duration=0.0013880729675292969, details={'url': 'http://localhost:8000/api/v1', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0013880729675292969, 'json_valid': True, 'response_size': 204, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '192', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 345666), error_message=None, ai_generated=False)",
+      "TestResult(test_name='endpoint_agents_list', status='passed', duration=0.0012526512145996094, details={'url': 'http://localhost:8000/api/v1/agents', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0012526512145996094, 'json_valid': True, 'response_size': 178, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '166', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 346989), error_message=None, ai_generated=False)",
+      "TestResult(test_name='endpoint_agents_status', status='passed', duration=0.0013549327850341797, details={'url': 'http://localhost:8000/api/v1/agents/status', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0013549327850341797, 'json_valid': True, 'response_size': 670, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '628', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 348423), error_message=None, ai_generated=False)",
+      "TestResult(test_name='endpoint_ollama_health', status='passed', duration=0.0018434524536132812, details={'url': 'http://localhost:11434/api/tags', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0018434524536132812, 'json_valid': True, 'response_size': 364, 'headers': {'Content-Type': 'application/json; charset=utf-8', 'Date': 'Fri, 01 Aug 2025 23:30:07 GMT', 'Content-Length': '341'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 350339), error_message=None, ai_generated=False)"
+    ],
+    "AI Model Integration": [
+      "TestResult(test_name='ollama_connection', status='passed', duration=0.0012202262878417969, details={'models_available': 1, 'response_data': {'models': [{'name': 'tinyllama:latest', 'model': 'tinyllama:latest', 'modified_at': '2025-08-01T23:05:53.460345452Z', 'size': 637700138, 'digest': '2644915ede352ea7bdfaff0bfac0be74c719d5d5202acb63a6fb095b52f394a4', 'details': {'parent_model': '', 'format': 'gguf', 'family': 'llama', 'families': ['llama'], 'parameter_size': '1B', 'quantization_level': 'Q4_0'}}]}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 351730), error_message=None, ai_generated=False)",
+      "TestResult(test_name='ollama_models', status='passed', duration=0.0014600753784179688, details={'models_count': 1, 'models': ['tinyllama:latest'], 'total_size': 637700138}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 353265), error_message=None, ai_generated=False)",
+      "TestResult(test_name='model_inference', status='error', duration=31.292540550231934, details={}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 645896), error_message=\"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)\", ai_generated=False)"
+    ],
+    "Agent Communication": [
+      "TestResult(test_name='agent_registry', status='passed', duration=0.0038886070251464844, details={'agents_count': 3, 'agents': [{'name': 'senior-ai-engineer', 'status': 'ready'}, {'name': 'infrastructure-devops-manager', 'status': 'ready'}, {'name': 'testing-qa-validator', 'status': 'ready'}]}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 650149), error_message=None, ai_generated=False)",
+      "TestResult(test_name='agent_status', status='passed', duration=0.003298044204711914, details={'status_data': {'agents': [{'name': 'senior-ai-engineer', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652503', 'tasks_completed': 0, 'capabilities': ['code_analysis', 'optimization', 'ai_integration']}, {'name': 'infrastructure-devops-manager', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652521', 'tasks_completed': 0, 'capabilities': ['deployment', 'infrastructure', 'monitoring']}, {'name': 'testing-qa-validator', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652522', 'tasks_completed': 0, 'capabilities': ['testing', 'quality_assurance', 'validation']}], 'total_agents': 3, 'active_agents': 3, 'timestamp': '2025-08-01T23:30:38.652523'}, 'active_agents': 3}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 653574), error_message=None, ai_generated=False)",
+      "TestResult(test_name='agent_task_assignment', status='passed', duration=0.0027365684509277344, details={'task_id': 'd1af7cf2-032a-4043-9214-35f6f6aff362', 'assigned_agent': 'code-generation-improver', 'status': 'queued'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 656440), error_message=None, ai_generated=False)"
+    ],
+    "Database Operations": [
+      "TestResult(test_name='database_connection', status='passed', duration=0.004316091537475586, details={'health_data': {'status': 'healthy', 'timestamp': '2025-08-01T23:30:38.659815', 'model': 'tinyllama', 'version': '1.0.0'}, 'database_status': 'unknown'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 661300), error_message=None, ai_generated=False)"
+    ],
+    "Redis Caching": [
+      "TestResult(test_name='redis_connection', status='passed', duration=0.002441883087158203, details={'health_data': {'status': 'healthy', 'timestamp': '2025-08-01T23:30:38.663279', 'model': 'tinyllama', 'version': '1.0.0'}, 'redis_status': 'unknown'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 664075), error_message=None, ai_generated=False)"
+    ],
+    "Frontend Integration": [
+      "TestResult(test_name='frontend_availability', status='passed', duration=0.0027174949645996094, details={'status_code': 200, 'content_length': 1522, 'content_type': 'text/html'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 667024), error_message=None, ai_generated=False)"
+    ],
+    "Security Validation": [
+      "TestResult(test_name='cors_configuration', status='passed', duration=0.0013740062713623047, details={'cors_headers': {'access-control-allow-origin': None, 'access-control-allow-methods': None, 'access-control-allow-headers': None}, 'status_code': 405}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 668546), error_message=None, ai_generated=False)",
+      "TestResult(test_name='authentication', status='passed', duration=0.0013229846954345703, details={'status_code': 404, 'expected_codes': [401, 403, 404], 'auth_headers': {'date': 'Fri, 01 Aug 2025 23:30:37 GMT', 'server': 'uvicorn', 'content-length': '22', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 669925), error_message=None, ai_generated=False)"
+    ],
+    "Performance Benchmarks": [
+      "TestResult(test_name='response_time_benchmark', status='passed', duration=0.012923002243041992, details={'average_response_time': np.float64(0.0012918233871459961), 'max_response_time': np.float64(0.0018677711486816406), 'min_response_time': np.float64(0.0010864734649658203), 'requests_tested': 10, 'performance_threshold': 1.0}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 683145), error_message=None, ai_generated=False)",
+      "TestResult(test_name='concurrent_requests', status='passed', duration=0.007239580154418945, details={'successful_requests': 5, 'total_requests': 5, 'average_response_time': np.float64(0.004154400000000001), 'max_response_time': 0.004649, 'results': [(200, 0.003879), (200, 0.004503), (200, 0.003223), (200, 0.004649), (200, 0.004518)]}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 690499), error_message=None, ai_generated=False)"
+    ],
+    "Error Handling": [
+      "TestResult(test_name='404_error_handling', status='passed', duration=0.0011413097381591797, details={'status_code': 404, 'expected_status': 404, 'response_text': '{\"detail\":\"Not found\"}'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 691772), error_message=None, ai_generated=False)",
+      "TestResult(test_name='malformed_request_handling', status='passed', duration=0.0011143684387207031, details={'status_code': 422, 'expected_error_codes': [400, 422, 500], 'response_text': '{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",0],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 692950), error_message=None, ai_generated=False)"
+    ],
+    "Edge Cases": [
+      "TestResult(test_name='large_payload_handling', status='passed', duration=0.006948947906494141, details={'status_code': 400, 'payload_size': 1048588, 'response_size': 41}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 701715), error_message=None, ai_generated=False)",
+      "TestResult(test_name='timeout_handling', status='failed', duration=0.0014147758483886719, details={'timeout_raised': False, 'timeout_value': 0.001}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 703288), error_message='Timeout exception not raised as expected', ai_generated=False)"
+    ]
+  },
+  "recommendations": [
+    "Address 1 issues in AI Model Integration",
+    "Address 1 issues in Edge Cases"
+  ],
+  "system_health_score": {
+    "score": 93.33333333333333,
+    "level": "GOOD",
+    "weighted_categories": {
+      "API Endpoints": 0.25,
+      "AI Model Integration": 0.2,
+      "Agent Communication": 0.15,
+      "Database Operations": 0.15,
+      "Security Validation": 0.1,
+      "Performance Benchmarks": 0.1,
+      "Frontend Integration": 0.05
+    }
+  }
+}

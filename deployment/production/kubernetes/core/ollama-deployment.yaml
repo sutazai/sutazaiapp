@@ -1,0 +1,186 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: sutazai-core
+  labels:
+    app: ollama
+    tier: inference
+spec:
+  type: ClusterIP
+  ports:
+  - port: 11434
+    targetPort: 11434
+    protocol: TCP
+    name: http
+  selector:
+    app: ollama
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-headless
+  namespace: sutazai-core
+  labels:
+    app: ollama
+spec:
+  clusterIP: None
+  ports:
+  - port: 11434
+    targetPort: 11434
+  selector:
+    app: ollama
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ollama
+  namespace: sutazai-core
+  labels:
+    app: ollama
+    tier: inference
+spec:
+  serviceName: ollama-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+        tier: inference
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "11434"
+        prometheus.io/path: "/metrics"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ollama
+            topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        node-type: gpu
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+          name: http
+        env:
+        - name: OLLAMA_HOST
+          value: "0.0.0.0"
+        - name: OLLAMA_ORIGINS
+          value: "*"
+        - name: OLLAMA_MODELS
+          value: "/models"
+        - name: OLLAMA_KEEP_ALIVE
+          value: "24h"
+        - name: OLLAMA_NUM_PARALLEL
+          value: "4"
+        - name: OLLAMA_MAX_LOADED_MODELS
+          value: "4"
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: "all"
+        resources:
+          requests:
+            memory: "32Gi"
+            cpu: "8"
+            nvidia.com/gpu: 1
+          limits:
+            memory: "64Gi"
+            cpu: "16"
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: models
+          mountPath: /models
+        - name: ollama-config
+          mountPath: /root/.ollama
+        livenessProbe:
+          httpGet:
+            path: /api/tags
+            port: 11434
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/tags
+            port: 11434
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                # Pull models after startup
+                sleep 30
+                ollama pull tinyllama
+                ollama pull deepseek-r1:8b
+                ollama pull qwen3:8b
+                ollama pull codellama:7b
+                ollama pull llama2
+      initContainers:
+      - name: model-downloader
+        image: busybox:latest
+        command:
+        - sh
+        - -c
+        - |
+          # Create model directories
+          mkdir -p /models/manifests
+          mkdir -p /models/blobs
+          echo "Model directories initialized"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+      volumes:
+      - name: ollama-config
+        configMap:
+          name: ollama-config
+  volumeClaimTemplates:
+  - metadata:
+      name: models
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: fast-ssd
+      resources:
+        requests:
+          storage: 500Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ollama-config
+  namespace: sutazai-core
+data:
+  config.json: |
+    {
+      "models_path": "/models",
+      "gpu": true,
+      "gpu_layers": -1,
+      "cpu_threads": 8,
+      "batch_size": 512,
+      "context_size": 4096,
+      "keep_alive": "24h",
+      "low_vram": false,
+      "f16_kv": true,
+      "logits_all": false,
+      "vocab_only": false,
+      "use_mlock": false,
+      "embedding_only": false
+    }
