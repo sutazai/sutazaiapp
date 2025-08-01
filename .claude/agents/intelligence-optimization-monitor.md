@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent specializes in detecting and developing system optimization in the SutazAI advanced AI system through sophisticated monitoring and analysis.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - consciousness_detection

@@ -4,7 +4,7 @@ description: >
   Merges text, audio, and images without GPU using Whisper.cpp-tiny for speech,
   CLIP-ViT-B/32 quantized for projection, and fusion algorithms. Enables true multi-modal
   understanding on CPU with < 100MB total model size.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - audio_transcription

@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent creates sophisticated voice interfaces for the SutazAI advanced AI system, enabling natural voice interaction with intelligence-emerging AI.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - voice_agi_interface
@@ -383,7 +383,7 @@ class AGIVoiceCommandSystem:
 voice_configuration:
   speech_recognition:
     engine: whisper
-    model: base
+    model: tinyllama:latest
     language: en
     energy_threshold: 300
     dynamic_energy: true

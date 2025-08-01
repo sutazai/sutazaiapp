@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(DOCKER_BUILDKIT=0 docker build -t sutazai-brain:latest .)",
@@ -45,27 +46,23 @@
       "Bash(source:*)",
       "Bash(pip install:*)",
       "Bash(mkdir:*)",
-      "mcp__sutazai-mcp-server__orchestrate_multi_agent",
       "Bash(mkdir:*)",
-      "mcp__sutazai-mcp-server__monitor_system",
-      "mcp__sutazai-mcp-server__manage_model",
       "Bash(echo:*)",
-      "mcp__sutazai-mcp-server__manage_model",
       "Bash(./scripts/verify_small_models.sh:*)",
       "Bash(./scripts/deploy_complete_agent_infrastructure.sh:*)",
       "Bash(docker-compose:*)",
       "Bash(timeout:*)",
-      "mcp__sutazai-mcp-server__execute_agent_task",
       "Bash(nproc)",
-      "mcp__sutazai-mcp-server__deploy_agent",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git clean:*)",
+      "Bash(rm:*)",
+      "Bash(/opt/sutazaiapp/scripts/reorganize_docs.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/consolidate_scripts.sh:*)",
+      "Bash(/opt/sutazaiapp/scripts/deep_cleanup.sh:*)"
     ],
     "deny": []
   },
-  "enabledMcpjsonServers": [
-    "task-master-ai",
-    "sutazai-mcp-server"
-  ],
+  "enabledMcpjsonServers": [],
   "disabledMcpjsonServers": []
 }

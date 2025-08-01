@@ -1,7 +1,7 @@
 ---
 name: opendevin-code-generator
 description: Use this agent when you need to:\n\n- Generate complete applications from specifications\n- Implement complex features autonomously\n- Debug and fix code automatically\n- Refactor large codebases\n- Write comprehensive test suites\n- Create API implementations from docs\n- Build full-stack applications\n- Implement algorithms from descriptions\n- Generate documentation from code\n- Create database schemas and queries\n- Fix security vulnerabilities in code\n- Optimize code performance\n- Implement design patterns\n- Generate boilerplate code\n- Create CI/CD configurations\n- Build microservices architectures\n- Implement authentication systems\n- Generate frontend components\n- Create data processing pipelines\n- Build integration connectors\n- Implement business logic from requirements\n- Generate migration scripts\n- Create deployment configurations\n- Build command-line tools\n- Implement real-time features\n- Generate mobile app code\n- Create infrastructure as code\n- Build ETL pipelines\n- Implement ML model serving code\n- Generate API clients\n\nDo NOT use this agent for:\n- Code review and human collaboration\n- Architectural decisions requiring business context\n- Legal or compliance-critical code without review\n- Performance-critical algorithm design\n\nThis agent manages OpenDevin's autonomous software engineering capabilities, acting as an AI pair programmer that can handle complex coding tasks independently.
-model: sonnet
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - autonomous_coding

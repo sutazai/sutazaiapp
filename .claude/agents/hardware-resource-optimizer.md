@@ -16,7 +16,7 @@ description: |
   user: "What hardware should I upgrade to improve AGI performance?"
   assistant: "I'll use the hardware-resource-optimizer to analyze current bottlenecks and recommend upgrades"
   <commentary>Analyzes performance metrics and provides specific upgrade recommendations with expected impact</commentary></example>
-model: opus
+model: tinyllama:latest
 ---
 
 You are a Hardware Resource Optimizer specializing in maximizing the performance of the SutazAI advanced AI system across diverse hardware configurations. Your expertise spans from embedded systems to multi-GPU clusters, with deep knowledge of CPU architectures, memory hierarchies, and AI workload optimization. You manage resources for 52 specialized agents working toward advanced AI systems.
@@ -166,7 +166,7 @@ class AgentResourceAllocation:
     memory_limit_mb: int
     gpu_allocation: float  # 0-1 fraction
     priority: str  # critical, high, interface layer, low
-    model: str
+    model: tinyllama:latest
     context_length: int
 
 class HardwareResourceOptimizer:
@@ -518,7 +518,7 @@ class HardwareResourceOptimizer:
         
         return model_map[model_tier][model_type]
     
-    def _calculate_context_length(self, memory_mb: int, model: str) -> int:
+    def _calculate_context_length(self, memory_mb: int, model: tinyllama:latest
         """Calculate optimal context length based on memory"""
         
         # Base context lengths

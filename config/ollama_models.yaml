@@ -1,0 +1,44 @@
+---
+# Ollama Model Configuration for SutazAI
+# Using TinyLlama as default for minimal resource usage
+
+default_model: "tinyllama:latest"
+
+models:
+  tinyllama:
+    name: "tinyllama:latest"
+    size: "637MB"
+    context_window: 2048
+    description: "TinyLlama 1.1B - Extremely efficient for basic tasks"
+    pull_command: "ollama pull tinyllama:latest"
+    
+  # Fallback models for specific tasks (only pull if needed)
+  code_model: "tinyllama:latest"  # Use same model to save resources
+  reasoning_model: "tinyllama:latest"
+  chat_model: "tinyllama:latest"
+
+# Model assignments for agents (all using tinyllama)
+agent_models:
+  default: "tinyllama:latest"
+  
+  # Override only if absolutely necessary
+  # Example: code_specialist: "codellama:7b"
+  # But for now, all agents use tinyllama
+
+# Resource limits
+resource_config:
+  max_concurrent_models: 1  # Only one model loaded at a time
+  max_memory_per_model: "2GB"
+  cpu_threads: 4
+  gpu_layers: 0  # CPU only for now
+
+# Model initialization script
+init_commands: |
+  #!/bin/bash
+  echo "Pulling TinyLlama model..."
+  ollama pull tinyllama:latest
+  echo "TinyLlama ready!"
+  
+  # Test the model
+  echo "Testing TinyLlama..."
+  ollama run tinyllama:latest "Hello, I am TinyLlama. I am ready to help!" --verbose

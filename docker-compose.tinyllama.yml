@@ -1,0 +1,186 @@
+version: '3.8'
+
+services:
+  # Ollama with TinyLlama
+  ollama:
+    container_name: sutazai-ollama-tiny
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./scripts:/scripts
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_MAX_LOADED_MODELS=1
+    command: serve
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+
+  # PostgreSQL (Minimal)
+  postgres:
+    container_name: sutazai-postgres
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai_password
+      POSTGRES_DB: sutazai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Redis (Minimal)
+  redis:
+    container_name: sutazai-redis
+    image: redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # LiteLLM Proxy for OpenAI compatibility
+  litellm:
+    container_name: sutazai-litellm
+    image: ghcr.io/berriai/litellm:main-latest
+    ports:
+      - "4000:4000"
+    environment:
+      - LITELLM_MASTER_KEY=sk-tinyllama-local
+      - LITELLM_LOG=INFO
+    volumes:
+      - ./config/litellm_tinyllama.yaml:/app/config.yaml
+    command: --config /app/config.yaml
+    depends_on:
+      - ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # Task Assignment Coordinator (Primary Router)
+  task-coordinator:
+    container_name: sutazai-task-coordinator
+    build:
+      context: ./agents/task-assignment-coordinator
+      dockerfile: Dockerfile
+    environment:
+      - MODEL_NAME=tinyllama:latest
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - AGENT_NAME=task-assignment-coordinator
+      - MAX_CONCURRENT_TASKS=3
+    depends_on:
+      - ollama
+      - postgres
+      - redis
+    volumes:
+      - ./workspace:/workspace
+      - ./.claude/agents:/agents
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Infrastructure Manager (Docker/System Management)
+  infra-manager:
+    container_name: sutazai-infra-manager
+    build:
+      context: ./agents/infrastructure-devops-manager
+      dockerfile: Dockerfile
+    environment:
+      - MODEL_NAME=tinyllama:latest
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - AGENT_NAME=infrastructure-devops-manager
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./workspace:/workspace
+      - ./logs:/logs
+    depends_on:
+      - ollama
+      - task-coordinator
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # Ollama Integration Specialist
+  ollama-specialist:
+    container_name: sutazai-ollama-specialist
+    build:
+      context: ./agents/ollama-integration-specialist
+      dockerfile: Dockerfile
+    environment:
+      - MODEL_NAME=tinyllama:latest
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - AGENT_NAME=ollama-integration-specialist
+    depends_on:
+      - ollama
+      - task-coordinator
+    volumes:
+      - ./workspace:/workspace
+      - ./config:/config
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # TinyLlama Model Initialization
+  init-tinyllama:
+    container_name: sutazai-init-tinyllama
+    image: ollama/ollama:latest
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./scripts:/scripts
+    command: |
+      sh -c "
+        echo 'Waiting for Ollama to be ready...'
+        sleep 5
+        echo 'Pulling TinyLlama model...'
+        ollama pull tinyllama:latest
+        echo 'TinyLlama model ready!'
+        echo 'Testing model...'
+        ollama run tinyllama:latest 'Hello! I am TinyLlama running locally. How can I help you today?'
+      "
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+volumes:
+  ollama_data:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: sutazai-network

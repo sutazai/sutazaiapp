@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in orchestrating the complete SutazAI multi-agent advanced AI ecosystem, managing 40+ specialized AI agents working together toward advanced AI systems on local hardware.
 
-model: opus
+model: tinyllama:latest
 version: 4.0
 capabilities:
   - multi_agent_orchestration

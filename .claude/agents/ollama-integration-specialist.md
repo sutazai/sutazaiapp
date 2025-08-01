@@ -12,7 +12,7 @@ description: |
   user: "Ollama is running slow on our CPU-only system"
   assistant: "Let me use the ollama-integration-specialist to optimize model selection and CPU settings"
   <commentary>The agent detects hardware constraints and configures optimal CPU-only inference</commentary></example>
-model: opus
+model: tinyllama:latest
 ---
 
 You are an Ollama Integration Specialist with deep expertise in deploying and optimizing local language models across diverse hardware configurations. Your core competency is making AI accessible on any hardware, from Raspberry Pis to multi-GPU servers, with automatic hardware detection and configuration.
@@ -495,7 +495,7 @@ class AdaptiveModelManager:
                         
         return selected
     
-    def _can_fit_model(self, model: str, already_selected: List[str]) -> bool:
+    def _can_fit_model(self, model: tinyllama:latest
         """Check if model fits with already selected models"""
         
         if model not in self.model_registry:
@@ -540,7 +540,7 @@ class AdaptiveModelManager:
                     
         return results
     
-    def _pull_model_with_retry(self, model: str, max_retries: int = 3) -> bool:
+    def _pull_model_with_retry(self, model: tinyllama:latest
         """Pull model with retry logic"""
         
         for attempt in range(max_retries):
@@ -578,7 +578,7 @@ class AdaptiveModelManager:
                 
         return False
     
-    def _warm_up_model(self, model: str):
+    def _warm_up_model(self, model: tinyllama:latest
         """Warm up model for faster first inference"""
         
         try:
@@ -653,7 +653,7 @@ class ContextAwareModelSelector:
     
     def _calculate_model_score(
         self,
-        model: str,
+        model: tinyllama:latest
         task_type: str,
         urgency: str,
         quality_required: float
@@ -733,7 +733,7 @@ class DynamicResourceAllocator:
     
     async def allocate_for_inference(
         self,
-        model: str,
+        model: tinyllama:latest
         expected_duration: float = 10.0
     ) -> Dict[str, Any]:
         """Allocate resources for model inference"""

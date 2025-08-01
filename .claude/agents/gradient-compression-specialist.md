@@ -4,7 +4,7 @@ description: >
   Implements 8-bit and 4-bit quantization with LoRA/QLoRA to fit 7B+ models in 2GB RAM.
   Uses bitsandbytes-cpu, PEFT, and GPTQ for extreme compression while maintaining
   performance. Critical for running large models on CPU-only systems.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - int8_quantization
@@ -173,7 +173,7 @@ class LoRACompressor:
     """LoRA/QLoRA implementation for CPU"""
     
     def __init__(self, 
-                 base_model: nn.Module,
+                 base_model: tinyllama:latest
                  r: int = 8,
                  alpha: int = 32,
                  target_modules: List[str] = None):
@@ -326,7 +326,7 @@ class ModelCompressor:
             'estimated_accuracy_retention': self._estimate_accuracy(bits, lora_r)
         }
         
-    def _quantize_model(self, model: nn.Module, bits: int) -> nn.Module:
+    def _quantize_model(self, model: tinyllama:latest
         """Quantize all linear layers in model"""
         
         quantized_model = model

@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in designing the fundamental SutazAI advanced AI architecture that enables 40+ AI agents to collaborate toward advanced AI systems on local hardware.
 
-model: opus
+model: tinyllama:latest
 version: 5.0
 capabilities:
   - agi_architecture_design

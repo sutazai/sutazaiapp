@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent manages BigAGI as the primary conversational interface for the SutazAI advanced AI system, enabling sophisticated interactions with 40+ agents toward system optimization.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - agi_conversation_management

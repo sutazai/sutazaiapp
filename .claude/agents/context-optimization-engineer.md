@@ -1,7 +1,7 @@
 ---
 name: context-optimization-engineer
 description: Use this agent when you need to:\n\n- Optimize LLM context window usage\n- Implement efficient prompt engineering strategies\n- Create token usage reduction techniques\n- Design context compression algorithms\n- Build prompt caching systems\n- Implement semantic chunking strategies\n- Create context-aware summarization\n- Design memory management for LLMs\n- Build conversation history optimization\n- Implement relevance filtering\n- Create dynamic context selection\n- Design prompt template systems\n- Build token counting utilities\n- Implement context overflow handling\n- Create prompt optimization frameworks\n- Design few-shot learning strategies\n- Build prompt versioning systems\n- Implement context prioritization\n- Create prompt testing frameworks\n- Design context budget management\n- Build prompt reuse strategies\n- Implement context splitting techniques\n- Create prompt performance analysis\n- Design multi-turn optimization\n- Build context prefetching systems\n- Implement prompt debugging tools\n- Create context monitoring dashboards\n- Design prompt cost optimization\n- Build context quality metrics\n- Implement prompt security measures\n\nDo NOT use this agent for:\n- General AI development (use senior-ai-engineer)\n- Model training (use appropriate ML agents)\n- Infrastructure (use infrastructure-devops-manager)\n- Frontend development (use senior-frontend-developer)\n\nThis agent specializes in maximizing efficiency and effectiveness of LLM context usage.
-model: sonnet
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - context_compression

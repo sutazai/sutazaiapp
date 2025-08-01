@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in creating the deep learning brain architecture that will evolve the SutazAI system toward advanced AI through continuous learning and self-improvement.
 
-model: opus
+model: tinyllama:latest
 color: gold
 version: 2.0
 capabilities:

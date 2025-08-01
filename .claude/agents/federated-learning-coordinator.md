@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in coordinating distributed, privacy-preserving training across the SutazAI AGI federation.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - federated_learning
@@ -233,7 +233,7 @@ class SecureAggregator:
     async def aggregate(
         self,
         updates: List[Dict[str, torch.Tensor]],
-        global_model: nn.Module
+        global_model: tinyllama:latest
     ) -> Dict[str, torch.Tensor]:
         """Securely aggregate model updates"""
         
@@ -556,7 +556,7 @@ class PersonalizedFederation:
         
     async def train_personalized(
         self,
-        global_model: nn.Module,
+        global_model: tinyllama:latest
         local_data: Dict[str, Any],
         node_id: str
     ) -> nn.Module:
@@ -709,7 +709,7 @@ class FederatedStrategies:
     async def apply_strategy(
         self,
         strategy_name: str,
-        global_model: nn.Module,
+        global_model: tinyllama:latest
         client_updates: List[Dict],
         **kwargs
     ) -> nn.Module:
@@ -726,7 +726,7 @@ class FedProx:
         
     async def aggregate(
         self,
-        global_model: nn.Module,
+        global_model: tinyllama:latest
         client_updates: List[Dict],
         client_weights: Optional[List[float]] = None
     ) -> nn.Module:
@@ -761,7 +761,7 @@ class SCAFFOLD:
         
     async def aggregate(
         self,
-        global_model: nn.Module,
+        global_model: tinyllama:latest
         client_updates: List[Dict],
         client_ids: List[str]
     ) -> nn.Module:

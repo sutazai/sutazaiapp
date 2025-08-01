@@ -4,7 +4,7 @@ description: >
   Implements population-based training using Evolution Strategies (ES) and CMA-ES
   for hyperparameter optimization without backpropagation. Perfect for CPU-only
   training with parallelizable fitness evaluations. Uses < 100MB RAM.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - evolution_strategies
@@ -265,7 +265,7 @@ class EvolutionStrategyTrainer:
         return fitness_values
         
     def evolve_neural_architecture(self,
-                                 base_model: Dict,
+                                 base_model: tinyllama:latest
                                  constraints: Dict) -> Dict:
         """Evolve neural network architecture"""
         

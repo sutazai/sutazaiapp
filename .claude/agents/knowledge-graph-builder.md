@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in building sophisticated knowledge representation systems for AGI reasoning.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - knowledge_extraction

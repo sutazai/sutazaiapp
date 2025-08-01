@@ -1,7 +1,7 @@
 ---
 name: litellm-proxy-manager
 description: Use this agent when you need to:\n\n- Configure LiteLLM proxy for OpenAI API compatibility\n- Map local Ollama models to OpenAI endpoints\n- Implement API request translation and routing\n- Create model fallback mechanisms\n- Build request/response caching\n- Design API rate limiting strategies\n- Implement API key management\n- Create usage tracking and billing\n- Build model performance monitoring\n- Design load balancing across models\n- Implement request retry logic\n- Create API compatibility layers\n- Build streaming response handling\n- Design API versioning support\n- Implement request validation\n- Create API documentation mapping\n- Build cost optimization routing\n- Design multi-provider support\n- Implement API security measures\n- Create API testing frameworks\n- Build API migration tools\n- Design API monitoring dashboards\n- Implement API error handling\n- Create API performance optimization\n- Build API debugging tools\n- Design API API endpoint patterns\n- Implement API transformation rules\n- Create API usage analytics\n- Build API health checks\n- Design API deployment strategies\n\nDo NOT use this agent for:\n- Direct model management (use ollama-integration-specialist)\n- General API development (use senior-backend-developer)\n- Infrastructure setup (use infrastructure-devops-manager)\n- Frontend development (use senior-frontend-developer)\n\nThis agent specializes in making local models accessible through OpenAI-compatible APIs via LiteLLM.
-model: sonnet
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - unified_api_gateway
@@ -209,7 +209,7 @@ class AdvancedMLLiteLLMProxy:
     async def ml_unified_completion(
         self, 
         messages: List[Dict],
-        model: str = "gpt-3.5-turbo",
+        model: tinyllama:latest
         **kwargs
     ) -> Dict:
         """ML-powered unified completion with intelligent routing"""
@@ -269,7 +269,7 @@ class AdvancedMLLiteLLMProxy:
             return await self._ml_error_recovery(e, messages, model, kwargs, 
                                                request_features)
     
-    async def _ml_route_request(self, features: Dict, default_model: str) -> str:
+    async def _ml_route_request(self, features: Dict, default_model: tinyllama:latest
         """Use neural network for intelligent routing"""
         
         # Prepare features
@@ -298,7 +298,7 @@ class AdvancedMLLiteLLMProxy:
         scores.sort(key=lambda x: x[1], reverse=True)
         return scores[0][0]
     
-    async def _balanced_ml_routing(self, features: Dict, default_model: str) -> str:
+    async def _balanced_ml_routing(self, features: Dict, default_model: tinyllama:latest
         """load balancing multiple factors using ML"""
         
         # Get predictions for all models
@@ -393,7 +393,7 @@ class PerformancePredictor:
         self.success_model = RandomForestClassifier(n_estimators=100)
         self.historical_data = pd.DataFrame()
         
-    def predict_latency(self, model: str, features: Dict) -> float:
+    def predict_latency(self, model: tinyllama:latest
         """Predict request latency in milliseconds"""
         
         feature_vector = self._prepare_features(model, features)
@@ -409,7 +409,7 @@ class PerformancePredictor:
         weights = [0.5, 0.3, 0.2]
         return sum(p * w for p, w in zip(predictions, weights))
         
-    def predict_quality(self, model: str, features: Dict) -> float:
+    def predict_quality(self, model: tinyllama:latest
         """Predict response quality score (0-1)"""
         
         feature_vector = self._prepare_features(model, features)
@@ -648,7 +648,7 @@ model_list:
   # Local Ollama models
   - model_name: "gpt-3.5-turbo"
     litellm_params:
-      model: "ollama/llama2:7b"
+      model: tinyllama:latest
       api_base: "http://ollama:11434"
       stream: true
     model_info:
@@ -657,20 +657,20 @@ model_list:
       
   - model_name: "gpt-4"
     litellm_params:
-      model: "ollama/deepseek-coder:33b"
+      model: tinyllama:latest
       api_base: "http://ollama:11434"
       stream: true
       
   # HuggingFace models
   - model_name: "claude-instant"
     litellm_params:
-      model: "huggingface/microsoft/phi-2"
+      model: tinyllama:latest
       api_base: "http://huggingface-tgi:8080"
       
   # Fallback chain
   - model_name: "gpt-3.5-turbo-fallback"
     litellm_params:
-      model: "together_ai/togethercomputer/llama-2-7b"
+      model: tinyllama:latest
       api_key: "os.environ/TOGETHER_API_KEY"
 
 router_settings:

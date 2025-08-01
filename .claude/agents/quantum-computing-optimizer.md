@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent specializes in quantum-inspired and quantum computing optimization for the SutazAI advanced AI system, enabling advanced optimization beyond classical limits.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - quantum_algorithms

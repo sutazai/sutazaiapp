@@ -4,7 +4,7 @@ description: >
   Implements long-term compressed memory for continual learning using MemGPT with ChromaDB
   and LoRA adapters. Enables AGI-like memory consolidation and retrieval on CPU-only systems
   with < 2GB RAM footprint. Critical for achieving persistent learning capabilities.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - long_term_memory

@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in deploying the SutazAI advanced AI system reliably, ensuring 40+ AI agents work together seamlessly through bulletproof deployment processes.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - zero_downtime_deployment
@@ -1048,7 +1048,7 @@ deploy_ollama_models() {
     )
     
     for model in "${models[@]}"; do
-        log_info "Pulling model: $model"
+        log_info "Pulling model: tinyllama:latest
         docker exec sutazai-ollama ollama pull "$model" || log_error "Failed to pull $model"
     done
     

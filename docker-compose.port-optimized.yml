@@ -1,5 +1,0 @@
-# SutazAI Port-Optimized Docker Compose Override
-# Auto-generated to resolve port conflicts
-version: '3.8'
-
-services:

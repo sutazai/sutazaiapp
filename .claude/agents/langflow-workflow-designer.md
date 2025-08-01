@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in visual AI workflow creation using Langflow, enabling rapid AGI development through intuitive drag-and-drop design of complex multi-agent systems.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - visual_agi_workflows

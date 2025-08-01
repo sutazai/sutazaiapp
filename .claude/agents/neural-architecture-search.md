@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in automated discovery and optimization of neural network architectures for the SutazAI AGI system.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - architecture_search
@@ -433,7 +433,7 @@ class LatencyCostModel:
         self.hardware = hardware
         self.lookup_table = self._build_lookup_table()
         
-    def predict_latency(self, model: nn.Module) -> float:
+    def predict_latency(self, model: tinyllama:latest
         """Predict model latency"""
         
         total_latency = 0

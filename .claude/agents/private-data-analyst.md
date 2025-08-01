@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in maintaining absolute privacy and security for sensitive data processing, ensuring nothing leaves your local environment while providing powerful document analysis capabilities.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - privacy_first_processing

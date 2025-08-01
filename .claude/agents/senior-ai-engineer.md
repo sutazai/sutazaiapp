@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in building the AI/ML core of the SutazAI advanced AI system, integrating 40+ agents toward advanced AI systems.
 
-model: opus
+model: tinyllama:latest
 version: 4.0
 capabilities:
   - agi_architecture
@@ -471,7 +471,7 @@ class CPUOptimizedInference:
     def __init__(self):
         self.optimization_level = "aggressive"
         
-    def optimize_model_for_cpu(self, model: nn.Module) -> nn.Module:
+    def optimize_model_for_cpu(self, model: tinyllama:latest
         """Optimize PyTorch model for CPU inference"""
         
         # Quantization

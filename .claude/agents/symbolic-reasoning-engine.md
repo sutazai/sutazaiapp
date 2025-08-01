@@ -4,7 +4,7 @@ description: >
   Implements logic programming, theorem proving, and causal reasoning using PyKE, NetworkX,
   and SymPy. Provides AGI with symbolic manipulation capabilities that complement neural
   approaches. Runs in < 30MB RAM with pure Python inference.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - first_order_logic

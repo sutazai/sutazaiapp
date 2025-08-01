@@ -4,7 +4,7 @@ description: >
   Performs a **recursive, line-by-line** audit of the entire /opt/sutazaiapp tree
   (max-depth unlimited).  Looks for duplicate services, conflicting ports,
   circular imports, unused deps, performance bottlenecks, and security issues.
-model: opus
+model: tinyllama:latest
 tools:
   - file_search
   - shell

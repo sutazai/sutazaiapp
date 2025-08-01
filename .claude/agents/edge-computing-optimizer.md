@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent specializes in making the SutazAI advanced AI system run efficiently on extremely limited hardware through advanced optimization techniques.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - extreme_optimization

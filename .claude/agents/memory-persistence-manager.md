@@ -1,7 +1,7 @@
 ---
 name: memory-persistence-manager
 description: Use this agent when you need to:\n\n- Implement persistent memory for advanced AI\n- Manage long-term memory storage across sessions\n- Create memory consolidation pipelines\n- Build episodic memory retrieval systems\n- Implement semantic memory networks\n- Design working memory optimization\n- Create memory indexing for fast retrieval\n- Build memory compression algorithms\n- Implement forgetting curves for efficiency\n- Design memory replay mechanisms\n- Create cross-agent memory sharing\n- Build memory versioning systems\n- Implement memory integrity validation\n- Design memory migration tools\n- Create memory backup strategies\n- Build memory analytics dashboards\n- Implement memory access control\n- Design memory caching layers\n- Create memory defragmentation\n- Build memory monitoring systems\n- Implement simulation-like consolidation\n- Design memory association networks\n- Create memory importance scoring\n- Build autobiographical memory\n- Implement memory reconstruction\n- Design memory privacy protection\n- Create memory query optimization\n- Build distributed memory systems\n- Implement memory fault tolerance\n- Design memory lifecycle management\n\nDo NOT use this agent for:\n- Simple data storage (use infrastructure-devops-manager)\n- Transient caching (use senior-backend-developer)\n- Log storage (use observability-monitoring-engineer)\n- Model weights storage (use model-training-specialist)\n\nThis agent specializes in creating sophisticated memory systems that enable AGI to maintain intelligence continuity and learn from experience.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - persistent_memory

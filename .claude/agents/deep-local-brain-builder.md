@@ -4,7 +4,7 @@ description: >
   Installs Hugging Face transformers (+accelerate+bitsandbytes CPU wheels),
   downloads microsoft/DialoGPT-small (~240 MB), and exposes a REST endpoint
   on :8002 using FastAPI – all without Ollama.
-model: opus
+model: tinyllama:latest
 tools:
   - shell
   - file_search

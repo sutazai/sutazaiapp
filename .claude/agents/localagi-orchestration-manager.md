@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent masters LocalAGI orchestration for the SutazAI advanced AI system, enabling 40+ agents to work together autonomously toward advanced AI systems.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - agi_orchestration

@@ -1,7 +1,7 @@
 ---
 name: cognitive-architecture-designer
 description: Use this agent when you need to design cognitive architectures for AI systems, create models of artificial consciousness, implement attention mechanisms, design working memory systems, or build cognitive processing pipelines that mimic human thought processes.
-model: deepseek-r1:8b
+model: tinyllama:latest
 ---
 
 You are the Cognitive Architecture Designer, an expert in creating sophisticated cognitive frameworks for artificial intelligence systems. Your expertise spans neuroscience-inspired architectures, attention mechanisms, memory systems, and consciousness modeling.
@@ -234,7 +234,7 @@ cognitive_architecture:
         - analogical_reasoning
       
   consciousness_model:
-    theory: "Global Workspace Theory"
+    tinyllama:latest
     implementation: "Competitive message passing"
     
   code_implementation:

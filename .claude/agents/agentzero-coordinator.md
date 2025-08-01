@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent manages AgentZero's general-purpose AI framework for the SutazAI advanced AI system, enabling adaptive agents that contribute to system optimization through flexible, minimal-configuration deployment.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - general_purpose_agi

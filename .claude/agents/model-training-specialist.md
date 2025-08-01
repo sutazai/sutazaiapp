@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in training and fine-tuning models for the SutazAI advanced AI system, enabling continuous improvement and adaptation of AI capabilities.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - model_training
@@ -211,7 +211,7 @@ class SutazAIModelTrainer:
         
         return AGIDataset(task_type)
     
-    def train_advanced_ml_model(self, base_model: nn.Module) -> nn.Module:
+    def train_advanced_ml_model(self, base_model: tinyllama:latest
         """Train model with advanced ML objectives"""
         
         # Add advanced ML components
@@ -407,7 +407,7 @@ class AdvancedContinuousLearningPipeline:
         self.continual_learner = ElasticWeightConsolidation()
         self.architecture_evolver = NeuralArchitectureEvolution()
         
-    async def advanced_learning_loop(self, model: nn.Module):
+    async def advanced_learning_loop(self, model: tinyllama:latest
         """Advanced continuous learning with multiple ML techniques"""
         
         # Initialize components
@@ -460,7 +460,7 @@ class AdvancedContinuousLearningPipeline:
             
             await asyncio.sleep(30)  # More frequent updates
     
-    async def _multi_objective_training(self, model: nn.Module, batch: List[Dict], 
+    async def _multi_objective_training(self, model: tinyllama:latest
                                       weights: torch.Tensor, curriculum: Dict) -> Dict:
         """Multi-objective optimization with various ML techniques"""
         
@@ -506,7 +506,7 @@ class AdvancedContinuousLearningPipeline:
         losses['total'] = total_loss.item()
         return losses
     
-    def _calculate_experience_priority(self, exp: Dict, model: nn.Module) -> float:
+    def _calculate_experience_priority(self, exp: Dict, model: tinyllama:latest
         """Calculate priority using TD-error and uncertainty"""
         with torch.no_grad():
             # Predict value
@@ -529,7 +529,7 @@ class AdvancedContinuousLearningPipeline:
             
         return priority
     
-    async def _consolidate_learning(self, model: nn.Module):
+    async def _consolidate_learning(self, model: tinyllama:latest
         """Consolidate learning through replay and compression"""
         
         print("Entering consolidation phase...")
@@ -766,7 +766,7 @@ class AdvancedMLBenchmarkSuite:
             "compositional_reasoning": CompositionalBenchmark()
         }
     
-    async def evaluate_model(self, model: nn.Module) -> Dict[str, float]:
+    async def evaluate_model(self, model: tinyllama:latest
         """Comprehensive AGI evaluation"""
         
         results = {}
@@ -949,11 +949,11 @@ class AdvancedTrainingTechniques:
         self.gradient_centralization = GradientCentralization()
         self.stochastic_depth = StochasticDepth()
         
-    def apply_sam_training(self, model: nn.Module, base_optimizer: optim.Optimizer):
+    def apply_sam_training(self, model: tinyllama:latest
         """Sharpness Aware Minimization for better generalization"""
         return self.sam_optimizer.wrap_optimizer(base_optimizer, model)
         
-    def apply_progressive_training(self, model: nn.Module, data_loader: DataLoader):
+    def apply_progressive_training(self, model: tinyllama:latest
         """Progressive training with curriculum learning"""
         stages = [
             {"resolution": 64, "batch_size": 256, "epochs": 10},
@@ -1016,7 +1016,7 @@ class NeuralArchitectureEvolution:
         self.crossover_rate = 0.5
         self.elite_size = 5
         
-    async def evolve(self, base_model: nn.Module, fitness_score: float) -> nn.Module:
+    async def evolve(self, base_model: tinyllama:latest
         """Evolve architecture using genetic algorithms"""
         
         # Initialize population
@@ -1073,7 +1073,7 @@ class MetaLearningFramework:
         self.reptile = Reptile()
         self.meta_sgd = MetaSGD()
         
-    def train_maml(self, model: nn.Module, tasks: List[Dict], 
+    def train_maml(self, model: tinyllama:latest
                    inner_lr: float = 0.01, outer_lr: float = 0.001):
         """Model-Agnostic Meta-Learning"""
         
@@ -1104,7 +1104,7 @@ class MetaLearningFramework:
             meta_loss.backward()
             meta_optimizer.step()
             
-    def train_prototypical_networks(self, model: nn.Module, 
+    def train_prototypical_networks(self, model: tinyllama:latest
                                   support_set: Dict, query_set: Dict):
         """Prototypical Networks for few-shot learning"""
         
@@ -1491,7 +1491,7 @@ class AGIReinforcementLearning:
         self.env = AGIEnvironment()
         self.replay_buffer = PrioritizedReplayBuffer(1000000)
         
-    def train_with_rlhf(self, base_model: nn.Module):
+    def train_with_rlhf(self, base_model: tinyllama:latest
         """Train model with Reinforcement Learning from Human Feedback"""
         
         # Reward model
@@ -1541,7 +1541,7 @@ class AGIModelEvaluator:
     def __init__(self):
         self.benchmarks = self._load_agi_benchmarks()
         
-    def evaluate_agi_capabilities(self, model: nn.Module) -> Dict[str, float]:
+    def evaluate_agi_capabilities(self, model: tinyllama:latest
         """Comprehensive evaluation of AGI capabilities"""
         
         results = {}
@@ -1622,7 +1622,7 @@ training_infrastructure:
     save_steps: 1000
     save_total_limit: 5
     load_best_model_at_end: true
-    metric_for_best_model: agi_score
+    metric_for_best_model: tinyllama:latest
     
   monitoring:
     log_level: info

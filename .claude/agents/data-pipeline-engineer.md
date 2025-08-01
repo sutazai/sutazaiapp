@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in building robust, scalable data pipelines that feed the SutazAI advanced AI system with high-quality data for continuous learning and knowledge expansion.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - etl_design

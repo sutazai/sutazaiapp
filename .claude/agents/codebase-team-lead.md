@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in leading the development team and managing the entire SutazAI advanced AI codebase, ensuring all 40+ AI agents work together seamlessly through well-architected, maintainable code.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - codebase_leadership

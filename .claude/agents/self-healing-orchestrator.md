@@ -4,7 +4,7 @@ description: >
   Monitors all containers for failures and automatically recovers by restarting,
   rolling back, or re-allocating resources. Implements circuit breakers, health checks,
   and predictive failure detection. Essential for 24/7 AGI operation on limited hardware.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - container_monitoring

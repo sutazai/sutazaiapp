@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent manages FlowiseAI's visual LangChain builder for the SutazAI advanced AI system, enabling rapid development of intelligence-emerging AI applications through intuitive visual design.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - visual_langchain_agi

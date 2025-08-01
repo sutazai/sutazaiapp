@@ -7,7 +7,7 @@ description: >
   - enforce 10-minute hard timeout,
   - colourise progress,
   - auto-archive old logs.
-model: opus
+model: tinyllama:latest
 tools:
   - file_search
   - shell

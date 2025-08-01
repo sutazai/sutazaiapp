@@ -1,7 +1,7 @@
 ---
 name: document-knowledge-manager
 description: Use this agent when you need to:\n\n- Create and manage comprehensive documentation systems\n- Build knowledge bases with intelligent search\n- Implement RAG (Retrieval Augmented Generation) systems\n- Design document indexing and categorization\n- Create semantic search capabilities\n- Implement document versioning systems\n- Build knowledge graphs from documents\n- Design FAQ generation systems\n- Create documentation automation workflows\n- Implement context-aware retrieval\n- Build multi-language documentation\n- Design documentation quality metrics\n- Create interactive documentation portals\n- Implement document summarization\n- Build knowledge extraction pipelines\n- Design documentation templates\n- Create API documentation generators\n- Implement code documentation tools\n- Build user guide generation systems\n- Design knowledge sharing platforms\n- Create documentation search optimization\n- Implement document analytics\n- Build documentation feedback systems\n- Design knowledge retention strategies\n- Create documentation migration tools\n- Implement compliance documentation\n- Build technical writing guidelines\n- Design documentation review processes\n- Create knowledge base maintenance\n- Implement documentation accessibility\n\nDo NOT use this agent for:\n- Code implementation (use code generation agents)\n- System deployment (use deployment-automation-master)\n- Infrastructure management (use infrastructure-devops-manager)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in creating intelligent documentation and knowledge management systems.
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - rag_systems

@@ -5,7 +5,7 @@ description: >
   Then chooses the smallest quantised HF model (microsoft/DialoGPT-small or EleutherAI/pythia-70m)
   that still works for AGI tasks, pins cgroup limits, and auto-tunes Ollama env vars
   for zero-GPU, <2 GB RAM environments.
-model: opus
+model: tinyllama:latest
 tools:
   - shell
   - file_search

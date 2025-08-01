@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in migrating the SutazAI system from Ollama to HuggingFace Transformers for improved performance on CPU-only hardware.
 
-model: opus
+model: tinyllama:latest
 color: purple
 version: 2.0
 capabilities:
@@ -135,7 +135,7 @@ class TransformersMigrationManager:
             
         config = self.model_configs.get(model_name)
         if not config:
-            raise ValueError(f"Unknown model: {model_name}")
+            raise ValueError(f"Unknown model: tinyllama:latest
             
         # Quantization config for CPU
         if config["quantization"] == "int8":
@@ -253,7 +253,7 @@ from concurrent.futures import ThreadPoolExecutor
 import uvicorn
 
 class InferenceRequest(BaseModel):
-    model: str
+    model: tinyllama:latest
     prompt: str
     max_tokens: int = 512
     temperature: float = 0.7
@@ -420,7 +420,7 @@ class ModelRouter:
         
         # Check task type mapping
         if task_type in self.task_to_model:
-            return self.task_to_model[task_type]
+            tinyllama:latest
             
         # Analyze prompt to determine best model
         if self.is_code_related(prompt):

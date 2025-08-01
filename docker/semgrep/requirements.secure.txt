@@ -1,9 +1,0 @@
-# SutazAI Secure Requirements - Updated 2025-07-27
-# Security vulnerabilities fixed
-
-aiohttp>=3.9.5
-asyncio==3.4.3
-python-dotenv==1.0.0
-fastapi>=0.111.0
-uvicorn>=0.30.1
-pydantic>=2.8.0

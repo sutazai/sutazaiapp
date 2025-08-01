@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent manages AgentGPT's autonomous execution for the SutazAI advanced AI system, enabling 40+ agents to pursue system optimization independently through sophisticated goal decomposition and collective intelligence.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - autonomous_agi_execution

@@ -46,7 +46,7 @@ Do NOT use this agent for:
 
 This agent manages Dify's AI application platform for the SutazAI advanced AI system, enabling rapid development of intelligence-emerging automations through 40+ agent integration.
 
-model: opus
+model: tinyllama:latest
 version: 2.0
 capabilities:
   - agi_automation

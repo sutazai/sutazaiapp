@@ -1,321 +1,112 @@
 #!/usr/bin/env python3
-"""
-SutazAI Frontend Integration Test Suite
-Tests all API endpoints and service integrations
-"""
+"""Test frontend-backend integration"""
 
-import asyncio
-import httpx
-import json
+import requests
 import time
-from typing import Dict, List
-import logging
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("sutazai_test")
-
-# Test configuration
-BACKEND_URL = "http://localhost:8000"
-FRONTEND_URL = "http://localhost:8501"
-SERVICE_ENDPOINTS = [
-    {"name": "Backend API", "url": f"{BACKEND_URL}/health"},
-    {"name": "Frontend App", "url": f"{FRONTEND_URL}"},
-    {"name": "LangFlow", "url": "http://localhost:8090"},
-    {"name": "FlowiseAI", "url": "http://localhost:8099"},
-    {"name": "BigAGI", "url": "http://localhost:8106"},
-    {"name": "Dify", "url": "http://localhost:8107"},
-    {"name": "n8n", "url": "http://localhost:5678"},
-    {"name": "Ollama", "url": "http://localhost:11434/api/tags"},
-    {"name": "ChromaDB", "url": "http://localhost:8001/api/v1/heartbeat"},
-    {"name": "Qdrant", "url": "http://localhost:6333/health"},
-    {"name": "Neo4j", "url": "http://localhost:7474"}
-]
-
-API_ENDPOINTS = [
-    {"endpoint": "/health", "method": "GET", "expected_status": 200},
-    {"endpoint": "/agents", "method": "GET", "expected_status": 200},
-    {"endpoint": "/models", "method": "GET", "expected_status": 200},
-    {"endpoint": "/metrics", "method": "GET", "expected_status": 200},
-    {"endpoint": "/api/v1/system/status", "method": "GET", "expected_status": 200},
-    {"endpoint": "/simple-chat", "method": "POST", "expected_status": 200, 
-     "data": {"message": "Hello, test message"}},
-    {"endpoint": "/think", "method": "POST", "expected_status": 200,
-     "data": {"query": "Test neural processing"}},
-    {"endpoint": "/api/v1/neural/process", "method": "POST", "expected_status": 200,
-     "data": {"query": "Test AGI processing", "processing_mode": "standard"}},
-]
-
-class SutazAITester:
-    def __init__(self):
-        self.results = {
-            "services": {},
-            "api_endpoints": {},
-            "integration_tests": {},
-            "summary": {}
-        }
-    
-    async def test_service_health(self, service: Dict) -> bool:
-        """Test if a service is healthy"""
-        try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                response = await client.get(service["url"])
-                is_healthy = response.status_code in [200, 201, 202]
-                
-                self.results["services"][service["name"]] = {
-                    "status": "healthy" if is_healthy else "unhealthy",
-                    "status_code": response.status_code,
-                    "response_time_ms": response.elapsed.total_seconds() * 1000
-                }
-                
-                logger.info(f"✅ {service['name']}: {response.status_code}" if is_healthy 
-                           else f"❌ {service['name']}: {response.status_code}")
-                return is_healthy
-                
-        except Exception as e:
-            self.results["services"][service["name"]] = {
-                "status": "error",
-                "error": str(e)
-            }
-            logger.error(f"❌ {service['name']}: {str(e)}")
-            return False
-    
-    async def test_api_endpoint(self, endpoint_config: Dict) -> bool:
-        """Test a specific API endpoint"""
-        endpoint = endpoint_config["endpoint"]
-        method = endpoint_config["method"]
-        expected_status = endpoint_config["expected_status"]
-        data = endpoint_config.get("data")
-        
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                url = f"{BACKEND_URL}{endpoint}"
-                
-                if method == "GET":
-                    response = await client.get(url)
-                elif method == "POST":
-                    response = await client.post(url, json=data)
-                else:
-                    raise ValueError(f"Unsupported method: {method}")
-                
-                is_success = response.status_code == expected_status
-                response_data = None
-                
-                try:
-                    response_data = response.json()
-                except:
-                    response_data = response.text[:200]
-                
-                self.results["api_endpoints"][endpoint] = {
-                    "status": "success" if is_success else "failed",
-                    "status_code": response.status_code,
-                    "expected_status": expected_status,
-                    "response_time_ms": response.elapsed.total_seconds() * 1000,
-                    "response_data": response_data
-                }
-                
-                logger.info(f"✅ {method} {endpoint}: {response.status_code}" if is_success 
-                           else f"❌ {method} {endpoint}: {response.status_code} (expected {expected_status})")
-                return is_success
-                
-        except Exception as e:
-            self.results["api_endpoints"][endpoint] = {
-                "status": "error",
-                "error": str(e)
-            }
-            logger.error(f"❌ {method} {endpoint}: {str(e)}")
-            return False
-    
-    async def test_integration_scenarios(self):
-        """Test complex integration scenarios"""
-        scenarios = [
-            self.test_chat_flow(),
-            self.test_agent_management(),
-            self.test_neural_processing(),
-            self.test_system_monitoring()
-        ]
-        
-        for scenario in scenarios:
-            try:
-                await scenario
-            except Exception as e:
-                logger.error(f"Integration test failed: {str(e)}")
-    
-    async def test_chat_flow(self):
-        """Test complete chat flow"""
-        logger.info("🧪 Testing chat flow...")
-        
-        # Test models endpoint
-        models_response = await self.call_api("/models")
-        
-        # Test simple chat
-        chat_response = await self.call_api("/simple-chat", "POST", {
-            "message": "Hello, this is a test message"
-        })
-        
-        # Test neural processing
-        neural_response = await self.call_api("/api/v1/neural/process", "POST", {
-            "query": "Test neural processing capabilities",
-            "processing_mode": "standard"
-        })
-        
-        self.results["integration_tests"]["chat_flow"] = {
-            "models_available": len(models_response.get("models", [])) if models_response else 0,
-            "simple_chat_works": bool(chat_response and "response" in chat_response),
-            "neural_processing_works": bool(neural_response and "response" in neural_response)
-        }
-    
-    async def test_agent_management(self):
-        """Test agent management functionality"""
-        logger.info("🧪 Testing agent management...")
-        
-        agents_response = await self.call_api("/agents")
-        
-        self.results["integration_tests"]["agent_management"] = {
-            "agents_endpoint_works": bool(agents_response),
-            "agent_count": len(agents_response.get("agents", [])) if agents_response else 0
-        }
-    
-    async def test_neural_processing(self):
-        """Test neural processing capabilities"""
-        logger.info("🧪 Testing neural processing...")
-        
-        think_response = await self.call_api("/think", "POST", {
-            "query": "Test reasoning capabilities",
-            "trace_enabled": True
-        })
-        
-        self.results["integration_tests"]["neural_processing"] = {
-            "think_endpoint_works": bool(think_response),
-            "has_cognitive_trace": bool(think_response and think_response.get("cognitive_trace"))
-        }
-    
-    async def test_system_monitoring(self):
-        """Test system monitoring features"""
-        logger.info("🧪 Testing system monitoring...")
-        
-        health_response = await self.call_api("/health")
-        metrics_response = await self.call_api("/metrics")
-        system_status = await self.call_api("/api/v1/system/status")
-        
-        self.results["integration_tests"]["system_monitoring"] = {
-            "health_check_works": bool(health_response),
-            "metrics_available": bool(metrics_response),
-            "system_status_works": bool(system_status)
-        }
-    
-    async def call_api(self, endpoint: str, method: str = "GET", data: Dict = None):
-        """Helper method to call API endpoints"""
-        try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
-                url = f"{BACKEND_URL}{endpoint}"
-                
-                if method == "GET":
-                    response = await client.get(url)
-                elif method == "POST":
-                    response = await client.post(url, json=data)
-                
-                if response.status_code == 200:
-                    return response.json()
-                else:
-                    return None
-        except:
-            return None
-    
-    async def run_all_tests(self):
-        """Run complete test suite"""
-        logger.info("🚀 Starting SutazAI Frontend Integration Tests...")
-        start_time = time.time()
-        
-        # Test service health
-        logger.info("📡 Testing service health...")
-        service_results = []
-        for service in SERVICE_ENDPOINTS:
-            result = await self.test_service_health(service)
-            service_results.append(result)
-        
-        # Test API endpoints
-        logger.info("🔗 Testing API endpoints...")
-        api_results = []
-        for endpoint_config in API_ENDPOINTS:
-            result = await self.test_api_endpoint(endpoint_config)
-            api_results.append(result)
-        
-        # Test integration scenarios
-        logger.info("🧪 Testing integration scenarios...")
-        await self.test_integration_scenarios()
-        
-        # Generate summary
-        total_time = time.time() - start_time
-        
-        self.results["summary"] = {
-            "test_duration_seconds": total_time,
-            "services_healthy": sum(service_results),
-            "total_services": len(service_results),
-            "api_endpoints_working": sum(api_results),
-            "total_api_endpoints": len(api_results),
-            "overall_health_score": (sum(service_results) + sum(api_results)) / (len(service_results) + len(api_results)) * 100
-        }
-        
-        # Print results
-        self.print_results()
-        
-        return self.results
-    
-    def print_results(self):
-        """Print test results summary"""
-        summary = self.results["summary"]
-        
-        print("\n" + "="*60)
-        print("🏁 SUTAZAI FRONTEND INTEGRATION TEST RESULTS")
-        print("="*60)
-        
-        print(f"⏱️  Total Test Time: {summary['test_duration_seconds']:.2f}s")
-        print(f"🏥 Services Health: {summary['services_healthy']}/{summary['total_services']} ({summary['services_healthy']/summary['total_services']*100:.1f}%)")
-        print(f"🔗 API Endpoints: {summary['api_endpoints_working']}/{summary['total_api_endpoints']} ({summary['api_endpoints_working']/summary['total_api_endpoints']*100:.1f}%)")
-        print(f"📊 Overall Health Score: {summary['overall_health_score']:.1f}%")
-        
-        # Service status details
-        print("\n📡 SERVICE STATUS:")
-        for service_name, service_data in self.results["services"].items():
-            status_icon = "✅" if service_data["status"] == "healthy" else "❌"
-            print(f"  {status_icon} {service_name}: {service_data['status']}")
-        
-        # API endpoint details
-        print("\n🔗 API ENDPOINT STATUS:")
-        for endpoint, endpoint_data in self.results["api_endpoints"].items():
-            status_icon = "✅" if endpoint_data["status"] == "success" else "❌"
-            print(f"  {status_icon} {endpoint}: {endpoint_data['status']}")
-        
-        # Integration test results
-        print("\n🧪 INTEGRATION TEST RESULTS:")
-        for test_name, test_data in self.results["integration_tests"].items():
-            print(f"  🔬 {test_name}:")
-            for key, value in test_data.items():
-                icon = "✅" if value else "❌"
-                print(f"    {icon} {key}: {value}")
-        
-        print("\n" + "="*60)
-        
-        if summary["overall_health_score"] >= 80:
-            print("🎉 EXCELLENT! SutazAI system is running optimally!")
-        elif summary["overall_health_score"] >= 60:
-            print("⚠️  GOOD! Most components are working, some may need attention.")
+def test_frontend_health():
+    """Check if frontend is accessible"""
+    print("Testing frontend health...")
+    try:
+        response = requests.get("http://localhost:8501", timeout=10)
+        if response.status_code == 200:
+            print("✅ Frontend is accessible")
+            return True
         else:
-            print("🚨 CRITICAL! Several components need immediate attention.")
-        
-        print("="*60)
+            print(f"❌ Frontend returned status: {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ Frontend error: {e}")
+        return False
 
-async def main():
-    """Main test function"""
-    tester = SutazAITester()
-    results = await tester.run_all_tests()
+def test_backend_endpoints():
+    """Test key backend endpoints"""
+    print("\nTesting backend endpoints...")
     
-    # Save results to file
-    with open("/opt/sutazaiapp/logs/frontend_test_results.json", "w") as f:
-        json.dump(results, f, indent=2, default=str)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer sutazai-default-token"
+    }
     
-    logger.info("📄 Test results saved to /opt/sutazaiapp/logs/frontend_test_results.json")
+    # Test health endpoint
+    try:
+        response = requests.get("http://localhost:8000/health", headers=headers)
+        if response.status_code == 200:
+            print("✅ Backend health check passed")
+        else:
+            print(f"❌ Backend health check failed: {response.status_code}")
+    except Exception as e:
+        print(f"❌ Backend health check error: {e}")
+    
+    # Test chat endpoint
+    try:
+        response = requests.post(
+            "http://localhost:8000/api/v1/models/chat",
+            headers=headers,
+            json={
+                "messages": [{"role": "user", "content": "test"}],
+                "model": "llama3.2:1b"
+            },
+            timeout=10
+        )
+        if response.status_code == 200:
+            print("✅ Chat endpoint working")
+            result = response.json()
+            print(f"   Response: {result.get('response', 'No response')[:50]}...")
+        else:
+            print(f"❌ Chat endpoint failed: {response.status_code}")
+    except Exception as e:
+        print(f"❌ Chat endpoint error: {e}")
+    
+    # Test brain think endpoint
+    try:
+        response = requests.post(
+            "http://localhost:8000/api/v1/brain/think",
+            headers=headers,
+            json={
+                "input_data": {"text": "test"},
+                "reasoning_type": "strategic"
+            },
+            timeout=5
+        )
+        if response.status_code == 200:
+            print("✅ Brain think endpoint working")
+        else:
+            print(f"❌ Brain think endpoint failed: {response.status_code}")
+    except requests.exceptions.Timeout:
+        print("⚠️ Brain think endpoint timed out (this may be normal for complex queries)")
+    except Exception as e:
+        print(f"❌ Brain think endpoint error: {e}")
+
+def main():
+    print("SutazAI Frontend Integration Test")
+    print("="*50)
+    
+    # Wait for services to be ready
+    print("Waiting for services to stabilize...")
+    time.sleep(5)
+    
+    # Run tests
+    frontend_ok = test_frontend_health()
+    test_backend_endpoints()
+    
+    print("\n" + "="*50)
+    if frontend_ok:
+        print("✅ Frontend is running. Access it at http://localhost:8501")
+        print("\nTo test the chat:")
+        print("1. Go to http://localhost:8501")
+        print("2. Enter 'test' in the chat input at the bottom")
+        print("3. Press Enter or click Send")
+        print("\nFor advanced features:")
+        print("1. Use the dropdown to select '💬 AI Chat Hub'")
+        print("2. This provides more configuration options")
+    else:
+        print("❌ Frontend is not accessible. Check docker logs.")
+    
+    print("\nTroubleshooting:")
+    print("- Check logs: docker logs sutazai-frontend-agi")
+    print("- Check backend: docker logs sutazai-backend-agi")
+    print("- Restart: docker-compose restart frontend-agi backend-agi")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

@@ -41,7 +41,7 @@ Do NOT use this agent for:
 
 This agent specializes in product management with web search capabilities for finding solutions.
 
-model: opus
+model: tinyllama:latest
 version: 1.0
 capabilities:
   - market_research

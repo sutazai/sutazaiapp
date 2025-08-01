@@ -42,7 +42,7 @@ Do NOT use this agent for:
 
 This agent specializes in deploying and managing the infrastructure for the SutazAI advanced AI system, ensuring 40+ AI agents run reliably on resource-constrained hardware.
 
-model: opus
+model: tinyllama:latest
 color: blue
 version: 3.0
 capabilities:
