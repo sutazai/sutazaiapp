@@ -1,0 +1,88 @@
+============================================================
+SUTAZAI SECURITY AUDIT REPORT
+============================================================
+Generated: 2025-07-27 13:17:16
+
+🚨 TOTAL VULNERABILITIES FOUND: 13
+   Critical: 0
+   High: 10
+   Medium: 3
+
+🟠 HIGH PRIORITY VULNERABILITIES:
+   • torch: >=2.0.0  # For portable cache artifacts and GPU acceleration -> >=2.3.1
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+
+🟡 MEDIUM PRIORITY VULNERABILITIES:
+   • pydantic: ==2.5.0 -> >=2.8.0
+   • pydantic: ==2.5.0 -> >=2.8.0
+   • pydantic: ==2.5.0 -> >=2.8.0
+
+✅ PACKAGES UPDATED:
+   • fastapi: >=0.115.6 -> >=0.111.0
+   • pydantic: >=2.10.4 -> >=2.8.0
+   • sqlalchemy: >=2.0.36 -> >=2.0.31
+   • psycopg2-binary: >=2.9.10 -> >=2.9.9
+   • redis: >=5.2.1 -> >=5.0.7
+   • celery: >=5.4.0 -> >=5.4.0
+   • requests: >=2.32.3 -> >=2.32.0
+   • aiohttp: >=3.11.11 -> >=3.9.5
+   • websockets: >=13.1 -> >=12.0
+   • beautifulsoup4: >=4.12.3 -> >=4.12.3
+   • cryptography: >=44.0.0 -> >=42.0.8
+   • jinja2: >=3.1.5 -> >=3.1.4
+   • pillow: >=11.0.0 -> >=10.4.0
+   • urllib3: >=2.3.0 -> >=2.2.2
+   • pandas: >=2.2.3 -> >=2.2.2
+   • numpy: >=2.1.3 -> >=1.26.4
+   • scikit-learn: >=1.6.0 -> >=1.5.0
+   • matplotlib: >=3.10.0 -> >=3.9.0
+   • plotly: >=5.24.1 -> >=5.22.0
+   • torch: >=2.5.1 -> >=2.3.1
+   • transformers: >=4.48.0 -> >=4.42.0
+   • openai: >=1.58.1 -> >=1.35.0
+   • anthropic: >=0.42.0 -> >=0.28.0
+   • langchain: >=0.3.11 -> >=0.2.6
+   • chromadb: >=0.5.23 -> >=0.5.0
+   • qdrant-client: >=1.12.1 -> >=1.9.0
+   • selenium: >=4.27.1 -> >=4.21.0
+   • playwright: >=1.49.1 -> >=1.45.0
+   • docker: >=7.1.0 -> >=7.1.0
+   • kubernetes: >=31.0.0 -> >=30.1.0
+   • streamlit: >=1.40.2 -> >=1.36.0
+   • black: >=24.10.0 -> >=24.4.2
+   • pytest: >=8.3.4 -> >=8.2.2
+   • coverage: >=7.6.9 -> >=7.5.4
+   • werkzeug: >=3.1.3 -> >=3.0.3
+   • flask: >=3.1.0 -> >=3.0.3
+   • django: >=5.1.4 -> >=4.2.14
+   • tornado: >=6.4.2 -> >=6.4.1
+   • lxml: >=5.3.0 -> >=5.2.2
+   • torch: >=2.0.0  # For portable cache artifacts and GPU acceleration -> >=2.3.1
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+   • pydantic: ==2.5.0 -> >=2.8.0
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+   • pydantic: ==2.5.0 -> >=2.8.0
+   • aiohttp: ==3.9.1 -> >=3.9.5
+   • fastapi: ==0.104.1 -> >=0.111.0
+   • uvicorn: ==0.24.0 -> >=0.30.1
+   • pydantic: ==2.5.0 -> >=2.8.0
+
+============================================================
+RECOMMENDATIONS:
+1. Update all requirements files with secure versions
+2. Rebuild Docker images with updated dependencies
+3. Run comprehensive tests after updates
+4. Monitor security advisories regularly
+============================================================

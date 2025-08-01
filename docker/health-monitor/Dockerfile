@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -13,11 +13,12 @@ RUN apt-get update && apt-get install -y \
 
 
 # Install Python dependencies
-RUN pip install --no-cache-dir 3.11-slim
-
-
-# Install Node dependencies
-RUN npm install -g docker psutil
+RUN pip install --no-cache-dir \
+    docker \
+    psutil \
+    requests \
+    fastapi \
+    uvicorn
 
 
 # Create startup script
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     main.run()
 ' > /app/web_interface.py
 
-EXPOSE :8100
+EXPOSE 8100
 EXPOSE 8000
 
 CMD ["python3", "web_interface.py"]

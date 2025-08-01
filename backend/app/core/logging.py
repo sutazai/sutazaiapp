@@ -8,7 +8,28 @@ from pathlib import Path
 import json
 from datetime import datetime
 
-from pythonjsonlogger import jsonlogger
+try:
+    from pythonjsonlogger import jsonlogger
+except ImportError:
+    # Fallback if pythonjsonlogger is not available - use python-json-logger instead
+    try:
+        from pythonjsonlogger.jsonlogger import JsonFormatter
+        class CompatJsonLogger:
+            JsonFormatter = JsonFormatter
+        jsonlogger = CompatJsonLogger()
+    except ImportError:
+        # Final fallback - create minimal compatible class
+        class JsonFormatterCompat:
+            def __init__(self, *args, **kwargs):
+                self.format_string = '%(asctime)s %(name)s %(levelname)s %(message)s'
+            def format(self, record):
+                return logging.Formatter(self.format_string).format(record)
+            def add_fields(self, log_record, record, message_dict):
+                pass
+        
+        class CompatJsonLogger:
+            JsonFormatter = JsonFormatterCompat
+        jsonlogger = CompatJsonLogger()
 
 # Custom log formatter
 class CustomJsonFormatter(jsonlogger.JsonFormatter):

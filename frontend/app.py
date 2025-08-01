@@ -1,3 +1,12 @@
+
+# Small model configuration for memory efficiency
+DEFAULT_MODEL = "qwen2.5:3b"
+AVAILABLE_MODELS = ["qwen2.5:3b", "llama3.2:3b", "qwen2.5-coder:3b"]
+MODEL_DESCRIPTIONS = {
+    "qwen2.5:3b": "Primary small model (2GB RAM)",
+    "llama3.2:3b": "Backup small model (2GB RAM)", 
+    "qwen2.5-coder:3b": "Coding-focused small model (2GB RAM)"
+}
 """
 SutazAI AGI/ASI System - Enhanced Frontend
 A comprehensive interface for the autonomous AI system
@@ -28,6 +37,16 @@ import threading
 sys.path.append(os.path.join(os.path.dirname(__file__), 'components'))
 
 try:
+    from enhanced_ui import (
+        ModernMetrics, LoadingComponents, NotificationSystem, 
+        InteractiveComponents, AccessibilityEnhancer
+    )
+    enhanced_ui_available = True
+except ImportError:
+    enhanced_ui_available = False
+    st.warning("Enhanced UI components not available, using standard components")
+
+try:
     from enter_key_handler import add_enter_key_handler, show_enter_key_hint
 except ImportError:
     # Fallback if component not available
@@ -50,7 +69,7 @@ st.markdown("""
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    /* Root Variables for Enterprise Theme */
+    /* Root Variables for Enterprise Theme - Enhanced 2025 */
     :root {
         --primary-color: #1a73e8;
         --secondary-color: #5f6368;
@@ -58,19 +77,60 @@ st.markdown("""
         --danger-color: #dc3545;
         --warning-color: #ffc107;
         --info-color: #17a2b8;
-        --dark-bg: #0e1117;
-        --card-bg: rgba(17, 25, 40, 0.75);
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --border-color: rgba(255, 255, 255, 0.1);
-        --text-primary: #ffffff;
-        --text-secondary: #b4b4b4;
+        --success-color: #28a745;
+        --purple-color: #6f42c1;
+        --cyan-color: #17a2b8;
+        
+        /* Dark theme backgrounds */
+        --dark-bg: #0a0e1a;
+        --darker-bg: #060b14;
+        --card-bg: rgba(15, 23, 42, 0.8);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-bg-strong: rgba(255, 255, 255, 0.08);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --border-color-strong: rgba(255, 255, 255, 0.15);
+        
+        /* Text colors */
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        
+        /* Enhanced gradients */
         --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --gradient-neural: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        
+        /* Advanced shadows */
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
         --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
         --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+        --shadow-2xl: 0 25px 50px rgba(0,0,0,0.25);
+        --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.1);
+        --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+        
+        /* Animation variables */
+        --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        /* Spacing */
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        
+        /* Border radius */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
     }
     
     /* Global Styles */
@@ -81,40 +141,98 @@ st.markdown("""
     .stApp {
         background: var(--dark-bg);
         background-image: 
-            radial-gradient(at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            radial-gradient(at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 60%),
+            radial-gradient(at 80% 20%, rgba(240, 147, 251, 0.1) 0%, transparent 60%),
+            radial-gradient(at 40% 40%, rgba(79, 172, 254, 0.08) 0%, transparent 60%),
+            radial-gradient(at 90% 10%, rgba(67, 233, 123, 0.05) 0%, transparent 50%),
+            linear-gradient(180deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
     }
     
-    /* Glassmorphism Cards */
+    .stApp::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(240, 147, 251, 0.03) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    /* Enhanced Glassmorphism Cards */
     .glass-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        background: var(--glass-bg-strong);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
         border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: var(--shadow-xl);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-xl), var(--shadow-inner);
+        transition: all var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-color-strong), transparent);
+        opacity: 0;
+        transition: opacity var(--transition-normal);
     }
     
     .glass-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: var(--shadow-2xl), var(--shadow-glow);
+        border-color: var(--border-color-strong);
+        background: var(--glass-bg-strong);
     }
     
-    /* Enhanced Metric Cards */
-    .metric-card {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
+    .glass-card:hover::before {
+        opacity: 1;
+    }
+    
+    /* Enhanced card variants */
+    .glass-card-subtle {
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
         border: 1px solid var(--border-color);
-        border-radius: 20px;
-        padding: 28px;
+        border-radius: var(--radius-xl);
+        padding: var(--space-lg);
+        transition: all var(--transition-fast);
+    }
+    
+    .glass-card-strong {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(32px) saturate(200%);
+        border: 1px solid var(--border-color-strong);
+        box-shadow: var(--shadow-2xl);
+    }
+    
+    /* Enhanced Metric Cards with Neural-inspired Design */
+    .metric-card {
+        background: var(--glass-bg-strong);
+        backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-xl);
         position: relative;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all var(--transition-normal);
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     
     .metric-card::before {
@@ -123,50 +241,116 @@ st.markdown("""
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: var(--gradient-1);
+        height: 3px;
+        background: var(--gradient-neural);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity var(--transition-normal);
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+    
+    .metric-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+        transition: left var(--transition-slow);
     }
     
     .metric-card:hover::before {
         opacity: 1;
     }
     
-    .metric-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        border-color: rgba(255, 255, 255, 0.2);
+    .metric-card:hover::after {
+        left: 100%;
     }
     
-    /* Agent Status Cards */
+    .metric-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-2xl), var(--shadow-glow);
+        border-color: var(--border-color-strong);
+        background: rgba(15, 23, 42, 0.9);
+    }
+    
+    /* Metric card variants */
+    .metric-card-primary {
+        border-color: rgba(26, 115, 232, 0.3);
+    }
+    
+    .metric-card-primary:hover {
+        box-shadow: 0 20px 40px rgba(26, 115, 232, 0.2);
+    }
+    
+    .metric-card-success {
+        border-color: rgba(0, 200, 83, 0.3);
+    }
+    
+    .metric-card-success:hover {
+        box-shadow: 0 20px 40px rgba(0, 200, 83, 0.2);
+    }
+    
+    .metric-card-warning {
+        border-color: rgba(255, 193, 7, 0.3);
+    }
+    
+    .metric-card-warning:hover {
+        box-shadow: 0 20px 40px rgba(255, 193, 7, 0.2);
+    }
+    
+    /* Enhanced Agent Status Cards */
     .agent-status {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
+        background: var(--glass-bg-strong);
+        backdrop-filter: blur(16px) saturate(180%);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin: 8px 0;
-        transition: all 0.3s ease;
+        border-radius: var(--radius-xl);
+        padding: var(--space-lg) var(--space-xl);
+        margin: var(--space-sm) 0;
+        transition: all var(--transition-normal);
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .agent-status::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--gradient-1);
+        opacity: 0;
+        transition: opacity var(--transition-normal);
     }
     
     .agent-status::after {
         content: '';
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
+        position: relative;
         width: 12px;
         height: 12px;
         border-radius: 50%;
         animation: pulse 2s infinite;
+        margin-left: auto;
     }
     
+    .agent-status:hover {
+        transform: translateX(4px);
+        border-color: var(--border-color-strong);
+        background: rgba(15, 23, 42, 0.9);
+    }
+    
+    .agent-status:hover::before {
+        opacity: 1;
+    }
+    
+    /* Status variants */
     .healthy {
-        border-color: var(--accent-color);
-        background: rgba(0, 200, 83, 0.1);
+        border-color: rgba(0, 200, 83, 0.3);
+        background: rgba(0, 200, 83, 0.05);
     }
     
     .healthy::after {
@@ -174,9 +358,14 @@ st.markdown("""
         box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.4);
     }
     
+    .healthy:hover {
+        background: rgba(0, 200, 83, 0.1);
+        box-shadow: 0 8px 25px rgba(0, 200, 83, 0.15);
+    }
+    
     .unhealthy {
-        border-color: var(--danger-color);
-        background: rgba(220, 53, 69, 0.1);
+        border-color: rgba(220, 53, 69, 0.3);
+        background: rgba(220, 53, 69, 0.05);
     }
     
     .unhealthy::after {
@@ -184,6 +373,27 @@ st.markdown("""
         box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
     }
     
+    .unhealthy:hover {
+        background: rgba(220, 53, 69, 0.1);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.15);
+    }
+    
+    .loading {
+        border-color: rgba(255, 193, 7, 0.3);
+        background: rgba(255, 193, 7, 0.05);
+    }
+    
+    .loading::after {
+        background: var(--warning-color);
+        animation: pulse-warning 1.5s infinite;
+    }
+    
+    .loading:hover {
+        background: rgba(255, 193, 7, 0.1);
+        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15);
+    }
+    
+    /* Enhanced Animations */
     @keyframes pulse {
         0% {
             box-shadow: 0 0 0 0 currentColor;
@@ -196,20 +406,65 @@ st.markdown("""
         }
     }
     
-    /* Modern Buttons */
+    @keyframes pulse-warning {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 8px transparent;
+        }
+        100% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }
+    
+    @keyframes neural-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 30px rgba(102, 126, 234, 0.6);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes shimmer-enhanced {
+        0% {
+            background-position: -200% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+    
+    /* Enhanced Modern Buttons */
     .stButton > button {
         background: var(--gradient-1);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 24px;
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-xl);
+        padding: var(--space-md) var(--space-xl);
         font-weight: 600;
         font-size: 14px;
         letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all var(--transition-normal);
+        box-shadow: var(--shadow-lg);
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(10px);
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-sm);
     }
     
     .stButton > button::before {
@@ -219,17 +474,87 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.2);
-        transition: left 0.5s ease;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left var(--transition-slow);
+    }
+    
+    .stButton > button::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: var(--gradient-1);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        opacity: 0;
+        transition: opacity var(--transition-normal);
     }
     
     .stButton > button:hover::before {
         left: 100%;
     }
     
+    .stButton > button:hover::after {
+        opacity: 1;
+    }
+    
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: var(--shadow-2xl), var(--shadow-glow);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .stButton > button:active {
+        transform: translateY(-1px) scale(0.98);
+        transition: all var(--transition-fast);
+    }
+    
+    /* Button variants */
+    .stButton > button[data-testid*="primary"] {
+        background: var(--gradient-neural);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stButton > button[data-testid*="primary"]:hover {
+        background: linear-gradient(135deg, #5a67d8, #9f7aea, #f093fb);
+        box-shadow: var(--shadow-2xl), 0 0 30px rgba(102, 126, 234, 0.5);
+        transform: translateY(-4px) scale(1.03);
+    }
+    
+    .stButton > button[data-testid*="secondary"] {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+    }
+    
+    .stButton > button[data-testid*="secondary"]:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Small button variant */
+    .stButton > button[data-testid*="small"] {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 12px;
+        min-height: 36px;
+    }
+    
+    /* Large button variant */
+    .stButton > button[data-testid*="large"] {
+        padding: var(--space-lg) var(--space-2xl);
+        font-size: 16px;
+        min-height: 52px;
+        font-weight: 700;
+    }
+    
+    .stButton > button[data-testid*="secondary"] {
+        background: var(--gradient-3);
+    }
+    
+    .stButton > button[data-testid*="success"] {
+        background: var(--gradient-4);
     }
     
     /* Enhanced Input Fields */
@@ -249,8 +574,56 @@ st.markdown("""
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus {
         border-color: var(--primary-color) !important;
-        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2) !important;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2), var(--shadow-lg) !important;
         background: rgba(26, 115, 232, 0.05) !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    /* Enhanced Input Field Animations */
+    .stTextInput > div > div > input:hover,
+    .stTextArea > div > div > textarea:hover,
+    .stSelectbox > div > div > div:hover {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+        box-shadow: var(--shadow-md) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+    
+    /* Input labels enhancement */
+    .stTextInput > label,
+    .stTextArea > label,
+    .stSelectbox > label {
+        color: var(--text-secondary) !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        margin-bottom: var(--space-sm) !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    /* Placeholder styling */
+    .stTextInput > div > div > input::placeholder,
+    .stTextArea > div > div > textarea::placeholder {
+        color: var(--text-muted) !important;
+        font-style: italic !important;
+        opacity: 0.7 !important;
+    }
+    
+    /* Chat input enhancement */
+    .stChatInput > div > div > div > input {
+        background: var(--glass-bg-strong) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: var(--radius-2xl) !important;
+        padding: 16px 24px !important;
+        font-size: 15px !important;
+        backdrop-filter: blur(12px) !important;
+        box-shadow: var(--shadow-lg) !important;
+        transition: all var(--transition-normal) !important;
+    }
+    
+    .stChatInput > div > div > div > input:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2), var(--shadow-xl) !important;
+        background: rgba(26, 115, 232, 0.08) !important;
+        transform: translateY(-2px) !important;
     }
     
     /* Tabs Enhancement */
@@ -277,9 +650,40 @@ st.markdown("""
     }
     
     .stTabs [aria-selected="true"] {
-        background: var(--gradient-1) !important;
+        background: var(--gradient-neural) !important;
         color: white !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(102, 126, 234, 0.3);
+        transform: translateY(-1px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Enhanced Tab Animations */
+    .stTabs [data-baseweb="tab"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+        border-radius: 12px;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover::before {
+        transform: translateX(100%);
+    }
+    
+    /* Tab content area enhancement */
+    .stTabs > div > div > div > div {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border-radius: var(--radius-xl);
+        padding: var(--space-xl);
+        margin-top: var(--space-md);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: var(--shadow-lg);
     }
     
     /* Progress Bars */
@@ -401,10 +805,40 @@ st.markdown("""
     }
     
     /* Sidebar Enhancement */
+    /* Enhanced Sidebar */
     section[data-testid="stSidebar"] {
         background: var(--card-bg);
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(24px);
         border-right: 1px solid var(--border-color);
+        box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+    }
+    
+    section[data-testid="stSidebar"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-neural);
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Sidebar content animation */
+    section[data-testid="stSidebar"] > div {
+        animation: slideInLeft 0.5s ease-out;
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
     }
     
     /* Expander Enhancement */
@@ -442,6 +876,254 @@ st.markdown("""
     
     div[data-baseweb="notification"] {
         border-radius: 12px !important;
+    }
+    
+    /* Modern Loading States & Animations */
+    .loading-shimmer {
+        background: linear-gradient(90deg, 
+            rgba(255,255,255,0.05) 25%, 
+            rgba(255,255,255,0.1) 50%, 
+            rgba(255,255,255,0.05) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+        border-radius: var(--radius-lg);
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
+    .pulse-glow {
+        animation: pulseGlow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes pulseGlow {
+        from {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        to {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6), 0 0 40px rgba(102, 126, 234, 0.3);
+        }
+    }
+    
+    /* Enhanced spinner for loading states */
+    .modern-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top: 3px solid var(--primary-color);
+        border-radius: 50%;
+        animation: modernSpin 1s linear infinite;
+        margin: 20px auto;
+    }
+    
+    @keyframes modernSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Staggered animation for lists */
+    .stagger-animation > * {
+        animation: fadeInUp 0.6s ease-out backwards;
+    }
+    
+    .stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+    .stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+    .stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Floating animation for hero elements */
+    .floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    /* Success/Error state animations */
+    .success-bounce {
+        animation: successBounce 0.6s ease-out;
+    }
+    
+    @keyframes successBounce {
+        0%, 20%, 40%, 60%, 80% {
+            transform: translateY(0);
+        }
+        10% {
+            transform: translateY(-10px);
+        }
+        30% {
+            transform: translateY(-5px);
+        }
+        50% {
+            transform: translateY(-3px);
+        }
+        70% {
+            transform: translateY(-2px);
+        }
+    }
+    
+    .error-shake {
+        animation: errorShake 0.5s ease-in-out;
+    }
+    
+    @keyframes errorShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    
+    /* Smooth page transitions */
+    .page-transition {
+        animation: pageTransition 0.3s ease-out;
+    }
+    
+    @keyframes pageTransition {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Enhanced scrollbar for webkit browsers */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--gradient-1);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--gradient-2);
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        :root {
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #ffffff;
+            --glass-bg: rgba(0, 0, 0, 0.9);
+        }
+        
+        .glass-card, .hero-metric, .metric-card {
+            background: #000000 !important;
+            border: 2px solid #ffffff !important;
+        }
+    }
+    
+    /* Dark mode optimizations */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --shadow-glow: 0 0 25px rgba(102, 126, 234, 0.4);
+        }
+    }
+    
+    /* Performance Optimizations */
+    * {
+        box-sizing: border-box;
+    }
+    
+    /* GPU acceleration for smoother animations */
+    .stButton > button,
+    .stTabs [data-baseweb="tab"],
+    .glass-card,
+    .hero-metric,
+    .metric-card {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+    
+    /* Optimize animations for performance */
+    @media (max-width: 768px) {
+        /* Reduce animations on mobile for better performance */
+        .stButton > button:hover {
+            transform: translateY(-1px) scale(1.01);
+        }
+        
+        .hero-metric:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+        
+        /* Reduce blur effects on mobile */
+        .glass-card,
+        section[data-testid="stSidebar"] {
+            backdrop-filter: blur(8px);
+        }
+    }
+    
+    /* Preload critical animations */
+    .stButton > button::before,
+    .stTabs [data-baseweb="tab"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        pointer-events: none;
+        will-change: transform;
+    }
+    
+    /* Optimize heavy shadow effects */
+    .stButton > button[data-testid*="primary"]:hover {
+        box-shadow: var(--shadow-xl), 0 0 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Container queries for responsive design */
+    @container (max-width: 600px) {
+        .hero-metric {
+            min-height: 100px;
+            padding: 16px;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -518,6 +1200,10 @@ async def call_api(endpoint: str, method: str = "GET", data: Dict = None, timeou
         "Accept": "application/json",
         "User-Agent": "SutazAI-Frontend/17.0.0"
     }
+    
+    # Add authentication for protected endpoints
+    if endpoint.startswith("/api/v1/") or endpoint in ["/chat", "/think", "/execute", "/improve", "/metrics", "/simple-chat"]:
+        headers["Authorization"] = "Bearer sutazai-default-token"
     
     try:
         async with httpx.AsyncClient(
@@ -802,7 +1488,6 @@ def main():
             "💾 Database Manager",
             
             # Audio & Communication
-            "🎤 RealtimeSTT Audio",
             "🎙️ Voice Interface",
             
             # Financial & Business
@@ -891,8 +1576,6 @@ def main():
         show_database_manager()
     
     # Audio & Communication
-    elif page == "🎤 RealtimeSTT Audio":
-        show_realtime_stt()
     elif page == "🎙️ Voice Interface":
         show_voice_interface()
     
@@ -1048,11 +1731,11 @@ def show_ai_chat():
     col1, col2, col3 = st.columns([2, 2, 1])
     with col1:
         model = st.selectbox("Select Model:", [
-            "AGI Brain (Multi-Model)",
-            "DeepSeek-R1 8B",
-            "Qwen3 8B",
-            "CodeLlama 7B",
-            "Llama 3.2 1B"
+            "AGI Brain (Enterprise)",
+            "Llama 3.2 1B",
+            "Qwen 2.5 3B",
+            "CodeQwen 1.5 7B",
+            "DeepSeek Coder 6.7B"
         ])
     
     with col2:
@@ -1088,18 +1771,51 @@ def show_ai_chat():
         
         # Get AI response
         with st.spinner("🤖 AI is thinking... (this may take 10-60 seconds on CPU)"):
-            if model == "AGI Brain (Multi-Model)":
-                response = asyncio.run(call_api("/think", "POST", {"query": prompt}))
+            if model == "AGI Brain (Enterprise)":
+                response = asyncio.run(call_api("/api/v1/brain/think", "POST", {
+                    "input_data": {"text": prompt},
+                    "reasoning_type": "strategic"
+                }))
             else:
-                # Use simple-chat for faster response with optimized models
-                response = asyncio.run(call_api("/simple-chat", "POST", {
-                    "message": prompt
+                # Use models/chat for faster response with optimized models
+                response = asyncio.run(call_api("/api/v1/models/chat", "POST", {
+                    "messages": [{"role": "user", "content": prompt}],
+                    "model": "qwen2.5:3b"  # Use the lightweight model
                 }))
             
             if response:
+                # Extract the actual response text from various possible fields
+                response_text = ""
+                if isinstance(response, dict):
+                    # Check for nested result structure (from think endpoint)
+                    if "result" in response and isinstance(response["result"], dict):
+                        result = response["result"]
+                        if "output" in result:
+                            response_text = result["output"]
+                        elif "analysis" in result:
+                            response_text = result["analysis"]
+                            if "insights" in result:
+                                response_text += "\n\nInsights:\n" + "\n".join(f"• {insight}" for insight in result.get("insights", []))
+                            if "recommendations" in result:
+                                response_text += "\n\nRecommendations:\n" + "\n".join(f"• {rec}" for rec in result.get("recommendations", []))
+                    # Check for direct response fields
+                    elif "response" in response:
+                        response_text = response["response"]
+                    elif "output" in response:
+                        response_text = response["output"]
+                    elif "text" in response:
+                        response_text = response["text"]
+                    elif "result" in response and isinstance(response["result"], str):
+                        response_text = response["result"]
+                    else:
+                        # Fallback: show raw response
+                        response_text = str(response)
+                else:
+                    response_text = str(response)
+                    
                 ai_message = {
                     "role": "assistant",
-                    "content": response.get("response", response.get("result", "I'm processing your request..."))
+                    "content": response_text or "I'm processing your request..."
                 }
                 
                 # Add cognitive trace if available
@@ -1448,10 +2164,10 @@ def show_system_config():
         
         # Model settings
         st.selectbox("Default Model:", [
-            "deepseek-r1:8b",
+            "qwen2.5:3b",
             "qwen3:8b",
-            "codellama:7b",
-            "llama3.2:1b"
+            "qwen2.5-coder:3b",
+            "qwen2.5:3b"
         ])
         
         st.slider("Default Temperature:", 0.0, 1.0, 0.7)
@@ -2178,7 +2894,7 @@ def show_api_gateway():
     if method in ["POST", "PUT"]:
         request_body = st.text_area(
             "Request Body (JSON)",
-            value='{\n  "message": "Hello AGI",\n  "model": "deepseek-r1:8b"\n}',
+            value='{\n  "message": "Hello AGI",\n  "model": "qwen2.5:3b"\n}',
             height=150
         )
     
@@ -2824,8 +3540,15 @@ def show_ai_chat_hub():
                             for source in metadata["knowledge_sources"]:
                                 st.caption(f"• {source}")
     
+    # Handle next_prompt from suggested follow-ups
+    if "next_prompt" in st.session_state and st.session_state.next_prompt:
+        prompt = st.session_state.next_prompt
+        st.session_state.next_prompt = None  # Clear it
+    else:
+        prompt = st.chat_input("💭 Enter your query for cognitive processing...")
+    
     # Enhanced chat input with cognitive processing
-    if prompt := st.chat_input("💭 Enter your query for cognitive processing..."):
+    if prompt:
         # Add user message
         st.session_state.chat_messages.append({
             "role": "user", 
@@ -2909,9 +3632,38 @@ def show_ai_chat_hub():
                 depth_multiplier = {"surface": 0.8, "standard": 0.9, "deep": 1.0, "expert": 1.1, "exhaustive": 1.15}
                 adjusted_confidence = min(confidence * depth_multiplier.get(cognitive_depth.lower(), 1.0), 1.0)
                 
+                # Extract the actual response text from various possible fields
+                response_text = ""
+                if isinstance(response, dict):
+                    # Check for nested result structure (from brain/think endpoint)
+                    if "result" in response and isinstance(response["result"], dict):
+                        result = response["result"]
+                        if "output" in result:
+                            response_text = result["output"]
+                        elif "analysis" in result:
+                            response_text = result["analysis"]
+                            if "insights" in result:
+                                response_text += "\n\nInsights:\n" + "\n".join(f"• {insight}" for insight in result.get("insights", []))
+                            if "recommendations" in result:
+                                response_text += "\n\nRecommendations:\n" + "\n".join(f"• {rec}" for rec in result.get("recommendations", []))
+                    # Check for direct response fields
+                    elif "response" in response:
+                        response_text = response["response"]
+                    elif "output" in response:
+                        response_text = response["output"]
+                    elif "text" in response:
+                        response_text = response["text"]
+                    elif "result" in response and isinstance(response["result"], str):
+                        response_text = response["result"]
+                    else:
+                        # Fallback: convert the entire response to a readable format
+                        response_text = json.dumps(response, indent=2)
+                else:
+                    response_text = str(response)
+                
                 assistant_message = {
                     "role": "assistant",
-                    "content": response.get("response", response.get("result", response.get("output", "Processing complete."))),
+                    "content": response_text or "I've processed your request successfully.",
                     "timestamp": datetime.now(),
                     "metadata": {
                         "model_used": selected_model,
@@ -3276,9 +4028,9 @@ def show_ollama_management():
         
         models = [
             {"name": "llama2:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "45K"},
-            {"name": "codellama:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
-            {"name": "mistral:7b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
-            {"name": "deepseek-r1:8b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
+            {"name": "qwen2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
+            {"name": "qwen2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
+            {"name": "qwen2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
             {"name": "qwen2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
         ]
         
@@ -3307,7 +4059,7 @@ def show_ollama_management():
         
         running = [
             {"model": "llama2:7b", "memory": "3.2GB", "gpu": "Yes", "requests": 1247},
-            {"model": "codellama:7b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
+            {"model": "qwen2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
         ]
         
         for model in running:
@@ -5353,11 +6105,11 @@ def show_real_ollama_management():
         
         # Recommended models for SutazAI
         recommended_models = [
-            {"name": "deepseek-r1:8b", "description": "Advanced reasoning model", "size": "4.7GB"},
-            {"name": "qwen2.5:7b", "description": "Multilingual large language model", "size": "4.4GB"},
-            {"name": "codellama:7b", "description": "Code generation and understanding", "size": "3.8GB"},
+            {"name": "qwen2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
+            {"name": "qwen2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
+            {"name": "qwen2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
             {"name": "llama2:7b", "description": "General purpose conversational AI", "size": "3.8GB"},
-            {"name": "mistral:7b", "description": "High-performance language model", "size": "4.1GB"},
+            {"name": "qwen2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
             {"name": "phi3:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
         ]
         

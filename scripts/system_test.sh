@@ -86,7 +86,7 @@ run_test "Ollama API" "curl -s http://localhost:11434/api/tags | grep -q 'models
 echo -n "Testing AI model inference... "
 response=$(curl -s -X POST http://localhost:8000/simple-chat \
     -H "Content-Type: application/json" \
-    -d '{"message": "Say hello", "model": "llama3.2:1b"}')
+    -d '{"message": "Say hello", "model": "qwen2.5:3b"}')
 
 if echo "$response" | python3 -c "import sys, json; data=json.load(sys.stdin); sys.exit(0 if 'response' in data and len(data['response']) > 0 else 1)" 2>/dev/null; then
     echo -e "${GREEN}✓ PASS${NC}"

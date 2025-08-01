@@ -2,7 +2,7 @@ llm:
   provider: ollama
   base_url: http://ollama:11434
   api_key: local
-  model: deepseek-r1:8b
+  model: tinyllama
   
 embeddings:
   provider: ollama

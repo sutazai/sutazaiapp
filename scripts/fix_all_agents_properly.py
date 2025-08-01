@@ -36,13 +36,13 @@ class SutazAIAgentFixer:
             result = subprocess.run(["docker", "exec", "sutazai-ollama", "ollama", "list"], 
                                   capture_output=True, text=True)
             
-            if "llama3.2:1b" not in result.stdout:
-                logger.info("Loading lightweight model llama3.2:1b...")
-                subprocess.run(["docker", "exec", "sutazai-ollama", "ollama", "pull", "llama3.2:1b"], 
+            if "qwen2.5:3b" not in result.stdout:
+                logger.info("Loading lightweight model qwen2.5:3b...")
+                subprocess.run(["docker", "exec", "sutazai-ollama", "ollama", "pull", "qwen2.5:3b"], 
                              capture_output=True)
             
             # Remove heavy models to free memory
-            heavy_models = ["deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+            heavy_models = ["qwen2.5:3b", "qwen3:8b", "qwen2.5-coder:3b"]
             for model in heavy_models:
                 if model in result.stdout:
                     logger.info(f"Removing heavy model {model}...")
@@ -102,7 +102,7 @@ class WorkingLettaManager:
         self.workspace = "/app/workspace"
         self.agents = {}
         self.ollama_url = "http://ollama:11434"
-        self.model = "llama3.2:1b"
+        self.model = "qwen2.5:3b"
         
         # Ensure workspace exists
         os.makedirs(self.workspace, exist_ok=True)
@@ -349,7 +349,7 @@ if __name__ == "__main__":
                     if response.status_code == 200:
                         # If Ollama is available, use it for a simple response
                         llm_payload = {
-                            "model": "llama3.2:1b",
+                            "model": "qwen2.5:3b",
                             "prompt": f"As a multi-agent system, briefly respond to: {request.tasks[0].description}",
                             "stream": False
                         }

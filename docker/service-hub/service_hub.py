@@ -61,7 +61,6 @@ class ServiceRegistry:
             'chromadb': 'http://chromadb:8000',
             'qdrant': 'http://qdrant:6333',
             'backend': 'http://backend-agi:8000',
-            'litellm': 'http://litellm:4000',
             # AI Agents (all configured to use Ollama)
             'autogpt': 'http://autogpt:8080',
             'crewai': 'http://crewai:8080',
@@ -141,8 +140,22 @@ class ServiceRegistry:
     async def health_check(self, service: str) -> Dict[str, Any]:
         """Check health of a specific service"""
         try:
-            # Try common health endpoints
-            for endpoint in ["/health", "/healthz", "/", "/api/health"]:
+            # Service-specific health endpoints
+            service_endpoints = {
+                'chromadb': ["/api/v1/heartbeat", "/api/v1"],
+                'dify': ["/"],  # Dify uses root endpoint
+                'bigagi': ["/"],  # BigAGI web interface
+                'ollama': ["/", "/api/tags"],
+                'qdrant': ["/", "/collections"],
+                'prometheus': ["/-/healthy", "/"],
+                'grafana': ["/api/health", "/"],
+            }
+            
+            # Get endpoints to try for this service
+            endpoints_to_try = service_endpoints.get(service, ["/health", "/healthz", "/", "/api/health"])
+            
+            # Try service-specific endpoints
+            for endpoint in endpoints_to_try:
                 try:
                     async with httpx.AsyncClient() as client:
                         response = await client.get(

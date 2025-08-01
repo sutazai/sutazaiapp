@@ -178,7 +178,7 @@ Monitoring: prometheus, grafana, loki, promtail, health-monitor
 ### Ollama Integration Status
 - **Excellent Integration:** AutoGen, CrewAI, Aider, FinRobot, AgentGPT
 - **Needs Work:** LocalAGI (mock responses), container-only services
-- **All Models Available:** llama3.2:3b, qwen2.5:3b, codellama:7b, deepseek-r1:8b, nomic-embed-text
+- **All Models Available:** llama3.2:3b, qwen2.5:3b, codellama:7b, tinyllama, nomic-embed-text
 
 ---
 

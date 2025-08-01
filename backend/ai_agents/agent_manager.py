@@ -24,7 +24,7 @@ from .memory.agent_memory import MemoryManager
 from .memory.shared_memory import SharedMemoryManager
 from .interaction.human_interaction import InteractionManager, HumanInteractionPoint, InteractionType, InteractionResponse
 from .orchestrator.workflow_engine import WorkflowEngine
-from backend.core.config import get_settings
+from app.core.config import get_settings
 from backend.models.base_models import Message
 
 # Configure logging

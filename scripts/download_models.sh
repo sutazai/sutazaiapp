@@ -18,7 +18,7 @@ OLLAMA_URL="${OLLAMA_URL:-http://localhost:11434}"
 
 # Required models
 MODELS=(
-    "deepseek-r1:8b"
+    "qwen2.5:3b"
     "qwen2.5:3b"
     "llama3.2:3b"
     "nomic-embed-text:latest"

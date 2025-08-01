@@ -269,11 +269,11 @@ class AdvancedReasoningEngine:
             """
         }
         
-        result = await self._execute_reasoning_task("deepseek-r1", synthesis_task)
+        result = await self._execute_reasoning_task("tinyllama", synthesis_task)
         
         return ReasoningStep(
             stage=ReasoningStage.SYNTHESIS,
-            agent_id="deepseek-r1",
+            agent_id="tinyllama",
             thought=result.get("synthesis", ""),
             confidence=result.get("confidence", 0.8),
             evidence=result.get("evidence", []),
@@ -284,10 +284,10 @@ class AdvancedReasoningEngine:
         """Select best agents for specific domain"""
         domain_mapping = {
             "code": ["deepseek-coder", "codellama", "starcoder"],
-            "math": ["wizard-math", "deepseek-r1", "llama3"],
+            "math": ["wizard-math", "tinyllama", "llama3"],
             "science": ["llama3", "qwen3", "neural-chat"],
-            "general": ["deepseek-r1", "llama3", "qwen3", "mistral"],
-            "analysis": ["deepseek-r1", "llama3", "qwen3"]
+            "general": ["tinyllama", "llama3", "qwen3", "mistral"],
+            "analysis": ["tinyllama", "llama3", "qwen3"]
         }
         
         return domain_mapping.get(domain, domain_mapping["general"])

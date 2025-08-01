@@ -1,0 +1,148 @@
+# LocalAGI Autonomous Orchestration Configuration
+# This configuration enables fully autonomous AI agent orchestration
+
+name: "SutazAI-LocalAGI-Autonomous-Orchestrator"
+version: "1.0.0"
+
+# Core System Configuration
+system:
+  autonomous_mode: true
+  self_improvement: true
+  recursive_delegation: true
+  independent_operation: true
+  minimal_human_intervention: true
+  
+# Agent Discovery and Registry
+agent_registry:
+  auto_discovery: true
+  capability_matching: true
+  performance_tracking: true
+  agent_count: 38
+  registry_path: "../agents/agent_registry.json"
+  
+# Ollama Integration
+ollama:
+  base_url: "http://ollama:11434"
+  models:
+    reasoning: "tinyllama"
+    planning: "qwen2.5:14b"
+    coordination: "llama3.2:3b"
+    execution: "phi3:mini"
+  fallback_strategy: "cascade"
+  
+# LiteLLM Proxy
+litellm:
+  base_url: "http://litellm:4000"
+  enable_openai_compatibility: true
+  model_routing: true
+  
+# Memory System
+memory:
+  type: "redis"
+  url: "redis://redis:6379"
+  persistence: true
+  knowledge_base: true
+  experience_tracking: true
+  performance_metrics: true
+  
+# Autonomous Decision Making
+decision_engine:
+  algorithm: "multi_criteria_optimization"
+  factors:
+    - agent_capability_match
+    - current_workload
+    - historical_performance
+    - task_complexity
+    - resource_availability
+  confidence_threshold: 0.8
+  auto_assign: true
+  fallback_agents: ["agentzero-coordinator", "complex-problem-solver"]
+  
+# Swarm Coordination
+swarm_config:
+  max_swarm_size: 10
+  coordination_pattern: "hierarchical_mesh"
+  communication_protocol: "async_message_passing"
+  consensus_mechanism: "weighted_voting"
+  leader_election: "performance_based"
+  
+# Task Decomposition
+task_decomposition:
+  recursive: true
+  max_depth: 5
+  min_task_size: 0.1  # relative to original
+  decomposition_strategies:
+    - "functional_breakdown"
+    - "domain_separation"
+    - "dependency_analysis"
+    - "parallel_opportunities"
+  
+# Self-Improvement System
+self_improvement:
+  learning_rate: 0.1
+  performance_tracking: true
+  strategy_evolution: true
+  feedback_loops: true
+  metrics:
+    - task_completion_rate
+    - resource_efficiency
+    - agent_satisfaction
+    - time_to_completion
+    - quality_scores
+  improvement_triggers:
+    - performance_degradation
+    - resource_inefficiency
+    - agent_failures
+    - user_feedback
+    
+# Workflow Management
+workflows:
+  persistence: true
+  versioning: true
+  rollback_capability: true
+  parallel_execution: true
+  conditional_branching: true
+  
+# Performance Monitoring
+monitoring:
+  real_time: true
+  metrics_collection: true
+  anomaly_detection: true
+  predictive_analytics: true
+  dashboard_enabled: true
+  
+# Security and Safety
+security:
+  agent_sandboxing: true
+  resource_limits: true
+  action_validation: true
+  audit_logging: true
+  rollback_on_failure: true
+  
+# Communication Protocols
+communication:
+  protocols:
+    - "direct_api"
+    - "message_queue"
+    - "event_stream"
+    - "websocket"
+  message_format: "json"
+  encryption: true
+  compression: true
+  
+# Resource Management
+resources:
+  cpu_allocation: "dynamic"
+  memory_management: "adaptive"
+  gpu_sharing: true
+  storage_optimization: true
+  bandwidth_management: true
+  
+# Logging and Debugging
+logging:
+  level: "INFO"
+  structured: true
+  correlation_ids: true
+  distributed_tracing: true
+  log_aggregation: true
+  retention_days: 30

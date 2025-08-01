@@ -255,7 +255,7 @@ model_backend: ollama
 ollama_url: http://ollama:11434
 default_model: llama3.2:3b
 models:
-  - deepseek-r1:8b
+  - tinyllama
   - qwen3:8b
   - codellama:7b
 EOF

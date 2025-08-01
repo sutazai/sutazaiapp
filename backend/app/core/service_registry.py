@@ -48,7 +48,6 @@ class ServiceRegistry:
             "shellgpt": {"url": "http://shellgpt:8080", "type": "agent", "capabilities": ["terminal"]},
             "pentestgpt": {"url": "http://pentestgpt:8080", "type": "agent", "capabilities": ["security_test"]},
             "finrobot": {"url": "http://finrobot:8080", "type": "agent", "capabilities": ["finance"]},
-            "realtimestt": {"url": "http://realtimestt:8080", "type": "agent", "capabilities": ["speech"]},
             "opendevin": {"url": "http://opendevin:3000", "type": "agent", "capabilities": ["ai_coding"]},
             "documind": {"url": "http://documind:8000", "type": "agent", "capabilities": ["document_processing"]},
             
@@ -150,7 +149,6 @@ class ServiceRegistry:
             "document_processing": ["documind", "privategpt"],
             "security": ["semgrep", "pentestgpt"],
             "finance": ["finrobot"],
-            "speech": ["realtimestt"],
             "orchestration": ["localagi"],
         }
         

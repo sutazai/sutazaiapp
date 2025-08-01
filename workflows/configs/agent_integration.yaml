@@ -1,0 +1,252 @@
+# Agent Integration Configuration for Dify Workflows
+# Maps existing SutazAI agents to Dify workflow components
+
+agent_mappings:
+  # Critical System Agents
+  agi-system-architect:
+    dify_agent_id: "sutazai_architect"
+    endpoint: "http://backend-agi:8000/api/v1/agents/agi-system-architect"
+    capabilities:
+      - system_design
+      - architecture_optimization
+      - integration_planning
+      - scalability_design
+    workflow_integration:
+      input_format: "json"
+      output_format: "json"
+      timeout: 1800
+      retry_policy: "exponential_backoff"
+    
+  ai-product-manager:
+    dify_agent_id: "sutazai_product_manager"
+    endpoint: "http://backend-agi:8000/api/v1/agents/ai-product-manager"
+    capabilities:
+      - requirement_analysis
+      - web_search
+      - project_coordination
+      - solution_research
+    workflow_integration:
+      input_format: "json"
+      output_format: "json"
+      timeout: 900
+      retry_policy: "linear_backoff"
+      
+  autonomous-system-controller:
+    dify_agent_id: "sutazai_system_controller"
+    endpoint: "http://backend-agi:8000/api/v1/agents/autonomous-system-controller"
+    capabilities:
+      - autonomous_control
+      - decision_making
+      - resource_allocation
+      - self_healing
+    workflow_integration:
+      input_format: "json"
+      output_format: "json"
+      timeout: 600
+      priority: "critical"
+      
+  senior-ai-engineer:
+    dify_agent_id: "sutazai_ai_engineer"
+    endpoint: "http://backend-agi:8000/api/v1/agents/senior-ai-engineer"
+    capabilities:
+      - ml_architecture
+      - model_optimization
+      - rag_development
+      - agi_design
+    workflow_integration:
+      input_format: "json"
+      output_format: "json"
+      timeout: 2700
+      resource_requirements:
+        memory: "4GB"
+        cpu: "2 cores"
+
+integration_points:
+  message_bus:
+    type: "redis"
+    host: "redis"
+    port: 6379
+    channels:
+      - "dify_agent_requests"
+      - "dify_agent_responses"
+      - "dify_workflow_events"
+    
+  agent_registry:
+    endpoint: "http://agent-registry:8300/api/v1"
+    authentication:
+      type: "bearer_token"
+      token_env: "AGENT_REGISTRY_TOKEN"
+    
+  backend_api:
+    endpoint: "http://backend-agi:8000/api/v1"
+    authentication:
+      type: "api_key"
+      key_env: "BACKEND_API_KEY"
+    
+  monitoring:
+    prometheus_endpoint: "http://prometheus:9090"
+    grafana_endpoint: "http://grafana:3000"
+    metrics_prefix: "dify_workflow_"
+
+workflow_templates_integration:
+  data_transformation:
+    agent_request_format:
+      workflow_id: "string"
+      agent_id: "string"
+      task_description: "string"
+      parameters: "object"
+      context: "object"
+      priority: "string"
+      timeout: "integer"
+      
+    agent_response_format:
+      workflow_id: "string"
+      agent_id: "string"
+      status: "string"
+      result: "object"
+      execution_time: "float"
+      resource_usage: "object"
+      errors: "array"
+      
+  error_handling:
+    retry_strategies:
+      exponential_backoff:
+        initial_delay: 1
+        max_delay: 60
+        multiplier: 2
+        max_attempts: 5
+        
+      linear_backoff:
+        delay: 5
+        max_attempts: 3
+        
+      immediate:
+        max_attempts: 1
+        
+    fallback_mechanisms:
+      agent_unavailable:
+        action: "route_to_fallback"
+        fallback_agents:
+          "agi-system-architect": ["ai-product-manager"]
+          "ai-product-manager": ["autonomous-system-controller"]
+          
+      timeout:
+        action: "cancel_and_notify"
+        notification_channels: ["ops_team"]
+        
+      resource_exhaustion:
+        action: "queue_for_later"
+        queue_priority: "medium"
+
+security_integration:
+  authentication:
+    method: "jwt"
+    secret_key_env: "DIFY_JWT_SECRET"
+    expiration: 3600
+    
+  authorization:
+    rbac_enabled: true
+    roles:
+      admin:
+        permissions: ["create", "read", "update", "delete", "execute"]
+        agents: "all"
+        
+      operator:
+        permissions: ["read", "execute"]
+        agents: ["ai-product-manager", "testing-qa-validator"]
+        
+      viewer:
+        permissions: ["read"]
+        agents: "none"
+        
+  rate_limiting:
+    requests_per_minute: 100
+    burst_limit: 20
+    per_agent_limits:
+      "autonomous-system-controller": 50
+      "agi-system-architect": 30
+
+monitoring_integration:
+  metrics:
+    workflow_execution_time:
+      type: "histogram"
+      buckets: [0.1, 0.5, 1, 5, 10, 30, 60, 300]
+      
+    agent_response_time:
+      type: "histogram"
+      buckets: [0.1, 0.5, 1, 5, 10, 30, 60]
+      
+    workflow_success_rate:
+      type: "counter"
+      labels: ["workflow_id", "agent_id", "status"]
+      
+    active_workflows:
+      type: "gauge"
+      
+  logging:
+    level: "INFO"
+    format: "json"
+    fields:
+      - timestamp
+      - workflow_id
+      - agent_id
+      - action
+      - duration
+      - status
+      - error_message
+      
+  alerting:
+    rules:
+      - name: "workflow_failure_rate_high"
+        condition: "rate(workflow_failures_total[5m]) > 0.1"
+        severity: "warning"
+        
+      - name: "agent_response_time_high"
+        condition: "histogram_quantile(0.95, rate(agent_response_time_bucket[5m])) > 30"
+        severity: "warning"
+        
+      - name: "workflow_queue_overflow"
+        condition: "workflow_queue_depth > 100"
+        severity: "critical"
+
+deployment_integration:
+  docker_compose_extension:
+    service_name: "dify-workflow-engine"
+    image: "langgenius/dify-api:latest"
+    environment:
+      - DIFY_MODE=workflow_engine
+      - AGENT_REGISTRY_URL=http://agent-registry:8300
+      - MESSAGE_BUS_URL=http://agent-message-bus:8299
+      - BACKEND_API_URL=http://backend-agi:8000
+    volumes:
+      - "./workflows:/app/workflows"
+      - "./data/dify:/app/storage"
+    depends_on:
+      - agent-registry
+      - agent-message-bus
+      - backend-agi
+      - redis
+      - postgres
+      
+  kubernetes_integration:
+    enabled: false
+    namespace: "sutazai-workflows"
+    service_mesh: "istio"
+    
+database_integration:
+  workflow_storage:
+    type: "postgresql"
+    connection_string: "postgresql://sutazai:sutazai_password@postgres:5432/dify"
+    tables:
+      workflows: "dify_workflows"
+      executions: "dify_workflow_executions"
+      agent_interactions: "dify_agent_interactions"
+      
+  caching:
+    type: "redis"
+    connection_string: "redis://:redis_password@redis:6379/1"
+    ttl: 3600
+    keys:
+      agent_capabilities: "agent_caps:{agent_id}"
+      workflow_templates: "workflow_template:{template_id}"
+      execution_cache: "exec_cache:{execution_id}"

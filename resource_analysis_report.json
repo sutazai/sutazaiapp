@@ -1,0 +1,574 @@
+{
+  "timestamp": "2025-08-01T16:44:54.673790",
+  "current_usage": {
+    "timestamp": "2025-08-01T16:44:54.672696",
+    "system": {
+      "cpu_cores": 8,
+      "cpu_percent": 6.2,
+      "memory_total_gb": 15.62,
+      "memory_used_gb": 4.18,
+      "memory_available_gb": 11.13,
+      "memory_percent": 28.8,
+      "swap_total_gb": 16.0,
+      "swap_used_gb": 0.0,
+      "swap_percent": 0.0,
+      "disk_total_gb": 1006.85,
+      "disk_used_gb": 108.26,
+      "disk_free_gb": 847.38,
+      "disk_percent": 11.3
+    },
+    "containers": [
+      {
+        "name": "buildx_buildkit_sutazai-builder0",
+        "cpu_percent": 0.01,
+        "memory_gb": 0.14,
+        "memory_limit_gb": 15.62,
+        "status": "running"
+      },
+      {
+        "name": "sutazai-context-optimizer",
+        "cpu_percent": 0.01,
+        "memory_gb": 0.07,
+        "memory_limit_gb": 15.62,
+        "status": "running"
+      },
+      {
+        "name": "sutazai-litellm-manager",
+        "cpu_percent": 0.01,
+        "memory_gb": 0.03,
+        "memory_limit_gb": 15.62,
+        "status": "running"
+      }
+    ]
+  },
+  "service_requirements": {
+    "total_cpu_cores": 129.0,
+    "total_memory_gb": 102.5,
+    "total_gpu_memory_gb": 0,
+    "services": {
+      "postgres": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "redis": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "neo4j": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 1.0,
+        "memory_limit_gb": 3.0,
+        "memory_reservation_gb": 2.0
+      },
+      "chromadb": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "qdrant": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "faiss": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "ollama": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 1.0,
+        "memory_limit_gb": 3.0,
+        "memory_reservation_gb": 1.0
+      },
+      "backend-agi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "frontend-agi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "autogpt": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "crewai": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "letta": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "aider": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "gpt-engineer": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "tabbyml": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "semgrep": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "browser-use": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "skyvern": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "localagi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "agentgpt": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "privategpt": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "langflow": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "flowise": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "llamaindex": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "shellgpt": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "pentestgpt": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "documind": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "pytorch": {
+        "cpu_limit": 20.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 16.0,
+        "memory_reservation_gb": 0.25
+      },
+      "tensorflow": {
+        "cpu_limit": 20.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 16.0,
+        "memory_reservation_gb": 0.25
+      },
+      "jax": {
+        "cpu_limit": 20.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 16.0,
+        "memory_reservation_gb": 0.25
+      },
+      "prometheus": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "grafana": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "loki": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "promtail": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "n8n": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "health-monitor": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "context-framework": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "localagi-enhanced": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "autogen": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "bigagi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "opendevin": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "finrobot": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "jarvis-agi": {
+        "cpu_limit": 8.0,
+        "cpu_reservation": 4.0,
+        "memory_limit_gb": 12.0,
+        "memory_reservation_gb": 6.0
+      },
+      "code-improver": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "service-hub": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "awesome-code-ai": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "fsdp": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "localagi-advanced": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "agentzero": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "dify": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "mcp-server": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 1.0,
+        "memory_reservation_gb": 0.25
+      },
+      "jarvis-ai": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "api-gateway": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "task-scheduler": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "model-optimizer": {
+        "cpu_limit": 4.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 8.0,
+        "memory_reservation_gb": 0.25
+      },
+      "agent-message-bus": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 2.0,
+        "memory_reservation_gb": 0.25
+      },
+      "agent-registry": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 2.0,
+        "memory_reservation_gb": 0.25
+      }
+    },
+    "by_category": {
+      "databases": {
+        "count": 3,
+        "cpu": 4.0,
+        "memory_gb": 4.0
+      },
+      "vector_stores": {
+        "count": 2,
+        "cpu": 2.0,
+        "memory_gb": 1.0
+      },
+      "ai_agents": {
+        "count": 16,
+        "cpu": 18.0,
+        "memory_gb": 11.0
+      },
+      "ai_models": {
+        "count": 2,
+        "cpu": 6.0,
+        "memory_gb": 11.0
+      },
+      "other": {
+        "count": 31,
+        "cpu": 96.0,
+        "memory_gb": 74.0
+      },
+      "monitoring": {
+        "count": 3,
+        "cpu": 3.0,
+        "memory_gb": 1.5
+      }
+    }
+  },
+  "bottlenecks": [
+    {
+      "type": "CPU",
+      "severity": "HIGH",
+      "current_cores": 8,
+      "required_cores": 129.0,
+      "utilization_percent": 1612.5,
+      "recommendation": "Need 167 CPU cores for optimal performance"
+    },
+    {
+      "type": "Memory",
+      "severity": "CRITICAL",
+      "current_gb": 15.62,
+      "required_gb": 102.5,
+      "utilization_percent": 656.21,
+      "recommendation": "Need 133GB RAM for safe operation"
+    }
+  ],
+  "minimum_requirements": {
+    "cpu_cores": 12.0,
+    "memory_gb": 13.2,
+    "disk_gb": 50,
+    "services": {
+      "postgres": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "redis": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "neo4j": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 1.0,
+        "memory_limit_gb": 3.0,
+        "memory_reservation_gb": 2.0
+      },
+      "chromadb": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "qdrant": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "ollama": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 1.0,
+        "memory_limit_gb": 3.0,
+        "memory_reservation_gb": 1.0
+      },
+      "backend-agi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "frontend-agi": {
+        "cpu_limit": 1.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 0.5,
+        "memory_reservation_gb": 0.25
+      },
+      "jarvis-agi": {
+        "cpu_limit": 8.0,
+        "cpu_reservation": 4.0,
+        "memory_limit_gb": 12.0,
+        "memory_reservation_gb": 6.0
+      },
+      "agent-message-bus": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 2.0,
+        "memory_reservation_gb": 0.25
+      },
+      "agent-registry": {
+        "cpu_limit": 2.0,
+        "cpu_reservation": 0.5,
+        "memory_limit_gb": 2.0,
+        "memory_reservation_gb": 0.25
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Memory",
+      "action": "Enable swap file",
+      "command": "sudo fallocate -l 16G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile",
+      "impact": "Provides 16GB additional virtual memory"
+    },
+    {
+      "priority": "HIGH",
+      "category": "Memory",
+      "action": "Use lightweight models",
+      "details": "Switch to tinyllama, qwen2.5:0.5b, or smollm:360m models",
+      "impact": "Reduce memory usage by 70-80%"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Memory",
+      "action": "Limit concurrent services",
+      "details": "Run only essential services: postgres, redis, ollama, backend-agi, frontend-agi",
+      "impact": "Save 8-10GB RAM"
+    },
+    {
+      "priority": "HIGH",
+      "category": "CPU",
+      "action": "Reduce CPU limits",
+      "details": "Lower CPU limits for non-critical services in docker-compose.yml",
+      "impact": "Better CPU scheduling and reduced contention"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "CPU",
+      "action": "Enable CPU throttling",
+      "command": "docker update --cpus=\"0.5\" $(docker ps -q)",
+      "impact": "Prevent any single container from monopolizing CPU"
+    },
+    {
+      "priority": "HIGH",
+      "category": "Docker",
+      "action": "Prune unused Docker resources",
+      "command": "docker system prune -a --volumes -f",
+      "impact": "Free up disk space and reduce overhead"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Models",
+      "action": "Implement model quantization",
+      "details": "Use GGUF quantized models (Q4_0 or Q4_K_M)",
+      "impact": "Reduce model size by 60-70% with minimal quality loss"
+    },
+    {
+      "priority": "LOW",
+      "category": "Monitoring",
+      "action": "Disable non-essential monitoring",
+      "details": "Temporarily disable Prometheus, Grafana, Loki to save resources",
+      "impact": "Save 2-3GB RAM and 2 CPU cores"
+    }
+  ]
+}

@@ -76,8 +76,8 @@ if ! load_model_safe "qwen2.5-coder:1.5b" 1500; then
     echo "Warning: Could not load qwen2.5-coder:1.5b"
 fi
 
-if ! load_model_safe "llama3.2:1b" 1200; then
-    echo "Warning: Could not load llama3.2:1b"
+if ! load_model_safe "qwen2.5:3b" 1200; then
+    echo "Warning: Could not load qwen2.5:3b"
 fi
 
 # For code tasks, use smaller code-specific models

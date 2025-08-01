@@ -36,14 +36,14 @@
 
 ### 1. Deepseek-R1 Integration
 ```yaml
-deepseek-r1:
-  container_name: sutazai-deepseek-r1
+tinyllama:
+  container_name: sutazai-tinyllama
   build:
-    context: ./docker/deepseek-r1
+    context: ./docker/tinyllama
     dockerfile: Dockerfile
   environment:
     <<: [*common-variables, *ollama-config]
-    MODEL_NAME: deepseek-r1:8b
+    MODEL_NAME: tinyllama
     AGENT_TYPE: reasoning
   ports:
     - "8120:8080"

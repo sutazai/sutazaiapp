@@ -147,3 +147,4 @@ data/tabby/models/
 *.bin
 *.model
 *.safetensors 
+data/repos/

@@ -8,9 +8,9 @@ RUN groupadd -r sutazai && useradd -r -g sutazai sutazai
 
 # Install system dependencies with security patches
 RUN apt-get update && apt-get install -y \
-    gcc=4:12.2.0-3 \
-    g++=4:12.2.0-3 \
-    curl=7.88.1-10+deb12u8 \
+    gcc \
+    g++ \
+    curl \
     && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

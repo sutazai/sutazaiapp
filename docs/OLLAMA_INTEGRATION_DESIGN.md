@@ -46,9 +46,9 @@ litellm:
 ```yaml
 # config/litellm_config.yaml
 model_list:
-  - model_name: deepseek-r1-8b
+  - model_name: tinyllama-8b
     litellm_params:
-      model: ollama/deepseek-r1:8b
+      model: ollama/tinyllama
       api_base: http://ollama:11434
       
   - model_name: qwen3-8b
@@ -187,7 +187,7 @@ class OpenAICompatibleAgent:
             base_url=os.getenv("LITELLM_BASE_URL", "http://litellm:4000/v1")
         )
     
-    async def chat_completion(self, messages: list, model: str = "deepseek-r1-8b") -> Dict[str, Any]:
+    async def chat_completion(self, messages: list, model: str = "tinyllama-8b") -> Dict[str, Any]:
         """Standard OpenAI chat completion"""
         try:
             response = await self.client.chat.completions.create(
@@ -447,7 +447,7 @@ x-ollama-agent-config: &ollama-agent-config
   OPENAI_API_KEY: sk-local
   
   # Model Selection
-  REASONING_MODEL: deepseek-r1:8b
+  REASONING_MODEL: tinyllama
   CODE_MODEL: codellama:7b
   CHAT_MODEL: llama3.2:3b
   MULTIMODAL_MODEL: qwen3:8b
@@ -477,19 +477,19 @@ x-ollama-agent-config: &ollama-agent-config
 ## Model Distribution Strategy
 
 ### Primary Models by Use Case
-1. **Reasoning Tasks**: deepseek-r1:8b
+1. **Reasoning Tasks**: tinyllama
 2. **Code Generation**: codellama:7b
 3. **General Chat**: llama3.2:3b
 4. **Multimodal**: qwen3:8b
 5. **Fast Responses**: llama3.2:1b
 
 ### Agent-Model Mapping
-- **AutoGPT**: deepseek-r1:8b (complex reasoning)
+- **AutoGPT**: tinyllama (complex reasoning)
 - **CrewAI**: llama3.2:3b (team coordination)
 - **Aider**: codellama:7b (code assistance)
 - **GPT-Engineer**: codellama:7b (software engineering)
 - **Letta**: llama3.2:3b (conversational memory)
-- **Research Agents**: deepseek-r1:8b (analysis)
+- **Research Agents**: tinyllama (analysis)
 - **Code Completion**: codellama:7b (fast completion)
 
 ## Monitoring & Health Checks

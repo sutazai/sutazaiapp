@@ -1,4 +1,4 @@
-FROM python
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -12,12 +12,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
-# Install Python dependencies
-RUN pip install --no-cache-dir 3.11-slim
+# Install Node.js and npm for semgrep
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
 
-
-# Install Node dependencies
-RUN npm install -g semgrep
+# Install Python and Node dependencies
+RUN pip install --no-cache-dir \
+    semgrep \
+    requests \
+    fastapi \
+    uvicorn
 
 
 # Create startup script
@@ -58,7 +61,7 @@ if __name__ == "__main__":
     main.run()
 ' > /app/web_interface.py
 
-EXPOSE :8080
+EXPOSE 8080
 EXPOSE 8000
 
 CMD ["python3", "web_interface.py"]

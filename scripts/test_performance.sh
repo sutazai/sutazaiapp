@@ -8,12 +8,12 @@ echo ""
 
 # Test different message types
 test_messages=(
-    '{"message": "Hi", "model": "llama3.2:1b"}'
-    '{"message": "What is 2+2?", "model": "llama3.2:1b"}'
-    '{"message": "Explain quantum computing in one sentence.", "model": "llama3.2:1b"}'
-    '{"message": "Hi", "model": "codellama:7b"}'
-    '{"message": "What is 2+2?", "model": "codellama:7b"}'
-    '{"message": "Write a simple Python function.", "model": "codellama:7b"}'
+    '{"message": "Hi", "model": "qwen2.5:3b"}'
+    '{"message": "What is 2+2?", "model": "qwen2.5:3b"}'
+    '{"message": "Explain quantum computing in one sentence.", "model": "qwen2.5:3b"}'
+    '{"message": "Hi", "model": "qwen2.5-coder:3b"}'
+    '{"message": "What is 2+2?", "model": "qwen2.5-coder:3b"}'
+    '{"message": "Write a simple Python function.", "model": "qwen2.5-coder:3b"}'
 )
 
 test_names=(

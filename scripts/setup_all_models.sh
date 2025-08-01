@@ -20,14 +20,14 @@ LOG_FILE="/opt/sutazaiapp/data/logs/model_setup.log"
 
 # Model configurations
 declare -A OLLAMA_MODELS=(
-    ["llama3.2:1b"]="Fast general-purpose model (1.3GB)"
-    ["deepseek-r1:8b"]="Advanced reasoning model (4.1GB)"
+    ["qwen2.5:3b"]="Fast general-purpose model (1.3GB)"
+    ["qwen2.5:3b"]="Advanced reasoning model (4.1GB)"
     ["qwen3:8b"]="Multilingual capabilities (4.5GB)"
-    ["codellama:7b"]="Code generation specialist (3.8GB)"
+    ["qwen2.5-coder:3b"]="Code generation specialist (3.8GB)"
     ["llama2:7b"]="General AI model (3.8GB)"
     ["deepseek-coder:6.7b"]="Code optimization expert (3.9GB)"
-    ["mistral:7b"]="Efficient instruction following (4.1GB)"
-    ["dolphin-mistral:7b"]="Uncensored conversation model (4.1GB)"
+    ["qwen2.5:3b"]="Efficient instruction following (4.1GB)"
+    ["dolphin-qwen2.5:3b"]="Uncensored conversation model (4.1GB)"
     ["neural-chat:7b"]="Chat optimized model (4.1GB)"
     ["phind-codellama:34b"]="Advanced code model (19GB)"
 )
@@ -451,7 +451,7 @@ class ModelAutoLoader:
         
         # Only preload if memory usage is low
         if resources['memory_percent'] < 60 and resources['available_memory_gb'] > 4:
-            popular_models = ['llama3.2:1b', 'deepseek-coder:6.7b']
+            popular_models = ['qwen2.5:3b', 'deepseek-coder:6.7b']
             
             for model in popular_models:
                 if model not in self.loaded_models:
@@ -569,18 +569,18 @@ systemctl stop sutazai-model-autoloader
 
 ### For Code Generation:
 - **deepseek-coder:6.7b** - Best for code completion and generation
-- **codellama:7b** - Excellent for code understanding and debugging
+- **qwen2.5-coder:3b** - Excellent for code understanding and debugging
 - **phind-codellama:34b** - Advanced code analysis (requires more memory)
 
 ### For General Chat:
-- **llama3.2:1b** - Fast responses for general questions
-- **mistral:7b** - Good balance of speed and capability
+- **qwen2.5:3b** - Fast responses for general questions
+- **qwen2.5:3b** - Good balance of speed and capability
 - **neural-chat:7b** - Optimized for conversational AI
 
 ### For Specialized Tasks:
 - **qwen3:8b** - Multilingual capabilities
-- **deepseek-r1:8b** - Advanced reasoning and analysis
-- **dolphin-mistral:7b** - Uncensored responses
+- **qwen2.5:3b** - Advanced reasoning and analysis
+- **dolphin-qwen2.5:3b** - Uncensored responses
 
 ## 🔄 Auto-Management Features
 

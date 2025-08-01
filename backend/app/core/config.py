@@ -58,28 +58,16 @@ class Settings(BaseSettings):
     QDRANT_PORT: int = 6333
     QDRANT_API_KEY: Optional[str] = None
     
-    # Model Configuration
+    # Model Configuration - Emergency small models to prevent freezing
     OLLAMA_HOST: str = "http://ollama:11434"
-    DEFAULT_MODEL: str = "qwen2.5:3b"  # Faster 3B model for better response times
-    FALLBACK_MODEL: str = "deepseek-r1:8b"  # Larger model for complex tasks
+    DEFAULT_MODEL: str = "tinyllama:1.1b"  # Ultra-small model to prevent system overload
+    FALLBACK_MODEL: str = "qwen2.5:3b"  # Larger model for complex tasks when resources allow
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
     
     # Performance optimization settings
     MODEL_PRELOAD_ENABLED: bool = True
-    MODEL_CACHE_SIZE: int = 3  # Number of models to keep in memory
-    
-    # Advanced Model Manager settings
-    ADVANCED_CACHING_ENABLED: bool = True
-    BATCH_SIZE: int = 8  # Default batch size for request batching
-    BATCH_TIMEOUT_MS: int = 100  # Batch timeout in milliseconds
-    STREAMING_ENABLED: bool = True  # Enable streaming responses
-    GPU_ACCELERATION: bool = True  # Enable GPU acceleration when available
-    
-    # Cache management
-    CACHE_WARMUP_ON_STARTUP: bool = True
-    CACHE_ARTIFACT_RETENTION_DAYS: int = 7
-    PERFORMANCE_MONITORING: bool = True
+    MODEL_CACHE_SIZE: int = 2  # Number of models to keep in memory
     
     @validator("OLLAMA_HOST", pre=True)
     def validate_ollama_host(cls, v: str) -> str:
