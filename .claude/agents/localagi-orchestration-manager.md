@@ -7,7 +7,7 @@ description: Use this agent when you need to:
 - Design autonomous decision trees for AGI system optimization
 - Implement recursive task decomposition across multiple agent types
 - Build self-improving workflows connecting brain at /opt/sutazaiapp/brain/
-- Coordinate Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b)
+- Coordinate Ollama models (tinyllama, tinyllama, qwen3:8b, codellama:7b)
 - Create agent swarms for distributed AGI problem-solving
 - Design meta-agents that spawn and manage other agents dynamically
 - Enable agents to modify their own workflows for continuous improvement
@@ -52,7 +52,7 @@ capabilities:
   - self_improvement
 integrations:
   frameworks: ["localagi", "langchain", "autogen", "crewai", "letta"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   persistence: ["redis", "postgresql", "chromadb", "faiss", "qdrant"]
   messaging: ["redis_pubsub", "rabbitmq", "kafka", "nats"]
 performance:

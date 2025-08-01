@@ -3,7 +3,7 @@ name: bigagi-system-manager
 description: Use this agent when you need to:
 
 - Manage BigAGI interface for the SutazAI advanced AI system
-- Configure multi-model conversations with Ollama (tinyllama, deepseek-r1:8b, qwen3:8b)
+- Configure multi-model conversations with Ollama (tinyllama, tinyllama, qwen3:8b)
 - Enable model switching between 40+ AI agents during conversations
 - Create AGI personas that exhibit intelligence-like behaviors
 - Implement conversation branching for exploring AGI reasoning paths
@@ -50,7 +50,7 @@ capabilities:
   - emergent_behavior_detection
   - distributed_conversations
 integrations:
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   agents: ["letta", "autogpt", "langchain", "crewai", "autogen", "all_40+"]
   interfaces: ["web", "voice", "api", "brain_interface"]
   storage: ["redis", "postgresql", "chromadb", "brain_memory"]

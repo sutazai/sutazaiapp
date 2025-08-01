@@ -33,7 +33,7 @@ ollama_config:
       - "qwen2.5:3b"
       - "llama3.2:3b"
     low_priority:
-      - "deepseek-r1:8b"          # Larger models get lower priority
+      - "tinyllama"          # Larger models get lower priority
       
   # Emergency Controls
   emergency_settings:

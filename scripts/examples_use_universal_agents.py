@@ -94,12 +94,8 @@ def example_ollama_usage():
         print("Ollama not running. Start Ollama and build models with: cd ollama/models && ./build_all_models.sh")
 
 
-def example_litellm_usage():
-    """Example of using agents with LiteLLM."""
-    print("\n\n=== LiteLLM Agent Usage ===")
     
     try:
-        # Use the agent through LiteLLM proxy
         response = requests.post(
             "http://localhost:4000/chat/completions",
             json={
@@ -112,11 +108,9 @@ def example_litellm_usage():
         
         if response.status_code == 200:
             result = response.json()
-            print("LiteLLM Response:")
             print(result['choices'][0]['message']['content'])
     
     except requests.exceptions.ConnectionError:
-        print("LiteLLM not running. Start with: litellm --config litellm/configs/universal_agents_config.yaml")
 
 
 def main():
@@ -128,7 +122,6 @@ def main():
     example_direct_usage()
     example_api_usage()
     example_ollama_usage()
-    example_litellm_usage()
     
     print("\n\nThese agents are now completely independent of Claude!")
     print("You can run them with local models using Ollama or any OpenAI-compatible API.")

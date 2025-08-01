@@ -61,7 +61,6 @@ class ServiceRegistry:
             'chromadb': 'http://chromadb:8000',
             'qdrant': 'http://qdrant:6333',
             'backend': 'http://backend-agi:8000',
-            'litellm': 'http://litellm:4000',
             # AI Agents (all configured to use Ollama)
             'autogpt': 'http://autogpt:8080',
             'crewai': 'http://crewai:8080',
@@ -148,7 +147,6 @@ class ServiceRegistry:
                 'bigagi': ["/"],  # BigAGI web interface
                 'ollama': ["/", "/api/tags"],
                 'qdrant': ["/", "/collections"],
-                'litellm': ["/health", "/"],
                 'prometheus': ["/-/healthy", "/"],
                 'grafana': ["/api/health", "/"],
             }

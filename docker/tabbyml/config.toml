@@ -1,12 +1,12 @@
 [model]
 kind = "ollama"
-model_id = "deepseek-r1:8b"
+model_id = "tinyllama"
 api_endpoint = "http://ollama:11434"
 
 [llm]
 provider = "ollama"
 base_url = "http://ollama:11434"
-model = "deepseek-r1:8b"
+model = "tinyllama"
 
 [embeddings]
 provider = "ollama"

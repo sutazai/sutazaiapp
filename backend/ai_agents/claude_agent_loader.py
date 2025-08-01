@@ -166,8 +166,6 @@ class ClaudeAgentLoader:
                 "system_prompt": agent.system_prompt,
                 "capabilities": self._extract_capabilities(agent.description),
                 "environment": {
-                    "MODEL_PROVIDER": "litellm",
-                    "MODEL_BASE_URL": "http://litellm:4000",
                     "AGENT_TYPE": "claude",
                     "AGENT_NAME": agent.name
                 }

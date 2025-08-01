@@ -101,7 +101,7 @@ class TransformersMigrationManager:
                 "quantization": "int8",
                 "max_memory": "2GB"
             },
-            "deepseek-r1:8b": {
+            "tinyllama": {
                 "hf_model": "deepseek-ai/deepseek-coder-6.7b-instruct",
                 "task": "text-generation",
                 "quantization": "int4",
@@ -409,7 +409,7 @@ class ModelRouter:
             "code_generation": "codellama:7b",
             "general_chat": "tinyllama",
             "complex_reasoning": "qwen3:8b",
-            "code_analysis": "deepseek-r1:8b",
+            "code_analysis": "tinyllama",
             "creative_writing": "llama2"
         }
         

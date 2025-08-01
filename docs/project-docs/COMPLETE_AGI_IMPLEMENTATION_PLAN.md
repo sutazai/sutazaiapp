@@ -14,7 +14,7 @@ This plan outlines the implementation of a complete, locally-hosted AGI/ASI syst
 ### ❌ Missing Components
 
 #### Model Management
-1. **deepseek-r1:8b** - Not pulled in Ollama
+1. **tinyllama** - Not pulled in Ollama
 2. **qwen3:8b** - Not pulled (should be qwen2.5:3b)
 3. **litellm** - Not configured as container
 4. **codellama:7b** - Available but not integrated
@@ -455,7 +455,7 @@ deploy_model_management() {
     
     # Pull all required models
     models=(
-        "deepseek-r1:8b"
+        "tinyllama"
         "qwen2.5:3b"  # Note: qwen3:8b doesn't exist, using qwen2.5
         "codellama:7b"
         "llama2:7b"

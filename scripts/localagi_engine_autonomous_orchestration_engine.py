@@ -143,8 +143,6 @@ class AutonomousOrchestrationEngine:
             base_url=self.config.get('ollama', {}).get('base_url', 'http://ollama:11434'),
             timeout=60.0
         )
-        self.litellm_client = httpx.AsyncClient(
-            base_url=self.config.get('litellm', {}).get('base_url', 'http://litellm:4000'),
             timeout=60.0
         )
     
@@ -208,7 +206,7 @@ class AutonomousOrchestrationEngine:
             """
             
             response = await self.ollama_client.post("/api/generate", json={
-                "model": self.config.get('ollama', {}).get('models', {}).get('reasoning', 'deepseek-r1:8b'),
+                "model": self.config.get('ollama', {}).get('models', {}).get('reasoning', 'tinyllama'),
                 "prompt": analysis_prompt,
                 "stream": False
             })

@@ -217,7 +217,7 @@ class RecursiveTaskDecomposer:
             """
             
             response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'deepseek-r1:8b'),
+                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'tinyllama'),
                 "prompt": analysis_prompt,
                 "stream": False
             })

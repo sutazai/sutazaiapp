@@ -56,7 +56,7 @@ capabilities:
   - emergent_behaviors
 integrations:
   agents: ["letta", "autogpt", "langchain", "crewai", "autogen", "all_40+"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   vector_stores: ["chromadb", "faiss", "qdrant"]
   brain: ["/opt/sutazaiapp/brain/"]
 performance:

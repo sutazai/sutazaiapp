@@ -2,7 +2,6 @@
 Universal Agent Adapter Module
 
 This module provides a universal adapter that converts Claude agent configurations
-into a format that can be used with any AI model provider (Ollama, LiteLLM, custom models).
 This enables independence from proprietary AI services.
 """
 
@@ -191,14 +190,11 @@ PARAMETER top_p {agent.model_config['top_p']}
 """
         return modelfile
     
-    def export_for_litellm(self, agent_name: str) -> Optional[Dict[str, Any]]:
-        """Export agent configuration for LiteLLM.
         
         Args:
             agent_name: Name of the agent
             
         Returns:
-            LiteLLM-compatible configuration
         """
         agent = self.get_agent(agent_name)
         if not agent:
@@ -206,7 +202,6 @@ PARAMETER top_p {agent.model_config['top_p']}
         
         return {
             "model_name": f"sutazai/{agent.name}",
-            "litellm_params": {
                 "model": agent.model_config["preferred_models"][0],
                 "temperature": agent.model_config["temperature"],
                 "max_tokens": agent.model_config["max_tokens"],
@@ -287,12 +282,6 @@ PARAMETER top_p {agent.model_config['top_p']}
                 with open(modelfile_path, 'w') as f:
                     f.write(ollama_config["modelfile"])
             
-            # Save LiteLLM config
-            litellm_config = self.export_for_litellm(name)
-            if litellm_config:
-                litellm_path = output_path / f"{name}_litellm.json"
-                with open(litellm_path, 'w') as f:
-                    json.dump(litellm_config, f, indent=2)
         
         logger.info(f"Saved all agent configurations to {output_path}")
 

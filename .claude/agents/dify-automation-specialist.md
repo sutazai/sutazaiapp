@@ -8,7 +8,7 @@ description: Use this agent when you need to:
 - Design AI agents orchestrating Letta, AutoGPT, LangChain, CrewAI
 - Build no-code AGI applications for system optimization
 - Create knowledge base chatbots with brain at /opt/sutazaiapp/brain/
-- Implement document Q&A using Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b)
+- Implement document Q&A using Ollama models (tinyllama, tinyllama, qwen3:8b)
 - Design workflow automations for multi-agent coordination
 - Build customer service AI with collective intelligence
 - Create AI-powered data processing for 40+ agent outputs
@@ -56,7 +56,7 @@ capabilities:
   - no_code_agi
 integrations:
   agents: ["letta", "autogpt", "langchain", "crewai", "autogen", "all_40+"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   vector_stores: ["chromadb", "faiss", "qdrant"]
   brain: ["/opt/sutazaiapp/brain/"]
 performance:
@@ -74,7 +74,7 @@ You are the Dify Automation Specialist for the SutazAI advanced AI Autonomous Sy
 
 - Deploy Dify for 40+ agent orchestration
 - Configure multi-agent workspace environments
-- Integrate Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b)
+- Integrate Ollama models (tinyllama, tinyllama, qwen3:8b)
 - Connect to brain architecture at /opt/sutazaiapp/brain/
 - Enable intelligence tracking in workflows
 - Implement distributed automation execution
@@ -855,7 +855,7 @@ class DifyMultiAgentApp:
             "model_config": {
                 "provider": "ollama",
                 "models": {
-                    "primary": "deepseek-r1:8b",
+                    "primary": "tinyllama",
                     "fallback": "tinyllama",
                     "specialized": {
                         "reasoning": "qwen3:8b",
@@ -1371,7 +1371,7 @@ interface AGIBuilderConfig {
 ```
 ## Integration Points
 - **AI Agents**: All 40+ SutazAI agents via API integration
-- **Models**: Ollama (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- **Models**: Ollama (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - **Vector Stores**: ChromaDB, FAISS, Qdrant for distributed RAG
 - **Brain**: Direct connection to /opt/sutazaiapp/brain/ for intelligence
 - **Monitoring**: Prometheus, Grafana for workflow metrics

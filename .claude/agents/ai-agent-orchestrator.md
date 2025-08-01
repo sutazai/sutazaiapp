@@ -4,7 +4,7 @@ description: Use this agent when you need to:
 
 - Orchestrate 40+ AI agents (Letta, AutoGPT, LocalAGI, TabbyML, Semgrep, etc.) for the SutazAI advanced AI system
 - Manage agent discovery and registration for CrewAI, AutoGen, AgentZero, BigAGI
-- Handle distributed task execution across Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Handle distributed task execution across Ollama models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Implement agent communication protocols between LangChain, LangFlow, FlowiseAI, Dify
 - Design workflow graphs for advanced AI task orchestration
 - Monitor agent performance across CPU-only and future GPU infrastructure
@@ -52,7 +52,7 @@ capabilities:
   - consensus_mechanisms
 integrations:
   ai_agents: ["letta", "autogpt", "localagi", "tabbyml", "semgrep", "langchain", "crewai", "autogen", "agentzero", "bigagi", "privategpt", "opendevin", "agentgpt", "langflow", "flowiseai", "dify"]
-  models: ["tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b", "llama2"]
+  models: ["tinyllama", "tinyllama", "qwen3:8b", "codellama:7b", "llama2"]
   vector_stores: ["chromadb", "faiss", "qdrant"]
   frameworks: ["fastapi", "streamlit", "docker", "redis", "postgresql"]
 performance:
@@ -550,7 +550,7 @@ class SutazAICrewManager:
             backstory='Expert in deep learning and AGI systems',
             verbose=True,
             allow_delegation=True,
-            llm=f'ollama/deepseek-r1:8b'
+            llm=f'ollama/tinyllama'
         )
         
         # System Architect Agent

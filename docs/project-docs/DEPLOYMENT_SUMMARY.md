@@ -25,7 +25,7 @@
 ### 5. ✅ Enhanced LiteLLM Configuration
 ```yaml
 # Model mappings:
-gpt-4 → ollama/deepseek-r1:8b
+gpt-4 → ollama/tinyllama
 gpt-3.5-turbo → ollama/qwen2.5:3b
 text-embedding-ada-002 → ollama/nomic-embed-text
 code-davinci-002 → ollama/codellama:7b

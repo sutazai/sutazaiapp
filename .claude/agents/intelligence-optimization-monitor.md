@@ -57,7 +57,7 @@ capabilities:
 integrations:
   agents: ["all_40+_agents"]
   brain: ["/opt/sutazaiapp/brain/"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b"]
   monitoring: ["prometheus", "grafana", "custom_intelligence_metrics"]
 performance:
   real_time_monitoring: true

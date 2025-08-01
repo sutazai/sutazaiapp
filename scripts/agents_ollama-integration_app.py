@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Ollama Integration Specialist Agent
-Manages Ollama models and integration with LiteLLM proxy
 """
 
 import os
@@ -23,7 +22,6 @@ app = Flask(__name__)
 class OllamaIntegrationSpecialist:
     def __init__(self):
         self.ollama_host = os.getenv('OLLAMA_HOST', 'http://sutazai-ollama:11434')
-        self.litellm_base = os.getenv('OPENAI_API_BASE', 'http://sutazai-litellm:4000')
         self.docker_client = docker.from_env()
         
     def check_ollama_health(self):
@@ -35,13 +33,9 @@ class OllamaIntegrationSpecialist:
             logger.error(f"Ollama health check failed: {e}")
             return False
     
-    def check_litellm_health(self):
-        """Check if LiteLLM proxy is healthy"""
         try:
-            response = requests.get(f"{self.litellm_base}/health", timeout=10)
             return response.status_code == 200
         except Exception as e:
-            logger.error(f"LiteLLM health check failed: {e}")
             return False
     
     def list_ollama_models(self):
@@ -87,12 +81,9 @@ class OllamaIntegrationSpecialist:
                     signal.alarm(0)  # Ensure timeout is cancelled
     
     def monitor_integration(self):
-        """Monitor Ollama-LiteLLM integration"""
         if not self.check_ollama_health():
             logger.warning("Ollama is not healthy")
             
-        if not self.check_litellm_health():
-            logger.warning("LiteLLM proxy is not healthy")
             
         models = self.list_ollama_models()
         logger.info(f"Available Ollama models: {len(models)}")
@@ -104,12 +95,9 @@ specialist = OllamaIntegrationSpecialist()
 def health():
     """Health check endpoint"""
     ollama_healthy = specialist.check_ollama_health()
-    litellm_healthy = specialist.check_litellm_health()
     
     return jsonify({
-        'status': 'healthy' if ollama_healthy and litellm_healthy else 'degraded',
         'ollama_healthy': ollama_healthy,
-        'litellm_healthy': litellm_healthy,
         'timestamp': time.time()
     })
 

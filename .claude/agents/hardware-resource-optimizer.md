@@ -481,13 +481,13 @@ class HardwareResourceOptimizer:
         
         model_map = {
             "large": {
-                "reasoning": "deepseek-r1:14b-distill-qwen-q4_0",
+                "reasoning": "tinyllama-distill-qwen-q4_0",
                 "general": "llama3.2:13b-instruct-q4_K_M",
                 "code": "codellama:13b-instruct-q4_0",
                 "fast": "qwen2.5:7b-instruct-q4_0"
             },
             "interface layer": {
-                "reasoning": "deepseek-r1:8b-distill-llama-q4_0",
+                "reasoning": "tinyllama-distill-llama-q4_0",
                 "general": "llama3.2:8b-instruct-q4_0",
                 "code": "codellama:7b-instruct-q4_0",
                 "fast": "mistral:7b-instruct-v0.3-q4_0"

@@ -34,7 +34,7 @@ The SutazAI Brain is a self-improving AGI/ASI system that orchestrates 25+ LLMs 
 2. **Perception** → Input analysis and memory retrieval
 3. **Planning** → Agent selection and resource allocation
 4. **Execution** → Parallel agent execution with resource limits
-5. **Evaluation** → Quality scoring using deepseek-r1
+5. **Evaluation** → Quality scoring using tinyllama
 6. **Improvement** → Patch generation if score < 0.85
 7. **Learning** → Store successful patterns in memory
 8. **Output** → Return best result with confidence score
@@ -97,7 +97,7 @@ The SutazAI Brain is a self-improving AGI/ASI system that orchestrates 25+ LLMs 
 
 ## 🔧 Self-Improvement Pipeline
 
-1. **Evaluation** (deepseek-r1:8b)
+1. **Evaluation** (tinyllama)
    - Scores every output 0-1
    - Identifies improvement areas
    

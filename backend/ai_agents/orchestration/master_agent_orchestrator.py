@@ -62,7 +62,6 @@ class AgentType(Enum):
     
     # AI Model Management
     OLLAMA_SPECIALIST = "ollama-integration-specialist"
-    LITELLM_MANAGER = "litellm-proxy-manager"
     CONTEXT_OPTIMIZER = "context-optimization-engineer"
     
     # Specialized AI Frameworks

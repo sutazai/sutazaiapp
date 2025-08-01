@@ -40,7 +40,7 @@ class AutoGenAgent:
     def __init__(self):
         # Configure LLM
         self.llm_config = {
-            "model": "ollama/deepseek-r1:8b",
+            "model": "ollama/tinyllama",
             "api_base": "http://sutazai-ollama:11434/v1",
             "api_type": "open_ai",
             "api_key": "ollama"  # Ollama doesn't need a real key

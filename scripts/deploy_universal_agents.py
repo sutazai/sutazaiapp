@@ -3,7 +3,6 @@
 Deploy Universal Agents Script
 
 This script deploys all Claude AI agent configurations as universal agents
-that can work with any AI model provider (Ollama, LiteLLM, etc.).
 """
 
 import os
@@ -55,8 +54,6 @@ class UniversalAgentDeployer:
         # 3. Create Ollama models
         self._create_ollama_models()
         
-        # 4. Create LiteLLM configurations
-        self._create_litellm_configs()
         
         # 5. Update backend integration
         self._update_backend_integration()
@@ -160,33 +157,19 @@ class UniversalAgentDeployer:
         
         logger.info(f"Created Ollama models in {ollama_dir}")
     
-    def _create_litellm_configs(self) -> None:
-        """Create LiteLLM proxy configurations."""
-        logger.info("Creating LiteLLM configurations...")
         
-        litellm_dir = self.base_dir / "litellm" / "configs"
-        litellm_dir.mkdir(parents=True, exist_ok=True)
         
-        # Create master LiteLLM config
-        litellm_config = {
             "model_list": [],
-            "litellm_settings": {
                 "drop_params": False,
                 "set_verbose": True
             }
         }
         
         for name in self.adapter.agents.keys():
-            agent_config = self.adapter.export_for_litellm(name)
             if agent_config:
-                litellm_config["model_list"].append(agent_config)
         
-        # Save LiteLLM config
-        config_path = litellm_dir / "universal_agents_config.yaml"
         with open(config_path, 'w') as f:
-            yaml.dump(litellm_config, f, default_flow_style=False)
         
-        logger.info(f"Created LiteLLM config at {config_path}")
     
     def _update_backend_integration(self) -> None:
         """Update backend to integrate universal agents."""
@@ -290,9 +273,7 @@ universal_agent_factory = UniversalAgentFactory()
             "ollama run sutazai_semgrep-security-analyzer",
             "```",
             "",
-            "### Using with LiteLLM",
             "```python",
-            "from litellm import completion",
             "",
             "response = completion(",
             '    model="sutazai/semgrep-security-analyzer",',
@@ -311,7 +292,6 @@ universal_agent_factory = UniversalAgentFactory()
             "These agents are now completely independent and can run on:",
             "- Local Ollama models",
             "- Any OpenAI-compatible API",
-            "- Custom model endpoints via LiteLLM",
             "- Self-hosted LLMs",
             "",
             "No external API keys or proprietary services required!"

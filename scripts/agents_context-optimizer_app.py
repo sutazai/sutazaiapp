@@ -23,7 +23,6 @@ app = Flask(__name__)
 
 class ContextOptimizationEngineer:
     def __init__(self):
-        self.openai_api_base = os.getenv('OPENAI_API_BASE', 'http://litellm:4000')
         self.openai_api_key = os.getenv('OPENAI_API_KEY', 'local')
         self.max_context_length = int(os.getenv('MAX_CONTEXT_LENGTH', 4096))
         self.optimization_level = os.getenv('OPTIMIZATION_LEVEL', 'balanced')

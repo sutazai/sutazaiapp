@@ -236,7 +236,7 @@ curl http://localhost:8000/api/v1/metrics
 ### Model Issues
 1. **Ollama not responding**:
    - Check Ollama status: `curl http://localhost:11434/api/tags`
-   - Pull required models: `docker exec sutazai-ollama ollama pull deepseek-r1:8b`
+   - Pull required models: `docker exec sutazai-ollama ollama pull tinyllama`
 
 2. **LiteLLM proxy errors**:
    - Check proxy health: `curl http://localhost:4000/health`

@@ -82,7 +82,6 @@ class UnifiedServiceController:
             "promtail": {"port": None, "health": None, "type": "monitoring", "description": "Log Collector"},
             
             # Other Services
-            "litellm": {"port": 4000, "health": "/health", "type": "other", "description": "LLM Proxy Service"}
         }
     
     async def execute_command(self, command: str) -> Dict[str, Any]:

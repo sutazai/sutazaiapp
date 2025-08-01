@@ -127,7 +127,6 @@ def update_backend_config():
     backend_configs = [
         '/opt/sutazaiapp/backend/config.py',
         '/opt/sutazaiapp/backend/app/core/config.py',
-        '/opt/sutazaiapp/config/litellm_config.yaml'
     ]
     
     for config_file in backend_configs:
@@ -306,7 +305,6 @@ def update_environment_files():
     
     env_files = [
         '/opt/sutazaiapp/.env',
-        '/opt/sutazaiapp/config/litellm.env'
     ]
     
     small_model_env_vars = f'''

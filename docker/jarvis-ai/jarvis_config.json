@@ -13,10 +13,10 @@
     "language": "en-US"
   },
   "ai_models": {
-    "reasoning": "deepseek-r1:8b",
+    "reasoning": "tinyllama",
     "conversation": "llama3.2:1b",
     "analysis": "qwen2.5:7b",
-    "coding": "deepseek-r1:8b",
+    "coding": "tinyllama",
     "embedding": "nomic-embed-text"
   },
   "integrations": {

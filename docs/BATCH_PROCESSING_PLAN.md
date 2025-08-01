@@ -75,8 +75,8 @@ This plan outlines the systematic approach to processing ~200+ files in batches 
 
 #### Files to Process:
 1. **Core AI Agents (25 files)**
-   - `/docker/deepseek-r1/Dockerfile` (create)
-   - `/docker/deepseek-r1/deepseek_service.py` (create)
+   - `/docker/tinyllama/Dockerfile` (create)
+   - `/docker/tinyllama/deepseek_service.py` (create)
    - `/docker/qwen3/Dockerfile` (create)
    - `/docker/qwen3/qwen3_service.py` (create)
    - `/docker/swe-agent/Dockerfile` (create)

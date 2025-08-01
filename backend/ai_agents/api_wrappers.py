@@ -446,20 +446,15 @@ class OllamaIntegrationSpecialistWrapper(BaseAgentWrapper):
         )
 
 
-class LiteLLMProxyManagerWrapper(BaseAgentWrapper):
-    """LiteLLM Proxy Manager API wrapper."""
     
     def __init__(self, client: UniversalAgentClient):
-        super().__init__(client, AgentType.LITELLM_PROXY_MANAGER)
     
     async def configure_proxy(
         self,
         model_mappings: Dict[str, str],
         proxy_config: Optional[Dict[str, Any]] = None
     ) -> ApiResult:
-        """Configure LiteLLM proxy."""
         return await self._execute_task(
-            "Configure LiteLLM proxy",
             {
                 "model_mappings": model_mappings,
                 "config": proxy_config or {},
@@ -1033,7 +1028,6 @@ class AgentWrapperFactory:
             AgentType.DEPLOYMENT_AUTOMATION_MASTER: DeploymentAutomationMasterWrapper,
             AgentType.HARDWARE_RESOURCE_OPTIMIZER: HardwareResourceOptimizerWrapper,
             AgentType.OLLAMA_INTEGRATION_SPECIALIST: OllamaIntegrationSpecialistWrapper,
-            AgentType.LITELLM_PROXY_MANAGER: LiteLLMProxyManagerWrapper,
             AgentType.SENIOR_AI_ENGINEER: SeniorAIEngineerWrapper,
             AgentType.DEEP_LEARNING_BRAIN_MANAGER: DeepLearningBrainManagerWrapper,
             AgentType.CODE_GENERATION_IMPROVER: CodeGenerationImproverWrapper,
@@ -1101,7 +1095,6 @@ class UnifiedAgentAPI:
         
         # AI & ML Specialists
         self.ollama_specialist = self.factory.get_wrapper(AgentType.OLLAMA_INTEGRATION_SPECIALIST)
-        self.litellm_manager = self.factory.get_wrapper(AgentType.LITELLM_PROXY_MANAGER)
         self.ai_engineer = self.factory.get_wrapper(AgentType.SENIOR_AI_ENGINEER)
         self.brain_manager = self.factory.get_wrapper(AgentType.DEEP_LEARNING_BRAIN_MANAGER)
         

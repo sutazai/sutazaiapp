@@ -35,9 +35,9 @@ class SelfImprover:
             temperature=0.3
         )
         
-        # Initialize analysis LLM (using deepseek-r1 for reasoning)
+        # Initialize analysis LLM (using tinyllama for reasoning)
         self.analysis_llm = Ollama(
-            model=config.get('analysis_model', 'deepseek-r1:8b'),
+            model=config.get('analysis_model', 'tinyllama'),
             base_url=config.get('ollama_host', 'http://sutazai-ollama:11434'),
             temperature=0.2
         )

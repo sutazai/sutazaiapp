@@ -5,7 +5,7 @@ description: Use this agent when you need to:
 - Deploy the complete SutazAI advanced AI system with 40+ AI agents
 - Master deploy_sutazai_agi.sh and deploy_complete_system.sh scripts
 - Implement zero-downtime deployment for brain updates at /opt/sutazaiapp/brain/
-- Deploy Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Deploy Ollama models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Orchestrate deployment of Letta, AutoGPT, LocalAGI, TabbyML, Semgrep agents
 - Handle vector store deployments (ChromaDB, FAISS, Qdrant)
 - Implement blue-green deployments for AGI evolution
@@ -1040,7 +1040,7 @@ deploy_ollama_models() {
     # Pull required models
     local models=(
         "tinyllama:latest"
-        "deepseek-r1:8b"
+        "tinyllama"
         "qwen3:8b"
         "codellama:7b"
         "llama2"
@@ -1267,7 +1267,7 @@ class DeploymentHealthValidator:
                 "critical": True,
                 "checks": [
                     {"type": "models_loaded", "required": [
-                        "tinyllama", "deepseek-r1:8b", "qwen3:8b"
+                        "tinyllama", "tinyllama", "qwen3:8b"
                     ]}
                 ]
             },
@@ -1668,7 +1668,7 @@ validate_brain_reasoning() {
 validate_model_loading() {
     log_info "Validating Ollama model loading..."
     
-    local models=("tinyllama" "deepseek-r1:8b" "qwen3:8b" "codellama:7b" "llama2")
+    local models=("tinyllama" "tinyllama" "qwen3:8b" "codellama:7b" "llama2")
     
     for model in "${models[@]}"; do
         if docker exec sutazai-ollama ollama list | grep -q "$model"; then
@@ -1961,7 +1961,7 @@ class SecurityHardenedDeployment:
 - **Deployment Scripts**: deploy_sutazai_agi.sh, deploy_complete_system.sh
 - **All 40+ AI Agents**: Letta, AutoGPT, LocalAGI, TabbyML, Semgrep, LangChain, CrewAI, AutoGen, etc.
 - **Brain Architecture**: /opt/sutazaiapp/brain/ with all cognitive components
-- **Ollama Models**: tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2
+- **Ollama Models**: tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2
 - **Vector Stores**: ChromaDB, FAISS, Qdrant for knowledge management
 - **Container Orchestration**: Docker, Docker Compose, Kubernetes
 - **CI/CD Pipelines**: Jenkins, GitLab CI, GitHub Actions, ArgoCD

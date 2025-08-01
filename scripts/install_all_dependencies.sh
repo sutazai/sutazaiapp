@@ -534,8 +534,6 @@ clone_ai_repositories() {
     log_info "Cloning Model Management repositories..."
     
     # LiteLLM
-    if [ ! -d "litellm" ]; then
-        git clone https://github.com/BerriAI/litellm.git
         log_success "LiteLLM repository cloned"
     fi
     
@@ -833,7 +831,6 @@ install_python_dependencies() {
         anthropic \
         cohere \
         together \
-        litellm \
         ollama \
         gradio \
         chainlit \

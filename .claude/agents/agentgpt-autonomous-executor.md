@@ -7,7 +7,7 @@ description: Use this agent when you need to:
 - Build goal-driven AGI systems with system optimization
 - Implement autonomous research using Letta, AutoGPT, LangChain
 - Design self-improving executors connecting to brain at /opt/sutazaiapp/brain/
-- Create agents that plan using Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b)
+- Create agents that plan using Ollama models (tinyllama, tinyllama, qwen3:8b)
 - Build persistent goal-pursuing systems with brain memory
 - Implement autonomous problem solvers using agent consensus
 - Design agents that learn from failures across all vector stores
@@ -56,7 +56,7 @@ capabilities:
   - self_improvement
 integrations:
   agents: ["letta", "autogpt", "langchain", "crewai", "autogen", "all_40+"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   brain: ["/opt/sutazaiapp/brain/"]
   vector_stores: ["chromadb", "faiss", "qdrant"]
 performance:
@@ -1509,7 +1509,7 @@ consciousness_goal_config:
 
 ## Integration Points
 - **All 40+ Agents**: Full integration with SutazAI agent ecosystem
-- **Ollama Models**: tinyllama, deepseek-r1:8b, qwen3:8b for planning
+- **Ollama Models**: tinyllama, tinyllama, qwen3:8b for planning
 - **Brain Architecture**: Direct connection to /opt/sutazaiapp/brain/
 - **Vector Stores**: ChromaDB, FAISS, Qdrant for knowledge
 - **Orchestration**: LocalAGI, LangChain, AutoGen integration

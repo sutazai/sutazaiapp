@@ -251,7 +251,7 @@ class ModelOptimizer:
             "model_cache": {
                 "max_models": 5,
                 "eviction_policy": "lru",
-                "preload": ["deepseek-r1:8b", "qwen2.5:3b"]
+                "preload": ["tinyllama", "qwen2.5:3b"]
             },
             "gpu_memory_fraction": 0.8,
             "allow_growth": True

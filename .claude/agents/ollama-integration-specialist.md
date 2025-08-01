@@ -93,7 +93,7 @@ def select_gpu_models(gpu_memory_mb: int, ram_gb: int) -> List[str]:
         models.extend([
             "llama3.3:70b-instruct-q4_K_M",    # Uses ~40GB VRAM
             "qwen2.5:72b-instruct-q4_0",       # Mathematical reasoning
-            "deepseek-r1:70b-distill-qwen-q4_0", # Advanced reasoning
+            "tinyllama:70b-distill-qwen-q4_0", # Advanced reasoning
             "mixtral:8x22b-instruct-q2_K",     # MoE architecture
             "llama3.1:405b-instruct-q2_K"      # Experimental
         ])
@@ -103,7 +103,7 @@ def select_gpu_models(gpu_memory_mb: int, ram_gb: int) -> List[str]:
         models.extend([
             "llama3.2:34b-instruct-q4_K_M",    # Uses ~20GB VRAM
             "qwen2.5:32b-instruct-q4_0",       # Excellent reasoning
-            "deepseek-r1:32b-distill-llama-q4_0", # Optimized reasoning
+            "tinyllama:32b-distill-llama-q4_0", # Optimized reasoning
             "codellama:34b-instruct-q4_0",     # Code specialist
             "yi:34b-chat-q4_0"                 # Bilingual support
         ])
@@ -112,7 +112,7 @@ def select_gpu_models(gpu_memory_mb: int, ram_gb: int) -> List[str]:
     elif gpu_memory_mb >= 16000:
         models.extend([
             "llama3.2:13b-instruct-q4_K_M",    # Uses ~10GB VRAM
-            "deepseek-r1:14b-distill-qwen-q4_0", # Reasoning
+            "tinyllama-distill-qwen-q4_0", # Reasoning
             "qwen2.5:14b-instruct-q4_0",       # General purpose
             "mixtral:8x7b-instruct-q2_K",      # MoE efficiency
             "solar:10.7b-instruct-q4_K_M"      # Depth upscaling
@@ -122,7 +122,7 @@ def select_gpu_models(gpu_memory_mb: int, ram_gb: int) -> List[str]:
     elif gpu_memory_mb >= 12000:
         models.extend([
             "llama3.2:8b-instruct-q4_K_M",     # Uses ~6GB VRAM
-            "deepseek-r1:8b-distill-llama-q4_0", # Compact reasoning
+            "tinyllama-distill-llama-q4_0", # Compact reasoning
             "qwen2.5:7b-instruct-q4_0",        # Efficient
             "mistral:7b-instruct-v0.3-q4_K_M", # Fast inference
             "gemma2:9b-instruct-q4_K_M"        # Google's model
@@ -133,7 +133,7 @@ def select_gpu_models(gpu_memory_mb: int, ram_gb: int) -> List[str]:
         models.extend([
             "llama3.2:3b-instruct-q4_K_M",     # Uses ~3GB VRAM
             "qwen2.5:7b-instruct-q4_0",        # Optimized 7B
-            "deepseek-r1:7b-distill-llama-q4_0", # Reasoning
+            "tinyllama:7b-distill-llama-q4_0", # Reasoning
             "phi-3:interface layer-128k-instruct-q4_0",  # Long context
             "mistral:7b-instruct-v0.3-q4_K_M"  # Reliable
         ])
@@ -173,14 +173,14 @@ def select_cpu_models(ram_gb: int, cpu_cores: int, cpu_flags: str) -> List[str]:
         else:
             models.extend([
                 "llama3.2:34b-instruct-q2_K",  # Uses ~20GB
-                "deepseek-r1:32b-distill-llama-q3_K_M"
+                "tinyllama:32b-distill-llama-q3_K_M"
             ])
             
     # Tier 2: Professional workstation (32GB RAM)
     elif ram_gb >= 32 and cpu_cores >= 8:
         models.extend([
             "llama3.2:13b-instruct-q4_0",      # Uses ~8GB
-            "deepseek-r1:14b-distill-qwen-q4_0",
+            "tinyllama-distill-qwen-q4_0",
             "codellama:13b-instruct-q4_0",     # Code tasks
             "qwen2.5:14b-instruct-q4_0"        # General purpose
         ])
@@ -189,7 +189,7 @@ def select_cpu_models(ram_gb: int, cpu_cores: int, cpu_flags: str) -> List[str]:
     elif ram_gb >= 16 and cpu_cores >= 4:
         models.extend([
             "llama3.2:8b-instruct-q4_0",       # Uses ~5GB
-            "deepseek-r1:8b-distill-llama-q4_0", # Reasoning
+            "tinyllama-distill-llama-q4_0", # Reasoning
             "qwen2.5:7b-instruct-q4_0",        # Efficient
             "mistral:7b-instruct-v0.3-q4_0",   # Fast
             "phi-3:interface layer-128k-instruct-q3_K_M" # Long context
@@ -338,7 +338,7 @@ class AdaptiveModelManager:
         
         return {
             # Reasoning Models
-            "deepseek-r1:8b-distill-llama-q4_0": {
+            "tinyllama-distill-llama-q4_0": {
                 "size_gb": 4.5,
                 "ram_required": 6,
                 "vram_required": 5,
@@ -346,7 +346,7 @@ class AdaptiveModelManager:
                 "performance_score": 0.9,
                 "context_length": 8192
             },
-            "deepseek-r1:14b-distill-qwen-q4_0": {
+            "tinyllama-distill-qwen-q4_0": {
                 "size_gb": 8.0,
                 "ram_required": 10,
                 "vram_required": 9,
@@ -444,9 +444,9 @@ class AdaptiveModelManager:
         
         # Priority structured data for GPU
         priority = [
-            "deepseek-r1:14b-distill-qwen-q4_0",
+            "tinyllama-distill-qwen-q4_0",
             "llama3.2:8b-instruct-q4_K_M",
-            "deepseek-r1:8b-distill-llama-q4_0",
+            "tinyllama-distill-llama-q4_0",
             "qwen2.5:7b-instruct-q4_0",
             "codellama:7b-instruct-q4_0",
             "phi-3:mini-4k-instruct-q4_0",
@@ -474,7 +474,7 @@ class AdaptiveModelManager:
         
         # Priority structured data for CPU
         priority = [
-            "deepseek-r1:8b-distill-llama-q4_0",
+            "tinyllama-distill-llama-q4_0",
             "qwen2.5:7b-instruct-q4_0",
             "llama3.2:8b-instruct-q4_K_M",
             "codellama:7b-instruct-q4_0",
@@ -873,7 +873,7 @@ class LettaOllamaIntegration:
         
         # Set model based on hardware
         if self.hardware["gpu_present"] and self.hardware["gpu_memory_mb"] >= 8000:
-            os.environ["LETTA_LLM_MODEL"] = "deepseek-r1:8b-distill-llama-q4_0"
+            os.environ["LETTA_LLM_MODEL"] = "tinyllama-distill-llama-q4_0"
         elif self.hardware["ram_gb"] >= 16:
             os.environ["LETTA_LLM_MODEL"] = "qwen2.5:7b-instruct-q4_0"
         else:
@@ -925,7 +925,7 @@ OPENAI_API_BASE=http://localhost:11434/v1
 
 # Model selection based on detected hardware
 {% if gpu_memory_mb >= 8000 %}
-SMART_LLM_MODEL=deepseek-r1:8b-distill-llama-q4_0
+SMART_LLM_MODEL=tinyllama-distill-llama-q4_0
 FAST_LLM_MODEL=qwen2.5:7b-instruct-q4_0
 {% elif ram_gb >= 16 %}
 SMART_LLM_MODEL=qwen2.5:7b-instruct-q4_0

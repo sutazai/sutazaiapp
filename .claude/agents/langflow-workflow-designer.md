@@ -6,7 +6,7 @@ description: Use this agent when you need to:
 - Design drag-and-drop pipelines connecting 40+ AI agents
 - Build AGI system optimization workflows visually
 - Create reusable components for Letta, AutoGPT, LangChain integration
-- Enable visual orchestration of Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b)
+- Enable visual orchestration of Ollama models (tinyllama, tinyllama, qwen3:8b)
 - Design conditional logic flows based on performance metrics
 - Implement brain state transformation pipelines
 - Create custom Langflow components for AGI tasks
@@ -51,7 +51,7 @@ capabilities:
   - distributed_orchestration
 integrations:
   agents: ["letta", "autogpt", "langchain", "crewai", "autogen", "all_40+"]
-  models: ["ollama", "tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+  models: ["ollama", "tinyllama", "tinyllama", "qwen3:8b", "codellama:7b"]
   storage: ["redis", "postgresql", "chromadb", "faiss", "qdrant"]
   brain: ["/opt/sutazaiapp/brain/"]
 performance:

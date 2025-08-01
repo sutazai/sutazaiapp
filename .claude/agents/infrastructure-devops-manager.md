@@ -4,7 +4,7 @@ description: Use this agent when you need to:
 
 - Deploy the complete SutazAI advanced AI system with 40+ AI agents
 - Manage Docker containers for Letta, AutoGPT, LocalAGI, TabbyML, Semgrep, etc.
-- Configure Ollama service for models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Configure Ollama service for models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Set up vector stores (ChromaDB, FAISS, Qdrant) for knowledge management
 - Deploy brain architecture at /opt/sutazaiapp/brain/
 - Configure container networking for multi-agent communication
@@ -1303,7 +1303,7 @@ sutazai_infrastructure:
       - ollama: "Local LLM inference engine"
       - models:
           - tinyllama: "1.1B - Quick responses"
-          - deepseek-r1:8b: "8B - Complex reasoning"
+          - tinyllama: "8B - Complex reasoning"
           - qwen3:8b: "8B - Multi-purpose tasks"
           - codellama:7b: "7B - Code generation"
           - llama2: "7B - General intelligence"

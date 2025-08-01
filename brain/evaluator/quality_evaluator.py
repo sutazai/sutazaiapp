@@ -37,9 +37,9 @@ class QualityEvaluator:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         
-        # Initialize evaluation LLM (using deepseek-r1 for reasoning)
+        # Initialize evaluation LLM (using tinyllama for reasoning)
         self.evaluator_llm = Ollama(
-            model=config.get('evaluation_model', 'deepseek-r1:8b'),
+            model=config.get('evaluation_model', 'tinyllama'),
             base_url=config.get('ollama_host', 'http://sutazai-ollama:11434'),
             temperature=0.1  # Low temperature for consistent evaluation
         )

@@ -83,7 +83,6 @@ class ExtendedAgentType(str, Enum):
     
     # Model Management
     OLLAMA = "ollama"
-    LITELLM = "litellm"
     CODELLAMA = "codellama"
     LLAMA2 = "llama2"
     DEEPSEEK = "deepseek"

@@ -886,7 +886,7 @@ async def chat_with_ai(request: ChatRequest):
     
     if not model:
         return {
-            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull deepseek-r1:8b\n- ollama pull qwen3:8b\n- ollama pull codellama:7b",
+            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull tinyllama\n- ollama pull qwen3:8b\n- ollama pull codellama:7b",
             "model": "unavailable",
             "agent": request.agent,
             "error": "No models available",
@@ -1456,7 +1456,7 @@ async def get_available_models():
         "models": model_info,
         "total_models": len(models),
         "default_model": models[0] if models else None,
-        "recommended_models": ["deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+        "recommended_models": ["tinyllama", "qwen3:8b", "codellama:7b"]
     }
 
 # Simple chat endpoint for testing

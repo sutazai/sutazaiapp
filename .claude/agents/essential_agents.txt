@@ -1,5 +1,5 @@
 # Essential SutazAI Agents
-# Total: 70 agents
+# Total: 69 agents
 # Updated: 2025-08-01 14:31:24
 
 
@@ -93,6 +93,5 @@
 - financial-analysis-specialist
 - jarvis-voice-interface
 - kali-security-specialist
-- litellm-proxy-manager
 - ollama-integration-specialist
 - private-data-analyst

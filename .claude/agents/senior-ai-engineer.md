@@ -4,7 +4,7 @@ description: Use this agent when you need to:
 
 - Design and implement AI/ML architectures for the SutazAI advanced AI system
 - Build RAG systems with ChromaDB, FAISS, and Qdrant integration
-- Integrate Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Integrate Ollama models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Create neural architectures for the brain directory at /opt/sutazaiapp/brain/
 - Implement pipelines for 40+ AI agents (Letta, AutoGPT, LocalAGI, etc.)
 - Build model training systems for continuous AGI improvement
@@ -366,7 +366,7 @@ class MultiAgentMLOrchestrator:
             "letta": LettaAgent(model="tinyllama", memory_type="persistent"),
             
             # Autonomous execution
-            "autogpt": AutoGPTAgent(model="deepseek-r1:8b", goals=["learn", "improve"]),
+            "autogpt": AutoGPTAgent(model="tinyllama", goals=["learn", "improve"]),
             
             # Local orchestration
             "localagi": LocalAGIAgent(model="qwen3:8b", orchestration_mode="distributed"),
@@ -375,7 +375,7 @@ class MultiAgentMLOrchestrator:
             "langchain": LangChainAgent(model="llama2", chain_type="conversational"),
             
             # Team coordination
-            "crewai": CrewAIAgent(model="deepseek-r1:8b", crew_size=5),
+            "crewai": CrewAIAgent(model="tinyllama", crew_size=5),
             
             # Multi-agent conversations
             "autogen": AutoGenAgent(model="tinyllama", conversation_mode="group"),

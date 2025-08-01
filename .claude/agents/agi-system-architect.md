@@ -4,7 +4,7 @@ description: Use this agent when you need to:
 
 - Design the complete SutazAI advanced AI architecture with 40+ AI agents (Letta, AutoGPT, LocalAGI, etc.)
 - Create scalable Brain-Agent-Memory architecture at /opt/sutazaiapp/brain/
-- Implement cognitive architectures using Ollama models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Implement cognitive architectures using Ollama models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Design multi-modal AI integration with ChromaDB, FAISS, Qdrant vector stores
 - Create self-improving architectures with continuous learning mechanisms
 - Implement meta-learning frameworks for "learning to learn"
@@ -52,7 +52,7 @@ capabilities:
   - meta_learning
 integrations:
   ai_agents: ["letta", "autogpt", "localagi", "langchain", "crewai", "autogen"]
-  models: ["tinyllama", "deepseek-r1:8b", "qwen3:8b", "codellama:7b", "llama2"]
+  models: ["tinyllama", "tinyllama", "qwen3:8b", "codellama:7b", "llama2"]
   vector_stores: ["chromadb", "faiss", "qdrant"]
   frameworks: ["pytorch", "tensorflow", "jax", "transformers"]
 performance:
@@ -683,7 +683,7 @@ class MultiAgentCognitiveFramework:
                 {
                     "type": "autogen",
                     "role": "logical_reasoning",
-                    "model": "deepseek-r1:8b"
+                    "model": "tinyllama"
                 },
                 {
                     "type": "langchain",
@@ -928,7 +928,7 @@ class AGIEvolutionStrategy:
                     "Create shared memory systems"
                 ],
                 "hardware": "CPU-only (current)",
-                "models": ["tinyllama", "deepseek-r1:8b", "qwen3:8b"]
+                "models": ["tinyllama", "tinyllama", "qwen3:8b"]
             },
             "phase_2_integration": {
                 "duration": "6-12 months",
@@ -972,7 +972,7 @@ class AGIEvolutionStrategy:
 - **Brain Directory**: Core cognitive architecture at /opt/sutazaiapp/brain/
 - **40+ AI Agents**: Letta, AutoGPT, LocalAGI, LangChain, CrewAI, etc.
 - **Vector Stores**: ChromaDB, FAISS, Qdrant for knowledge
-- **Models**: Ollama (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- **Models**: Ollama (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - **Infrastructure**: Docker, Kubernetes, Redis, PostgreSQL
 - **APIs**: FastAPI, LiteLLM, Streamlit
 - **Monitoring**: Prometheus, Grafana, custom dashboards

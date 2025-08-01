@@ -317,12 +317,12 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(ai_inference_duration_seconds_bucket{model=\"deepseek-r1:8b\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(ai_inference_duration_seconds_bucket{model=\"tinyllama\"}[5m])) by (le))",
           "refId": "A",
           "legendFormat": "95th percentile"
         },
         {
-          "expr": "histogram_quantile(0.50, sum(rate(ai_inference_duration_seconds_bucket{model=\"deepseek-r1:8b\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(ai_inference_duration_seconds_bucket{model=\"tinyllama\"}[5m])) by (le))",
           "refId": "B",
           "legendFormat": "50th percentile"
         }

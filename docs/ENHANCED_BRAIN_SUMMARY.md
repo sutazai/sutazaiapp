@@ -65,7 +65,7 @@ Drawing from the article's insights about the brain's universal learning capabil
 - **Ollama**: Local LLM serving
 - **LiteLLM**: Unified LLM interface
 - Support for 25+ models including:
-  - deepseek-r1:8b (reasoning)
+  - tinyllama (reasoning)
   - codellama:7b (code generation)
   - qwen2.5:7b (multi-lingual)
   - llama2:13b (general purpose)

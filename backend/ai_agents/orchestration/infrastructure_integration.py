@@ -399,8 +399,6 @@ class InfrastructureIntegration:
                 "image": "sutazai/ollama-specialist:latest",
                 "ports": {"8215": 8080}
             },
-            "litellm-proxy-manager": {
-                "image": "sutazai/litellm-manager:latest",
                 "ports": {"8216": 8080}
             },
             "context-optimization-engineer": {

@@ -3,7 +3,7 @@ name: model-training-specialist
 description: Use this agent when you need to:
 
 - Train custom models for the SutazAI advanced AI system
-- Fine-tune existing models (tinyllama, deepseek-r1:8b, qwen3:8b, codellama:7b, llama2)
+- Fine-tune existing models (tinyllama, tinyllama, qwen3:8b, codellama:7b, llama2)
 - Implement distributed training across multiple nodes
 - Create training pipelines for continuous learning
 - Design curriculum learning for AGI development

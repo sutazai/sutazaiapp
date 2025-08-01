@@ -59,7 +59,6 @@ ALL_SUTAZAI_AGENTS = {
     
     # Integration & Management Agents
     "ollama-integration-specialist": {"model": "opus", "capabilities": ["ollama_management", "model_optimization", "local_ai_setup"]},
-    "litellm-proxy-manager": {"model": "sonnet", "capabilities": ["api_proxying", "model_routing", "cost_optimization"]},
     "bigagi-system-manager": {"model": "sonnet", "capabilities": ["conversational_ai", "multi_model_management", "chat_interfaces"]},
     "agentgpt-autonomous-executor": {"model": "sonnet", "capabilities": ["autonomous_execution", "goal_achievement", "task_planning"]},
     "agentzero-coordinator": {"model": "sonnet", "capabilities": ["zero_shot_tasks", "adaptive_learning", "general_coordination"]},
@@ -101,7 +100,6 @@ class MasterAgentController:
             "AI & Orchestration": ["ai-agent-orchestrator", "ai-agent-creator", "localagi", "autonomous", "complex"],
             "Workflow & Automation": ["langflow", "flowiseai", "dify", "shell", "browser"],
             "Specialized Domain": ["financial", "document", "private-data", "deep-learning"],
-            "Integration & Management": ["ollama", "litellm", "bigagi", "agentgpt", "agentzero"],
             "Product & Project": ["ai-product", "ai-scrum", "task-assignment"],
             "User Interface": ["jarvis", "context-optimization"]
         }
@@ -166,7 +164,6 @@ class MasterAgentController:
                     ("infrastructure-devops-manager", "Setup CI/CD pipelines"),
                     ("deployment-automation-master", "Execute deployment"),
                     ("ollama-integration-specialist", "Configure local AI models"),
-                    ("litellm-proxy-manager", "Setup API routing")
                 ]
             },
             {

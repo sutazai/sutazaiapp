@@ -35,7 +35,6 @@ class AgentType(Enum):
     
     # AI & ML Specialists
     OLLAMA_INTEGRATION_SPECIALIST = "ollama-integration-specialist"
-    LITELLM_PROXY_MANAGER = "litellm-proxy-manager"
     SENIOR_AI_ENGINEER = "senior-ai-engineer"
     DEEP_LEARNING_BRAIN_MANAGER = "deep-learning-brain-manager"
     
@@ -358,9 +357,6 @@ class UniversalAgentClient:
                 "capabilities": ["model_management", "api_configuration", "performance_tuning"]
             },
             {
-                "id": "litellm-proxy-manager",
-                "name": "LiteLLM Proxy Manager",
-                "description": "Manages LiteLLM proxy for API compatibility",
                 "port": 8008,
                 "capabilities": ["proxy_management", "api_translation", "model_mapping"]
             },

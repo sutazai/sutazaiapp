@@ -8,7 +8,7 @@ description: Use this agent when you need to:
 - Create edge deployment strategies for AGI
 - Optimize memory usage below 8GB for full system
 - Enable CPU-only inference at maximum efficiency
-- Implement model pruning for tinyllama, deepseek-r1:8b
+- Implement model pruning for tinyllama, tinyllama
 - Create distributed edge computing networks
 - Optimize Docker containers for minimal footprint
 - Enable swap memory optimization for AGI
@@ -152,7 +152,7 @@ class EdgeAGIOptimizer:
                 "target_size": "100MB",
                 "quantization": "4bit"
             },
-            "deepseek-r1:8b": {
+            "tinyllama": {
                 "original_size": "8B", 
                 "target_size": "800MB",
                 "quantization": "4bit"

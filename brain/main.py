@@ -75,12 +75,12 @@ class BrainSystem:
             
             # Models
             'default_embedding_model': 'nomic-embed-text',
-            'default_reasoning_model': 'deepseek-r1:8b',
+            'default_reasoning_model': 'tinyllama',
             'default_coding_model': 'codellama:7b',
-            'evaluation_model': 'deepseek-r1:8b',
+            'evaluation_model': 'tinyllama',
             'comparison_model': 'qwen2.5:7b',
             'code_model': 'codellama:7b',
-            'analysis_model': 'deepseek-r1:8b',
+            'analysis_model': 'tinyllama',
             
             # Thresholds
             'min_quality_score': 0.85,

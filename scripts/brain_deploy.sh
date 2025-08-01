@@ -117,9 +117,9 @@ cpu_cores: $(nproc)
 
 # Model settings
 default_embedding_model: nomic-embed-text
-default_reasoning_model: deepseek-r1:8b
+default_reasoning_model: tinyllama
 default_coding_model: codellama:7b
-evaluation_model: deepseek-r1:8b
+evaluation_model: tinyllama
 comparison_model: qwen2.5:7b
 
 # Quality thresholds
@@ -541,7 +541,7 @@ pull_ollama_models() {
     log "🤖 Pulling required Ollama models..."
     
     local models=(
-        "deepseek-r1:8b"
+        "tinyllama"
         "codellama:7b"
         "qwen2.5:7b"
         "nomic-embed-text"

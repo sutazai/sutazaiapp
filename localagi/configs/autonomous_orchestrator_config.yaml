@@ -24,7 +24,7 @@ agent_registry:
 ollama:
   base_url: "http://ollama:11434"
   models:
-    reasoning: "deepseek-r1:8b"
+    reasoning: "tinyllama"
     planning: "qwen2.5:14b"
     coordination: "llama3.2:3b"
     execution: "phi3:mini"
