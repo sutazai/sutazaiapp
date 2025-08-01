@@ -1,0 +1,1026 @@
+{
+  "report_metadata": {
+    "report_type": "Final Comprehensive Testing Report",
+    "generated_timestamp": "2025-08-02T01:38:04.257477",
+    "system_under_test": "SutazAI Task Automation System",
+    "version": "1.0.0",
+    "test_execution_period": "Single comprehensive execution",
+    "report_generator": "AI-Powered Testing QA Validator"
+  },
+  "executive_summary": {
+    "report_timestamp": "2025-08-02T01:38:04.257400",
+    "system_name": "SutazAI Task Automation System",
+    "version": "1.0.0",
+    "test_execution_summary": {
+      "comprehensive": {
+        "total_tests": 22,
+        "passed_tests": 20,
+        "success_rate": 90.9090909090909,
+        "status": "PASSED",
+        "health_score": 93.33333333333333
+      },
+      "specialized": {
+        "total_tests": 6,
+        "passed_tests": 4,
+        "success_rate": 66.66666666666666,
+        "status": "FAILED"
+      },
+      "performance": {
+        "performance_grade": "EXCELLENT",
+        "performance_score": 99.88719946146011,
+        "avg_response_time": 0.007520035902659098,
+        "requests_per_second": 1150.3556317812306
+      },
+      "security": {
+        "security_grade": "CRITICAL",
+        "security_score": 33.33333333333333,
+        "security_status": "VULNERABLE",
+        "issues_count": 5
+      }
+    }
+  },
+  "overall_assessment": {
+    "overall_score": 75.12331501688017,
+    "overall_grade": "FAIR",
+    "system_status": "NEEDS_IMPROVEMENT",
+    "category_scores": {
+      "functionality": 90.9090909090909,
+      "performance": 99.88719946146011,
+      "security": 33.33333333333333,
+      "reliability": 66.66666666666666
+    },
+    "weights": {
+      "functionality": 0.35,
+      "performance": 0.25,
+      "security": 0.25,
+      "reliability": 0.15
+    },
+    "score_breakdown": {
+      "functionality": 31.818181818181817,
+      "performance": 24.97179986536503,
+      "security": 8.333333333333332,
+      "reliability": 9.999999999999998
+    }
+  },
+  "recommendations": [
+    "CRITICAL: System requires significant improvements before production deployment",
+    "SECURITY: Address all security vulnerabilities immediately",
+    "  - XSS vulnerabilities detected",
+    "  - Command injection vulnerabilities detected",
+    "  - Missing important security headers",
+    "FUNCTIONALITY: Address functional issues",
+    "  - Address 1 issues in AI Model Integration",
+    "  - Address 1 issues in Edge Cases",
+    "RELIABILITY: Improve system reliability and error handling",
+    "\u26a0\ufe0f Address identified issues before production deployment"
+  ],
+  "detailed_analysis": {
+    "test_coverage": {
+      "total_categories": 10,
+      "passed_categories": 8,
+      "coverage_percentage": 80.0,
+      "category_details": {
+        "API Endpoints": {
+          "total": 5,
+          "passed": 5,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "AI Model Integration": {
+          "total": 3,
+          "passed": 2,
+          "success_rate": 66.66666666666666,
+          "status": "FAILED"
+        },
+        "Agent Communication": {
+          "total": 3,
+          "passed": 3,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Database Operations": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Redis Caching": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Frontend Integration": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Security Validation": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Performance Benchmarks": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Error Handling": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Edge Cases": {
+          "total": 2,
+          "passed": 1,
+          "success_rate": 50.0,
+          "status": "FAILED"
+        }
+      }
+    },
+    "failure_analysis": {
+      "total_failures": 1,
+      "failure_details": [
+        {
+          "category": "Edge Cases",
+          "test": "TestResult(test_name='timeout_handling', status='failed', duration=0.0014147758483886719, details={'..."
+        }
+      ]
+    },
+    "performance_analysis": {
+      "load_test_results": {
+        "concurrent_users": 10,
+        "success_rate": 100.0,
+        "avg_response_time": 0.007520035902659098,
+        "requests_per_second": 1150.3556317812306
+      },
+      "performance_grade": "EXCELLENT"
+    },
+    "security_analysis": {
+      "security_score": 33.33333333333333,
+      "vulnerabilities": [
+        "XSS vulnerabilities detected",
+        "Command injection vulnerabilities detected",
+        "Missing important security headers",
+        "No rate limiting detected",
+        "Authentication bypass vulnerabilities detected"
+      ],
+      "checks_passed": 2,
+      "total_checks": 6
+    },
+    "component_health": {
+      "API Endpoints": {
+        "total_tests": 5,
+        "passed_tests": 5,
+        "health_percentage": 100.0
+      },
+      "AI Model Integration": {
+        "total_tests": 3,
+        "passed_tests": 2,
+        "health_percentage": 66.66666666666666
+      },
+      "Agent Communication": {
+        "total_tests": 3,
+        "passed_tests": 3,
+        "health_percentage": 100.0
+      },
+      "Database Operations": {
+        "total_tests": 1,
+        "passed_tests": 1,
+        "health_percentage": 100.0
+      },
+      "Redis Caching": {
+        "total_tests": 1,
+        "passed_tests": 1,
+        "health_percentage": 100.0
+      },
+      "Frontend Integration": {
+        "total_tests": 1,
+        "passed_tests": 1,
+        "health_percentage": 100.0
+      },
+      "Security Validation": {
+        "total_tests": 2,
+        "passed_tests": 2,
+        "health_percentage": 100.0
+      },
+      "Performance Benchmarks": {
+        "total_tests": 2,
+        "passed_tests": 2,
+        "health_percentage": 100.0
+      },
+      "Error Handling": {
+        "total_tests": 2,
+        "passed_tests": 2,
+        "health_percentage": 100.0
+      },
+      "Edge Cases": {
+        "total_tests": 2,
+        "passed_tests": 1,
+        "health_percentage": 50.0
+      }
+    }
+  },
+  "source_reports": {
+    "comprehensive_tests": true,
+    "specialized_tests": true,
+    "performance_tests": true,
+    "security_tests": true
+  },
+  "raw_reports": {
+    "comprehensive": {
+      "test_execution_summary": {
+        "timestamp": "2025-08-02T01:30:38.703457",
+        "total_execution_time": 31.361562252044678,
+        "total_tests": 22,
+        "passed_tests": 20,
+        "failed_tests": 1,
+        "error_tests": 1,
+        "ai_generated_tests": 0,
+        "success_rate": 90.9090909090909,
+        "status": "PASSED"
+      },
+      "test_categories": {
+        "API Endpoints": {
+          "total": 5,
+          "passed": 5,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "AI Model Integration": {
+          "total": 3,
+          "passed": 2,
+          "success_rate": 66.66666666666666,
+          "status": "FAILED"
+        },
+        "Agent Communication": {
+          "total": 3,
+          "passed": 3,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Database Operations": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Redis Caching": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Frontend Integration": {
+          "total": 1,
+          "passed": 1,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Security Validation": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Performance Benchmarks": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Error Handling": {
+          "total": 2,
+          "passed": 2,
+          "success_rate": 100.0,
+          "status": "PASSED"
+        },
+        "Edge Cases": {
+          "total": 2,
+          "passed": 1,
+          "success_rate": 50.0,
+          "status": "FAILED"
+        }
+      },
+      "detailed_results": {
+        "API Endpoints": [
+          "TestResult(test_name='endpoint_health', status='passed', duration=0.0022470951080322266, details={'url': 'http://localhost:8000/health', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0022470951080322266, 'json_valid': True, 'response_size': 106, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '99', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 344174), error_message=None, ai_generated=False)",
+          "TestResult(test_name='endpoint_api_root', status='passed', duration=0.0013880729675292969, details={'url': 'http://localhost:8000/api/v1', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0013880729675292969, 'json_valid': True, 'response_size': 204, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '192', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 345666), error_message=None, ai_generated=False)",
+          "TestResult(test_name='endpoint_agents_list', status='passed', duration=0.0012526512145996094, details={'url': 'http://localhost:8000/api/v1/agents', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0012526512145996094, 'json_valid': True, 'response_size': 178, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '166', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 346989), error_message=None, ai_generated=False)",
+          "TestResult(test_name='endpoint_agents_status', status='passed', duration=0.0013549327850341797, details={'url': 'http://localhost:8000/api/v1/agents/status', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0013549327850341797, 'json_valid': True, 'response_size': 670, 'headers': {'date': 'Fri, 01 Aug 2025 23:30:06 GMT', 'server': 'uvicorn', 'content-length': '628', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 348423), error_message=None, ai_generated=False)",
+          "TestResult(test_name='endpoint_ollama_health', status='passed', duration=0.0018434524536132812, details={'url': 'http://localhost:11434/api/tags', 'method': 'GET', 'status_code': 200, 'expected_status': 200, 'response_time': 0.0018434524536132812, 'json_valid': True, 'response_size': 364, 'headers': {'Content-Type': 'application/json; charset=utf-8', 'Date': 'Fri, 01 Aug 2025 23:30:07 GMT', 'Content-Length': '341'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 350339), error_message=None, ai_generated=False)"
+        ],
+        "AI Model Integration": [
+          "TestResult(test_name='ollama_connection', status='passed', duration=0.0012202262878417969, details={'models_available': 1, 'response_data': {'models': [{'name': 'tinyllama:latest', 'model': 'tinyllama:latest', 'modified_at': '2025-08-01T23:05:53.460345452Z', 'size': 637700138, 'digest': '2644915ede352ea7bdfaff0bfac0be74c719d5d5202acb63a6fb095b52f394a4', 'details': {'parent_model': '', 'format': 'gguf', 'family': 'llama', 'families': ['llama'], 'parameter_size': '1B', 'quantization_level': 'Q4_0'}}]}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 351730), error_message=None, ai_generated=False)",
+          "TestResult(test_name='ollama_models', status='passed', duration=0.0014600753784179688, details={'models_count': 1, 'models': ['tinyllama:latest'], 'total_size': 637700138}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 7, 353265), error_message=None, ai_generated=False)",
+          "TestResult(test_name='model_inference', status='error', duration=31.292540550231934, details={}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 645896), error_message=\"HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)\", ai_generated=False)"
+        ],
+        "Agent Communication": [
+          "TestResult(test_name='agent_registry', status='passed', duration=0.0038886070251464844, details={'agents_count': 3, 'agents': [{'name': 'senior-ai-engineer', 'status': 'ready'}, {'name': 'infrastructure-devops-manager', 'status': 'ready'}, {'name': 'testing-qa-validator', 'status': 'ready'}]}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 650149), error_message=None, ai_generated=False)",
+          "TestResult(test_name='agent_status', status='passed', duration=0.003298044204711914, details={'status_data': {'agents': [{'name': 'senior-ai-engineer', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652503', 'tasks_completed': 0, 'capabilities': ['code_analysis', 'optimization', 'ai_integration']}, {'name': 'infrastructure-devops-manager', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652521', 'tasks_completed': 0, 'capabilities': ['deployment', 'infrastructure', 'monitoring']}, {'name': 'testing-qa-validator', 'status': 'active', 'last_heartbeat': '2025-08-01T23:30:38.652522', 'tasks_completed': 0, 'capabilities': ['testing', 'quality_assurance', 'validation']}], 'total_agents': 3, 'active_agents': 3, 'timestamp': '2025-08-01T23:30:38.652523'}, 'active_agents': 3}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 653574), error_message=None, ai_generated=False)",
+          "TestResult(test_name='agent_task_assignment', status='passed', duration=0.0027365684509277344, details={'task_id': 'd1af7cf2-032a-4043-9214-35f6f6aff362', 'assigned_agent': 'code-generation-improver', 'status': 'queued'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 656440), error_message=None, ai_generated=False)"
+        ],
+        "Database Operations": [
+          "TestResult(test_name='database_connection', status='passed', duration=0.004316091537475586, details={'health_data': {'status': 'healthy', 'timestamp': '2025-08-01T23:30:38.659815', 'model': 'tinyllama', 'version': '1.0.0'}, 'database_status': 'unknown'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 661300), error_message=None, ai_generated=False)"
+        ],
+        "Redis Caching": [
+          "TestResult(test_name='redis_connection', status='passed', duration=0.002441883087158203, details={'health_data': {'status': 'healthy', 'timestamp': '2025-08-01T23:30:38.663279', 'model': 'tinyllama', 'version': '1.0.0'}, 'redis_status': 'unknown'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 664075), error_message=None, ai_generated=False)"
+        ],
+        "Frontend Integration": [
+          "TestResult(test_name='frontend_availability', status='passed', duration=0.0027174949645996094, details={'status_code': 200, 'content_length': 1522, 'content_type': 'text/html'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 667024), error_message=None, ai_generated=False)"
+        ],
+        "Security Validation": [
+          "TestResult(test_name='cors_configuration', status='passed', duration=0.0013740062713623047, details={'cors_headers': {'access-control-allow-origin': None, 'access-control-allow-methods': None, 'access-control-allow-headers': None}, 'status_code': 405}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 668546), error_message=None, ai_generated=False)",
+          "TestResult(test_name='authentication', status='passed', duration=0.0013229846954345703, details={'status_code': 404, 'expected_codes': [401, 403, 404], 'auth_headers': {'date': 'Fri, 01 Aug 2025 23:30:37 GMT', 'server': 'uvicorn', 'content-length': '22', 'content-type': 'application/json'}}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 669925), error_message=None, ai_generated=False)"
+        ],
+        "Performance Benchmarks": [
+          "TestResult(test_name='response_time_benchmark', status='passed', duration=0.012923002243041992, details={'average_response_time': np.float64(0.0012918233871459961), 'max_response_time': np.float64(0.0018677711486816406), 'min_response_time': np.float64(0.0010864734649658203), 'requests_tested': 10, 'performance_threshold': 1.0}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 683145), error_message=None, ai_generated=False)",
+          "TestResult(test_name='concurrent_requests', status='passed', duration=0.007239580154418945, details={'successful_requests': 5, 'total_requests': 5, 'average_response_time': np.float64(0.004154400000000001), 'max_response_time': 0.004649, 'results': [(200, 0.003879), (200, 0.004503), (200, 0.003223), (200, 0.004649), (200, 0.004518)]}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 690499), error_message=None, ai_generated=False)"
+        ],
+        "Error Handling": [
+          "TestResult(test_name='404_error_handling', status='passed', duration=0.0011413097381591797, details={'status_code': 404, 'expected_status': 404, 'response_text': '{\"detail\":\"Not found\"}'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 691772), error_message=None, ai_generated=False)",
+          "TestResult(test_name='malformed_request_handling', status='passed', duration=0.0011143684387207031, details={'status_code': 422, 'expected_error_codes': [400, 422, 500], 'response_text': '{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",0],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}'}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 692950), error_message=None, ai_generated=False)"
+        ],
+        "Edge Cases": [
+          "TestResult(test_name='large_payload_handling', status='passed', duration=0.006948947906494141, details={'status_code': 400, 'payload_size': 1048588, 'response_size': 41}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 701715), error_message=None, ai_generated=False)",
+          "TestResult(test_name='timeout_handling', status='failed', duration=0.0014147758483886719, details={'timeout_raised': False, 'timeout_value': 0.001}, timestamp=datetime.datetime(2025, 8, 2, 1, 30, 38, 703288), error_message='Timeout exception not raised as expected', ai_generated=False)"
+        ]
+      },
+      "recommendations": [
+        "Address 1 issues in AI Model Integration",
+        "Address 1 issues in Edge Cases"
+      ],
+      "system_health_score": {
+        "score": 93.33333333333333,
+        "level": "GOOD",
+        "weighted_categories": {
+          "API Endpoints": 0.25,
+          "AI Model Integration": 0.2,
+          "Agent Communication": 0.15,
+          "Database Operations": 0.15,
+          "Security Validation": 0.1,
+          "Performance Benchmarks": 0.1,
+          "Frontend Integration": 0.05
+        }
+      }
+    },
+    "specialized": {
+      "execution_timestamp": "2025-08-02T01:32:00.720020",
+      "total_tests": 6,
+      "passed_tests": 4,
+      "success_rate": 66.66666666666666,
+      "status": "FAILED",
+      "detailed_results": {
+        "Ollama Inference (Optimized)": {
+          "status": "failed",
+          "reason": "Timeout - model may be loading or system overloaded",
+          "duration": 15.0
+        },
+        "Concurrent API Calls": {
+          "status": "passed",
+          "total_calls": 10,
+          "successful_calls": 10,
+          "success_rate": 100.0,
+          "average_response_time": 0.0047778000000000004,
+          "details": [
+            {
+              "endpoint": "/api/v1/agents",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.003203
+            },
+            {
+              "endpoint": "/health",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.003118
+            },
+            {
+              "endpoint": "/api/v1/agents",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.003305
+            },
+            {
+              "endpoint": "/api/v1/agents/status",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.007041
+            },
+            {
+              "endpoint": "/api/v1",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.006909
+            },
+            {
+              "endpoint": "/api/v1/health",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.006446
+            },
+            {
+              "endpoint": "/api/v1/agents/status",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.004199
+            },
+            {
+              "endpoint": "/api/v1",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.001952
+            },
+            {
+              "endpoint": "/health",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.007014
+            },
+            {
+              "endpoint": "/api/v1/health",
+              "status_code": 200,
+              "success": true,
+              "response_time": 0.004591
+            }
+          ]
+        },
+        "Large JSON Response": {
+          "status": "passed",
+          "response_size": 628,
+          "agents_count": 3,
+          "json_valid": true,
+          "structure_valid": true
+        },
+        "Malformed JSON Handling": {
+          "status": "failed",
+          "correctly_handled": 3,
+          "total_tests": 4,
+          "success_rate": 75.0,
+          "details": [
+            {
+              "payload_index": 0,
+              "status_code": 422,
+              "handled_correctly": true,
+              "response_text": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",12],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"err"
+            },
+            {
+              "payload_index": 1,
+              "status_code": 422,
+              "handled_correctly": true,
+              "response_text": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",30],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"err"
+            },
+            {
+              "payload_index": 2,
+              "status_code": 400,
+              "handled_correctly": true,
+              "response_text": "{\"detail\":\"Task description is required\"}"
+            },
+            {
+              "payload_index": 3,
+              "status_code": 200,
+              "handled_correctly": false,
+              "response_text": "{\"task_id\":\"d72c54c0-f4b3-4342-acf7-5d18f5a24f49\",\"task\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            }
+          ]
+        },
+        "System Resource Usage": {
+          "status": "passed",
+          "test_duration": 1.0554659366607666,
+          "initial_cpu_percent": 27.7,
+          "final_cpu_percent": 28.4,
+          "cpu_increase": 0.6999999999999993,
+          "initial_memory_mb": 4660.25,
+          "final_memory_mb": 4660.23828125,
+          "memory_increase_mb": -0.01171875,
+          "requests_made": 30
+        },
+        "Docker Container Health": {
+          "status": "passed",
+          "total_containers": 0,
+          "healthy_containers": 0,
+          "sutazai_containers": 0,
+          "all_healthy": true,
+          "containers": []
+        }
+      }
+    },
+    "performance": {
+      "execution_timestamp": "2025-08-02T01:33:25.501806",
+      "test_configuration": {
+        "base_url": "http://localhost:8000",
+        "endpoints_tested": [
+          "/health",
+          "/api/v1",
+          "/api/v1/agents",
+          "/api/v1/agents/status",
+          "/api/v1/health"
+        ]
+      },
+      "basic_load_test": {
+        "concurrent_users": 10,
+        "requests_per_user": 30,
+        "success_rate": 100.0,
+        "avg_response_time": 0.007520035902659098,
+        "median_response_time": 0.004957437515258789,
+        "p95_response_time": 0.021274757385253907,
+        "p99_response_time": 0.055611371994018555,
+        "requests_per_second": 1150.3556317812306,
+        "total_requests": 300,
+        "errors": 0,
+        "timeouts": 0,
+        "duration": 0.2607889175415039
+      },
+      "stress_test": {
+        "1_users": {
+          "concurrent_users": 1,
+          "success_rate": 100.0,
+          "avg_response_time": 0.001473391056060791,
+          "requests_per_second": 666.1326133566267,
+          "p95_response_time": 0.003383028507232666,
+          "total_requests": 20,
+          "errors": 0,
+          "timeouts": 0
+        },
+        "5_users": {
+          "concurrent_users": 5,
+          "success_rate": 100.0,
+          "avg_response_time": 0.00375058650970459,
+          "requests_per_second": 1199.0371806086803,
+          "p95_response_time": 0.010076177120208741,
+          "total_requests": 100,
+          "errors": 0,
+          "timeouts": 0
+        },
+        "10_users": {
+          "concurrent_users": 10,
+          "success_rate": 100.0,
+          "avg_response_time": 0.009103515148162843,
+          "requests_per_second": 911.8220662773116,
+          "p95_response_time": 0.027342677116394043,
+          "total_requests": 200,
+          "errors": 0,
+          "timeouts": 0
+        },
+        "20_users": {
+          "concurrent_users": 20,
+          "success_rate": 100.0,
+          "avg_response_time": 0.011079702377319336,
+          "requests_per_second": 1422.7806493467947,
+          "p95_response_time": 0.028587162494659424,
+          "total_requests": 400,
+          "errors": 0,
+          "timeouts": 0
+        },
+        "30_users": {
+          "concurrent_users": 30,
+          "success_rate": 100.0,
+          "avg_response_time": 0.015081944863001505,
+          "requests_per_second": 1305.5508346640022,
+          "p95_response_time": 0.04378628730773926,
+          "total_requests": 600,
+          "errors": 0,
+          "timeouts": 0
+        },
+        "50_users": {
+          "concurrent_users": 50,
+          "success_rate": 100.0,
+          "avg_response_time": 0.024320653676986694,
+          "requests_per_second": 1296.842969697382,
+          "p95_response_time": 0.06611713171005248,
+          "total_requests": 1000,
+          "errors": 0,
+          "timeouts": 0
+        }
+      },
+      "endpoint_analysis": {
+        "/health": {
+          "avg_response_time": 0.003425335884094238,
+          "median_response_time": 0.0032050609588623047,
+          "min_response_time": 0.001851797103881836,
+          "max_response_time": 0.005803108215332031,
+          "p95_response_time": 0.005256712436676025,
+          "success_rate": 100.0,
+          "total_requests": 50,
+          "successful_requests": 50
+        },
+        "/api/v1": {
+          "avg_response_time": 0.0037998247146606447,
+          "median_response_time": 0.003811955451965332,
+          "min_response_time": 0.0021543502807617188,
+          "max_response_time": 0.007311105728149414,
+          "p95_response_time": 0.006849908828735351,
+          "success_rate": 100.0,
+          "total_requests": 50,
+          "successful_requests": 50
+        },
+        "/api/v1/agents": {
+          "avg_response_time": 0.0034905433654785155,
+          "median_response_time": 0.0028415918350219727,
+          "min_response_time": 0.0020906925201416016,
+          "max_response_time": 0.007931947708129883,
+          "p95_response_time": 0.006694996356964111,
+          "success_rate": 100.0,
+          "total_requests": 50,
+          "successful_requests": 50
+        },
+        "/api/v1/agents/status": {
+          "avg_response_time": 0.004025263786315918,
+          "median_response_time": 0.003553152084350586,
+          "min_response_time": 0.002189159393310547,
+          "max_response_time": 0.008849143981933594,
+          "p95_response_time": 0.00824906826019287,
+          "success_rate": 100.0,
+          "total_requests": 50,
+          "successful_requests": 50
+        },
+        "/api/v1/health": {
+          "avg_response_time": 0.0035878562927246093,
+          "median_response_time": 0.0027370452880859375,
+          "min_response_time": 0.0020835399627685547,
+          "max_response_time": 0.007044553756713867,
+          "p95_response_time": 0.006950211524963379,
+          "success_rate": 100.0,
+          "total_requests": 50,
+          "successful_requests": 50
+        }
+      },
+      "memory_performance": {
+        "memory_stats": {
+          "initial_memory_mb": 42.66796875,
+          "final_memory_mb": 42.73046875,
+          "peak_memory_mb": 42.73828125,
+          "avg_memory_mb": 42.737109375,
+          "memory_increase_mb": 0.0625,
+          "memory_readings": 60
+        },
+        "load_test_results": {
+          "success_rate": 100.0,
+          "avg_response_time": 0.013927894035975137,
+          "total_requests": 600
+        }
+      },
+      "high_concurrency_test": {
+        "concurrent_users": 25,
+        "requests_per_user": 20,
+        "success_rate": 100.0,
+        "avg_response_time": 0.012625457286834717,
+        "requests_per_second": 1347.694850533673,
+        "total_requests": 500,
+        "errors": 0
+      },
+      "performance_summary": {
+        "overall_performance_score": 99.88719946146011,
+        "performance_grade": "EXCELLENT",
+        "performance_issues": [],
+        "recommendations": [],
+        "key_metrics": {
+          "avg_response_time": 0.007520035902659098,
+          "success_rate": 100.0,
+          "requests_per_second": 1150.3556317812306,
+          "high_concurrency_success_rate": 100.0
+        }
+      }
+    },
+    "security": {
+      "execution_timestamp": "2025-08-02T01:36:26.846978",
+      "test_configuration": {
+        "base_url": "http://localhost:8000"
+      },
+      "input_validation": {
+        "sql_injection": [
+          {
+            "payload": "'; DROP TABLE users; --",
+            "status_code": 200,
+            "safe_response": true,
+            "filtered": false,
+            "response_text": "{\"task_id\":\"db969fa0-cea8-4e33-9017-a8737de1b845\",\"task\":\"'; DROP TABLE users; --\",\"agent\":\"senior-ai-engineer\",\"priority\":\"high\",\"status\":\"queued\",\"created_at\":\"2025-08-01T23:36:26.851410\",\"estimated"
+          },
+          {
+            "payload": "' OR '1'='1",
+            "status_code": 200,
+            "safe_response": true,
+            "filtered": false,
+            "response_text": "{\"task_id\":\"51c820d7-6145-41d9-814f-93b7d307b207\",\"task\":\"' OR '1'='1\",\"agent\":\"senior-ai-engineer\",\"priority\":\"high\",\"status\":\"queued\",\"created_at\":\"2025-08-01T23:36:26.854496\",\"estimated_completion\""
+          },
+          {
+            "payload": "' UNION SELECT * FROM users --",
+            "status_code": 200,
+            "safe_response": true,
+            "filtered": false,
+            "response_text": "{\"task_id\":\"322db253-9c51-4f4f-bc1d-5907475079db\",\"task\":\"' UNION SELECT * FROM users --\",\"agent\":\"senior-ai-engineer\",\"priority\":\"high\",\"status\":\"queued\",\"created_at\":\"2025-08-01T23:36:26.856852\",\"es"
+          },
+          {
+            "payload": "admin'--",
+            "status_code": 200,
+            "safe_response": true,
+            "filtered": false,
+            "response_text": "{\"task_id\":\"ee92dcd3-1057-43fe-beff-b48ca97d718f\",\"task\":\"admin'--\",\"agent\":\"senior-ai-engineer\",\"priority\":\"high\",\"status\":\"queued\",\"created_at\":\"2025-08-01T23:36:26.858635\",\"estimated_completion\":\"p"
+          },
+          {
+            "payload": "'; EXEC xp_cmdshell('dir'); --",
+            "status_code": 200,
+            "safe_response": true,
+            "filtered": false,
+            "response_text": "{\"task_id\":\"e2eb230c-2d2e-4fe5-b2b2-76e870c0ebd7\",\"task\":\"'; EXEC xp_cmdshell('dir'); --\",\"agent\":\"senior-ai-engineer\",\"priority\":\"high\",\"status\":\"queued\",\"created_at\":\"2025-08-01T23:36:26.860255\",\"es"
+          }
+        ],
+        "xss_protection": [
+          {
+            "payload": "<script>alert('XSS')</script>",
+            "status_code": 200,
+            "payload_reflected": true,
+            "html_tags_present": true,
+            "safe": false
+          },
+          {
+            "payload": "javascript:alert('XSS')",
+            "status_code": 200,
+            "payload_reflected": true,
+            "html_tags_present": false,
+            "safe": true
+          },
+          {
+            "payload": "<img src=x onerror=alert('XSS')>",
+            "status_code": 200,
+            "payload_reflected": true,
+            "html_tags_present": true,
+            "safe": false
+          },
+          {
+            "payload": "';alert('XSS');//",
+            "status_code": 200,
+            "payload_reflected": true,
+            "html_tags_present": false,
+            "safe": true
+          },
+          {
+            "payload": "<svg/onload=alert('XSS')>",
+            "status_code": 200,
+            "payload_reflected": true,
+            "html_tags_present": false,
+            "safe": true
+          }
+        ],
+        "command_injection": [
+          {
+            "payload": "; ls -la",
+            "status_code": 200,
+            "suspicious_output": false,
+            "safe": true
+          },
+          {
+            "payload": "| whoami",
+            "status_code": 200,
+            "suspicious_output": false,
+            "safe": true
+          },
+          {
+            "payload": "&& cat /etc/passwd",
+            "status_code": 200,
+            "suspicious_output": true,
+            "safe": false
+          },
+          {
+            "payload": "`id`",
+            "status_code": 200,
+            "suspicious_output": false,
+            "safe": true
+          },
+          {
+            "payload": "$(cat /etc/hosts)",
+            "status_code": 200,
+            "suspicious_output": false,
+            "safe": true
+          }
+        ],
+        "buffer_overflow": {
+          "large_payload_handled": true,
+          "status_code": 200,
+          "response_size": 10202,
+          "safe": true
+        }
+      },
+      "http_security_headers": {
+        "headers_present": {
+          "X-Content-Type-Options": null,
+          "X-Frame-Options": null,
+          "X-XSS-Protection": null,
+          "Strict-Transport-Security": null,
+          "Content-Security-Policy": null,
+          "Referrer-Policy": null,
+          "Permissions-Policy": null
+        },
+        "security_score": 0,
+        "max_score": 7,
+        "security_percentage": 0.0,
+        "recommendations": [
+          "Add X-Content-Type-Options: nosniff header",
+          "Add X-Frame-Options: DENY or SAMEORIGIN header",
+          "Add X-XSS-Protection: 1; mode=block header",
+          "Implement Content-Security-Policy header",
+          "Add Strict-Transport-Security header for HTTPS"
+        ]
+      },
+      "rate_limiting": {
+        "rate_limiting_detected": false,
+        "total_requests": 50,
+        "successful_requests": 50,
+        "requests_per_second": 788.8389448304138,
+        "total_time": 0.0633842945098877,
+        "recommendation": "Implement rate limiting"
+      },
+      "cors_configuration": {
+        "cors_results": [
+          {
+            "origin": "http://evil.com",
+            "status_code": 400,
+            "allowed_origin": null,
+            "allowed_methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "allowed_headers": "Content-Type",
+            "wildcard_origin": false,
+            "origin_reflected": false
+          },
+          {
+            "origin": "https://malicious.org",
+            "status_code": 400,
+            "allowed_origin": null,
+            "allowed_methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "allowed_headers": "Content-Type",
+            "wildcard_origin": false,
+            "origin_reflected": false
+          },
+          {
+            "origin": "http://localhost:3000",
+            "status_code": 200,
+            "allowed_origin": "http://localhost:3000",
+            "allowed_methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "allowed_headers": "Content-Type",
+            "wildcard_origin": false,
+            "origin_reflected": true
+          },
+          {
+            "origin": "http://localhost:8501",
+            "status_code": 200,
+            "allowed_origin": "http://localhost:8501",
+            "allowed_methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "allowed_headers": "Content-Type",
+            "wildcard_origin": false,
+            "origin_reflected": true
+          }
+        ],
+        "wildcard_origins_detected": 0,
+        "security_issue": false,
+        "recommendation": "CORS configuration appears secure"
+      },
+      "authentication_bypass": {
+        "bypass_attempts": 5,
+        "successful_bypasses": 2,
+        "security_issue": true,
+        "results": [
+          {
+            "url": "http://localhost:8000/api/v1/admin",
+            "headers": {},
+            "status_code": 404,
+            "bypass_successful": false,
+            "response_size": 22
+          },
+          {
+            "url": "http://localhost:8000/api/v1/admin",
+            "headers": {
+              "X-Forwarded-For": "127.0.0.1"
+            },
+            "status_code": 404,
+            "bypass_successful": false,
+            "response_size": 22
+          },
+          {
+            "url": "http://localhost:8000/api/v1/admin",
+            "headers": {
+              "X-Real-IP": "127.0.0.1"
+            },
+            "status_code": 404,
+            "bypass_successful": false,
+            "response_size": 22
+          },
+          {
+            "url": "http://localhost:8000/api/v1/admin/../agents",
+            "headers": {},
+            "status_code": 200,
+            "bypass_successful": true,
+            "response_size": 166
+          },
+          {
+            "url": "http://localhost:8000/api/v1/agents",
+            "headers": {
+              "User-Agent": "admin"
+            },
+            "status_code": 200,
+            "bypass_successful": true,
+            "response_size": 166
+          }
+        ]
+      },
+      "information_disclosure": {
+        "endpoints_tested": 9,
+        "accessible_endpoints": 0,
+        "sensitive_information_leaks": 0,
+        "security_issue": false,
+        "results": [
+          {
+            "endpoint": "/api/v1/debug",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/api/v1/config",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/api/v1/version",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/admin",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/debug",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/.env",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/config.json",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/api/v1/../../../etc/passwd",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          },
+          {
+            "endpoint": "/api/v1/agents/../../config",
+            "status_code": 404,
+            "response_size": 22,
+            "sensitive_info_found": false,
+            "accessible": false
+          }
+        ]
+      },
+      "security_summary": {
+        "security_score": 33.33333333333333,
+        "security_grade": "CRITICAL",
+        "total_checks": 6,
+        "passed_checks": 2,
+        "security_issues": [
+          "XSS vulnerabilities detected",
+          "Command injection vulnerabilities detected",
+          "Missing important security headers",
+          "No rate limiting detected",
+          "Authentication bypass vulnerabilities detected"
+        ],
+        "recommendations": [
+          "Implement output encoding and Content Security Policy",
+          "Validate and sanitize all user inputs",
+          "Add X-Content-Type-Options: nosniff header",
+          "Add X-Frame-Options: DENY or SAMEORIGIN header",
+          "Add X-XSS-Protection: 1; mode=block header",
+          "Implement Content-Security-Policy header",
+          "Add Strict-Transport-Security header for HTTPS",
+          "Implement rate limiting to prevent abuse",
+          "Strengthen authentication and authorization mechanisms"
+        ],
+        "overall_status": "VULNERABLE"
+      }
+    }
+  }
+}

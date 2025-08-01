@@ -68,7 +68,8 @@
       "Bash(tree:*)",
       "Bash(sudo systemctl stop:*)",
       "Bash(sudo kill:*)",
-      "Bash(/opt/sutazaiapp/health_check.sh:*)"
+      "Bash(/opt/sutazaiapp/health_check.sh:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   },

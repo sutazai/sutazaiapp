@@ -67,20 +67,33 @@ services:
     container_name: sutazai-ollama-minimal
     volumes:
       - ollama_data:/root/.ollama
+      - /dev/shm:/dev/shm:rw  # Shared memory for better performance
     ports:
       - "11434:11434"
     environment:
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: "*"
-      OLLAMA_KEEP_ALIVE: 30s
+      OLLAMA_KEEP_ALIVE: 5m      # Balanced for performance
       OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_NUM_PARALLEL: 1
-      OLLAMA_MAX_QUEUE: 2
+      OLLAMA_NUM_PARALLEL: 2      # Allow 2 parallel requests
+      OLLAMA_MAX_QUEUE: 4         # Increase queue size
+      OLLAMA_NUM_THREADS: 4       # Limit threads to prevent CPU overload
+      OLLAMA_MMAP: 1              # Enable memory mapping (critical for CPU performance!)
+      OLLAMA_LLM_LIBRARY: cpu_avx2  # Use AVX2 for better CPU performance
+      OLLAMA_KV_CACHE_TYPE: q8_0  # Optimized cache type
+      OLLAMA_FLASH_ATTENTION: 1   # Enable flash attention
+      GOMAXPROCS: 4               # Go runtime optimization
+      GOMEMLIMIT: 3GiB            # Go memory limit
     deploy:
       resources:
         limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
           cpus: '2'
           memory: 2G
+    cpu_shares: 512  # Lower CPU priority to prevent system overload
+    mem_swappiness: 10  # Reduce swap usage for better performance
     healthcheck:
       test: ["CMD-SHELL", "ollama list || exit 1"]
       interval: 30s
@@ -97,8 +110,17 @@ services:
     container_name: sutazai-backend-minimal
     environment:
       DATABASE_URL: postgresql://sutazai:sutazai123@postgres:5432/sutazai_db
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: sutazai
+      POSTGRES_PASSWORD: sutazai123
+      POSTGRES_DB: sutazai_db
       REDIS_URL: redis://redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       OLLAMA_BASE_URL: http://ollama:11434
+      CHROMADB_HOST: chromadb
+      QDRANT_HOST: qdrant
       API_V1_STR: /api/v1
       SECRET_KEY: minimal-secret-key
       BACKEND_CORS_ORIGINS: '["*"]'
