@@ -1,0 +1,11 @@
+Missing agents from the comprehensive list:
+- ram-hardware-optimizer
+- gpu-hardware-optimizer
+- garbage-collector-coordinator
+- edge-inference-proxy
+- experiment-tracker
+- attention-optimizer
+- data-drift-detector
+- genetic-algorithm-tuner
+- resource-visualiser
+- prompt-injection-guard
