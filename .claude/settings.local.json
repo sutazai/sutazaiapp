@@ -59,7 +59,9 @@
       "Bash(rm:*)",
       "Bash(/opt/sutazaiapp/scripts/reorganize_docs.sh:*)",
       "Bash(/opt/sutazaiapp/scripts/consolidate_scripts.sh:*)",
-      "Bash(/opt/sutazaiapp/scripts/deep_cleanup.sh:*)"
+      "Bash(/opt/sutazaiapp/scripts/deep_cleanup.sh:*)",
+      "Bash(systemctl list-units:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   },
