@@ -5,7 +5,7 @@ agent_mappings:
   # Critical System Agents
   agi-system-architect:
     dify_agent_id: "sutazai_architect"
-    endpoint: "http://backend-agi:8000/api/v1/agents/agi-system-architect"
+    endpoint: "http://backend:8000/api/v1/agents/agi-system-architect"
     capabilities:
       - system_design
       - architecture_optimization
@@ -19,7 +19,7 @@ agent_mappings:
     
   ai-product-manager:
     dify_agent_id: "sutazai_product_manager"
-    endpoint: "http://backend-agi:8000/api/v1/agents/ai-product-manager"
+    endpoint: "http://backend:8000/api/v1/agents/ai-product-manager"
     capabilities:
       - requirement_analysis
       - web_search
@@ -33,7 +33,7 @@ agent_mappings:
       
   autonomous-system-controller:
     dify_agent_id: "sutazai_system_controller"
-    endpoint: "http://backend-agi:8000/api/v1/agents/autonomous-system-controller"
+    endpoint: "http://backend:8000/api/v1/agents/autonomous-system-controller"
     capabilities:
       - autonomous_control
       - decision_making
@@ -47,7 +47,7 @@ agent_mappings:
       
   senior-ai-engineer:
     dify_agent_id: "sutazai_ai_engineer"
-    endpoint: "http://backend-agi:8000/api/v1/agents/senior-ai-engineer"
+    endpoint: "http://backend:8000/api/v1/agents/senior-ai-engineer"
     capabilities:
       - ml_architecture
       - model_optimization
@@ -78,7 +78,7 @@ integration_points:
       token_env: "AGENT_REGISTRY_TOKEN"
     
   backend_api:
-    endpoint: "http://backend-agi:8000/api/v1"
+    endpoint: "http://backend:8000/api/v1"
     authentication:
       type: "api_key"
       key_env: "BACKEND_API_KEY"
@@ -217,14 +217,14 @@ deployment_integration:
       - DIFY_MODE=workflow_engine
       - AGENT_REGISTRY_URL=http://agent-registry:8300
       - MESSAGE_BUS_URL=http://agent-message-bus:8299
-      - BACKEND_API_URL=http://backend-agi:8000
+      - BACKEND_API_URL=http://backend:8000
     volumes:
       - "./workflows:/app/workflows"
       - "./data/dify:/app/storage"
     depends_on:
       - agent-registry
       - agent-message-bus
-      - backend-agi
+      - backend
       - redis
       - postgres
       

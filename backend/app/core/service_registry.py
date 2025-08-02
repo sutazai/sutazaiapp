@@ -1,5 +1,5 @@
 """
-Service Registry for AGI/ASI System
+Service Registry for automation/advanced automation System
 Manages inter-service communication and discovery
 """
 from typing import Dict, List, Optional, Any

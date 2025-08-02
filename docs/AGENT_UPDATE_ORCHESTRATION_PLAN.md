@@ -1,15 +1,15 @@
 # SutazAI Agent Update Orchestration Plan
 
 ## Overview
-This document outlines the comprehensive plan to update all 52+ AI agents in the SutazAI AGI/ASI system to the new comprehensive format with auto-detection capabilities.
+This document outlines the comprehensive plan to update all 52+ AI agents in the SutazAI automation system/advanced automation system to the new comprehensive format with auto-detection capabilities.
 
 ## Current Status
 
 ### Already Updated (6 agents)
 These agents already have detailed implementations:
 - ✅ infrastructure-devops-manager
-- ✅ deep-learning-brain-manager
-- ✅ consciousness-emergence-monitor
+- ✅ deep-learning-coordinator-manager
+- ✅ system state-optimization-monitor
 - ✅ agi-system-architect
 - ✅ autonomous-system-controller
 - ✅ senior-backend-developer
@@ -55,11 +55,11 @@ These agents are essential for system operation:
 3. **deployment-automation-master** - Handles deployments
 4. **ai-agent-orchestrator** - Coordinates all agents
 
-### Phase 2: Core AGI Components (Priority 2)
+### Phase 2: Core automation system Components (Priority 2)
 **Timeline: After Phase 1**
 **Parallel Execution: Yes**
 
-Core AGI functionality agents:
+Core automation system functionality agents:
 1. **memory-persistence-manager** - Long-term memory
 2. **knowledge-graph-builder** - Knowledge representation
 3. **symbolic-reasoning-engine** - Logic processing
@@ -126,7 +126,7 @@ Specialized functionality:
 **Responsibility**: Update AI/ML agents
 **Tasks**:
 - Update model-training-specialist
-- Update neural-architecture-search
+- Update processing-architecture-search
 - Update evolution-strategy-trainer
 - Update gradient-compression-specialist
 - Update transformers-migration-specialist
@@ -194,11 +194,11 @@ GPU_REQUIRED = False  # CPU-only by default
 - deployment-automation-master
 - observability-monitoring-engineer
 
-**Workflow 2: AGI Core Updates**
+**Workflow 2: automation system Core Updates**
 - memory-persistence-manager
 - knowledge-graph-builder
 - symbolic-reasoning-engine
-- consciousness-emergence-monitor (validate)
+- system state-optimization-monitor (validate)
 
 **Workflow 3: Development Tools**
 - senior-frontend-developer

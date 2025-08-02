@@ -329,7 +329,7 @@ services:
     networks:
       - sutazai-agents
 
-  localagi:
+  # LocalAGI service removed
     build:
       context: ./agents/localagi
       dockerfile: Dockerfile
@@ -341,7 +341,7 @@ services:
       API_PORT: 8095
       BACKEND_URL: http://backend:8000
     volumes:
-      - localagi-data:/data
+      # - localagi (removed)-data:/data
       - shared-storage:/shared:ro
     networks:
       - sutazai-agents
@@ -498,7 +498,7 @@ services:
       - sutazai-agents
 
   # ========== AI AGENTS LAYER - SPECIALIZED AGENTS ==========
-  bigagi:
+  # BigAGI service removed
     build:
       context: ./agents/bigagi
       dockerfile: Dockerfile
@@ -508,7 +508,7 @@ services:
       SERVICE_NAME: bigagi
       API_PORT: 8106
     volumes:
-      - bigagi-data:/data
+      # - bigagi (removed)-data:/data
     networks:
       - sutazai-agents
     ports:

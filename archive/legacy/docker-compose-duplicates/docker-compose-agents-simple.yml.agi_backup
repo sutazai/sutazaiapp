@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # LangChain Agents Container
+  langchain-agents:
+    build:
+      context: ./docker/langchain-agents
+      dockerfile: Dockerfile
+    container_name: sutazai-langchain-agents
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./data/langchain:/app/data
+    environment:
+      - OLLAMA_API_BASE=http://host.docker.internal:11434
+      - LANGCHAIN_MODEL=llama3.2:1b
+      - LANGCHAIN_PORT=8084
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # AutoGen Container
+  autogen:
+    build:
+      context: ./docker/autogen
+      dockerfile: Dockerfile
+    container_name: sutazai-autogen
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./data/autogen:/app/data
+    environment:
+      - OLLAMA_API_BASE=http://host.docker.internal:11434
+      - AUTOGEN_MODEL=llama3.2:1b
+      - AUTOGEN_PORT=8085
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # Browser Use Container
+  browser-use:
+    build:
+      context: ./docker/browser-use
+      dockerfile: Dockerfile
+    container_name: sutazai-browser-use
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./data/browser-use:/app/data
+    environment:
+      - DISPLAY=:99
+      - BROWSER_USE_MODEL=llama3.2:1b
+      - BROWSER_USE_PORT=8088
+      - OLLAMA_API_BASE=http://host.docker.internal:11434
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # Mock Agents for Testing
+  mock-agents:
+    image: python:3.11-slim
+    container_name: sutazai-mock-agents
+    ports:
+      - "8083:8083"
+      - "8082:8082"
+      - "8090:8090"
+    command: >
+      sh -c "
+      pip install fastapi uvicorn &&
+      python -c \"
+      from fastapi import FastAPI
+      import uvicorn
+
+      app = FastAPI()
+
+      @app.get('/health')
+      def health():
+          return {'status': 'healthy', 'service': 'mock-agents'}
+
+      @app.get('/api/status')
+      def status():
+          return {'status': 'active', 'agents': ['semgrep', 'tabbyml', 'openwebui']}
+
+      @app.post('/api/execute')
+      def execute(request: dict):
+          return {'result': f'Mock execution for: {request.get(\"task\", \"unknown\")}'}
+
+      if __name__ == '__main__':
+          uvicorn.run(app, host='0.0.0.0', port=8083)
+      \"
+      "
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  langchain-data:
+  autogen-data:
+  browser-use-data:

@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI System Documentation v10.0
+# SutazAI automation system/advanced automation System Documentation v10.0
 
 ## Table of Contents
 1. [System Overview](#system-overview)
@@ -14,7 +14,7 @@
 
 ## System Overview
 
-SutazAI is an enterprise-grade Autonomous General Intelligence (AGI) and Autonomous Super Intelligence (ASI) system designed for comprehensive AI capabilities including:
+SutazAI is an enterprise-grade Autonomous General Intelligence (automation system) and Autonomous Super Intelligence (advanced automation) system designed for comprehensive AI capabilities including:
 
 - **Multi-Agent Orchestration**: Coordinate multiple specialized AI agents
 - **Natural Language Processing**: Advanced conversational AI
@@ -230,7 +230,7 @@ curl -X POST http://localhost:8000/api/auth/login \
 ```bash
 POST /api/chat
 {
-  "message": "Explain quantum computing",
+  "message": "Explain advanced computing",
   "model": "llama3.2:1b",
   "temperature": 0.7,
   "max_tokens": 500

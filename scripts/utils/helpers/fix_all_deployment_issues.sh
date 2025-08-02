@@ -202,12 +202,12 @@ echo "================================================"
 # Deploy backend and frontend if not running
 if ! docker ps | grep -q "sutazai-backend"; then
     echo "Deploying backend service..."
-    docker-compose up -d backend-agi || echo "Backend deployment skipped"
+    docker-compose up -d backend || echo "Backend deployment skipped"
 fi
 
 if ! docker ps | grep -q "sutazai-frontend"; then
     echo "Deploying frontend service..."
-    docker-compose up -d frontend-agi || echo "Frontend deployment skipped"
+    docker-compose up -d frontend || echo "Frontend deployment skipped"
 fi
 
 # 6. Start MCP Servers
@@ -237,7 +237,7 @@ services=(
     "Redis:6379:"
     "ChromaDB:8001:/api/v1"
     "Qdrant:6333:/health"
-    "Brain:8888:/status"
+    "Coordinator:8888:/status"
     "Grafana:3000:/api/health"
     "Prometheus:9090/-/healthy"
 )
@@ -291,7 +291,7 @@ echo -e "\n${GREEN}🎉 SutazAI deployment issues fixed!${NC}"
 echo ""
 echo "Next steps:"
 echo "1. Check MCP status: Check the MCP tab in Claude"
-echo "2. Access Brain API: http://localhost:8888"
+echo "2. Access Coordinator API: http://localhost:8888"
 echo "3. Access Frontend: http://localhost:8501"
 echo "4. Monitor system: http://localhost:3000 (Grafana)"
 echo ""

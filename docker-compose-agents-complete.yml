@@ -34,11 +34,13 @@ services:
     depends_on:
       - ollama
 
-  localagi:
+  # LocalAGI service removed
     build:
       context: ./agents
-      dockerfile: dockerfiles/Dockerfile.localagi
-    container_name: sutazai-localagi
+      dockerfile: dockerfiles/Dockerfile.
+  # LocalAGI - Service removed
+    container_name: sutazai-
+  # LocalAGI - Service removed
     restart: unless-stopped
     ports:
       - "8503:8080"

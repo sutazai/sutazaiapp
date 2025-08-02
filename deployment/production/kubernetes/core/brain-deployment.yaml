@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: brain-core
+  name: coordinator-core
   namespace: sutazai-core
   labels:
-    app: brain-core
+    app: coordinator-core
     tier: core
 spec:
   type: ClusterIP
@@ -14,21 +14,21 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: brain-core
+    app: coordinator-core
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: brain-core
+  name: coordinator-core
   namespace: sutazai-core
   labels:
-    app: brain-core
+    app: coordinator-core
     tier: core
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: brain-core
+      app: coordinator-core
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -37,7 +37,7 @@ spec:
   template:
     metadata:
       labels:
-        app: brain-core
+        app: coordinator-core
         tier: core
       annotations:
         prometheus.io/scrape: "true"
@@ -54,18 +54,18 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - brain-core
+                  - coordinator-core
               topologyKey: kubernetes.io/hostname
       containers:
-      - name: brain-core
-        image: sutazai/brain-core:latest
+      - name: coordinator-core
+        image: sutazai/coordinator-core:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
           name: http
         env:
         - name: BRAIN_MODE
-          value: "AGI"
+          value: "automation"
         - name: NEURAL_THREADS
           value: "8"
         - name: MEMORY_LIMIT
@@ -127,28 +127,28 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         volumeMounts:
-        - name: brain-data
-          mountPath: /brain/data
-        - name: brain-models
-          mountPath: /brain/models
-        - name: brain-config
-          mountPath: /brain/config
+        - name: coordinator-data
+          mountPath: /coordinator/data
+        - name: coordinator-models
+          mountPath: /coordinator/models
+        - name: coordinator-config
+          mountPath: /coordinator/config
           readOnly: true
       volumes:
-      - name: brain-data
+      - name: coordinator-data
         persistentVolumeClaim:
-          claimName: brain-data-pvc
-      - name: brain-models
+          claimName: coordinator-data-pvc
+      - name: coordinator-models
         persistentVolumeClaim:
-          claimName: brain-models-pvc
-      - name: brain-config
+          claimName: coordinator-models-pvc
+      - name: coordinator-config
         configMap:
-          name: brain-config
+          name: coordinator-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: brain-data-pvc
+  name: coordinator-data-pvc
   namespace: sutazai-core
 spec:
   accessModes:
@@ -161,7 +161,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: brain-models-pvc
+  name: coordinator-models-pvc
   namespace: sutazai-core
 spec:
   accessModes:
@@ -174,12 +174,12 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: brain-config
+  name: coordinator-config
   namespace: sutazai-core
 data:
   config.yaml: |
-    brain:
-      mode: AGI
+    coordinator:
+      mode: automation
       learning:
         enabled: true
         rate: 0.001
@@ -198,7 +198,7 @@ data:
         max_depth: 10
         timeout_seconds: 300
         parallel_branches: 5
-      consciousness:
+      system_state:
         enabled: true
         awareness_level: high
         self_reflection: true

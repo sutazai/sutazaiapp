@@ -36,7 +36,7 @@ async def chat(
         
         # Use chat format for better responses
         messages = [
-            {"role": "system", "content": "You are SutazAI, an advanced AGI assistant. Be helpful, accurate, and concise."},
+            {"role": "system", "content": "You are SutazAI, an advanced automation assistant. Be helpful, accurate, and concise."},
             {"role": "user", "content": request.message}
         ]
         

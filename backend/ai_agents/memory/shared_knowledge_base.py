@@ -1,5 +1,5 @@
 """
-Shared Knowledge Base for AGI Agents
+Shared Knowledge Base for automation Agents
 ====================================
 
 Advanced shared memory system that enables cross-agent learning,
@@ -126,7 +126,7 @@ class KnowledgeItem:
 
 class SharedKnowledgeBase:
     """
-    Advanced shared knowledge base for AGI agents
+    Advanced shared knowledge base for automation agents
     
     Features:
     - Multi-modal storage (vector + graph + key-value)
@@ -187,7 +187,7 @@ class SharedKnowledgeBase:
             )
             self.chroma_collection = self.chroma_client.get_or_create_collection(
                 name="agi_knowledge",
-                metadata={"description": "Shared knowledge base for AGI agents"}
+                metadata={"description": "Shared knowledge base for automation agents"}
             )
             logger.info("Connected to ChromaDB")
         except Exception as e:

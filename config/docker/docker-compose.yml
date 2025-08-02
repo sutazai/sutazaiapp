@@ -166,7 +166,7 @@ services:
       - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
       - CHROMA_SERVER_HOST=0.0.0.0
       - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend-agi:8000"]
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     ports:
       - "8001:8000"
     healthcheck:
@@ -261,11 +261,11 @@ services:
   # CORE APPLICATION SERVICES
   # ===========================================
   
-  backend-agi:
+  backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.agi
-    container_name: sutazai-backend-agi
+      dockerfile: Dockerfile
+    container_name: sutazai-backend
     restart: unless-stopped
     volumes:
       - ./backend:/app
@@ -318,24 +318,24 @@ services:
       retries: 5
       start_period: 60s
 
-  frontend-agi:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: sutazai-frontend-agi
+    container_name: sutazai-frontend
     restart: unless-stopped
     volumes:
       - ./frontend:/app
       - ./data:/data
     environment:
       <<: *common-variables
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     ports:
       - "8501:8501"
     depends_on:
-      backend-agi:
+      backend:
         condition: service_healthy
     networks:
       - sutazai-network
@@ -370,9 +370,9 @@ services:
       <<: [*common-variables, *ollama-config]
       AGENT_NAME: AutoGPT
       WORKSPACE_PATH: /app/workspace
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
     depends_on:
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -391,7 +391,7 @@ services:
       <<: [*common-variables, *ollama-config]
       AGENT_NAME: CrewAI
       CREW_SIZE: 5
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       # Ultra-lightweight model defaults for maximum memory efficiency
       DEFAULT_MODEL: "tinyllama"
       FALLBACK_MODEL: "smollm:360m"
@@ -410,7 +410,7 @@ services:
       retries: 3
       start_period: 30s
     depends_on:
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -437,7 +437,7 @@ services:
       MEMORY_BACKEND: postgres
     depends_on:
       - postgres
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -591,11 +591,13 @@ services:
       - sutazai-network
 
   # LocalAGI Orchestrator
-  localagi:
+  # LocalAGI service removed
     build:
-      context: ./docker/localagi
+      context: ./docker/
+  # LocalAGI - Service removed
       dockerfile: Dockerfile
-    container_name: sutazai-localagi
+    container_name: sutazai-
+  # LocalAGI - Service removed
     restart: unless-stopped
     volumes:
       - agent_workspaces:/app/workspace
@@ -621,7 +623,7 @@ services:
       start_period: 60s
     depends_on:
       - ollama
-      - backend-agi
+      - backend
     networks:
       - sutazai-network
 
@@ -1020,7 +1022,7 @@ services:
       <<: *common-variables
       MONITOR_INTERVAL: 30
       ALERT_WEBHOOK_URL: ${HEALTH_ALERT_WEBHOOK:-}
-      SERVICES_TO_CHECK: sutazai-backend-agi,sutazai-frontend-agi,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
+      SERVICES_TO_CHECK: sutazai-backend,sutazai-frontend,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
     ports:
       - "8100:8000"
     healthcheck:
@@ -1031,7 +1033,7 @@ services:
       start_period: 60s
     networks:
       - sutazai-network
-  # Additional AGI/ASI Services
+  # Additional automation/advanced automation Services
   
   # Context Engineering Framework
   context-framework:
@@ -1050,10 +1052,12 @@ services:
     restart: unless-stopped
 
   # LocalAGI Enhanced
-  localagi-enhanced:
-    container_name: sutazai-localagi-enhanced
+  # LocalAGI - Service removed
+    container_name: sutazai-
+  # LocalAGI - Service removed
     build:
-      context: ./docker/localagi
+      context: ./docker/
+  # LocalAGI - Service removed
       dockerfile: Dockerfile
     environment:
       <<: [*common-variables, *ollama-config, *vector-config, *database-config]
@@ -1096,8 +1100,9 @@ services:
     restart: unless-stopped
 
   # BigAGI
-  bigagi:
-    container_name: sutazai-bigagi
+  # BigAGI service removed
+    container_name: sutazai-
+  # BigAGI - Service removed
     image: ghcr.io/enricoros/big-agi:latest
     environment:
       <<: *common-variables
@@ -1152,10 +1157,10 @@ services:
     restart: unless-stopped
 
   # JARVIS Super Intelligence System
-  jarvis-agi:
-    container_name: sutazai-jarvis-agi
+  jarvis:
+    container_name: sutazai-jarvis
     build:
-      context: ./docker/jarvis-agi
+      context: ./docker/jarvis
       dockerfile: Dockerfile
     environment:
       <<: [*common-variables, *database-config, *ollama-config, *vector-config]
@@ -1281,10 +1286,12 @@ services:
     restart: unless-stopped
 
   # LocalAGI Advanced
-  localagi-advanced:
-    container_name: sutazai-localagi-advanced
+  # LocalAGI - Service removed
+    container_name: sutazai-
+  # LocalAGI - Service removed
     build:
-      context: ./docker/localagi
+      context: ./docker/
+  # LocalAGI - Service removed
       dockerfile: Dockerfile
     environment:
       <<: [*common-variables, *ollama-config, *vector-config, *database-config]
@@ -1367,7 +1374,7 @@ services:
     environment:
       <<: [*common-variables, *database-config, *vector-config, *ollama-config]
       # MCP Server specific config
-      BACKEND_API_URL: http://backend-agi:8000
+      BACKEND_API_URL: http://backend:8000
       OLLAMA_URL: http://ollama:11434
       CHROMADB_URL: http://chromadb:8000
       QDRANT_URL: http://qdrant:6333
@@ -1386,7 +1393,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      backend-agi:
+      backend:
         condition: service_started
       ollama:
         condition: service_started
@@ -1420,7 +1427,7 @@ services:
     environment:
       <<: [*common-variables, *ollama-config, *database-config]
       JARVIS_MODE: autonomous
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       SPEECH_ENABLED: "true"
       SECURITY_LEVEL: high
       # Ultra-lightweight model defaults for maximum memory efficiency
@@ -1438,7 +1445,7 @@ services:
       - ./logs:/app/logs
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
-      - backend-agi
+      - backend
       - ollama
       - redis
     networks:
@@ -1475,7 +1482,7 @@ services:
       - ./config/gateway:/app/config
     depends_on:
       - redis
-      - backend-agi
+      - backend
     networks:
       - sutazai-network
     restart: unless-stopped
@@ -1498,7 +1505,7 @@ services:
     environment:
       <<: [*common-variables, *database-config, *ollama-config]
       SCHEDULER_MODE: autonomous
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       JARVIS_URL: http://jarvis-ai:8120
       MAX_CONCURRENT_TASKS: 10
     volumes:
@@ -1507,7 +1514,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - backend-agi
+      - backend
       - jarvis-ai
     networks:
       - sutazai-network

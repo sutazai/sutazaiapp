@@ -1,14 +1,14 @@
-# SutazAI AGI/ASI System Architecture
+# SutazAI automation system/advanced automation System Architecture
 
 ## System Overview
 
-SutazAI is an enterprise-grade, fully autonomous AGI/ASI system designed for local deployment with self-improvement capabilities.
+SutazAI is an enterprise-grade, fully autonomous automation system/advanced automation system designed for local deployment with self-improvement capabilities.
 
 ## Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              SutazAI AGI/ASI System                               │
+│                              SutazAI automation system/advanced automation System                               │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                   │
 │  ┌─────────────────────────────────────────────────────────────────────────┐    │

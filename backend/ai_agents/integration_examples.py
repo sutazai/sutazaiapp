@@ -1095,7 +1095,7 @@ async def example_complete_scenario():
             print("✅ Model performance optimized")
         
         # Continuous learning setup
-        continuous_learning_result = await examples.api.brain_manager.implement_continuous_learning(
+        continuous_learning_result = await examples.api.coordinator_manager.implement_continuous_learning(
             learning_config={
                 "learning_rate": 0.001,
                 "batch_size": 32,

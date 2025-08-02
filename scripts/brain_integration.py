@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Brain Integration Service for SutazAI
-Connects the brain system to the main application backend
+Coordinator Integration Service for SutazAI
+Connects the coordinator system to the main application backend
 """
 
 import asyncio
@@ -15,25 +15,25 @@ import time
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class BrainIntegration:
+class CoordinatorIntegration:
     """
-    Integration layer between SutazAI backend and brain system
+    Integration layer between SutazAI backend and coordinator system
     """
     
     def __init__(self):
-        self.brain_api_url = "http://localhost:8888"
+        self.coordinator_api_url = "http://localhost:8888"
         self.backend_url = "http://localhost:8000"  # Main backend
         self.is_connected = False
         self.last_health_check = None
         
     async def initialize(self):
-        """Initialize brain integration"""
-        logger.info("🔗 Initializing Brain Integration...")
+        """Initialize coordinator integration"""
+        logger.info("🔗 Initializing Coordinator Integration...")
         
-        # Check brain availability
-        if await self.check_brain_health():
+        # Check coordinator availability
+        if await self.check_coordinator_health():
             self.is_connected = True
-            logger.info("✅ Brain system connected")
+            logger.info("✅ Coordinator system connected")
             
             # Start integration loops
             asyncio.create_task(self.health_monitoring_loop())
@@ -41,27 +41,27 @@ class BrainIntegration:
             
             return True
         else:
-            logger.error("❌ Brain system not available")
+            logger.error("❌ Coordinator system not available")
             return False
     
-    async def check_brain_health(self) -> bool:
-        """Check if brain system is healthy"""
+    async def check_coordinator_health(self) -> bool:
+        """Check if coordinator system is healthy"""
         try:
-            response = requests.get(f"{self.brain_api_url}/health", timeout=5)
+            response = requests.get(f"{self.coordinator_api_url}/health", timeout=5)
             if response.status_code == 200:
                 health_data = response.json()
                 self.last_health_check = datetime.now()
-                logger.info(f"📊 Brain health: {health_data['status']} (Intelligence: {health_data['intelligence_level']:.3f})")
+                logger.info(f"📊 Coordinator health: {health_data['status']} (Intelligence: {health_data['intelligence_level']:.3f})")
                 return True
         except Exception as e:
-            logger.warning(f"Brain health check failed: {e}")
+            logger.warning(f"Coordinator health check failed: {e}")
         return False
     
-    async def process_with_brain(self, user_input: str, context: Optional[Dict] = None, require_learning: bool = False) -> Dict[str, Any]:
-        """Process user input through the brain system"""
+    async def process_with_coordinator(self, user_input: str, context: Optional[Dict] = None, require_learning: bool = False) -> Dict[str, Any]:
+        """Process user input through the coordinator system"""
         if not self.is_connected:
             return {
-                'response': 'Brain system not available',
+                'response': 'Coordinator system not available',
                 'confidence': 0.0,
                 'source': 'fallback'
             }
@@ -74,20 +74,20 @@ class BrainIntegration:
             }
             
             response = requests.post(
-                f"{self.brain_api_url}/process",
+                f"{self.coordinator_api_url}/process",
                 json=payload,
                 timeout=30
             )
             
             if response.status_code == 200:
                 result = response.json()
-                result['source'] = 'brain'
+                result['source'] = 'coordinator'
                 return result
             else:
-                logger.error(f"Brain processing failed: {response.status_code}")
+                logger.error(f"Coordinator processing failed: {response.status_code}")
                 
         except Exception as e:
-            logger.error(f"Error processing with brain: {e}")
+            logger.error(f"Error processing with coordinator: {e}")
         
         # Fallback response
         return {
@@ -97,7 +97,7 @@ class BrainIntegration:
         }
     
     async def store_memory(self, content: str, importance: float = 0.5, memory_type: str = "user_interaction") -> bool:
-        """Store a memory in the brain system"""
+        """Store a memory in the coordinator system"""
         if not self.is_connected:
             return False
         
@@ -109,7 +109,7 @@ class BrainIntegration:
             }
             
             response = requests.post(
-                f"{self.brain_api_url}/memory/store",
+                f"{self.coordinator_api_url}/memory/store",
                 json=payload,
                 timeout=10
             )
@@ -121,13 +121,13 @@ class BrainIntegration:
             return False
     
     async def search_memories(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """Search brain memories"""
+        """Search coordinator memories"""
         if not self.is_connected:
             return []
         
         try:
             response = requests.get(
-                f"{self.brain_api_url}/memory/search",
+                f"{self.coordinator_api_url}/memory/search",
                 params={'query': query, 'top_k': top_k},
                 timeout=10
             )
@@ -140,43 +140,43 @@ class BrainIntegration:
         
         return []
     
-    async def get_brain_status(self) -> Dict[str, Any]:
-        """Get current brain status"""
+    async def get_coordinator_status(self) -> Dict[str, Any]:
+        """Get current coordinator status"""
         if not self.is_connected:
             return {'status': 'disconnected'}
         
         try:
-            response = requests.get(f"{self.brain_api_url}/status", timeout=5)
+            response = requests.get(f"{self.coordinator_api_url}/status", timeout=5)
             if response.status_code == 200:
                 return response.json()
         except Exception as e:
-            logger.error(f"Error getting brain status: {e}")
+            logger.error(f"Error getting coordinator status: {e}")
         
         return {'status': 'error'}
     
     async def trigger_learning(self) -> bool:
-        """Manually trigger brain learning cycle"""
+        """Manually trigger coordinator learning cycle"""
         if not self.is_connected:
             return False
         
         try:
-            response = requests.post(f"{self.brain_api_url}/learning/trigger", timeout=15)
+            response = requests.post(f"{self.coordinator_api_url}/learning/trigger", timeout=15)
             return response.status_code == 200
         except Exception as e:
             logger.error(f"Error triggering learning: {e}")
             return False
     
     async def health_monitoring_loop(self):
-        """Monitor brain health continuously"""
+        """Monitor coordinator health continuously"""
         while True:
             try:
                 was_connected = self.is_connected
-                self.is_connected = await self.check_brain_health()
+                self.is_connected = await self.check_coordinator_health()
                 
                 if was_connected and not self.is_connected:
-                    logger.warning("⚠️ Brain system disconnected")
+                    logger.warning("⚠️ Coordinator system disconnected")
                 elif not was_connected and self.is_connected:
-                    logger.info("✨ Brain system reconnected")
+                    logger.info("✨ Coordinator system reconnected")
                 
                 await asyncio.sleep(60)  # Check every minute
                 
@@ -185,21 +185,21 @@ class BrainIntegration:
                 await asyncio.sleep(60)
     
     async def experience_sharing_loop(self):
-        """Share experiences between backend and brain"""
+        """Share experiences between backend and coordinator"""
         while True:
             try:
                 if self.is_connected:
                     # This would collect experiences from the backend
-                    # and share them with the brain for learning
+                    # and share them with the coordinator for learning
                     
                     # For now, just log the connection status
-                    brain_status = await self.get_brain_status()
-                    if brain_status.get('status') != 'error':
+                    coordinator_status = await self.get_coordinator_status()
+                    if coordinator_status.get('status') != 'error':
                         logger.info(
-                            f"🧠 Brain Update - Intelligence: {brain_status.get('intelligence_level', 0):.3f} | "
-                            f"Requests: {brain_status.get('total_requests', 0)} | "
-                            f"Memories: {brain_status.get('memory_entries', 0)} | "
-                            f"Learning Cycles: {brain_status.get('learning_cycles', 0)}"
+                            f"🧠 Coordinator Update - Intelligence: {coordinator_status.get('intelligence_level', 0):.3f} | "
+                            f"Requests: {coordinator_status.get('total_requests', 0)} | "
+                            f"Memories: {coordinator_status.get('memory_entries', 0)} | "
+                            f"Learning Cycles: {coordinator_status.get('learning_cycles', 0)}"
                         )
                 
                 await asyncio.sleep(300)  # Update every 5 minutes
@@ -209,17 +209,17 @@ class BrainIntegration:
                 await asyncio.sleep(300)
 
 
-class BrainEnhancedAgent:
+class CoordinatorEnhancedAgent:
     """
-    Enhanced agent that uses the brain system for processing
+    Enhanced agent that uses the coordinator system for processing
     """
     
-    def __init__(self, brain_integration: BrainIntegration):
-        self.brain = brain_integration
+    def __init__(self, coordinator_integration: CoordinatorIntegration):
+        self.coordinator = coordinator_integration
         self.conversation_history = []
         
     async def process_message(self, message: str, user_id: str = None) -> Dict[str, Any]:
-        """Process a message through the brain-enhanced system"""
+        """Process a message through the coordinator-enhanced system"""
         # Add to conversation history
         self.conversation_history.append({
             'type': 'user',
@@ -245,8 +245,8 @@ class BrainEnhancedAgent:
             'user_id': user_id
         }
         
-        # Process through brain
-        result = await self.brain.process_with_brain(
+        # Process through coordinator
+        result = await self.coordinator.process_with_coordinator(
             user_input=message,
             context=context,
             require_learning=True  # Enable learning from user interactions
@@ -262,7 +262,7 @@ class BrainEnhancedAgent:
         
         # Store important interactions as memories
         if result['confidence'] > 0.8:
-            await self.brain.store_memory(
+            await self.coordinator.store_memory(
                 content=f"User: {message}\nAssistant: {result['response']}",
                 importance=result['confidence'],
                 memory_type="user_interaction"
@@ -282,8 +282,8 @@ class BrainEnhancedAgent:
             for msg in recent_messages
         ])
         
-        # Use brain to generate summary
-        result = await self.brain.process_with_brain(
+        # Use coordinator to generate summary
+        result = await self.coordinator.process_with_coordinator(
             f"Please summarize this conversation: {summary_text}",
             require_learning=False
         )
@@ -293,15 +293,15 @@ class BrainEnhancedAgent:
 
 async def main():
     """Main integration test"""
-    logger.info("🎆 Starting SutazAI Brain Integration...")
+    logger.info("🎆 Starting SutazAI Coordinator Integration...")
     
-    # Initialize brain integration
-    integration = BrainIntegration()
+    # Initialize coordinator integration
+    integration = CoordinatorIntegration()
     if await integration.initialize():
-        logger.info("✅ Brain integration initialized")
+        logger.info("✅ Coordinator integration initialized")
         
         # Create enhanced agent
-        agent = BrainEnhancedAgent(integration)
+        agent = CoordinatorEnhancedAgent(integration)
         
         # Test conversation
         test_messages = [
@@ -311,7 +311,7 @@ async def main():
             "Can you remember what we've discussed so far?"
         ]
         
-        logger.info("\n💬 Testing brain-enhanced conversation...")
+        logger.info("\n💬 Testing coordinator-enhanced conversation...")
         
         for i, message in enumerate(test_messages, 1):
             logger.info(f"\n--- Test {i} ---")
@@ -319,7 +319,7 @@ async def main():
             
             result = await agent.process_message(message, user_id="test_user")
             
-            logger.info(f"Brain: {result['response'][:200]}...")
+            logger.info(f"Coordinator: {result['response'][:200]}...")
             logger.info(f"Confidence: {result['confidence']:.2f}, Source: {result.get('source', 'unknown')}")
             
             # Wait a bit between messages
@@ -330,23 +330,23 @@ async def main():
         summary = await agent.get_conversation_summary()
         logger.info(f"Summary: {summary[:200]}...")
         
-        # Show final brain statistics
-        brain_status = await integration.get_brain_status()
-        logger.info("\n📊 Final Brain Statistics:")
-        logger.info(f"Intelligence Level: {brain_status.get('intelligence_level', 0):.3f}")
-        logger.info(f"Total Requests: {brain_status.get('total_requests', 0)}")
-        logger.info(f"Memory Entries: {brain_status.get('memory_entries', 0)}")
-        logger.info(f"Learning Cycles: {brain_status.get('learning_cycles', 0)}")
+        # Show final coordinator statistics
+        coordinator_status = await integration.get_coordinator_status()
+        logger.info("\n📊 Final Coordinator Statistics:")
+        logger.info(f"Intelligence Level: {coordinator_status.get('intelligence_level', 0):.3f}")
+        logger.info(f"Total Requests: {coordinator_status.get('total_requests', 0)}")
+        logger.info(f"Memory Entries: {coordinator_status.get('memory_entries', 0)}")
+        logger.info(f"Learning Cycles: {coordinator_status.get('learning_cycles', 0)}")
         
-        logger.info("\n✨ Brain integration test completed successfully!")
+        logger.info("\n✨ Coordinator integration test completed successfully!")
         
         # Keep integration running
-        logger.info("🔄 Brain integration will continue running...")
+        logger.info("🔄 Coordinator integration will continue running...")
         while True:
             await asyncio.sleep(60)
     
     else:
-        logger.error("❌ Failed to initialize brain integration")
+        logger.error("❌ Failed to initialize coordinator integration")
 
 
 if __name__ == "__main__":

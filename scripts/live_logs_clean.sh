@@ -117,7 +117,7 @@ repair_system() {
     # Restart services in correct order
     echo "Restarting services in dependency order..."
     
-    services=("postgres" "redis" "neo4j" "chromadb" "qdrant" "ollama" "backend-agi" "frontend-agi")
+    services=("postgres" "redis" "neo4j" "chromadb" "qdrant" "ollama" "backend" "frontend")
     
     for service in "${services[@]}"; do
         echo "Restarting sutazai-${service}..."

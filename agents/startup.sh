@@ -14,4 +14,13 @@ fi
 
 # Start the agent
 echo "Starting agent: $AGENT_NAME"
-python /app/agent.py
+
+# Check if specific agent implementation exists
+if [ -f "/app/agent.py" ]; then
+    python /app/agent.py
+elif [ -f "/app/shared/generic_agent.py" ]; then
+    python /app/shared/generic_agent.py
+else
+    # Use the generic agent from the shared location
+    python /app/shared/agent_base.py
+fi

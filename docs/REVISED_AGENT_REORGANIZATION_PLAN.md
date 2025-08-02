@@ -6,12 +6,12 @@ This document outlines the reorganization of the SutazAI agent system to streaml
 ## Essential Agents to KEEP (Updated List)
 
 ### Core Development & Infrastructure (MUST KEEP)
-- **senior-ai-engineer** - AI/ML architecture and AGI design
+- **senior-ai-engineer** - AI/ML architecture and automation system design
 - **senior-backend-developer** - Backend development and API design
 - **senior-frontend-developer** - Frontend and UI development
 - **infrastructure-devops-manager** - Docker, Kubernetes, CI/CD
 
-### AGI/ASI Core Architecture
+### automation system/advanced automation Core Architecture
 - agi-system-architect
 - agi-system-validator
 - ai-agent-creator
@@ -37,19 +37,19 @@ This document outlines the reorganization of the SutazAI agent system to streaml
 - codebase-team-lead
 - testing-qa-validator
 
-### Deep Learning & Brain
-- deep-local-brain-builder
-- deep-learning-brain-architect
-- deep-learning-brain-manager
+### Deep Learning & Coordinator
+- deep-local-coordinator-builder
+- deep-learning-coordinator-architect
+- deep-learning-coordinator-manager
 - symbolic-reasoning-engine
 - multi-modal-fusion-coordinator
-- consciousness-emergence-monitor
+- system state-optimization-monitor
 
 ### Advanced AI Capabilities
 - evolution-strategy-trainer
-- neural-architecture-search
+- processing-architecture-search
 - federated-learning-coordinator
-- quantum-computing-optimizer
+- advanced-computing-optimizer
 - gradient-compression-specialist
 
 ### System Management
@@ -136,10 +136,10 @@ Rather than removing essential agents, we focus on:
 - deployment-automation-master
 
 #### Tier 3 - Task-Specific (High Resource)
-- deep-learning-brain-manager
+- deep-learning-coordinator-manager
 - model-training-specialist
 - mega-code-auditor
-- neural-architecture-search
+- processing-architecture-search
 
 ### 3. Communication Optimization
 
@@ -153,7 +153,7 @@ Rather than removing essential agents, we focus on:
 - All senior-* agents
 - Security specialists
 - Hardware optimizers
-- Brain/learning specialists
+- Coordinator/learning specialists
 
 ## Implementation Plan
 

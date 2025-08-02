@@ -1,0 +1,40 @@
+version: '3.8'
+
+# Enhanced AGI Backend Service Override
+services:
+  backend-agi:
+    container_name: sutazai-backend-agi
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=sutazai
+      - POSTGRES_PASSWORD=sutazai123
+      - POSTGRES_DB=sutazai
+      - OPENAI_API_BASE=http://litellm:4000/v1
+      - OPENAI_API_KEY=sk-local
+      - PYTHONPATH=/opt/sutazaiapp
+      - SERVICE_HUB_URL=http://service-hub:8080
+      - OLLAMA_URL=http://ollama:11434
+    volumes:
+      - ./backend:/opt/sutazaiapp/backend
+      - ./backend/main_agi_enhanced.py:/opt/sutazaiapp/backend/main.py
+    ports:
+      - "8000:8000"
+    command: python /opt/sutazaiapp/backend/main.py
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+      - litellm
+      - service-hub
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

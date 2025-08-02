@@ -1,6 +1,6 @@
 #!/bin/bash
 # SutazAI Complete System Deployment - Perfected Version
-# Comprehensive AGI/ASI System with 50+ AI Services
+# Comprehensive automation/advanced automation System with 50+ AI Services
 # Senior Developer Implementation - 100% Delivery with Perfect Error Handling
 
 set -euo pipefail
@@ -563,12 +563,12 @@ deploy_backend_services() {
     log_phase "Backend Services Deployment"
     
     # Check if backend container exists in compose
-    if docker compose config --services | grep -q "^backend-agi$"; then
+    if docker compose config --services | grep -q "^backend$"; then
         log_info "Starting enterprise backend service..."
-        docker compose up -d backend-agi
+        docker compose up -d backend
         
         # Wait for backend to be ready with comprehensive health check
-        check_service_health backend-agi "http://localhost:8000/health" "Enterprise Backend API"
+        check_service_health backend "http://localhost:8000/health" "Enterprise Backend API"
         
         # Test API endpoints
         log_info "Testing backend API endpoints..."
@@ -586,12 +586,12 @@ deploy_frontend_services() {
     log_phase "Frontend Services Deployment"
     
     # Check if frontend container exists in compose
-    if docker compose config --services | grep -q "^frontend-agi$"; then
+    if docker compose config --services | grep -q "^frontend$"; then
         log_info "Starting enhanced frontend service..."
-        docker compose up -d frontend-agi
+        docker compose up -d frontend
         
         # Wait for frontend
-        check_service_health frontend-agi "http://localhost:8501" "Enterprise Frontend"
+        check_service_health frontend "http://localhost:8501" "Enterprise Frontend"
     else
         log_warn "Frontend service not found in compose file"
     fi
@@ -803,7 +803,7 @@ run_comprehensive_health_checks() {
     # Summary
     echo
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}${GREEN}             SUTAZAI AGI/ASI SYSTEM STATUS REPORT${NC}"
+    echo -e "${BOLD}${GREEN}             SUTAZAI automation/advanced automation SYSTEM STATUS REPORT${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     echo
     echo -e "${GREEN}📊 System Status Summary:${NC}"
@@ -892,7 +892,7 @@ run_integration_tests() {
     if [[ -f "backend/app/self_improvement.py" ]]; then
         log_info "Testing self-improvement system integration..."
         # Test if the self-improvement system can be imported
-        if docker exec sutazai-backend-agi python -c "from app.self_improvement import SelfImprovementSystem; print('OK')" 2>/dev/null | grep -q "OK"; then
+        if docker exec sutazai-backend python -c "from app.self_improvement import SelfImprovementSystem; print('OK')" 2>/dev/null | grep -q "OK"; then
             log_success "Self-improvement system is properly integrated"
         else
             log_warn "Self-improvement system integration issues"
@@ -941,7 +941,7 @@ main() {
 ║   ███████║╚██████╔╝   ██║   ██║  ██║███████╗██║  ██║██║                     ║
 ║   ╚══════╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝                     ║
 ║                                                                              ║
-║                    🧠 COMPLETE AGI/ASI SYSTEM 🧠                            ║
+║                    🧠 COMPLETE automation/advanced automation SYSTEM 🧠                            ║
 ║                                                                              ║
 ║               🚀 50+ AI Agents & Services Deployment 🚀                     ║
 ║                     📡 100% Local & Self-Hosted 📡                         ║
@@ -981,7 +981,7 @@ EOF
         echo -e "${GREEN}${BOLD}"
         echo "╔══════════════════════════════════════════════════════════════════════════════╗"
         echo "║                     🎉 DEPLOYMENT SUCCESSFUL! 🎉                           ║"
-        echo "║                  SUTAZAI AGI/ASI SYSTEM IS OPERATIONAL                      ║"
+        echo "║                  SUTAZAI automation/advanced automation SYSTEM IS OPERATIONAL                      ║"
         echo "╚══════════════════════════════════════════════════════════════════════════════╝"
         echo -e "${NC}"
         
@@ -1031,7 +1031,7 @@ EOF
         echo -e "   • Live Logs Script: ${CYAN}./scripts/live_logs.sh${NC}"
         
         echo
-        echo -e "${BOLD}${GREEN}🎯 SUTAZAI AGI/ASI SYSTEM IS NOW FULLY OPERATIONAL!${NC}"
+        echo -e "${BOLD}${GREEN}🎯 SUTAZAI automation/advanced automation SYSTEM IS NOW FULLY OPERATIONAL!${NC}"
         
     else
         # PARTIAL SUCCESS
@@ -1064,7 +1064,7 @@ EOF
 # ===============================================
 
 show_usage() {
-    echo "SutazAI Complete AGI/ASI System Deployment Script"
+    echo "SutazAI Complete automation/advanced automation System Deployment Script"
     echo
     echo "Usage: $0 [COMMAND] [OPTIONS]"
     echo

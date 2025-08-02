@@ -1,0 +1,62 @@
+{
+  "voice_enabled": true,
+  "auto_execute": false,
+  "learning_mode": true,
+  "security_level": "high",
+  "response_style": "professional",
+  "max_task_duration": 300,
+  "concurrent_tasks": 5,
+  "speech_settings": {
+    "rate": 150,
+    "volume": 0.8,
+    "voice_id": 0,
+    "language": "en-US"
+  },
+  "ai_models": {
+    "reasoning": "tinyllama",
+    "conversation": "llama3.2:1b",
+    "analysis": "qwen2.5:7b",
+    "coding": "tinyllama",
+    "embedding": "nomic-embed-text"
+  },
+  "integrations": {
+    "ollama_url": "http://ollama:11434",
+    "backend_url": "http://backend-agi:8000",
+    "chromadb_url": "http://chromadb:8000",
+    "qdrant_url": "http://qdrant:6333",
+    "neo4j_url": "bolt://neo4j:7687"
+  },
+  "capabilities": {
+    "code_execution": false,
+    "system_control": true,
+    "file_operations": true,
+    "web_browsing": false,
+    "email_sending": false,
+    "calendar_management": true,
+    "task_scheduling": true
+  },
+  "security": {
+    "require_confirmation": true,
+    "sandbox_mode": true,
+    "allowed_commands": [
+      "status",
+      "analyze",
+      "research",
+      "help",
+      "explain",
+      "summarize"
+    ],
+    "restricted_commands": [
+      "delete",
+      "format",
+      "shutdown",
+      "reboot"
+    ]
+  },
+  "monitoring": {
+    "log_level": "INFO",
+    "performance_tracking": true,
+    "health_check_interval": 30,
+    "resource_monitoring": true
+  }
+} 

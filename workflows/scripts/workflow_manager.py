@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dify Workflow Manager for SutazAI AGI System
+Dify Workflow Manager for SutazAI automation System
 Manages workflow execution, monitoring, and optimization
 """
 
@@ -92,7 +92,7 @@ class DifyWorkflowManager:
         
         # API endpoints
         self.agent_registry_url = "http://agent-registry:8300/api/v1"
-        self.backend_api_url = "http://backend-agi:8000/api/v1"
+        self.backend_api_url = "http://backend:8000/api/v1"
         self.message_bus_url = "http://agent-message-bus:8299/api/v1"
         
         # Runtime state

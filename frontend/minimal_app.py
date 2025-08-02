@@ -9,7 +9,7 @@ MODEL_DESCRIPTIONS = {
 }
 #!/usr/bin/env python3
 """
-Quick minimal AGI frontend for immediate deployment
+Quick minimal automation frontend for immediate deployment
 """
 import streamlit as st
 import requests
@@ -18,7 +18,7 @@ from datetime import datetime
 
 # Set page config
 st.set_page_config(
-    page_title="SutazAI AGI System",
+    page_title="SutazAI automation System",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -34,7 +34,7 @@ def test_backend_connection():
     try:
         response = requests.get(f"{BACKEND_URL}/health", timeout=5)
         if response.status_code == 200:
-            return True, "backend-agi"
+            return True, "backend"
     except:
         pass
     
@@ -49,8 +49,8 @@ def test_backend_connection():
 
 def main():
     # Title and header
-    st.title("🤖 SutazAI AGI System")
-    st.markdown("### Enterprise AGI/ASI Autonomous System")
+    st.title("🤖 SutazAI automation System")
+    st.markdown("### Enterprise automation/advanced automation Autonomous System")
     
     # Sidebar
     with st.sidebar:
@@ -109,7 +109,7 @@ def show_dashboard(backend_connected, backend_type):
         if st.button("🤖 Invoke Agent"):
             if backend_connected:
                 try:
-                    url = f"{BACKEND_URL if backend_type == 'backend-agi' else BACKEND_URL_LOCAL}/api/v1/agents/sutazai-core/invoke"
+                    url = f"{BACKEND_URL if backend_type == 'backend' else BACKEND_URL_LOCAL}/api/v1/agents/sutazai-core/invoke"
                     response = requests.post(url, json={"message": "Test invocation"}, timeout=10)
                     if response.status_code == 200:
                         st.success("Agent invoked successfully!")
@@ -125,7 +125,7 @@ def show_dashboard(backend_connected, backend_type):
         if st.button("📊 System Check"):
             if backend_connected:
                 try:
-                    url = f"{BACKEND_URL if backend_type == 'backend-agi' else BACKEND_URL_LOCAL}/api/v1/system/status"
+                    url = f"{BACKEND_URL if backend_type == 'backend' else BACKEND_URL_LOCAL}/api/v1/system/status"
                     response = requests.get(url, timeout=10)
                     if response.status_code == 200:
                         st.success("System check completed!")
@@ -146,7 +146,7 @@ def show_agent_management(backend_connected, backend_type):
     
     if backend_connected:
         try:
-            url = f"{BACKEND_URL if backend_type == 'backend-agi' else BACKEND_URL_LOCAL}/api/v1/agents"
+            url = f"{BACKEND_URL if backend_type == 'backend' else BACKEND_URL_LOCAL}/api/v1/agents"
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 agents = response.json()
@@ -161,7 +161,7 @@ def show_agent_management(backend_connected, backend_type):
                         with col2:
                             if st.button(f"Invoke {agent['name']}", key=agent['id']):
                                 try:
-                                    invoke_url = f"{BACKEND_URL if backend_type == 'backend-agi' else BACKEND_URL_LOCAL}/api/v1/agents/{agent['id']}/invoke"
+                                    invoke_url = f"{BACKEND_URL if backend_type == 'backend' else BACKEND_URL_LOCAL}/api/v1/agents/{agent['id']}/invoke"
                                     response = requests.post(invoke_url, json={"task": "status check"}, timeout=10)
                                     if response.status_code == 200:
                                         st.success("Agent invoked!")
@@ -190,8 +190,8 @@ def show_system_status(backend_connected, backend_type):
         ("ChromaDB", "🟢 Running", "Vector database"),
         ("Qdrant", "🟢 Running", "Vector search"),
         ("Ollama", "🟢 Running", "LLM inference"),
-        ("Backend AGI", "🟢 Running" if backend_connected else "🔴 Offline", "Main backend service"),
-        ("Frontend AGI", "🟢 Running", "This interface")
+        ("Backend automation", "🟢 Running" if backend_connected else "🔴 Offline", "Main backend service"),
+        ("Frontend automation", "🟢 Running", "This interface")
     ]
     
     for service, status, description in services:

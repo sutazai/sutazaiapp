@@ -232,7 +232,7 @@ main() {
 # ===============================================
 
 show_usage() {
-    echo "SutazAI Complete AGI/ASI System Deployment Script"
+    echo "SutazAI Complete automation/advanced automation System Deployment Script"
     echo
     echo "Usage: $0 [COMMAND] [OPTIONS]"
     echo

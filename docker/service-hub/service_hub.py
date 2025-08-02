@@ -60,7 +60,7 @@ class ServiceRegistry:
             'ollama': 'http://ollama:11434',
             'chromadb': 'http://chromadb:8000',
             'qdrant': 'http://qdrant:6333',
-            'backend': 'http://backend-agi:8000',
+            'backend': 'http://backend:8000',
             # AI Agents (all configured to use Ollama)
             'autogpt': 'http://autogpt:8080',
             'crewai': 'http://crewai:8080',

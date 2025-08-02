@@ -1,6 +1,6 @@
 # 🤝 SutazAI v8 AI Collaboration Hub
 
-This directory facilitates collaboration between Claude Code and Gemini CLI to optimize and perfect the SutazAI AGI/ASI system.
+This directory facilitates collaboration between Claude Code and Gemini CLI to optimize and perfect the SutazAI automation system/advanced automation system.
 
 ## 📁 Directory Structure
 

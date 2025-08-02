@@ -31,7 +31,7 @@ Task(subagent_type='testing-qa-validator',
 ```python
 # AI system development
 Task(subagent_type='senior-ai-engineer',
-     prompt='Design and implement a neural network for image classification using PyTorch')
+     prompt='Design and implement a processing network for image classification using PyTorch')
 
 # Backend development
 Task(subagent_type='senior-backend-developer',
@@ -108,7 +108,7 @@ Task(subagent_type='ai-scrum-master',
      prompt='Plan and manage 2-week sprint for AI development team')
 
 # Deep learning
-Task(subagent_type='deep-learning-brain-manager',
+Task(subagent_type='deep-learning-coordinator-manager',
      prompt='Implement and train transformer model for NLP tasks')
 ```
 
@@ -187,8 +187,8 @@ await Task(subagent_type='deployment-automation-master',
 await Task(subagent_type='ai-agent-creator',
           prompt='Design agents for customer support automation')
 
-# Implement neural networks
-await Task(subagent_type='deep-learning-brain-manager',
+# Implement processing networks
+await Task(subagent_type='deep-learning-coordinator-manager',
           prompt='Build and train conversational AI model')
 
 # Deploy locally
@@ -277,7 +277,7 @@ Task(subagent_type='autonomous-system-controller',
    ```python
    # Build complete AI solution
    Task(subagent_type='ai-agent-creator', prompt='Create custom agents')
-   Task(subagent_type='deep-learning-brain-manager', prompt='Train models')
+   Task(subagent_type='deep-learning-coordinator-manager', prompt='Train models')
    Task(subagent_type='ollama-integration-specialist', prompt='Deploy locally')
    ```
 

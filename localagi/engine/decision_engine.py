@@ -36,7 +36,7 @@ class DecisionAlgorithm(Enum):
     REINFORCEMENT_LEARNING = "reinforcement_learning"
     MONTE_CARLO = "monte_carlo"
     BAYESIAN_OPTIMIZATION = "bayesian_optimization"
-    NEURAL_NETWORK = "neural_network"
+    NEURAL_NETWORK = "processing_network"
 
 @dataclass
 class DecisionCriteria:

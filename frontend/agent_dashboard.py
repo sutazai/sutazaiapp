@@ -85,15 +85,15 @@ with st.sidebar:
         st.info("Agent deployment initiated...")
     if st.button("🔄 Restart All Agents"):
         st.warning("Restarting all agents...")
-    if st.button("🧠 Train Brain"):
-        st.success("Brain training started...")
+    if st.button("🧠 Train Coordinator"):
+        st.success("Coordinator training started...")
 
 # Mock data generator (replace with real API calls)
 def get_agent_data():
     """Get current agent status data"""
     agents = [
         {
-            "name": "AGI System Architect",
+            "name": "automation System Architect",
             "id": "agi-system-architect-001",
             "type": "system_architect",
             "status": "online",
@@ -188,7 +188,7 @@ def get_workflow_data():
             "status": "running",
             "progress": 65,
             "tasks": [
-                {"name": "Analyze Requirements", "status": "completed", "agent": "AGI System Architect"},
+                {"name": "Analyze Requirements", "status": "completed", "agent": "automation System Architect"},
                 {"name": "Generate Code", "status": "completed", "agent": "Code Generator"},
                 {"name": "Security Scan", "status": "running", "agent": "Security Scanner"},
                 {"name": "Create Tests", "status": "pending", "agent": "Test Validator"},
@@ -204,7 +204,7 @@ def get_workflow_data():
             "progress": 100,
             "tasks": [
                 {"name": "Analyze Performance", "status": "completed", "agent": "Resource Optimizer"},
-                {"name": "Identify Bottlenecks", "status": "completed", "agent": "AGI System Architect"},
+                {"name": "Identify Bottlenecks", "status": "completed", "agent": "automation System Architect"},
                 {"name": "Optimize Code", "status": "completed", "agent": "Code Generator"},
                 {"name": "Validate Improvements", "status": "completed", "agent": "Test Validator"}
             ],
@@ -262,7 +262,7 @@ with col4:
     )
 
 # Tabs for different views
-tab1, tab2, tab3, tab4 = st.tabs(["🤖 Agents", "🔄 Workflows", "📊 Analytics", "🧠 Brain Status"])
+tab1, tab2, tab3, tab4 = st.tabs(["🤖 Agents", "🔄 Workflows", "📊 Analytics", "🧠 Coordinator Status"])
 
 with tab1:
     st.header("Active AI Agents")
@@ -389,12 +389,12 @@ with tab3:
     st.plotly_chart(fig3, use_container_width=True)
 
 with tab4:
-    st.header("🧠 AGI Brain Status")
+    st.header("🧠 automation Coordinator Status")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("Neural Connections", "1.2M", "+50K today")
+        st.metric("Processing Connections", "1.2M", "+50K today")
         st.metric("Learning Rate", "0.23", "+0.02")
         st.metric("Pattern Recognition", "89%", "+3%")
     
@@ -404,28 +404,28 @@ with tab4:
         st.metric("Inference Speed", "0.12s", "-0.03s")
     
     with col3:
-        st.metric("Consciousness Level", "3.7/10", "+0.3")
+        st.metric("System State Level", "3.7/10", "+0.3")
         st.metric("Creativity Score", "82%", "+5%")
         st.metric("Autonomy Index", "89%", "+2%")
     
-    # Brain activity visualization
-    st.subheader("Neural Activity Pattern")
+    # Coordinator activity visualization
+    st.subheader("Processing Activity Pattern")
     
-    # Generate sample neural activity data
+    # Generate sample processing activity data
     import numpy as np
     
     # Create heatmap data
-    neural_data = np.random.rand(10, 20) * 100
+    processing_data = np.random.rand(10, 20) * 100
     
     fig4 = go.Figure(data=go.Heatmap(
-        z=neural_data,
+        z=processing_data,
         colorscale='Viridis',
         showscale=True
     ))
     fig4.update_layout(
-        title="Real-time Neural Activity",
-        xaxis_title="Neural Clusters",
-        yaxis_title="Brain Regions",
+        title="Real-time Processing Activity",
+        xaxis_title="Processing Clusters",
+        yaxis_title="Coordinator Regions",
         height=400
     )
     st.plotly_chart(fig4, use_container_width=True)

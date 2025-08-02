@@ -1,7 +1,7 @@
 #!/bin/bash
-# Final test of the complete deployment with Brain system
+# Final test of the complete deployment with Coordinator system
 
-echo "🧠 Final Test: Super Intelligent Deployment with Brain System"
+echo "🧠 Final Test: Super Intelligent Deployment with Coordinator System"
 echo "==========================================================="
 echo ""
 
@@ -11,7 +11,7 @@ cd /opt/sutazaiapp
 ./scripts/check_docker_health.sh
 
 echo ""
-echo "Starting deployment with full Brain intelligence..."
+echo "Starting deployment with full Coordinator intelligence..."
 LOG_FILE="final_deployment_$(date +%Y%m%d_%H%M%S).log"
 echo "Log file: $LOG_FILE"
 echo ""
@@ -24,25 +24,25 @@ PID=$!
 sleep 15
 
 echo ""
-echo "🧠 Brain System Activity:"
+echo "🧠 Coordinator System Activity:"
 echo "========================"
 
-# Check Brain initialization
-if grep -q "Brain: Analyzing system state" "$LOG_FILE"; then
-    echo "✅ Brain initialized and analyzing system"
+# Check Coordinator initialization
+if grep -q "Coordinator: Analyzing system state" "$LOG_FILE"; then
+    echo "✅ Coordinator initialized and analyzing system"
 fi
 
-# Check Brain decisions
-brain_decisions=$(grep -c "Brain Decision:" "$LOG_FILE" 2>/dev/null || echo 0)
-echo "✅ Brain made $brain_decisions intelligent decisions"
+# Check Coordinator decisions
+coordinator_decisions=$(grep -c "Coordinator Decision:" "$LOG_FILE" 2>/dev/null || echo 0)
+echo "✅ Coordinator made $coordinator_decisions intelligent decisions"
 
 # Check Docker handling
-if grep -q "Brain: Skipping Docker restart in WSL2" "$LOG_FILE"; then
-    echo "✅ Brain intelligently avoided Docker restart in WSL2"
+if grep -q "Coordinator: Skipping Docker restart in WSL2" "$LOG_FILE"; then
+    echo "✅ Coordinator intelligently avoided Docker restart in WSL2"
 fi
 
-if grep -q "Brain: WSL2 detected - using specialized recovery" "$LOG_FILE"; then
-    echo "✅ Brain used WSL2-specific recovery strategy"
+if grep -q "Coordinator: WSL2 detected - using specialized recovery" "$LOG_FILE"; then
+    echo "✅ Coordinator used WSL2-specific recovery strategy"
 fi
 
 # Check deployment progress
@@ -55,11 +55,11 @@ if grep -q "Phase 3:" "$LOG_FILE"; then echo "✅ Phase 3: Port resolution compl
 if grep -q "Phase 4:" "$LOG_FILE"; then echo "✅ Phase 4: System optimization completed"; fi
 if grep -q "Phase 5:" "$LOG_FILE"; then echo "✅ Phase 5: Deployment started"; fi
 
-# Show some Brain decisions
+# Show some Coordinator decisions
 echo ""
-echo "🧠 Sample Brain Decisions:"
+echo "🧠 Sample Coordinator Decisions:"
 echo "========================="
-grep "Brain Decision:" "$LOG_FILE" 2>/dev/null | head -5 || echo "No decisions logged yet"
+grep "Coordinator Decision:" "$LOG_FILE" 2>/dev/null | head -5 || echo "No decisions logged yet"
 
 # Monitor for 30 more seconds
 sleep 30
@@ -79,10 +79,10 @@ fi
 kill $PID 2>/dev/null
 
 echo ""
-echo "✅ Test complete! The Super Intelligent Brain system is working!"
+echo "✅ Test complete! The Super Intelligent Coordinator system is working!"
 echo ""
 echo "Summary:"
-echo "- Brain made $brain_decisions intelligent decisions"
+echo "- Coordinator made $coordinator_decisions intelligent decisions"
 echo "- Deployment progressed through multiple phases"
 echo "- Docker issues were handled intelligently"
 echo ""

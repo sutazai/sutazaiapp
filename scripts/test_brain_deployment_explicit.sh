@@ -1,36 +1,36 @@
 #!/bin/bash
-# Test deployment by explicitly calling the Brain-enabled function
+# Test deployment by explicitly calling the Coordinator-enabled function
 
-echo "🧠 Testing Brain-Enabled Deployment Function..."
+echo "🧠 Testing Coordinator-Enabled Deployment Function..."
 echo "============================================"
 echo ""
 
 cd /opt/sutazaiapp
 
 # Run deployment with explicit "deploy" argument
-LOG_FILE="brain_explicit_test_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="coordinator_explicit_test_$(date +%Y%m%d_%H%M%S).log"
 
 echo "Running deployment with explicit 'deploy' argument..."
 echo "Log file: $LOG_FILE"
 echo ""
 
-# Run with explicit deploy argument to ensure Brain path is taken
+# Run with explicit deploy argument to ensure Coordinator path is taken
 timeout 60 bash scripts/deploy_complete_system.sh deploy 2>&1 | tee "$LOG_FILE" &
 PID=$!
 
-# Monitor for Brain initialization
+# Monitor for Coordinator initialization
 sleep 8
 
-echo "Checking for Brain activity..."
-if grep -q "Initializing Super Intelligent Brain Core System" "$LOG_FILE"; then
-    echo "✅ Brain successfully initialized!"
+echo "Checking for Coordinator activity..."
+if grep -q "Initializing Super Intelligent Coordinator Core System" "$LOG_FILE"; then
+    echo "✅ Coordinator successfully initialized!"
     
-    # Show Brain activity
+    # Show Coordinator activity
     echo ""
-    echo "Brain Activity:"
-    grep -E "🧠|Brain:|Brain Status Dashboard" "$LOG_FILE" | head -15
+    echo "Coordinator Activity:"
+    grep -E "🧠|Coordinator:|Coordinator Status Dashboard" "$LOG_FILE" | head -15
 else
-    echo "❌ Brain not initialized"
+    echo "❌ Coordinator not initialized"
     
     # Check what function is being called
     echo ""

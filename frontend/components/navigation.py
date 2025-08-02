@@ -18,7 +18,7 @@ class NavigationManager:
                 "pages": [
                     {"id": "dashboard", "name": "Enterprise Dashboard", "icon": "📊", "description": "System overview and metrics"},
                     {"id": "chat", "name": "AI Chat Hub", "icon": "💬", "description": "Central chat interface for all AI models"},
-                    {"id": "neural", "name": "AGI Neural Engine", "icon": "🧠", "description": "Advanced neural processing center"}
+                    {"id": "processing", "name": "automation Processing Engine", "icon": "🧠", "description": "Advanced processing processing center"}
                 ]
             },
             "🤖 AI Agents": {
@@ -48,7 +48,7 @@ class NavigationManager:
                     {"id": "langflow", "name": "LangFlow Builder", "icon": "🌊", "description": "Visual workflow builder"},
                     {"id": "flowiseai", "name": "FlowiseAI", "icon": "🌸", "description": "No-code AI workflows"},
                     {"id": "n8n", "name": "n8n Automation", "icon": "🔗", "description": "Workflow automation platform"},
-                    {"id": "bigagi", "name": "BigAGI Interface", "icon": "💼", "description": "Advanced AGI interface"},
+                    {"id": "bigagi", "name": "BigAGI Interface", "icon": "💼", "description": "Advanced automation interface"},
                     {"id": "dify", "name": "Dify Workflows", "icon": "⚡", "description": "LLM application workflows"}
                 ]
             },

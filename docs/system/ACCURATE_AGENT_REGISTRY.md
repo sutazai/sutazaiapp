@@ -8,7 +8,7 @@
 ## 🧠 OPUS Agents (19)
 
 ### System Architecture & Design
-- `agi-system-architect` - Overall AGI/ASI system architecture
+- `agi-system-architect` - Overall automation system/advanced automation system architecture
 - `complex-problem-solver` - Solving complex technical challenges
 - `autonomous-system-controller` - Self-managing system control
 - `system-optimizer-reorganizer` - System optimization and reorganization
@@ -23,7 +23,7 @@
 - `ai-agent-creator` - Creating new AI agents
 - `ai-agent-orchestrator` - Multi-agent coordination
 - `ai-product-manager` - AI product strategy
-- `deep-learning-brain-manager` - Neural network development
+- `deep-learning-coordinator-manager` - Processing network development
 
 ### Infrastructure & Deployment
 - `infrastructure-devops-manager` - DevOps and infrastructure
@@ -126,7 +126,7 @@ Task(subagent_type='task-assignment-coordinator',
 | autonomous-system-controller | opus | Autonomous system management |
 | code-generation-improver | opus | Code optimization |
 | complex-problem-solver | opus | Complex problem solving |
-| deep-learning-brain-manager | opus | Neural network development |
+| deep-learning-coordinator-manager | opus | Processing network development |
 | deployment-automation-master | opus | Deployment automation |
 | document-knowledge-manager | opus | Knowledge management |
 | hardware-resource-optimizer | opus | Hardware optimization |

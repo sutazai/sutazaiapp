@@ -4,7 +4,7 @@
   "capabilities": [
     "ai_architecture_design",
     "machine_learning_implementation", 
-    "neural_network_development",
+    "processing_network_development",
     "model_training_optimization",
     "rag_system_building"
   ],
@@ -13,5 +13,5 @@
   "max_tokens": 2048,
   "priority": "high",
   "agent_type": "specialized_engineer",
-  "description": "Senior AI Engineer for AI/ML development, neural architectures, and intelligent system design"
+  "description": "Senior AI Engineer for AI/ML development, processing architectures, and intelligent system design"
 }

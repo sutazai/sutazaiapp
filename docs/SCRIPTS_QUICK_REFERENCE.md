@@ -30,7 +30,7 @@
 
 | Script | Purpose | When to use |
 |--------|---------|-------------|
-| `deploy_complete_system.sh` | Full AGI deployment | Production |
+| `deploy_complete_system.sh` | Full automation system deployment | Production |
 | `deploy_essential_ai.sh` | Core components only | Development |
 | `deploy_autonomous_agi.sh` | Autonomous agents | Advanced features |
 

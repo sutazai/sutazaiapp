@@ -1,5 +1,5 @@
 #!/bin/bash
-# SutazAI Enhanced Brain Testing Script
+# SutazAI Enhanced Coordinator Testing Script
 # Comprehensive validation of all components
 
 set -e
@@ -86,7 +86,7 @@ test_docker_container() {
 
 # Main test sequence
 echo "═══════════════════════════════════════════════════════════════"
-echo "         🧪 SutazAI Enhanced Brain System Tests 🧪"
+echo "         🧪 SutazAI Enhanced Coordinator System Tests 🧪"
 echo "═══════════════════════════════════════════════════════════════"
 echo
 
@@ -100,13 +100,13 @@ test_docker_container "Qdrant" "sutazai-qdrant"
 test_docker_container "ChromaDB" "sutazai-chromadb"
 test_docker_container "Neo4j" "sutazai-neo4j"
 
-# Test 2: Brain Core
-echo -e "\n${BLUE}[2/7] Testing Brain Core${NC}"
+# Test 2: Coordinator Core
+echo -e "\n${BLUE}[2/7] Testing Coordinator Core${NC}"
 echo "───────────────────────────────────────"
-test_docker_container "Brain Core" "sutazai-brain-core"
-test_endpoint "Brain Health" "http://localhost:8888/health"
-test_endpoint "Brain Status" "http://localhost:8888/status"
-test_endpoint "Brain Agents List" "http://localhost:8888/agents"
+test_docker_container "Coordinator Core" "sutazai-coordinator-core"
+test_endpoint "Coordinator Health" "http://localhost:8888/health"
+test_endpoint "Coordinator Status" "http://localhost:8888/status"
+test_endpoint "Coordinator Agents List" "http://localhost:8888/agents"
 
 # Test 3: Enhanced Agents
 echo -e "\n${BLUE}[3/7] Testing Enhanced Agents${NC}"
@@ -126,10 +126,10 @@ test_endpoint "PyTorch Service" "http://localhost:8888/health"
 test_docker_container "TensorFlow" "sutazai-tensorflow"
 test_docker_container "JAX" "sutazai-jax"
 
-# Test 5: Brain API Functionality
-echo -e "\n${BLUE}[5/7] Testing Brain API Functionality${NC}"
+# Test 5: Coordinator API Functionality
+echo -e "\n${BLUE}[5/7] Testing Coordinator API Functionality${NC}"
 echo "───────────────────────────────────────"
-test_post_endpoint "Brain Process" \
+test_post_endpoint "Coordinator Process" \
     "http://localhost:8888/process" \
     '{"input": "Test request"}' \
     "output"
@@ -142,9 +142,9 @@ test_post_endpoint "JARVIS Execution" \
 # Test 6: Monitoring Stack
 echo -e "\n${BLUE}[6/7] Testing Monitoring Stack${NC}"
 echo "───────────────────────────────────────"
-test_docker_container "Brain Prometheus" "sutazai-brain-prometheus"
+test_docker_container "Coordinator Prometheus" "sutazai-coordinator-prometheus"
 test_endpoint "Prometheus" "http://localhost:9091"
-test_docker_container "Brain Grafana" "sutazai-brain-grafana"
+test_docker_container "Coordinator Grafana" "sutazai-coordinator-grafana"
 test_endpoint "Grafana" "http://localhost:3001" "302"
 
 # Test 7: Advanced Features
@@ -234,7 +234,7 @@ echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
 echo
 
 if [ "$TESTS_FAILED" -eq 0 ]; then
-    echo -e "${GREEN}✅ ALL TESTS PASSED! The Enhanced Brain is fully operational.${NC}"
+    echo -e "${GREEN}✅ ALL TESTS PASSED! The Enhanced Coordinator is fully operational.${NC}"
     exit 0
 else
     echo -e "${RED}❌ Some tests failed. Please check the logs for details.${NC}"
@@ -242,7 +242,7 @@ else
     echo "Troubleshooting tips:"
     echo "1. Check container logs: docker logs <container-name>"
     echo "2. Verify all services are running: docker ps"
-    echo "3. Check Brain logs: tail -f /workspace/brain/logs/*.log"
+    echo "3. Check Coordinator logs: tail -f /workspace/coordinator/logs/*.log"
     echo "4. Ensure models are downloaded: docker exec sutazai-ollama ollama list"
     exit 1
 fi

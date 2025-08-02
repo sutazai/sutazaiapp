@@ -1,7 +1,7 @@
 {
   "name": "sutazai-mcp-server",
   "version": "1.0.0",
-  "description": "Model Context Protocol server for SutazAI AGI/ASI system",
+  "description": "Model Context Protocol server for SutazAI automation/advanced automation system",
   "type": "module",
   "main": "index.js",
   "bin": {

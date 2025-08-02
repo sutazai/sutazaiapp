@@ -53,7 +53,7 @@ POST /api/v1/streaming/chat/stream
 ```json
 {
   "messages": [
-    {"role": "user", "content": "Explain quantum computing"}
+    {"role": "user", "content": "Explain advanced computing"}
   ],
   "model": "qwen2.5:3b",
   "temperature": 0.7,
@@ -65,7 +65,7 @@ POST /api/v1/streaming/chat/stream
 ```
 data: {"type": "start", "model": "qwen2.5:3b", "timestamp": "2025-01-26T..."}
 
-data: {"type": "chunk", "content": "Quantum", "is_final": false}
+data: {"type": "chunk", "content": "Advanced", "is_final": false}
 
 data: {"type": "chunk", "content": " computing", "is_final": false}
 

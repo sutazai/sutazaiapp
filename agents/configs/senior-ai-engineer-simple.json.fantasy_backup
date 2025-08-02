@@ -1,0 +1,17 @@
+{
+  "name": "senior-ai-engineer",
+  "role": "AI/ML Engineer",
+  "capabilities": [
+    "ai_architecture_design",
+    "machine_learning_implementation", 
+    "neural_network_development",
+    "model_training_optimization",
+    "rag_system_building"
+  ],
+  "ollama_endpoint": "http://sutazai-ollama-minimal:11434",
+  "model": "tinyllama",
+  "max_tokens": 2048,
+  "priority": "high",
+  "agent_type": "specialized_engineer",
+  "description": "Senior AI Engineer for AI/ML development, neural architectures, and intelligent system design"
+}

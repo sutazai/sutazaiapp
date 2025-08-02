@@ -1,8 +1,8 @@
-# SutazAI Autonomous System Controller
+# SutazAI automation system Controller
 
 ## 🚀 Overview
 
-The Autonomous System Controller is the master brain of the SutazAI AGI system. It operates 24/7 without human intervention, making intelligent decisions to keep your AI system running optimally.
+The automation system Controller is the master coordinator of the SutazAI automation system system. It operates 24/7 without human intervention, making intelligent decisions to keep your AI system running optimally.
 
 ### Key Features
 
@@ -42,7 +42,7 @@ python3 tests/test_autonomous_controller.py
 
 ```
 ┌─────────────────────────────────────────┐
-│       Autonomous System Controller       │
+│       automation system Controller       │
 ├─────────────────────────────────────────┤
 │                                         │
 │  ┌───────────┐  ┌──────────────────┐  │
@@ -64,7 +64,7 @@ python3 tests/test_autonomous_controller.py
                     │
                     ▼
         ┌─────────────────────┐
-        │   AGI System Agents │
+        │   automation system System Agents │
         └─────────────────────┘
 ```
 
@@ -257,7 +257,7 @@ The controller integrates with:
 - **Redis**: Fast state storage
 - **PostgreSQL**: Persistent decision history
 - **Prometheus**: Metrics collection
-- **Brain System**: High-level coordination
+- **Coordinator System**: High-level coordination
 
 ## 📚 Further Reading
 
@@ -268,4 +268,4 @@ The controller integrates with:
 
 ---
 
-**Remember**: The Autonomous System Controller is designed to make your life easier by handling routine operations automatically. Trust it to manage your system, but always maintain oversight through monitoring and regular reviews of its decisions.
+**Remember**: The automation system Controller is designed to make your life easier by handling routine operations automatically. Trust it to manage your system, but always maintain oversight through monitoring and regular reviews of its decisions.

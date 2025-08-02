@@ -1,16 +1,16 @@
 # Horizontal Pod Autoscalers for all services
 ---
-# Brain Core HPA
+# Coordinator Core HPA
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: brain-core-hpa
+  name: coordinator-core-hpa
   namespace: sutazai-core
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: brain-core
+    name: coordinator-core
   minReplicas: 3
   maxReplicas: 10
   metrics:
@@ -150,18 +150,18 @@ spec:
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: brain-core-vpa
+  name: coordinator-core-vpa
   namespace: sutazai-core
 spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: brain-core
+    name: coordinator-core
   updatePolicy:
     updateMode: "Auto"
   resourcePolicy:
     containerPolicies:
-    - containerName: brain-core
+    - containerName: coordinator-core
       minAllowed:
         cpu: "2"
         memory: "4Gi"

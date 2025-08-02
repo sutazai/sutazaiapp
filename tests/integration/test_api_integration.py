@@ -45,15 +45,15 @@ async def test_system_status(client):
     assert "services" in data
 
 @pytest.mark.asyncio
-async def test_brain_think(client, auth_headers):
-    """Test AGI brain thinking endpoint"""
+async def test_coordinator_think(client, auth_headers):
+    """Test automation coordinator thinking endpoint"""
     payload = {
         "input_data": {"text": "What is the meaning of life?"},
         "reasoning_type": "strategic"
     }
     
     response = await client.post(
-        "/api/v1/brain/think",
+        "/api/v1/coordinator/think",
         json=payload,
         headers=auth_headers
     )
@@ -65,10 +65,10 @@ async def test_brain_think(client, auth_headers):
     assert data["reasoning_type"] == "strategic"
 
 @pytest.mark.asyncio
-async def test_brain_status(client, auth_headers):
-    """Test brain status endpoint"""
+async def test_coordinator_status(client, auth_headers):
+    """Test coordinator status endpoint"""
     response = await client.get(
-        "/api/v1/brain/status",
+        "/api/v1/coordinator/status",
         headers=auth_headers
     )
     
@@ -159,7 +159,7 @@ async def test_rate_limiting(client):
 async def test_cors_headers(client):
     """Test CORS headers"""
     response = await client.options(
-        "/api/v1/brain/think",
+        "/api/v1/coordinator/think",
         headers={"Origin": "http://localhost:3000"}
     )
     
@@ -192,7 +192,7 @@ async def test_concurrent_requests(client, auth_headers):
             "reasoning_type": "deductive"
         }
         tasks.append(client.post(
-            "/api/v1/brain/think",
+            "/api/v1/coordinator/think",
             json=payload,
             headers=auth_headers
         ))
@@ -211,7 +211,7 @@ async def test_error_handling(client, auth_headers):
     """Test API error handling"""
     # Test with invalid payload
     response = await client.post(
-        "/api/v1/brain/think",
+        "/api/v1/coordinator/think",
         json={"invalid": "payload"},
         headers=auth_headers
     )

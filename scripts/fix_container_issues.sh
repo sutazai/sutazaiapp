@@ -1,6 +1,6 @@
 #!/bin/bash
 # Fix Container Issues Script - SutazAI v17.0
-# Fixes Loki, N8N, backend-agi, and frontend-agi container issues
+# Fixes Loki, N8N, backend, and frontend container issues
 
 source "$(dirname "$0")/common.sh"
 
@@ -76,9 +76,9 @@ fix_n8n_container() {
     log_warning "N8N may still be starting - check logs if issues persist"
 }
 
-# Fix backend-agi container
-fix_backend_agi_container() {
-    log_info "Fixing backend-agi container issues..."
+# Fix backend container
+fix_backend_container() {
+    log_info "Fixing backend container issues..."
     
     # Check if working_main.py exists
     if [[ ! -f "$PROJECT_ROOT/backend/app/working_main.py" ]]; then
@@ -86,27 +86,27 @@ fix_backend_agi_container() {
         return 1
     fi
     
-    # Build and start backend-agi
+    # Build and start backend
     cd "$PROJECT_ROOT"
-    docker-compose build backend-agi
-    docker-compose up -d backend-agi
+    docker-compose build backend
+    docker-compose up -d backend
     
     # Wait for backend to be healthy
-    log_info "Waiting for backend-agi to be ready..."
+    log_info "Waiting for backend to be ready..."
     for i in {1..60}; do
         if curl -s http://localhost:8000/health >/dev/null 2>&1; then
-            log_success "Backend-AGI container started successfully"
+            log_success "Backend-automation container started successfully"
             return 0
         fi
         sleep 3
     done
     
-    log_warning "Backend-AGI may still be starting - check logs"
+    log_warning "Backend-automation may still be starting - check logs"
 }
 
-# Fix frontend-agi container
-fix_frontend_agi_container() {
-    log_info "Fixing frontend-agi container issues..."
+# Fix frontend container
+fix_frontend_container() {
+    log_info "Fixing frontend container issues..."
     
     # Check if app_agi_enhanced.py exists, if not use app.py
     if [[ ! -f "$PROJECT_ROOT/frontend/app_agi_enhanced.py" ]]; then
@@ -120,22 +120,22 @@ fix_frontend_agi_container() {
         fi
     fi
     
-    # Build and start frontend-agi
+    # Build and start frontend
     cd "$PROJECT_ROOT"
-    docker-compose build frontend-agi
-    docker-compose up -d frontend-agi
+    docker-compose build frontend
+    docker-compose up -d frontend
     
     # Wait for frontend to be ready
-    log_info "Waiting for frontend-agi to be available..."
+    log_info "Waiting for frontend to be available..."
     for i in {1..60}; do
         if curl -s http://localhost:8501 >/dev/null 2>&1; then
-            log_success "Frontend-AGI container started successfully"
+            log_success "Frontend-automation container started successfully"
             return 0
         fi
         sleep 3
     done
     
-    log_warning "Frontend-AGI may still be starting - check logs"
+    log_warning "Frontend-automation may still be starting - check logs"
 }
 
 # Fix Qdrant health check issues
@@ -179,8 +179,8 @@ main() {
     # Fix all container issues
     fix_loki_container
     fix_n8n_container
-    fix_backend_agi_container  
-    fix_frontend_agi_container
+    fix_backend_container  
+    fix_frontend_container
     fix_qdrant_health
     fix_faiss_service
     

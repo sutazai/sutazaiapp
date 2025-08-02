@@ -122,7 +122,7 @@ services:
           memory: 1G
 
   # Backend API
-  backend-agi:
+  backend:
     build:
       context: ../..
       dockerfile: docker/production/backend.Dockerfile
@@ -159,7 +159,7 @@ services:
           memory: 1G
 
   # Frontend
-  frontend-agi:
+  frontend:
     build:
       context: ../..
       dockerfile: docker/production/frontend.Dockerfile
@@ -168,11 +168,11 @@ services:
     restart: always
     environment:
       <<: *common-variables
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
     ports:
       - "127.0.0.1:8501:8501"
     depends_on:
-      - backend-agi
+      - backend
     networks:
       - sutazai-prod
     logging: *default-logging
@@ -195,8 +195,8 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     depends_on:
-      - backend-agi
-      - frontend-agi
+      - backend
+      - frontend
     networks:
       - sutazai-prod
     logging: *default-logging

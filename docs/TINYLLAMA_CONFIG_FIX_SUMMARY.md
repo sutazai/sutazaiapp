@@ -2,7 +2,7 @@
 
 ## Fixed Issues
 
-1. **Missing backend-agi service** - Added the core backend API service that was missing
+1. **Missing backend service** - Added the core backend API service that was missing
 2. **Resource allocation** - Optimized to stay within 12GB RAM and 6 CPU cores limit
 3. **Network configuration** - Added proper network definitions for all services
 4. **Health checks** - Added proper health checks for all services
@@ -15,7 +15,7 @@
 - **ollama**: 2.0 cores, 3 GB RAM (for TinyLlama model)
 - **postgres**: 1.0 cores, 1 GB RAM
 - **redis**: 0.5 cores, 512 MB RAM
-- **backend-agi**: 1.0 cores, 2 GB RAM
+- **backend**: 1.0 cores, 2 GB RAM
 - **task-coordinator**: 0.5 cores, 1 GB RAM
 
 ### Temporary Service
@@ -23,7 +23,7 @@
 
 ## Key Configuration Updates
 
-1. **Backend AGI Service**
+1. **Backend automation system Service**
    - Added complete configuration with all required environment variables
    - Configured for TinyLlama model usage
    - Proper volume mounts for data persistence
@@ -36,7 +36,7 @@
 
 3. **Task Coordinator**
    - Using existing infrastructure-devops directory
-   - Configured to connect to backend-agi service
+   - Configured to connect to backend service
    - Limited concurrent tasks to 2 for resource efficiency
 
 4. **Model Initialization**

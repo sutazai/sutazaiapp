@@ -1,0 +1,362 @@
+# SutazAI Deployment Verification Configuration
+# Testing QA Validator Agent
+# Version: 1.0.0
+
+# Global settings
+global:
+  timeout: 30  # Default timeout for checks in seconds
+  retries: 3   # Number of retries for failed checks
+  log_level: INFO
+  report_format: json
+  
+# Resource usage thresholds
+thresholds:
+  cpu_warning: 80    # CPU usage warning threshold (%)
+  cpu_critical: 95   # CPU usage critical threshold (%)
+  memory_warning: 85 # Memory usage warning threshold (%)
+  memory_critical: 95 # Memory usage critical threshold (%)
+  disk_warning: 85   # Disk usage warning threshold (%)
+  disk_critical: 95  # Disk usage critical threshold (%)
+  success_rate_good: 90      # Overall success rate for "good" status
+  success_rate_acceptable: 80 # Overall success rate for "acceptable" status
+
+# Service configurations
+services:
+  core_infrastructure:
+    postgres:
+      container: sutazai-postgres
+      port: 5432
+      health_url: null
+      timeout: 10
+      required: true
+    redis:
+      container: sutazai-redis
+      port: 6379
+      health_url: null
+      timeout: 5
+      required: true
+    neo4j:
+      container: sutazai-neo4j
+      port: 7687
+      health_url: "http://localhost:7474"
+      timeout: 15
+      required: false
+      
+  vector_databases:
+    chromadb:
+      container: sutazai-chromadb
+      port: 8001
+      health_url: "http://localhost:8001/api/v1/heartbeat"
+      timeout: 10
+      required: true
+    qdrant:
+      container: sutazai-qdrant
+      port: 6333
+      health_url: "http://localhost:6333/cluster"
+      timeout: 10
+      required: true
+    faiss:
+      container: sutazai-faiss
+      port: 8002
+      health_url: "http://localhost:8002/health"
+      timeout: 10
+      required: false
+      
+  application:
+    backend:
+      container: sutazai-backend
+      port: 8000
+      health_url: "http://localhost:8000/health"
+      timeout: 15
+      required: true
+    frontend:
+      container: sutazai-frontend
+      port: 8501
+      health_url: "http://localhost:8501/healthz"
+      timeout: 15
+      required: true
+    ollama:
+      container: sutazai-ollama
+      port: 11434
+      health_url: "http://localhost:11434/api/tags"
+      timeout: 20
+      required: true
+      
+  ai_services:
+    litellm:
+      container: sutazai-litellm
+      port: 4000
+      health_url: "http://localhost:4000/health"
+      timeout: 10
+      required: false
+    langflow:
+      container: sutazai-langflow
+      port: 8090
+      health_url: "http://localhost:8090/health"
+      timeout: 15
+      required: false
+    flowise:
+      container: sutazai-flowise
+      port: 8099
+      health_url: "http://localhost:8099/api/v1/ping"
+      timeout: 15
+      required: false
+    dify:
+      container: sutazai-dify
+      port: 8107
+      health_url: "http://localhost:8107"
+      timeout: 15
+      required: false
+      
+  monitoring:
+    prometheus:
+      container: sutazai-prometheus
+      port: 9090
+      health_url: "http://localhost:9090/-/healthy"
+      timeout: 10
+      required: false
+    grafana:
+      container: sutazai-grafana
+      port: 3000
+      health_url: "http://localhost:3000/api/health"
+      timeout: 10
+      required: false
+    loki:
+      container: sutazai-loki
+      port: 3100
+      health_url: "http://localhost:3100/ready"
+      timeout: 10
+      required: false
+      
+  workflow:
+    n8n:
+      container: sutazai-n8n
+      port: 5678
+      health_url: "http://localhost:5678/healthz"
+      timeout: 10
+      required: false
+
+# AI Agent configurations
+agents:
+  autonomous:
+    autogpt:
+      container: sutazai-autogpt
+      port: 8080
+      health_url: "http://localhost:8080/health"
+      timeout: 10
+      required: false
+    agentgpt:
+      container: sutazai-agentgpt
+      port: 8091
+      health_url: "http://localhost:8091"
+      timeout: 10
+      required: false
+    agentzero:
+      container: sutazai-agentzero
+      port: 8105
+      health_url: "http://localhost:8105/health"
+      timeout: 10
+      required: false
+      
+  collaborative:
+    crewai:
+      container: sutazai-crewai
+      port: 8096
+      health_url: "http://localhost:8096/health"
+      timeout: 10
+      required: false
+    letta:
+      container: sutazai-letta
+      port: null
+      health_url: null
+      timeout: 10
+      required: false
+      
+  coding:
+    aider:
+      container: sutazai-aider
+      port: 8095
+      health_url: "http://localhost:8095/health"
+      timeout: 10
+      required: false
+    gpt_engineer:
+      container: sutazai-gpt-engineer
+      port: 8097
+      health_url: "http://localhost:8097/health"
+      timeout: 10
+      required: false
+      
+  specialized:
+    privategpt:
+      container: sutazai-privategpt
+      port: 8092
+      health_url: "http://localhost:8092"
+      timeout: 10
+      required: false
+    pentestgpt:
+      container: sutazai-pentestgpt
+      port: null
+      health_url: null
+      timeout: 10
+      required: false
+
+# API endpoint tests
+api_tests:
+  core_endpoints:
+    - name: backend_health
+      url: "http://localhost:8000/health"
+      method: GET
+      expected_status: 200
+      timeout: 10
+      required: true
+      
+    - name: agents_list
+      url: "http://localhost:8000/agents"
+      method: GET
+      expected_status: 200
+      timeout: 10
+      required: true
+      
+    - name: models_list
+      url: "http://localhost:8000/models"
+      method: GET
+      expected_status: 200
+      timeout: 15
+      required: true
+      
+    - name: public_metrics
+      url: "http://localhost:8000/public/metrics"
+      method: GET
+      expected_status: 200
+      timeout: 10
+      required: false
+      
+  interactive_endpoints:
+    - name: chat_test
+      url: "http://localhost:8000/chat"
+      method: POST
+      payload:
+        message: "Hello, test message"
+        model: "test"
+      expected_status: 200
+      timeout: 30
+      required: true
+      
+    - name: think_test
+      url: "http://localhost:8000/public/think"
+      method: POST
+      payload:
+        query: "Test reasoning query"
+        reasoning_type: "general"
+      expected_status: 200
+      timeout: 30
+      required: false
+      
+  external_services:
+    - name: ollama_tags
+      url: "http://localhost:11434/api/tags"
+      method: GET
+      expected_status: 200
+      timeout: 15
+      required: true
+      
+    - name: chromadb_heartbeat
+      url: "http://localhost:8001/api/v1/heartbeat"
+      method: GET
+      expected_status: 200
+      timeout: 10
+      required: true
+      
+    - name: qdrant_cluster
+      url: "http://localhost:6333/cluster"
+      method: GET
+      expected_status: 200
+      timeout: 10
+      required: true
+
+# Database connection tests
+database_tests:
+  postgresql:
+    host: localhost
+    port: 5432
+    database: sutazai
+    username: sutazai
+    password: sutazai_password
+    timeout: 10
+    required: true
+    test_query: "SELECT version()"
+    
+  redis:
+    host: localhost
+    port: 6379
+    password: redis_password
+    timeout: 5
+    required: true
+    
+  neo4j:
+    uri: "bolt://localhost:7687"
+    username: neo4j
+    password: sutazai_neo4j_password
+    timeout: 15
+    required: false
+    test_query: "CALL dbms.components() YIELD name, versions RETURN name, versions[0] as version"
+
+# Model inference tests
+model_tests:
+  ollama:
+    enabled: true
+    test_prompt: "Hello, this is a test message for model inference."
+    max_tokens: 50
+    timeout: 60
+    required_models: []  # Empty means any model is acceptable
+    preferred_models:
+      - "llama3.2:1b"
+      - "qwen2.5:3b"
+      - "deepseek-r1:8b"
+      - "codellama:7b"
+
+# Report configuration
+reporting:
+  console_output: true
+  json_report: true
+  html_report: false
+  csv_report: false
+  
+  output_directory: "/opt/sutazaiapp/logs"
+  filename_template: "deployment_verification_%Y%m%d_%H%M%S"
+  
+  include_sections:
+    - summary
+    - services
+    - agents
+    - apis
+    - databases
+    - models
+    - resources
+    - recommendations
+    
+  access_points:
+    - name: "Frontend UI"
+      url: "http://localhost:8501"
+      description: "Main SutazAI web interface"
+    - name: "Backend API"
+      url: "http://localhost:8000"
+      description: "REST API and documentation"
+    - name: "API Documentation"
+      url: "http://localhost:8000/docs"
+      description: "Interactive API documentation"
+    - name: "Grafana Dashboard"
+      url: "http://localhost:3000"
+      description: "System monitoring and metrics"
+    - name: "LangFlow"
+      url: "http://localhost:8090"
+      description: "Visual AI workflow builder"
+    - name: "Flowise"
+      url: "http://localhost:8099"
+      description: "Low-code AI application builder"
+    - name: "Dify"
+      url: "http://localhost:8107"
+      description: "LLM app development platform"
+    - name: "n8n Workflows"
+      url: "http://localhost:5678"
+      description: "Workflow automation platform"

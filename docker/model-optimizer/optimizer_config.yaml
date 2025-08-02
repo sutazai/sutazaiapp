@@ -55,7 +55,7 @@ performance_targets:
 
 integrations:
   ollama_url: "http://ollama:11434"
-  backend_url: "http://backend-agi:8000"
+  backend_url: "http://backend:8000"
   
 logging:
   level: "INFO"

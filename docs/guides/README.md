@@ -1,4 +1,4 @@
-# Dify Workflow Automation System for SutazAI AGI
+# Dify Workflow Automation System for SutazAI automation system
 
 This directory contains the complete Dify workflow automation system designed to make the 38-agent SutazAI system self-managing and user-friendly through visual interfaces.
 
@@ -299,7 +299,7 @@ To extend the workflow system:
 
 ## 📝 License
 
-This workflow system is part of the SutazAI AGI project and follows the same licensing terms.
+This workflow system is part of the SutazAI automation system project and follows the same licensing terms.
 
 ---
 

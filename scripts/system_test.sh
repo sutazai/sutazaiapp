@@ -59,7 +59,7 @@ echo "🔧 Container Health Tests"
 echo "========================"
 
 # Test container health
-CONTAINERS=("sutazai-postgres" "sutazai-redis" "sutazai-ollama" "sutazai-chromadb" "sutazai-qdrant" "sutazai-backend-agi" "sutazai-frontend-agi")
+CONTAINERS=("sutazai-postgres" "sutazai-redis" "sutazai-ollama" "sutazai-chromadb" "sutazai-qdrant" "sutazai-backend" "sutazai-frontend")
 
 for container in "${CONTAINERS[@]}"; do
     run_test "$container health" "docker ps | grep '$container' | grep -q '(healthy)'"
@@ -101,7 +101,7 @@ echo "🎯 Frontend Tests"
 echo "================"
 
 run_test "Frontend accessibility" "curl -s http://localhost:8501 | grep -q -i 'streamlit\\|sutaz\\|title'"
-run_test "Frontend health" "docker logs sutazai-frontend-agi --tail 10 | grep -v TypeError"
+run_test "Frontend health" "docker logs sutazai-frontend --tail 10 | grep -v TypeError"
 
 echo ""
 echo "📊 System Resource Tests"

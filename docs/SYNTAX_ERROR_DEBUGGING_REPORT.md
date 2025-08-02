@@ -81,7 +81,7 @@ python3 -c "import ast; ast.parse(open('backend/app/working_main.py').read())"
 # Result: ✅ Syntax is valid!
 
 # 2. Backend restart and health check
-docker restart sutazai-backend-agi
+docker restart sutazai-backend
 curl -s http://localhost:8000/health | jq '.status'
 # Result: "healthy"
 

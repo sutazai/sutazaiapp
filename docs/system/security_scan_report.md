@@ -835,7 +835,7 @@ Total findings: 1563
 ### Container running as root
 **Category:** Docker
 **Description:** Dockerfile does not specify a non-root user
-**File:** brain/Dockerfile
+**File:** coordinator/Dockerfile
 **Remediation:** Add USER directive to run as non-root user
 
 ### Container running as root
@@ -1699,25 +1699,25 @@ Total findings: 1563
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/initialize_brain.py
+**File:** coordinator/initialize_coordinator.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/main.py
+**File:** coordinator/main.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/main.py
+**File:** coordinator/main.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/test_brain.py
+**File:** coordinator/test_coordinator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
@@ -2095,13 +2095,13 @@ Total findings: 1563
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend/app/agi_brain.py
+**File:** backend/app/task_coordinator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend/app/advanced_brain_architecture.py
+**File:** backend/app/advanced_coordinator_architecture.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
@@ -2233,7 +2233,7 @@ Total findings: 1563
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** backend/app/consciousness/emergent_intelligence.py
+**File:** backend/app/system state/emergent_intelligence.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
@@ -2257,13 +2257,13 @@ Total findings: 1563
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** backend/app/core/agi_brain.py
+**File:** backend/app/core/task_coordinator.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend/app/core/agi_brain.py
+**File:** backend/app/core/task_coordinator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
@@ -2335,7 +2335,7 @@ Total findings: 1563
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend/app/api/v1/brain.py
+**File:** backend/app/api/v1/coordinator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
@@ -2371,109 +2371,109 @@ Total findings: 1563
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/memory/vector_memory.py
+**File:** coordinator/memory/vector_memory.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/evaluator/quality_evaluator.py
+**File:** coordinator/evaluator/quality_evaluator.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/evaluator/quality_evaluator.py
+**File:** coordinator/evaluator/quality_evaluator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/core/brain_state.py
+**File:** coordinator/core/coordinator_state.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/core/brain_state.py
+**File:** coordinator/core/coordinator_state.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of pickle
 **Category:** Code Security
 **Description:** Pickle can execute arbitrary code
-**File:** brain/core/continuous_learning.py
+**File:** coordinator/core/continuous_learning.py
 **Remediation:** Replace pickle with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/core/continuous_learning.py
+**File:** coordinator/core/continuous_learning.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/core/universal_learning_machine.py
+**File:** coordinator/core/universal_learning_machine.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/core/universal_learning_machine.py
+**File:** coordinator/core/universal_learning_machine.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/core/orchestrator.py
+**File:** coordinator/core/orchestrator.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/core/orchestrator.py
+**File:** coordinator/core/orchestrator.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/improver/self_improver.py
+**File:** coordinator/improver/self_improver.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/improver/self_improver.py
+**File:** coordinator/improver/self_improver.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/agents/autogen_agent_template.py
-**Remediation:** Replace exec with safer alternative
-
-### Use of eval
-**Category:** Code Security
-**Description:** Eval can execute arbitrary code
-**File:** brain/agents/comprehensive_agent_registry.py
-**Remediation:** Replace eval with safer alternative
-
-### Use of exec
-**Category:** Code Security
-**Description:** Exec can execute arbitrary code
-**File:** brain/agents/comprehensive_agent_registry.py
+**File:** coordinator/agents/autogen_agent_template.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** brain/agents/agent_router.py
+**File:** coordinator/agents/comprehensive_agent_registry.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** brain/agents/agent_router.py
+**File:** coordinator/agents/comprehensive_agent_registry.py
+**Remediation:** Replace exec with safer alternative
+
+### Use of eval
+**Category:** Code Security
+**Description:** Eval can execute arbitrary code
+**File:** coordinator/agents/agent_router.py
+**Remediation:** Replace eval with safer alternative
+
+### Use of exec
+**Category:** Code Security
+**Description:** Exec can execute arbitrary code
+**File:** coordinator/agents/agent_router.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
@@ -2617,13 +2617,13 @@ Total findings: 1563
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** backend_archive/additional_cleanup/individual_bloat_files/neural_engine/neural_memory.py
+**File:** backend_archive/additional_cleanup/individual_bloat_files/processing_engine/processing_memory.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend_archive/additional_cleanup/individual_bloat_files/neural_engine/neural_processor.py
+**File:** backend_archive/additional_cleanup/individual_bloat_files/processing_engine/processing_processor.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of eval
@@ -2935,7 +2935,7 @@ Total findings: 1563
 ### Use of eval
 **Category:** Code Security
 **Description:** Eval can execute arbitrary code
-**File:** backend_archive/final_minimal_cleanup/tests/unit/test_brain_real.py
+**File:** backend_archive/final_minimal_cleanup/tests/unit/test_coordinator_real.py
 **Remediation:** Replace eval with safer alternative
 
 ### Use of eval
@@ -2953,7 +2953,7 @@ Total findings: 1563
 ### Use of exec
 **Category:** Code Security
 **Description:** Exec can execute arbitrary code
-**File:** backend_archive/duplicate_components/neuromorphic/test_enhanced_engine.py
+**File:** backend_archive/duplicate_components/optimized/test_enhanced_engine.py
 **Remediation:** Replace exec with safer alternative
 
 ### Use of exec
@@ -9388,7 +9388,7 @@ Total findings: 1563
 ### Using latest tag
 **Category:** Docker
 **Description:** Using latest tag can lead to unexpected updates
-**File:** brain/docker-compose.brain.yml
+**File:** coordinator/docker-compose.coordinator.yml
 **Remediation:** Pin to specific version tags
 
 ### Using latest tag

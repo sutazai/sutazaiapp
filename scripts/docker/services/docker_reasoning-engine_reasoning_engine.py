@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Advanced Reasoning Engine for SutazAI AGI/ASI System
+Advanced Reasoning Engine for SutazAI automation/advanced automation System
 Implements symbolic reasoning, probabilistic inference, and causal analysis
 """
 

@@ -914,11 +914,11 @@ show_system_overview() {
         
         if [ -n "$port" ]; then
             case "$service" in
-                "frontend-agi")
+                "frontend")
                     echo "• Frontend: http://localhost:${port}"
                     urls_found=1
                     ;;
-                "backend-agi")
+                "backend")
                     echo "• Backend API: http://localhost:${port}"
                     echo "• API Docs: http://localhost:${port}/docs"
                     urls_found=1
@@ -1117,7 +1117,7 @@ show_container_stats() {
     
     docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.PIDs}}" \
         sutazai-postgres sutazai-redis sutazai-neo4j sutazai-chromadb \
-        sutazai-qdrant sutazai-ollama sutazai-backend-agi sutazai-frontend-agi 2>/dev/null
+        sutazai-qdrant sutazai-ollama sutazai-backend sutazai-frontend 2>/dev/null
 }
 
 # Log management menu
@@ -1473,7 +1473,7 @@ repair_system() {
     # Restart services in correct order
     echo "Restarting services in dependency order..."
     
-    services=("postgres" "redis" "neo4j" "chromadb" "qdrant" "ollama" "backend-agi" "frontend-agi")
+    services=("postgres" "redis" "neo4j" "chromadb" "qdrant" "ollama" "backend" "frontend")
     
     for service in "${services[@]}"; do
         echo "Restarting sutazai-${service}..."

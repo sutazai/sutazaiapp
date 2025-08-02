@@ -6,7 +6,7 @@ metadata:
   namespace: sutazai-agents
 data:
   resources.yaml: |
-    # High Priority Agents (Core AGI functionality)
+    # High Priority Agents (Core automation functionality)
     high_priority:
       - name: letta
         replicas: 3

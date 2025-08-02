@@ -76,7 +76,7 @@
    curl -X POST http://localhost:8000/api/chat \
      -H "Content-Type: application/json" \
      -d '{
-       "message": "Explain quantum computing",
+       "message": "Explain advanced computing",
        "model": "qwen2.5:3b",
        "temperature": 0.8,
        "max_tokens": 200

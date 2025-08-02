@@ -7,7 +7,7 @@ data:
   sutazai-overview.json: |
     {
       "dashboard": {
-        "title": "SutazAI AGI System Overview",
+        "title": "SutazAI automation System Overview",
         "panels": [
           {
             "title": "System Health Score",
@@ -28,11 +28,11 @@ data:
             ]
           },
           {
-            "title": "Brain Core Performance",
+            "title": "Coordinator Core Performance",
             "type": "graph",
             "targets": [
               {
-                "expr": "rate(http_request_duration_seconds_sum{job=\"sutazai-brain\"}[5m])"
+                "expr": "rate(http_request_duration_seconds_sum{job=\"sutazai-coordinator\"}[5m])"
               }
             ]
           },

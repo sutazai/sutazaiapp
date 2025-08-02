@@ -8,9 +8,9 @@ Generated: 2025-07-31 09:23:56
 ### agi-system-architect
 **Capabilities:** 34
 
-- Design comprehensive AGI/ASI system architectures
+- Design comprehensive automation system/advanced automation system architectures
 - Create scalable and modular system designs
-- Implement cognitive architectures for artificial general intelligence
+- Implement processing architectures for artificial general intelligence
 - Design multi-modal AI integration patterns
 - Create self-improving system architectures
 - ... and 29 more
@@ -45,14 +45,14 @@ Generated: 2025-07-31 09:23:56
 - Build hypothesis testing frameworks
 - ... and 29 more
 
-### deep-learning-brain-manager
+### deep-learning-coordinator-manager
 **Capabilities:** 34
 
-- Design and evolve neural intelligence cores
+- Design and evolve processing intelligence cores
 - Implement continuous learning systems
 - Create meta-learning architectures
-- Build self-improving neural networks
-- Design cognitive architecture patterns
+- Build self-improving processing networks
+- Design processing architecture patterns
 - ... and 29 more
 
 ### deployment-automation-master
@@ -111,7 +111,7 @@ Generated: 2025-07-31 09:23:56
 - Design and implement AI/ML architectures
 - Build RAG (Retrieval Augmented Generation) systems
 - Integrate various LLMs and AI models
-- Create neural network architectures
+- Create processing network architectures
 - Implement machine learning pipelines
 - ... and 29 more
 

@@ -17,8 +17,8 @@
 5. **GPT-Engineer** - Needs Dockerfile fix
 6. **LocalAGI** - Container exists
 7. **N8N** - Configuration issue
-8. **Backend-AGI** - Missing Dockerfile
-9. **Frontend-AGI** - Missing Dockerfile
+8. **Backend-automation system** - Missing Dockerfile
+9. **Frontend-automation system** - Missing Dockerfile
 
 ### 🔧 Dockerfiles Exist, Need Activation
 1. **AgentGPT** - `/docker/agentgpt/`
@@ -422,4 +422,4 @@ All agents will be monitored through:
 2. Grafana dashboards
 3. Health check endpoints
 4. Centralized logging via Loki
-5. Agent registry in backend-agi
+5. Agent registry in backend

@@ -175,7 +175,7 @@ display_info() {
     echo -e "  • reasoning-assistant - Optimized for complex reasoning"
     echo -e "  • general-assistant - General purpose assistant"
     echo -e "\n${YELLOW}Usage Examples:${NC}"
-    echo -e "  • ollama run qwen2.5:3b \"Explain quantum computing\""
+    echo -e "  • ollama run qwen2.5:3b \"Explain advanced computing\""
     echo -e "  • ollama run qwen2.5-coder:3b \"Write a Python web scraper\""
     echo -e "  • ollama run coding-assistant \"Create a REST API\""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"

@@ -63,7 +63,7 @@ show_banner() {
 ║   ╚══════╝ ╚═════╝    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝                     ║
 ║                                                                              ║
 ║              🧠 COMPLETE AI AGENT INFRASTRUCTURE MANAGER 🧠                 ║
-║                          38 AI Agents • Full AGI/ASI System                 ║
+║                          38 AI Agents • Full automation/advanced automation System                 ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 EOF
     echo -e "${NC}"

@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI System - Working Status Report
+# SutazAI automation system/advanced automation System - Working Status Report
 
 ## 🎉 System Successfully Fixed and Operational!
 
@@ -39,7 +39,7 @@ curl -X POST http://localhost:8000/api/chat \
 # With specific model
 curl -X POST http://localhost:8000/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message": "Explain quantum computing", "model": "llama3.2:1b"}'
+  -d '{"message": "Explain advanced computing", "model": "llama3.2:1b"}'
 ```
 
 #### 2. Using External Agents (when available)
@@ -113,7 +113,7 @@ The Streamlit chat interface should now work properly:
    ```bash
    # Pull additional models
    docker exec sutazai-ollama ollama pull mistral:7b
-   docker exec sutazai-ollama ollama pull phi-3:3.8b
+   docker exec sutazai-ollama ollama pull integration_score-3:3.8b
    ```
 
 3. **Monitor System**

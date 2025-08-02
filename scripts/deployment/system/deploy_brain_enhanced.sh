@@ -1,6 +1,6 @@
 #!/bin/bash
-# SutazAI Enhanced Brain Deployment Script
-# Deploys the complete AGI/ASI system with Universal Learning Machine
+# SutazAI Enhanced Coordinator Deployment Script
+# Deploys the complete automation/advanced automation system with Universal Learning Machine
 
 set -e
 
@@ -16,8 +16,8 @@ NC='\033[0m' # No Color
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="$(dirname "$SCRIPT_DIR")"
-BRAIN_DIR="$WORKSPACE_DIR/brain"
-LOG_FILE="$WORKSPACE_DIR/logs/brain_enhanced_deploy_$(date +%Y%m%d_%H%M%S).log"
+BRAIN_DIR="$WORKSPACE_DIR/coordinator"
+LOG_FILE="$WORKSPACE_DIR/logs/coordinator_enhanced_deploy_$(date +%Y%m%d_%H%M%S).log"
 
 # Logging functions
 log() {
@@ -82,9 +82,9 @@ check_main_system() {
     return 0
 }
 
-# Create enhanced brain structure
-create_enhanced_brain_structure() {
-    log_header "🧠 Creating Enhanced Brain Structure"
+# Create enhanced coordinator structure
+create_enhanced_coordinator_structure() {
+    log_header "🧠 Creating Enhanced Coordinator Structure"
     
     # Create comprehensive directory structure
     local dirs=(
@@ -112,7 +112,7 @@ create_enhanced_brain_structure() {
         log_info "Created: $dir"
     done
     
-    log_success "Enhanced brain structure created"
+    log_success "Enhanced coordinator structure created"
 }
 
 # Install additional Python requirements
@@ -121,7 +121,7 @@ install_python_requirements() {
     
     # Create comprehensive requirements.txt
     cat > "$BRAIN_DIR/requirements_enhanced.txt" << 'EOF'
-# Core Brain Dependencies
+# Core Coordinator Dependencies
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
@@ -197,14 +197,14 @@ EOF
 create_enhanced_config() {
     log_header "⚙️ Creating Enhanced Configuration"
     
-    cat > "$BRAIN_DIR/config/brain_enhanced_config.yaml" << EOF
-# SutazAI Enhanced Brain Configuration
+    cat > "$BRAIN_DIR/config/coordinator_enhanced_config.yaml" << EOF
+# SutazAI Enhanced Coordinator Configuration
 # Generated: $(date)
 
 # System Information
 system:
   version: "2.0.0"
-  name: "SutazAI Enhanced Brain"
+  name: "SutazAI Enhanced Coordinator"
   description: "Universal Learning Machine with 30+ Agents"
 
 # Hardware Configuration
@@ -247,7 +247,7 @@ models:
     - "qwen2.5:3b"
     - "mixtral:8x7b"
     - "phi-2"
-    - "neural-chat:7b"
+    - "processing-chat:7b"
 
 # Agent Configuration
 agents:
@@ -273,15 +273,15 @@ memory:
     qdrant:
       host: "sutazai-qdrant"
       port: 6333
-      collection: "brain_memories_v2"
+      collection: "coordinator_memories_v2"
     chromadb:
       host: "sutazai-chromadb"
       port: 8000
-      collection: "brain_long_term_v2"
+      collection: "coordinator_long_term_v2"
     postgresql:
       host: "sutazai-postgresql"
       port: 5432
-      database: "sutazai_brain"
+      database: "sutazai_coordinator"
       user: "sutazai"
 
 # Quality Thresholds
@@ -322,7 +322,7 @@ security:
 # Service Endpoints
 services:
   ollama_host: "http://sutazai-ollama:11434"
-  brain_api: "http://localhost:8888"
+  coordinator_api: "http://localhost:8888"
   monitoring: "http://localhost:3000"
 EOF
     
@@ -728,20 +728,20 @@ EOF
     log_success "JARVIS Super Agent created"
 }
 
-# Create comprehensive docker-compose for brain
-create_brain_docker_compose() {
-    log_header "🐳 Creating Enhanced Brain Docker Compose"
+# Create comprehensive docker-compose for coordinator
+create_coordinator_docker_compose() {
+    log_header "🐳 Creating Enhanced Coordinator Docker Compose"
     
     cat > "$BRAIN_DIR/docker-compose-enhanced.yml" << 'EOF'
 version: '3.8'
 
 services:
-  # Main Brain Service
-  brain-core:
+  # Main Coordinator Service
+  coordinator-core:
     build:
       context: .
       dockerfile: Dockerfile.enhanced
-    container_name: sutazai-brain-core
+    container_name: sutazai-coordinator-core
     restart: unless-stopped
     ports:
       - "8888:8888"
@@ -758,7 +758,7 @@ services:
     networks:
       - sutazai-network
     depends_on:
-      brain-db-init:
+      coordinator-db-init:
         condition: service_completed_successfully
     deploy:
       resources:
@@ -786,7 +786,7 @@ services:
     environment:
       - AGENT_TYPE=jarvis
       - OLLAMA_HOST=sutazai-ollama:11434
-      - BRAIN_API=http://brain-core:8888
+      - BRAIN_API=http://coordinator-core:8888
     networks:
       - sutazai-network
     devices:
@@ -880,15 +880,15 @@ services:
           memory: 2G
 
   # Database initialization
-  brain-db-init:
+  coordinator-db-init:
     image: postgres:16-alpine
-    container_name: sutazai-brain-db-init
+    container_name: sutazai-coordinator-db-init
     environment:
       - PGHOST=sutazai-postgresql
       - PGUSER=sutazai
       - PGPASSWORD=${POSTGRES_PASSWORD:-sutazai_password}
     volumes:
-      - ./sql/init_brain_enhanced.sql:/init.sql
+      - ./sql/init_coordinator_enhanced.sql:/init.sql
     networks:
       - sutazai-network
     command: >
@@ -897,16 +897,16 @@ services:
           echo 'Waiting for PostgreSQL...'
           sleep 2
         done
-        psql -h sutazai-postgresql -U sutazai -d postgres -c 'CREATE DATABASE IF NOT EXISTS sutazai_brain;'
-        psql -h sutazai-postgresql -U sutazai -d sutazai_brain -f /init.sql
+        psql -h sutazai-postgresql -U sutazai -d postgres -c 'CREATE DATABASE IF NOT EXISTS sutazai_coordinator;'
+        psql -h sutazai-postgresql -U sutazai -d sutazai_coordinator -f /init.sql
         echo 'Database initialization complete'
       "
     restart: "no"
 
-  # Brain monitoring
-  brain-prometheus:
+  # Coordinator monitoring
+  coordinator-prometheus:
     image: prom/prometheus:latest
-    container_name: sutazai-brain-prometheus
+    container_name: sutazai-coordinator-prometheus
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -918,10 +918,10 @@ services:
     networks:
       - sutazai-network
 
-  # Brain dashboard
-  brain-grafana:
+  # Coordinator dashboard
+  coordinator-grafana:
     image: grafana/grafana:latest
-    container_name: sutazai-brain-grafana
+    container_name: sutazai-coordinator-grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
       - GF_SERVER_ROOT_URL=http://localhost:3001
@@ -933,7 +933,7 @@ services:
     networks:
       - sutazai-network
     depends_on:
-      - brain-prometheus
+      - coordinator-prometheus
 
 volumes:
   prometheus_data:
@@ -947,9 +947,9 @@ EOF
     log_success "Enhanced Docker Compose created"
 }
 
-# Create enhanced Dockerfile for brain
+# Create enhanced Dockerfile for coordinator
 create_enhanced_dockerfile() {
-    log_header "🐳 Creating Enhanced Brain Dockerfile"
+    log_header "🐳 Creating Enhanced Coordinator Dockerfile"
     
     cat > "$BRAIN_DIR/Dockerfile.enhanced" << 'EOF'
 FROM python:3.11-slim
@@ -976,7 +976,7 @@ COPY requirements_enhanced.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements_enhanced.txt
 
-# Copy Brain code
+# Copy Coordinator code
 COPY . .
 
 # Create necessary directories
@@ -994,19 +994,19 @@ EXPOSE 8888
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8888/health || exit 1
 
-# Start Brain with enhanced features
+# Start Coordinator with enhanced features
 CMD ["python", "main.py"]
 EOF
     
     log_success "Enhanced Dockerfile created"
 }
 
-# Create database initialization for enhanced brain
+# Create database initialization for enhanced coordinator
 create_enhanced_db_init() {
     log_header "🗄️ Creating Enhanced Database Schema"
     
-    cat > "$BRAIN_DIR/sql/init_brain_enhanced.sql" << 'EOF'
--- SutazAI Enhanced Brain Database Schema
+    cat > "$BRAIN_DIR/sql/init_coordinator_enhanced.sql" << 'EOF'
+-- SutazAI Enhanced Coordinator Database Schema
 -- Version 2.0
 
 -- Enable extensions
@@ -1045,7 +1045,7 @@ CREATE TABLE IF NOT EXISTS memory_searches (
 CREATE TABLE IF NOT EXISTS ulm_states (
     id SERIAL PRIMARY KEY,
     state_id UUID NOT NULL DEFAULT uuid_generate_v4(),
-    neural_weights JSONB,
+    processing_weights JSONB,
     q_table JSONB,
     learning_history JSONB,
     performance_metrics JSONB,
@@ -1080,7 +1080,7 @@ CREATE TABLE IF NOT EXISTS learning_experiences (
     result JSONB,
     reward FLOAT,
     performance_score FLOAT,
-    neural_state JSONB,
+    processing_state JSONB,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_experience_reward (reward DESC),
     INDEX idx_experience_time (timestamp DESC)
@@ -1221,9 +1221,9 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'brain-core'
+  - job_name: 'coordinator-core'
     static_configs:
-      - targets: ['brain-core:8888']
+      - targets: ['coordinator-core:8888']
     metrics_path: '/metrics'
   
   - job_name: 'jarvis'
@@ -1255,48 +1255,48 @@ EOF
     
     # Grafana dashboard
     mkdir -p "$BRAIN_DIR/monitoring/dashboards"
-    cat > "$BRAIN_DIR/monitoring/dashboards/brain_enhanced_dashboard.json" << 'EOF'
+    cat > "$BRAIN_DIR/monitoring/dashboards/coordinator_enhanced_dashboard.json" << 'EOF'
 {
   "dashboard": {
     "id": null,
-    "uid": "brain-enhanced",
-    "title": "SutazAI Enhanced Brain Dashboard",
+    "uid": "coordinator-enhanced",
+    "title": "SutazAI Enhanced Coordinator Dashboard",
     "panels": [
       {
-        "title": "Brain Request Rate",
-        "targets": [{"expr": "rate(brain_requests_total[5m])"}],
+        "title": "Coordinator Request Rate",
+        "targets": [{"expr": "rate(coordinator_requests_total[5m])"}],
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
       },
       {
         "title": "Universal Learning Progress",
-        "targets": [{"expr": "brain_learning_progress"}],
+        "targets": [{"expr": "coordinator_learning_progress"}],
         "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
       },
       {
         "title": "Agent Performance Matrix",
-        "targets": [{"expr": "brain_agent_quality_score"}],
+        "targets": [{"expr": "coordinator_agent_quality_score"}],
         "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
       },
       {
         "title": "Neuroplasticity Events",
-        "targets": [{"expr": "brain_neuroplasticity_events_total"}],
+        "targets": [{"expr": "coordinator_neuroplasticity_events_total"}],
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
       },
       {
         "title": "Memory Utilization",
         "targets": [
-          {"expr": "brain_memory_redis_usage"},
-          {"expr": "brain_memory_qdrant_usage"},
-          {"expr": "brain_memory_chroma_usage"}
+          {"expr": "coordinator_memory_redis_usage"},
+          {"expr": "coordinator_memory_qdrant_usage"},
+          {"expr": "coordinator_memory_chroma_usage"}
         ],
         "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
       },
       {
         "title": "Self-Improvement Metrics",
         "targets": [
-          {"expr": "brain_patches_created_total"},
-          {"expr": "brain_patches_applied_total"},
-          {"expr": "brain_performance_improvement_rate"}
+          {"expr": "coordinator_patches_created_total"},
+          {"expr": "coordinator_patches_applied_total"},
+          {"expr": "coordinator_performance_improvement_rate"}
         ],
         "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24}
       }
@@ -1314,8 +1314,8 @@ create_cicd_workflow() {
     
     mkdir -p "$BRAIN_DIR/.github/workflows"
     
-    cat > "$BRAIN_DIR/.github/workflows/brain_ci.yml" << 'EOF'
-name: Brain CI/CD
+    cat > "$BRAIN_DIR/.github/workflows/coordinator_ci.yml" << 'EOF'
+name: Coordinator CI/CD
 
 on:
   push:
@@ -1343,7 +1343,7 @@ jobs:
     
     - name: Run tests
       run: |
-        pytest tests/ -v --cov=brain --cov-report=xml
+        pytest tests/ -v --cov=coordinator --cov-report=xml
     
     - name: Check code quality
       run: |
@@ -1353,7 +1353,7 @@ jobs:
     
     - name: Build Docker images
       run: |
-        docker build -t sutazai/brain:test -f Dockerfile.enhanced .
+        docker build -t sutazai/coordinator:test -f Dockerfile.enhanced .
         docker build -t sutazai/jarvis:test -f agents/dockerfiles/Dockerfile.jarvis agents/
     
     - name: Security scan
@@ -1371,7 +1371,7 @@ jobs:
     
     - name: Deploy to production
       run: |
-        echo "Deploying Brain to production..."
+        echo "Deploying Coordinator to production..."
         # Add deployment steps here
 EOF
     
@@ -1389,7 +1389,7 @@ pull_enhanced_models() {
         "llama2:13b"
         "qwen2.5:3b"
         "mixtral:8x7b"
-        "neural-chat:7b"
+        "processing-chat:7b"
         "phi-2"
         "nomic-embed-text"
         "all-minilm"
@@ -1407,9 +1407,9 @@ pull_enhanced_models() {
     log_success "Model pulling complete"
 }
 
-# Deploy enhanced brain
-deploy_enhanced_brain() {
-    log_header "🚀 Deploying Enhanced Brain System"
+# Deploy enhanced coordinator
+deploy_enhanced_coordinator() {
+    log_header "🚀 Deploying Enhanced Coordinator System"
     
     cd "$BRAIN_DIR"
     
@@ -1418,27 +1418,27 @@ deploy_enhanced_brain() {
     docker-compose -f docker-compose-enhanced.yml build
     
     # Start services
-    log_info "Starting Brain services..."
+    log_info "Starting Coordinator services..."
     docker-compose -f docker-compose-enhanced.yml up -d
     
     # Wait for initialization
-    log_info "Waiting for Brain to initialize..."
+    log_info "Waiting for Coordinator to initialize..."
     local max_attempts=60
     local attempt=0
     
     while [ $attempt -lt $max_attempts ]; do
         if curl -f http://localhost:8888/health >/dev/null 2>&1; then
-            log_success "Brain is healthy and ready!"
+            log_success "Coordinator is healthy and ready!"
             break
         fi
         attempt=$((attempt + 1))
-        log_info "Waiting for Brain... (attempt $attempt/$max_attempts)"
+        log_info "Waiting for Coordinator... (attempt $attempt/$max_attempts)"
         sleep 5
     done
     
     if [ $attempt -eq $max_attempts ]; then
-        log_error "Brain failed to start properly"
-        docker-compose -f docker-compose-enhanced.yml logs brain-core
+        log_error "Coordinator failed to start properly"
+        docker-compose -f docker-compose-enhanced.yml logs coordinator-core
         return 1
     fi
     
@@ -1459,12 +1459,12 @@ deploy_enhanced_brain() {
         fi
     done
     
-    log_success "Enhanced Brain deployment complete!"
+    log_success "Enhanced Coordinator deployment complete!"
 }
 
 # Show deployment summary
 show_enhanced_summary() {
-    log_header "🎉 Enhanced Brain Deployment Summary"
+    log_header "🎉 Enhanced Coordinator Deployment Summary"
     
     cat << EOF
 
@@ -1473,7 +1473,7 @@ show_enhanced_summary() {
 ═══════════════════════════════════════════════════════════════════════
 
 ✨ CORE COMPONENTS:
-   📡 Brain API: http://localhost:8888
+   📡 Coordinator API: http://localhost:8888
    🤖 JARVIS: http://localhost:8026
    📊 Monitoring: http://localhost:3001
    🔍 Prometheus: http://localhost:9091
@@ -1488,7 +1488,7 @@ show_enhanced_summary() {
 
 🧬 ADVANCED FEATURES:
    ✅ Universal Learning Machine (ULM)
-   ✅ Dynamic Neural Architecture
+   ✅ Dynamic Processing Architecture
    ✅ Neuroplasticity Simulation
    ✅ Hierarchical Temporal Memory
    ✅ Basal Ganglia Controller
@@ -1501,7 +1501,7 @@ show_enhanced_summary() {
    • Real-time metrics and learning progress
 
 🔧 CONFIGURATION:
-   • Config: $BRAIN_DIR/config/brain_enhanced_config.yaml
+   • Config: $BRAIN_DIR/config/coordinator_enhanced_config.yaml
    • Logs: $BRAIN_DIR/logs/
    • Models: $BRAIN_DIR/models/
 
@@ -1511,7 +1511,7 @@ show_enhanced_summary() {
      -d '{"input": "Hello JARVIS, analyze system status and create a report"}'
 
 💡 TIPS:
-   • The Brain continuously learns and improves
+   • The Coordinator continuously learns and improves
    • Check learning progress at /metrics
    • Review self-improvement patches at /improvements
    • Access JARVIS via WebSocket for real-time interaction
@@ -1522,7 +1522,7 @@ EOF
 
 # Main deployment flow
 main() {
-    log_header "🧠 Starting SutazAI Enhanced Brain Deployment"
+    log_header "🧠 Starting SutazAI Enhanced Coordinator Deployment"
     
     # Create log directory
     mkdir -p "$WORKSPACE_DIR/logs"
@@ -1534,11 +1534,11 @@ main() {
     fi
     
     # Execute deployment steps
-    create_enhanced_brain_structure
+    create_enhanced_coordinator_structure
     install_python_requirements
     create_enhanced_config
     create_jarvis_agent
-    create_brain_docker_compose
+    create_coordinator_docker_compose
     create_enhanced_dockerfile
     create_enhanced_db_init
     create_monitoring_config
@@ -1549,17 +1549,17 @@ main() {
     if [ ! -d .git ]; then
         git init
         git add .
-        git commit -m "Initial Enhanced Brain v2.0 commit"
+        git commit -m "Initial Enhanced Coordinator v2.0 commit"
     fi
     
     # Deploy
     pull_enhanced_models
-    deploy_enhanced_brain
+    deploy_enhanced_coordinator
     
     # Show summary
     show_enhanced_summary
     
-    log_success "🧠 Enhanced Brain deployment completed successfully!"
+    log_success "🧠 Enhanced Coordinator deployment completed successfully!"
 }
 
 # Execute main function

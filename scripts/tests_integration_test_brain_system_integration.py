@@ -1,8 +1,8 @@
 """
-Brain System Integration Test Suite for SutazAI AGI System
+Coordinator System Integration Test Suite for SutazAI automation System
 
-Tests integration between the main backend and the brain system,
-including neural processing, consciousness, and learning capabilities.
+Tests integration between the main backend and the coordinator system,
+including processing processing, system_state, and learning capabilities.
 """
 
 import pytest
@@ -15,10 +15,10 @@ from datetime import datetime
 
 # Configuration
 BACKEND_URL = "http://localhost:8000"
-BRAIN_URL = "http://localhost:8001"  # Assuming brain runs on separate port
-BRAIN_INTERNAL_URL = "http://sutazai-brain:8001"  # Docker internal URL
+BRAIN_URL = "http://localhost:8001"  # Assuming coordinator runs on separate port
+BRAIN_INTERNAL_URL = "http://sutazai-coordinator:8001"  # Docker internal URL
 
-INTEGRATION_TIMEOUT = 60.0  # Longer timeout for brain operations
+INTEGRATION_TIMEOUT = 60.0  # Longer timeout for coordinator operations
 
 @pytest.fixture
 async def backend_client():
@@ -28,8 +28,8 @@ async def backend_client():
         yield client
 
 @pytest.fixture
-async def brain_client():
-    """Create async HTTP client for brain system"""
+async def coordinator_client():
+    """Create async HTTP client for coordinator system"""
     timeout = httpx.Timeout(INTEGRATION_TIMEOUT, connect=10.0)
     # Try both local and internal URLs
     for url in [BRAIN_URL, BRAIN_INTERNAL_URL]:
@@ -43,7 +43,7 @@ async def brain_client():
         except:
             continue
     
-    # If neither works, yield None to skip brain-specific tests
+    # If neither works, yield None to skip coordinator-specific tests
     yield None
 
 @pytest.fixture
@@ -51,53 +51,53 @@ async def auth_headers():
     """Get authentication headers"""
     return {}
 
-class TestBrainSystemConnectivity:
-    """Test basic connectivity between backend and brain system"""
+class TestCoordinatorSystemConnectivity:
+    """Test basic connectivity between backend and coordinator system"""
     
     @pytest.mark.asyncio
-    async def test_backend_brain_health_integration(self, backend_client):
-        """Test that backend can report brain system health"""
+    async def test_backend_coordinator_health_integration(self, backend_client):
+        """Test that backend can report coordinator system health"""
         response = await backend_client.get("/health")
         assert response.status_code == 200
         
         data = response.json()
         assert "services" in data
         
-        # Check if brain system is mentioned in health status
+        # Check if coordinator system is mentioned in health status
         services = data["services"]
         
-        # Look for brain-related services or neural engine status
-        brain_indicators = [
-            "neural_engine", "brain", "consciousness", "reasoning_engine"
+        # Look for coordinator-related services or processing engine status
+        coordinator_indicators = [
+            "processing_engine", "coordinator", "system_state", "reasoning_engine"
         ]
         
-        found_brain_service = False
-        for indicator in brain_indicators:
+        found_coordinator_service = False
+        for indicator in coordinator_indicators:
             if indicator in services or any(indicator in str(v) for v in services.values()):
-                found_brain_service = True
+                found_coordinator_service = True
                 break
         
-        # If brain system is integrated, it should be reported
-        if "neural_engine" in services:
-            assert "status" in services["neural_engine"]
+        # If coordinator system is integrated, it should be reported
+        if "processing_engine" in services:
+            assert "status" in services["processing_engine"]
     
     @pytest.mark.asyncio
-    async def test_direct_brain_health(self, brain_client):
-        """Test direct brain system health check"""
-        if brain_client is None:
-            pytest.skip("Brain system not accessible")
+    async def test_direct_coordinator_health(self, coordinator_client):
+        """Test direct coordinator system health check"""
+        if coordinator_client is None:
+            pytest.skip("Coordinator system not accessible")
         
-        response = await brain_client.get("/health")
+        response = await coordinator_client.get("/health")
         assert response.status_code == 200
         
         data = response.json()
         assert "status" in data
-        assert "brain_id" in data or "service" in data
+        assert "coordinator_id" in data or "service" in data
         assert "timestamp" in data
     
     @pytest.mark.asyncio
-    async def test_brain_system_status_via_backend(self, backend_client, auth_headers):
-        """Test brain system status through backend API"""
+    async def test_coordinator_system_status_via_backend(self, backend_client, auth_headers):
+        """Test coordinator system status through backend API"""
         response = await backend_client.get("/api/v1/system/status", headers=auth_headers)
         assert response.status_code == 200
         
@@ -105,32 +105,32 @@ class TestBrainSystemConnectivity:
         assert "components" in data
         
         components = data["components"]
-        if "neural_engine" in components:
-            neural_engine = components["neural_engine"]
-            assert "active" in neural_engine
-            assert "healthy" in neural_engine
+        if "processing_engine" in components:
+            processing_engine = components["processing_engine"]
+            assert "active" in processing_engine
+            assert "healthy" in processing_engine
             
-            if neural_engine["active"]:
-                assert "consciousness_active" in neural_engine
+            if processing_engine["active"]:
+                assert "system_state_active" in processing_engine
 
-class TestNeuralProcessingIntegration:
-    """Test neural processing integration between backend and brain"""
+class TestProcessingProcessingIntegration:
+    """Test processing processing integration between backend and coordinator"""
     
     @pytest.mark.asyncio
-    async def test_neural_processing_endpoint(self, backend_client, auth_headers):
-        """Test neural processing through backend"""
+    async def test_processing_processing_endpoint(self, backend_client, auth_headers):
+        """Test processing processing through backend"""
         payload = {
             "input_data": {
-                "text": "Analyze the relationship between artificial intelligence and human consciousness",
+                "text": "Analyze the relationship between artificial intelligence and human system_state",
                 "type": "philosophical_analysis"
             },
             "processing_type": "deep_analysis",
-            "use_consciousness": True,
+            "use_system_state": True,
             "reasoning_depth": 3
         }
         
         response = await backend_client.post(
-            "/api/v1/neural/process",
+            "/api/v1/processing/process",
             json=payload,
             headers=auth_headers
         )
@@ -140,49 +140,49 @@ class TestNeuralProcessingIntegration:
         data = response.json()
         assert "result" in data
         assert "processing_type" in data
-        assert "consciousness_enabled" in data
+        assert "system_state_enabled" in data
         assert "reasoning_depth" in data
         assert "timestamp" in data
         
-        # If neural processing is actually working
+        # If processing processing is actually working
         if not data.get("fallback_mode", False):
-            assert "neural_pathways_activated" in data
+            assert "processing_pathways_activated" in data
     
     @pytest.mark.asyncio
-    async def test_consciousness_state_monitoring(self, backend_client, auth_headers):
-        """Test consciousness state monitoring"""
-        response = await backend_client.get("/api/v1/neural/consciousness", headers=auth_headers)
+    async def test_system_state_state_monitoring(self, backend_client, auth_headers):
+        """Test system_state state monitoring"""
+        response = await backend_client.get("/api/v1/processing/system_state", headers=auth_headers)
         assert response.status_code == 200
         
         data = response.json()
-        assert "consciousness_active" in data
+        assert "system_state_active" in data
         assert "timestamp" in data
         
-        # If consciousness is active, check detailed state
-        if data["consciousness_active"]:
+        # If system_state is active, check detailed state
+        if data["system_state_active"]:
             assert "awareness_level" in data
             assert "cognitive_load" in data
             assert "active_processes" in data
-            assert "neural_activity" in data
+            assert "processing_activity" in data
             
-            # Validate consciousness metrics
+            # Validate system_state metrics
             assert 0.0 <= data["awareness_level"] <= 1.0
             assert 0.0 <= data["cognitive_load"] <= 1.0
             assert isinstance(data["active_processes"], list)
-            assert isinstance(data["neural_activity"], dict)
+            assert isinstance(data["processing_activity"], dict)
     
     @pytest.mark.asyncio
     async def test_creative_synthesis_integration(self, backend_client, auth_headers):
-        """Test creative synthesis neural processing"""
+        """Test creative synthesis processing processing"""
         payload = {
             "prompt": "Design an innovative solution for sustainable urban transportation",
             "synthesis_mode": "cross_domain",
             "reasoning_depth": 4,
-            "use_consciousness": True
+            "use_system_state": True
         }
         
         response = await backend_client.post(
-            "/api/v1/neural/creative",
+            "/api/v1/processing/creative",
             json=payload,
             headers=auth_headers
         )
@@ -195,7 +195,7 @@ class TestNeuralProcessingIntegration:
         assert "recommendations" in data
         assert "output" in data
         assert "synthesis_mode" in data
-        assert "consciousness_active" in data
+        assert "system_state_active" in data
         assert "reasoning_depth" in data
         assert "creative_pathways" in data
         assert "timestamp" in data
@@ -208,13 +208,13 @@ class TestNeuralProcessingIntegration:
         assert isinstance(data["creative_pathways"], list)
     
     @pytest.mark.asyncio
-    async def test_direct_brain_processing(self, brain_client):
-        """Test direct brain system processing"""
-        if brain_client is None:
-            pytest.skip("Brain system not accessible")
+    async def test_direct_coordinator_processing(self, coordinator_client):
+        """Test direct coordinator system processing"""
+        if coordinator_client is None:
+            pytest.skip("Coordinator system not accessible")
         
         payload = {
-            "input": "Analyze quantum computing applications in AI",
+            "input": "Analyze advanced computing applications in AI",
             "context": {
                 "domain": "technology",
                 "complexity": "high"
@@ -222,7 +222,7 @@ class TestNeuralProcessingIntegration:
             "stream": False
         }
         
-        response = await brain_client.post("/process", json=payload)
+        response = await coordinator_client.post("/process", json=payload)
         assert response.status_code == 200
         
         data = response.json()
@@ -232,12 +232,12 @@ class TestNeuralProcessingIntegration:
         assert "execution_time" in data
         assert "agents_used" in data
         
-        # Validate brain processing metrics
+        # Validate coordinator processing metrics
         assert 0.0 <= data["confidence"] <= 1.0
         assert data["execution_time"] >= 0.0
         assert isinstance(data["agents_used"], list)
 
-class TestBrainLearningIntegration:
+class TestCoordinatorLearningIntegration:
     """Test learning system integration"""
     
     @pytest.mark.asyncio
@@ -362,12 +362,12 @@ class TestBrainLearningIntegration:
         
         assert mentioned_terms >= 2, "System should synthesize learned renewable energy knowledge"
 
-class TestBrainSelfImprovementIntegration:
+class TestCoordinatorSelfImprovementIntegration:
     """Test self-improvement system integration"""
     
     @pytest.mark.asyncio
     async def test_improvement_analysis_integration(self, backend_client, auth_headers):
-        """Test improvement analysis through brain system"""
+        """Test improvement analysis through coordinator system"""
         response = await backend_client.post("/api/v1/improvement/analyze", headers=auth_headers)
         assert response.status_code == 200
         
@@ -417,7 +417,7 @@ class TestBrainSelfImprovementIntegration:
         assert analyze_response.status_code == 200
         
         # Try to apply some improvements
-        improvement_ids = ["memory_optimization", "response_speed", "neural_efficiency"]
+        improvement_ids = ["memory_optimization", "response_speed", "processing_efficiency"]
         
         apply_response = await backend_client.post(
             "/api/v1/improvement/apply",
@@ -436,12 +436,12 @@ class TestBrainSelfImprovementIntegration:
             assert "system_restart_required" in apply_data
             assert "performance_impact" in apply_data
 
-class TestBrainMemoryIntegration:
-    """Test brain memory and knowledge management integration"""
+class TestCoordinatorMemoryIntegration:
+    """Test coordinator memory and knowledge management integration"""
     
     @pytest.mark.asyncio
     async def test_memory_persistence(self, backend_client, auth_headers):
-        """Test that brain maintains memory across operations"""
+        """Test that coordinator maintains memory across operations"""
         # Store some information
         learn_payload = {
             "content": "The unique identifier for this test session is: TEST_SESSION_12345",
@@ -504,7 +504,7 @@ class TestBrainMemoryIntegration:
                 "type": "project_context"
             },
             {
-                "content": "The team lead for Project Alpha is Dr. Sarah Chen, an expert in neural networks.",
+                "content": "The team lead for Project Alpha is Dr. Sarah Chen, an expert in processing networks.",
                 "type": "team_information"
             },
             {
@@ -553,12 +553,12 @@ class TestBrainMemoryIntegration:
         context_usage_rate = correct_contexts / len(contextual_questions)
         print(f"Contextual memory usage rate: {context_usage_rate}")
 
-class TestBrainPerformanceIntegration:
-    """Test performance aspects of brain system integration"""
+class TestCoordinatorPerformanceIntegration:
+    """Test performance aspects of coordinator system integration"""
     
     @pytest.mark.asyncio
-    async def test_neural_processing_performance(self, backend_client, auth_headers):
-        """Test neural processing performance"""
+    async def test_processing_processing_performance(self, backend_client, auth_headers):
+        """Test processing processing performance"""
         processing_times = []
         
         for i in range(5):
@@ -570,12 +570,12 @@ class TestBrainPerformanceIntegration:
                     "complexity": "moderate"
                 },
                 "processing_type": "performance_analysis",
-                "use_consciousness": True,
+                "use_system_state": True,
                 "reasoning_depth": 2
             }
             
             response = await backend_client.post(
-                "/api/v1/neural/process",
+                "/api/v1/processing/process",
                 json=payload,
                 headers=auth_headers
             )
@@ -594,14 +594,14 @@ class TestBrainPerformanceIntegration:
         min_time = min(processing_times)
         
         # Performance assertions
-        assert avg_time < 30.0, f"Average neural processing time too high: {avg_time}s"
-        assert max_time < 45.0, f"Maximum neural processing time too high: {max_time}s"
+        assert avg_time < 30.0, f"Average processing processing time too high: {avg_time}s"
+        assert max_time < 45.0, f"Maximum processing processing time too high: {max_time}s"
         
-        print(f"Neural processing performance - Avg: {avg_time:.2f}s, Max: {max_time:.2f}s, Min: {min_time:.2f}s")
+        print(f"Processing processing performance - Avg: {avg_time:.2f}s, Max: {max_time:.2f}s, Min: {min_time:.2f}s")
     
     @pytest.mark.asyncio
-    async def test_concurrent_brain_operations(self, backend_client, auth_headers):
-        """Test concurrent brain operations"""
+    async def test_concurrent_coordinator_operations(self, backend_client, auth_headers):
+        """Test concurrent coordinator operations"""
         async def concurrent_operation(operation_id):
             payload = {
                 "query": f"Concurrent operation {operation_id}: analyze data patterns",
@@ -633,8 +633,8 @@ class TestBrainPerformanceIntegration:
         print(f"Concurrent operations - Success rate: {success_rate}, Total time: {total_time:.2f}s")
     
     @pytest.mark.asyncio
-    async def test_brain_resource_usage(self, backend_client, auth_headers):
-        """Test brain system resource usage monitoring"""
+    async def test_coordinator_resource_usage(self, backend_client, auth_headers):
+        """Test coordinator system resource usage monitoring"""
         # Get initial system state
         initial_response = await backend_client.get("/api/v1/system/status", headers=auth_headers)
         assert initial_response.status_code == 200
@@ -642,7 +642,7 @@ class TestBrainPerformanceIntegration:
         initial_data = initial_response.json()
         initial_performance = initial_data.get("performance", {})
         
-        # Perform resource-intensive brain operations
+        # Perform resource-intensive coordinator operations
         intensive_operations = [
             {
                 "input_data": {
@@ -650,22 +650,22 @@ class TestBrainPerformanceIntegration:
                     "complexity": "very_high"
                 },
                 "processing_type": "architectural_analysis",
-                "use_consciousness": True,
+                "use_system_state": True,
                 "reasoning_depth": 5
             },
             {
                 "prompt": "Design a comprehensive AI safety framework that addresses alignment, robustness, interpretability, and ethical considerations across multiple domains",
                 "synthesis_mode": "multi_domain_integration",
                 "reasoning_depth": 4,
-                "use_consciousness": True
+                "use_system_state": True
             }
         ]
         
         for operation in intensive_operations:
             if "input_data" in operation:
-                endpoint = "/api/v1/neural/process"
+                endpoint = "/api/v1/processing/process"
             else:
-                endpoint = "/api/v1/neural/creative"
+                endpoint = "/api/v1/processing/creative"
             
             response = await backend_client.post(endpoint, json=operation, headers=auth_headers)
             assert response.status_code == 200
@@ -685,12 +685,12 @@ class TestBrainPerformanceIntegration:
         
         print(f"Resource usage after intensive operations - CPU: {final_performance.get('cpu_percent', 'N/A')}%, Memory: {final_performance.get('memory_percent', 'N/A')}%")
 
-class TestBrainErrorHandling:
-    """Test error handling in brain system integration"""
+class TestCoordinatorErrorHandling:
+    """Test error handling in coordinator system integration"""
     
     @pytest.mark.asyncio
-    async def test_invalid_neural_processing_input(self, backend_client, auth_headers):
-        """Test handling of invalid neural processing input"""
+    async def test_invalid_processing_processing_input(self, backend_client, auth_headers):
+        """Test handling of invalid processing processing input"""
         invalid_payloads = [
             {},  # Empty payload
             {"input_data": ""},  # Empty input data
@@ -701,7 +701,7 @@ class TestBrainErrorHandling:
         
         for payload in invalid_payloads:
             response = await backend_client.post(
-                "/api/v1/neural/process",
+                "/api/v1/processing/process",
                 json=payload,
                 headers=auth_headers
             )
@@ -715,8 +715,8 @@ class TestBrainErrorHandling:
                 assert "result" in data or "error" in data
     
     @pytest.mark.asyncio
-    async def test_brain_system_timeout_handling(self, backend_client, auth_headers):
-        """Test timeout handling for brain operations"""
+    async def test_coordinator_system_timeout_handling(self, backend_client, auth_headers):
+        """Test timeout handling for coordinator operations"""
         # Create a potentially long-running operation
         complex_payload = {
             "input_data": {
@@ -724,7 +724,7 @@ class TestBrainErrorHandling:
                 "complexity": "maximum"
             },
             "processing_type": "exhaustive_analysis",
-            "use_consciousness": True,
+            "use_system_state": True,
             "reasoning_depth": 10  # Very deep reasoning
         }
         
@@ -732,7 +732,7 @@ class TestBrainErrorHandling:
         
         try:
             response = await backend_client.post(
-                "/api/v1/neural/process",
+                "/api/v1/processing/process",
                 json=complex_payload,
                 headers=auth_headers
             )
@@ -756,8 +756,8 @@ class TestBrainErrorHandling:
             print(f"Operation timed out after {processing_time:.2f}s - this is expected for very complex operations")
     
     @pytest.mark.asyncio
-    async def test_brain_recovery_after_errors(self, backend_client, auth_headers):
-        """Test brain system recovery after encountering errors"""
+    async def test_coordinator_recovery_after_errors(self, backend_client, auth_headers):
+        """Test coordinator system recovery after encountering errors"""
         # Cause some errors first
         error_payloads = [
             {"input_data": None, "processing_type": "invalid"},
@@ -767,7 +767,7 @@ class TestBrainErrorHandling:
         for payload in error_payloads:
             try:
                 response = await backend_client.post(
-                    "/api/v1/neural/process",
+                    "/api/v1/processing/process",
                     json=payload,
                     headers=auth_headers
                 )
@@ -786,12 +786,12 @@ class TestBrainErrorHandling:
                 "context": "recovery_test"
             },
             "processing_type": "simple_analysis",
-            "use_consciousness": False,
+            "use_system_state": False,
             "reasoning_depth": 1
         }
         
         recovery_response = await backend_client.post(
-            "/api/v1/neural/process",
+            "/api/v1/processing/process",
             json=normal_payload,
             headers=auth_headers
         )
@@ -802,7 +802,7 @@ class TestBrainErrorHandling:
         assert "result" in recovery_data
         assert "timestamp" in recovery_data
         
-        print("Brain system successfully recovered after errors")
+        print("Coordinator system successfully recovered after errors")
 
 # Test configuration and utilities
 if __name__ == "__main__":

@@ -48,7 +48,7 @@ def test_coordinator():
     # Test 3: Task Assignment with different types
     test_tasks = [
         {
-            "task": "Design and implement a neural network architecture for computer vision",
+            "task": "Design and implement a processing network architecture for computer vision",
             "priority": "high",
             "expected_agent_type": "AI/ML Engineer"
         },

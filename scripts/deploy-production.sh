@@ -188,7 +188,7 @@ run_smoke_tests() {
     log "Running smoke tests..."
     
     # Get service endpoints
-    API_ENDPOINT=$(kubectl -n $NAMESPACE get service backend-agi -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+    API_ENDPOINT=$(kubectl -n $NAMESPACE get service backend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
     
     # Health check
     if curl -f "http://$API_ENDPOINT/health" > /dev/null 2>&1; then

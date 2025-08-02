@@ -608,8 +608,8 @@ clone_ai_repositories() {
     fi
     
     # BigAGI
-    if [ ! -d "big-AGI" ]; then
-        git clone https://github.com/enricoros/big-AGI.git
+    if [ ! -d "big-automation" ]; then
+        git clone https://github.com/enricoros/big-automation.git
         log_success "BigAGI repository cloned"
     fi
     
@@ -1086,7 +1086,7 @@ EOF
     # SutazAI main service
     sudo tee /etc/systemd/system/sutazai.service > /dev/null <<EOF
 [Unit]
-Description=SutazAI AGI/ASI System
+Description=SutazAI automation/advanced automation System
 After=network.target docker.service
 Requires=docker.service
 

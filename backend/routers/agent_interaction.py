@@ -1,5 +1,5 @@
 """
-Agent Interaction Router for SutazAI AGI System
+Agent Interaction Router for SutazAI automation System
 
 This module provides enterprise-level agent interaction endpoints,
 consolidating functionality from various agent-related routers.

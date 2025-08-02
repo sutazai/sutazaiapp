@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Deploy Autonomous AGI System
+# Deploy Autonomous automation System
 # ============================
-# This script deploys the complete autonomous AGI system
+# This script deploys the complete autonomous automation system
 # with all AI agents working together independently
 
 set -e
 
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║        SUTAZAI AUTONOMOUS AGI DEPLOYMENT SYSTEM              ║"
+echo "║        SUTAZAI AUTONOMOUS automation DEPLOYMENT SYSTEM              ║"
 echo "║                                                              ║"
 echo "║  Deploying complete AI agent infrastructure...               ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
@@ -90,10 +90,10 @@ echo -e "${GREEN}✓${NC} Redis is running"
 log "Step 4: Starting core infrastructure..."
 cd "$PROJECT_ROOT"
 
-# Start AGI Brain
-if ! docker ps | grep -q "sutazai-brain"; then
-    log "Starting AGI Brain..."
-    docker-compose -f docker-compose-agi-brain.yml up -d
+# Start automation Coordinator
+if ! docker ps | grep -q "sutazai-coordinator"; then
+    log "Starting automation Coordinator..."
+    docker-compose -f docker-compose-task_coordinator.yml up -d
     sleep 10
 fi
 
@@ -151,7 +151,7 @@ echo "Service Health Status:"
 echo "====================="
 
 # Check all services
-check_health "AGI Brain" 8900
+check_health "automation Coordinator" 8900
 check_health "Universal Agents" 9101
 check_health "Redis" 6379
 check_health "Ollama" 11434
@@ -160,11 +160,11 @@ check_health "LiteLLM" 4000
 # Step 8: Display status
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║              AUTONOMOUS AGI DEPLOYMENT COMPLETE              ║"
+echo "║              AUTONOMOUS automation DEPLOYMENT COMPLETE              ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 echo "🚀 System Status:"
-echo "  - AGI Brain: http://localhost:8900"
+echo "  - automation Coordinator: http://localhost:8900"
 echo "  - Universal Agents API: http://localhost:9101"
 echo "  - Agent Registry: http://localhost:9101/agents"
 echo "  - System Health: http://localhost:9101/health"
@@ -193,7 +193,7 @@ echo "  python3 scripts/sutazai_monitor.py"
 echo ""
 echo "To stop the system:"
 echo "  docker-compose -f docker-compose-new-universal-agents.yml down"
-echo "  docker-compose -f docker-compose-agi-brain.yml down"
+echo "  docker-compose -f docker-compose-task_coordinator.yml down"
 
 # Save deployment info
 cat > "$PROJECT_ROOT/deployment_status.json" <<EOF
@@ -201,7 +201,7 @@ cat > "$PROJECT_ROOT/deployment_status.json" <<EOF
   "deployment_time": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
   "status": "active",
   "components": {
-    "agi_brain": "running",
+    "task_coordinator": "running",
     "universal_agents": "running",
     "redis": "running",
     "ollama": "running",

@@ -1,5 +1,5 @@
 """
-SutazAI AGI/ASI Master Agent Orchestration System v2.0
+SutazAI automation/advanced automation Master Agent Orchestration System v2.0
 =====================================================
 
 A comprehensive multi-agent orchestration system that coordinates all 38 AI agents
@@ -45,7 +45,7 @@ class AgentType(Enum):
     AUTONOMOUS_CONTROLLER = "autonomous-system-controller"
     AI_ORCHESTRATOR = "ai-agent-orchestrator"
     COMPLEX_SOLVER = "complex-problem-solver"
-    DEEP_LEARNING_BRAIN = "deep-learning-brain-manager"
+    DEEP_LEARNING_BRAIN = "deep-learning-coordinator-manager"
     
     # Development & Engineering
     SENIOR_AI_ENGINEER = "senior-ai-engineer"
@@ -316,7 +316,7 @@ class MasterAgentOrchestrator:
         # Core Intelligence Agents
         await self._register_agent(AgentProfile(
             id="agi-system-architect",
-            name="AGI System Architect",
+            name="automation System Architect",
             type=AgentType.AGI_ARCHITECT,
             capabilities={
                 AgentCapability.REASONING, AgentCapability.PLANNING,

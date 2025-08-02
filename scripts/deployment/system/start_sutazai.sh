@@ -184,7 +184,7 @@ sleep 20
 
 # Start application services
 log "Starting application services..."
-docker compose up -d backend-agi frontend-agi
+docker compose up -d backend frontend
 
 # Wait for services to be ready
 sleep 10

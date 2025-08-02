@@ -101,7 +101,7 @@ echo "📚 Organizing documentation..."
 
 # System documentation
 mv docs/*ARCHITECTURE*.md docs/system/architecture/ 2>/dev/null
-mv docs/*AGI*.md docs/system/architecture/ 2>/dev/null
+mv docs/*automation*.md docs/system/architecture/ 2>/dev/null
 mv docs/*SYSTEM*.md docs/system/ 2>/dev/null
 
 # Deployment docs
@@ -223,7 +223,7 @@ cat > docs/README.md << 'EOF'
 - `TINYLLAMA_CONFIGURATION_COMPLETE.md` - TinyLlama setup complete
 
 ### System Overview
-- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - AGI architecture
+- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - automation architecture
 - `system/SUTAZAI_AGI_ASI_PROJECT_DOCUMENTATION.md` - Complete project docs
 
 ### Deployment

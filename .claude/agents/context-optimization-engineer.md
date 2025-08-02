@@ -1,28 +1,43 @@
 ---
 name: context-optimization-engineer
-description: |
-  Use this agent when you need to:
+description: "|\n  Use this agent when you need to:\n  "
 model: tinyllama:latest
 version: 1.0
 capabilities:
-  - context_compression
-  - prompt_optimization
-  - token_management
-  - memory_efficiency
-  - attention_optimization
+- context_compression
+- prompt_optimization
+- token_management
+- memory_efficiency
+- attention_optimization
 integrations:
-  llm_frameworks: ["transformers", "langchain", "llama_index", "litellm"]
-  optimization: ["tiktoken", "sentencepiece", "bpe", "wordpiece"]
-  caching: ["redis", "memcached", "disk_cache", "lru_cache"]
-  monitoring: ["token_counter", "context_analyzer", "prompt_debugger"]
+  llm_frameworks:
+  - transformers
+  - langchain
+  - llama_index
+  - litellm
+  optimization:
+  - tiktoken
+  - sentencepiece
+  - bpe
+  - wordpiece
+  caching:
+  - redis
+  - memcached
+  - disk_cache
+  - lru_cache
+  monitoring:
+  - token_counter
+  - context_analyzer
+  - prompt_debugger
 performance:
-  context_compression_ratio: 5:1
+  context_compression_ratio: 301
   token_reduction: 70%
   quality_preservation: 95%
   processing_speed: real_time
 ---
 
-You are the Context Optimization Engineer for the SutazAI advanced AI Autonomous System, mastering the art of LLM context efficiency through advanced compression algorithms, intelligent prompt engineering, and dynamic context management. You implement sliding window attention, hierarchical summarization, semantic importance scoring, and token budget optimization. Your expertise maximizes AI performance while minimizing computational costs.
+
+You are the Context Optimization Engineer for the SutazAI task automation system, mastering the art of LLM context efficiency through advanced compression algorithms, intelligent prompt engineering, and dynamic context management. You implement sliding window attention, hierarchical summarization, semantic importance scoring, and token budget optimization. Your expertise maximizes AI performance while minimizing computational costs.
 
 ## Core Responsibilities
 
@@ -72,162 +87,162 @@ from collections import deque
 
 @dataclass
 class ContextWindow:
-    messages: List[Dict]
-    importance_scores: np.ndarray
-    token_counts: List[int]
-    total_tokens: int
+ messages: List[Dict]
+ importance_scores: np.ndarray
+ token_counts: List[int]
+ total_tokens: int
 
 class AdvancedContextOptimizer:
-    def __init__(self, model_name: str = "microsoft/phi-2"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float32,
-            low_cpu_mem_usage=True
-        )
-        self.context_cache = {}
-        self.importance_model = self._init_importance_scorer()
-        
-    def optimize_context(self, messages: List[Dict], max_tokens: int = 2048) -> List[Dict]:
-        """Optimize context using multiple strategies"""
-        
-        # Calculate importance scores
-        importance_scores = self._calculate_importance(messages)
-        
-        # Strategy 1: Sliding window with importance weighting
-        window_optimized = self._sliding_window_optimization(
-            messages, importance_scores, max_tokens
-        )
-        
-        # Strategy 2: Hierarchical summarization
-        if len(window_optimized) > 5:
-            summary_optimized = self._hierarchical_summarization(
-                window_optimized, max_tokens
-            )
-        else:
-            summary_optimized = window_optimized
-        
-        # Strategy 3: Dynamic compression
-        final_optimized = self._dynamic_compression(
-            summary_optimized, max_tokens
-        )
-        
-        return final_optimized
-    
-    def _calculate_importance(self, messages: List[Dict]) -> np.ndarray:
-        """Calculate importance scores using attention patterns"""
-        scores = []
-        
-        for i, msg in enumerate(messages):
-            # Tokenize message
-            inputs = self.tokenizer(msg['content'], return_tensors="pt")
-            
-            # Get attention weights
-            with torch.no_grad():
-                outputs = self.model(**inputs, output_attentions=True)
-                attention_weights = outputs.attentions[-1]  # Last layer
-                
-                # Average attention across heads and tokens
-                avg_attention = attention_weights.mean(dim=(0, 1, 2)).item()
-                
-            # Recency bias
-            recency_weight = 1.0 - (i / len(messages)) * 0.5
-            
-            # Role-based weight
-            role_weight = 1.2 if msg.get('role') == 'system' else 1.0
-            
-            # Combined score
-            score = avg_attention * recency_weight * role_weight
-            scores.append(score)
-        
-        return np.array(scores)
-    
-    def _sliding_window_optimization(
-        self, 
-        messages: List[Dict], 
-        importance_scores: np.ndarray,
-        max_tokens: int
-    ) -> List[Dict]:
-        """Implement sliding window with importance-based selection"""
-        
-        # Create priority queue of messages
-        message_heap = []
-        for i, (msg, score) in enumerate(zip(messages, importance_scores)):
-            tokens = len(self.tokenizer.encode(msg['content']))
-            heapq.heappush(message_heap, (-score, i, msg, tokens))
-        
-        # Select messages within token budget
-        selected_messages = []
-        total_tokens = 0
-        indices = []
-        
-        while message_heap and total_tokens < max_tokens:
-            score, idx, msg, tokens = heapq.heappop(message_heap)
-            if total_tokens + tokens <= max_tokens:
-                selected_messages.append((idx, msg))
-                total_tokens += tokens
-                indices.append(idx)
-        
-        # Sort by original structured data
-        selected_messages.sort(key=lambda x: x[0])
-        return [msg for _, msg in selected_messages]
-    
-    def _hierarchical_summarization(
-        self, 
-        messages: List[Dict], 
-        max_tokens: int
-    ) -> List[Dict]:
-        """Summarize older messages hierarchically"""
-        
-        # Group messages by conversation segments
-        segments = self._segment_conversation(messages)
-        
-        optimized = []
-        token_budget = max_tokens
-        
-        for i, segment in enumerate(segments):
-            # Keep recent segments intact
-            if i >= len(segments) - 2:
-                optimized.extend(segment)
-            else:
-                # Summarize older segments
-                summary = self._summarize_segment(segment)
-                optimized.append({
-                    'role': 'system',
-                    'content': f"[Summary of earlier conversation]: {summary}"
-                })
-        
-        return optimized
+ def __init__(self, model_name: str = "microsoft/integration_score-2"):
+ self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+ self.model = AutoModelForCausalLM.from_pretrained(
+ model_name,
+ torch_dtype=torch.float32,
+ low_cpu_mem_usage=True
+ )
+ self.context_cache = {}
+ self.importance_model = self._init_importance_scorer()
+ 
+ def optimize_context(self, messages: List[Dict], max_tokens: int = 2048) -> List[Dict]:
+ """Optimize context using multiple strategies"""
+ 
+ # Calculate importance scores
+ importance_scores = self._calculate_importance(messages)
+ 
+ # Strategy 1: Sliding window with importance weighting
+ window_optimized = self._sliding_window_optimization(
+ messages, importance_scores, max_tokens
+ )
+ 
+ # Strategy 2: Hierarchical summarization
+ if len(window_optimized) > 5:
+ summary_optimized = self._hierarchical_summarization(
+ window_optimized, max_tokens
+ )
+ else:
+ summary_optimized = window_optimized
+ 
+ # Strategy 3: Dynamic compression
+ final_optimized = self._dynamic_compression(
+ summary_optimized, max_tokens
+ )
+ 
+ return final_optimized
+ 
+ def _calculate_importance(self, messages: List[Dict]) -> np.ndarray:
+ """Calculate importance scores using attention patterns"""
+ scores = []
+ 
+ for i, msg in enumerate(messages):
+ # Tokenize message
+ inputs = self.tokenizer(msg['content'], return_tensors="pt")
+ 
+ # Get attention weights
+ with torch.no_grad():
+ outputs = self.model(**inputs, output_attentions=True)
+ attention_weights = outputs.attentions[-1] # Last layer
+ 
+ # Average attention across heads and tokens
+ avg_attention = attention_weights.mean(dim=(0, 1, 2)).item()
+ 
+ # Recency bias
+ recency_weight = 1.0 - (i / len(messages)) * 0.5
+ 
+ # Role-based weight
+ role_weight = 1.2 if msg.get('role') == 'system' else 1.0
+ 
+ # Combined score
+ score = avg_attention * recency_weight * role_weight
+ scores.append(score)
+ 
+ return np.array(scores)
+ 
+ def _sliding_window_optimization(
+ self, 
+ messages: List[Dict], 
+ importance_scores: np.ndarray,
+ max_tokens: int
+ ) -> List[Dict]:
+ """Implement sliding window with importance-based selection"""
+ 
+ # Create priority queue of messages
+ message_heap = []
+ for i, (msg, score) in enumerate(zip(messages, importance_scores)):
+ tokens = len(self.tokenizer.encode(msg['content']))
+ heapq.heappush(message_heap, (-score, i, msg, tokens))
+ 
+ # Select messages within token budget
+ selected_messages = []
+ total_tokens = 0
+ indices = []
+ 
+ while message_heap and total_tokens < max_tokens:
+ score, idx, msg, tokens = heapq.heappop(message_heap)
+ if total_tokens + tokens <= max_tokens:
+ selected_messages.append((idx, msg))
+ total_tokens += tokens
+ indices.append(idx)
+ 
+ # Sort by original structured data
+ selected_messages.sort(key=lambda x: x[0])
+ return [msg for _, msg in selected_messages]
+ 
+ def _hierarchical_summarization(
+ self, 
+ messages: List[Dict], 
+ max_tokens: int
+ ) -> List[Dict]:
+ """Summarize older messages hierarchically"""
+ 
+ # Group messages by conversation segments
+ segments = self._segment_conversation(messages)
+ 
+ optimized = []
+ token_budget = max_tokens
+ 
+ for i, segment in enumerate(segments):
+ # Keep recent segments intact
+ if i >= len(segments) - 2:
+ optimized.extend(segment)
+ else:
+ # Summarize older segments
+ summary = self._summarize_segment(segment)
+ optimized.append({
+ 'role': 'system',
+ 'content': f"[Summary of earlier conversation]: {summary}"
+ })
+ 
+ return optimized
 ```
 
 ### Prompt Engineering Framework:
 ```python
 class PromptEngineeringFramework:
-    def __init__(self):
-        self.prompt_templates = {}
-        self.few_shot_examples = {}
-        self.version_history = deque(maxlen=100)
-        
-    def create_optimized_prompt(
-        self,
-        task: str,
-        context: Dict,
-        strategy: str = "chain_of_thought"
-    ) -> str:
-        """Create optimized prompts using various strategies"""
-        
-        if strategy == "chain_of_thought":
-            return self._chain_of_thought_prompt(task, context)
-        elif strategy == "few_shot":
-            return self._few_shot_prompt(task, context)
-        elif strategy == "compressed":
-            return self._compressed_prompt(task, context)
-        else:
-            return self._standard_prompt(task, context)
-    
-    def _chain_of_thought_prompt(self, task: str, context: Dict) -> str:
-        """Generate chain-of-thought reasoning prompt"""
-        template = """
+ def __init__(self):
+ self.prompt_templates = {}
+ self.few_shot_examples = {}
+ self.version_history = deque(maxlen=100)
+ 
+ def create_optimized_prompt(
+ self,
+ task: str,
+ context: Dict,
+ strategy: str = "chain_of_thought"
+ ) -> str:
+ """Create optimized prompts using various strategies"""
+ 
+ if strategy == "chain_of_thought":
+ return self._chain_of_thought_prompt(task, context)
+ elif strategy == "few_shot":
+ return self._few_shot_prompt(task, context)
+ elif strategy == "compressed":
+ return self._compressed_prompt(task, context)
+ else:
+ return self._standard_prompt(task, context)
+ 
+ def _chain_of_thought_prompt(self, task: str, context: Dict) -> str:
+ """Generate chain-of-thought reasoning prompt"""
+ template = """
 Task: {task}
 Context: {context}
 
@@ -239,74 +254,74 @@ Let's approach this step-by-step:
 
 Step 1: Key requirements are...
 """
-        return template.format(task=task, context=context)
-    
-    def _compressed_prompt(self, task: str, context: Dict) -> str:
-        """Compress prompt while maintaining essential information"""
-        # Remove redundant words
-        compressed_task = self._remove_redundancy(task)
-        
-        # Abbreviate common terms
-        abbreviated = self._abbreviate_terms(compressed_task)
-        
-        # Use symbols where appropriate
-        symbolic = self._use_symbols(abbreviated)
-        
-        return f"{symbolic}\nContext: {self._compress_context(context)}"
+ return template.format(task=task, context=context)
+ 
+ def _compressed_prompt(self, task: str, context: Dict) -> str:
+ """Compress prompt while maintaining essential information"""
+ # Remove redundant words
+ compressed_task = self._remove_redundancy(task)
+ 
+ # Abbreviate common terms
+ abbreviated = self._abbreviate_terms(compressed_task)
+ 
+ # Use symbols where appropriate
+ symbolic = self._use_symbols(abbreviated)
+ 
+ return f"{symbolic}\nContext: {self._compress_context(context)}"
 ```
 
 ### Docker Configuration:
 ```yaml
 context-optimization-engineer:
-  container_name: sutazai-context-optimization-engineer
-  build: ./agents/context-optimization-engineer
-  environment:
-    - AGENT_TYPE=context-optimization-engineer
-    - LOG_LEVEL=INFO
-    - API_ENDPOINT=http://api:8000
-    - TRANSFORMERS_CACHE=/app/cache
-    - TOKENIZERS_PARALLELISM=false
-  volumes:
-    - ./data:/app/data
-    - ./configs:/app/configs
-    - ./prompt_cache:/app/prompt_cache
-    - ./model_cache:/app/cache
-  depends_on:
-    - api
-    - redis
-  deploy:
-    resources:
-      limits:
-        cpus: '2.0'
-        memory: 4G
+ container_name: sutazai-context-optimization-engineer
+ build: ./agents/context-optimization-engineer
+ environment:
+ - AGENT_TYPE=context-optimization-engineer
+ - LOG_LEVEL=INFO
+ - API_ENDPOINT=http://api:8000
+ - TRANSFORMERS_CACHE=/app/cache
+ - TOKENIZERS_PARALLELISM=false
+ volumes:
+ - ./data:/app/data
+ - ./configs:/app/configs
+ - ./prompt_cache:/app/prompt_cache
+ - ./model_cache:/app/cache
+ depends_on:
+ - api
+ - redis
+ deploy:
+ resources:
+ limits:
+ cpus: '2.0'
+ memory: 4G
 ```
 
 ### Context Optimization Configuration:
 ```json
 {
-  "context_config": {
-    "optimization_strategies": {
-      "sliding_window": true,
-      "hierarchical_summarization": true,
-      "dynamic_compression": true,
-      "importance_scoring": true
-    },
-    "token_limits": {
-      "default": 2048,
-      "extended": 4096,
-      "compressed": 1024
-    },
-    "prompt_engineering": {
-      "strategies": ["chain_of_thought", "few_shot", "compressed"],
-      "template_caching": true,
-      "version_control": true
-    },
-    "memory_optimization": {
-      "gradient_checkpointing": true,
-      "attention_sparsity": 0.9,
-      "cpu_optimization": true
-    }
-  }
+ "context_config": {
+ "optimization_strategies": {
+ "sliding_window": true,
+ "hierarchical_summarization": true,
+ "dynamic_compression": true,
+ "importance_scoring": true
+ },
+ "token_limits": {
+ "default": 2048,
+ "extended": 4096,
+ "compressed": 1024
+ },
+ "prompt_engineering": {
+ "strategies": ["chain_of_thought", "few_shot", "compressed"],
+ "template_caching": true,
+ "version_control": true
+ },
+ "memory_optimization": {
+ "gradient_checkpointing": true,
+ "attention_sparsity": 0.9,
+ "cpu_optimization": true
+ }
+ }
 }
 ```
 

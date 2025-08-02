@@ -20,7 +20,7 @@ This guide provides comprehensive documentation for all essential scripts in the
 |--------|---------|-------------|
 | `start.sh` | Quick start core system | Initial system startup |
 | `status.sh` | Check system status | Regular health checks |
-| `deploy_complete_system.sh` | Full AGI deployment | Production deployment |
+| `deploy_complete_system.sh` | Full automation system deployment | Production deployment |
 | `agent_status_dashboard.sh` | Monitor all agents | Real-time monitoring |
 | `monitor` | Live system monitoring | Continuous monitoring |
 | `check_system_status.sh` | Detailed status check | Troubleshooting |
@@ -74,7 +74,7 @@ cd /opt/sutazaiapp
 ## 🚀 Deployment Scripts
 
 ### deploy_complete_system.sh
-**Purpose:** Deploy the complete AGI/ASI system with all services
+**Purpose:** Deploy the complete automation system/advanced automation system with all services
 **Usage:** `./scripts/deploy_complete_system.sh [options]`
 **Description:**
 - Enterprise-grade deployment script
@@ -106,7 +106,7 @@ cd /opt/sutazaiapp
 - Minimal resource usage
 
 ### deploy_autonomous_agi.sh
-**Purpose:** Deploy autonomous AGI system
+**Purpose:** Deploy autonomous automation system system
 **Usage:** `./scripts/deploy_autonomous_agi.sh`
 **Description:**
 - Focuses on autonomous agents

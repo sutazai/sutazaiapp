@@ -70,7 +70,7 @@ PHASE_6_INTEGRATION_AGENTS=(
 PHASE_7_DOMAIN_AGENTS=(
     "financial-analysis-specialist"
     "document-knowledge-manager"
-    "deep-learning-brain-manager"
+    "deep-learning-coordinator-manager"
     "complex-problem-solver"
     "jarvis-voice-interface"
 )
@@ -501,7 +501,7 @@ main() {
     echo -e "${GREEN}║                    🎯 38 AI AGENTS DEPLOYED SUCCESSFULLY! 🎯               ║${NC}"
     echo -e "${GREEN}║                                                                            ║${NC}"
     echo -e "${GREEN}║  All agents are now operational with full communication and monitoring    ║${NC}"
-    echo -e "${GREEN}║  infrastructure. The SutazAI AGI/ASI system is ready for operation!      ║${NC}"
+    echo -e "${GREEN}║  infrastructure. The SutazAI automation/advanced automation system is ready for operation!      ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════════════════════════════════╝${NC}"
     
     log_info "Deployment completed successfully at $(date)"

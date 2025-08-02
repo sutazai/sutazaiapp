@@ -43,9 +43,9 @@ ln -sf build/make/Makefile Makefile
 
 # Create a root README for navigation
 cat > README.md << 'EOF'
-# SutazAI AGI/ASI Autonomous System
+# SutazAI automation/advanced automation Autonomous System
 
-A lightweight, fully local AGI system running on TinyLlama.
+A lightweight, fully local automation system running on TinyLlama.
 
 ## 🚀 Quick Start
 
@@ -64,7 +64,7 @@ make verify     # Verify configuration
 ├── agents/         # Agent configurations and definitions
 ├── archive/        # Archived files (scripts, docs, configs)
 ├── backend/        # Backend API service
-├── brain/          # AGI brain components
+├── coordinator/          # automation coordinator components
 ├── build/          # Build tools and Makefile
 ├── config/         # All configuration files
 │   ├── docker/     # Docker compose files

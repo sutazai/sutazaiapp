@@ -19,7 +19,7 @@ redis:
   result_ttl: 3600  # 1 hour
   
 services:
-  backend_url: "http://backend-agi:8000"
+  backend_url: "http://backend:8000"
   jarvis_url: "http://jarvis-ai:8120"
   optimizer_url: "http://model-optimizer:8080"
 

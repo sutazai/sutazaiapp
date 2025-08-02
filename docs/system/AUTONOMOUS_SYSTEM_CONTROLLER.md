@@ -1,8 +1,8 @@
-# Autonomous System Controller - Master AGI Controller
+# automation system Controller - Master automation system Controller
 
 ## Overview
 
-The Autonomous System Controller is the master controller for the entire SutazAI AGI system. It operates 24/7 without human intervention, making autonomous decisions to optimize, heal, and scale the system based on real-time metrics and learned patterns.
+The automation system Controller is the master controller for the entire SutazAI automation system system. It operates 24/7 without human intervention, making autonomous decisions to optimize, heal, and scale the system based on real-time metrics and learned patterns.
 
 ## Key Features
 
@@ -259,7 +259,7 @@ The controller learns from:
 ## Future Enhancements
 
 1. **Advanced ML Models**: Deep learning for pattern recognition
-2. **Multi-Cluster Support**: Manage multiple AGI clusters
+2. **Multi-Cluster Support**: Manage multiple automation system clusters
 3. **Cost Optimization**: Cloud cost management
 4. **Predictive Analytics**: Advanced forecasting
 5. **Federated Learning**: Learn from multiple deployments

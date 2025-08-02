@@ -1,0 +1,63 @@
+scheduler:
+  mode: "autonomous"
+  max_concurrent_tasks: 10
+  task_timeout_seconds: 300
+  retry_policy:
+    max_retries: 3
+    backoff_factor: 2
+    
+database:
+  url: "postgresql://sutazai:sutazai_password@postgres:5432/sutazai"
+  pool_size:
+    min: 1
+    max: 10
+  connection_timeout: 30
+
+redis:
+  url: "redis://redis:6379/0"
+  task_queue: "task_queue"
+  result_ttl: 3600  # 1 hour
+  
+services:
+  backend_url: "http://backend-agi:8000"
+  jarvis_url: "http://jarvis-ai:8120"
+  optimizer_url: "http://model-optimizer:8080"
+
+task_types:
+  jarvis_command:
+    default_timeout: 30
+    max_retries: 2
+    description: "Execute JARVIS AI commands"
+    
+  backend_operation:
+    default_timeout: 60
+    max_retries: 3
+    description: "Execute backend API operations"
+    
+  model_training:
+    default_timeout: 3600  # 1 hour
+    max_retries: 1
+    description: "Train ML models"
+    
+  data_processing:
+    default_timeout: 300  # 5 minutes
+    max_retries: 2
+    description: "Process data and documents"
+    
+  system_maintenance:
+    default_timeout: 120  # 2 minutes
+    max_retries: 1
+    description: "System maintenance tasks"
+
+scheduling:
+  health_check_interval: 30
+  queue_check_interval: 5
+  cleanup_interval: 3600  # 1 hour
+  
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+monitoring:
+  metrics_enabled: true
+  performance_tracking: true 

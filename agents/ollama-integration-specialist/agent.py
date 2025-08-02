@@ -24,7 +24,7 @@ class OllamaIntegrationSpecialistAgent(BaseAgent):
             "llama2",
             "mistral",
             "codellama",
-            "neural-chat",
+            "processing-chat",
             "phi"
         ]
         self.model_cache = {}
@@ -311,7 +311,7 @@ Assistant: {{{{ .Response }}}}
             "llama2": ["chat", "reasoning", "code", "general"],
             "mistral": ["instruction", "chat", "multilingual"],
             "codellama": ["code", "debugging", "completion"],
-            "neural-chat": ["conversation", "chat", "friendly"],
+            "processing-chat": ["conversation", "chat", "friendly"],
             "phi": ["reasoning", "math", "logic"]
         }
         

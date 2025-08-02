@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# SutazAI AGI Monitoring Configuration Script
-# This script configures all components of the SutazAI AGI monitoring system
+# SutazAI automation Monitoring Configuration Script
+# This script configures all components of the SutazAI automation monitoring system
 
 set -e
 
@@ -18,7 +18,7 @@ LOG_DIR="${BASE_DIR}/logs"
 # Create necessary directories
 echo -e "${YELLOW}Creating necessary directories...${NC}"
 mkdir -p "${LOG_DIR}"
-mkdir -p "${LOG_DIR}/neural"
+mkdir -p "${LOG_DIR}/processing"
 mkdir -p "${LOG_DIR}/ethics"
 mkdir -p "${LOG_DIR}/security"
 mkdir -p "${LOG_DIR}/hardware"
@@ -108,7 +108,7 @@ groups:
       severity: critical
     annotations:
       summary: Ethical boundary violation detected
-      description: A potential ethical boundary violation has been detected in the AGI system
+      description: A potential ethical boundary violation has been detected in the automation system
       
   - alert: SecurityBreachAttempt
     expr: sutazai_security_unauthorized_access_attempts_total > 2
@@ -119,14 +119,14 @@ groups:
       summary: Security breach attempt detected
       description: Multiple unauthorized access attempts detected
       
-  - alert: NeuralArchitectureAnomaly
-    expr: sutazai_neural_plasticity_change_rate > 0.5
+  - alert: ProcessingArchitectureAnomaly
+    expr: sutazai_processing_plasticity_change_rate > 0.5
     for: 5m
     labels:
       severity: warning
     annotations:
-      summary: Neural architecture anomaly detected
-      description: Abnormal synaptic plasticity changes detected in the neural architecture
+      summary: Processing architecture anomaly detected
+      description: Abnormal synaptic plasticity changes detected in the processing architecture
       
   - alert: SelfModificationDetected
     expr: rate(sutazai_self_mod_changes_total[1h]) > 0
@@ -135,7 +135,7 @@ groups:
       severity: warning
     annotations:
       summary: Self-modification detected
-      description: The AGI system has attempted to modify its own code or parameters
+      description: The automation system has attempted to modify its own code or parameters
 EOF
 
 echo -e "${GREEN}✓ Prometheus configured${NC}"
@@ -267,7 +267,7 @@ filter {
     }
   }
   
-  if [fields][log_type] == "neural" {
+  if [fields][log_type] == "processing" {
     json {
       source => "message"
       skip_on_invalid_json => true
@@ -384,9 +384,9 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /opt/sutazaiapp/logs/neural/*.log
+    - /opt/sutazaiapp/logs/processing/*.log
   fields:
-    log_type: neural
+    log_type: processing
   fields_under_root: false
   json.keys_under_root: true
   json.add_error_key: true

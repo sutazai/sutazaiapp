@@ -172,12 +172,12 @@ test_application_services() {
     log_header "🚀 Testing Application Services"
     
     # Backend
-    test_container "Backend AGI container" "sutazai-backend-agi" true
+    test_container "Backend automation container" "sutazai-backend" true
     test_endpoint "Backend API health" "http://localhost:8000/health" 200 true
     test_endpoint "Backend API docs" "http://localhost:8000/docs" 200 false
     
     # Frontend
-    test_container "Frontend AGI container" "sutazai-frontend-agi" true
+    test_container "Frontend automation container" "sutazai-frontend" true
     test_endpoint "Frontend UI" "http://localhost:8501" 200 true
     
     # API Gateway (if implemented)

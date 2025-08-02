@@ -307,7 +307,7 @@ class SutazAIWithMonitoring:
 |----------|------------|------------|------------|--------------|
 | `/health` | 10ms | 25ms | 50ms | 99.95% |
 | `/api/v1/system/status` | 50ms | 150ms | 300ms | 99.9% |
-| `/api/v1/brain/think` | 500ms | 2000ms | 5000ms | 95.0% |
+| `/api/v1/coordinator/think` | 500ms | 2000ms | 5000ms | 95.0% |
 | `/api/v1/vectors/search` | 100ms | 300ms | 600ms | 98.0% |
 
 ### Resource Utilization Targets
@@ -470,7 +470,7 @@ watch -n 1 free -h
 ```python
 # Customize performance thresholds
 custom_thresholds = {
-    "/api/v1/brain/think": BenchmarkThresholds(
+    "/api/v1/coordinator/think": BenchmarkThresholds(
         p50_ms=300,    # Faster requirement
         p95_ms=1500,   # Tighter P95
         p99_ms=3000,   # Stricter P99

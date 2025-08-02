@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI System - Advanced Usage Guide
+# SutazAI automation system/advanced automation System - Advanced Usage Guide
 
 ## 🚀 Advanced Features & Capabilities
 
@@ -15,7 +15,7 @@
 curl -X POST http://localhost:8000/api/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "message": "Analyze the implications of quantum computing on AGI development",
+    "message": "Analyze the implications of advanced computing on automation system development",
     "model": "tinyllama"
   }'
 
@@ -84,7 +84,7 @@ curl -X POST http://localhost:8000/api/agents/route \
 curl -X POST http://localhost:8000/api/knowledge/add \
   -H "Content-Type: application/json" \
   -d '{
-    "entity": "AGI System",
+    "entity": "automation system System",
     "properties": {
       "components": ["reasoning", "learning", "adaptation"],
       "capabilities": ["self-improvement", "multi-agent"]
@@ -102,7 +102,7 @@ curl -X POST http://localhost:8000/api/knowledge/add \
 curl -X POST http://localhost:8000/api/knowledge/search \
   -H "Content-Type: application/json" \
   -d '{
-    "query": "How does the AGI system learn?",
+    "query": "How does the automation system system learn?",
     "limit": 5
   }'
 ```
@@ -117,8 +117,8 @@ curl -X POST http://localhost:8000/api/reason \
   -d '{
     "type": "deductive",
     "premises": [
-      "All AGI systems can self-improve",
-      "SutazAI is an AGI system"
+      "All automation system systems can self-improve",
+      "SutazAI is an automation system system"
     ],
     "query": "Can SutazAI self-improve?"
   }'
@@ -137,11 +137,11 @@ curl -X POST http://localhost:8000/api/reason \
 
 #### Create Complex Workflow
 ```python
-# Multi-step AGI workflow
+# Multi-step automation system workflow
 curl -X POST http://localhost:8000/api/workflows/create \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "AGI Analysis Pipeline",
+    "name": "automation system Analysis Pipeline",
     "steps": [
       {
         "action": "analyze_code",
@@ -217,8 +217,8 @@ curl -X POST http://localhost:8000/api/batch/chat \
   -H "Content-Type: application/json" \
   -d '{
     "requests": [
-      {"message": "What is AGI?", "model": "qwen2.5:3b"},
-      {"message": "Explain ASI", "model": "tinyllama"},
+      {"message": "What is automation system?", "model": "qwen2.5:3b"},
+      {"message": "Explain advanced automation", "model": "tinyllama"},
       {"message": "Future of AI", "model": "llama3.2:1b"}
     ],
     "parallel": true
@@ -266,7 +266,7 @@ CREATE INDEX idx_timestamp ON conversations(created_at);
 
 ## 📊 Usage Examples
 
-### Complete AGI Demonstration
+### Complete automation system Demonstration
 ```bash
 # 1. Start a reasoning session
 SESSION_ID=$(curl -s -X POST http://localhost:8000/api/sessions/create | jq -r '.session_id')
@@ -275,7 +275,7 @@ SESSION_ID=$(curl -s -X POST http://localhost:8000/api/sessions/create | jq -r '
 curl -X POST http://localhost:8000/api/sessions/$SESSION_ID/context \
   -H "Content-Type: application/json" \
   -d '{
-    "context": "You are an AGI system with self-improvement capabilities",
+    "context": "You are an automation system system with self-improvement capabilities",
     "objectives": ["analyze", "reason", "improve"]
   }'
 
@@ -307,4 +307,4 @@ curl -X POST http://localhost:8000/api/sessions/$SESSION_ID/execute \
 5. Contribute improvements back to the system
 
 ---
-Your AGI/ASI system is ready for advanced experimentation!
+Your automation system/advanced automation system is ready for advanced experimentation!

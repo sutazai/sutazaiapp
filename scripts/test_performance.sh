@@ -10,7 +10,7 @@ echo ""
 test_messages=(
     '{"message": "Hi", "model": "qwen2.5:3b"}'
     '{"message": "What is 2+2?", "model": "qwen2.5:3b"}'
-    '{"message": "Explain quantum computing in one sentence.", "model": "qwen2.5:3b"}'
+    '{"message": "Explain advanced computing in one sentence.", "model": "qwen2.5:3b"}'
     '{"message": "Hi", "model": "qwen2.5-coder:3b"}'
     '{"message": "What is 2+2?", "model": "qwen2.5-coder:3b"}'
     '{"message": "Write a simple Python function.", "model": "qwen2.5-coder:3b"}'

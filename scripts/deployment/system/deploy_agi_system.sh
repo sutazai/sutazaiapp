@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# SutazAI AGI/ASI Deployment Script
+# SutazAI automation/advanced automation Deployment Script
 #
-# This script automates the deployment of the full AGI/ASI system.
+# This script automates the deployment of the full automation/advanced automation system.
 # It handles dependency installation, system configuration, and startup.
 #
 # Usage: ./deploy_agi_system.sh [--debug] [--no-gpu] [--skip-deps]
@@ -25,7 +25,7 @@ mkdir -p "$LOG_DIR"
 
 # Initialize logging
 exec > >(tee -a "$LOG_FILE") 2>&1
-echo "=== SutazAI AGI/ASI Deployment Started at $(date) ==="
+echo "=== SutazAI automation/advanced automation Deployment Started at $(date) ==="
 echo "Working directory: $PROJECT_ROOT"
 
 # Parse command line arguments
@@ -221,7 +221,7 @@ if command_exists numactl; then
     "numa_nodes": $NUMA_NODES,
     "memory_strategy": "interleave",
     "cpu_binding": {
-        "neuromorphic_engine": [0, 1],
+        "optimized_engine": [0, 1],
         "vector_db": [2, 3],
         "agent_manager": [4, 5],
         "web_server": [6, 7]
@@ -234,19 +234,19 @@ fi
 # Create configuration files
 log_step "Generating system configuration"
 
-# Main AGI configuration
+# Main automation configuration
 if [ ! -f "$CONFIG_DIR/agi_system.json" ]; then
     cat > "$CONFIG_DIR/agi_system.json" << EOF
 {
     "system": {
-        "name": "SutazAI AGI/ASI Autonomous System",
+        "name": "SutazAI automation/advanced automation Autonomous System",
         "version": "0.1.0",
-        "description": "Autonomous AGI system with self-improvement capabilities",
+        "description": "Autonomous automation system with self-improvement capabilities",
         "max_memory_usage_gb": $(($TOTAL_MEM_GB - 10)),
         "max_cpu_usage_percent": 90,
         "debug_mode": $([ "$DEBUG" = true ] && echo "true" || echo "false")
     },
-    "neuromorphic_engine": {
+    "optimized_engine": {
         "enabled": true,
         "port": 50051,
         "energy_efficient_mode": true,
@@ -289,7 +289,7 @@ if [ ! -f "$CONFIG_DIR/agi_system.json" ]; then
     }
 }
 EOF
-    log_step "Created AGI system configuration"
+    log_step "Created automation system configuration"
 fi
 
 # Create starter ethical constraint
@@ -320,7 +320,7 @@ mkdir -p "$TEST_DIR"
 # Create a test file if it doesn't exist
 if [ ! -f "$TEST_DIR/test_document.txt" ]; then
     cat > "$TEST_DIR/test_document.txt" << EOF
-This is a test document for the SutazAI AGI/ASI system.
+This is a test document for the SutazAI automation/advanced automation system.
 It should be processed correctly if the system is working properly.
 EOF
 fi
@@ -335,7 +335,7 @@ errors = []
 
 # Check required components
 components = [
-    'neuromorphic.core',
+    'optimized.core',
     'ai_agents.base_agent',
     'ai_agents.protocols.self_modification',
     'ai_agents.ethical_constraints'
@@ -357,7 +357,7 @@ required_dirs = [
     'logs',
     'config',
     'data',
-    'neuromorphic',
+    'optimized',
     'ai_agents'
 ]
 
@@ -390,7 +390,7 @@ log_step "Creating startup script"
 
 cat > "$PROJECT_ROOT/start_agi.sh" << 'EOF'
 #!/bin/bash
-# AGI System Startup Script
+# automation System Startup Script
 
 PROJECT_ROOT=$(pwd)
 VENV_DIR="$PROJECT_ROOT/venv"
@@ -403,8 +403,8 @@ mkdir -p "$LOG_DIR"
 # Activate virtual environment
 source "$VENV_DIR/bin/activate"
 
-# Start the AGI system
-echo "Starting AGI system at $(date)"
+# Start the automation system
+echo "Starting automation system at $(date)"
 echo "Logs will be written to $LOG_FILE"
 
 # Use nohup to keep the process running after terminal closes
@@ -412,31 +412,31 @@ nohup python scripts/initialize_agi.py "$@" > "$LOG_FILE" 2>&1 &
 
 # Save the process ID
 echo $! > "$PROJECT_ROOT/.agi.pid"
-echo "AGI system started with PID: $!"
+echo "automation system started with PID: $!"
 echo "To stop the system, run: ./stop_agi.sh"
 EOF
 
 # Create stop script
 cat > "$PROJECT_ROOT/stop_agi.sh" << 'EOF'
 #!/bin/bash
-# AGI System Shutdown Script
+# automation System Shutdown Script
 
 PROJECT_ROOT=$(pwd)
 PID_FILE="$PROJECT_ROOT/.agi.pid"
 
 if [ -f "$PID_FILE" ]; then
     PID=$(cat "$PID_FILE")
-    echo "Stopping AGI system with PID: $PID"
+    echo "Stopping automation system with PID: $PID"
     kill -15 $PID
     sleep 5
     if kill -0 $PID 2>/dev/null; then
-        echo "AGI system didn't stop gracefully, forcing termination"
+        echo "automation system didn't stop gracefully, forcing termination"
         kill -9 $PID
     fi
     rm "$PID_FILE"
-    echo "AGI system stopped"
+    echo "automation system stopped"
 else
-    echo "No PID file found. AGI system may not be running."
+    echo "No PID file found. automation system may not be running."
 fi
 EOF
 
@@ -444,8 +444,8 @@ chmod +x "$PROJECT_ROOT/start_agi.sh"
 chmod +x "$PROJECT_ROOT/stop_agi.sh"
 
 log_step "✅ Deployment completed successfully!"
-log_step "To start the AGI system, run: ./start_agi.sh"
-log_step "To stop the AGI system, run: ./stop_agi.sh"
+log_step "To start the automation system, run: ./start_agi.sh"
+log_step "To stop the automation system, run: ./stop_agi.sh"
 
 # Final summary
 echo ""
@@ -459,4 +459,4 @@ echo ""
 echo "System will use $([ "$USE_GPU" = true ] && echo "GPU acceleration" || echo "CPU only mode")"
 echo "Debug mode: $([ "$DEBUG" = true ] && echo "Enabled" || echo "Disabled")"
 echo ""
-echo "=== SutazAI AGI/ASI Deployment Completed at $(date) ===" 
+echo "=== SutazAI automation/advanced automation Deployment Completed at $(date) ===" 

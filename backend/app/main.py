@@ -28,7 +28,7 @@ try:
     from monitoring.monitoring import MonitoringService
     from agent_orchestration.orchestrator import AgentOrchestrator
     from ai_agents.agent_manager import AgentManager
-    from neural_engine.reasoning_engine import ReasoningEngine
+    from processing_engine.reasoning_engine import ReasoningEngine
     from routers.agent_interaction import router as agent_interaction_router
     from app.self_improvement import SelfImprovementSystem
     
@@ -56,7 +56,7 @@ start_time = time.time()
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="SutazAI AGI/ASI System",
+    title="SutazAI automation/advanced automation System",
     description="Autonomous General Intelligence Platform with Enterprise Features",
     version="17.0.0",
     docs_url="/docs",
@@ -93,13 +93,13 @@ if ENTERPRISE_FEATURES:
         logger.warning(f"Monitoring setup failed: {e}")
 
 # Include enterprise routers
-# Include brain router (always available)
+# Include coordinator router (always available)
 try:
-    from app.api.v1.brain import router as brain_router
-    app.include_router(brain_router, prefix="/api/v1/brain", tags=["AGI Brain"])
-    logger.info("Brain router loaded successfully")
+    from app.api.v1.coordinator import router as coordinator_router
+    app.include_router(coordinator_router, prefix="/api/v1/coordinator", tags=["automation Coordinator"])
+    logger.info("Coordinator router loaded successfully")
 except Exception as e:
-    logger.warning(f"Brain router setup failed: {e}")
+    logger.warning(f"Coordinator router setup failed: {e}")
 
 # Include models router (always available)
 try:
@@ -141,13 +141,21 @@ try:
 except Exception as e:
     logger.warning(f"Security router setup failed: {e}")
 
-# Include AGI router (advanced functionality)
+# Include multi-agent orchestration router (advanced functionality)
+try:
+    from app.api.v1.orchestration import router as orchestration_router
+    app.include_router(orchestration_router, prefix="/api/v1/orchestration", tags=["Multi-Agent Orchestration"])
+    logger.info("Multi-agent orchestration router loaded successfully")
+except Exception as e:
+    logger.warning(f"Orchestration router setup failed: {e}")
+
+# Include automation router (advanced functionality)
 try:
     from app.api.v1.endpoints.agi import router as agi_router
-    app.include_router(agi_router, prefix="/api/v1/agi", tags=["AGI"])
-    logger.info("AGI router loaded successfully")
+    app.include_router(agi_router, prefix="/api/v1/agi", tags=["automation"])
+    logger.info("automation router loaded successfully")
 except Exception as e:
-    logger.warning(f"AGI router setup failed: {e}")
+    logger.warning(f"automation router setup failed: {e}")
 
 # Include chat router (always available)
 try:
@@ -196,7 +204,7 @@ async def startup_event():
     """Initialize enterprise components on startup"""
     global orchestrator, agent_manager, reasoning_engine, self_improvement, monitoring_service
     
-    logger.info("Starting SutazAI AGI System v17.0.0...")
+    logger.info("Starting SutazAI automation System v17.0.0...")
     
     if ENTERPRISE_FEATURES:
         try:
@@ -210,7 +218,7 @@ async def startup_event():
             try:
                 global reasoning_engine
                 reasoning_engine = ReasoningEngine()
-                logger.info("Neural reasoning engine initialized with performance optimizations")
+                logger.info("Processing reasoning engine initialized with performance optimizations")
             except Exception as e:
                 logger.warning(f"Reasoning engine initialization failed: {e}")
             
@@ -260,7 +268,7 @@ async def shutdown_event():
 # Request/Response Models
 class ChatRequest(BaseModel):
     message: str
-    model: Optional[str] = "agi-brain"
+    model: Optional[str] = "task_coordinator"
     agent: Optional[str] = None
     temperature: Optional[float] = 0.7
 
@@ -291,10 +299,10 @@ class AgentCreateRequest(BaseModel):
     config: Dict[str, Any] = Field(default_factory=dict)
     name: Optional[str] = None
 
-class NeuralProcessingRequest(BaseModel):
+class ProcessingProcessingRequest(BaseModel):
     input_data: Any
     processing_type: str = "general"
-    use_consciousness: bool = True
+    use_system_state: bool = True
     reasoning_depth: int = 3
 
 # Service connectivity helpers
@@ -502,17 +510,17 @@ async def get_orchestration_status(current_user: Dict = Depends(get_current_user
         logger.error(f"Status retrieval failed: {e}")
         return {"status": "error", "error": str(e)}
 
-# Neural Processing Engine Endpoints
-@app.post("/api/v1/neural/process")
-async def neural_process(
-    request: NeuralProcessingRequest,
+# Processing Processing Engine Endpoints
+@app.post("/api/v1/processing/process")
+async def processing_process(
+    request: ProcessingProcessingRequest,
     current_user: Dict = Depends(get_current_user)
 ):
-    """Process data through the neural reasoning engine"""
+    """Process data through the processing reasoning engine"""
     if not reasoning_engine:
         # Fallback to basic processing
         return {
-            "result": "Neural processing system not available - using basic processing",
+            "result": "Processing processing system not available - using basic processing",
             "processed_data": request.input_data,
             "processing_type": request.processing_type,
             "fallback_mode": True
@@ -522,57 +530,57 @@ async def neural_process(
         result = await reasoning_engine.process(
             input_data=request.input_data,
             processing_type=request.processing_type,
-            use_consciousness=request.use_consciousness,
+            use_system_state=request.use_system_state,
             reasoning_depth=request.reasoning_depth
         )
         
         return {
             "result": result,
             "processing_type": request.processing_type,
-            "consciousness_enabled": request.use_consciousness,
+            "system_state_enabled": request.use_system_state,
             "reasoning_depth": request.reasoning_depth,
-            "neural_pathways_activated": getattr(result, 'pathways', []),
+            "processing_pathways_activated": getattr(result, 'pathways', []),
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
-        logger.error(f"Neural processing failed: {e}")
+        logger.error(f"Processing processing failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/v1/neural/consciousness")
-async def get_consciousness_state(current_user: Dict = Depends(get_current_user)):
-    """Get current consciousness state of the neural engine"""
+@app.get("/api/v1/processing/system_state")
+async def get_system_state_state(current_user: Dict = Depends(get_current_user)):
+    """Get current system_state state of the processing engine"""
     if not reasoning_engine:
         return {
-            "consciousness_active": False,
-            "message": "Neural reasoning engine not available"
+            "system_state_active": False,
+            "message": "Processing reasoning engine not available"
         }
     
     try:
-        state = reasoning_engine.get_consciousness_state()
+        state = reasoning_engine.get_system_state_state()
         return {
-            "consciousness_active": True,
+            "system_state_active": True,
             "awareness_level": state.get("awareness_level", 0.0),
             "cognitive_load": state.get("cognitive_load", 0.0),
             "active_processes": state.get("active_processes", []),
-            "neural_activity": state.get("neural_activity", {}),
+            "processing_activity": state.get("processing_activity", {}),
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
-        logger.error(f"Consciousness state retrieval failed: {e}")
-        return {"consciousness_active": False, "error": str(e)}
+        logger.error(f"System State state retrieval failed: {e}")
+        return {"system_state_active": False, "error": str(e)}
 
-# Creative Neural Processing Endpoint
-@app.post("/api/v1/neural/creative")
-async def neural_creative_synthesis(
+# Creative Processing Processing Endpoint
+@app.post("/api/v1/processing/creative")
+async def processing_creative_synthesis(
     request: dict,
     current_user: Dict = Depends(get_current_user)
 ):
-    """Creative synthesis through neural reasoning engine"""
+    """Creative synthesis through processing reasoning engine"""
     try:
         prompt = request.get("prompt", "")
         synthesis_mode = request.get("synthesis_mode", "cross_domain")
         reasoning_depth = request.get("reasoning_depth", 3)
-        use_consciousness = request.get("use_consciousness", True)
+        use_system_state = request.get("use_system_state", True)
         
         if not reasoning_engine:
             # Fallback creative processing
@@ -590,20 +598,20 @@ async def neural_creative_synthesis(
                 ],
                 "output": f"Creative synthesis: {prompt}",
                 "synthesis_mode": synthesis_mode,
-                "consciousness_active": False,
+                "system_state_active": False,
                 "reasoning_depth": reasoning_depth,
                 "creative_pathways": ["divergent", "associative", "combinatorial"],
                 "timestamp": datetime.utcnow().isoformat()
             }
         
-        # Use the neural reasoning engine for creative processing
+        # Use the processing reasoning engine for creative processing
         enhanced_prompt = f"Apply creative synthesis using {synthesis_mode} mode to: {prompt}"
         
-        # Process through neural engine
+        # Process through processing engine
         result = await reasoning_engine.process(
             input_data={"prompt": prompt, "mode": synthesis_mode},
             processing_type="creative",
-            use_consciousness=use_consciousness,
+            use_system_state=use_system_state,
             reasoning_depth=reasoning_depth
         )
         
@@ -611,7 +619,7 @@ async def neural_creative_synthesis(
         return {
             "analysis": f"Analyzed input using creative synthesis mode: {synthesis_mode}",
             "insights": [
-                "Creative patterns identified through neural processing",
+                "Creative patterns identified through processing processing",
                 "Cross-domain synthesis pathways activated",
                 "Novel combination strategies generated"
             ],
@@ -622,10 +630,10 @@ async def neural_creative_synthesis(
             ],
             "output": f"Creative synthesis processing: {prompt}",
             "synthesis_mode": synthesis_mode,
-            "consciousness_active": use_consciousness,
+            "system_state_active": use_system_state,
             "reasoning_depth": reasoning_depth,
             "creative_pathways": result.get("pathways", ["divergent", "associative", "combinatorial"]),
-            "neural_result": result,
+            "processing_result": result,
             "timestamp": datetime.utcnow().isoformat()
         }
         
@@ -693,7 +701,7 @@ async def comprehensive_health_check(current_user: Dict = Depends(get_current_us
     if ENTERPRISE_FEATURES:
         enterprise_health = {
             "orchestrator": orchestrator.health_check() if orchestrator else False,
-            "neural_engine": reasoning_engine.health_check() if reasoning_engine else False,
+            "processing_engine": reasoning_engine.health_check() if reasoning_engine else False,
             "self_improvement": self_improvement.health_check() if self_improvement else False,
             "monitoring_active": True
         }
@@ -724,7 +732,7 @@ async def health_check():
     
     return {
         "status": "healthy" if ollama_status else "degraded",
-        "service": "sutazai-backend-agi",
+        "service": "sutazai-backend",
         "version": "17.0.0",
         "enterprise_features": ENTERPRISE_FEATURES,
         "timestamp": datetime.utcnow().isoformat(),
@@ -744,9 +752,9 @@ async def health_check():
                 "active_count": len(orchestrator.get_agents()) if orchestrator else 5,
                 "orchestration_active": orchestrator.health_check() if orchestrator else False
             },
-            "neural_engine": {
+            "processing_engine": {
                 "status": "active" if reasoning_engine else "inactive",
-                "consciousness_active": True if reasoning_engine else False
+                "system_state_active": True if reasoning_engine else False
             },
             "self_improvement": {
                 "status": "active" if self_improvement else "inactive",
@@ -807,12 +815,12 @@ async def get_agents():
     response = {
         "agents": [
             {
-                "id": "agi-brain",
-                "name": "AGI Brain",
+                "id": "task_coordinator",
+                "name": "automation Coordinator",
                 "status": "active",
                 "type": "reasoning",
-                "description": "Central AGI reasoning system",
-                "capabilities": ["reasoning", "learning", "consciousness"],
+                "description": "Central automation reasoning system",
+                "capabilities": ["reasoning", "learning", "system_state"],
                 "health": "healthy"
             },
             {
@@ -867,7 +875,7 @@ async def get_agents():
     service_cache["agents"] = (time.time(), response)
     return response
 
-# Enhanced Chat endpoint with neural processing
+# Enhanced Chat endpoint with processing processing
 @app.post("/chat")
 async def chat_with_ai(request: ChatRequest):
     """Chat with AI models"""
@@ -893,29 +901,29 @@ async def chat_with_ai(request: ChatRequest):
             "timestamp": datetime.utcnow().isoformat()
         }
     
-    # Enhanced prompt processing with neural engine
+    # Enhanced prompt processing with processing engine
     enhanced_prompt = request.message
-    neural_context = None
+    processing_context = None
     
-    # Use neural processing if available
-    if reasoning_engine and request.agent == "agi-brain":
+    # Use processing processing if available
+    if reasoning_engine and request.agent == "task_coordinator":
         try:
-            neural_context = await reasoning_engine.enhance_prompt(
+            processing_context = await reasoning_engine.enhance_prompt(
                 prompt=request.message,
                 context_type="conversational",
                 reasoning_depth=2
             )
-            enhanced_prompt = neural_context.get("enhanced_prompt", enhanced_prompt)
+            enhanced_prompt = processing_context.get("enhanced_prompt", enhanced_prompt)
         except Exception as e:
-            logger.warning(f"Neural enhancement failed: {e}")
+            logger.warning(f"Processing enhancement failed: {e}")
     
     # Agent-specific prompt enhancement
-    if request.agent == "agi-brain":
-        enhanced_prompt = f"As an advanced AGI system with deep reasoning capabilities and neural consciousness, analyze and respond thoughtfully to: {enhanced_prompt}"
+    if request.agent == "task_coordinator":
+        enhanced_prompt = f"As an advanced automation system with deep reasoning capabilities and processing system_state, analyze and respond thoughtfully to: {enhanced_prompt}"
     elif request.agent in ["code-agent", "aider", "gpt-engineer"]:
         enhanced_prompt = f"As an expert software engineer and code architect with enterprise-grade knowledge, provide detailed technical assistance for: {enhanced_prompt}"
     elif request.agent == "research-agent":
-        enhanced_prompt = f"As a research specialist with access to comprehensive knowledge and neural analysis capabilities, investigate and analyze: {enhanced_prompt}"
+        enhanced_prompt = f"As a research specialist with access to comprehensive knowledge and processing analysis capabilities, investigate and analyze: {enhanced_prompt}"
     elif request.agent == "autogpt":
         enhanced_prompt = f"As an autonomous AI agent with orchestration capabilities, plan and address: {enhanced_prompt}"
     elif request.agent == "crewai":
@@ -927,9 +935,9 @@ async def chat_with_ai(request: ChatRequest):
         "response": response,
         "model": model,
         "agent": request.agent,
-        "neural_enhancement": neural_context is not None,
-        "reasoning_pathways": neural_context.get("pathways", []) if neural_context else [],
-        "consciousness_level": neural_context.get("consciousness_level", 0.0) if neural_context else 0.0,
+        "processing_enhancement": processing_context is not None,
+        "reasoning_pathways": processing_context.get("pathways", []) if processing_context else [],
+        "system_state_level": processing_context.get("system_state_level", 0.0) if processing_context else 0.0,
         "timestamp": datetime.utcnow().isoformat(),
         "processing_time": "1.2s"
     }
@@ -945,7 +953,7 @@ async def public_think(request: ThinkRequest):
     
     if not model:
         return {
-            "response": "🧠 AGI Brain temporarily offline - neural networks initializing",
+            "response": "🧠 automation Coordinator temporarily offline - processing networks initializing",
             "reasoning_type": request.reasoning_type,
             "confidence": 0.0,
             "thought_process": ["System loading", "Please try again shortly"],
@@ -954,7 +962,7 @@ async def public_think(request: ThinkRequest):
     
     # Enhanced reasoning prompt
     reasoning_prompt = f"""
-    SutazAI AGI Brain - Advanced Cognitive Processing
+    SutazAI automation Coordinator - Advanced Cognitive Processing
     
     Query: {request.query}
     Reasoning Mode: {request.reasoning_type.upper()}
@@ -988,10 +996,10 @@ async def public_think(request: ThinkRequest):
         "timestamp": datetime.utcnow().isoformat()
     }
 
-# Enhanced AGI Brain thinking endpoint with neural processing
+# Enhanced automation Coordinator thinking endpoint with processing processing
 @app.post("/think")
 async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_current_user)):
-    """AGI Brain deep thinking process"""
+    """automation Coordinator deep thinking process"""
     models = await get_ollama_models()
     model = "llama3.2:1b" if "llama3.2:1b" in models else (
         "qwen2.5:3b" if "qwen2.5:3b" in models else (models[0] if models else None)
@@ -999,27 +1007,27 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
     
     if not model:
         return {
-            "thought": "🧠 AGI Brain is currently offline - no reasoning models available. Please install models via Ollama.",
+            "thought": "🧠 automation Coordinator is currently offline - no reasoning models available. Please install models via Ollama.",
             "reasoning": "System requires at least one language model to perform cognitive functions",
             "confidence": 0.0,
             "status": "offline"
         }
     
-    # Use neural reasoning engine if available
-    neural_result = None
+    # Use processing reasoning engine if available
+    processing_result = None
     if reasoning_engine:
         try:
-            neural_result = await reasoning_engine.deep_think(
+            processing_result = await reasoning_engine.deep_think(
                 query=request.query,
                 reasoning_type=request.reasoning_type,
-                consciousness_active=True
+                system_state_active=True
             )
         except Exception as e:
-            logger.warning(f"Neural reasoning failed: {e}")
+            logger.warning(f"Processing reasoning failed: {e}")
     
-    # Enhanced reasoning prompt with consciousness simulation
+    # Enhanced reasoning prompt with system_state simulation
     reasoning_prompt = f"""
-    As SutazAI's central AGI brain with advanced cognitive capabilities and neural consciousness, engage in deep analytical thinking:
+    As SutazAI's central automation coordinator with advanced cognitive capabilities and processing system_state, engage in deep analytical thinking:
     
     Query: {request.query}
     Reasoning Type: {request.reasoning_type}
@@ -1031,7 +1039,7 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
     3. REASONING: What logical frameworks apply?
     4. SYNTHESIS: How do different perspectives integrate?
     5. METACOGNITION: How confident am I in this reasoning?
-    6. NEURAL_INTEGRATION: How do neural pathways enhance understanding?
+    6. NEURAL_INTEGRATION: How do processing pathways enhance understanding?
     
     Provide comprehensive analysis with your reasoning process visible.
     """
@@ -1040,14 +1048,14 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
     
     return {
         "thought": response,
-        "reasoning": "Multi-layer cognitive analysis using perception, reasoning, metacognition, and neural integration",
-        "confidence": neural_result.get("confidence", 0.85) if neural_result else 0.85,
+        "reasoning": "Multi-layer cognitive analysis using perception, reasoning, metacognition, and processing integration",
+        "confidence": processing_result.get("confidence", 0.85) if processing_result else 0.85,
         "model_used": model,
-        "cognitive_load": neural_result.get("cognitive_load", "high") if neural_result else "high",
-        "processing_stages": ["perception", "analysis", "reasoning", "synthesis", "metacognition", "neural_integration"],
-        "neural_pathways": neural_result.get("pathways", []) if neural_result else [],
-        "consciousness_level": neural_result.get("consciousness_level", 0.8) if neural_result else 0.8,
-        "reasoning_depth": neural_result.get("depth", 3) if neural_result else 3,
+        "cognitive_load": processing_result.get("cognitive_load", "high") if processing_result else "high",
+        "processing_stages": ["perception", "analysis", "reasoning", "synthesis", "metacognition", "processing_integration"],
+        "processing_pathways": processing_result.get("pathways", []) if processing_result else [],
+        "system_state_level": processing_result.get("system_state_level", 0.8) if processing_result else 0.8,
+        "reasoning_depth": processing_result.get("depth", 3) if processing_result else 3,
         "timestamp": datetime.utcnow().isoformat()
     }
 
@@ -1250,7 +1258,7 @@ async def self_improve(current_user: Dict = Depends(get_current_user)):
         "impact": impact,
         "next_optimization": "Vector database indexing and query optimization scheduled",
         "optimization_areas": [
-            "Neural pathway efficiency",
+            "Processing pathway efficiency",
             "Memory consolidation",
             "Knowledge retrieval speed",
             "Multi-agent coordination",
@@ -1290,7 +1298,7 @@ async def get_system_metrics(current_user: Dict = Depends(get_current_user)):
                 "monitoring_active": True,
                 "detailed_system_metrics": detailed_metrics,
                 "orchestrator_metrics": orchestrator.get_metrics() if orchestrator else {},
-                "neural_engine_metrics": reasoning_engine.get_metrics() if reasoning_engine else {},
+                "processing_engine_metrics": reasoning_engine.get_metrics() if reasoning_engine else {},
                 "self_improvement_metrics": self_improvement.get_metrics() if self_improvement else {}
             }
         except Exception as e:
@@ -1342,8 +1350,8 @@ async def get_system_metrics(current_user: Dict = Depends(get_current_user)):
             "reasoning_operations": 892,
             "learning_events": 127,
             "self_improvements": 23,
-            "neural_pathways_active": reasoning_engine.get_active_pathways() if reasoning_engine else 0,
-            "consciousness_level": reasoning_engine.get_consciousness_level() if reasoning_engine else 0.0
+            "processing_pathways_active": reasoning_engine.get_active_pathways() if reasoning_engine else 0,
+            "system_state_level": reasoning_engine.get_system_state_level() if reasoning_engine else 0.0
         },
         "enterprise_metrics": enterprise_metrics
     }
@@ -1433,7 +1441,7 @@ sutazai_cache_entries_total {cache_entries}
 
 # HELP sutazai_info Application information
 # TYPE sutazai_info gauge
-sutazai_info{{version="3.0.0",service="backend-agi"}} 1"""
+sutazai_info{{version="3.0.0",service="backend"}} 1"""
 
 # Models endpoint
 @app.get("/models")
@@ -1511,7 +1519,7 @@ async def get_enterprise_system_status(current_user: Dict = Depends(get_current_
     """Get comprehensive enterprise system status"""
     status = {
         "system_info": {
-            "name": "SutazAI AGI/ASI System",
+            "name": "SutazAI automation/advanced automation System",
             "version": "17.0.0",
             "enterprise_features": ENTERPRISE_FEATURES,
             "uptime": time.time() - start_time,
@@ -1523,10 +1531,10 @@ async def get_enterprise_system_status(current_user: Dict = Depends(get_current_
                 "healthy": orchestrator.health_check() if orchestrator else False,
                 "status": orchestrator.get_status() if orchestrator else None
             },
-            "neural_engine": {
+            "processing_engine": {
                 "active": reasoning_engine is not None,
                 "healthy": reasoning_engine.health_check() if reasoning_engine else False,
-                "consciousness_active": reasoning_engine.get_consciousness_level() > 0 if reasoning_engine else False
+                "system_state_active": reasoning_engine.get_system_state_level() > 0 if reasoning_engine else False
             },
             "self_improvement": {
                 "active": self_improvement is not None,
@@ -1567,13 +1575,13 @@ async def get_api_documentation(current_user: Dict = Depends(get_current_user)):
                 {
                     "path": "/chat",
                     "method": "POST",
-                    "description": "Chat with AI models (enhanced with neural processing)",
+                    "description": "Chat with AI models (enhanced with processing processing)",
                     "enterprise": True
                 },
                 {
                     "path": "/think",
                     "method": "POST",
-                    "description": "AGI Brain deep thinking (enhanced with neural consciousness)",
+                    "description": "automation Coordinator deep thinking (enhanced with processing system_state)",
                     "enterprise": True
                 }
             ],
@@ -1597,17 +1605,17 @@ async def get_api_documentation(current_user: Dict = Depends(get_current_user)):
                     "enterprise": True
                 }
             ],
-            "neural": [
+            "processing": [
                 {
-                    "path": "/api/v1/neural/process",
+                    "path": "/api/v1/processing/process",
                     "method": "POST",
-                    "description": "Neural reasoning engine processing",
+                    "description": "Processing reasoning engine processing",
                     "enterprise": True
                 },
                 {
-                    "path": "/api/v1/neural/consciousness",
+                    "path": "/api/v1/processing/system_state",
                     "method": "GET",
-                    "description": "Get consciousness state",
+                    "description": "Get system_state state",
                     "enterprise": True
                 }
             ],
@@ -1662,11 +1670,11 @@ async def agents_consensus(
                 "timestamp": datetime.utcnow().isoformat()
             }
         
-        # Use neural reasoning engine for agent consensus
+        # Use processing reasoning engine for agent consensus
         result = await reasoning_engine.process(
             input_data={"prompt": prompt, "agents": agents},
             processing_type="consensus",
-            use_consciousness=True,
+            use_system_state=True,
             reasoning_depth=3
         )
         
@@ -1677,13 +1685,13 @@ async def agents_consensus(
             "consensus_type": consensus_type,
             "confidence": 0.85,
             "recommendations": [
-                "Neural consensus processing completed",
+                "Processing consensus processing completed",
                 "Multi-agent collaboration successful",
                 "Consensus decision validated"
             ],
             "output": f"Agent consensus: {prompt}",
             "agent_votes": {agent: "agree" for agent in agents},
-            "neural_result": result,
+            "processing_result": result,
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
@@ -1730,32 +1738,32 @@ async def models_generate(
                 "timestamp": datetime.utcnow().isoformat()
             }
         
-        # Use neural reasoning engine for enhanced generation
+        # Use processing reasoning engine for enhanced generation
         result = await reasoning_engine.process(
             input_data={"prompt": prompt, "model": model, "temperature": temperature},
             processing_type="generation",
-            use_consciousness=True,
+            use_system_state=True,
             reasoning_depth=2
         )
         
         return {
             "analysis": f"Enhanced model generation completed for: {prompt}",
             "model_used": model,
-            "generated_text": f"Neural-enhanced generation: {prompt}",
+            "generated_text": f"Processing-enhanced generation: {prompt}",
             "tokens_used": min(len(prompt.split()) * 3, max_tokens),
             "temperature": temperature,
             "insights": [
-                "Neural-enhanced generation completed",
-                "Consciousness-guided response",
-                "High quality neural output"
+                "Processing-enhanced generation completed",
+                "System State-guided response",
+                "High quality processing output"
             ],
             "recommendations": [
-                "Neural pathways optimized response",
+                "Processing pathways optimized response",
                 "Enhanced coherence achieved",
                 "Ready for application"
             ],
-            "output": f"Neural Generated: {prompt}",
-            "neural_result": result,
+            "output": f"Processing Generated: {prompt}",
+            "processing_result": result,
             "timestamp": datetime.utcnow().isoformat()
         }
     except Exception as e:
@@ -1772,14 +1780,14 @@ async def models_generate(
 async def root():
     """Root endpoint with comprehensive system information"""
     return {
-        "name": "SutazAI AGI/ASI System",
+        "name": "SutazAI automation/advanced automation System",
         "version": "17.0.0",
-        "description": "Enterprise Autonomous General Intelligence Platform with Neural Consciousness",
+        "description": "Enterprise Autonomous General Intelligence Platform with Processing System State",
         "status": "running",
         "capabilities": [
             "Multi-model AI reasoning",
             "Enterprise agent orchestration", 
-            "Neural consciousness processing",
+            "Processing system_state processing",
             "Real-time learning and adaptation",
             "Advanced problem solving",
             "Autonomous knowledge management",
@@ -1789,22 +1797,22 @@ async def root():
             "Multi-agent collaboration",
             "Enterprise monitoring and metrics",
             "Workflow automation",
-            "Neural pathway optimization"
+            "Processing pathway optimization"
         ],
         "enterprise_features": ENTERPRISE_FEATURES,
         "endpoints": {
             "core": ["/health", "/agents", "/chat", "/think", "/execute", "/reason", "/learn", "/improve", "/metrics", "/models"],
-            "enterprise": ["/api/v1/orchestration/*", "/api/v1/neural/*", "/api/v1/improvement/*", "/api/v1/system/*"] if ENTERPRISE_FEATURES else []
+            "enterprise": ["/api/v1/orchestration/*", "/api/v1/processing/*", "/api/v1/improvement/*", "/api/v1/system/*"] if ENTERPRISE_FEATURES else []
         },
         "architecture": {
             "frontend": "Streamlit Web Interface",
-            "backend": "FastAPI with Enterprise AGI Brain",
+            "backend": "FastAPI with Enterprise automation Coordinator",
             "models": "Ollama Local LLM Service",
             "vector_db": "ChromaDB + Qdrant",
             "agents": "AutoGPT, CrewAI, Aider, GPT-Engineer",
             "knowledge": "Vector-based Knowledge Management",
             "orchestration": "Enterprise Agent Orchestration System" if ENTERPRISE_FEATURES else "Basic",
-            "neural_engine": "Neural Consciousness Processing" if ENTERPRISE_FEATURES else "Basic",
+            "processing_engine": "Processing System State Processing" if ENTERPRISE_FEATURES else "Basic",
             "monitoring": "Enterprise Prometheus Monitoring" if ENTERPRISE_FEATURES else "Basic",
             "security": "JWT Authentication & Authorization" if ENTERPRISE_FEATURES else "Basic"
         },

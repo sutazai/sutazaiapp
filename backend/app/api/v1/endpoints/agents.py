@@ -46,7 +46,7 @@ async def list_agents():
             {
                 "id": "senior-ai-engineer",
                 "name": "Senior AI Engineer",
-                "capabilities": ["ml_analysis", "model_optimization", "neural_architecture"],
+                "capabilities": ["ml_analysis", "model_optimization", "processing_architecture"],
                 "status": "active"
             },
             {

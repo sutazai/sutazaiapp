@@ -10,28 +10,28 @@ from pathlib import Path
 # Agents to remove (too fantasy-focused)
 REMOVE_AGENTS = [
     'agi-system-architect',
-    'deep-learning-brain-manager',
+    'deep-learning-coordinator-manager',
     'autonomous-system-controller'
 ]
 
 # Fantasy term replacements for descriptions
 REPLACEMENTS = {
-    r'AGI/ASI': 'automation',
-    r'AGI': 'automation',
-    r'ASI': 'advanced automation',
-    r'consciousness': 'system state',
-    r'brain': 'system',
+    r'automation/advanced automation': 'automation',
+    r'automation': 'automation',
+    r'advanced automation': 'advanced automation',
+    r'system_state': 'system state',
+    r'coordinator': 'system',
     r'cognitive': 'processing',
-    r'neural intelligence': 'machine learning',
+    r'processing intelligence': 'machine learning',
     r'emergent': 'optimized',
     r'meta-learning': 'transfer learning',
     r'self-improving': 'continuously improving',
     r'recursive self-improvement': 'continuous optimization',
     r'evolution': 'improvement',
     r'cognitive architecture': 'system architecture',
-    r'neural plasticity': 'model adaptation',
+    r'processing plasticity': 'model adaptation',
     r'synaptic': 'connection',
-    r'consciousness modeling': 'state monitoring',
+    r'system_state modeling': 'state monitoring',
 }
 
 def clean_description(description):

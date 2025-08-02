@@ -1,8 +1,8 @@
-# SutazAI AGI/ASI Autonomous System - Complete Implementation
+# SutazAI automation system/advanced automation automation system - Complete Implementation
 
 ## 🚀 Overview
 
-SutazAI is a comprehensive AGI/ASI autonomous system that integrates multiple AI agents, models, and services to create a self-improving, intelligent platform. The system features over 20 specialized AI agents working together through a central orchestrator.
+SutazAI is a comprehensive automation system/advanced automation autonomous system that integrates multiple AI agents, models, and services to create a self-improving, intelligent platform. The system features over 20 specialized AI agents working together through a central orchestrator.
 
 ## 🏗️ System Architecture
 

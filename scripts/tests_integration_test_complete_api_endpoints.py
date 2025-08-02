@@ -1,5 +1,5 @@
 """
-Comprehensive API Endpoint Test Suite for SutazAI AGI System
+Comprehensive API Endpoint Test Suite for SutazAI automation System
 
 Tests all API endpoints defined in working_main.py to ensure 100% functionality
 before marking deployment complete.
@@ -52,7 +52,7 @@ class TestCoreHealthEndpoints:
         assert response.status_code == 200
         
         data = response.json()
-        assert data["name"] == "SutazAI AGI/ASI System"
+        assert data["name"] == "SutazAI automation/advanced automation System"
         assert data["version"] == "17.0.0"
         assert "capabilities" in data
         assert "endpoints" in data
@@ -66,7 +66,7 @@ class TestCoreHealthEndpoints:
         assert response.status_code == 200
         
         data = response.json()
-        assert data["service"] == "sutazai-backend-agi"
+        assert data["service"] == "sutazai-backend"
         assert data["version"] == "17.0.0"
         assert "status" in data
         assert "services" in data
@@ -119,7 +119,7 @@ class TestAgentEndpoints:
         
         # Verify expected agents are present
         agent_ids = [agent["id"] for agent in agents]
-        expected_agents = ["agi-brain", "autogpt", "crewai", "aider", "gpt-engineer", "research-agent"]
+        expected_agents = ["task_coordinator", "autogpt", "crewai", "aider", "gpt-engineer", "research-agent"]
         
         for expected_agent in expected_agents:
             assert expected_agent in agent_ids
@@ -143,7 +143,7 @@ class TestChatEndpoints:
         payload = {
             "message": "Hello, can you help me with a simple task?",
             "model": "llama3.2:1b",
-            "agent": "agi-brain",
+            "agent": "task_coordinator",
             "temperature": 0.7
         }
         
@@ -155,8 +155,8 @@ class TestChatEndpoints:
         assert "model" in data
         assert "agent" in data
         assert "timestamp" in data
-        assert "neural_enhancement" in data
-        assert "consciousness_level" in data
+        assert "processing_enhancement" in data
+        assert "system_state_level" in data
     
     @pytest.mark.asyncio
     async def test_simple_chat_endpoint(self, client):
@@ -198,7 +198,7 @@ class TestReasoningEndpoints:
     
     @pytest.mark.asyncio
     async def test_think_endpoint(self, client, auth_headers):
-        """Test AGI brain thinking endpoint"""
+        """Test automation coordinator thinking endpoint"""
         payload = {
             "query": "How can we solve climate change effectively?",
             "reasoning_type": "strategic"
@@ -214,8 +214,8 @@ class TestReasoningEndpoints:
         assert "model_used" in data
         assert "cognitive_load" in data
         assert "processing_stages" in data
-        assert "neural_pathways" in data
-        assert "consciousness_level" in data
+        assert "processing_pathways" in data
+        assert "system_state_level" in data
         assert "timestamp" in data
     
     @pytest.mark.asyncio
@@ -326,57 +326,57 @@ class TestTaskExecutionEndpoints:
             assert "health" in data
             assert "timestamp" in data
 
-class TestNeuralProcessingEndpoints:
-    """Test neural processing and consciousness endpoints"""
+class TestProcessingProcessingEndpoints:
+    """Test processing processing and system_state endpoints"""
     
     @pytest.mark.asyncio
-    async def test_neural_process_endpoint(self, client, auth_headers):
-        """Test neural processing endpoint"""
+    async def test_processing_process_endpoint(self, client, auth_headers):
+        """Test processing processing endpoint"""
         payload = {
-            "input_data": {"text": "Analyze the concept of consciousness"},
+            "input_data": {"text": "Analyze the concept of system_state"},
             "processing_type": "analytical",
-            "use_consciousness": True,
+            "use_system_state": True,
             "reasoning_depth": 3
         }
         
-        response = await client.post("/api/v1/neural/process", json=payload, headers=auth_headers)
+        response = await client.post("/api/v1/processing/process", json=payload, headers=auth_headers)
         assert response.status_code == 200
         
         data = response.json()
         assert "result" in data
         assert "processing_type" in data
-        assert "consciousness_enabled" in data
+        assert "system_state_enabled" in data
         assert "reasoning_depth" in data
         assert "timestamp" in data
     
     @pytest.mark.asyncio
-    async def test_neural_consciousness_endpoint(self, client, auth_headers):
-        """Test consciousness state endpoint"""
-        response = await client.get("/api/v1/neural/consciousness", headers=auth_headers)
+    async def test_processing_system_state_endpoint(self, client, auth_headers):
+        """Test system_state state endpoint"""
+        response = await client.get("/api/v1/processing/system_state", headers=auth_headers)
         assert response.status_code == 200
         
         data = response.json()
-        assert "consciousness_active" in data
+        assert "system_state_active" in data
         
-        if data["consciousness_active"]:
+        if data["system_state_active"]:
             assert "awareness_level" in data
             assert "cognitive_load" in data
             assert "active_processes" in data
-            assert "neural_activity" in data
+            assert "processing_activity" in data
         
         assert "timestamp" in data
     
     @pytest.mark.asyncio
-    async def test_neural_creative_synthesis(self, client, auth_headers):
+    async def test_processing_creative_synthesis(self, client, auth_headers):
         """Test creative synthesis endpoint"""
         payload = {
             "prompt": "Design an innovative solution for sustainable energy",
             "synthesis_mode": "cross_domain",
             "reasoning_depth": 3,
-            "use_consciousness": True
+            "use_system_state": True
         }
         
-        response = await client.post("/api/v1/neural/creative", json=payload, headers=auth_headers)
+        response = await client.post("/api/v1/processing/creative", json=payload, headers=auth_headers)
         assert response.status_code == 200
         
         data = response.json()
@@ -385,7 +385,7 @@ class TestNeuralProcessingEndpoints:
         assert "recommendations" in data
         assert "output" in data
         assert "synthesis_mode" in data
-        assert "consciousness_active" in data
+        assert "system_state_active" in data
         assert "reasoning_depth" in data
         assert "creative_pathways" in data
         assert "timestamp" in data
@@ -629,7 +629,7 @@ class TestAdvancedAPIEndpoints:
         endpoints = data["endpoints"]
         assert "core" in endpoints
         assert "orchestration" in endpoints
-        assert "neural" in endpoints
+        assert "processing" in endpoints
         assert "improvement" in endpoints
 
 class TestErrorHandlingAndEdgeCases:

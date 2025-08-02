@@ -1,19 +1,12 @@
-# Minimal Viable SutazAI System
-# Optimized for local AI development with essential agents only
-
 version: '3.8'
-
 networks:
   sutazai-minimal:
     driver: bridge
-
 volumes:
-  postgres_data:
-  redis_data:
-  ollama_data:
-
+  postgres_data: null
+  redis_data: null
+  ollama_data: null
 services:
-  # Core Database (Minimal Config)
   postgres:
     image: postgres:16-alpine
     container_name: sutazai-postgres-minimal
@@ -21,69 +14,70 @@ services:
       POSTGRES_USER: sutazai
       POSTGRES_PASSWORD: sutazai123
       POSTGRES_DB: sutazai_db
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --data-checksums"
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --data-checksums
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+    - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+    - 5432:5432
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sutazai"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U sutazai
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - sutazai-minimal
-
-  # Cache/Queue (Minimal Config)
+    - sutazai-minimal
   redis:
     image: redis:7-alpine
     container_name: sutazai-redis-minimal
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
-      - redis_data:/data
+    - redis_data:/data
     ports:
-      - "6379:6379"
+    - 6379:6379
     deploy:
       resources:
         limits:
           cpus: '0.25'
           memory: 256M
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+      - CMD
+      - redis-cli
+      - ping
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - sutazai-minimal
-
-  # Ollama with TinyLlama (Minimal Config)
+    - sutazai-minimal
   ollama:
     image: ollama/ollama:latest
     container_name: sutazai-ollama-minimal
     volumes:
-      - ollama_data:/root/.ollama
-      - /dev/shm:/dev/shm:rw  # Shared memory for better performance
+    - ollama_data:/root/.ollama
+    - /dev/shm:/dev/shm:rw
     ports:
-      - "11434:11434"
+    - 11434:11434
     environment:
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_ORIGINS: "*"
-      OLLAMA_KEEP_ALIVE: 5m      # Balanced for performance
+      OLLAMA_ORIGINS: '*'
+      OLLAMA_KEEP_ALIVE: 5m
       OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_NUM_PARALLEL: 2      # Allow 2 parallel requests
-      OLLAMA_MAX_QUEUE: 4         # Increase queue size
-      OLLAMA_NUM_THREADS: 4       # Limit threads to prevent CPU overload
-      OLLAMA_MMAP: 1              # Enable memory mapping (critical for CPU performance!)
-      OLLAMA_LLM_LIBRARY: cpu_avx2  # Use AVX2 for better CPU performance
-      OLLAMA_KV_CACHE_TYPE: q8_0  # Optimized cache type
-      OLLAMA_FLASH_ATTENTION: 1   # Enable flash attention
-      GOMAXPROCS: 4               # Go runtime optimization
-      GOMEMLIMIT: 3GiB            # Go memory limit
+      OLLAMA_NUM_PARALLEL: 2
+      OLLAMA_MAX_QUEUE: 4
+      OLLAMA_NUM_THREADS: 4
+      OLLAMA_MMAP: 1
+      OLLAMA_LLM_LIBRARY: cpu_avx2
+      OLLAMA_KV_CACHE_TYPE: q8_0
+      OLLAMA_FLASH_ATTENTION: 1
+      GOMAXPROCS: 4
+      GOMEMLIMIT: 3GiB
     deploy:
       resources:
         limits:
@@ -92,17 +86,17 @@ services:
         reservations:
           cpus: '2'
           memory: 2G
-    cpu_shares: 512  # Lower CPU priority to prevent system overload
-    mem_swappiness: 10  # Reduce swap usage for better performance
+    cpu_shares: 512
+    mem_swappiness: 10
     healthcheck:
-      test: ["CMD-SHELL", "ollama list || exit 1"]
+      test:
+      - CMD-SHELL
+      - ollama list || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
     networks:
-      - sutazai-minimal
-
-  # Minimal Backend API
+    - sutazai-minimal
   backend:
     build:
       context: ./backend
@@ -126,28 +120,30 @@ services:
       BACKEND_CORS_ORIGINS: '["*"]'
       LOG_LEVEL: INFO
     volumes:
-      - ./backend:/app
-      - ./data:/data
+    - ./backend:/app
+    - ./data:/data
     ports:
-      - "8000:8000"
+    - 8000:8000
     deploy:
       resources:
         limits:
           cpus: '1'
           memory: 1G
     depends_on:
-      - postgres
-      - redis
-      - ollama
+    - postgres
+    - redis
+    - ollama
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8000/health
       interval: 30s
       timeout: 10s
       retries: 5
     networks:
-      - sutazai-minimal
-
-  # Essential Agent 1: Code Generator/Improver
+    - sutazai-minimal
   code-improver:
     build:
       context: ./agents/code-generation-improver
@@ -161,19 +157,17 @@ services:
       MAX_TOKENS: 2048
       TEMPERATURE: 0.7
     volumes:
-      - ./workspace:/workspace
+    - ./workspace:/workspace
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
     depends_on:
-      - backend
-      - ollama
+    - backend
+    - ollama
     networks:
-      - sutazai-minimal
-
-  # Essential Agent 2: Testing & QA
+    - sutazai-minimal
   qa-validator:
     build:
       context: ./agents/testing-qa-validator
@@ -186,19 +180,17 @@ services:
       MODEL_NAME: tinyllama
       MAX_TOKENS: 2048
     volumes:
-      - ./workspace:/workspace
+    - ./workspace:/workspace
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
     depends_on:
-      - backend
-      - ollama
+    - backend
+    - ollama
     networks:
-      - sutazai-minimal
-
-  # Essential Agent 3: AI Engineer
+    - sutazai-minimal
   ai-engineer:
     build:
       context: ./agents/senior-ai-engineer
@@ -210,34 +202,29 @@ services:
       BACKEND_URL: http://backend:8000
       MODEL_NAME: tinyllama
       MAX_TOKENS: 2048
-      FOCUS: "code_analysis,optimization,ai_integration"
+      FOCUS: code_analysis,optimization,ai_integration
     volumes:
-      - ./workspace:/workspace
+    - ./workspace:/workspace
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
     depends_on:
-      - backend
-      - ollama
+    - backend
+    - ollama
     networks:
-      - sutazai-minimal
-
-  # Minimal Frontend
+    - sutazai-minimal
   frontend:
     image: python:3.11-slim
     container_name: sutazai-frontend-minimal
     working_dir: /app
-    command: |
-      sh -c "
-        pip install --no-cache-dir streamlit requests
-        streamlit run minimal_app.py --server.port=8501 --server.address=0.0.0.0
-      "
+    command: "sh -c \"\n  pip install --no-cache-dir streamlit requests\n  streamlit\
+      \ run minimal_app.py --server.port=8501 --server.address=0.0.0.0\n\"\n"
     volumes:
-      - ./frontend:/app
+    - ./frontend:/app
     ports:
-      - "8501:8501"
+    - 8501:8501
     environment:
       BACKEND_URL: http://backend:8000
     deploy:
@@ -246,35 +233,19 @@ services:
           cpus: '0.5'
           memory: 512M
     depends_on:
-      - backend
+    - backend
     networks:
-      - sutazai-minimal
-
-  # Model Initializer (runs once)
+    - sutazai-minimal
   init-models:
     image: ollama/ollama:latest
     container_name: sutazai-init-models
-    command: |
-      sh -c "
-        echo 'Waiting for Ollama to be ready...'
-        until curl -s http://ollama:11434/api/tags > /dev/null; do
-          sleep 2
-        done
-        echo 'Pulling TinyLlama model...'
-        ollama pull tinyllama:latest || true
-        echo 'Model initialization complete'
-      "
+    command: "sh -c \"\n  echo 'Waiting for Ollama to be ready...'\n  until curl -s\
+      \ http://ollama:11434/api/tags > /dev/null; do\n    sleep 2\n  done\n  echo\
+      \ 'Pulling TinyLlama model...'\n  ollama pull tinyllama:latest || true\n  echo\
+      \ 'Model initialization complete'\n\"\n"
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-minimal
+    - sutazai-minimal
     deploy:
-      replicas: 0  # Set to 1 to run initialization
-
-# Total Resource Usage:
-# - Postgres: 0.5 CPU, 512MB RAM
-# - Redis: 0.25 CPU, 256MB RAM  
-# - Ollama: 2 CPU, 2GB RAM
-# - Backend: 1 CPU, 1GB RAM
-# - Agents (3x): 1.5 CPU, 1.5GB RAM
-# TOTAL: 5.25 CPU cores, 5.25GB RAM (well under limits)
+      replicas: 0

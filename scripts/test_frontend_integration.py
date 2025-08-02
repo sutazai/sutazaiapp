@@ -58,10 +58,10 @@ def test_backend_endpoints():
     except Exception as e:
         print(f"❌ Chat endpoint error: {e}")
     
-    # Test brain think endpoint
+    # Test coordinator think endpoint
     try:
         response = requests.post(
-            "http://localhost:8000/api/v1/brain/think",
+            "http://localhost:8000/api/v1/coordinator/think",
             headers=headers,
             json={
                 "input_data": {"text": "test"},
@@ -70,13 +70,13 @@ def test_backend_endpoints():
             timeout=5
         )
         if response.status_code == 200:
-            print("✅ Brain think endpoint working")
+            print("✅ Coordinator think endpoint working")
         else:
-            print(f"❌ Brain think endpoint failed: {response.status_code}")
+            print(f"❌ Coordinator think endpoint failed: {response.status_code}")
     except requests.exceptions.Timeout:
-        print("⚠️ Brain think endpoint timed out (this may be normal for complex queries)")
+        print("⚠️ Coordinator think endpoint timed out (this may be normal for complex queries)")
     except Exception as e:
-        print(f"❌ Brain think endpoint error: {e}")
+        print(f"❌ Coordinator think endpoint error: {e}")
 
 def main():
     print("SutazAI Frontend Integration Test")
@@ -104,9 +104,9 @@ def main():
         print("❌ Frontend is not accessible. Check docker logs.")
     
     print("\nTroubleshooting:")
-    print("- Check logs: docker logs sutazai-frontend-agi")
-    print("- Check backend: docker logs sutazai-backend-agi")
-    print("- Restart: docker-compose restart frontend-agi backend-agi")
+    print("- Check logs: docker logs sutazai-frontend")
+    print("- Check backend: docker logs sutazai-backend")
+    print("- Restart: docker-compose restart frontend backend")
 
 if __name__ == "__main__":
     main()

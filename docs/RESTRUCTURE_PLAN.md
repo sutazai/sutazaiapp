@@ -14,14 +14,14 @@
 ├── core/                    # Core system only
 │   ├── backend/            # Single clean backend
 │   │   ├── api/           # REST API endpoints
-│   │   ├── brain/         # AI brain system
+│   │   ├── coordinator/         # AI coordinator system
 │   │   └── main.py        # Single entry point
 │   ├── frontend/          # Single clean frontend
 │   │   ├── app.py         # Main Streamlit app
 │   │   └── components/    # UI components
 │   └── agents/            # Essential agents only (max 5)
 │       ├── ollama/        # Ollama integration
-│       ├── brain/         # Brain management
+│       ├── coordinator/         # Coordinator management
 │       └── monitor/       # System monitoring
 ├── config/                # Single config directory
 │   ├── docker-compose.yml # ONE compose file
@@ -53,7 +53,7 @@
 - Clean up documentation
 
 ### 3. **Simplify Agent System**
-- Keep only: ollama, brain, monitor, deploy, status agents
+- Keep only: ollama, coordinator, monitor, deploy, status agents
 - Remove complex orchestration
 - Direct API calls instead of agent buses
 

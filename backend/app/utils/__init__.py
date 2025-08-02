@@ -1,5 +1,5 @@
 """
-Utility modules for SutazAI AGI/ASI System
+Utility modules for SutazAI automation/advanced automation System
 """
 
 from .logger import setup_logger, get_logger, PerformanceLogger

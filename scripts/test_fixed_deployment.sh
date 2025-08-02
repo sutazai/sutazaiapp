@@ -1,5 +1,5 @@
 #!/bin/bash
-# Test the deployment with enhanced Brain and Docker handling
+# Test the deployment with enhanced Coordinator and Docker handling
 
 echo "🧠 Testing Fixed Deployment with Smart Docker Handling"
 echo "==================================================="
@@ -17,7 +17,7 @@ fi
 # Run deployment
 LOG_FILE="fixed_deployment_$(date +%Y%m%d_%H%M%S).log"
 
-echo "Starting deployment with enhanced Brain system..."
+echo "Starting deployment with enhanced Coordinator system..."
 echo "Log file: $LOG_FILE"
 echo ""
 
@@ -31,16 +31,16 @@ sleep 10
 echo "Monitoring deployment progress..."
 echo "================================"
 
-# Check Brain activity
-if grep -q "Brain: Analyzing system state" "$LOG_FILE"; then
-    echo "✅ Brain is active and analyzing system"
+# Check Coordinator activity
+if grep -q "Coordinator: Analyzing system state" "$LOG_FILE"; then
+    echo "✅ Coordinator is active and analyzing system"
 fi
 
 # Check Docker handling
-if grep -q "Brain: Detected WSL2 with running Docker - avoiding risky restart" "$LOG_FILE"; then
-    echo "✅ Brain correctly detected WSL2 Docker and avoided restart!"
-elif grep -q "Brain: WSL2 detected - using specialized recovery strategy" "$LOG_FILE"; then
-    echo "✅ Brain used WSL2-specific Docker recovery!"
+if grep -q "Coordinator: Detected WSL2 with running Docker - avoiding risky restart" "$LOG_FILE"; then
+    echo "✅ Coordinator correctly detected WSL2 Docker and avoided restart!"
+elif grep -q "Coordinator: WSL2 detected - using specialized recovery strategy" "$LOG_FILE"; then
+    echo "✅ Coordinator used WSL2-specific Docker recovery!"
 fi
 
 # Monitor for errors
@@ -61,11 +61,11 @@ if grep -q "Phase 3:" "$LOG_FILE"; then
     echo "✅ Deployment progressed past initial phases"
 fi
 
-# Show Brain decisions
+# Show Coordinator decisions
 echo ""
-echo "Brain Decisions Made:"
+echo "Coordinator Decisions Made:"
 echo "===================="
-grep "Brain Decision:" "$LOG_FILE" | head -10
+grep "Coordinator Decision:" "$LOG_FILE" | head -10
 
 # Kill deployment after monitoring
 sleep 10

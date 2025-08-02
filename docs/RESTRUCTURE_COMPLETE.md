@@ -64,7 +64,7 @@ The SutazAI system has been successfully restructured from a complex, over-engin
 
 Only 3 essential agents remain:
 - **Ollama**: Model management
-- **Brain**: Central reasoning
+- **Coordinator**: Central reasoning
 - **Monitor**: System health
 
 ### Next Steps
@@ -98,4 +98,4 @@ These can be referenced if needed but are no longer part of the active system.
 
 ## Conclusion
 
-The SutazAI system is now a clean, efficient, and maintainable AGI platform focused on essential functionality without unnecessary complexity.
+The SutazAI system is now a clean, efficient, and maintainable automation system platform focused on essential functionality without unnecessary complexity.

@@ -163,7 +163,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 383,
       "type": "bug",
       "severity": "medium",
@@ -172,7 +172,7 @@
       "agent": "senior-ai-engineer"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 41,
       "type": "bug",
       "severity": "medium",
@@ -226,7 +226,7 @@
       "agent": "senior-ai-engineer"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 82,
       "type": "bug",
       "severity": "medium",
@@ -244,7 +244,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 30,
       "type": "style",
       "severity": "medium",
@@ -253,7 +253,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 39,
       "type": "style",
       "severity": "medium",
@@ -262,7 +262,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 267,
       "type": "style",
       "severity": "medium",
@@ -271,7 +271,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 290,
       "type": "style",
       "severity": "medium",
@@ -280,7 +280,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 365,
       "type": "style",
       "severity": "medium",
@@ -289,7 +289,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 409,
       "type": "style",
       "severity": "medium",
@@ -298,16 +298,16 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
       "line": 0,
       "type": "testing",
       "severity": "medium",
-      "description": "Missing test file for agi_brain",
-      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_agi_brain.py",
+      "description": "Missing test file for task_coordinator",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_task_coordinator.py",
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 40,
       "type": "style",
       "severity": "medium",
@@ -316,7 +316,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 60,
       "type": "style",
       "severity": "medium",
@@ -325,7 +325,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 80,
       "type": "style",
       "severity": "medium",
@@ -334,7 +334,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 137,
       "type": "style",
       "severity": "medium",
@@ -343,7 +343,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 172,
       "type": "style",
       "severity": "medium",
@@ -352,7 +352,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 368,
       "type": "style",
       "severity": "medium",
@@ -361,7 +361,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 651,
       "type": "style",
       "severity": "medium",
@@ -370,7 +370,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 664,
       "type": "style",
       "severity": "medium",
@@ -379,7 +379,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 674,
       "type": "style",
       "severity": "medium",
@@ -388,7 +388,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 686,
       "type": "style",
       "severity": "medium",
@@ -397,7 +397,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 692,
       "type": "style",
       "severity": "medium",
@@ -406,7 +406,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 715,
       "type": "style",
       "severity": "medium",
@@ -415,7 +415,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 756,
       "type": "style",
       "severity": "medium",
@@ -424,7 +424,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1133,
       "type": "style",
       "severity": "medium",
@@ -433,7 +433,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1159,
       "type": "style",
       "severity": "medium",
@@ -442,7 +442,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1185,
       "type": "style",
       "severity": "medium",
@@ -451,7 +451,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1220,
       "type": "style",
       "severity": "medium",
@@ -460,7 +460,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1221,
       "type": "style",
       "severity": "medium",
@@ -469,7 +469,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1232,
       "type": "style",
       "severity": "medium",
@@ -478,7 +478,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1236,
       "type": "style",
       "severity": "medium",
@@ -487,7 +487,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1237,
       "type": "style",
       "severity": "medium",
@@ -496,7 +496,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1238,
       "type": "style",
       "severity": "medium",
@@ -505,7 +505,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1239,
       "type": "style",
       "severity": "medium",
@@ -514,7 +514,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1240,
       "type": "style",
       "severity": "medium",
@@ -523,7 +523,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1243,
       "type": "style",
       "severity": "medium",
@@ -532,7 +532,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1245,
       "type": "style",
       "severity": "medium",
@@ -541,7 +541,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1246,
       "type": "style",
       "severity": "medium",
@@ -550,7 +550,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1247,
       "type": "style",
       "severity": "medium",
@@ -559,7 +559,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 1248,
       "type": "style",
       "severity": "medium",
@@ -568,12 +568,12 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
       "line": 0,
       "type": "testing",
       "severity": "medium",
-      "description": "Missing test file for advanced_brain_architecture",
-      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_advanced_brain_architecture.py",
+      "description": "Missing test file for advanced_coordinator_architecture",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/test_advanced_coordinator_architecture.py",
       "agent": "testing-qa-validator"
     },
     {
@@ -1189,7 +1189,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 35,
       "type": "style",
       "severity": "medium",
@@ -1198,7 +1198,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 297,
       "type": "style",
       "severity": "medium",
@@ -1207,7 +1207,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 320,
       "type": "style",
       "severity": "medium",
@@ -1216,7 +1216,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 458,
       "type": "style",
       "severity": "medium",
@@ -1225,12 +1225,12 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
       "line": 0,
       "type": "testing",
       "severity": "medium",
-      "description": "Missing test file for agi_brain",
-      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_agi_brain.py",
+      "description": "Missing test file for task_coordinator",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/core/test_task_coordinator.py",
       "agent": "testing-qa-validator"
     },
     {
@@ -2368,7 +2368,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 72,
       "type": "style",
       "severity": "medium",
@@ -2377,7 +2377,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 489,
       "type": "style",
       "severity": "medium",
@@ -2386,7 +2386,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 518,
       "type": "style",
       "severity": "medium",
@@ -2395,7 +2395,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 536,
       "type": "style",
       "severity": "medium",
@@ -2404,7 +2404,7 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 603,
       "type": "style",
       "severity": "medium",
@@ -2413,12 +2413,12 @@
       "agent": "testing-qa-validator"
     },
     {
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
       "line": 0,
       "type": "testing",
       "severity": "medium",
-      "description": "Missing test file for brain",
-      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_brain.py",
+      "description": "Missing test file for coordinator",
+      "fix": "Create test file: /opt/sutazaiapp/backend/app/api/v1/test_coordinator.py",
       "agent": "testing-qa-validator"
     },
     {
@@ -3223,8 +3223,8 @@
     },
     {
       "type": "refactor",
-      "file": "/opt/sutazaiapp/backend/app/advanced_brain_architecture.py",
-      "description": "Refactor /opt/sutazaiapp/backend/app/advanced_brain_architecture.py - 31 issues found",
+      "file": "/opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/advanced_coordinator_architecture.py - 31 issues found",
       "priority": "high",
       "issues": [
         "ML pattern issue: hardcoded_hyperparams",
@@ -3236,8 +3236,8 @@
     },
     {
       "type": "refactor",
-      "file": "/opt/sutazaiapp/backend/app/core/agi_brain.py",
-      "description": "Refactor /opt/sutazaiapp/backend/app/core/agi_brain.py - 6 issues found",
+      "file": "/opt/sutazaiapp/backend/app/core/task_coordinator.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/core/task_coordinator.py - 6 issues found",
       "priority": "high",
       "issues": [
         "ML pattern issue: hardcoded_hyperparams",
@@ -3275,8 +3275,8 @@
     },
     {
       "type": "refactor",
-      "file": "/opt/sutazaiapp/backend/app/api/v1/brain.py",
-      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/brain.py - 7 issues found",
+      "file": "/opt/sutazaiapp/backend/app/api/v1/coordinator.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/api/v1/coordinator.py - 7 issues found",
       "priority": "high",
       "issues": [
         "ML pattern issue: hardcoded_hyperparams",
@@ -3288,8 +3288,8 @@
     },
     {
       "type": "refactor",
-      "file": "/opt/sutazaiapp/backend/app/agi_brain.py",
-      "description": "Refactor /opt/sutazaiapp/backend/app/agi_brain.py - 7 issues found",
+      "file": "/opt/sutazaiapp/backend/app/task_coordinator.py",
+      "description": "Refactor /opt/sutazaiapp/backend/app/task_coordinator.py - 7 issues found",
       "priority": "high",
       "issues": [
         "QA issue: missing_input_validation",

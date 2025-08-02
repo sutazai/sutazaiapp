@@ -133,7 +133,7 @@ test_error_handling() {
 test_health_checks() {
     log_test "Testing health check implementations..."
     
-    local services=("postgres" "redis" "ollama" "backend-agi" "frontend-agi")
+    local services=("postgres" "redis" "ollama" "backend" "frontend")
     local missing_checks=()
     
     for service in "${services[@]}"; do

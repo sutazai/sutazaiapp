@@ -1,0 +1,80 @@
+# Ollama Memory Optimization Configuration
+# Designed for 15GB RAM systems with efficient model management
+
+ollama_config:
+  # Memory Management
+  memory_limits:
+    max_model_memory: "6G"        # Maximum memory per loaded model
+    system_reserved: "4G"         # Reserved memory for system operations
+    buffer_memory: "2G"           # Buffer for model switching
+    
+  # Model Loading Strategy
+  model_management:
+    max_loaded_models: 1          # Only one model loaded at a time
+    unload_after_idle: "60s"      # Unload models after 1 minute idle
+    preload_models: false         # Disable model preloading
+    lazy_loading: true            # Load models only when needed
+    
+  # CPU Optimization
+  cpu_settings:
+    num_threads: 6                # Reduced threads for better stability
+    max_parallel_requests: 1      # Single request processing
+    batch_size: 16                # Smaller batch sizes
+    
+  # Memory Cleanup
+  garbage_collection:
+    enable_aggressive_gc: true    # Enable aggressive garbage collection
+    gc_interval: "30s"            # Run GC every 30 seconds
+    memory_threshold: 85          # Trigger cleanup at 85% memory usage
+    
+  # Model Priority (for automatic unloading)
+  model_priority:
+    high_priority:
+      - "qwen2.5:3b"
+      - "llama3.2:3b"
+    low_priority:
+      - "tinyllama"          # Larger models get lower priority
+      
+  # Emergency Controls
+  emergency_settings:
+    oom_prevention: true          # Enable OOM prevention
+    emergency_unload_threshold: 92 # Emergency unload at 92% memory
+    kill_switch_threshold: 95     # Kill processes at 95% memory
+    
+# Container Resource Limits
+container_limits:
+  ollama:
+    memory: "8G"
+    memory_swap: "8G"             # Same as memory to prevent swap usage
+    cpus: "6"
+    cpu_period: 100000
+    cpu_quota: 600000             # 6 CPU limit
+    
+  # Other critical containers
+  postgres:
+    memory: "2G"
+    cpus: "2"
+    
+  redis:
+    memory: "1G"
+    cpus: "1"
+    
+  chromadb:
+    memory: "2G"
+    cpus: "2"
+    
+  backend_agi:
+    memory: "2G"
+    cpus: "2"
+
+# Monitoring Configuration
+monitoring:
+  memory_check_interval: 10       # Check memory every 10 seconds
+  alert_thresholds:
+    memory_warning: 80
+    memory_critical: 90
+    cpu_warning: 85
+    cpu_critical: 95
+    
+  log_level: "INFO"
+  metrics_retention: "1h"

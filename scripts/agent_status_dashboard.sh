@@ -48,7 +48,7 @@ agent_containers=(
     "sutazai-devops-manager:Infrastructure DevOps Manager"
     "sutazai-ollama-specialist:Ollama Integration Specialist"
     "sutazai-hardware-optimizer:Hardware Resource Optimizer"
-    "sutazai-agi-brain:AGI Brain System"
+    "sutazai-task_coordinator:automation Coordinator System"
 )
 
 for agent_info in "${agent_containers[@]}"; do
@@ -122,7 +122,7 @@ echo -e "${YELLOW}═══ Access Points ═══${NC}"
 echo -e "  ${BLUE}Frontend:${NC} http://localhost:8501"
 echo -e "  ${BLUE}Backend API:${NC} http://localhost:8000"
 echo -e "  ${BLUE}MCP Server:${NC} http://localhost:8100"
-echo -e "  ${BLUE}AGI Brain:${NC} http://localhost:8900"
+echo -e "  ${BLUE}automation Coordinator:${NC} http://localhost:8900"
 echo -e "  ${BLUE}Grafana:${NC} http://localhost:3000"
 echo -e "  ${BLUE}Prometheus:${NC} http://localhost:9090"
 
@@ -132,7 +132,7 @@ echo -e "${YELLOW}═══ Active Agent Collaborations ═══${NC}"
 echo -e "  ${GREEN}●${NC} Development Team: AI Engineer + Backend Dev + Frontend Dev"
 echo -e "  ${GREEN}●${NC} Deployment Pipeline: QA Validator → Security Tester → Deploy Master"
 echo -e "  ${GREEN}●${NC} Optimization Squad: Hardware Optimizer + Context Engineer + Orchestrator"
-echo -e "  ${GREEN}●${NC} Architecture Council: AGI Architect + System Controller + Agent Creator"
+echo -e "  ${GREEN}●${NC} Architecture Council: automation Architect + System Controller + Agent Creator"
 
 # Quick Actions
 echo

@@ -8,7 +8,7 @@ This directory contains practical workflows for automated code analysis and impr
 
 A comprehensive workflow that analyzes code quality using three specialized AI agents:
 
-- **Senior AI Engineer**: Analyzes ML/AI code patterns, model optimization, and neural architecture
+- **Senior AI Engineer**: Analyzes ML/AI code patterns, model optimization, and processing architecture
 - **Testing QA Validator**: Checks test coverage, error handling, and code quality
 - **Infrastructure DevOps Manager**: Reviews Docker configurations, deployment setup, and infrastructure
 
@@ -140,7 +140,7 @@ CodeImprovementWorkflow
 ├── SeniorAIEngineerAnalyzer
 │   ├── ML pattern detection
 │   ├── Model optimization checks
-│   └── Neural architecture review
+│   └── Processing architecture review
 ├── TestingQAValidatorAnalyzer
 │   ├── Test coverage analysis
 │   ├── Error handling validation

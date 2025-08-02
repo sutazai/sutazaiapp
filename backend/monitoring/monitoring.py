@@ -1,5 +1,5 @@
 """
-Monitoring Service Module for SutazAI AGI System
+Monitoring Service Module for SutazAI automation System
 
 This module provides the MonitoringService expected by the main application,
 wrapping the existing Prometheus metrics from backend.app.core.metrics.

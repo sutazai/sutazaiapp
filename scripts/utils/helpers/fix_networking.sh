@@ -118,10 +118,10 @@ test_container_communication() {
     log_info "🔍 Testing container communication..."
     
     # Check if containers can resolve each other
-    if docker ps --format "{{.Names}}" | grep -q "sutazai-backend-agi"; then
+    if docker ps --format "{{.Names}}" | grep -q "sutazai-backend"; then
         if docker ps --format "{{.Names}}" | grep -q "sutazai-chromadb"; then
             log_info "Testing ChromaDB connectivity from backend..."
-            if docker exec sutazai-backend-agi bash -c "curl -s http://sutazai-chromadb:8000/api/v1/heartbeat" >/dev/null 2>&1; then
+            if docker exec sutazai-backend bash -c "curl -s http://sutazai-chromadb:8000/api/v1/heartbeat" >/dev/null 2>&1; then
                 log_success "✅ Backend -> ChromaDB communication working"
             else
                 log_warn "⚠️ Backend -> ChromaDB communication failed"

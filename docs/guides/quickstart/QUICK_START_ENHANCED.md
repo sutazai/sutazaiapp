@@ -1,24 +1,24 @@
-# SutazAI Enhanced Brain v2.0 - Quick Start Guide
+# SutazAI Enhanced Coordinator v2.0 - Quick Start Guide
 
 ## 🚀 Quick Deployment (5 minutes)
 
-### Option 1: Complete System with Brain (Recommended)
+### Option 1: Complete System with Coordinator (Recommended)
 ```bash
 # Clone the repository
 git clone https://github.com/sutazai/sutazaiapp.git
 cd sutazaiapp
 
-# Deploy everything including Enhanced Brain
+# Deploy everything including Enhanced Coordinator
 DEPLOY_BRAIN=true ./scripts/deploy_complete_system.sh
 ```
 
-### Option 2: Deploy Brain Separately
+### Option 2: Deploy Coordinator Separately
 ```bash
 # First, deploy main system
 ./scripts/deploy_complete_system.sh
 
-# Then deploy Enhanced Brain
-./scripts/deploy_brain_enhanced.sh
+# Then deploy Enhanced Coordinator
+./scripts/deploy_coordinator_enhanced.sh
 ```
 
 ## 🧪 Verify Installation
@@ -31,8 +31,8 @@ DEPLOY_BRAIN=true ./scripts/deploy_complete_system.sh
 
 ### Detailed Testing
 ```bash
-# Test Enhanced Brain specifically
-./scripts/test_enhanced_brain.sh
+# Test Enhanced Coordinator specifically
+./scripts/test_enhanced_coordinator.sh
 ```
 
 ## 🎯 Key Access Points
@@ -42,15 +42,15 @@ DEPLOY_BRAIN=true ./scripts/deploy_complete_system.sh
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 
-### Enhanced Brain
-- **Brain API**: http://localhost:8888
+### Enhanced Coordinator
+- **Coordinator API**: http://localhost:8888
 - **JARVIS**: http://localhost:8026
 - **Monitoring**: http://localhost:3001
 - **Prometheus**: http://localhost:9091
 
 ## 💬 Quick Examples
 
-### 1. Basic Brain Request
+### 1. Basic Coordinator Request
 ```bash
 curl -X POST http://localhost:8888/process \
   -H 'Content-Type: application/json' \
@@ -87,8 +87,8 @@ curl -X POST http://localhost:8888/process \
    # View all logs
    tail -f /workspace/logs/*.log
    
-   # View Brain-specific logs
-   tail -f /workspace/brain/logs/*.log
+   # View Coordinator-specific logs
+   tail -f /workspace/coordinator/logs/*.log
    ```
 
 3. **System Status**:
@@ -96,7 +96,7 @@ curl -X POST http://localhost:8888/process \
    # Check all services
    docker ps
    
-   # Check Brain status
+   # Check Coordinator status
    curl http://localhost:8888/status
    ```
 
@@ -113,9 +113,9 @@ docker exec sutazai-ollama ollama pull llama2:13b
 docker exec sutazai-ollama ollama pull mistral:7b
 ```
 
-### Restart Brain System
+### Restart Coordinator System
 ```bash
-cd /workspace/brain
+cd /workspace/coordinator
 docker-compose -f docker-compose-enhanced.yml restart
 ```
 
@@ -127,7 +127,7 @@ curl http://localhost:8888/agents
 ## 🛠️ Configuration
 
 ### Basic Configuration
-Edit `/workspace/brain/config/brain_enhanced_config.yaml`:
+Edit `/workspace/coordinator/config/coordinator_enhanced_config.yaml`:
 ```yaml
 # Adjust concurrent agents
 agents:
@@ -143,10 +143,10 @@ self_improvement:
 ```
 
 ### Resource Limits
-Edit `/workspace/brain/docker-compose-enhanced.yml`:
+Edit `/workspace/coordinator/docker-compose-enhanced.yml`:
 ```yaml
 services:
-  brain-core:
+  coordinator-core:
     deploy:
       resources:
         limits:
@@ -156,10 +156,10 @@ services:
 
 ## 🚨 Troubleshooting
 
-### Brain Not Starting
+### Coordinator Not Starting
 ```bash
 # Check logs
-docker logs sutazai-brain-core
+docker logs sutazai-coordinator-core
 
 # Verify prerequisites
 docker ps | grep -E "ollama|redis|postgresql|qdrant|chromadb"
@@ -208,7 +208,7 @@ ollama pull tinyllama
 ## 📚 Next Steps
 
 1. **Explore the API Documentation**: http://localhost:8000/docs
-2. **Read the Architecture Guide**: `/workspace/docs/ENHANCED_BRAIN_SUMMARY.md`
+2. **Read the Architecture Guide**: `/workspace/docs/ENHANCED_COORDINATOR_SUMMARY.md`
 3. **Try Advanced Features**:
    - Test self-improvement capabilities
    - Experiment with multi-agent coordination
@@ -223,7 +223,7 @@ ollama pull tinyllama
 
 ## 🎉 Congratulations!
 
-You now have a fully operational AGI/ASI system with:
+You now have a fully operational automation system/advanced automation system with:
 - ✅ Universal Learning Machine
 - ✅ 30+ Specialized Agents
 - ✅ Advanced ML/Deep Learning
@@ -235,4 +235,4 @@ The system will continuously learn and improve. Check back regularly to see its 
 
 ---
 
-**Pro Tip**: The Brain gets smarter with each interaction. Feed it diverse tasks to accelerate learning!
+**Pro Tip**: The Coordinator gets smarter with each interaction. Feed it diverse tasks to accelerate learning!

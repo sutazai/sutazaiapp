@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI Quick Start Guide
+# SutazAI automation system/advanced automation Quick Start Guide
 
 ## 🚀 System is Fully Operational!
 
@@ -67,7 +67,7 @@ python3 /opt/sutazaiapp/test_complete_system.py
 In your Streamlit interface, try these queries:
 
 1. **Basic Questions**:
-   - "What is quantum computing?"
+   - "What is advanced computing?"
    - "Explain machine learning"
    - "How does blockchain work?"
 
@@ -136,7 +136,7 @@ Your system is working when:
 1. **Add More Models**:
    ```bash
    docker exec sutazai-ollama ollama pull mistral:7b
-   docker exec sutazai-ollama ollama pull phi-3:3.8b
+   docker exec sutazai-ollama ollama pull integration_score-3:3.8b
    ```
 
 2. **Deploy AI Agents** (when Docker images available):

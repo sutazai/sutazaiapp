@@ -1,5 +1,5 @@
 """
-Advanced Reasoning Module for SutazAI AGI/ASI System
+Advanced Reasoning Module for SutazAI automation/advanced automation System
 """
 
 from .chain_of_thought import AdvancedReasoningEngine, ReasoningChain, ReasoningStep, ReasoningStage

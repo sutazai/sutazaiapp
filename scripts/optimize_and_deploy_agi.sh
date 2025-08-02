@@ -2,7 +2,7 @@
 # SutazAI Complete System Optimization and Deployment Script
 # Optimizes system performance and deploys all AI agents
 
-echo "🚀 SutazAI AGI/ASI System Optimization & Deployment"
+echo "🚀 SutazAI automation/advanced automation System Optimization & Deployment"
 echo "=================================================="
 
 # Colors
@@ -346,7 +346,7 @@ chmod +x sutazai.sh
 print_section "System Deployment Report"
 
 cat > DEPLOYMENT_REPORT.md <<EOF
-# SutazAI AGI/ASI System Deployment Report
+# SutazAI automation/advanced automation System Deployment Report
 Generated: $(date)
 
 ## System Status
@@ -390,7 +390,7 @@ Generated: $(date)
 5. Implement backup strategies
 EOF
 
-echo -e "\n${GREEN}✅ SutazAI AGI/ASI System Optimization Complete!${NC}"
+echo -e "\n${GREEN}✅ SutazAI automation/advanced automation System Optimization Complete!${NC}"
 echo -e "${GREEN}✅ Enhanced backend deployed successfully!${NC}"
 echo -e "${GREEN}✅ Core AI agents are starting up!${NC}"
 
@@ -402,4 +402,4 @@ echo "4. Access API docs: http://localhost:8000/api/docs"
 echo "5. Start chat interface: streamlit run intelligent_chat_app.py"
 
 echo -e "\n${YELLOW}⚡ System is now running in optimized mode!${NC}"
-echo -e "${BLUE}🚀 SutazAI AGI/ASI System v10.0 - Ready for Production${NC}"
+echo -e "${BLUE}🚀 SutazAI automation/advanced automation System v10.0 - Ready for Production${NC}"

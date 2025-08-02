@@ -1,6 +1,6 @@
 """
 Enterprise Security and Compliance System
-Implements comprehensive security measures for AGI/ASI system
+Implements comprehensive security measures for automation/advanced automation system
 """
 import asyncio
 import logging
@@ -225,8 +225,8 @@ class AuthorizationManager:
             ),
             AccessPolicy(
                 id="pol_003",
-                name="Brain Access",
-                resource="/api/v1/brain/*",
+                name="Coordinator Access",
+                resource="/api/v1/coordinator/*",
                 actions=["POST"],
                 conditions={"authenticated": True, "rate_limit": 100},
                 required_level=SecurityLevel.AUTHENTICATED

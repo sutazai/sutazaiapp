@@ -250,7 +250,7 @@ show_dashboard() {
     
     # Services status
     echo -e "\n${YELLOW}Core Services:${NC}"
-    docker-compose ps --format "table {{.Name}}\t{{.Status}}" | grep -E "(postgres|redis|ollama|backend-agi|frontend-agi)" | head -10
+    docker-compose ps --format "table {{.Name}}\t{{.Status}}" | grep -E "(postgres|redis|ollama|backend|frontend)" | head -10
     
     # Agent summary
     echo -e "\n${YELLOW}AI Agents:${NC}"

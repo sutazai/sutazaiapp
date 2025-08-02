@@ -1,0 +1,18 @@
+{
+  "total_files": 141,
+  "issues_found": 2,
+  "fixes_applied": 0,
+  "issues": [
+    {
+      "type": "naming",
+      "file": "sutazai_agents.json",
+      "issue": "Does not match standard naming convention"
+    },
+    {
+      "type": "naming",
+      "file": "AGENT_STANDARDS_COMPLIANCE_REPORT.json",
+      "issue": "Does not match standard naming convention"
+    }
+  ],
+  "fixes": []
+}

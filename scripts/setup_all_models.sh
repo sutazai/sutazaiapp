@@ -28,7 +28,7 @@ declare -A OLLAMA_MODELS=(
     ["deepseek-coder:6.7b"]="Code optimization expert (3.9GB)"
     ["qwen2.5:3b"]="Efficient instruction following (4.1GB)"
     ["dolphin-qwen2.5:3b"]="Uncensored conversation model (4.1GB)"
-    ["neural-chat:7b"]="Chat optimized model (4.1GB)"
+    ["processing-chat:7b"]="Chat optimized model (4.1GB)"
     ["phind-codellama:34b"]="Advanced code model (19GB)"
 )
 
@@ -575,7 +575,7 @@ systemctl stop sutazai-model-autoloader
 ### For General Chat:
 - **qwen2.5:3b** - Fast responses for general questions
 - **qwen2.5:3b** - Good balance of speed and capability
-- **neural-chat:7b** - Optimized for conversational AI
+- **processing-chat:7b** - Optimized for conversational AI
 
 ### For Specialized Tasks:
 - **qwen3:8b** - Multilingual capabilities

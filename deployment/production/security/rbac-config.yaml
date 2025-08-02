@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: brain-core
+  name: coordinator-core
   namespace: sutazai-core
 ---
 apiVersion: v1
@@ -23,7 +23,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: sutazai-brain-role
+  name: sutazai-coordinator-role
 rules:
 - apiGroups: [""]
   resources: ["pods", "services", "configmaps", "secrets"]
@@ -72,14 +72,14 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: brain-core-binding
+  name: coordinator-core-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: sutazai-brain-role
+  name: sutazai-coordinator-role
 subjects:
 - kind: ServiceAccount
-  name: brain-core
+  name: coordinator-core
   namespace: sutazai-core
 ---
 apiVersion: rbac.authorization.k8s.io/v1

@@ -16,7 +16,7 @@ This document defines comprehensive performance requirements and quality benchma
 | `/api/v1/system/status` | 50ms | 150ms | 300ms | 500ms | 99.9% |
 | `/api/v1/agents/` | 75ms | 200ms | 400ms | 1000ms | 99.5% |
 | `/api/v1/models/list` | 100ms | 250ms | 500ms | 1000ms | 99.0% |
-| `/api/v1/brain/think` | 500ms | 2000ms | 5000ms | 10000ms | 95.0% |
+| `/api/v1/coordinator/think` | 500ms | 2000ms | 5000ms | 10000ms | 95.0% |
 | `/api/v1/vectors/search` | 100ms | 300ms | 600ms | 1500ms | 98.0% |
 | `/api/v1/workflows/code-improvement` | 200ms | 1000ms | 3000ms | 10000ms | 95.0% |
 | `/ws/chat` (WebSocket) | 20ms | 100ms | 200ms | 500ms | 99.0% |

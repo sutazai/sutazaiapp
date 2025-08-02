@@ -86,8 +86,8 @@ declare -a CORE_CONTAINERS=(
     "sutazai-chromadb"
     "sutazai-qdrant"
     "sutazai-ollama"
-    "sutazai-backend-agi"
-    "sutazai-frontend-agi"
+    "sutazai-backend"
+    "sutazai-frontend"
 )
 
 core_healthy=0

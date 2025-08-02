@@ -31,7 +31,7 @@ display_sutazai_logo() {
     echo -e "${BRIGHT_GREEN}/_______  /____/ |__| (____  /_____ \\____|__  /___|${RESET}"
     echo -e "${BRIGHT_GREEN}        \\/                 \\/      \\/       \\/     ${RESET}"
     echo ""
-    echo -e "${BRIGHT_CYAN}           🚀 Enterprise AGI/ASI Autonomous System 🚀${RESET}"
+    echo -e "${BRIGHT_CYAN}           🚀 Enterprise automation/advanced automation Autonomous System 🚀${RESET}"
     echo -e "${CYAN}                     Comprehensive AI Platform${RESET}"
     echo ""
     echo -e "${YELLOW}    • 50+ AI Services  • Vector Databases  • Model Management${RESET}"

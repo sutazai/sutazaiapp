@@ -2,8 +2,8 @@ version: '3.8'
 
 # Enhanced AGI Backend Service Override
 services:
-  backend-agi:
-    container_name: sutazai-backend-agi
+  backend:
+    container_name: sutazai-backend
     build:
       context: ./backend
       dockerfile: Dockerfile

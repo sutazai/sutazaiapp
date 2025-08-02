@@ -1,5 +1,5 @@
 #!/bin/bash
-# SutazAI AGI/ASI Deployment Verification Script
+# SutazAI automation/advanced automation Deployment Verification Script
 
 set -e
 

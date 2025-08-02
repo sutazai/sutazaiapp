@@ -55,9 +55,9 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - nginx_certs:/etc/nginx/ssl:ro
     depends_on:
-      backend-agi:
+      backend:
         condition: service_healthy
-      frontend-agi:
+      frontend:
         condition: service_healthy
     networks:
       - sutazai-net
@@ -160,7 +160,7 @@ services:
               capabilities: [gpu]
 
   # Backend API
-  backend-agi:
+  backend:
     image: sutazai/backend:${VERSION:-latest}
     container_name: sutazai-backend
     <<: *restart-policy
@@ -195,19 +195,19 @@ services:
           memory: 4G
 
   # Frontend UI
-  frontend-agi:
+  frontend:
     image: sutazai/frontend:${VERSION:-latest}
     container_name: sutazai-frontend
     <<: *restart-policy
     environment:
       <<: *common-env
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     networks:
       - sutazai-net
     depends_on:
-      backend-agi:
+      backend:
         condition: service_healthy
     healthcheck:
       <<: *healthcheck-defaults

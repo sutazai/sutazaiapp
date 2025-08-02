@@ -180,7 +180,7 @@ async def get_audit_events(
                 "type": "api_request",
                 "severity": "info",
                 "user_id": current_user["user_id"],
-                "details": {"endpoint": "/api/v1/brain/think"}
+                "details": {"endpoint": "/api/v1/coordinator/think"}
             }
         ]
         

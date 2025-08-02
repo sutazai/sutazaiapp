@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test script to verify service control through the AGI Brain API"""
+"""Test script to verify service control through the automation Coordinator API"""
 
 import requests
 import json
@@ -34,7 +34,7 @@ def test_service_command(command):
     
     try:
         response = requests.post(
-            f"{BASE_URL}/api/v1/brain/think",
+            f"{BASE_URL}/api/v1/coordinator/think",
             headers=HEADERS,
             json=payload,
             timeout=30
@@ -69,7 +69,7 @@ def test_service_command(command):
 
 def main():
     print("SutazAI Service Control Test")
-    print("Testing service control commands through AGI Brain API...")
+    print("Testing service control commands through automation Coordinator API...")
     
     for command in test_commands:
         test_service_command(command)

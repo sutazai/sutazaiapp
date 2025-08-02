@@ -69,7 +69,7 @@ RUN mkdir -p /app/data /app/logs /app/models /app/workspace
 ENV PYTHONUNBUFFERED=1
 ENV JARVIS_MODE=autonomous
 ENV OLLAMA_BASE_URL=http://ollama:11434
-ENV BACKEND_URL=http://backend-agi:8000
+ENV BACKEND_URL=http://backend:8000
 
 # Expose port
 EXPOSE 8120

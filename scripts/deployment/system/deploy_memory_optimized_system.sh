@@ -109,7 +109,7 @@ echo "🔍 Verifying deployment..."
 FAILED_SERVICES=0
 
 # Check critical services
-CRITICAL_SERVICES="sutazai-ollama sutazai-postgres sutazai-redis sutazai-backend-agi"
+CRITICAL_SERVICES="sutazai-ollama sutazai-postgres sutazai-redis sutazai-backend"
 for service in $CRITICAL_SERVICES; do
     if docker ps | grep -q "$service"; then
         echo "   ✅ $service is running"

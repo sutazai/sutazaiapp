@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Cleanup script to remove all fantasy elements from SutazAI codebase
-Transforms AGI/ASI system into practical task automation platform
+Transforms automation/advanced automation system into practical task automation platform
 """
 
 import os
@@ -12,35 +12,35 @@ from typing import Dict, List, Tuple
 
 # Fantasy terms to replace
 FANTASY_REPLACEMENTS = {
-    # AGI/ASI terms
+    # automation/advanced automation terms
     r'\bAGI\b': 'automation system',
     r'\bASI\b': 'advanced automation',
-    r'agi[_-]?brain': 'task_coordinator',
-    r'brain[_-]?architecture': 'system_architecture',
+    r'agi[_-]?coordinator': 'task_coordinator',
+    r'coordinator[_-]?architecture': 'system_architecture',
     
-    # Consciousness terms
-    r'consciousness[_-]?level': 'system_health_score',
-    r'consciousness': 'system_state',
-    r'conscious': 'active',
+    # System State terms
+    r'system_state[_-]?level': 'system_health_score',
+    r'system_state': 'system_state',
+    r'active': 'active',
     r'self[_-]?aware': 'self_monitoring',
     
     # Cognitive terms
     r'cognitive[_-]?modules?': 'task_processors',
     r'cognitive[_-]?functions?': 'processing_functions',
-    r'neural[_-]?engine': 'processing_engine',
-    r'neural[_-]?network': 'ml_model',
+    r'processing[_-]?engine': 'processing_engine',
+    r'processing[_-]?network': 'ml_model',
     
     # Fantasy descriptors
-    r'transcendent': 'advanced',
-    r'divine': 'optimized',
-    r'omniscient': 'comprehensive',
-    r'omnipotent': 'powerful',
-    r'mystical': 'sophisticated',
-    r'supernatural': 'advanced',
-    r'cosmic': 'system-wide',
-    r'godlike': 'high-performance',
-    r'celestial': 'cloud-based',
-    r'ethereal': 'lightweight',
+    r'optimal': 'advanced',
+    r'enhanced': 'optimized',
+    r'comprehensive': 'comprehensive',
+    r'powerful': 'powerful',
+    r'sophisticated': 'sophisticated',
+    r'advanced': 'advanced',
+    r'system-wide': 'system-wide',
+    r'high-performance': 'high-performance',
+    r'cloud-based': 'cloud-based',
+    r'lightweight': 'lightweight',
     
     # Emergence terms
     r'emergence': 'optimization',
@@ -52,12 +52,12 @@ FANTASY_REPLACEMENTS = {
 
 # Files to rename
 FILE_RENAMES = {
-    'agi_brain.py': 'task_coordinator.py',
-    'advanced_brain_architecture.py': 'system_architecture.py',
-    'brain.py': 'system_api.py',
+    'task_coordinator.py': 'task_coordinator.py',
+    'advanced_coordinator_architecture.py': 'system_architecture.py',
+    'coordinator.py': 'system_api.py',
     'self_improvement.py': 'continuous_improvement.py',
     'autonomous_system_controller.py': 'system_controller.py',
-    'neural_engine': 'processing_engine',
+    'processing_engine': 'processing_engine',
 }
 
 def clean_file_content(content: str) -> str:
@@ -144,13 +144,13 @@ def update_imports(directory: Path) -> List[str]:
     return results
 
 def archive_agi_docs(base_path: Path) -> List[str]:
-    """Archive AGI-related documentation"""
+    """Archive automation-related documentation"""
     results = []
     archive_dir = base_path / 'archive' / 'historical' / 'agi-concepts'
     archive_dir.mkdir(parents=True, exist_ok=True)
     
-    # Patterns for AGI docs
-    agi_patterns = ['*AGI*.md', '*ASI*.md', '*consciousness*.md', '*brain*.md']
+    # Patterns for automation docs
+    agi_patterns = ['*automation*.md', '*advanced automation*.md', '*system_state*.md', '*coordinator*.md']
     
     for pattern in agi_patterns:
         for doc in base_path.rglob(pattern):
@@ -193,8 +193,8 @@ def main():
     if len(import_results) > 10:
         print(f"  ... and {len(import_results) - 10} more files")
     
-    # Step 4: Archive AGI docs
-    print("\n📦 Archiving AGI documentation...")
+    # Step 4: Archive automation docs
+    print("\n📦 Archiving automation documentation...")
     archive_results = archive_agi_docs(base_path)
     for result in archive_results:
         print(f"  ✅ {result}")

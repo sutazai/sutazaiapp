@@ -37,7 +37,7 @@
 - `TINYLLAMA_CONFIGURATION_COMPLETE.md` - TinyLlama setup complete
 
 ### System Overview
-- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - AGI architecture
+- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - automation system architecture
 - `system/SUTAZAI_AGI_ASI_PROJECT_DOCUMENTATION.md` - Complete project docs
 
 ### Deployment

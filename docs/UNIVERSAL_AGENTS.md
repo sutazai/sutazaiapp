@@ -21,7 +21,7 @@ This guide explains how to use the deployed universal agents that are independen
 **Capabilities:** security_analysis, code_generation, testing, deployment, monitoring, automation, integration, analysis
 
 ### senior-ai-engineer
-**Description:** Use this agent when you need to:\n\n- Design and implement AI/ML architectures\n- Build RAG (Retrieval Augmented Generation) systems\n- Integrate various LLMs and AI models\n- Create neural network ar...
+**Description:** Use this agent when you need to:\n\n- Design and implement AI/ML architectures\n- Build RAG (Retrieval Augmented Generation) systems\n- Integrate various LLMs and AI models\n- Create processing network ar...
 **Capabilities:** code_generation, deployment, monitoring, automation, integration, documentation
 
 ### hardware-resource-optimizer
@@ -33,7 +33,7 @@ This guide explains how to use the deployed universal agents that are independen
 **Capabilities:** code_generation, testing, monitoring, automation
 
 ### agi-system-architect
-**Description:** Use this agent when you need to:\n\n- Design comprehensive AGI/ASI system architectures\n- Create scalable and modular system designs\n- Implement cognitive architectures for artificial general intell...
+**Description:** Use this agent when you need to:\n\n- Design comprehensive automation system/advanced automation system architectures\n- Create scalable and modular system designs\n- Implement processing architectures for artificial general intell...
 **Capabilities:** security_analysis, code_generation, testing, deployment, monitoring, optimization, documentation
 
 ### litellm-proxy-manager
@@ -144,8 +144,8 @@ This guide explains how to use the deployed universal agents that are independen
 **Description:** Use this agent when you need to:\n\n- Perform comprehensive security assessments\n- Conduct penetration testing operations\n- Implement vulnerability scanning systems\n- Design security audit framewor...
 **Capabilities:** security_analysis, code_generation, testing, deployment, monitoring, automation, analysis, documentation
 
-### deep-learning-brain-manager
-**Description:** Use this agent when you need to:\n\n- Design and evolve neural intelligence cores\n- Implement continuous learning systems\n- Create meta-learning architectures\n- Build self-improving neural networks...
+### deep-learning-coordinator-manager
+**Description:** Use this agent when you need to:\n\n- Design and evolve processing intelligence cores\n- Implement continuous learning systems\n- Create meta-learning architectures\n- Build self-improving processing networks...
 **Capabilities:** code_generation
 
 ### testing-qa-validator

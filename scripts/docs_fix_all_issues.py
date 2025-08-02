@@ -408,7 +408,7 @@ if __name__ == "__main__":
     
     if success:
         print(f"\n{Colors.GREEN}{Colors.BOLD}🎉 System is fully operational!{Colors.ENDC}")
-        print(f"{Colors.GREEN}You can now start using SutazAI AGI/ASI system.{Colors.ENDC}")
+        print(f"{Colors.GREEN}You can now start using SutazAI automation/advanced automation system.{Colors.ENDC}")
     else:
         print(f"\n{Colors.YELLOW}{Colors.BOLD}⚠ Some issues remain.{Colors.ENDC}")
         print(f"{Colors.YELLOW}Run the generated fix script: ./auto_fix_remaining.sh{Colors.ENDC}")

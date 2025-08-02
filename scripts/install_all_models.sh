@@ -28,7 +28,7 @@ pull_model() {
     return 1
 }
 
-# Core models for the AGI system
+# Core models for the automation system
 CORE_MODELS=(
     "qwen2.5:3b"        # Primary reasoning model
     "qwen3:8b"              # Alternative reasoning
@@ -50,7 +50,7 @@ SPECIALIZED_MODELS=(
 OPTIONAL_MODELS=(
     "mixtral:8x7b"          # Advanced but large
     "wizard-math:7b"        # Math reasoning
-    "neural-chat:7b"        # Conversational
+    "processing-chat:7b"        # Conversational
 )
 
 # Check Ollama is running

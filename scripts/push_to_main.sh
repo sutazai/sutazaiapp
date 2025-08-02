@@ -35,7 +35,7 @@ git pull origin main
 echo "🔀 Merging v26 branch into main..."
 git merge v26 --no-ff -m "Merge v26: Major SutazAI system updates
 
-- AGI reasoning engine implementation
+- automation reasoning engine implementation
 - Network reconnaissance capabilities  
 - Enhanced UI components and navigation
 - System optimizations and improvements
@@ -60,7 +60,7 @@ echo ""
 echo "📊 Summary:"
 echo "  - Source branch: v26"
 echo "  - Target branch: main" 
-echo "  - Changes: AGI reasoning, network recon, UI enhancements"
+echo "  - Changes: automation reasoning, network recon, UI enhancements"
 echo "  - Files modified: 23 files with 4,485 insertions"
 echo ""
 echo "🔧 Branch status:"

@@ -1,16 +1,16 @@
 #!/bin/bash
-# Final test of Brain-enabled deployment
+# Final test of Coordinator-enabled deployment
 
-echo "🧠 Final Test of Super Intelligent Brain Deployment System"
+echo "🧠 Final Test of Super Intelligent Coordinator Deployment System"
 echo "========================================================"
 echo ""
 
 cd /opt/sutazaiapp
 
 # Run deployment and capture output
-LOG_FILE="brain_final_test_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="coordinator_final_test_$(date +%Y%m%d_%H%M%S).log"
 
-echo "Starting deployment with Brain system..."
+echo "Starting deployment with Coordinator system..."
 echo "Log file: $LOG_FILE"
 echo ""
 
@@ -18,52 +18,52 @@ echo ""
 timeout 90 bash scripts/deploy_complete_system.sh 2>&1 | tee "$LOG_FILE" &
 PID=$!
 
-# Monitor for Brain activity
+# Monitor for Coordinator activity
 sleep 10
 
-echo "Checking Brain System Status..."
+echo "Checking Coordinator System Status..."
 echo "==============================="
 
-# Check Brain initialization
-if grep -q "Initializing Super Intelligent Brain Core System" "$LOG_FILE"; then
-    echo "✅ Brain Core initialized successfully!"
+# Check Coordinator initialization
+if grep -q "Initializing Super Intelligent Coordinator Core System" "$LOG_FILE"; then
+    echo "✅ Coordinator Core initialized successfully!"
 else
-    echo "⚠️  Brain Core not explicitly initialized (may be already active)"
+    echo "⚠️  Coordinator Core not explicitly initialized (may be already active)"
 fi
 
-# Check Brain decisions
-if grep -q "Brain: Analyzing system state" "$LOG_FILE"; then
-    echo "✅ Brain is analyzing system state!"
+# Check Coordinator decisions
+if grep -q "Coordinator: Analyzing system state" "$LOG_FILE"; then
+    echo "✅ Coordinator is analyzing system state!"
 fi
 
-if grep -q "Brain Decision:" "$LOG_FILE"; then
-    echo "✅ Brain is making intelligent decisions!"
+if grep -q "Coordinator Decision:" "$LOG_FILE"; then
+    echo "✅ Coordinator is making intelligent decisions!"
     echo ""
-    echo "Sample Brain Decisions:"
-    grep "Brain Decision:" "$LOG_FILE" | head -5
+    echo "Sample Coordinator Decisions:"
+    grep "Coordinator Decision:" "$LOG_FILE" | head -5
 fi
 
-# Check Brain monitoring
-if grep -q "Brain Status Dashboard" "$LOG_FILE"; then
-    echo "✅ Brain monitoring dashboard is active!"
+# Check Coordinator monitoring
+if grep -q "Coordinator Status Dashboard" "$LOG_FILE"; then
+    echo "✅ Coordinator monitoring dashboard is active!"
 fi
 
-# Check deployment phases with Brain
+# Check deployment phases with Coordinator
 if grep -q "deployment_phase" "$LOG_FILE"; then
-    echo "✅ Brain is tracking deployment phases!"
+    echo "✅ Coordinator is tracking deployment phases!"
 fi
 
-# Show Brain activity summary
+# Show Coordinator activity summary
 echo ""
-echo "Brain Activity Summary:"
+echo "Coordinator Activity Summary:"
 echo "======================="
-echo "Total Brain decisions: $(grep -c "Brain Decision:" "$LOG_FILE" 2>/dev/null || echo 0)"
-echo "System analyses: $(grep -c "Brain: Analyzing" "$LOG_FILE" 2>/dev/null || echo 0)"
-echo "Brain status updates: $(grep -c "update_brain" "$LOG_FILE" 2>/dev/null || echo 0)"
+echo "Total Coordinator decisions: $(grep -c "Coordinator Decision:" "$LOG_FILE" 2>/dev/null || echo 0)"
+echo "System analyses: $(grep -c "Coordinator: Analyzing" "$LOG_FILE" 2>/dev/null || echo 0)"
+echo "Coordinator status updates: $(grep -c "update_coordinator" "$LOG_FILE" 2>/dev/null || echo 0)"
 
 # Kill deployment
 kill $PID 2>/dev/null
 
 echo ""
-echo "✅ Test complete! The Super Intelligent Brain system is working!"
+echo "✅ Test complete! The Super Intelligent Coordinator system is working!"
 echo "📋 Full log available at: $LOG_FILE"

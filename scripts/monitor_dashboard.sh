@@ -311,7 +311,7 @@ EOF
 )
     
     # Add container stats
-    local containers=("sutazai-postgres" "sutazai-redis" "sutazai-ollama" "sutazai-chromadb" "sutazai-qdrant" "sutazai-backend-agi" "sutazai-frontend-agi")
+    local containers=("sutazai-postgres" "sutazai-redis" "sutazai-ollama" "sutazai-chromadb" "sutazai-qdrant" "sutazai-backend" "sutazai-frontend")
     local first=true
     
     for container in "${containers[@]}"; do
@@ -399,8 +399,8 @@ display_dashboard() {
         "sutazai-ollama|Ollama Model Server"
         "sutazai-chromadb|ChromaDB Vector Store"
         "sutazai-qdrant|Qdrant Vector Database"
-        "sutazai-backend-agi|Backend API"
-        "sutazai-frontend-agi|Frontend UI"
+        "sutazai-backend|Backend API"
+        "sutazai-frontend|Frontend UI"
     )
     
     for container_info in "${containers[@]}"; do

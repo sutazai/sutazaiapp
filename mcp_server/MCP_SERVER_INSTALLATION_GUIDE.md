@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-Your custom SutazAI MCP (Model Context Protocol) server is now ready! This server provides comprehensive integration between Claude Desktop and your existing SutazAI AGI/ASI system, exposing powerful tools for:
+Your custom SutazAI MCP (Model Context Protocol) server is now ready! This server provides comprehensive integration between Claude Desktop and your existing SutazAI automation system/advanced automation system, exposing powerful tools for:
 
 - **23+ AI Agent Types** (AutoGPT, CrewAI, LocalAGI, etc.)
 - **Model Management** via Ollama
@@ -156,7 +156,7 @@ In Claude Desktop:
 ```
 Deploy a new AutoGPT agent called "research-bot" with research and analysis capabilities.
 
-Then use the research-bot to analyze the latest trends in quantum computing and prepare a technical summary.
+Then use the research-bot to analyze the latest trends in advanced computing and prepare a technical summary.
 ```
 
 Claude will use the MCP tools to:
@@ -405,7 +405,7 @@ Your MCP server integrates seamlessly with:
 
 ## 🎉 Success!
 
-Your SutazAI MCP server is now fully operational and integrated with Claude Desktop. You have access to the full power of your AGI/ASI system through a clean, context-aware interface.
+Your SutazAI MCP server is now fully operational and integrated with Claude Desktop. You have access to the full power of your automation system/advanced automation system through a clean, context-aware interface.
 
 **Key Capabilities Unlocked:**
 - 🤖 Deploy and manage 23+ AI agent types
@@ -419,4 +419,4 @@ Your SutazAI MCP server is now fully operational and integrated with Claude Desk
 
 ---
 
-*Built with ❤️ for the SutazAI AGI/ASI ecosystem* 
+*Built with ❤️ for the SutazAI automation system/advanced automation ecosystem* 

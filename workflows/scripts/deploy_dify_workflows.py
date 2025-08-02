@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dify Workflow Deployment Script for SutazAI AGI System
+Dify Workflow Deployment Script for SutazAI automation System
 Deploys and configures Dify workflows with full agent integration
 """
 
@@ -467,7 +467,7 @@ if __name__ == "__main__":
       SECRET_KEY: ${SECRET_KEY:-sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U}
       AGENT_REGISTRY_URL: http://agent-registry:8300
       MESSAGE_BUS_URL: http://agent-message-bus:8299  
-      BACKEND_API_URL: http://backend-agi:8000
+      BACKEND_API_URL: http://backend:8000
       STORAGE_TYPE: local
       STORAGE_LOCAL_PATH: /app/storage
       WORKFLOW_CONFIG_PATH: /app/workflows
@@ -481,7 +481,7 @@ if __name__ == "__main__":
       - redis
       - agent-registry
       - agent-message-bus
-      - backend-agi
+      - backend
     networks:
       - sutazai-network
     restart: unless-stopped

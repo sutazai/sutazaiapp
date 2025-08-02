@@ -2,7 +2,7 @@
 
 ## Overview
 
-SutazAI is a comprehensive, well-structured AI system designed for enterprise and research applications. It provides a unified platform for AI model management, agent orchestration, knowledge management, and neural processing.
+SutazAI is a comprehensive, well-structured AI system designed for enterprise and research applications. It provides a unified platform for AI model management, agent orchestration, knowledge management, and processing processing.
 
 ## Architecture
 
@@ -31,7 +31,7 @@ SutazAI is a comprehensive, well-structured AI system designed for enterprise an
 - **Model Management**: Load, unload, and manage AI models
 - **Agent Orchestration**: Create and manage AI agents
 - **Knowledge Management**: Vector storage and semantic search
-- **Neural Processing**: Biological modeling and neuromorphic computing
+- **Processing Processing**: Biological modeling and optimized computing
 - **Security**: Ethical verification and content filtering
 - **Monitoring**: System metrics and health checks
 - **Web Learning**: Content scraping and knowledge extraction
@@ -51,7 +51,7 @@ SutazAI is a comprehensive, well-structured AI system designed for enterprise an
     "models_dir": "/opt/sutazaiapp/backend/data/models"
   },
   "features": {
-    "enable_neural_processing": true,
+    "enable_processing_processing": true,
     "enable_agent_orchestration": true,
     "enable_knowledge_management": true
   }

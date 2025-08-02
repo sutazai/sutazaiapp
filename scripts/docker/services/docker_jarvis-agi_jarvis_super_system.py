@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🧠 JARVIS Super Intelligence System v2.0
+🤖 JARVIS Automation System System v2.0
 =======================================
 Enterprise-grade AI orchestration platform integrating:
 - Multi-modal AI capabilities (Text, Voice, Vision)
@@ -92,13 +92,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Request/Response models
-class IntelligenceQuery(BaseModel):
+class automationQuery(BaseModel):
     type: str = "general"
     content: str
     context: Optional[Dict[str, Any]] = None
     mode: str = "standard"
 
-class IntelligenceResponse(BaseModel):
+class automationResponse(BaseModel):
     query_id: str
     type: str
     result: Any
@@ -107,8 +107,8 @@ class IntelligenceResponse(BaseModel):
     timestamp: str
     metadata: Optional[Dict[str, Any]] = None
 
-class JarvisSuperIntelligence:
-    """🧠 Advanced AI orchestration and intelligence system"""
+class JarvisSuperautomation:
+    """🤖 Advanced AI orchestration and automation system"""
     
     def __init__(self):
         self.config = self.load_config()
@@ -142,7 +142,7 @@ class JarvisSuperIntelligence:
         """Enterprise-grade default configuration"""
         return {
             "system": {
-                "name": "JARVIS Super Intelligence",
+                "name": "JARVIS Automation System",
                 "version": "2.0.0",
                 "mode": "enterprise",
                 "max_workers": min(32, (os.cpu_count() or 1) + 4),
@@ -167,7 +167,7 @@ class JarvisSuperIntelligence:
                 "ollama_url": os.getenv("OLLAMA_URL", "http://ollama:11434"),
                 "chromadb_url": os.getenv("CHROMADB_URL", "http://chromadb:8001"),
                 "faiss_url": os.getenv("FAISS_URL", "http://faiss:8002"),
-                "backend_url": os.getenv("BACKEND_URL", "http://backend-agi:8000"),
+                "backend_url": os.getenv("BACKEND_URL", "http://backend:8000"),
                 "postgres_url": os.getenv("POSTGRES_URL", "postgresql://sutazai:sutazai123@postgres:5432/sutazai"),
                 "redis_url": os.getenv("REDIS_URL", "redis://redis:6379")
             },
@@ -182,7 +182,7 @@ class JarvisSuperIntelligence:
         """Create comprehensive directory structure"""
         directories = [
             "/app/workspaces", "/app/logs", "/app/data", "/app/models",
-            "/app/brain", "/app/engine", "/app/playground", "/app/tools",
+            "/app/coordinator", "/app/engine", "/app/playground", "/app/tools",
             "/app/models/transformers", "/app/models/huggingface",
             "/app/data/conversations", "/app/data/embeddings",
             "/app/logs/services", "/app/logs/analytics"
@@ -253,8 +253,8 @@ class JarvisSuperIntelligence:
     def create_api_service(self) -> FastAPI:
         """Create advanced API service with comprehensive endpoints"""
         app = FastAPI(
-            title="JARVIS Super Intelligence API",
-            description="Enterprise AI orchestration and intelligence platform",
+            title="JARVIS Automation System API",
+            description="Enterprise AI orchestration and automation platform",
             version="2.0.0",
             docs_url="/api/docs",
             redoc_url="/api/redoc"
@@ -271,7 +271,7 @@ class JarvisSuperIntelligence:
         @app.get("/")
         async def root():
             return {
-                "system": "JARVIS Super Intelligence System",
+                "system": "JARVIS Automation System System",
                 "version": "2.0.0",
                 "status": "operational",
                 "capabilities": [
@@ -284,9 +284,9 @@ class JarvisSuperIntelligence:
                 "timestamp": datetime.now().isoformat()
             }
         
-        @app.post("/api/v1/intelligence", response_model=IntelligenceResponse)
-        async def intelligence_query(query: IntelligenceQuery):
-            """Advanced intelligence processing endpoint"""
+        @app.post("/api/v1/automation", response_model=automationResponse)
+        async def automation_query(query: automationQuery):
+            """Advanced automation processing endpoint"""
             start_time = time.time()
             query_id = f"jarvis_{int(time.time() * 1000)}"
             
@@ -294,7 +294,7 @@ class JarvisSuperIntelligence:
                 result = await self.process_advanced_query(query)
                 self.stats["queries_processed"] += 1
                 
-                return IntelligenceResponse(
+                return automationResponse(
                     query_id=query_id,
                     type=query.type,
                     result=result,
@@ -304,8 +304,8 @@ class JarvisSuperIntelligence:
                     metadata={"mode": query.mode, "context_used": bool(query.context)}
                 )
             except Exception as e:
-                logger.error(f"Intelligence query failed: {e}")
-                return IntelligenceResponse(
+                logger.error(f"automation query failed: {e}")
+                return automationResponse(
                     query_id=query_id,
                     type=query.type,
                     result={"error": str(e)},
@@ -318,7 +318,7 @@ class JarvisSuperIntelligence:
         async def advanced_status():
             """Comprehensive system status"""
             return {
-                "system": "JARVIS Super Intelligence v2.0",
+                "system": "JARVIS Automation System v2.0",
                 "status": "operational" if self.is_running else "starting",
                 "services": {
                     name: {"status": "active", "type": type(service).__name__}
@@ -372,7 +372,7 @@ class JarvisSuperIntelligence:
                     query_data = json.loads(data)
                     
                     # Process query
-                    query = IntelligenceQuery(**query_data)
+                    query = automationQuery(**query_data)
                     result = await self.process_advanced_query(query)
                     
                     await websocket.send_text(json.dumps({
@@ -396,7 +396,7 @@ class JarvisSuperIntelligence:
         async def health_check():
             return {
                 "status": "healthy",
-                "system": "JARVIS Super Intelligence v2.0",
+                "system": "JARVIS Automation System v2.0",
                 "timestamp": datetime.now().isoformat(),
                 "services": len(self.services),
                 "models": len(self.models),
@@ -440,7 +440,7 @@ class JarvisSuperIntelligence:
         def intelligent_chat(message, history, mode):
             """Advanced chat with multiple modes"""
             try:
-                query = IntelligenceQuery(
+                query = automationQuery(
                     type="chat",
                     content=message,
                     mode=mode
@@ -464,7 +464,7 @@ class JarvisSuperIntelligence:
         # Create advanced Gradio interface
         with gr.Blocks(
             theme=gr.themes.Soft(),
-            title="JARVIS Super Intelligence",
+            title="JARVIS Automation System",
             css="""
             .gradio-container {
                 font-family: 'Arial', sans-serif;
@@ -482,12 +482,12 @@ class JarvisSuperIntelligence:
             with gr.Row():
                 gr.HTML("""
                     <div class="header">
-                        <h1>🧠 JARVIS Super Intelligence System v2.0</h1>
+                        <h1>🤖 JARVIS Automation System System v2.0</h1>
                         <p>Enterprise AI orchestration platform with multi-modal capabilities</p>
                     </div>
                 """)
             
-            with gr.Tab("💬 Intelligence Chat"):
+            with gr.Tab("💬 automation Chat"):
                 with gr.Row():
                     with gr.Column(scale=4):
                         chatbot = gr.Chatbot(
@@ -520,7 +520,7 @@ class JarvisSuperIntelligence:
                 
                 def get_status():
                     return {
-                        "system": "JARVIS Super Intelligence v2.0",
+                        "system": "JARVIS Automation System v2.0",
                         "status": "operational",
                         "uptime": f"{time.time() - self.stats['uptime_start']:.0f}s",
                         "queries_processed": self.stats["queries_processed"],
@@ -538,7 +538,7 @@ class JarvisSuperIntelligence:
         
         return interface
     
-    async def process_advanced_query(self, query: IntelligenceQuery) -> Any:
+    async def process_advanced_query(self, query: automationQuery) -> Any:
         """Advanced query processing with multiple AI backends"""
         
         if query.type == "chat" or query.type == "text":
@@ -574,7 +574,7 @@ class JarvisSuperIntelligence:
         
         elif query.type == "system_info":
             return {
-                "system": "JARVIS Super Intelligence v2.0",
+                "system": "JARVIS Automation System v2.0",
                 "uptime": time.time() - self.stats["uptime_start"],
                 "queries_processed": self.stats["queries_processed"],
                 "models": list(self.models.keys()),
@@ -710,7 +710,7 @@ class JarvisSuperIntelligence:
         self.start_time = time.time()
         self.is_running = True
         
-        logger.info("🚀 Starting JARVIS Super Intelligence System v2.0...")
+        logger.info("🚀 Starting JARVIS Automation System System v2.0...")
         
         # Create thread pool for services
         executor = ThreadPoolExecutor(max_workers=self.config["system"]["max_workers"])
@@ -779,11 +779,11 @@ class JarvisSuperIntelligence:
             )
 
 async def main():
-    """Main entry point for JARVIS Super Intelligence System v2.0"""
+    """Main entry point for JARVIS Automation System System v2.0"""
     
     print("""
-🧠 ══════════════════════════════════════════════════════════════════════
-    JARVIS Super Intelligence System v2.0
+🤖 ══════════════════════════════════════════════════════════════════════
+    JARVIS Automation System System v2.0
     🚀 Enterprise AI Orchestration Platform
     ⚡ Optimized for CPU-only deployment with maximum efficiency
     🎯 Multi-modal AI: Text, Voice, Vision, Vector Search
@@ -793,10 +793,10 @@ async def main():
     """)
     
     try:
-        # Initialize JARVIS super intelligence system
-        jarvis = JarvisSuperIntelligence()
+        # Initialize JARVIS super automation system
+        jarvis = JarvisSuperautomation()
         
-        logger.info("🎯 JARVIS Super Intelligence System initialized successfully")
+        logger.info("🎯 JARVIS Automation System System initialized successfully")
         logger.info(f"🔧 Configuration: {jarvis.config['system']['mode']} mode")
         logger.info(f"🤖 AI Models loaded: {len(jarvis.models)}")
         logger.info(f"⚡ Services available: {len(jarvis.services)}")
@@ -806,7 +806,7 @@ async def main():
         
     except KeyboardInterrupt:
         logger.info("🛑 JARVIS shutdown requested by user")
-        print("\n🧠 JARVIS Super Intelligence System shutting down gracefully...")
+        print("\n🤖 JARVIS Automation System System shutting down gracefully...")
     except Exception as e:
         logger.error(f"💥 JARVIS startup failed: {e}")
         print(f"\n❌ Startup error: {e}")

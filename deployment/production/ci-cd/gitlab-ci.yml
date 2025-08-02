@@ -13,15 +13,15 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 # Build stage
-build-brain-core:
+build-coordinator-core:
   stage: build
   image: docker:latest
   services:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE/brain-core:$CI_COMMIT_SHA -f deployment/production/docker/Dockerfile.brain-optimized .
-    - docker push $CI_REGISTRY_IMAGE/brain-core:$CI_COMMIT_SHA
+    - docker build -t $CI_REGISTRY_IMAGE/coordinator-core:$CI_COMMIT_SHA -f deployment/production/docker/Dockerfile.coordinator-optimized .
+    - docker push $CI_REGISTRY_IMAGE/coordinator-core:$CI_COMMIT_SHA
   only:
     - main
     - production
@@ -74,7 +74,7 @@ security-scan:
   stage: security
   image: aquasec/trivy:latest
   script:
-    - trivy image --exit-code 1 --no-progress $CI_REGISTRY_IMAGE/brain-core:$CI_COMMIT_SHA
+    - trivy image --exit-code 1 --no-progress $CI_REGISTRY_IMAGE/coordinator-core:$CI_COMMIT_SHA
     - trivy image --exit-code 1 --no-progress $CI_REGISTRY_IMAGE/agent-base:$CI_COMMIT_SHA
   allow_failure: true
 
@@ -105,8 +105,8 @@ deploy-staging:
     - kubectl apply -f deployment/production/kubernetes/core/
     - kubectl apply -f deployment/production/kubernetes/agents/
     - kubectl apply -f deployment/production/monitoring/
-    - kubectl set image deployment/brain-core brain-core=$CI_REGISTRY_IMAGE/brain-core:$CI_COMMIT_SHA -n sutazai-core
-    - kubectl rollout status deployment/brain-core -n sutazai-core
+    - kubectl set image deployment/coordinator-core coordinator-core=$CI_REGISTRY_IMAGE/coordinator-core:$CI_COMMIT_SHA -n sutazai-core
+    - kubectl rollout status deployment/coordinator-core -n sutazai-core
   only:
     - main
   when: manual
@@ -124,8 +124,8 @@ deploy-production:
     - kubectl apply -f deployment/production/kubernetes/core/
     - kubectl apply -f deployment/production/kubernetes/agents/
     - kubectl apply -f deployment/production/monitoring/
-    - kubectl set image deployment/brain-core brain-core=$CI_REGISTRY_IMAGE/brain-core:$CI_COMMIT_SHA -n sutazai-core
-    - kubectl rollout status deployment/brain-core -n sutazai-core
+    - kubectl set image deployment/coordinator-core coordinator-core=$CI_REGISTRY_IMAGE/coordinator-core:$CI_COMMIT_SHA -n sutazai-core
+    - kubectl rollout status deployment/coordinator-core -n sutazai-core
   only:
     - production
   when: manual

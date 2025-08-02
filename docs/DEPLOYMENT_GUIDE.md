@@ -192,10 +192,10 @@ curl https://prometheus.sutazai.ai/api/v1/query?query=up
 
 ```bash
 # Scale backend
-kubectl scale deployment backend-agi -n sutazai --replicas=10
+kubectl scale deployment backend -n sutazai --replicas=10
 
 # Enable HPA
-kubectl autoscale deployment backend-agi -n sutazai \
+kubectl autoscale deployment backend -n sutazai \
   --min=3 --max=20 --cpu-percent=70
 ```
 
@@ -269,10 +269,10 @@ kubectl exec -i -n sutazai postgres-0 -- psql -U sutazai sutazai < backup.sql
 
 ```bash
 # Rollback deployment
-kubectl rollout undo deployment/backend-agi -n sutazai
+kubectl rollout undo deployment/backend -n sutazai
 
 # Rollback to specific revision
-kubectl rollout undo deployment/backend-agi -n sutazai --to-revision=2
+kubectl rollout undo deployment/backend -n sutazai --to-revision=2
 ```
 
 ## Troubleshooting
@@ -287,7 +287,7 @@ kubectl rollout undo deployment/backend-agi -n sutazai --to-revision=2
 
 2. **Database connection issues**
    ```bash
-   kubectl exec -it deployment/backend-agi -n sutazai -- /bin/bash
+   kubectl exec -it deployment/backend -n sutazai -- /bin/bash
    nc -zv postgres 5432
    ```
 

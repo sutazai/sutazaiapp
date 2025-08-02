@@ -63,9 +63,9 @@ find "$BASE_DIR/demos" "$BASE_DIR/workflows" -type f \( -name "*.md" -o -name "*
     mv "$file" "$DOCS_DIR/guides/" 2>/dev/null || true
 done
 
-# Move brain architecture documentation
-echo "Moving brain architecture documentation..."
-find "$BASE_DIR/brain" -type f \( -name "*.md" -o -name "*.txt" \) ! -name "requirements*.txt" ! -path "*/.claude/*" 2>/dev/null | while read -r file; do
+# Move coordinator architecture documentation
+echo "Moving coordinator architecture documentation..."
+find "$BASE_DIR/coordinator" -type f \( -name "*.md" -o -name "*.txt" \) ! -name "requirements*.txt" ! -path "*/.claude/*" 2>/dev/null | while read -r file; do
     mv "$file" "$DOCS_DIR/architecture/" 2>/dev/null || true
 done
 

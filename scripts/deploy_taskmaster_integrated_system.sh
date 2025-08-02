@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SutazAI TaskMaster Integration Deployment Script
-# Comprehensive setup for autonomous AGI/ASI system with 40+ AI components
+# Comprehensive setup for task automation system with AI components
 # Author: SutazAI Development Team
 # Version: 1.0
 
@@ -162,7 +162,7 @@ TASKMASTER_OLLAMA_URL=http://localhost:11434
 # AI Agent Configuration
 AGENT_WORKSPACE=/app/agent_workspaces
 AGENT_OUTPUTS=/app/outputs
-BACKEND_URL=http://backend-agi:8000
+BACKEND_URL=http://backend:8000
 
 # API Configuration
 API_V1_STR=/api/v1
@@ -229,10 +229,10 @@ fix_container_health() {
     header "FIXING CONTAINER HEALTH ISSUES"
     
     log "Stopping unhealthy containers..."
-    sudo docker-compose stop backend-agi qdrant || true
+    sudo docker-compose stop backend qdrant || true
     
     log "Removing stopped containers..."
-    sudo docker-compose rm -f backend-agi qdrant || true
+    sudo docker-compose rm -f backend qdrant || true
     
     log "Rebuilding and starting containers..."
     sudo docker-compose up -d postgres redis neo4j chromadb qdrant ollama
@@ -242,7 +242,7 @@ fix_container_health() {
     sleep 30
     
     log "Starting backend with fixed environment..."
-    sudo docker-compose up -d backend-agi
+    sudo docker-compose up -d backend
     
     success "Container health issues resolved"
 }
@@ -582,8 +582,8 @@ validate_deployment() {
         "ollama:11434"
         "chromadb:8000"
         "qdrant:6333"
-        "backend-agi:8000"
-        "frontend-agi:8501"
+        "backend:8000"
+        "frontend:8501"
         "prometheus:9090"
         "grafana:3000"
     )
@@ -657,7 +657,7 @@ main() {
     echo -e "  • Live logs: ./scripts/live_logs.sh"
     echo -e "  • System status: ./scripts/autonomous_task_generator.py"
     echo -e "\n${YELLOW}⚡ The system will now autonomously generate and manage tasks every 6 hours${NC}"
-    echo -e "${YELLOW}⚡ TaskMaster is integrated with 40+ AI services for comprehensive management${NC}\n"
+    echo -e "${YELLOW}⚡ TaskMaster is integrated with AI services for comprehensive management${NC}\n"
     
     log "Deployment completed successfully at $(date)"
 }

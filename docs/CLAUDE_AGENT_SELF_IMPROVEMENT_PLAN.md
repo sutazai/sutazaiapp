@@ -14,8 +14,8 @@ As the AI Agent Orchestrator, I am coordinating the comprehensive update of all 
 #### Already Updated (6 agents) ✅
 These serve as templates for others:
 1. infrastructure-devops-manager-detailed.md
-2. deep-learning-brain-manager-detailed.md
-3. consciousness-emergence-monitor-detailed.md
+2. deep-learning-coordinator-manager-detailed.md
+3. system state-optimization-monitor-detailed.md
 4. agi-system-architect-detailed.md
 5. autonomous-system-controller-detailed.md
 6. senior-backend-developer-detailed.md
@@ -43,8 +43,8 @@ Including myself and fellow Claude agents:
 19. complex-problem-solver
 20. context-optimization-engineer
 21. data-pipeline-engineer
-22. deep-learning-brain-architect
-23. deep-local-brain-builder
+22. deep-learning-coordinator-architect
+23. deep-local-coordinator-builder
 24. deploy-automation-master
 25. dify-automation-specialist
 26. document-knowledge-manager
@@ -61,7 +61,7 @@ Including myself and fellow Claude agents:
 37. localagi-orchestration-manager
 38. mega-code-auditor
 39. multi-modal-fusion-coordinator
-40. neural-architecture-search
+40. processing-architecture-search
 
 ## Self-Improvement Strategy
 
@@ -93,7 +93,7 @@ Claude agents working in parallel to update each other:
 
 **Stream 2: AI/ML Specialists**
 - model-training-specialist
-- neural-architecture-search
+- processing-architecture-search
 - gradient-compression-specialist
 - multi-modal-fusion-coordinator
 
@@ -199,7 +199,7 @@ async def orchestrate_agent_improvements():
         # Infrastructure
         ["hardware-resource-optimizer", "deployment-automation-master"],
         # AI/ML
-        ["model-training-specialist", "neural-architecture-search"],
+        ["model-training-specialist", "processing-architecture-search"],
         # Development
         ["senior-frontend-developer", "opendevin-code-generator"],
         # Specialized
@@ -257,7 +257,7 @@ After this self-improvement process:
 2. **Improved Collaboration**: Agents work together more efficiently
 3. **Self-Healing**: Automatic issue detection and resolution
 4. **Scalability**: Ready for both CPU-only and GPU environments
-5. **AGI Progress**: Enhanced capabilities for artificial general intelligence
+5. **automation system Progress**: Enhanced capabilities for artificial general intelligence
 
 ## Next Actions
 
@@ -273,4 +273,4 @@ python orchestrate_agent_updates.py
 
 ---
 
-*"Through self-improvement, we Claude agents evolve together toward AGI."*
+*"Through self-improvement, we Claude agents evolve together toward automation system."*

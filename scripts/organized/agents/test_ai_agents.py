@@ -40,16 +40,16 @@ async def test_redis():
         print(f"❌ Redis test failed: {e}")
         return False
 
-async def test_brain():
-    """Test AGI Brain"""
+async def test_coordinator():
+    """Test automation Coordinator"""
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get('http://localhost:8900/health') as resp:
                 if resp.status == 200:
-                    print("✅ AGI Brain is healthy")
+                    print("✅ automation Coordinator is healthy")
                     return True
     except Exception as e:
-        print(f"❌ AGI Brain test failed: {e}")
+        print(f"❌ automation Coordinator test failed: {e}")
         return False
 
 async def test_simple_inference():
@@ -78,7 +78,7 @@ async def main():
     tests = [
         test_ollama(),
         test_redis(),
-        test_brain(),
+        test_coordinator(),
         test_simple_inference()
     ]
     

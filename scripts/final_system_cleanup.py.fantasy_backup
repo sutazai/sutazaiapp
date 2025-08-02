@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+"""
+Final comprehensive cleanup script to ensure ALL fantasy elements are removed from SutazAI
+"""
+
+import os
+import re
+import json
+import yaml
+from pathlib import Path
+from typing import Dict, List, Tuple, Set
+
+# Comprehensive list of ALL fantasy terms to replace
+FANTASY_TERMS = {
+    # AGI/ASI terms
+    r'\bAGI\b': 'automation',
+    r'\bASI\b': 'advanced automation',
+    r'agi[_-]?brain': 'task_coordinator',
+    r'brain': 'coordinator',
+    r'Brain': 'Coordinator',
+    
+    # Neural/consciousness terms
+    r'neural': 'processing',
+    r'Neural': 'Processing',
+    r'consciousness': 'system_state',
+    r'Consciousness': 'System State',
+    r'conscious': 'active',
+    r'self[_-]?aware': 'self_monitoring',
+    
+    # Quantum/advanced terms
+    r'quantum': 'advanced',
+    r'Quantum': 'Advanced',
+    r'neuromorphic': 'optimized',
+    r'Neuromorphic': 'Optimized',
+    
+    # Mystical terms
+    r'transcendent': 'optimal',
+    r'divine': 'enhanced',
+    r'omniscient': 'comprehensive',
+    r'omnipotent': 'powerful',
+    r'mystical': 'sophisticated',
+    r'supernatural': 'advanced',
+    r'cosmic': 'system-wide',
+    r'godlike': 'high-performance',
+    r'celestial': 'cloud-based',
+    r'ethereal': 'lightweight',
+    
+    # Service names
+    r'backend-agi': 'backend',
+    r'frontend-agi': 'frontend',
+    r'backend_agi': 'backend',
+    r'frontend_agi': 'frontend',
+    r'sutazai-backend-agi': 'sutazai-backend',
+    r'sutazai-frontend-agi': 'sutazai-frontend',
+}
+
+# File types to process
+PROCESS_EXTENSIONS = {
+    '.py', '.sh', '.md', '.yml', '.yaml', '.json', '.txt', '.rst',
+    '.cfg', '.conf', '.ini', '.env', '.toml', '.xml', '.html'
+}
+
+# Directories to skip
+SKIP_DIRS = {
+    '.git', '__pycache__', 'node_modules', '.venv', 'venv',
+    'archive', 'backup', 'cleanup_backups', '.pytest_cache'
+}
+
+class SystemCleaner:
+    def __init__(self, root_path: str):
+        self.root_path = Path(root_path)
+        self.cleaned_files = []
+        self.skipped_files = []
+        self.errors = []
+        
+    def should_process_file(self, filepath: Path) -> bool:
+        """Check if file should be processed"""
+        # Skip if in excluded directory
+        for part in filepath.parts:
+            if part in SKIP_DIRS:
+                return False
+        
+        # Only process specific extensions
+        return filepath.suffix.lower() in PROCESS_EXTENSIONS
+    
+    def clean_content(self, content: str) -> Tuple[str, int]:
+        """Clean fantasy elements from content"""
+        cleaned = content
+        changes = 0
+        
+        for pattern, replacement in FANTASY_TERMS.items():
+            new_content = re.sub(pattern, replacement, cleaned, flags=re.MULTILINE)
+            if new_content != cleaned:
+                changes += len(re.findall(pattern, cleaned))
+                cleaned = new_content
+        
+        return cleaned, changes
+    
+    def process_file(self, filepath: Path) -> bool:
+        """Process a single file"""
+        try:
+            # Read file
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                original = f.read()
+            
+            # Clean content
+            cleaned, changes = self.clean_content(original)
+            
+            if changes > 0:
+                # Backup original
+                backup_path = filepath.with_suffix(filepath.suffix + '.fantasy_backup')
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(original)
+                
+                # Write cleaned content
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(cleaned)
+                
+                self.cleaned_files.append((str(filepath), changes))
+                return True
+            else:
+                self.skipped_files.append(str(filepath))
+                return False
+                
+        except Exception as e:
+            self.errors.append((str(filepath), str(e)))
+            return False
+    
+    def update_docker_compose_files(self):
+        """Specifically update docker-compose files"""
+        compose_files = list(self.root_path.glob('docker-compose*.yml'))
+        
+        for compose_file in compose_files:
+            try:
+                with open(compose_file, 'r') as f:
+                    data = yaml.safe_load(f)
+                
+                if data and 'services' in data:
+                    # Update service names
+                    services_to_rename = []
+                    for service_name in data['services']:
+                        if 'agi' in service_name:
+                            new_name = service_name.replace('-agi', '').replace('_agi', '')
+                            services_to_rename.append((service_name, new_name))
+                    
+                    # Rename services
+                    for old_name, new_name in services_to_rename:
+                        if old_name != new_name:
+                            data['services'][new_name] = data['services'].pop(old_name)
+                    
+                    # Update container names and depends_on
+                    for service in data['services'].values():
+                        if 'container_name' in service:
+                            service['container_name'] = service['container_name'].replace('-agi', '').replace('_agi', '')
+                        
+                        if 'depends_on' in service:
+                            service['depends_on'] = [
+                                dep.replace('-agi', '').replace('_agi', '') 
+                                for dep in service['depends_on']
+                            ]
+                        
+                        # Update environment variables
+                        if 'environment' in service:
+                            for key, value in list(service['environment'].items()):
+                                if isinstance(value, str) and 'agi' in value:
+                                    service['environment'][key] = value.replace('-agi', '').replace('_agi', '')
+                
+                # Write back
+                with open(compose_file, 'w') as f:
+                    yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+                
+                print(f"✅ Updated Docker Compose file: {compose_file.name}")
+                
+            except Exception as e:
+                print(f"❌ Error updating {compose_file}: {e}")
+    
+    def run_cleanup(self):
+        """Run complete system cleanup"""
+        print("🧹 Starting Final System Cleanup")
+        print("=" * 60)
+        
+        # Count total files
+        total_files = sum(1 for f in self.root_path.rglob('*') 
+                         if f.is_file() and self.should_process_file(f))
+        print(f"📊 Found {total_files} files to process")
+        
+        # Process all files
+        processed = 0
+        for filepath in self.root_path.rglob('*'):
+            if filepath.is_file() and self.should_process_file(filepath):
+                self.process_file(filepath)
+                processed += 1
+                if processed % 100 == 0:
+                    print(f"  Processed {processed}/{total_files} files...")
+        
+        # Update Docker Compose files
+        print("\n🐳 Updating Docker Compose files...")
+        self.update_docker_compose_files()
+        
+        # Generate report
+        self.generate_report()
+    
+    def generate_report(self):
+        """Generate cleanup report"""
+        print("\n" + "=" * 60)
+        print("📊 CLEANUP SUMMARY")
+        print("=" * 60)
+        
+        print(f"\n✅ Files cleaned: {len(self.cleaned_files)}")
+        if self.cleaned_files:
+            # Show top 10 most changed files
+            sorted_files = sorted(self.cleaned_files, key=lambda x: x[1], reverse=True)[:10]
+            print("\n📝 Most modified files:")
+            for filepath, changes in sorted_files:
+                print(f"  - {filepath}: {changes} replacements")
+        
+        print(f"\n⏭️  Files skipped (no changes): {len(self.skipped_files)}")
+        
+        if self.errors:
+            print(f"\n❌ Errors encountered: {len(self.errors)}")
+            for filepath, error in self.errors[:5]:
+                print(f"  - {filepath}: {error}")
+        
+        # Check for remaining fantasy terms
+        print("\n🔍 Verification check...")
+        remaining = self.find_remaining_fantasy_terms()
+        if remaining:
+            print(f"⚠️  Found {len(remaining)} files with possible remaining fantasy terms:")
+            for filepath in list(remaining)[:10]:
+                print(f"  - {filepath}")
+        else:
+            print("✅ No fantasy terms found - system is clean!")
+        
+        # Save detailed report
+        report_path = self.root_path / 'FINAL_CLEANUP_REPORT.md'
+        with open(report_path, 'w') as f:
+            f.write("# SutazAI Final Cleanup Report\n\n")
+            f.write(f"## Summary\n")
+            f.write(f"- Files cleaned: {len(self.cleaned_files)}\n")
+            f.write(f"- Files skipped: {len(self.skipped_files)}\n")
+            f.write(f"- Errors: {len(self.errors)}\n")
+            f.write(f"\n## All Cleaned Files\n")
+            for filepath, changes in sorted(self.cleaned_files, key=lambda x: x[1], reverse=True):
+                f.write(f"- {filepath}: {changes} replacements\n")
+        
+        print(f"\n📄 Detailed report saved to: {report_path}")
+    
+    def find_remaining_fantasy_terms(self) -> Set[str]:
+        """Find any remaining fantasy terms"""
+        remaining = set()
+        fantasy_patterns = ['AGI', 'ASI', 'neural', 'consciousness', 'brain', 'quantum']
+        
+        for filepath in self.root_path.rglob('*'):
+            if filepath.is_file() and self.should_process_file(filepath):
+                try:
+                    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                    
+                    for pattern in fantasy_patterns:
+                        if re.search(rf'\b{pattern}\b', content, re.IGNORECASE):
+                            remaining.add(str(filepath))
+                            break
+                except:
+                    pass
+        
+        return remaining
+
+def main():
+    """Run the final cleanup"""
+    root_path = '/opt/sutazaiapp'
+    
+    print("🚀 SutazAI Final System Cleanup")
+    print("This will remove ALL remaining fantasy elements from the entire codebase")
+    print(f"Target directory: {root_path}")
+    print("")
+    
+    # Create cleaner and run
+    cleaner = SystemCleaner(root_path)
+    cleaner.run_cleanup()
+    
+    print("\n✨ Cleanup complete!")
+    print("\nNext steps:")
+    print("1. Review changes with: git diff")
+    print("2. Test the system: ./scripts/system_test.sh")
+    print("3. Restart services: docker-compose down && docker-compose up -d")
+    print("4. Verify functionality: curl http://localhost:8000/health")
+
+if __name__ == "__main__":
+    main()

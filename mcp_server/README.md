@@ -1,6 +1,6 @@
 # SutazAI MCP Server
 
-A comprehensive Model Context Protocol (MCP) server that provides seamless integration between Claude Desktop and the SutazAI AGI/ASI system. This server exposes powerful tools and resources for managing AI agents, models, knowledge bases, and system orchestration.
+A comprehensive Model Context Protocol (MCP) server that provides seamless integration between Claude Desktop and the SutazAI automation system/advanced automation system. This server exposes powerful tools and resources for managing AI agents, models, knowledge bases, and system orchestration.
 
 ## 🚀 Features
 
@@ -140,7 +140,7 @@ Execute a task using a specific AI agent.
 ```json
 {
   "agent_name": "research-assistant-001",
-  "task": "Research the latest developments in quantum computing and prepare a summary",
+  "task": "Research the latest developments in advanced computing and prepare a summary",
   "context": {
     "domain": "technology",
     "target_audience": "technical"
@@ -720,7 +720,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Model Context Protocol](https://github.com/modelcontextprotocol) - The foundational protocol
 - [Anthropic Claude](https://claude.ai) - AI assistant platform
-- [SutazAI Team](https://github.com/sutazai) - The underlying AGI/ASI system
+- [SutazAI Team](https://github.com/sutazai) - The underlying automation system/advanced automation system
 - [Ollama](https://ollama.ai) - Local AI model management
 
 ## 📞 Support
@@ -739,4 +739,4 @@ For issues and questions:
 
 ---
 
-**Built with ❤️ for the SutazAI AGI/ASI ecosystem** 
+**Built with ❤️ for the SutazAI automation system/advanced automation ecosystem** 

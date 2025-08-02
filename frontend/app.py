@@ -8,7 +8,7 @@ MODEL_DESCRIPTIONS = {
     "qwen2.5-coder:3b": "Coding-focused small model (2GB RAM)"
 }
 """
-SutazAI AGI/ASI System - Enhanced Frontend
+SutazAI automation/advanced automation System - Enhanced Frontend
 A comprehensive interface for the autonomous AI system
 """
 
@@ -57,7 +57,7 @@ except ImportError:
 
 # Page configuration
 st.set_page_config(
-    page_title="SutazAI AGI/ASI System",
+    page_title="SutazAI automation/advanced automation System",
     page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -101,7 +101,7 @@ st.markdown("""
         --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        --gradient-neural: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        --gradient-processing: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
         
         /* Advanced shadows */
         --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
@@ -219,7 +219,7 @@ st.markdown("""
         box-shadow: var(--shadow-2xl);
     }
     
-    /* Enhanced Metric Cards with Neural-inspired Design */
+    /* Enhanced Metric Cards with Processing-inspired Design */
     .metric-card {
         background: var(--glass-bg-strong);
         backdrop-filter: blur(20px) saturate(160%);
@@ -242,7 +242,7 @@ st.markdown("""
         left: 0;
         right: 0;
         height: 3px;
-        background: var(--gradient-neural);
+        background: var(--gradient-processing);
         opacity: 0;
         transition: opacity var(--transition-normal);
         border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
@@ -418,7 +418,7 @@ st.markdown("""
         }
     }
     
-    @keyframes neural-glow {
+    @keyframes processing-glow {
         0%, 100% {
             box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
         }
@@ -512,7 +512,7 @@ st.markdown("""
     
     /* Button variants */
     .stButton > button[data-testid*="primary"] {
-        background: var(--gradient-neural);
+        background: var(--gradient-processing);
         box-shadow: var(--shadow-xl), 0 0 20px rgba(102, 126, 234, 0.3);
     }
     
@@ -650,7 +650,7 @@ st.markdown("""
     }
     
     .stTabs [aria-selected="true"] {
-        background: var(--gradient-neural) !important;
+        background: var(--gradient-processing) !important;
         color: white !important;
         box-shadow: var(--shadow-xl), 0 0 20px rgba(102, 126, 234, 0.3);
         transform: translateY(-1px);
@@ -821,7 +821,7 @@ st.markdown("""
         left: 0;
         right: 0;
         height: 4px;
-        background: var(--gradient-neural);
+        background: var(--gradient-processing);
         box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
     }
     
@@ -1157,8 +1157,8 @@ if 'real_time_data' not in st.session_state:
     st.session_state.real_time_data = {}
 
 # API configuration
-API_BASE_URL = "http://backend-agi:8000"
-WEBSOCKET_URL = "ws://backend-agi:8000/ws"
+API_BASE_URL = "http://backend:8000"
+WEBSOCKET_URL = "ws://backend:8000/ws"
 import requests
 import base64
 import websocket
@@ -1178,7 +1178,7 @@ async def call_api(endpoint: str, method: str = "GET", data: Dict = None, timeou
     Production-ready API client with comprehensive error handling
     
     Args:
-        endpoint: API endpoint (e.g., "/health", "/api/v1/neural/process")
+        endpoint: API endpoint (e.g., "/health", "/api/v1/processing/process")
         method: HTTP method (GET, POST, PUT, DELETE)
         data: Request payload for POST/PUT requests
         timeout: Custom timeout in seconds
@@ -1190,8 +1190,8 @@ async def call_api(endpoint: str, method: str = "GET", data: Dict = None, timeou
         # Smart timeout based on endpoint type
         if endpoint in ["/health", "/metrics", "/agents"]:
             timeout = 5.0
-        elif endpoint.startswith("/api/v1/neural") or endpoint.startswith("/think"):
-            timeout = 60.0  # Neural processing can take longer
+        elif endpoint.startswith("/api/v1/processing") or endpoint.startswith("/think"):
+            timeout = 60.0  # Processing processing can take longer
         else:
             timeout = 30.0
     
@@ -1383,7 +1383,7 @@ def render_enterprise_header():
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div style="font-size: 2rem;">🧠</div>
                 <div>
-                    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SutazAI AGI/ASI System</h1>
+                    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SutazAI automation/advanced automation System</h1>
                     <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">Enterprise Autonomous Intelligence Platform</p>
                 </div>
             </div>
@@ -1448,7 +1448,7 @@ def main():
             # Core System
             "🏠 Enterprise Dashboard",
             "💬 AI Chat Hub",
-            "🧠 AGI Neural Engine",
+            "🧠 automation Processing Engine",
             
             # AI Agents & Services (40+ integrations)
             "🤖 Agent Control Center",
@@ -1510,8 +1510,8 @@ def main():
         show_enterprise_dashboard()
     elif page == "💬 AI Chat Hub":
         show_ai_chat_hub()
-    elif page == "🧠 AGI Neural Engine":
-        show_agi_neural_engine()
+    elif page == "🧠 automation Processing Engine":
+        show_agi_processing_engine()
     
     # AI Agents & Services
     elif page == "🤖 Agent Control Center":
@@ -1731,7 +1731,7 @@ def show_ai_chat():
     col1, col2, col3 = st.columns([2, 2, 1])
     with col1:
         model = st.selectbox("Select Model:", [
-            "AGI Brain (Enterprise)",
+            "automation Coordinator (Enterprise)",
             "Llama 3.2 1B",
             "Qwen 2.5 3B",
             "CodeQwen 1.5 7B",
@@ -1771,8 +1771,8 @@ def show_ai_chat():
         
         # Get AI response
         with st.spinner("🤖 AI is thinking... (this may take 10-60 seconds on CPU)"):
-            if model == "AGI Brain (Enterprise)":
-                response = asyncio.run(call_api("/api/v1/brain/think", "POST", {
+            if model == "automation Coordinator (Enterprise)":
+                response = asyncio.run(call_api("/api/v1/coordinator/think", "POST", {
                     "input_data": {"text": prompt},
                     "reasoning_type": "strategic"
                 }))
@@ -1946,9 +1946,9 @@ def show_agent_card(agent: Dict):
             for cap in agent.get('capabilities', []):
                 st.caption(f"• {cap}")
 
-def show_agi_brain():
-    """Show AGI brain interface"""
-    st.header("AGI Brain Control")
+def show_task_coordinator():
+    """Show automation coordinator interface"""
+    st.header("automation Coordinator Control")
     
     # Cognitive functions
     st.subheader("Cognitive Functions")
@@ -1965,9 +1965,9 @@ def show_agi_brain():
         with col:
             st.metric(name, f"{icon} Active", "Normal")
     
-    # Consciousness level
-    consciousness = st.slider("Consciousness Level", 0.0, 1.0, 0.75, disabled=True)
-    st.progress(consciousness)
+    # System State level
+    system_state = st.slider("System State Level", 0.0, 1.0, 0.75, disabled=True)
+    st.progress(system_state)
     
     # Problem solving
     st.subheader("Problem Solving")
@@ -2130,7 +2130,7 @@ def show_system_config():
         
         col1, col2 = st.columns(2)
         with col1:
-            st.text_input("System Name:", value="SutazAI AGI/ASI", disabled=True)
+            st.text_input("System Name:", value="SutazAI automation/advanced automation", disabled=True)
             st.text_input("Version:", value="16.0.0", disabled=True)
             st.selectbox("Environment:", ["Production", "Development", "Testing"])
         
@@ -2453,7 +2453,7 @@ class {generation_type.replace(" ", "")}:
                     "impact": "Medium",
                     "effort": "Medium", 
                     "description": "Refactor large functions into smaller ones",
-                    "files": ["orchestrator.py", "brain.py"]
+                    "files": ["orchestrator.py", "coordinator.py"]
                 }
             ]
             
@@ -2880,7 +2880,7 @@ def show_api_gateway():
             "/api/v1/chat",
             "/api/v1/agents/status",
             "/api/v1/models",
-            "/api/v1/brain/think",
+            "/api/v1/coordinator/think",
             "Custom"
         ])
         
@@ -2894,7 +2894,7 @@ def show_api_gateway():
     if method in ["POST", "PUT"]:
         request_body = st.text_area(
             "Request Body (JSON)",
-            value='{\n  "message": "Hello AGI",\n  "model": "qwen2.5:3b"\n}',
+            value='{\n  "message": "Hello automation",\n  "model": "qwen2.5:3b"\n}',
             height=150
         )
     
@@ -3073,7 +3073,7 @@ def show_enterprise_dashboard():
     st.markdown("### System Health Matrix")
     
     health_data = {
-        'Component': ['AGI Brain', 'Agent Network', 'Knowledge Base', 'API Gateway', 'Database', 'Cache Layer'],
+        'Component': ['automation Coordinator', 'Agent Network', 'Knowledge Base', 'API Gateway', 'Database', 'Cache Layer'],
         'Status': ['Healthy', 'Healthy', 'Warning', 'Healthy', 'Healthy', 'Critical'],
         'Uptime': [99.98, 99.95, 99.12, 99.99, 99.87, 97.43],
         'Response Time': [89, 134, 256, 45, 23, 892],
@@ -3352,7 +3352,7 @@ def show_enterprise_dashboard():
     
     # Define services to check - using internal Docker service names
     service_endpoints = [
-        {"name": "AGI Brain", "url": "http://backend-agi:8000/health", "port": "8000"},
+        {"name": "automation Coordinator", "url": "http://backend:8000/health", "port": "8000"},
         {"name": "LangFlow", "url": "http://langflow:7860/health", "port": "8090"},
         {"name": "FlowiseAI", "url": "http://flowise:3000/api/v1/ping", "port": "8099"},
         {"name": "BigAGI", "url": "http://bigagi:3000", "port": "8106"},
@@ -3424,8 +3424,8 @@ def show_ai_chat_hub():
         with config_col1:
             st.markdown("**🤖 AI Model**")
             model_options = [
-                "AGI Brain (Enterprise)",
-                "Neural Reasoning Engine",
+                "automation Coordinator (Enterprise)",
+                "Processing Reasoning Engine",
                 "Multi-Agent Consensus",
                 "Creative Synthesis",
                 "Simple Chat"
@@ -3571,9 +3571,9 @@ def show_ai_chat_hub():
             }
             
             # Select appropriate endpoint based on model
-            if "AGI Brain" in selected_model or "Neural Reasoning" in selected_model:
-                # Use advanced neural processing with reasoning
-                response = asyncio.run(call_api("/api/v1/brain/think", "POST", {
+            if "automation Coordinator" in selected_model or "Processing Reasoning" in selected_model:
+                # Use advanced processing processing with reasoning
+                response = asyncio.run(call_api("/api/v1/coordinator/think", "POST", {
                     "input_data": {"text": prompt},
                     "reasoning_type": "strategic" if reasoning_type == "Automatic (Best Fit)" else reasoning_type.lower().split()[0],
                     "context": {
@@ -3590,7 +3590,7 @@ def show_ai_chat_hub():
                 }))
             elif "Creative Synthesis" in selected_model:
                 # Use creative reasoning engine
-                response = asyncio.run(call_api("/api/v1/neural/creative", "POST", {
+                response = asyncio.run(call_api("/api/v1/processing/creative", "POST", {
                     "prompt": prompt,
                     "synthesis_mode": "cross_domain",
                     **cognitive_params
@@ -3635,7 +3635,7 @@ def show_ai_chat_hub():
                 # Extract the actual response text from various possible fields
                 response_text = ""
                 if isinstance(response, dict):
-                    # Check for nested result structure (from brain/think endpoint)
+                    # Check for nested result structure (from coordinator/think endpoint)
                     if "result" in response and isinstance(response["result"], dict):
                         result = response["result"]
                         if "output" in result:
@@ -3888,7 +3888,7 @@ def show_langflow_integration():
         st.markdown("### Active Flows")
         
         flows = [
-            {"name": "AGI Processing Pipeline", "status": "Running", "nodes": 12, "executions": 1247},
+            {"name": "automation Processing Pipeline", "status": "Running", "nodes": 12, "executions": 1247},
             {"name": "Data Analysis Workflow", "status": "Running", "nodes": 8, "executions": 856},
             {"name": "Code Review Flow", "status": "Paused", "nodes": 15, "executions": 234},
             {"name": "Customer Support Bot", "status": "Running", "nodes": 6, "executions": 2341}
@@ -4648,7 +4648,7 @@ def show_monitoring_integration():
                     if selected_metric == "up":
                         st.success("✅ All services reporting as UP")
                         services_status = pd.DataFrame({
-                            "Service": ["backend-agi", "ollama", "chromadb", "qdrant", "neo4j"],
+                            "Service": ["backend", "ollama", "chromadb", "qdrant", "neo4j"],
                             "Status": [1, 1, 1, 1, 1],
                             "Last Seen": ["30s ago", "45s ago", "1m ago", "25s ago", "1m ago"]
                         })
@@ -4848,7 +4848,7 @@ def show_autonomous_improvement():
 async def call_api(endpoint: str, method: str = "GET", data: Dict = None, timeout: float = None):
     if timeout is None:
         # Increased default timeout for better reliability
-        timeout = 30.0 if endpoint.startswith("/api/v1/neural") else 15.0
+        timeout = 30.0 if endpoint.startswith("/api/v1/processing") else 15.0
     
     # Add retry logic for transient failures
     max_retries = 3
@@ -4864,7 +4864,7 @@ async def call_api(endpoint: str, method: str = "GET", data: Dict = None, timeou
 """, language="python")
                         
                         st.markdown("### 📝 Explanation")
-                        st.info("The fix implements retry logic with exponential backoff and increases default timeouts for neural processing endpoints.")
+                        st.info("The fix implements retry logic with exponential backoff and increases default timeouts for processing processing endpoints.")
                         
                         col1, col2 = st.columns(2)
                         with col1:
@@ -5052,7 +5052,7 @@ def show_system_monitoring():
     st.markdown("### Service Health Matrix")
     
     services_health = {
-        'Service': ['AGI Backend', 'Ollama', 'ChromaDB', 'Qdrant', 'Neo4j', 'Redis', 'Postgres'],
+        'Service': ['automation Backend', 'Ollama', 'ChromaDB', 'Qdrant', 'Neo4j', 'Redis', 'Postgres'],
         'Status': ['🟢 Healthy', '🟢 Healthy', '🟢 Healthy', '🟡 Warning', '🟢 Healthy', '🟢 Healthy', '🟢 Healthy'],
         'Response Time': ['89ms', '234ms', '45ms', '567ms', '123ms', '12ms', '67ms'],
         'Uptime': ['99.9%', '99.8%', '99.9%', '98.7%', '99.5%', '100%', '99.7%']
@@ -5214,8 +5214,8 @@ def show_system_monitoring():
                 
                 # Mock log results
                 log_entries = [
-                    {"time": "2024-07-24 10:30:15", "level": "INFO", "service": "backend-agi", 
-                     "message": "AGI brain cycle completed successfully"},
+                    {"time": "2024-07-24 10:30:15", "level": "INFO", "service": "backend", 
+                     "message": "automation coordinator cycle completed successfully"},
                     {"time": "2024-07-24 10:30:10", "level": "DEBUG", "service": "ollama", 
                      "message": "Model inference completed in 1.23s"},
                     {"time": "2024-07-24 10:30:05", "level": "WARN", "service": "qdrant", 
@@ -5257,76 +5257,76 @@ def show_system_monitoring():
 # ADDITIONAL INTERFACE FUNCTIONS
 # ================================
 
-def show_agi_neural_engine():
-    """AGI Neural Engine with advanced consciousness visualization"""
-    st.title("🧠 AGI Neural Engine - Consciousness & Cognition Center")
+def show_agi_processing_engine():
+    """automation Processing Engine with advanced system_state visualization"""
+    st.title("🧠 automation Processing Engine - System State & Cognition Center")
     
-    # Enhanced neural status with real-time data
-    brain_status = asyncio.run(call_api("/api/v1/brain/status"))
+    # Enhanced processing status with real-time data
+    coordinator_status = asyncio.run(call_api("/api/v1/coordinator/status"))
     
-    if brain_status:
-        # Neural metrics overview
+    if coordinator_status:
+        # Processing metrics overview
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             st.metric(
-                "Consciousness Level",
-                f"{brain_status.get('consciousness_level', 85)}%",
-                delta=f"+{brain_status.get('consciousness_delta', 2.1)}%"
+                "System State Level",
+                f"{coordinator_status.get('system_state_level', 85)}%",
+                delta=f"+{coordinator_status.get('system_state_delta', 2.1)}%"
             )
         
         with col2:
             st.metric(
                 "Active Thoughts",
-                brain_status.get("active_thoughts", 42),
+                coordinator_status.get("active_thoughts", 42),
                 delta="+3"
             )
         
         with col3:
-            memory = brain_status.get("memory_usage", {})
+            memory = coordinator_status.get("memory_usage", {})
             total_memory = memory.get("short_term", 0) + memory.get("long_term", 0)
             st.metric("Memory Items", f"{total_memory:,}")
         
         with col4:
             st.metric(
                 "Learning Rate",
-                f"{brain_status.get('learning_rate', 0.0023):.4f}",
+                f"{coordinator_status.get('learning_rate', 0.0023):.4f}",
                 delta="+0.0001"
             )
     else:
         # Fallback metrics if API unavailable
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.metric("Neural Pathways", "12,847", "+234")
+            st.metric("Processing Pathways", "12,847", "+234")
         with col2:
-            st.metric("Consciousness Level", "87.3%", "+2.1%")
+            st.metric("System State Level", "87.3%", "+2.1%")
         with col3:
             st.metric("Processing Units", "42", "+3")
         with col4:
             st.metric("Synapse Strength", "94.7%", "+0.8%")
     
-    # Consciousness & Cognition Tabs
-    tabs = st.tabs(["🧠 Consciousness", "💭 Thought Stream", "🎯 Reasoning", "📊 Memory", "🔬 Neural Activity"])
+    # System State & Cognition Tabs
+    tabs = st.tabs(["🧠 System State", "💭 Thought Stream", "🎯 Reasoning", "📊 Memory", "🔬 Processing Activity"])
     
     with tabs[0]:
-        st.markdown("### 🌟 Consciousness Visualization")
+        st.markdown("### 🌟 System State Visualization")
         
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            # Consciousness state visualization
-            consciousness_data = {
+            # System State state visualization
+            system_state_data = {
                 'Component': ['Self-Awareness', 'Perception', 'Emotion', 'Intention', 'Reflection'],
                 'Level': [92, 88, 76, 85, 90],
                 'Activity': ['+2%', '+1%', '+5%', '-1%', '+3%']
             }
             
             fig = px.line_polar(
-                pd.DataFrame(consciousness_data),
+                pd.DataFrame(system_state_data),
                 r='Level',
                 theta='Component',
                 line_close=True,
-                title='Consciousness Components'
+                title='System State Components'
             )
             fig.update_traces(fill='toself')
             fig.update_layout(
@@ -5342,7 +5342,7 @@ def show_agi_neural_engine():
         
         with col2:
             st.markdown("#### 🎓 Knowledge Domains")
-            domains = brain_status.get("knowledge_domains", ["General", "Technical", "Creative", "Analytical"]) if brain_status else ["General", "Technical", "Creative", "Analytical"]
+            domains = coordinator_status.get("knowledge_domains", ["General", "Technical", "Creative", "Analytical"]) if coordinator_status else ["General", "Technical", "Creative", "Analytical"]
             
             for domain in domains:
                 domain_score = random.randint(75, 95)
@@ -5399,7 +5399,7 @@ def show_agi_neural_engine():
             
             if st.button("🧠 Process Query", type="primary"):
                 if query:
-                    with st.spinner("Engaging neural reasoning engine..."):
+                    with st.spinner("Engaging processing reasoning engine..."):
                         # Simulate reasoning process
                         progress_bar = st.progress(0)
                         status_text = st.empty()
@@ -5407,7 +5407,7 @@ def show_agi_neural_engine():
                         reasoning_steps = [
                             "Parsing input query...",
                             "Identifying reasoning requirements...",
-                            "Activating neural pathways...",
+                            "Activating processing pathways...",
                             "Processing logical inferences...",
                             "Synthesizing insights...",
                             "Formulating response..."
@@ -5535,19 +5535,19 @@ def show_agi_neural_engine():
                 st.markdown(f"✓ {proc}")
     
     with tabs[4]:
-        st.markdown("### 🔬 Neural Activity Visualization")
+        st.markdown("### 🔬 Processing Activity Visualization")
         
         col1, col2 = st.columns(2)
         
         with col1:
-            # Neural activity heatmap
-            st.markdown("#### Neural Activation Patterns")
-            neural_data = np.random.rand(12, 12) * 100
+            # Processing activity heatmap
+            st.markdown("#### Processing Activation Patterns")
+            processing_data = np.random.rand(12, 12) * 100
             
             fig = px.imshow(
-                neural_data,
-                labels=dict(x="Neural Column", y="Neural Layer", color="Activation"),
-                title="Real-time Neural Activity",
+                processing_data,
+                labels=dict(x="Processing Column", y="Processing Layer", color="Activation"),
+                title="Real-time Processing Activity",
                 color_continuous_scale="Viridis"
             )
             fig.update_layout(
@@ -5558,7 +5558,7 @@ def show_agi_neural_engine():
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
-            st.markdown("#### Neural Network Metrics")
+            st.markdown("#### Processing Network Metrics")
             
             metrics = [
                 {"metric": "Neurons Active", "value": "2.3M", "change": "+12K"},
@@ -5932,10 +5932,10 @@ def show_jax_ml_interface():
         # JAX features overview
         jax_features = [
             {"name": "XLA Compilation", "status": "✅", "description": "Just-in-time compilation for high performance"},
-            {"name": "Automatic Differentiation", "status": "✅", "description": "Grad transformation for neural networks"},
+            {"name": "Automatic Differentiation", "status": "✅", "description": "Grad transformation for processing networks"},
             {"name": "Vectorization", "status": "✅", "description": "Vmap for parallel computation"},
             {"name": "GPU Acceleration", "status": "⚡", "description": "CUDA support for faster training"},
-            {"name": "Neural Networks", "status": "🧠", "description": "Flax integration for deep learning"},
+            {"name": "Processing Networks", "status": "🧠", "description": "Flax integration for deep learning"},
             {"name": "Scientific Computing", "status": "🔬", "description": "NumPy-compatible operations"}
         ]
         
@@ -5951,7 +5951,7 @@ def show_jax_ml_interface():
         st.markdown("### Quick Model Training")
         
         with st.form("jax_training"):
-            model_type = st.selectbox("Model Type", ["Neural Network", "Linear Regression", "CNN", "Transformer"])
+            model_type = st.selectbox("Model Type", ["Processing Network", "Linear Regression", "CNN", "Transformer"])
             dataset = st.selectbox("Dataset", ["Custom", "MNIST", "CIFAR-10", "ImageNet"])
             epochs = st.slider("Training Epochs", 1, 100, 10)
             

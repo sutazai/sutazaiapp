@@ -77,9 +77,9 @@ data:
         target_label: kubernetes_pod_name
     
     # SutazAI specific targets
-    - job_name: 'sutazai-brain'
+    - job_name: 'sutazai-coordinator'
       static_configs:
-      - targets: ['brain-core.sutazai-core:8000']
+      - targets: ['coordinator-core.sutazai-core:8000']
       metrics_path: '/metrics'
     
     - job_name: 'sutazai-agents'
@@ -122,38 +122,38 @@ metadata:
 data:
   sutazai-alerts.yml: |
     groups:
-    - name: sutazai_brain
+    - name: sutazai_coordinator
       interval: 30s
       rules:
-      - alert: BrainCoreDown
-        expr: up{job="sutazai-brain"} == 0
+      - alert: CoordinatorCoreDown
+        expr: up{job="sutazai-coordinator"} == 0
         for: 2m
         labels:
           severity: critical
-          component: brain
+          component: coordinator
         annotations:
-          summary: "Brain Core is down"
-          description: "Brain Core {{ $labels.instance }} has been down for more than 2 minutes."
+          summary: "Coordinator Core is down"
+          description: "Coordinator Core {{ $labels.instance }} has been down for more than 2 minutes."
       
-      - alert: BrainHighMemory
-        expr: container_memory_usage_bytes{pod=~"brain-core-.*"} / container_spec_memory_limit_bytes{pod=~"brain-core-.*"} > 0.9
+      - alert: CoordinatorHighMemory
+        expr: container_memory_usage_bytes{pod=~"coordinator-core-.*"} / container_spec_memory_limit_bytes{pod=~"coordinator-core-.*"} > 0.9
         for: 5m
         labels:
           severity: warning
-          component: brain
+          component: coordinator
         annotations:
-          summary: "Brain Core high memory usage"
-          description: "Brain Core pod {{ $labels.pod }} memory usage is above 90%"
+          summary: "Coordinator Core high memory usage"
+          description: "Coordinator Core pod {{ $labels.pod }} memory usage is above 90%"
       
-      - alert: BrainHighCPU
-        expr: rate(container_cpu_usage_seconds_total{pod=~"brain-core-.*"}[5m]) > 0.8
+      - alert: CoordinatorHighCPU
+        expr: rate(container_cpu_usage_seconds_total{pod=~"coordinator-core-.*"}[5m]) > 0.8
         for: 5m
         labels:
           severity: warning
-          component: brain
+          component: coordinator
         annotations:
-          summary: "Brain Core high CPU usage"
-          description: "Brain Core pod {{ $labels.pod }} CPU usage is above 80%"
+          summary: "Coordinator Core high CPU usage"
+          description: "Coordinator Core pod {{ $labels.pod }} CPU usage is above 80%"
     
     - name: sutazai_agents
       interval: 30s

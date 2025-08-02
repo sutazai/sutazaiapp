@@ -149,7 +149,7 @@ cat > .repository-info.json << 'EOF'
     "name": "sutazaiapp",
     "owner": "sutazai",
     "full_name": "sutazai/sutazaiapp",
-    "description": "SutazAI AGI/ASI Autonomous System",
+    "description": "SutazAI automation/advanced automation Autonomous System",
     "type": "local",
     "path": "/opt/sutazaiapp",
     "git_remote": "https://github.com/sutazai/sutazaiapp.git",

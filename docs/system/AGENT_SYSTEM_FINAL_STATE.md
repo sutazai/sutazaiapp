@@ -2,12 +2,12 @@
 
 ## System Overview
 
-The SutazAI AGI/ASI Autonomous System operates with **69+ specialized AI agents** working in harmony to achieve artificial general intelligence capabilities. The system has been optimized to maintain all essential agents while removing only true duplicates.
+The SutazAI automation system/advanced automation automation system operates with **69+ specialized AI agents** working in harmony to achieve artificial general intelligence capabilities. The system has been optimized to maintain all essential agents while removing only true duplicates.
 
 ## Essential Agents (MUST KEEP)
 
 ### Critical Infrastructure Team
-1. **senior-ai-engineer** - AI/ML architecture and AGI design leadership
+1. **senior-ai-engineer** - AI/ML architecture and automation system design leadership
 2. **senior-backend-developer** - Backend systems and API expertise
 3. **senior-frontend-developer** - Frontend and UI/UX leadership
 4. **infrastructure-devops-manager** - Infrastructure, Docker, and deployment management
@@ -45,11 +45,11 @@ All remaining 50+ specialized agents including:
 - ram-hardware-optimizer
 - gpu-hardware-optimizer
 - mega-code-auditor
-- deep-local-brain-builder
+- deep-local-coordinator-builder
 - symbolic-reasoning-engine
 - multi-modal-fusion-coordinator
 - evolution-strategy-trainer
-- And 40+ more specialized agents...
+- And  more specialized agents...
 
 ## Agents Removed (Duplicates Only)
 1. **deploy-automation-master** - Duplicate of deployment-automation-master
@@ -112,7 +112,7 @@ User Request → ai-agent-orchestrator → autonomous-system-controller
 ## Critical Rules
 
 1. **NEVER** remove senior-* agents or infrastructure-devops-manager
-2. **ALWAYS** maintain 69+ agents for full AGI capability
+2. **ALWAYS** maintain 69+ agents for full automation system capability
 3. **RESPECT** the agent hierarchy and approval chains
 4. **COORDINATE** through ai-agent-orchestrator for multi-agent tasks
 5. **VALIDATE** with essential agents before major changes
@@ -127,6 +127,6 @@ User Request → ai-agent-orchestrator → autonomous-system-controller
 
 ## Conclusion
 
-The SutazAI system now operates with a streamlined yet comprehensive agent architecture. All essential expertise is preserved through the senior agents and infrastructure manager, while the system maintains its full AGI/ASI capabilities with 69+ specialized agents working in coordinated harmony.
+The SutazAI system now operates with a streamlined yet comprehensive agent architecture. All essential expertise is preserved through the senior agents and infrastructure manager, while the system maintains its full automation system/advanced automation capabilities with 69+ specialized agents working in coordinated harmony.
 
 The focus has shifted from removing agents to optimizing their coordination and resource usage, ensuring the system can scale efficiently from CPU-only operations to future GPU-accelerated workloads.

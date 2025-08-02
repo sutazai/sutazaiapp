@@ -27,7 +27,7 @@ def create_architecture_diagram():
     }
     
     # Title
-    ax.text(5, 9.5, 'SutazAI AGI/ASI System Architecture', 
+    ax.text(5, 9.5, 'SutazAI automation/advanced automation System Architecture', 
             ha='center', va='center', fontsize=20, fontweight='bold')
     
     # Frontend Layer

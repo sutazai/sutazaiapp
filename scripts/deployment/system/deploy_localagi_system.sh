@@ -214,7 +214,7 @@ deploy_localagi() {
     log INFO "Starting LocalAGI services..."
     
     # Start backend services
-    docker-compose up -d backend-agi
+    docker-compose up -d backend
     
     # Wait for backend to be ready
     log INFO "Waiting for backend service..."
@@ -334,7 +334,7 @@ Infrastructure Services:
 - Redis Cache: $(docker-compose ps redis | grep -q "Up" && echo "RUNNING" || echo "NOT RUNNING")
 - Ollama Model Server: $(docker-compose ps ollama | grep -q "Up" && echo "RUNNING" || echo "NOT RUNNING")
 - ChromaDB Vector Store: $(docker-compose ps chromadb | grep -q "Up" && echo "RUNNING" || echo "NOT RUNNING")
-- Backend API: $(docker-compose ps backend-agi | grep -q "Up" && echo "RUNNING" || echo "NOT RUNNING")
+- Backend API: $(docker-compose ps backend | grep -q "Up" && echo "RUNNING" || echo "NOT RUNNING")
 
 Service Endpoints:
 - Backend API: http://localhost:8000

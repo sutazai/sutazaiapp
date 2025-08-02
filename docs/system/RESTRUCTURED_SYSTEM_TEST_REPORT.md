@@ -80,7 +80,7 @@ The SutazAI system restructuring has been **SUCCESSFULLY VALIDATED**. The system
 - ✅ Metrics endpoint: `GET /metrics` - Returns system metrics
 - ✅ Agents endpoint: `GET /agents` - Returns available agents
 - ✅ Chat endpoint: `POST /chat` - AI chat functionality working
-- ✅ Think endpoint: `POST /think` - AGI reasoning working
+- ✅ Think endpoint: `POST /think` - automation system reasoning working
 - ✅ Execute endpoint: `POST /execute` - Task execution working
 - ✅ Reason endpoint: `POST /reason` - Logical reasoning working
 
@@ -165,7 +165,7 @@ Status: Working
 
 1. **AI Chat System** ✅
    - Multi-model support (qwen2.5:0.5b, tinyllama)
-   - Agent-specific prompting (agi-brain, code-agent, research-agent)
+   - Agent-specific prompting (agi-coordinator, code-agent, research-agent)
    - Temperature control and parameter adjustment
 
 2. **Reasoning Engine** ✅

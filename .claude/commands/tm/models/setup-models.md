@@ -32,7 +32,7 @@ task-master models --setup
 
 Based on your needs:
 - **For best results**: Claude + Perplexity
-- **Budget conscious**: GPT-3.5 + Perplexity
+- **Budget aware**: GPT-3.5 + Perplexity
 - **Maximum capability**: GPT-4 + Perplexity + Claude fallback
 
 ## Configuration Storage

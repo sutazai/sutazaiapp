@@ -37,7 +37,7 @@ done
 
 # Move Python scripts that look like utility scripts
 echo "Moving Python utility scripts..."
-find "$BASE_DIR" -name "*.py" ! -path "*/scripts/*" ! -path "*/.git/*" ! -path "*/venv/*" ! -path "*/.venv/*" ! -path "*/site-packages/*" ! -path "*/backend/*" ! -path "*/frontend/*" ! -path "*/brain/*" -type f | while read -r file; do
+find "$BASE_DIR" -name "*.py" ! -path "*/scripts/*" ! -path "*/.git/*" ! -path "*/venv/*" ! -path "*/.venv/*" ! -path "*/site-packages/*" ! -path "*/backend/*" ! -path "*/frontend/*" ! -path "*/coordinator/*" -type f | while read -r file; do
     # Check if it's likely a script (not a module)
     if grep -q "if __name__ == ['\"]__main__['\"]" "$file" 2>/dev/null; then
         filename=$(basename "$file")

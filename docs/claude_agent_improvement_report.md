@@ -24,15 +24,15 @@ Generated: 2025-08-01T14:27:06.723591
 - ✅ code-generation-improver
 - ✅ codebase-team-lead
 - ✅ complex-problem-solver
-- ✅ consciousness-emergence-monitor
+- ✅ system state-optimization-monitor
 - ✅ context-optimization-engineer
 - ✅ cpu-only-hardware-optimizer
 - ✅ data-analysis-engineer
 - ✅ data-drift-detector
 - ✅ data-pipeline-engineer
-- ✅ deep-learning-brain-architect
-- ✅ deep-learning-brain-manager
-- ✅ deep-local-brain-builder
+- ✅ deep-learning-coordinator-architect
+- ✅ deep-learning-coordinator-manager
+- ✅ deep-local-coordinator-builder
 - ✅ deploy-automation-master
 - ✅ deployment-automation-master
 - ✅ dify-automation-specialist
@@ -61,14 +61,14 @@ Generated: 2025-08-01T14:27:06.723591
 - ✅ memory-persistence-manager
 - ✅ model-training-specialist
 - ✅ multi-modal-fusion-coordinator
-- ✅ neural-architecture-search
+- ✅ processing-architecture-search
 - ✅ observability-monitoring-engineer
 - ✅ ollama-integration-specialist
 - ✅ opendevin-code-generator
 - ✅ private-data-analyst
 - ✅ product-strategy-architect
 - ✅ prompt-injection-guard
-- ✅ quantum-computing-optimizer
+- ✅ advanced-computing-optimizer
 - ✅ ram-hardware-optimizer
 - ✅ resource-visualiser
 - ✅ security-pentesting-specialist

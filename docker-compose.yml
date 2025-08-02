@@ -144,7 +144,7 @@ services:
       - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
       - CHROMA_SERVER_HOST=0.0.0.0
       - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend-agi:8000"]
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     ports:
       - "8001:8000"
     healthcheck:
@@ -237,11 +237,11 @@ services:
   # CORE APPLICATION SERVICES
   # ===========================================
   
-  backend-agi:
+  backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.agi
-    container_name: sutazai-backend-agi
+      dockerfile: Dockerfile
+    container_name: sutazai-backend
     restart: unless-stopped
     volumes:
       - ./backend:/app
@@ -293,24 +293,24 @@ services:
       retries: 5
       start_period: 60s
 
-  frontend-agi:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: sutazai-frontend-agi
+    container_name: sutazai-frontend
     restart: unless-stopped
     volumes:
       - ./frontend:/app
       - ./data:/data
     environment:
       <<: *common-variables
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     ports:
       - "8501:8501"
     depends_on:
-      backend-agi:
+      backend:
         condition: service_healthy
     networks:
       - sutazai-network
@@ -339,9 +339,9 @@ services:
       <<: [*common-variables, *ollama-config]
       AGENT_NAME: AutoGPT
       WORKSPACE_PATH: /app/workspace
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
     depends_on:
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -360,11 +360,11 @@ services:
       <<: [*common-variables, *ollama-config]
       AGENT_NAME: CrewAI
       CREW_SIZE: 5
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
     ports:
       - "8096:8080"
     depends_on:
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -385,7 +385,7 @@ services:
       MEMORY_BACKEND: postgres
     depends_on:
       - postgres
-      - backend-agi
+      - backend
       - ollama
     networks:
       - sutazai-network
@@ -505,26 +505,7 @@ services:
     networks:
       - sutazai-network
 
-  # LocalAGI Orchestrator
-  localagi:
-    build:
-      context: ./docker/localagi
-      dockerfile: Dockerfile
-    container_name: sutazai-localagi
-    restart: unless-stopped
-    volumes:
-      - agent_workspaces:/app/workspace
-    environment:
-      <<: [*common-variables, *ollama-config]
-      AGENT_NAME: LocalAGI
-      ORCHESTRATOR_MODE: true
-    ports:
-      - "8115:8090"
-    depends_on:
-      - ollama
-      - backend-agi
-    networks:
-      - sutazai-network
+  # LocalAGI Orchestrator - Service removed
 
   # AgentGPT
   agentgpt:
@@ -883,12 +864,12 @@ services:
       <<: *common-variables
       MONITOR_INTERVAL: 30
       ALERT_WEBHOOK_URL: ${HEALTH_ALERT_WEBHOOK:-}
-      SERVICES_TO_CHECK: sutazai-backend-agi,sutazai-frontend-agi,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
+      SERVICES_TO_CHECK: sutazai-backend,sutazai-frontend,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
     ports:
       - "8100:8000"
     networks:
       - sutazai-network
-  # Additional AGI/ASI Services
+  # Additional automation/advanced automation Services
   
   # LiteLLM Proxy for unified model access
   litellm:
@@ -927,22 +908,7 @@ services:
       - sutazai-network
     restart: unless-stopped
 
-  # LocalAGI Enhanced
-  localagi-enhanced:
-    container_name: sutazai-localagi-enhanced
-    build:
-      context: ./docker/localagi
-      dockerfile: Dockerfile
-    environment:
-      <<: [*common-variables, *ollama-config, *vector-config, *database-config]
-    ports:
-      - "8115:8080"
-    depends_on:
-      - ollama
-      - chromadb
-    networks:
-      - sutazai-network
-    restart: unless-stopped
+  # LocalAGI Enhanced - Service removed
 
   # AutoGen (AG2)
   autogen:
@@ -961,27 +927,7 @@ services:
       - sutazai-network
     restart: unless-stopped
 
-  # BigAGI
-  bigagi:
-    container_name: sutazai-bigagi
-    image: ghcr.io/enricoros/big-agi:latest
-    environment:
-      <<: *common-variables
-      # BigAGI: OpenAI API via LiteLLM proxy (for OpenAI API compatibility)
-      OPENAI_API_BASE: http://litellm:4000/v1
-      OPENAI_API_KEY: sk-local
-      # Alternative: Direct Ollama connection
-      OLLAMA_API_BASE: http://ollama:11434
-      # Disable OpenAI API if using Ollama directly
-      # REACT_APP_OPENAI_API_KEY: ""
-    ports:
-      - "8106:3000"
-    depends_on:
-      - litellm
-      - ollama
-    networks:
-      - sutazai-network
-    restart: unless-stopped
+  # BigAGI - Service removed
 
   # OpenDevin
   opendevin:
@@ -1103,22 +1049,7 @@ services:
       - sutazai-network
     restart: unless-stopped
 
-  # LocalAGI Advanced
-  localagi-advanced:
-    container_name: sutazai-localagi-advanced
-    build:
-      context: ./docker/localagi
-      dockerfile: Dockerfile
-    environment:
-      <<: [*common-variables, *ollama-config, *vector-config, *database-config]
-    ports:
-      - "8103:8080"
-    depends_on:
-      - ollama
-      - chromadb
-    networks:
-      - sutazai-network
-    restart: unless-stopped
+  # LocalAGI Advanced - Service removed
 
   # AgentZero
   agentzero:
@@ -1176,7 +1107,7 @@ services:
     environment:
       <<: [*common-variables, *database-config, *vector-config, *ollama-config]
       # MCP Server specific config
-      BACKEND_API_URL: http://backend-agi:8000
+      BACKEND_API_URL: http://backend:8000
       OLLAMA_URL: http://ollama:11434
       CHROMADB_URL: http://chromadb:8000
       QDRANT_URL: http://qdrant:6333
@@ -1195,7 +1126,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      backend-agi:
+      backend:
         condition: service_started
       ollama:
         condition: service_started

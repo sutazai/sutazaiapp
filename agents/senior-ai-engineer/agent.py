@@ -89,7 +89,7 @@ class SeniorAIEngineerAgent(BaseAgent):
     
     def _train_model(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Train a new ML model"""
-        model_type = data.get("model_type", "neural_network")
+        model_type = data.get("model_type", "processing_network")
         dataset = data.get("dataset", "default")
         
         self.logger.info(f"Training {model_type} on {dataset}")

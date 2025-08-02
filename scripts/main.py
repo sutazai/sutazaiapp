@@ -23,7 +23,7 @@ logger = logging.getLogger("sutazai")
 
 # Import SutazAI components
 try:
-    from core.neural.model_controller import ModelController, generate_text
+    from core.processing.model_controller import ModelController, generate_text
 
     MODEL_CONTROLLER_AVAILABLE = True
 except ImportError:

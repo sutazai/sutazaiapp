@@ -10,15 +10,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements if exists
-COPY requirements-bigagi.txt* ./
-RUN if [ -f requirements-bigagi.txt ]; then pip install -r requirements-bigagi.txt; fi
+COPY requirements-# bigagi removed.txt* ./
+RUN if [ -f requirements-# bigagi removed.txt ]; then pip install -r requirements-# bigagi removed.txt; fi
 
 # Create necessary directories
 RUN mkdir -p /app/data /app/logs /app/workspace
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1
-ENV AGENT_NAME=bigagi
+ENV AGENT_NAME=# bigagi removed
 ENV OLLAMA_BASE_URL=http://ollama:11434
 
 # Health check
@@ -27,4 +27,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 
 EXPOSE 8510
 
-CMD ["python", "-m", "bigagi"]
+CMD ["python", "-m", "# bigagi removed"]

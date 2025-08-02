@@ -12,21 +12,21 @@
 
 ## Overview
 
-The SutazAI Autonomous AI Agent System is a comprehensive infrastructure that enables complete independence from external AI services. This system replicates and extends AI agent capabilities across your entire codebase, creating a self-contained, self-improving AGI/ASI platform.
+The SutazAI Autonomous AI Agent System is a comprehensive infrastructure that enables complete independence from external AI services. This system replicates and extends AI agent capabilities across your entire codebase, creating a self-contained, self-improving automation system/advanced automation platform.
 
 ### Key Features
 - **100% Local Operation**: All AI processing happens on your infrastructure using Ollama
 - **16+ Specialized Agents**: Each agent handles specific domains with expert-level capabilities
 - **Universal Agent Factory**: Dynamic agent creation based on requirements
 - **Redis-Based Communication**: High-performance inter-agent messaging
-- **Self-Learning Brain**: Continuous improvement through real interactions
+- **Self-Learning Coordinator**: Continuous improvement through real interactions
 - **Complete Autonomy**: No external API dependencies
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   SutazAI AGI Brain (Port 8900)             │
+│                   SutazAI automation system Coordinator (Port 8900)             │
 │                  Central Intelligence & Learning             │
 └─────────────────┬───────────────────────────┬───────────────┘
                   │                           │
@@ -49,7 +49,7 @@ The SutazAI Autonomous AI Agent System is a comprehensive infrastructure that en
 ## AI Agent Types
 
 ### 1. System Architecture Agents
-- **AGI System Architect**: Overall system design and optimization
+- **automation system System Architect**: Overall system design and optimization
 - **Infrastructure Manager**: Deployment and container management
 - **Resource Optimizer**: Performance and resource allocation
 
@@ -97,8 +97,8 @@ docker exec sutazai-ollama ollama pull llama2:latest
 docker exec sutazai-ollama ollama pull codellama:latest
 docker exec sutazai-ollama ollama pull deepseek-coder:latest
 
-# 3. Start AGI Brain
-docker-compose -f docker-compose-agi-brain.yml up -d
+# 3. Start automation system Coordinator
+docker-compose -f docker-compose-agi-coordinator.yml up -d
 
 # 4. Deploy Universal Agents
 docker-compose -f docker-compose-new-universal-agents.yml up -d
@@ -187,7 +187,7 @@ result = await controller.execute_workflow(workflow)
 
 ### Dashboard Access
 - **Main Dashboard**: http://localhost:8501 (Streamlit)
-- **AGI Brain**: http://localhost:8900
+- **automation system Coordinator**: http://localhost:8900
 - **Agent Registry**: http://localhost:9101/agents
 - **Health Status**: http://localhost:9101/health
 
@@ -209,7 +209,7 @@ curl http://localhost:9101/metrics
 ## Advanced Features
 
 ### 1. Self-Learning Capabilities
-The AGI Brain continuously learns from:
+The automation system Coordinator continuously learns from:
 - Agent interactions and outcomes
 - Workflow execution patterns
 - Error resolutions
@@ -269,16 +269,16 @@ class ClaudeReplacement:
 python scripts/export_knowledge.py
 
 # Import into local system
-python scripts/import_to_brain.py knowledge.json
+python scripts/import_to_coordinator.py knowledge.json
 ```
 
 ### Step 4: Continuous Improvement
 ```python
 # Enable learning mode
-brain.enable_continuous_learning()
+coordinator.enable_continuous_learning()
 
 # Monitor improvement
-metrics = brain.get_performance_metrics()
+metrics = coordinator.get_performance_metrics()
 print(f"Intelligence Level: {metrics['intelligence_level']}/10")
 ```
 

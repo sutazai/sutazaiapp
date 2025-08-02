@@ -1,14 +1,14 @@
 #!/bin/bash
-# Test deployment with Brain monitoring
+# Test deployment with Coordinator monitoring
 
-echo "🧠 Testing Deployment with Brain System..."
+echo "🧠 Testing Deployment with Coordinator System..."
 echo "========================================"
 echo ""
 
 cd /opt/sutazaiapp
 
 # Run deployment and capture output
-LOG_FILE="brain_deployment_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="coordinator_deployment_$(date +%Y%m%d_%H%M%S).log"
 
 echo "Starting deployment..."
 echo "Log file: $LOG_FILE"
@@ -18,33 +18,33 @@ echo ""
 timeout 60 bash scripts/deploy_complete_system.sh 2>&1 | tee "$LOG_FILE" &
 PID=$!
 
-# Monitor for Brain activity
-echo "Monitoring for Brain activity..."
+# Monitor for Coordinator activity
+echo "Monitoring for Coordinator activity..."
 sleep 5
 
-# Check Brain initialization
-if grep -q "Initializing Super Intelligent Brain Core System" "$LOG_FILE"; then
-    echo "✅ Brain initialized!"
+# Check Coordinator initialization
+if grep -q "Initializing Super Intelligent Coordinator Core System" "$LOG_FILE"; then
+    echo "✅ Coordinator initialized!"
     
-    # Check for Brain decisions
+    # Check for Coordinator decisions
     sleep 10
-    if grep -q "Brain decided on deployment strategy" "$LOG_FILE"; then
-        echo "✅ Brain is making deployment decisions!"
-        grep "Brain decided on deployment strategy" "$LOG_FILE"
+    if grep -q "Coordinator decided on deployment strategy" "$LOG_FILE"; then
+        echo "✅ Coordinator is making deployment decisions!"
+        grep "Coordinator decided on deployment strategy" "$LOG_FILE"
     fi
     
-    # Check Brain monitoring
-    if grep -q "Brain Status Dashboard" "$LOG_FILE"; then
-        echo "✅ Brain monitoring is active!"
+    # Check Coordinator monitoring
+    if grep -q "Coordinator Status Dashboard" "$LOG_FILE"; then
+        echo "✅ Coordinator monitoring is active!"
     fi
     
-    # Show Brain-related log entries
+    # Show Coordinator-related log entries
     echo ""
-    echo "Brain Activity Log:"
+    echo "Coordinator Activity Log:"
     echo "==================="
-    grep -E "🧠|Brain:" "$LOG_FILE" | head -20
+    grep -E "🧠|Coordinator:" "$LOG_FILE" | head -20
 else
-    echo "❌ Brain not initialized - checking deployment flow..."
+    echo "❌ Coordinator not initialized - checking deployment flow..."
     echo ""
     echo "Current deployment phase:"
     grep -E "Phase [0-9]:|Starting SutazAI" "$LOG_FILE" | tail -5

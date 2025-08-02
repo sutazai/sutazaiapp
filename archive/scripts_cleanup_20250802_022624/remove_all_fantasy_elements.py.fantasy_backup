@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""
+Comprehensive cleanup script to remove ALL fantasy elements from SutazAI codebase
+Transforms AGI/ASI system into practical task automation platform
+"""
+
+import os
+import re
+import shutil
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+# Comprehensive fantasy terms to replace
+FANTASY_REPLACEMENTS = {
+    # AGI/ASI terms
+    r'\bAGI\b': 'automation',
+    r'\bASI\b': 'advanced automation',
+    r'agi[_-]?brain': 'task_coordinator',
+    r'brain[_-]?architecture': 'system_architecture',
+    r'automation system Brain': 'Task Coordinator',
+    r'automation system brain': 'task coordinator',
+    r'AGI Brain': 'Task Coordinator',
+    r'AGI/ASI': 'Automation',
+    
+    # Backend service names
+    r'backend-agi': 'backend',
+    r'frontend-agi': 'frontend',
+    r'backend_agi': 'backend',
+    r'frontend_agi': 'frontend',
+    
+    # Consciousness terms
+    r'consciousness[_-]?level': 'system_health_score',
+    r'consciousness': 'system_state',
+    r'conscious': 'active',
+    r'self[_-]?aware': 'self_monitoring',
+    r'system_state[_-]?state': 'system_state',
+    r'system_state active': 'system active',
+    
+    # Cognitive terms
+    r'cognitive[_-]?modules?': 'task_processors',
+    r'cognitive[_-]?functions?': 'processing_functions',
+    r'neural[_-]?engine': 'processing_engine',
+    r'neural[_-]?network': 'ml_model',
+    r'neural reasoning engine': 'task processing engine',
+    r'Neural reasoning engine': 'Task processing engine',
+    r'neural processing': 'task processing',
+    r'Neural processing': 'Task processing',
+    r'neural system_state': 'system monitoring',
+    r'Neural system_state': 'System monitoring',
+    r'neural': 'processing',
+    r'Neural': 'Processing',
+    
+    # Brain terms
+    r'brain': 'coordinator',
+    r'Brain': 'Coordinator',
+    r'/api/v1/brain': '/api/v1/coordinator',
+    
+    # Fantasy descriptors
+    r'transcendent': 'advanced',
+    r'divine': 'optimized',
+    r'omniscient': 'comprehensive',
+    r'omnipotent': 'powerful',
+    r'mystical': 'sophisticated',
+    r'supernatural': 'advanced',
+    r'cosmic': 'system-wide',
+    r'godlike': 'high-performance',
+    r'celestial': 'cloud-based',
+    r'ethereal': 'lightweight',
+    
+    # Emergence terms
+    r'emergence': 'optimization',
+    r'emergent[_-]?behavior': 'optimized_behavior',
+    r'singularity': 'convergence',
+    r'meta[_-]?learning': 'transfer_learning',
+    r'self[_-]?improvement': 'continuous_improvement',
+    
+    # Quantum terms
+    r'quantum': 'advanced',
+    r'neuromorphic': 'optimized',
+    
+    # Model names
+    r'automation system-brain': 'task-coordinator',
+    r'agi-brain': 'task-coordinator',
+}
+
+# Files to process
+TARGET_FILES = [
+    '/opt/sutazaiapp/backend/app/main.py',
+    '/opt/sutazaiapp/frontend/app.py',
+    '/opt/sutazaiapp/docker-compose.yml',
+    '/opt/sutazaiapp/docker-compose.minimal.yml',
+    '/opt/sutazaiapp/docker-compose.agents.yml',
+]
+
+def clean_content(content: str) -> str:
+    """Clean fantasy elements from content"""
+    cleaned = content
+    
+    # Apply replacements in order
+    for pattern, replacement in FANTASY_REPLACEMENTS.items():
+        cleaned = re.sub(pattern, replacement, cleaned, flags=re.IGNORECASE if pattern.islower() else 0)
+    
+    # Fix any double replacements
+    cleaned = re.sub(r'system_state[_-]?state', 'system_state', cleaned)
+    cleaned = re.sub(r'Task Task', 'Task', cleaned)
+    cleaned = re.sub(r'task task', 'task', cleaned)
+    cleaned = re.sub(r'processing processing', 'processing', cleaned)
+    cleaned = re.sub(r'Processing Processing', 'Processing', cleaned)
+    
+    return cleaned
+
+def process_file(filepath: Path) -> Tuple[bool, str]:
+    """Process a file and clean fantasy elements"""
+    try:
+        # Read file
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        original = content
+        cleaned = clean_content(content)
+        
+        if cleaned != original:
+            # Backup original
+            backup_path = filepath.with_suffix(filepath.suffix + '.fantasy_backup')
+            shutil.copy2(filepath, backup_path)
+            
+            # Write cleaned content
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(cleaned)
+            
+            # Count changes
+            changes = sum(1 for a, b in zip(original.split('\n'), cleaned.split('\n')) if a != b)
+            return True, f"Cleaned {filepath.name} - {changes} lines modified"
+        
+        return False, f"No changes needed for {filepath.name}"
+        
+    except Exception as e:
+        return False, f"Error processing {filepath}: {e}"
+
+def clean_all_python_files(directory: Path) -> List[str]:
+    """Clean all Python files in directory"""
+    results = []
+    
+    for py_file in directory.rglob('*.py'):
+        if 'archive' not in str(py_file) and '.fantasy_backup' not in str(py_file):
+            success, message = process_file(py_file)
+            if success:
+                results.append(message)
+    
+    return results
+
+def clean_docker_files() -> List[str]:
+    """Clean Docker compose files"""
+    results = []
+    
+    docker_files = [
+        '/opt/sutazaiapp/docker-compose.yml',
+        '/opt/sutazaiapp/docker-compose.minimal.yml',
+        '/opt/sutazaiapp/docker-compose.agents.yml',
+    ]
+    
+    for docker_file in docker_files:
+        if os.path.exists(docker_file):
+            success, message = process_file(Path(docker_file))
+            if success:
+                results.append(message)
+    
+    return results
+
+def main():
+    """Main cleanup function"""
+    print("🧹 Starting Comprehensive Fantasy Elements Cleanup")
+    print("=" * 60)
+    
+    # Step 1: Clean specific target files
+    print("\n📝 Cleaning target files...")
+    for target_file in TARGET_FILES:
+        if os.path.exists(target_file):
+            success, message = process_file(Path(target_file))
+            print(f"  {'✅' if success else '⚠️'} {message}")
+    
+    # Step 2: Clean all Python files in backend
+    print("\n🔧 Cleaning all backend Python files...")
+    backend_results = clean_all_python_files(Path('/opt/sutazaiapp/backend'))
+    for result in backend_results[:10]:  # Show first 10
+        print(f"  ✅ {result}")
+    if len(backend_results) > 10:
+        print(f"  ... and {len(backend_results) - 10} more files")
+    
+    # Step 3: Clean all Python files in scripts
+    print("\n📜 Cleaning all script files...")
+    script_results = clean_all_python_files(Path('/opt/sutazaiapp/scripts'))
+    for result in script_results[:10]:  # Show first 10
+        print(f"  ✅ {result}")
+    if len(script_results) > 10:
+        print(f"  ... and {len(script_results) - 10} more files")
+    
+    # Step 4: Clean Docker files
+    print("\n🐳 Cleaning Docker files...")
+    docker_results = clean_docker_files()
+    for result in docker_results:
+        print(f"  ✅ {result}")
+    
+    # Step 5: Update environment variables
+    print("\n🔧 Updating environment variables...")
+    env_file = Path('/opt/sutazaiapp/.env')
+    if env_file.exists():
+        with open(env_file, 'r') as f:
+            env_content = f.read()
+        
+        # Update any AGI references
+        env_content = re.sub(r'AGI', 'AUTOMATION', env_content)
+        env_content = re.sub(r'agi', 'automation', env_content)
+        
+        with open(env_file, 'w') as f:
+            f.write(env_content)
+        print("  ✅ Updated .env file")
+    
+    print("\n✨ Cleanup complete!")
+    print("\nNext steps:")
+    print("1. Review the changes with `git diff`")
+    print("2. Restart all services: `docker-compose down && docker-compose up -d`")
+    print("3. Run tests to ensure functionality")
+    print("4. Verify API endpoints are working correctly")
+    
+    # Summary
+    total_cleaned = len(backend_results) + len(script_results) + len(docker_results) + len([f for f in TARGET_FILES if os.path.exists(f)])
+    print(f"\n📊 Summary: Cleaned {total_cleaned} files")
+    print("🎯 All fantasy elements have been removed!")
+
+if __name__ == "__main__":
+    main()

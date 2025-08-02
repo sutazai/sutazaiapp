@@ -105,8 +105,8 @@ ollama create sutazai_ai-agent-orchestrator -f ollama/models/ai-agent-orchestrat
 echo 'Building model for security-pentesting-specialist...'
 ollama create sutazai_security-pentesting-specialist -f ollama/models/security-pentesting-specialist.modelfile
 
-echo 'Building model for deep-learning-brain-manager...'
-ollama create sutazai_deep-learning-brain-manager -f ollama/models/deep-learning-brain-manager.modelfile
+echo 'Building model for deep-learning-coordinator-manager...'
+ollama create sutazai_deep-learning-coordinator-manager -f ollama/models/deep-learning-coordinator-manager.modelfile
 
 echo 'Building model for testing-qa-validator...'
 ollama create sutazai_testing-qa-validator -f ollama/models/testing-qa-validator.modelfile

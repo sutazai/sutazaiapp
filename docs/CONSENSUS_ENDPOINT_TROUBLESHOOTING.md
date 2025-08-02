@@ -51,7 +51,7 @@ curl -X POST "http://localhost:8000/api/v1/agents/consensus" \
   "consensus_type": "majority",
   "confidence": 0.85,
   "recommendations": [
-    "Neural consensus processing completed",
+    "Processing consensus processing completed",
     "Multi-agent collaboration successful", 
     "Consensus decision validated"
   ],
@@ -61,13 +61,13 @@ curl -X POST "http://localhost:8000/api/v1/agents/consensus" \
     "agent2": "agree", 
     "agent3": "agree"
   },
-  "neural_result": {
+  "processing_result": {
     "processed_data": {
       "prompt": "Should we implement caching optimization?",
       "agents": ["agent1", "agent2", "agent3"]
     },
     "processing_type": "consensus",
-    "consciousness_active": true,
+    "system_state_active": true,
     "reasoning_depth": 3,
     "pathways": []
   },

@@ -1,6 +1,6 @@
 #!/bin/bash
-# SutazAI Brain - One-Command Deployment Script
-# Deploys the complete 100% local AGI/ASI system
+# SutazAI Coordinator - One-Command Deployment Script
+# Deploys the complete 100% local automation/advanced automation system
 
 set -e
 
@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 # Configuration
 BRAIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="$(dirname "$BRAIN_DIR")"
-LOG_FILE="$BRAIN_DIR/logs/brain_deploy.log"
+LOG_FILE="$BRAIN_DIR/logs/coordinator_deploy.log"
 
 # Logging functions
 log() {
@@ -35,7 +35,7 @@ log_info() {
 
 # Create necessary directories
 create_directories() {
-    log "🗂️  Creating Brain directories..."
+    log "🗂️  Creating Coordinator directories..."
     mkdir -p "$BRAIN_DIR"/{logs,config,data,models/adapters}
     mkdir -p "$BRAIN_DIR"/agents/{dockerfiles,configs}
     mkdir -p "$BRAIN_DIR"/monitoring/{dashboards,alerts}
@@ -63,7 +63,7 @@ check_prerequisites() {
     # Check available resources
     local available_memory=$(free -g | awk '/^Mem:/{print $7}')
     if [ "$available_memory" -lt 8 ]; then
-        log_warn "Low available memory: ${available_memory}GB. Brain may experience performance issues."
+        log_warn "Low available memory: ${available_memory}GB. Coordinator may experience performance issues."
     fi
     
     log "✅ Prerequisites check passed"
@@ -77,8 +77,8 @@ init_git_repo() {
     
     if [ ! -d .git ]; then
         git init
-        git config user.name "SutazAI Brain"
-        git config user.email "brain@sutazai.local"
+        git config user.name "SutazAI Coordinator"
+        git config user.email "coordinator@sutazai.local"
         
         # Create .gitignore
         cat > .gitignore << EOF
@@ -96,18 +96,18 @@ models/*.gguf
 EOF
         
         git add .
-        git commit -m "Initial Brain commit"
+        git commit -m "Initial Coordinator commit"
     fi
     
     log "✅ Git repository initialized"
 }
 
-# Create Brain configuration
+# Create Coordinator configuration
 create_config() {
-    log "⚙️  Creating Brain configuration..."
+    log "⚙️  Creating Coordinator configuration..."
     
-    cat > "$BRAIN_DIR/config/brain_config.yaml" << EOF
-# SutazAI Brain Configuration
+    cat > "$BRAIN_DIR/config/coordinator_config.yaml" << EOF
+# SutazAI Coordinator Configuration
 # Auto-generated on $(date)
 
 # Hardware constraints (adjust based on your system)
@@ -142,15 +142,15 @@ redis_host: sutazai-redis
 qdrant_host: sutazai-qdrant
 chroma_host: sutazai-chromadb
 postgres_host: sutazai-postgresql
-brain_repo_path: /workspace/brain
+coordinator_repo_path: /workspace/coordinator
 EOF
     
     log "✅ Configuration created"
 }
 
-# Create Brain Dockerfile
-create_brain_dockerfile() {
-    log "🐳 Creating Brain Dockerfile..."
+# Create Coordinator Dockerfile
+create_coordinator_dockerfile() {
+    log "🐳 Creating Coordinator Dockerfile..."
     
     cat > "$BRAIN_DIR/Dockerfile" << 'EOF'
 FROM python:3.11-slim
@@ -170,7 +170,7 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy Brain code
+# Copy Coordinator code
 COPY . .
 
 # Create necessary directories
@@ -187,7 +187,7 @@ EXPOSE 8888
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8888/health || exit 1
 
-# Start Brain
+# Start Coordinator
 CMD ["python", "main.py"]
 EOF
     
@@ -306,17 +306,17 @@ EOF
     log "✅ Agent Dockerfiles created"
 }
 
-# Create docker-compose for Brain
+# Create docker-compose for Coordinator
 create_docker_compose() {
-    log "🐳 Creating Brain docker-compose.yml..."
+    log "🐳 Creating Coordinator docker-compose.yml..."
     
     cat > "$BRAIN_DIR/docker-compose.yml" << EOF
 version: '3.8'
 
 services:
-  brain:
+  coordinator:
     build: .
-    container_name: sutazai-brain
+    container_name: sutazai-coordinator
     restart: unless-stopped
     ports:
       - "8888:8888"
@@ -330,22 +330,22 @@ services:
     networks:
       - sutazai-network
     depends_on:
-      - brain-db-init
+      - coordinator-db-init
     deploy:
       resources:
         limits:
           cpus: '4'
           memory: 8G
 
-  brain-db-init:
+  coordinator-db-init:
     image: postgres:16-alpine
-    container_name: sutazai-brain-db-init
+    container_name: sutazai-coordinator-db-init
     environment:
       - PGHOST=sutazai-postgresql
       - PGUSER=sutazai
       - PGPASSWORD=\${POSTGRES_PASSWORD:-sutazai_password}
     volumes:
-      - ./sql/init_brain_db.sql:/init.sql
+      - ./sql/init_coordinator_db.sql:/init.sql
     networks:
       - sutazai-network
     command: >
@@ -354,8 +354,8 @@ services:
           echo 'Waiting for PostgreSQL...'
           sleep 2
         done
-        psql -h sutazai-postgresql -U sutazai -d postgres -c 'CREATE DATABASE IF NOT EXISTS sutazai_brain;'
-        psql -h sutazai-postgresql -U sutazai -d sutazai_brain -f /init.sql
+        psql -h sutazai-postgresql -U sutazai -d postgres -c 'CREATE DATABASE IF NOT EXISTS sutazai_coordinator;'
+        psql -h sutazai-postgresql -U sutazai -d sutazai_coordinator -f /init.sql
       "
     restart: "no"
 
@@ -373,8 +373,8 @@ create_db_init() {
     
     mkdir -p "$BRAIN_DIR/sql"
     
-    cat > "$BRAIN_DIR/sql/init_brain_db.sql" << 'EOF'
--- SutazAI Brain Database Schema
+    cat > "$BRAIN_DIR/sql/init_coordinator_db.sql" << 'EOF'
+-- SutazAI Coordinator Database Schema
 
 -- Memory audit table
 CREATE TABLE IF NOT EXISTS memory_audit (
@@ -447,33 +447,33 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'brain'
+  - job_name: 'coordinator'
     static_configs:
-      - targets: ['sutazai-brain:8888']
+      - targets: ['sutazai-coordinator:8888']
     metrics_path: '/metrics'
 EOF
     
     # Create a basic Grafana dashboard JSON
-    cat > "$BRAIN_DIR/monitoring/dashboards/brain_dashboard.json" << 'EOF'
+    cat > "$BRAIN_DIR/monitoring/dashboards/coordinator_dashboard.json" << 'EOF'
 {
   "dashboard": {
-    "title": "SutazAI Brain Dashboard",
+    "title": "SutazAI Coordinator Dashboard",
     "panels": [
       {
         "title": "Request Rate",
-        "targets": [{"expr": "rate(brain_requests_total[5m])"}]
+        "targets": [{"expr": "rate(coordinator_requests_total[5m])"}]
       },
       {
         "title": "Agent Performance",
-        "targets": [{"expr": "brain_agent_quality_score"}]
+        "targets": [{"expr": "coordinator_agent_quality_score"}]
       },
       {
         "title": "Memory Usage",
-        "targets": [{"expr": "brain_memory_entries_total"}]
+        "targets": [{"expr": "coordinator_memory_entries_total"}]
       },
       {
         "title": "Improvement Patches",
-        "targets": [{"expr": "brain_patches_created_total"}]
+        "targets": [{"expr": "coordinator_patches_created_total"}]
       }
     ]
   }
@@ -497,10 +497,10 @@ create_init_files() {
     
     # Create README
     cat > "$BRAIN_DIR/README.md" << EOF
-# SutazAI Brain - 100% Local AGI/ASI System
+# SutazAI Coordinator - 100% Local automation/advanced automation System
 
 ## Overview
-The Brain is a self-improving AGI/ASI system that orchestrates 25+ LLMs and 30+ specialized agents to solve complex tasks.
+The Coordinator is a self-improving automation/advanced automation system that orchestrates 25+ LLMs and 30+ specialized agents to solve complex tasks.
 
 ## Architecture
 - **Perception Layer**: Processes inputs and retrieves memories
@@ -516,21 +516,21 @@ The Brain is a self-improving AGI/ASI system that orchestrates 25+ LLMs and 30+ 
 \`\`\`
 
 ## API Endpoints
-- \`POST /process\`: Process a request through the Brain
+- \`POST /process\`: Process a request through the Coordinator
 - \`GET /health\`: Health check
 - \`GET /status\`: Detailed system status
 - \`GET /agents\`: List available agents
 - \`GET /memory/stats\`: Memory system statistics
 
 ## Configuration
-Edit \`config/brain_config.yaml\` to adjust:
+Edit \`config/coordinator_config.yaml\` to adjust:
 - Hardware limits
 - Model selection
 - Quality thresholds
 - Self-improvement settings
 
 ## Monitoring
-Access Grafana dashboard at http://localhost:3000/d/brain
+Access Grafana dashboard at http://localhost:3000/d/coordinator
 EOF
     
     log "✅ Initialization files created"
@@ -555,55 +555,55 @@ pull_ollama_models() {
     log "✅ Model pulling complete"
 }
 
-# Build and deploy Brain
-deploy_brain() {
-    log "🚀 Deploying Brain system..."
+# Build and deploy Coordinator
+deploy_coordinator() {
+    log "🚀 Deploying Coordinator system..."
     
     cd "$BRAIN_DIR"
     
-    # Build Brain image
-    log_info "Building Brain Docker image..."
+    # Build Coordinator image
+    log_info "Building Coordinator Docker image..."
     docker-compose build
     
-    # Start Brain services
-    log_info "Starting Brain services..."
+    # Start Coordinator services
+    log_info "Starting Coordinator services..."
     docker-compose up -d
     
-    # Wait for Brain to initialize
-    log_info "Waiting for Brain to initialize..."
+    # Wait for Coordinator to initialize
+    log_info "Waiting for Coordinator to initialize..."
     local max_attempts=30
     local attempt=0
     
     while [ $attempt -lt $max_attempts ]; do
         if curl -f http://localhost:8888/health >/dev/null 2>&1; then
-            log "✅ Brain is healthy and ready!"
+            log "✅ Coordinator is healthy and ready!"
             break
         fi
         attempt=$((attempt + 1))
-        log_info "Waiting for Brain... (attempt $attempt/$max_attempts)"
+        log_info "Waiting for Coordinator... (attempt $attempt/$max_attempts)"
         sleep 5
     done
     
     if [ $attempt -eq $max_attempts ]; then
-        log_error "Brain failed to start properly"
-        docker-compose logs brain
+        log_error "Coordinator failed to start properly"
+        docker-compose logs coordinator
         exit 1
     fi
 }
 
 # Show deployment summary
 show_summary() {
-    log "🎉 Brain deployment complete!"
+    log "🎉 Coordinator deployment complete!"
     echo
     echo "========================================="
-    echo "🧠 SutazAI Brain is now running!"
+    echo "🧠 SutazAI Coordinator is now running!"
     echo "========================================="
     echo
     echo "📡 API Endpoint: http://localhost:8888"
     echo "📊 Status: http://localhost:8888/status"
     echo "🤖 Agents: http://localhost:8888/agents"
     echo
-    echo "🔧 Configuration: $BRAIN_DIR/config/brain_config.yaml"
+    echo "🔧 Configuration: $BRAIN_DIR/config/coordinator_config.yaml"
     echo "📝 Logs: $BRAIN_DIR/logs/"
     echo
     echo "🚀 Quick test:"
@@ -611,13 +611,13 @@ show_summary() {
     echo "     -H 'Content-Type: application/json' \\"
     echo "     -d '{\"input\": \"Write a hello world function in Python\"}'"
     echo
-    echo "💡 The Brain will now continuously learn and improve itself!"
+    echo "💡 The Coordinator will now continuously learn and improve itself!"
     echo "========================================="
 }
 
 # Main deployment flow
 main() {
-    log "🧠 Starting SutazAI Brain Deployment"
+    log "🧠 Starting SutazAI Coordinator Deployment"
     
     # Create log directory first
     mkdir -p "$BRAIN_DIR/logs"
@@ -627,7 +627,7 @@ main() {
     check_prerequisites
     init_git_repo
     create_config
-    create_brain_dockerfile
+    create_coordinator_dockerfile
     create_requirements
     create_agent_dockerfiles
     create_docker_compose
@@ -635,7 +635,7 @@ main() {
     create_monitoring
     create_init_files
     pull_ollama_models
-    deploy_brain
+    deploy_coordinator
     show_summary
 }
 

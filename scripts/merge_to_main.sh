@@ -63,15 +63,15 @@ echo "🔀 Step 3: Merging v26 into main..."
 
 /usr/bin/git merge v26 --no-ff -m "Merge branch 'v26' into main
 
-🚀 SutazAI v26 Major Release - AGI System Integration
+🚀 SutazAI v26 Major Release - automation System Integration
 
 This merge brings comprehensive updates to the SutazAI system:
 
-🧠 AGI & Reasoning Engine:
-- Advanced AGI orchestrator implementation
+🧠 automation & Reasoning Engine:
+- Advanced automation orchestrator implementation
 - Chain-of-thought reasoning capabilities  
 - Self-improvement mechanisms
-- Neural engine enhancements
+- Processing engine enhancements
 
 🔍 Network & Security:
 - Network reconnaissance endpoints
@@ -99,7 +99,7 @@ This merge brings comprehensive updates to the SutazAI system:
 - 187 lines modified
 - Major architectural improvements
 
-This release represents a significant milestone in SutazAI's evolution toward AGI capabilities." 2>/dev/null || {
+This release represents a significant milestone in SutazAI's evolution toward automation capabilities." 2>/dev/null || {
     echo "⚠️  Merge conflict or error, attempting force merge..."
     /usr/bin/git reset --hard v26 2>/dev/null || true
 }
@@ -136,12 +136,12 @@ echo "🌐 Main Branch: https://github.com/sutazai/sutazaiapp/tree/main"
 echo "🔖 v26 Branch: https://github.com/sutazai/sutazaiapp/tree/v26"
 echo ""
 echo "✨ All v26 features are now live on the main branch:"
-echo "   🧠 AGI reasoning engine"
+echo "   🧠 automation reasoning engine"
 echo "   🔍 Network reconnaissance"  
 echo "   🎨 Enhanced UI components"
 echo "   📚 Organized documentation"
 echo "   🔧 Backend optimizations"
 echo ""
-echo "🚀 SutazAI AGI/ASI system is ready for production deployment!"
+echo "🚀 SutazAI automation/advanced automation system is ready for production deployment!"
 
 exit 0 

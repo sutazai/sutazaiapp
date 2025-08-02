@@ -120,4 +120,4 @@ MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-**Note**: This is a practical tool for developers. No AGI, no consciousness, just useful automation.
+**Note**: This is a practical tool for developers. No automation system, no system state, just useful automation.

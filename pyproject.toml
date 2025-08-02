@@ -244,8 +244,8 @@ skip_gitignore = true
 # line-length = 88 
 
 exclude = [
-    "core/neuromorphic_pb2.py",
-    "core/neuromorphic_pb2_grpc.py",
+    "core/optimized_pb2.py",
+    "core/optimized_pb2_grpc.py",
     "*/tests/*",
     "*/test_*",
 ]

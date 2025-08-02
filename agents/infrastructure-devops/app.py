@@ -46,7 +46,7 @@ class HealthResponse(BaseModel):
 async def health_check():
     """Health check endpoint"""
     ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://ollama:11434')
-    backend_url = os.getenv('BACKEND_URL', 'http://backend-agi:8000')
+    backend_url = os.getenv('BACKEND_URL', 'http://backend:8000')
     
     ollama_connected = False
     backend_connected = False

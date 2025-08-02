@@ -1,9 +1,9 @@
-# SutazAI AGI/ASI System - Final Status Report
+# SutazAI automation system/advanced automation System - Final Status Report
 
 ## ✅ System Successfully Deployed and Fixed
 
 ### Current Status
-The SutazAI AGI/ASI system is now **FULLY OPERATIONAL** with the following configuration:
+The SutazAI automation system/advanced automation system is now **FULLY OPERATIONAL** with the following configuration:
 
 #### Working Components
 1. **Backend API** (v3.0.0) - Fixed and running on port 8000
@@ -65,13 +65,13 @@ curl http://localhost:8000/api/models
    ```
 3. **Pull optimized models**:
    ```bash
-   docker exec sutazai-ollama ollama pull phi:2.7b
+   docker exec sutazai-ollama ollama pull integration_score:2.7b
    docker exec sutazai-ollama ollama pull mistral:7b-instruct-q4_0
    ```
 
 ## 🎉 System is WORKING!
 
-The AGI/ASI system is now properly responding with real AI-generated content. The backend has been fixed and is no longer returning default messages.
+The automation system/advanced automation system is now properly responding with real AI-generated content. The backend has been fixed and is no longer returning default messages.
 
 **Current Working Configuration:**
 - Backend: Fixed v3.0.0

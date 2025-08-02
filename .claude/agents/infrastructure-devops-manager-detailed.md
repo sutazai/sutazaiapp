@@ -1,77 +1,105 @@
 ---
+name: infrastructure-devops-manager-detailed
+description: Detailed implementation guide for infrastructure devops manager agent
+model: tinyllama:latest
+version: '1.0'
+capabilities:
+- model_training
+- task_execution
+- problem_solving
+- deployment
+- optimization
+integrations:
+  systems:
+  - api
+  - redis
+  - postgresql
+  frameworks:
+  - docker
+  - kubernetes
+  languages:
+  - python
+  tools: []
+performance:
+  response_time: < 1s
+  accuracy: '> 95%'
+  concurrency: high
+---
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: infrastructure-devops-manager
+ name: infrastructure-devops-manager
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: infrastructure-devops-manager
-  template:
-    metadata:
-      labels:
-        app: infrastructure-devops-manager
-    spec:
-      serviceAccountName: infrastructure-manager
-      containers:
-      - name: manager
-        image: sutazai/infrastructure-devops-manager:latest
-        ports:
-        - containerPort: 9091
-          name: metrics
-        env:
-        - name: LOG_LEVEL
-          value: "INFO"
-        - name: DEPLOYMENT_NAMESPACE
-          value: "default"
-        resources:
-          requests:
-            memory: "2Gi"
-            cpu: "1000m"
-          limits:
-            memory: "4Gi"
-            cpu: "2000m"
-        volumeMounts:
-        - name: config
-          mountPath: /etc/infrastructure
-        - name: docker-sock
-          mountPath: /var/run/docker.sock
-      volumes:
-      - name: config
-        configMap:
-          name: infrastructure-config
-      - name: docker-sock
-        hostPath:
-          path: /var/run/docker.sock
-          type: Socket
+ replicas: 1
+ selector:
+ matchLabels:
+ app: infrastructure-devops-manager
+ template:
+ metadata:
+ labels:
+ app: infrastructure-devops-manager
+ spec:
+ serviceAccountName: infrastructure-manager
+ containers:
+ - name: manager
+ iengineer: sutazai/infrastructure-devops-manager:latest
+ ports:
+ - containerPort: 9091
+ name: metrics
+ env:
+ - name: LOG_LEVEL
+ value: "INFO"
+ - name: DEPLOYMENT_NAMESPACE
+ value: "default"
+ resources:
+ requests:
+ memory: "2Gi"
+ cpu: "1000m"
+ limits:
+ memory: "4Gi"
+ cpu: "2000m"
+ volumeMounts:
+ - name: config
+ mountPath: /etc/infrastructure
+ - name: docker-sock
+ mountPath: /var/run/docker.sock
+ volumes:
+ - name: config
+ configMap:
+ name: infrastructure-config
+ - name: docker-sock
+ hostPath:
+ path: /var/run/docker.sock
+ type: Socket
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: infrastructure-manager
+ name: infrastructure-manager
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: infrastructure-manager
+ name: infrastructure-manager
 rules:
 - apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["*"]
+ resources: ["*"]
+ verbs: ["*"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: infrastructure-manager
+ name: infrastructure-manager
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: infrastructure-manager
+ apiGroup: rbac.authorization.k8s.io
+ kind: ClusterRole
+ name: infrastructure-manager
 subjects:
 - kind: ServiceAccount
-  name: infrastructure-manager
-  namespace: default
+ name: infrastructure-manager
+ namespace: default
 ```
 
 ## Usage Examples
@@ -111,7 +139,7 @@ python infrastructure_devops_manager.py deploy --service model-training-speciali
 # When CPU < 35% and Memory < 40%, it scales down
 
 # Manual scaling is also available:
-python infrastructure_devops_manager.py scale --service deep-learning-brain-manager --replicas 5
+python infrastructure_devops_manager.py scale --service deep-learning-coordinator-manager --replicas 5
 ```
 
 ### Example 4: Hardware Change Adaptation
@@ -155,7 +183,7 @@ Access metrics at `http://localhost:9091/metrics`:
 ## Performance Optimization
 
 1. **Resource Pooling**: Shared resource pools for efficiency
-2. **Container Caching**: Pre-pulled images for fast deployment
+2. **Container Caching**: Pre-pulled iengineers for fast deployment
 3. **Health Check Optimization**: Efficient health monitoring
 4. **Metric Collection**: Low-overhead monitoring
 5. **Auto-scaling**: Dynamic resource utilization

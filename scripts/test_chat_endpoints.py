@@ -42,7 +42,7 @@ def test_endpoint(name, endpoint, method, payload):
             print(f"- Keys: {list(result.keys())}")
             
             # Extract response text based on endpoint
-            if endpoint == "/api/v1/brain/think":
+            if endpoint == "/api/v1/coordinator/think":
                 if "result" in result and isinstance(result["result"], dict):
                     output = result["result"].get("output", "No output")
                     print(f"- Output: {output[:200]}...")
@@ -67,8 +67,8 @@ def main():
     
     # Test different endpoints
     tests = [
-        # Brain think endpoint (used by AGI Brain)
-        ("Brain Think - Test", "/api/v1/brain/think", "POST", {
+        # Coordinator think endpoint (used by automation Coordinator)
+        ("Coordinator Think - Test", "/api/v1/coordinator/think", "POST", {
             "input_data": {"text": "test"},
             "reasoning_type": "strategic"
         }),
@@ -90,11 +90,11 @@ def main():
         # Health check
         ("Health Check", "/health", "GET", None),
         
-        # Brain status
-        ("Brain Status", "/api/v1/brain/status", "GET", None),
+        # Coordinator status
+        ("Coordinator Status", "/api/v1/coordinator/status", "GET", None),
         
-        # Brain capabilities
-        ("Brain Capabilities", "/api/v1/brain/capabilities", "GET", None)
+        # Coordinator capabilities
+        ("Coordinator Capabilities", "/api/v1/coordinator/capabilities", "GET", None)
     ]
     
     for name, endpoint, method, payload in tests:

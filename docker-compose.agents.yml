@@ -148,5 +148,5 @@ services:
 
 networks:
   sutazai-minimal:
-    name: sutazaiapp_sutazai-minimal
+    name: sutazaiapp_sutazai-network
     external: true

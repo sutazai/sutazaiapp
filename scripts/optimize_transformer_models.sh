@@ -137,7 +137,7 @@ if [ "$AUTO_DOWNLOAD" = true ] || [ ! -z "$MODEL_ID" ]; then
     
     # Prepare the download command
     DOWNLOADER_CMD="python3 -c \"
-from core.neural.model_downloader import EnterpriseModelDownloader;
+from core.processing.model_downloader import EnterpriseModelDownloader;
 downloader = EnterpriseModelDownloader();
 "
     
@@ -150,7 +150,7 @@ downloader = EnterpriseModelDownloader();
     else
         # If no specific model_id, use the optimal model for E5-2640
         DOWNLOADER_CMD+="
-from core.neural.model_downloader import get_optimal_model_for_e5_2640;
+from core.processing.model_downloader import get_optimal_model_for_e5_2640;
 model_id = get_optimal_model_for_e5_2640();
 print(f'Auto-selecting optimal model for E5-2640: {model_id}');
 path = downloader.get_model(model_id, force_download=$FORCE_DOWNLOAD);
@@ -194,7 +194,7 @@ if [[ $MODEL_TYPE == "llama" || $MODEL_PATH == *"llama"* || $MODEL_PATH == *"Lla
     
     # Run the Python script with Llama-specific options
     log "Starting optimization for Llama model..."
-    python3 -m core.neural.transformer_optimizer --model "$MODEL_PATH" \
+    python3 -m core.processing.transformer_optimizer --model "$MODEL_PATH" \
         --output "$OUTPUT_DIR" \
         --model_type llama \
         --threads $THREADS \
@@ -204,7 +204,7 @@ if [[ $MODEL_TYPE == "llama" || $MODEL_PATH == *"llama"* || $MODEL_PATH == *"Lla
 else
     # Run the Python script for standard transformer models
     log "Starting optimization for transformer model..."
-    python3 -m core.neural.transformer_optimizer --model "$MODEL_PATH" \
+    python3 -m core.processing.transformer_optimizer --model "$MODEL_PATH" \
         --output "$OUTPUT_DIR" \
         --model_type transformer \
         --threads $THREADS \
@@ -245,7 +245,7 @@ if [ $? -eq 0 ]; then
     
     if [ "$MODEL_TYPE" == "llama" ]; then
         log "To use the optimized Llama model:"
-        log "python3 -c 'from core.neural.llama_utils import get_optimized_model; model = get_optimized_model(\"$OUTPUT_DIR/llama_optimized_config.json\")'"
+        log "python3 -c 'from core.processing.llama_utils import get_optimized_model; model = get_optimized_model(\"$OUTPUT_DIR/llama_optimized_config.json\")'"
     else
         log "To use the optimized transformer model, load from: $OUTPUT_DIR"
     fi

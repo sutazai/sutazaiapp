@@ -79,7 +79,7 @@ Your system was experiencing:
 ```bash
 ./deploy.sh
 ```
-- Complete AGI/ASI system
+- Complete automation system/advanced automation system
 - All AI agents and services
 - Maximum functionality (requires 32GB+ RAM)
 
@@ -201,7 +201,7 @@ docker system prune -f
 - Share state via Redis/PostgreSQL
 
 ### Vertical Scaling (More Resources)
-- 32GB+ RAM for full AGI system
+- 32GB+ RAM for full automation system system
 - NVMe SSD for model storage
 - GPU for accelerated inference
 

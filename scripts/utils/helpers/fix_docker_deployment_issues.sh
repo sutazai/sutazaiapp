@@ -70,7 +70,7 @@ echo "Testing network connectivity..."
 
 # Test Ollama connectivity
 echo -n "Testing Ollama API: "
-if docker exec sutazai-agi-brain wget -q -O- http://ollama:11434/api/tags >/dev/null 2>&1; then
+if docker exec sutazai-task_coordinator wget -q -O- http://ollama:11434/api/tags >/dev/null 2>&1; then
     echo "✓ OK"
 else
     echo "✗ FAILED"
@@ -78,7 +78,7 @@ fi
 
 # Test Redis connectivity
 echo -n "Testing Redis: "
-if docker exec sutazai-agi-brain redis-cli -h redis -a ${REDIS_PASSWORD:-redis_password} ping >/dev/null 2>&1; then
+if docker exec sutazai-task_coordinator redis-cli -h redis -a ${REDIS_PASSWORD:-redis_password} ping >/dev/null 2>&1; then
     echo "✓ OK"
 else
     echo "✗ FAILED"
@@ -86,7 +86,7 @@ fi
 
 # Test PostgreSQL connectivity
 echo -n "Testing PostgreSQL: "
-if docker exec sutazai-agi-brain pg_isready -h postgres -U ${POSTGRES_USER:-sutazai} >/dev/null 2>&1; then
+if docker exec sutazai-task_coordinator pg_isready -h postgres -U ${POSTGRES_USER:-sutazai} >/dev/null 2>&1; then
     echo "✓ OK"
 else
     echo "✗ FAILED"

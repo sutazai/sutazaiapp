@@ -4,7 +4,7 @@
 
 ✅ **All 38 AI agents are properly configured and available for use!**
 
-The SutazAI AGI/ASI Autonomous System now has a complete ecosystem of specialized AI agents, each with specific capabilities and expertise areas. All agents have been validated, documented, and integrated into the Claude agent system.
+The SutazAI automation system/advanced automation automation system now has a complete ecosystem of specialized AI agents, each with specific capabilities and expertise areas. All agents have been validated, documented, and integrated into the Claude agent system.
 
 ## Agent Statistics
 
@@ -25,7 +25,7 @@ The SutazAI AGI/ASI Autonomous System now has a complete ecosystem of specialize
 ### 2. Agent Categories
 
 #### Core System Agents (5)
-- `agi-system-architect` - AGI system design and architecture
+- `agi-system-architect` - automation system system design and architecture
 - `ai-agent-orchestrator` - Multi-agent workflow coordination
 - `autonomous-system-controller` - Autonomous system operations
 - `deployment-automation-master` - Deployment and reliability

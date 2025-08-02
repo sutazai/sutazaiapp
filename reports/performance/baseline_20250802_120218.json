@@ -1,0 +1,178 @@
+{
+  "timestamp": "2025-08-02T10:02:18Z",
+  "system": {
+    "cpu_usage_percent": 9.6,
+    "memory_total_bytes": 16775139328,
+    "memory_used_bytes": 5064024064,
+    "memory_percent": 30.18,
+    "load_average": " 0.09, 0.30, 0.33"
+  },
+  "containers": {
+    "stats": 
+[
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "3044b00a0a83",
+    "ID": "3044b00a0a83",
+    "MemPerc": "10.62%",
+    "MemUsage": "27.2MiB / 256MiB",
+    "Name": "sutazai-senior-ai-engineer",
+    "NetIO": "11.9MB / 269kB",
+    "PIDs": "3"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.27%",
+    "Container": "df1bc114d07e",
+    "ID": "df1bc114d07e",
+    "MemPerc": "10.78%",
+    "MemUsage": "27.59MiB / 256MiB",
+    "Name": "sutazai-deployment-automation-master",
+    "NetIO": "11.9MB / 247kB",
+    "PIDs": "3"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "9fb4dbb7d4e0",
+    "ID": "9fb4dbb7d4e0",
+    "MemPerc": "10.81%",
+    "MemUsage": "27.68MiB / 256MiB",
+    "Name": "sutazai-testing-qa-validator",
+    "NetIO": "12MB / 319kB",
+    "PIDs": "3"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.17%",
+    "Container": "14fc386fae23",
+    "ID": "14fc386fae23",
+    "MemPerc": "10.89%",
+    "MemUsage": "27.88MiB / 256MiB",
+    "Name": "sutazai-infrastructure-devops-manager",
+    "NetIO": "11.9MB / 247kB",
+    "PIDs": "3"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.18%",
+    "Container": "da1b81a2433d",
+    "ID": "da1b81a2433d",
+    "MemPerc": "10.93%",
+    "MemUsage": "27.97MiB / 256MiB",
+    "Name": "sutazai-ollama-integration-specialist",
+    "NetIO": "11.9MB / 243kB",
+    "PIDs": "3"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "e04122dd3229",
+    "ID": "e04122dd3229",
+    "MemPerc": "3.73%",
+    "MemUsage": "19.12MiB / 512MiB",
+    "Name": "sutazai-ai-engineer",
+    "NetIO": "287kB / 288kB",
+    "PIDs": "2"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.18%",
+    "Container": "056548fefac6",
+    "ID": "056548fefac6",
+    "MemPerc": "3.79%",
+    "MemUsage": "19.39MiB / 512MiB",
+    "Name": "sutazai-qa-validator",
+    "NetIO": "287kB / 288kB",
+    "PIDs": "2"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "65b99cc1490e",
+    "ID": "65b99cc1490e",
+    "MemPerc": "16.92%",
+    "MemUsage": "86.63MiB / 512MiB",
+    "Name": "sutazai-frontend-minimal",
+    "NetIO": "106MB / 1.42MB",
+    "PIDs": "5"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "f105b2323ac7",
+    "ID": "f105b2323ac7",
+    "MemPerc": "7.69%",
+    "MemUsage": "39.38MiB / 512MiB",
+    "Name": "sutazai-code-improver",
+    "NetIO": "237kB / 240kB",
+    "PIDs": "2"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.42%",
+    "Container": "b21ea9d84587",
+    "ID": "b21ea9d84587",
+    "MemPerc": "4.67%",
+    "MemUsage": "47.81MiB / 1GiB",
+    "Name": "sutazai-backend-minimal",
+    "NetIO": "1.04MB / 734kB",
+    "PIDs": "5"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "ca91cc9e88f6",
+    "ID": "ca91cc9e88f6",
+    "MemPerc": "3.91%",
+    "MemUsage": "20.03MiB / 512MiB",
+    "Name": "sutazai-postgres-minimal",
+    "NetIO": "3.59kB / 672B",
+    "PIDs": "6"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.33%",
+    "Container": "23e429e20928",
+    "ID": "23e429e20928",
+    "MemPerc": "3.16%",
+    "MemUsage": "8.078MiB / 256MiB",
+    "Name": "sutazai-redis-minimal",
+    "NetIO": "3.59kB / 672B",
+    "PIDs": "6"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "8ceca76dd586",
+    "ID": "8ceca76dd586",
+    "MemPerc": "0.34%",
+    "MemUsage": "13.86MiB / 4GiB",
+    "Name": "sutazai-ollama-minimal",
+    "NetIO": "63.9kB / 81.9kB",
+    "PIDs": "9"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.01%",
+    "Container": "f0e75554d3de",
+    "ID": "f0e75554d3de",
+    "MemPerc": "6.20%",
+    "MemUsage": "991.5MiB / 15.62GiB",
+    "Name": "buildx_buildkit_sutazai-builder0",
+    "NetIO": "1.01GB / 9.31MB",
+    "PIDs": "18"
+  }
+]
+  },
+  "api_performance": {
+    "health_check_ms": 194.081000,
+    "docs_load_ms": 1.282000,
+    "list_agents_ms": .938000,
+    "ollama_inference_ms": 2717.666680000,
+    "postgres_query_ms": 52.713778000,
+    "redis_ping_ms": 39.859454000
+  },
+  "service_availability": {
+    "postgres": true,

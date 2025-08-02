@@ -3,11 +3,11 @@
 # Updated: 2025-08-01 14:31:24
 
 
-## Core AGI/ASI
+## Core automation/advanced automation
 - agi-system-architect
 - agi-system-validator
 - autonomous-system-controller
-- consciousness-emergence-monitor
+- system_state-emergence-monitor
 
 ## Orchestration
 - agentzero-coordinator
@@ -33,12 +33,12 @@
 - resource-visualiser
 
 ## AI/ML Core
-- deep-learning-brain-architect
-- deep-learning-brain-manager
-- deep-local-brain-builder
+- deep-learning-coordinator-architect
+- deep-learning-coordinator-manager
+- deep-local-coordinator-builder
 - model-training-specialist
 - multi-modal-fusion-coordinator
-- neural-architecture-search
+- processing-architecture-search
 - symbolic-reasoning-engine
 
 ## Memory/Knowledge
@@ -69,7 +69,7 @@
 - federated-learning-coordinator
 - garbage-collector-coordinator
 - genetic-algorithm-tuner
-- quantum-computing-optimizer
+- advanced-computing-optimizer
 - system-optimizer-reorganizer
 - transformers-migration-specialist
 

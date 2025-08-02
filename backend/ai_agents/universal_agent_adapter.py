@@ -96,7 +96,7 @@ class UniversalAgentAdapter:
             "preferred_models": [
                 "ollama/llama2:latest",
                 "ollama/mistral:latest",
-                "ollama/neural-chat:latest",
+                "ollama/processing-chat:latest",
                 "gpt-3.5-turbo",
                 "gpt-4"
             ]

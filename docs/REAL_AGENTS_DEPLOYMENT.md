@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide provides complete automation for deploying the SutazAI AGI/ASI system with **real AI agents only**. No mock implementations - everything is functional and production-ready.
+This guide provides complete automation for deploying the SutazAI automation system/advanced automation system with **real AI agents only**. No mock implementations - everything is functional and production-ready.
 
 ## 🚀 Quick Start (Automated)
 

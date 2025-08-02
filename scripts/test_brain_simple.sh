@@ -1,5 +1,5 @@
 #!/bin/bash
-# Simple test to check if Brain is working
+# Simple test to check if Coordinator is working
 
 # Change to project directory
 cd /opt/sutazaiapp
@@ -8,12 +8,12 @@ cd /opt/sutazaiapp
 # and go directly to our main function
 bash -c '
 source scripts/deploy_complete_system.sh
-echo "🧠 Testing Brain System Directly..."
+echo "🧠 Testing Coordinator System Directly..."
 echo "================================="
 echo ""
 
-# Initialize Brain
-initialize_super_brain
+# Initialize Coordinator
+initialize_super_coordinator
 
 echo ""
 echo "🧠 Testing System Analysis..."
@@ -26,6 +26,6 @@ decision=$(make_intelligent_decision "deployment_strategy" "$state")
 echo "Decision: $decision"
 
 echo ""
-echo "🧠 Testing Docker Brain..."
+echo "🧠 Testing Docker Coordinator..."
 ensure_docker_running_perfectly
 '

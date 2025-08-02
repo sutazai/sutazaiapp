@@ -1,6 +1,6 @@
 # AI Agent Interface System
 
-A comprehensive interface system for managing and coordinating all 38 AI agents in the SutazAI AGI/ASI system. This system provides universal client libraries, agent discovery, workflow orchestration, real-time communication, health monitoring, and complete API wrappers.
+A comprehensive interface system for managing and coordinating all 38 AI agents in the SutazAI automation system/advanced automation system. This system provides universal client libraries, agent discovery, workflow orchestration, real-time communication, health monitoring, and complete API wrappers.
 
 ## 🚀 Quick Start
 
@@ -207,8 +207,8 @@ result = await wrapper.execute("custom task")
 The system supports all 38 specialized AI agents:
 
 ### Core System Agents
-- **AGI System Architect**: System design and architecture
-- **Autonomous System Controller**: Autonomous decision making
+- **automation system System Architect**: System design and architecture
+- **automation system Controller**: Autonomous decision making
 - **AI Agent Orchestrator**: Multi-agent coordination
 
 ### Infrastructure & DevOps
@@ -220,7 +220,7 @@ The system supports all 38 specialized AI agents:
 - **Ollama Integration Specialist**: Local LLM management
 - **LiteLLM Proxy Manager**: API proxy management
 - **Senior AI Engineer**: ML architecture and RAG systems
-- **Deep Learning Brain Manager**: Neural network evolution
+- **Deep Learning Coordinator Manager**: Processing network evolution
 
 ### Development Specialists
 - **Code Generation Improver**: Code quality analysis
@@ -283,7 +283,7 @@ export MAX_RETRIES=3
   "agents": [
     {
       "id": "agi-system-architect",
-      "name": "AGI System Architect",
+      "name": "automation system System Architect",
       "endpoint": "http://localhost:8001",
       "capabilities": ["system_design", "architecture_optimization"],
       "priority": "critical"
@@ -720,4 +720,4 @@ For support and questions:
 
 ---
 
-Built with ❤️ for the SutazAI AGI/ASI Autonomous System
+Built with ❤️ for the SutazAI automation system/advanced automation automation system

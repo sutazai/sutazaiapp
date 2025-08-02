@@ -1,5 +1,5 @@
 """
-Unified Orchestration API for SutazAI AGI/ASI System
+Unified Orchestration API for SutazAI automation/advanced automation System
 ===================================================
 
 A comprehensive FastAPI-based REST API that provides unified access to the entire

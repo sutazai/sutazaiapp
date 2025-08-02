@@ -31,16 +31,16 @@ spec:
     - protocol: UDP
       port: 53
 ---
-# Brain Core network policy
+# Coordinator Core network policy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: brain-core-network-policy
+  name: coordinator-core-network-policy
   namespace: sutazai-core
 spec:
   podSelector:
     matchLabels:
-      app: brain-core
+      app: coordinator-core
   policyTypes:
   - Ingress
   - Egress

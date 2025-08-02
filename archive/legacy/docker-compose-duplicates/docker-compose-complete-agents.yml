@@ -6,7 +6,7 @@ networks:
 
 volumes:
   autogpt_data:
-  localagi_data:
+  # localagi_data (removed):
   tabby_data:
   semgrep_data:
   browser_data:
@@ -15,7 +15,7 @@ volumes:
   finrobot_data:
   gpt_engineer_data:
   aider_data:
-  bigagi_data:
+  # bigagi_data (removed):
   agentzero_data:
   langflow_data:
   dify_data:
@@ -80,14 +80,14 @@ services:
       retries: 3
 
   # LocalAGI (Autonomous AI Orchestration)
-  localagi:
-    image: mudler/localagi:latest
+  # LocalAGI service removed
+    image: mudler/# LocalAGI service removed
     container_name: sutazai-localagi
     restart: unless-stopped
     ports:
       - "8081:8080"
     volumes:
-      - localagi_data:/data
+      - # localagi_data (removed):/data
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
     networks:

@@ -1,5 +1,5 @@
 """
-AGI Brain - Central Intelligence Coordinator for SutazAI
+automation Coordinator - Central Intelligence Coordinator for SutazAI
 This module serves as the main reasoning and decision-making center
 """
 import asyncio
@@ -12,7 +12,7 @@ import json
 logger = logging.getLogger(__name__)
 
 class ReasoningType(Enum):
-    """Types of reasoning the AGI can perform"""
+    """Types of reasoning the automation can perform"""
     DEDUCTIVE = "deductive"
     INDUCTIVE = "inductive"
     ABDUCTIVE = "abductive"
@@ -29,8 +29,8 @@ class TaskComplexity(Enum):
     EXPERT = "expert"
     RESEARCH = "research"
 
-class AGIBrain:
-    """Central AGI Brain that coordinates all system intelligence"""
+class AGICoordinator:
+    """Central automation Coordinator that coordinates all system intelligence"""
     
     def __init__(self):
         self.knowledge_graph = {}
@@ -225,7 +225,7 @@ class AGIBrain:
         elif reasoning_type == ReasoningType.CREATIVE:
             # Creative problem solving
             chain.extend([
-                {"step": "brainstorm_ideas", "agents": agents},
+                {"step": "coordinatorstorm_ideas", "agents": agents},
                 {"step": "combine_concepts", "agents": agents[:3]},
                 {"step": "evaluate_novelty", "agents": [agents[0]]},
                 {"step": "refine_solution", "agents": agents[:2]}
@@ -467,4 +467,4 @@ class AGIBrain:
         return f"Thought {thought['id']}: {thought['reasoning_type']} reasoning resulted in {result.get('final_output', 'no output')}"
 
 # Singleton instance
-agi_brain = AGIBrain()
+task_coordinator = AGICoordinator()

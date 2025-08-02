@@ -151,11 +151,11 @@ services:
       retries: 3
 
   # Enhanced Backend with AGI Brain
-  backend-agi:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.agi
-    container_name: sutazai-backend-agi
+    container_name: sutazai-backend
     restart: unless-stopped
     volumes:
       - ./backend:/app
@@ -196,13 +196,13 @@ services:
       - ./data:/data
     environment:
       <<: *common-variables
-      BACKEND_URL: http://backend-agi:8000
+      BACKEND_URL: http://backend:8000
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     ports:
       - "8501:8501"
     depends_on:
-      - backend-agi
+      - backend
     networks:
       - sutazai-network
     command: streamlit run app_enhanced.py --server.port 8501 --server.address 0.0.0.0

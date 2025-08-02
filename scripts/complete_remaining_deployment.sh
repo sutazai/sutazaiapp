@@ -19,7 +19,7 @@ log "========================================"
 
 # Phase 4: Verify Backend and Frontend Services
 log "📋 Phase 4: Verifying Core Application Services"
-docker compose up -d sutazai-backend-agi sutazai-frontend-agi
+docker compose up -d sutazai-backend sutazai-frontend
 
 # Wait for services to be ready
 sleep 20
@@ -55,8 +55,8 @@ fi
 log "📋 Phase 6: Configuring Service Connections"
 
 # Fix backend service connections
-docker exec sutazai-backend-agi sh -c 'ping -c 1 sutazai-ollama >/dev/null 2>&1' && log "✅ Backend can reach Ollama" || log "⚠️ Backend-Ollama connection issue"
-docker exec sutazai-backend-agi sh -c 'ping -c 1 sutazai-chromadb >/dev/null 2>&1' && log "✅ Backend can reach ChromaDB" || log "⚠️ Backend-ChromaDB connection issue"
+docker exec sutazai-backend sh -c 'ping -c 1 sutazai-ollama >/dev/null 2>&1' && log "✅ Backend can reach Ollama" || log "⚠️ Backend-Ollama connection issue"
+docker exec sutazai-backend sh -c 'ping -c 1 sutazai-chromadb >/dev/null 2>&1' && log "✅ Backend can reach ChromaDB" || log "⚠️ Backend-ChromaDB connection issue"
 
 # Phase 7: Database Initialization
 log "📋 Phase 7: Database Initialization"
@@ -107,5 +107,5 @@ log "📈 Prometheus: http://localhost:9090"
 log "📊 Grafana: http://localhost:3000"
 log ""
 log "💾 Completion log: $LOG_FILE"
-log "🎯 SutazAI Enterprise AGI/ASI System is now fully configured!"
+log "🎯 SutazAI Enterprise automation/advanced automation System is now fully configured!"
 

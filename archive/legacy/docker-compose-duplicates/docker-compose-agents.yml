@@ -195,8 +195,8 @@ services:
       - sutazai-network
 
   # BigAGI - Advanced chat interface
-  bigagi:
-    image: bigagi:latest
+  # BigAGI service removed
+    image: # BigAGI service removed
     build:
       context: ./docker/bigagi
       dockerfile: Dockerfile
@@ -274,8 +274,8 @@ services:
       - sutazai-network
 
   # LocalAGI - Local AGI orchestration
-  localagi:
-    image: mudler/localagi:latest
+  # LocalAGI service removed
+    image: mudler/# LocalAGI service removed
     container_name: sutazai-localagi
     restart: unless-stopped
     environment:
@@ -284,7 +284,7 @@ services:
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
     volumes:
-      - localagi_data:/app/data
+      - # localagi_data (removed):/app/data
     depends_on:
       - ollama
       - chromadb
@@ -306,7 +306,7 @@ volumes:
   skyvern_data:
   browser_data:
   letta_data:
-  localagi_data:
+  # localagi_data (removed):
 
 networks:
   sutazai-network:

@@ -118,7 +118,7 @@ Your SutazAI system now has:
 - **All 26 AI agents** working with new features
 - **Production-ready deployment** with complete automation
 
-**The SutazAI AGI/ASI system is now enhanced with voice and keyboard features as requested!**
+**The SutazAI automation system/advanced automation system is now enhanced with voice and keyboard features as requested!**
 
 ---
 

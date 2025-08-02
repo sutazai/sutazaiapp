@@ -1,5 +1,5 @@
 """
-LocalAGI Orchestration Manager for SutazAI AGI/ASI System
+LocalAGI Orchestration Manager for SutazAI automation/advanced automation System
 Manages 38 AI agents (19 Opus, 19 Sonnet) with autonomous workflows
 """
 

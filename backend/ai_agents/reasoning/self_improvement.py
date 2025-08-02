@@ -1,5 +1,5 @@
 """
-Self-Improvement Engine for SutazAI AGI/ASI System
+Self-Improvement Engine for SutazAI automation/advanced automation System
 Enables continuous learning and capability enhancement
 """
 
@@ -49,7 +49,7 @@ class CapabilityMetric:
 
 class SelfImprovementEngine:
     """
-    Implements self-improvement mechanisms for the AGI system
+    Implements self-improvement mechanisms for the automation system
     Based on latest research in meta-learning and autonomous improvement
     """
     

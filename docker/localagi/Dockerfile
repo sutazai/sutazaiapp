@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir \
     langchain-community
 
 # Create LocalAGI service
-COPY localagi_service.py /app/main.py
+COPY # localagi removed_service.py /app/main.py
 
 EXPOSE 8080
 

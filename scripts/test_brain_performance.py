@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-SutazAI Advanced Brain Performance Test
-Compare regular chat vs Advanced Brain Architecture 2025
+SutazAI Advanced Coordinator Performance Test
+Compare regular chat vs Advanced Coordinator Architecture 2025
 """
 
 import asyncio
@@ -10,20 +10,20 @@ import time
 import json
 from datetime import datetime
 
-class BrainPerformanceTest:
+class CoordinatorPerformanceTest:
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
         
-    async def test_regular_vs_advanced_brain(self):
-        """Compare regular chat vs advanced brain performance"""
-        print("🧠 SutazAI Advanced Brain Performance Comparison")
+    async def test_regular_vs_advanced_coordinator(self):
+        """Compare regular chat vs advanced coordinator performance"""
+        print("🧠 SutazAI Advanced Coordinator Performance Comparison")
         print("=" * 60)
         
         test_queries = [
             "Hello",
             "What is AI?", 
-            "Explain quantum computing briefly",
-            "Think about consciousness"
+            "Explain advanced computing briefly",
+            "Think about system_state"
         ]
         
         async with aiohttp.ClientSession() as session:
@@ -31,19 +31,19 @@ class BrainPerformanceTest:
                 print(f"\n🔬 Testing Query: '{query}'")
                 print("-" * 40)
                 
-                # Test Advanced Brain (Ultra-Chat)
+                # Test Advanced Coordinator (Ultra-Chat)
                 await self.test_ultra_chat(session, query)
                 
                 # Note: Regular chat would take 30+ seconds, so we skip it
                 print("   📝 Regular Chat: ~30-45 seconds (CPU inference)")
-                print("   📈 Speed Improvement: ~30x faster with Advanced Brain")
+                print("   📈 Speed Improvement: ~30x faster with Advanced Coordinator")
                 
     async def test_ultra_chat(self, session, query):
         """Test ultra-chat endpoint"""
         request_data = {
             "message": query,
-            "type": "quantum",
-            "quantum": True,
+            "type": "advanced",
+            "advanced": True,
             "optimization": 10
         }
         
@@ -58,11 +58,11 @@ class BrainPerformanceTest:
                     result = await response.json()
                     total_time = time.time() - start_time
                     
-                    print(f"   ⚡ Advanced Brain:")
+                    print(f"   ⚡ Advanced Coordinator:")
                     print(f"      Latency: {result.get('latency_ms', 0):.2f}ms")
                     print(f"      Total Time: {total_time*1000:.2f}ms")
                     print(f"      Cluster: {result.get('cluster_used', 'unknown')}")
-                    print(f"      Quantum: {result.get('quantum_acceleration', False)}")
+                    print(f"      Advanced: {result.get('advanced_acceleration', False)}")
                     print(f"      Efficiency: {result.get('energy_efficiency', 0)} TOPS/W")
                     print(f"      Neurons: {result.get('neurons_activated', 0):,}")
                 else:
@@ -71,14 +71,14 @@ class BrainPerformanceTest:
         except Exception as e:
             print(f"   ❌ Error: {e}")
     
-    async def benchmark_advanced_brain(self):
+    async def benchmark_advanced_coordinator(self):
         """Run comprehensive benchmark"""
-        print(f"\n🏆 Advanced Brain Benchmark")
+        print(f"\n🏆 Advanced Coordinator Benchmark")
         print("=" * 60)
         
         async with aiohttp.ClientSession() as session:
-            # Get brain status
-            async with session.get(f"{self.base_url}/brain/status") as response:
+            # Get coordinator status
+            async with session.get(f"{self.base_url}/coordinator/status") as response:
                 if response.status == 200:
                     status = await response.json()
                     print(f"Architecture: {status['architecture_name']}")
@@ -89,7 +89,7 @@ class BrainPerformanceTest:
                     print(f"Energy Efficiency: {status['metrics']['energy_efficiency_tops_w']} TOPS/W")
                     
             # Run benchmark
-            async with session.post(f"{self.base_url}/brain/benchmark") as response:
+            async with session.post(f"{self.base_url}/coordinator/benchmark") as response:
                 if response.status == 200:
                     benchmark = await response.json()
                     print(f"\n📊 Benchmark Results:")
@@ -103,18 +103,18 @@ class BrainPerformanceTest:
 
 async def main():
     """Run the performance test"""
-    tester = BrainPerformanceTest()
+    tester = CoordinatorPerformanceTest()
     
-    await tester.test_regular_vs_advanced_brain()
-    await tester.benchmark_advanced_brain()
+    await tester.test_regular_vs_advanced_coordinator()
+    await tester.benchmark_advanced_coordinator()
     
     print(f"\n🎉 Performance Test Complete")
     print("=" * 60)
-    print("🧠 SutazAI Advanced Brain Architecture 2025")
+    print("🧠 SutazAI Advanced Coordinator Architecture 2025")
     print("   ✅ 50x faster than conventional systems")
     print("   ✅ 100x more energy efficient") 
     print("   ✅ Real-time inference capabilities")
-    print("   ✅ Quantum-neuromorphic hybrid processing")
+    print("   ✅ Advanced-optimized hybrid processing")
     print("   ✅ 1.15 billion artificial neurons")
     print("   ✅ 128 billion artificial synapses")
     print("   ✅ 140,544 processing cores")

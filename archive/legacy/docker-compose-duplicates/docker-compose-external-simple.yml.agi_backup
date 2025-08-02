@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # LangChain Agents Container
+  langchain-agents:
+    build:
+      context: ./docker/langchain-agents
+      dockerfile: Dockerfile
+    container_name: sutazai-langchain-agents
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./data/langchain:/app/data
+    environment:
+      - OLLAMA_API_BASE=http://sutazai-ollama:11434
+      - LANGCHAIN_MODEL=llama3.2:1b
+      - LANGCHAIN_PORT=8084
+    external_links:
+      - sutazai-ollama:ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # AutoGen Container
+  autogen:
+    build:
+      context: ./docker/autogen
+      dockerfile: Dockerfile
+    container_name: sutazai-autogen
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./data/autogen:/app/data
+    environment:
+      - OLLAMA_API_BASE=http://sutazai-ollama:11434
+      - AUTOGEN_MODEL=llama3.2:1b
+      - AUTOGEN_PORT=8085
+    external_links:
+      - sutazai-ollama:ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # Browser Use Container
+  browser-use:
+    build:
+      context: ./docker/browser-use
+      dockerfile: Dockerfile
+    container_name: sutazai-browser-use
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./data/browser-use:/app/data
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    environment:
+      - DISPLAY=:0
+      - BROWSER_USE_MODEL=llama3.2:1b
+      - BROWSER_USE_PORT=8088
+      - OLLAMA_API_BASE=http://sutazai-ollama:11434
+    external_links:
+      - sutazai-ollama:ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # OpenWebUI Container
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: sutazai-open-webui
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./data/open-webui:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://sutazai-ollama:11434
+      - WEBUI_SECRET_KEY=your-secret-key
+      - WEBUI_AUTH=false
+    external_links:
+      - sutazai-ollama:ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # Semgrep Container
+  semgrep:
+    image: returntocorp/semgrep:latest
+    container_name: sutazai-semgrep
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./data/semgrep:/app/data
+      - ./external_agents/semgrep:/app/rules
+    environment:
+      - SEMGREP_RULES=p/security-audit
+      - SEMGREP_PORT=8083
+    command: |
+      sh -c "
+        echo 'Starting Semgrep service...'
+        python3 -m http.server 8083 --directory /app/data
+      "
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  # TabbyML Container
+  tabbyml:
+    image: tabbyml/tabby:latest
+    container_name: sutazai-tabbyml
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./data/tabbyml:/data
+    environment:
+      - TABBY_MODEL=deepseek-coder:7b
+      - TABBY_PORT=8082
+      - TABBY_DEVICE=cpu
+    command: serve --model deepseek-coder:7b --port 8082 --device cpu
+    external_links:
+      - sutazai-ollama:ollama
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  langchain-data:
+  autogen-data:
+  browser-use-data:
+  open-webui-data:
+  semgrep-data:
+  tabbyml-data:

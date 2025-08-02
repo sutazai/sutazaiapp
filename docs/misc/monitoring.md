@@ -372,20 +372,20 @@ The monitoring system is designed to help meet compliance requirements:
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [Sentry Documentation](https://docs.sentry.io/)
 
-# SutazAI AGI/ASI Monitoring System
+# SutazAI automation system/advanced automation Monitoring System
 
 ## Overview
 
-The SutazAI monitoring system provides comprehensive observability and monitoring capabilities specifically designed for AGI/ASI systems. The system monitors various aspects of the AGI architecture, including neural components, ethical constraints, self-modification capabilities, hardware optimization, and security.
+The SutazAI monitoring system provides comprehensive observability and monitoring capabilities specifically designed for automation system/advanced automation systems. The system monitors various aspects of the automation system architecture, including processing components, ethical constraints, self-modification capabilities, hardware optimization, and security.
 
 ## Architecture
 
 ```
 SutazAI Monitoring System
-├── Neural Architecture Monitoring
+├── Processing Architecture Monitoring
 │   ├── Spike Activity Tracking
 │   ├── Attention Mechanism Monitoring
-│   └── Synaptic Plasticity Tracking
+│   └── Connection Plasticity Tracking
 ├── Ethical Constraints Verification
 │   ├── Decision Boundary Enforcement
 │   ├── Ethical Properties Verification
@@ -418,7 +418,7 @@ The monitoring system consists of the following components:
 4. **ELK Stack**: Elasticsearch, Logstash, and Kibana for log aggregation
 5. **Node Exporter**: Exports system metrics such as CPU, memory, and disk usage
 6. **cAdvisor**: Container metrics exporter
-7. **Custom Monitoring Modules**: Python modules for specialized AGI/ASI monitoring
+7. **Custom Monitoring Modules**: Python modules for specialized automation system/advanced automation monitoring
 
 ## Installation
 
@@ -456,41 +456,41 @@ cd /opt/sutazaiapp/monitoring
 - **Kibana**: http://localhost:5601
 - **Monitoring API**: http://localhost:8100
 
-## Neural Architecture Monitoring
+## Processing Architecture Monitoring
 
-The Neural Architecture Monitoring module tracks metrics related to the biologically-inspired neural architecture:
+The Processing Architecture Monitoring module tracks metrics related to the biologically-inspired processing architecture:
 
-- **Spike Activity**: Monitor the rate and pattern of neural spikes across different network layers
+- **Spike Activity**: Monitor the rate and pattern of processing spikes across different network layers
 - **Attention Mechanisms**: Track attention head activations and patterns
-- **Synaptic Plasticity**: Measure changes in synaptic weights and connections
+- **Connection Plasticity**: Measure changes in connection weights and connections
 
 Example usage:
 
 ```python
-from utils.neural_monitoring import NeuralMonitor
+from utils.processing_monitoring import ProcessingMonitor
 
-# Initialize the neural monitor
-neural_monitor = NeuralMonitor(
+# Initialize the processing monitor
+processing_monitor = ProcessingMonitor(
     system_id="sutazai_main",
-    log_dir="/opt/sutazaiapp/logs/neural"
+    log_dir="/opt/sutazaiapp/logs/processing"
 )
 
 # Record spike activity
-neural_monitor.record_spike_activity(
+processing_monitor.record_spike_activity(
     layer_id="transformer_layer_5",
     spike_rate=0.42,
     activation_pattern=[0.1, 0.3, 0.2, 0.8, 0.4]
 )
 
 # Record attention mechanism
-neural_monitor.record_attention(
+processing_monitor.record_attention(
     head_id="attn_head_3",
     attention_scores=[[0.1, 0.8, 0.1], [0.2, 0.1, 0.7], [0.5, 0.3, 0.2]],
     attention_entropy=1.2
 )
 
-# Record synaptic changes
-neural_monitor.record_synaptic_change(
+# Record connection changes
+processing_monitor.record_synaptic_change(
     layer_id="transformer_layer_2",
     change_rate=0.03,
     connection_delta={"added": 5, "removed": 3, "modified": 12}
@@ -685,7 +685,7 @@ monitoring = setup_monitoring(
     app=app,
     system_id="sutazai_api",
     base_dir="/opt/sutazaiapp",
-    enable_neural_monitoring=True,
+    enable_processing_monitoring=True,
     enable_ethics_monitoring=True,
     enable_self_mod_monitoring=True,
     enable_hardware_monitoring=True,
@@ -705,15 +705,15 @@ Alerts are configured in Prometheus and managed by AlertManager. Some critical a
 - **Ethical Boundary Violations**: Immediate alerts for any ethical violations
 - **Self-Modification Events**: Alerts for unauthorized self-modifications
 - **Security Breaches**: Critical alerts for security violations
-- **Neural Architecture Anomalies**: Warnings for unusual neural behavior
+- **Processing Architecture Anomalies**: Warnings for unusual processing behavior
 - **Resource Constraints**: Alerts for hardware limitations
 
 ## Dashboards
 
 The system includes pre-configured Grafana dashboards:
 
-- **AGI Overview Dashboard**: High-level overview of all metrics
-- **Neural Architecture Dashboard**: Detailed view of neural metrics
+- **automation system Overview Dashboard**: High-level overview of all metrics
+- **Processing Architecture Dashboard**: Detailed view of processing metrics
 - **Ethics and Safety Dashboard**: Ethics verification metrics
 - **Self-Modification Dashboard**: System modification tracking
 - **Hardware Optimization Dashboard**: Resource usage and efficiency

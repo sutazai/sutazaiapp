@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI Deployment Summary
+# SutazAI automation system/advanced automation Deployment Summary
 
 ## Completed Tasks
 
@@ -33,7 +33,7 @@ code-davinci-002 → ollama/codellama:7b
 
 ## Deployment Instructions
 
-To deploy the complete AGI/ASI system:
+To deploy the complete automation system/advanced automation system:
 
 ```bash
 # 1. Ensure you're in the SutazAI directory

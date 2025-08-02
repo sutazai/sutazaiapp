@@ -1,7 +1,7 @@
 # SutazAI Agent System Reorganization Plan
 
 ## Executive Summary
-This document outlines the reorganization of the SutazAI agent system, removing 4 redundant agents and redistributing their responsibilities among the remaining essential agents to maintain a streamlined AGI/ASI system.
+This document outlines the reorganization of the SutazAI agent system, removing 4 redundant agents and redistributing their responsibilities among the remaining essential agents to maintain a streamlined automation system/advanced automation system.
 
 ## Agents Being Removed
 
@@ -10,7 +10,7 @@ This document outlines the reorganization of the SutazAI agent system, removing 
   - ML architecture design
   - Model optimization
   - RAG development
-  - AGI design
+  - automation system design
 
 ### 2. **senior-backend-developer**
 - **Previous Responsibilities:**
@@ -37,9 +37,9 @@ This document outlines the reorganization of the SutazAI agent system, removing 
 
 ### 1. Senior AI Engineer Responsibilities → Multiple Agents
 
-**ML Architecture & AGI Design:**
-- **Primary:** `agi-system-architect` - Already handles AGI/ASI architecture
-- **Secondary:** `deep-learning-brain-architect` - Specializes in neural architectures
+**ML Architecture & automation system Design:**
+- **Primary:** `agi-system-architect` - Already handles automation system/advanced automation architecture
+- **Secondary:** `deep-learning-coordinator-architect` - Specializes in processing architectures
 - **Support:** `ai-agent-creator` - Creates new AI agents as needed
 
 **Model Optimization:**
@@ -125,10 +125,10 @@ This document outlines the reorganization of the SutazAI agent system, removing 
 - `system-optimizer-reorganizer` - System maintenance
 
 ### 3. **Model & AI Operations**
-- `agi-system-architect` - AGI architecture
+- `agi-system-architect` - automation system architecture
 - `model-training-specialist` - Model operations
 - `ollama-integration-specialist` - Local LLM management
-- `deep-learning-brain-architect` - Neural architectures
+- `deep-learning-coordinator-architect` - Processing architectures
 - `ai-agent-orchestrator` - Multi-agent coordination
 
 ### 4. **Security & Quality**
@@ -206,6 +206,6 @@ This reorganization streamlines the SutazAI system by removing redundant "senior
 - Improves resource efficiency
 - Maintains all critical functionality
 - Enhances agent specialization
-- Supports the AGI/ASI goals with a leaner architecture
+- Supports the automation system/advanced automation goals with a leaner architecture
 
 The remaining 65 agents provide comprehensive coverage of all required functionalities while operating more efficiently within the Conservative Resource Strategy constraints.

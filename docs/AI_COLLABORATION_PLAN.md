@@ -1,7 +1,7 @@
 # 🤝 Claude Code & Gemini CLI Collaboration Plan for SutazAI v8
 
 ## 🎯 Objective
-Establish an efficient collaboration workflow between Claude Code and Gemini CLI to perfect the SutazAI AGI/ASI system by leveraging each AI's unique strengths.
+Establish an efficient collaboration workflow between Claude Code and Gemini CLI to perfect the SutazAI automation system/advanced automation system by leveraging each AI's unique strengths.
 
 ## 🏗️ Task Distribution Strategy
 

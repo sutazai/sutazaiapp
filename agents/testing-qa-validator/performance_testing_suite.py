@@ -200,7 +200,7 @@ class PerformanceTestSuite:
             "/api/v1/system/status": BenchmarkThresholds(50, 150, 300, 500, 99.9, 500),
             "/api/v1/agents/": BenchmarkThresholds(75, 200, 400, 1000, 99.5, 200),
             "/api/v1/models/list": BenchmarkThresholds(100, 250, 500, 1000, 99.0, 100),
-            "/api/v1/brain/think": BenchmarkThresholds(500, 2000, 5000, 10000, 95.0, 50),
+            "/api/v1/coordinator/think": BenchmarkThresholds(500, 2000, 5000, 10000, 95.0, 50),
             "/api/v1/vectors/search": BenchmarkThresholds(100, 300, 600, 1500, 98.0, 500),
         }
         
@@ -274,8 +274,8 @@ class PerformanceTestSuite:
                 error_msg = None
                 
                 try:
-                    if endpoint == "/api/v1/brain/think":
-                        # Special handling for brain endpoint
+                    if endpoint == "/api/v1/coordinator/think":
+                        # Special handling for coordinator endpoint
                         payload = {
                             "input_data": {"text": f"Performance test query {i}"},
                             "reasoning_type": "deductive"
@@ -623,7 +623,7 @@ class PerformanceTestSuite:
                 "error": str(e)
             }
             
-        # Test brain thinking (if available)
+        # Test coordinator thinking (if available)
         try:
             think_payload = {
                 "input_data": {"text": "Performance test: What is 2+2?"},
@@ -633,19 +633,19 @@ class PerformanceTestSuite:
             start_time = time.time()
             response = await self._make_request(
                 "POST",
-                "/api/v1/brain/think",
+                "/api/v1/coordinator/think",
                 json=think_payload
             )
             end_time = time.time()
             
             success = 200 <= response.status < 300
-            model_results["brain_inference"] = {
+            model_results["coordinator_inference"] = {
                 "success": success,
                 "inference_time": (end_time - start_time) * 1000
             }
             
         except Exception as e:
-            model_results["brain_inference"] = {
+            model_results["coordinator_inference"] = {
                 "success": False,
                 "error": str(e)
             }

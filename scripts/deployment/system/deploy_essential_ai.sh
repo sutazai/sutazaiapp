@@ -57,7 +57,7 @@ echo "🔍 Checking existing services..."
 echo "================================"
 
 # Check core services
-check_service "sutazai-agi-brain"
+check_service "sutazai-task_coordinator"
 check_service "sutazai-agi-redis"
 check_service "sutazai-agi-ollama"
 
@@ -179,16 +179,16 @@ async def test_redis():
         print(f"❌ Redis test failed: {e}")
         return False
 
-async def test_brain():
-    """Test AGI Brain"""
+async def test_coordinator():
+    """Test automation Coordinator"""
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get('http://localhost:8900/health') as resp:
                 if resp.status == 200:
-                    print("✅ AGI Brain is healthy")
+                    print("✅ automation Coordinator is healthy")
                     return True
     except Exception as e:
-        print(f"❌ AGI Brain test failed: {e}")
+        print(f"❌ automation Coordinator test failed: {e}")
         return False
 
 async def test_simple_inference():
@@ -217,7 +217,7 @@ async def main():
     tests = [
         test_ollama(),
         test_redis(),
-        test_brain(),
+        test_coordinator(),
         test_simple_inference()
     ]
     
@@ -258,7 +258,7 @@ echo "║            ESSENTIAL AI SERVICES STATUS                      ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 echo "🎯 Core Services:"
-docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "(brain|redis|ollama)" | head -5
+docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "(coordinator|redis|ollama)" | head -5
 echo ""
 echo "🤖 Available Models:"
 docker exec sutazai-agi-ollama ollama list 2>/dev/null || echo "Unable to list models"
@@ -266,6 +266,6 @@ echo ""
 echo "📊 Next Steps:"
 echo "  1. Test services: python3 scripts/test_ai_agents.py"
 echo "  2. Monitor system: python3 scripts/sutazai_monitor.py"
-echo "  3. View Brain UI: http://localhost:8900"
+echo "  3. View Coordinator UI: http://localhost:8900"
 echo ""
 echo "✅ Essential AI deployment complete!"

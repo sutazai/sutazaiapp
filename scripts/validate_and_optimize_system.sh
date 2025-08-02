@@ -46,11 +46,11 @@ init_report() {
     cat > "$REPORT_FILE" << EOF
 {
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-    "system": "SutazAI Enhanced Brain v2.0",
+    "system": "SutazAI Enhanced Coordinator v2.0",
     "checks": {
         "infrastructure": {},
         "services": {},
-        "brain": {},
+        "coordinator": {},
         "agents": {},
         "models": {},
         "performance": {},
@@ -172,21 +172,21 @@ check_docker_services() {
     done
 }
 
-# Brain system validation
-check_brain_system() {
-    log_header "Brain System Validation"
+# Coordinator system validation
+check_coordinator_system() {
+    log_header "Coordinator System Validation"
     
-    # Check if Brain is deployed
+    # Check if Coordinator is deployed
     ((TOTAL_CHECKS++))
-    if docker ps --format "{{.Names}}" | grep -q "sutazai-brain-core"; then
-        log_success "Brain Core: deployed"
-        update_report "brain" "deployment" "pass" "deployed"
+    if docker ps --format "{{.Names}}" | grep -q "sutazai-coordinator-core"; then
+        log_success "Coordinator Core: deployed"
+        update_report "coordinator" "deployment" "pass" "deployed"
         
-        # Test Brain API
+        # Test Coordinator API
         ((TOTAL_CHECKS++))
         if curl -sf http://localhost:8888/health > /dev/null; then
-            log_success "Brain API: healthy"
-            update_report "brain" "api" "pass" "healthy"
+            log_success "Coordinator API: healthy"
+            update_report "coordinator" "api" "pass" "healthy"
             
             # Test ULM integration
             ((TOTAL_CHECKS++))
@@ -196,14 +196,14 @@ check_brain_system() {
             
             if [ "$ulm_test" -gt 0 ]; then
                 log_success "Universal Learning Machine: integrated"
-                update_report "brain" "ulm" "pass" "integrated"
+                update_report "coordinator" "ulm" "pass" "integrated"
             else
                 log_warn "Universal Learning Machine: not detected"
-                update_report "brain" "ulm" "warning" "not detected"
+                update_report "coordinator" "ulm" "warning" "not detected"
             fi
         else
-            log_error "Brain API: not responding"
-            update_report "brain" "api" "fail" "not responding"
+            log_error "Coordinator API: not responding"
+            update_report "coordinator" "api" "fail" "not responding"
         fi
         
         # Check enhanced agents
@@ -229,14 +229,14 @@ check_brain_system() {
         ((TOTAL_CHECKS++))
         if [ "$active_agents" -ge 3 ]; then
             log_success "Agent ecosystem: $active_agents/4 agents active"
-            update_report "brain" "agents" "pass" "$active_agents active"
+            update_report "coordinator" "agents" "pass" "$active_agents active"
         else
             log_warn "Agent ecosystem: only $active_agents/4 agents active"
-            update_report "brain" "agents" "warning" "$active_agents active"
+            update_report "coordinator" "agents" "warning" "$active_agents active"
         fi
     else
-        log_warn "Brain system not deployed"
-        update_report "brain" "deployment" "warning" "not deployed"
+        log_warn "Coordinator system not deployed"
+        update_report "coordinator" "deployment" "warning" "not deployed"
     fi
 }
 
@@ -388,9 +388,9 @@ generate_recommendations() {
         recommendations+=("Install NVIDIA GPU with 4GB+ VRAM for accelerated ML processing")
     fi
     
-    # Brain recommendations
-    if ! docker ps --format "{{.Names}}" | grep -q "sutazai-brain-core"; then
-        recommendations+=("Deploy Enhanced Brain system: DEPLOY_BRAIN=true ./scripts/deploy_complete_system.sh")
+    # Coordinator recommendations
+    if ! docker ps --format "{{.Names}}" | grep -q "sutazai-coordinator-core"; then
+        recommendations+=("Deploy Enhanced Coordinator system: DEPLOY_BRAIN=true ./scripts/deploy_complete_system.sh")
     fi
     
     # Model recommendations
@@ -483,7 +483,7 @@ main() {
     # Run all checks
     check_system_resources
     check_docker_services
-    check_brain_system
+    check_coordinator_system
     check_models
     check_performance
     check_security
@@ -501,8 +501,8 @@ main() {
     if [ "$FAILED_CHECKS" -gt 0 ]; then
         echo -e "\n${YELLOW}Quick Fix Commands:${NC}"
         
-        if ! docker ps --format "{{.Names}}" | grep -q "sutazai-brain-core"; then
-            echo "Deploy Brain: ./scripts/deploy_brain_enhanced.sh"
+        if ! docker ps --format "{{.Names}}" | grep -q "sutazai-coordinator-core"; then
+            echo "Deploy Coordinator: ./scripts/deploy_coordinator_enhanced.sh"
         fi
         
         if [ "$WARNINGS" -gt 5 ]; then

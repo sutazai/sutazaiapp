@@ -59,4 +59,4 @@ All configurations have been successfully updated to use TinyLlama as the defaul
    docker ps
    ```
 
-The system is now fully configured to run with TinyLlama, providing an extremely lightweight AGI system suitable for resource-constrained environments.
+The system is now fully configured to run with TinyLlama, providing an extremely lightweight automation system system suitable for resource-constrained environments.

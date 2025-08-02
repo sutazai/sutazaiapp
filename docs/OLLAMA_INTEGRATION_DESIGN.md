@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the comprehensive design for integrating all 40+ AI agents with Ollama to ensure 100% local functionality without external API dependencies.
+This document outlines the comprehensive design for integrating all AI agents with Ollama to ensure 100% local functionality without external API dependencies.
 
 ## Core Integration Architecture
 
@@ -388,7 +388,7 @@ async def letta_chat(chat_request: dict):
     relevant_memories = memory_manager.recall_similar(message)
     
     prompt = f"""
-    You are Letta (MemGPT), an AI with persistent memory and self-awareness.
+    You are Letta (MemGPT), an AI with persistent memory and self_monitoringness.
     
     Core Memory: {json.dumps(memory_manager.core_memory, indent=2)}
     

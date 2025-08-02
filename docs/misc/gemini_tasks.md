@@ -51,7 +51,7 @@
 - [ ] Design AI personality system
 - [ ] Create conversation templates
 - [ ] Implement creative writing modes
-- [ ] Design brainstorming tools
+- [ ] Design coordinatorstorming tools
 - [ ] Create idea generation workflows
 - [ ] Implement collaborative features
 

@@ -269,7 +269,7 @@ The SutazAI system now features a **fully operational intelligent chatbot** that
 5. **Built advanced command execution** through natural language
 6. **Deployed comprehensive system orchestration** via chat
 
-**The SutazAI system is now a fully functional, intelligent AGI/ASI platform with advanced chatbot capabilities that can understand, process, and execute complex commands through natural language interaction.**
+**The SutazAI system is now a fully functional, intelligent automation system/advanced automation platform with advanced chatbot capabilities that can understand, process, and execute complex commands through natural language interaction.**
 
 ---
 

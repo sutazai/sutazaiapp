@@ -55,7 +55,7 @@ ALL_SUTAZAI_AGENTS = {
     "financial-analysis-specialist": {"model": "sonnet", "capabilities": ["financial_modeling", "market_analysis", "risk_assessment"]},
     "document-knowledge-manager": {"model": "sonnet", "capabilities": ["document_processing", "knowledge_extraction", "rag_systems"]},
     "private-data-analyst": {"model": "sonnet", "capabilities": ["data_privacy", "secure_analytics", "compliance_management"]},
-    "deep-learning-brain-manager": {"model": "opus", "capabilities": ["neural_networks", "model_training", "deep_learning_optimization"]},
+    "deep-learning-coordinator-manager": {"model": "opus", "capabilities": ["processing_networks", "model_training", "deep_learning_optimization"]},
     
     # Integration & Management Agents
     "ollama-integration-specialist": {"model": "opus", "capabilities": ["ollama_management", "model_optimization", "local_ai_setup"]},
@@ -224,7 +224,7 @@ class MasterAgentController:
             },
             {
                 "scenario": "AI Development Pipeline",
-                "agents": ["ai-agent-creator", "deep-learning-brain-manager", "ollama-integration-specialist"],
+                "agents": ["ai-agent-creator", "deep-learning-coordinator-manager", "ollama-integration-specialist"],
                 "workflow": "Create agents → Train models → Deploy locally"
             }
         ]
@@ -248,7 +248,7 @@ class MasterAgentController:
         capability_groups = {
             "Security": ["security", "penetration", "vulnerability", "compliance"],
             "Development": ["development", "code", "api", "frontend", "backend"],
-            "AI/ML": ["ai", "ml", "deep_learning", "model", "neural"],
+            "AI/ML": ["ai", "ml", "deep_learning", "model", "processing"],
             "Automation": ["automation", "workflow", "scheduling", "orchestration"],
             "Infrastructure": ["deployment", "infrastructure", "devops", "monitoring"],
             "Management": ["management", "planning", "coordination", "strategy"]

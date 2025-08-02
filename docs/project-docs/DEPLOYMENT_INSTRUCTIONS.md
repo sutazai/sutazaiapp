@@ -1,4 +1,4 @@
-# SutazAI AGI/ASI System - Deployment Instructions
+# SutazAI automation system/advanced automation System - Deployment Instructions
 
 ## 🚀 Complete System Deployment
 

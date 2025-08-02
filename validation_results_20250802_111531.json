@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-08-02T11:15:18.695108",
+  "tests": {
+    "health": {
+      "status": "PASS",
+      "status_code": 200,
+      "response_size": 660
+    },
+    "root": {
+      "status": "PASS",
+      "status_code": 200,
+      "response_size": 1184
+    },
+    "agents": {
+      "status": "PASS",
+      "status_code": 200,
+      "response_size": 1292
+    },
+    "models": {
+      "status": "PASS",
+      "status_code": 200,
+      "response_size": 288
+    },
+    "simple_chat": {
+      "status": "ERROR",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=10)"
+    },
+    "system_status": {
+      "status": "PASS",
+      "status_code": 200,
+      "response_size": 588
+    },
+    "database": {
+      "status": "PASS"
+    },
+    "redis": {
+      "status": "PASS"
+    },
+    "ollama": {
+      "status": "PASS",
+      "models_count": 1
+    },
+    "frontend": {
+      "status": "PASS",
+      "status_code": 200
+    }
+  },
+  "summary": {
+    "total": 10,
+    "passed": 9,
+    "failed": 0,
+    "errors": 1,
+    "success_rate": 90.0
+  }
+}

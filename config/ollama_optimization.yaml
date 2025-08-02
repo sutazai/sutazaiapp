@@ -63,7 +63,7 @@ container_limits:
     memory: "2G"
     cpus: "2"
     
-  backend_agi:
+  backend:
     memory: "2G"
     cpus: "2"
 

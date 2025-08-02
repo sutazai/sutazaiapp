@@ -1,6 +1,6 @@
 """
-AGI Orchestrator for SutazAI - Next-Generation Multi-Agent Intelligence
-Implements cutting-edge AGI research approaches including:
+automation Orchestrator for SutazAI - Next-Generation Multi-Agent Intelligence
+Implements cutting-edge automation research approaches including:
 - Multi-agent reasoning with verification
 - Self-improvement and learning
 - Dynamic agent coordination
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 class AGIOrchestrator:
     """
-    Advanced AGI orchestrator implementing next-generation intelligence patterns
+    Advanced automation orchestrator implementing next-generation intelligence patterns
     """
     
     def __init__(self, 
@@ -52,9 +52,9 @@ class AGIOrchestrator:
                                  require_reasoning: bool = True,
                                  enable_learning: bool = True) -> Dict[str, Any]:
         """
-        Process complex tasks using advanced AGI capabilities
+        Process complex tasks using advanced automation capabilities
         
-        This is the main entry point for AGI-level task processing that:
+        This is the main entry point for automation-level task processing that:
         1. Uses multi-agent reasoning for complex problems
         2. Enables self-improvement from task outcomes
         3. Coordinates multiple specialized agents
@@ -308,7 +308,7 @@ class AGIOrchestrator:
             self.capability_scores[capability] = 1.0 if result.get("success", False) else 0.0
             
     async def get_agi_status(self) -> Dict[str, Any]:
-        """Get comprehensive AGI system status"""
+        """Get comprehensive automation system status"""
         
         recent_performance = self.performance_history[-10:] if self.performance_history else []
         success_rate = sum(1 for p in recent_performance if p["success"]) / max(len(recent_performance), 1)
@@ -353,7 +353,7 @@ class AGIOrchestrator:
             return {"error": str(e), "confidence": 0.0}
             
     async def demonstrate_agi_capabilities(self) -> Dict[str, Any]:
-        """Demonstrate AGI capabilities with a complex multi-step task"""
+        """Demonstrate automation capabilities with a complex multi-step task"""
         
         demo_task = {
             "id": "agi_demo",
@@ -366,7 +366,7 @@ class AGIOrchestrator:
             """
         }
         
-        logger.info("Demonstrating AGI capabilities...")
+        logger.info("Demonstrating automation capabilities...")
         
         result = await self.process_complex_task(
             task=demo_task,

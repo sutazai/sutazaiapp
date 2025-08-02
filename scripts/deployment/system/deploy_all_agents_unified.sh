@@ -58,8 +58,8 @@ CORE_SERVICES=(
 
 # AI Agent services - Tier 1 (Essential)
 TIER1_AGENTS=(
-    "backend-agi"
-    "frontend-agi"
+    "backend"
+    "frontend"
     "jarvis-ai"
     "mcp-server"
     "api-gateway"
@@ -245,7 +245,7 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
   
   # Agent services with dependencies
-  backend-agi:
+  backend:
     <<: *resource-limits
     depends_on:
       postgres:
@@ -265,7 +265,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      backend-agi:
+      backend:
         condition: service_started
     healthcheck:
       <<: *healthcheck-defaults
@@ -326,8 +326,8 @@ from datetime import datetime
 
 def check_agents():
     agents = {
-        "backend-agi": "http://localhost:8000/health",
-        "frontend-agi": "http://localhost:8501/",
+        "backend": "http://localhost:8000/health",
+        "frontend": "http://localhost:8501/",
         "mcp-server": "http://localhost:8100/health",
         "api-gateway": "http://localhost:8080/health",
         "grafana": "http://localhost:3000/api/health",

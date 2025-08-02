@@ -86,7 +86,7 @@ mkdir -p "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR/scripts"
 mkdir -p "$INSTALL_DIR/models"
 mkdir -p "$INSTALL_DIR/models/optimized"
-mkdir -p "$INSTALL_DIR/core/neural"
+mkdir -p "$INSTALL_DIR/core/processing"
 
 log "Created directory structure in $INSTALL_DIR"
 

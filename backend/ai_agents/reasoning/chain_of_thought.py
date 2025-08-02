@@ -285,7 +285,7 @@ class AdvancedReasoningEngine:
         domain_mapping = {
             "code": ["deepseek-coder", "codellama", "starcoder"],
             "math": ["wizard-math", "tinyllama", "llama3"],
-            "science": ["llama3", "qwen3", "neural-chat"],
+            "science": ["llama3", "qwen3", "processing-chat"],
             "general": ["tinyllama", "llama3", "qwen3", "mistral"],
             "analysis": ["tinyllama", "llama3", "qwen3"]
         }

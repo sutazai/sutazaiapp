@@ -27,17 +27,17 @@ SAMPLE_MESSAGES = [
     "Hello, how are you today?",
     "What is artificial intelligence?",
     "Can you help me with a coding problem?",
-    "Explain quantum computing in simple terms.",
+    "Explain advanced computing in simple terms.",
     "What are the benefits of machine learning?",
-    "How does neural network training work?",
-    "What is the difference between AI and AGI?",
+    "How does processing network training work?",
+    "What is the difference between AI and automation?",
     "Can you write a Python function to sort a list?",
     "Explain the concept of recursion.",
     "What are the applications of natural language processing?"
 ]
 
 SAMPLE_AGENTS = [
-    "agi-brain",
+    "task_coordinator",
     "reasoning-agent", 
     "coding-assistant",
     "research-agent",
@@ -149,7 +149,7 @@ class SutazAIUser(HttpUser):
     def send_chat_message(self):
         """Test chat message sending - primary load test."""
         message = random.choice(SAMPLE_MESSAGES)
-        agent = self.user_context.get("preferred_agent", "agi-brain")
+        agent = self.user_context.get("preferred_agent", "task_coordinator")
         model = self.user_context.get("preferred_model", "llama3.2:1b")
         
         payload = {
@@ -346,7 +346,7 @@ class SpikeTestUser(HttpUser):
         message = "Quick test message"
         payload = {
             "message": message,
-            "agent": "agi-brain",
+            "agent": "task_coordinator",
             "model": "llama3.2:1b"
         }
         
@@ -414,7 +414,7 @@ class AIHeavyUser(HttpUser):
         """Long, complex chat messages."""
         long_messages = [
             "Please write a detailed explanation of how machine learning algorithms work, including examples of supervised, unsupervised, and reinforcement learning.",
-            "Can you create a comprehensive Python program that implements a simple neural network from scratch with detailed comments?",
+            "Can you create a comprehensive Python program that implements a simple processing network from scratch with detailed comments?",
             "Explain the philosophical implications of artificial general intelligence and its potential impact on society.",
             "Write a technical analysis of different database architectures and their trade-offs in modern applications."
         ]
@@ -456,7 +456,7 @@ class ConcurrentSessionUser(HttpUser):
             payload = {
                 "message": message,
                 "session_id": session_id,
-                "agent": "agi-brain"
+                "agent": "task_coordinator"
             }
             
             self.client.post(API_ENDPOINTS["chat"], json=payload, timeout=20)

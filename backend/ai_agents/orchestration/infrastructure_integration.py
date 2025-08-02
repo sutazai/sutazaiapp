@@ -310,7 +310,7 @@ class InfrastructureIntegration:
             "restart_policy": "unless-stopped",
             "environment": {
                 "REDIS_URL": "redis://redis:6379",
-                "BACKEND_URL": "http://backend-agi:8000",
+                "BACKEND_URL": "http://backend:8000",
                 "OLLAMA_BASE_URL": "http://ollama:11434"
             },
             "volumes": {
@@ -348,8 +348,8 @@ class InfrastructureIntegration:
                 "ports": {"8204": 8080},
                 "memory_limit": "2G"
             },
-            "deep-learning-brain-manager": {
-                "image": "sutazai/brain-manager:latest",
+            "deep-learning-coordinator-manager": {
+                "image": "sutazai/coordinator-manager:latest",
                 "ports": {"8205": 8080},
                 "memory_limit": "3G",
                 "cpu_limit": "2"

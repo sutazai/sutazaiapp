@@ -1,0 +1,1088 @@
+# Complete SutazAI Multi-Agent System Deployment
+# This file deploys all 34 configured AI agents
+
+services:
+  # ===========================================
+  # CORE AI AGENTS (First 5 - Already Implemented)
+  # ===========================================
+  
+  senior-ai-engineer:
+    container_name: sutazai-senior-ai-engineer
+    build:
+      context: ./agents/senior-ai-engineer
+      dockerfile: Dockerfile
+    volumes:
+      - ./agents/configs/senior-ai-engineer_universal.json:/app/config.json:ro
+      - ./agents/senior-ai-engineer:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=senior-ai-engineer
+      - AGENT_TYPE=senior-ai-engineer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  deployment-automation-master:
+    container_name: sutazai-deployment-automation-master
+    build:
+      context: ./agents/deployment-automation-master
+      dockerfile: ../Dockerfile
+    volumes:
+      - ./agents/configs/deployment-automation-master_universal.json:/app/config.json:ro
+      - ./agents/deployment-automation-master:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - AGENT_NAME=deployment-automation-master
+      - AGENT_TYPE=deployment-automation-master
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  infrastructure-devops-manager:
+    container_name: sutazai-infrastructure-devops-manager
+    build:
+      context: ./agents/infrastructure-devops-manager
+      dockerfile: ../Dockerfile
+    volumes:
+      - ./agents/configs/infrastructure-devops-manager_universal.json:/app/config.json:ro
+      - ./agents/infrastructure-devops-manager:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - AGENT_NAME=infrastructure-devops-manager
+      - AGENT_TYPE=infrastructure-devops-manager
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  ollama-integration-specialist:
+    container_name: sutazai-ollama-integration-specialist
+    build:
+      context: ./agents/ollama-integration-specialist
+      dockerfile: ../Dockerfile
+    volumes:
+      - ./agents/configs/ollama-integration-specialist_universal.json:/app/config.json:ro
+      - ./agents/ollama-integration-specialist:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=ollama-integration-specialist
+      - AGENT_TYPE=ollama-integration-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  testing-qa-validator:
+    container_name: sutazai-testing-qa-validator
+    build:
+      context: ./agents/testing-qa-validator
+      dockerfile: Dockerfile
+    volumes:
+      - ./agents/configs/testing-qa-validator_universal.json:/app/config.json:ro
+      - ./agents/testing-qa-validator:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=testing-qa-validator
+      - AGENT_TYPE=testing-qa-validator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # AUTONOMOUS AI AGENTS
+  # ===========================================
+
+  agentgpt-autonomous-executor:
+    container_name: sutazai-agentgpt-autonomous-executor
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.agentgpt
+    volumes:
+      - ./agents/configs/agentgpt-autonomous-executor_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=agentgpt-autonomous-executor
+      - AGENT_TYPE=agentgpt-autonomous-executor
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  agentzero-coordinator:
+    container_name: sutazai-agentzero-coordinator
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.agentzero
+    volumes:
+      - ./agents/configs/agentzero-coordinator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=agentzero-coordinator
+      - AGENT_TYPE=agentzero-coordinator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  autonomous-system-controller:
+    container_name: sutazai-autonomous-system-controller
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/autonomous-system-controller_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=autonomous-system-controller
+      - AGENT_TYPE=autonomous-system-controller
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # CODE GENERATION & DEVELOPMENT AGENTS
+  # ===========================================
+
+  code-generation-improver:
+    container_name: sutazai-code-generation-improver
+    build:
+      context: ./agents/code-generation-improver
+      dockerfile: Dockerfile
+    volumes:
+      - ./agents/configs/code-generation-improver_universal.json:/app/config.json:ro
+      - ./agents/code-generation-improver:/app
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=code-generation-improver
+      - AGENT_TYPE=code-generation-improver
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  opendevin-code-generator:
+    container_name: sutazai-opendevin-code-generator
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/opendevin-code-generator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=opendevin-code-generator
+      - AGENT_TYPE=opendevin-code-generator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  senior-backend-developer:
+    container_name: sutazai-senior-backend-developer
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/senior-backend-developer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=senior-backend-developer
+      - AGENT_TYPE=senior-backend-developer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  senior-frontend-developer:
+    container_name: sutazai-senior-frontend-developer
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/senior-frontend-developer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=senior-frontend-developer
+      - AGENT_TYPE=senior-frontend-developer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # AI WORKFLOW & ORCHESTRATION AGENTS
+  # ===========================================
+
+  ai-agent-creator:
+    container_name: sutazai-ai-agent-creator
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/ai-agent-creator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=ai-agent-creator
+      - AGENT_TYPE=ai-agent-creator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  ai-agent-orchestrator:
+    container_name: sutazai-ai-agent-orchestrator
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/ai-agent-orchestrator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=ai-agent-orchestrator
+      - AGENT_TYPE=ai-agent-orchestrator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  task-assignment-coordinator:
+    container_name: sutazai-task-assignment-coordinator
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/task-assignment-coordinator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=task-assignment-coordinator
+      - AGENT_TYPE=task-assignment-coordinator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # WORKFLOW DESIGN AGENTS
+  # ===========================================
+
+  langflow-workflow-designer:
+    container_name: sutazai-langflow-workflow-designer
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.langflow
+    volumes:
+      - ./agents/configs/langflow-workflow-designer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=langflow-workflow-designer
+      - AGENT_TYPE=langflow-workflow-designer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  flowiseai-flow-manager:
+    container_name: sutazai-flowiseai-flow-manager
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.flowise
+    volumes:
+      - ./agents/configs/flowiseai-flow-manager_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=flowiseai-flow-manager
+      - AGENT_TYPE=flowiseai-flow-manager
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  dify-automation-specialist:
+    container_name: sutazai-dify-automation-specialist
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.dify
+    volumes:
+      - ./agents/configs/dify-automation-specialist_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=dify-automation-specialist
+      - AGENT_TYPE=dify-automation-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # SPECIALIZED ANALYSIS AGENTS
+  # ===========================================
+
+  complex-problem-solver:
+    container_name: sutazai-complex-problem-solver
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/complex-problem-solver_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=complex-problem-solver
+      - AGENT_TYPE=complex-problem-solver
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  financial-analysis-specialist:
+    container_name: sutazai-financial-analysis-specialist
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/financial-analysis-specialist_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=financial-analysis-specialist
+      - AGENT_TYPE=financial-analysis-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  private-data-analyst:
+    container_name: sutazai-private-data-analyst
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.privategpt
+    volumes:
+      - ./agents/configs/private-data-analyst_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=private-data-analyst
+      - AGENT_TYPE=private-data-analyst
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  document-knowledge-manager:
+    container_name: sutazai-document-knowledge-manager
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.documind
+    volumes:
+      - ./agents/configs/document-knowledge-manager_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=document-knowledge-manager
+      - AGENT_TYPE=document-knowledge-manager
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # SECURITY & ANALYSIS AGENTS
+  # ===========================================
+
+  security-pentesting-specialist:
+    container_name: sutazai-security-pentesting-specialist
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.pentestgpt
+    volumes:
+      - ./agents/configs/security-pentesting-specialist_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=security-pentesting-specialist
+      - AGENT_TYPE=security-pentesting-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  semgrep-security-analyzer:
+    container_name: sutazai-semgrep-security-analyzer
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.semgrep
+    volumes:
+      - ./agents/configs/semgrep-security-analyzer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=semgrep-security-analyzer
+      - AGENT_TYPE=semgrep-security-analyzer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  kali-security-specialist:
+    container_name: sutazai-kali-security-specialist
+    image: kalilinux/kali-rolling
+    volumes:
+      - ./agents/configs/kali-security-specialist_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=kali-security-specialist
+      - AGENT_TYPE=kali-security-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # BROWSER & AUTOMATION AGENTS
+  # ===========================================
+
+  browser-automation-orchestrator:
+    container_name: sutazai-browser-automation-orchestrator
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.browseruse
+    volumes:
+      - ./agents/configs/browser-automation-orchestrator_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=browser-automation-orchestrator
+      - AGENT_TYPE=browser-automation-orchestrator
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  shell-automation-specialist:
+    container_name: sutazai-shell-automation-specialist
+    build:
+      context: ./agents/dockerfiles
+      dockerfile: Dockerfile.shellgpt
+    volumes:
+      - ./agents/configs/shell-automation-specialist_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=shell-automation-specialist
+      - AGENT_TYPE=shell-automation-specialist
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # SYSTEM OPTIMIZATION AGENTS
+  # ===========================================
+
+  hardware-resource-optimizer:
+    container_name: sutazai-hardware-resource-optimizer
+    build:
+      context: ./agents/hardware-optimizer
+      dockerfile: Dockerfile
+    volumes:
+      - ./agents/configs/hardware-resource-optimizer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=hardware-resource-optimizer
+      - AGENT_TYPE=hardware-resource-optimizer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  context-optimization-engineer:
+    container_name: sutazai-context-optimization-engineer
+    build:
+      context: ./agents/context-optimizer
+      dockerfile: Dockerfile
+    volumes:
+      - ./agents/configs/context-optimization-engineer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=context-optimization-engineer
+      - AGENT_TYPE=context-optimization-engineer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  system-optimizer-reorganizer:
+    container_name: sutazai-system-optimizer-reorganizer
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/system-optimizer-reorganizer_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=system-optimizer-reorganizer
+      - AGENT_TYPE=system-optimizer-reorganizer
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # PROJECT MANAGEMENT AGENTS
+  # ===========================================
+
+  ai-product-manager:
+    container_name: sutazai-ai-product-manager
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/ai-product-manager_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=ai-product-manager
+      - AGENT_TYPE=ai-product-manager
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  ai-scrum-master:
+    container_name: sutazai-ai-scrum-master
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/ai-scrum-master_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=ai-scrum-master
+      - AGENT_TYPE=ai-scrum-master
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # VOICE & INTERFACE AGENTS
+  # ===========================================
+
+  jarvis-voice-interface:
+    container_name: sutazai-jarvis-voice-interface
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/jarvis-voice-interface_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=jarvis-voice-interface
+      - AGENT_TYPE=jarvis-voice-interface
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ===========================================
+  # SYSTEM ARCHITECTURE AGENT
+  # ===========================================
+
+  system-architect:
+    container_name: sutazai-system-architect
+    image: python:3.11-slim
+    volumes:
+      - ./agents/configs/system-architect_universal.json:/app/config.json:ro
+      - ./agents/agent_base.py:/app/shared/agent_base.py:ro
+      - ./agents/generic_agent.py:/app/shared/generic_agent.py:ro
+      - ./agents/startup.sh:/app/startup.sh:ro
+      - ./data:/app/data
+    environment:
+      - AGENT_NAME=system-architect
+      - AGENT_TYPE=system-architect
+      - LOG_LEVEL=INFO
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - PYTHONUNBUFFERED=1
+    networks:
+      - sutazai-network
+    working_dir: /app
+    command: bash /app/startup.sh
+    restart: unless-stopped
+    external_links:
+      - sutazai-backend:backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  sutazai-network:
+    name: sutazaiapp_sutazai-network
+    external: true
