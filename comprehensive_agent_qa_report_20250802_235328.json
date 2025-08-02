@@ -1,0 +1,2817 @@
+{
+  "total_agents": 72,
+  "passed_agents": 72,
+  "failed_agents": 0,
+  "compliance_percentage": 100.0,
+  "validation_timestamp": "2025-08-02T23:53:28.182165",
+  "detailed_results": {
+    "agentgpt-autonomous-executor": {
+      "agent_name": "agentgpt-autonomous-executor",
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentgpt-autonomous-executor.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "agentzero-coordinator": {
+      "agent_name": "agentzero-coordinator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentzero-coordinator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "ai-agent-creator": {
+      "agent_name": "ai-agent-creator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-creator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "ai-agent-debugger": {
+      "agent_name": "ai-agent-debugger",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-debugger.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "ai-agent-orchestrator": {
+      "agent_name": "ai-agent-orchestrator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-orchestrator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "ai-product-manager": {
+      "agent_name": "ai-product-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-product-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "ai-scrum-master": {
+      "agent_name": "ai-scrum-master",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-scrum-master.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "attention-optimizer": {
+      "agent_name": "attention-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/attention-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "autonomous-system-controller": {
+      "agent_name": "autonomous-system-controller",
+      "file_path": "/opt/sutazaiapp/.claude/agents/autonomous-system-controller.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing investigation protocol references"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "browser-automation-orchestrator": {
+      "agent_name": "browser-automation-orchestrator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/browser-automation-orchestrator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "causal-inference-expert": {
+      "agent_name": "causal-inference-expert",
+      "file_path": "/opt/sutazaiapp/.claude/agents/causal-inference-expert.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "code-generation-improver": {
+      "agent_name": "code-generation-improver",
+      "file_path": "/opt/sutazaiapp/.claude/agents/code-generation-improver.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "codebase-team-lead": {
+      "agent_name": "codebase-team-lead",
+      "file_path": "/opt/sutazaiapp/.claude/agents/codebase-team-lead.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "cognitive-architecture-designer": {
+      "agent_name": "cognitive-architecture-designer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/cognitive-architecture-designer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "complex-problem-solver": {
+      "agent_name": "complex-problem-solver",
+      "file_path": "/opt/sutazaiapp/.claude/agents/complex-problem-solver.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "context-optimization-engineer": {
+      "agent_name": "context-optimization-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/context-optimization-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "cpu-only-hardware-optimizer": {
+      "agent_name": "cpu-only-hardware-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/cpu-only-hardware-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "data-analysis-engineer": {
+      "agent_name": "data-analysis-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-analysis-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "data-drift-detector": {
+      "agent_name": "data-drift-detector",
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-drift-detector.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "data-pipeline-engineer": {
+      "agent_name": "data-pipeline-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-pipeline-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "deployment-automation-master": {
+      "agent_name": "deployment-automation-master",
+      "file_path": "/opt/sutazaiapp/.claude/agents/deployment-automation-master.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "dify-automation-specialist": {
+      "agent_name": "dify-automation-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/dify-automation-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 100.0
+    },
+    "distributed-computing-architect": {
+      "agent_name": "distributed-computing-architect",
+      "file_path": "/opt/sutazaiapp/.claude/agents/distributed-computing-architect.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "document-knowledge-manager": {
+      "agent_name": "document-knowledge-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/document-knowledge-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "edge-computing-optimizer": {
+      "agent_name": "edge-computing-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-computing-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "edge-inference-proxy": {
+      "agent_name": "edge-inference-proxy",
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-inference-proxy.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "episodic-memory-engineer": {
+      "agent_name": "episodic-memory-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/episodic-memory-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "experiment-tracker": {
+      "agent_name": "experiment-tracker",
+      "file_path": "/opt/sutazaiapp/.claude/agents/experiment-tracker.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "explainable-ai-specialist": {
+      "agent_name": "explainable-ai-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/explainable-ai-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "federated-learning-coordinator": {
+      "agent_name": "federated-learning-coordinator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/federated-learning-coordinator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "financial-analysis-specialist": {
+      "agent_name": "financial-analysis-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/financial-analysis-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "flowiseai-flow-manager": {
+      "agent_name": "flowiseai-flow-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/flowiseai-flow-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "garbage-collector-coordinator": {
+      "agent_name": "garbage-collector-coordinator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/garbage-collector-coordinator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "gpu-hardware-optimizer": {
+      "agent_name": "gpu-hardware-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/gpu-hardware-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "gradient-compression-specialist": {
+      "agent_name": "gradient-compression-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/gradient-compression-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "hardware-resource-optimizer": {
+      "agent_name": "hardware-resource-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/hardware-resource-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 100.0
+    },
+    "infrastructure-devops-manager": {
+      "agent_name": "infrastructure-devops-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/infrastructure-devops-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 100.0
+    },
+    "intelligence-optimization-monitor": {
+      "agent_name": "intelligence-optimization-monitor",
+      "file_path": "/opt/sutazaiapp/.claude/agents/intelligence-optimization-monitor.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "jarvis-voice-interface": {
+      "agent_name": "jarvis-voice-interface",
+      "file_path": "/opt/sutazaiapp/.claude/agents/jarvis-voice-interface.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "kali-security-specialist": {
+      "agent_name": "kali-security-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/kali-security-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "knowledge-distillation-expert": {
+      "agent_name": "knowledge-distillation-expert",
+      "file_path": "/opt/sutazaiapp/.claude/agents/knowledge-distillation-expert.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "knowledge-graph-builder": {
+      "agent_name": "knowledge-graph-builder",
+      "file_path": "/opt/sutazaiapp/.claude/agents/knowledge-graph-builder.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "langflow-workflow-designer": {
+      "agent_name": "langflow-workflow-designer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/langflow-workflow-designer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "localagi-orchestration-manager": {
+      "agent_name": "localagi-orchestration-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/localagi-orchestration-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 100.0
+    },
+    "mega-code-auditor": {
+      "agent_name": "mega-code-auditor",
+      "file_path": "/opt/sutazaiapp/.claude/agents/mega-code-auditor.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "memory-persistence-manager": {
+      "agent_name": "memory-persistence-manager",
+      "file_path": "/opt/sutazaiapp/.claude/agents/memory-persistence-manager.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "meta-learning-specialist": {
+      "agent_name": "meta-learning-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/meta-learning-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "model-training-specialist": {
+      "agent_name": "model-training-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/model-training-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "multi-modal-fusion-coordinator": {
+      "agent_name": "multi-modal-fusion-coordinator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/multi-modal-fusion-coordinator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "neuromorphic-computing-expert": {
+      "agent_name": "neuromorphic-computing-expert",
+      "file_path": "/opt/sutazaiapp/.claude/agents/neuromorphic-computing-expert.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "observability-monitoring-engineer": {
+      "agent_name": "observability-monitoring-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/observability-monitoring-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 100.0
+    },
+    "ollama-integration-specialist": {
+      "agent_name": "ollama-integration-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ollama-integration-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "opendevin-code-generator": {
+      "agent_name": "opendevin-code-generator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/opendevin-code-generator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "private-data-analyst": {
+      "agent_name": "private-data-analyst",
+      "file_path": "/opt/sutazaiapp/.claude/agents/private-data-analyst.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "product-strategy-architect": {
+      "agent_name": "product-strategy-architect",
+      "file_path": "/opt/sutazaiapp/.claude/agents/product-strategy-architect.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "prompt-injection-guard": {
+      "agent_name": "prompt-injection-guard",
+      "file_path": "/opt/sutazaiapp/.claude/agents/prompt-injection-guard.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "ram-hardware-optimizer": {
+      "agent_name": "ram-hardware-optimizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/ram-hardware-optimizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "reinforcement-learning-trainer": {
+      "agent_name": "reinforcement-learning-trainer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/reinforcement-learning-trainer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "resource-visualiser": {
+      "agent_name": "resource-visualiser",
+      "file_path": "/opt/sutazaiapp/.claude/agents/resource-visualiser.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "security-pentesting-specialist": {
+      "agent_name": "security-pentesting-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/security-pentesting-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "self-healing-orchestrator": {
+      "agent_name": "self-healing-orchestrator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/self-healing-orchestrator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "semgrep-security-analyzer": {
+      "agent_name": "semgrep-security-analyzer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/semgrep-security-analyzer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "senior-ai-engineer": {
+      "agent_name": "senior-ai-engineer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-ai-engineer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "senior-backend-developer": {
+      "agent_name": "senior-backend-developer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-backend-developer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "senior-frontend-developer": {
+      "agent_name": "senior-frontend-developer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-frontend-developer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "shell-automation-specialist": {
+      "agent_name": "shell-automation-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/shell-automation-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "symbolic-reasoning-engine": {
+      "agent_name": "symbolic-reasoning-engine",
+      "file_path": "/opt/sutazaiapp/.claude/agents/symbolic-reasoning-engine.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "synthetic-data-generator": {
+      "agent_name": "synthetic-data-generator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/synthetic-data-generator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    },
+    "system-optimizer-reorganizer": {
+      "agent_name": "system-optimizer-reorganizer",
+      "file_path": "/opt/sutazaiapp/.claude/agents/system-optimizer-reorganizer.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "task-assignment-coordinator": {
+      "agent_name": "task-assignment-coordinator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/task-assignment-coordinator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "testing-qa-validator": {
+      "agent_name": "testing-qa-validator",
+      "file_path": "/opt/sutazaiapp/.claude/agents/testing-qa-validator.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": true,
+          "score": 70,
+          "issues": [
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 94.0
+    },
+    "transformers-migration-specialist": {
+      "agent_name": "transformers-migration-specialist",
+      "file_path": "/opt/sutazaiapp/.claude/agents/transformers-migration-specialist.md",
+      "tests": {
+        "yaml_frontmatter": {
+          "passed": true,
+          "score": 100,
+          "issues": [],
+          "critical": false
+        },
+        "naming_conventions": {
+          "passed": true,
+          "score": 100,
+          "issues": []
+        },
+        "hygiene_enforcement": {
+          "passed": true,
+          "score": 100.0,
+          "issues": [],
+          "critical": false
+        },
+        "content_quality": {
+          "passed": true,
+          "score": 100.0,
+          "issues": []
+        },
+        "behavior_compliance": {
+          "passed": false,
+          "score": 40,
+          "issues": [
+            "Missing investigation protocol references",
+            "Missing agent coordination guidelines"
+          ]
+        }
+      },
+      "overall_pass": true,
+      "issues": [],
+      "score": 88.0
+    }
+  },
+  "critical_issues": [],
+  "recommendations": [
+    "Implement automated compliance checking in CI/CD pipeline",
+    "Create agent template to ensure consistency across new agents",
+    "Regular hygiene audits should be scheduled monthly",
+    "Consider agent performance optimization for resource efficiency"
+  ],
+  "agent_inventory": {},
+  "test_categories": {
+    "yaml_frontmatter": {
+      "passed": 72,
+      "failed": 0,
+      "issues": []
+    },
+    "naming_conventions": {
+      "passed": 72,
+      "failed": 0,
+      "issues": []
+    },
+    "hygiene_enforcement": {
+      "passed": 72,
+      "failed": 0,
+      "issues": []
+    },
+    "duplicate_detection": {
+      "passed": 0,
+      "failed": 0,
+      "issues": []
+    },
+    "agent_behavior": {
+      "passed": 0,
+      "failed": 0,
+      "issues": []
+    },
+    "integration_compliance": {
+      "passed": 0,
+      "failed": 0,
+      "issues": []
+    },
+    "performance_standards": {
+      "passed": 0,
+      "failed": 0,
+      "issues": []
+    }
+  }
+}

@@ -18,8 +18,15 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(False, env="DEBUG")
     LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
     
+    # System Configuration (environment variables from .env)
+    TZ: str = Field("UTC", env="TZ")
+    SUTAZAI_ENV: str = Field("local", env="SUTAZAI_ENV")
+    LOCAL_IP: str = Field("127.0.0.1", env="LOCAL_IP")
+    DEPLOYMENT_ID: str = Field("", env="DEPLOYMENT_ID")
+    
     # Security
     SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    JWT_SECRET: str = Field(..., env="JWT_SECRET")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -33,9 +40,10 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     
     @property
-    def DATABASE_URL(self) -> str:
+    def computed_database_url(self) -> str:
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Redis
@@ -58,8 +66,18 @@ class Settings(BaseSettings):
     QDRANT_PORT: int = 6333
     QDRANT_API_KEY: Optional[str] = None
     
+    # Neo4j Configuration
+    NEO4J_PASSWORD: str = Field(..., env="NEO4J_PASSWORD")
+    
+    # Monitoring Configuration
+    GRAFANA_PASSWORD: str = Field(..., env="GRAFANA_PASSWORD")
+    
     # Model Configuration - Emergency small models to prevent freezing
-    OLLAMA_HOST: str = "http://ollama:11434"
+    OLLAMA_HOST: str = Field("http://ollama:11434", env="OLLAMA_HOST")
+    OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
+    OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
+    OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
+    
     DEFAULT_MODEL: str = "tinyllama:1.1b"  # Ultra-small model to prevent system overload
     FALLBACK_MODEL: str = "qwen2.5:3b"  # Larger model for complex tasks when resources allow
     EMBEDDING_MODEL: str = "nomic-embed-text"
@@ -79,8 +97,18 @@ class Settings(BaseSettings):
         return v
     
     # GPU Configuration
-    ENABLE_GPU: bool = True
+    ENABLE_GPU: bool = Field(False, env="ENABLE_GPU")
     GPU_MEMORY_FRACTION: float = 0.8
+    
+    # Feature Flags
+    ENABLE_MONITORING: bool = Field(True, env="ENABLE_MONITORING")
+    ENABLE_LOGGING: bool = Field(True, env="ENABLE_LOGGING")
+    ENABLE_HEALTH_CHECKS: bool = Field(True, env="ENABLE_HEALTH_CHECKS")
+    
+    # Performance Tuning
+    MAX_WORKERS: int = Field(4, env="MAX_WORKERS")
+    CONNECTION_POOL_SIZE: int = Field(20, env="CONNECTION_POOL_SIZE")
+    CACHE_TTL: int = Field(3600, env="CACHE_TTL")
     
     # Resource Limits
     MAX_CONCURRENT_AGENTS: int = 10

@@ -1,1 +1,0 @@
-# LiteLLM Proxy Manager Agent

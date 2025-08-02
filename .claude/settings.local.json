@@ -84,7 +84,9 @@
       "Bash(/opt/sutazaiapp/chaos/scripts/make-executable.sh:*)",
       "Bash(vulture:*)",
       "Bash(export CLAUDE_RULES_ENABLED=true)",
-      "Bash(export:*)"
+      "Bash(export:*)",
+      "Bash(sudo pkill:*)",
+      "Bash(pip3 install:*)"
     ],
     "deny": []
   },

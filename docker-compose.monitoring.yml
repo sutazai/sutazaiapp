@@ -109,46 +109,42 @@ services:
     networks:
       - sutazai-network
 
-  # Nginx Exporter for web server metrics
-  nginx-exporter:
-    image: nginx/nginx-prometheus-exporter:latest
-    container_name: sutazai-nginx-exporter
-    restart: unless-stopped
-    ports:
-      - "9113:9113"
-    command:
-      - -nginx.scrape-uri=http://nginx:8080/nginx_status
-    depends_on:
-      - nginx
-    networks:
-      - sutazai-network
+  # Nginx Exporter for web server metrics (commented out - no nginx service available)
+  # nginx-exporter:
+  #   image: nginx/nginx-prometheus-exporter:latest
+  #   container_name: sutazai-nginx-exporter
+  #   restart: unless-stopped
+  #   ports:
+  #     - "9113:9113"
+  #   command:
+  #     - -nginx.scrape-uri=http://nginx:8080/nginx_status
+  #   depends_on:
+  #     - nginx
+  #   networks:
+  #     - sutazai-network
 
-  # PostgreSQL Exporter for database metrics
+  # PostgreSQL Exporter for database metrics (depends on external postgres service)
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter:latest
-    container_name: sutazai-postgres-exporter
+    container_name: sutazai-postgres-exporter-monitoring
     restart: unless-stopped
     environment:
-      DATA_SOURCE_NAME: "postgresql://sutazai:${POSTGRES_PASSWORD}@postgres:5432/sutazai?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://sutazai:${POSTGRES_PASSWORD}@sutazai-postgres:5432/sutazai?sslmode=disable"
     ports:
-      - "9187:9187"
-    depends_on:
-      - postgres
+      - "9188:9187"
     networks:
       - sutazai-network
 
-  # Redis Exporter for cache metrics
+  # Redis Exporter for cache metrics (depends on external redis service)
   redis-exporter:
     image: oliver006/redis_exporter:latest
-    container_name: sutazai-redis-exporter
+    container_name: sutazai-redis-exporter-monitoring
     restart: unless-stopped
     environment:
-      REDIS_ADDR: "redis://redis:6379"
+      REDIS_ADDR: "redis://sutazai-redis:6379"
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
     ports:
-      - "9121:9121"
-    depends_on:
-      - redis
+      - "9122:9121"
     networks:
       - sutazai-network
 
@@ -185,3 +181,7 @@ volumes:
   jaeger_data:
   elasticsearch_data:
   uptime_data:
+
+networks:
+  sutazai-network:
+    external: true

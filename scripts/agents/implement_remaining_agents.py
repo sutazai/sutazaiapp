@@ -262,13 +262,6 @@ REMAINING_AGENTS = {
         "framework": "native",
         "port": 8582
     },
-    "litellm-proxy-manager": {
-        "name": "LiteLLM Proxy Manager",
-        "description": "Multi-LLM proxy management",
-        "capabilities": ["llm_routing", "api_management", "cost_optimization"],
-        "framework": "litellm",
-        "port": 8583
-    },
     "opendevin-code-generator": {
         "name": "OpenDevin Code Generator",
         "description": "Advanced code generation",

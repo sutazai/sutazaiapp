@@ -1,1 +1,0 @@
-/opt/sutazaiapp/scripts/deployment/system/deploy_complete_system.sh

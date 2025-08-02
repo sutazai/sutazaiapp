@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-08-02T23:43:42.994579",
+  "deployment_status": {
+    "docker_available": true,
+    "running_containers": [],
+    "stopped_containers": [],
+    "total_containers": 0,
+    "expected_containers": 4,
+    "all_containers_running": false,
+    "compose_file_exists": true,
+    "compose_status": "accessible"
+  },
+  "container_health": {
+    "sutazai-postgres": {
+      "status": "not_found",
+      "health": "not_found",
+      "accessible": false,
+      "error": "Error: No such object: sutazai-postgres"
+    },
+    "sutazai-redis": {
+      "status": "not_found",
+      "health": "not_found",
+      "accessible": false,
+      "error": "Error: No such object: sutazai-redis"
+    },
+    "sutazai-neo4j": {
+      "status": "not_found",
+      "health": "not_found",
+      "accessible": false,
+      "error": "Error: No such object: sutazai-neo4j"
+    },
+    "sutazai-chromadb": {
+      "status": "not_found",
+      "health": "not_found",
+      "accessible": false,
+      "error": "Error: No such object: sutazai-chromadb"
+    }
+  },
+  "log_analysis": {
+    "sutazai-postgres": {
+      "status": "error",
+      "error": "Error response from daemon: No such container: sutazai-postgres",
+      "log_lines": 0
+    },
+    "sutazai-redis": {
+      "status": "error",
+      "error": "Error response from daemon: No such container: sutazai-redis",
+      "log_lines": 0
+    },
+    "sutazai-neo4j": {
+      "status": "error",
+      "error": "Error response from daemon: No such container: sutazai-neo4j",
+      "log_lines": 0
+    },
+    "sutazai-chromadb": {
+      "status": "error",
+      "error": "Error response from daemon: No such container: sutazai-chromadb",
+      "log_lines": 0
+    }
+  },
+  "resource_usage": {
+    "memory": {
+      "total_bytes": 31542411264,
+      "used_bytes": 3795529728,
+      "available_bytes": 27746881536,
+      "usage_percent": 12.03
+    },
+    "cpu": {
+      "load_1min": 0.32,
+      "load_5min": 0.52,
+      "load_15min": 0.49
+    },
+    "disk": {
+      "total_kb": 1055762868,
+      "used_kb": 145676476,
+      "available_kb": 856382920,
+      "usage_percent": 15
+    }
+  },
+  "overall_status": "failed"
+}
