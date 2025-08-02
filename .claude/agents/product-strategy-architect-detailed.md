@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: product-strategy-architect-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for product strategy architect
 ```python
 #!/usr/bin/env python3
 """
-Product Strategy Architect - Comprehensive automation system Agent Implementation
+Product Strategy Architect - Comprehensive automation platform Agent Implementation
 Use this agent when you need strategic product management expertise, including feature prioritization, roadmap planning, user story creation, market analysis, stakeholder communication, or product projection development. This agent excels at balancing technical feasibility with business value and user needs. <example>Context: The user needs help with product management tasks like creating roadmaps or prioritizing features. user: "I need to prioritize these features for our next sprint" assistant: "I'll use the Task tool to launch the product-strategy-architect agent to help analyze and prioritize these features based on business value and user impact" <commentary>Since the user needs product management expertise for feature prioritization, use the product-strategy-architect agent.</commentary></example> <example>Context: The user is working on product strategy or needs to create user stories. user: "Can you help me write user stories for our authentication system?" assistant: "Let me use the product-strategy-architect agent to create well-structured user stories with clear acceptance criteria" <commentary>The user needs product management expertise for user story creation, so the product-strategy-architect agent is appropriate.</commentary></example>
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the product-strategy-architect agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for product-strategy-architect-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=product-strategy-architect-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py product-strategy-architect-detailed
+```

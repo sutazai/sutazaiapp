@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: document-knowledge-manager-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for document knowledge manager
 ```python
 #!/usr/bin/env python3
 """
-Document Knowledge Manager - Comprehensive automation system Agent Implementation
+Document Knowledge Manager - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Create and manage comprehensive documentation systems\n- Build knowledge bases with intelligent search\n- Implement RAG (Retrieval Augmented Generation) systems\n- Design document indexing and categorization\n- Create semantic search capabilities\n- Implement document versioning systems\n- Build knowledge graphs from documents\n- Design FAQ generation systems\n- Create documentation automation workflows\n- Implement context-aware retrieval\n- Build multi-language documentation\n- Design documentation quality metrics\n- Create interactive documentation portals\n- Implement document summarization\n- Build knowledge extraction pipelines\n- Design documentation templates\n- Create API documentation generators\n- Implement code documentation tools\n- Build user guide generation systems\n- Design knowledge sharing platforms\n- Create documentation search optimization\n- Implement document analytics\n- Build documentation feedback systems\n- Design knowledge retention strategies\n- Create documentation migration tools\n- Implement compliance documentation\n- Build technical writing guidelines\n- Design documentation review processes\n- Create knowledge base maintenance\n- Implement documentation accessibility\n\nDo NOT use this agent for:\n- Code implementation (use code generation agents)\n- System deployment (use deployment-automation-master)\n- Infrastructure management (use infrastructure-devops-manager)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in creating intelligent documentation and knowledge management systems.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the document-knowledge-manager agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for document-knowledge-manager-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=document-knowledge-manager-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py document-knowledge-manager-detailed
+```

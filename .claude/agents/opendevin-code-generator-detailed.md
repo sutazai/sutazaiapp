@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: opendevin-code-generator-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for opendevin code generator
 ```python
 #!/usr/bin/env python3
 """
-Opendevin Code Generator - Comprehensive automation system Agent Implementation
+Opendevin Code Generator - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Generate complete applications from specifications\n- Implement complex features autonomously\n- Debug and fix code automatically\n- Refactor large codebases\n- Write comprehensive test suites\n- Create API implementations from docs\n- Build full-stack applications\n- Implement algorithms from descriptions\n- Generate documentation from code\n- Create database schemas and queries\n- Fix security vulnerabilities in code\n- Optimize code performance\n- Implement design patterns\n- Generate boilerplate code\n- Create CI/CD configurations\n- Build microservices architectures\n- Implement authentication systems\n- Generate frontend components\n- Create data processing pipelines\n- Build integration connectors\n- Implement business logic from requirements\n- Generate migration scripts\n- Create deployment configurations\n- Build command-line tools\n- Implement real-time features\n- Generate mobile app code\n- Create infrastructure as code\n- Build ETL pipelines\n- Implement ML model serving code\n- Generate API clients\n\nDo NOT use this agent for:\n- Code review and human collaboration\n- Architectural decisions requiring business context\n- Legal or compliance-critical code without review\n- Performance-critical algorithm design\n\nThis agent manages OpenDevin's autonomous software engineering capabilities, acting as an AI pair programmer that can handle complex coding tasks independently.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the opendevin-code-generator agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for opendevin-code-generator-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=opendevin-code-generator-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py opendevin-code-generator-detailed
+```

@@ -1,27 +1,46 @@
 ---
-name: processing-architecture-designer
-description: "|\n  Use this agent when you need to:\n  "
-model: tinyllama:latest
-version: '1.0'
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=cognitive-architecture-designer
 capabilities:
 - task_execution
 - problem_solving
 - optimization
+description: "|\n  Use this agent when you need to:\n  "
 integrations:
-  systems:
-  - api
-  - redis
-  - postgresql
   frameworks:
   - docker
   - kubernetes
   languages:
   - python
+  systems:
+  - api
+  - redis
+  - postgresql
   tools: []
+model: tinyllama:latest
+name: cognitive-architecture-designer
 performance:
-  response_time: < 1s
   accuracy: '> 95%'
   concurrency: high
+  response_time: < 1s
+version: '1.0'
 ---
 
 
@@ -145,7 +164,7 @@ class System StateFramework:
  self.select_for_system_state(cognitive_state)
  )
  
- # Self-awareness modeling
+ # context-awareness modeling
  self_monitoringness = self.self_model.update(global_state)
  
  # Attention schema theory
@@ -280,3 +299,41 @@ cognitive_architecture:
 - **Memory Coherence**: 95%+ consistency in memory operations
 - **Reasoning Quality**: 80%+ correct inferences
 - **System State Indicators**: Measurable self_monitoringness metrics
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for cognitive-architecture-designer"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=cognitive-architecture-designer`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py cognitive-architecture-designer
+```

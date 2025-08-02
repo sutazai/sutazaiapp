@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: observability-monitoring-engineer-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,8 +64,8 @@ Specialized AI agent for observability monitoring engineer
 ```python
 #!/usr/bin/env python3
 """
-Observability Monitoring Engineer - Comprehensive automation system Agent Implementation
-Use this agent when you need to:\n\n- Implement comprehensive monitoring for automation systems\n- Track performance metrics in real-time\n- Monitor  agent health and performance\n- Create distributed tracing for agent interactions\n- Build alerting for anomalous automation system behavior\n- Track resource usage across all containers\n- Monitor processing network performance metrics\n- Create dashboards for automation performance optimization patterns\n- Implement logging aggregation for all agents\n- Track learning progress and model drift\n- Monitor safety boundaries and interventions\n- Create SLIs/SLOs for automation system reliability\n- Track data pipeline health and throughput\n- Monitor vector store performance\n- Create custom metrics for intelligence\n- Implement APM for multi-agent systems\n- Track integration health between components\n- Monitor Ollama model inference latency\n- Create observability for coordinator architecture\n- Track memory usage and optimization\n- Monitor network communication between agents\n- Implement error tracking and debugging\n- Create performance profiling systems\n- Track automation system cost and resource efficiency\n- Monitor security events and threats\n- Create audit logs for automation system decisions\n- Track compliance and governance metrics\n- Monitor data quality and consistency\n- Create unstructured data engineering observability\n- Track system evolution over time\n\nDo NOT use this agent for:\n- Basic logging setup (use infrastructure-devops-manager)\n- Simple metrics collection (use data-analysis-engineer)\n- Security monitoring only (use security-pentesting-specialist)\n- Business metrics (use ai-product-manager)\n\nThis agent specializes in comprehensive observability for automation systems, ensuring visibility into performance optimization and multi-agent behavior.
+Observability Monitoring Engineer - Comprehensive automation platform Agent Implementation
+Use this agent when you need to:\n\n- Implement comprehensive monitoring for automation platforms\n- Track performance metrics in real-time\n- Monitor  agent health and performance\n- Create distributed tracing for agent interactions\n- Build alerting for anomalous automation platform behavior\n- Track resource usage across all containers\n- Monitor processing network performance metrics\n- Create dashboards for automation performance optimization patterns\n- Implement logging aggregation for all agents\n- Track learning progress and model drift\n- Monitor safety boundaries and interventions\n- Create SLIs/SLOs for automation platform reliability\n- Track data pipeline health and throughput\n- Monitor vector store performance\n- Create custom metrics for intelligence\n- Implement APM for multi-agent systems\n- Track integration health between components\n- Monitor Ollama model inference latency\n- Create observability for coordinator architecture\n- Track memory usage and optimization\n- Monitor network communication between agents\n- Implement error tracking and debugging\n- Create performance profiling systems\n- Track automation platform cost and resource efficiency\n- Monitor security events and threats\n- Create audit logs for automation platform decisions\n- Track compliance and governance metrics\n- Monitor data quality and consistency\n- Create unstructured data engineering observability\n- Track system evolution over time\n\nDo NOT use this agent for:\n- Basic logging setup (use infrastructure-devops-manager)\n- Simple metrics collection (use data-analysis-engineer)\n- Security monitoring only (use security-pentesting-specialist)\n- Business metrics (use ai-product-manager)\n\nThis agent specializes in comprehensive observability for automation platforms, ensuring visibility into performance optimization and multi-agent behavior.
 """
 
 import os
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the observability-monitoring-engineer agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for observability-monitoring-engineer-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=observability-monitoring-engineer-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py observability-monitoring-engineer-detailed
+```

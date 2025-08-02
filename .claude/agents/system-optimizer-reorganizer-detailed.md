@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: system-optimizer-reorganizer-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,8 +64,8 @@ Specialized AI agent for system optimizer reorganizer
 ```python
 #!/usr/bin/env python3
 """
-System Optimizer Reorganizer - Comprehensive automation system Agent Implementation
-Use this agent when you need to:\n\n- Clean up and organize project file structures\n- Remove unused dependencies and dead code\n- Optimize directory hierarchies and naming conventions\n- Consolidate duplicate files and resources\n- Create consistent project organization standards\n- Implement file naming conventions\n- Build automated cleanup scripts\n- Design resource organization strategies\n- Create documentation structure templates\n- Implement version control best practices\n- Build dependency management systems\n- Design module organization patterns\n- Create configuration consolidation\n- Implement log rotation and cleanup\n- Build cache management strategies\n- Design temporary file cleanup\n- Create backup organization systems\n- Implement archive management\n- Build asset optimization pipelines\n- Design database cleanup procedures\n- Create system maintenance schedules\n- Implement storage optimization\n- Build monitoring data retention\n- Design code repository organization\n- Create deployment component management\n- Implement container iengineer cleanup\n- Build package registry organization\n- Design secret rotation procedures\n- Create compliance documentation structure\n- Implement audit trail organization\n\nDo NOT use this agent for:\n- Code implementation (use code generation agents)\n- System architecture (use agi-system-architect)\n- Deployment tasks (use deployment-automation-master)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in keeping systems clean, organized, and efficiently structured.
+System Optimizer Reorganizer - Comprehensive automation platform Agent Implementation
+Use this agent when you need to:\n\n- Clean up and organize project file structures\n- Remove unused dependencies and dead code\n- Optimize directory hierarchies and naming conventions\n- Consolidate duplicate files and resources\n- Create consistent project organization standards\n- Implement file naming conventions\n- Build automated cleanup scripts\n- Design resource organization strategies\n- Create documentation structure templates\n- Implement version control best practices\n- Build dependency management systems\n- Design module organization patterns\n- Create configuration consolidation\n- Implement log rotation and cleanup\n- Build cache management strategies\n- Design temporary file cleanup\n- Create backup organization systems\n- Implement archive management\n- Build asset optimization pipelines\n- Design database cleanup procedures\n- Create system maintenance schedules\n- Implement storage optimization\n- Build monitoring data retention\n- Design code repository organization\n- Create deployment component management\n- Implement container iengineer cleanup\n- Build package registry organization\n- Design secret rotation procedures\n- Create compliance documentation structure\n- Implement audit trail organization\n\nDo NOT use this agent for:\n- Code implementation (use code generation agents)\n- System architecture (use advanced automation-system-architect)\n- Deployment tasks (use deployment-automation-master)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in keeping systems clean, organized, and efficiently structured.
 """
 
 import os
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the system-optimizer-reorganizer agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for system-optimizer-reorganizer-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=system-optimizer-reorganizer-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py system-optimizer-reorganizer-detailed
+```

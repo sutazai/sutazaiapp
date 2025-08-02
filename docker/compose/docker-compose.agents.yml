@@ -1,0 +1,279 @@
+# SutazAI AI Agents Services Configuration
+# Optimized agent deployment with proper resource management
+version: '3.8'
+
+networks:
+  sutazai-network:
+    name: sutazai-network
+    external: true
+
+services:
+  # Core AI Agents - High Priority
+  senior-ai-engineer:
+    build:
+      context: ../../agents/senior-ai-engineer
+      dockerfile: ../../docker/services/agents/senior-ai-engineer/Dockerfile
+    container_name: sutazai-senior-ai-engineer
+    environment:
+      AGENT_NAME: senior-ai-engineer
+      AGENT_TYPE: senior-ai-engineer
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../agents/configs/senior-ai-engineer_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  deployment-automation-master:
+    build:
+      context: ../../agents/deployment-automation-master
+      dockerfile: ../../docker/services/agents/deployment-automation-master/Dockerfile
+    container_name: sutazai-deployment-automation-master
+    environment:
+      AGENT_NAME: deployment-automation-master
+      AGENT_TYPE: deployment-automation-master
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+      DOCKER_HOST: unix:///var/run/docker.sock
+    volumes:
+      - ../../agents/configs/deployment-automation-master_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  infrastructure-devops-manager:
+    build:
+      context: ../../agents/infrastructure-devops-manager
+      dockerfile: ../../docker/services/agents/infrastructure-devops-manager/Dockerfile
+    container_name: sutazai-infrastructure-devops-manager
+    environment:
+      AGENT_NAME: infrastructure-devops-manager
+      AGENT_TYPE: infrastructure-devops-manager
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+      DOCKER_HOST: unix:///var/run/docker.sock
+    volumes:
+      - ../../agents/configs/infrastructure-devops-manager_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Additional Agents - Medium Priority
+  testing-qa-validator:
+    build:
+      context: ../../agents/testing-qa-validator
+      dockerfile: Dockerfile
+    container_name: sutazai-testing-qa-validator
+    environment:
+      AGENT_NAME: testing-qa-validator
+      AGENT_TYPE: testing-qa-validator
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../agents/configs/testing-qa-validator_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  ollama-integration-specialist:
+    build:
+      context: ../../agents/ollama-integration-specialist
+      dockerfile: Dockerfile
+    container_name: sutazai-ollama-integration-specialist
+    environment:
+      AGENT_NAME: ollama-integration-specialist
+      AGENT_TYPE: ollama-integration-specialist
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../agents/configs/ollama-integration-specialist_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Workflow and Orchestration Agents
+  ai-agent-orchestrator:
+    image: sutazai/agent-base:latest
+    container_name: sutazai-ai-agent-orchestrator
+    environment:
+      AGENT_NAME: ai-agent-orchestrator
+      AGENT_TYPE: ai-agent-orchestrator
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../agents/configs/ai-agent-orchestrator_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    command: ["python", "/app/shared/generic_agent.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  task-assignment-coordinator:
+    image: sutazai/agent-base:latest
+    container_name: sutazai-task-assignment-coordinator
+    environment:
+      AGENT_NAME: task-assignment-coordinator
+      AGENT_TYPE: task-assignment-coordinator
+      LOG_LEVEL: INFO
+      OLLAMA_URL: http://sutazai-ollama:11434
+      BACKEND_URL: http://sutazai-backend:8000
+      HEALTH_PORT: 8080
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - ../../agents/configs/task-assignment-coordinator_universal.json:/app/config/config.json:ro
+      - ../../agents/shared:/app/shared:ro
+      - ../../data:/app/data
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    command: ["python", "/app/shared/generic_agent.py"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+# Resource constraints for agent deployment
+x-agent-defaults: &agent-defaults
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  healthcheck:
+    test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 60s
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.25'
+        memory: 256M

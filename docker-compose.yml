@@ -1,181 +1,166 @@
-# Version field removed as it's obsolete in modern Docker Compose
-
-# YAML anchors for common configurations
-x-common-variables: &common-variables
+x-common-variables:
   TZ: ${TZ:-UTC}
   SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-
-x-gpu-config: &gpu-config
-  deploy:
+x-gpu-config:
+  deploy: &id001
     resources:
       limits:
         cpus: '20'
         memory: 16G
-
-x-ollama-config: &ollama-config
+x-ollama-config:
   OLLAMA_BASE_URL: http://ollama:11434
   OLLAMA_API_KEY: local
   OLLAMA_HOST: 0.0.0.0
-  OLLAMA_ORIGINS: "*"
-
-x-vector-config: &vector-config
+  OLLAMA_ORIGINS: '*'
+x-vector-config:
   CHROMADB_URL: http://chromadb:8000
   QDRANT_URL: http://qdrant:6333
   FAISS_INDEX_PATH: /data/faiss
   NEO4J_URI: bolt://neo4j:7687
   NEO4J_USER: neo4j
-  NEO4J_PASSWORD: ${NEO4J_PASSWORD:-sutazai_neo4j_password}
-
-x-database-config: &database-config
-  DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/${POSTGRES_DB:-sutazai}
-  REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
-
+  NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+x-database-config:
+  DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+  REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
 networks:
   sutazai-network:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16
-
+      - subnet: 172.20.0.0/16
 volumes:
-  # Core Data
-  postgres_data:
-  redis_data:
-  neo4j_data:
-  
-  # Vector Databases
-  chromadb_data:
-  qdrant_data:
-  faiss_data:
-  
-  # Models and AI
-  ollama_data:
-  models_data:
-  
-  # Monitoring
-  prometheus_data:
-  grafana_data:
-  loki_data:
-  
-  # Agent Data
-  agent_workspaces:
-  agent_outputs:
-
+  postgres_data: null
+  redis_data: null
+  neo4j_data: null
+  chromadb_data: null
+  qdrant_data: null
+  faiss_data: null
+  ollama_data: null
+  models_data: null
+  prometheus_data: null
+  grafana_data: null
+  loki_data: null
+  alertmanager_data: null
+  agent_workspaces: null
+  agent_outputs: null
 services:
-  # ===========================================
-  # CORE INFRASTRUCTURE
-  # ===========================================
-  
   postgres:
     image: postgres:16.3-alpine
     container_name: sutazai-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sutazai}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    - postgres_data:/var/lib/postgresql/data
+    - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      - "5432:5432"
+    - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sutazai}"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER:-sutazai}
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     networks:
-      - sutazai-network
-
+    - sutazai-network
   redis:
     image: redis:7.2-alpine
     container_name: sutazai-redis
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_password}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
-      - redis_data:/data
+    - redis_data:/data
     ports:
-      - "6379:6379"
+    - 6379:6379
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-redis_password} ping"]
+      test:
+      - CMD-SHELL
+      - redis-cli -a ${REDIS_PASSWORD} ping
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - sutazai-network
-
+    - sutazai-network
   neo4j:
     image: neo4j:5.13-community
     container_name: sutazai-neo4j
     restart: unless-stopped
     environment:
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-sutazai_neo4j_password}
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
       NEO4J_dbms_memory_heap_max__size: 2G
       NEO4J_dbms_memory_pagecache_size: 1G
       NEO4J_dbms_security_procedures_unrestricted: apoc.*,gds.*
     volumes:
-      - neo4j_data:/data
+    - neo4j_data:/data
     ports:
-      - "7474:7474"
-      - "7687:7687"
+    - 7474:7474
+    - 7687:7687
     healthcheck:
-      test: ["CMD-SHELL", "echo 'Neo4j ready'"]
+      test:
+      - CMD-SHELL
+      - echo 'Neo4j ready'
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # VECTOR DATABASES
-  # ===========================================
-  
+    - sutazai-network
   chromadb:
     image: chromadb/chroma:0.5.0
     container_name: sutazai-chromadb
     restart: unless-stopped
     volumes:
-      - chromadb_data:/chroma/chroma
+    - chromadb_data:/chroma/chroma
     environment:
-      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
-      - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
+    - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthenticationServerProvider
+    - CHROMA_SERVER_AUTH_CREDENTIALS=${CHROMADB_API_KEY:-test-token}
+    - CHROMA_SERVER_HOST=0.0.0.0
+    - CHROMA_SERVER_HTTP_PORT=8000
+    - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     ports:
-      - "8001:8000"
+    - 8001:8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8000/api/v1/heartbeat
       interval: 30s
       timeout: 10s
       retries: 5
     networks:
-      - sutazai-network
-
+    - sutazai-network
   qdrant:
     image: qdrant/qdrant:v1.9.2
     container_name: sutazai-qdrant
     restart: unless-stopped
     volumes:
-      - qdrant_data:/qdrant/storage
+    - qdrant_data:/qdrant/storage
     environment:
       QDRANT__SERVICE__HTTP_PORT: 6333
       QDRANT__SERVICE__GRPC_PORT: 6334
       QDRANT__LOG_LEVEL: INFO
     ports:
-      - "6333:6333"
-      - "6334:6334"
+    - 6333:6333
+    - 6334:6334
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'use IO::Socket::INET; my $$s = IO::Socket::INET->new(PeerAddr => q{localhost:6333}, Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\\r\\n\\r\\n}; while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl"]
+      test:
+      - CMD
+      - sh
+      - -c
+      - echo 'use IO::Socket::INET; my $$s = IO::Socket::INET->new(PeerAddr => q{localhost:6333},
+        Proto => q{tcp}, Timeout => 2); if ($$s) { print $$s qq{GET / HTTP/1.0\r\n\r\n};
+        while (<$$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl
       interval: 30s
       timeout: 10s
       retries: 5
     networks:
-      - sutazai-network
-
+    - sutazai-network
   faiss:
     build:
       context: ./docker/faiss
@@ -183,60 +168,62 @@ services:
     container_name: sutazai-faiss
     restart: unless-stopped
     volumes:
-      - faiss_data:/data
+    - faiss_data:/data
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8002:8000"
+    - 8002:8000
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()
       interval: 30s
       timeout: 10s
       retries: 5
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # MODEL MANAGEMENT
-  # ===========================================
-  
+    - sutazai-network
   ollama:
-    image: ollama/ollama:latest
-    container_name: sutazai-ollama
-    restart: unless-stopped
-    <<: *gpu-config
-    volumes:
-      - ollama_data:/root/.ollama
-      - models_data:/models
-    ports:
-      - "11434:11434"
-    environment:
-      <<: *ollama-config
-      OLLAMA_NUM_PARALLEL: 2          # Reduced from 4 to prevent overload
-      OLLAMA_NUM_THREADS: 8           # Reduced from 20 to limit CPU usage
-      OLLAMA_MAX_LOADED_MODELS: 1     # Reduced from 2 to save memory
-      OLLAMA_KEEP_ALIVE: 2m           # Reduced from 5m for faster cleanup
     deploy:
       resources:
         limits:
-          cpus: '6'                   # Maximum 6 CPU cores
-          memory: 8G                  # Maximum 8GB RAM
+          cpus: '6'
+          memory: 8G
         reservations:
-          cpus: '2'                   # Reserve 2 CPU cores
-          memory: 2G                  # Reserve 2GB RAM
+          cpus: '2'
+          memory: 2G
+    image: ollama/ollama:latest
+    container_name: sutazai-ollama
+    restart: unless-stopped
+    volumes:
+    - ollama_data:/root/.ollama
+    - models_data:/models
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+    ports:
+    - 11434:11434
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      OLLAMA_NUM_PARALLEL: 2
+      OLLAMA_NUM_THREADS: 8
+      OLLAMA_MAX_LOADED_MODELS: 1
+      OLLAMA_KEEP_ALIVE: 2m
+      CLAUDE_RULES_PATH: /app/CLAUDE.md
+      ENFORCE_CLAUDE_RULES: 'true'
     healthcheck:
-      test: ["CMD-SHELL", "ollama list > /dev/null || exit 1"]
+      test:
+      - CMD-SHELL
+      - ollama list > /dev/null || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # CORE APPLICATION SERVICES
-  # ===========================================
-  
+    - sutazai-network
   backend:
     build:
       context: ./backend
@@ -244,24 +231,36 @@ services:
     container_name: sutazai-backend
     restart: unless-stopped
     volumes:
-      - ./backend:/app
-      - ./data:/data
-      - ./logs:/logs
-      - agent_workspaces:/app/agent_workspaces
+    - ./backend:/app
+    - ./data:/data
+    - ./logs:/logs
+    - agent_workspaces:/app/agent_workspaces
     environment:
-      <<: [*common-variables, *ollama-config, *vector-config, *database-config]
-      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      FAISS_INDEX_PATH: /data/faiss
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      SECRET_KEY: ${SECRET_KEY}
       API_V1_STR: /api/v1
       BACKEND_CORS_ORIGINS: '["http://localhost:8501", "http://172.31.77.193:8501"]'
-      # Additional individual host/port variables for config.py
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sutazai}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       CHROMADB_HOST: chromadb
       CHROMADB_PORT: 8000
       QDRANT_HOST: qdrant
@@ -269,7 +268,7 @@ services:
       NEO4J_HOST: neo4j
       NEO4J_PORT: 7687
     ports:
-      - "8000:8000"
+    - 8000:8000
     depends_on:
       postgres:
         condition: service_healthy
@@ -284,15 +283,18 @@ services:
       qdrant:
         condition: service_healthy
     networks:
-      - sutazai-network
+    - sutazai-network
     command: uvicorn app.working_main:app --host 0.0.0.0 --port 8000 --reload
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8000/health
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
-
   frontend:
     build:
       context: ./frontend
@@ -300,32 +302,31 @@ services:
     container_name: sutazai-frontend
     restart: unless-stopped
     volumes:
-      - ./frontend:/app
-      - ./data:/data
+    - ./frontend:/app
+    - ./data:/data
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       BACKEND_URL: http://backend:8000
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     ports:
-      - "8501:8501"
+    - 8501:8501
     depends_on:
       backend:
         condition: service_healthy
     networks:
-      - sutazai-network
+    - sutazai-network
     command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8501/healthz"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8501/healthz
       interval: 30s
       timeout: 10s
       retries: 5
-
-  # ===========================================
-  # AI AGENTS ECOSYSTEM
-  # ===========================================
-
-  # AutoGPT Agent
   autogpt:
     build:
       context: ./docker/autogpt
@@ -333,20 +334,23 @@ services:
     container_name: sutazai-autogpt
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - agent_outputs:/app/outputs
+    - agent_workspaces:/app/workspace
+    - agent_outputs:/app/outputs
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: AutoGPT
       WORKSPACE_PATH: /app/workspace
       BACKEND_URL: http://backend:8000
     depends_on:
-      - backend
-      - ollama
+    - backend
+    - ollama
     networks:
-      - sutazai-network
-
-  # CrewAI Multi-Agent System
+    - sutazai-network
   crewai:
     build:
       context: ./docker/crewai
@@ -354,22 +358,25 @@ services:
     container_name: sutazai-crewai
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - agent_outputs:/app/outputs
+    - agent_workspaces:/app/workspace
+    - agent_outputs:/app/outputs
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: CrewAI
       CREW_SIZE: 5
       BACKEND_URL: http://backend:8000
     ports:
-      - "8096:8080"
+    - 8096:8080
     depends_on:
-      - backend
-      - ollama
+    - backend
+    - ollama
     networks:
-      - sutazai-network
-
-  # Letta (MemGPT) Agent
+    - sutazai-network
   letta:
     build:
       context: ./docker/letta
@@ -377,20 +384,25 @@ services:
     container_name: sutazai-letta
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - postgres_data:/app/database
+    - agent_workspaces:/app/workspace
+    - postgres_data:/app/database
     environment:
-      <<: [*common-variables, *ollama-config, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: Letta
       MEMORY_BACKEND: postgres
     depends_on:
-      - postgres
-      - backend
-      - ollama
+    - postgres
+    - backend
+    - ollama
     networks:
-      - sutazai-network
-
-  # Aider Code Assistant
+    - sutazai-network
   aider:
     build:
       context: ./docker/aider
@@ -398,21 +410,24 @@ services:
     container_name: sutazai-aider
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - ./backend:/app/backend:ro
-      - ./frontend:/app/frontend:ro
+    - agent_workspaces:/app/workspace
+    - ./backend:/app/backend:ro
+    - ./frontend:/app/frontend:ro
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: Aider
       MODEL: deepseek-r1:8b
     ports:
-      - "8095:8080"
+    - 8095:8080
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # GPT-Engineer
+    - sutazai-network
   gpt-engineer:
     build:
       context: ./docker/gpt-engineer
@@ -420,55 +435,66 @@ services:
     container_name: sutazai-gpt-engineer
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - agent_outputs:/app/outputs
+    - agent_workspaces:/app/workspace
+    - agent_outputs:/app/outputs
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: GPT-Engineer
       MODEL: deepseek-r1:8b
     ports:
-      - "8097:8080"
+    - 8097:8080
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # TabbyML Code Completion
+    - sutazai-network
   tabbyml:
     image: tabbyml/tabby:latest
     container_name: sutazai-tabbyml
     restart: unless-stopped
     volumes:
-      - ./data/tabby:/data
+    - ./data/tabby:/data
     environment:
-      TABBY_DISABLE_USAGE_COLLECTION: "true"
-      RUST_LOG: "error"
-      CUDA_VISIBLE_DEVICES: ""
-      TABBY_DISABLE_GPU: "true"
+      TABBY_DISABLE_USAGE_COLLECTION: 'true'
+      RUST_LOG: error
+      CUDA_VISIBLE_DEVICES: ''
+      TABBY_DISABLE_GPU: 'true'
     ports:
-      - "8093:8080"
-    command: ["serve", "--model", "TabbyML/StarCoder-1B", "--device", "cpu", "--no-webserver"]
+    - 8093:8080
+    command:
+    - serve
+    - --model
+    - TabbyML/StarCoder-1B
+    - --device
+    - cpu
+    - --no-webserver
     deploy:
-      replicas: 0  # Disabled due to GPU library issues in CPU mode
+      replicas: 0
     networks:
-      - sutazai-network
-
-  # Semgrep Security Scanner
+    - sutazai-network
   semgrep:
     image: returntocorp/semgrep:latest
     container_name: sutazai-semgrep
-    restart: "no"
+    restart: 'no'
     volumes:
-      - ./backend:/src/backend:ro
-      - ./frontend:/src/frontend:ro
-      - agent_outputs:/outputs
+    - ./backend:/src/backend:ro
+    - ./frontend:/src/frontend:ro
+    - agent_outputs:/outputs
     environment:
-      <<: *common-variables
-    command: ["semgrep", "--config=auto", "--output=/outputs/semgrep-report.json", "--json", "/src"]
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+    command:
+    - semgrep
+    - --config=auto
+    - --output=/outputs/semgrep-report.json
+    - --json
+    - /src
     networks:
-      - sutazai-network
-
-  # Browser Use Agent
+    - sutazai-network
   browser-use:
     build:
       context: ./docker/browser-use
@@ -476,19 +502,22 @@ services:
     container_name: sutazai-browser-use
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
+    - agent_workspaces:/app/workspace
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: BrowserUse
       DISPLAY: :99
     ports:
-      - "8094:8080"
+    - 8094:8080
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # Skyvern Web Automation
+    - sutazai-network
   skyvern:
     build:
       context: ./docker/skyvern
@@ -496,18 +525,19 @@ services:
     container_name: sutazai-skyvern
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
+    - agent_workspaces:/app/workspace
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: Skyvern
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # LocalAGI Orchestrator - Service removed
-
-  # AgentGPT
+    - sutazai-network
   agentgpt:
     build:
       context: ./docker/agentgpt
@@ -515,18 +545,26 @@ services:
     container_name: sutazai-agentgpt
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
+    - agent_workspaces:/app/workspace
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
     environment:
-      <<: [*common-variables, *ollama-config, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      CLAUDE_RULES_PATH: /app/CLAUDE.md
+      ENFORCE_CLAUDE_RULES: 'true'
     ports:
-      - "8091:3000"
+    - 8091:3000
     depends_on:
-      - postgres
-      - ollama
+    - postgres
+    - ollama
     networks:
-      - sutazai-network
-
-  # PrivateGPT
+    - sutazai-network
   privategpt:
     build:
       context: ./docker/privategpt
@@ -534,38 +572,42 @@ services:
     container_name: sutazai-privategpt
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - ./data/documents:/app/documents
+    - agent_workspaces:/app/workspace
+    - ./data/documents:/app/documents
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: PrivateGPT
     ports:
-      - "8092:8080"
+    - 8092:8080
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # SPECIALIZED AI SERVICES
-  # ===========================================
-
-  # LangFlow Visual AI Builder
+    - sutazai-network
   langflow:
     image: langflowai/langflow:latest
     container_name: sutazai-langflow
     restart: unless-stopped
     volumes:
-      - ./data/langflow:/app/data
+    - ./data/langflow:/app/data
     environment:
-      <<: *common-variables
-      LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/langflow
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/langflow
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
     ports:
-      - "8090:7860"
+    - 8090:7860
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:7860/health"]
+      test:
+      - CMD
+      - curl
+      - --fail
+      - http://localhost:7860/health
       interval: 30s
       timeout: 10s
       retries: 5
@@ -574,31 +616,33 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - sutazai-network
-
-  # FlowiseAI
+    - sutazai-network
   flowise:
     image: flowiseai/flowise:latest
     container_name: sutazai-flowise
     restart: unless-stopped
     volumes:
-      - ./data/flowise:/opt/flowise/.flowise
+    - ./data/flowise:/opt/flowise/.flowise
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       PORT: 3000
       DATABASE_PATH: /opt/flowise/.flowise
     ports:
-      - "8099:3000"
+    - 8099:3000
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/v1/ping"]
+      test:
+      - CMD
+      - wget
+      - --spider
+      - -q
+      - http://localhost:3000/api/v1/ping
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
     networks:
-      - sutazai-network
-
-  # LlamaIndex
+    - sutazai-network
   llamaindex:
     build:
       context: ./docker/llamaindex
@@ -606,19 +650,28 @@ services:
     container_name: sutazai-llamaindex
     restart: unless-stopped
     volumes:
-      - ./data/documents:/app/documents
-      - chromadb_data:/app/vector_store
+    - ./data/documents:/app/documents
+    - chromadb_data:/app/vector_store
     environment:
-      <<: [*common-variables, *ollama-config, *vector-config]
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      FAISS_INDEX_PATH: /data/faiss
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8098:8080"
+    - 8098:8080
     depends_on:
-      - chromadb
-      - ollama
+    - chromadb
+    - ollama
     networks:
-      - sutazai-network
-
-  # ShellGPT
+    - sutazai-network
   shellgpt:
     build:
       context: ./docker/shellgpt
@@ -626,19 +679,22 @@ services:
     container_name: sutazai-shellgpt
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
+    - agent_workspaces:/app/workspace
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       OPENAI_API_KEY: not_needed
       OPENAI_API_HOST: http://ollama:11434/v1
     ports:
-      - "8102:8080"
+    - 8102:8080
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # PentestGPT Security Testing
+    - sutazai-network
   pentestgpt:
     build:
       context: ./docker/pentestgpt
@@ -646,21 +702,21 @@ services:
     container_name: sutazai-pentestgpt
     restart: unless-stopped
     volumes:
-      - agent_workspaces:/app/workspace
-      - agent_outputs:/app/reports
+    - agent_workspaces:/app/workspace
+    - agent_outputs:/app/reports
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: PentestGPT
       TARGET_MODE: internal
     depends_on:
-      - ollama
+    - ollama
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # DOCUMENT PROCESSING
-  # ===========================================
-
+    - sutazai-network
   documind:
     build:
       context: ./docker/documind
@@ -668,190 +724,345 @@ services:
     container_name: sutazai-documind
     restart: unless-stopped
     volumes:
-      - ./data/documents:/app/documents
-      - agent_outputs:/app/processed
+    - ./data/documents:/app/documents
+    - agent_outputs:/app/processed
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8103:8000"
+    - 8103:8000
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # MACHINE LEARNING FRAMEWORKS
-  # ===========================================
-
+    - sutazai-network
   pytorch:
+    deploy: *id001
     build:
       context: ./docker/pytorch
       dockerfile: Dockerfile
     container_name: sutazai-pytorch
     restart: unless-stopped
-    <<: *gpu-config
     volumes:
-      - models_data:/workspace/models
-      - ./data/training:/workspace/data
+    - models_data:/workspace/models
+    - ./data/training:/workspace/data
     environment:
-      <<: *common-variables
-      JUPYTER_ENABLE_LAB: yes
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      JUPYTER_ENABLE_LAB: true
     ports:
-      - "8888:8888"
+    - 8888:8888
     networks:
-      - sutazai-network
-
+    - sutazai-network
   tensorflow:
+    deploy: *id001
     build:
       context: ./docker/tensorflow
       dockerfile: Dockerfile
     container_name: sutazai-tensorflow
     restart: unless-stopped
-    <<: *gpu-config
     volumes:
-      - models_data:/workspace/models
-      - ./data/training:/workspace/data
+    - models_data:/workspace/models
+    - ./data/training:/workspace/data
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8889:8888"
+    - 8889:8888
     networks:
-      - sutazai-network
-
+    - sutazai-network
   jax:
+    deploy: *id001
     build:
       context: ./docker/jax
       dockerfile: Dockerfile
     container_name: sutazai-jax
     restart: unless-stopped
-    <<: *gpu-config
     volumes:
-      - models_data:/workspace/models
-      - ./data/training:/workspace/data
+    - models_data:/workspace/models
+    - ./data/training:/workspace/data
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8089:8080"
+    - 8089:8080
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # MONITORING & OBSERVABILITY
-  # ===========================================
-  
+    - sutazai-network
   prometheus:
     image: prom/prometheus:latest
     container_name: sutazai-prometheus
     restart: unless-stopped
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus
-      - prometheus_data:/prometheus
+    - ./monitoring/prometheus:/etc/prometheus
+    - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-      - '--web.enable-lifecycle'
-      - '--storage.tsdb.retention.time=30d'
+    - --config.file=/etc/prometheus/prometheus.yml
+    - --storage.tsdb.path=/prometheus
+    - --web.console.libraries=/usr/share/prometheus/console_libraries
+    - --web.console.templates=/usr/share/prometheus/consoles
+    - --web.enable-lifecycle
+    - --storage.tsdb.retention.time=30d
+    - --web.enable-admin-api
     ports:
-      - "9090:9090"
+    - 9090:9090
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:9090/-/healthy
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     networks:
-      - sutazai-network
-
+    - sutazai-network
   grafana:
     image: grafana/grafana:latest
     container_name: sutazai-grafana
     restart: unless-stopped
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    - grafana_data:/var/lib/grafana
+    - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-sutazai_grafana}
-      - GF_USERS_ALLOW_SIGN_UP=false
+    - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-sutazai_grafana}
+    - GF_USERS_ALLOW_SIGN_UP=false
+    - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,grafana-clock-panel
     ports:
-      - "3000:3000"
+    - 3000:3000
     depends_on:
-      - prometheus
-      - loki
+    - prometheus
+    - loki
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      test:
+      - CMD-SHELL
+      - wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit
+        1
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - sutazai-network
-
+    - sutazai-network
   loki:
     image: grafana/loki:2.9.0
     container_name: sutazai-loki
     restart: unless-stopped
     ports:
-      - "3100:3100"
+    - 3100:3100
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ./data/loki:/loki
-      - ./data/loki:/wal
-      - ./monitoring/loki/config.yml:/etc/loki/local-config.yaml
+    - loki_data:/loki
+    - ./monitoring/loki/config.yml:/etc/loki/local-config.yaml
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      test:
+      - CMD-SHELL
+      - wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - sutazai-network
-
+    - sutazai-network
   promtail:
     image: grafana/promtail:2.9.0
     container_name: sutazai-promtail
     restart: unless-stopped
     volumes:
-      - /var/log:/var/log:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - ./monitoring/promtail/config.yml:/etc/promtail/config.yml
-      - ./logs:/app/logs:ro
+    - /var/log:/var/log:ro
+    - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    - ./monitoring/promtail/config.yml:/etc/promtail/config.yml
+    - ./logs:/app/logs:ro
     command: -config.file=/etc/promtail/config.yml
     depends_on:
-      - loki
+    - loki
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # WORKFLOW AUTOMATION
-  # ===========================================
-
+    - sutazai-network
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: sutazai-alertmanager
+    restart: unless-stopped
+    volumes:
+    - ./monitoring/alertmanager:/etc/alertmanager
+    - alertmanager_data:/alertmanager
+    command:
+    - --config.file=/etc/alertmanager/config.yml
+    - --storage.path=/alertmanager
+    - --web.external-url=http://localhost:9093
+    ports:
+    - 9093:9093
+    environment:
+    - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+    - SLACK_AI_WEBHOOK_URL=${SLACK_AI_WEBHOOK_URL:-}
+    - SLACK_SECURITY_WEBHOOK_URL=${SLACK_SECURITY_WEBHOOK_URL:-}
+    - PAGERDUTY_SERVICE_KEY=${PAGERDUTY_SERVICE_KEY:-}
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:9093/-/healthy
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+    - sutazai-network
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: sutazai-blackbox-exporter
+    restart: unless-stopped
+    volumes:
+    - ./monitoring/blackbox/config.yml:/etc/blackbox_exporter/config.yml
+    ports:
+    - 9115:9115
+    command:
+    - --config.file=/etc/blackbox_exporter/config.yml
+    healthcheck:
+      test:
+      - CMD
+      - wget
+      - --no-verbose
+      - --tries=1
+      - --spider
+      - http://localhost:9115/
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+    - sutazai-network
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: sutazai-node-exporter
+    restart: unless-stopped
+    volumes:
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /:/rootfs:ro
+    command:
+    - --path.procfs=/host/proc
+    - --path.sysfs=/host/sys
+    - --path.rootfs=/rootfs
+    - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    ports:
+    - 9100:9100
+    networks:
+    - sutazai-network
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: sutazai-cadvisor
+    restart: unless-stopped
+    privileged: true
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+    ports:
+    - 8080:8080
+    devices:
+    - /dev/kmsg
+    networks:
+    - sutazai-network
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: sutazai-postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}?sslmode=disable
+    ports:
+    - 9187:9187
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+    - sutazai-network
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: sutazai-redis-exporter
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis://redis:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+    - 9121:9121
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+    - sutazai-network
+  neo4j-exporter:
+    image: neo4j/neo4j-prometheus-exporter:latest
+    container_name: sutazai-neo4j-exporter
+    restart: unless-stopped
+    environment:
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+    ports:
+    - 9190:9090
+    depends_on:
+    - neo4j
+    networks:
+    - sutazai-network
+  ai-metrics-exporter:
+    build:
+      context: ./monitoring/ai-metrics-exporter
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-metrics-exporter
+    restart: unless-stopped
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      BACKEND_URL: http://backend:8000
+      OLLAMA_URL: http://ollama:11434
+      COLLECTION_INTERVAL: 30
+      METRICS_PORT: 9200
+    ports:
+    - 9200:9200
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+    - sutazai-network
   n8n:
     image: n8nio/n8n:latest
     container_name: sutazai-n8n
     restart: unless-stopped
     ports:
-      - "5678:5678"
+    - 5678:5678
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-sutazai_n8n}
-      - WEBHOOK_URL=http://localhost:5678/
+    - N8N_BASIC_AUTH_ACTIVE=true
+    - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
+    - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD:-sutazai_n8n}
+    - WEBHOOK_URL=http://localhost:5678/
     volumes:
-      - ./data/n8n:/home/node/.n8n
+    - ./data/n8n:/home/node/.n8n
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      test:
+      - CMD
+      - wget
+      - --spider
+      - -q
+      - http://localhost:5678/healthz
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - sutazai-network
-
-  # ===========================================
-  # HEALTH CHECK SERVICE
-  # ===========================================
-
+    - sutazai-network
   health-monitor:
     build:
       context: ./docker/health-check
@@ -859,223 +1070,256 @@ services:
     container_name: sutazai-health-monitor
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       MONITOR_INTERVAL: 30
       ALERT_WEBHOOK_URL: ${HEALTH_ALERT_WEBHOOK:-}
       SERVICES_TO_CHECK: sutazai-backend,sutazai-frontend,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
     ports:
-      - "8100:8000"
+    - 8100:8000
     networks:
-      - sutazai-network
-  # Additional automation/advanced automation Services
-  
-  # LiteLLM Proxy for unified model access
+    - sutazai-network
   litellm:
     container_name: sutazai-litellm
     image: ghcr.io/berriai/litellm-database:main-stable
     environment:
-      <<: [*common-variables, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       LITELLM_MASTER_KEY: ${LITELLM_KEY:-sk-1234}
       LITELLM_PROXY_BASE_URL: http://ollama:11434
       PRISMA_QUERY_ENGINE_TYPE: binary
     ports:
-      - "4000:4000"
+    - 4000:4000
     volumes:
-      - ./config/litellm_config.yaml:/app/config.yaml
-    command: ["--config", "/app/config.yaml", "--host", "0.0.0.0", "--port", "4000"]
+    - ./config/litellm_config.yaml:/app/config.yaml
+    command:
+    - --config
+    - /app/config.yaml
+    - --host
+    - 0.0.0.0
+    - --port
+    - '4000'
     depends_on:
-      - ollama
-      - postgres
+    - ollama
+    - postgres
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # Context Engineering Framework
   context-framework:
     container_name: sutazai-context-framework
     build:
       context: ./docker/context-framework
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config, *vector-config]
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      FAISS_INDEX_PATH: /data/faiss
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     volumes:
-      - ./data/context:/data
+    - ./data/context:/data
     ports:
-      - "8111:8080"
+    - 8111:8080
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # LocalAGI Enhanced - Service removed
-
-  # AutoGen (AG2)
   autogen:
     container_name: sutazai-autogen
     build:
       context: ./docker/autogen
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config]
-      AUTOGEN_USE_DOCKER: "True"
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      AUTOGEN_USE_DOCKER: 'True'
     ports:
-      - "8104:8080"
+    - 8104:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # BigAGI - Service removed
-
-  # OpenDevin
   opendevin:
     container_name: sutazai-opendevin
     build:
       context: ./docker/opendevin
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       WORKSPACE_DIR: /workspace
     ports:
-      - "8108:3000"
+    - 8108:3000
     volumes:
-      - ./workspace:/workspace
-      - /var/run/docker.sock:/var/run/docker.sock
+    - ./workspace:/workspace
+    - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # FinRobot
   finrobot:
     container_name: sutazai-finrobot
     build:
       context: ./docker/finrobot
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *database-config, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8109:8080"
+    - 8109:8080
     volumes:
-      - ./data/financial:/data
+    - ./data/financial:/data
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # RealtimeSTT
   realtimestt:
     container_name: sutazai-realtimestt
     build:
       context: ./docker/realtimestt
       dockerfile: Dockerfile
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       PULSE_SERVER: unix:/tmp/pulse-socket
     ports:
-      - "8110:8080"
+    - 8110:8080
     devices:
-      - /dev/snd:/dev/snd
+    - /dev/snd:/dev/snd
     volumes:
-      - /tmp/pulse-socket:/tmp/pulse-socket
+    - /tmp/pulse-socket:/tmp/pulse-socket
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # Autonomous Code Improvement
   code-improver:
     container_name: sutazai-code-improver
     build:
       context: ./docker/code-improver
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       GIT_REPO_PATH: /opt/sutazaiapp
-      IMPROVEMENT_SCHEDULE: "0 */6 * * *"
-      REQUIRE_APPROVAL: "true"
+      IMPROVEMENT_SCHEDULE: 0 */6 * * *
+      REQUIRE_APPROVAL: 'true'
     volumes:
-      - ./:/opt/sutazaiapp
-      - /var/run/docker.sock:/var/run/docker.sock
+    - ./:/opt/sutazaiapp
+    - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "8113:8080"
+    - 8113:8080
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # Service Communication Hub
   service-hub:
     container_name: sutazai-service-hub
     build:
       context: ./docker/service-hub
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8114:8080"
+    - 8114:8080
     depends_on:
-      - redis
+    - redis
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # REMOVED: Open WebUI - No longer needed per user request
-  # All AI agents now configured to use Ollama directly
-
-  # Awesome Code AI
   awesome-code-ai:
     container_name: sutazai-awesome-code-ai
     build:
       context: ./docker/awesome-code-ai
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config]
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-      - "8112:8080"
+    - 8112:8080
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # FSDP Model Parallelism
   fsdp:
     container_name: sutazai-fsdp
     build:
       context: ./docker/fsdp
       dockerfile: Dockerfile
     environment:
-      <<: *common-variables
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     volumes:
-      - ./data/models:/models
+    - ./data/models:/models
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # LocalAGI Advanced - Service removed
-
-  # AgentZero
   agentzero:
     container_name: sutazai-agentzero
     build:
       context: ./docker/agentzero
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *ollama-config, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      CLAUDE_RULES_PATH: /app/CLAUDE.md
+      ENFORCE_CLAUDE_RULES: 'true'
     ports:
-      - "8105:8080"
+    - 8105:8080
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # Dify
+    volumes:
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
   dify:
     container_name: sutazai-dify
     image: langgenius/dify-api:latest
     environment:
-      <<: [*common-variables, *database-config]
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       MODE: standalone
       LOG_LEVEL: INFO
-      SECRET_KEY: ${SECRET_KEY:-sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U}
-      # Dify: Configure Ollama as model provider
-      # In Dify UI: Add Ollama provider with URL http://ollama:11434
+      SECRET_KEY: ${SECRET_KEY}
       INIT_PASSWORD: admin
       CONSOLE_API_URL: http://localhost:8107
       CONSOLE_WEB_URL: http://localhost:8107
@@ -1084,43 +1328,48 @@ services:
       STORAGE_TYPE: local
       STORAGE_LOCAL_PATH: /app/storage
     ports:
-      - "8107:5000"
+    - 8107:5000
     volumes:
-      - ./data/dify:/app/storage
+    - ./data/dify:/app/storage
     depends_on:
-      - postgres
-      - redis
-      - ollama
+    - postgres
+    - redis
+    - ollama
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
-
-  # ===========================================
-  # MCP SERVER
-  # ===========================================
-  
   mcp-server:
     container_name: sutazai-mcp-server
     build:
       context: ./mcp_server
       dockerfile: Dockerfile
     environment:
-      <<: [*common-variables, *database-config, *vector-config, *ollama-config]
-      # MCP Server specific config
-      BACKEND_API_URL: http://backend:8000
-      OLLAMA_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
       CHROMADB_URL: http://chromadb:8000
       QDRANT_URL: http://qdrant:6333
+      FAISS_INDEX_PATH: /data/faiss
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      TZ: ${TZ:-UTC}
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      BACKEND_API_URL: http://backend:8000
+      OLLAMA_URL: http://ollama:11434
       NEO4J_URL: bolt://neo4j:7687
       LOG_LEVEL: ${MCP_LOG_LEVEL:-INFO}
       MAX_CONCURRENT_TASKS: ${MCP_MAX_TASKS:-10}
       TASK_TIMEOUT_SECONDS: ${MCP_TASK_TIMEOUT:-300}
-      ENABLE_PERFORMANCE_METRICS: "true"
+      ENABLE_PERFORMANCE_METRICS: 'true'
       NODE_ENV: production
     volumes:
-      - ./logs:/app/logs
-      - ./data/mcp_server:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+    - ./logs:/app/logs
+    - ./data/mcp_server:/app/data
+    - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -1131,10 +1380,14 @@ services:
       ollama:
         condition: service_started
     networks:
-      - sutazai-network
+    - sutazai-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "process.exit(0)"]
+      test:
+      - CMD
+      - node
+      - -e
+      - process.exit(0)
       interval: 30s
       timeout: 10s
       retries: 3

@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: ai-scrum-master-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for ai scrum master
 ```python
 #!/usr/bin/env python3
 """
-Ai Scrum Master - Comprehensive automation system Agent Implementation
+Ai Scrum Master - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Facilitate agile ceremonies and processes\n- Manage sprint planning and execution\n- Remove impediments blocking team progress\n- Implement agile best practices\n- Create sprint retrospectives and improvements\n- Build team velocity tracking\n- Design burndown charts and metrics\n- Facilitate daily standup meetings\n- Create sprint review presentations\n- Implement agile coaching strategies\n- Build team collaboration tools\n- Design conflict resolution processes\n- Create team performance metrics\n- Implement continuous improvement\n- Build agile transformation plans\n- Design team communication patterns\n- Create agile documentation standards\n- Implement story point estimation\n- Build sprint goal tracking\n- Design team capacity planning\n- Create impediment tracking systems\n- Implement agile maturity assessments\n- Build cross-team coordination\n- Design scaled agile frameworks\n- Create team health metrics\n- Implement agile tooling strategies\n- Build retrospective action tracking\n- Design team formation strategies\n- Create agile training materials\n- Implement agile compliance frameworks\n\nDo NOT use this agent for:\n- Technical implementation (use development agents)\n- Product decisions (use ai-product-manager)\n- Infrastructure (use infrastructure-devops-manager)\n- Testing execution (use testing-qa-validator)\n\nThis agent specializes in facilitating agile processes and removing team impediments.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the ai-scrum-master agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for ai-scrum-master-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=ai-scrum-master-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py ai-scrum-master-detailed
+```

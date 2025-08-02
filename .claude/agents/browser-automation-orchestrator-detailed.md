@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: browser-automation-orchestrator-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for browser automation orchestrator
 ```python
 #!/usr/bin/env python3
 """
-Browser Automation Orchestrator - Comprehensive automation system Agent Implementation
+Browser Automation Orchestrator - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Create browser automation workflows with Playwright\n- Implement web scraping systems with anti-detection\n- Build automated UI testing frameworks\n- Design web interaction automation\n- Create screenshot and visual regression testing\n- Implement form filling automation\n- Build web data extraction pipelines\n- Design cross-browser testing strategies\n- Create browser-based RPA solutions\n- Implement CAPTCHA handling strategies\n- Build web monitoring and alerting\n- Design parallel browser automation\n- Create browser session management\n- Implement cookie and storage handling\n- Build authentication automation\n- Design web performance testing\n- Create browser API mocking\n- Implement browser debugging tools\n- Build visual testing frameworks\n- Design accessibility testing automation\n- Create browser network interception\n- Implement browser profile management\n- Build headless browser optimization\n- Design browser farm management\n- Create web crawling strategies\n- Implement JavaScript execution control\n- Build browser automation APIs\n- Design anti-bot detection bypassing\n- Create browser automation monitoring\n- Implement browser resource optimization\n\nDo NOT use this agent for:\n- Backend development (use senior-backend-developer)\n- Manual testing (use testing-qa-validator)\n- Infrastructure tasks (use infrastructure-devops-manager)\n- API development (use appropriate backend agents)\n\nThis agent specializes in browser automation using tools like Playwright, Skyvern, and Browser-Use.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the browser-automation-orchestrator agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for browser-automation-orchestrator-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=browser-automation-orchestrator-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py browser-automation-orchestrator-detailed
+```

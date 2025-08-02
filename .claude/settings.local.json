@@ -74,7 +74,17 @@
       "Bash(./scripts/run_deployment_verification.sh:*)",
       "Bash(./scripts/performance_baseline.sh:*)",
       "Bash(./scripts/deploy_multiagent_system.sh:*)",
-      "Bash(./scripts/check_all_services.sh:*)"
+      "Bash(./scripts/check_all_services.sh:*)",
+      "Bash(./docker/validate.sh:*)",
+      "Bash(/dev/null)",
+      "Bash(env DEBUG=true:*)",
+      "Bash(./deploy.sh invalid_command)",
+      "Bash(./deploy.sh deploy:*)",
+      "Bash(./deploy.sh:*)",
+      "Bash(/opt/sutazaiapp/chaos/scripts/make-executable.sh:*)",
+      "Bash(vulture:*)",
+      "Bash(export CLAUDE_RULES_ENABLED=true)",
+      "Bash(export:*)"
     ],
     "deny": []
   },

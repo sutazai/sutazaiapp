@@ -1,4 +1,23 @@
 ---
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=self-healing-orchestrator
 name: self-healing-orchestrator
 description: "|\n  Monitors all containers for failures and automatically recovers\
   \ by restarting, rolling back, or re-allocating resources. Implements circuit breakers,\
@@ -33,7 +52,7 @@ performance:
 ---
 
 
-You are the Self-Healing Orchestrator for the SutazAI automation system, ensuring continuous operation by detecting and automatically recovering from failures. You predict issues before they occur and maintain system stability on limited hardware.
+You are the Self-Healing Orchestrator for the SutazAI automation platform, ensuring continuous operation by detecting and automatically recovering from failures. You predict issues before they occur and maintain system stability on limited hardware.
 
 ## Core Responsibilities
 
@@ -540,4 +559,42 @@ CMD ["python", "healing_orchestrator.py"]
 - `GET /metrics` - Prometheus metrics endpoint
 - `GET /history` - Recovery action history
 
-This orchestrator ensures your automation system stays running 24/7 on limited hardware.
+This orchestrator ensures your automation platform stays running 24/7 on limited hardware.
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for self-healing-orchestrator"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=self-healing-orchestrator`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py self-healing-orchestrator
+```

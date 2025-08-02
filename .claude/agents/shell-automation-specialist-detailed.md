@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: shell-automation-specialist-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for shell automation specialist
 ```python
 #!/usr/bin/env python3
 """
-Shell Automation Specialist - Comprehensive automation system Agent Implementation
+Shell Automation Specialist - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Create complex shell scripts and automation\n- Implement system task automation with ShellGPT\n- Build command-line interfaces and tools\n- Design shell script best practices\n- Create system administration automation\n- Implement shell script testing frameworks\n- Build deployment automation scripts\n- Design error handling in shell scripts\n- Create shell script libraries\n- Implement cross-platform shell compatibility\n- Build shell script debugging tools\n- Design shell script security practices\n- Create system monitoring scripts\n- Implement backup automation scripts\n- Build log processing scripts\n- Design shell script optimization\n- Create system maintenance automation\n- Implement shell script documentation\n- Build shell-based CI/CD pipelines\n- Design shell script version control\n- Create system configuration scripts\n- Implement shell script packaging\n- Build interactive shell menus\n- Design shell script logging systems\n- Create system health check scripts\n- Implement shell script scheduling\n- Build shell-based data processing\n- Design shell script modularity\n- Create system integration scripts\n- Implement shell script performance monitoring\n\nDo NOT use this agent for:\n- Application development (use appropriate language agents)\n- Infrastructure provisioning (use infrastructure-devops-manager)\n- Web development (use frontend/backend developers)\n- Database management (use database specialists)\n\nThis agent specializes in shell scripting and command-line automation expertise.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the shell-automation-specialist agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for shell-automation-specialist-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=shell-automation-specialist-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py shell-automation-specialist-detailed
+```

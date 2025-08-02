@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-08-02T21:28:37.197827",
+  "process_summary": {
+    "pre_fix": {
+      "compliant_agents": 25,
+      "total_agents": 134,
+      "compliance_rate": "18.7%"
+    },
+    "post_fix": {
+      "compliant_agents": 25,
+      "total_agents": 134,
+      "compliance_rate": "18.7%"
+    },
+    "improvement": {
+      "agents_fixed": 0,
+      "percentage_improvement": "0.0%",
+      "fixed_agents": []
+    }
+  },
+  "reports": {
+    "pre_fix_report": "/opt/sutazaiapp/.claude/agents/agent_compliance_report_20250802_212837.json",
+    "post_fix_report": "/opt/sutazaiapp/.claude/agents/agent_compliance_report_20250802_212837.json"
+  },
+  "recommendations": [
+    "🔧 109 agents still need manual attention",
+    "📋 Review individual agent issues in the post-fix compliance report",
+    "🔄 Consider running the fix process again for remaining issues",
+    "🚀 Implement automated compliance checking in the deployment pipeline",
+    "📝 Update agent documentation to include compliance requirements",
+    "🎯 Train team members on CLAUDE.md rules and compliance process",
+    "⚡ Set up monitoring to catch compliance issues early"
+  ]
+}

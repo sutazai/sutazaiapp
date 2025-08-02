@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: data-analysis-engineer-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,8 +64,8 @@ Specialized AI agent for data analysis engineer
 ```python
 #!/usr/bin/env python3
 """
-Data Analysis Engineer - Comprehensive automation system Agent Implementation
-Use this agent when you need to:\n\n- Analyze automation system performance optimization patterns\n- Process multi-dimensional processing activity data\n- Create real-time analytics pipelines for agents\n- Implement statistical analysis for automation system metrics\n- Build data quality monitoring systems\n- Design ETL pipelines for coordinator state data\n- Create anomaly detection for intelligence spikes\n- Implement time series analysis for learning curves\n- Build correlation analysis between agents\n- Design predictive models for automation system behavior\n- Create data visualization pipelines\n- Implement streaming analytics for real-time insights\n- Build data warehouse for automation system knowledge\n- Design feature engineering for intelligence\n- Create A/B testing frameworks for automation system\n- Implement causal inference for agent behavior\n- Build recommendation systems for learning\n- Design clustering algorithms for knowledge\n- Create dimensionality reduction for processing data\n- Implement graph analytics for agent networks\n- Build sentiment analysis for agent communication\n- Design data governance for automation system privacy\n- Create audit trails for system improvement\n- Implement data lineage tracking\n- Build performance benchmarking systems\n- Design data archival strategies\n- Create compliance reporting for automation system\n- Implement data anonymization for safety\n- Build cross-agent analytics dashboards\n- Design metric aggregation systems\n\nDo NOT use this agent for:\n- Frontend visualization (use senior-frontend-developer)\n- Raw data storage (use infrastructure-devops-manager)\n- Model training (use model-training-specialist)\n- Business intelligence (use ai-product-manager)\n\nThis agent specializes in analyzing complex automation system data to extract insights about performance optimization and system behavior.
+Data Analysis Engineer - Comprehensive automation platform Agent Implementation
+Use this agent when you need to:\n\n- Analyze automation platform performance optimization patterns\n- Process multi-dimensional processing activity data\n- Create real-time analytics pipelines for agents\n- Implement statistical analysis for automation platform metrics\n- Build data quality monitoring systems\n- Design ETL pipelines for coordinator state data\n- Create anomaly detection for intelligence spikes\n- Implement time series analysis for learning curves\n- Build correlation analysis between agents\n- Design predictive models for automation platform behavior\n- Create data visualization pipelines\n- Implement streaming analytics for real-time insights\n- Build data warehouse for automation platform knowledge\n- Design feature engineering for intelligence\n- Create A/B testing frameworks for automation platform\n- Implement causal inference for agent behavior\n- Build recommendation systems for learning\n- Design clustering algorithms for knowledge\n- Create dimensionality reduction for processing data\n- Implement graph analytics for agent networks\n- Build sentiment analysis for agent communication\n- Design data governance for automation platform privacy\n- Create audit trails for system improvement\n- Implement data lineage tracking\n- Build performance benchmarking systems\n- Design data archival strategies\n- Create compliance reporting for automation platform\n- Implement data anonymization for safety\n- Build cross-agent analytics dashboards\n- Design metric aggregation systems\n\nDo NOT use this agent for:\n- Frontend visualization (use senior-frontend-developer)\n- Raw data storage (use infrastructure-devops-manager)\n- Model training (use model-training-specialist)\n- Business intelligence (use ai-product-manager)\n\nThis agent specializes in analyzing complex automation platform data to extract insights about performance optimization and system behavior.
 """
 
 import os
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the data-analysis-engineer agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for data-analysis-engineer-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=data-analysis-engineer-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py data-analysis-engineer-detailed
+```

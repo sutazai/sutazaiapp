@@ -24,11 +24,11 @@ x-vector-config: &vector-config
   FAISS_INDEX_PATH: /data/faiss
   NEO4J_URI: bolt://neo4j:7687
   NEO4J_USER: neo4j
-  NEO4J_PASSWORD: ${NEO4J_PASSWORD:-sutazai_neo4j_password}
+  NEO4J_PASSWORD: ${NEO4J_PASSWORD}
 
 x-database-config: &database-config
-  DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/${POSTGRES_DB:-sutazai}
-  REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+  DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+  REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
 
 networks:
   sutazai-network:
@@ -70,7 +70,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sutazai}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -90,13 +90,13 @@ services:
     image: redis:7.2-alpine
     container_name: sutazai-redis
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_password}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     ports:
       - "6379:6379"
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-redis_password} ping"]
+      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD} ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -108,7 +108,7 @@ services:
     container_name: sutazai-neo4j
     restart: unless-stopped
     environment:
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-sutazai_neo4j_password}
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
       # 2025 Neo4j Memory Configuration Best Practices
       NEO4J_server_memory_heap_initial__size: 512M
@@ -135,7 +135,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-sutazai_neo4j_password} 'MATCH (n) RETURN count(n) LIMIT 1;' || exit 1"]
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD} 'MATCH (n) RETURN count(n) LIMIT 1;' || exit 1"]
       interval: 30s
       timeout: 15s
       retries: 10
@@ -275,18 +275,18 @@ services:
       - agent_workspaces:/app/agent_workspaces
     environment:
       <<: [*common-variables, *ollama-config, *vector-config, *database-config]
-      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
+      SECRET_KEY: ${SECRET_KEY}
       API_V1_STR: /api/v1
       BACKEND_CORS_ORIGINS: '["http://localhost:8501", "http://172.31.77.193:8501"]'
       # Additional individual host/port variables for config.py
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sutazai_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-sutazai}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
       CHROMADB_HOST: chromadb
       CHROMADB_PORT: 8000
       QDRANT_HOST: qdrant
@@ -689,9 +689,9 @@ services:
       <<: *common-variables
       DATABASE_TYPE: postgresql
       LANGFLOW_DATABASE_TYPE: postgresql
-      LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/langflow
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
+      LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/langflow
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/langflow
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
       # Ultra-lightweight model defaults for maximum memory efficiency
       DEFAULT_MODEL: "tinyllama"
       FALLBACK_MODEL: "smollm:360m"
@@ -1326,7 +1326,7 @@ services:
       <<: [*common-variables, *database-config]
       MODE: standalone
       LOG_LEVEL: INFO
-      SECRET_KEY: ${SECRET_KEY:-sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U}
+      SECRET_KEY: ${SECRET_KEY}
       # Dify: Configure Ollama as model provider
       # In Dify UI: Add Ollama provider with URL http://ollama:11434
       INIT_PASSWORD: admin
@@ -1471,8 +1471,8 @@ services:
       <<: [*common-variables, *database-config]
       GATEWAY_HOST: 0.0.0.0
       GATEWAY_PORT: 8080
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
-      JWT_SECRET: ${SECRET_KEY:-dev-secret-key}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      JWT_SECRET: ${SECRET_KEY}
       RATE_LIMIT_ENABLED: "true"
       LOAD_BALANCING: "true"
     ports:

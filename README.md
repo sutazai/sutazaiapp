@@ -94,10 +94,14 @@ curl http://localhost:8000/health
 
 ## 📚 Documentation
 
-- [Practical Implementation Guide](PRACTICAL_IMPLEMENTATION_GUIDE.md)
-- [Working Agents List](docs/PRACTICAL_AGENTS_LIST.md)
-- [Example Workflows](workflows/)
-- [API Documentation](http://localhost:8000/docs) (after starting)
+- [Project Overview](docs/overview.md) - Complete project summary and architecture
+- [Setup Guide](docs/setup/) - Installation and configuration instructions
+- [API Documentation](docs/backend/api_reference.md) - Complete API reference
+- [Frontend Guide](docs/frontend/) - UI components and styling
+- [Deployment Guide](docs/ci-cd/) - CI/CD and deployment processes
+- [Working Agents List](docs/PRACTICAL_AGENTS_LIST.md) - Available AI agents
+- [Example Workflows](workflows/) - Automation workflow examples
+- [Live API Docs](http://localhost:8000/docs) - Interactive API documentation (after starting)
 
 ## 🔒 Privacy & Security
 

@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: memory-persistence-manager-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,8 +64,8 @@ Specialized AI agent for memory persistence manager
 ```python
 #!/usr/bin/env python3
 """
-Memory Persistence Manager - Comprehensive automation system Agent Implementation
-Use this agent when you need to:\n\n- Implement persistent memory for advanced AI\n- Manage long-term memory storage across sessions\n- Create memory consolidation pipelines\n- Build episodic memory retrieval systems\n- Implement semantic memory networks\n- Design working memory optimization\n- Create memory indexing for fast retrieval\n- Build memory compression algorithms\n- Implement forgetting curves for efficiency\n- Design memory replay mechanisms\n- Create cross-agent memory sharing\n- Build memory versioning systems\n- Implement memory integrity validation\n- Design memory migration tools\n- Create memory backup strategies\n- Build memory analytics dashboards\n- Implement memory access control\n- Design memory caching layers\n- Create memory defragmentation\n- Build memory monitoring systems\n- Implement simulation-like consolidation\n- Design memory association networks\n- Create memory importance scoring\n- Build autobiographical memory\n- Implement memory reconstruction\n- Design memory privacy protection\n- Create memory query optimization\n- Build distributed memory systems\n- Implement memory fault tolerance\n- Design memory lifecycle management\n\nDo NOT use this agent for:\n- Simple data storage (use infrastructure-devops-manager)\n- Transient caching (use senior-backend-developer)\n- Log storage (use observability-monitoring-engineer)\n- Model weights storage (use model-training-specialist)\n\nThis agent specializes in creating sophisticated memory systems that enable automation system to maintain intelligence continuity and learn from experience.
+Memory Persistence Manager - Comprehensive automation platform Agent Implementation
+Use this agent when you need to:\n\n- Implement persistent memory for advanced AI\n- Manage long-term memory storage across sessions\n- Create memory consolidation pipelines\n- Build episodic memory retrieval systems\n- Implement semantic memory networks\n- Design working memory optimization\n- Create memory indexing for fast retrieval\n- Build memory compression algorithms\n- Implement forgetting curves for efficiency\n- Design memory replay mechanisms\n- Create cross-agent memory sharing\n- Build memory versioning systems\n- Implement memory integrity validation\n- Design memory migration tools\n- Create memory backup strategies\n- Build memory analytics dashboards\n- Implement memory access control\n- Design memory caching layers\n- Create memory defragmentation\n- Build memory monitoring systems\n- Implement simulation-like consolidation\n- Design memory association networks\n- Create memory importance scoring\n- Build autobiographical memory\n- Implement memory reconstruction\n- Design memory privacy protection\n- Create memory query optimization\n- Build distributed memory systems\n- Implement memory fault tolerance\n- Design memory lifecycle management\n\nDo NOT use this agent for:\n- Simple data storage (use infrastructure-devops-manager)\n- Transient caching (use senior-backend-developer)\n- Log storage (use observability-monitoring-engineer)\n- Model weights storage (use model-training-specialist)\n\nThis agent specializes in creating sophisticated memory systems that enable automation platform to maintain intelligence continuity and learn from experience.
 """
 
 import os
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the memory-persistence-manager agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for memory-persistence-manager-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=memory-persistence-manager-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py memory-persistence-manager-detailed
+```

@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: ai-agent-orchestrator-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -54,7 +66,7 @@ Orchestrate and coordinate all AI agents in the SutazAI system for advanced AI a
 ```python
 #!/usr/bin/env python3
 """
-Ai Agent Orchestrator - Comprehensive automation system Agent Implementation
+Ai Agent Orchestrator - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:
 """
 
@@ -482,7 +494,7 @@ python -m agents.ai_agent_orchestrator investigate
 
 ### Integration Example 1: Multi-Agent Workflow
 ```python
-# Orchestrate a complex automation system task
+# Orchestrate a complex automation platform task
 workflow = {
  'goal': 'Analyze and optimize system performance',
  'agents': [
@@ -610,3 +622,42 @@ consensus = await orchestrator.process_task({
  - Predictive resource allocation
 
 This comprehensive implementation ensures the ai-agent-orchestrator agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for ai-agent-orchestrator-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=ai-agent-orchestrator-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py ai-agent-orchestrator-detailed
+```

@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: task-assignment-coordinator-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for task assignment coordinator
 ```python
 #!/usr/bin/env python3
 """
-Task Assignment Coordinator - Comprehensive automation system Agent Implementation
+Task Assignment Coordinator - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Automatically analyze incoming tasks and requirements\n- Match tasks to the most suitable agents\n- Implement workload balancing across agents\n- Create task prioritization algorithms\n- Build agent capability matching systems\n- Design task routing strategies\n- Implement task dependency management\n- Create agent availability tracking\n- Build task assignment optimization\n- Design multi-agent task distribution\n- Implement task queue management\n- Create agent skill matrices\n- Build task complexity analysis\n- Design task deadline management\n- Implement resource allocation optimization\n- Create task assignment rules engines\n- Build agent performance tracking\n- Design task reassignment strategies\n- Implement task escalation procedures\n- Create workload forecasting\n- Build task assignment dashboards\n- Design agent specialization tracking\n- Implement task batching strategies\n- Create assignment conflict resolution\n- Build task assignment analytics\n- Design agent utilization metrics\n- Implement fair task distribution\n- Create task assignment APIs\n- Build assignment notification systems\n- Design task assignment auditing\n\nDo NOT use this agent for:\n- Task execution (use appropriate specialist agents)\n- System deployment (use deployment-automation-master)\n- Code implementation (use development agents)\n- Testing (use testing-qa-validator)\n\nThis agent specializes in intelligently routing tasks to the most appropriate agents.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the task-assignment-coordinator agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for task-assignment-coordinator-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=task-assignment-coordinator-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py task-assignment-coordinator-detailed
+```

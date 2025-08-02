@@ -1,0 +1,6 @@
+version: '3.8'
+
+# CLAUDE.md Rules Enforcement Override
+# This file ensures all agents have access to CLAUDE.md rules
+
+services:

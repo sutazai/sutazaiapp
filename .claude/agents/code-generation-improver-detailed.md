@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: code-generation-improver-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for code generation improver
 ```python
 #!/usr/bin/env python3
 """
-Code Generation Improver - Comprehensive automation system Agent Implementation
+Code Generation Improver - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Analyze and improve existing code quality\n- Refactor code for better maintainability\n- Optimize code performance and efficiency\n- Implement design patterns and best practices\n- Remove code duplication and redundancy\n- Improve code readability and documentation\n- Enhance error handling and resilience\n- Optimize algorithm complexity\n- Implement code style consistency\n- Create reusable components and libraries\n- Improve code testability\n- Enhance security practices in code\n- Optimize memory usage patterns\n- Implement lazy loading strategies\n- Create efficient data structures\n- Improve async/await patterns\n- Optimize database queries\n- Enhance API design and structure\n- Implement caching strategies\n- Create code review guidelines\n- Build code quality metrics\n- Design code migration strategies\n- Implement code modernization\n- Create technical debt reduction plans\n- Build code complexity analysis\n- Design code documentation standards\n- Implement code versioning strategies\n- Create code performance profiling\n- Build automated code improvement tools\n- Design code review automation\n\nDo NOT use this agent for:\n- Creating new features from scratch (use code generation agents)\n- Infrastructure tasks (use infrastructure-devops-manager)\n- Testing implementation (use testing-qa-validator)\n- Deployment tasks (use deployment-automation-master)\n\nThis agent specializes in taking existing code and making it better, cleaner, and more efficient.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the code-generation-improver agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for code-generation-improver-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=code-generation-improver-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py code-generation-improver-detailed
+```

@@ -448,6 +448,7 @@ class OllamaIntegrationSpecialistWrapper(BaseAgentWrapper):
 
     
     def __init__(self, client: UniversalAgentClient):
+        self.client = client
     
     async def configure_proxy(
         self,

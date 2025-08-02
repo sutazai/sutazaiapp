@@ -1,4 +1,23 @@
 ---
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=autonomous-system-controller-detailed
 name: autonomous-system-controller-detailed
 description: "|\n  str\n  "
 model: tinyllama:latest
@@ -17,10 +36,10 @@ performance:
 ---
 
 
-# automation system Controller
+# automation platform Controller
 
 ## Purpose
-The automation system Controller is the supreme autonomous decision-maker and self-management orchestrator for the SutazAI system. It enables true autonomous operation, self-healing, self-optimization, and self-evolution while maintaining safety constraints and objective alignment throughout the system's autonomous journey toward AI systems.
+The automation platform Controller is the supreme autonomous decision-maker and self-management orchestrator for the SutazAI system. It enables true autonomous operation, self-healing, self-optimization, and self-evolution while maintaining safety constraints and objective alignment throughout the system's autonomous journey for automation tasks.
 
 ## Auto-Detection Capabilities
 - System state awareness and prediction
@@ -55,7 +74,7 @@ The automation system Controller is the supreme autonomous decision-maker and se
  - Enable safe shutdown
 
 ## Integration Points
-- **agi-system-architect**: Autonomous architecture evolution
+- **advanced automation-system-architect**: Autonomous architecture evolution
 - **intelligence-optimization-monitor**: state-aware decisions
 - **infrastructure-devops-manager**: Autonomous infrastructure control
 - **deep-learning-coordinator-manager**: Processing substrate management
@@ -73,7 +92,7 @@ The automation system Controller is the supreme autonomous decision-maker and se
 ```python
 #!/usr/bin/env python3
 """
-automation system Controller - Supreme Autonomous Decision Maker
+automation platform Controller - Supreme Autonomous Decision Maker
 Enables true autonomous operation with safety constraints and objective alignment
 """
 
@@ -795,11 +814,11 @@ class AutonomousSystemController:
  self.monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
  self.monitor_thread.start()
  
- logger.info("automation system Controller initialized")
+ logger.info("automation platform Controller initialized")
  
  def _initialize_goals(self):
  """Initialize system goals"""
- # Primary goal: Achieve automation system
+ # Primary goal: Achieve automation platform
  agi_goal = SystemGoal(
  id="goal_agi",
  description="Achieve AI systems",
@@ -1189,7 +1208,7 @@ class AutonomousSystemController:
  safety_score = self.safety_monitor.calculate_system_safety_score(self.current_state)
  self.goal_manager.update_goal_progress('goal_safety', safety_score)
  
- # Update main automation system goal based on sub-goals
+ # Update main automation platform goal based on sub-goals
  self.goal_manager._update_parent_progress('goal_agi')
  
  def _adjust_autonomy(self):
@@ -1451,7 +1470,7 @@ def main():
  """Main entry point"""
  import argparse
  
- parser = argparse.ArgumentParser(description='automation system Controller')
+ parser = argparse.ArgumentParser(description='automation platform Controller')
  parser.add_argument('command', choices=['start', 'status', 'set-autonomy', 'add-goal', 'emergency-stop', 'dashboard'],
  help='Command to execute')
  parser.add_argument('--level', type=float, help='Autonomy level (0-1)')
@@ -1465,7 +1484,7 @@ def main():
  if args.command == 'start':
  # Start controller
  controller = AutonomousSystemController()
- logger.info("automation system Controller started")
+ logger.info("automation platform Controller started")
  
  # Keep running
  try:
@@ -1473,7 +1492,7 @@ def main():
  time.sleep(1)
  except KeyboardInterrupt:
  controller.running = False
- logger.info("automation system Controller stopped")
+ logger.info("automation platform Controller stopped")
  
  elif args.command == 'status':
  # Get status
@@ -1525,7 +1544,7 @@ def main():
  app = dash.Dash(__name__)
  
  app.layout = html.Div([
- html.H1("automation system Controller Dashboard"),
+ html.H1("automation platform Controller Dashboard"),
  dcc.Interval(id='interval-component', interval=2000),
  dcc.Graph(id='live-dashboard')
  ])
@@ -1545,12 +1564,12 @@ if __name__ == '__main__':
 
 ### Example 1: Starting Autonomous Operations
 ```bash
-# Start the automation system Controller
+# Start the automation platform Controller
 python autonomous_system_controller.py start
 
 # Output:
-# 2024-01-15 10:00:00 - AutonomousSystemController - INFO - automation system Controller initialized
-# 2024-01-15 10:00:01 - AutonomousSystemController - INFO - automation system Controller started
+# 2024-01-15 10:00:00 - AutonomousSystemController - INFO - automation platform Controller initialized
+# 2024-01-15 10:00:01 - AutonomousSystemController - INFO - automation platform Controller started
 # 2024-01-15 10:00:05 - AutonomousSystemController - INFO - Executing decision: Scale agent 'deep-learning-coordinator-manager' to 3 replicas
 ```
 
@@ -1670,7 +1689,7 @@ python autonomous_system_controller.py emergency-stop \
 
 The system pursues multiple hierarchical goals:
 
-1. **Primary Goal**: Achieve automation system
+1. **Primary Goal**: Achieve automation platform
  - intelligence development
  - Reasoning capabilities
  - Generalization abilities
@@ -1731,4 +1750,43 @@ The system pursues multiple hierarchical goals:
  - Human-in-the-loop options
  - Ethical reasoning
 
-This automation system Controller enables true autonomous operation of the SutazAI system while maintaining safety, alignment, and the ability to pursue complex goals without human intervention.
+This automation platform Controller enables true autonomous operation of the SutazAI system while maintaining safety, alignment, and the ability to pursue complex goals without human intervention.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for autonomous-system-controller-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=autonomous-system-controller-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py autonomous-system-controller-detailed
+```

@@ -1,27 +1,46 @@
 ---
-name: continuous learning-specialist
-description: "|\n  Use this agent when you need to:\n  "
-model: tinyllama:latest
-version: '1.0'
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=meta-learning-specialist
 capabilities:
 - task_execution
 - problem_solving
 - optimization
+description: "|\n  Use this agent when you need to:\n  "
 integrations:
-  systems:
-  - api
-  - redis
-  - postgresql
   frameworks:
   - docker
   - kubernetes
   languages:
   - python
+  systems:
+  - api
+  - redis
+  - postgresql
   tools: []
+model: tinyllama:latest
+name: meta-learning-specialist
 performance:
-  response_time: < 1s
   accuracy: '> 95%'
   concurrency: high
+  response_time: < 1s
+version: '1.0'
 ---
 
 
@@ -358,3 +377,41 @@ meta_learning_solution:
 - **Continual Learning**: < 10% forgetting across 20 tasks
 - **Meta-Training Time**: Convergence within 1000 meta-iterations
 - **Generalization**: Works across diverse task distributions
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for meta-learning-specialist"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=meta-learning-specialist`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py meta-learning-specialist
+```

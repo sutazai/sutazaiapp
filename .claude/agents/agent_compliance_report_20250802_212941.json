@@ -1,0 +1,3389 @@
+{
+  "timestamp": "2025-08-02T21:29:41.460077",
+  "total_agents": 134,
+  "compliant_agents": 96,
+  "non_compliant_agents": 38,
+  "agents": {
+    "agentgpt-autonomous-executor-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentgpt-autonomous-executor-detailed.md",
+      "file_name": "agentgpt-autonomous-executor-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "agentgpt-autonomous-executor.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentgpt-autonomous-executor.md",
+      "file_name": "agentgpt-autonomous-executor.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "agentzero-coordinator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentzero-coordinator-detailed.md",
+      "file_name": "agentzero-coordinator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "agentzero-coordinator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/agentzero-coordinator.md",
+      "file_name": "agentzero-coordinator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-agent-creator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-creator-detailed.md",
+      "file_name": "ai-agent-creator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-agent-creator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-creator.md",
+      "file_name": "ai-agent-creator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-agent-debugger.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-debugger.md",
+      "file_name": "ai-agent-debugger.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-agent-orchestrator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-orchestrator-detailed.md",
+      "file_name": "ai-agent-orchestrator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-agent-orchestrator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-agent-orchestrator.md",
+      "file_name": "ai-agent-orchestrator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-product-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-product-manager-detailed.md",
+      "file_name": "ai-product-manager-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-product-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-product-manager.md",
+      "file_name": "ai-product-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-scrum-master-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-scrum-master-detailed.md",
+      "file_name": "ai-scrum-master-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ai-scrum-master.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ai-scrum-master.md",
+      "file_name": "ai-scrum-master.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "attention-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/attention-optimizer-detailed.md",
+      "file_name": "attention-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "attention-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/attention-optimizer.md",
+      "file_name": "attention-optimizer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "autonomous-system-controller-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/autonomous-system-controller-detailed.md",
+      "file_name": "autonomous-system-controller-detailed.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "autonomous-system-controller.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/autonomous-system-controller.md",
+      "file_name": "autonomous-system-controller.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "browser-automation-orchestrator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/browser-automation-orchestrator-detailed.md",
+      "file_name": "browser-automation-orchestrator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "browser-automation-orchestrator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/browser-automation-orchestrator.md",
+      "file_name": "browser-automation-orchestrator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "causal-inference-expert.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/causal-inference-expert.md",
+      "file_name": "causal-inference-expert.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "code-generation-improver-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/code-generation-improver-detailed.md",
+      "file_name": "code-generation-improver-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "code-generation-improver.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/code-generation-improver.md",
+      "file_name": "code-generation-improver.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "codebase-team-lead-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/codebase-team-lead-detailed.md",
+      "file_name": "codebase-team-lead-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "codebase-team-lead.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/codebase-team-lead.md",
+      "file_name": "codebase-team-lead.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "cognitive-architecture-designer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/cognitive-architecture-designer.md",
+      "file_name": "cognitive-architecture-designer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "complex-problem-solver-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/complex-problem-solver-detailed.md",
+      "file_name": "complex-problem-solver-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "complex-problem-solver.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/complex-problem-solver.md",
+      "file_name": "complex-problem-solver.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "context-optimization-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/context-optimization-engineer-detailed.md",
+      "file_name": "context-optimization-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "context-optimization-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/context-optimization-engineer.md",
+      "file_name": "context-optimization-engineer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "cpu-only-hardware-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/cpu-only-hardware-optimizer-detailed.md",
+      "file_name": "cpu-only-hardware-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "cpu-only-hardware-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/cpu-only-hardware-optimizer.md",
+      "file_name": "cpu-only-hardware-optimizer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-analysis-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-analysis-engineer-detailed.md",
+      "file_name": "data-analysis-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-analysis-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-analysis-engineer.md",
+      "file_name": "data-analysis-engineer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-drift-detector-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-drift-detector-detailed.md",
+      "file_name": "data-drift-detector-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-drift-detector.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-drift-detector.md",
+      "file_name": "data-drift-detector.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-pipeline-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-pipeline-engineer-detailed.md",
+      "file_name": "data-pipeline-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "data-pipeline-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/data-pipeline-engineer.md",
+      "file_name": "data-pipeline-engineer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "deployment-automation-master-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/deployment-automation-master-detailed.md",
+      "file_name": "deployment-automation-master-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "deployment-automation-master.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/deployment-automation-master.md",
+      "file_name": "deployment-automation-master.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "dify-automation-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/dify-automation-specialist-detailed.md",
+      "file_name": "dify-automation-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "dify-automation-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/dify-automation-specialist.md",
+      "file_name": "dify-automation-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "distributed-computing-architect.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/distributed-computing-architect.md",
+      "file_name": "distributed-computing-architect.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "document-knowledge-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/document-knowledge-manager-detailed.md",
+      "file_name": "document-knowledge-manager-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "document-knowledge-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/document-knowledge-manager.md",
+      "file_name": "document-knowledge-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "edge-computing-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-computing-optimizer-detailed.md",
+      "file_name": "edge-computing-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "edge-computing-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-computing-optimizer.md",
+      "file_name": "edge-computing-optimizer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "edge-inference-proxy-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-inference-proxy-detailed.md",
+      "file_name": "edge-inference-proxy-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "edge-inference-proxy.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/edge-inference-proxy.md",
+      "file_name": "edge-inference-proxy.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "episodic-memory-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/episodic-memory-engineer-detailed.md",
+      "file_name": "episodic-memory-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "episodic-memory-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/episodic-memory-engineer.md",
+      "file_name": "episodic-memory-engineer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "experiment-tracker-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/experiment-tracker-detailed.md",
+      "file_name": "experiment-tracker-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "experiment-tracker.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/experiment-tracker.md",
+      "file_name": "experiment-tracker.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "explainable-ai-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/explainable-ai-specialist.md",
+      "file_name": "explainable-ai-specialist.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "federated-learning-coordinator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/federated-learning-coordinator-detailed.md",
+      "file_name": "federated-learning-coordinator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "federated-learning-coordinator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/federated-learning-coordinator.md",
+      "file_name": "federated-learning-coordinator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "financial-analysis-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/financial-analysis-specialist-detailed.md",
+      "file_name": "financial-analysis-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "financial-analysis-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/financial-analysis-specialist.md",
+      "file_name": "financial-analysis-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "flowiseai-flow-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/flowiseai-flow-manager-detailed.md",
+      "file_name": "flowiseai-flow-manager-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "flowiseai-flow-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/flowiseai-flow-manager.md",
+      "file_name": "flowiseai-flow-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "garbage-collector-coordinator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/garbage-collector-coordinator-detailed.md",
+      "file_name": "garbage-collector-coordinator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "garbage-collector-coordinator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/garbage-collector-coordinator.md",
+      "file_name": "garbage-collector-coordinator.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "gpu-hardware-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/gpu-hardware-optimizer-detailed.md",
+      "file_name": "gpu-hardware-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "gpu-hardware-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/gpu-hardware-optimizer.md",
+      "file_name": "gpu-hardware-optimizer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "gradient-compression-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/gradient-compression-specialist-detailed.md",
+      "file_name": "gradient-compression-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "gradient-compression-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/gradient-compression-specialist.md",
+      "file_name": "gradient-compression-specialist.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "hardware-resource-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/hardware-resource-optimizer-detailed.md",
+      "file_name": "hardware-resource-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "hardware-resource-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/hardware-resource-optimizer.md",
+      "file_name": "hardware-resource-optimizer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "infrastructure-devops-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/infrastructure-devops-manager-detailed.md",
+      "file_name": "infrastructure-devops-manager-detailed.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "infrastructure-devops-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/infrastructure-devops-manager.md",
+      "file_name": "infrastructure-devops-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "intelligence-optimization-monitor-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/intelligence-optimization-monitor-detailed.md",
+      "file_name": "intelligence-optimization-monitor-detailed.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "intelligence-optimization-monitor.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/intelligence-optimization-monitor.md",
+      "file_name": "intelligence-optimization-monitor.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "jarvis-voice-interface-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/jarvis-voice-interface-detailed.md",
+      "file_name": "jarvis-voice-interface-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "jarvis-voice-interface.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/jarvis-voice-interface.md",
+      "file_name": "jarvis-voice-interface.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "kali-security-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/kali-security-specialist-detailed.md",
+      "file_name": "kali-security-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "kali-security-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/kali-security-specialist.md",
+      "file_name": "kali-security-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "knowledge-distillation-expert.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/knowledge-distillation-expert.md",
+      "file_name": "knowledge-distillation-expert.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "knowledge-graph-builder-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/knowledge-graph-builder-detailed.md",
+      "file_name": "knowledge-graph-builder-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "knowledge-graph-builder.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/knowledge-graph-builder.md",
+      "file_name": "knowledge-graph-builder.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "langflow-workflow-designer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/langflow-workflow-designer-detailed.md",
+      "file_name": "langflow-workflow-designer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "langflow-workflow-designer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/langflow-workflow-designer.md",
+      "file_name": "langflow-workflow-designer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "localagi-orchestration-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/localagi-orchestration-manager-detailed.md",
+      "file_name": "localagi-orchestration-manager-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "localagi-orchestration-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/localagi-orchestration-manager.md",
+      "file_name": "localagi-orchestration-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "mega-code-auditor-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/mega-code-auditor-detailed.md",
+      "file_name": "mega-code-auditor-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "mega-code-auditor.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/mega-code-auditor.md",
+      "file_name": "mega-code-auditor.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "memory-persistence-manager-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/memory-persistence-manager-detailed.md",
+      "file_name": "memory-persistence-manager-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "memory-persistence-manager.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/memory-persistence-manager.md",
+      "file_name": "memory-persistence-manager.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "meta-learning-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/meta-learning-specialist.md",
+      "file_name": "meta-learning-specialist.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "model-training-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/model-training-specialist-detailed.md",
+      "file_name": "model-training-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "model-training-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/model-training-specialist.md",
+      "file_name": "model-training-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "multi-modal-fusion-coordinator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/multi-modal-fusion-coordinator-detailed.md",
+      "file_name": "multi-modal-fusion-coordinator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "multi-modal-fusion-coordinator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/multi-modal-fusion-coordinator.md",
+      "file_name": "multi-modal-fusion-coordinator.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "neuromorphic-computing-expert.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/neuromorphic-computing-expert.md",
+      "file_name": "neuromorphic-computing-expert.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "observability-monitoring-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/observability-monitoring-engineer-detailed.md",
+      "file_name": "observability-monitoring-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "observability-monitoring-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/observability-monitoring-engineer.md",
+      "file_name": "observability-monitoring-engineer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ollama-integration-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ollama-integration-specialist-detailed.md",
+      "file_name": "ollama-integration-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ollama-integration-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ollama-integration-specialist.md",
+      "file_name": "ollama-integration-specialist.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "opendevin-code-generator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/opendevin-code-generator-detailed.md",
+      "file_name": "opendevin-code-generator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "opendevin-code-generator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/opendevin-code-generator.md",
+      "file_name": "opendevin-code-generator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "private-data-analyst-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/private-data-analyst-detailed.md",
+      "file_name": "private-data-analyst-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "private-data-analyst.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/private-data-analyst.md",
+      "file_name": "private-data-analyst.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "product-strategy-architect-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/product-strategy-architect-detailed.md",
+      "file_name": "product-strategy-architect-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "product-strategy-architect.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/product-strategy-architect.md",
+      "file_name": "product-strategy-architect.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "prompt-injection-guard-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/prompt-injection-guard-detailed.md",
+      "file_name": "prompt-injection-guard-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "prompt-injection-guard.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/prompt-injection-guard.md",
+      "file_name": "prompt-injection-guard.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ram-hardware-optimizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ram-hardware-optimizer-detailed.md",
+      "file_name": "ram-hardware-optimizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "ram-hardware-optimizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/ram-hardware-optimizer.md",
+      "file_name": "ram-hardware-optimizer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "reinforcement-learning-trainer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/reinforcement-learning-trainer.md",
+      "file_name": "reinforcement-learning-trainer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "resource-visualiser-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/resource-visualiser-detailed.md",
+      "file_name": "resource-visualiser-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "resource-visualiser.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/resource-visualiser.md",
+      "file_name": "resource-visualiser.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "security-pentesting-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/security-pentesting-specialist-detailed.md",
+      "file_name": "security-pentesting-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "security-pentesting-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/security-pentesting-specialist.md",
+      "file_name": "security-pentesting-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "self-healing-orchestrator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/self-healing-orchestrator-detailed.md",
+      "file_name": "self-healing-orchestrator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "self-healing-orchestrator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/self-healing-orchestrator.md",
+      "file_name": "self-healing-orchestrator.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "semgrep-security-analyzer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/semgrep-security-analyzer-detailed.md",
+      "file_name": "semgrep-security-analyzer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "semgrep-security-analyzer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/semgrep-security-analyzer.md",
+      "file_name": "semgrep-security-analyzer.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-ai-engineer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-ai-engineer-detailed.md",
+      "file_name": "senior-ai-engineer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-ai-engineer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-ai-engineer.md",
+      "file_name": "senior-ai-engineer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-backend-developer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-backend-developer-detailed.md",
+      "file_name": "senior-backend-developer-detailed.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-backend-developer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-backend-developer.md",
+      "file_name": "senior-backend-developer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-frontend-developer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-frontend-developer-detailed.md",
+      "file_name": "senior-frontend-developer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "senior-frontend-developer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/senior-frontend-developer.md",
+      "file_name": "senior-frontend-developer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "shell-automation-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/shell-automation-specialist-detailed.md",
+      "file_name": "shell-automation-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "shell-automation-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/shell-automation-specialist.md",
+      "file_name": "shell-automation-specialist.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "symbolic-reasoning-engine-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/symbolic-reasoning-engine-detailed.md",
+      "file_name": "symbolic-reasoning-engine-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "symbolic-reasoning-engine.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/symbolic-reasoning-engine.md",
+      "file_name": "symbolic-reasoning-engine.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "synthetic-data-generator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/synthetic-data-generator.md",
+      "file_name": "synthetic-data-generator.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "system-optimizer-reorganizer-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/system-optimizer-reorganizer-detailed.md",
+      "file_name": "system-optimizer-reorganizer-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "system-optimizer-reorganizer.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/system-optimizer-reorganizer.md",
+      "file_name": "system-optimizer-reorganizer.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "task-assignment-coordinator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/task-assignment-coordinator-detailed.md",
+      "file_name": "task-assignment-coordinator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "task-assignment-coordinator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/task-assignment-coordinator.md",
+      "file_name": "task-assignment-coordinator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "testing-qa-validator-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/testing-qa-validator-detailed.md",
+      "file_name": "testing-qa-validator-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "testing-qa-validator.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/testing-qa-validator.md",
+      "file_name": "testing-qa-validator.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "transformers-migration-specialist-detailed.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/transformers-migration-specialist-detailed.md",
+      "file_name": "transformers-migration-specialist-detailed.md",
+      "compliant": true,
+      "issues": [],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": true,
+          "issues": []
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "transformers-migration-specialist.md": {
+      "file_path": "/opt/sutazaiapp/.claude/agents/transformers-migration-specialist.md",
+      "file_name": "transformers-migration-specialist.md",
+      "compliant": false,
+      "issues": [
+        "File should start with YAML front matter (---)"
+      ],
+      "checks": {
+        "claude_md_header": {
+          "passed": true,
+          "message": "Compliance header present and complete"
+        },
+        "agent_structure": {
+          "passed": false,
+          "issues": [
+            "File should start with YAML front matter (---)"
+          ]
+        },
+        "rules_integration": {
+          "passed": true,
+          "issues": []
+        },
+        "environment_variables": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    }
+  },
+  "summary": {
+    "compliance_rate": "71.6%",
+    "critical_issues": [
+      "38 agents have structural issues"
+    ],
+    "recommendations": [
+      "1. Run the agent update scripts to add missing compliance headers",
+      "2. Ensure all agents reference claude_rules_checker.py",
+      "3. Add CLAUDE_RULES_ENABLED environment variable to all agents",
+      "4. Update agent startup scripts to check CLAUDE.md before execution",
+      "5. Implement automated compliance checking in CI/CD pipeline"
+    ]
+  }
+}

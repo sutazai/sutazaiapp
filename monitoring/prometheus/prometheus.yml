@@ -3,20 +3,44 @@ global:
   evaluation_interval: 15s
   external_labels:
     monitor: 'sutazai-monitor'
+    cluster: 'sutazai-production'
+    region: 'local'
 
 rule_files:
-  # - "alert_rules.yml"
+  - "alert_rules.yml"
+  - "ai_model_rules.yml"
+  - "business_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
 
 scrape_configs:
+  # Infrastructure Monitoring
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+    scrape_interval: 15s
 
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # Core Application Services
   - job_name: 'sutazai-backend'
     static_configs:
       - targets: ['backend:8000']
     metrics_path: '/metrics'
-    scrape_interval: 30s
+    scrape_interval: 10s
+    scrape_timeout: 5s
 
   - job_name: 'sutazai-frontend'
     static_configs:
@@ -24,27 +48,135 @@ scrape_configs:
     metrics_path: '/metrics'
     scrape_interval: 30s
 
-  - job_name: 'sutazai-postgres'
+  # Database Monitoring
+  - job_name: 'postgres-exporter'
     static_configs:
-      - targets: ['postgres:5432']
+      - targets: ['postgres-exporter:9187']
     scrape_interval: 30s
 
-  - job_name: 'sutazai-redis'
+  - job_name: 'redis-exporter'
     static_configs:
-      - targets: ['redis:6379']
+      - targets: ['redis-exporter:9121']
     scrape_interval: 30s
 
-  - job_name: 'sutazai-ollama'
+  - job_name: 'neo4j-exporter'
+    static_configs:
+      - targets: ['neo4j-exporter:9190']
+    scrape_interval: 30s
+
+  # Vector Database Monitoring
+  - job_name: 'chromadb'
+    static_configs:
+      - targets: ['chromadb:8000']
+    metrics_path: '/api/v1/heartbeat'
+    scrape_interval: 30s
+
+  - job_name: 'qdrant'
+    static_configs:
+      - targets: ['qdrant:6333']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # AI Model Services
+  - job_name: 'ollama'
     static_configs:
       - targets: ['ollama:11434']
-    scrape_interval: 30s
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
 
-  - job_name: 'sutazai-grafana'
+  - job_name: 'litellm'
     static_configs:
-      - targets: ['grafana:3000']
+      - targets: ['litellm:4000']
+    metrics_path: '/metrics'
     scrape_interval: 30s
 
-  - job_name: 'sutazai-n8n'
+  # AI Agent Services
+  - job_name: 'autogpt'
+    static_configs:
+      - targets: ['autogpt:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  - job_name: 'crewai'
+    static_configs:
+      - targets: ['crewai:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  - job_name: 'aider'
+    static_configs:
+      - targets: ['aider:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  - job_name: 'langflow'
+    static_configs:
+      - targets: ['langflow:7860']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  - job_name: 'flowise'
+    static_configs:
+      - targets: ['flowise:3000']
+    metrics_path: '/api/v1/ping'
+    scrape_interval: 60s
+
+  - job_name: 'dify'
+    static_configs:
+      - targets: ['dify:5000']
+    metrics_path: '/health'
+    scrape_interval: 60s
+
+  - job_name: 'n8n'
     static_configs:
       - targets: ['n8n:5678']
+    metrics_path: '/healthz'
+    scrape_interval: 60s
+
+  # Health and Monitoring Services
+  - job_name: 'health-monitor'
+    static_configs:
+      - targets: ['health-monitor:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  - job_name: 'mcp-server'
+    static_configs:
+      - targets: ['mcp-server:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Blackbox Monitoring for External Health Checks
+  - job_name: 'blackbox-exporter'
+    static_configs:
+      - targets: ['blackbox-exporter:9115']
+    scrape_interval: 60s
+
+  - job_name: 'blackbox-http-checks'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://backend:8000/health
+        - http://frontend:8501/healthz
+        - http://ollama:11434/
+        - http://chromadb:8000/api/v1/heartbeat
+        - http://qdrant:6333/
+        - http://langflow:7860/health
+        - http://flowise:3000/api/v1/ping
+        - http://n8n:5678/healthz
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Custom AI Performance Metrics
+  - job_name: 'ai-performance-metrics'
+    static_configs:
+      - targets: ['ai-metrics-exporter:9200']
     scrape_interval: 30s

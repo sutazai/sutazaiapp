@@ -13,7 +13,7 @@ services:
       <<: [*common-variables, *database-config]
       MODE: api
       LOG_LEVEL: INFO
-      SECRET_KEY: ${SECRET_KEY:-sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U}
+      SECRET_KEY: ${SECRET_KEY}
       CONSOLE_API_URL: http://localhost:8107
       CONSOLE_WEB_URL: http://localhost:8107
       SERVICE_API_URL: http://localhost:8107
@@ -104,7 +104,7 @@ services:
       DIFY_API_URL: http://dify-api:5001
       CONFIG_PATH: /app/config
       LOG_LEVEL: INFO
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/2
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/2
     ports:
       - "8109:8080"
     volumes:
@@ -146,7 +146,7 @@ services:
       <<: [*common-variables, *database-config]
       AGENT_REGISTRY_URL: http://agent-registry:8300
       MESSAGE_BUS_URL: http://agent-message-bus:8299
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/3
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/3
       CONFIG_PATH: /app/config
       LOG_LEVEL: INFO
       ROUTING_STRATEGY: capability_weighted
@@ -189,7 +189,7 @@ services:
       MONITORING_INTERVAL: 30
       PROMETHEUS_URL: http://prometheus:9090
       GRAFANA_URL: http://grafana:3000
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/4
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/4
       CONFIG_PATH: /app/config
       LOG_LEVEL: INFO
       HEALING_MODE: proactive
@@ -234,7 +234,7 @@ services:
       <<: *common-variables
       PROMETHEUS_URL: http://prometheus:9090
       GRAFANA_URL: http://grafana:3000
-      REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/5
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/5
       METRICS_INTERVAL: 15
       DASHBOARD_REFRESH_INTERVAL: 30
     ports:

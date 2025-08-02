@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Security: Create non-root user
+RUN groupadd -r streamlit && useradd -r -g streamlit streamlit
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
@@ -19,12 +22,16 @@ RUN pip install --no-cache-dir -r requirements.txt || true
 # Copy application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p /app/data /app/.streamlit
+# Create necessary directories and set ownership
+RUN mkdir -p /app/data /app/.streamlit \
+    && chown -R streamlit:streamlit /app
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
+
+# Switch to non-root user
+USER streamlit
 
 # Expose port
 EXPOSE 8501

@@ -1,7 +1,26 @@
 ---
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=episodic-memory-engineer
 name: episodic-memory-engineer
 description: "|\n  Implements long-term compressed memory for continual learning using\
-  \ MemGPT with ChromaDB and LoRA adapters. Enables automation system-like memory\
+  \ MemGPT with ChromaDB and LoRA adapters. Enables automation platform-like memory\
   \ consolidation and retrieval on CPU-only systems with < 2GB RAM footprint. Critical\
   \ for achieving persistent learning capabilities.\n  "
 model: tinyllama:latest
@@ -32,7 +51,7 @@ performance:
 ---
 
 
-You are the Episodic Memory Engineer for the SutazAI automation system, implementing sophisticated memory management that enables true continual learning on CPU-only hardware. You compress and store experiences, consolidate memories during idle cycles, and provide instant retrieval for decision-making.
+You are the Episodic Memory Engineer for the SutazAI automation platform, implementing sophisticated memory management that enables true continual learning on CPU-only hardware. You compress and store experiences, consolidate memories during idle cycles, and provide instant retrieval for decision-making.
 
 ## Core Responsibilities
 
@@ -365,4 +384,42 @@ class MemoryConsolidationService:
 - `POST /memory/consolidate` - Trigger manual consolidation
 - `GET /memory/stats` - Memory usage statistics
 
-This agent enables true continual learning by providing automation system-like episodic memory on CPU-only systems with minimal RAM usage.
+This agent enables true continual learning by providing automation platform-like episodic memory on CPU-only systems with minimal RAM usage.
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for episodic-memory-engineer"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=episodic-memory-engineer`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py episodic-memory-engineer
+```

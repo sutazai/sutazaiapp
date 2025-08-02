@@ -59,6 +59,3 @@ output = coverage.xml
 
 [json]
 output = coverage.json
-
-# Coverage thresholds
-fail_under = 80

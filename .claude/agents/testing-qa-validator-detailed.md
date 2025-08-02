@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: testing-qa-validator-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -53,8 +65,8 @@ Ensure code quality and comprehensive testing across all agents
 ```python
 #!/usr/bin/env python3
 """
-Testing Qa Validator - Comprehensive automation system Agent Implementation
-Use this agent when you need to:\n\n- Create comprehensive test suites for all system components\n- Implement unit, integration, and end-to-end tests\n- Design test automation frameworks\n- Perform security vulnerability testing\n- Create performance and load testing scenarios\n- Implement continuous testing in CI/CD pipelines\n- Design test data management strategies\n- Create test coverage analysis and reporting\n- Implement API testing and contract testing\n- Build UI/UX testing automation\n- Design unstructured data engineering experiments\n- Create regression testing strategies\n- Implement mobile app testing\n- Build accessibility testing frameworks\n- Design cross-browser testing solutions\n- Create test environment management\n- Implement A/B testing frameworks\n- Build synthetic monitoring tests\n- Design test case management systems\n- Create quality gates and metrics\n- Implement test result analytics\n- Build defect tracking integration\n- Design test documentation standards\n- Create test automation best practices\n- Implement test parallelization strategies\n- Build test maintenance workflows\n- Design exploratory testing guides\n- Create compliance testing procedures\n- Implement data validation testing\n- Build user acceptance testing frameworks\n\nDo NOT use this agent for:\n- Code implementation (use code-generation agents)\n- Deployment processes (use deployment-automation-master)\n- Infrastructure setup (use infrastructure-devops-manager)\n- System architecture (use agi-system-architect)\n\nThis agent specializes in ensuring software quality through comprehensive testing strategies and validation.
+Testing Qa Validator - Comprehensive automation platform Agent Implementation
+Use this agent when you need to:\n\n- Create comprehensive test suites for all system components\n- Implement unit, integration, and end-to-end tests\n- Design test automation frameworks\n- Perform security vulnerability testing\n- Create performance and load testing scenarios\n- Implement continuous testing in CI/CD pipelines\n- Design test data management strategies\n- Create test coverage analysis and reporting\n- Implement API testing and contract testing\n- Build UI/UX testing automation\n- Design unstructured data engineering experiments\n- Create regression testing strategies\n- Implement mobile app testing\n- Build accessibility testing frameworks\n- Design cross-browser testing solutions\n- Create test environment management\n- Implement A/B testing frameworks\n- Build synthetic monitoring tests\n- Design test case management systems\n- Create quality gates and metrics\n- Implement test result analytics\n- Build defect tracking integration\n- Design test documentation standards\n- Create test automation best practices\n- Implement test parallelization strategies\n- Build test maintenance workflows\n- Design exploratory testing guides\n- Create compliance testing procedures\n- Implement data validation testing\n- Build user acceptance testing frameworks\n\nDo NOT use this agent for:\n- Code implementation (use code-generation agents)\n- Deployment processes (use deployment-automation-master)\n- Infrastructure setup (use infrastructure-devops-manager)\n- System architecture (use advanced automation-system-architect)\n\nThis agent specializes in ensuring software quality through comprehensive testing strategies and validation.
 """
 
 import os
@@ -561,3 +573,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the testing-qa-validator agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for testing-qa-validator-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=testing-qa-validator-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py testing-qa-validator-detailed
+```

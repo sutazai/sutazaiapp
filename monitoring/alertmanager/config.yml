@@ -1,0 +1,178 @@
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@sutazai.com'
+  smtp_auth_username: 'alerts@sutazai.com'
+  smtp_auth_password: 'password'
+
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'default'
+  routes:
+    # Critical infrastructure alerts - immediate notification
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 10s
+      repeat_interval: 1m
+      continue: true
+
+    # AI model specific alerts
+    - match:
+        component: ai_models
+      receiver: 'ai-team'
+      group_wait: 30s
+      repeat_interval: 30m
+
+    # Security alerts - immediate notification
+    - match:
+        component: security
+      receiver: 'security-team'
+      group_wait: 5s
+      repeat_interval: 15m
+
+    # Database alerts
+    - match:
+        component: database
+      receiver: 'database-team'
+      group_wait: 1m
+      repeat_interval: 1h
+
+    # Business logic alerts
+    - match:
+        component: business
+      receiver: 'business-team'
+      group_wait: 5m
+      repeat_interval: 4h
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+receivers:
+  - name: 'default'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#sutazai-alerts'
+        title: 'SutazAI Alert - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Severity:* {{ .Labels.severity }}
+          *Component:* {{ .Labels.component }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'ops-team@sutazai.com'
+        subject: 'CRITICAL: SutazAI System Alert'
+        body: |
+          Alert Details:
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity }}
+          Service: {{ .Labels.job }}
+          Instance: {{ .Labels.instance }}
+          {{ end }}
+        
+          Runbook: {{ .CommonAnnotations.runbook_url }}
+        headers:
+          Priority: 'high'
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#sutazai-critical'
+        title: '🚨 CRITICAL ALERT - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Service:* {{ .Labels.job }}
+          *Instance:* {{ .Labels.instance }}
+          {{ end }}
+        send_resolved: true
+        color: 'danger'
+
+    pagerduty_configs:
+      - service_key: '${PAGERDUTY_SERVICE_KEY}'
+        description: '{{ .CommonAnnotations.summary }}'
+        details:
+          alert_count: '{{ len .Alerts }}'
+          service: '{{ .CommonLabels.job }}'
+          severity: '{{ .CommonLabels.severity }}'
+
+  - name: 'ai-team'
+    slack_configs:
+      - api_url: '${SLACK_AI_WEBHOOK_URL}'
+        channel: '#ai-models'
+        title: '🤖 AI Model Alert - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Model:* {{ .Labels.model | default "Unknown" }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'security-team'
+    email_configs:
+      - to: 'security@sutazai.com'
+        subject: '🔒 Security Alert - {{ .GroupLabels.alertname }}'
+        body: |
+          Security Alert Details:
+          {{ range .Alerts }}
+          Event: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          User: {{ .Labels.user_id | default "Unknown" }}
+          IP: {{ .Labels.ip_address | default "Unknown" }}
+          {{ end }}
+
+    slack_configs:
+      - api_url: '${SLACK_SECURITY_WEBHOOK_URL}'
+        channel: '#security-alerts'
+        title: '🔒 Security Alert - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Event:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *User:* {{ .Labels.user_id | default "Unknown" }}
+          *IP:* {{ .Labels.ip_address | default "Unknown" }}
+          {{ end }}
+        send_resolved: true
+        color: 'warning'
+
+  - name: 'database-team'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#database-alerts'
+        title: '💾 Database Alert - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Database:* {{ .Labels.job }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'business-team'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#business-metrics'
+        title: '📊 Business Metrics Alert - {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Metric:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

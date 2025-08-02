@@ -25,12 +25,16 @@ RUN python -m pip install --upgrade pip>=25.1.1 \
 # Copy application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p /app/logs /app/uploads /app/data
+# Create necessary directories and set ownership
+RUN mkdir -p /app/logs /app/uploads /app/data \
+    && chown -R sutazai:sutazai /app
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
+
+# Switch to non-root user
+USER sutazai
 
 # Production stage
 FROM base AS production

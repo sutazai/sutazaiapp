@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: semgrep-security-analyzer-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for semgrep security analyzer
 ```python
 #!/usr/bin/env python3
 """
-Semgrep Security Analyzer - Comprehensive automation system Agent Implementation
+Semgrep Security Analyzer - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Scan code for security vulnerabilities before deployment\n- Create custom security rules for your specific codebase\n- Detect hardcoded secrets, API keys, or credentials in code\n- Identify OWASP Top 10 vulnerabilities automatically\n- Find SQL injection, XSS, or other injection vulnerabilities\n- Analyze code for authentication and authorization flaws\n- Detect insecure cryptographic implementations\n- Enforce secure coding standards across the team\n- Integrate security scanning into CI/CD pipelines\n- Set up pre-commit hooks for security checks\n- Generate security compliance reports\n- Track and remediate security technical debt\n- Validate code against regulatory requirements (PCI-DSS, HIPAA)\n- Create custom rules for company-specific security policies\n- Scan pull requests automatically for security issues\n- Identify vulnerable dependencies in code\n- Detect insecure configurations or hardcoded settings\n- Analyze code for path traversal vulnerabilities\n- Find race conditions and timing attacks\n- Identify insecure random number generation\n- Detect unsafe deserialization patterns\n- Scan for XXE (XML External Entity) vulnerabilities\n- Find command injection vulnerabilities\n- Analyze JavaScript for DOM-based XSS\n- Detect insecure file operations\n- Identify missing security headers\n- Find JWT implementation flaws\n- Scan infrastructure-as-code for misconfigurations\n- Create security gates in deployment pipelines\n- Generate actionable fix recommendations\n- Educate developers on secure coding practices\n- Perform differential security scans between commits\n- Analyze code changes for security impact\n- Create security scorecards for projects\n- Detect security anti-patterns in frameworks\n- Validate secure API implementations\n- Find business logic vulnerabilities through pattern matching\n- Implement shift-left security practices\n\nDo NOT use this agent for:\n- Runtime security testing (use Security Pentesting Specialist)\n- Dynamic application testing\n- Network vulnerability scanning\n- Manual code review tasks\n- Performance analysis\n\nThis agent specializes in finding security vulnerabilities through static code analysis using Semgrep's powerful pattern-matching engine, helping you catch security issues early in the development lifecycle.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the semgrep-security-analyzer agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for semgrep-security-analyzer-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=semgrep-security-analyzer-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py semgrep-security-analyzer-detailed
+```

@@ -399,8 +399,6 @@ class InfrastructureIntegration:
                 "image": "sutazai/ollama-specialist:latest",
                 "ports": {"8215": 8080}
             },
-                "ports": {"8216": 8080}
-            },
             "context-optimization-engineer": {
                 "image": "sutazai/context-optimizer:latest",
                 "ports": {"8217": 8080}

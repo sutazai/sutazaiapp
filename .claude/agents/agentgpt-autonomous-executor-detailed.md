@@ -1,4 +1,67 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through the following integration:
+
+```python
+# Import the rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check CLAUDE.md compliance
+def safe_execute(action_description: str, action_function):
+    """Safely execute an action with CLAUDE.md rules checking"""
+    
+    # Check rules compliance
+    if not enforce_rules_before_action(action_description):
+        return False
+    
+    # Execute the action
+    try:
+        return action_function()
+    except Exception as e:
+        print(f"❌ Action failed: {e}")
+        return False
+
+# Example usage in agent
+def example_agent_action():
+    action_desc = "Analyzing codebase for agentgpt-autonomous-executor-detailed tasks"
+    
+    def analyze_code():
+        # Your actual analysis code here
+        print("✅ Performing analysis...")
+        return True
+    
+    return safe_execute(action_desc, analyze_code)
+```
+
+### Required Environment Variables:
+- `CLAUDE_RULES_ENABLED=true` - Enable rules checking
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md` - Path to rules file
+- `AGENT_NAME=agentgpt-autonomous-executor-detailed` - This agent's name for logging
+
+### Startup Compliance Check:
+```bash
+# Use the startup wrapper to ensure compliance
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py agentgpt-autonomous-executor-detailed
+```
 name: agentgpt-autonomous-executor-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +115,7 @@ Specialized AI agent for agentgpt autonomous executor
 ```python
 #!/usr/bin/env python3
 """
-Agentgpt Autonomous Executor - Comprehensive automation system Agent Implementation
+Agentgpt Autonomous Executor - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:
 """
 

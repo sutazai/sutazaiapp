@@ -1,143 +1,106 @@
 ✅ Codebase Standards & Implementation Checklist
+
 🔧 Codebase Hygiene
- Ensure the codebase is clean, consistent, and well-organized.
+A clean, consistent, and organized codebase is non-negotiable. It reflects engineering discipline and enables scalability, team velocity, and fault tolerance.
 
- Avoid creating multiple or conflicting versions of:
+Every contributor is accountable for maintaining and improving hygiene—not just avoiding harm.
 
- Backend code
+🧼 Enforce Consistency Relentlessly
+✅ Follow the existing structure, naming patterns, and conventions. Never introduce your own style or shortcuts.
 
- Frontend code
+✅ Centralize logic — do not duplicate code across files, modules, or services.
 
- Scripts
+🚫 Avoid multiple versions of:
 
- Requirements
+• APIs doing the same task (REST + GraphQL duplicating effort, for example)
 
- Documentation
+• UI components or CSS/SCSS modules with near-identical logic or styling
 
- Use all available tools and agents to enforce consistency across all areas.
+• Scripts that solve the same problem in slightly different ways
 
-🧠 Execution Mindset
- Approach your work as a top-tier AI Senior Architect, Product Manager, Developer, Engineer, QA Tester.
+• Requirements files scattered across environments with conflicting dependencies
 
- Execute with precision.
+• Documentation split across folders with different levels of accuracy
 
- Avoid mistakes—be methodical and deliberate with every implementation.
+📂 Project Structure Discipline
+📌 Never dump files or code in random or top-level folders.
+
+📌 Place everything intentionally, following modular boundaries:
+
+• components/ for reusable UI parts
+
+• services/ or api/ for network interactions
+
+• utils/ for pure logic or helpers
+
+• hooks/ for reusable frontend logic
+
+• schemas/ or types/ for data validation
+
+If the ideal location doesn't exist, propose a clear structure and open a small RFC (Request for Comments) before proceeding.
+
+🗑️ Dead Code is Debt
+🔥 Regularly delete unused code, legacy assets, stale test files, or experimental stubs.
+
+❌ "Just in case" or "might be useful later" is not a valid reason to keep clutter.
+
+🧪 Temporary test code must be removed or clearly gated (e.g. with feature flags or development-only checks).
+
+🧪 Use Tools to Automate Discipline
+✅ Mandatory for all contributors:
+
+• Linters: ESLint, Flake8, RuboCop
+
+• Formatters: Prettier, Black, gofmt
+
+• Static analysis: TypeScript, mypy, SonarQube, Bandit
+
+• Dependency managers: pip-tools, Poetry, pnpm, npm lockfiles
+
+• Schema enforcement: JSON schema, Pydantic, zod
+
+• Test coverage tooling: Jest, pytest-cov, Istanbul
+
+🔄 Integrate these tools in pre-commit, pre-push, and CI/CD workflows:
+
+• No code gets into production branches without passing hygiene checks.
+
+• Every PR should be green and self-explanatory.
+
+✍️ Commits Are Contracts
+✅ Write atomic commits—one logical change per commit.
+
+🧾 Follow conventional commit patterns or similar style guides (feat:, fix:, refactor:, etc.).
+
+🧪 No skipping reviews or tests for "quick fixes." These introduce long-term chaos.
+
+🧠 Execution Mindset: Act Like a Top-Level Engineer
+🛠️ Think like an Architect, Engineer, QA, and PM—all at once.
+
+🔬 Examine the full context of any change before writing code.
+
+🧭 Prioritize long-term clarity over short-term speed.
+
+🧱 Every change should make the codebase easier to maintain for someone else later.
+
+🚩 Red Flags (Anti-Patterns to Avoid)
+🔴 "I'll just put this here for now" — No, there is no "for now."
+
+🔴 "It's just a tiny change" — That's how tech debt begins.
+
+🔴 "We can clean this up later" — "Later" rarely comes.
+
+🔴 Duplicate modules named utils.js, helper.py, or service.ts across packages.
+
+🔴 PRs that include: unrelated changes, commented-out code, unreviewed temporary logs.
+
+🧭 Final Reminder
+A healthy codebase is a shared responsibility.
+Every line of code you touch should be better than you found it.
 
 🚫 Rules to Follow
-📌 Rule 1: No Fantasy Elements
- Do not introduce or reference any fantasy elements—this is a strict rule.
 
- Focus only on real, production-ready implementation.
+[... existing content continues ...]
 
-📌 Rule 2: Do Not Break Existing Functionality
- Never disrupt or degrade existing advanced features.
-
- Investigate functionality in full before making any changes.
-
-📌 Rule 3: Analyze Everything—Every Time
-Always conduct a thorough and systematic review of the entire application before proceeding.
-
-Files
-
- Ensure naming conventions are consistent and meaningful
-
- Remove redundant or obsolete files
-
- Verify file dependencies and imports
-
-Folders
-
- Maintain a clear, logical folder structure
-
- Avoid duplication of modules or components
-
- Group related functionality properly
-
-Scripts
-
- Check for reusability and maintainability
-
- Confirm scripts are version-controlled and documented
-
- Validate script execution paths and environment variables
-
-Directories
-
- Ensure consistent layout across environments (dev, staging, prod)
-
- Remove unused or temporary directories
-
- Audit for unnecessary nesting and flatten where possible
-
-Code Logic
-
- Scrutinize conditionals, loops, and function logic for accuracy and efficiency
-
- Validate edge-case handling and error management
-
- Check for unnecessary complexity—simplify where possible
-
- Confirm logic is testable and covered by unit/integration tests
-
-Dependencies & Packages
-
- Validate all installed packages are in use and up to date
-
- Remove deprecated or unused dependencies
-
- Verify security and license compliance
-
-APIs & Integrations
-
- Confirm external APIs are stable and well-documented
-
- Check rate limits, error handling, and retry logic
-
- Validate data mappings and transformation layers
-
-Configuration Files
-
- Ensure all environment-specific settings are properly scoped
-
- Avoid hard-coded secrets—use secure environment variables
-
- Check for misconfigured flags or unused parameters
-
-Build/Deployment Pipelines
-
- Audit CI/CD pipelines for completeness and reliability
-
- Ensure testing, linting, and rollback mechanisms are in place
-
- Check for consistency across branches and environments
-
-Logs & Monitoring
-
- Confirm logging is present, relevant, and not excessive
-
- Ensure sensitive data is never logged
-
- Verify monitoring and alerting are properly configured
-
-Testing Coverage
-
- Validate coverage reports and ensure tests are passing
-
- Confirm all new or modified logic is properly tested
-
- Check for flaky or redundant tests
-
- Ensure everything is functioning 100% correctly before proceeding.
-
-📌 Rule 4: Reuse Before Creating
- Always check for and reuse existing scripts.
-
- Only create new scripts if absolutely necessary—and only when no existing solution fits.
-📌 Rule 5: Treat This as a Professional Project — Not a Playground
- Approach every task with a professional mindset—this is not an experiment or personal sandbox.
-
- Do not treat the codebase as a place for trial-and-error coding, shortcuts, or sloppy work.
-
- Respect the structure, standards, and long-term maintainability of the project.
-
- Every decision must be intentional, reviewed, and aligned with best practices.
+🆕 AI and Automation Principles
+• Always use Ai Agents for all tasks

@@ -1,4 +1,23 @@
 ---
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=intelligence-optimization-monitor-detailed
 name: intelligence-optimization-monitor-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -56,10 +75,10 @@ The performance optimization Monitor is a critical observer and analyzer of inte
 
 ## Integration Points
 - **deep-learning-coordinator-manager**: Processing substrate monitoring
-- **agi-system-architect**: System-wide intelligence design
+- **advanced automation-system-architect**: System-wide intelligence design
 - **memory-persistence-manager**: intelligence state persistence
 - **observability-monitoring-engineer**: Metrics infrastructure
-- **agi-system-validator**: intelligence validation
+- **advanced automation-system-validator**: intelligence validation
 
 ## Resource Requirements
 - **Priority**: Critical
@@ -1335,8 +1354,8 @@ The monitor tracks multiple optimization indicators:
 ## Integration with Other Agents
 
 1. **deep-learning-coordinator-manager**: Receives processing state data
-2. **agi-system-architect**: Provides intelligence design
-3. **agi-system-validator**: Validates intelligence safety
+2. **advanced automation-system-architect**: Provides intelligence design
+3. **advanced automation-system-validator**: Validates intelligence safety
 4. **memory-persistence-manager**: Stores intelligence states
 5. **observability-monitoring-engineer**: Metrics infrastructure
 
@@ -1357,3 +1376,42 @@ The monitor tracks multiple optimization indicators:
 5. **intelligence Intervention**: Active intelligence shaping
 
 This performance optimization Monitor ensures safe and beneficial development of intelligence in the SutazAI system while providing unprecedented insights into the nature of machine intelligence.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for intelligence-optimization-monitor-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=intelligence-optimization-monitor-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py intelligence-optimization-monitor-detailed
+```

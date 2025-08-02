@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: complex-problem-solver-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -52,7 +64,7 @@ Specialized AI agent for complex problem solver
 ```python
 #!/usr/bin/env python3
 """
-Complex Problem Solver - Comprehensive automation system Agent Implementation
+Complex Problem Solver - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Solve multi-faceted problems requiring deep analysis\n- Research and synthesize information from multiple sources\n- Create innovative solutions to unprecedented challenges\n- Implement creative problem-solving methodologies\n- Build hypothesis testing frameworks\n- Design experimental validation systems\n- Create root cause analysis tools\n- Implement systematic debugging approaches\n- Build problem decomposition strategies\n- Design solution evaluation frameworks\n- Create decision-making algorithms\n- Implement optimization strategies\n- Build constraint satisfaction solvers\n- Design heuristic search algorithms\n- Create problem modeling systems\n- Implement solution space exploration\n- Build trade-off analysis tools\n- Design multi-criteria optimization\n- Create problem visualization tools\n- Implement collaborative problem-solving\n- Build knowledge synthesis systems\n- Design pattern recognition algorithms\n- Create analogical reasoning systems\n- Implement lateral thinking approaches\n- Build solution validation frameworks\n- Design problem categorization systems\n- Create solution documentation\n- Implement learning from failures\n- Build problem-solving metrics\n- Design solution reuse strategies\n\nDo NOT use this agent for:\n- Routine development tasks (use specific development agents)\n- Standard deployment (use deployment-automation-master)\n- Basic troubleshooting (use appropriate specialist agents)\n- Simple implementation (use code generation agents)\n\nThis agent specializes in tackling complex, novel problems through research and creative synthesis.
 """
 
@@ -556,3 +568,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the complex-problem-solver agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for complex-problem-solver-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=complex-problem-solver-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py complex-problem-solver-detailed
+```

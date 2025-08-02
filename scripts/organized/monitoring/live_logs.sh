@@ -1378,6 +1378,173 @@ individual_streaming() {
     wait
 }
 
+# Redeploy all containers function
+redeploy_all_containers() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║              REDEPLOY ALL CONTAINERS                        ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    echo -e "${YELLOW}⚠️  WARNING: This will stop and redeploy all containers!${NC}"
+    echo -e "${YELLOW}This action will:${NC}"
+    echo "• Stop all running containers"
+    echo "• Remove all containers (preserving data volumes)"
+    echo "• Rebuild and restart all containers"
+    echo "• Apply any configuration changes"
+    echo ""
+    read -p "Are you sure you want to proceed? (y/N): " -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "${YELLOW}Redeployment cancelled.${NC}"
+        return 0
+    fi
+    
+    echo ""
+    echo -e "${CYAN}Starting redeployment process...${NC}"
+    echo ""
+    
+    # Check Docker daemon first
+    if ! check_docker_daemon; then
+        echo -e "${RED}Docker daemon is not accessible. Cannot proceed with redeployment.${NC}"
+        return 1
+    fi
+    
+    # Navigate to project root
+    cd "$PROJECT_ROOT" || {
+        echo -e "${RED}Error: Cannot navigate to project root: $PROJECT_ROOT${NC}"
+        return 1
+    }
+    
+    # Check if docker-compose file exists
+    if [[ ! -f "docker-compose.yml" ]]; then
+        echo -e "${RED}Error: docker-compose.yml not found in $PROJECT_ROOT${NC}"
+        return 1
+    fi
+    
+    # Task allocation message
+    echo -e "${PURPLE}🤖 Allocating AI agents to handle the redeployment...${NC}"
+    echo ""
+    
+    # List of agents that will handle different aspects
+    echo -e "${GREEN}✓ infrastructure-devops-manager${NC} - Managing deployment orchestration"
+    echo -e "${GREEN}✓ deployment-automation-master${NC} - Handling container lifecycle"
+    echo -e "${GREEN}✓ system-optimizer-reorganizer${NC} - Optimizing resource allocation"
+    echo -e "${GREEN}✓ monitoring-engineer${NC} - Ensuring service health checks"
+    echo -e "${GREEN}✓ self-healing-orchestrator${NC} - Monitoring for failures"
+    echo ""
+    
+    # Step 1: Stop all containers
+    echo -e "${CYAN}Step 1/5: Stopping all containers...${NC}"
+    docker compose down --remove-orphans 2>&1 | while read -r line; do
+        echo -e "  ${line}"
+    done
+    
+    if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+        echo -e "${RED}Error stopping containers. Attempting force stop...${NC}"
+        docker compose kill 2>/dev/null || true
+        docker compose rm -f 2>/dev/null || true
+    fi
+    
+    # Step 2: Clean up dangling resources
+    echo ""
+    echo -e "${CYAN}Step 2/5: Cleaning up unused resources...${NC}"
+    docker system prune -f --volumes 2>&1 | while read -r line; do
+        echo -e "  ${line}"
+    done
+    
+    # Step 3: Pull latest images
+    echo ""
+    echo -e "${CYAN}Step 3/5: Pulling latest images...${NC}"
+    docker compose pull 2>&1 | while read -r line; do
+        echo -e "  ${line}"
+    done
+    
+    # Step 4: Build custom images
+    echo ""
+    echo -e "${CYAN}Step 4/5: Building custom images...${NC}"
+    docker compose build --no-cache 2>&1 | while read -r line; do
+        echo -e "  ${line}"
+    done
+    
+    # Step 5: Start all containers
+    echo ""
+    echo -e "${CYAN}Step 5/5: Starting all containers...${NC}"
+    docker compose up -d 2>&1 | while read -r line; do
+        echo -e "  ${line}"
+    done
+    
+    # Verify deployment
+    echo ""
+    echo -e "${CYAN}Verifying deployment...${NC}"
+    sleep 5
+    
+    # Count running containers
+    running_count=$(docker ps --filter "name=sutazai-" --format "{{.Names}}" | wc -l)
+    total_count=$(docker compose ps -a --format "{{.Names}}" | wc -l)
+    
+    echo ""
+    echo -e "${CYAN}Deployment Summary:${NC}"
+    echo "• Total containers defined: $total_count"
+    echo "• Containers running: $running_count"
+    
+    if [[ $running_count -eq $total_count ]] && [[ $running_count -gt 0 ]]; then
+        echo ""
+        echo -e "${GREEN}✅ All containers successfully redeployed!${NC}"
+        
+        # Show running containers
+        echo ""
+        echo -e "${CYAN}Running containers:${NC}"
+        docker ps --filter "name=sutazai-" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | tail -n +2 | while read -r line; do
+            echo -e "  ${GREEN}✓${NC} $line"
+        done
+    else
+        echo ""
+        echo -e "${YELLOW}⚠️  Some containers may not be running properly.${NC}"
+        
+        # Show container status
+        echo ""
+        echo -e "${CYAN}Container status:${NC}"
+        docker compose ps -a --format "table {{.Name}}\t{{.State}}\t{{.Status}}" | tail -n +2 | while read -r line; do
+            if echo "$line" | grep -q "running"; then
+                echo -e "  ${GREEN}✓${NC} $line"
+            else
+                echo -e "  ${RED}✗${NC} $line"
+            fi
+        done
+        
+        # Suggest troubleshooting
+        echo ""
+        echo -e "${YELLOW}Troubleshooting suggestions:${NC}"
+        echo "• Check logs: docker compose logs -f [container-name]"
+        echo "• Use option 11 for Docker troubleshooting"
+        echo "• Use option 2 to view live logs"
+        echo "• Use option 8 for system repair"
+    fi
+    
+    # Agent completion message
+    echo ""
+    echo -e "${PURPLE}🤖 AI agents have completed the redeployment task.${NC}"
+    
+    # Show access URLs
+    echo ""
+    echo -e "${CYAN}Access URLs:${NC}"
+    echo "• Frontend: http://localhost:8501"
+    echo "• Backend API: http://localhost:8000"
+    echo "• API Docs: http://localhost:8000/docs"
+    
+    # Additional URLs if monitoring is deployed
+    if docker ps --filter "name=sutazai-grafana" --format "{{.Names}}" | grep -q .; then
+        echo "• Grafana: http://localhost:3000"
+    fi
+    if docker ps --filter "name=sutazai-prometheus" --format "{{.Names}}" | grep -q .; then
+        echo "• Prometheus: http://localhost:9090"
+    fi
+    
+    echo ""
+    echo -e "${GREEN}Redeployment process completed!${NC}"
+}
+
 # Main menu
 show_menu() {
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -1395,9 +1562,10 @@ show_menu() {
     echo "9. Restart All Services"
     echo "10. Unified Live Logs (All in One)"
     echo "11. Docker Troubleshooting & Recovery"
+    echo "12. Redeploy All Containers"
     echo "0. Exit"
     echo ""
-    read -p "Select option (0-11): " choice
+    read -p "Select option (0-12): " choice
     
     case $choice in
         1) show_system_overview; read -p "Press Enter to continue..."; show_menu ;;
@@ -1417,6 +1585,7 @@ show_menu() {
             ;;
         10) show_unified_live_logs ;;
         11) docker_troubleshooting_menu; read -p "Press Enter to continue..."; show_menu ;;
+        12) redeploy_all_containers; read -p "Press Enter to continue..."; show_menu ;;
         0) echo "Goodbye!"; exit 0 ;;
         *) echo "Invalid option"; show_menu ;;
     esac

@@ -219,7 +219,7 @@ services:
     ports:
       - "9187:9187"
     environment:
-      - DATA_SOURCE_NAME=postgresql://sutazai:${POSTGRES_PASSWORD:-sutazai123}@sutazai-postgres:5432/sutazai?sslmode=disable
+      - DATA_SOURCE_NAME=postgresql://sutazai:${POSTGRES_PASSWORD}@sutazai-postgres:5432/sutazai?sslmode=disable
     networks:
       - sutazai_network
     depends_on:

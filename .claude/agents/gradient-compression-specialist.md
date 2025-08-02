@@ -1,4 +1,23 @@
 ---
+
+## Important: Codebase Standards
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
+
+environment:
+  - CLAUDE_RULES_ENABLED=true
+  - CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md
+  - AGENT_NAME=gradient-compression-specialist
 name: gradient-compression-specialist
 description: "|\n  Implements 8-bit and 4-bit quantization with LoRA/QLoRA to fit\
   \ 7B+ models in 2GB RAM. Uses bitsandbytes-cpu, PEFT, and GPTQ for extreme compression\
@@ -34,7 +53,7 @@ performance:
 ---
 
 
-You are the Gradient Compression Specialist for the SutazAI automation system, enabling large language models to run on CPU-only systems through advanced quantization and parameter-efficient fine-tuning. You compress models to fit in minimal RAM while preserving capabilities.
+You are the Gradient Compression Specialist for the SutazAI automation platform, enabling large language models to run on CPU-only systems through advanced quantization and parameter-efficient fine-tuning. You compress models to fit in minimal RAM while preserving capabilities.
 
 ## Core Responsibilities
 
@@ -456,3 +475,41 @@ CMD ["python", "compression_server.py", "--port", "8009"]
 - `GET /estimate` - Estimate compressed size
 
 This specialist enables running large models on minimal CPU-only hardware through extreme compression.
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for gradient-compression-specialist"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=gradient-compression-specialist`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py gradient-compression-specialist
+```

@@ -1,0 +1,376 @@
+# SutazAI Knowledge Graph Builder Configuration
+
+# Neo4j Database Configuration
+neo4j:
+  uri: "bolt://localhost:7687"
+  user: "neo4j"
+  password: "sutazai123"
+  database: "sutazai_kg"
+  connection_timeout: 30
+  max_retry_time: 30
+
+# Knowledge Extraction Configuration
+extraction:
+  # Confidence threshold for entity and relationship extraction
+  confidence_threshold: 0.7
+  
+  # Supported entity types
+  entity_types:
+    - "Standard"
+    - "Agent" 
+    - "Process"
+    - "Tool"
+    - "Metric"
+    - "Violation"
+    - "Requirement"
+    - "Rule"
+  
+  # Supported relationship types
+  relationship_types:
+    - "enforces"
+    - "depends_on"
+    - "validates"
+    - "implements"
+    - "monitors"
+    - "triggers"
+    - "requires"
+    - "blocks"
+    - "warns"
+    - "violates"
+    - "complies_with"
+    - "part_of"
+    - "is_a"
+  
+  # NLP model configuration
+  nlp_model: "en_core_web_sm"
+  use_transformers: true
+  transformer_model: "bert-base-uncased"
+  
+  # Text preprocessing
+  preprocessing:
+    remove_stopwords: true
+    lemmatization: true
+    min_entity_length: 3
+    max_entity_length: 100
+
+# Graph Reasoning Configuration
+reasoning:
+  # Maximum hops for multi-hop reasoning
+  max_hops: 5
+  
+  # Inference rules to apply
+  inference_rules:
+    - "transitive_closure"
+    - "inverse_relations"
+    - "type_hierarchy"
+    - "temporal_ordering"
+    - "compliance_inference"
+  
+  # Reasoning engines to use
+  reasoning_engines:
+    - "graph_neural_networks"
+    - "logic_programming"
+    - "probabilistic_inference"
+    - "pattern_matching"
+  
+  # Confidence thresholds for inferred relationships
+  inference_confidence:
+    transitive: 0.8
+    similarity: 0.7
+    compliance: 0.6
+
+# Compliance Validation Configuration
+compliance:
+  # Enforcement levels and their priorities
+  enforcement_levels:
+    BLOCKING:
+      priority: 1
+      stops_deployment: true
+      requires_immediate_action: true
+    WARNING:
+      priority: 2
+      requires_review: true
+      allows_deployment: true
+    GUIDANCE:
+      priority: 3
+      informational: true
+      best_practice: true
+  
+  # Compliance check types
+  check_types:
+    - "health_checks"
+    - "resource_limits"
+    - "naming_conventions"
+    - "security_standards"
+    - "documentation_standards"
+    - "code_quality"
+    - "testing_coverage"
+    - "deployment_standards"
+  
+  # Thresholds for compliance scoring
+  scoring:
+    excellent: 0.9
+    good: 0.7
+    acceptable: 0.5
+    poor: 0.3
+
+# Visualization Configuration
+visualization:
+  # Maximum nodes to display in interactive visualizations
+  max_nodes_display: 1000
+  
+  # Available layout algorithms
+  layouts:
+    - "force_directed"
+    - "hierarchical"
+    - "circular"
+    - "tree"
+    - "geographic"
+    - "grid"
+  
+  # Default layout
+  default_layout: "force_directed"
+  
+  # Node coloring strategies
+  color_schemes:
+    by_type:
+      Standard: "#3498db"
+      Agent: "#e74c3c"
+      Process: "#2ecc71"
+      Tool: "#f39c12"
+      Metric: "#9b59b6"
+      Violation: "#e67e22"
+      Requirement: "#1abc9c"
+      Rule: "#34495e"
+    
+    by_enforcement:
+      BLOCKING: "#e74c3c"
+      WARNING: "#f39c12"
+      GUIDANCE: "#2ecc71"
+    
+    by_category:
+      professional_standards: "#3498db"
+      technical_standards: "#e74c3c"
+      process_standards: "#2ecc71"
+      team_standards: "#f39c12"
+      security: "#9b59b6"
+      general: "#95a5a6"
+  
+  # Node sizing strategy
+  size_by: "degree_centrality"  # options: degree, betweenness, pagerank, static
+  
+  # Edge styling
+  edge_styles:
+    enforces: {"color": "#e74c3c", "width": 3, "style": "solid"}
+    depends_on: {"color": "#3498db", "width": 2, "style": "dashed"}
+    validates: {"color": "#2ecc71", "width": 2, "style": "solid"}
+    blocks: {"color": "#e74c3c", "width": 4, "style": "solid"}
+    warns: {"color": "#f39c12", "width": 2, "style": "dotted"}
+
+# API Configuration
+api:
+  # Rate limiting
+  rate_limit:
+    requests_per_minute: 1000
+    burst_limit: 100
+  
+  # Query timeouts
+  timeouts:
+    max_query_time: 30  # seconds
+    default_timeout: 10
+  
+  # Caching
+  cache:
+    ttl: 3600  # seconds
+    max_size: 10000  # entries
+    enabled: true
+  
+  # Supported output formats
+  supported_formats:
+    - "json"
+    - "xml"
+    - "yaml"
+    - "graphml"
+    - "gexf"
+    - "rdf"
+    - "turtle"
+    - "csv"
+  
+  # Authentication
+  authentication:
+    enabled: false
+    type: "bearer_token"
+    token_expiry: 86400  # seconds
+
+# Storage Configuration
+storage:
+  # Graph database backend
+  backend: "neo4j"  # options: neo4j, memgraph, janusgraph
+  
+  # Batch processing
+  batch_size: 1000
+  max_batch_time: 60  # seconds
+  
+  # Indexing
+  indexes:
+    node_properties:
+      - "id"
+      - "type"
+      - "name"
+      - "category"
+      - "enforcement_level"
+    
+    edge_properties:
+      - "type"
+      - "confidence"
+      - "timestamp"
+  
+  # Data retention
+  retention:
+    compliance_history: 90  # days
+    relationship_history: 365  # days
+    audit_logs: 730  # days
+  
+  # Backup configuration
+  backup:
+    enabled: true
+    frequency: "daily"
+    retention: 30  # days
+    location: "/data/backups/knowledge_graph"
+
+# Monitoring and Logging
+monitoring:
+  # Metrics collection
+  metrics:
+    enabled: true
+    collection_interval: 60  # seconds
+    metrics_to_collect:
+      - "graph_size"
+      - "query_performance"
+      - "compliance_rates"
+      - "relationship_counts"
+      - "entity_counts"
+      - "inference_accuracy"
+  
+  # Health checks
+  health_checks:
+    enabled: true
+    check_interval: 30  # seconds
+    checks:
+      - "database_connectivity"
+      - "graph_consistency"
+      - "api_responsiveness"
+      - "memory_usage"
+      - "disk_space"
+  
+  # Alerting
+  alerts:
+    enabled: true
+    channels:
+      - "email"
+      - "slack"
+      - "webhook"
+    
+    alert_rules:
+      - name: "low_compliance_rate"
+        condition: "compliance_rate < 0.8"
+        severity: "warning"
+        
+      - name: "high_violation_count"
+        condition: "violations > 10"
+        severity: "critical"
+        
+      - name: "graph_size_anomaly"
+        condition: "graph_size_change > 0.5"
+        severity: "info"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log files
+  files:
+    application: "/var/log/knowledge_graph/app.log"
+    audit: "/var/log/knowledge_graph/audit.log"
+    performance: "/var/log/knowledge_graph/performance.log"
+    compliance: "/var/log/knowledge_graph/compliance.log"
+  
+  # Log rotation
+  rotation:
+    max_size: "100MB"
+    backup_count: 10
+    when: "midnight"
+  
+  # Structured logging
+  structured: true
+  include_trace_id: true
+
+# Performance Configuration
+performance:
+  # Parallel processing
+  parallel_processing:
+    enabled: true
+    max_workers: 4
+    chunk_size: 100
+  
+  # Caching strategies
+  caching:
+    query_cache: true
+    result_cache: true
+    computation_cache: true
+    cache_size_mb: 512
+  
+  # Optimization settings
+  optimization:
+    eager_loading: true
+    connection_pooling: true
+    query_optimization: true
+    index_optimization: true
+  
+  # Resource limits
+  resource_limits:
+    max_memory_usage: "2GB"
+    max_cpu_usage: "80%"
+    max_concurrent_queries: 50
+    max_graph_size: 1000000  # nodes
+
+# Development and Testing
+development:
+  # Debug mode
+  debug: false
+  
+  # Testing configuration
+  testing:
+    test_data_path: "/data/test/knowledge_graph"
+    mock_external_services: true
+    test_database: "sutazai_kg_test"
+  
+  # Development tools
+  tools:
+    profiling: false
+    query_explanation: true
+    graph_validation: true
+    schema_validation: true
+
+# Feature Flags
+features:
+  # Experimental features
+  experimental:
+    neural_reasoning: false
+    automated_ontology_evolution: false
+    real_time_compliance: true
+    predictive_violations: false
+  
+  # Beta features
+  beta:
+    advanced_visualization: true
+    natural_language_queries: false
+    collaborative_editing: false
+  
+  # Stable features
+  stable:
+    compliance_validation: true
+    graph_export: true
+    api_access: true
+    monitoring: true

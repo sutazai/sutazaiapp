@@ -3,6 +3,8 @@ auth_enabled: false
 server:
   http_listen_port: 3100
   grpc_listen_port: 9096
+  log_level: info
+  log_format: logfmt
 
 common:
   path_prefix: /loki
@@ -15,12 +17,24 @@ common:
     kvstore:
       store: inmemory
 
+limits_config:
+  retention_period: 720h  # 30 days
+  ingestion_rate_mb: 4
+  ingestion_burst_size_mb: 6
+  max_global_streams_per_user: 10000
+  max_query_length: 721h
+  max_query_parallelism: 32
+  max_streams_per_user: 0
+  max_line_size: 256000
+
 query_range:
   results_cache:
     cache:
       embedded_cache:
         enabled: true
-        max_size_mb: 100
+        max_size_mb: 512
+        ttl: 1h
+  cache_results: true
 
 schema_config:
   configs:
@@ -32,17 +46,40 @@ schema_config:
         prefix: index_
         period: 24h
 
-ruler:
-  alertmanager_url: http://localhost:9093
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/boltdb-shipper-active
+    cache_location: /loki/boltdb-shipper-cache
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
 
-# By default, Loki will send anonymous, but uniquely-identifiable usage and configuration
-# analytics to Grafana Labs. These statistics are sent to https://stats.grafana.org/
-#
-# Statistics help us better understand how Loki is used, and they show us performance
-# levels for most users. This helps us prioritize features and documentation.
-# For more information on what's sent: https://github.com/grafana/loki/blob/main/docs/sources/configuration/telemetry.md
-# Refer to the buildReport method to see what goes into a report.
-#
-# If you would like to disable reporting, uncomment the following lines:
+compactor:
+  working_directory: /loki/compactor
+  shared_store: filesystem
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /loki/rules
+  rule_path: /loki/rules
+  alertmanager_url: http://alertmanager:9093
+  ring:
+    kvstore:
+      store: inmemory
+  enable_api: true
+
+frontend:
+  log_queries_longer_than: 5s
+  compress_responses: true
+
+chunk_store_config:
+  max_look_back_period: 0s
+
+table_manager:
+  retention_deletes_enabled: true
+  retention_period: 720h
+
 analytics:
   reporting_enabled: false

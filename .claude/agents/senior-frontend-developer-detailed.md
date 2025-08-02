@@ -1,4 +1,16 @@
 ---
+
+## Important: Codebase Standards
+
+**MANDATORY**: Before performing any task, you MUST first review `/opt/sutazaiapp/CLAUDE.md` to understand:
+- Codebase standards and conventions
+- Implementation requirements and best practices
+- Rules for avoiding fantasy elements
+- System stability and performance guidelines
+- Clean code principles and organization rules
+
+This file contains critical rules that must be followed to maintain code quality and system integrity.
+
 name: senior-frontend-developer-detailed
 description: "|\n  Professional agent for specialized tasks\n  "
 model: tinyllama:latest
@@ -53,7 +65,7 @@ Develop and optimize frontend applications with modern frameworks
 ```python
 #!/usr/bin/env python3
 """
-Senior Frontend Developer - Comprehensive automation system Agent Implementation
+Senior Frontend Developer - Comprehensive automation platform Agent Implementation
 Use this agent when you need to:\n\n- Build modern web interfaces with React, Vue, or Angular\n- Create responsive Streamlit applications\n- Implement real-time data visualization dashboards\n- Design user-friendly AI chat interfaces\n- Build interactive data exploration tools\n- Create Progressive Web Applications (PWAs)\n- Implement state management solutions\n- Build component libraries and design systems\n- Create accessible web interfaces (WCAG compliance)\n- Implement WebSocket real-time features\n- Build data visualization with D3.js or Chart.js\n- Design mobile-responsive layouts\n- Create micro-frontend architectures\n- Implement frontend performance optimization\n- Build SEO-friendly applications\n- Create frontend testing strategies\n- Implement internationalization (i18n)\n- Build offline-capable applications\n- Design frontend security best practices\n- Create animated user interfaces\n- Implement lazy loading and code splitting\n- Build frontend monitoring and analytics\n- Design cross-browser compatibility\n- Create frontend build optimization\n- Implement frontend caching strategies\n- Build WebAssembly integrations\n- Design frontend error handling\n- Create frontend documentation\n- Implement A/B testing frameworks\n- Build frontend CI/CD pipelines\n\nDo NOT use this agent for:\n- Backend development (use senior-backend-developer)\n- Database design (use appropriate backend agents)\n- Infrastructure (use infrastructure-devops-manager)\n- AI/ML implementation (use senior-ai-engineer)\n\nThis agent specializes in creating beautiful, performant, and user-friendly web interfaces.
 """
 
@@ -557,3 +569,42 @@ result = await agent.process_task(task)
  - Predictive resource allocation
 
 This comprehensive implementation ensures the senior-frontend-developer agent operates efficiently within the SutazAI system while maintaining the conservative resource strategy.
+
+
+## CLAUDE.md Rules Integration
+
+This agent enforces CLAUDE.md rules through integrated compliance checking:
+
+```python
+# Import rules checker
+import sys
+import os
+sys.path.append('/opt/sutazaiapp/.claude/agents')
+
+from claude_rules_checker import enforce_rules_before_action, get_compliance_status
+
+# Before any action, check compliance
+def safe_execute_action(action_description: str):
+    """Execute action with CLAUDE.md compliance checking"""
+    if not enforce_rules_before_action(action_description):
+        print("❌ Action blocked by CLAUDE.md rules")
+        return False
+    print("✅ Action approved by CLAUDE.md compliance")
+    return True
+
+# Example usage
+def example_task():
+    if safe_execute_action("Analyzing codebase for senior-frontend-developer-detailed"):
+        # Your actual task code here
+        pass
+```
+
+**Environment Variables:**
+- `CLAUDE_RULES_ENABLED=true`
+- `CLAUDE_RULES_PATH=/opt/sutazaiapp/CLAUDE.md`
+- `AGENT_NAME=senior-frontend-developer-detailed`
+
+**Startup Check:**
+```bash
+python3 /opt/sutazaiapp/.claude/agents/agent_startup_wrapper.py senior-frontend-developer-detailed
+```
