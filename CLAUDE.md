@@ -133,3 +133,11 @@ Testing Coverage
  Always check for and reuse existing scripts.
 
  Only create new scripts if absolutely necessary—and only when no existing solution fits.
+📌 Rule 5: Treat This as a Professional Project — Not a Playground
+ Approach every task with a professional mindset—this is not an experiment or personal sandbox.
+
+ Do not treat the codebase as a place for trial-and-error coding, shortcuts, or sloppy work.
+
+ Respect the structure, standards, and long-term maintainability of the project.
+
+ Every decision must be intentional, reviewed, and aligned with best practices.

@@ -7,6 +7,12 @@ if ! python -c "import requests" 2>/dev/null; then
     pip install --no-cache-dir requests asyncio python-dotenv pydantic httpx aiohttp PyYAML
 fi
 
+# Install curl for health checks if not present
+if ! command -v curl &> /dev/null; then
+    echo "Installing curl for health checks..."
+    apt-get update -qq && apt-get install -y -qq curl
+fi
+
 # Copy agent_base.py if it doesn't exist
 if [ ! -f "/app/agent_base.py" ]; then
     cp /app/shared/agent_base.py /app/agent_base.py 2>/dev/null || true
