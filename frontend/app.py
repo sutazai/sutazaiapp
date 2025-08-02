@@ -1837,66 +1837,102 @@ def show_agent_control():
     else:
         agents = []
     
+    # Fetch all running agents from Docker
+    try:
+        import subprocess
+        result = subprocess.run(["docker", "ps", "--format", "{{.Names}}", "--filter", "name=sutazai-"], 
+                              capture_output=True, text=True)
+        if result.returncode == 0:
+            running_containers = [name for name in result.stdout.strip().split('\n') 
+                                if name and any(x in name for x in ['agent', 'developer', 'engineer', 
+                                                                     'specialist', 'coordinator', 'manager', 
+                                                                     'optimizer', 'architect', 'improver', 
+                                                                     'debugger', 'gpt', 'ai', 'crewai', 
+                                                                     'aider', 'letta', 'devika', 'babyagi'])]
+            # Add running agents to the list if not already present
+            for container in running_containers:
+                agent_name = container.replace('sutazai-', '').replace('-', ' ').title()
+                if not any(a.get('name', '').lower() == agent_name.lower() for a in agents):
+                    agents.append({
+                        'id': container.replace('sutazai-', ''),
+                        'name': agent_name,
+                        'status': 'active',
+                        'type': 'docker',
+                        'description': f'Running in container {container}',
+                        'capabilities': ['task_execution'],
+                        'health': 'healthy'
+                    })
+    except Exception as e:
+        st.sidebar.warning(f"Could not fetch Docker containers: {e}")
+    
     if agents:
-        # Tabs for different agent groups
-        tab1, tab2, tab3, tab4 = st.tabs([
-            "🤖 Task Automation",
-            "💻 Code Generation",
-            "🌐 Web Automation",
-            "🧩 Specialized"
-        ])
+        # Group agents by category
+        task_automation = []
+        code_generation = []
+        data_analysis = []
+        infrastructure = []
+        security = []
+        ml_agents = []
+        specialized = []
         
-        with tab1:
-            st.subheader("Task Automation Agents")
-            col1, col2 = st.columns(2)
+        for agent in agents:
+            name_lower = agent.get('name', '').lower()
+            id_lower = agent.get('id', '').lower()
             
-            task_agents = ["AutoGPT", "CrewAI", "LocalAGI", "AutoGen"]
-            for i, agent_name in enumerate(task_agents):
-                agent = None
-                if isinstance(agents, list):
-                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
-                if agent:
-                    with col1 if i % 2 == 0 else col2:
-                        show_agent_card(agent)
+            if any(x in name_lower or x in id_lower for x in ['autogpt', 'agentgpt', 'crewai', 'agi', 'autonomous', 'task', 'coordinator', 'babyagi', 'letta']):
+                task_automation.append(agent)
+            elif any(x in name_lower or x in id_lower for x in ['code', 'developer', 'engineer', 'aider', 'gpt-engineer', 'devin', 'devika']):
+                code_generation.append(agent)
+            elif any(x in name_lower or x in id_lower for x in ['data', 'analysis', 'pipeline', 'analyst']):
+                data_analysis.append(agent)
+            elif any(x in name_lower or x in id_lower for x in ['infrastructure', 'devops', 'deployment', 'docker', 'kubernetes']):
+                infrastructure.append(agent)
+            elif any(x in name_lower or x in id_lower for x in ['security', 'pentest', 'semgrep', 'kali', 'shellgpt']):
+                security.append(agent)
+            elif any(x in name_lower or x in id_lower for x in ['model', 'training', 'learning', 'neural', 'quantum', 'federated']):
+                ml_agents.append(agent)
+            else:
+                specialized.append(agent)
         
-        with tab2:
-            st.subheader("Code Generation Agents")
-            col1, col2 = st.columns(2)
-            
-            code_agents = ["GPT-Engineer", "Aider", "TabbyML", "Semgrep"]
-            for i, agent_name in enumerate(code_agents):
-                agent = None
-                if isinstance(agents, list):
-                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
-                if agent:
-                    with col1 if i % 2 == 0 else col2:
-                        show_agent_card(agent)
+        # Create tabs for categories with agents
+        tabs = []
+        tab_names = []
+        if task_automation:
+            tabs.append(task_automation)
+            tab_names.append(f"🤖 Task Automation ({len(task_automation)})")
+        if code_generation:
+            tabs.append(code_generation)
+            tab_names.append(f"💻 Code Generation ({len(code_generation)})")
+        if data_analysis:
+            tabs.append(data_analysis)
+            tab_names.append(f"📊 Data Analysis ({len(data_analysis)})")
+        if ml_agents:
+            tabs.append(ml_agents)
+            tab_names.append(f"🧠 ML/AI ({len(ml_agents)})")
+        if infrastructure:
+            tabs.append(infrastructure)
+            tab_names.append(f"🏗️ Infrastructure ({len(infrastructure)})")
+        if security:
+            tabs.append(security)
+            tab_names.append(f"🔒 Security ({len(security)})")
+        if specialized:
+            tabs.append(specialized)
+            tab_names.append(f"🧩 Specialized ({len(specialized)})")
         
-        with tab3:
-            st.subheader("Web Automation Agents")
-            col1, col2 = st.columns(2)
+        if tab_names:
+            tab_containers = st.tabs(tab_names)
             
-            web_agents = ["BrowserUse", "Skyvern", "AgentGPT"]
-            for i, agent_name in enumerate(web_agents):
-                agent = None
-                if isinstance(agents, list):
-                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
-                if agent:
-                    with col1 if i % 2 == 0 else col2:
-                        show_agent_card(agent)
-        
-        with tab4:
-            st.subheader("Specialized Agents")
-            col1, col2 = st.columns(2)
-            
-            special_agents = ["Documind", "FinRobot", "BigAGI", "AgentZero"]
-            for i, agent_name in enumerate(special_agents):
-                agent = None
-                if isinstance(agents, list):
-                    agent = next((a for a in agents if isinstance(a, dict) and a.get("name") == agent_name), None)
-                if agent:
-                    with col1 if i % 2 == 0 else col2:
-                        show_agent_card(agent)
+            for i, (container, agent_list) in enumerate(zip(tab_containers, tabs)):
+                with container:
+                    # Show total count
+                    st.info(f"**{len(agent_list)} agents** in this category")
+                    
+                    # Show up to 3 columns
+                    cols = st.columns(min(3, max(1, (len(agent_list) + 1) // 2)))
+                    
+                    for idx, agent in enumerate(agent_list):
+                        with cols[idx % len(cols)]:
+                            show_agent_card(agent)
     
     # Task execution
     st.markdown("---")

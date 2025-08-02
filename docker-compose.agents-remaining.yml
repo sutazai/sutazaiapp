@@ -1,0 +1,1047 @@
+version: '3.8'
+
+services:
+  data-pipeline-engineer:
+    container_name: sutazai-data-pipeline-engineer
+    build:
+      context: ./agents/data-pipeline-engineer
+      dockerfile: Dockerfile
+    image: sutazai/data-pipeline-engineer:latest
+    ports:
+      - "8547:8547"
+    environment:
+      - AGENT_ID=data-pipeline-engineer
+      - AGENT_NAME=Data Pipeline Engineer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/data-pipeline-engineer:/app/data
+    restart: unless-stopped
+
+  private-data-analyst:
+    container_name: sutazai-private-data-analyst
+    build:
+      context: ./agents/private-data-analyst
+      dockerfile: Dockerfile
+    image: sutazai/private-data-analyst:latest
+    ports:
+      - "8548:8548"
+    environment:
+      - AGENT_ID=private-data-analyst
+      - AGENT_NAME=Private Data Analyst
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/private-data-analyst:/app/data
+    restart: unless-stopped
+
+  knowledge-graph-builder:
+    container_name: sutazai-knowledge-graph-builder
+    build:
+      context: ./agents/knowledge-graph-builder
+      dockerfile: Dockerfile
+    image: sutazai/knowledge-graph-builder:latest
+    ports:
+      - "8549:8549"
+    environment:
+      - AGENT_ID=knowledge-graph-builder
+      - AGENT_NAME=Knowledge Graph Builder
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/knowledge-graph-builder:/app/data
+    restart: unless-stopped
+
+  document-knowledge-manager:
+    container_name: sutazai-document-knowledge-manager
+    build:
+      context: ./agents/document-knowledge-manager
+      dockerfile: Dockerfile
+    image: sutazai/document-knowledge-manager:latest
+    ports:
+      - "8550:8550"
+    environment:
+      - AGENT_ID=document-knowledge-manager
+      - AGENT_NAME=Document Knowledge Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/document-knowledge-manager:/app/data
+    restart: unless-stopped
+
+  task-assignment-coordinator:
+    container_name: sutazai-task-assignment-coordinator
+    build:
+      context: ./agents/task-assignment-coordinator
+      dockerfile: Dockerfile
+    image: sutazai/task-assignment-coordinator:latest
+    ports:
+      - "8551:8551"
+    environment:
+      - AGENT_ID=task-assignment-coordinator
+      - AGENT_NAME=Task Assignment Coordinator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/task-assignment-coordinator:/app/data
+    restart: unless-stopped
+
+  langflow-workflow-designer:
+    container_name: sutazai-langflow-workflow-designer
+    build:
+      context: ./agents/langflow-workflow-designer
+      dockerfile: Dockerfile
+    image: sutazai/langflow-workflow-designer:latest
+    ports:
+      - "8552:8552"
+    environment:
+      - AGENT_ID=langflow-workflow-designer
+      - AGENT_NAME=LangFlow Workflow Designer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/langflow-workflow-designer:/app/data
+    restart: unless-stopped
+
+  flowiseai-flow-manager:
+    container_name: sutazai-flowiseai-flow-manager
+    build:
+      context: ./agents/flowiseai-flow-manager
+      dockerfile: Dockerfile
+    image: sutazai/flowiseai-flow-manager:latest
+    ports:
+      - "8553:8553"
+    environment:
+      - AGENT_ID=flowiseai-flow-manager
+      - AGENT_NAME=FlowiseAI Flow Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/flowiseai-flow-manager:/app/data
+    restart: unless-stopped
+
+  dify-automation-specialist:
+    container_name: sutazai-dify-automation-specialist
+    build:
+      context: ./agents/dify-automation-specialist
+      dockerfile: Dockerfile
+    image: sutazai/dify-automation-specialist:latest
+    ports:
+      - "8554:8554"
+    environment:
+      - AGENT_ID=dify-automation-specialist
+      - AGENT_NAME=Dify Automation Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/dify-automation-specialist:/app/data
+    restart: unless-stopped
+
+  memory-persistence-manager:
+    container_name: sutazai-memory-persistence-manager
+    build:
+      context: ./agents/memory-persistence-manager
+      dockerfile: Dockerfile
+    image: sutazai/memory-persistence-manager:latest
+    ports:
+      - "8555:8555"
+    environment:
+      - AGENT_ID=memory-persistence-manager
+      - AGENT_NAME=Memory Persistence Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/memory-persistence-manager:/app/data
+    restart: unless-stopped
+
+  garbage-collector-coordinator:
+    container_name: sutazai-garbage-collector-coordinator
+    build:
+      context: ./agents/garbage-collector-coordinator
+      dockerfile: Dockerfile
+    image: sutazai/garbage-collector-coordinator:latest
+    ports:
+      - "8556:8556"
+    environment:
+      - AGENT_ID=garbage-collector-coordinator
+      - AGENT_NAME=Garbage Collector Coordinator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/garbage-collector-coordinator:/app/data
+    restart: unless-stopped
+
+  semgrep-security-analyzer:
+    container_name: sutazai-semgrep-security-analyzer
+    build:
+      context: ./agents/semgrep-security-analyzer
+      dockerfile: Dockerfile
+    image: sutazai/semgrep-security-analyzer:latest
+    ports:
+      - "8557:8557"
+    environment:
+      - AGENT_ID=semgrep-security-analyzer
+      - AGENT_NAME=Semgrep Security Analyzer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/semgrep-security-analyzer:/app/data
+    restart: unless-stopped
+
+  transformers-migration-specialist:
+    container_name: sutazai-transformers-migration-specialist
+    build:
+      context: ./agents/transformers-migration-specialist
+      dockerfile: Dockerfile
+    image: sutazai/transformers-migration-specialist:latest
+    ports:
+      - "8558:8558"
+    environment:
+      - AGENT_ID=transformers-migration-specialist
+      - AGENT_NAME=Transformers Migration Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/transformers-migration-specialist:/app/data
+    restart: unless-stopped
+
+  model-training-specialist:
+    container_name: sutazai-model-training-specialist
+    build:
+      context: ./agents/model-training-specialist
+      dockerfile: Dockerfile
+    image: sutazai/model-training-specialist:latest
+    ports:
+      - "8559:8559"
+    environment:
+      - AGENT_ID=model-training-specialist
+      - AGENT_NAME=Model Training Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/model-training-specialist:/app/data
+    restart: unless-stopped
+
+  edge-computing-optimizer:
+    container_name: sutazai-edge-computing-optimizer
+    build:
+      context: ./agents/edge-computing-optimizer
+      dockerfile: Dockerfile
+    image: sutazai/edge-computing-optimizer:latest
+    ports:
+      - "8560:8560"
+    environment:
+      - AGENT_ID=edge-computing-optimizer
+      - AGENT_NAME=Edge Computing Optimizer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/edge-computing-optimizer:/app/data
+    restart: unless-stopped
+
+  distributed-computing-architect:
+    container_name: sutazai-distributed-computing-architect
+    build:
+      context: ./agents/distributed-computing-architect
+      dockerfile: Dockerfile
+    image: sutazai/distributed-computing-architect:latest
+    ports:
+      - "8561:8561"
+    environment:
+      - AGENT_ID=distributed-computing-architect
+      - AGENT_NAME=Distributed Computing Architect
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/distributed-computing-architect:/app/data
+    restart: unless-stopped
+
+  neuromorphic-computing-expert:
+    container_name: sutazai-neuromorphic-computing-expert
+    build:
+      context: ./agents/neuromorphic-computing-expert
+      dockerfile: Dockerfile
+    image: sutazai/neuromorphic-computing-expert:latest
+    ports:
+      - "8562:8562"
+    environment:
+      - AGENT_ID=neuromorphic-computing-expert
+      - AGENT_NAME=Neuromorphic Computing Expert
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/neuromorphic-computing-expert:/app/data
+    restart: unless-stopped
+
+  quantum-computing-optimizer:
+    container_name: sutazai-quantum-computing-optimizer
+    build:
+      context: ./agents/quantum-computing-optimizer
+      dockerfile: Dockerfile
+    image: sutazai/quantum-computing-optimizer:latest
+    ports:
+      - "8563:8563"
+    environment:
+      - AGENT_ID=quantum-computing-optimizer
+      - AGENT_NAME=Quantum Computing Optimizer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/quantum-computing-optimizer:/app/data
+    restart: unless-stopped
+
+  federated-learning-coordinator:
+    container_name: sutazai-federated-learning-coordinator
+    build:
+      context: ./agents/federated-learning-coordinator
+      dockerfile: Dockerfile
+    image: sutazai/federated-learning-coordinator:latest
+    ports:
+      - "8564:8564"
+    environment:
+      - AGENT_ID=federated-learning-coordinator
+      - AGENT_NAME=Federated Learning Coordinator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/federated-learning-coordinator:/app/data
+    restart: unless-stopped
+
+  reinforcement-learning-trainer:
+    container_name: sutazai-reinforcement-learning-trainer
+    build:
+      context: ./agents/reinforcement-learning-trainer
+      dockerfile: Dockerfile
+    image: sutazai/reinforcement-learning-trainer:latest
+    ports:
+      - "8565:8565"
+    environment:
+      - AGENT_ID=reinforcement-learning-trainer
+      - AGENT_NAME=Reinforcement Learning Trainer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/reinforcement-learning-trainer:/app/data
+    restart: unless-stopped
+
+  causal-inference-expert:
+    container_name: sutazai-causal-inference-expert
+    build:
+      context: ./agents/causal-inference-expert
+      dockerfile: Dockerfile
+    image: sutazai/causal-inference-expert:latest
+    ports:
+      - "8566:8566"
+    environment:
+      - AGENT_ID=causal-inference-expert
+      - AGENT_NAME=Causal Inference Expert
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/causal-inference-expert:/app/data
+    restart: unless-stopped
+
+  meta-learning-specialist:
+    container_name: sutazai-meta-learning-specialist
+    build:
+      context: ./agents/meta-learning-specialist
+      dockerfile: Dockerfile
+    image: sutazai/meta-learning-specialist:latest
+    ports:
+      - "8567:8567"
+    environment:
+      - AGENT_ID=meta-learning-specialist
+      - AGENT_NAME=Meta-Learning Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/meta-learning-specialist:/app/data
+    restart: unless-stopped
+
+  explainable-ai-specialist:
+    container_name: sutazai-explainable-ai-specialist
+    build:
+      context: ./agents/explainable-ai-specialist
+      dockerfile: Dockerfile
+    image: sutazai/explainable-ai-specialist:latest
+    ports:
+      - "8568:8568"
+    environment:
+      - AGENT_ID=explainable-ai-specialist
+      - AGENT_NAME=Explainable AI Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/explainable-ai-specialist:/app/data
+    restart: unless-stopped
+
+  synthetic-data-generator:
+    container_name: sutazai-synthetic-data-generator
+    build:
+      context: ./agents/synthetic-data-generator
+      dockerfile: Dockerfile
+    image: sutazai/synthetic-data-generator:latest
+    ports:
+      - "8569:8569"
+    environment:
+      - AGENT_ID=synthetic-data-generator
+      - AGENT_NAME=Synthetic Data Generator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/synthetic-data-generator:/app/data
+    restart: unless-stopped
+
+  knowledge-distillation-expert:
+    container_name: sutazai-knowledge-distillation-expert
+    build:
+      context: ./agents/knowledge-distillation-expert
+      dockerfile: Dockerfile
+    image: sutazai/knowledge-distillation-expert:latest
+    ports:
+      - "8570:8570"
+    environment:
+      - AGENT_ID=knowledge-distillation-expert
+      - AGENT_NAME=Knowledge Distillation Expert
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/knowledge-distillation-expert:/app/data
+    restart: unless-stopped
+
+  multi-modal-fusion-coordinator:
+    container_name: sutazai-multi-modal-fusion-coordinator
+    build:
+      context: ./agents/multi-modal-fusion-coordinator
+      dockerfile: Dockerfile
+    image: sutazai/multi-modal-fusion-coordinator:latest
+    ports:
+      - "8571:8571"
+    environment:
+      - AGENT_ID=multi-modal-fusion-coordinator
+      - AGENT_NAME=Multi-Modal Fusion Coordinator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/multi-modal-fusion-coordinator:/app/data
+    restart: unless-stopped
+
+  cognitive-architecture-designer:
+    container_name: sutazai-cognitive-architecture-designer
+    build:
+      context: ./agents/cognitive-architecture-designer
+      dockerfile: Dockerfile
+    image: sutazai/cognitive-architecture-designer:latest
+    ports:
+      - "8572:8572"
+    environment:
+      - AGENT_ID=cognitive-architecture-designer
+      - AGENT_NAME=Cognitive Architecture Designer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/cognitive-architecture-designer:/app/data
+    restart: unless-stopped
+
+  symbolic-reasoning-engine:
+    container_name: sutazai-symbolic-reasoning-engine
+    build:
+      context: ./agents/symbolic-reasoning-engine
+      dockerfile: Dockerfile
+    image: sutazai/symbolic-reasoning-engine:latest
+    ports:
+      - "8573:8573"
+    environment:
+      - AGENT_ID=symbolic-reasoning-engine
+      - AGENT_NAME=Symbolic Reasoning Engine
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/symbolic-reasoning-engine:/app/data
+    restart: unless-stopped
+
+  episodic-memory-engineer:
+    container_name: sutazai-episodic-memory-engineer
+    build:
+      context: ./agents/episodic-memory-engineer
+      dockerfile: Dockerfile
+    image: sutazai/episodic-memory-engineer:latest
+    ports:
+      - "8574:8574"
+    environment:
+      - AGENT_ID=episodic-memory-engineer
+      - AGENT_NAME=Episodic Memory Engineer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/episodic-memory-engineer:/app/data
+    restart: unless-stopped
+
+  attention-optimizer:
+    container_name: sutazai-attention-optimizer
+    build:
+      context: ./agents/attention-optimizer
+      dockerfile: Dockerfile
+    image: sutazai/attention-optimizer:latest
+    ports:
+      - "8575:8575"
+    environment:
+      - AGENT_ID=attention-optimizer
+      - AGENT_NAME=Attention Optimizer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/attention-optimizer:/app/data
+    restart: unless-stopped
+
+  gradient-compression-specialist:
+    container_name: sutazai-gradient-compression-specialist
+    build:
+      context: ./agents/gradient-compression-specialist
+      dockerfile: Dockerfile
+    image: sutazai/gradient-compression-specialist:latest
+    ports:
+      - "8576:8576"
+    environment:
+      - AGENT_ID=gradient-compression-specialist
+      - AGENT_NAME=Gradient Compression Specialist
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/gradient-compression-specialist:/app/data
+    restart: unless-stopped
+
+  self-healing-orchestrator:
+    container_name: sutazai-self-healing-orchestrator
+    build:
+      context: ./agents/self-healing-orchestrator
+      dockerfile: Dockerfile
+    image: sutazai/self-healing-orchestrator:latest
+    ports:
+      - "8577:8577"
+    environment:
+      - AGENT_ID=self-healing-orchestrator
+      - AGENT_NAME=Self-Healing Orchestrator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/self-healing-orchestrator:/app/data
+    restart: unless-stopped
+
+  intelligence-optimization-monitor:
+    container_name: sutazai-intelligence-optimization-monitor
+    build:
+      context: ./agents/intelligence-optimization-monitor
+      dockerfile: Dockerfile
+    image: sutazai/intelligence-optimization-monitor:latest
+    ports:
+      - "8578:8578"
+    environment:
+      - AGENT_ID=intelligence-optimization-monitor
+      - AGENT_NAME=Intelligence Optimization Monitor
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/intelligence-optimization-monitor:/app/data
+    restart: unless-stopped
+
+  product-strategy-architect:
+    container_name: sutazai-product-strategy-architect
+    build:
+      context: ./agents/product-strategy-architect
+      dockerfile: Dockerfile
+    image: sutazai/product-strategy-architect:latest
+    ports:
+      - "8579:8579"
+    environment:
+      - AGENT_ID=product-strategy-architect
+      - AGENT_NAME=Product Strategy Architect
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/product-strategy-architect:/app/data
+    restart: unless-stopped
+
+  observability-monitoring-engineer:
+    container_name: sutazai-observability-monitoring-engineer
+    build:
+      context: ./agents/observability-monitoring-engineer
+      dockerfile: Dockerfile
+    image: sutazai/observability-monitoring-engineer:latest
+    ports:
+      - "8580:8580"
+    environment:
+      - AGENT_ID=observability-monitoring-engineer
+      - AGENT_NAME=Observability Monitoring Engineer
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/observability-monitoring-engineer:/app/data
+    restart: unless-stopped
+
+  ai-agent-debugger:
+    container_name: sutazai-ai-agent-debugger
+    build:
+      context: ./agents/ai-agent-debugger
+      dockerfile: Dockerfile
+    image: sutazai/ai-agent-debugger:latest
+    ports:
+      - "8581:8581"
+    environment:
+      - AGENT_ID=ai-agent-debugger
+      - AGENT_NAME=AI Agent Debugger
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/ai-agent-debugger:/app/data
+    restart: unless-stopped
+
+  jarvis-voice-interface:
+    container_name: sutazai-jarvis-voice-interface
+    build:
+      context: ./agents/jarvis-voice-interface
+      dockerfile: Dockerfile
+    image: sutazai/jarvis-voice-interface:latest
+    ports:
+      - "8582:8582"
+    environment:
+      - AGENT_ID=jarvis-voice-interface
+      - AGENT_NAME=Jarvis Voice Interface
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/jarvis-voice-interface:/app/data
+    restart: unless-stopped
+
+  litellm-proxy-manager:
+    container_name: sutazai-litellm-proxy-manager
+    build:
+      context: ./agents/litellm-proxy-manager
+      dockerfile: Dockerfile
+    image: sutazai/litellm-proxy-manager:latest
+    ports:
+      - "8583:8583"
+    environment:
+      - AGENT_ID=litellm-proxy-manager
+      - AGENT_NAME=LiteLLM Proxy Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/litellm-proxy-manager:/app/data
+    restart: unless-stopped
+
+  opendevin-code-generator:
+    container_name: sutazai-opendevin-code-generator
+    build:
+      context: ./agents/opendevin-code-generator
+      dockerfile: Dockerfile
+    image: sutazai/opendevin-code-generator:latest
+    ports:
+      - "8584:8584"
+    environment:
+      - AGENT_ID=opendevin-code-generator
+      - AGENT_NAME=OpenDevin Code Generator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/opendevin-code-generator:/app/data
+    restart: unless-stopped
+
+  agentgpt-autonomous-executor:
+    container_name: sutazai-agentgpt-autonomous-executor
+    build:
+      context: ./agents/agentgpt-autonomous-executor
+      dockerfile: Dockerfile
+    image: sutazai/agentgpt-autonomous-executor:latest
+    ports:
+      - "8585:8585"
+    environment:
+      - AGENT_ID=agentgpt-autonomous-executor
+      - AGENT_NAME=AgentGPT Autonomous Executor
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/agentgpt-autonomous-executor:/app/data
+    restart: unless-stopped
+
+  agentzero-coordinator:
+    container_name: sutazai-agentzero-coordinator
+    build:
+      context: ./agents/agentzero-coordinator
+      dockerfile: Dockerfile
+    image: sutazai/agentzero-coordinator:latest
+    ports:
+      - "8586:8586"
+    environment:
+      - AGENT_ID=agentzero-coordinator
+      - AGENT_NAME=AgentZero Coordinator
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/agentzero-coordinator:/app/data
+    restart: unless-stopped
+
+  localagi-orchestration-manager:
+    container_name: sutazai-localagi-orchestration-manager
+    build:
+      context: ./agents/localagi-orchestration-manager
+      dockerfile: Dockerfile
+    image: sutazai/localagi-orchestration-manager:latest
+    ports:
+      - "8587:8587"
+    environment:
+      - AGENT_ID=localagi-orchestration-manager
+      - AGENT_NAME=LocalAGI Orchestration Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/localagi-orchestration-manager:/app/data
+    restart: unless-stopped
+
+  bigagi-system-manager:
+    container_name: sutazai-bigagi-system-manager
+    build:
+      context: ./agents/bigagi-system-manager
+      dockerfile: Dockerfile
+    image: sutazai/bigagi-system-manager:latest
+    ports:
+      - "8588:8588"
+    environment:
+      - AGENT_ID=bigagi-system-manager
+      - AGENT_NAME=BigAGI System Manager
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/bigagi-system-manager:/app/data
+    restart: unless-stopped
+
+  context-framework:
+    container_name: sutazai-context-framework
+    build:
+      context: ./agents/context-framework
+      dockerfile: Dockerfile
+    image: sutazai/context-framework:latest
+    ports:
+      - "8589:8589"
+    environment:
+      - AGENT_ID=context-framework
+      - AGENT_NAME=Context Framework
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/context-framework:/app/data
+    restart: unless-stopped
+
+  autogen:
+    container_name: sutazai-autogen
+    build:
+      context: ./agents/autogen
+      dockerfile: Dockerfile
+    image: sutazai/autogen:latest
+    ports:
+      - "8590:8590"
+    environment:
+      - AGENT_ID=autogen
+      - AGENT_NAME=AutoGen
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/autogen:/app/data
+    restart: unless-stopped
+
+  finrobot:
+    container_name: sutazai-finrobot
+    build:
+      context: ./agents/finrobot
+      dockerfile: Dockerfile
+    image: sutazai/finrobot:latest
+    ports:
+      - "8591:8591"
+    environment:
+      - AGENT_ID=finrobot
+      - AGENT_NAME=FinRobot
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/finrobot:/app/data
+    restart: unless-stopped
+
+  realtimestt:
+    container_name: sutazai-realtimestt
+    build:
+      context: ./agents/realtimestt
+      dockerfile: Dockerfile
+    image: sutazai/realtimestt:latest
+    ports:
+      - "8592:8592"
+    environment:
+      - AGENT_ID=realtimestt
+      - AGENT_NAME=RealTimeSTT
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/realtimestt:/app/data
+    restart: unless-stopped
+
+  code-improver:
+    container_name: sutazai-code-improver
+    build:
+      context: ./agents/code-improver
+      dockerfile: Dockerfile
+    image: sutazai/code-improver:latest
+    ports:
+      - "8593:8593"
+    environment:
+      - AGENT_ID=code-improver
+      - AGENT_NAME=Code Improver
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/code-improver:/app/data
+    restart: unless-stopped
+
+  service-hub:
+    container_name: sutazai-service-hub
+    build:
+      context: ./agents/service-hub
+      dockerfile: Dockerfile
+    image: sutazai/service-hub:latest
+    ports:
+      - "8594:8594"
+    environment:
+      - AGENT_ID=service-hub
+      - AGENT_NAME=Service Hub
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/service-hub:/app/data
+    restart: unless-stopped
+
+  awesome-code-ai:
+    container_name: sutazai-awesome-code-ai
+    build:
+      context: ./agents/awesome-code-ai
+      dockerfile: Dockerfile
+    image: sutazai/awesome-code-ai:latest
+    ports:
+      - "8595:8595"
+    environment:
+      - AGENT_ID=awesome-code-ai
+      - AGENT_NAME=Awesome Code AI
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/awesome-code-ai:/app/data
+    restart: unless-stopped
+
+  fsdp:
+    container_name: sutazai-fsdp
+    build:
+      context: ./agents/fsdp
+      dockerfile: Dockerfile
+    image: sutazai/fsdp:latest
+    ports:
+      - "8596:8596"
+    environment:
+      - AGENT_ID=fsdp
+      - AGENT_NAME=FSDP
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/fsdp:/app/data
+    restart: unless-stopped
+
+  mcp-server:
+    container_name: sutazai-mcp-server
+    build:
+      context: ./agents/mcp-server
+      dockerfile: Dockerfile
+    image: sutazai/mcp-server:latest
+    ports:
+      - "8597:8597"
+    environment:
+      - AGENT_ID=mcp-server
+      - AGENT_NAME=MCP Server
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/mcp-server:/app/data
+    restart: unless-stopped
+
+  health-monitor:
+    container_name: sutazai-health-monitor
+    build:
+      context: ./agents/health-monitor
+      dockerfile: Dockerfile
+    image: sutazai/health-monitor:latest
+    ports:
+      - "8598:8598"
+    environment:
+      - AGENT_ID=health-monitor
+      - AGENT_NAME=Health Monitor
+      - BACKEND_URL=http://sutazai-backend:8000
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - LOG_LEVEL=INFO
+    networks:
+      - sutazai-network
+    volumes:
+      - ./data/health-monitor:/app/data
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    name: sutazaiapp_sutazai-network
+    external: true

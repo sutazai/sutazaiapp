@@ -58,19 +58,76 @@ scrape_configs:
     scrape_interval: 30s
     scrape_timeout: 15s
 
-  # AI Agents Monitoring
+  # AI Agents Monitoring - All 46+ Agents
   - job_name: 'sutazai-agents'
     static_configs:
       - targets: 
-        - 'senior-ai-engineer:8080'
-        - 'infrastructure-devops-manager:8080'
-        - 'deployment-automation-master:8080'
-        - 'testing-qa-validator:8080'
-        - 'ollama-integration-specialist:8080'
+        # Core Infrastructure Agents
+        - 'sutazai-senior-ai-engineer:8080'
+        - 'sutazai-infrastructure-devops-manager:8080'
+        - 'sutazai-deployment-automation-master:8080'
+        - 'sutazai-testing-qa-validator:8080'
+        - 'sutazai-ollama-integration-specialist:8080'
+        - 'sutazai-senior-backend-developer:8080'
+        - 'sutazai-senior-frontend-developer:8080'
+        - 'sutazai-autonomous-system-controller:8080'
+        - 'sutazai-ai-agent-orchestrator:8080'
+        # Specialized Agents
+        - 'sutazai-complex-problem-solver:8080'
+        - 'sutazai-agentzero-coordinator:8080'
+        - 'sutazai-semgrep-security-analyzer:8080'
+        - 'sutazai-kali-security-specialist:8080'
+        - 'sutazai-browser-automation-orchestrator:8080'
+        - 'sutazai-financial-analysis-specialist:8080'
+        - 'sutazai-langflow-workflow-designer:8080'
+        - 'sutazai-security-pentesting-specialist:8080'
+        - 'sutazai-ai-scrum-master:8080'
+        - 'sutazai-agentgpt-autonomous-executor:8080'
+        - 'sutazai-system-optimizer-reorganizer:8080'
+        - 'sutazai-flowiseai-flow-manager:8080'
+        - 'sutazai-system-architect:8080'
+        - 'sutazai-dify-automation-specialist:8080'
+        - 'sutazai-shell-automation-specialist:8080'
+        - 'sutazai-jarvis-voice-interface:8080'
+        - 'sutazai-ai-agent-creator:8080'
+        - 'sutazai-document-knowledge-manager:8080'
+        - 'sutazai-private-data-analyst:8080'
+        - 'sutazai-opendevin-code-generator:8080'
+        - 'sutazai-context-optimization-engineer:8080'
+        - 'sutazai-hardware-resource-optimizer:8080'
+        - 'sutazai-ai-product-manager:8080'
+        - 'sutazai-task-assignment-coordinator:8080'
     metrics_path: '/metrics'
-    scrape_interval: 30s
+    scrape_interval: 15s
+    scrape_timeout: 10s
     params:
-      module: [http_2xx]
+      format: ['prometheus']
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'agent_.*'
+        target_label: 'agent_metric'
+        replacement: 'true'
+
+  # Agent Health Check Service
+  - job_name: 'agent-health-checks'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/api/v1/agents/health/metrics'
+    scrape_interval: 30s
+
+  # Multi-Agent Orchestration Metrics
+  - job_name: 'orchestration-system'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/api/v1/orchestration/metrics'
+    scrape_interval: 20s
+
+  # Agent Communication Bus
+  - job_name: 'agent-message-bus'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/api/v1/message-bus/metrics'
+    scrape_interval: 15s
 
   # Node/Container Metrics
   - job_name: 'node-exporter'
@@ -82,6 +139,27 @@ scrape_configs:
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # Jaeger Tracing Metrics
+  - job_name: 'jaeger'
+    static_configs:
+      - targets: ['jaeger:14269']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Loki Log Aggregation Metrics
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # AlertManager
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:9093']
+    metrics_path: '/metrics'
     scrape_interval: 30s
 
   # Service Discovery for Dynamic Agents

@@ -73,7 +73,8 @@
       "Bash(git push:*)",
       "Bash(./scripts/run_deployment_verification.sh:*)",
       "Bash(./scripts/performance_baseline.sh:*)",
-      "Bash(./scripts/deploy_multiagent_system.sh:*)"
+      "Bash(./scripts/deploy_multiagent_system.sh:*)",
+      "Bash(./scripts/check_all_services.sh:*)"
     ],
     "deny": []
   },

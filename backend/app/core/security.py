@@ -8,6 +8,8 @@ import hashlib
 import secrets
 import jwt
 import re
+import html
+import bleach
 from typing import Dict, List, Any, Optional, Set
 from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass
@@ -275,7 +277,7 @@ class AuthorizationManager:
         return True
 
 class InputValidator:
-    """Validates and sanitizes user inputs"""
+    """Validates and sanitizes user inputs with comprehensive XSS protection"""
     
     def __init__(self):
         self.max_input_length = 10000
@@ -287,10 +289,55 @@ class InputValidator:
             r'expression\s*\(',  # CSS expressions
             r'vbscript:',  # VBScript protocol
             r'data:.*base64',  # Data URLs with base64
+            r'<iframe[^>]*>.*?</iframe>',  # Iframe tags
+            r'<object[^>]*>.*?</object>',  # Object tags
+            r'<embed[^>]*>.*?</embed>',  # Embed tags
+            r'<link[^>]*rel=["\']?stylesheet["\']?[^>]*>',  # External stylesheets
+            r'<meta[^>]*http-equiv=["\']?refresh["\']?[^>]*>',  # Meta refresh
+            r'<form[^>]*>.*?</form>',  # Form tags
+            r'<input[^>]*>',  # Input tags
+            r'<textarea[^>]*>.*?</textarea>',  # Textarea tags
+            r'<img[^>]*src=["\']?[^"\']*["\']?[^>]*onerror[^>]*>',  # Image with onerror
+            r'<svg[^>]*>.*?</svg>',  # SVG tags
+            r'<style[^>]*>.*?</style>',  # Style tags
+        ]
+        
+        # Allowed HTML tags for bleach sanitization
+        self.allowed_tags = [
+            'p', 'br', 'strong', 'em', 'u', 'i', 'b',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'ul', 'ol', 'li', 'blockquote', 'code', 'pre'
+        ]
+        
+        # Allowed HTML attributes
+        self.allowed_attributes = {
+            '*': ['class'],
+            'a': ['href', 'title'],
+            'img': ['src', 'alt', 'title', 'width', 'height'],
+        }
+        
+        # XSS pattern detection
+        self.xss_patterns = [
+            r'alert\s*\(',
+            r'confirm\s*\(',
+            r'prompt\s*\(',
+            r'document\.cookie',
+            r'document\.write',
+            r'window\.location',
+            r'location\.href',
+            r'innerHTML',
+            r'outerHTML',
+            r'insertAdjacentHTML',
+            r'document\.createElement',
+            r'setAttribute\s*\(',
+            r'\bXSS\b',
+            r'<\s*img[^>]+src\s*=\s*["\']?\s*javascript:',
+            r'<\s*img[^>]+src\s*=\s*["\']?\s*vbscript:',
+            r'<\s*img[^>]+src\s*=\s*["\']?\s*data:',
         ]
         
     def validate_input(self, input_data: str, input_type: str = "text") -> str:
-        """Validate and sanitize input"""
+        """Validate and sanitize input with comprehensive XSS protection"""
         if not input_data:
             return input_data
             
@@ -298,9 +345,16 @@ class InputValidator:
         if len(input_data) > self.max_input_length:
             raise ValueError(f"Input exceeds maximum length of {self.max_input_length}")
             
+        # Check for XSS patterns first
+        for pattern in self.xss_patterns:
+            if re.search(pattern, input_data, re.IGNORECASE | re.DOTALL):
+                logger.warning(f"XSS pattern detected: {pattern}")
+                raise ValueError("Cross-site scripting (XSS) content detected")
+                
         # Check for malicious patterns
         for pattern in self.blocked_patterns:
             if re.search(pattern, input_data, re.IGNORECASE | re.DOTALL):
+                logger.warning(f"Malicious pattern detected: {pattern}")
                 raise ValueError("Potentially malicious content detected")
                 
         # Type-specific validation
@@ -313,6 +367,9 @@ class InputValidator:
         elif input_type == "json":
             if not self._validate_json(input_data):
                 raise ValueError("Invalid JSON format")
+        elif input_type == "chat_message":
+            # Special validation for chat messages
+            input_data = self._validate_chat_message(input_data)
                 
         # Sanitize input
         sanitized = self._sanitize_input(input_data, input_type)
@@ -338,16 +395,71 @@ class InputValidator:
         except:
             return False
             
-    def _sanitize_input(self, input_data: str, input_type: str) -> str:
-        """Sanitize input based on type"""
-        # Remove null bytes
-        sanitized = input_data.replace('\x00', '')
+    def _validate_chat_message(self, message: str) -> str:
+        """Special validation for chat messages"""
+        # Check for suspicious patterns in chat messages
+        suspicious_patterns = [
+            r'<.*?>',  # Any HTML tags
+            r'javascript:',
+            r'data:',
+            r'vbscript:',
+            r'file://',
+            r'\\x[0-9a-fA-F]{2}',  # Hex encoded characters
+            r'\\u[0-9a-fA-F]{4}',  # Unicode escapes
+        ]
         
-        # HTML encode special characters for text
-        if input_type == "text":
-            sanitized = sanitized.replace('<', '&lt;').replace('>', '&gt;')
+        for pattern in suspicious_patterns:
+            if re.search(pattern, message, re.IGNORECASE):
+                logger.warning(f"Suspicious pattern in chat message: {pattern}")
+                # Remove the suspicious content instead of raising error
+                message = re.sub(pattern, '', message, flags=re.IGNORECASE)
+                
+        return message
+        
+    def _sanitize_input(self, input_data: str, input_type: str) -> str:
+        """Sanitize input based on type with comprehensive XSS protection"""
+        # Remove null bytes and control characters
+        sanitized = input_data.replace('\x00', '')
+        sanitized = ''.join(char for char in sanitized if ord(char) >= 32 or char in '\n\r\t')
+        
+        # Type-specific sanitization
+        if input_type in ["text", "chat_message"]:
+            # HTML escape for text content
+            sanitized = html.escape(sanitized, quote=True)
             
+        elif input_type == "html":
+            # Use bleach for HTML sanitization
+            sanitized = bleach.clean(
+                sanitized,
+                tags=self.allowed_tags,
+                attributes=self.allowed_attributes,
+                strip=True
+            )
+            
+        elif input_type == "json":
+            # For JSON, escape special characters
+            sanitized = sanitized.replace('\\', '\\\\').replace('"', '\\"')
+            
+        # Additional XSS protection - encode dangerous characters
+        sanitized = sanitized.replace('&', '&amp;')
+        sanitized = sanitized.replace('<', '&lt;')
+        sanitized = sanitized.replace('>', '&gt;')
+        sanitized = sanitized.replace('"', '&quot;')
+        sanitized = sanitized.replace("'", '&#x27;')
+        sanitized = sanitized.replace('/', '&#x2F;')
+        
         return sanitized.strip()
+        
+    def sanitize_json_response(self, data: Any) -> Any:
+        """Sanitize data before JSON serialization"""
+        if isinstance(data, str):
+            return self.validate_input(data, "text")
+        elif isinstance(data, dict):
+            return {key: self.sanitize_json_response(value) for key, value in data.items()}
+        elif isinstance(data, list):
+            return [self.sanitize_json_response(item) for item in data]
+        else:
+            return data
 
 class AuditLogger:
     """Logs security events for audit trail"""
@@ -638,16 +750,39 @@ class SecurityManager:
         return request_data
         
     def get_security_headers(self) -> Dict[str, str]:
-        """Get security headers for responses"""
+        """Get enhanced security headers for XSS protection"""
         return {
             "X-Content-Type-Options": "nosniff",
             "X-Frame-Options": "DENY",
             "X-XSS-Protection": "1; mode=block",
-            "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-            "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+            "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+            "Content-Security-Policy": self._get_csp_header(),
             "Referrer-Policy": "strict-origin-when-cross-origin",
-            "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
+            "Permissions-Policy": "geolocation=(), microphone=(), camera=(), fullscreen=(), payment=()",
+            "Cross-Origin-Embedder-Policy": "require-corp",
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Resource-Policy": "same-site"
         }
+        
+    def _get_csp_header(self) -> str:
+        """Generate comprehensive Content Security Policy"""
+        # Strict CSP to prevent XSS
+        csp_directives = [
+            "default-src 'self'",
+            "script-src 'self' 'strict-dynamic'",  # No unsafe-inline or unsafe-eval
+            "style-src 'self' 'unsafe-inline'",  # Allow inline styles for now, but limit sources
+            "img-src 'self' data: https:",
+            "font-src 'self'",
+            "connect-src 'self'",
+            "media-src 'self'",
+            "object-src 'none'",  # Block objects
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",  # Prevent framing
+            "upgrade-insecure-requests",
+            "block-all-mixed-content"
+        ]
+        return "; ".join(csp_directives)
         
     async def generate_security_report(self) -> Dict[str, Any]:
         """Generate comprehensive security report"""
@@ -681,8 +816,75 @@ class SecurityManager:
             ]
         }
 
+# XSS Protection Middleware
+class XSSProtectionMiddleware:
+    """Middleware specifically for XSS protection"""
+    
+    def __init__(self):
+        self.validator = InputValidator()
+        self.security_manager = None  # Will be set later
+        
+    async def process_request(self, request_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process and sanitize request data for XSS protection"""
+        if not request_data:
+            return request_data
+            
+        # Sanitize all string values in request body
+        if "body" in request_data and isinstance(request_data["body"], dict):
+            request_data["body"] = self._sanitize_dict(request_data["body"])
+            
+        # Sanitize query parameters
+        if "query_params" in request_data and isinstance(request_data["query_params"], dict):
+            request_data["query_params"] = self._sanitize_dict(request_data["query_params"])
+            
+        return request_data
+        
+    def _sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively sanitize dictionary values"""
+        sanitized = {}
+        for key, value in data.items():
+            if isinstance(value, str):
+                # Determine input type based on key name
+                input_type = "chat_message" if "message" in key.lower() else "text"
+                try:
+                    sanitized[key] = self.validator.validate_input(value, input_type)
+                except ValueError as e:
+                    logger.warning(f"Input validation failed for key '{key}': {e}")
+                    # Use a safe fallback value
+                    sanitized[key] = "[Content filtered for security]"
+            elif isinstance(value, dict):
+                sanitized[key] = self._sanitize_dict(value)
+            elif isinstance(value, list):
+                sanitized[key] = self._sanitize_list(value)
+            else:
+                sanitized[key] = value
+        return sanitized
+        
+    def _sanitize_list(self, data: List[Any]) -> List[Any]:
+        """Recursively sanitize list values"""
+        sanitized = []
+        for item in data:
+            if isinstance(item, str):
+                try:
+                    sanitized.append(self.validator.validate_input(item, "text"))
+                except ValueError:
+                    sanitized.append("[Content filtered for security]")
+            elif isinstance(item, dict):
+                sanitized.append(self._sanitize_dict(item))
+            elif isinstance(item, list):
+                sanitized.append(self._sanitize_list(item))
+            else:
+                sanitized.append(item)
+        return sanitized
+        
+    async def sanitize_response(self, response_data: Any) -> Any:
+        """Sanitize response data before sending to client"""
+        return self.validator.sanitize_json_response(response_data)
+
 # Global security manager instance
 security_manager = SecurityManager()
+xss_protection = XSSProtectionMiddleware()
+xss_protection.security_manager = security_manager
 
 # FastAPI integration
 from fastapi import APIRouter, HTTPException, Depends, Request

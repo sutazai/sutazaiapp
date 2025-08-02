@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends, Security, WebSocke
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 # Import enterprise components
 try:
@@ -181,6 +181,14 @@ try:
 except Exception as e:
     logger.warning(f"Network reconnaissance router setup failed: {e}")
 
+# Include monitoring router (comprehensive observability)
+try:
+    from app.api.v1.endpoints.monitoring import router as monitoring_router
+    app.include_router(monitoring_router, prefix="/api/v1/monitoring", tags=["Monitoring & Observability"])
+    logger.info("Monitoring router loaded successfully")
+except Exception as e:
+    logger.warning(f"Monitoring router setup failed: {e}")
+
 if ENTERPRISE_FEATURES:
     try:
         app.include_router(agent_interaction_router, prefix="/api/v1/agents", tags=["Agent Interaction"])
@@ -271,14 +279,91 @@ class ChatRequest(BaseModel):
     model: Optional[str] = "task_coordinator"
     agent: Optional[str] = None
     temperature: Optional[float] = 0.7
+    
+    @validator('message')
+    def validate_message(cls, v):
+        """Validate and sanitize chat message for XSS protection"""
+        if not v or not v.strip():
+            raise ValueError("Message cannot be empty")
+        
+        # Import here to avoid circular imports
+        from app.core.security import xss_protection
+        try:
+            return xss_protection.validator.validate_input(v, "chat_message")
+        except ValueError as e:
+            raise ValueError(f"Invalid message content: {str(e)}")
+    
+    @validator('model')
+    def validate_model(cls, v):
+        """Validate model name"""
+        if v is not None:
+            v = v.strip()
+            import re
+            if not re.match(r'^[a-zA-Z0-9._:-]+$', v):
+                raise ValueError("Invalid model name format")
+        return v
+    
+    @validator('agent')
+    def validate_agent(cls, v):
+        """Validate agent name"""
+        if v is not None:
+            v = v.strip()
+            import re
+            if not re.match(r'^[a-zA-Z0-9._-]+$', v):
+                raise ValueError("Invalid agent name format")
+        return v
 
 class ThinkRequest(BaseModel):
     query: str
     reasoning_type: Optional[str] = "general"
+    
+    @validator('query')
+    def validate_query(cls, v):
+        """Validate and sanitize query for XSS protection"""
+        if not v or not v.strip():
+            raise ValueError("Query cannot be empty")
+        
+        from app.core.security import xss_protection
+        try:
+            return xss_protection.validator.validate_input(v, "text")
+        except ValueError as e:
+            raise ValueError(f"Invalid query content: {str(e)}")
+    
+    @validator('reasoning_type')
+    def validate_reasoning_type(cls, v):
+        """Validate reasoning type"""
+        if v is not None:
+            v = v.strip()
+            allowed_types = ["general", "deductive", "inductive", "abductive", "analogical", "causal"]
+            if v not in allowed_types:
+                raise ValueError(f"Invalid reasoning type. Must be one of: {', '.join(allowed_types)}")
+        return v
 
 class TaskRequest(BaseModel):
     description: str
     type: str = "general"
+    
+    @validator('description')
+    def validate_description(cls, v):
+        """Validate and sanitize description for XSS protection"""
+        if not v or not v.strip():
+            raise ValueError("Description cannot be empty")
+        
+        from app.core.security import xss_protection
+        try:
+            return xss_protection.validator.validate_input(v, "text")
+        except ValueError as e:
+            raise ValueError(f"Invalid description content: {str(e)}")
+    
+    @validator('type')
+    def validate_type(cls, v):
+        """Validate task type"""
+        if v is not None:
+            v = v.strip()
+            allowed_types = ["general", "complex", "multi_agent", "workflow", "coding", "analysis"]
+            if v not in allowed_types:
+                raise ValueError(f"Invalid task type. Must be one of: {', '.join(allowed_types)}")
+        return v
 
 class ReasoningRequest(BaseModel):
     type: str
@@ -875,10 +960,10 @@ async def get_agents():
     service_cache["agents"] = (time.time(), response)
     return response
 
-# Enhanced Chat endpoint with processing processing
+# Enhanced Chat endpoint with XSS protection and processing processing
 @app.post("/chat")
 async def chat_with_ai(request: ChatRequest):
-    """Chat with AI models"""
+    """Chat with AI models - XSS protected endpoint"""
     models = await get_ollama_models()
     
     # Select appropriate model (prioritize smaller, faster models for CPU inference)

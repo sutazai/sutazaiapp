@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 """
-Comprehensive Testing Suite for SutazAI System
-Testing QA Validator - AI-Powered Validation Framework
+SutazAI Comprehensive Test Suite
+==============================
+
+Testing QA Validator implementing comprehensive testing of the SutazAI ecosystem.
+Tests all components systematically and generates detailed reports.
 """
-import requests
-import redis
-import psycopg2
-import json
-import time
-import subprocess
+
 import asyncio
 import httpx
+import json
+import time
+import psutil
+import subprocess
+import logging
 from datetime import datetime
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Optional
+from pathlib import Path
+import redis
+import psycopg2
+import websockets
+import requests
 
 class ComprehensiveTestSuite:
     def __init__(self):

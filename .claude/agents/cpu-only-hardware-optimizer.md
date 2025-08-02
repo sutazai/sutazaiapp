@@ -1,24 +1,31 @@
 ---
 name: cpu-only-hardware-optimizer
-description: "|\n  Detects the exact CPU micro-architecture, RAM size, and swap status.\
-  \ Then chooses the smallest quantised HF model (microsoft/DialoGPT-small or EleutherAI/pythia-70m)\
-  \ that still works for automation system tasks, pins cgroup limits, and auto-tunes\
-  \ Ollama env vars for zero-GPU, <2 GB RAM environments.\n  "
+description: |
+  Professional CPU-only hardware optimization agent that detects exact CPU micro-architecture, 
+  RAM size, and swap status. Selects optimal quantized HuggingFace models for automation 
+  system tasks, configures resource limits, and optimizes Ollama environment variables 
+  for zero-GPU, low-memory environments.
 model: tinyllama:latest
 tools:
 - shell
 - file_search
 - web_search
-prompt: "1. Run `lscpu`, `free -h`, `swapon --show`, `docker system df`.\n2. If RAM\
-  \ < 4 GB OR no swap \u2192 create 4 GB swapfile (`sudo fallocate -l 4G /swapfile\
-  \ \u2026`)\n3. Pull the smallest working transformers model (\u2264300 MB) to `/opt/sutazaiapp/models/cpu/`.\n\
-  4. Emit a one-line JSON report with CPU model, RAM (GB), swap (GB), chosen model\
-  \ path.\n5. DO NOT modify files; return the JSON only.\n"
+prompt: |
+  1. Execute `lscpu`, `free -h`, `swapon --show`, `docker system df` for hardware profiling
+  2. If RAM < 4 GB OR no swap detected, create 4 GB swapfile using `sudo fallocate -l 4G /swapfile`
+  3. Download optimal transformers model (≤300 MB) to `/opt/sutazaiapp/models/cpu/`
+  4. Generate comprehensive JSON report with CPU model, RAM (GB), swap (GB), selected model path
+  5. Return structured JSON output only - no file modifications
 version: '1.0'
+type: hardware-optimizer
+category: system-optimization
+tier: specialized
 capabilities:
-- task_execution
-- problem_solving
-- optimization
+- hardware_profiling
+- resource_optimization
+- model_selection
+- performance_tuning
+- system_monitoring
 integrations:
   systems:
   - api
@@ -29,9 +36,19 @@ integrations:
   - kubernetes
   languages:
   - python
-  tools: []
+  tools:
+  - hardware-resource-optimizer
+  - observability-monitoring-engineer
 performance:
   response_time: < 1s
-  accuracy: '> 95%'
-  concurrency: high
+  accuracy: "> 95%"
+  throughput: high
+  resource_usage: minimal
+  cpu_cores: "1-2"
+  memory_mb: "512-1024"
+security:
+  input_validation: strict
+  output_sanitization: enabled
+  resource_isolation: container
+  audit_logging: comprehensive
 ---

@@ -1,53 +1,116 @@
-#!/bin/bash
+#\!/bin/bash
+# System Optimization Script for SutazAI
 
-echo "=== SutazAI System Optimization Script ==="
-echo "Removing unnecessary services and optimizing for port 8501 only"
+echo "╔═══════════════════════════════════════════════════════════════════╗"
+echo "║           SutazAI System Optimization Tool                        ║"
+echo "╚═══════════════════════════════════════════════════════════════════╝"
+echo ""
 
-# Stop and remove unnecessary containers
-echo "Stopping and removing non-essential containers..."
-docker stop sutazai-open-webui || true
-docker rm sutazai-open-webui || true
-docker stop sutazai-enhanced-model-manager || true
-docker rm sutazai-enhanced-model-manager || true
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Clear Docker logs to free up disk space
-echo "Clearing Docker logs..."
-truncate -s 0 /var/lib/docker/containers/*/*-json.log
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then 
+   echo -e "${RED}Please run as root (use sudo)${NC}"
+   exit 1
+fi
 
-# Clear system logs
-echo "Clearing old system logs..."
-journalctl --vacuum-time=1d
-find /var/log -type f -name "*.log" -mtime +7 -delete 2>/dev/null || true
+echo -e "${BLUE}1. Cleaning Docker Resources...${NC}"
+# Remove stopped containers
+stopped_count=$(docker ps -aq -f status=exited | wc -l)
+if [ $stopped_count -gt 0 ]; then
+    echo "Removing $stopped_count stopped containers..."
+    docker container prune -f
+else
+    echo "No stopped containers to remove."
+fi
 
-# Optimize Ollama
-echo "Optimizing Ollama resource usage..."
-docker update sutazai-ollama \
-  --cpus="1.0" \
-  --memory="4g" \
-  --memory-swap="4g" \
-  --cpu-shares=512
+# Remove unused images
+echo "Removing unused images..."
+docker image prune -f
 
-# Kill excessive ollama runner processes
-echo "Killing excessive ollama runner processes..."
-pkill -f "ollama runner" || true
+# Remove unused volumes
+echo "Removing unused volumes..."
+docker volume prune -f
 
-# Clean Docker system
-echo "Cleaning Docker system..."
-docker system prune -af --volumes
+# Remove unused networks
+echo "Removing unused networks (keeping sutazai network)..."
+docker network prune -f
 
-# Restart essential services with optimized settings
-echo "Restarting Ollama with optimized settings..."
-docker restart sutazai-ollama
+echo -e "\n${BLUE}2. Optimizing Container Resources...${NC}"
+# Set memory limits for high-usage containers
+echo "Setting resource limits for agents..."
 
-# Clear cache
-echo "Clearing system cache..."
-sync && echo 3 > /proc/sys/vm/drop_caches
+# Get all agent containers
+docker ps --format "{{.Names}}" | grep -E "agent|developer|engineer|specialist" | while read container; do
+    # Set reasonable memory limit (512MB) and CPU limit (0.5 CPU)
+    docker update --memory="512m" --memory-swap="512m" --cpus="0.5" $container 2>/dev/null
+    if [ $? -eq 0 ]; then
+        echo -e "  ${GREEN}✓${NC} Updated limits for $container"
+    fi
+done
 
-# Display new resource usage
-echo "=== Current Resource Status ==="
-free -h
-df -h /
-docker stats --no-stream
+echo -e "\n${BLUE}3. System Cache Optimization...${NC}"
+# Clear system caches
+echo "Clearing system caches..."
+sync
+echo 3 > /proc/sys/vm/drop_caches
+echo -e "  ${GREEN}✓${NC} System caches cleared"
 
-echo "=== Optimization Complete ==="
-echo "Only http://192.168.131.128:8501/ and essential services are active"
+# Optimize Redis
+echo "Optimizing Redis..."
+docker exec sutazai-redis redis-cli -a redis_password BGREWRITEAOF 2>/dev/null
+docker exec sutazai-redis redis-cli -a redis_password MEMORY PURGE 2>/dev/null
+echo -e "  ${GREEN}✓${NC} Redis optimized"
+
+echo -e "\n${BLUE}4. Log Rotation...${NC}"
+# Rotate Docker logs
+echo "Configuring log rotation..."
+cat > /etc/docker/daemon.json << EOL
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+EOL
+
+# Restart Docker daemon to apply changes
+systemctl restart docker 2>/dev/null || service docker restart 2>/dev/null
+echo -e "  ${GREEN}✓${NC} Log rotation configured"
+
+echo -e "\n${BLUE}5. Database Optimization...${NC}"
+# Optimize PostgreSQL
+echo "Running PostgreSQL VACUUM..."
+docker exec sutazai-postgres psql -U sutazai -d sutazai_agents -c "VACUUM ANALYZE;" 2>/dev/null
+echo -e "  ${GREEN}✓${NC} PostgreSQL optimized"
+
+# Show results
+echo -e "\n${BLUE}6. Optimization Results:${NC}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Disk space saved
+df -h / | awk 'NR==2 {print "Disk Usage: " $3 " / " $2 " (" $5 ")"}'
+
+# Memory usage
+free -h | awk '/^Mem:/ {print "Memory Usage: " $3 " / " $2}'
+
+# Container count
+echo "Active Containers: $(docker ps -q | wc -l)"
+
+# Calculate saved space
+saved_space=$(docker system df | grep "Reclaimable" | awk '{sum+=$4} END {print sum}')
+echo -e "\n${GREEN}Space Reclaimed: ${saved_space}GB${NC}"
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -e "\n${GREEN}✅ System optimization complete\!${NC}"
+echo ""
+echo "Recommendations:"
+echo "1. Run this script weekly to maintain optimal performance"
+echo "2. Monitor resource usage with: docker stats"
+echo "3. Check system health with: ./scripts/verify_complete_system.sh"
