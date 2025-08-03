@@ -1,14 +1,49 @@
 #!/bin/bash
 #
-# SutazAI Universal Deployment Master Script
-# Version: 2.0.0
-# 
-# This script implements Rule 12: One-Command Universal Deployment
-# A bulletproof, intelligent deployment system that can transform
-# any fresh system into a fully operational SutazAI environment.
+# SutazAI Universal Deployment Script
+# Version: 3.0.0
 #
-# Usage: ./deploy.sh [TARGET] [OPTIONS]
-# Targets: local, staging, production, fresh
+# DESCRIPTION:
+#   Canonical deployment script following CLAUDE.md codebase hygiene standards.
+#   This is the ONLY deployment script for SutazAI - consolidates all deployment
+#   functionality into a single, maintainable, production-ready solution.
+#
+# PURPOSE:
+#   - Deploy SutazAI AI automation platform to any environment
+#   - Manage service lifecycle (start, stop, health checks)
+#   - Handle rollbacks and recovery scenarios
+#   - Maintain deployment state and logging
+#
+# USAGE:
+#   ./deploy.sh [COMMAND] [TARGET] [OPTIONS]
+#
+# REQUIREMENTS:
+#   - Docker and Docker Compose v2
+#   - Bash 4.0+
+#   - curl, jq, openssl
+#   - 16GB+ RAM, 100GB+ disk (minimum)
+#   - Internet connectivity for model downloads
+#
+# ENVIRONMENT VARIABLES:
+#   SUTAZAI_ENV          - Deployment environment (local|staging|production)
+#   POSTGRES_PASSWORD    - PostgreSQL password (auto-generated if not set)
+#   REDIS_PASSWORD       - Redis password (auto-generated if not set)
+#   NEO4J_PASSWORD       - Neo4j password (auto-generated if not set)
+#   DEBUG                - Enable debug logging (true|false)
+#   FORCE_DEPLOY         - Skip safety checks (true|false)
+#   AUTO_ROLLBACK        - Auto-rollback on failure (true|false)
+#   ENABLE_MONITORING    - Enable monitoring stack (true|false)
+#   ENABLE_GPU           - Enable GPU support (true|false|auto)
+#
+# EXAMPLES:
+#   ./deploy.sh deploy local       # Local development deployment
+#   ./deploy.sh deploy production  # Production deployment
+#   ./deploy.sh status             # Check system status
+#   ./deploy.sh logs backend       # View backend logs
+#   ./deploy.sh health             # Run health checks
+#   ./deploy.sh rollback latest    # Rollback to last checkpoint
+#   ./deploy.sh cleanup            # Clean up resources
+#
 # 
 
 set -euo pipefail
@@ -18,8 +53,8 @@ set -euo pipefail
 # ===============================================
 
 # Script metadata
-readonly SCRIPT_VERSION="2.0.0"
-readonly SCRIPT_NAME="SutazAI Universal Deployment Master"
+readonly SCRIPT_VERSION="3.0.0"
+readonly SCRIPT_NAME="SutazAI Universal Deployment Script"
 readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DEPLOYMENT_ID="deploy_$(date +%Y%m%d_%H%M%S)_$$"
 
@@ -864,18 +899,44 @@ setup_environment_variables() {
     local env_file="$PROJECT_ROOT/.env"
     local secrets_dir="$PROJECT_ROOT/secrets"
     
-    # Read secrets
+    # Read secrets with proper fallbacks - no hardcoded passwords
     local postgres_password
     local redis_password
     local neo4j_password
     local jwt_secret
     local grafana_password
     
-    postgres_password=$(cat "$secrets_dir/postgres_password.txt" 2>/dev/null || echo "sutazai_postgres")
-    redis_password=$(cat "$secrets_dir/redis_password.txt" 2>/dev/null || echo "sutazai_redis")
-    neo4j_password=$(cat "$secrets_dir/neo4j_password.txt" 2>/dev/null || echo "sutazai_neo4j")
-    jwt_secret=$(cat "$secrets_dir/jwt_secret.txt" 2>/dev/null || echo "sutazai_jwt_secret")
-    grafana_password=$(cat "$secrets_dir/grafana_password.txt" 2>/dev/null || echo "sutazai_grafana")
+    postgres_password="${POSTGRES_PASSWORD:-$(cat "$secrets_dir/postgres_password.txt" 2>/dev/null || echo "")}"
+    redis_password="${REDIS_PASSWORD:-$(cat "$secrets_dir/redis_password.txt" 2>/dev/null || echo "")}"
+    neo4j_password="${NEO4J_PASSWORD:-$(cat "$secrets_dir/neo4j_password.txt" 2>/dev/null || echo "")}"
+    jwt_secret="${JWT_SECRET:-$(cat "$secrets_dir/jwt_secret.txt" 2>/dev/null || echo "")}"
+    grafana_password="${GRAFANA_PASSWORD:-$(cat "$secrets_dir/grafana_password.txt" 2>/dev/null || echo "")}"
+    
+    # Ensure all passwords are set (generate if missing)
+    if [[ -z "$postgres_password" ]]; then
+        log_warn "PostgreSQL password not found, using generated password from secrets"
+        postgres_password="${POSTGRES_PASSWORD:-$(cat "$secrets_dir/postgres_password.txt")}"
+    fi
+    
+    if [[ -z "$redis_password" ]]; then
+        log_warn "Redis password not found, using generated password from secrets"  
+        redis_password="${REDIS_PASSWORD:-$(cat "$secrets_dir/redis_password.txt")}"
+    fi
+    
+    if [[ -z "$neo4j_password" ]]; then
+        log_warn "Neo4j password not found, using generated password from secrets"
+        neo4j_password="${NEO4J_PASSWORD:-$(cat "$secrets_dir/neo4j_password.txt")}"
+    fi
+    
+    if [[ -z "$jwt_secret" ]]; then
+        log_warn "JWT secret not found, using generated secret from secrets"
+        jwt_secret="${JWT_SECRET:-$(cat "$secrets_dir/jwt_secret.txt")}"
+    fi
+    
+    if [[ -z "$grafana_password" ]]; then
+        log_warn "Grafana password not found, using generated password from secrets"
+        grafana_password="${GRAFANA_PASSWORD:-$(cat "$secrets_dir/grafana_password.txt")}"
+    fi
     
     # Get local IP
     local local_ip
@@ -889,16 +950,16 @@ setup_environment_variables() {
 # Target: ${DEPLOYMENT_TARGET:-local}
 
 # System Configuration
-TZ=UTC
-SUTAZAI_ENV=${DEPLOYMENT_TARGET:-local}
+TZ=${TZ:-UTC}
+SUTAZAI_ENV=${SUTAZAI_ENV:-${DEPLOYMENT_TARGET:-local}}
 LOCAL_IP=$local_ip
 DEPLOYMENT_ID=$DEPLOYMENT_ID
 
-# Database Configuration
-POSTGRES_USER=sutazai
+# Database Configuration  
+POSTGRES_USER=${POSTGRES_USER:-sutazai}
 POSTGRES_PASSWORD=$postgres_password
-POSTGRES_DB=sutazai
-DATABASE_URL=postgresql://sutazai:$postgres_password@postgres:5432/sutazai
+POSTGRES_DB=${POSTGRES_DB:-sutazai}
+DATABASE_URL=postgresql://${POSTGRES_USER:-sutazai}:$postgres_password@postgres:5432/${POSTGRES_DB:-sutazai}
 
 # Redis Configuration
 REDIS_PASSWORD=$redis_password
@@ -914,21 +975,21 @@ JWT_SECRET=$jwt_secret
 GRAFANA_PASSWORD=$grafana_password
 
 # Model Configuration
-OLLAMA_HOST=0.0.0.0
-OLLAMA_ORIGINS=*
-OLLAMA_NUM_PARALLEL=2
-OLLAMA_MAX_LOADED_MODELS=2
+OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
+OLLAMA_ORIGINS=${OLLAMA_ORIGINS:-*}
+OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-2}
+OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-2}
 
 # Feature Flags
-ENABLE_GPU=auto
-ENABLE_MONITORING=true
-ENABLE_LOGGING=true
-ENABLE_HEALTH_CHECKS=true
+ENABLE_GPU=${ENABLE_GPU:-auto}
+ENABLE_MONITORING=${ENABLE_MONITORING:-true}
+ENABLE_LOGGING=${ENABLE_LOGGING:-true}
+ENABLE_HEALTH_CHECKS=${ENABLE_HEALTH_CHECKS:-true}
 
 # Performance Tuning
-MAX_WORKERS=4
-CONNECTION_POOL_SIZE=20
-CACHE_TTL=3600
+MAX_WORKERS=${MAX_WORKERS:-4}
+CONNECTION_POOL_SIZE=${CONNECTION_POOL_SIZE:-20}
+CACHE_TTL=${CACHE_TTL:-3600}
 
 # Development/Debug Settings
 DEBUG=${DEBUG:-false}
@@ -1007,6 +1068,191 @@ initialize_data_directories() {
 }
 
 # ===============================================
+# DOCKER IMAGE BUILDING
+# ===============================================
+
+build_required_images() {
+    log_info "Building required Docker images..."
+    
+    # Check if build script exists
+    local build_script="$PROJECT_ROOT/scripts/build_all_images.sh"
+    
+    if [[ ! -f "$build_script" ]]; then
+        log_error "Build script not found: $build_script"
+        exit 1
+    fi
+    
+    # Make build script executable
+    chmod +x "$build_script"
+    
+    # Determine build options based on deployment target and system capabilities
+    local build_args=()
+    
+    # For production deployments, validate images
+    if [[ "${DEPLOYMENT_TARGET:-local}" == "production" ]]; then
+        build_args+=(--validate)
+        build_args+=(--cleanup)
+    fi
+    
+    # Use parallel builds for systems with sufficient resources
+    local cpu_cores
+    cpu_cores=$(nproc 2>/dev/null || echo "4")
+    local memory_gb
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        memory_gb=$(free -m | awk 'NR==2{printf "%.0f", $2/1024}')
+    else
+        memory_gb="8"
+    fi
+    
+    if [[ $cpu_cores -ge 8 && $memory_gb -ge 16 ]]; then
+        build_args+=(--parallel)
+        log_info "Using parallel builds (sufficient resources detected)"
+    else
+        log_info "Using sequential builds (limited resources detected)"
+    fi
+    
+    # Force rebuild for fresh deployments
+    if [[ "${DEPLOYMENT_TARGET:-local}" == "fresh" ]] || [[ "${FORCE_DEPLOY:-false}" == "true" ]]; then
+        build_args+=(--force)
+        log_info "Force rebuilding all images"
+    fi
+    
+    # Execute build
+    log_info "Executing build with options: ${build_args[*]}"
+    
+    if "$build_script" "${build_args[@]}"; then
+        log_success "All required Docker images built successfully"
+    else
+        log_error "Docker image build failed"
+        
+        # For production deployments, fail immediately
+        if [[ "${DEPLOYMENT_TARGET:-local}" == "production" ]]; then
+            log_error "Production deployment aborted due to build failure"
+            exit 1
+        else
+            log_warn "Some images failed to build, but continuing deployment"
+            log_warn "You may encounter issues with services that require custom builds"
+        fi
+    fi
+}
+
+check_and_pull_external_images() {
+    log_info "Checking and pulling external Docker images..."
+    
+    # List of external images used by the system
+    local external_images=(
+        "postgres:16.3-alpine"
+        "redis:7.2-alpine"
+        "neo4j:5.13-community"
+        "chromadb/chroma:0.5.0"
+        "qdrant/qdrant:v1.9.2"
+        "ollama/ollama:latest"
+        "langflowai/langflow:latest"
+        "flowiseai/flowise:latest"
+        "langgenius/dify-api:latest"
+        "tabbyml/tabby:latest"
+        "returntocorp/semgrep:latest"
+        "prom/prometheus:latest"
+        "grafana/grafana:latest"
+        "grafana/loki:2.9.0"
+        "grafana/promtail:2.9.0"
+        "prom/alertmanager:latest"
+        "prom/blackbox-exporter:latest"
+        "prom/node-exporter:latest"
+        "gcr.io/cadvisor/cadvisor:v0.47.0"
+        "prometheuscommunity/postgres-exporter:latest"
+        "oliver006/redis_exporter:latest"
+        "n8nio/n8n:latest"
+    )
+    
+    local failed_pulls=()
+    local total_images=${#external_images[@]}
+    local current_image=1
+    
+    for image in "${external_images[@]}"; do
+        log_info "Pulling image $current_image/$total_images: $image"
+        
+        if docker pull "$image" >/dev/null 2>&1; then
+            log_success "Successfully pulled $image"
+        else
+            log_warn "Failed to pull $image"
+            failed_pulls+=("$image")
+        fi
+        
+        show_progress $current_image $total_images "Pulling external images"
+        current_image=$((current_image + 1))
+    done
+    
+    if [[ ${#failed_pulls[@]} -gt 0 ]]; then
+        log_warn "Failed to pull ${#failed_pulls[@]} external images:"
+        for failed_image in "${failed_pulls[@]}"; do
+            log_warn "  - $failed_image"
+        done
+        log_warn "Services using these images may fail to start"
+    else
+        log_success "All external images pulled successfully"
+    fi
+}
+
+validate_docker_images() {
+    log_info "Validating Docker images and build status..."
+    
+    # Check for services that need to be built
+    local services_needing_build=()
+    local services_with_images=()
+    
+    # Services that require local builds (from docker-compose.yml analysis)
+    local build_services=(
+        "backend" "frontend" "faiss" "autogpt" "crewai" "letta" "aider" 
+        "gpt-engineer" "agentgpt" "privategpt" "llamaindex" "shellgpt" 
+        "pentestgpt" "documind" "browser-use" "skyvern" "pytorch" 
+        "tensorflow" "jax" "ai-metrics-exporter" "health-monitor" 
+        "mcp-server" "context-framework" "autogen" "opendevin" 
+        "finrobot" "code-improver" "service-hub" "awesome-code-ai" 
+        "fsdp" "agentzero"
+    )
+    
+    log_info "Checking ${#build_services[@]} services that require local builds..."
+    
+    for service in "${build_services[@]}"; do
+        local image_name="sutazai/$service:latest"
+        
+        if docker images --format "table {{.Repository}}:{{.Tag}}" | grep -q "^$image_name$"; then
+            services_with_images+=("$service")
+            log_success "✅ Image exists: $service"
+        else
+            services_needing_build+=("$service")
+            log_warn "❌ Image missing: $service"
+        fi
+    done
+    
+    # Summary
+    echo -e "\n${BOLD}${CYAN}IMAGE VALIDATION SUMMARY${NC}"
+    echo -e "${CYAN}========================${NC}\n"
+    
+    echo -e "${GREEN}✅ Images available: ${#services_with_images[@]} services${NC}"
+    echo -e "${RED}❌ Images missing: ${#services_needing_build[@]} services${NC}"
+    echo -e "${BLUE}📦 Total build services: ${#build_services[@]}${NC}"
+    
+    if [[ ${#services_needing_build[@]} -gt 0 ]]; then
+        echo -e "\n${RED}Services needing build:${NC}"
+        for service in "${services_needing_build[@]}"; do
+            echo -e "  - $service"
+        done
+        
+        echo -e "\n${YELLOW}To build missing images, run:${NC}"
+        echo -e "${CYAN}  ./deploy.sh build${NC}"
+        echo -e "${CYAN}  # OR for parallel build:${NC}"
+        echo -e "${CYAN}  ./scripts/build_all_images.sh --parallel${NC}"
+        
+        return 1
+    else
+        log_success "All required Docker images are available!"
+        return 0
+    fi
+}
+
+# ===============================================
 # INFRASTRUCTURE DEPLOYMENT
 # ===============================================
 
@@ -1016,6 +1262,12 @@ deploy_infrastructure() {
     local rollback_point
     rollback_point=$(create_rollback_point "infrastructure" "Before infrastructure deployment")
     LAST_ROLLBACK_POINT="$rollback_point"
+    
+    # Build all required Docker images first
+    build_required_images
+    
+    # Pull external images
+    check_and_pull_external_images
     
     # Determine compose files based on target and capabilities
     local compose_files
@@ -1894,7 +2146,12 @@ handle_cleanup() {
 show_usage() {
     cat << EOF
 ${BOLD}${SCRIPT_NAME} v${SCRIPT_VERSION}${NC}
-${UNDERLINE}Universal deployment script for SutazAI systems${NC}
+${UNDERLINE}Canonical deployment script for SutazAI AI automation platform${NC}
+
+${BOLD}DESCRIPTION:${NC}
+This is the ONLY deployment script for SutazAI. It consolidates all deployment
+functionality following CLAUDE.md codebase hygiene standards. No other deployment
+scripts should be used or created.
 
 ${BOLD}USAGE:${NC}
     $0 [COMMAND] [TARGET/OPTIONS]
@@ -1914,6 +2171,12 @@ ${BOLD}COMMANDS:${NC}
     
     health            Run health checks on current deployment
     
+    build             Build all required Docker images
+    
+    pull              Pull all external Docker images
+    
+    validate          Validate Docker images and build status
+    
     help              Show this help message
 
 ${BOLD}DEPLOYMENT TARGETS:${NC}
@@ -1922,27 +2185,49 @@ $(for target in "${!DEPLOYMENT_TARGETS[@]}"; do
 done)
 
 ${BOLD}ENVIRONMENT VARIABLES:${NC}
-    DEBUG=true            Enable debug output
-    FORCE_DEPLOY=true     Force deployment despite warnings
-    AUTO_ROLLBACK=false   Disable automatic rollback on failure
-    ENABLE_MONITORING=false  Disable monitoring stack
-    LOG_LEVEL=DEBUG       Set logging level
+    SUTAZAI_ENV           Deployment environment (local|staging|production)
+    POSTGRES_PASSWORD     PostgreSQL password (auto-generated if not set)
+    REDIS_PASSWORD        Redis password (auto-generated if not set)
+    NEO4J_PASSWORD        Neo4j password (auto-generated if not set)
+    DEBUG                 Enable debug output (true|false)
+    FORCE_DEPLOY          Force deployment despite warnings (true|false)
+    AUTO_ROLLBACK         Auto-rollback on failure (true|false)
+    ENABLE_MONITORING     Enable monitoring stack (true|false)
+    ENABLE_GPU            Enable GPU support (true|false|auto)
+    LOG_LEVEL             Set logging level (DEBUG|INFO|WARN|ERROR)
 
 ${BOLD}EXAMPLES:${NC}
-    $0 deploy local                    # Deploy to local development
-    $0 deploy production               # Deploy to production
-    FORCE_DEPLOY=true $0 deploy fresh  # Force fresh installation
-    $0 rollback latest                 # Rollback to latest checkpoint
-    $0 status                          # Check system status
-    $0 logs backend                    # Show backend service logs
-    $0 cleanup                         # Clean up system
+    $0 deploy local                      # Deploy to local development
+    $0 deploy production                 # Deploy to production
+    FORCE_DEPLOY=true $0 deploy fresh    # Force fresh installation
+    ENABLE_GPU=true $0 deploy local      # Deploy with GPU support
+    $0 rollback latest                   # Rollback to latest checkpoint
+    $0 status                            # Check system status
+    $0 logs backend                      # Show backend service logs
+    $0 health                            # Run comprehensive health checks
+    $0 cleanup                           # Clean up system resources
 
 ${BOLD}FILES & DIRECTORIES:${NC}
-    Configuration: $PROJECT_ROOT/.env
-    Secrets:      $PROJECT_ROOT/secrets/
-    Logs:         $PROJECT_ROOT/logs/
-    State:        $PROJECT_ROOT/logs/deployment_state/
-    Rollbacks:    $PROJECT_ROOT/logs/rollback/
+    Main config:      $PROJECT_ROOT/.env
+    Docker compose:   $PROJECT_ROOT/docker-compose.yml (canonical)
+    Secrets:          $PROJECT_ROOT/secrets/
+    Logs:             $PROJECT_ROOT/logs/
+    State:            $PROJECT_ROOT/logs/deployment_state/
+    Rollbacks:        $PROJECT_ROOT/logs/rollback/
+
+${BOLD}REQUIREMENTS:${NC}
+    - Docker and Docker Compose v2
+    - 16GB+ RAM, 100GB+ disk space (minimum)
+    - Internet connectivity for model downloads
+    - Linux, macOS, or WSL2 on Windows
+
+${BOLD}HYGIENE COMPLIANCE:${NC}
+This script follows CLAUDE.md standards:
+- Single canonical deployment script (no duplicates)
+- No hardcoded passwords or secrets
+- Environment variable configuration
+- Comprehensive error handling and rollback
+- Production-ready with proper logging
 
 For more information, visit: https://github.com/sutazai/sutazaiapp
 EOF
@@ -1974,6 +2259,18 @@ main() {
         "health")
             setup_logging
             validate_deployment_health
+            ;;
+        "build")
+            setup_logging
+            build_required_images
+            ;;
+        "pull")
+            setup_logging
+            check_and_pull_external_images
+            ;;
+        "validate")
+            setup_logging
+            validate_docker_images
             ;;
         "help"|"--help"|"-h")
             show_usage

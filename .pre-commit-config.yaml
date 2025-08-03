@@ -1,0 +1,100 @@
+# CLAUDE.md Hygiene Enforcement Pre-commit Configuration
+# Automatically enforces codebase hygiene standards before commits
+
+default_language_version:
+  python: python3.11
+
+repos:
+  # Remove trailing whitespace and fix line endings
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        language_version: python3.11
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+
+  # Python linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: ['--max-line-length=120', '--extend-ignore=E203,W503']
+
+  # Security checks
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        args: ['-r', '--skip', 'B101']
+
+  # Custom hygiene checks
+  - repo: local
+    hooks:
+      - id: no-backup-files
+        name: Block backup files
+        entry: bash -c 'find . -name "*.backup*" -o -name "*.fantasy*" -o -name "*.agi_backup" | grep -q . && echo "ERROR: Backup files not allowed" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: no-archive-directory
+        name: Block archive directories
+        entry: bash -c 'test -d archive && echo "ERROR: Archive directory not allowed" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+      - id: no-hardcoded-secrets
+        name: Check for hardcoded secrets
+        entry: python scripts/check_secrets.py
+        language: python
+        pass_filenames: false
+
+      - id: enforce-naming-conventions
+        name: Enforce naming conventions
+        entry: python scripts/check_naming.py
+        language: python
+        types: [python]
+
+      - id: check-duplicate-files
+        name: Check for duplicate files
+        entry: python scripts/check_duplicates.py
+        language: python
+        pass_filenames: false
+
+      - id: validate-agent-format
+        name: Validate agent YAML format
+        entry: python scripts/validate_agents.py
+        language: python
+        files: ^\.claude/agents/.*\.md$
+
+      - id: check-requirements
+        name: Check requirements files
+        entry: python scripts/check_requirements.py
+        language: python
+        files: requirements.*\.txt$
+
+      - id: enforce-claude-rules
+        name: Enforce CLAUDE.md rules
+        entry: python scripts/enforce_claude_md_simple.py
+        language: python
+        pass_filenames: false

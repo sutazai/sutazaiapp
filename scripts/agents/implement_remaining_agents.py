@@ -318,13 +318,6 @@ REMAINING_AGENTS = {
         "framework": "native",
         "port": 8591
     },
-    "realtimestt": {
-        "name": "RealTimeSTT",
-        "description": "Real-time speech recognition",
-        "capabilities": ["speech_recognition", "real_time_transcription", "audio_processing"],
-        "framework": "native",
-        "port": 8592
-    },
     "code-improver": {
         "name": "Code Improver",
         "description": "Code quality improvement",

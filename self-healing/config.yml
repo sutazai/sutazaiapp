@@ -1,0 +1,161 @@
+# Self-Healing Orchestrator Configuration
+
+# Basic Configuration
+project_root: "/opt/sutazaiapp"
+backup_dir: "/opt/sutazaiapp/self-healing/backups"
+database_path: "/opt/sutazaiapp/self-healing/hygiene.db"
+log_file: "/opt/sutazaiapp/self-healing/hygiene.log"
+log_level: "INFO"
+
+# Scanning Configuration
+scan_interval: 300  # 5 minutes
+auto_fix_enabled: true
+dry_run: false  # Set to true for testing
+max_fixes_per_scan: 50
+risk_threshold: "medium"  # low, medium, high
+
+# Safety Configuration
+backup_enabled: true
+rollback_enabled: true
+critical_file_protection: true
+git_integration: true
+
+# Notification Configuration
+notification_enabled: true
+
+# Email notifications (optional)
+# email:
+#   smtp_host: "smtp.gmail.com"
+#   smtp_port: 587
+#   use_tls: true
+#   from: "hygiene-bot@yourcompany.com"
+#   to: "devops@yourcompany.com"
+#   username: "your-email@gmail.com"
+#   password: "your-app-password"
+
+# Slack notifications (optional)
+# slack_webhook: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+
+# Discord notifications (optional)
+# discord_webhook: "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK"
+
+# CI/CD Integration
+trigger_ci: true
+github_token: ""  # For GitHub integration
+
+# Advanced Configuration
+predictive_monitoring: true
+ml_enabled: false  # Requires scikit-learn
+retention_days: 30  # How long to keep historical data
+
+# Violation Patterns Configuration
+violation_patterns:
+  forbidden_files:
+    enabled: true
+    severity: "medium"
+    auto_fix: true
+    patterns:
+      - ".*\\.backup$"
+      - ".*\\.fantasy_backup$"
+      - ".*\\.old$"
+      - ".*\\.bak$"
+      - ".*\\.tmp$"
+      - ".*~$"
+      - ".*\\.swp$"
+      - ".*\\.DS_Store$"
+      - ".*Thumbs\\.db$"
+      - ".*\\.pyc$"
+      - ".*__pycache__.*"
+      - ".*\\.pytest_cache.*"
+      - ".*node_modules.*"
+    exceptions:
+      - "data/backups"
+      - "deployment/backup"
+
+  archive_directories:
+    enabled: true
+    severity: "low"
+    auto_fix: true
+    patterns:
+      - ".*/archive/.*"
+      - ".*/old/.*"
+      - ".*/backup/.*"
+      - ".*/deprecated/.*"
+      - ".*/unused/.*"
+      - ".*/temp/.*"
+      - ".*/tmp/.*"
+    exceptions:
+      - "data/backups"
+      - "deployment/backup"
+      - "scripts/archive"
+
+  naming_violations:
+    enabled: true
+    severity: "medium"
+    auto_fix: true
+    patterns:
+      - ".*[A-Z].*\\.py$"  # Python files with uppercase
+      - ".*\\s+.*\\.(py|js|ts|yml|yaml)$"  # Files with spaces
+      - ".*-\\d+\\.(py|js|ts)$"  # Numbered duplicates
+      - ".*copy.*\\.(py|js|ts)$"  # Copy files
+
+  large_files:
+    enabled: true
+    severity: "high"
+    auto_fix: true
+    size_threshold: 104857600  # 100MB in bytes
+    compress_extensions:
+      - ".log"
+      - ".dump"
+      - ".sql"
+
+  security_violations:
+    enabled: true
+    severity: "critical"
+    auto_fix: false  # Never auto-fix security issues
+    patterns:
+      - ".*password.*"
+      - ".*secret.*"
+      - ".*token.*"
+      - ".*\\.pem$"
+      - ".*\\.key$"
+
+# Ignore Patterns
+ignore_patterns:
+  - ".git"
+  - "node_modules"
+  - "__pycache__"
+  - ".pytest_cache"
+  - "venv"
+  - ".venv"
+  - "dist"
+  - "build"
+  - "*.egg-info"
+  - ".claude"
+  - "data/loki"
+  - "data/postgres"
+  - "data/redis"
+  - "data/qdrant"
+  - "data/neo4j"
+  - "logs"
+  - "ssl"
+
+# Monitoring Thresholds
+thresholds:
+  violation_count_critical: 100
+  violation_count_high: 50
+  fix_success_rate_low: 0.8
+  disk_usage_high: 0.9
+  cpu_usage_high: 0.8
+  memory_usage_high: 0.9
+
+# Reporting Configuration
+reports:
+  generate_daily: true
+  generate_weekly: true
+  include_trends: true
+  include_predictions: true
+  export_formats:
+    - "json"
+    - "html"
+    - "csv"

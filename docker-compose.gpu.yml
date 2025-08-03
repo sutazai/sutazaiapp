@@ -1,53 +1,23 @@
-# GPU-optimized override for SutazAI deployment
-# This file provides GPU configurations when NVIDIA GPUs are available
+# GPU Override Configuration for SutazAI
+# This file provides GPU support overrides for the main docker-compose.yml
+# Usage: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up
+
+version: '3.8'
 
 services:
   ollama:
-    runtime: nvidia
-    environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      OLLAMA_NUM_PARALLEL: 4          # More parallel processing with GPU
-      OLLAMA_NUM_THREADS: 8           # More threads with GPU acceleration
-      OLLAMA_MAX_LOADED_MODELS: 3     # Multiple models with GPU memory
-      OLLAMA_KEEP_ALIVE: 5m           # Longer keep-alive with GPU
-      CUDA_VISIBLE_DEVICES: "0"       # Use first GPU
-      OLLAMA_GPU_LAYERS: 35           # GPU layers for acceleration
     deploy:
       resources:
-        limits:
-          cpus: '8'                   # More CPU cores with GPU
-          memory: 16G                 # More RAM with GPU
         reservations:
-          cpus: '2'
-          memory: 4G
           devices:
             - driver: nvidia
-              count: 1
+              count: all
               capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
   backend:
-    runtime: nvidia
-    environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      # GPU-optimized settings
-      MAX_WORKERS: 4
-      WORKER_CONNECTIONS: 200
-      ENABLE_GPU_ACCELERATION: "true"
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 8G
-        reservations:
-          cpus: '1'
-          memory: 2G
-
-  # Enable GPU-accelerated services
-  pytorch:
-    runtime: nvidia
-    environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      CUDA_VISIBLE_DEVICES: "0"
     deploy:
       resources:
         reservations:
@@ -55,13 +25,13 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-
-  tensorflow:
-    runtime: nvidia
     environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      CUDA_VISIBLE_DEVICES: "0"
-      TF_FORCE_GPU_ALLOW_GROWTH: "true"
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+      - ENABLE_GPU=true
+
+  # AI agents with GPU support
+  autogpt:
     deploy:
       resources:
         reservations:
@@ -69,13 +39,11 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-
-  jax:
-    runtime: nvidia
     environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      CUDA_VISIBLE_DEVICES: "0"
-      XLA_PYTHON_CLIENT_PREALLOCATE: "false"
+      - NVIDIA_VISIBLE_DEVICES=all
+      - ENABLE_GPU=true
+
+  letta:
     deploy:
       resources:
         reservations:
@@ -83,20 +51,30 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-
-  # GPU-accelerated AI services
-  tabbyml:
-    runtime: nvidia
     environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      CUDA_VISIBLE_DEVICES: "0"
-      TABBY_DISABLE_GPU: "false"
-    command: ["serve", "--model", "TabbyML/StarCoder-7B", "--device", "cuda", "--port", "8080"]
+      - NVIDIA_VISIBLE_DEVICES=all
+      - ENABLE_GPU=true
+
+  aider:
     deploy:
-      replicas: 1  # Enable with GPU
       resources:
         reservations:
           devices:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - ENABLE_GPU=true
+
+  gpt-engineer:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - ENABLE_GPU=true

@@ -87,7 +87,6 @@ class ServiceRegistry:
             'modelmanager': 'http://modelmanager:8080',
             'llm-autoeval': 'http://llm-autoeval:8080',
             'context-framework': 'http://context-framework:8080',
-            'realtimestt': 'http://realtimestt:8080',
             'awesome-code-ai': 'http://awesome-code-ai:8080',
             'ollama-webui': 'http://ollama-webui:8080'
         }

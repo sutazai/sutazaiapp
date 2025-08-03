@@ -74,7 +74,6 @@ class NavigationManager:
             "🎤 Audio & Communication": {
                 "icon": "🎤",
                 "pages": [
-                    {"id": "realtime_stt", "name": "RealtimeSTT Audio", "icon": "🎤", "description": "Real-time speech recognition"},
                     {"id": "voice", "name": "Voice Interface", "icon": "🎙️", "description": "Voice-controlled interactions"}
                 ]
             },

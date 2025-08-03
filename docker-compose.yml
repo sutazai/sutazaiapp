@@ -267,6 +267,8 @@ services:
       QDRANT_PORT: 6333
       NEO4J_HOST: neo4j
       NEO4J_PORT: 7687
+      JWT_SECRET: ${JWT_SECRET}
+      GRAFANA_PASSWORD: ${GRAFANA_PASSWORD}
     ports:
     - 8000:8000
     depends_on:
@@ -284,7 +286,7 @@ services:
         condition: service_healthy
     networks:
     - sutazai-network
-    command: uvicorn app.working_main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     healthcheck:
       test:
       - CMD
@@ -1170,24 +1172,6 @@ services:
     - 8109:8080
     volumes:
     - ./data/financial:/data
-    networks:
-    - sutazai-network
-    restart: unless-stopped
-  realtimestt:
-    container_name: sutazai-realtimestt
-    build:
-      context: ./docker/realtimestt
-      dockerfile: Dockerfile
-    environment:
-      TZ: ${TZ:-UTC}
-      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
-      PULSE_SERVER: unix:/tmp/pulse-socket
-    ports:
-    - 8110:8080
-    devices:
-    - /dev/snd:/dev/snd
-    volumes:
-    - /tmp/pulse-socket:/tmp/pulse-socket
     networks:
     - sutazai-network
     restart: unless-stopped

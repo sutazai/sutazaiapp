@@ -149,7 +149,6 @@ configure_agent "agentzero" "json" "$AGENT_DIR/agentzero/config.json"
 configure_agent "browser-use" "json" "$AGENT_DIR/browser-use/config.json"
 configure_agent "llamaindex" "json" "$AGENT_DIR/llamaindex/config.json"
 configure_agent "finrobot" "json" "$AGENT_DIR/finrobot/config.json"
-configure_agent "realtimestt" "json" "$AGENT_DIR/realtimestt/config.json"
 configure_agent "documind" "json" "$AGENT_DIR/documind/config.json"
 
 # YAML-based agents

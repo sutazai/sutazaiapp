@@ -825,6 +825,453 @@ get_container_health() {
     fi
 }
 
+# Smart container health check and repair function
+check_and_repair_unhealthy_containers() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║              SMART CONTAINER HEALTH CHECK & REPAIR          ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Get list of all containers with health status
+    echo -e "${YELLOW}⏳ Checking container health status and missing services...${NC}"
+    echo ""
+    
+    # Arrays to store container states
+    declare -a healthy_containers=()
+    declare -a unhealthy_containers=()
+    declare -a no_healthcheck_containers=()
+    declare -a exited_containers=()
+    declare -a missing_services=()
+    
+    # Get all services from docker-compose
+    cd /opt/sutazaiapp
+    all_services=($(docker compose config --services 2>/dev/null || echo ""))
+    
+    # Get all running/existing containers
+    declare -A existing_containers
+    while IFS= read -r container; do
+        [[ -z "$container" ]] && continue
+        service_name=${container#sutazai-}
+        existing_containers["$service_name"]=1
+    done < <(docker ps -a --filter "name=sutazai-" --format "{{.Names}}")
+    
+    # Check for missing services
+    for service in "${all_services[@]}"; do
+        if [[ ! -v existing_containers["$service"] ]]; then
+            missing_services+=("$service")
+        fi
+    done
+    
+    # Check all containers
+    while IFS= read -r container; do
+        [[ -z "$container" ]] && continue
+        
+        container_name=$(echo "$container" | awk '{print $1}')
+        container_status=$(echo "$container" | awk '{print $2}')
+        health_status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "none")
+        
+        if [[ "$container_status" == "Exited" ]] || [[ "$container_status" == "exited" ]]; then
+            exited_containers+=("$container_name")
+        elif [[ "$health_status" == "healthy" ]]; then
+            healthy_containers+=("$container_name")
+        elif [[ "$health_status" == "unhealthy" ]]; then
+            unhealthy_containers+=("$container_name")
+        elif [[ "$health_status" == "none" ]] || [[ "$health_status" == "<no value>" ]]; then
+            no_healthcheck_containers+=("$container_name")
+        fi
+    done < <(docker ps -a --filter "name=sutazai-" --format "{{.Names}} {{.Status}}")
+    
+    # Display results
+    echo -e "${GREEN}✅ Healthy Containers (${#healthy_containers[@]}):${NC}"
+    if [[ ${#healthy_containers[@]} -eq 0 ]]; then
+        echo "   None found"
+    else
+        for container in "${healthy_containers[@]}"; do
+            echo "   - $container"
+        done
+    fi
+    echo ""
+    
+    echo -e "${RED}❌ Unhealthy Containers (${#unhealthy_containers[@]}):${NC}"
+    if [[ ${#unhealthy_containers[@]} -eq 0 ]]; then
+        echo "   None found"
+    else
+        for container in "${unhealthy_containers[@]}"; do
+            echo "   - $container"
+        done
+    fi
+    echo ""
+    
+    echo -e "${YELLOW}⚠️  Exited Containers (${#exited_containers[@]}):${NC}"
+    if [[ ${#exited_containers[@]} -eq 0 ]]; then
+        echo "   None found"
+    else
+        for container in "${exited_containers[@]}"; do
+            echo "   - $container"
+        done
+    fi
+    echo ""
+    
+    echo -e "${PURPLE}🚫 Missing Services (${#missing_services[@]}):${NC}"
+    if [[ ${#missing_services[@]} -eq 0 ]]; then
+        echo "   None found - all services deployed"
+    else
+        for service in "${missing_services[@]}"; do
+            echo "   - $service"
+        done
+    fi
+    echo ""
+    
+    echo -e "${BLUE}ℹ️  No Health Check (${#no_healthcheck_containers[@]}):${NC}"
+    if [[ ${#no_healthcheck_containers[@]} -eq 0 ]]; then
+        echo "   None found"
+    else
+        for container in "${no_healthcheck_containers[@]}"; do
+            echo "   - $container"
+        done
+    fi
+    echo ""
+    
+    # Ask for confirmation to repair/deploy
+    total_to_repair=$((${#unhealthy_containers[@]} + ${#exited_containers[@]}))
+    total_to_deploy=${#missing_services[@]}
+    total_issues=$((total_to_repair + total_to_deploy))
+    
+    if [[ $total_issues -gt 0 ]]; then
+        echo -e "${YELLOW}Found issues:${NC}"
+        [[ $total_to_repair -gt 0 ]] && echo "  - $total_to_repair container(s) need repair"
+        [[ $total_to_deploy -gt 0 ]] && echo "  - $total_to_deploy service(s) need deployment"
+        echo ""
+        
+        echo "What would you like to do?"
+        echo "1) Repair unhealthy/exited containers only"
+        echo "2) Deploy missing services only" 
+        echo "3) Both repair and deploy"
+        echo "4) Cancel"
+        read -p "Select option (1-4): " action
+        
+        case "$action" in
+            1|3)
+                if [[ $total_to_repair -gt 0 ]]; then
+                    echo ""
+                    echo -e "${CYAN}Starting repair process...${NC}"
+                    echo ""
+                    
+                    # Repair unhealthy containers
+                    for container in "${unhealthy_containers[@]}"; do
+                        echo -e "${YELLOW}Repairing unhealthy container: $container${NC}"
+                        
+                        # Get service name from container name
+                        service_name=${container#sutazai-}
+                        
+                        # Stop and remove the container
+                        docker stop "$container" >/dev/null 2>&1
+                        docker rm "$container" >/dev/null 2>&1
+                        
+                        # Recreate from docker-compose
+                        echo "   Recreating container..."
+                        cd /opt/sutazaiapp
+                        docker compose up -d "$service_name" 2>&1 | grep -v "is up-to-date" || true
+                        
+                        # Wait for container to start
+                        sleep 5
+                        
+                        # Check new health status
+                        new_health=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "none")
+                if [[ "$new_health" == "healthy" ]]; then
+                    echo -e "   ${GREEN}✅ Container repaired successfully${NC}"
+                else
+                    echo -e "   ${YELLOW}⚠️  Container recreated, health status: $new_health${NC}"
+                fi
+                echo ""
+            done
+            
+            # Repair exited containers
+            for container in "${exited_containers[@]}"; do
+                echo -e "${YELLOW}Repairing exited container: $container${NC}"
+                
+                # Get service name from container name
+                service_name=${container#sutazai-}
+                
+                # Remove the container
+                docker rm "$container" >/dev/null 2>&1
+                
+                # Recreate from docker-compose
+                echo "   Recreating container..."
+                cd /opt/sutazaiapp
+                docker compose up -d "$service_name" 2>&1 | grep -v "is up-to-date" || true
+                
+                # Wait for container to start
+                sleep 5
+                
+                # Check if running
+                if docker ps --filter "name=$container" --format "{{.Names}}" | grep -q "$container"; then
+                    echo -e "   ${GREEN}✅ Container restarted successfully${NC}"
+                else
+                    echo -e "   ${RED}❌ Failed to restart container${NC}"
+                fi
+                echo ""
+            done
+            
+                fi
+                ;;
+            2|3)
+                if [[ $total_to_deploy -gt 0 ]]; then
+                    echo ""
+                    echo -e "${CYAN}Starting deployment of missing services...${NC}"
+                    echo ""
+                    
+                    # Check if images need to be built
+                    echo -e "${YELLOW}Checking which services need to be built...${NC}"
+                    declare -a services_to_build=()
+                    declare -a services_to_pull=()
+                    
+                    for service in "${missing_services[@]}"; do
+                        # Check if service has a build context in docker-compose
+                        if docker compose config --services --resolve-image-digests | grep -q "^${service}$" && \
+                           docker compose config | grep -A5 "^  ${service}:" | grep -q "build:"; then
+                            # Check if image exists
+                            image_name="sutazaiapp-${service}"
+                            if ! docker images --format "{{.Repository}}" | grep -q "^${image_name}$"; then
+                                services_to_build+=("$service")
+                            fi
+                        else
+                            services_to_pull+=("$service")
+                        fi
+                    done
+                    
+                    # Build missing images
+                    if [[ ${#services_to_build[@]} -gt 0 ]]; then
+                        echo ""
+                        echo -e "${YELLOW}Building ${#services_to_build[@]} service image(s)...${NC}"
+                        for service in "${services_to_build[@]}"; do
+                            echo -e "${CYAN}Building $service...${NC}"
+                            if docker compose build "$service" 2>&1 | tail -20; then
+                                echo -e "   ${GREEN}✅ Built successfully${NC}"
+                            else
+                                echo -e "   ${RED}❌ Build failed${NC}"
+                            fi
+                        done
+                    fi
+                    
+                    # Deploy all missing services
+                    echo ""
+                    echo -e "${YELLOW}Deploying missing services...${NC}"
+                    for service in "${missing_services[@]}"; do
+                        echo -e "${CYAN}Deploying $service...${NC}"
+                        if docker compose up -d "$service" 2>&1 | grep -v "is up-to-date" | tail -5; then
+                            # Check if container started
+                            sleep 3
+                            if docker ps --filter "name=sutazai-${service}" --format "{{.Names}}" | grep -q "sutazai-${service}"; then
+                                echo -e "   ${GREEN}✅ Deployed successfully${NC}"
+                            else
+                                echo -e "   ${RED}❌ Deployment failed${NC}"
+                            fi
+                        else
+                            echo -e "   ${RED}❌ Failed to deploy${NC}"
+                        fi
+                        echo ""
+                    done
+                    
+                    echo -e "${GREEN}Deployment process completed!${NC}"
+                fi
+                ;;
+            4)
+                echo -e "${YELLOW}Operation cancelled.${NC}"
+                ;;
+            *)
+                echo -e "${RED}Invalid option selected.${NC}"
+                ;;
+        esac
+    else
+        echo -e "${GREEN}All services are healthy and deployed! No action needed.${NC}"
+    fi
+}
+
+# Container health status display function
+show_container_health_status() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║                 CONTAINER HEALTH STATUS                     ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Create table header
+    printf "%-30s %-15s %-20s %-15s\n" "Container" "Status" "Health" "Uptime"
+    printf "%-30s %-15s %-20s %-15s\n" "─────────" "──────" "──────" "──────"
+    
+    # Get all containers and their health status
+    while IFS= read -r container; do
+        [[ -z "$container" ]] && continue
+        
+        container_name=$(echo "$container" | awk '{print $1}')
+        container_status=$(echo "$container" | awk '{$1=""; print $0}' | xargs)
+        
+        # Get health status
+        health_status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "no check")
+        
+        # Get uptime
+        uptime=$(docker ps --filter "name=$container_name" --format "{{.Status}}" 2>/dev/null | sed 's/Up //' | sed 's/ (healthy)//' | sed 's/ (unhealthy)//')
+        
+        # Color code based on status
+        if [[ "$health_status" == "healthy" ]]; then
+            health_color="${GREEN}"
+            health_icon="✅"
+        elif [[ "$health_status" == "unhealthy" ]]; then
+            health_color="${RED}"
+            health_icon="❌"
+        elif [[ "$health_status" == "starting" ]]; then
+            health_color="${YELLOW}"
+            health_icon="⏳"
+        else
+            health_color="${BLUE}"
+            health_icon="ℹ️"
+        fi
+        
+        # Check if running
+        if echo "$container_status" | grep -q "Up"; then
+            status_color="${GREEN}"
+            status_text="Running"
+        else
+            status_color="${RED}"
+            status_text="Stopped"
+        fi
+        
+        printf "%-30s ${status_color}%-15s${NC} ${health_color}%-20s${NC} %-15s\n" \
+            "$container_name" "$status_text" "$health_icon $health_status" "$uptime"
+        
+    done < <(docker ps -a --filter "name=sutazai-" --format "{{.Names}} {{.Status}}")
+    
+    echo ""
+    
+    # Show summary
+    total=$(docker ps -a --filter "name=sutazai-" --format "{{.Names}}" | wc -l)
+    running=$(docker ps --filter "name=sutazai-" --format "{{.Names}}" | wc -l)
+    healthy=$(docker ps --filter "name=sutazai-" --format "{{.Names}}" | xargs -I {} docker inspect --format='{{.State.Health.Status}}' {} 2>/dev/null | grep -c "healthy" || echo 0)
+    unhealthy=$(docker ps --filter "name=sutazai-" --format "{{.Names}}" | xargs -I {} docker inspect --format='{{.State.Health.Status}}' {} 2>/dev/null | grep -c "unhealthy" || echo 0)
+    
+    echo -e "${CYAN}Summary:${NC}"
+    echo "  Total containers: $total"
+    echo "  Running: $running"
+    echo "  Healthy: $healthy"
+    echo "  Unhealthy: $unhealthy"
+    echo "  Stopped: $((total - running))"
+}
+
+# Selective service deployment function
+selective_service_deployment() {
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║               SELECTIVE SERVICE DEPLOYMENT                  ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Get list of all services from docker-compose
+    cd /opt/sutazaiapp
+    
+    # Extract service names from docker-compose.yml
+    services=($(docker compose config --services 2>/dev/null | sort))
+    
+    if [[ ${#services[@]} -eq 0 ]]; then
+        echo -e "${RED}No services found in docker-compose.yml${NC}"
+        return
+    fi
+    
+    echo "Available services:"
+    echo ""
+    
+    # Display services with numbers
+    for i in "${!services[@]}"; do
+        # Check if service is running
+        if docker ps --filter "name=sutazai-${services[$i]}" --format "{{.Names}}" | grep -q "sutazai-${services[$i]}"; then
+            status="${GREEN}[Running]${NC}"
+        else
+            status="${RED}[Stopped]${NC}"
+        fi
+        printf "%2d. %-25s %s\n" $((i+1)) "${services[$i]}" "$status"
+    done
+    
+    echo ""
+    echo "Enter service numbers to deploy (comma-separated, e.g., 1,3,5)"
+    echo "Or enter 'all' to deploy all services"
+    echo "Or enter 'stopped' to deploy only stopped services"
+    echo "Or enter 'q' to quit"
+    echo ""
+    read -p "Your selection: " selection
+    
+    if [[ "$selection" == "q" ]]; then
+        echo "Deployment cancelled."
+        return
+    fi
+    
+    # Determine which services to deploy
+    services_to_deploy=()
+    
+    if [[ "$selection" == "all" ]]; then
+        services_to_deploy=("${services[@]}")
+    elif [[ "$selection" == "stopped" ]]; then
+        for service in "${services[@]}"; do
+            if ! docker ps --filter "name=sutazai-$service" --format "{{.Names}}" | grep -q "sutazai-$service"; then
+                services_to_deploy+=("$service")
+            fi
+        done
+    else
+        # Parse comma-separated numbers
+        IFS=',' read -ra selections <<< "$selection"
+        for num in "${selections[@]}"; do
+            num=$(echo "$num" | xargs)  # Trim whitespace
+            if [[ "$num" =~ ^[0-9]+$ ]] && [[ $num -ge 1 ]] && [[ $num -le ${#services[@]} ]]; then
+                services_to_deploy+=("${services[$((num-1))]}")
+            fi
+        done
+    fi
+    
+    if [[ ${#services_to_deploy[@]} -eq 0 ]]; then
+        echo -e "${YELLOW}No services selected for deployment.${NC}"
+        return
+    fi
+    
+    echo ""
+    echo -e "${CYAN}Selected services for deployment:${NC}"
+    for service in "${services_to_deploy[@]}"; do
+        echo "  - $service"
+    done
+    echo ""
+    
+    read -p "Proceed with deployment? (y/n): " confirm
+    
+    if [[ "$confirm" == "y" ]] || [[ "$confirm" == "Y" ]]; then
+        echo ""
+        echo -e "${CYAN}Starting deployment...${NC}"
+        echo ""
+        
+        # Deploy each selected service
+        for service in "${services_to_deploy[@]}"; do
+            echo -e "${YELLOW}Deploying $service...${NC}"
+            
+            # Stop and remove existing container if exists
+            if docker ps -a --filter "name=sutazai-$service" --format "{{.Names}}" | grep -q "sutazai-$service"; then
+                docker stop "sutazai-$service" >/dev/null 2>&1
+                docker rm "sutazai-$service" >/dev/null 2>&1
+            fi
+            
+            # Deploy service
+            docker compose up -d "$service" 2>&1 | grep -v "is up-to-date" || true
+            
+            # Check if deployed successfully
+            sleep 3
+            if docker ps --filter "name=sutazai-$service" --format "{{.Names}}" | grep -q "sutazai-$service"; then
+                echo -e "  ${GREEN}✅ $service deployed successfully${NC}"
+            else
+                echo -e "  ${RED}❌ Failed to deploy $service${NC}"
+            fi
+            echo ""
+        done
+        
+        echo -e "${GREEN}Deployment completed!${NC}"
+    else
+        echo -e "${YELLOW}Deployment cancelled.${NC}"
+    fi
+}
+
 # Function to display system overview
 show_system_overview() {
     clear
@@ -1421,10 +1868,11 @@ redeploy_all_containers() {
     echo "• Rebuild and restart all containers"
     echo "• Apply any configuration changes"
     echo ""
-    read -p "Are you sure you want to proceed? (y/N): " -n 1 -r
+    read -p "Are you sure you want to proceed? (Y/n): " -r
     echo ""
     
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    # Accept empty input (Enter key) as "yes", or explicit y/Y
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
         echo -e "${YELLOW}Redeployment cancelled.${NC}"
         return 0
     fi
@@ -1566,28 +2014,70 @@ redeploy_all_containers() {
         echo -e "  ${line}"
     done
     
-    # Step 3: Pull latest images with parallel downloading
+    # Step 3: Analyze and pull/build images intelligently
     echo ""
-    echo -e "${CYAN}Step 3/5: Pulling latest images with parallel optimization...${NC}"
-    echo -e "${YELLOW}Using $PULL_PARALLELISM parallel downloads based on hardware capabilities${NC}"
+    echo -e "${CYAN}Step 3/5: Analyzing image requirements...${NC}"
     
-    # Get list of images to pull
-    IMAGES_TO_PULL=$(docker compose config --images 2>/dev/null | sort -u || echo "")
+    # First, identify which services need building vs pulling
+    echo -e "${CYAN}Analyzing docker-compose.yml for image sources...${NC}"
     
-    if [ -n "$IMAGES_TO_PULL" ]; then
-        TOTAL_IMAGES=$(echo "$IMAGES_TO_PULL" | wc -l)
-        echo -e "${CYAN}Found $TOTAL_IMAGES unique images to process${NC}"
+    # Extract services that use build contexts (need building)
+    # Use yq if available, otherwise use grep-based approach
+    if command -v yq &> /dev/null; then
+        BUILD_SERVICES=$(yq eval '.services | to_entries | .[] | select(.value.build) | .key' docker-compose.yml 2>/dev/null | sort -u || echo "")
+    else
+        # Fallback: Find services with build sections using grep
+        BUILD_SERVICES=$(grep -B 5 "^    build:" docker-compose.yml | grep "^  [a-zA-Z][a-zA-Z0-9_-]*:" | awk -F: '{print $1}' | sed 's/^  //' | sort -u)
+    fi
+    
+    # Extract services that use external images (need pulling)
+    # Only include images from services that DON'T have build contexts
+    if command -v yq &> /dev/null; then
+        EXTERNAL_IMAGES=$(yq eval '.services | to_entries | .[] | select(.value.build | not) | .value.image' docker-compose.yml 2>/dev/null | grep -v "null" | sort -u || echo "")
+    else
+        # Fallback: Get all images, then filter out those from services with build contexts
+        ALL_IMAGES=$(grep "^\s*image:" docker-compose.yml | awk '{print $2}')
+        EXTERNAL_IMAGES=""
         
-        # Function to pull single image with progress
+        # Filter out images that are sutazaiapp-* (these are local builds)
+        for image in $ALL_IMAGES; do
+            if [[ ! "$image" =~ ^sutazaiapp- ]]; then
+                EXTERNAL_IMAGES="$EXTERNAL_IMAGES$image"$'\n'
+            fi
+        done
+        EXTERNAL_IMAGES=$(echo "$EXTERNAL_IMAGES" | sort -u | grep -v '^$')
+    fi
+    
+    # Count totals
+    EXTERNAL_COUNT=$(echo "$EXTERNAL_IMAGES" | grep -v '^$' | wc -l || echo "0")
+    BUILD_COUNT=$(echo "$BUILD_SERVICES" | grep -v '^$' | wc -l || echo "0")
+    
+    echo -e "${CYAN}Image Analysis Results:${NC}"
+    echo "  External images to pull: $EXTERNAL_COUNT"
+    echo "  Services to build locally: $BUILD_COUNT"
+    echo ""
+    
+    # Show details if verbose
+    if [ "$EXTERNAL_COUNT" -gt 0 ]; then
+        echo -e "${CYAN}External images that will be pulled:${NC}"
+        echo "$EXTERNAL_IMAGES" | grep -v '^$' | sed 's/^/  • /'
+        echo ""
+    fi
+    
+    if [ "$BUILD_COUNT" -gt 0 ]; then
+        echo -e "${CYAN}Services that will be built locally:${NC}"
+        echo "$BUILD_SERVICES" | grep -v '^$' | sed 's/^/  • /'
+        echo ""
+    fi
+    
+    # Step 3a: Pull external images with parallel optimization
+    if [ "$EXTERNAL_COUNT" -gt 0 ]; then
+        echo -e "${CYAN}Step 3a: Pulling external images with parallel optimization...${NC}"
+        echo -e "${YELLOW}Using $PULL_PARALLELISM parallel downloads based on hardware capabilities${NC}"
+        
+        # Function to pull single external image with progress
         pull_single_image() {
             local image="$1"
-            local status="PENDING"
-            
-            # Skip local build images
-            if [[ "$image" =~ ^sutazaiapp- ]] || [[ "$image" == *":latest" ]] && docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^$image$"; then
-                echo -e "  ${YELLOW}[SKIP]${NC} $image (local build)"
-                return 0
-            fi
             
             # Try to pull the image
             if docker pull "$image" >/dev/null 2>&1; then
@@ -1603,49 +2093,62 @@ redeploy_all_containers() {
         export GREEN YELLOW RED NC
         
         # Parallel pull with progress monitoring
-        echo "$IMAGES_TO_PULL" | xargs -P "$PULL_PARALLELISM" -I {} bash -c 'pull_single_image "$@"' _ {}
+        echo "$EXTERNAL_IMAGES" | grep -v '^$' | xargs -P "$PULL_PARALLELISM" -I {} bash -c 'pull_single_image "$@"' _ {}
         
-        echo -e "${GREEN}Image pull phase completed${NC}"
+        echo -e "${GREEN}External image pull phase completed${NC}"
     else
-        echo -e "${YELLOW}No remote images to pull, all services use local builds${NC}"
+        echo -e "${YELLOW}No external images to pull${NC}"
     fi
     
+    # Step 3b: Build local services with intelligent handling
+    if [ "$BUILD_COUNT" -gt 0 ]; then
+        echo ""
+        echo -e "${CYAN}Step 3b: Building local services with optimization...${NC}"
+        echo -e "${YELLOW}Using $BUILD_PARALLELISM parallel builds with BuildKit${NC}"
+        
+        # Configure build optimization
+        export BUILDKIT_INLINE_CACHE=1
+        export DOCKER_BUILDKIT_INLINE_CACHE=1
+        
+        echo -e "${CYAN}Build configuration:${NC}"
+        echo "  BuildKit: Enabled"
+        echo "  Services to build: $BUILD_COUNT"
+        echo "  Parallelism: $BUILD_PARALLELISM"
+        echo ""
+        
+        # Build with detailed progress and error handling
+        echo -e "${CYAN}Starting build process...${NC}"
+        
+        # Use docker compose build with better error handling (removed --memory flag as BuildKit doesn't support it)
+        if docker compose build --parallel 2>&1 | while read -r line; do
+            # Enhanced filtering and formatting
+            if [[ ! "$line" =~ "level=warning" ]] && [[ -n "$line" ]]; then
+                if [[ "$line" =~ "Building" ]] || [[ "$line" =~ "built" ]]; then
+                    echo -e "  ${GREEN}${line}${NC}"
+                elif [[ "$line" =~ "ERROR" ]] || [[ "$line" =~ "error" ]] || [[ "$line" =~ "failed" ]]; then
+                    echo -e "  ${RED}${line}${NC}"
+                elif [[ "$line" =~ "WARN" ]] || [[ "$line" =~ "warning" ]]; then
+                    echo -e "  ${YELLOW}${line}${NC}"
+                else
+                    echo -e "  ${line}"
+                fi
+            fi
+        done; then
+            echo -e "${GREEN}Build phase completed successfully${NC}"
+        else
+            echo -e "${RED}Build phase encountered errors${NC}"
+            echo -e "${YELLOW}Attempting to continue with deployment...${NC}"
+        fi
+    else
+        echo -e "${YELLOW}No local services to build${NC}"
+    fi
+    
+    echo ""
     echo -e "${CYAN}Continuing with deployment...${NC}"
     
-    # Step 4: Build custom images with optimized parallelism
+    # Step 4: Start all containers  
     echo ""
-    echo -e "${CYAN}Step 4/5: Building custom images with optimization...${NC}"
-    echo -e "${YELLOW}Using $BUILD_PARALLELISM parallel builds with BuildKit${NC}"
-    
-    # Configure build optimization
-    export BUILDKIT_INLINE_CACHE=1
-    export DOCKER_BUILDKIT_INLINE_CACHE=1
-    
-    # Build with parallelism and memory limits
-    if [ "$RAM_AVAILABLE_GB" -gt 4 ]; then
-        MEMORY_LIMIT="${RAM_AVAILABLE_GB}g"
-    else
-        MEMORY_LIMIT="4g"
-    fi
-    
-    echo -e "${CYAN}Build configuration:${NC}"
-    echo "  BuildKit: Enabled"
-    echo "  Parallelism: $BUILD_PARALLELISM"
-    echo "  Memory limit: $MEMORY_LIMIT"
-    
-    docker compose build \
-        --parallel \
-        --memory "$MEMORY_LIMIT" \
-        2>&1 | while read -r line; do
-        # Filter out warning messages
-        if [[ ! "$line" =~ "level=warning" ]] && [[ -n "$line" ]]; then
-            echo -e "  ${line}"
-        fi
-    done
-    
-    # Step 5: Start all containers
-    echo ""
-    echo -e "${CYAN}Step 5/5: Starting all containers...${NC}"
+    echo -e "${CYAN}Step 4/5: Starting all containers...${NC}"
     
     # Start containers and capture output
     docker compose up -d 2>&1 | while read -r line; do
@@ -1661,9 +2164,9 @@ redeploy_all_containers() {
         fi
     done
     
-    # Verify deployment
+    # Step 5: Verify deployment
     echo ""
-    echo -e "${CYAN}Verifying deployment...${NC}"
+    echo -e "${CYAN}Step 5/5: Verifying deployment...${NC}"
     sleep 5
     
     # Count running containers
@@ -1782,9 +2285,12 @@ show_menu() {
     echo "10. Unified Live Logs (All in One)"
     echo "11. Docker Troubleshooting & Recovery"
     echo "12. Redeploy All Containers"
+    echo "13. Smart Health Check & Repair (Unhealthy Only)"
+    echo "14. Container Health Status"
+    echo "15. Selective Service Deployment"
     echo "0. Exit"
     echo ""
-    read -p "Select option (0-12): " choice
+    read -p "Select option (0-15): " choice
     
     case $choice in
         1) show_system_overview; read -p "Press Enter to continue..."; show_menu ;;
@@ -1805,6 +2311,9 @@ show_menu() {
         10) show_unified_live_logs ;;
         11) docker_troubleshooting_menu; read -p "Press Enter to continue..."; show_menu ;;
         12) redeploy_all_containers; read -p "Press Enter to continue..."; show_menu ;;
+        13) check_and_repair_unhealthy_containers; read -p "Press Enter to continue..."; show_menu ;;
+        14) show_container_health_status; read -p "Press Enter to continue..."; show_menu ;;
+        15) selective_service_deployment; read -p "Press Enter to continue..."; show_menu ;;
         0) echo "Goodbye!"; exit 0 ;;
         *) echo "Invalid option"; show_menu ;;
     esac

@@ -66,7 +66,7 @@ tiktoken>=0.8.0
 langchain>=0.3.11
 pyDatalog>=0.10.0
 pydantic-ai>=0.1.1
-pydantic-ai-tools>=0.1.1
+# pydantic-ai-tools>=0.1.1  # Commented out - package doesn't exist on PyPI
 
 # Vector Databases - SECURITY UPDATES
 chromadb>=0.5.23
@@ -119,6 +119,6 @@ dnspython>=2.7.0
 pyshark>=0.6.0
 
 # Advanced Model Management & Performance Optimization
-torch>=2.0.0  # For portable cache artifacts and GPU acceleration
-torchvision>=0.15.0  # Additional torch utilities
-pickle5>=0.0.12  # Enhanced pickle for cache serialization
+# torch>=2.0.0  # Already included above at line 59
+# torchvision>=0.15.0  # Additional torch utilities - commented out to avoid duplication
+# pickle5>=0.0.12  # Not compatible with Python 3.12

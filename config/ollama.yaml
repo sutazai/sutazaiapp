@@ -1,0 +1,13 @@
+# Ollama configuration for local LLM usage
+model:
+  name: tinyllama
+  version: latest
+  
+resource_limits:
+  cpu: 1.0
+  memory: 512MB
+  timeout: 30s
+
+settings:
+  temperature: 0.7
+  max_tokens: 100

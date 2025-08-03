@@ -1,4 +1,5 @@
-# SECURITY HARDENED - Updated 2025-07-26
+# SECURITY HARDENED - Updated 2025-08-03
+# Multi-stage build for optimal caching and faster builds
 FROM python:3.12.8-slim AS base
 
 WORKDIR /app
@@ -8,19 +9,56 @@ RUN groupadd -r sutazai && useradd -r -g sutazai sutazai
 
 # Install system dependencies with security patches
 RUN apt-get update && apt-get install -y \
-    gcc=4:12.2.0-3 \
-    g++=4:12.2.0-3 \
-    curl=7.88.1-10+deb12u8 \
+    gcc \
+    g++ \
+    curl \
+    wget \
+    git \
     && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Dependencies stage for better caching
+FROM base AS dependencies
+
+# Upgrade pip first with extended timeout
+RUN python -m pip install --upgrade pip>=25.1.1 --timeout=120 --retries=5
+
 # Copy requirements first for better caching
-COPY requirements.txt .
-# Security: Upgrade pip and install with hash verification
-RUN python -m pip install --upgrade pip>=25.1.1 \
-    && pip install --no-cache-dir --require-hashes -r requirements.txt || \
-    pip install --no-cache-dir -r requirements.txt
+ARG REQUIREMENTS_FILE=requirements.txt
+COPY ${REQUIREMENTS_FILE} requirements.txt
+COPY requirements-minimal.txt .
+
+# Install core dependencies first (lightweight packages)
+RUN pip install --no-cache-dir --timeout=120 --retries=5 \
+    fastapi>=0.115.6 \
+    uvicorn[standard]>=0.32.1 \
+    pydantic>=2.10.4 \
+    pydantic-settings>=2.8.1 \
+    sqlalchemy>=2.0.36 \
+    alembic>=1.14.0 \
+    psycopg2-binary>=2.9.10 \
+    redis>=5.2.1
+
+# Install ML dependencies in separate layer (heavy packages)
+RUN pip install --no-cache-dir --timeout=300 --retries=3 \
+    torch>=2.5.1 \
+    transformers>=4.48.0 \
+    sentence-transformers>=3.3.1 \
+    scikit-learn>=1.6.0 \
+    pandas>=2.2.3 \
+    numpy>=2.1.3
+
+# Install remaining dependencies (conditional based on build arg)
+RUN if [ "$REQUIREMENTS_FILE" = "requirements-minimal.txt" ]; then \
+        pip install --no-cache-dir --timeout=120 --retries=5 -r requirements-minimal.txt; \
+    else \
+        pip install --no-cache-dir --timeout=120 --retries=5 -r requirements.txt || \
+        pip install --no-cache-dir --timeout=300 --retries=3 -r requirements.txt; \
+    fi
+
+# Application stage
+FROM dependencies AS application
 
 # Copy application code
 COPY . .
@@ -32,21 +70,36 @@ RUN mkdir -p /app/logs /app/uploads /app/data \
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Switch to non-root user
 USER sutazai
 
 # Production stage
-FROM base AS production
+FROM application AS production
 
 # Expose port
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+# Health check with improved timing
+HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=5 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-# Run the application
+# Run the application with optimized settings
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--loop", "uvloop"]
+
+# Development stage
+FROM application AS development
+
+# Install development dependencies
+RUN pip install --no-cache-dir \
+    pytest==8.3.4 \
+    pytest-asyncio==0.23.5 \
+    pytest-cov==4.1.0 \
+    httpx==0.28.1 \
+    black==24.10.0
+
+# Enable reload for development
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # Test stage
