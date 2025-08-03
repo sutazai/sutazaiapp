@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libtesseract-dev \
     wget \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install core AI/ML packages efficiently in stages
 # Stage 1: Core packages
@@ -119,4 +119,10 @@ echo ""\n\
 exec python jarvis_super_system.py\n\
 ' > /app/start_jarvis.sh && chmod +x /app/start_jarvis.sh
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["/app/start_jarvis.sh"]

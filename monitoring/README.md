@@ -26,7 +26,7 @@ This monitoring stack implements **Rule 13: System Health & Performance Monitori
 │ • cAdvisor      │    │                 │    │                 │
 │ • DB Exporters  │    │                 │    │                 │
 │ • AI Metrics    │    │                 │    │                 │
-│ • Blackbox      │    │                 │    │                 │
+│ • externalSystem, thirdPartyService      │    │                 │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
                                 ▼

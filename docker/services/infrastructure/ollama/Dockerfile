@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Copy Ollama binary from base image
 COPY --from=base /bin/ollama /bin/ollama
@@ -61,4 +61,10 @@ HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
 VOLUME ["/app/models"]
 
 # Run Ollama
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["ollama", "serve"]

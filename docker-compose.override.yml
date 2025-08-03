@@ -8,7 +8,6 @@ services:
       dockerfile: Dockerfile
       target: development  # Use development stage for faster builds
       cache_from:
-        - sutazai/backend:cache
         - python:3.12.8-slim
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -34,7 +33,6 @@ services:
       dockerfile: Dockerfile
       target: development  # Use development stage
       cache_from:
-        - sutazai/frontend:cache
         - python:3.12.8-slim
       args:
         BUILDKIT_INLINE_CACHE: 1
@@ -134,9 +132,5 @@ volumes:
 # Networks optimized for development
 networks:
   sutazai-network:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.name: sutazai-dev
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+    external: true
+    name: system-validator_sutazai-network

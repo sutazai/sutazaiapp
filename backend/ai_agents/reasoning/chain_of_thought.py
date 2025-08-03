@@ -123,7 +123,7 @@ class AdvancedReasoningEngine:
                 1. What is the core question being asked?
                 2. What information do we have?
                 3. What information might we need?
-                4. What approaches could work?
+                4. What approaches tested implementation or proof of concept?
                 5. What are potential challenges?
                 
                 Be specific and show your reasoning.
@@ -284,7 +284,7 @@ class AdvancedReasoningEngine:
         """Select best agents for specific domain"""
         domain_mapping = {
             "code": ["deepseek-coder", "codellama", "starcoder"],
-            "math": ["wizard-math", "tinyllama", "llama3"],
+            "math": ["assistant, helper, processor, manager-math", "tinyllama", "llama3"],
             "science": ["llama3", "qwen3", "processing-chat"],
             "general": ["tinyllama", "llama3", "qwen3", "mistral"],
             "analysis": ["tinyllama", "llama3", "qwen3"]

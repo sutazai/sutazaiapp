@@ -4,21 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    curl \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install AutoGen with all features
-RUN pip install --no-cache-dir \
-    'ag2[all]' \
-    fastapi \
-    uvicorn \
-    httpx \
-    redis
+# Copy requirements
+COPY requirements.txt .
 
-# Copy service implementation
-COPY autogen_service.py /app/
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8080
+# Copy application
+COPY app.py .
 
-CMD ["uvicorn", "autogen_service:app", "--host", "0.0.0.0", "--port", "8080"]
+# Set environment variables
+ENV AGENT_ID=autogen
+ENV AGENT_NAME="AutoGen"
+ENV PORT=8590
+
+# Expose port
+EXPOSE 8590
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8590/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

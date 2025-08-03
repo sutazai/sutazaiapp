@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     make \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Create virtual environment
 RUN python -m venv /opt/venv
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Copy virtual environment from builder
 COPY --from=python-builder /opt/venv /opt/venv
@@ -92,4 +92,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
 # Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]

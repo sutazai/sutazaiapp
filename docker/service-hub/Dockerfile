@@ -2,19 +2,40 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install dependencies
-RUN pip install --no-cache-dir \
-    fastapi \
-    uvicorn \
-    httpx \
-    redis \
-    asyncio \
-    pydantic \
-    websockets
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Copy service implementation
-COPY service_hub.py /app/
+# Copy requirements
+COPY requirements.txt .
 
-EXPOSE 8080
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["uvicorn", "service_hub:app", "--host", "0.0.0.0", "--port", "8080"]
+# Copy application
+COPY app.py .
+
+# Set environment variables
+ENV AGENT_ID=service-hub
+ENV AGENT_NAME="Service Hub"
+ENV PORT=8594
+
+# Expose port
+EXPOSE 8594
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8594/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

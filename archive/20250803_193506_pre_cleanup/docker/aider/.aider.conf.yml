@@ -1,0 +1,6 @@
+# Aider configuration for Ollama
+openai-api-base: http://ollama:11434/v1
+openai-api-key: dummy
+model: codellama:7b
+edit-format: whole
+auto-commits: false

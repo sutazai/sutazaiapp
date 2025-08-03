@@ -21,4 +21,7 @@ ENV FLOWISE_USERNAME=admin
 ENV FLOWISE_PASSWORD=sutazai123
 ENV PORT=3000
 
+
+# Run as non-root user
+USER nobody
 CMD ["npm", "start"]

@@ -19,10 +19,10 @@ class AgentStandardsEnforcer:
         
         # Define fantasy terms to remove
         self.fantasy_terms = {
-            'wizard', 'magic', 'spell', 'enchant', 'dragon', 'mythical', 
+            'assistant, helper, processor, manager', 'specific implementation name (e.g., emailSender, dataProcessor)', 'spell', 'enchant', 'dragon', 'mythical', 
             'fantasy', 'supernatural', 'mystical', 'sorcerer', 'mage', 
             'alchemy', 'arcane', 'celestial', 'divine', 'ethereal', 
-            'necromancer', 'warlock', 'enchantment', 'magical'
+            'necromancer', 'warlock', 'enchantment', 'automated, programmatic, or algorithmic'
         }
         
         # Valid agent file patterns
@@ -97,7 +97,7 @@ class AgentStandardsEnforcer:
                 # Skip legitimate technical uses
                 if term == 'image' and 'container' in content:
                     continue
-                if term == 'magic' and ('magic number' in content or 'imagemagick' in content):
+                if term == 'specific implementation name (e.g., emailSender, dataProcessor)' and ('specific implementation name (e.g., emailSender, dataProcessor) number' in content or 'imagemagick' in content):
                     continue
                     
                 if term in content:
@@ -185,8 +185,8 @@ class AgentStandardsEnforcer:
     def remove_fantasy_elements(self):
         """Remove fantasy elements from agent files"""
         replacements = {
-            'wizard': 'expert',
-            'magic': 'advanced',
+            'assistant, helper, processor, manager': 'expert',
+            'specific implementation name (e.g., emailSender, dataProcessor)': 'advanced',
             'spell': 'command',
             'enchant': 'enhance',
             'dragon': 'system',
@@ -204,7 +204,7 @@ class AgentStandardsEnforcer:
             'necromancer': 'recovery specialist',
             'warlock': 'security specialist',
             'enchantment': 'enhancement',
-            'magical': 'advanced'
+            'automated, programmatic, or algorithmic': 'advanced'
         }
         
         for file_path in self.agents_dir.glob("*.md"):

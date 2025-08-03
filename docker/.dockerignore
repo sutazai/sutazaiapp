@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Tests
+tests/
+test/
+*.test.js
+*.spec.js

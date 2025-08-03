@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     postgresql-client \
     redis-tools \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies - lightweight set
 RUN pip install --no-cache-dir \
@@ -42,4 +42,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD python /app/healthcheck.py
 
 # Default command
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["python", "/app/brain/simple_agi_brain.py"]

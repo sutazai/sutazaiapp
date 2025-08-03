@@ -1,5 +1,9 @@
 #!/bin/bash
-# Enhanced two-way sync script with optimized performance and conflict resolution
+# Purpose: Enhanced two-way sync script with optimized performance and conflict resolution
+# Usage: ./two_way_sync.sh [--dry-run] [--to-code|--to-deploy] [--force]
+# Requires: rsync, ssh, configured sync servers
+
+set -euo pipefail
 
 # Source configuration
 source /opt/sutazaiapp/scripts/config/sync_config.sh

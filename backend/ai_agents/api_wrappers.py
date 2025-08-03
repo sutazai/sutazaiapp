@@ -917,7 +917,7 @@ class SecurityPentestingSpecialistWrapper(BaseAgentWrapper):
             {
                 "target": target_info,
                 "scenarios": test_scenarios,
-                "approach": "black_box",
+                "approach": "external_service, third_party_api",
                 "document_findings": True
             }
         )

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sutazai Hygiene Enforcement Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="rule-control.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hotkeys-js@3.12.0/dist/hotkeys.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> Sutazai Hygiene Enforcement Monitor</h1>
+                <div class="header-controls">
+                    <div class="theme-toggle" id="theme-toggle" title="Toggle theme (Ctrl+T)">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="master-control">
+                        <label class="master-toggle" title="Master system toggle (Ctrl+M)">
+                            <input type="checkbox" id="master-system-toggle" checked>
+                            <span class="master-slider">
+                                <span class="master-slider-text">SYSTEM</span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">System Status</span>
+                            <span class="stat-value" id="system-status">Loading...</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Last Update</span>
+                            <span class="stat-value" id="last-update">--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- Real-time Status Overview -->
+            <section class="status-overview">
+                <div class="card">
+                    <h2><i class="fas fa-heartbeat"></i> Enforcement Status</h2>
+                    <div class="status-grid">
+                        <div class="status-item critical">
+                            <div class="status-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="status-info">
+                                <span class="status-count" id="critical-violations">0</span>
+                                <span class="status-label">Critical Violations</span>
+                            </div>
+                        </div>
+                        <div class="status-item warning">
+                            <div class="status-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <div class="status-info">
+                                <span class="status-count" id="warning-violations">0</span>
+                                <span class="status-label">Warnings</span>
+                            </div>
+                        </div>
+                        <div class="status-item success">
+                            <div class="status-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="status-info">
+                                <span class="status-count" id="compliance-score">0%</span>
+                                <span class="status-label">Compliance Score</span>
+                            </div>
+                        </div>
+                        <div class="status-item info">
+                            <div class="status-icon"><i class="fas fa-robot"></i></div>
+                            <div class="status-info">
+                                <span class="status-count" id="active-agents">0</span>
+                                <span class="status-label">Active Agents</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Intelligent Rule Control Center -->
+            <section class="rule-control-center">
+                <div class="card">
+                    <div class="rule-control-header">
+                        <h2><i class="fas fa-brain"></i> Intelligent Rule Control Center</h2>
+                        <div class="rule-control-actions">
+                            <div class="rule-profile-selector">
+                                <label for="rule-profile">Profile:</label>
+                                <select id="rule-profile">
+                                    <option value="default">Default</option>
+                                    <option value="strict">Strict</option>
+                                    <option value="development">Development</option>
+                                    <option value="production">Production</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="rule-search">
+                                <input type="text" id="rule-search" placeholder="Search rules..." title="Search rules (Ctrl+F)">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="rule-actions">
+                                <button class="btn-icon" id="undo-changes" title="Undo (Ctrl+Z)" disabled>
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="btn-icon" id="redo-changes" title="Redo (Ctrl+Y)" disabled>
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="btn-icon" id="export-config" title="Export config (Ctrl+E)">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn-icon" id="import-config" title="Import config (Ctrl+I)">
+                                    <i class="fas fa-upload"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rule-grid" id="rule-grid">
+                        <!-- Rules will be populated by JavaScript -->
+                    </div>
+                    <div class="rule-recommendations" id="rule-recommendations" style="display: none;">
+                        <div class="recommendations-header">
+                            <h3><i class="fas fa-lightbulb"></i> AI Recommendations</h3>
+                            <button class="btn-icon" id="close-recommendations">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="recommendations-content" id="recommendations-content">
+                            <!-- AI recommendations will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Agent Health Dashboard -->
+            <section class="agent-health">
+                <div class="card">
+                    <h2><i class="fas fa-robot"></i> Agent Health & Performance</h2>
+                    <div class="agent-list" id="agent-list">
+                        <!-- Agents will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts and Trends -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <div class="card">
+                        <h3><i class="fas fa-chart-line"></i> Violation Trends (24h)</h3>
+                        <canvas id="violation-trend-chart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="card">
+                        <h3><i class="fas fa-chart-pie"></i> Rule Violations by Type</h3>
+                        <canvas id="rule-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Actions -->
+            <section class="recent-actions">
+                <div class="card">
+                    <h2><i class="fas fa-history"></i> Recent Enforcement Actions</h2>
+                    <div class="actions-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="critical">Critical</button>
+                        <button class="filter-btn" data-filter="warning">Warning</button>
+                        <button class="filter-btn" data-filter="success">Success</button>
+                    </div>
+                    <div class="actions-list" id="actions-list">
+                        <!-- Actions will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Health Metrics -->
+            <section class="system-metrics">
+                <div class="card">
+                    <h2><i class="fas fa-server"></i> System Health Metrics</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-icon"><i class="fas fa-memory"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-value" id="memory-usage">--</span>
+                                <span class="metric-label">Memory Usage</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon"><i class="fas fa-microchip"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-value" id="cpu-usage">--</span>
+                                <span class="metric-label">CPU Usage</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon"><i class="fas fa-hdd"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-value" id="disk-usage">--</span>
+                                <span class="metric-label">Disk Usage</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon"><i class="fas fa-network-wired"></i></div>
+                            <div class="metric-info">
+                                <span class="metric-value" id="network-status">--</span>
+                                <span class="metric-label">Network Status</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Enhanced Control Panel -->
+        <aside class="control-panel">
+            <div class="card">
+                <h3><i class="fas fa-cogs"></i> System Control</h3>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" id="run-audit" data-hotkey="a">
+                        <i class="fas fa-play"></i> Run Audit <span class="hotkey">Ctrl+A</span>
+                    </button>
+                    <button class="btn btn-warning" id="force-cleanup" data-hotkey="c">
+                        <i class="fas fa-broom"></i> Force Cleanup <span class="hotkey">Ctrl+Shift+C</span>
+                    </button>
+                    <button class="btn btn-info" id="generate-report" data-hotkey="r">
+                        <i class="fas fa-file-alt"></i> Generate Report <span class="hotkey">Ctrl+R</span>
+                    </button>
+                    <button class="btn btn-success" id="sync-tabs" data-hotkey="s">
+                        <i class="fas fa-sync"></i> Sync Tabs <span class="hotkey">Ctrl+S</span>
+                    </button>
+                </div>
+                
+                <div class="auto-settings">
+                    <h4>Automation Settings</h4>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="auto-enforcement" checked>
+                        <span class="slider"></span>
+                        <span class="toggle-label">Auto Enforcement</span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="real-time-monitoring" checked>
+                        <span class="slider"></span>
+                        <span class="toggle-label">Real-time Monitoring</span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="impact-preview" checked>
+                        <span class="slider"></span>
+                        <span class="toggle-label">Impact Preview</span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ai-recommendations" checked>
+                        <span class="slider"></span>
+                        <span class="toggle-label">AI Recommendations</span>
+                    </label>
+                    <div class="refresh-interval">
+                        <label for="refresh-rate">Refresh Rate:</label>
+                        <select id="refresh-rate">
+                            <option value="1">1 second</option>
+                            <option value="5">5 seconds</option>
+                            <option value="10" selected>10 seconds</option>
+                            <option value="30">30 seconds</option>
+                            <option value="60">1 minute</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="system-info">
+                    <h4>Connection Status</h4>
+                    <div class="connection-status" id="connection-status">
+                        <div class="status-indicator connected" id="status-indicator"></div>
+                        <span id="connection-text">Connected</span>
+                    </div>
+                    <div class="tab-sync-status" id="tab-sync-status">
+                        <span>Synced tabs: <strong id="synced-tabs-count">1</strong></span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal for detailed views -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Details</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Content populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loading-text">Processing...</div>
+        </div>
+    </div>
+    
+    <!-- Impact preview modal -->
+    <div class="modal" id="impact-preview-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="impact-modal-title">Impact Preview</h3>
+                <button class="modal-close" id="impact-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="impact-modal-body">
+                <!-- Impact preview content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="impact-cancel">Cancel</button>
+                <button class="btn btn-primary" id="impact-confirm">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- File input for import -->
+    <input type="file" id="config-file-input" accept=".json" style="display: none;">
+
+    <!-- Keyboard shortcuts help -->
+    <div class="shortcuts-help" id="shortcuts-help" style="display: none;">
+        <div class="shortcuts-content">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="shortcuts-list">
+                <div class="shortcut-item"><kbd>Ctrl+M</kbd> Toggle Master System</div>
+                <div class="shortcut-item"><kbd>Ctrl+T</kbd> Toggle Theme</div>
+                <div class="shortcut-item"><kbd>Ctrl+F</kbd> Search Rules</div>
+                <div class="shortcut-item"><kbd>Ctrl+A</kbd> Run Audit</div>
+                <div class="shortcut-item"><kbd>Ctrl+R</kbd> Generate Report</div>
+                <div class="shortcut-item"><kbd>Ctrl+S</kbd> Sync Tabs</div>
+                <div class="shortcut-item"><kbd>Ctrl+Z</kbd> Undo</div>
+                <div class="shortcut-item"><kbd>Ctrl+Y</kbd> Redo</div>
+                <div class="shortcut-item"><kbd>Ctrl+E</kbd> Export Config</div>
+                <div class="shortcut-item"><kbd>Ctrl+I</kbd> Import Config</div>
+                <div class="shortcut-item"><kbd>?</kbd> Show this help</div>
+                <div class="shortcut-item"><kbd>Esc</kbd> Close modals</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

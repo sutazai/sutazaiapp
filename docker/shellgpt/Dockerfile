@@ -2,65 +2,40 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    git \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir \
-    shell-gpt \
-    fastapi \
-    uvicorn
+# Copy requirements
+COPY requirements.txt .
 
-# Create a simple API wrapper
-RUN cat > /app/shellgpt_api.py << 'EOF'
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import subprocess
-import os
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-app = FastAPI(title="ShellGPT API")
+# Copy application
+COPY app.py .
 
-class ShellRequest(BaseModel):
-    command: str
-    use_gpt: bool = True
+# Set environment variables
+ENV AGENT_ID=shellgpt
+ENV AGENT_NAME="ShellGPT"
+ENV PORT=8539
 
-@app.get("/health")
-async def health():
-    return {"status": "healthy", "agent": "shellgpt"}
+# Expose port
+EXPOSE 8539
 
-@app.post("/execute")
-async def execute_command(request: ShellRequest):
-    try:
-        if request.use_gpt:
-            # Use shell-gpt to process command
-            result = subprocess.run(
-                ["sgpt", request.command],
-                capture_output=True,
-                text=True,
-                env={**os.environ, "OPENAI_API_KEY": "sk-local"}
-            )
-        else:
-            # Direct shell execution
-            result = subprocess.run(
-                request.command,
-                shell=True,
-                capture_output=True,
-                text=True
-            )
-        
-        return {
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-            "returncode": result.returncode
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8539/health || exit 1
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
-EOF
+# Run the application
 
-EXPOSE 8080
+# Run as non-root user
+USER nobody
 
-CMD ["python", "/app/shellgpt_api.py"]
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

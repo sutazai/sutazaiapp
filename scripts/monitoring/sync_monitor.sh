@@ -1,5 +1,9 @@
 #!/bin/bash
-# Enhanced sync monitoring system with performance metrics and alerts
+# Purpose: Enhanced sync monitoring system with performance metrics and alerts
+# Usage: ./sync_monitor.sh
+# Requires: docker, system monitoring tools, mail (optional)
+
+set -euo pipefail
 
 # Source configuration
 source /opt/sutazaiapp/scripts/config/sync_config.sh

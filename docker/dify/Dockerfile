@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     nodejs \
     npm \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Clone Dify
 RUN git clone https://github.com/langgenius/dify.git .
@@ -29,4 +29,10 @@ wait\n\
 
 EXPOSE 5001 3000
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["./start.sh"]

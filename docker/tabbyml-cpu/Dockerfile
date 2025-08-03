@@ -21,4 +21,7 @@ RUN /opt/tabby/bin/tabby-cpu download --model Qwen2-1.5B-Instruct || true
 
 # Use smart CPU wrapper
 ENTRYPOINT ["/opt/tabby/bin/tabby-smart-cpu"]
+
+# Run as non-root user
+USER nobody
 CMD ["serve", "--model", "StarCoder-1B", "--chat-model", "Qwen2-1.5B-Instruct"]

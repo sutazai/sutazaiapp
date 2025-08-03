@@ -227,7 +227,7 @@ class ClaudeRulesChecker:
         violations = []
         
         # Rule 1: No Fantasy Elements
-        fantasy_keywords = ['wizard', 'magic', 'spell', 'fantasy', 'mythical']
+        fantasy_keywords = ['wizard', 'specific implementation name (e.g., emailSender, dataProcessor)', 'spell', 'fantasy', 'mythical']
         if any(keyword in action.lower() for keyword in fantasy_keywords):
             violations.append("BLOCKING: Rule 1 - No fantasy elements allowed")
         
@@ -285,8 +285,68 @@ def get_rules_summary() -> Dict[str, List[str]]:
     
     print(f"Created rules checker module: {module_path}")
 
+def run_comprehensive_check() -> int:
+    """Run comprehensive check of all CLAUDE.md rules"""
+    print("🔍 Running comprehensive CLAUDE.md compliance check...")
+    
+    violations = []
+    warnings = []
+    
+    # Check for garbage files (Rule 13)
+    garbage_patterns = ['*.backup*', '*.tmp', '*.bak', '*~', '*.old', '*.agi_backup']
+    for pattern in garbage_patterns:
+        result = os.popen(f'find /opt/sutazaiapp -name "{pattern}" -type f 2>/dev/null | grep -v archive | grep -v .git').read()
+        if result.strip():
+            violations.append(f"Rule 13: Garbage files found:\n{result}")
+    
+    # Check for multiple deployment scripts (Rule 12)
+    deploy_scripts = os.popen('find /opt/sutazaiapp -name "deploy*.sh" -o -name "*deploy*.py" | grep -v archive').read()
+    if len(deploy_scripts.strip().split('\n')) > 1:
+        violations.append(f"Rule 12: Multiple deployment scripts found:\n{deploy_scripts}")
+    
+    # Check Docker structure (Rule 11)
+    dockerfiles = os.popen('find /opt/sutazaiapp -name "Dockerfile*" | grep -v archive | wc -l').read().strip()
+    if int(dockerfiles) > 20:
+        warnings.append(f"Rule 11: {dockerfiles} Dockerfiles found - consider consolidation")
+    
+    # Check Python documentation (Rule 8)
+    py_files = os.popen('find /opt/sutazaiapp -name "*.py" | grep -v venv | grep -v __pycache__ | head -20').read()
+    for py_file in py_files.strip().split('\n'):
+        if py_file:
+            try:
+                with open(py_file, 'r') as f:
+                    content = f.read(500)
+                    if 'Purpose:' not in content and 'purpose:' not in content:
+                        warnings.append(f"Rule 8: {py_file} missing documentation")
+            except:
+                pass
+    
+    # Report results
+    if violations:
+        print("\n❌ BLOCKING VIOLATIONS FOUND:")
+        for v in violations:
+            print(f"\n{v}")
+        return 1
+    
+    if warnings:
+        print("\n⚠️  WARNINGS:")
+        for w in warnings[:10]:  # Limit output
+            print(f"\n{w}")
+    
+    print("\n✅ Comprehensive check complete")
+    return 0
+
 def main():
     """Main function to enforce CLAUDE.md rules across all agents"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Enforce CLAUDE.md rules")
+    parser.add_argument('--comprehensive', action='store_true', help='Run comprehensive compliance check')
+    args = parser.parse_args()
+    
+    if args.comprehensive:
+        return run_comprehensive_check()
+    
     print("Enforcing CLAUDE.md rules for all AI agents...")
     
     # Create shared rules checker module

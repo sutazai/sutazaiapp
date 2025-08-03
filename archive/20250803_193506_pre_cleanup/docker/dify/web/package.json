@@ -1,0 +1,13 @@
+{
+  "name": "dify-web",
+  "version": "1.0.0",
+  "description": "Dify web interface",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Build complete'",
+    "start": "echo 'Starting web interface'"
+  },
+  "dependencies": {
+    "react": "^18.3.1"
+  }
+}

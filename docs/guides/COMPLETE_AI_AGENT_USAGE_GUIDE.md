@@ -20,7 +20,7 @@ Task(subagent_type='semgrep-security-analyzer',
 
 # Penetration testing
 Task(subagent_type='security-pentesting-specialist',
-     prompt='Execute black-box penetration testing on the deployed application')
+     prompt='Execute external service, third-party API, opaque system penetration testing on the deployed application')
 
 # Quality assurance
 Task(subagent_type='testing-qa-validator',

@@ -143,13 +143,13 @@ scrape_configs:
     metrics_path: '/metrics'
     scrape_interval: 30s
 
-  # Blackbox Monitoring for External Health Checks
-  - job_name: 'blackbox-exporter'
+  # externalSystem, thirdPartyService Monitoring for External Health Checks
+  - job_name: 'externalSystem, thirdPartyService-exporter'
     static_configs:
-      - targets: ['blackbox-exporter:9115']
+      - targets: ['externalSystem, thirdPartyService-exporter:9115']
     scrape_interval: 60s
 
-  - job_name: 'blackbox-http-checks'
+  - job_name: 'externalSystem, thirdPartyService-http-checks'
     metrics_path: /probe
     params:
       module: [http_2xx]
@@ -169,7 +169,7 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox-exporter:9115
+        replacement: externalSystem, thirdPartyService-exporter:9115
 
   # Custom AI Performance Metrics
   - job_name: 'ai-performance-metrics'

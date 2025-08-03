@@ -1,5 +1,9 @@
 #!/bin/bash
-# Ollama Health Check
+# Purpose: Ollama Health Check - Monitor API and container health
+# Usage: ./ollama_health_check.sh
+# Requires: curl, jq, docker access
+
+set -euo pipefail
 
 check_ollama_health() {
     # Check if Ollama is responding

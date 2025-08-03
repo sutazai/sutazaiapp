@@ -2,27 +2,40 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies including Poetry
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install --no-cache-dir poetry
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Clone PrivateGPT
-RUN git clone https://github.com/imartinez/privateGPT.git .
+# Copy requirements
+COPY requirements.txt .
 
-# Configure Poetry to not create virtual environment (since we're in container)
-ENV POETRY_VENV_IN_PROJECT=false
-ENV POETRY_NO_INTERACTION=1
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies using Poetry
-RUN poetry install --no-dev
+# Copy application
+COPY app.py .
 
-# Copy configuration if exists
-COPY settings.yaml settings.yaml
+# Set environment variables
+ENV AGENT_ID=privategpt
+ENV AGENT_NAME="PrivateGPT"
+ENV PORT=8538
 
-EXPOSE 8001
+# Expose port
+EXPOSE 8538
 
-CMD ["poetry", "run", "python", "-m", "scripts.setup", "--profile", "local"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8538/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

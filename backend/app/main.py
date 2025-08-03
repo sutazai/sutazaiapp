@@ -20,7 +20,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends, Security, WebSocke
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 # Import enterprise components
 try:
@@ -280,7 +280,8 @@ class ChatRequest(BaseModel):
     agent: Optional[str] = None
     temperature: Optional[float] = 0.7
     
-    @validator('message')
+    @field_validator('message')
+    @classmethod
     def validate_message(cls, v):
         """Validate and sanitize chat message for XSS protection"""
         if not v or not v.strip():
@@ -293,7 +294,8 @@ class ChatRequest(BaseModel):
         except ValueError as e:
             raise ValueError(f"Invalid message content: {str(e)}")
     
-    @validator('model')
+    @field_validator('model')
+    @classmethod
     def validate_model(cls, v):
         """Validate model name"""
         if v is not None:
@@ -303,7 +305,8 @@ class ChatRequest(BaseModel):
                 raise ValueError("Invalid model name format")
         return v
     
-    @validator('agent')
+    @field_validator('agent')
+    @classmethod
     def validate_agent(cls, v):
         """Validate agent name"""
         if v is not None:
@@ -317,7 +320,8 @@ class ThinkRequest(BaseModel):
     query: str
     reasoning_type: Optional[str] = "general"
     
-    @validator('query')
+    @field_validator('query')
+    @classmethod
     def validate_query(cls, v):
         """Validate and sanitize query for XSS protection"""
         if not v or not v.strip():
@@ -329,7 +333,8 @@ class ThinkRequest(BaseModel):
         except ValueError as e:
             raise ValueError(f"Invalid query content: {str(e)}")
     
-    @validator('reasoning_type')
+    @field_validator('reasoning_type')
+    @classmethod
     def validate_reasoning_type(cls, v):
         """Validate reasoning type"""
         if v is not None:
@@ -343,7 +348,8 @@ class TaskRequest(BaseModel):
     description: str
     type: str = "general"
     
-    @validator('description')
+    @field_validator('description')
+    @classmethod
     def validate_description(cls, v):
         """Validate and sanitize description for XSS protection"""
         if not v or not v.strip():
@@ -355,7 +361,8 @@ class TaskRequest(BaseModel):
         except ValueError as e:
             raise ValueError(f"Invalid description content: {str(e)}")
     
-    @validator('type')
+    @field_validator('type')
+    @classmethod
     def validate_type(cls, v):
         """Validate task type"""
         if v is not None:
@@ -421,7 +428,7 @@ async def check_ollama():
 
 async def check_chromadb():
     """Check if ChromaDB service is available"""
-    urls = ["http://sutazai-chromadb:8000/api/v1/heartbeat", "http://chromadb:8000/api/v1/heartbeat"]
+    urls = ["http://sutazai-chromadb:8001/api/v1/heartbeat", "http://chromadb:8001/api/v1/heartbeat"]
     for url in urls:
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:

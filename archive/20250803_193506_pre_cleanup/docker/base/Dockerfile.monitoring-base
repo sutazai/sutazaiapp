@@ -1,0 +1,16 @@
+FROM alpine:3.18
+
+# Install common monitoring tools
+RUN apk add --no-cache \
+    ca-certificates \
+    curl \
+    bash \
+    tzdata
+
+# Create monitoring user
+RUN addgroup -g 1000 monitoring && \
+    adduser -D -u 1000 -G monitoring monitoring
+
+USER monitoring
+
+WORKDIR /app

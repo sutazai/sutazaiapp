@@ -25,7 +25,7 @@ fi
 # Display enforcement rules
 echo -e "\n${YELLOW}MANDATORY RULES TO FOLLOW:${NC}"
 echo -e "${RED}BLOCKING RULES (Never Violate):${NC}"
-echo "  1. No Fantasy Elements - No magic, wizards, or mythical references"
+echo "  1. No Fantasy Elements - No specific implementation name (e.g., emailSender, dataProcessor), wizards, or mythical references"
 echo "  2. Do Not Break Existing Functionality - Always preserve what works"
 
 echo -e "\n${YELLOW}WARNING RULES (Require Careful Consideration):${NC}"

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     build-essential \
     cron \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir \
@@ -52,4 +52,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8080/health')" || exit 1
 
 # Start task scheduler
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["python", "task_scheduler.py"] 

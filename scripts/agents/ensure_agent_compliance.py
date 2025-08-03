@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 # Define compliance rules
 FORBIDDEN_TERMS = {
-    'magic', 'wizard', 'teleport', 'supernatural', 'mythical', 'fantasy', 
+    'specific implementation name (e.g., emailSender, dataProcessor)', 'wizard', 'teleport', 'supernatural', 'mythical', 'fantasy', 
     'spell', 'enchant', 'mystical', 'sorcery', 'alchemy'
 }
 

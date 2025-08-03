@@ -995,28 +995,9 @@ services:
         condition: service_healthy
     networks:
     - sutazai-network
-  # neo4j-exporter:
-  #   # Using a working neo4j exporter image instead of non-existent grafana/neo4j-exporter
-  #   image: lebauce/neo4j-exporter:latest
-  #   container_name: sutazai-neo4j-exporter
-  #   restart: unless-stopped
-  #   environment:
-  #     NEO4J_URI: bolt://neo4j:7687
-  #     NEO4J_USERNAME: neo4j
-  #     NEO4J_PASSWORD: ${NEO4J_PASSWORD}
-  #   ports:
-  #   - 9190:9090
-  #   depends_on:
-  #   - neo4j
-  #   networks:
-  #   - sutazai-network
-  #   # Note: Commented out until a reliable Neo4j exporter image is confirmed
-  #   # Alternative: Enable Neo4j built-in Prometheus metrics in neo4j.conf:
-  #   # metrics.prometheus.enabled=true
-  #   # metrics.prometheus.endpoint=0.0.0.0:2004
   ai-metrics-exporter:
     build:
-      context: ./monitoring/ai-metrics-exporter
+      context: ./docker/ai-metrics-exporter
       dockerfile: Dockerfile
     container_name: sutazai-ai-metrics-exporter
     restart: unless-stopped
@@ -1072,7 +1053,7 @@ services:
     - sutazai-network
   health-monitor:
     build:
-      context: ./docker/health-check
+      context: ./docker/health-monitor
       dockerfile: Dockerfile
     container_name: sutazai-health-monitor
     restart: unless-stopped

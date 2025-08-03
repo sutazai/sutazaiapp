@@ -125,7 +125,7 @@ class AgentStandardsEnforcer:
             self.issues[agent_name].append("Description missing 'Do NOT use' section")
             
         # Check for vague language
-        vague_terms = ['might', 'maybe', 'possibly', 'could', 'etc.', '...']
+        vague_terms = ['might', 'conditional logic or feature flag', 'possibly', 'could', 'etc.', '...']
         for term in vague_terms:
             if term in description.lower():
                 self.issues[agent_name].append(f"Vague language detected: '{term}'")

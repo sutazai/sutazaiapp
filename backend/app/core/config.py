@@ -3,7 +3,7 @@ Configuration management using Pydantic Settings
 """
 from typing import List, Optional, Dict, Any
 from pydantic_settings import BaseSettings
-from pydantic import validator, Field
+from pydantic import field_validator, Field
 from functools import lru_cache
 import os
 import secrets
@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     DEPLOYMENT_ID: str = Field("", env="DEPLOYMENT_ID")
     
     # Security
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
-    JWT_SECRET: str = Field(..., env="JWT_SECRET")
+    SECRET_KEY: str = Field("default-secret-key-change-in-production", env="SECRET_KEY")
+    JWT_SECRET: str = Field("default-jwt-secret-change-in-production", env="JWT_SECRET")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -35,11 +35,11 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
     
     # Database
-    POSTGRES_HOST: str
+    POSTGRES_HOST: str = Field("postgres", env="POSTGRES_HOST")
     POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_USER: str = Field("sutazai", env="POSTGRES_USER")
+    POSTGRES_PASSWORD: str = Field("sutazai_password", env="POSTGRES_PASSWORD")
+    POSTGRES_DB: str = Field("sutazai", env="POSTGRES_DB")
     DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     
     @property
@@ -47,7 +47,7 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Redis
-    REDIS_HOST: str
+    REDIS_HOST: str = Field("redis", env="REDIS_HOST")
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: Optional[str] = None
     
@@ -58,19 +58,19 @@ class Settings(BaseSettings):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
     
     # Vector Databases
-    CHROMADB_HOST: str
-    CHROMADB_PORT: int = 8000
+    CHROMADB_HOST: str = Field("chromadb", env="CHROMADB_HOST")
+    CHROMADB_PORT: int = 8001  # Changed from 8000 to avoid conflict with backend
     CHROMADB_API_KEY: Optional[str] = None
     
-    QDRANT_HOST: str
+    QDRANT_HOST: str = Field("qdrant", env="QDRANT_HOST")
     QDRANT_PORT: int = 6333
     QDRANT_API_KEY: Optional[str] = None
     
     # Neo4j Configuration
-    NEO4J_PASSWORD: str = Field(..., env="NEO4J_PASSWORD")
+    NEO4J_PASSWORD: str = Field("neo4j_password", env="NEO4J_PASSWORD")
     
     # Monitoring Configuration
-    GRAFANA_PASSWORD: str = Field(..., env="GRAFANA_PASSWORD")
+    GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
     
     # Model Configuration - Emergency small models to prevent freezing
     OLLAMA_HOST: str = Field("http://ollama:11434", env="OLLAMA_HOST")
@@ -87,7 +87,8 @@ class Settings(BaseSettings):
     MODEL_PRELOAD_ENABLED: bool = True
     MODEL_CACHE_SIZE: int = 2  # Number of models to keep in memory
     
-    @validator("OLLAMA_HOST", pre=True)
+    @field_validator("OLLAMA_HOST", mode="before")
+    @classmethod
     def validate_ollama_host(cls, v: str) -> str:
         """Ensure OLLAMA_HOST has proper format"""
         if v == "0.0.0.0" or v == "ollama":
@@ -125,7 +126,8 @@ class Settings(BaseSettings):
     MODELS_PATH: str = "/data/models"
     LOGS_PATH: str = "/logs"
     
-    @validator("SECRET_KEY", pre=True)
+    @field_validator("SECRET_KEY", mode="before")
+    @classmethod
     def validate_secret_key(cls, v: Optional[str]) -> str:
         if not v:
             return secrets.token_urlsafe(32)

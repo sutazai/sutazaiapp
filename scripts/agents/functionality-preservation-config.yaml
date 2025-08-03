@@ -1,0 +1,157 @@
+# Functionality Preservation Validator Configuration
+# This file configures the behavior of the functionality preservation validator
+
+# General settings
+general:
+  repo_path: "."
+  base_branch: "main"
+  log_level: "INFO"
+  
+# Files and directories to include/exclude
+scope:
+  include_patterns:
+    - "*.py"
+    - "*.js"
+    - "*.ts"
+    - "*.jsx"
+    - "*.tsx"
+  
+  exclude_patterns:
+    - "__pycache__/*"
+    - "node_modules/*"
+    - ".git/*"
+    - "*.pyc"
+    - "dist/*"
+    - "build/*"
+    - ".pytest_cache/*"
+    - "coverage/*"
+  
+  exclude_directories:
+    - "__pycache__"
+    - "node_modules"
+    - ".git"
+    - "dist"
+    - "build"
+    - ".pytest_cache"
+    - "coverage"
+
+# Test configuration
+testing:
+  test_command: "python -m pytest"
+  test_directory: "tests/"
+  timeout: 300  # seconds
+  parallel: true
+  coverage: true
+  
+# Validation rules configuration
+rules:
+  # Function signature validation
+  functions:
+    check_signature_changes: true
+    check_parameter_removal: true
+    check_default_value_changes: true
+    check_return_type_changes: true
+    allow_parameter_addition: true  # New parameters with defaults are OK
+    
+  # Class validation
+  classes:
+    check_method_removal: true
+    check_inheritance_changes: true
+    check_attribute_removal: true
+    allow_method_addition: true
+    
+  # API endpoint validation
+  api:
+    check_endpoint_removal: true
+    check_parameter_changes: true
+    check_response_schema_changes: true
+    check_http_method_changes: true
+    
+  # Import validation
+  imports:
+    check_removed_imports: true
+    check_module_restructuring: true
+    warn_on_new_dependencies: true
+    
+  # Database schema validation
+  database:
+    check_migration_files: true
+    check_model_changes: true
+    require_migration_for_schema_changes: true
+
+# Breaking change severity levels
+severity:
+  function_removed: "error"
+  class_removed: "error"
+  method_removed: "error"
+  api_endpoint_removed: "error"
+  function_signature_changed: "error"
+  class_inheritance_changed: "warning"
+  import_removed: "warning"
+  default_value_changed: "warning"
+  test_regression: "error"
+
+# Git hook configuration
+git_hooks:
+  install_pre_commit: true
+  install_pre_push: false
+  block_on_breaking_changes: true
+  block_on_test_failures: true
+  allow_force_commit: false  # Require --no-verify to bypass
+
+# Reporting configuration
+reporting:
+  format: "detailed"  # summary, detailed, json
+  include_suggestions: true
+  include_file_paths: true
+  include_line_numbers: true
+  save_reports: true
+  report_directory: "reports/functionality-validation/"
+  
+# Integration settings
+integrations:
+  # CI/CD integration
+  ci_cd:
+    fail_build_on_breaking_changes: true
+    create_pr_comments: true
+    post_to_slack: false
+    slack_webhook: ""
+    
+  # IDE integration
+  ide:
+    create_problem_markers: true
+    show_inline_suggestions: true
+    
+# Performance settings
+performance:
+  parallel_analysis: true
+  cache_ast_results: true
+  cache_duration: 3600  # seconds
+  max_file_size: 10485760  # 10MB
+  
+# Rollback configuration
+rollback:
+  auto_suggest_rollback: true
+  create_rollback_scripts: true
+  backup_before_changes: true
+  
+# Advanced settings
+advanced:
+  # Dependency graph analysis
+  dependency_analysis:
+    enabled: true
+    max_depth: 5
+    include_third_party: false
+    
+  # Static analysis integration
+  static_analysis:
+    enabled: true
+    tools:
+      - "mypy"
+      - "pylint"
+      - "bandit"
+    
+  # Machine learning suggestions
+  ml_suggestions:
+    enabled: false  # Requires additional ML models
+    confidence_threshold: 0.8

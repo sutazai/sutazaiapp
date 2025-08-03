@@ -1,0 +1,665 @@
+{
+  "metadata": {
+    "rule": "Rule 13: No Garbage, No Rot",
+    "enforcer": "GarbageCollectionEnforcer",
+    "version": "1.0.0",
+    "timestamp": "2025-08-03T20:52:44.223568",
+    "session_id": "20250803_205202",
+    "project_root": "/opt/sutazaiapp",
+    "dry_run": true
+  },
+  "configuration": {
+    "confidence_threshold": 0.8,
+    "risk_threshold": "safe",
+    "git_integration_enabled": true,
+    "archive_before_delete": true
+  },
+  "statistics": {
+    "files_scanned": 4789,
+    "directories_scanned": 775,
+    "garbage_items_found": 1628,
+    "items_removed": 0,
+    "items_archived": 0,
+    "items_skipped": 0,
+    "space_recovered_bytes": 0,
+    "false_positives": 0,
+    "scan_duration_seconds": 41.363816,
+    "cleanup_duration_seconds": 0.0
+  },
+  "analysis": {
+    "total_garbage_items": 1628,
+    "total_potential_space_mb": 0.84,
+    "actionable_items": 30,
+    "items_by_type": {
+      "old_version": 6,
+      "log_file": 31,
+      "duplicate_file": 70,
+      "build_artifact": 3,
+      "backup_file": 3,
+      "temporary_file": 82,
+      "unused_import": 18,
+      "empty_file": 69,
+      "dead_code": 1346
+    },
+    "items_by_risk": {
+      "risky": 28,
+      "safe": 48,
+      "moderate": 1547,
+      "dangerous": 5
+    },
+    "confidence_distribution": {
+      "high (0.8-1.0)": 104,
+      "medium (0.6-0.8)": 1522,
+      "low (0.0-0.6)": 2
+    }
+  },
+  "findings": {
+    "top_violations_by_size": [
+      {
+        "path": "tests/comprehensive_test_report_final.py",
+        "type": "old_version",
+        "size_mb": 0.02,
+        "confidence": 0.9,
+        "risk": "risky",
+        "reasoning": "Strong pattern match for old_version; Referenced in 6 files"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/042-space shuttle.svg",
+        "type": "temporary_file",
+        "size_mb": 0.02,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/040-mission.svg",
+        "type": "temporary_file",
+        "size_mb": 0.02,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/048-satellite.svg",
+        "type": "temporary_file",
+        "size_mb": 0.02,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/039-Asteroid.svg",
+        "type": "temporary_file",
+        "size_mb": 0.02,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "backend/tests/reports/latest_comprehensive_report.json",
+        "type": "duplicate_file",
+        "size_mb": 0.02,
+        "confidence": 0.9,
+        "risk": "moderate",
+        "reasoning": "Duplicate of backend/tests/reports/comprehensive_report_20250803_000637.json"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/050-space robot.svg",
+        "type": "temporary_file",
+        "size_mb": 0.02,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/044-rocket.svg",
+        "type": "temporary_file",
+        "size_mb": 0.01,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/034-alien.svg",
+        "type": "temporary_file",
+        "size_mb": 0.01,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      },
+      {
+        "path": "data/langflow/.cache/langflow/profile_pictures/Space/036-eclipse.svg",
+        "type": "temporary_file",
+        "size_mb": 0.01,
+        "confidence": 0.7,
+        "risk": "moderate",
+        "reasoning": "Pattern match for temporary_file; No references found"
+      }
+    ],
+    "high_confidence_items": [
+      {
+        "path": "scripts/data/fix_yaml_indentation_final.py",
+        "type": "old_version",
+        "confidence": 0.9,
+        "risk": "risky",
+        "reasoning": "Strong pattern match for old_version; Referenced in 6 files"
+      },
+      {
+        "path": "scripts/data/fix_yaml_frontmatter_final.py",
+        "type": "old_version",
+        "confidence": 0.9,
+        "risk": "risky",
+        "reasoning": "Strong pattern match for old_version; Referenced in 6 files"
+      },
+      {
+        "path": "scripts/data/fix_yaml_structure_final.py",
+        "type": "old_version",
+        "confidence": 0.9,
+        "risk": "risky",
+        "reasoning": "Strong pattern match for old_version; Referenced in 6 files"
+      },
+      {
+        "path": "logs/health_monitor.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; Referenced in 4 files"
+      },
+      {
+        "path": "logs/deployment_20250802_005410.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_022729.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_deploy_20250802_232306_9199.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_113327.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_125123.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_deploy_20250802_232436_13040.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_113200.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/mcp-monitor.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_003338.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_super_intelligent_20250731_192559.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_113417.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/quick_deployment_check_20250802_115025.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_20250802_105756.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/deployment_deploy_20250803_003644_119394.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      },
+      {
+        "path": "logs/health-monitor.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; Empty file; Referenced in 4 files"
+      },
+      {
+        "path": "logs/quick_deployment_check_20250802_115428.log",
+        "type": "log_file",
+        "confidence": 0.9,
+        "risk": "safe",
+        "reasoning": "Strong pattern match for log_file; No references found"
+      }
+    ],
+    "duplicate_files": [
+      {
+        "path": "scripts/init-postgres.sql",
+        "duplicate_of": "scripts/init_db.sql",
+        "size_mb": 0.0
+      },
+      {
+        "path": "tests/security/test_security_hardening.py",
+        "duplicate_of": "scripts/test/tests_security_test_security_hardening.py",
+        "size_mb": 0.01
+      },
+      {
+        "path": "scripts/utils/ollama_cleanup.sh",
+        "duplicate_of": "scripts/models/ollama/ollama_cleanup.sh",
+        "size_mb": 0.0
+      },
+      {
+        "path": "scripts/utils/ollama_health_check.sh",
+        "duplicate_of": "scripts/models/ollama/ollama_health_check.sh",
+        "size_mb": 0.0
+      },
+      {
+        "path": "scripts/utils/compact_monitor.py",
+        "duplicate_of": "scripts/monitoring/static_monitor.py",
+        "size_mb": 0.01
+      },
+      {
+        "path": "docker/autogen/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/opendevin/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/jax/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/health-monitor/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/flowise/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/agentzero/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/context-engineering/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/llamaindex/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/crewai/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/tensorflow/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/security/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/requirements/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/faiss/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/context-framework/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/enhanced-model-manager/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/letta/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/gpt-engineer/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/health-check/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/autogpt-real/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/awesome-code-ai/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/task-scheduler/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/tabbyml/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/api-gateway/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/model-optimizer/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/localagi/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/semgrep/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/pytorch/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/privategpt/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/legacy/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/fsdp/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/dify/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/agentgpt/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/shellgpt/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/knowledge-manager/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/documind/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/langflow/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/service-hub/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/bigagi/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/pentestgpt/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/fms-fsdp/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/code-improver/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/skyvern/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/jarvis-ai/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/agents/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/aider/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/langchain-agents/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/browser-use/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/finrobot/.dockerignore",
+        "duplicate_of": "docker/autogpt/.dockerignore",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/autogen/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/agentzero/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/llamaindex/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/crewai/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/letta/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/gpt-engineer/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/documind/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/browser-use/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/finrobot/config.json",
+        "duplicate_of": "docker/autogpt/config.json",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/semgrep/requirements.txt",
+        "duplicate_of": "docker/health-monitor/requirements.txt",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/pentestgpt/requirements.txt",
+        "duplicate_of": "docker/health-monitor/requirements.txt",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/fms-fsdp/health_check.py",
+        "duplicate_of": "docker/context-engineering/health_check.py",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/requirements/requirements.txt",
+        "duplicate_of": "docker/requirements/requirements.secure.txt",
+        "size_mb": 0.0
+      },
+      {
+        "path": "docker/skyvern/skyvern.yml",
+        "duplicate_of": "docker/localagi/config.yaml",
+        "size_mb": 0.0
+      },
+      {
+        "path": "backend/tests/reports/latest_comprehensive_report.txt",
+        "duplicate_of": "backend/tests/reports/comprehensive_report_20250803_000637.txt",
+        "size_mb": 0.0
+      },
+      {
+        "path": "backend/tests/reports/latest_comprehensive_report.json",
+        "duplicate_of": "backend/tests/reports/comprehensive_report_20250803_000637.json",
+        "size_mb": 0.02
+      },
+      {
+        "path": "config/agent_framework.json",
+        "duplicate_of": "config/database.json",
+        "size_mb": 0.0
+      }
+    ]
+  },
+  "recommendations": [
+    "Consider implementing duplicate file detection in CI/CD pipeline",
+    "Integrate dead code detection tools (vulture, unimport) into development workflow"
+  ],
+  "audit_trail": {
+    "archive_location": "/opt/sutazaiapp/archive/garbage_cleanup_20250803_205202",
+    "git_commands_for_review": [
+      "# Review what will be changed:",
+      "git status",
+      "git diff --name-only",
+      "",
+      "# After cleanup, review changes:",
+      "git add -A",
+      "git commit -m 'Clean up garbage files (Rule 13: No Garbage, No Rot) \ud83e\udd16 Generated with Claude Code'",
+      "",
+      "# If you need to revert:",
+      "git reset --hard HEAD~1"
+    ],
+    "rollback_instructions": [
+      "# To rollback file deletions:",
+      "1. Check archive directory for backed up files",
+      "2. Archive location: /opt/sutazaiapp/archive/garbage_cleanup_20250803_205202",
+      "3. Use git to restore files if they were tracked:",
+      "   git checkout HEAD~1 -- <file_path>",
+      "",
+      "# To prevent similar issues:",
+      "1. Add patterns to .gitignore for build artifacts",
+      "2. Set up pre-commit hooks to prevent garbage files",
+      "3. Configure IDE to not create backup files in project directory"
+    ]
+  }
+}

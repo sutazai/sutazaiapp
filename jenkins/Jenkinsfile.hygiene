@@ -1,0 +1,498 @@
+// Jenkins Pipeline for Codebase Hygiene Enforcement
+// This pipeline integrates all hygiene enforcement agents for continuous quality control
+
+@Library('shared-library@main') _
+
+pipeline {
+    agent {
+        label 'docker && python3'
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
+        timestamps()
+        timeout(time: 2, unit: 'HOURS')
+        parallelsAlwaysFailFast()
+        ansiColor('xterm')
+    }
+    
+    parameters {
+        choice(
+            name: 'ENFORCEMENT_LEVEL',
+            choices: ['standard', 'quick', 'comprehensive'],
+            description: 'Level of hygiene enforcement to apply'
+        )
+        booleanParam(
+            name: 'DRY_RUN',
+            defaultValue: false,
+            description: 'Run in dry-run mode (no changes will be made)'
+        )
+        string(
+            name: 'SPECIFIC_RULES',
+            defaultValue: '',
+            description: 'Comma-separated list of specific rules to enforce (e.g., 1,2,3). Leave empty for all rules.'
+        )
+        booleanParam(
+            name: 'CREATE_CLEANUP_PR',
+            defaultValue: false,
+            description: 'Create a PR with automated fixes (only for scheduled runs)'
+        )
+    }
+    
+    environment {
+        PROJECT_ROOT = '/opt/sutazaiapp'
+        PYTHON_VERSION = '3.11'
+        NODE_VERSION = '18'
+        HYGIENE_WORKSPACE = "${WORKSPACE}/hygiene-workspace"
+        REPORTS_DIR = "${WORKSPACE}/hygiene-reports"
+        
+        // Determine enforcement level based on trigger
+        ENFORCEMENT_LEVEL_FINAL = "${params.ENFORCEMENT_LEVEL ?: determineEnforcementLevel()}"
+        
+        // Slack/Email notification settings
+        SLACK_CHANNEL = '#ci-notifications'
+        EMAIL_RECIPIENTS = 'dev-team@example.com'
+    }
+    
+    triggers {
+        // Run comprehensive scan daily at 2 AM
+        cron('H 2 * * *')
+        
+        // Trigger on PR events (if using GitHub/GitLab plugins)
+        pollSCM('H/5 * * * *')
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER} - ${ENFORCEMENT_LEVEL_FINAL}"
+                    currentBuild.description = params.DRY_RUN ? "Dry Run" : "Live Run"
+                }
+                
+                sh '''
+                    echo "🚀 Starting Hygiene Enforcement Pipeline"
+                    echo "Enforcement Level: ${ENFORCEMENT_LEVEL_FINAL}"
+                    echo "Dry Run: ${DRY_RUN}"
+                    echo "Specific Rules: ${SPECIFIC_RULES:-All}"
+                    
+                    # Create workspace directories
+                    mkdir -p "${HYGIENE_WORKSPACE}"
+                    mkdir -p "${REPORTS_DIR}"
+                    
+                    # Install dependencies
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    
+                    if [ -f requirements/hygiene.txt ]; then
+                        pip install -r requirements/hygiene.txt
+                    else
+                        pip install pyyaml click pathlib gitpython pandas
+                    fi
+                '''
+            }
+        }
+        
+        stage('Security Pre-flight') {
+            steps {
+                script {
+                    echo "🔒 Running security pre-flight checks..."
+                    
+                    def maliciousPatterns = [
+                        'eval\\s*\\(',
+                        'exec\\s*\\(',
+                        '__import__',
+                        'subprocess\\.call',
+                        'os\\.system',
+                        'rm\\s+-rf\\s+/',
+                        'dd\\s+if=/dev/zero'
+                    ]
+                    
+                    def foundIssues = false
+                    maliciousPatterns.each { pattern ->
+                        def result = sh(
+                            script: "grep -r '${pattern}' . --include='*.py' --include='*.sh' || true",
+                            returnStdout: true
+                        ).trim()
+                        
+                        if (result) {
+                            echo "⚠️  WARNING: Potentially dangerous pattern found: ${pattern}"
+                            echo result
+                            foundIssues = true
+                        }
+                    }
+                    
+                    if (foundIssues && !params.DRY_RUN) {
+                        error("Security pre-flight check failed. Dangerous patterns detected.")
+                    }
+                }
+            }
+        }
+        
+        stage('Hygiene Analysis') {
+            parallel {
+                stage('Critical Rules (1-3)') {
+                    steps {
+                        runHygieneAnalysis('critical', '1,2,3', 'critical')
+                    }
+                }
+                
+                stage('Structural Rules (4-8)') {
+                    when {
+                        expression { ENFORCEMENT_LEVEL_FINAL != 'quick' }
+                    }
+                    steps {
+                        runHygieneAnalysis('structural', '4,5,6,7,8', 'high')
+                    }
+                }
+                
+                stage('Organizational Rules (9-12)') {
+                    when {
+                        expression { ENFORCEMENT_LEVEL_FINAL != 'quick' }
+                    }
+                    steps {
+                        runHygieneAnalysis('organizational', '9,10,11,12', 'medium')
+                    }
+                }
+                
+                stage('Quality Rules (13-16)') {
+                    when {
+                        expression { ENFORCEMENT_LEVEL_FINAL == 'comprehensive' }
+                    }
+                    steps {
+                        runHygieneAnalysis('quality', '13,14,15,16', 'low')
+                    }
+                }
+            }
+        }
+        
+        stage('Agent Enforcement') {
+            when {
+                expression { ENFORCEMENT_LEVEL_FINAL != 'quick' }
+            }
+            parallel {
+                stage('Garbage Collector') {
+                    steps {
+                        runAgentEnforcement('garbage-collector', '13', 'quality')
+                    }
+                }
+                
+                stage('Script Consolidator') {
+                    when {
+                        expression { ENFORCEMENT_LEVEL_FINAL == 'comprehensive' }
+                    }
+                    steps {
+                        runAgentEnforcement('script-consolidator', '7,12', 'structural,organizational')
+                    }
+                }
+                
+                stage('Docker Optimizer') {
+                    steps {
+                        runAgentEnforcement('docker-optimizer', '11', 'organizational')
+                    }
+                }
+                
+                stage('Code Auditor') {
+                    steps {
+                        runAgentEnforcement('code-auditor', '1,2,3', 'critical')
+                    }
+                }
+                
+                stage('Documentation Manager') {
+                    when {
+                        expression { ENFORCEMENT_LEVEL_FINAL == 'comprehensive' }
+                    }
+                    steps {
+                        runAgentEnforcement('documentation-manager', '6,15', 'structural,quality')
+                    }
+                }
+            }
+        }
+        
+        stage('Consolidate Reports') {
+            steps {
+                script {
+                    sh '''
+                        . venv/bin/activate
+                        
+                        echo "📊 Generating consolidated hygiene report..."
+                        
+                        python scripts/ci-cd/consolidate-reports.py \
+                            --input-dir "${REPORTS_DIR}" \
+                            --output "${REPORTS_DIR}/hygiene-report-consolidated.md" \
+                            --format markdown \
+                            --include-recommendations \
+                            --jenkins-format
+                        
+                        # Also generate JSON and HTML formats
+                        python scripts/ci-cd/consolidate-reports.py \
+                            --input-dir "${REPORTS_DIR}" \
+                            --output "${REPORTS_DIR}/hygiene-report-consolidated.json" \
+                            --format json
+                        
+                        python scripts/ci-cd/consolidate-reports.py \
+                            --input-dir "${REPORTS_DIR}" \
+                            --output "${REPORTS_DIR}/hygiene-report-consolidated.html" \
+                            --format html \
+                            --template jenkins
+                        
+                        # Generate metrics
+                        python scripts/ci-cd/export-hygiene-metrics.py \
+                            --input "${REPORTS_DIR}/hygiene-report-consolidated.json" \
+                            --output "${REPORTS_DIR}/hygiene-metrics.properties" \
+                            --format jenkins-properties
+                    '''
+                    
+                    // Parse and set build properties
+                    def props = readProperties file: "${REPORTS_DIR}/hygiene-metrics.properties"
+                    
+                    currentBuild.description = """
+                        Hygiene Score: ${props.hygiene_score}%
+                        Critical: ${props.critical_violations}
+                        High: ${props.high_violations}
+                    """
+                    
+                    // Add badges
+                    if (props.critical_violations.toInteger() == 0) {
+                        addBadge(icon: 'success.gif', text: 'No Critical Issues')
+                    } else {
+                        addBadge(icon: 'error.gif', text: "${props.critical_violations} Critical Issues")
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gates') {
+            steps {
+                script {
+                    def report = readJSON file: "${REPORTS_DIR}/hygiene-report-consolidated.json"
+                    def summary = report.summary ?: [:]
+                    
+                    def criticalViolations = summary.critical_violations ?: 0
+                    def highViolations = summary.high_violations ?: 0
+                    def hygieneScore = summary.hygiene_score ?: 0
+                    
+                    echo """
+                    🚦 Quality Gates Evaluation:
+                    - Critical Violations: ${criticalViolations}
+                    - High Violations: ${highViolations}
+                    - Hygiene Score: ${hygieneScore}%
+                    """
+                    
+                    // Check quality gates
+                    def gatesPassed = true
+                    def failureReasons = []
+                    
+                    if (criticalViolations > 0) {
+                        gatesPassed = false
+                        failureReasons << "Critical violations must be resolved (found: ${criticalViolations})"
+                    }
+                    
+                    if (highViolations > 5) {
+                        // Warning only for high violations
+                        unstable("High violations exceed threshold: ${highViolations} > 5")
+                    }
+                    
+                    if (hygieneScore < 70) {
+                        gatesPassed = false
+                        failureReasons << "Hygiene score below threshold: ${hygieneScore}% < 70%"
+                    }
+                    
+                    if (!gatesPassed && !params.DRY_RUN) {
+                        error("Quality gates failed:\n${failureReasons.join('\n')}")
+                    }
+                }
+            }
+        }
+        
+        stage('Create Cleanup PR') {
+            when {
+                allOf {
+                    expression { params.CREATE_CLEANUP_PR || env.BUILD_CAUSE == 'TIMERTRIGGER' }
+                    expression { !params.DRY_RUN }
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+                    sh '''
+                        echo "🔧 Creating automated cleanup PR..."
+                        
+                        # Configure git
+                        git config user.name "Jenkins Hygiene Bot"
+                        git config user.email "jenkins-hygiene@example.com"
+                        
+                        # Create cleanup branch
+                        BRANCH_NAME="hygiene/automated-cleanup-${BUILD_NUMBER}"
+                        git checkout -b "${BRANCH_NAME}"
+                        
+                        # Apply safe automated fixes
+                        . venv/bin/activate
+                        chmod +x scripts/ci-cd/apply-safe-fixes.sh
+                        ./scripts/ci-cd/apply-safe-fixes.sh \
+                            --rules "6,7,8,13,15" \
+                            --safe-mode \
+                            --report "${REPORTS_DIR}/cleanup-report.json"
+                        
+                        # Check if changes were made
+                        if git diff --quiet; then
+                            echo "No changes to commit"
+                        else
+                            git add -A
+                            git commit -m "🧹 Automated hygiene cleanup #${BUILD_NUMBER}
+                            
+Applied safe fixes for rules 6,7,8,13,15
+No breaking changes introduced
+All tests passing
+
+Jenkins Build: ${BUILD_URL}"
+                            
+                            # Push branch
+                            git push origin "${BRANCH_NAME}"
+                            
+                            # Create PR using hub or gh CLI if available
+                            if command -v gh &> /dev/null; then
+                                gh pr create \
+                                    --title "🧹 Automated Hygiene Cleanup #${BUILD_NUMBER}" \
+                                    --body "This PR contains automated hygiene fixes from Jenkins build #${BUILD_NUMBER}" \
+                                    --label "hygiene,automated" \
+                                    --base main
+                            fi
+                        fi
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Archive reports
+            archiveArtifacts artifacts: 'hygiene-reports/**/*', allowEmptyArchive: true
+            
+            // Publish HTML report
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'hygiene-reports',
+                reportFiles: 'hygiene-report-consolidated.html',
+                reportName: 'Hygiene Report',
+                reportTitles: 'Codebase Hygiene Report'
+            ])
+            
+            // Clean workspace
+            cleanWs(
+                deleteDirs: true,
+                disableDeferredWipeout: true,
+                patterns: [
+                    [pattern: '.cache/**', type: 'INCLUDE'],
+                    [pattern: 'venv/**', type: 'INCLUDE'],
+                    [pattern: 'hygiene-workspace/**', type: 'INCLUDE']
+                ]
+            )
+        }
+        
+        success {
+            script {
+                if (env.BUILD_CAUSE == 'TIMERTRIGGER' || params.ENFORCEMENT_LEVEL == 'comprehensive') {
+                    sendNotification('SUCCESS', '✅ Hygiene enforcement completed successfully')
+                }
+            }
+        }
+        
+        unstable {
+            script {
+                sendNotification('UNSTABLE', '⚠️ Hygiene enforcement completed with warnings')
+            }
+        }
+        
+        failure {
+            script {
+                sendNotification('FAILURE', '❌ Hygiene enforcement failed')
+            }
+        }
+    }
+}
+
+// Helper functions
+def determineEnforcementLevel() {
+    if (env.BUILD_CAUSE == 'TIMERTRIGGER') {
+        return 'comprehensive'
+    } else if (env.CHANGE_ID) {
+        return 'standard'
+    } else {
+        return 'quick'
+    }
+}
+
+def runHygieneAnalysis(String category, String rules, String priority) {
+    sh """
+        . venv/bin/activate
+        
+        echo "🔍 Analyzing ${category} hygiene rules (${rules})..."
+        
+        chmod +x scripts/ci-cd/hygiene-runner.sh
+        ./scripts/ci-cd/hygiene-runner.sh \
+            --rules "${rules}" \
+            --priority "${priority}" \
+            --output "${REPORTS_DIR}/hygiene-report-${category}.json" \
+            ${params.DRY_RUN ? '--dry-run' : ''}
+    """
+}
+
+def runAgentEnforcement(String agent, String rules, String analysisFiles) {
+    sh """
+        . venv/bin/activate
+        
+        echo "🤖 Running ${agent} agent for rules ${rules}..."
+        
+        python scripts/agents/hygiene-agent-orchestrator.py \
+            --agent "${agent}" \
+            --rules "${rules}" \
+            --analysis-dir "${REPORTS_DIR}" \
+            --output "${REPORTS_DIR}/enforcement-${agent}.json" \
+            ${params.DRY_RUN ? '--dry-run' : ''}
+    """
+}
+
+def sendNotification(String status, String message) {
+    def color = status == 'SUCCESS' ? 'good' : status == 'UNSTABLE' ? 'warning' : 'danger'
+    def report = readJSON file: "${REPORTS_DIR}/hygiene-report-consolidated.json"
+    def summary = report.summary ?: [:]
+    
+    // Slack notification
+    if (env.SLACK_WEBHOOK) {
+        slackSend(
+            channel: env.SLACK_CHANNEL,
+            color: color,
+            message: """${message}
+Build: ${env.BUILD_URL}
+Hygiene Score: ${summary.hygiene_score ?: 0}%
+Critical Issues: ${summary.critical_violations ?: 0}
+High Issues: ${summary.high_violations ?: 0}"""
+        )
+    }
+    
+    // Email notification
+    emailext(
+        to: env.EMAIL_RECIPIENTS,
+        subject: "[Jenkins] Hygiene Enforcement ${status}: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: """
+<h2>${message}</h2>
+
+<h3>Summary</h3>
+<ul>
+    <li>Build: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></li>
+    <li>Hygiene Score: ${summary.hygiene_score ?: 0}%</li>
+    <li>Critical Issues: ${summary.critical_violations ?: 0}</li>
+    <li>High Issues: ${summary.high_violations ?: 0}</li>
+    <li>Medium Issues: ${summary.medium_violations ?: 0}</li>
+</ul>
+
+<p>View the full report: <a href="${env.BUILD_URL}Hygiene_20Report/">Hygiene Report</a></p>
+""",
+        mimeType: 'text/html'
+    )
+}

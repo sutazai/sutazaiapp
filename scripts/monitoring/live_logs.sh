@@ -1,6 +1,7 @@
 #!/bin/bash
-# SutazAI Live Logs Management System
-# Provides real-time log monitoring with cleanup and debugging controls
+# Purpose: SutazAI Live Logs Management System - Comprehensive log monitoring and management
+# Usage: ./live_logs.sh [live|follow|cleanup|reset|debug|config|status] [OPTIONS]
+# Requires: docker, docker-compose, system utilities
 
 set -euo pipefail
 
@@ -21,6 +22,26 @@ enable_numlock() {
     # If numlockx is available, use it for X sessions
     if command -v numlockx >/dev/null 2>&1; then
         numlockx on >/dev/null 2>&1 || true
+    fi
+}
+
+# Check numlock status
+check_numlock_status() {
+    if command -v setleds >/dev/null 2>&1; then
+        # Check current TTY
+        if setleds -F 2>&1 | grep -q "NumLock on"; then
+            echo "ON"
+        else
+            echo "OFF"
+        fi
+    elif command -v numlockx >/dev/null 2>&1; then
+        if numlockx status 2>&1 | grep -q "on"; then
+            echo "ON"
+        else
+            echo "OFF"
+        fi
+    else
+        echo "N/A"
     fi
 }
 
@@ -227,6 +248,24 @@ start_live_monitoring() {
     
     # Wait for user interrupt
     wait
+}
+
+# Container name to service name mapping function
+get_service_name_from_container() {
+    local container_name="$1"
+    
+    # Remove sutazai- prefix to get base name
+    local base_name=${container_name#sutazai-}
+    
+    # Handle special cases where service name differs from container base name
+    case "$base_name" in
+        "api")
+            echo "backend"
+            ;;
+        *)
+            echo "$base_name"
+            ;;
+    esac
 }
 
 # Follow specific service
@@ -828,9 +867,12 @@ get_container_health() {
 # Smart container health check and repair function
 check_and_repair_unhealthy_containers() {
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║              SMART CONTAINER HEALTH CHECK & REPAIR          ║${NC}"
+    echo -e "${CYAN}║        SMART CONTAINER HEALTH CHECK & REPAIR 🤖            ║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
+    
+    # Enable numlock for this operation
+    enable_numlock
     
     # Get list of all containers with health status
     echo -e "${YELLOW}⏳ Checking container health status and missing services...${NC}"
@@ -851,7 +893,7 @@ check_and_repair_unhealthy_containers() {
     declare -A existing_containers
     while IFS= read -r container; do
         [[ -z "$container" ]] && continue
-        service_name=${container#sutazai-}
+        service_name=$(get_service_name_from_container "$container")
         existing_containers["$service_name"]=1
     done < <(docker ps -a --filter "name=sutazai-" --format "{{.Names}}")
     
@@ -881,7 +923,32 @@ check_and_repair_unhealthy_containers() {
         fi
     done < <(docker ps -a --filter "name=sutazai-" --format "{{.Names}} {{.Status}}")
     
-    # Display results
+    # Analyze container issues for intelligent repair suggestions
+    declare -A container_issues
+    declare -A repair_priorities
+    
+    # Check for common issues in unhealthy containers
+    for container in "${unhealthy_containers[@]}"; do
+        service_name=$(get_service_name_from_container "$container")
+        last_logs=$(docker logs --tail 20 "$container" 2>&1 | tail -5)
+        
+        # Detect common issues
+        if echo "$last_logs" | grep -qi "connection refused\|cannot connect"; then
+            container_issues["$container"]="Network/Connection issue"
+            repair_priorities["$container"]=1
+        elif echo "$last_logs" | grep -qi "out of memory\|memory"; then
+            container_issues["$container"]="Memory issue"
+            repair_priorities["$container"]=2
+        elif echo "$last_logs" | grep -qi "permission denied\|access denied"; then
+            container_issues["$container"]="Permission issue"
+            repair_priorities["$container"]=3
+        else
+            container_issues["$container"]="Unknown issue"
+            repair_priorities["$container"]=4
+        fi
+    done
+    
+    # Display results with enhanced information
     echo -e "${GREEN}✅ Healthy Containers (${#healthy_containers[@]}):${NC}"
     if [[ ${#healthy_containers[@]} -eq 0 ]]; then
         echo "   None found"
@@ -897,7 +964,9 @@ check_and_repair_unhealthy_containers() {
         echo "   None found"
     else
         for container in "${unhealthy_containers[@]}"; do
-            echo "   - $container"
+            issue="${container_issues[$container]:-Unknown}"
+            priority="${repair_priorities[$container]:-5}"
+            echo "   - $container ${YELLOW}[${issue}] Priority: ${priority}${NC}"
         done
     fi
     echo ""
@@ -938,17 +1007,43 @@ check_and_repair_unhealthy_containers() {
     total_issues=$((total_to_repair + total_to_deploy))
     
     if [[ $total_issues -gt 0 ]]; then
-        echo -e "${YELLOW}Found issues:${NC}"
+        echo -e "${YELLOW}🔍 Analysis Summary:${NC}"
         [[ $total_to_repair -gt 0 ]] && echo "  - $total_to_repair container(s) need repair"
         [[ $total_to_deploy -gt 0 ]] && echo "  - $total_to_deploy service(s) need deployment"
-        echo ""
         
+        # Provide intelligent recommendation
+        echo ""
+        echo -e "${CYAN}🤖 Smart Recommendation:${NC}"
+        if [[ ${#unhealthy_containers[@]} -gt 0 ]]; then
+            # Check if we have high priority issues
+            high_priority=0
+            for container in "${unhealthy_containers[@]}"; do
+                if [[ "${repair_priorities[$container]}" -le 2 ]]; then
+                    high_priority=1
+                    break
+                fi
+            done
+            
+            if [[ $high_priority -eq 1 ]]; then
+                echo "  ⚠️  High priority issues detected (network/memory problems)"
+                echo "  💡 Recommended: Option 3 - Full repair and deploy"
+            else
+                echo "  ℹ️  Standard issues detected"
+                echo "  💡 Recommended: Option 1 - Repair containers first"
+            fi
+        elif [[ ${#missing_services[@]} -gt 0 ]]; then
+            echo "  📦 Missing services detected"
+            echo "  💡 Recommended: Option 2 - Deploy missing services"
+        fi
+        
+        echo ""
         echo "What would you like to do?"
         echo "1) Repair unhealthy/exited containers only"
         echo "2) Deploy missing services only" 
-        echo "3) Both repair and deploy"
-        echo "4) Cancel"
-        read -p "Select option (1-4): " action
+        echo "3) Both repair and deploy (recommended for critical issues)"
+        echo "4) Advanced repair with dependency check"
+        echo "5) Cancel"
+        read -p "Select option (1-5): " action
         
         case "$action" in
             1|3)
@@ -962,7 +1057,7 @@ check_and_repair_unhealthy_containers() {
                         echo -e "${YELLOW}Repairing unhealthy container: $container${NC}"
                         
                         # Get service name from container name
-                        service_name=${container#sutazai-}
+                        service_name=$(get_service_name_from_container "$container")
                         
                         # Stop and remove the container
                         docker stop "$container" >/dev/null 2>&1
@@ -991,7 +1086,7 @@ check_and_repair_unhealthy_containers() {
                 echo -e "${YELLOW}Repairing exited container: $container${NC}"
                 
                 # Get service name from container name
-                service_name=${container#sutazai-}
+                service_name=$(get_service_name_from_container "$container")
                 
                 # Remove the container
                 docker rm "$container" >/dev/null 2>&1
@@ -1077,6 +1172,71 @@ check_and_repair_unhealthy_containers() {
                 fi
                 ;;
             4)
+                # Advanced repair with dependency check
+                echo ""
+                echo -e "${CYAN}🔧 Advanced Repair with Dependency Analysis...${NC}"
+                echo ""
+                
+                # Get service dependencies
+                echo -e "${YELLOW}Analyzing service dependencies...${NC}"
+                declare -A service_deps
+                
+                # Core services that should be repaired first
+                core_services=("postgres" "redis" "ollama")
+                
+                # Repair core services first
+                for service in "${core_services[@]}"; do
+                    container="sutazai-${service}"
+                    if [[ " ${unhealthy_containers[@]} " =~ " ${container} " ]] || \
+                       [[ " ${exited_containers[@]} " =~ " ${container} " ]]; then
+                        echo -e "${YELLOW}Repairing core service: $service${NC}"
+                        docker stop "$container" >/dev/null 2>&1
+                        docker rm "$container" >/dev/null 2>&1
+                        docker compose up -d "$service" 2>&1 | grep -v "is up-to-date" || true
+                        
+                        # Wait for core service to be ready
+                        echo "   Waiting for $service to be ready..."
+                        sleep 10
+                        
+                        # Check health
+                        health=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "none")
+                        if [[ "$health" == "healthy" ]] || [[ "$health" == "none" ]]; then
+                            echo -e "   ${GREEN}✅ Core service $service is ready${NC}"
+                        else
+                            echo -e "   ${YELLOW}⚠️  Core service $service started but not healthy yet${NC}"
+                        fi
+                        echo ""
+                    fi
+                done
+                
+                # Then repair other services
+                echo -e "${YELLOW}Repairing dependent services...${NC}"
+                for container in "${unhealthy_containers[@]}" "${exited_containers[@]}"; do
+                    service_name=$(get_service_name_from_container "$container")
+                    
+                    # Skip if already handled as core service
+                    if [[ " ${core_services[@]} " =~ " ${service_name} " ]]; then
+                        continue
+                    fi
+                    
+                    echo -e "${CYAN}Repairing: $container${NC}"
+                    docker stop "$container" >/dev/null 2>&1
+                    docker rm "$container" >/dev/null 2>&1
+                    docker compose up -d "$service_name" 2>&1 | grep -v "is up-to-date" || true
+                    sleep 3
+                    
+                    # Check status
+                    if docker ps --filter "name=$container" --format "{{.Names}}" | grep -q "$container"; then
+                        echo -e "   ${GREEN}✅ Service restarted${NC}"
+                    else
+                        echo -e "   ${RED}❌ Failed to restart${NC}"
+                    fi
+                    echo ""
+                done
+                
+                echo -e "${GREEN}🎉 Advanced repair completed!${NC}"
+                ;;
+            5)
                 echo -e "${YELLOW}Operation cancelled.${NC}"
                 ;;
             *)
@@ -2269,8 +2429,20 @@ redeploy_all_containers() {
 
 # Main menu
 show_menu() {
+    # Check numlock status
+    local numlock_status=$(check_numlock_status)
+    local numlock_indicator=""
+    if [[ "$numlock_status" == "ON" ]]; then
+        numlock_indicator="${GREEN}NUM${NC}"
+    elif [[ "$numlock_status" == "OFF" ]]; then
+        numlock_indicator="${RED}num${NC}"
+    else
+        numlock_indicator="${YELLOW}N/A${NC}"
+    fi
+    
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}║                   SUTAZAI MONITORING MENU                   ║${NC}"
+    echo -e "${CYAN}║                                                   [$numlock_indicator]     ║${NC}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     echo "1. System Overview"

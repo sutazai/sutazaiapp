@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     wget \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install LangFlow
 RUN pip install langflow
@@ -19,4 +19,10 @@ langflow run --host 0.0.0.0 --port 7860\n\
 
 EXPOSE 7860
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["./start.sh"]

@@ -4,25 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    wget \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install GPT-Engineer from PyPI
-RUN pip install --no-cache-dir gpt-engineer
-
-# Copy service files
-COPY gpt_engineer_service.py .
+# Copy requirements
 COPY requirements.txt .
 
-# Install service dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create workspace
-RUN mkdir -p /app/workspace
+# Copy application
+COPY app.py .
 
-EXPOSE 8080
+# Set environment variables
+ENV AGENT_ID=gpt-engineer
+ENV AGENT_NAME="GPT-Engineer"
+ENV PORT=8536
 
-CMD ["uvicorn", "gpt_engineer_service:app", "--host", "0.0.0.0", "--port", "8080"]
+# Expose port
+EXPOSE 8536
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8536/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]
