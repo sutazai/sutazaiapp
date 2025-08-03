@@ -1,0 +1,18 @@
+{
+  "name": "experiment-tracker",
+  "description": "Agent for ai-ml operations",
+  "model": "ollama",
+  "base_model": "qwen2.5-coder:7b",
+  "port": 9222,
+  "capabilities": [
+    "code_generation",
+    "analysis",
+    "optimization"
+  ],
+  "memory_limit": "512M",
+  "cpu_limit": "0.5",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "ai-ml"
+  }
+}

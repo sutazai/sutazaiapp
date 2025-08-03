@@ -1,0 +1,18 @@
+{
+  "name": "bias-and-fairness-auditor",
+  "description": "Agent for security operations",
+  "model": "ollama",
+  "base_model": "deepseek-r1:8b",
+  "port": 9004,
+  "capabilities": [
+    "security_analysis",
+    "monitoring",
+    "alerting"
+  ],
+  "memory_limit": "1G",
+  "cpu_limit": "1.0",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "security"
+  }
+}

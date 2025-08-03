@@ -9,11 +9,11 @@ import os
 import subprocess
 sys.path.append('/opt/sutazaiapp/agents')
 
-from agent_base import BaseAgent
+from agents.core.base_agent_v2 import BaseAgentV2
 from typing import Dict, Any, List
 
 
-class DeploymentAutomationMasterAgent(BaseAgent):
+class DeploymentAutomationMasterAgent(BaseAgentV2):
     """Deployment Automation Master Agent implementation"""
     
     def __init__(self):

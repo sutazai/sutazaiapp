@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hygiene System Test</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background: #1a1a1a; color: white; }
+        .status { padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .online { background: #27ae60; }
+        .button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; }
+        .enable { background: #2ecc71; }
+        .disable { background: #e74c3c; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Hygiene System Status</h1>
+    <div id="api-status" class="status">Checking API...</div>
+    <div id="rules-count" class="status">Loading rules...</div>
+    
+    <h2>Quick Controls:</h2>
+    <button class="button enable" onclick="enableAll()">✅ Enable All Rules</button>
+    <button class="button disable" onclick="disableAll()">❌ Disable All Rules</button>
+    
+    <h2>Access Full Dashboard:</h2>
+    <a href="http://localhost:8080" target="_blank" style="color: #3498db;">
+        Click here to open the full dashboard
+    </a>
+
+    <script>
+        // Check API status
+        fetch('http://localhost:8100/api/rules')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('api-status').innerHTML = 
+                    '<div class="online">✅ API is ONLINE!</div>';
+                document.getElementById('rules-count').innerHTML = 
+                    `📋 ${data.enabled} of ${data.total} rules are enabled (Profile: ${data.current_profile})`;
+            })
+            .catch(e => {
+                document.getElementById('api-status').innerHTML = 
+                    '❌ API is offline - run: python scripts/agents/rule-control-manager.py';
+            });
+
+        function enableAll() {
+            fetch('http://localhost:8100/api/rules/enable-all', {method: 'POST'})
+                .then(() => location.reload());
+        }
+
+        function disableAll() {
+            fetch('http://localhost:8100/api/rules/disable-all', {method: 'POST'})
+                .then(() => location.reload());
+        }
+    </script>
+</body>
+</html>

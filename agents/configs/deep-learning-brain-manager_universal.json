@@ -1,0 +1,18 @@
+{
+  "name": "deep-learning-brain-manager",
+  "description": "Agent for ai-ml operations",
+  "model": "ollama",
+  "base_model": "deepseek-r1:8b",
+  "port": 9209,
+  "capabilities": [
+    "code_generation",
+    "analysis",
+    "optimization"
+  ],
+  "memory_limit": "1G",
+  "cpu_limit": "1.0",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "ai-ml"
+  }
+}

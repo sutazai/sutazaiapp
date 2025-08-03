@@ -10,12 +10,12 @@ import json
 import subprocess
 sys.path.append('/opt/sutazaiapp/agents')
 
-from agent_base import BaseAgent
+from agents.core.base_agent_v2 import BaseAgentV2
 from typing import Dict, Any, List
 import random
 
 
-class TestingQAValidatorAgent(BaseAgent):
+class TestingQAValidatorAgent(BaseAgentV2):
     """Testing QA Validator Agent implementation"""
     
     def __init__(self):

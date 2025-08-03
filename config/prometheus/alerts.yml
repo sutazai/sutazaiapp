@@ -1,0 +1,180 @@
+groups:
+  - name: ollama_distributed_alerts
+    interval: 30s
+    rules:
+      # Ollama service alerts
+      - alert: OllamaServiceDown
+        expr: up{job="ollama"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: ollama
+        annotations:
+          summary: "Ollama service is down"
+          description: "Ollama service {{ $labels.instance }} has been down for more than 2 minutes"
+
+      - alert: OllamaHighQueueDepth
+        expr: sum(ollama_queue_depth) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: queue
+        annotations:
+          summary: "High Ollama request queue depth"
+          description: "Total queue depth is {{ $value }}, indicating potential overload"
+
+      - alert: OllamaRequestLatencyHigh
+        expr: histogram_quantile(0.95, rate(ollama_request_duration_seconds_bucket[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "High Ollama request latency"
+          description: "95th percentile latency is {{ $value }}s"
+
+      # Agent health alerts
+      - alert: AgentFleetUnhealthy
+        expr: (count(agent_health_status == 0) / count(agent_health_status)) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: agents
+        annotations:
+          summary: "More than 10% of agents are unhealthy"
+          description: "{{ $value | humanizePercentage }} of agents are currently unhealthy"
+
+      - alert: CriticalAgentDown
+        expr: agent_health_status{agent_type="opus"} == 0
+        for: 3m
+        labels:
+          severity: critical
+          component: agents
+        annotations:
+          summary: "Critical Opus agent is down"
+          description: "Opus agent {{ $labels.agent_name }} has been down for more than 3 minutes"
+
+      # Resource alerts
+      - alert: SystemMemoryHigh
+        expr: resource_utilization_percent{resource_type="memory"} > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "System memory usage is high"
+          description: "Memory usage is {{ $value }}%"
+
+      - alert: SystemMemoryCritical
+        expr: resource_utilization_percent{resource_type="memory"} > 95
+        for: 2m
+        labels:
+          severity: critical
+          component: resources
+        annotations:
+          summary: "System memory usage is critical"
+          description: "Memory usage is {{ $value }}%, system may become unstable"
+
+      - alert: GPUMemoryHigh
+        expr: resource_utilization_percent{resource_type="gpu_memory"} > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: gpu
+        annotations:
+          summary: "GPU memory usage is high"
+          description: "GPU memory usage is {{ $value }}%"
+
+      # Circuit breaker alerts
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_status > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: circuit_breaker
+        annotations:
+          summary: "Circuit breaker is open"
+          description: "Circuit breaker for {{ $labels.agent_name }} is in state {{ $value }}"
+
+      - alert: MultipleCircuitBreakersOpen
+        expr: count(circuit_breaker_status > 0) > 5
+        for: 2m
+        labels:
+          severity: critical
+          component: circuit_breaker
+        annotations:
+          summary: "Multiple circuit breakers are open"
+          description: "{{ $value }} circuit breakers are currently open, indicating widespread issues"
+
+      # System degradation alerts
+      - alert: SystemDegradationMinor
+        expr: system_degradation_level >= 1
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "System is in degraded state"
+          description: "System degradation level is {{ $value }}"
+
+      - alert: SystemDegradationMajor
+        expr: system_degradation_level >= 2
+        for: 3m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "System is in major degradation"
+          description: "System degradation level is {{ $value }}, performance severely impacted"
+
+      - alert: SystemDegradationCritical
+        expr: system_degradation_level >= 3
+        for: 1m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "System is in critical state"
+          description: "System degradation level is {{ $value }}, immediate intervention required"
+
+      # Network and connectivity alerts
+      - alert: RedisConnectionFailure
+        expr: up{job="redis"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: redis
+        annotations:
+          summary: "Redis connection failure"
+          description: "Cannot connect to Redis, queue management impacted"
+
+      - alert: ConsulServiceDown
+        expr: up{job="consul"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: consul
+        annotations:
+          summary: "Consul service discovery is down"
+          description: "Consul is unreachable, agent discovery impacted"
+
+      # Performance degradation alerts
+      - alert: RequestProcessingBacklog
+        expr: rate(ollama_queue_depth[5m]) > 10
+        for: 10m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "Request processing backlog growing"
+          description: "Queue depth increasing at {{ $value }} requests/second"
+
+      - alert: CacheHitRateLow
+        expr: rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) < 0.5
+        for: 10m
+        labels:
+          severity: info
+          component: cache
+        annotations:
+          summary: "Cache hit rate is low"
+          description: "Cache hit rate is {{ $value | humanizePercentage }}"

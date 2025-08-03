@@ -1,0 +1,90 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'ollama-distributed'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules
+rule_files:
+  - '/etc/prometheus/alerts.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Ollama service monitoring
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama-primary:11434']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Gateway monitoring
+  - job_name: 'ollama-gateway'
+    static_configs:
+      - targets: ['ollama-gateway:80']
+    metrics_path: '/metrics'
+
+  # HAProxy monitoring
+  - job_name: 'haproxy'
+    static_configs:
+      - targets: ['agent-load-balancer:9101']
+
+  # Service discovery for agents
+  - job_name: 'agents'
+    consul_sd_configs:
+      - server: 'consul-server:8500'
+        services: ['agent-*']
+    relabel_configs:
+      - source_labels: [__meta_consul_service]
+        target_label: agent_name
+      - source_labels: [__meta_consul_tags]
+        regex: '.*,([^,]+),.*'
+        target_label: agent_type
+      - source_labels: [__address__]
+        target_label: __address__
+        regex: '([^:]+)(?::\d+)?'
+        replacement: '${1}:9100'
+
+  # Redis monitoring
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-distributed:6379']
+
+  # System services
+  - job_name: 'system-services'
+    static_configs:
+      - targets:
+          - 'queue-processor:8080'
+          - 'circuit-breaker:8080'
+          - 'cache-manager:8080'
+          - 'agent-registry:8080'
+          - 'resource-monitor:8080'
+          - 'health-checker-distributed:8080'
+
+  # Node exporter for host metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['host.docker.internal:9100']
+
+  # cAdvisor for container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    metrics_path: '/metrics'
+    
+# Remote write for long-term storage (optional)
+# remote_write:
+#   - url: "http://cortex:9009/api/v1/push"

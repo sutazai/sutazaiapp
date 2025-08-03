@@ -9,11 +9,11 @@ import os
 import subprocess
 sys.path.append('/opt/sutazaiapp/agents')
 
-from agent_base import BaseAgent
+from agents.core.base_agent_v2 import BaseAgentV2
 from typing import Dict, Any, List
 
 
-class InfrastructureDevOpsManagerAgent(BaseAgent):
+class InfrastructureDevOpsManagerAgent(BaseAgentV2):
     """Infrastructure DevOps Manager Agent implementation"""
     
     def __init__(self):

@@ -10,11 +10,11 @@ import json
 import requests
 sys.path.append('/opt/sutazaiapp/agents')
 
-from agent_base import BaseAgent
+from agents.core.base_agent_v2 import BaseAgentV2
 from typing import Dict, Any, List, Optional
 
 
-class OllamaIntegrationSpecialistAgent(BaseAgent):
+class OllamaIntegrationSpecialistAgent(BaseAgentV2):
     """Ollama Integration Specialist Agent implementation"""
     
     def __init__(self):

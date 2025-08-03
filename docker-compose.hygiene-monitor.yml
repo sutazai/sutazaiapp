@@ -1,0 +1,159 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for persistence
+  postgres:
+    image: postgres:15-alpine
+    container_name: hygiene-postgres
+    environment:
+      POSTGRES_DB: hygiene_monitoring
+      POSTGRES_USER: hygiene_user
+      POSTGRES_PASSWORD: hygiene_secure_2024
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hygiene-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hygiene_user -d hygiene_monitoring"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "5433:5432"  # Non-standard port to avoid conflicts
+
+  # Backend API Service
+  hygiene-backend:
+    build:
+      context: .
+      dockerfile: docker/hygiene-backend/Dockerfile
+    container_name: hygiene-backend
+    environment:
+      DATABASE_URL: postgresql://hygiene_user:hygiene_secure_2024@postgres:5432/hygiene_monitoring
+      PROJECT_ROOT: /app/project
+      LOG_LEVEL: INFO
+      WEBSOCKET_PORT: 8080
+      API_PORT: 8080
+    volumes:
+      - ./:/app/project:ro  # Read-only mount of project for scanning
+      - hygiene_logs:/app/logs
+    networks:
+      - hygiene-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/hygiene/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  # Rule Control API Service
+  rule-control-api:
+    build:
+      context: .
+      dockerfile: docker/rule-control/Dockerfile
+    container_name: rule-control-api
+    environment:
+      PROJECT_ROOT: /app/project
+      CONFIG_DIR: /app/config
+      LOG_LEVEL: INFO
+    volumes:
+      - ./:/app/project:ro
+      - ./config:/app/config
+      - hygiene_logs:/app/logs
+    networks:
+      - hygiene-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8100/api/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+
+  # Frontend Dashboard Service
+  hygiene-dashboard:
+    build:
+      context: .
+      dockerfile: docker/hygiene-dashboard/Dockerfile
+    container_name: hygiene-dashboard
+    environment:
+      BACKEND_API_URL: http://hygiene-backend:8080
+      RULE_API_URL: http://rule-control-api:8100
+      WEBSOCKET_URL: ws://hygiene-backend:8080/ws
+    networks:
+      - hygiene-network
+    depends_on:
+      hygiene-backend:
+        condition: service_healthy
+      rule-control-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+
+  # Nginx Reverse Proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: hygiene-nginx
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - hygiene_logs:/var/log/nginx
+    networks:
+      - hygiene-network
+    depends_on:
+      - hygiene-dashboard
+      - hygiene-backend
+      - rule-control-api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    ports:
+      - "80:80"   # Dashboard
+
+  # Redis for caching and pub/sub
+  redis:
+    image: redis:7-alpine
+    container_name: hygiene-redis
+    networks:
+      - hygiene-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+networks:
+  hygiene-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  hygiene_logs:
+    driver: local

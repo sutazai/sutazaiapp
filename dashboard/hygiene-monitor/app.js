@@ -8,8 +8,12 @@
 
 class HygieneMonitorDashboard {
     constructor() {
-        this.apiEndpoint = '/api/hygiene';
-        this.refreshInterval = 10000; // 10 seconds
+        // Use configuration from environment or defaults
+        const config = window.HYGIENE_CONFIG || {};
+        this.apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8080/api/hygiene';
+        this.websocketEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8080/ws';
+        this.ruleApiEndpoint = config.RULE_API_URL || 'http://localhost:8100/api';
+        this.refreshInterval = 1000; // 1 second for real-time updates
         this.charts = {};
         this.websocket = null;
         this.cache = new Map();
@@ -20,6 +24,9 @@ class HygieneMonitorDashboard {
         this.pendingChanges = new Set();
         this.tabId = this.generateTabId();
         this.syncChannel = null;
+        this.isConnected = false;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 10;
         this.data = {
             rules: {},
             agents: {},
@@ -211,6 +218,7 @@ class HygieneMonitorDashboard {
         this.setupTabSync();
         this.initializeCharts();
         await this.loadInitialData();
+        await this.initializeWebSocket();
         this.startRealTimeUpdates();
         this.renderDashboard();
         this.showToast('Dashboard initialized successfully', 'success');
@@ -452,7 +460,7 @@ class HygieneMonitorDashboard {
             let response = this.getCachedData(statusKey);
             
             if (!response) {
-                response = await this.fetchWithFallback('/api/hygiene/status', this.generateMockData());
+                response = await this.fetchWithFallback(this.apiEndpoint + '/status', this.generateMockData());
                 this.setCachedData(statusKey, response);
             }
             
@@ -463,7 +471,7 @@ class HygieneMonitorDashboard {
             let metricsResponse = this.getCachedData(metricsKey);
             
             if (!metricsResponse) {
-                metricsResponse = await this.fetchWithFallback('/api/system/metrics', this.generateMockMetrics());
+                metricsResponse = await this.fetchWithFallback('http://localhost:8080/api/system/metrics', this.generateMockMetrics());
                 this.setCachedData(metricsKey, metricsResponse);
             }
             
@@ -2089,26 +2097,32 @@ class HygieneMonitorDashboard {
         this.connectWebSocket();
     }
     
+    async initializeWebSocket() {
+        this.connectWebSocket();
+    }
+
     connectWebSocket() {
         if (this.websocket) {
             this.websocket.close();
         }
         
         try {
-            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `${protocol}//${window.location.host}/ws/hygiene`;
+            console.log('Connecting to WebSocket:', this.websocketEndpoint);
             
-            this.websocket = new WebSocket(wsUrl);
+            this.websocket = new WebSocket(this.websocketEndpoint);
             
             this.websocket.onopen = () => {
-                console.log('WebSocket connected');
+                console.log('WebSocket connected to monitoring backend');
+                this.isConnected = true;
+                this.reconnectAttempts = 0;
                 this.updateConnectionStatus(true);
+                this.showToast('Real-time monitoring connected', 'success');
             };
             
             this.websocket.onmessage = (event) => {
                 try {
-                    const data = JSON.parse(event.data);
-                    this.handleWebSocketMessage(data);
+                    const message = JSON.parse(event.data);
+                    this.handleWebSocketMessage(message);
                 } catch (error) {
                     console.warn('Invalid WebSocket message:', error);
                 }
@@ -2116,40 +2130,345 @@ class HygieneMonitorDashboard {
             
             this.websocket.onclose = () => {
                 console.log('WebSocket disconnected');
+                this.isConnected = false;
                 this.updateConnectionStatus(false);
                 
-                // Attempt to reconnect after 5 seconds
-                setTimeout(() => {
-                    if (document.getElementById('real-time-monitoring')?.checked) {
-                        this.connectWebSocket();
-                    }
-                }, 5000);
+                // Attempt to reconnect with exponential backoff
+                if (this.reconnectAttempts < this.maxReconnectAttempts) {
+                    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+                    this.reconnectAttempts++;
+                    
+                    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
+                    setTimeout(() => {
+                        if (document.getElementById('real-time-monitoring')?.checked) {
+                            this.connectWebSocket();
+                        }
+                    }, delay);
+                } else {
+                    console.warn('Max reconnection attempts reached');
+                    this.showToast('Connection lost - refresh page to retry', 'error');
+                }
             };
             
             this.websocket.onerror = (error) => {
                 console.warn('WebSocket error:', error);
+                this.isConnected = false;
                 this.updateConnectionStatus(false);
             };
         } catch (error) {
             console.warn('WebSocket connection failed:', error);
+            this.isConnected = false;
             this.updateConnectionStatus(false);
         }
     }
     
-    handleWebSocketMessage(data) {
-        switch (data.type) {
-            case 'violation-update':
-                this.handleViolationUpdate(data.payload);
+    handleWebSocketMessage(message) {
+        console.log('Received WebSocket message:', message.type);
+        
+        switch (message.type) {
+            case 'initial_data':
+                this.handleInitialData(message.data);
                 break;
-            case 'agent-status':
-                this.handleAgentStatusUpdate(data.payload);
+            case 'system_metrics':
+                this.handleSystemMetrics(message.data);
                 break;
-            case 'system-alert':
-                this.showToast(data.payload.message, data.payload.severity || 'info');
+            case 'violations_update':
+                this.handleViolationsUpdate(message.data);
+                break;
+            case 'enforcement_action':
+                this.handleEnforcementAction(message.data);
+                break;
+            case 'agent_health':
+                this.handleAgentHealth(message.data);
+                break;
+            case 'log_entry':
+                this.handleLogEntry(message.data);
                 break;
             default:
-                console.log('Unknown WebSocket message type:', data.type);
+                console.log('Unknown WebSocket message type:', message.type);
         }
+    }
+
+    handleInitialData(data) {
+        console.log('Received initial data from backend');
+        this.data = { ...this.data, ...data };
+        this.renderDashboard();
+    }
+
+    handleSystemMetrics(metrics) {
+        // Update system metrics in real-time
+        this.data.systemMetrics = metrics;
+        this.updateSystemMetricsDisplay(metrics);
+    }
+
+    handleViolationsUpdate(violations) {
+        // Update violations data
+        this.data.recentViolations = violations;
+        this.updateViolationCounts();
+        this.updateViolationCharts();
+    }
+
+    handleEnforcementAction(action) {
+        // Add new enforcement action
+        if (!this.data.recentActions) {
+            this.data.recentActions = [];
+        }
+        this.data.recentActions.unshift(action);
+        this.data.recentActions = this.data.recentActions.slice(0, 100); // Keep last 100
+        this.updateActionsDisplay();
+    }
+
+    handleAgentHealth(agentHealthData) {
+        // Update agent health information
+        this.data.agentHealth = agentHealthData;
+        this.updateAgentHealthDisplay();
+    }
+
+    handleLogEntry(logEntry) {
+        // Handle real-time log entries
+        console.log('Log entry:', logEntry);
+        // Could add to a logs panel if needed
+    }
+
+    updateSystemMetricsDisplay(metrics) {
+        // Update memory usage
+        const memoryElement = document.getElementById('memory-usage');
+        if (memoryElement && metrics.memory_percentage !== undefined) {
+            memoryElement.textContent = `${metrics.memory_percentage.toFixed(1)}%`;
+        }
+
+        // Update CPU usage
+        const cpuElement = document.getElementById('cpu-usage');
+        if (cpuElement && metrics.cpu_usage !== undefined) {
+            cpuElement.textContent = `${metrics.cpu_usage.toFixed(1)}%`;
+        }
+
+        // Update disk usage
+        const diskElement = document.getElementById('disk-usage');
+        if (diskElement && metrics.disk_percentage !== undefined) {
+            diskElement.textContent = `${metrics.disk_percentage.toFixed(1)}%`;
+        }
+
+        // Update network status
+        const networkElement = document.getElementById('network-status');
+        if (networkElement && metrics.network_status) {
+            networkElement.textContent = metrics.network_status;
+            networkElement.className = `metric-value ${metrics.network_status.toLowerCase()}`;
+        }
+
+        // Update last update time
+        const lastUpdateElement = document.getElementById('last-update');
+        if (lastUpdateElement) {
+            const now = new Date();
+            lastUpdateElement.textContent = now.toLocaleTimeString();
+        }
+    }
+
+    updateViolationCounts() {
+        if (!this.data.recentViolations) return;
+
+        const violations = this.data.recentViolations;
+        const criticalCount = violations.filter(v => v.severity === 'CRITICAL').length;
+        const warningCount = violations.filter(v => v.severity === 'HIGH' || v.severity === 'MEDIUM').length;
+        const totalCount = violations.length;
+
+        // Update violation counts
+        const criticalElement = document.getElementById('critical-violations');
+        if (criticalElement) {
+            criticalElement.textContent = criticalCount;
+        }
+
+        const warningElement = document.getElementById('warning-violations');
+        if (warningElement) {
+            warningElement.textContent = warningCount;
+        }
+
+        // Update compliance score
+        const complianceElement = document.getElementById('compliance-score');
+        if (complianceElement && this.data.complianceScore !== undefined) {
+            complianceElement.textContent = `${this.data.complianceScore}%`;
+        }
+
+        // Update system status
+        const statusElement = document.getElementById('system-status');
+        if (statusElement) {
+            if (criticalCount > 0) {
+                statusElement.textContent = 'CRITICAL';
+                statusElement.className = 'stat-value critical';
+            } else if (warningCount > 0) {
+                statusElement.textContent = 'WARNING';
+                statusElement.className = 'stat-value warning';
+            } else {
+                statusElement.textContent = 'HEALTHY';
+                statusElement.className = 'stat-value success';
+            }
+        }
+    }
+
+    updateViolationCharts() {
+        // Update the violation trend chart with real data
+        if (this.charts.violationTrend && this.data.recentViolations) {
+            const violations = this.data.recentViolations;
+            const timeSlots = this.generateTimeSlots(24); // 24 hour slots
+            const violationCounts = this.countViolationsByTime(violations, timeSlots);
+            
+            this.charts.violationTrend.data.labels = timeSlots.map(slot => 
+                new Date(slot).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+            );
+            this.charts.violationTrend.data.datasets[0].data = violationCounts;
+            this.charts.violationTrend.update();
+        }
+
+        // Update rule distribution chart
+        if (this.charts.ruleDistribution && this.data.recentViolations) {
+            const ruleViolations = this.countViolationsByRule(this.data.recentViolations);
+            const ruleNames = Object.keys(ruleViolations);
+            const ruleCounts = Object.values(ruleViolations);
+
+            this.charts.ruleDistribution.data.labels = ruleNames;
+            this.charts.ruleDistribution.data.datasets[0].data = ruleCounts;
+            this.charts.ruleDistribution.update();
+        }
+    }
+
+    updateActionsDisplay() {
+        const actionsList = document.getElementById('actions-list');
+        if (!actionsList || !this.data.recentActions) return;
+
+        const actionsHtml = this.data.recentActions.slice(0, 10).map(action => {
+            const timeAgo = this.getTimeAgo(new Date(action.timestamp));
+            const statusClass = action.status.toLowerCase();
+            const icon = this.getActionIcon(action.action_type);
+
+            return `
+                <div class="action-item ${statusClass}">
+                    <div class="action-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="action-content">
+                        <div class="action-title">${action.action_type}: ${action.rule_id || 'General'}</div>
+                        <div class="action-details">
+                            ${action.file_path ? `File: ${action.file_path}` : ''}
+                            ${action.duration_ms ? `(${action.duration_ms}ms)` : ''}
+                        </div>
+                        <div class="action-time">${timeAgo}</div>
+                    </div>
+                    <div class="action-status ${statusClass}">${action.status}</div>
+                </div>
+            `;
+        }).join('');
+
+        actionsList.innerHTML = actionsHtml || '<div class="no-actions">No recent enforcement actions</div>';
+    }
+
+    updateAgentHealthDisplay() {
+        const agentList = document.getElementById('agent-list');
+        if (!agentList || !this.data.agentHealth) return;
+
+        const agentsHtml = this.data.agentHealth.map(agent => {
+            const statusClass = agent.status.toLowerCase();
+            const lastHeartbeat = this.getTimeAgo(new Date(agent.last_heartbeat));
+
+            return `
+                <div class="agent-item ${statusClass}">
+                    <div class="agent-header">
+                        <div class="agent-name">${agent.name || agent.agent_id}</div>
+                        <div class="agent-status ${statusClass}">${agent.status}</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Tasks Completed:</span>
+                            <span class="metric-value">${agent.tasks_completed}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Tasks Failed:</span>
+                            <span class="metric-value">${agent.tasks_failed}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">CPU:</span>
+                            <span class="metric-value">${agent.cpu_usage?.toFixed(1) || 0}%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Memory:</span>
+                            <span class="metric-value">${agent.memory_usage?.toFixed(1) || 0}MB</span>
+                        </div>
+                    </div>
+                    <div class="agent-heartbeat">Last heartbeat: ${lastHeartbeat}</div>
+                </div>
+            `;
+        }).join('');
+
+        agentList.innerHTML = agentsHtml || '<div class="no-agents">No agents available</div>';
+
+        // Update active agents count
+        const activeAgentsElement = document.getElementById('active-agents');
+        if (activeAgentsElement) {
+            const activeCount = this.data.agentHealth.filter(agent => 
+                agent.status === 'ACTIVE' || agent.status === 'BUSY'
+            ).length;
+            activeAgentsElement.textContent = activeCount;
+        }
+    }
+
+    generateTimeSlots(hours) {
+        const slots = [];
+        const now = new Date();
+        for (let i = hours - 1; i >= 0; i--) {
+            const slot = new Date(now.getTime() - (i * 60 * 60 * 1000));
+            slots.push(slot.getTime());
+        }
+        return slots;
+    }
+
+    countViolationsByTime(violations, timeSlots) {
+        const counts = new Array(timeSlots.length).fill(0);
+        
+        violations.forEach(violation => {
+            const violationTime = new Date(violation.timestamp).getTime();
+            for (let i = 0; i < timeSlots.length - 1; i++) {
+                if (violationTime >= timeSlots[i] && violationTime < timeSlots[i + 1]) {
+                    counts[i]++;
+                    break;
+                }
+            }
+        });
+        
+        return counts;
+    }
+
+    countViolationsByRule(violations) {
+        const ruleCounts = {};
+        violations.forEach(violation => {
+            const ruleName = violation.rule_name || violation.rule_id;
+            ruleCounts[ruleName] = (ruleCounts[ruleName] || 0) + 1;
+        });
+        return ruleCounts;
+    }
+
+    getActionIcon(actionType) {
+        const icons = {
+            'SCAN': 'fa-search',
+            'CLEANUP': 'fa-broom',
+            'VALIDATE': 'fa-check-circle',
+            'FIX': 'fa-wrench',
+            'REPORT': 'fa-file-alt'
+        };
+        return icons[actionType] || 'fa-cog';
+    }
+
+    getTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        
+        const diffHours = Math.floor(diffMins / 60);
+        if (diffHours < 24) return `${diffHours}h ago`;
+        
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays}d ago`;
     }
     
     handleViolationUpdate(payload) {
