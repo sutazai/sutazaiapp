@@ -517,6 +517,67 @@ class EnhancedHygieneBackend:
                 'systemStatus': 'ERROR'
             }
 
+    def _safe_serialize(self, obj, seen=None, depth=0):
+        """Safely serialize objects with circular reference and depth protection"""
+        if seen is None:
+            seen = set()
+        
+        if depth > 20:  # Maximum depth limit
+            return '[Max Depth Exceeded]'
+        
+        obj_id = id(obj)
+        if obj_id in seen:
+            return '[Circular Reference]'
+        
+        # Handle basic types that don't need tracking
+        if obj is None or isinstance(obj, (bool, int, float, str)):
+            return obj
+        
+        # Handle datetime objects
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        
+        # Track complex objects
+        seen.add(obj_id)
+        
+        try:
+            if isinstance(obj, dict):
+                result = {}
+                for k, v in obj.items():
+                    try:
+                        result[str(k)] = self._safe_serialize(v, seen.copy(), depth + 1)
+                    except Exception:
+                        result[str(k)] = '[Serialization Error]'
+                return result
+            
+            elif isinstance(obj, (list, tuple)):
+                result = []
+                for item in obj:
+                    try:
+                        result.append(self._safe_serialize(item, seen.copy(), depth + 1))
+                    except Exception:
+                        result.append('[Serialization Error]')
+                return result
+            
+            elif hasattr(obj, '__dict__'):
+                result = {}
+                for k, v in obj.__dict__.items():
+                    if not k.startswith('_') and not callable(v):
+                        try:
+                            result[k] = self._safe_serialize(v, seen.copy(), depth + 1)
+                        except Exception:
+                            result[k] = '[Serialization Error]'
+                return result
+            
+            else:
+                # Fallback to string representation
+                return str(obj)
+                
+        except Exception:
+            return f'[Unserializable: {type(obj).__name__}]'
+        finally:
+            seen.discard(obj_id)
+
     async def broadcast_to_websockets(self, message: Dict[str, Any]):
         """Broadcast message to all WebSocket clients with circular reference protection"""
         if not self.websocket_clients:
@@ -525,9 +586,9 @@ class EnhancedHygieneBackend:
         closed_clients = set()
         
         try:
-            # Use a fresh encoder instance for each broadcast to reset the seen set
-            encoder = DateTimeEncoder()
-            message_json = encoder.encode(message)
+            # Safely serialize the message to prevent circular references
+            safe_message = self._safe_serialize(message)
+            message_json = json.dumps(safe_message, ensure_ascii=False)
             
             # Limit message size to prevent memory issues
             if len(message_json) > 100000:  # 100KB limit
@@ -539,7 +600,8 @@ class EnhancedHygieneBackend:
                     'timestamp': message.get('timestamp', datetime.now().isoformat()),
                     'error': 'Message truncated due to size limit'
                 }
-                message_json = encoder.encode(simplified_message)
+                safe_simplified = self._safe_serialize(simplified_message)
+                message_json = json.dumps(safe_simplified, ensure_ascii=False)
             
         except Exception as e:
             logger.error("Failed to serialize WebSocket message", error=str(e))
@@ -547,7 +609,7 @@ class EnhancedHygieneBackend:
             error_message = {
                 'type': 'error',
                 'timestamp': datetime.now().isoformat(),
-                'error': 'Failed to serialize message'
+                'error': f'Failed to serialize message: {str(e)}'
             }
             message_json = json.dumps(error_message)
         

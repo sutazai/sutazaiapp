@@ -10,8 +10,8 @@ class HygieneMonitorDashboard {
     constructor() {
         // Use configuration from environment or defaults
         const config = window.HYGIENE_CONFIG || {};
-        this.apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8081/api/hygiene';
-        this.websocketEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8081/ws';
+        this.apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8080/api/hygiene';
+        this.websocketEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8080/ws';
         this.ruleApiEndpoint = config.RULE_API_URL || 'http://localhost:8100/api';
         
         console.log('Dashboard initializing with configuration:', {
@@ -31,7 +31,18 @@ class HygieneMonitorDashboard {
         this.tabId = this.generateTabId();
         this.syncChannel = null;
         this.isConnected = false;
+        this.isConnecting = false;
         this.reconnectAttempts = 0;
+        this.reconnectTimeout = null;
+        this.isAuditing = false;
+        
+        // Recursion protection
+        this.isUpdating = false;
+        this.updateQueue = [];
+        this.maxUpdateDepth = 3;
+        this.currentUpdateDepth = 0;
+        this.lastUpdateTime = 0;
+        this.minUpdateInterval = 100; // 100ms minimum between updates
         this.maxReconnectAttempts = 10;
         this.data = {
             rules: {},
@@ -754,13 +765,45 @@ class HygieneMonitorDashboard {
     }
 
     renderDashboard() {
-        this.updateStatusOverview();
-        this.updateRuleMatrix();
-        this.updateAgentHealth();
-        this.updateCharts();
-        this.updateRecentActions();
-        this.updateSystemMetrics();
-        this.updateLastUpdateTime();
+        // Recursion protection
+        const now = Date.now();
+        if (this.isUpdating || (now - this.lastUpdateTime) < this.minUpdateInterval) {
+            // Queue the update for later if we're updating too frequently
+            if (!this.updateQueue.includes('renderDashboard')) {
+                this.updateQueue.push('renderDashboard');
+                setTimeout(() => {
+                    if (this.updateQueue.includes('renderDashboard')) {
+                        this.updateQueue = this.updateQueue.filter(item => item !== 'renderDashboard');
+                        this.renderDashboard();
+                    }
+                }, this.minUpdateInterval);
+            }
+            return;
+        }
+        
+        if (this.currentUpdateDepth >= this.maxUpdateDepth) {
+            console.warn('Maximum update depth reached, preventing recursion');
+            return;
+        }
+        
+        this.isUpdating = true;
+        this.currentUpdateDepth++;
+        this.lastUpdateTime = now;
+        
+        try {
+            this.updateStatusOverview();
+            this.updateRuleMatrix();
+            this.updateAgentHealth();
+            this.updateCharts();
+            this.updateRecentActions();
+            this.updateSystemMetrics();
+            this.updateLastUpdateTime();
+        } catch (error) {
+            console.error('Error in renderDashboard:', error);
+        } finally {
+            this.isUpdating = false;
+            this.currentUpdateDepth--;
+        }
     }
 
     updateStatusOverview() {
@@ -1829,6 +1872,13 @@ class HygieneMonitorDashboard {
 
     // Event handlers
     async runFullAudit() {
+        // Prevent multiple simultaneous audits
+        if (this.isAuditing) {
+            this.showToast('Audit already in progress', 'warning');
+            return;
+        }
+        
+        this.isAuditing = true;
         const loadingToast = this.showToast('Running full hygiene audit...', 'info', 0);
         this.showLoadingOverlay('Running comprehensive audit...');
         
@@ -1843,12 +1893,20 @@ class HygieneMonitorDashboard {
             this.removeToast(loadingToast);
             
             if (response.success) {
-                this.showToast(`Audit completed: ${response.fixed || 0} issues fixed, ${response.violations || 0} violations found`, 'success');
+                this.showToast(`Audit completed: ${response.violations_fixed || 0} issues fixed, ${response.violations_found || 0} violations found`, 'success');
                 
                 // Clear cache to force fresh data
                 this.cache.clear();
-                await this.loadInitialData();
-                this.renderDashboard();
+                
+                // Use setTimeout to break recursion chain
+                setTimeout(async () => {
+                    try {
+                        await this.loadInitialData();
+                        this.renderDashboard();
+                    } catch (error) {
+                        console.error('Error refreshing data after audit:', error);
+                    }
+                }, 100);
                 
                 // Sync with other tabs
                 this.syncAllTabs({ type: 'audit-completed', data: response });
@@ -1860,6 +1918,7 @@ class HygieneMonitorDashboard {
             this.showToast('Audit failed: ' + error.message, 'error');
         } finally {
             this.hideLoadingOverlay();
+            this.isAuditing = false;
         }
     }
 
@@ -2114,9 +2173,28 @@ class HygieneMonitorDashboard {
     }
 
     connectWebSocket() {
+        // Prevent multiple simultaneous connection attempts
+        if (this.isConnecting) {
+            console.log('WebSocket connection already in progress');
+            return;
+        }
+        
+        if (this.websocket && this.websocket.readyState === WebSocket.CONNECTING) {
+            console.log('WebSocket already connecting');
+            return;
+        }
+        
+        // Clear any existing reconnect timeout
+        if (this.reconnectTimeout) {
+            clearTimeout(this.reconnectTimeout);
+            this.reconnectTimeout = null;
+        }
+        
         if (this.websocket) {
             this.websocket.close();
         }
+        
+        this.isConnecting = true;
         
         try {
             console.log('Connecting to WebSocket:', this.websocketEndpoint);
@@ -2126,6 +2204,7 @@ class HygieneMonitorDashboard {
             this.websocket.onopen = () => {
                 console.log('WebSocket connected to monitoring backend');
                 this.isConnected = true;
+                this.isConnecting = false;
                 this.reconnectAttempts = 0;
                 this.updateConnectionStatus(true);
                 this.showToast('Real-time monitoring connected', 'success');
@@ -2143,6 +2222,7 @@ class HygieneMonitorDashboard {
             this.websocket.onclose = () => {
                 console.log('WebSocket disconnected');
                 this.isConnected = false;
+                this.isConnecting = false;
                 this.updateConnectionStatus(false);
                 
                 // Attempt to reconnect with exponential backoff
@@ -2151,8 +2231,10 @@ class HygieneMonitorDashboard {
                     this.reconnectAttempts++;
                     
                     console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
-                    setTimeout(() => {
-                        if (document.getElementById('real-time-monitoring')?.checked) {
+                    
+                    // Use setTimeout to break recursion chain
+                    this.reconnectTimeout = setTimeout(() => {
+                        if (document.getElementById('real-time-monitoring')?.checked && !this.isConnecting) {
                             this.connectWebSocket();
                         }
                     }, delay);
@@ -2165,11 +2247,13 @@ class HygieneMonitorDashboard {
             this.websocket.onerror = (error) => {
                 console.warn('WebSocket error:', error);
                 this.isConnected = false;
+                this.isConnecting = false;
                 this.updateConnectionStatus(false);
             };
         } catch (error) {
             console.warn('WebSocket connection failed:', error);
             this.isConnected = false;
+            this.isConnecting = false;
             this.updateConnectionStatus(false);
         }
     }

@@ -46,7 +46,7 @@ class HardwareResourceOptimizerAgent(BaseAgent):
         super().__init__()
         self.agent_id = "hardware-resource-optimizer"
         self.name = "Hardware Resource Optimizer"
-        self.port = int(os.getenv("PORT", "8080"))
+        self.port = int(os.getenv("PORT", "8116"))
         self.description = "On-demand hardware resource optimization and cleanup tool"
         
         # Docker client for container management
@@ -376,6 +376,364 @@ class HardwareResourceOptimizerAgent(BaseAgent):
         except Exception as e:
             self.logger.error(f"Storage report error: {e}")
             return {"status": "error", "error": str(e)}
+    
+    # Storage Optimization Methods
+    def _safe_delete(self, filepath: str, dry_run: bool = False) -> bool:
+        """Safely delete a file by moving to temp location first"""
+        try:
+            if dry_run:
+                return True
+            
+            # Create safety backup
+            backup_path = os.path.join(self.safe_temp_location, 
+                                     f"{int(time.time())}_{os.path.basename(filepath)}")
+            shutil.move(filepath, backup_path)
+            
+            # Log the operation
+            self.logger.info(f"Safely deleted {filepath} -> {backup_path}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed safe delete of {filepath}: {e}")
+            return False
+    
+    def _optimize_storage_comprehensive(self, dry_run: bool = False) -> Dict[str, Any]:
+        """Main storage optimization with smart cleanup"""
+        actions_taken = []
+        space_freed = 0
+        
+        try:
+            initial_disk = psutil.disk_usage('/')
+            
+            # 1. Clean temporary files (older than 3 days)
+            temp_paths = ['/tmp', '/var/tmp']
+            for temp_path in temp_paths:
+                if os.path.exists(temp_path):
+                    files = self._scan_directory(temp_path, max_depth=3)
+                    cutoff_time = time.time() - (3 * 86400)  # 3 days
+                    
+                    for file_info in files:
+                        if file_info['mtime'] < cutoff_time:
+                            if self._safe_delete(file_info['path'], dry_run):
+                                space_freed += file_info['size']
+                                actions_taken.append(f"Deleted old temp file: {file_info['name']}")
+            
+            # 2. Clean cache directories
+            cache_paths = ['/var/cache', '/home/*/.cache'] if not dry_run else []
+            for cache_pattern in cache_paths:
+                for cache_path in glob.glob(cache_pattern):
+                    if os.path.isdir(cache_path) and self._is_safe_path(cache_path):
+                        try:
+                            # Clean cache older than 7 days
+                            result = subprocess.run([
+                                'find', cache_path, '-type', 'f', '-mtime', '+7', '-delete'
+                            ], capture_output=True, text=True, timeout=30)
+                            
+                            if result.returncode == 0:
+                                actions_taken.append(f"Cleaned cache: {cache_path}")
+                        except Exception as e:
+                            actions_taken.append(f"Could not clean cache {cache_path}: {e}")
+            
+            # 3. Application-specific cleanup
+            app_cleanups = {
+                'pip': ['/home/*/.cache/pip', '/root/.cache/pip'],
+                'npm': ['/home/*/.npm/_cacache', '/root/.npm/_cacache'],
+                'apt': ['/var/cache/apt/archives/*.deb'],
+                'docker': None  # Handled separately
+            }
+            
+            for app_name, paths in app_cleanups.items():
+                if paths and not dry_run:
+                    for path_pattern in paths:
+                        for path in glob.glob(path_pattern):
+                            if os.path.exists(path):
+                                try:
+                                    if os.path.isfile(path):
+                                        os.remove(path)
+                                        actions_taken.append(f"Cleaned {app_name} cache file: {os.path.basename(path)}")
+                                    elif os.path.isdir(path):
+                                        shutil.rmtree(path)
+                                        actions_taken.append(f"Cleaned {app_name} cache dir: {path}")
+                                except Exception as e:
+                                    actions_taken.append(f"Could not clean {app_name} cache: {e}")
+            
+            # 4. Log rotation
+            if not dry_run:
+                log_result = self._optimize_logs()
+                if log_result.get('status') == 'success':
+                    actions_taken.extend(log_result.get('actions_taken', []))
+                    space_freed += log_result.get('space_freed_bytes', 0)
+            
+            final_disk = psutil.disk_usage('/')
+            actual_space_freed = initial_disk.used - final_disk.used
+            
+            return {
+                "status": "success",
+                "optimization_type": "comprehensive_storage",
+                "dry_run": dry_run,
+                "actions_taken": actions_taken,
+                "estimated_space_freed_mb": space_freed / (1024 * 1024),
+                "actual_space_freed_mb": actual_space_freed / (1024 * 1024),
+                "initial_disk_percent": (initial_disk.used / initial_disk.total) * 100,
+                "final_disk_percent": (final_disk.used / final_disk.total) * 100,
+                "timestamp": time.time()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Comprehensive storage optimization error: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "actions_taken": actions_taken
+            }
+    
+    def _optimize_duplicates(self, path: str, dry_run: bool = False) -> Dict[str, Any]:
+        """Remove duplicate files with safety checks"""
+        actions_taken = []
+        space_freed = 0
+        
+        try:
+            duplicates_analysis = self._analyze_duplicates(path)
+            
+            if duplicates_analysis.get('status') != 'success':
+                return duplicates_analysis
+            
+            duplicate_groups = duplicates_analysis.get('duplicate_details', [])
+            
+            for group in duplicate_groups:
+                # Keep the first file (newest), delete the rest
+                files_to_delete = group['files'][1:]
+                
+                for file_info in files_to_delete:
+                    if self._safe_delete(file_info['path'], dry_run):
+                        space_freed += file_info['size']
+                        actions_taken.append(f"Removed duplicate: {file_info['name']}")
+            
+            return {
+                "status": "success",
+                "optimization_type": "duplicates",
+                "path": path,
+                "dry_run": dry_run,
+                "actions_taken": actions_taken,
+                "duplicates_removed": len(actions_taken),
+                "space_freed_mb": space_freed / (1024 * 1024),
+                "timestamp": time.time()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Duplicate optimization error: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "actions_taken": actions_taken
+            }
+    
+    def _optimize_cache(self) -> Dict[str, Any]:
+        """Clear various system and application caches"""
+        actions_taken = []
+        
+        try:
+            cache_commands = [
+                # System cache
+                ['sync'],
+                # Package manager caches
+                ['apt-get', 'clean'],
+                ['yum', 'clean', 'all'],
+                # Thumbnail cache
+                ['find', '/home/*/.thumbnails', '-type', 'f', '-delete'],
+                ['find', '/home/*/.cache/thumbnails', '-type', 'f', '-delete'],
+            ]
+            
+            for cmd in cache_commands:
+                try:
+                    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                    if result.returncode == 0:
+                        actions_taken.append(f"Executed: {' '.join(cmd)}")
+                    else:
+                        actions_taken.append(f"Failed: {' '.join(cmd)} - {result.stderr}")
+                except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+                    continue
+            
+            # Browser caches (if safe to do so)
+            browser_caches = [
+                '/home/*/.cache/google-chrome',
+                '/home/*/.cache/chromium',
+                '/home/*/.mozilla/firefox/*/cache2'
+            ]
+            
+            for cache_pattern in browser_caches:
+                for cache_path in glob.glob(cache_pattern):
+                    if os.path.isdir(cache_path):
+                        try:
+                            shutil.rmtree(cache_path)
+                            actions_taken.append(f"Cleared browser cache: {cache_path}")
+                        except Exception as e:
+                            actions_taken.append(f"Could not clear browser cache {cache_path}: {e}")
+            
+            return {
+                "status": "success",
+                "optimization_type": "cache",
+                "actions_taken": actions_taken,
+                "timestamp": time.time()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Cache optimization error: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "actions_taken": actions_taken
+            }
+    
+    def _optimize_compress(self, path: str, days_old: int) -> Dict[str, Any]:
+        """Compress old/archived files"""
+        actions_taken = []
+        space_saved = 0
+        
+        try:
+            if not self._is_safe_path(path) or not os.path.exists(path):
+                return {
+                    "status": "error",
+                    "error": f"Path not accessible or safe: {path}"
+                }
+            
+            files = self._scan_directory(path)
+            cutoff_time = time.time() - (days_old * 86400)
+            compressible_extensions = {'.log', '.txt', '.csv', '.sql', '.json', '.xml'}
+            
+            for file_info in files:
+                if (file_info['mtime'] < cutoff_time and 
+                    file_info['extension'] in compressible_extensions and
+                    not file_info['name'].endswith('.gz')):
+                    
+                    try:
+                        original_path = file_info['path']
+                        compressed_path = original_path + '.gz'
+                        
+                        with open(original_path, 'rb') as f_in:
+                            with gzip.open(compressed_path, 'wb') as f_out:
+                                shutil.copyfileobj(f_in, f_out)
+                        
+                        # Verify compression worked and delete original
+                        if os.path.exists(compressed_path):
+                            original_size = file_info['size']
+                            compressed_size = os.path.getsize(compressed_path)
+                            
+                            if compressed_size < original_size:
+                                os.remove(original_path)
+                                space_saved += (original_size - compressed_size)
+                                actions_taken.append(f"Compressed {file_info['name']} "
+                                                   f"({original_size} -> {compressed_size} bytes)")
+                            else:
+                                # Compression didn't help, remove compressed version
+                                os.remove(compressed_path)
+                    except Exception as e:
+                        actions_taken.append(f"Could not compress {file_info['name']}: {e}")
+            
+            return {
+                "status": "success",
+                "optimization_type": "compress",
+                "path": path,
+                "days_old": days_old,
+                "actions_taken": actions_taken,
+                "files_compressed": len([a for a in actions_taken if 'Compressed' in a]),
+                "space_saved_mb": space_saved / (1024 * 1024),
+                "timestamp": time.time()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Compression optimization error: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "actions_taken": actions_taken
+            }
+    
+    def _optimize_logs(self) -> Dict[str, Any]:
+        """Intelligent log rotation and cleanup"""
+        actions_taken = []
+        space_freed = 0
+        
+        try:
+            log_paths = ['/var/log', '/opt/sutazaiapp/logs']
+            
+            for log_path in log_paths:
+                if not os.path.exists(log_path):
+                    continue
+                
+                files = self._scan_directory(log_path, max_depth=2)
+                
+                for file_info in files:
+                    if file_info['extension'] == '.log':
+                        age_days = (time.time() - file_info['mtime']) / 86400
+                        
+                        # Delete logs older than 90 days
+                        if age_days > 90:
+                            if self._safe_delete(file_info['path']):
+                                space_freed += file_info['size']
+                                actions_taken.append(f"Deleted old log: {file_info['name']}")
+                        
+                        # Compress logs older than 7 days
+                        elif age_days > 7 and not file_info['name'].endswith('.gz'):
+                            try:
+                                original_path = file_info['path']
+                                compressed_path = original_path + '.gz'
+                                
+                                with open(original_path, 'rb') as f_in:
+                                    with gzip.open(compressed_path, 'wb') as f_out:
+                                        shutil.copyfileobj(f_in, f_out)
+                                
+                                if os.path.exists(compressed_path):
+                                    compressed_size = os.path.getsize(compressed_path)
+                                    if compressed_size < file_info['size'] * 0.8:  # 20% compression minimum
+                                        os.remove(original_path)
+                                        space_freed += (file_info['size'] - compressed_size)
+                                        actions_taken.append(f"Compressed log: {file_info['name']}")
+                                    else:
+                                        os.remove(compressed_path)
+                                        
+                            except Exception as e:
+                                actions_taken.append(f"Could not compress log {file_info['name']}: {e}")
+            
+            # Handle SQLite databases (VACUUM operation)
+            sqlite_files = []
+            for log_path in log_paths:
+                if os.path.exists(log_path):
+                    sqlite_files.extend(glob.glob(os.path.join(log_path, '**/*.db'), recursive=True))
+                    sqlite_files.extend(glob.glob(os.path.join(log_path, '**/*.sqlite'), recursive=True))
+            
+            for db_file in sqlite_files:
+                try:
+                    if self._is_safe_path(db_file):
+                        original_size = os.path.getsize(db_file)
+                        conn = sqlite3.connect(db_file)
+                        conn.execute('VACUUM')
+                        conn.close()
+                        
+                        new_size = os.path.getsize(db_file)
+                        if new_size < original_size:
+                            space_freed += (original_size - new_size)
+                            actions_taken.append(f"Vacuumed SQLite database: {os.path.basename(db_file)}")
+                            
+                except Exception as e:
+                    actions_taken.append(f"Could not vacuum database {os.path.basename(db_file)}: {e}")
+            
+            return {
+                "status": "success",
+                "optimization_type": "logs",
+                "actions_taken": actions_taken,
+                "space_freed_bytes": space_freed,
+                "space_freed_mb": space_freed / (1024 * 1024),
+                "timestamp": time.time()
+            }
+            
+        except Exception as e:
+            self.logger.error(f"Log optimization error: {e}")
+            return {
+                "status": "error",
+                "error": str(e),
+                "actions_taken": actions_taken
+            }
         
     def _setup_routes(self):
         """Setup FastAPI routes for on-demand optimization"""
@@ -756,6 +1114,11 @@ class HardwareResourceOptimizerAgent(BaseAgent):
                 all_results['docker'] = docker_result
                 all_actions.extend(docker_result.get('actions_taken', []))
             
+            # Run comprehensive storage optimization
+            storage_result = self._optimize_storage_comprehensive(dry_run=False)
+            all_results['storage'] = storage_result
+            all_actions.extend(storage_result.get('actions_taken', []))
+            
             # Get final system status
             final_status = self._get_system_status()
             
@@ -818,10 +1181,46 @@ class HardwareResourceOptimizerAgent(BaseAgent):
             elif task_type == "optimize_all":
                 return self._optimize_all()
             
+            elif task_type == "analyze_storage":
+                path = task.get("path", "/")
+                return self._analyze_storage(path)
+            
+            elif task_type == "analyze_duplicates":
+                path = task.get("path", "/")
+                return self._analyze_duplicates(path)
+            
+            elif task_type == "analyze_large_files":
+                path = task.get("path", "/")
+                min_size_mb = task.get("min_size_mb", 100)
+                return self._analyze_large_files(path, min_size_mb)
+            
+            elif task_type == "storage_report":
+                return self._generate_storage_report()
+            
+            elif task_type == "optimize_storage":
+                dry_run = task.get("dry_run", False)
+                return self._optimize_storage_comprehensive(dry_run)
+            
+            elif task_type == "optimize_duplicates":
+                path = task.get("path", "/")
+                dry_run = task.get("dry_run", False)
+                return self._optimize_duplicates(path, dry_run)
+            
+            elif task_type == "optimize_cache":
+                return self._optimize_cache()
+            
+            elif task_type == "optimize_compress":
+                path = task.get("path", "/var/log")
+                days_old = task.get("days_old", 30)
+                return self._optimize_compress(path, days_old)
+            
+            elif task_type == "optimize_logs":
+                return self._optimize_logs()
+            
             else:
                 return {
                     "status": "success",
-                    "message": f"Hardware optimization agent ready. Supported tasks: optimize_memory, optimize_cpu, optimize_disk, optimize_docker, optimize_all",
+                    "message": f"Hardware optimization agent ready. Supported tasks: optimize_memory, optimize_cpu, optimize_disk, optimize_docker, optimize_all, analyze_storage, analyze_duplicates, analyze_large_files, storage_report, optimize_storage, optimize_duplicates, optimize_cache, optimize_compress, optimize_logs",
                     "agent": self.agent_id,
                     "task_type_received": task_type
                 }
