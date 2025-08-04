@@ -1,0 +1,36 @@
+
+version: '3.8'
+
+networks:
+  sutazai-network:
+    external: true
+
+services:
+  # Optimized agent configuration template
+  agent-template: &agent-template
+    image: sutazai/agent-base:latest
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.0'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - CONSUL_HOST=http://consul:8500
+      - RABBITMQ_HOST=amqp://rabbitmq:5672/sutazai
+      - REDIS_HOST=redis://redis:6379/0
+      - MEMORY_LIMIT=1024M
+      - CPU_LIMIT=1.0
+      - ENABLE_AUTO_SCALING=true

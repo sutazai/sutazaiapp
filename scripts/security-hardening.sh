@@ -1,10 +1,10 @@
 #!/bin/bash
-"""
-SutazAI Security Hardening Script
-Addresses critical security vulnerabilities identified in security audit
-Author: Claude Security Specialist
-Date: August 4, 2025
-"""
+#
+# SutazAI Security Hardening Script
+# Addresses critical security vulnerabilities identified in security audit
+# Author: Claude Security Specialist
+# Date: August 4, 2025
+#
 
 set -euo pipefail
 

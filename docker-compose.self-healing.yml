@@ -1,0 +1,125 @@
+version: '3.8'
+
+# Self-healing container configurations
+x-agent-self-healing: &agent-self-healing
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+    interval: 60s
+    timeout: 30s
+    retries: 3
+    start_period: 120s
+  deploy:
+    restart_policy:
+      condition: on-failure
+      delay: 10s
+      max_attempts: 5
+      window: 120s
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.1'
+        memory: 128M
+
+services:
+  # Apply self-healing to all agent services
+  sutazai-data-analysis-engineer-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-dify-automation-specialist-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-awesome-code-ai-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-distributed-computing-architect-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-federated-learning-coordinator-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-garbage-collector-coordinator-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-edge-computing-optimizer-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-finrobot-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-flowiseai-flow-manager-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-data-pipeline-engineer-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-episodic-memory-engineer-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-gradient-compression-specialist-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-explainable-ai-specialist-phase3:
+    <<: *agent-self-healing
+    
+  sutazai-document-knowledge-manager-phase3:
+    <<: *agent-self-healing
+    
+  # Phase 2 agents
+  sutazai-attention-optimizer-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-autogen-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-cognitive-architecture-designer-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-crewai-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-code-improver-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-autogpt-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-aider-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-browser-automation-orchestrator-phase2:
+    <<: *agent-self-healing
+    
+  sutazai-devika-phase2:
+    <<: *agent-self-healing
+    
+  # Phase 1 agents
+  sutazai-ai-scrum-master-phase1:
+    <<: *agent-self-healing
+    
+  sutazai-ai-product-manager-phase1:
+    <<: *agent-self-healing
+    
+  sutazai-agentzero-coordinator-phase1:
+    <<: *agent-self-healing
+
+  # Infrastructure services self-healing
+  sutazai-service-registry:
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  sutazai-hardware-resource-optimizer:
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

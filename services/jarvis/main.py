@@ -24,7 +24,10 @@ from starlette.responses import Response, HTMLResponse
 
 from core.orchestrator import JarvisOrchestrator
 from core.task_planner import TaskPlanner
-from core.voice_interface import VoiceInterface
+try:
+    from core.voice_interface import VoiceInterface
+except ImportError:
+    from core.voice_interface_minimal import VoiceInterface
 from core.plugin_manager import PluginManager
 from core.agent_coordinator import AgentCoordinator
 

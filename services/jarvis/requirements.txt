@@ -25,7 +25,7 @@ openai-whisper>=20231117
 
 # Database and caching
 aioredis>=2.0.1
-sqlite3  # Built-in
+# sqlite3 is built-in to Python
 psycopg2-binary>=2.9.7
 
 # Service discovery and messaging

@@ -1,0 +1,61 @@
+services:
+  # JARVIS Unified Voice Interface
+  jarvis:
+    build: 
+      context: ./services/jarvis
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis
+    restart: unless-stopped
+    ports:
+      - "9091:8888"
+    environment:
+      TZ: UTC
+      SUTAZAI_ENV: production
+      JARVIS_CONFIG: /app/config/config.yaml
+      JARVIS_HOST: 0.0.0.0
+      JARVIS_PORT: 8888
+      
+      # Service connections using actual container names
+      OLLAMA_BASE_URL: http://sutazai-ollama:11434
+      OLLAMA_API_KEY: local
+      
+      # Database connections
+      DATABASE_URL: postgresql://postgres:postgres@kong-database:5432/kong
+      REDIS_URL: redis://sutazai-redis:6379/1
+      
+      # Service discovery
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      
+      # Kong gateway
+      KONG_ADMIN_URL: http://kong:8001
+      KONG_PROXY_URL: http://kong:8000
+      
+    volumes:
+      - ./config/jarvis:/app/config:ro
+      - ./data/jarvis:/app/data
+      - ./logs/jarvis:/app/logs
+      - ./services/jarvis/plugins:/app/plugins
+      - /dev/snd:/dev/snd  # Audio device access
+    devices:
+      - /dev/snd:/dev/snd  # Audio devices for voice interface
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  sutazai-network:
+    external: true

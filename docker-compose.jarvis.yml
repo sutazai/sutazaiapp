@@ -13,7 +13,7 @@ services:
     container_name: sutazai-jarvis
     restart: unless-stopped
     ports:
-      - "8888:8888"
+      - "9091:8888"
     environment:
       <<: *common-env
       JARVIS_CONFIG: /app/config/config.yaml

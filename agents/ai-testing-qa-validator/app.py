@@ -91,3 +91,14 @@ class Ai_Testing_Qa_ValidatorAgent(BaseAgentV2):
 if __name__ == "__main__":
     agent = Ai_Testing_Qa_ValidatorAgent()
     agent.start()
+
+# Health check endpoints
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for container monitoring"""
+    return {"status": "healthy", "service": "agent", "timestamp": str(datetime.utcnow())}
+
+@app.get("/healthz")
+async def k8s_health_check():
+    """Kubernetes style health check"""
+    return {"status": "ok"}

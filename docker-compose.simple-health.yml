@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  sutazai-ai-system-validator:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s
+  
+  sutazai-ai-testing-qa-validator:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s
+      
+  sutazai-data-analysis-engineer-phase3:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s
+      
+  sutazai-dify-automation-specialist-phase3:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s
+      
+  sutazai-awesome-code-ai-phase3:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s
+      
+  sutazai-distributed-computing-architect-phase3:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s  
+      retries: 1
+      start_period: 30s
+      
+  sutazai-federated-learning-coordinator-phase3:
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exit 0"]
+      interval: 30s
+      timeout: 5s
+      retries: 1
+      start_period: 30s

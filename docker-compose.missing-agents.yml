@@ -5,7 +5,7 @@ version: '3.8'
 # Port Range: 10300-10399
 
 x-agent-base: &agent-base
-  image: python:3.11-slim
+  image: sutazai/agent-base:latest
   restart: unless-stopped
   networks:
     - sutazai-network
@@ -25,11 +25,7 @@ x-agent-base: &agent-base
       reservations:
         cpus: '0.25'
         memory: 256M
-  command: >
-    sh -c "
-      pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client &&
-      cd /app && python container_startup.py
-    "
+  command: ["python", "container_startup.py"]
 
 networks:
   sutazai-network:

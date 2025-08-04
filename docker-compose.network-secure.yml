@@ -1,0 +1,55 @@
+# Network Security Configuration for SutazAI
+# Use this as a reference to secure your docker-compose networks
+
+networks:
+  frontend:
+    driver: bridge
+    internal: false  # Allow external access for web services
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  
+  backend:
+    driver: bridge
+    internal: true   # Internal-only network for databases
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+  
+  monitoring:
+    driver: bridge
+    internal: true   # Internal monitoring network
+    ipam:
+      config:
+        - subnet: 172.22.0.0/24
+
+# Example service network assignments
+services:
+  # Public-facing services
+  nginx:
+    networks:
+      - frontend
+  
+  backend:
+    networks:
+      - frontend
+      - backend
+  
+  # Internal services - no external access
+  postgres:
+    networks:
+      - backend
+  
+  redis:
+    networks:
+      - backend
+  
+  neo4j:
+    networks:
+      - backend
+  
+  # Monitoring services
+  prometheus:
+    networks:
+      - monitoring
+      - backend  # To collect metrics

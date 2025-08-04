@@ -13,7 +13,10 @@ from datetime import datetime
 from pathlib import Path
 
 from .task_planner import TaskPlanner
-from .voice_interface import VoiceInterface
+try:
+    from .voice_interface import VoiceInterface
+except ImportError:
+    from .voice_interface_minimal import VoiceInterface
 from .plugin_manager import PluginManager
 from .agent_coordinator import AgentCoordinator
 from .memory_manager import MemoryManager

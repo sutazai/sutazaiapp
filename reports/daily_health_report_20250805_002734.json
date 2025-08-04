@@ -1,0 +1,18 @@
+{
+  "timestamp": "2025-08-04T22:27:34Z",
+  "hostname": "DESKTOP-I534C9S",
+  "system_info": {
+    "uptime": "up 1 day, 12 hours, 16 minutes",
+    "load_average": "2.00, 2.42, 2.49",
+    "memory_usage": "11Gi/29Gi (3.4Gi free)",
+    "disk_usage": "210G/1007G (22% used)"
+  },
+  "checks": [],
+  "summary": {
+    "total_checks": 0,
+    "passed": 2,
+    "failed": 3,
+    "warnings": 0,
+    "status": "unknown"
+  }
+}
