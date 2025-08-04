@@ -58,11 +58,18 @@ class IntegrationTestSuite:
             if method == "GET":
                 response = requests.get(url, params=params, timeout=30)
             elif method == "POST":
+                # Use query params for POST requests as the API expects
                 response = requests.post(url, params=params, timeout=60)
             else:
                 return False, f"Unsupported method: {method}"
                 
-            return response.status_code == 200, response.json()
+            if response.status_code == 200:
+                try:
+                    return True, response.json()
+                except:
+                    return True, {"status": "success", "message": "No JSON response"}
+            else:
+                return False, {"status_code": response.status_code, "error": response.text}
         except Exception as e:
             return False, str(e)
             

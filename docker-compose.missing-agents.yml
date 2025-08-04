@@ -5,10 +5,11 @@ version: '3.8'
 # Port Range: 10300-10399
 
 x-agent-base: &agent-base
-  image: sutazai/python-agent-base:v2.2
+  image: python:3.11-slim
   restart: unless-stopped
   networks:
     - sutazai-network
+  working_dir: /app
   environment:
     CONSUL_URL: http://consul:8500
     RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
@@ -24,6 +25,11 @@ x-agent-base: &agent-base
       reservations:
         cpus: '0.25'
         memory: 256M
+  command: >
+    sh -c "
+      pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client &&
+      python -m uvicorn main:app --host 0.0.0.0 --port 8080
+    "
 
 networks:
   sutazai-network:

@@ -66,7 +66,7 @@ class ContinuousValidator:
             ("GET", "/health", None),
             ("GET", "/status", None),
             ("POST", "/optimize/memory", {"dry_run": "true"}),
-            ("GET", "/analyze/storage", {"path": "/tmp", "limit": "10"}),
+            ("GET", "/analyze/storage", {"path": "/tmp"}),
             ("POST", "/optimize/storage/cache", {})
         ]
         
@@ -83,7 +83,7 @@ class ContinuousValidator:
                 if method == "GET":
                     response = requests.get(url, params=params if params else None, timeout=10)
                 else:
-                    response = requests.post(url, params=params if params else None, timeout=10)
+                    response = requests.post(url, json=params if params else None, timeout=10)
                     
                 success = response.status_code == 200
                 results["tests"].append({

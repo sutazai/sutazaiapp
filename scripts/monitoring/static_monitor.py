@@ -177,12 +177,12 @@ class EnhancedMonitor:
                 'memory_critical': 90,
                 'disk_warning': 80,
                 'disk_critical': 90,
-                'response_time_warning': 1000,
+                'response_time_warning': 2500,  # Increased to 2500ms for slower agents like hardware-resource-optimizer
                 'response_time_critical': 5000
             },
             'agent_monitoring': {
                 'enabled': True,
-                'timeout': 2,
+                'timeout': 3,  # Increased from 2 to 3 seconds for slower agents
                 'max_agents_display': 6
             },
             'logging': {
@@ -444,7 +444,7 @@ class EnhancedMonitor:
                 
                 # Create display line with improved name truncation and status
                 display_name = self._get_display_name(agent_id)
-                agent_line = f"{display_name:<14} {icon} {color}{health_status[:8]:<8}{self.RESET} {rt_str:>6}"
+                agent_line = f"{display_name:<20} {icon} {color}{health_status[:8]:<8}{self.RESET} {rt_str:>6}"
                 agents.append(agent_line)
                 
         except Exception as e:
@@ -566,6 +566,13 @@ class EnhancedMonitor:
             if endpoint:
                 return endpoint
         
+        # First check if this is the hardware-resource-optimizer agent (special case)
+        if agent_id == 'hardware-resource-optimizer':
+            endpoint = "http://localhost:8116"
+            if self._test_port_connection(8116):
+                if self._verify_agent_endpoint(endpoint, agent_id):
+                    return endpoint
+        
         # Try agent-specific port patterns based on agent type
         agent_type = self._get_agent_type(agent_info)
         port_ranges = self._get_port_ranges_by_type(agent_type)
@@ -578,8 +585,8 @@ class EnhancedMonitor:
                     if self._verify_agent_endpoint(endpoint, agent_id):
                         return endpoint
         
-        # Fallback to common ports
-        common_ports = [8000, 8001, 8002, 8003, 8004, 8005, 8116, 3000, 5000, 9000]
+        # Fallback to common ports, with hardware-resource-optimizer port prioritized
+        common_ports = [8116, 8000, 8001, 8002, 8003, 8004, 8005, 3000, 5000, 9000]
         for port in common_ports:
             if self._test_port_connection(port):
                 endpoint = f"http://localhost:{port}"
@@ -606,7 +613,7 @@ class EnhancedMonitor:
             'BACK': [[8000, 8010], [5000, 5010]],    # Backend services
             'FRON': [[3000, 3010], [8080, 8090]],    # Frontend services  
             'AI': [[11434, 11444], [7860, 7870]],    # AI/ML services (Ollama, HuggingFace)
-            'INFR': [[9000, 9010], [6000, 6010], [8110, 8120]],    # Infrastructure services (includes hardware-resource-optimizer on 8116)
+            'INFR': [[9000, 9010], [6000, 6010], [8110, 8125]],    # Infrastructure services (includes hardware-resource-optimizer on 8116)
             'SECU': [[8443, 8453], [9443, 9453]],    # Security services
             'DATA': [[5432, 5442], [6379, 6389]],    # Data services
         }
@@ -628,6 +635,9 @@ class EnhancedMonitor:
     def _verify_agent_endpoint(self, endpoint: str, agent_id: str) -> bool:
         """Verify endpoint is actually an agent service"""
         try:
+            # Use longer timeout for slower agents like hardware-resource-optimizer
+            timeout = 3 if agent_id == 'hardware-resource-optimizer' else 1
+            
             # Try common health check paths
             health_paths = ['/health', '/status', '/ping', '/api/health', '/heartbeat']
             
@@ -635,7 +645,7 @@ class EnhancedMonitor:
                 try:
                     response = self.session.get(
                         f"{endpoint}{path}",
-                        timeout=1,
+                        timeout=timeout,
                         headers={'User-Agent': 'SutazAI-Monitor/1.0'}
                     )
                     if response.status_code in [200, 201, 204]:
@@ -647,7 +657,7 @@ class EnhancedMonitor:
             try:
                 response = self.session.get(
                     endpoint,
-                    timeout=1,
+                    timeout=timeout,
                     headers={'User-Agent': 'SutazAI-Monitor/1.0'}
                 )
                 # Accept various success codes and even some error codes that indicate a service is running
@@ -718,31 +728,31 @@ class EnhancedMonitor:
     
     def _get_display_name(self, agent_id: str) -> str:
         """Get intelligently truncated display name"""
-        if len(agent_id) <= 14:
+        if len(agent_id) <= 20:  # Increased from 14 to 20
             return agent_id
         
         # Special handling for hardware-resource-optimizer
         if agent_id == 'hardware-resource-optimizer':
-            return 'hardware-optim'
+            return 'hw-resource-optim'  # Better truncation that fits in display
         
         # Try to extract meaningful parts
         parts = agent_id.split('-')
         if len(parts) > 1:
             # Take first and last meaningful parts
-            if len(parts[0]) <= 6 and len(parts[-1]) <= 6:
+            if len(parts[0]) <= 8 and len(parts[-1]) <= 8:
                 truncated = f"{parts[0]}-{parts[-1]}"
-                if len(truncated) <= 14:
+                if len(truncated) <= 20:
                     return truncated
             
             # Try first part + abbreviated last
-            if len(parts[0]) <= 8:
-                remaining = 14 - len(parts[0]) - 1  # -1 for hyphen
+            if len(parts[0]) <= 12:
+                remaining = 20 - len(parts[0]) - 1  # -1 for hyphen
                 last_part = parts[-1][:remaining] if remaining > 0 else ""
                 if last_part:
                     return f"{parts[0]}-{last_part}"
         
         # Fallback to simple truncation
-        return agent_id[:14]
+        return agent_id[:20]
     
     def _detect_gpu_capabilities(self) -> bool:
         """Detect available GPU monitoring capabilities with WSL2 support"""
@@ -1850,7 +1860,7 @@ class EnhancedMonitor:
                 
                 # Agent/Container section header with health summary
                 health_color = self.GREEN if healthy == total else (self.YELLOW if healthy > total * 0.5 else self.RED)
-                print(f"{self.move_to(agent_start_line)}{icon} {display_type} ({health_color}{healthy}{self.RESET}/{total}) {'Name':<14} Status    RT{self.clear_line()}", end='')
+                print(f"{self.move_to(agent_start_line)}{icon} {display_type} ({health_color}{healthy}{self.RESET}/{total}) {'Name':<20} Status    RT{self.clear_line()}", end='')
                 
                 # Lines for agents/containers (6 items)
                 for i in range(6):

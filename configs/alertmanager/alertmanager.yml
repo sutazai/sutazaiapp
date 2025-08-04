@@ -32,18 +32,10 @@ receivers:
       - url: 'http://resource-manager:8000/alerts/critical'
         send_resolved: true
     
-    # Email notifications for critical alerts
+    # Email notifications for critical alerts  
     email_configs:
       - to: 'admin@sutazai.local'
-        subject: 'CRITICAL: SutazAI System Alert - {{ .GroupLabels.alertname }}'
-        body: |
-          Alert: {{ .GroupLabels.alertname }}
-          Summary: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
-          Description: {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
-          
-          Time: {{ range .Alerts }}{{ .StartsAt }}{{ end }}
-          
-          View in Grafana: http://localhost:10201
+        from: 'alerts@sutazai.local'
 
   - name: 'ai-alerts'
     webhook_configs:

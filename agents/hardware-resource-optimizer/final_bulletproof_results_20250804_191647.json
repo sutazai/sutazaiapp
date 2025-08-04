@@ -1,0 +1,459 @@
+{
+  "test_suite": "Final Bulletproof Test Suite",
+  "timestamp": "2025-08-04T19:16:47.747750",
+  "duration_seconds": 16.97,
+  "total_tests": 8,
+  "passed": 8,
+  "failed": 0,
+  "pass_rate": "100.0%",
+  "overall_status": "PASS",
+  "under_30_seconds": true,
+  "agent_responsive": true,
+  "test_results": [
+    {
+      "test": "agent_connectivity",
+      "status": "PASS",
+      "validations": {
+        "agent_responds": true,
+        "health_status": true,
+        "has_agent_info": true,
+        "system_data_present": true
+      },
+      "agent_data": {
+        "status": "healthy",
+        "agent": "hardware-resource-optimizer",
+        "description": "On-demand hardware resource optimization and cleanup tool",
+        "docker_available": true,
+        "system_status": {
+          "cpu_percent": 3.5,
+          "memory_percent": 24.4,
+          "disk_percent": 20.614469650016144,
+          "memory_available_gb": 22.210437774658203,
+          "disk_free_gb": 748.0807113647461,
+          "timestamp": 1754327791.7766871
+        },
+        "timestamp": 1754327791.7766912
+      }
+    },
+    {
+      "test": "basic_optimization",
+      "status": "PASS",
+      "validations": {
+        "memory_optimization_works": true,
+        "cache_cleanup_works": true,
+        "memory_returns_actions": true,
+        "cache_returns_actions": true
+      },
+      "memory_result": {
+        "status": "success",
+        "optimization_type": "memory",
+        "actions_taken": [
+          "Python garbage collection freed 39 objects"
+        ],
+        "initial_memory_percent": 24.4,
+        "final_memory_percent": 24.4,
+        "memory_freed_mb": 0.0,
+        "timestamp": 1754327791.7949448
+      },
+      "cache_result": {
+        "status": "success",
+        "optimization_type": "cache",
+        "actions_taken": [
+          "Executed: sync",
+          "Executed: apt-get clean",
+          "Failed: find /home/*/.thumbnails -type f -delete - find: \u2018/home/*/.thumbnails\u2019: No such file or directory\n",
+          "Failed: find /home/*/.cache/thumbnails -type f -delete - find: \u2018/home/*/.cache/thumbnails\u2019: No such file or directory\n"
+        ],
+        "timestamp": 1754327791.8173454
+      }
+    },
+    {
+      "test": "system_analysis",
+      "status": "PASS",
+      "validations": {
+        "status_endpoint_works": true,
+        "status_has_metrics": true,
+        "storage_analysis_works": true,
+        "storage_analysis_valid_response": true
+      },
+      "system_metrics": {
+        "cpu_percent": 2.9,
+        "memory_percent": 24.3,
+        "disk_percent": 20.614469271143186,
+        "memory_available_gb": 22.22406768798828,
+        "disk_free_gb": 748.0807151794434,
+        "timestamp": 1754327792.8202326
+      },
+      "storage_analysis": {
+        "status": "success",
+        "path": "/tmp",
+        "total_files": 0,
+        "total_size_bytes": 0,
+        "total_size_mb": 0.0,
+        "extension_breakdown": {},
+        "size_distribution": {},
+        "age_distribution": {},
+        "timestamp": 1754327792.8227093
+      }
+    },
+    {
+      "test": "error_handling",
+      "status": "PASS",
+      "validations": {
+        "all_errors_handled": true,
+        "no_crashes": true,
+        "appropriate_error_responses": true
+      },
+      "error_scenarios": [
+        {
+          "scenario": "invalid_endpoint",
+          "handled_gracefully": true,
+          "no_crash": true
+        },
+        {
+          "scenario": "invalid_path",
+          "handled_gracefully": true,
+          "no_crash": true
+        },
+        {
+          "scenario": "malformed_params",
+          "handled_gracefully": true,
+          "no_crash": true
+        }
+      ]
+    },
+    {
+      "test": "performance",
+      "status": "PASS",
+      "validations": {
+        "all_endpoints_respond": true,
+        "reasonable_response_times": true,
+        "no_timeouts": true,
+        "health_check_fast": true
+      },
+      "average_response_time": 0.6739128430684408,
+      "response_times": [
+        {
+          "endpoint": "/health",
+          "method": "GET",
+          "duration": 1.0024604797363281,
+          "success": true
+        },
+        {
+          "endpoint": "/status",
+          "method": "GET",
+          "duration": 1.003098487854004,
+          "success": true
+        },
+        {
+          "endpoint": "/optimize/memory",
+          "method": "POST",
+          "duration": 0.016179561614990234,
+          "success": true
+        }
+      ],
+      "successful_calls": 3
+    },
+    {
+      "test": "concurrent_handling",
+      "status": "PASS",
+      "validations": {
+        "all_requests_completed": true,
+        "no_concurrent_errors": true,
+        "all_successful": true,
+        "concurrent_performance_ok": true
+      },
+      "concurrent_requests": 3,
+      "successful": 3,
+      "errors": []
+    },
+    {
+      "test": "optimization_effectiveness",
+      "status": "PASS",
+      "validations": {
+        "comprehensive_optimization_works": true,
+        "returns_optimization_results": true,
+        "multiple_optimizations_performed": true,
+        "system_metrics_stable": true,
+        "actions_reported": true
+      },
+      "memory_before": 24.4,
+      "memory_after": 24.4,
+      "optimization_result": {
+        "status": "success",
+        "optimization_type": "all",
+        "duration_seconds": 3.4781718254089355,
+        "total_actions": 7,
+        "actions_taken": [
+          "Python garbage collection freed 28 objects",
+          "No CPU optimization needed - no high-usage processes found",
+          "Cleaned old files from /tmp",
+          "Cleaned old files from /var/tmp",
+          "Pruned 1 unused networks",
+          "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'",
+          "Cleaned cache: /var/cache"
+        ],
+        "detailed_results": {
+          "memory": {
+            "status": "success",
+            "optimization_type": "memory",
+            "actions_taken": [
+              "Python garbage collection freed 28 objects"
+            ],
+            "initial_memory_percent": 24.4,
+            "final_memory_percent": 24.4,
+            "memory_freed_mb": 0.0,
+            "timestamp": 1754327798.8796318
+          },
+          "cpu": {
+            "status": "success",
+            "optimization_type": "cpu",
+            "actions_taken": [
+              "No CPU optimization needed - no high-usage processes found"
+            ],
+            "initial_cpu_percent": 1.4,
+            "processes_adjusted": 0,
+            "timestamp": 1754327799.8803914
+          },
+          "disk": {
+            "status": "success",
+            "optimization_type": "disk",
+            "actions_taken": [
+              "Cleaned old files from /tmp",
+              "Cleaned old files from /var/tmp"
+            ],
+            "initial_disk_percent": 20.6144700288891,
+            "final_disk_percent": 20.6144700288891,
+            "space_freed_mb": 0.0,
+            "timestamp": 1754327799.8829534
+          },
+          "docker": {
+            "status": "success",
+            "optimization_type": "docker",
+            "actions_taken": [
+              "Pruned 1 unused networks",
+              "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'"
+            ],
+            "containers_removed": 0,
+            "images_removed": 0,
+            "timestamp": 1754327800.3347893
+          },
+          "storage": {
+            "status": "success",
+            "optimization_type": "comprehensive_storage",
+            "dry_run": false,
+            "actions_taken": [
+              "Cleaned cache: /var/cache"
+            ],
+            "estimated_space_freed_mb": 0.0,
+            "actual_space_freed_mb": 0.0,
+            "initial_disk_percent": 20.6144700288891,
+            "final_disk_percent": 20.6144700288891,
+            "timestamp": 1754327800.3379772
+          }
+        },
+        "before": {
+          "cpu_percent": 4.2,
+          "memory_percent": 24.4,
+          "disk_percent": 20.6144700288891,
+          "memory_available_gb": 22.20962905883789,
+          "disk_free_gb": 748.0807075500488,
+          "timestamp": 1754327798.860887
+        },
+        "after": {
+          "cpu_percent": 1.9,
+          "memory_percent": 24.4,
+          "disk_percent": 20.6144700288891,
+          "memory_available_gb": 22.204574584960938,
+          "disk_free_gb": 748.0807075500488,
+          "timestamp": 1754327801.3385847
+        },
+        "timestamp": 1754327801.3385892
+      }
+    },
+    {
+      "test": "api_completeness",
+      "status": "PASS",
+      "validations": {
+        "all_core_endpoints_available": true,
+        "health_endpoint_works": true,
+        "status_endpoint_works": true,
+        "optimization_endpoints_work": true,
+        "analysis_endpoints_work": true
+      },
+      "total_endpoints_tested": 6,
+      "available_endpoints": 6,
+      "endpoint_results": [
+        {
+          "endpoint": "GET /health",
+          "available": true,
+          "response": {
+            "status": "healthy",
+            "agent": "hardware-resource-optimizer",
+            "description": "On-demand hardware resource optimization and cleanup tool",
+            "docker_available": true,
+            "system_status": {
+              "cpu_percent": 9.1,
+              "memory_percent": 24.8,
+              "disk_percent": 20.61447116550797,
+              "memory_available_gb": 22.098529815673828,
+              "disk_free_gb": 748.080696105957,
+              "timestamp": 1754327803.3431396
+            },
+            "timestamp": 1754327803.3431442
+          }
+        },
+        {
+          "endpoint": "GET /status",
+          "available": true,
+          "response": {
+            "cpu_percent": 2.0,
+            "memory_percent": 24.8,
+            "disk_percent": 20.61447116550797,
+            "memory_available_gb": 22.097354888916016,
+            "disk_free_gb": 748.080696105957,
+            "timestamp": 1754327804.3463748
+          }
+        },
+        {
+          "endpoint": "POST /optimize/memory",
+          "available": true,
+          "response": {
+            "status": "success",
+            "optimization_type": "memory",
+            "actions_taken": [
+              "Python garbage collection freed 19 objects"
+            ],
+            "initial_memory_percent": 24.8,
+            "final_memory_percent": 24.8,
+            "memory_freed_mb": 0.0,
+            "timestamp": 1754327804.3603795
+          }
+        },
+        {
+          "endpoint": "POST /optimize/storage/cache",
+          "available": true,
+          "response": {
+            "status": "success",
+            "optimization_type": "cache",
+            "actions_taken": [
+              "Executed: sync",
+              "Executed: apt-get clean",
+              "Failed: find /home/*/.thumbnails -type f -delete - find: \u2018/home/*/.thumbnails\u2019: No such file or directory\n",
+              "Failed: find /home/*/.cache/thumbnails -type f -delete - find: \u2018/home/*/.cache/thumbnails\u2019: No such file or directory\n"
+            ],
+            "timestamp": 1754327804.3852139
+          }
+        },
+        {
+          "endpoint": "GET /analyze/storage",
+          "available": true,
+          "response": {
+            "status": "success",
+            "path": "/tmp",
+            "total_files": 0,
+            "total_size_bytes": 0,
+            "total_size_mb": 0.0,
+            "extension_breakdown": {},
+            "size_distribution": {},
+            "age_distribution": {},
+            "timestamp": 1754327804.3873172
+          }
+        },
+        {
+          "endpoint": "POST /optimize/all",
+          "available": true,
+          "response": {
+            "status": "success",
+            "optimization_type": "all",
+            "duration_seconds": 3.3578665256500244,
+            "total_actions": 6,
+            "actions_taken": [
+              "Python garbage collection freed 19 objects",
+              "No CPU optimization needed - no high-usage processes found",
+              "Cleaned old files from /tmp",
+              "Cleaned old files from /var/tmp",
+              "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'",
+              "Cleaned cache: /var/cache"
+            ],
+            "detailed_results": {
+              "memory": {
+                "status": "success",
+                "optimization_type": "memory",
+                "actions_taken": [
+                  "Python garbage collection freed 19 objects"
+                ],
+                "initial_memory_percent": 24.8,
+                "final_memory_percent": 24.8,
+                "memory_freed_mb": 0.0,
+                "timestamp": 1754327805.4051843
+              },
+              "cpu": {
+                "status": "success",
+                "optimization_type": "cpu",
+                "actions_taken": [
+                  "No CPU optimization needed - no high-usage processes found"
+                ],
+                "initial_cpu_percent": 2.5,
+                "processes_adjusted": 0,
+                "timestamp": 1754327806.4060628
+              },
+              "disk": {
+                "status": "success",
+                "optimization_type": "disk",
+                "actions_taken": [
+                  "Cleaned old files from /tmp",
+                  "Cleaned old files from /var/tmp"
+                ],
+                "initial_disk_percent": 20.61447116550797,
+                "final_disk_percent": 20.61447116550797,
+                "space_freed_mb": 0.0,
+                "timestamp": 1754327806.410177
+              },
+              "docker": {
+                "status": "success",
+                "optimization_type": "docker",
+                "actions_taken": [
+                  "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'"
+                ],
+                "containers_removed": 0,
+                "images_removed": 0,
+                "timestamp": 1754327806.742708
+              },
+              "storage": {
+                "status": "success",
+                "optimization_type": "comprehensive_storage",
+                "dry_run": false,
+                "actions_taken": [
+                  "Cleaned cache: /var/cache"
+                ],
+                "estimated_space_freed_mb": 0.0,
+                "actual_space_freed_mb": 0.0,
+                "initial_disk_percent": 20.61447116550797,
+                "final_disk_percent": 20.61447116550797,
+                "timestamp": 1754327806.7459617
+              }
+            },
+            "before": {
+              "cpu_percent": 3.7,
+              "memory_percent": 24.8,
+              "disk_percent": 20.61447116550797,
+              "memory_available_gb": 22.09191131591797,
+              "disk_free_gb": 748.080696105957,
+              "timestamp": 1754327805.389232
+            },
+            "after": {
+              "cpu_percent": 2.6,
+              "memory_percent": 24.8,
+              "disk_percent": 20.61447116550797,
+              "memory_available_gb": 22.100948333740234,
+              "disk_free_gb": 748.080696105957,
+              "timestamp": 1754327807.746572
+            },
+            "timestamp": 1754327807.746575
+          }
+        }
+      ]
+    }
+  ]
+}
