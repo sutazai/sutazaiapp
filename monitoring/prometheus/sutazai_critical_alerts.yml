@@ -1,0 +1,190 @@
+groups:
+  - name: sutazai_critical_system
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for more than 5 minutes on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% for more than 5 minutes on {{ $labels.instance }}"
+
+      - alert: HighDiskUsage
+        expr: 100 - ((node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100) > 90
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "High disk usage detected"
+          description: "Disk usage is above 90% for more than 5 minutes on {{ $labels.instance }}"
+
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: "{{ $labels.job }}"
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute"
+
+  - name: sutazai_agents
+    rules:
+      - alert: AgentDown
+        expr: up{job=~".*agent.*|.*ai.*"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          service: agent
+        annotations:
+          summary: "SutazAI Agent {{ $labels.job }} is down"
+          description: "Agent {{ $labels.job }} has been down for more than 2 minutes"
+
+      - alert: LowAgentCount
+        expr: count(up{job=~".*agent.*|.*ai.*"} == 1) < 30
+        for: 5m
+        labels:
+          severity: warning
+          service: agents
+        annotations:
+          summary: "Low number of active agents"
+          description: "Only {{ $value }} agents are currently active, expected at least 30"
+
+      - alert: HighAgentFailureRate
+        expr: (count(up{job=~".*agent.*|.*ai.*"} == 0) / count(up{job=~".*agent.*|.*ai.*"})) * 100 > 20
+        for: 5m
+        labels:
+          severity: critical
+          service: agents
+        annotations:
+          summary: "High agent failure rate"
+          description: "{{ $value }}% of agents are currently down"
+
+  - name: sutazai_database
+    rules:
+      - alert: PostgreSQLDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: postgresql
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database is not responding"
+
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache is not responding"
+
+      - alert: HighPostgreSQLConnections
+        expr: pg_stat_activity_count / pg_settings_max_connections * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: postgresql
+        annotations:
+          summary: "High PostgreSQL connection usage"
+          description: "PostgreSQL connection usage is above 80% ({{ $value }}%)"
+
+      - alert: HighRedisMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is above 90% ({{ $value }}%)"
+
+  - name: sutazai_ollama
+    rules:
+      - alert: OllamaDown
+        expr: up{job="ollama"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: ollama
+        annotations:
+          summary: "Ollama AI service is down"
+          description: "Ollama AI inference service is not responding"
+
+      - alert: HighOllamaResponseTime
+        expr: histogram_quantile(0.95, rate(ollama_request_duration_seconds_bucket[5m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: ollama
+        annotations:
+          summary: "High Ollama response time"
+          description: "Ollama 95th percentile response time is above 10 seconds ({{ $value }}s)"
+
+      - alert: LowOllamaRequestRate
+        expr: rate(ollama_requests_total[5m]) < 0.1
+        for: 10m
+        labels:
+          severity: info
+          service: ollama
+        annotations:
+          summary: "Low Ollama request rate"
+          description: "Ollama is receiving very few requests ({{ $value }}/sec)"
+
+  - name: sutazai_application
+    rules:
+      - alert: BackendDown
+        expr: up{job="sutazai-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "SutazAI Backend is down"
+          description: "SutazAI backend API is not responding"
+
+      - alert: FrontendDown
+        expr: up{job="sutazai-frontend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: frontend
+        annotations:
+          summary: "SutazAI Frontend is down"
+          description: "SutazAI frontend application is not responding"
+
+      - alert: HighAPIResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="sutazai-backend"}[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High API response time"
+          description: "Backend API 95th percentile response time is above 5 seconds ({{ $value }}s)"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{job="sutazai-backend",status=~"4..|5.."}[5m]) / rate(http_requests_total{job="sutazai-backend"}[5m]) * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High API error rate"
+          description: "Backend API error rate is above 5% ({{ $value }}%)"

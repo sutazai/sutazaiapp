@@ -90,6 +90,10 @@ class BaseAgentV2:
     """
     
     def __init__(self, 
+                 agent_id: str = None,
+                 name: str = None,
+                 port: int = None,
+                 description: str = None,
                  config_path: str = '/app/config.json',
                  max_concurrent_tasks: int = 3,
                  max_ollama_connections: int = 2,
@@ -99,10 +103,14 @@ class BaseAgentV2:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.config = self._load_config(config_path)
         
-        # Agent identification
-        self.agent_name = os.getenv('AGENT_NAME', 'base-agent-v2')
+        # Agent identification - support both constructor patterns
+        self.agent_id = agent_id or os.getenv('AGENT_NAME', 'base-agent-v2')
+        self.agent_name = name or self.agent_id or os.getenv('AGENT_NAME', 'base-agent-v2')
+        self.name = self.agent_name  # Alias for compatibility
         self.agent_type = os.getenv('AGENT_TYPE', 'base')
         self.agent_version = "2.0.0"
+        self.port = port or int(os.getenv("PORT", "8080"))
+        self.description = description or "SutazAI Agent"
         
         # Service endpoints
         self.backend_url = os.getenv('BACKEND_URL', 'http://localhost:8000')
@@ -665,6 +673,10 @@ class BaseAgentV2:
         except Exception as e:
             self.logger.error(f"Agent run error: {e}")
             raise
+    
+    def start(self):
+        """Compatibility method for existing agents"""
+        self.run()
     
     # Backward compatibility methods
     def query_ollama_sync(self, prompt: str, model: str = None) -> Optional[str]:

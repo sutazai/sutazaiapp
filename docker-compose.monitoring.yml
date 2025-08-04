@@ -148,15 +148,15 @@ services:
     networks:
       - sutazai-network
 
-  # externalSystem, thirdPartyService Exporter for endpoint monitoring
-  externalSystem, thirdPartyService-exporter:
-    image: prom/externalSystem, thirdPartyService-exporter:latest
-    container_name: sutazai-externalSystem, thirdPartyService-exporter
+  # Blackbox Exporter for endpoint monitoring
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: sutazai-blackbox-exporter
     restart: unless-stopped
     ports:
       - "10229:9115"
     volumes:
-      - ./monitoring/externalSystem, thirdPartyService:/etc/blackbox_exporter
+      - ./monitoring/blackbox:/etc/blackbox_exporter
     command:
       - '--config.file=/etc/blackbox_exporter/config.yml'
     networks:

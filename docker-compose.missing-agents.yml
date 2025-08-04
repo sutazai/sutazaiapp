@@ -28,7 +28,7 @@ x-agent-base: &agent-base
   command: >
     sh -c "
       pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client &&
-      python -m uvicorn main:app --host 0.0.0.0 --port 8080
+      cd /app && python container_startup.py
     "
 
 networks:

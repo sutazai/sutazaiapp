@@ -3,11 +3,11 @@ version: '3.8'
 services:
   # Service Discovery - Consul
   consul:
-    image: consul:latest
+    image: hashicorp/consul:1.17
     container_name: consul
     command: agent -server -bootstrap -ui -client=0.0.0.0
     ports:
-      - "10040:8500"  # UI and HTTP API
+      - "10006:8500"  # UI and HTTP API
       - "8300:8300"   # Server RPC
       - "8301:8301"   # Serf LAN
       - "8302:8302"   # Serf WAN
@@ -82,8 +82,8 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
       KONG_PROXY_LISTEN: 0.0.0.0:8000
     ports:
-      - "10001:8000"  # Proxy port
-      - "10002:8001"  # Admin API
+      - "10005:8000"  # Proxy port
+      - "10007:8001"  # Admin API
     networks:
       - service-mesh
     depends_on:
@@ -111,19 +111,140 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: adminpass
-      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: 0.4
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_management path_prefix /rabbitmq"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+      - ./config/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./config/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
     networks:
       - service-mesh
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '1.0'
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    depends_on:
+      - consul
+
+  # Service Discovery Client
+  service-discovery:
+    build:
+      context: ./scripts/service-mesh
+      dockerfile: Dockerfile.service-discovery
+    container_name: service-discovery
+    environment:
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+      - SERVICES_CONFIG_PATH=/app/config/services.json
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config/consul/services.json:/app/config/services.json:ro
+      - ./logs:/app/logs
+    networks:
+      - service-mesh
+    depends_on:
+      consul:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+    restart: unless-stopped
+
+  # Health Check Server
+  health-check-server:
+    build:
+      context: ./scripts/service-mesh
+      dockerfile: Dockerfile.health-check
+    container_name: health-check-server
+    ports:
+      - "10008:8080"  # Health check API
+    environment:
+      - HEALTH_CHECK_PORT=8080
+      - REDIS_URL=redis://redis:6379/1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config/consul/services.json:/app/config/services.json:ro
+      - ./logs:/app/logs
+    networks:
+      - service-mesh
+    depends_on:
+      consul:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Service Mesh Orchestrator
+  service-mesh-orchestrator:
+    build:
+      context: ./scripts/service-mesh
+      dockerfile: Dockerfile.orchestrator
+    container_name: service-mesh-orchestrator
+    environment:
+      - CONSUL_URL=http://consul:8500
+      - KONG_ADMIN_URL=http://kong:8001
+      - RABBITMQ_URL=http://rabbitmq:15672
+      - RABBITMQ_USER=admin
+      - RABBITMQ_PASS=adminpass
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config/consul/services.json:/app/config/consul/services.json:ro
+      - ./config/kong/kong.yml:/app/config/kong/kong.yml:ro
+      - ./config/rabbitmq/definitions.json:/app/config/rabbitmq/definitions.json:ro
+      - ./logs:/app/logs
+    networks:
+      - service-mesh
+    depends_on:
+      consul:
+        condition: service_healthy
+      kong:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+    restart: unless-stopped
+
+  # Redis for service mesh caching
+  redis-service-mesh:
+    image: redis:7.2-alpine
+    container_name: redis-service-mesh
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-service-mesh-data:/data
+    networks:
+      - service-mesh
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -139,3 +260,4 @@ volumes:
   consul-data:
   kong-db-data:
   rabbitmq-data:
+  redis-service-mesh-data:

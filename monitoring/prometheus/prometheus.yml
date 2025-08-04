@@ -10,6 +10,9 @@ rule_files:
   - "alert_rules.yml"
   - "ai_model_rules.yml"
   - "business_rules.yml"
+  - "sutazai_production_alerts.yml"
+  - "sutazai_critical_alerts.yml"
+  - "rules/ollama-agent-alerts.yml"
 
 alerting:
   alertmanagers:

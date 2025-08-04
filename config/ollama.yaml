@@ -1,32 +1,64 @@
-# Ollama configuration for local LLM usage (Limited Hardware Optimized)
+# Ollama configuration for high-concurrency local LLM usage (29GB RAM, 12 CPU cores)
+# Optimized to handle 174 concurrent consumers
+
 model:
   name: tinyllama
   version: latest
   
-# Resource limits optimized for limited hardware
+# Resource limits optimized for high concurrency (29GB RAM available)
 resource_limits:
-  cpu: 2.0
-  memory: 1GB
-  timeout: 60s
-  max_concurrent: 1  # Only one request at a time
+  cpu: 10.0                    # Use most available cores
+  memory: 20GB                 # Generous memory allocation
+  timeout: 120s                # Increased timeout for concurrent requests
+  max_concurrent: 50           # High concurrency support
+  queue_size: 200              # Allow queuing of requests
 
-# Model settings optimized for efficiency  
+# Model settings optimized for production load
 settings:
-  temperature: 0.3  # Lower temperature for more consistent responses
-  max_tokens: 256   # Reasonable response length
+  temperature: 0.3             # Consistent responses
+  max_tokens: 512              # Reasonable response length
   top_p: 0.9
   top_k: 20
   repeat_penalty: 1.1
-
-# Connection settings
+  batch_size: 32               # Larger batch processing
+  
+# Connection settings optimized for high load
 connection:
   base_url: "http://ollama:11434"
-  timeout: 30
-  retries: 3
+  timeout: 60                  # Increased timeout
+  retries: 5                   # More retries for reliability
+  keepalive: 300               # 5 minute keepalive
+  pool_size: 100               # Connection pooling
   
-# Agent model mapping - all agents use tinyllama for limited hardware
+# Load balancing configuration for multiple Ollama instances
+load_balancing:
+  enabled: true
+  strategy: "round_robin"
+  health_check_interval: 30
+  instances:
+    - "http://ollama-primary:11434"
+    - "http://ollama-secondary:11435"  # Secondary instance for scaling
+    - "http://ollama-tertiary:11436"   # Tertiary instance for peak load
+  
+# Agent model mapping - optimized for available hardware
 agent_models:
-  default: "tinyllama"
-  sonnet_agents: "tinyllama"  # Would use qwen2.5-coder:7b on better hardware
-  opus_agents: "tinyllama"    # Would use deepseek-r1:8b on better hardware
-  base_agents: "tinyllama"
+  default: "tinyllama"                    # Default lightweight model per Rule 16
+  coding_agents: "qwen2.5-coder:3b"       # Better model for coding tasks
+  analysis_agents: "qwen2.5:3b"           # Better model for analysis
+  embedding_agents: "nomic-embed-text"     # Specialized embedding model
+  
+# Performance monitoring
+monitoring:
+  metrics_enabled: true
+  log_level: "INFO"
+  performance_tracking: true
+  queue_monitoring: true
+  
+# Auto-scaling configuration
+autoscaling:
+  enabled: true
+  min_instances: 2
+  max_instances: 4
+  cpu_threshold: 80            # Scale up when CPU > 80%
+  memory_threshold: 85         # Scale up when memory > 85%
+  queue_threshold: 20          # Scale up when queue > 20 requests

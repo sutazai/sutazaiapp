@@ -34,6 +34,8 @@ import socket
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import concurrent.futures
 
 
 class EnhancedMonitor:
@@ -57,12 +59,24 @@ class EnhancedMonitor:
         # Load configuration
         self.config = self._load_config(config_path)
         
-        # Historical data for trends
+        # Historical data for trends - optimized sizes for memory efficiency
         self.history = {
-            'cpu': deque(maxlen=60),
-            'memory': deque(maxlen=60),
-            'network': deque(maxlen=60),
-            'agent_response_times': defaultdict(lambda: deque(maxlen=30))
+            'cpu': deque(maxlen=30),        # Reduced from 60 to 30 for memory efficiency
+            'memory': deque(maxlen=30),     # Reduced from 60 to 30
+            'network': deque(maxlen=30),    # Reduced from 60 to 30
+            'agent_response_times': defaultdict(lambda: deque(maxlen=10))  # Reduced from 30 to 10
+        }
+        
+        # Cache frequently accessed config values to avoid repeated dict lookups
+        self._config_cache = {
+            'cpu_warning': self.config['thresholds']['cpu_warning'],
+            'cpu_critical': self.config['thresholds']['cpu_critical'],
+            'memory_warning': self.config['thresholds']['memory_warning'],
+            'memory_critical': self.config['thresholds']['memory_critical'],
+            'disk_warning': self.config['thresholds']['disk_warning'],
+            'disk_critical': self.config['thresholds']['disk_critical'],
+            'show_trends': self.config['display']['show_trends'],
+            'show_network': self.config['display']['show_network']
         }
         
         # Network baseline for bandwidth calculation
@@ -105,6 +119,9 @@ class EnhancedMonitor:
         adapter = HTTPAdapter(max_retries=retry_strategy)
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
+        
+        # Thread pool for parallel agent health checks
+        self.executor = ThreadPoolExecutor(max_workers=6, thread_name_prefix="agent_health")
         
         # Initialize CPU measurement baseline
         psutil.cpu_percent()  # Initialize CPU measurement
@@ -257,12 +274,11 @@ class EnhancedMonitor:
             return self.GREEN
     
     def get_system_stats(self) -> Dict[str, Any]:
-        """Get comprehensive system statistics with network monitoring"""
-        # Get fresh CPU data - use a very short interval to get current usage
-        # On first call or if too much time has passed, use interval to get accurate reading
+        """Get comprehensive system statistics with optimized resource usage"""
+        # Optimized CPU measurement - minimize blocking calls
         current_time = time.time()
-        if not hasattr(self, '_last_cpu_time') or current_time - self._last_cpu_time > 10:
-            cpu = psutil.cpu_percent(interval=0.1)  # Short blocking call for accuracy
+        if not hasattr(self, '_last_cpu_time') or current_time - self._last_cpu_time > 15:
+            cpu = psutil.cpu_percent(interval=0.05)  # Reduced from 0.1 to 0.05 for faster response
             self._last_cpu_time = current_time
         else:
             cpu = psutil.cpu_percent(interval=None)  # Non-blocking call
@@ -283,10 +299,10 @@ class EnhancedMonitor:
         self.history['memory'].append(memory.percent)
         self.history['network'].append(network_stats['bandwidth_mbps'])
         
-        # Store GPU data for trends (ensure history exists)
+        # Store GPU data for trends (ensure history exists) - optimized memory usage
         if gpu_stats['available']:
             if 'gpu' not in self.history:
-                self.history['gpu'] = deque(maxlen=60)
+                self.history['gpu'] = deque(maxlen=30)  # Consistent with other history sizes
             self.history['gpu'].append(gpu_stats['usage'])
         
         # Calculate adaptive refresh rate
@@ -377,25 +393,35 @@ class EnhancedMonitor:
             return "→"
     
     def _update_refresh_rate(self, cpu: float, memory: float):
-        """Adaptively update refresh rate based on system activity"""
+        """Efficiently update refresh rate based on system activity with hysteresis"""
         if not self.adaptive_mode:
             self.current_refresh_rate = self.manual_refresh_rate
             return
         
-        high_activity = cpu > 50 or memory > 70
-        very_high_activity = cpu > 80 or memory > 85
-        
+        # Use hysteresis to prevent refresh rate oscillation
+        current_rate = self.current_refresh_rate
         base_rate = self.manual_refresh_rate
         
-        if very_high_activity:
-            self.current_refresh_rate = max(0.5, base_rate * 0.25)
-        elif high_activity:
-            self.current_refresh_rate = max(1.0, base_rate * 0.5)
+        # Calculate activity score (0-100) for smooth transitions
+        activity_score = max(cpu, memory * 0.8)  # Memory weighted slightly less
+        
+        # Determine target refresh rate based on activity bands
+        if activity_score >= 85:
+            target_rate = max(0.5, base_rate * 0.2)  # Very fast updates for critical load
+        elif activity_score >= 70:
+            target_rate = max(0.8, base_rate * 0.4)  # Fast updates for high load
+        elif activity_score >= 50:
+            target_rate = max(1.2, base_rate * 0.7)  # Medium updates for moderate load
+        elif activity_score >= 30:
+            target_rate = min(3.0, base_rate * 1.2)  # Slower updates for low activity
         else:
-            self.current_refresh_rate = min(5.0, base_rate * 1.5)
+            target_rate = min(6.0, base_rate * 2.0)   # Very slow updates for idle system
+        
+        # Apply gradual transition to prevent jarring changes (simple moving average)
+        self.current_refresh_rate = (current_rate * 0.7) + (target_rate * 0.3)
     
     def get_ai_agents_status(self) -> Tuple[List[str], int, int]:
-        """Get AI agent status with health monitoring"""
+        """Get AI agent status with parallel health monitoring for better performance"""
         agents = []
         healthy_count = 0
         total_count = 0
@@ -404,11 +430,46 @@ class EnhancedMonitor:
         timeout = self.config['agent_monitoring'].get('timeout', 2)
         
         try:
-            for agent_id, agent_info in list(self.agent_registry.get('agents', {}).items())[:max_display]:
-                total_count += 1
+            agent_items = list(self.agent_registry.get('agents', {}).items())[:max_display]
+            total_count = len(agent_items)
+            
+            if not agent_items:
+                return agents, healthy_count, total_count
+            
+            # Submit all health checks concurrently
+            future_to_agent = {}
+            for agent_id, agent_info in agent_items:
+                future = self.executor.submit(self._check_agent_health, agent_id, agent_info, timeout)
+                future_to_agent[future] = (agent_id, agent_info)
+            
+            # Collect results with timeout to prevent hanging
+            results = {}
+            try:
+                for future in as_completed(future_to_agent, timeout=timeout + 1):
+                    agent_id, agent_info = future_to_agent[future]
+                    try:
+                        health_status, response_time = future.result()
+                        results[agent_id] = (health_status, response_time, agent_info)
+                    except Exception as e:
+                        if self.logger:
+                            self.logger.debug(f"Health check future failed for {agent_id}: {e}")
+                        results[agent_id] = ('offline', None, agent_info)
+            except concurrent.futures.TimeoutError:
+                if self.logger:
+                    self.logger.warning("Some agent health checks timed out")
+                # Handle any futures that didn't complete
+                for future in future_to_agent:
+                    if not future.done():
+                        future.cancel()
+                        agent_id, agent_info = future_to_agent[future]
+                        results[agent_id] = ('offline', None, agent_info)
+            
+            # Process results in original order
+            for agent_id, agent_info in agent_items:
+                if agent_id not in results:
+                    results[agent_id] = ('offline', None, agent_info)
                 
-                # Check agent health
-                health_status, response_time = self._check_agent_health(agent_id, agent_info, timeout)
+                health_status, response_time, _ = results[agent_id]
                 
                 # Update agent tracking
                 self.agent_health[agent_id] = health_status
@@ -435,9 +496,6 @@ class EnhancedMonitor:
                 else:
                     icon = '🔘'
                     color = self.RESET
-                
-                # Get agent type from description or name
-                agent_type = self._get_agent_type(agent_info)
                 
                 # Format response time
                 rt_str = f"{response_time:.0f}ms" if response_time is not None else "--ms"
@@ -1774,10 +1832,15 @@ class EnhancedMonitor:
                 
                 models = self.get_ollama_models()
                 
-                # Build enhanced display
+                # Build enhanced display - optimized string operations
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 refresh_mode = "ADAPTIVE" if self.adaptive_mode else "MANUAL"
                 refresh_indicator = f"⚡{self.current_refresh_rate:.1f}s [{refresh_mode}]"
+                
+                # Pre-compute commonly used strings to reduce repeated formatting
+                cpu_percent_str = f"{stats['cpu_percent']:5.1f}%"
+                mem_percent_str = f"{stats['mem_percent']:5.1f}%"
+                disk_percent_str = f"{stats['disk_percent']:5.1f}%"
                 
                 # Line 1: Enhanced header with refresh rate
                 print(f"{self.move_to(1)}{self.BOLD}🚀 SutazAI Enhanced Monitor{self.RESET} - {timestamp} [{refresh_indicator}]{self.clear_line()}", end='')
@@ -1785,30 +1848,30 @@ class EnhancedMonitor:
                 # Line 2: Separator
                 print(f"{self.move_to(2)}{'=' * 70}{self.clear_line()}", end='')
                 
-                # Lines 3-7: Enhanced system stats with trends and network
+                # Lines 3-7: Enhanced system stats with trends and network - using cached config values
                 cpu_color = self.get_color(stats['cpu_percent'], 
-                                         self.config['thresholds']['cpu_warning'], 
-                                         self.config['thresholds']['cpu_critical'])
+                                         self._config_cache['cpu_warning'], 
+                                         self._config_cache['cpu_critical'])
                 mem_color = self.get_color(stats['mem_percent'], 
-                                         self.config['thresholds']['memory_warning'], 
-                                         self.config['thresholds']['memory_critical'])
+                                         self._config_cache['memory_warning'], 
+                                         self._config_cache['memory_critical'])
                 disk_color = self.get_color(stats['disk_percent'], 
-                                          self.config['thresholds']['disk_warning'], 
-                                          self.config['thresholds']['disk_critical'])
+                                          self._config_cache['disk_warning'], 
+                                          self._config_cache['disk_critical'])
                 
-                trend_cpu = stats['cpu_trend'] if self.config['display']['show_trends'] else ""
-                trend_mem = stats['mem_trend'] if self.config['display']['show_trends'] else ""
+                trend_cpu = stats['cpu_trend'] if self._config_cache['show_trends'] else ""
+                trend_mem = stats['mem_trend'] if self._config_cache['show_trends'] else ""
                 
-                print(f"{self.move_to(3)}CPU:    {self.create_bar(stats['cpu_percent'])} {cpu_color}{stats['cpu_percent']:5.1f}%{self.RESET} {trend_cpu} ({stats['cpu_cores']}c) Load:{stats['load_avg'][0]:.2f}{self.clear_line()}", end='')
-                print(f"{self.move_to(4)}Memory: {self.create_bar(stats['mem_percent'])} {mem_color}{stats['mem_percent']:5.1f}%{self.RESET} {trend_mem} ({stats['mem_used']:.1f}GB/{stats['mem_total']:.1f}GB){self.clear_line()}", end='')
-                print(f"{self.move_to(5)}Disk:   {self.create_bar(stats['disk_percent'])} {disk_color}{stats['disk_percent']:5.1f}%{self.RESET} ({stats['disk_free']:.1f}GB free){self.clear_line()}", end='')
+                print(f"{self.move_to(3)}CPU:    {self.create_bar(stats['cpu_percent'])} {cpu_color}{cpu_percent_str}{self.RESET} {trend_cpu} ({stats['cpu_cores']}c) Load:{stats['load_avg'][0]:.2f}{self.clear_line()}", end='')
+                print(f"{self.move_to(4)}Memory: {self.create_bar(stats['mem_percent'])} {mem_color}{mem_percent_str}{self.RESET} {trend_mem} ({stats['mem_used']:.1f}GB/{stats['mem_total']:.1f}GB){self.clear_line()}", end='')
+                print(f"{self.move_to(5)}Disk:   {self.create_bar(stats['disk_percent'])} {disk_color}{disk_percent_str}{self.RESET} ({stats['disk_free']:.1f}GB free){self.clear_line()}", end='')
                 
                 # Line 6: GPU statistics (if available)
                 gpu_line = 6
                 if stats['gpu']['available']:
                     gpu_usage = stats['gpu']['usage']
                     gpu_color = self.get_color(gpu_usage, 70, 85)  # GPU thresholds
-                    gpu_trend = self._get_trend(self.history['gpu']) if self.config['display']['show_trends'] and len(self.history['gpu']) > 2 else ""
+                    gpu_trend = self._get_trend(self.history['gpu']) if self._config_cache['show_trends'] and len(self.history['gpu']) > 2 else ""
                     
                     gpu_temp_str = f" {stats['gpu']['temperature']:.0f}°C" if stats['gpu']['temperature'] > 0 else ""
                     gpu_mem_str = f" {stats['gpu']['memory']:.0f}%" if stats['gpu']['memory'] > 0 else ""
@@ -1845,10 +1908,10 @@ class EnhancedMonitor:
                     print(f"{self.move_to(gpu_line)}GPU:    {'─' * 20} {self.RESET} N/A - {wsl_msg}{self.clear_line()}", end='')
                     network_line = 7
                 
-                # Network statistics (line determined by GPU presence)
-                if self.config['display']['show_network']:
+                # Network statistics (line determined by GPU presence) - using cached config
+                if self._config_cache['show_network']:
                     net = stats['network']
-                    net_trend = self._get_trend(self.history['network']) if self.config['display']['show_trends'] else ""
+                    net_trend = self._get_trend(self.history['network']) if self._config_cache['show_trends'] else ""
                     print(f"{self.move_to(network_line)}Network: {self.CYAN}{net['bandwidth_mbps']:6.1f} Mbps{self.RESET} {net_trend} ↑{net['upload_mbps']:.1f} ↓{net['download_mbps']:.1f} Conn:{stats['connections']}{self.clear_line()}", end='')
                     agent_start_line = network_line + 2
                 else:
@@ -1905,16 +1968,19 @@ class EnhancedMonitor:
                 # Flush output
                 sys.stdout.flush()
                 
-                # Handle keyboard input and sleep with proper refresh timing
+                # Optimized keyboard input and sleep with variable polling rate
                 start_sleep = time.time()
                 sleep_duration = self.current_refresh_rate
+                
+                # Adaptive polling rate based on refresh speed - faster polling for faster refresh
+                poll_interval = min(0.2, max(0.05, sleep_duration / 10))
                 
                 while time.time() - start_sleep < sleep_duration:
                     key = self._get_keyboard_input() 
                     if key:
                         if not self._handle_keyboard_input(key):
                             raise KeyboardInterrupt
-                    time.sleep(0.1)  # Small sleep to prevent high CPU usage
+                    time.sleep(poll_interval)  # Adaptive sleep to balance responsiveness and CPU usage
                 
         except KeyboardInterrupt:
             # Clean exit with session cleanup
@@ -1967,6 +2033,9 @@ class EnhancedMonitor:
             # Restore terminal settings
             if self.old_settings and sys.stdin.isatty():
                 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
+            
+            # Shutdown thread pool with timeout
+            self.executor.shutdown(wait=False)  # Don't wait for running tasks
             
             self.session.close()
             if self.logger:

@@ -1,0 +1,120 @@
+version: '3.8'
+
+x-common-variables: &common-env
+  TZ: ${TZ:-UTC}
+  SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+
+services:
+  # JARVIS Unified Voice Interface
+  jarvis:
+    build: 
+      context: ./services/jarvis
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    environment:
+      <<: *common-env
+      JARVIS_CONFIG: /app/config/config.yaml
+      JARVIS_HOST: 0.0.0.0
+      JARVIS_PORT: 8888
+      
+      # Ollama integration
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_API_KEY: local
+      
+      # Database connections
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      REDIS_URL: redis://redis:6379/1
+      
+      # Vector databases
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      
+      # Service discovery
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      
+      # Backend integration
+      BACKEND_URL: http://sutazai-backend:8000
+      
+      # Kong gateway
+      KONG_ADMIN_URL: http://kong:8001
+      KONG_PROXY_URL: http://kong:8000
+      
+    volumes:
+      - ./config/jarvis:/app/config:ro
+      - ./data/jarvis:/app/data
+      - ./logs/jarvis:/app/logs
+      - ./services/jarvis/plugins:/app/plugins
+      - /dev/snd:/dev/snd  # Audio device access
+    devices:
+      - /dev/snd:/dev/snd  # Audio devices for voice interface
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+      - consul
+      - kong
+    networks:
+      - sutazai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jarvis.rule=Host(`jarvis.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.jarvis.loadbalancer.server.port=8888"
+
+  # Voice Processing Service (Optional dedicated service)
+  jarvis-voice-processor:
+    image: sutazai/voice-processor:latest
+    container_name: sutazai-voice-processor
+    restart: unless-stopped
+    environment:
+      <<: *common-env
+      JARVIS_URL: http://jarvis:8888
+      AUDIO_SAMPLE_RATE: 16000
+      VOICE_RECOGNITION_ENGINE: whisper
+      TTS_ENGINE: pyttsx3
+    volumes:
+      - ./data/voice:/app/data
+      - /dev/snd:/dev/snd
+    devices:
+      - /dev/snd:/dev/snd
+    depends_on:
+      - jarvis
+    networks:
+      - sutazai-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  jarvis_data:
+    driver: local
+  jarvis_logs:
+    driver: local
+  voice_cache:
+    driver: local

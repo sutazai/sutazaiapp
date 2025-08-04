@@ -24,10 +24,7 @@ x-database-config:
   REDIS_URL: redis://redis:6379/0
 networks:
   sutazai-network:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 172.20.0.0/16
+    external: true
 volumes:
   postgres_data: null
   redis_data: null
@@ -229,11 +226,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '6'
-          memory: 8G
+          cpus: '10'
+          memory: 20G
         reservations:
-          cpus: '2'
-          memory: 2G
+          cpus: '4'
+          memory: 8G
     image: ollama/ollama:latest
     container_name: sutazai-ollama
     restart: unless-stopped
@@ -241,6 +238,7 @@ services:
     - ollama_data:/root/.ollama
     - models_data:/models
     - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+    - /opt/sutazaiapp/config/ollama.yaml:/app/config/ollama.yaml:ro
     ports:
     - 10104:11434
     environment:
@@ -248,10 +246,15 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
-      OLLAMA_NUM_PARALLEL: 2
-      OLLAMA_NUM_THREADS: 8
-      OLLAMA_MAX_LOADED_MODELS: 1
-      OLLAMA_KEEP_ALIVE: 2m
+      OLLAMA_NUM_PARALLEL: 50
+      OLLAMA_NUM_THREADS: 10
+      OLLAMA_MAX_LOADED_MODELS: 3
+      OLLAMA_KEEP_ALIVE: 10m
+      OLLAMA_MODELS: /root/.ollama/models
+      OLLAMA_DEBUG: false
+      OLLAMA_FLASH_ATTENTION: 1
+      OLLAMA_RUNNERS_DIR: /tmp
+      OLLAMA_TMPDIR: /tmp
       CLAUDE_RULES_PATH: /app/CLAUDE.md
       ENFORCE_CLAUDE_RULES: 'true'
     healthcheck:
@@ -264,6 +267,12 @@ services:
       start_period: 60s
     networks:
     - sutazai-network
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    sysctls:
+      - net.core.somaxconn=65535
   backend:
     build:
       context: ./backend

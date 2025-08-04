@@ -23,28 +23,40 @@ class AgentCoordinator:
         self.retry_attempts = config.get('retry_attempts', 3)
         self.session = None
         self.agent_registry = {}
-        self.agent_specialties = {
-            # Core agents
-            'agent-coordinator': ['orchestration', 'planning'],
-            'task-manager': ['task', 'scheduling'],
-            'resource-monitor': ['monitoring', 'resources'],
+        # Load comprehensive agent specialties from registry
+        self.agent_specialties = self._load_agent_specialties()
+        
+        # Voice command patterns for intelligent routing
+        self.voice_patterns = {
+            # Development commands
+            r'(code|develop|build|create|implement).*': ['senior-backend-developer', 'senior-frontend-developer', 'senior-full-stack-developer'],
+            r'(backend|api|server|database).*': ['senior-backend-developer', 'ai-senior-backend-developer'],
+            r'(frontend|ui|interface|react|vue|angular).*': ['senior-frontend-developer', 'ai-senior-frontend-developer'],
+            r'(test|testing|qa|quality).*': ['testing-qa-validator', 'ai-testing-qa-validator'],
             
-            # AI/ML agents
-            'senior-ai-engineer': ['ai', 'ml', 'deep-learning'],
-            'ml-engineer': ['machine-learning', 'training'],
-            'data-scientist': ['analysis', 'statistics'],
+            # AI/ML commands
+            r'(ai|artificial intelligence|machine learning|ml|deep learning).*': ['senior-ai-engineer', 'ai-senior-engineer'],
+            r'(train|model|neural|algorithm).*': ['senior-ai-engineer', 'deep-learning-brain-architect'],
+            r'(data analysis|statistics|analytics).*': ['private-data-analyst', 'data-analysis-engineer'],
             
-            # Development agents
-            'senior-backend-developer': ['backend', 'api', 'database'],
-            'senior-frontend-developer': ['frontend', 'ui', 'react'],
-            'senior-full-stack-developer': ['fullstack', 'web'],
+            # Infrastructure commands
+            r'(deploy|deployment|infrastructure|devops).*': ['infrastructure-devops-manager', 'deployment-automation-master'],
+            r'(docker|container|kubernetes|k8s).*': ['container-orchestrator-k3s', 'container-vulnerability-scanner-trivy'],
+            r'(monitor|monitoring|metrics|logs).*': ['observability-dashboard-manager-grafana', 'metrics-collector-prometheus'],
             
-            # Specialized agents
-            'ollama-integration-specialist': ['ollama', 'llm'],
-            'container-orchestrator-k3s': ['kubernetes', 'containers'],
-            'security-pentesting-specialist': ['security', 'pentesting'],
+            # Security commands
+            r'(security|secure|hack|pentest|vulnerability).*': ['security-pentesting-specialist', 'kali-security-specialist'],
+            r'(scan|analyze code|security audit).*': ['semgrep-security-analyzer', 'adversarial-attack-detector'],
             
-            # Add more agent specialties as needed
+            # Specialized commands
+            r'(ollama|llm|local model).*': ['ollama-integration-specialist'],
+            r'(documentation|docs|knowledge|wiki).*': ['document-knowledge-manager'],
+            r'(workflow|automation|process).*': ['langflow-workflow-designer', 'dify-automation-specialist'],
+            r'(hardware|resource|optimize|performance).*': ['hardware-resource-optimizer', 'cpu-only-hardware-optimizer'],
+            
+            # Management commands
+            r'(manage|coordinate|orchestrate|plan).*': ['agent-orchestrator', 'task-assignment-coordinator'],
+            r'(product|project|scrum|agile).*': ['ai-product-manager', 'ai-scrum-master'],
         }
         
     async def initialize(self):
@@ -300,3 +312,215 @@ class AgentCoordinator:
                 'specialties': self.agent_specialties.get(name, [])
             })
         return agent_list
+        
+    def _load_agent_specialties(self) -> Dict[str, List[str]]:
+        """Load comprehensive agent specialties from the SutazAI registry"""
+        try:
+            # Load from agent registry file
+            registry_path = Path('/opt/sutazaiapp/agents/agent_registry.json')
+            if registry_path.exists():
+                with open(registry_path, 'r') as f:
+                    registry = json.load(f)
+                    
+                specialties = {}
+                for agent_name, agent_info in registry.get('agents', {}).items():
+                    capabilities = agent_info.get('capabilities', [])
+                    description = agent_info.get('description', '').lower()
+                    
+                    # Extract keywords from description
+                    keywords = self._extract_keywords_from_description(description)
+                    specialties[agent_name] = list(set(capabilities + keywords))
+                    
+                return specialties
+        except Exception as e:
+            logger.warning(f"Could not load agent registry: {e}")
+            
+        # Fallback to comprehensive manual mapping
+        return {
+            # Core system agents
+            'agent-orchestrator': ['orchestration', 'coordination', 'planning', 'management'],
+            'agent-creator': ['agent', 'creation', 'generation', 'development'],
+            'agent-debugger': ['debugging', 'troubleshooting', 'analysis', 'fixing'],
+            'task-assignment-coordinator': ['task', 'assignment', 'coordination', 'scheduling'],
+            
+            # Development agents
+            'senior-backend-developer': ['backend', 'api', 'server', 'database', 'microservices'],
+            'senior-frontend-developer': ['frontend', 'ui', 'react', 'javascript', 'css', 'html'],
+            'senior-full-stack-developer': ['fullstack', 'web', 'application', 'development'],
+            'senior-ai-engineer': ['ai', 'ml', 'machine learning', 'deep learning', 'neural networks'],
+            'code-generation-improver': ['code', 'improvement', 'refactoring', 'optimization'],
+            'code-improver': ['code', 'quality', 'cleanup', 'refactoring'],
+            'opendevin-code-generator': ['code', 'generation', 'automation', 'development'],
+            
+            # Testing & QA agents
+            'testing-qa-validator': ['testing', 'qa', 'quality', 'validation', 'verification'],
+            'ai-testing-qa-validator': ['testing', 'qa', 'ai testing', 'automated testing'],
+            'ai-qa-team-lead': ['qa', 'testing', 'leadership', 'quality assurance'],
+            'comprehensive-testing-validator': ['testing', 'comprehensive', 'validation'],
+            
+            # Infrastructure & DevOps agents
+            'infrastructure-devops-manager': ['infrastructure', 'devops', 'deployment', 'operations'],
+            'deployment-automation-master': ['deployment', 'automation', 'ci/cd', 'release'],
+            'container-orchestrator-k3s': ['kubernetes', 'k8s', 'containers', 'orchestration'],
+            'container-vulnerability-scanner-trivy': ['security', 'vulnerability', 'scanning', 'containers'],
+            'cicd-pipeline-orchestrator': ['ci/cd', 'pipeline', 'automation', 'integration'],
+            
+            # Security agents
+            'security-pentesting-specialist': ['security', 'pentesting', 'penetration testing', 'hacking'],
+            'kali-security-specialist': ['kali', 'security', 'hacking', 'penetration testing'],
+            'semgrep-security-analyzer': ['security', 'code analysis', 'vulnerability', 'static analysis'],
+            'adversarial-attack-detector': ['security', 'adversarial', 'attack', 'detection'],
+            'bias-and-fairness-auditor': ['bias', 'fairness', 'ethics', 'auditing'],
+            'prompt-injection-guard': ['security', 'prompt injection', 'ai security'],
+            
+            # AI/ML specialists
+            'deep-learning-brain-architect': ['deep learning', 'neural networks', 'architecture', 'ai'],
+            'deep-learning-brain-manager': ['deep learning', 'brain', 'management', 'ai'],
+            'deep-local-brain-builder': ['local ai', 'brain', 'building', 'neural networks'],
+            'neural-architecture-search': ['neural', 'architecture', 'search', 'optimization'],
+            'evolution-strategy-trainer': ['evolution', 'strategy', 'training', 'optimization'],
+            'genetic-algorithm-tuner': ['genetic', 'algorithm', 'tuning', 'optimization'],
+            'quantum-ai-researcher': ['quantum', 'ai', 'research', 'quantum computing'],
+            
+            # Data & Analytics agents
+            'private-data-analyst': ['data', 'analysis', 'analytics', 'private data'],
+            'data-analysis-engineer': ['data', 'analysis', 'engineering', 'statistics'],
+            'data-drift-detector': ['data', 'drift', 'detection', 'monitoring'],
+            'data-lifecycle-manager': ['data', 'lifecycle', 'management', 'governance'],
+            'data-version-controller-dvc': ['data', 'version control', 'dvc', 'versioning'],
+            
+            # Monitoring & Observability agents
+            'observability-dashboard-manager-grafana': ['monitoring', 'grafana', 'dashboard', 'observability'],
+            'metrics-collector-prometheus': ['metrics', 'prometheus', 'monitoring', 'collection'],
+            'log-aggregator-loki': ['logs', 'loki', 'aggregation', 'monitoring'],
+            'distributed-tracing-analyzer-jaeger': ['tracing', 'jaeger', 'distributed', 'analysis'],
+            'runtime-behavior-anomaly-detector': ['runtime', 'anomaly', 'behavior', 'detection'],
+            
+            # Hardware & Resource agents
+            'hardware-resource-optimizer': ['hardware', 'resource', 'optimization', 'performance'],
+            'cpu-only-hardware-optimizer': ['cpu', 'hardware', 'optimization', 'performance'],
+            'gpu-hardware-optimizer': ['gpu', 'hardware', 'optimization', 'performance'],
+            'ram-hardware-optimizer': ['ram', 'memory', 'optimization', 'performance'],
+            'compute-scheduler-and-optimizer': ['compute', 'scheduling', 'optimization', 'resources'],
+            'energy-consumption-optimize': ['energy', 'consumption', 'optimization', 'efficiency'],
+            
+            # Specialized AI agents
+            'ollama-integration-specialist': ['ollama', 'llm', 'local models', 'integration'],
+            'document-knowledge-manager': ['documentation', 'knowledge', 'management', 'rag'],
+            'langflow-workflow-designer': ['langflow', 'workflow', 'design', 'automation'],
+            'dify-automation-specialist': ['dify', 'automation', 'workflow', 'ai apps'],
+            'flowiseai-flow-manager': ['flowise', 'flow', 'management', 'ai workflows'],
+            
+            # Management & Coordination agents
+            'ai-product-manager': ['product', 'management', 'planning', 'strategy'],
+            'ai-scrum-master': ['scrum', 'agile', 'project management', 'coordination'],
+            'product-manager': ['product', 'management', 'strategy', 'planning'],
+            'scrum-master': ['scrum', 'agile', 'project management'],
+            'codebase-team-lead': ['team', 'leadership', 'codebase', 'management'],
+            
+            # Automation agents
+            'autonomous-task-executor': ['autonomous', 'task', 'execution', 'automation'],
+            'automated-incident-responder': ['incident', 'response', 'automation', 'ops'],
+            'garbage-collector': ['cleanup', 'garbage collection', 'maintenance', 'optimization'],
+            'emergency-shutdown-coordinator': ['emergency', 'shutdown', 'coordination', 'safety'],
+            
+            # Voice interface (self-reference)
+            'jarvis-voice-interface': ['voice', 'speech', 'interface', 'natural language', 'assistant']
+        }
+        
+    def _extract_keywords_from_description(self, description: str) -> List[str]:
+        """Extract relevant keywords from agent description"""
+        keywords = []
+        
+        # Common technical terms to extract
+        tech_terms = [
+            'frontend', 'backend', 'fullstack', 'database', 'api', 'microservices',
+            'docker', 'kubernetes', 'ci/cd', 'deployment', 'monitoring', 'security',
+            'machine learning', 'deep learning', 'ai', 'neural networks', 'data',
+            'testing', 'qa', 'automation', 'workflow', 'optimization', 'performance'
+        ]
+        
+        for term in tech_terms:
+            if term in description:
+                keywords.append(term)
+                
+        return keywords
+        
+    async def route_voice_command(self, command: str) -> List[str]:
+        """Route voice command to appropriate agents using pattern matching"""
+        command_lower = command.lower()
+        candidate_agents = []
+        
+        # Check voice patterns
+        for pattern, agents in self.voice_patterns.items():
+            if re.match(pattern, command_lower):
+                candidate_agents.extend(agents)
+                
+        # If no patterns match, use keyword-based routing
+        if not candidate_agents:
+            candidate_agents = await self._keyword_based_routing(command_lower)
+            
+        # Filter to available agents
+        available_candidates = [
+            agent for agent in candidate_agents 
+            if agent in self.agent_registry and 
+            self.agent_registry[agent]['status'] == 'available'
+        ]
+        
+        # Return top 3 most suitable agents
+        return available_candidates[:3] if available_candidates else ['agent-orchestrator']
+        
+    async def _keyword_based_routing(self, command: str) -> List[str]:
+        """Route command based on keyword matching with agent specialties"""
+        candidates = []
+        
+        for agent_name, specialties in self.agent_specialties.items():
+            score = 0
+            for specialty in specialties:
+                if specialty.lower() in command:
+                    score += len(specialty.split())  # Prefer longer, more specific matches
+                    
+            if score > 0:
+                candidates.append((score, agent_name))
+                
+        # Sort by score and return agent names
+        candidates.sort(reverse=True)
+        return [agent for _, agent in candidates[:5]]
+        
+    async def process_voice_command(self, command: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Process a voice command with intelligent agent routing"""
+        try:
+            # Route command to appropriate agents
+            suggested_agents = await self.route_voice_command(command)
+            
+            logger.info(f"Voice command '{command}' routed to agents: {suggested_agents}")
+            
+            # Create execution plan
+            plan = {
+                'goal': command,
+                'steps': [{
+                    'id': 'voice_command_execution',
+                    'type': 'voice_command',
+                    'description': command,
+                    'input': {'command': command, 'context': context or {}},
+                    'suggested_agents': suggested_agents
+                }]
+            }
+            
+            # Execute using the first available agent
+            result = await self.execute_plan(plan)
+            
+            return {
+                'command': command,
+                'suggested_agents': suggested_agents,
+                'execution_result': result,
+                'success': result.get('success', False)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error processing voice command: {e}")
+            return {
+                'command': command,
+                'error': str(e),
+                'success': False
+            }
