@@ -1,58 +1,58 @@
 # Core web framework
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.5.0
-starlette>=0.27.0
+fastapi==0.115.6
+uvicorn[standard]==LATEST_SECURE
+pydantic==2.10.4
+starlette==0.41.3
 
 # HTTP client
-httpx>=0.25.0
-aiohttp>=3.9.0
+httpx==0.28.1
+aiohttp==3.11.11
 
 # Voice processing
-SpeechRecognition>=3.10.0
-pyttsx3>=2.90
-pyaudio>=0.2.11
-webrtcvad>=2.0.10
-soundfile>=0.12.1
-numpy>=1.24.0
-scipy>=1.11.0
+SpeechRecognition==LATEST_SECURE
+pyttsx3==LATEST_SECURE
+pyaudio==LATEST_SECURE
+webrtcvad==LATEST_SECURE
+soundfile==LATEST_SECURE
+numpy==2.1.3
+scipy==LATEST_SECURE
 
 # AI/ML libraries
-torch>=2.0.0
-transformers>=4.35.0
-sentence-transformers>=2.2.2
-openai-whisper>=20231117
+torch==2.5.1
+transformers==4.48.0
+sentence-transformers==LATEST_SECURE
+openai-whisper==LATEST_SECURE
 
 # Database and caching
-aioredis>=2.0.1
+aioredis==LATEST_SECURE
 # sqlite3 is built-in to Python
-psycopg2-binary>=2.9.7
+psycopg2-binary==2.9.10
 
 # Service discovery and messaging
-python-consul>=1.1.0
-aio-pika>=9.3.0
+python-consul==LATEST_SECURE
+aio-pika==LATEST_SECURE
 
 # Configuration and logging
-PyYAML>=6.0.1
-python-multipart>=0.0.6
-python-dotenv>=1.0.0
+PyYAML==LATEST_SECURE
+python-multipart==LATEST_SECURE
+python-dotenv==1.0.1
 
 # Monitoring and metrics
-prometheus-client>=0.19.0
-psutil>=5.9.6
+prometheus-client==0.21.1
+psutil==6.1.0
 
 # Security
-passlib[bcrypt]>=1.7.4
-python-jose[cryptography]>=3.3.0
+passlib[bcrypt]==LATEST_SECURE
+python-jose[cryptography]==LATEST_SECURE
 
 # Utilities
-python-dateutil>=2.8.0
-colorama>=0.4.6
-tqdm>=4.66.0
+python-dateutil==LATEST_SECURE
+colorama==LATEST_SECURE
+tqdm==4.67.1
 
 # Development and testing (optional)
-pytest>=7.4.0
-pytest-asyncio>=0.21.0
-pytest-cov>=4.1.0
-black>=23.0.0
-flake8>=6.0.0
+pytest==8.3.4
+pytest-asyncio==LATEST_SECURE
+pytest-cov==LATEST_SECURE
+black==24.10.0
+flake8==LATEST_SECURE

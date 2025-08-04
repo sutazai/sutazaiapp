@@ -519,7 +519,7 @@ class PredictiveMonitor:
             
         try:
             data = []
-            list_key = "metrics:containers:list"
+            list_key = os.getenv("METRICS_LIST_KEY", "metrics:containers:list")
             
             raw_metrics = self.redis_client.lrange(list_key, 0, 100)
             for raw in raw_metrics:

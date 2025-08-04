@@ -1,0 +1,92 @@
+version: '3.8'
+
+# Permanent health check override for all SutazAI services
+# This replaces problematic curl-based health checks with Python socket checks
+
+x-python-health-check: &python-health-check
+  healthcheck:
+    test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+    interval: 60s
+    timeout: 30s
+    retries: 5
+    start_period: 120s
+
+services:
+  # Phase 1 Critical Services
+  ai-system-validator:
+    <<: *python-health-check
+    
+  ai-testing-qa-validator:
+    <<: *python-health-check
+    
+  # Phase 2 Specialized Services  
+  attention-optimizer-phase2:
+    <<: *python-health-check
+    
+  cognitive-architecture-designer-phase2:
+    <<: *python-health-check
+    
+  browser-automation-orchestrator-phase2:
+    <<: *python-health-check
+    
+  devika-phase2:
+    <<: *python-health-check
+    
+  ai-scrum-master-phase1:
+    <<: *python-health-check
+    
+  ai-product-manager-phase1:
+    <<: *python-health-check
+    
+  agentzero-coordinator-phase1:
+    <<: *python-health-check
+    
+  # Phase 3 Auxiliary Services
+  data-analysis-engineer-phase3:
+    <<: *python-health-check
+    
+  dify-automation-specialist-phase3:
+    <<: *python-health-check
+    
+  awesome-code-ai-phase3:
+    <<: *python-health-check
+    
+  distributed-computing-architect-phase3:
+    <<: *python-health-check
+    
+  federated-learning-coordinator-phase3:
+    <<: *python-health-check
+    
+  garbage-collector-coordinator-phase3:
+    <<: *python-health-check
+    
+  edge-computing-optimizer-phase3:
+    <<: *python-health-check
+    
+  finrobot-phase3:
+    <<: *python-health-check
+    
+  flowiseai-flow-manager-phase3:
+    <<: *python-health-check
+    
+  data-pipeline-engineer-phase3:
+    <<: *python-health-check
+    
+  episodic-memory-engineer-phase3:
+    <<: *python-health-check
+    
+  gradient-compression-specialist-phase3:
+    <<: *python-health-check
+    
+  explainable-ai-specialist-phase3:
+    <<: *python-health-check
+    
+  document-knowledge-manager-phase3:
+    <<: *python-health-check
+    
+  # Infrastructure Services
+  service-registry:
+    <<: *python-health-check
+    
+  hardware-resource-optimizer:
+    <<: *python-health-check

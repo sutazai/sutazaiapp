@@ -64,7 +64,7 @@ services:
     <<: *resource-limits-medium
     environment:
       <<: *common-env
-      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-sutazai_neo4j}
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_dbms_default__database: sutazai
       NEO4J_dbms_memory_heap_initial__size: 512m
       NEO4J_dbms_memory_heap_max__size: 1G
@@ -83,7 +83,7 @@ services:
     networks:
       - sutazai-network
     healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-sutazai_neo4j} 'RETURN 1'"]
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD} 'RETURN 1'"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -227,7 +227,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       NEO4J_URL: bolt://neo4j:7687
       NEO4J_USER: neo4j
-      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-sutazai_neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
       CHROMADB_URL: http://chromadb:8000
       QDRANT_URL: http://qdrant:6333
       OLLAMA_URL: http://ollama:11434
@@ -395,7 +395,7 @@ services:
       QDRANT_URL: http://qdrant:6333
       NEO4J_URL: bolt://neo4j:7687
       NEO4J_USER: neo4j
-      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-sutazai_neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
       METRICS_PORT: 9200
     volumes:
       - ./services/ai-metrics:/app:ro

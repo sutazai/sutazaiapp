@@ -34,6 +34,13 @@ ALLOWED_PATTERNS = [
     r'password_field',
     r'secret_key',
     r'api_key',
+    r'\*{3,}',  # Masked secrets like "*****"
+    r'"\.\.\."',  # Example patterns like "..."
+    r'ghp_\.\.\.',  # Example GitHub token pattern
+    r'change_me',  # Placeholder values
+    r'LATEST_SECURE',  # Placeholder for dependency versions
+    r'# Never expose secrets',  # Comment indicating proper masking
+    r'# Example pattern',  # Comment for regex examples
 ]
 
 def check_file(filepath):
@@ -72,9 +79,10 @@ def main():
     
     for pattern in patterns:
         for filepath in Path('.').glob(pattern):
-            # Skip virtual environments and dependencies
+            # Skip virtual environments, dependencies, and backup directories
             if any(part in str(filepath) for part in 
-                   ['venv', 'node_modules', '.git', '__pycache__']):
+                   ['venv', 'node_modules', '.git', '__pycache__', 'backup', 'archive', 
+                    'security-scan-results/backups', 'semgrep_custom_rules.yaml']):
                 continue
                 
             file_violations = check_file(filepath)

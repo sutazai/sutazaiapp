@@ -86,7 +86,7 @@ class DifyWorkflowManager:
         self.redis_client = redis.Redis(
             host='redis', 
             port=6379, 
-            password='redis_password',
+            password=os.getenv('REDIS_PASSWORD', 'redis_password'),
             decode_responses=True
         )
         

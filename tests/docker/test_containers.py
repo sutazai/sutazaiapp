@@ -379,7 +379,7 @@ class TestServiceContainers:
                 port=5432,
                 database="test_db",
                 user="test_user",
-                password="test_pass"
+                password=os.getenv("TEST_PASSWORD", "test_pass")
             )
             
             # Test basic operations

@@ -185,7 +185,7 @@ class TestServiceAvailability:
                 port=5432,
                 database="postgres",
                 user="postgres",
-                password="postgres",
+                password=os.getenv("POSTGRES_PASSWORD", "postgres"),
                 connect_timeout=TIMEOUT_SECONDS
             )
             
@@ -412,7 +412,7 @@ class TestServiceDependencies:
             import psycopg2
             conn = psycopg2.connect(
                 host="localhost", port=5432, database="postgres",
-                user="postgres", password="postgres", connect_timeout=5
+                user="postgres", password=os.getenv("POSTGRES_PASSWORD", "postgres"), connect_timeout=5
             )
             conn.close()
         except:

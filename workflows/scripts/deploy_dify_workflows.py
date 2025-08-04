@@ -376,7 +376,7 @@ from typing import Dict, List, Optional
 
 class TaskRouter:
     def __init__(self):
-        self.redis_client = redis.Redis(host='redis', port=6379, password='redis_password')
+        self.redis_client = redis.Redis(host='redis', port=6379, password=os.getenv('REDIS_PASSWORD', 'redis_password'))
         self.agent_registry_url = "{self.agent_registry_base}"
         self.routing_config = {json.dumps(self.task_router_config, indent=8)}
         

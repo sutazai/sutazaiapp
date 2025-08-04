@@ -61,7 +61,7 @@ class PortfolioRequest(BaseModel):
 
 class FinancialAnalyzer:
     def __init__(self):
-        self.alpha_vantage_key = "demo"  # Replace with actual API key
+        self.alpha_vantage_key = os.getenv("ALPHA_VANTAGE_KEY", "demo")  # Replace with actual API key
         self.ts = TimeSeries(key=self.alpha_vantage_key, output_format='pandas')
         self.fd = FundamentalData(key=self.alpha_vantage_key, output_format='pandas')
         self.cache = {}

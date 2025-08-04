@@ -1,24 +1,24 @@
 # Testing dependencies
-pytest>=7.4.0
-pytest-asyncio>=0.21.0
-pytest-cov>=4.1.0
-httpx>=0.25.0
-pytest-mock>=3.11.0
-factory-boy>=3.3.0
-faker>=19.0.0
+pytest==8.3.4
+pytest-asyncio==LATEST_SECURE
+pytest-cov==LATEST_SECURE
+httpx==0.28.1
+pytest-mock==LATEST_SECURE
+factory-boy==LATEST_SECURE
+faker==LATEST_SECURE
 
 # Test database
-pytest-postgresql>=5.0.0
+pytest-postgresql==LATEST_SECURE
 
 # Load testing
-locust>=2.17.0
+locust==LATEST_SECURE
 
 # Linting and formatting (for CI)
-black>=23.7.0
-flake8>=6.0.0
-isort>=5.12.0
-mypy>=1.5.0
+black==24.10.0
+flake8==LATEST_SECURE
+isort==LATEST_SECURE
+mypy==LATEST_SECURE
 
 # Security testing
-bandit>=1.7.5
-safety>=2.3.0
+bandit==LATEST_SECURE
+safety==LATEST_SECURE

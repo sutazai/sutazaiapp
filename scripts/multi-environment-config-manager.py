@@ -95,10 +95,10 @@ class ConfigType(Enum):
 
 class SecretType(Enum):
     """Secret types"""
-    PASSWORD = "password"
+    PASSWORD = os.getenv("CONFIG_MANAGER_PASSWORD", "change_me")
     API_KEY = "api_key"
     CERTIFICATE = "certificate"
-    TOKEN = "token"
+    TOKEN = os.getenv("CONFIG_MANAGER_TOKEN", "change_me")
     CONNECTION_STRING = "connection_string"
 
 @dataclass

@@ -165,7 +165,7 @@ class SutazAISystemFixer:
                 port=5432,
                 database="sutazai_db",
                 user="sutazai",
-                password="sutazai123"
+                password=os.getenv("DOCS_DB_PASSWORD", "change_me")
             )
             cursor = conn.cursor()
             

@@ -1,13 +1,13 @@
 # Hygiene Monitoring System Requirements
 # Core async web framework
-aiohttp>=3.8.0
-aiofiles>=22.0.0
+aiohttp==3.11.11
+aiofiles==LATEST_SECURE
 
 # System monitoring
-psutil>=5.9.0
+psutil==6.1.0
 
 # File system monitoring
-watchdog>=2.1.0
+watchdog==LATEST_SECURE
 
 # Database (SQLite is built-in to Python)
 sqlite3

@@ -1,0 +1,512 @@
+version: '3.8'
+
+# SutazAI Phase 3 Auxiliary Agents Deployment
+# 24 Auxiliary Support and Utility Agents  
+# Port Range: 11045-11068
+# Memory: ~12GB (24 agents × 512MB)
+
+x-agent-base: &agent-base
+  image: python:3.11-slim
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  working_dir: /app
+  environment:
+    CONSUL_URL: http://consul:8500
+    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
+    REDIS_URL: redis://redis:6379/0
+    OLLAMA_BASE_URL: http://ollama:11434
+    LOG_LEVEL: INFO
+    AGENT_POOL: python
+    DEPLOYMENT_PHASE: "3"
+    PHASE_PRIORITY: "auxiliary"
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.25'
+        memory: 256M
+  command: >
+    sh -c "
+      pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client &&
+      python -m uvicorn app:app --host 0.0.0.0 --port 8080
+    "
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  agent_workspaces:
+    external: true
+
+services:
+  # Phase 3: Auxiliary Support Agents (11045-11068)
+  
+  # Monitoring and Analytics
+  evolution-strategy-trainer:
+    <<: *agent-base
+    container_name: sutazai-evolution-strategy-trainer-phase3
+    ports:
+      - "11045:8080"
+    environment:
+      AGENT_NAME: evolution-strategy-trainer
+      AGENT_TYPE: optimization
+      PRIORITY: auxiliary
+      AGENT_ROLE: strategy-optimization
+    volumes:
+      - ./agents/evolution-strategy-trainer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  experiment-tracker:
+    <<: *agent-base
+    container_name: sutazai-experiment-tracker-phase3
+    ports:
+      - "11046:8080"
+    environment:
+      AGENT_NAME: experiment-tracker
+      AGENT_TYPE: monitoring
+      PRIORITY: auxiliary
+      AGENT_ROLE: experiment-management
+    volumes:
+      - ./agents/experiment-tracker:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  explainability-and-transparency-agent:
+    <<: *agent-base
+    container_name: sutazai-explainability-transparency-phase3
+    ports:
+      - "11047:8080"
+    environment:
+      AGENT_NAME: explainability-and-transparency-agent
+      AGENT_TYPE: governance
+      PRIORITY: auxiliary
+      AGENT_ROLE: model-explainability
+    volumes:
+      - ./agents/explainability-and-transparency-agent:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Resource and System Management  
+  distributed-tracing-analyzer-jaeger:
+    <<: *agent-base
+    container_name: sutazai-distributed-tracing-analyzer-phase3
+    ports:
+      - "11048:8080"
+    environment:
+      AGENT_NAME: distributed-tracing-analyzer-jaeger
+      AGENT_TYPE: monitoring
+      PRIORITY: auxiliary
+      AGENT_ROLE: distributed-tracing
+    volumes:
+      - ./agents/distributed-tracing-analyzer-jaeger:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  log-aggregator-loki:
+    <<: *agent-base
+    container_name: sutazai-log-aggregator-loki-phase3
+    ports:
+      - "11049:8080"
+    environment:
+      AGENT_NAME: log-aggregator-loki
+      AGENT_TYPE: monitoring
+      PRIORITY: auxiliary
+      AGENT_ROLE: log-management
+    volumes:
+      - ./agents/log-aggregator-loki:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  metrics-collector-prometheus:
+    <<: *agent-base
+    container_name: sutazai-metrics-collector-prometheus-phase3
+    ports:
+      - "11050:8080"
+    environment:
+      AGENT_NAME: metrics-collector-prometheus
+      AGENT_TYPE: monitoring
+      PRIORITY: auxiliary
+      AGENT_ROLE: metrics-collection
+    volumes:
+      - ./agents/metrics-collector-prometheus:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  observability-dashboard-manager-grafana:
+    <<: *agent-base
+    container_name: sutazai-observability-dashboard-manager-phase3
+    ports:
+      - "11051:8080"
+    environment:
+      AGENT_NAME: observability-dashboard-manager-grafana
+      AGENT_TYPE: monitoring
+      PRIORITY: auxiliary
+      AGENT_ROLE: dashboard-management
+    volumes:
+      - ./agents/observability-dashboard-manager-grafana:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Advanced AI/ML Support
+  explainable-ai-specialist:
+    <<: *agent-base
+    container_name: sutazai-explainable-ai-specialist-phase3
+    ports:
+      - "11052:8080"
+    environment:
+      AGENT_NAME: explainable-ai-specialist
+      AGENT_TYPE: ai-ml
+      PRIORITY: auxiliary
+      AGENT_ROLE: ai-interpretation
+    volumes:
+      - ./agents/explainable-ai-specialist:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  federated-learning-coordinator:
+    <<: *agent-base
+    container_name: sutazai-federated-learning-coordinator-phase3
+    ports:
+      - "11053:8080"
+    environment:
+      AGENT_NAME: federated-learning-coordinator
+      AGENT_TYPE: ai-ml
+      PRIORITY: auxiliary
+      AGENT_ROLE: federated-learning
+    volumes:
+      - ./agents/federated-learning-coordinator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Data and Analytics
+  data-analysis-engineer:
+    <<: *agent-base
+    container_name: sutazai-data-analysis-engineer-phase3
+    ports:
+      - "11054:8080"
+    environment:
+      AGENT_NAME: data-analysis-engineer
+      AGENT_TYPE: data-analysis
+      PRIORITY: auxiliary
+      AGENT_ROLE: data-insights
+    volumes:
+      - ./agents/data-analysis-engineer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  data-pipeline-engineer:
+    <<: *agent-base
+    container_name: sutazai-data-pipeline-engineer-phase3
+    ports:
+      - "11055:8080"
+    environment:
+      AGENT_NAME: data-pipeline-engineer
+      AGENT_TYPE: data-engineering
+      PRIORITY: auxiliary
+      AGENT_ROLE: pipeline-management
+    volumes:
+      - ./agents/data-pipeline-engineer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Advanced Infrastructure
+  distributed-computing-architect:
+    <<: *agent-base
+    container_name: sutazai-distributed-computing-architect-phase3
+    ports:
+      - "11056:8080"
+    environment:
+      AGENT_NAME: distributed-computing-architect
+      AGENT_TYPE: infrastructure
+      PRIORITY: auxiliary
+      AGENT_ROLE: distributed-systems
+    volumes:
+      - ./agents/distributed-computing-architect:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  edge-computing-optimizer:
+    <<: *agent-base
+    container_name: sutazai-edge-computing-optimizer-phase3
+    ports:
+      - "11057:8080"
+    environment:
+      AGENT_NAME: edge-computing-optimizer
+      AGENT_TYPE: optimization
+      PRIORITY: auxiliary
+      AGENT_ROLE: edge-optimization
+    volumes:
+      - ./agents/edge-computing-optimizer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Specialized Services
+  document-knowledge-manager:
+    <<: *agent-base
+    container_name: sutazai-document-knowledge-manager-phase3
+    ports:
+      - "11058:8080"
+    environment:
+      AGENT_NAME: document-knowledge-manager
+      AGENT_TYPE: knowledge-management
+      PRIORITY: auxiliary
+      AGENT_ROLE: document-processing
+    volumes:
+      - ./agents/document-knowledge-manager:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  episodic-memory-engineer:
+    <<: *agent-base
+    container_name: sutazai-episodic-memory-engineer-phase3
+    ports:
+      - "11059:8080"
+    environment:
+      AGENT_NAME: episodic-memory-engineer
+      AGENT_TYPE: memory-management
+      PRIORITY: auxiliary
+      AGENT_ROLE: memory-systems
+    volumes:
+      - ./agents/episodic-memory-engineer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Advanced Frameworks and Tools
+  dify-automation-specialist:
+    <<: *agent-base
+    container_name: sutazai-dify-automation-specialist-phase3
+    ports:
+      - "11060:8080"
+    environment:
+      AGENT_NAME: dify-automation-specialist
+      AGENT_TYPE: automation
+      PRIORITY: auxiliary
+      AGENT_ROLE: workflow-automation
+    volumes:
+      - ./agents/dify-automation-specialist:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  flowiseai-flow-manager:
+    <<: *agent-base
+    container_name: sutazai-flowiseai-flow-manager-phase3
+    ports:
+      - "11061:8080"
+    environment:
+      AGENT_NAME: flowiseai-flow-manager
+      AGENT_TYPE: workflow
+      PRIORITY: auxiliary
+      AGENT_ROLE: flow-management
+    volumes:
+      - ./agents/flowiseai-flow-manager:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Additional Specialized Agents
+  awesome-code-ai:
+    <<: *agent-base
+    container_name: sutazai-awesome-code-ai-phase3
+    ports:
+      - "11062:8080"
+    environment:
+      AGENT_NAME: awesome-code-ai
+      AGENT_TYPE: development
+      PRIORITY: auxiliary
+      AGENT_ROLE: code-enhancement
+    volumes:
+      - ./agents/awesome-code-ai:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  finrobot:
+    <<: *agent-base
+    container_name: sutazai-finrobot-phase3
+    ports:
+      - "11063:8080"
+    environment:
+      AGENT_NAME: finrobot
+      AGENT_TYPE: financial
+      PRIORITY: auxiliary
+      AGENT_ROLE: financial-analysis
+    volumes:
+      - ./agents/finrobot:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Memory and Advanced AI Support
+  garbage-collector-coordinator:
+    <<: *agent-base
+    container_name: sutazai-garbage-collector-coordinator-phase3
+    ports:
+      - "11064:8080"
+    environment:
+      AGENT_NAME: garbage-collector-coordinator
+      AGENT_TYPE: resource-management
+      PRIORITY: auxiliary
+      AGENT_ROLE: memory-cleanup
+    volumes:
+      - ./agents/garbage-collector-coordinator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  gradient-compression-specialist:
+    <<: *agent-base
+    container_name: sutazai-gradient-compression-specialist-phase3
+    ports:
+      - "11065:8080"
+    environment:
+      AGENT_NAME: gradient-compression-specialist
+      AGENT_TYPE: optimization
+      PRIORITY: auxiliary
+      AGENT_ROLE: gradient-optimization
+    volumes:
+      - ./agents/gradient-compression-specialist:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  # Hardware and Performance
+  gpu-hardware-optimizer:
+    <<: *agent-base
+    container_name: sutazai-gpu-hardware-optimizer-phase3
+    ports:
+      - "11066:8080"
+    environment:
+      AGENT_NAME: gpu-hardware-optimizer
+      AGENT_TYPE: hardware-optimization
+      PRIORITY: auxiliary
+      AGENT_ROLE: gpu-optimization
+    volumes:
+      - ./agents/gpu-hardware-optimizer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  genetic-algorithm-tuner:
+    <<: *agent-base
+    container_name: sutazai-genetic-algorithm-tuner-phase3
+    ports:
+      - "11067:8080"
+    environment:
+      AGENT_NAME: genetic-algorithm-tuner
+      AGENT_TYPE: optimization
+      PRIORITY: auxiliary
+      AGENT_ROLE: evolutionary-optimization
+    volumes:
+      - ./agents/genetic-algorithm-tuner:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  goal-setting-and-planning-agent:
+    <<: *agent-base
+    container_name: sutazai-goal-setting-planning-agent-phase3
+    ports:
+      - "11068:8080"
+    environment:
+      AGENT_NAME: goal-setting-and-planning-agent
+      AGENT_TYPE: planning
+      PRIORITY: auxiliary
+      AGENT_ROLE: strategic-planning
+    volumes:
+      - ./agents/goal-setting-and-planning-agent:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost', 8080))==0 else 1)"]
+      interval: 60s
+      timeout: 30s
+      retries: 5

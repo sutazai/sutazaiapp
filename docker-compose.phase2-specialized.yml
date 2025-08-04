@@ -1,64 +1,590 @@
-version: '3.8'
-
-# SutazAI Phase 2 Specialized Agents Deployment
-# 25 Specialized AI/ML and Development Agents
-# Port Range: 11020-11044
-# Memory: ~12.5GB (25 agents × 512MB)
-
-x-agent-base: &agent-base
-  image: python:3.11-slim
-  restart: unless-stopped
-  networks:
-    - sutazai-network
-  working_dir: /app
-  environment:
-    CONSUL_URL: http://consul:8500
-    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
-    REDIS_URL: redis://redis:6379/0
-    OLLAMA_BASE_URL: http://ollama:11434
-    LOG_LEVEL: INFO
-    AGENT_POOL: python
-    DEPLOYMENT_PHASE: "2"
-    PHASE_PRIORITY: "specialized"
-  deploy:
-    resources:
-      limits:
-        cpus: '0.5'
-        memory: 512M
-      reservations:
-        cpus: '0.25'
-        memory: 256M
-  command: >
-    sh -c "
-      pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client &&
-      python -m uvicorn app:app --host 0.0.0.0 --port 8080
-    "
-
 networks:
   sutazai-network:
     external: true
-
-volumes:
-  agent_workspaces:
-    external: true
-
 services:
-  # Phase 2: Specialized AI/ML Agents (11020-11044)
-  
-  # AI/ML Core Agents
-  deep-learning-brain-architect:
-    <<: *agent-base
-    container_name: sutazai-deep-learning-brain-architect-phase2
-    ports:
-      - "11020:8080"
+  aider:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-aider-phase2
+    deploy: &id001
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
-      AGENT_NAME: deep-learning-brain-architect
-      AGENT_TYPE: ai-ml
+      AGENT_NAME: aider
+      AGENT_ROLE: ai-pair-programming
+      AGENT_TYPE: development
       PRIORITY: specialized
-      AGENT_ROLE: ml-architecture
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: &id002
+    - sutazai-network
+    ports:
+    - 11025:8080
+    restart: unless-stopped
     volumes:
-      - ./agents/deep-learning-brain-architect:/app
-      - agent_workspaces:/workspaces
+    - ./agents/aider:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  attention-optimizer:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-attention-optimizer-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: attention-optimizer
+      AGENT_ROLE: attention-tuning
+      AGENT_TYPE: ai-optimization
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11036:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/attention-optimizer:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  autogen:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-autogen-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: autogen
+      AGENT_ROLE: multi-agent-conversation
+      AGENT_TYPE: ai-framework
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11022:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/autogen:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  autogpt:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-autogpt-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: autogpt
+      AGENT_ROLE: autonomous-tasks
+      AGENT_TYPE: ai-framework
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11023:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/autogpt:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  autonomous-task-executor:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-autonomous-task-executor-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: autonomous-task-executor
+      AGENT_ROLE: task-automation
+      AGENT_TYPE: task-execution
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11039:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/autonomous-task-executor:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  bias-and-fairness-auditor:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-bias-fairness-auditor-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: bias-and-fairness-auditor
+      AGENT_ROLE: fairness-validation
+      AGENT_TYPE: testing
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11030:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/bias-and-fairness-auditor:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  browser-automation-orchestrator:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-browser-automation-orchestrator-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: browser-automation-orchestrator
+      AGENT_ROLE: web-automation
+      AGENT_TYPE: automation
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11040:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/browser-automation-orchestrator:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  code-generation-improver:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-code-generation-improver-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: code-generation-improver
+      AGENT_ROLE: code-enhancement
+      AGENT_TYPE: development
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11026:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/code-generation-improver:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  code-improver:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-code-improver-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: code-improver
+      AGENT_ROLE: code-optimization
+      AGENT_TYPE: development
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11027:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/code-improver:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  code-quality-gateway-sonarqube:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-code-quality-gateway-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: code-quality-gateway-sonarqube
+      AGENT_ROLE: code-quality-gate
+      AGENT_TYPE: testing
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11029:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/code-quality-gateway-sonarqube:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  codebase-team-lead:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-codebase-team-lead-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: codebase-team-lead
+      AGENT_ROLE: codebase-governance
+      AGENT_TYPE: management
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11041:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/codebase-team-lead:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  cognitive-architecture-designer:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-cognitive-architecture-designer-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: cognitive-architecture-designer
+      AGENT_ROLE: cognitive-design
+      AGENT_TYPE: ai-architecture
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11037:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/cognitive-architecture-designer:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  cognitive-load-monitor:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-cognitive-load-monitor-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: cognitive-load-monitor
+      AGENT_ROLE: cognitive-monitoring
+      AGENT_TYPE: monitoring
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11038:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/cognitive-load-monitor:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  container-orchestrator-k3s:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-container-orchestrator-k3s-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: container-orchestrator-k3s
+      AGENT_ROLE: kubernetes-management
+      AGENT_TYPE: infrastructure
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11031:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/container-orchestrator-k3s:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  container-vulnerability-scanner-trivy:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-container-vulnerability-scanner-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: container-vulnerability-scanner-trivy
+      AGENT_ROLE: vulnerability-scanning
+      AGENT_TYPE: security
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11032:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/container-vulnerability-scanner-trivy:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  crewai:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-crewai-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: crewai
+      AGENT_ROLE: crew-coordination
+      AGENT_TYPE: ai-framework
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11024:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/crewai:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  data-drift-detector:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-data-drift-detector-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: data-drift-detector
+      AGENT_ROLE: data-monitoring
+      AGENT_TYPE: data-management
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11033:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/data-drift-detector:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  data-lifecycle-manager:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-data-lifecycle-manager-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: data-lifecycle-manager
+      AGENT_ROLE: data-governance
+      AGENT_TYPE: data-management
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11034:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/data-lifecycle-manager:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  data-version-controller-dvc:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-data-version-controller-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: data-version-controller-dvc
+      AGENT_ROLE: data-versioning
+      AGENT_TYPE: data-management
+      PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11035:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/data-version-controller-dvc:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  deep-learning-brain-architect:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-deep-learning-brain-architect-phase2
     deploy:
       resources:
         limits:
@@ -67,472 +593,199 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  deep-learning-brain-manager:
-    <<: *agent-base
-    container_name: sutazai-deep-learning-brain-manager-phase2
-    ports:
-      - "11021:8080"
     environment:
-      AGENT_NAME: deep-learning-brain-manager
+      AGENT_NAME: deep-learning-brain-architect
+      AGENT_ROLE: ml-architecture
       AGENT_TYPE: ai-ml
       PRIORITY: specialized
+    healthcheck:
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11020:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/deep-learning-brain-architect:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  deep-learning-brain-manager:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-deep-learning-brain-manager-phase2
+    deploy: *id001
+    environment:
+      AGENT_NAME: deep-learning-brain-manager
       AGENT_ROLE: ml-management
-    volumes:
-      - ./agents/deep-learning-brain-manager:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  autogen:
-    <<: *agent-base
-    container_name: sutazai-autogen-phase2
-    ports:
-      - "11022:8080"
-    environment:
-      AGENT_NAME: autogen
-      AGENT_TYPE: ai-framework
+      AGENT_TYPE: ai-ml
       PRIORITY: specialized
-      AGENT_ROLE: multi-agent-conversation
-    volumes:
-      - ./agents/autogen:/app
-      - agent_workspaces:/workspaces
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  autogpt:
-    <<: *agent-base
-    container_name: sutazai-autogpt-phase2
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
     ports:
-      - "11023:8080"
-    environment:
-      AGENT_NAME: autogpt
-      AGENT_TYPE: ai-framework
-      PRIORITY: specialized
-      AGENT_ROLE: autonomous-tasks
+    - 11021:8080
+    restart: unless-stopped
     volumes:
-      - ./agents/autogpt:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  crewai:
-    <<: *agent-base
-    container_name: sutazai-crewai-phase2
-    ports:
-      - "11024:8080"  
-    environment:
-      AGENT_NAME: crewai
-      AGENT_TYPE: ai-framework
-      PRIORITY: specialized
-      AGENT_ROLE: crew-coordination
-    volumes:
-      - ./agents/crewai:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Development Specialists  
-  aider:
-    <<: *agent-base
-    container_name: sutazai-aider-phase2
-    ports:
-      - "11025:8080"
-    environment:
-      AGENT_NAME: aider
-      AGENT_TYPE: development
-      PRIORITY: specialized
-      AGENT_ROLE: ai-pair-programming
-    volumes:
-      - ./agents/aider:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  code-generation-improver:
-    <<: *agent-base
-    container_name: sutazai-code-generation-improver-phase2
-    ports:
-      - "11026:8080"
-    environment:
-      AGENT_NAME: code-generation-improver
-      AGENT_TYPE: development
-      PRIORITY: specialized
-      AGENT_ROLE: code-enhancement
-    volumes:
-      - ./agents/code-generation-improver:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  code-improver:
-    <<: *agent-base
-    container_name: sutazai-code-improver-phase2
-    ports:
-      - "11027:8080"
-    environment:
-      AGENT_NAME: code-improver
-      AGENT_TYPE: development
-      PRIORITY: specialized
-      AGENT_ROLE: code-optimization
-    volumes:
-      - ./agents/code-improver:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+    - ./agents/deep-learning-brain-manager:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
   devika:
-    <<: *agent-base
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
     container_name: sutazai-devika-phase2
-    ports:
-      - "11028:8080"
+    deploy: *id001
     environment:
       AGENT_NAME: devika
+      AGENT_ROLE: ai-software-engineer
       AGENT_TYPE: development
       PRIORITY: specialized
-      AGENT_ROLE: ai-software-engineer
-    volumes:
-      - ./agents/devika:/app
-      - agent_workspaces:/workspaces
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Testing and Quality Assurance
-  code-quality-gateway-sonarqube:
-    <<: *agent-base
-    container_name: sutazai-code-quality-gateway-phase2
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
     ports:
-      - "11029:8080"
-    environment:
-      AGENT_NAME: code-quality-gateway-sonarqube
-      AGENT_TYPE: testing
-      PRIORITY: specialized
-      AGENT_ROLE: code-quality-gate
+    - 11028:8080
+    restart: unless-stopped
     volumes:
-      - ./agents/code-quality-gateway-sonarqube:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  bias-and-fairness-auditor:
-    <<: *agent-base
-    container_name: sutazai-bias-fairness-auditor-phase2
-    ports:
-      - "11030:8080"
-    environment:
-      AGENT_NAME: bias-and-fairness-auditor
-      AGENT_TYPE: testing
-      PRIORITY: specialized
-      AGENT_ROLE: fairness-validation
-    volumes:
-      - ./agents/bias-and-fairness-auditor:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Infrastructure Specialists
-  container-orchestrator-k3s:
-    <<: *agent-base
-    container_name: sutazai-container-orchestrator-k3s-phase2
-    ports:
-      - "11031:8080"
-    environment:
-      AGENT_NAME: container-orchestrator-k3s
-      AGENT_TYPE: infrastructure
-      PRIORITY: specialized
-      AGENT_ROLE: kubernetes-management
-    volumes:
-      - ./agents/container-orchestrator-k3s:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  container-vulnerability-scanner-trivy:
-    <<: *agent-base
-    container_name: sutazai-container-vulnerability-scanner-phase2
-    ports:
-      - "11032:8080"
-    environment:
-      AGENT_NAME: container-vulnerability-scanner-trivy
-      AGENT_TYPE: security
-      PRIORITY: specialized
-      AGENT_ROLE: vulnerability-scanning
-    volumes:
-      - ./agents/container-vulnerability-scanner-trivy:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Data Management
-  data-drift-detector:
-    <<: *agent-base
-    container_name: sutazai-data-drift-detector-phase2
-    ports:
-      - "11033:8080"
-    environment:
-      AGENT_NAME: data-drift-detector
-      AGENT_TYPE: data-management
-      PRIORITY: specialized
-      AGENT_ROLE: data-monitoring
-    volumes:
-      - ./agents/data-drift-detector:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  data-lifecycle-manager:
-    <<: *agent-base
-    container_name: sutazai-data-lifecycle-manager-phase2
-    ports:
-      - "11034:8080"
-    environment:
-      AGENT_NAME: data-lifecycle-manager
-      AGENT_TYPE: data-management
-      PRIORITY: specialized
-      AGENT_ROLE: data-governance
-    volumes:
-      - ./agents/data-lifecycle-manager:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  data-version-controller-dvc:
-    <<: *agent-base
-    container_name: sutazai-data-version-controller-phase2
-    ports:
-      - "11035:8080"
-    environment:
-      AGENT_NAME: data-version-controller-dvc
-      AGENT_TYPE: data-management
-      PRIORITY: specialized
-      AGENT_ROLE: data-versioning
-    volumes:
-      - ./agents/data-version-controller-dvc:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      
-  # Advanced AI Capabilities
-  attention-optimizer:
-    <<: *agent-base
-    container_name: sutazai-attention-optimizer-phase2
-    ports:
-      - "11036:8080"
-    environment:
-      AGENT_NAME: attention-optimizer
-      AGENT_TYPE: ai-optimization
-      PRIORITY: specialized
-      AGENT_ROLE: attention-tuning
-    volumes:
-      - ./agents/attention-optimizer:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  cognitive-architecture-designer:
-    <<: *agent-base
-    container_name: sutazai-cognitive-architecture-designer-phase2
-    ports:
-      - "11037:8080"
-    environment:
-      AGENT_NAME: cognitive-architecture-designer
-      AGENT_TYPE: ai-architecture
-      PRIORITY: specialized
-      AGENT_ROLE: cognitive-design
-    volumes:
-      - ./agents/cognitive-architecture-designer:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  cognitive-load-monitor:
-    <<: *agent-base
-    container_name: sutazai-cognitive-load-monitor-phase2
-    ports:
-      - "11038:8080"
-    environment:
-      AGENT_NAME: cognitive-load-monitor
-      AGENT_TYPE: monitoring
-      PRIORITY: specialized
-      AGENT_ROLE: cognitive-monitoring
-    volumes:
-      - ./agents/cognitive-load-monitor:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Task Management
-  autonomous-task-executor:
-    <<: *agent-base
-    container_name: sutazai-autonomous-task-executor-phase2
-    ports:
-      - "11039:8080"
-    environment:
-      AGENT_NAME: autonomous-task-executor
-      AGENT_TYPE: task-execution
-      PRIORITY: specialized
-      AGENT_ROLE: task-automation
-    volumes:
-      - ./agents/autonomous-task-executor:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Advanced Features
-  browser-automation-orchestrator:
-    <<: *agent-base
-    container_name: sutazai-browser-automation-orchestrator-phase2
-    ports:
-      - "11040:8080"
-    environment:
-      AGENT_NAME: browser-automation-orchestrator
-      AGENT_TYPE: automation
-      PRIORITY: specialized
-      AGENT_ROLE: web-automation
-    volumes:
-      - ./agents/browser-automation-orchestrator:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  codebase-team-lead:
-    <<: *agent-base
-    container_name: sutazai-codebase-team-lead-phase2
-    ports:
-      - "11041:8080"
-    environment:
-      AGENT_NAME: codebase-team-lead
-      AGENT_TYPE: management
-      PRIORITY: specialized
-      AGENT_ROLE: codebase-governance
-    volumes:
-      - ./agents/codebase-team-lead:/app
-      - agent_workspaces:/workspaces
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Specialized Infrastructure
+    - ./agents/devika:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
   edge-inference-proxy:
-    <<: *agent-base
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
     container_name: sutazai-edge-inference-proxy-phase2
-    ports:
-      - "11042:8080"
+    deploy: *id001
     environment:
       AGENT_NAME: edge-inference-proxy
+      AGENT_ROLE: edge-computing
       AGENT_TYPE: infrastructure
       PRIORITY: specialized
-      AGENT_ROLE: edge-computing
-    volumes:
-      - ./agents/edge-inference-proxy:/app
-      - agent_workspaces:/workspaces
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  energy-consumption-optimize:
-    <<: *agent-base
-    container_name: sutazai-energy-consumption-optimizer-phase2
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
     ports:
-      - "11043:8080"
+    - 11042:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/edge-inference-proxy:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  energy-consumption-optimize:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-energy-consumption-optimizer-phase2
+    deploy: *id001
     environment:
       AGENT_NAME: energy-consumption-optimize
+      AGENT_ROLE: energy-efficiency
       AGENT_TYPE: optimization
       PRIORITY: specialized
-      AGENT_ROLE: energy-efficiency
-    volumes:
-      - ./agents/energy-consumption-optimize:/app
-      - agent_workspaces:/workspaces
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  ethical-governor:
-    <<: *agent-base
-    container_name: sutazai-ethical-governor-phase2
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
     ports:
-      - "11044:8080"
+    - 11043:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/energy-consumption-optimize:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+  ethical-governor:
+    command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+      \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+      \"\n"
+    container_name: sutazai-ethical-governor-phase2
+    deploy: *id001
     environment:
       AGENT_NAME: ethical-governor
+      AGENT_ROLE: ethical-oversight
       AGENT_TYPE: governance
       PRIORITY: specialized
-      AGENT_ROLE: ethical-oversight
-    volumes:
-      - ./agents/ethical-governor:/app
-      - agent_workspaces:/workspaces
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 60s
+      retries: 5
+      test:
+      - CMD
+      - python3
+      - -c
+      - import socket; s=socket.socket(); s.settimeout(3); exit(0 if s.connect_ex(('localhost',
+        8080))==0 else 1)
+      timeout: 30s
+    image: python:3.11-slim
+    networks: *id002
+    ports:
+    - 11044:8080
+    restart: unless-stopped
+    volumes:
+    - ./agents/ethical-governor:/app
+    - agent_workspaces:/workspaces
+    working_dir: /app
+version: '3.8'
+volumes:
+  agent_workspaces:
+    external: true
+x-agent-base:
+  command: "sh -c \"\n  pip install --no-cache-dir fastapi uvicorn httpx redis pydantic\
+    \ prometheus-client &&\n  python -m uvicorn app:app --host 0.0.0.0 --port 8080\n\
+    \"\n"
+  deploy: *id001
+  environment:
+    AGENT_POOL: python
+    CONSUL_URL: http://consul:8500
+    DEPLOYMENT_PHASE: '2'
+    LOG_LEVEL: INFO
+    OLLAMA_BASE_URL: http://ollama:11434
+    PHASE_PRIORITY: specialized
+    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
+    REDIS_URL: redis://redis:6379/0
+  image: python:3.11-slim
+  networks: *id002
+  restart: unless-stopped
+  working_dir: /app

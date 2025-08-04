@@ -1,133 +1,60 @@
-# Docker Compose override for optimized local development
-# This file provides optimized settings for faster builds and better development experience
+version: '3.8'
+
+# Resource optimization overrides
+x-agent-optimized: &agent-optimized
+  deploy:
+    resources:
+      limits:
+        cpus: '0.3'
+        memory: 384M
+      reservations:
+        cpus: '0.1'
+        memory: 128M
+  restart: unless-stopped
+  healthcheck:
+    interval: 60s
+    timeout: 30s
+    retries: 5
+    start_period: 90s
 
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      cache_from:
-        - python:3.11-slim
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-    environment:
-      - DEBUG=true
-      - LOG_LEVEL=DEBUG
-      - RELOAD=true
-    volumes:
-      - ./backend:/app:cached
-      - backend_cache:/app/__pycache__
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
-          cpus: '1'
-          memory: 1G
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      cache_from:
-        - python:3.11-slim
-      args:
-        BUILDKIT_INLINE_CACHE: 1
-    environment:
-      - DEBUG=true
-      - STREAMLIT_SERVER_RUN_ON_SAVE=true
-    volumes:
-      - ./frontend:/app:cached
-      - frontend_cache:/app/__pycache__
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-
-  # Optimized Ollama for CPU-only systems
-  ollama:
-    environment:
-      - OLLAMA_NUM_PARALLEL=1
-      - OLLAMA_MAX_LOADED_MODELS=1
-      - OLLAMA_KEEP_ALIVE=5m
-      - OLLAMA_HOST=0.0.0.0
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 6G
-        reservations:
-          cpus: '2'
-          memory: 2G
-
-  # Lightweight PostgreSQL for development
+  # Core services optimization
   postgres:
-    environment:
-      - POSTGRES_INITDB_ARGS=--auth-host=md5
-    command: >
-      postgres
-      -c shared_preload_libraries=pg_stat_statements
-      -c max_connections=100
-      -c shared_buffers=256MB
-      -c effective_cache_size=1GB
-      -c maintenance_work_mem=64MB
-      -c checkpoint_completion_target=0.9
-      -c wal_buffers=16MB
-      -c default_statistics_target=100
-      -c random_page_cost=1.1
-      -c effective_io_concurrency=200
     deploy:
       resources:
         limits:
+          cpus: '1.5'
+          memory: 1.5G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+  
+  neo4j:
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+        reservations:
           cpus: '1'
           memory: 1G
-
-  # Optimized Redis
+  
+  ollama:
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+        reservations:
+          cpus: '4'
+          memory: 8G
+  
   redis:
-    command: >
-      redis-server
-      --maxmemory 512mb
-      --maxmemory-policy allkeys-lru
-      --save 60 1000
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 512M
-
-  # Lightweight ChromaDB
-  chromadb:
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
         reservations:
-          cpus: '0.5'
-          memory: 512M
-
-  # Lightweight Qdrant
-  qdrant:
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
-
-# Additional volumes for caching
-volumes:
-  backend_cache:
-  frontend_cache:
-  pip_cache:
-  npm_cache:
-
-# Networks optimized for development
-networks:
-  sutazai-network:
-    external: true
-    name: sutazai-network
+          cpus: '0.25'
+          memory: 256M

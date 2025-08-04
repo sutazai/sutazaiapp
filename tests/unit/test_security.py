@@ -99,7 +99,7 @@ def test_decryption_invalid_data(encryption_manager):
 
 def test_password_hashing(encryption_manager):
     """Test password hashing"""
-    password = "my_secure_password"
+    password = os.getenv("TEST_PASSWORD", "my_secure_password")
     hashed, salt = encryption_manager.hash_password(password)
     
     assert hashed != password
