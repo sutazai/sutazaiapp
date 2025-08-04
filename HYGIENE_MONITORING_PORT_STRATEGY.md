@@ -46,7 +46,7 @@ Port 8003   - Docker proxy (sutazai-storage)
 Port 8081   - Docker proxy (hygiene-backend) ✅
 Port 8082   - Docker proxy (hygiene-nginx) ✅
 Port 8101   - Docker proxy (rule-control-api) ✅
-Port 8115   - Docker proxy (hardware-resource-optimizer)
+Port 8116   - Docker proxy (hardware-resource-optimizer)
 Port 9090   - Docker proxy (sutazai-prometheus)
 Port 11434  - Docker proxy (sutazai-ollama)
 ```

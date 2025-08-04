@@ -14,7 +14,7 @@ from typing import Dict, Any, List
 from datetime import datetime
 
 # Configuration
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8002"
 AGENT_ENDPOINTS = {
     "autogpt": "http://autogpt:8080",
     "crewai": "http://crewai:8080", 
@@ -24,8 +24,8 @@ AGENT_ENDPOINTS = {
 }
 
 SERVICE_ENDPOINTS = {
-    "ollama": "http://ollama:11434",
-    "chromadb": "http://chromadb:8000",
+    "ollama": "http://ollama:9005",
+    "chromadb": "http://chromadb:8001",
     "qdrant": "http://qdrant:6333"
 }
 

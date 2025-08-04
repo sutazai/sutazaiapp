@@ -99,9 +99,9 @@ except ImportError as e:
 # Configuration
 PROJECT_ROOT = Path(__file__).parent.parent.absolute()
 LOG_DIR = PROJECT_ROOT / "logs"
-DASHBOARD_PORT = 7777
-WS_PORT = 7778
-API_PORT = 7779
+DASHBOARD_PORT = 9002
+WS_PORT = 9003
+API_PORT = 9004
 
 # Setup logging
 LOG_DIR.mkdir(exist_ok=True)
@@ -736,7 +736,7 @@ class UltimateDeploymentMaster:
         try:
             async with aiohttp.ClientSession() as session:
                 # Test backend API
-                async with session.get("http://localhost:8000/health", timeout=10) as response:
+                async with session.get("http://localhost:8002/health", timeout=10) as response:
                     return response.status == 200
                     
         except Exception:

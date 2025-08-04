@@ -20,7 +20,7 @@ services:
       retries: 5
     restart: unless-stopped
     ports:
-      - "5433:5432"  # Non-standard port to avoid conflicts
+      - "10020:5432"  # New conflict-free port
 
   # Backend API Service
   hygiene-backend:
@@ -52,7 +52,7 @@ services:
       retries: 5
     restart: unless-stopped
     ports:
-      - "8081:8080"
+      - "10420:8080"
 
   # Rule Control API Service
   rule-control-api:
@@ -77,7 +77,7 @@ services:
       retries: 5
     restart: unless-stopped
     ports:
-      - "8101:8100"
+      - "10421:8100"
 
   # Frontend Dashboard Service
   hygiene-dashboard:
@@ -86,9 +86,9 @@ services:
       dockerfile: docker/hygiene-dashboard/Dockerfile
     container_name: hygiene-dashboard
     environment:
-      BACKEND_API_URL: http://localhost:8081/api/hygiene
-      RULE_API_URL: http://localhost:8100/api
-      WEBSOCKET_URL: ws://localhost:8081/ws
+      BACKEND_API_URL: http://localhost:10420/api/hygiene
+      RULE_API_URL: http://localhost:10421/api
+      WEBSOCKET_URL: ws://localhost:10420/ws
     networks:
       - hygiene-network
     depends_on:
@@ -103,7 +103,7 @@ services:
       retries: 3
     restart: unless-stopped
     ports:
-      - "3002:3000"
+      - "10422:3000"
 
   # Nginx Reverse Proxy
   nginx:
@@ -127,7 +127,7 @@ services:
       retries: 3
     restart: unless-stopped
     ports:
-      - "8082:80"   # Dashboard
+      - "10423:80"   # Dashboard
 
   # Redis for caching and pub/sub
   hygiene-redis:
@@ -145,7 +145,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6380:6379"  # Non-standard port to avoid conflicts
+      - "10021:6379"  # New conflict-free port
 
 networks:
   hygiene-network:

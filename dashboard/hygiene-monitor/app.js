@@ -1463,7 +1463,7 @@ class HygieneMonitorDashboard {
     async loadLatestTestResults() {
         try {
             // Try to load the latest test results from the report
-            const response = await this.makeRequest('/api/test-results/latest', {}, 'GET');
+            const response = await this.fetchWithFallback('/api/test-results/latest', { success: false });
             if (response.success) {
                 return response.data;
             }
@@ -1833,7 +1833,7 @@ class HygieneMonitorDashboard {
         this.showLoadingOverlay('Running comprehensive audit...');
         
         try {
-            const response = await this.fetchWithFallback('/api/hygiene/audit', { 
+            const response = await this.fetchWithFallback(this.apiEndpoint + '/audit', { 
                 success: true, 
                 message: 'Mock audit completed',
                 violations: Math.floor(Math.random() * 5),
@@ -1876,7 +1876,7 @@ class HygieneMonitorDashboard {
         this.showLoadingOverlay('Performing force cleanup...');
         
         try {
-            const response = await this.fetchWithFallback('/api/hygiene/cleanup', {
+            const response = await this.fetchWithFallback(this.apiEndpoint + '/cleanup', {
                 success: true,
                 message: 'Mock cleanup completed',
                 removed: Math.floor(Math.random() * 20) + 5,
@@ -1994,7 +1994,7 @@ class HygieneMonitorDashboard {
             
             // Try to get additional data from API
             try {
-                const apiResponse = await this.fetchWithFallback('/api/hygiene/report', reportData);
+                const apiResponse = await this.fetchWithFallback(this.apiEndpoint + '/report', reportData);
                 Object.assign(reportData, apiResponse);
             } catch (error) {
                 console.warn('Using local report data:', error);

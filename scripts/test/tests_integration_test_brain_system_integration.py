@@ -14,7 +14,7 @@ from typing import Dict, Any, List
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "http://localhost:8000"
+BACKEND_URL = "http://localhost:8002"
 BRAIN_URL = "http://localhost:8001"  # Assuming coordinator runs on separate port
 BRAIN_INTERNAL_URL = "http://sutazai-coordinator:8001"  # Docker internal URL
 

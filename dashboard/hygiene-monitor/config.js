@@ -5,10 +5,10 @@
 
 window.HYGIENE_CONFIG = {
     // Backend API configuration
-    BACKEND_API_URL: 'http://localhost:8081/api/hygiene',
+    BACKEND_API_URL: 'http://localhost:8080/api/hygiene',
     
     // WebSocket configuration for real-time updates
-    WEBSOCKET_URL: 'ws://localhost:8081/ws',
+    WEBSOCKET_URL: 'ws://localhost:8080/ws',
     
     // Rule control API (if different from main API)
     RULE_API_URL: 'http://localhost:8081/api',

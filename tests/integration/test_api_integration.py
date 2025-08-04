@@ -6,7 +6,7 @@ import httpx
 import asyncio
 from typing import Dict, Any
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:10010"
 
 @pytest.fixture
 async def client():

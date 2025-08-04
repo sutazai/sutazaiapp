@@ -579,7 +579,7 @@ class EnhancedMonitor:
                         return endpoint
         
         # Fallback to common ports
-        common_ports = [8000, 8001, 8002, 8003, 8004, 8005, 8115, 3000, 5000, 9000]
+        common_ports = [8000, 8001, 8002, 8003, 8004, 8005, 8116, 3000, 5000, 9000]
         for port in common_ports:
             if self._test_port_connection(port):
                 endpoint = f"http://localhost:{port}"
@@ -606,7 +606,7 @@ class EnhancedMonitor:
             'BACK': [[8000, 8010], [5000, 5010]],    # Backend services
             'FRON': [[3000, 3010], [8080, 8090]],    # Frontend services  
             'AI': [[11434, 11444], [7860, 7870]],    # AI/ML services (Ollama, HuggingFace)
-            'INFR': [[9000, 9010], [6000, 6010], [8110, 8120]],    # Infrastructure services (includes hardware-resource-optimizer on 8115)
+            'INFR': [[9000, 9010], [6000, 6010], [8110, 8120]],    # Infrastructure services (includes hardware-resource-optimizer on 8116)
             'SECU': [[8443, 8453], [9443, 9453]],    # Security services
             'DATA': [[5432, 5442], [6379, 6389]],    # Data services
         }

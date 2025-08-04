@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class AdvancedFeaturesDemo:
     """Demonstration of SutazAI's advanced performance features"""
     
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8002"):
         self.base_url = base_url
         self.session = None
         

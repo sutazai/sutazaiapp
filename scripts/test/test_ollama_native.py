@@ -10,7 +10,7 @@ import asyncio
 
 async def test_ollama_native():
     """Test all native Ollama API endpoints"""
-    base_url = "http://localhost:11434"
+    base_url = "http://localhost:9005"
     
     print("🧪 Testing Native Ollama API")
     print("=" * 50)

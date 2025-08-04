@@ -155,7 +155,7 @@ class TestRunner:
             f"--users={users}",
             f"--spawn-rate={min(users, 10)}",
             f"--run-time={duration}",
-            "--host=http://localhost:8000",
+            "--host=http://localhost:8002",
             "--html=load-test-report.html",
             "--csv=load-test-results"
         ]
@@ -311,7 +311,7 @@ class TestRunner:
         service_urls = {
             "postgres": "postgresql://localhost:5432",
             "redis": "redis://localhost:6379",
-            "ollama": "http://localhost:11434",
+            "ollama": "http://localhost:9005",
             "chromadb": "http://localhost:8001",
             "qdrant": "http://localhost:6333"
         }
@@ -503,7 +503,7 @@ def create_test_config(config_path: str = "test-config.yaml"):
             },
             "ollama": {
                 "required": False,
-                "url": "http://localhost:11434"
+                "url": "http://localhost:9005"
             }
         },
         "environments": {

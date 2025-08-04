@@ -22,8 +22,8 @@ class SpecializedTestSuite:
     """Specialized tests for edge cases and specific components"""
     
     def __init__(self):
-        self.base_url = "http://localhost:8000"
-        self.ollama_url = "http://localhost:11434"
+        self.base_url = "http://localhost:10010"
+        self.ollama_url = "http://localhost:10104"
         
     async def test_ollama_inference_with_retry(self):
         """Test Ollama inference with shorter timeout and retry logic"""

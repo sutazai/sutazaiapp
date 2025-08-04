@@ -479,10 +479,23 @@ class RealtimeDashboard:
                     
                     this.ws.onmessage = (event) => {
                         try {
-                            const data = JSON.parse(event.data);
+                            // Safely parse JSON with circular reference protection
+                            const data = JSON.parse(event.data, (key, value) => {
+                                // Skip processing circular references
+                                if (typeof value === 'object' && value !== null) {
+                                    if (this._seenObjects && this._seenObjects.has(value)) {
+                                        return '[Circular Reference]';
+                                    }
+                                    if (!this._seenObjects) this._seenObjects = new WeakSet();
+                                    this._seenObjects.add(value);
+                                }
+                                return value;
+                            });
                             this.updateDashboard(data);
                         } catch (error) {
-                            console.error('Error parsing WebSocket message:', error);
+                            console.error('Error parsing WebSocket message:', error, 'Raw data:', event.data.substring(0, 200));
+                            // Clear the seen objects set on error
+                            this._seenObjects = null;
                         }
                     };
                     
@@ -510,12 +523,20 @@ class RealtimeDashboard:
                     this.reconnectAttempts++;
                     console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
                     
+                    // Prevent stack overflow by using setTimeout instead of direct recursion
+                    const reconnectDelay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), 30000);
                     setTimeout(() => {
-                        this.connectWebSocket();
-                    }, this.reconnectDelay);
+                        if (this.reconnectAttempts <= this.maxReconnectAttempts) {
+                            this.connectWebSocket();
+                        }
+                    }, reconnectDelay);
                 } else {
                     console.error('Max reconnection attempts reached');
                     this.updateConnectionStatus('failed');
+                    // Reset after a longer delay to allow manual retry
+                    setTimeout(() => {
+                        this.reconnectAttempts = 0;
+                    }, 60000);
                 }
             }
             
@@ -551,66 +572,117 @@ class RealtimeDashboard:
             }
             
             updateDashboard(data) {
+                // Add stack depth tracking to prevent infinite recursion
+                if (!this._updateDepth) this._updateDepth = 0;
+                if (this._updateDepth > 10) {
+                    console.error('Maximum update depth exceeded, preventing stack overflow');
+                    return;
+                }
+                
+                this._updateDepth++;
+                
                 try {
-                    // Update system status
-                    if (data.system_status) {
-                        document.getElementById('activeAgents').textContent = data.system_status.active_agents || '-';
-                        document.getElementById('totalAgents').textContent = data.system_status.total_agents || '-';
-                        document.getElementById('memoryUsage').textContent = 
-                            data.system_status.memory_usage_percent ? 
-                            `${data.system_status.memory_usage_percent.toFixed(1)}%` : '-';
-                        document.getElementById('cpuUsage').textContent = 
-                            data.system_status.cpu_usage_percent ? 
-                            `${data.system_status.cpu_usage_percent.toFixed(1)}%` : '-';
-                        
-                        // Update freeze risk
-                        const freezeRisk = data.system_status.freeze_risk_score || 0;
-                        document.getElementById('freezeRisk').textContent = freezeRisk.toFixed(0);
-                        
-                        let riskStatus = 'Low Risk';
-                        let riskColor = '#4caf50';
-                        
-                        if (freezeRisk > 80) {
-                            riskStatus = 'CRITICAL RISK';
-                            riskColor = '#f44336';
-                        } else if (freezeRisk > 60) {
-                            riskStatus = 'High Risk';
-                            riskColor = '#ff9800';
-                        } else if (freezeRisk > 40) {
-                            riskStatus = 'Medium Risk';
-                            riskColor = '#ffeb3b';
+                    // Validate data structure to prevent errors
+                    if (!data || typeof data !== 'object') {
+                        console.warn('Invalid dashboard data received:', data);
+                        return;
+                    }
+                    
+                    // Update system status with error boundaries
+                    this.safeUpdateElement(() => {
+                        if (data.system_status) {
+                            this.safeSetTextContent('activeAgents', data.system_status.active_agents || '-');
+                            this.safeSetTextContent('totalAgents', data.system_status.total_agents || '-');
+                            
+                            const memoryPercent = data.system_status.memory_usage_percent;
+                            this.safeSetTextContent('memoryUsage', 
+                                memoryPercent ? `${memoryPercent.toFixed(1)}%` : '-');
+                            
+                            const cpuPercent = data.system_status.cpu_usage_percent;
+                            this.safeSetTextContent('cpuUsage', 
+                                cpuPercent ? `${cpuPercent.toFixed(1)}%` : '-');
+                            
+                            // Update freeze risk with bounds checking
+                            const freezeRisk = Math.max(0, Math.min(100, data.system_status.freeze_risk_score || 0));
+                            this.safeSetTextContent('freezeRisk', freezeRisk.toFixed(0));
+                            
+                            let riskStatus = 'Low Risk';
+                            let riskColor = '#4caf50';
+                            
+                            if (freezeRisk > 80) {
+                                riskStatus = 'CRITICAL RISK';
+                                riskColor = '#f44336';
+                            } else if (freezeRisk > 60) {
+                                riskStatus = 'High Risk';
+                                riskColor = '#ff9800';
+                            } else if (freezeRisk > 40) {
+                                riskStatus = 'Medium Risk';
+                                riskColor = '#ffeb3b';
+                            }
+                            
+                            const riskElement = document.getElementById('freezeRiskStatus');
+                            if (riskElement) {
+                                riskElement.textContent = riskStatus;
+                                riskElement.style.color = riskColor;
+                            }
                         }
-                        
-                        document.getElementById('freezeRiskStatus').textContent = riskStatus;
-                        document.getElementById('freezeRiskStatus').style.color = riskColor;
-                    }
+                    });
                     
-                    // Update Ollama metrics
-                    if (data.ollama_metrics) {
-                        document.getElementById('queueDepth').textContent = data.ollama_metrics.queue_depth || '-';
-                        document.getElementById('activeConnections').textContent = data.ollama_metrics.active_connections || '-';
-                        document.getElementById('totalRequests').textContent = data.ollama_metrics.total_requests || '-';
-                        document.getElementById('avgResponseTime').textContent = 
-                            data.ollama_metrics.avg_response_time ? 
-                            data.ollama_metrics.avg_response_time.toFixed(2) : '-';
-                    }
+                    // Update Ollama metrics with error boundaries
+                    this.safeUpdateElement(() => {
+                        if (data.ollama_metrics) {
+                            this.safeSetTextContent('queueDepth', data.ollama_metrics.queue_depth || '-');
+                            this.safeSetTextContent('activeConnections', data.ollama_metrics.active_connections || '-');
+                            this.safeSetTextContent('totalRequests', data.ollama_metrics.total_requests || '-');
+                            
+                            const avgResponseTime = data.ollama_metrics.avg_response_time;
+                            this.safeSetTextContent('avgResponseTime', 
+                                avgResponseTime ? avgResponseTime.toFixed(2) : '-');
+                        }
+                    });
                     
-                    // Update agents list
-                    if (data.agent_metrics) {
-                        this.updateAgentsList(data.agent_metrics);
-                    }
+                    // Update agents list with error boundaries
+                    this.safeUpdateElement(() => {
+                        if (data.agent_metrics) {
+                            this.updateAgentsList(data.agent_metrics);
+                        }
+                    });
                     
-                    // Update alerts
-                    if (data.recent_alerts) {
-                        this.updateAlertsList(data.recent_alerts);
-                    }
+                    // Update alerts with error boundaries
+                    this.safeUpdateElement(() => {
+                        if (data.recent_alerts) {
+                            this.updateAlertsList(data.recent_alerts);
+                        }
+                    });
                     
                     // Update timestamp
-                    document.getElementById('lastUpdated').textContent = 
-                        `Last updated: ${new Date().toLocaleTimeString()}`;
+                    this.safeSetTextContent('lastUpdated', 
+                        `Last updated: ${new Date().toLocaleTimeString()}`);
                     
                 } catch (error) {
                     console.error('Error updating dashboard:', error);
+                    // Don't rethrow to prevent cascading failures
+                } finally {
+                    this._updateDepth--;
+                }
+            }
+            
+            safeUpdateElement(updateFunction) {
+                try {
+                    updateFunction();
+                } catch (error) {
+                    console.warn('Safe update element failed:', error);
+                }
+            }
+            
+            safeSetTextContent(elementId, content) {
+                try {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = String(content);
+                    }
+                } catch (error) {
+                    console.warn(`Failed to update element ${elementId}:`, error);
                 }
             }
             

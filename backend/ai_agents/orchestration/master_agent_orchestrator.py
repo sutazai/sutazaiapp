@@ -464,7 +464,7 @@ class MasterAgentOrchestrator:
             specializations=["local_orchestration", "agent_management"],
             priority="high",
             container_name="sutazai-localagi",
-            port=8115,
+            port=8116,
             health_endpoint="/health",
             api_endpoint="/api/v1",
             resource_requirements={"memory": "1G", "cpu": "1"}

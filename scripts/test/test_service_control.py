@@ -5,7 +5,7 @@ import requests
 import json
 import time
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://localhost:8002"
 HEADERS = {
     "Content-Type": "application/json",
     "Authorization": "Bearer sutazai-default-token"

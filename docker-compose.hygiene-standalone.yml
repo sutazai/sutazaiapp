@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Standalone Hygiene Monitoring System
 # This is completely independent from the main Sutazai application
 # Run with: docker-compose -f docker-compose.hygiene-standalone.yml up
@@ -15,16 +13,18 @@ networks:
 volumes:
   hygiene_standalone_data:
     driver: local
+    name: hygiene_standalone_data
   hygiene_standalone_logs:
     driver: local
+    name: hygiene_standalone_logs
 
 services:
   # Lightweight hygiene scanner
-  hygiene-scanner:
+  hygiene-scanner-standalone:
     build:
       context: .
       dockerfile: docker/hygiene-scanner/Dockerfile
-    container_name: hygiene-standalone-scanner
+    container_name: hygiene-standalone-scanner-isolated
     environment:
       PROJECT_ROOT: /app/project
       SCAN_MODE: on-demand
@@ -38,13 +38,13 @@ services:
       - ./reports:/app/reports
     networks:
       - hygiene-standalone-network
-    command: ["python", "hygiene_scanner.py", "--scan-once"]
+    command: ["--scan-once"]
     restart: "no"  # Only run when explicitly started
 
   # Simple web UI for reports
-  hygiene-reporter:
+  hygiene-reporter-standalone:
     image: nginx:alpine
-    container_name: hygiene-standalone-reporter
+    container_name: hygiene-standalone-reporter-isolated
     volumes:
       - ./reports:/usr/share/nginx/html:ro
       - ./docker/hygiene-reporter/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -53,15 +53,13 @@ services:
     networks:
       - hygiene-standalone-network
     restart: "no"  # Only run when needed
-    depends_on:
-      - hygiene-scanner
 
   # Optional: Lightweight rule validator
-  hygiene-validator:
+  hygiene-validator-standalone:
     build:
       context: .
       dockerfile: docker/hygiene-validator/Dockerfile
-    container_name: hygiene-standalone-validator
+    container_name: hygiene-standalone-validator-isolated
     environment:
       PROJECT_ROOT: /app/project
       VALIDATION_MODE: comprehensive

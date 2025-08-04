@@ -64,7 +64,7 @@ services:
     - postgres_data:/var/lib/postgresql/data
     - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-    - 5432:5432
+    - 10000:5432
     healthcheck:
       test:
       - CMD-SHELL
@@ -91,7 +91,7 @@ services:
     volumes:
     - redis_data:/data
     ports:
-    - 6379:6379
+    - 10001:6379
     healthcheck:
       test:
       - CMD-SHELL
@@ -122,8 +122,8 @@ services:
     volumes:
     - neo4j_data:/data
     ports:
-    - 7474:7474
-    - 7687:7687
+    - 10002:7474
+    - 10003:7687
     healthcheck:
       test:
       - CMD-SHELL
@@ -155,7 +155,7 @@ services:
     - CHROMA_SERVER_HTTP_PORT=8000
     - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["http://localhost:8501", "http://backend:8000"]
     ports:
-    - 8001:8000
+    - 10100:8000
     healthcheck:
       test:
       - CMD
@@ -186,8 +186,8 @@ services:
       QDRANT__SERVICE__GRPC_PORT: 6334
       QDRANT__LOG_LEVEL: INFO
     ports:
-    - 6333:6333
-    - 6334:6334
+    - 10101:6333
+    - 10102:6334
     healthcheck:
       test:
       - CMD
@@ -213,7 +213,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8002:8000
+    - 10103:8000
     healthcheck:
       test:
       - CMD
@@ -242,7 +242,7 @@ services:
     - models_data:/models
     - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
     ports:
-    - 11434:11434
+    - 10104:11434
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_API_KEY: local
@@ -300,7 +300,7 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       SECRET_KEY: ${SECRET_KEY}
       API_V1_STR: /api/v1
-      BACKEND_CORS_ORIGINS: '["http://localhost:8501", "http://172.31.77.193:8501"]'
+      BACKEND_CORS_ORIGINS: '["http://localhost:10011", "http://172.31.77.193:10011"]'
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
@@ -318,7 +318,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       GRAFANA_PASSWORD: ${GRAFANA_PASSWORD}
     ports:
-    - 8000:8000
+    - 10010:8000
     depends_on:
       postgres:
         condition: service_healthy
@@ -359,7 +359,7 @@ services:
       STREAMLIT_SERVER_PORT: 8501
       STREAMLIT_SERVER_ADDRESS: 0.0.0.0
     ports:
-    - 8501:8501
+    - 10011:8501
     depends_on:
       backend:
         condition: service_healthy
@@ -419,7 +419,7 @@ services:
       CREW_SIZE: 5
       BACKEND_URL: http://backend:8000
     ports:
-    - 8096:8080
+    - 10300:8080
     depends_on:
     - backend
     - ollama
@@ -471,7 +471,7 @@ services:
       AGENT_NAME: Aider
       MODEL: deepseek-r1:8b
     ports:
-    - 8095:8080
+    - 10301:8080
     depends_on:
     - ollama
     networks:
@@ -495,7 +495,7 @@ services:
       AGENT_NAME: GPT-Engineer
       MODEL: deepseek-r1:8b
     ports:
-    - 8097:8080
+    - 10302:8080
     depends_on:
     - ollama
     networks:
@@ -512,7 +512,7 @@ services:
       CUDA_VISIBLE_DEVICES: ''
       TABBY_DISABLE_GPU: 'true'
     ports:
-    - 8093:8080
+    - 10303:8080
     command:
     - serve
     - --model
@@ -561,7 +561,7 @@ services:
       AGENT_NAME: BrowserUse
       DISPLAY: :99
     ports:
-    - 8094:8080
+    - 10304:8080
     depends_on:
     - ollama
     networks:
@@ -607,7 +607,7 @@ services:
       CLAUDE_RULES_PATH: /app/CLAUDE.md
       ENFORCE_CLAUDE_RULES: 'true'
     ports:
-    - 8091:3000
+    - 10305:3000
     depends_on:
     - postgres
     - ollama
@@ -631,7 +631,7 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AGENT_NAME: PrivateGPT
     ports:
-    - 8092:8080
+    - 10306:8080
     depends_on:
     - ollama
     networks:
@@ -649,7 +649,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/langflow
       REDIS_URL: redis://redis:6379/0
     ports:
-    - 8090:7860
+    - 10400:7860
     healthcheck:
       test:
       - CMD
@@ -677,7 +677,7 @@ services:
       PORT: 3000
       DATABASE_PATH: /opt/flowise/.flowise
     ports:
-    - 8099:3000
+    - 10401:3000
     healthcheck:
       test:
       - CMD
@@ -714,7 +714,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8098:8080
+    - 10402:8080
     depends_on:
     - chromadb
     - ollama
@@ -738,7 +738,7 @@ services:
       OPENAI_API_KEY: not_needed
       OPENAI_API_HOST: http://ollama:11434/v1
     ports:
-    - 8102:8080
+    - 10307:8080
     depends_on:
     - ollama
     networks:
@@ -778,7 +778,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8103:8000
+    - 10308:8000
     networks:
     - sutazai-network
   pytorch:
@@ -796,7 +796,7 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       JUPYTER_ENABLE_LAB: true
     ports:
-    - 8888:8888
+    - 10500:8888
     networks:
     - sutazai-network
   tensorflow:
@@ -813,7 +813,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8889:8888
+    - 10501:8888
     networks:
     - sutazai-network
   jax:
@@ -830,7 +830,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8089:8080
+    - 10502:8080
     networks:
     - sutazai-network
   prometheus:
@@ -849,7 +849,7 @@ services:
     - --storage.tsdb.retention.time=30d
     - --web.enable-admin-api
     ports:
-    - 9090:9090
+    - 10200:9090
     healthcheck:
       test:
       - CMD
@@ -877,7 +877,7 @@ services:
     - GF_USERS_ALLOW_SIGN_UP=false
     - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,grafana-clock-panel
     ports:
-    - 3000:3000
+    - 10201:3000
     depends_on:
     - prometheus
     - loki
@@ -897,7 +897,7 @@ services:
     container_name: sutazai-loki
     restart: unless-stopped
     ports:
-    - 3100:3100
+    - 10202:3100
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
     - loki_data:/loki
@@ -938,7 +938,7 @@ services:
     - --storage.path=/alertmanager
     - --web.external-url=http://localhost:9093
     ports:
-    - 9093:9093
+    - 10203:9093
     environment:
     - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
     - SLACK_AI_WEBHOOK_URL=${SLACK_AI_WEBHOOK_URL:-}
@@ -964,7 +964,7 @@ services:
     volumes:
     - ./monitoring/blackbox/config.yml:/etc/blackbox_exporter/config.yml
     ports:
-    - 9115:9115
+    - 10204:9115
     command:
     - --config.file=/etc/blackbox_exporter/config.yml
     healthcheck:
@@ -994,7 +994,7 @@ services:
     - --path.rootfs=/rootfs
     - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
     ports:
-    - 9100:9100
+    - 10205:9100
     networks:
     - sutazai-network
   cadvisor:
@@ -1009,7 +1009,7 @@ services:
     - /var/lib/docker/:/var/lib/docker:ro
     - /dev/disk/:/dev/disk:ro
     ports:
-    - 8080:8080
+    - 10206:8080
     devices:
     - /dev/kmsg
     networks:
@@ -1021,7 +1021,7 @@ services:
     environment:
       DATA_SOURCE_NAME: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}?sslmode=disable
     ports:
-    - 9187:9187
+    - 10207:9187
     depends_on:
       postgres:
         condition: service_healthy
@@ -1035,7 +1035,7 @@ services:
       REDIS_ADDR: redis://redis:6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
-    - 9121:9121
+    - 10208:9121
     depends_on:
       redis:
         condition: service_healthy
@@ -1061,7 +1061,7 @@ services:
       COLLECTION_INTERVAL: 30
       METRICS_PORT: 9200
     ports:
-    - 9200:9200
+    - 10209:9200
     depends_on:
       postgres:
         condition: service_healthy
@@ -1076,7 +1076,7 @@ services:
     container_name: sutazai-n8n
     restart: unless-stopped
     ports:
-    - 5678:5678
+    - 10403:5678
     environment:
     - N8N_BASIC_AUTH_ACTIVE=true
     - N8N_BASIC_AUTH_USER=${N8N_USER:-admin}
@@ -1112,7 +1112,7 @@ services:
       ALERT_WEBHOOK_URL: ${HEALTH_ALERT_WEBHOOK:-}
       SERVICES_TO_CHECK: sutazai-backend,sutazai-frontend,sutazai-postgres,sutazai-redis,sutazai-neo4j,sutazai-chromadb,sutazai-qdrant,sutazai-ollama,sutazai-prometheus,sutazai-grafana,sutazai-langflow,sutazai-flowise,sutazai-dify,sutazai-n8n
     ports:
-    - 8100:8000
+    - 10210:8000
     networks:
     - sutazai-network
   context-framework:
@@ -1136,7 +1136,7 @@ services:
     volumes:
     - ./data/context:/data
     ports:
-    - 8111:8080
+    - 10404:8080
     networks:
     - sutazai-network
     restart: unless-stopped
@@ -1154,7 +1154,7 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       AUTOGEN_USE_DOCKER: 'True'
     ports:
-    - 8104:8080
+    - 10405:8080
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -1174,7 +1174,7 @@ services:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       WORKSPACE_DIR: /workspace
     ports:
-    - 8108:3000
+    - 10406:3000
     volumes:
     - ./workspace:/workspace
     - /var/run/docker.sock:/var/run/docker.sock
@@ -1196,7 +1196,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8109:8080
+    - 10407:8080
     volumes:
     - ./data/financial:/data
     networks:
@@ -1223,7 +1223,7 @@ services:
     - ./:/opt/sutazaiapp
     - /var/run/docker.sock:/var/run/docker.sock
     ports:
-    - 8113:8080
+    - 10408:8080
     networks:
     - sutazai-network
     restart: unless-stopped
@@ -1238,7 +1238,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8114:8080
+    - 10409:8080
     depends_on:
     - redis
     networks:
@@ -1257,7 +1257,7 @@ services:
       TZ: ${TZ:-UTC}
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
     ports:
-    - 8112:8080
+    - 10410:8080
     networks:
     - sutazai-network
     restart: unless-stopped
@@ -1291,7 +1291,7 @@ services:
       CLAUDE_RULES_PATH: /app/CLAUDE.md
       ENFORCE_CLAUDE_RULES: 'true'
     ports:
-    - 8105:8080
+    - 10411:8080
     networks:
     - sutazai-network
     restart: unless-stopped
@@ -1309,14 +1309,14 @@ services:
       LOG_LEVEL: INFO
       SECRET_KEY: ${SECRET_KEY}
       INIT_PASSWORD: admin
-      CONSOLE_API_URL: http://localhost:8107
-      CONSOLE_WEB_URL: http://localhost:8107
-      SERVICE_API_URL: http://localhost:8107
-      APP_WEB_URL: http://localhost:8107
+      CONSOLE_API_URL: http://localhost:10412
+      CONSOLE_WEB_URL: http://localhost:10412
+      SERVICE_API_URL: http://localhost:10412
+      APP_WEB_URL: http://localhost:10412
       STORAGE_TYPE: local
       STORAGE_LOCAL_PATH: /app/storage
     ports:
-    - 8107:5000
+    - 10412:5000
     volumes:
     - ./data/dify:/app/storage
     depends_on:
@@ -1418,7 +1418,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
     - /tmp:/host/tmp
     ports:
-    - 8115:8080
+    - 10413:8080
     depends_on:
       backend:
         condition: service_started

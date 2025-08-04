@@ -28,8 +28,8 @@ class OllamaIntegrationTester:
     """Tests the complete Ollama integration across all agents"""
     
     def __init__(self):
-        self.ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434")
-        self.backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
+        self.ollama_url = os.getenv("OLLAMA_URL", "http://localhost:9005")
+        self.backend_url = os.getenv("BACKEND_URL", "http://localhost:8002")
         self.results = {
             "timestamp": datetime.now().isoformat(),
             "total_agents": 0,

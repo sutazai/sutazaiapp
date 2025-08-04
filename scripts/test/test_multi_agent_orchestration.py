@@ -22,7 +22,7 @@ class OrchestrationTester:
     Comprehensive test suite for the SutazAI multi-agent orchestration system
     """
     
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8002"):
         self.base_url = base_url
         self.orchestration_url = f"{base_url}/api/v1/orchestration"
         self.session = None

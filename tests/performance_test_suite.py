@@ -76,7 +76,7 @@ class PerformanceTestSuite:
     """Comprehensive performance testing suite"""
     
     def __init__(self):
-        self.base_url = "http://localhost:8000"
+        self.base_url = "http://localhost:10010"
         self.endpoints = [
             "/health",
             "/api/v1",

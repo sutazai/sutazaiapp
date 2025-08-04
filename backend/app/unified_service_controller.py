@@ -45,7 +45,7 @@ class UnifiedServiceController:
             "crewai": {"port": 8096, "health": "/health", "type": "agent", "description": "Multi-Agent Collaboration"},
             "gpt-engineer": {"port": 8097, "health": "/health", "type": "agent", "description": "Full-Stack Code Generation"},
             "letta": {"port": None, "health": None, "type": "agent", "description": "Memory-Enhanced Agent"},
-            "localagi": {"port": 8115, "health": "/health", "type": "agent", "description": "Local automation Implementation"},
+            "localagi": {"port": 8116, "health": "/health", "type": "agent", "description": "Local automation Implementation"},
             
             # Workflow & Automation
             "bigagi": {"port": 8106, "health": "/health", "type": "workflow", "description": "BigAGI Interface"},

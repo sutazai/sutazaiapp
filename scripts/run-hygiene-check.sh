@@ -33,7 +33,7 @@ run_hygiene_scan() {
     
     # Run the hygiene scanner
     docker-compose -f "$PROJECT_ROOT/docker-compose.hygiene-standalone.yml" \
-        run --rm hygiene-scanner
+        up --abort-on-container-exit hygiene-scanner-standalone
     
     # Check exit code
     if [ $? -eq 0 ]; then
@@ -48,7 +48,7 @@ start_report_viewer() {
     echo -e "\n${BLUE}Starting report viewer...${NC}"
     
     docker-compose -f "$PROJECT_ROOT/docker-compose.hygiene-standalone.yml" \
-        up -d hygiene-reporter
+        up -d hygiene-reporter-standalone
     
     echo -e "${GREEN}✓ Report viewer available at: http://localhost:9080${NC}"
     echo -e "${YELLOW}  Latest report: http://localhost:9080/hygiene-report.html${NC}"
@@ -69,7 +69,7 @@ run_rule_validation() {
     echo -e "\n${BLUE}Running CLAUDE.md rule validation...${NC}"
     
     docker-compose -f "$PROJECT_ROOT/docker-compose.hygiene-standalone.yml" \
-        run --rm hygiene-validator
+        up --abort-on-container-exit hygiene-validator-standalone
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✓ Rule validation completed${NC}"

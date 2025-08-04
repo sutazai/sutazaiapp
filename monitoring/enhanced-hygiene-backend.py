@@ -22,14 +22,71 @@ from aiohttp import web, WSMsgType
 from aiohttp_cors import setup as cors_setup, ResourceOptions
 import uvloop
 
-class DateTimeEncoder(json.JSONEncoder):
-    """Custom JSON encoder to handle datetime objects"""
+class SafeJSONEncoder(json.JSONEncoder):
+    """Safe JSON encoder that handles datetime objects and prevents circular references"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.seen_objects = set()
+        self.depth = 0
+        self.max_depth = 20  # Prevent deep recursion
+    
+    def encode(self, obj):
+        """Override encode to reset state"""
+        self.seen_objects = set()
+        self.depth = 0
+        return super().encode(obj)
+    
+    def iterencode(self, obj, _one_shot=False):
+        """Override iterencode to prevent stack overflow"""
+        self.seen_objects = set()
+        self.depth = 0
+        return super().iterencode(obj, _one_shot)
+    
     def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        elif hasattr(obj, 'isoformat'):
-            return obj.isoformat()
-        return super().default(obj)
+        # Depth protection
+        self.depth += 1
+        if self.depth > self.max_depth:
+            return '[Max Depth Exceeded]'
+        
+        try:
+            # Handle common types first
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            elif hasattr(obj, 'isoformat') and callable(getattr(obj, 'isoformat')):
+                return obj.isoformat()
+            
+            # Check for circular references on complex objects
+            obj_id = id(obj)
+            if obj_id in self.seen_objects:
+                return '[Circular Reference]'
+            
+            # Only track complex objects
+            if isinstance(obj, (dict, list, tuple, set)) or hasattr(obj, '__dict__'):
+                self.seen_objects.add(obj_id)
+            
+            # Handle custom objects
+            if hasattr(obj, '__dict__'):
+                safe_dict = {}
+                for k, v in obj.__dict__.items():
+                    if not k.startswith('_') and not callable(v):
+                        try:
+                            # Test if the value is serializable
+                            json.dumps(v, default=str, ensure_ascii=False)
+                            safe_dict[k] = v
+                        except (TypeError, ValueError):
+                            safe_dict[k] = str(v)
+                return safe_dict
+            
+            # Fallback to string representation
+            return str(obj)
+            
+        except Exception:
+            return f'[Unserializable: {type(obj).__name__}]'
+        finally:
+            self.depth -= 1
+
+# Maintain backward compatibility
+DateTimeEncoder = SafeJSONEncoder
 
 # Enhanced logging setup
 structlog.configure(
@@ -57,8 +114,8 @@ class EnhancedHygieneBackend:
     
     def __init__(self):
         self.project_root = Path(os.getenv('PROJECT_ROOT', '/app/project'))
-        self.database_url = os.getenv('DATABASE_URL', 'postgresql://hygiene_user:hygiene_secure_2024@localhost:5432/hygiene_monitoring')
-        self.redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
+        self.database_url = os.getenv('DATABASE_URL', 'postgresql://hygiene_user:hygiene_secure_2024@hygiene-postgres:5432/hygiene_monitoring')
+        self.redis_url = os.getenv('REDIS_URL', 'redis://hygiene-redis:6379/0')
         
         # Connection pools
         self.db_pool = None
@@ -461,17 +518,44 @@ class EnhancedHygieneBackend:
             }
 
     async def broadcast_to_websockets(self, message: Dict[str, Any]):
-        """Broadcast message to all WebSocket clients"""
+        """Broadcast message to all WebSocket clients with circular reference protection"""
         if not self.websocket_clients:
             return
         
         closed_clients = set()
-        message_json = json.dumps(message, cls=DateTimeEncoder)
         
-        for ws in self.websocket_clients.copy():
+        try:
+            # Use a fresh encoder instance for each broadcast to reset the seen set
+            encoder = DateTimeEncoder()
+            message_json = encoder.encode(message)
+            
+            # Limit message size to prevent memory issues
+            if len(message_json) > 100000:  # 100KB limit
+                logger.warning("WebSocket message too large, truncating", 
+                             size=len(message_json))
+                # Send a simplified version
+                simplified_message = {
+                    'type': message.get('type', 'unknown'),
+                    'timestamp': message.get('timestamp', datetime.now().isoformat()),
+                    'error': 'Message truncated due to size limit'
+                }
+                message_json = encoder.encode(simplified_message)
+            
+        except Exception as e:
+            logger.error("Failed to serialize WebSocket message", error=str(e))
+            # Send error message instead
+            error_message = {
+                'type': 'error',
+                'timestamp': datetime.now().isoformat(),
+                'error': 'Failed to serialize message'
+            }
+            message_json = json.dumps(error_message)
+        
+        # Broadcast to all clients
+        for ws in list(self.websocket_clients):
             try:
-                await ws.send_str(message_json)
-            except Exception as e:
+                await asyncio.wait_for(ws.send_str(message_json), timeout=5.0)
+            except (Exception, asyncio.TimeoutError) as e:
                 logger.warning("WebSocket send failed", error=str(e))
                 closed_clients.add(ws)
         
@@ -482,45 +566,78 @@ class EnhancedHygieneBackend:
             logger.info("Cleaned up closed WebSocket connections", count=len(closed_clients))
 
     async def background_monitor(self):
-        """Background monitoring task"""
+        """Background monitoring task with stack overflow prevention"""
         self.running = True
         logger.info("Background monitoring started")
         
         scan_counter = 0
+        max_consecutive_errors = 5
+        consecutive_errors = 0
         
         while self.running:
             try:
-                # Collect metrics every cycle
-                metrics = await self.collect_system_metrics()
+                # Prevent deep call stack by limiting async nesting
+                async def safe_collect_metrics():
+                    try:
+                        return await asyncio.wait_for(self.collect_system_metrics(), timeout=10.0)
+                    except asyncio.TimeoutError:
+                        logger.warning("Metrics collection timed out")
+                        return self.metrics_cache or {}
+                    except Exception as e:
+                        logger.error("Metrics collection failed", error=str(e))
+                        return self.metrics_cache or {}
                 
-                # Broadcast metrics
-                await self.broadcast_to_websockets({
+                # Collect metrics with timeout protection
+                metrics = await safe_collect_metrics()
+                
+                # Broadcast metrics (non-blocking)
+                asyncio.create_task(self.broadcast_to_websockets({
                     'type': 'system_metrics',
                     'data': metrics
-                })
+                }))
                 
                 # Scan for violations every 30 seconds
                 if scan_counter % 30 == 0:
-                    violations = await self.scan_violations()
-                    if violations:
-                        await self.broadcast_to_websockets({
-                            'type': 'violations_update',
-                            'data': violations
-                        })
-                        
-                        # Send dashboard update
-                        dashboard_data = await self.get_dashboard_data()
-                        await self.broadcast_to_websockets({
-                            'type': 'dashboard_update',
-                            'data': dashboard_data
-                        })
+                    try:
+                        violations = await asyncio.wait_for(self.scan_violations(), timeout=15.0)
+                        if violations:
+                            # Use create_task to prevent deep call chains
+                            asyncio.create_task(self.broadcast_to_websockets({
+                                'type': 'violations_update',
+                                'data': violations
+                            }))
+                            
+                            # Send dashboard update (non-blocking)
+                            async def send_dashboard_update():
+                                try:
+                                    dashboard_data = await self.get_dashboard_data()
+                                    await self.broadcast_to_websockets({
+                                        'type': 'dashboard_update',
+                                        'data': dashboard_data
+                                    })
+                                except Exception as e:
+                                    logger.error("Dashboard update failed", error=str(e))
+                            
+                            asyncio.create_task(send_dashboard_update())
+                    except asyncio.TimeoutError:
+                        logger.warning("Violation scan timed out")
                 
                 scan_counter += 1
+                consecutive_errors = 0  # Reset error counter on success
                 await asyncio.sleep(1)  # 1-second intervals
                 
             except Exception as e:
-                logger.error("Background monitoring error", error=str(e))
-                await asyncio.sleep(5)
+                consecutive_errors += 1
+                logger.error("Background monitoring error", 
+                           error=str(e), 
+                           consecutive_errors=consecutive_errors)
+                
+                # Exponential backoff on consecutive errors
+                if consecutive_errors >= max_consecutive_errors:
+                    logger.error("Too many consecutive errors, extending sleep")
+                    await asyncio.sleep(min(30, consecutive_errors * 2))
+                else:
+                    await asyncio.sleep(5)
 
 # HTTP Handlers
 async def websocket_handler(request):

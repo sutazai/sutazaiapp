@@ -8,7 +8,7 @@ services:
     container_name: sutazai-node-exporter
     restart: unless-stopped
     ports:
-      - "9100:9100"
+      - "10220:9100"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -27,7 +27,7 @@ services:
     container_name: sutazai-cadvisor
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "10221:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -46,14 +46,14 @@ services:
     container_name: sutazai-alertmanager
     restart: unless-stopped
     ports:
-      - "9093:9093"
+      - "10222:9093"
     volumes:
       - ./monitoring/alertmanager:/etc/alertmanager
       - alertmanager_data:/alertmanager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
-      - '--web.external-url=http://localhost:9093'
+      - '--web.external-url=http://localhost:10222'
       - '--web.route-prefix=/'
     networks:
       - sutazai-network
@@ -64,8 +64,8 @@ services:
     container_name: sutazai-jaeger
     restart: unless-stopped
     ports:
-      - "16686:16686"  # Jaeger UI
-      - "14268:14268"  # Jaeger collector
+      - "10223:16686"  # Jaeger UI
+      - "10224:14268"  # Jaeger collector
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     volumes:
@@ -83,7 +83,7 @@ services:
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     ports:
-      - "9200:9200"
+      - "10225:9200"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     deploy:
@@ -103,7 +103,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
-      - "5601:5601"
+      - "10226:5601"
     depends_on:
       - elasticsearch
     networks:
@@ -131,7 +131,7 @@ services:
     environment:
       DATA_SOURCE_NAME: "postgresql://sutazai:${POSTGRES_PASSWORD}@sutazai-postgres:5432/sutazai?sslmode=disable"
     ports:
-      - "9188:9187"
+      - "10227:9187"
     networks:
       - sutazai-network
 
@@ -144,7 +144,7 @@ services:
       REDIS_ADDR: "redis://sutazai-redis:6379"
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
     ports:
-      - "9122:9121"
+      - "10228:9121"
     networks:
       - sutazai-network
 
@@ -154,7 +154,7 @@ services:
     container_name: sutazai-externalSystem, thirdPartyService-exporter
     restart: unless-stopped
     ports:
-      - "9115:9115"
+      - "10229:9115"
     volumes:
       - ./monitoring/externalSystem, thirdPartyService:/etc/blackbox_exporter
     command:
@@ -168,7 +168,7 @@ services:
     container_name: sutazai-uptime-kuma
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "10230:3001"
     volumes:
       - uptime_data:/app/data
     environment:

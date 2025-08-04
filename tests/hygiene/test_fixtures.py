@@ -75,7 +75,7 @@ import sys
 
 def validate_deployment():
     try:
-        response = requests.get("http://localhost:8080/health")
+        response = requests.get("http://localhost:10206/health")
         return response.status_code == 200
     except:
         return False

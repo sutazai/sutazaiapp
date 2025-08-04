@@ -69,7 +69,7 @@ class TestLocalAGIIntegration:
     async def _wait_for_dependencies(self):
         """Wait for required services to be available."""
         services = [
-            ("http://localhost:11434", "Ollama"),
+            ("http://localhost:9005", "Ollama"),
             ("http://localhost:6379", "Redis"),
             ("http://localhost:8000", "Backend API")
         ]

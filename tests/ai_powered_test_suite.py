@@ -145,11 +145,11 @@ class SutazAITestSuite:
     """Main testing suite for SutazAI system"""
     
     def __init__(self):
-        self.base_url = "http://localhost:8000"
-        self.frontend_url = "http://localhost:8501"
-        self.ollama_url = "http://localhost:11434"
-        self.postgres_url = "postgresql://sutazai:sutazai123@localhost:5432/sutazai_db"
-        self.redis_url = "redis://localhost:6379/0"
+        self.base_url = "http://localhost:10010"
+        self.frontend_url = "http://localhost:10011"
+        self.ollama_url = "http://localhost:10104"
+        self.postgres_url = "postgresql://sutazai:sutazai123@localhost:10000/sutazai_db"
+        self.redis_url = "redis://localhost:10001/0"
         
         self.test_results = []
         self.ai_generator = AITestGenerator()

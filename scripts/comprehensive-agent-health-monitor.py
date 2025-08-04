@@ -753,7 +753,7 @@ class ComprehensiveHealthChecker:
             "postgres": 5432,
             "redis": 6379,
             "neo4j": 7474,
-            "ollama": 11434,
+            "ollama": 9005,
             "prometheus": 9090,
             "grafana": 3000
         }
