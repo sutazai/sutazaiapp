@@ -1,0 +1,121 @@
+# Kong Configuration for SutazAI API Gateway
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: backend-api
+    url: http://backend-api:8000
+    tags: ["backend", "api"]
+    routes:
+      - name: backend-route
+        paths: ["/api"]
+        strip_path: true
+        plugins:
+          - name: cors
+            config:
+              origins: ["http://localhost:10011"]
+              methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+              headers: ["Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Auth-Token", "Authorization"]
+              exposed_headers: ["X-Auth-Token"]
+              credentials: true
+              max_age: 3600
+          - name: prometheus
+            config:
+              per_consumer: true
+              status_code_metrics: true
+              latency_metrics: true
+              bandwidth_metrics: true
+
+  - name: ollama-service
+    url: http://ollama:11434
+    tags: ["ai", "ollama"]
+    routes:
+      - name: ollama-route
+        paths: ["/ollama"]
+        strip_path: true
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 60
+              hour: 1000
+          - name: prometheus
+
+  - name: chromadb-service
+    url: http://chromadb:8000
+    tags: ["vector", "chromadb"]
+    routes:
+      - name: chromadb-route
+        paths: ["/vector/chroma"]
+        strip_path: true
+        plugins:
+          - name: key-auth
+            config:
+              key_names: ["X-API-Key"]
+          - name: prometheus
+
+  - name: qdrant-service
+    url: http://qdrant:6333
+    tags: ["vector", "qdrant"]
+    routes:
+      - name: qdrant-route
+        paths: ["/vector/qdrant"]
+        strip_path: true
+        plugins:
+          - name: prometheus
+
+  - name: neo4j-service
+    url: http://neo4j:7474
+    tags: ["graph", "neo4j"]
+    routes:
+      - name: neo4j-route
+        paths: ["/graph"]
+        strip_path: true
+        plugins:
+          - name: basic-auth
+            config:
+              hide_credentials: true
+          - name: prometheus
+
+  - name: resource-manager
+    url: http://resource-manager:8000
+    tags: ["system", "resources"]
+    routes:
+      - name: resource-route
+        paths: ["/resources"]
+        strip_path: true
+        plugins:
+          - name: prometheus
+
+consumers:
+  - username: sutazai-system
+    custom_id: system-001
+    keyauth_credentials:
+      - key: sutazai-api-key-2025
+    basicauth_credentials:
+      - username: sutazai
+        password: sutazai-system
+
+plugins:
+  - name: prometheus
+    config:
+      per_consumer: true
+      status_code_metrics: true
+      latency_metrics: true
+      bandwidth_metrics: true
+
+upstreams:
+  - name: backend-upstream
+    algorithm: round-robin
+    healthchecks:
+      active:
+        type: http
+        http_path: "/health"
+        healthy:
+          interval: 10
+          successes: 2
+        unhealthy:
+          interval: 10
+          http_failures: 3
+    targets:
+      - target: backend-api:8000
+        weight: 100

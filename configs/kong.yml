@@ -1,0 +1,83 @@
+_format_version: "3.0"
+
+services:
+  - name: ollama-service
+    url: http://ollama:11434
+    routes:
+      - name: ollama-route
+        paths:
+          - /ollama
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: local
+      - name: prometheus
+
+  - name: ai-runtime-service
+    url: http://ai-runtime:8000
+    routes:
+      - name: ai-runtime-route
+        paths:
+          - /ai-runtime
+        strip_path: true
+    plugins:
+      - name: rate-limiting
+        config:
+          minute: 200
+          policy: local
+
+  - name: langflow-service
+    url: http://langflow:7860
+    routes:
+      - name: langflow-route
+        paths:
+          - /langflow
+        strip_path: true
+
+  - name: flowise-service
+    url: http://flowise:3000
+    routes:
+      - name: flowise-route
+        paths:
+          - /flowise
+        strip_path: true
+
+  - name: n8n-service
+    url: http://n8n:5678
+    routes:
+      - name: n8n-route
+        paths:
+          - /n8n
+        strip_path: true
+
+  - name: chromadb-service
+    url: http://chromadb:8000
+    routes:
+      - name: chromadb-route
+        paths:
+          - /chromadb
+        strip_path: true
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          credentials: true
+
+  - name: qdrant-service
+    url: http://qdrant:6333
+    routes:
+      - name: qdrant-route
+        paths:
+          - /qdrant
+        strip_path: true
+
+plugins:
+  - name: prometheus
+    config:
+      status_code_metrics: true
+      latency_metrics: true
+      bandwidth_metrics: true
+      upstream_health_metrics: true

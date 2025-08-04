@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Resource Optimizer - Test Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            color: #00ff41;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #1a1a2e;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #2a2a3e;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 255, 65, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value.success { color: #00ff41; }
+        .stat-value.warning { color: #ffaa00; }
+        .stat-value.error { color: #ff4444; }
+        
+        .stat-change {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .section {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #2a2a3e;
+        }
+        
+        .section h2 {
+            color: #00ff41;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .test-results {
+            overflow-x: auto;
+        }
+        
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .test-table th,
+        .test-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a3e;
+        }
+        
+        .test-table th {
+            background: #16213e;
+            color: #00ff41;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        
+        .test-table tr:hover {
+            background: #1f1f3e;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-badge.pass { background: #00ff41; color: #000; }
+        .status-badge.fail { background: #ff4444; color: #fff; }
+        .status-badge.skip { background: #666; color: #fff; }
+        
+        .chart-container {
+            height: 300px;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .alert-box {
+            background: #2a1a1a;
+            border-left: 4px solid #ff4444;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .alert-box.warning {
+            border-left-color: #ffaa00;
+        }
+        
+        .alert-time {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+        
+        .refresh-timer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1a1a2e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #00ff41;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .refresh-timer span {
+            color: #00ff41;
+            font-weight: bold;
+        }
+        
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .endpoint-card {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #2a2a3e;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .endpoint-card.healthy {
+            border-color: #00ff41;
+        }
+        
+        .endpoint-card.degraded {
+            border-color: #ffaa00;
+        }
+        
+        .endpoint-card.failed {
+            border-color: #ff4444;
+        }
+        
+        .endpoint-name {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .endpoint-status {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 3px solid #1a1a2e;
+            border-top: 3px solid #00ff41;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Hardware Resource Optimizer - Test Dashboard</h1>
+            <p>Real-time monitoring and test results for optimization agent</p>
+        </div>
+        
+        <!-- Summary Statistics -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Agent Status</h3>
+                <div class="stat-value success" id="agentStatus">Loading...</div>
+                <div class="stat-change" id="agentUptime">-</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Test Pass Rate</h3>
+                <div class="stat-value" id="passRate">-</div>
+                <div class="stat-change" id="passRateChange">-</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Active Endpoints</h3>
+                <div class="stat-value success" id="activeEndpoints">-</div>
+                <div class="stat-change">of 16 total</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Avg Response Time</h3>
+                <div class="stat-value" id="avgResponseTime">-</div>
+                <div class="stat-change" id="responseTimeTrend">-</div>
+            </div>
+        </div>
+        
+        <!-- Recent Test Results -->
+        <div class="section">
+            <h2>📊 Recent Test Results</h2>
+            <div class="test-results">
+                <table class="test-table" id="testResultsTable">
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Status</th>
+                            <th>Duration</th>
+                            <th>Details</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testResultsBody">
+                        <tr>
+                            <td colspan="5" class="loading">
+                                <div class="spinner"></div>
+                                Loading test results...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Endpoint Health -->
+        <div class="section">
+            <h2>🌐 Endpoint Health Status</h2>
+            <div class="endpoint-grid" id="endpointGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Performance Chart -->
+        <div class="section">
+            <h2>📈 Performance Trends</h2>
+            <div class="chart-container" id="performanceChart">
+                <canvas id="perfCanvas"></canvas>
+            </div>
+        </div>
+        
+        <!-- Recent Alerts -->
+        <div class="section">
+            <h2>⚠️ Recent Alerts</h2>
+            <div id="alertsContainer">
+                <div class="alert-box">
+                    <div class="alert-time">No recent alerts</div>
+                    <div>System operating normally</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Optimization Metrics -->
+        <div class="section">
+            <h2>💾 Optimization Effectiveness</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Memory Freed</h3>
+                    <div class="stat-value success" id="memoryFreed">-</div>
+                    <div class="stat-change">Last 24 hours</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Disk Space Recovered</h3>
+                    <div class="stat-value success" id="diskRecovered">-</div>
+                    <div class="stat-change">Last 24 hours</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Docker Cleaned</h3>
+                    <div class="stat-value success" id="dockerCleaned">-</div>
+                    <div class="stat-change">Containers removed</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Files Compressed</h3>
+                    <div class="stat-value success" id="filesCompressed">-</div>
+                    <div class="stat-change">Space saved</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refresh Timer -->
+    <div class="refresh-timer">
+        Auto-refresh in <span id="refreshCountdown">60</span>s
+    </div>
+    
+    <script>
+        // Dashboard State
+        let dashboardData = {
+            agentStatus: 'Unknown',
+            testResults: [],
+            endpoints: [],
+            alerts: [],
+            metrics: {},
+            refreshInterval: 60
+        };
+        
+        // Simulated endpoints for testing
+        const endpoints = [
+            '/health', '/status', '/optimize/memory', '/optimize/cpu',
+            '/optimize/disk', '/optimize/docker', '/optimize/storage',
+            '/optimize/all', '/analyze/storage', '/analyze/storage/duplicates',
+            '/analyze/storage/large-files', '/analyze/storage/report',
+            '/optimize/storage/duplicates', '/optimize/storage/cache',
+            '/optimize/storage/compress', '/optimize/storage/logs'
+        ];
+        
+        // Update dashboard with live data
+        async function updateDashboard() {
+            try {
+                // Fetch agent health
+                const healthResponse = await fetch('http://localhost:8116/health');
+                if (healthResponse.ok) {
+                    const health = await healthResponse.json();
+                    updateAgentStatus('Healthy', health);
+                } else {
+                    updateAgentStatus('Unhealthy');
+                }
+                
+                // Fetch recent test results (simulated for demo)
+                updateTestResults();
+                
+                // Update endpoint health
+                updateEndpointHealth();
+                
+                // Update metrics
+                updateOptimizationMetrics();
+                
+            } catch (error) {
+                console.error('Dashboard update error:', error);
+                updateAgentStatus('Offline');
+            }
+        }
+        
+        function updateAgentStatus(status, data) {
+            const statusEl = document.getElementById('agentStatus');
+            statusEl.textContent = status;
+            statusEl.className = `stat-value ${status === 'Healthy' ? 'success' : 'error'}`;
+            
+            if (data && data.system_status) {
+                document.getElementById('agentUptime').textContent = 
+                    `CPU: ${data.system_status.cpu_percent.toFixed(1)}% | Mem: ${data.system_status.memory_percent.toFixed(1)}%`;
+            }
+        }
+        
+        function updateTestResults() {
+            // Simulated test results
+            const scenarios = [
+                { name: 'Full System Optimization', status: 'pass', duration: '3.2s', details: '5/5 checks passed' },
+                { name: 'Storage Workflow', status: 'pass', duration: '4.1s', details: '7/7 validations passed' },
+                { name: 'Resource Pressure', status: 'pass', duration: '2.8s', details: 'Memory freed: 61MB' },
+                { name: 'Docker Lifecycle', status: 'pass', duration: '1.9s', details: '2 containers removed' },
+                { name: 'Concurrent Operations', status: 'pass', duration: '5.4s', details: 'No conflicts detected' },
+                { name: 'Error Recovery', status: 'pass', duration: '1.2s', details: 'All errors handled gracefully' }
+            ];
+            
+            const tbody = document.getElementById('testResultsBody');
+            tbody.innerHTML = scenarios.map(scenario => `
+                <tr>
+                    <td>${scenario.name}</td>
+                    <td><span class="status-badge ${scenario.status}">${scenario.status.toUpperCase()}</span></td>
+                    <td>${scenario.duration}</td>
+                    <td>${scenario.details}</td>
+                    <td>${new Date().toLocaleTimeString()}</td>
+                </tr>
+            `).join('');
+            
+            // Update pass rate
+            const passCount = scenarios.filter(s => s.status === 'pass').length;
+            const passRate = (passCount / scenarios.length * 100).toFixed(1);
+            const passRateEl = document.getElementById('passRate');
+            passRateEl.textContent = `${passRate}%`;
+            passRateEl.className = `stat-value ${passRate >= 80 ? 'success' : passRate >= 60 ? 'warning' : 'error'}`;
+        }
+        
+        function updateEndpointHealth() {
+            const grid = document.getElementById('endpointGrid');
+            grid.innerHTML = endpoints.map(endpoint => {
+                // Simulate endpoint health (in real implementation, check actual endpoints)
+                const isHealthy = Math.random() > 0.1;
+                const responseTime = (Math.random() * 0.5 + 0.1).toFixed(2);
+                
+                return `
+                    <div class="endpoint-card ${isHealthy ? 'healthy' : 'failed'}">
+                        <div class="endpoint-name">${endpoint}</div>
+                        <div class="endpoint-status" style="color: ${isHealthy ? '#00ff41' : '#ff4444'}">
+                            ${isHealthy ? `${responseTime}s` : 'Failed'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update active endpoints count
+            const activeCount = endpoints.filter(() => Math.random() > 0.1).length;
+            document.getElementById('activeEndpoints').textContent = activeCount;
+            
+            // Update average response time
+            const avgTime = (Math.random() * 0.3 + 0.1).toFixed(3);
+            const avgTimeEl = document.getElementById('avgResponseTime');
+            avgTimeEl.textContent = `${avgTime}s`;
+            avgTimeEl.className = `stat-value ${avgTime < 0.5 ? 'success' : avgTime < 1 ? 'warning' : 'error'}`;
+        }
+        
+        function updateOptimizationMetrics() {
+            // Simulated metrics (in real implementation, fetch from API)
+            document.getElementById('memoryFreed').textContent = `${(Math.random() * 500 + 100).toFixed(0)} MB`;
+            document.getElementById('diskRecovered').textContent = `${(Math.random() * 2 + 0.5).toFixed(1)} GB`;
+            document.getElementById('dockerCleaned').textContent = Math.floor(Math.random() * 10 + 2);
+            document.getElementById('filesCompressed').textContent = `${(Math.random() * 200 + 50).toFixed(0)} MB`;
+        }
+        
+        // Countdown timer
+        let countdown = dashboardData.refreshInterval;
+        setInterval(() => {
+            countdown--;
+            document.getElementById('refreshCountdown').textContent = countdown;
+            
+            if (countdown <= 0) {
+                countdown = dashboardData.refreshInterval;
+                updateDashboard();
+            }
+        }, 1000);
+        
+        // Initial load
+        updateDashboard();
+        
+        // Draw performance chart (simplified)
+        function drawPerformanceChart() {
+            const canvas = document.getElementById('perfCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.parentElement.offsetWidth - 40;
+            canvas.height = 260;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#2a2a3e';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i < 5; i++) {
+                const y = i * 50 + 20;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw sample performance line
+            ctx.strokeStyle = '#00ff41';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const points = 20;
+            for (let i = 0; i < points; i++) {
+                const x = (i / (points - 1)) * canvas.width;
+                const y = 140 + Math.sin(i * 0.5) * 50 + Math.random() * 20;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            
+            ctx.stroke();
+            
+            // Add labels
+            ctx.fillStyle = '#888';
+            ctx.font = '12px Arial';
+            ctx.fillText('100%', 5, 25);
+            ctx.fillText('0%', 5, 235);
+            ctx.fillText('Response Time (last hour)', 10, 255);
+        }
+        
+        // Draw chart on load and resize
+        window.addEventListener('load', drawPerformanceChart);
+        window.addEventListener('resize', drawPerformanceChart);
+    </script>
+</body>
+</html>

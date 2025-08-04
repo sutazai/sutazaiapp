@@ -1,0 +1,61 @@
+# Alertmanager Configuration for SutazAI Monitoring
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@sutazai.local'
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+    - match:
+        service: 'critical'
+      receiver: 'critical-alerts'
+      group_wait: 0s
+      repeat_interval: 5m
+    - match:
+        service: 'ai-agent'
+      receiver: 'ai-alerts'
+      group_wait: 30s
+      repeat_interval: 15m
+
+receivers:
+  - name: 'web.hook'
+    webhook_configs:
+      - url: 'http://resource-manager:8000/alerts/webhook'
+        send_resolved: true
+
+  - name: 'critical-alerts'
+    webhook_configs:
+      - url: 'http://resource-manager:8000/alerts/critical'
+        send_resolved: true
+    
+    # Email notifications for critical alerts
+    email_configs:
+      - to: 'admin@sutazai.local'
+        subject: 'CRITICAL: SutazAI System Alert - {{ .GroupLabels.alertname }}'
+        body: |
+          Alert: {{ .GroupLabels.alertname }}
+          Summary: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          Description: {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+          
+          Time: {{ range .Alerts }}{{ .StartsAt }}{{ end }}
+          
+          View in Grafana: http://localhost:10201
+
+  - name: 'ai-alerts'
+    webhook_configs:
+      - url: 'http://resource-manager:8000/alerts/ai-agent'
+        send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
