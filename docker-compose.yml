@@ -48,6 +48,14 @@ services:
     image: postgres:16.3-alpine
     container_name: sutazai-postgres
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sutazai}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -71,6 +79,14 @@ services:
     image: redis:7.2-alpine
     container_name: sutazai-redis
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     command: redis-server
     volumes:
     - redis_data:/data
@@ -89,6 +105,14 @@ services:
     image: neo4j:5.13-community
     container_name: sutazai-neo4j
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
     environment:
       NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
@@ -114,6 +138,14 @@ services:
     image: chromadb/chroma:0.5.0
     container_name: sutazai-chromadb
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     volumes:
     - chromadb_data:/chroma/chroma
     environment:
@@ -139,6 +171,14 @@ services:
     image: qdrant/qdrant:v1.9.2
     container_name: sutazai-qdrant
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     volumes:
     - qdrant_data:/qdrant/storage
     environment:
@@ -230,6 +270,14 @@ services:
       dockerfile: Dockerfile
     container_name: sutazai-backend
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
     volumes:
     - ./backend:/app
     - ./data:/data
@@ -1345,6 +1393,8 @@ services:
     build:
       context: ./agents/hardware-resource-optimizer
       dockerfile: Dockerfile
+    privileged: true
+    pid: host
     environment:
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_API_KEY: local
@@ -1365,6 +1415,8 @@ services:
     - ./logs:/app/logs
     - /proc:/host/proc:ro
     - /sys:/host/sys:ro
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /tmp:/host/tmp
     ports:
     - 8115:8080
     depends_on:
@@ -1390,8 +1442,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 512M
+          cpus: '2'
+          memory: 1G
         reservations:
-          cpus: '0.25'
-          memory: 128M
+          cpus: '0.5'
+          memory: 256M

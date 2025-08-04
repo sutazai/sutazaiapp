@@ -11,19 +11,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
-COPY hardware-resource-optimizer/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create directory structure
-RUN mkdir -p agents/core
-
-# Copy core modules 
-COPY core/ ./agents/core/
-
 # Copy agent files
-COPY hardware-resource-optimizer/app.py .
-COPY hardware-resource-optimizer/startup.sh .
-COPY hardware-resource-optimizer/shared/ ./shared/
+COPY app.py .
+COPY startup.sh .
+COPY shared/ ./shared/
 
 # Make startup script executable
 RUN chmod +x startup.sh

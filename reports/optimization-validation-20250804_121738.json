@@ -1,0 +1,509 @@
+{
+  "timestamp": "2025-08-04T12:17:38.718930",
+  "tests": [
+    {
+      "name": "memory_optimization",
+      "status": "completed",
+      "start_time": 1754302663.7222989,
+      "metrics": {
+        "high_memory_processes": 8,
+        "top_memory_processes": [
+          {
+            "pid": 2142042,
+            "name": "java",
+            "memory_percent": 2.9295848318820523
+          },
+          {
+            "pid": 29435,
+            "name": "node",
+            "memory_percent": 2.4867078468893555
+          },
+          {
+            "pid": 2148556,
+            "name": "ollama",
+            "memory_percent": 2.4499453562130817
+          },
+          {
+            "pid": 4083,
+            "name": "claude",
+            "memory_percent": 1.64404039900353
+          },
+          {
+            "pid": 761852,
+            "name": "claude",
+            "memory_percent": 1.4660325494131508
+          }
+        ],
+        "memory_fragmentation": {
+          "total_gb": 29.38,
+          "available_gb": 22.29,
+          "cached_gb": 2.56,
+          "fragmentation_ratio": 0.15
+        }
+      },
+      "duration": 1.8986642360687256
+    },
+    {
+      "name": "cpu_optimization",
+      "status": "completed",
+      "start_time": 1754302665.620976,
+      "metrics": {
+        "cpu_per_core_avg": [
+          41.6,
+          37.07,
+          30.28,
+          40.92,
+          45.26,
+          50.75,
+          39.2,
+          27.44,
+          41.58,
+          28.29,
+          34.7,
+          32.07
+        ],
+        "cpu_load_distribution": {
+          "balanced": false,
+          "max_core_usage": 50.75,
+          "min_core_usage": 27.439999999999998,
+          "load_variance": 46.62
+        },
+        "high_cpu_processes": [
+          {
+            "pid": 2222526,
+            "name": "python",
+            "cpu_percent": 134.8
+          }
+        ]
+      },
+      "duration": 6.403846502304077
+    },
+    {
+      "name": "container_optimization",
+      "status": "completed",
+      "start_time": 1754302672.0248413,
+      "metrics": {
+        "container_count": 20,
+        "containers": [
+          {
+            "name": "sutazai-hardware-resource-optimizer",
+            "status": "running",
+            "image": "sutazaiapp-hardware-resource-optimizer:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 102.86,
+            "memory_limit_mb": 1024.0,
+            "memory_percent": 10.04
+          },
+          {
+            "name": "hygiene-dashboard",
+            "status": "running",
+            "image": "sutazaiapp-hygiene-dashboard:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 10.73,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.04
+          },
+          {
+            "name": "hygiene-backend",
+            "status": "running",
+            "image": "sutazaiapp-hygiene-backend:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 45.87,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.15
+          },
+          {
+            "name": "hygiene-nginx",
+            "status": "running",
+            "image": "sutazaiapp-nginx:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 13.76,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.05
+          },
+          {
+            "name": "rule-control-api",
+            "status": "running",
+            "image": "sutazaiapp-rule-control-api:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 49.55,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.16
+          },
+          {
+            "name": "hygiene-postgres",
+            "status": "running",
+            "image": "postgres:16-alpine",
+            "restart_count": 1,
+            "memory_usage_mb": 33.7,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.11
+          },
+          {
+            "name": "hygiene-redis",
+            "status": "running",
+            "image": "redis:7-alpine",
+            "restart_count": 0,
+            "memory_usage_mb": 5.76,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.02
+          },
+          {
+            "name": "sutazai-backend",
+            "status": "running",
+            "image": "sutazaiapp-backend:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 100.79,
+            "memory_limit_mb": 2048.0,
+            "memory_percent": 4.92
+          },
+          {
+            "name": "sutazai-postgres",
+            "status": "running",
+            "image": "postgres:16.3-alpine",
+            "restart_count": 9,
+            "memory_usage_mb": 33.84,
+            "memory_limit_mb": 1024.0,
+            "memory_percent": 3.3
+          },
+          {
+            "name": "sutazai-redis",
+            "status": "restarting",
+            "image": "redis:7.2-alpine",
+            "restart_count": 33,
+            "memory_usage_mb": 0,
+            "memory_limit_mb": 0,
+            "memory_percent": 0
+          },
+          {
+            "name": "sutazai-ollama",
+            "status": "running",
+            "image": "ollama/ollama:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 1372.08,
+            "memory_limit_mb": 6144.0,
+            "memory_percent": 22.33
+          },
+          {
+            "name": "sutazai-chromadb",
+            "status": "running",
+            "image": "chromadb/chroma:0.5.0",
+            "restart_count": 0,
+            "memory_usage_mb": 116.75,
+            "memory_limit_mb": 1024.0,
+            "memory_percent": 11.4
+          },
+          {
+            "name": "sutazai-neo4j",
+            "status": "running",
+            "image": "neo4j:5.13-community",
+            "restart_count": 0,
+            "memory_usage_mb": 1043.75,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 3.47
+          },
+          {
+            "name": "sutazai-qdrant",
+            "status": "running",
+            "image": "qdrant/qdrant:v1.9.2",
+            "restart_count": 0,
+            "memory_usage_mb": 57.52,
+            "memory_limit_mb": 1024.0,
+            "memory_percent": 5.62
+          },
+          {
+            "name": "sutazai-system-validator",
+            "status": "running",
+            "image": "python:3.9-slim",
+            "restart_count": 0,
+            "memory_usage_mb": 0.79,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.0
+          },
+          {
+            "name": "sutazai-frontend",
+            "status": "running",
+            "image": "nginx:alpine",
+            "restart_count": 0,
+            "memory_usage_mb": 15.04,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.05
+          },
+          {
+            "name": "sutazai-prometheus",
+            "status": "running",
+            "image": "prom/prometheus:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 81.48,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.27
+          },
+          {
+            "name": "sutazai-storage",
+            "status": "running",
+            "image": "python:3.9-slim",
+            "restart_count": 0,
+            "memory_usage_mb": 12.76,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.04
+          },
+          {
+            "name": "sutazai-grafana",
+            "status": "running",
+            "image": "grafana/grafana:latest",
+            "restart_count": 0,
+            "memory_usage_mb": 247.5,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 0.82
+          },
+          {
+            "name": "buildx_buildkit_sutazai-builder0",
+            "status": "running",
+            "image": "moby/buildkit:buildx-stable-1",
+            "restart_count": 0,
+            "memory_usage_mb": 371.38,
+            "memory_limit_mb": 30081.19,
+            "memory_percent": 1.23
+          }
+        ],
+        "issues": [
+          {
+            "type": "no_memory_limits",
+            "count": 1,
+            "containers": [
+              "sutazai-redis"
+            ]
+          },
+          {
+            "type": "frequent_restarts",
+            "count": 2,
+            "containers": [
+              {
+                "name": "sutazai-postgres",
+                "restart_count": 9
+              },
+              {
+                "name": "sutazai-redis",
+                "restart_count": 33
+              }
+            ]
+          }
+        ]
+      },
+      "duration": 33.28655529022217
+    },
+    {
+      "name": "process_optimization",
+      "status": "completed",
+      "start_time": 1754302705.3124664,
+      "metrics": {
+        "total_processes": 256,
+        "zombie_processes": 0,
+        "duplicate_processes": {
+          "claude": {
+            "count": 6,
+            "total_memory_percent": 8.346176181542035,
+            "total_cpu_percent": 19.4,
+            "processes": [
+              {
+                "pid": 4083,
+                "cpu_percent": 0.0,
+                "memory_percent": 1.64404039900353,
+                "status": "sleeping",
+                "runtime_hours": 24.04
+              },
+              {
+                "pid": 587594,
+                "cpu_percent": 0.0,
+                "memory_percent": 1.3093082470564037,
+                "status": "sleeping",
+                "runtime_hours": 13.68
+              },
+              {
+                "pid": 760654,
+                "cpu_percent": 0.0,
+                "memory_percent": 1.3357471135406473,
+                "status": "sleeping",
+                "runtime_hours": 11.31
+              },
+              {
+                "pid": 761852,
+                "cpu_percent": 0.0,
+                "memory_percent": 1.4543324419955161,
+                "status": "sleeping",
+                "runtime_hours": 11.3
+              },
+              {
+                "pid": 793913,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.9848347908472695,
+                "status": "stopped",
+                "runtime_hours": 11.0
+              },
+              {
+                "pid": 1271360,
+                "cpu_percent": 19.4,
+                "memory_percent": 1.6179131890986682,
+                "status": "sleeping",
+                "runtime_hours": 7.85
+              }
+            ]
+          },
+          "node": {
+            "count": 8,
+            "total_memory_percent": 4.628619631455706,
+            "total_cpu_percent": 0.0,
+            "processes": [
+              {
+                "pid": 29384,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.6625818877662326,
+                "status": "sleeping",
+                "runtime_hours": 23.78
+              },
+              {
+                "pid": 29435,
+                "cpu_percent": 0.0,
+                "memory_percent": 2.4867078468893555,
+                "status": "sleeping",
+                "runtime_hours": 23.78
+              },
+              {
+                "pid": 29446,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.2752836594300009,
+                "status": "sleeping",
+                "runtime_hours": 23.78
+              },
+              {
+                "pid": 29460,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.2262367052497512,
+                "status": "sleeping",
+                "runtime_hours": 23.78
+              },
+              {
+                "pid": 32868,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.19382442099401825,
+                "status": "sleeping",
+                "runtime_hours": 23.74
+              },
+              {
+                "pid": 32874,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.19385039237563345,
+                "status": "sleeping",
+                "runtime_hours": 23.74
+              },
+              {
+                "pid": 33039,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.27324490597321,
+                "status": "sleeping",
+                "runtime_hours": 23.74
+              },
+              {
+                "pid": 90038,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.3168898127775042,
+                "status": "sleeping",
+                "runtime_hours": 23.02
+              }
+            ]
+          },
+          "python": {
+            "count": 6,
+            "total_memory_percent": 0.9086217714975514,
+            "total_cpu_percent": 138.4,
+            "processes": [
+              {
+                "pid": 393790,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.06360391357555283,
+                "status": "sleeping",
+                "runtime_hours": 16.55
+              },
+              {
+                "pid": 1480829,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.18242298446495836,
+                "status": "sleeping",
+                "runtime_hours": 6.15
+              },
+              {
+                "pid": 1495490,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.15941234035391721,
+                "status": "sleeping",
+                "runtime_hours": 6.04
+              },
+              {
+                "pid": 2148363,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.19126623990492397,
+                "status": "sleeping",
+                "runtime_hours": 0.37
+              },
+              {
+                "pid": 2198475,
+                "cpu_percent": 0.0,
+                "memory_percent": 0.18543566473231815,
+                "status": "sleeping",
+                "runtime_hours": 0.14
+              },
+              {
+                "pid": 2222526,
+                "cpu_percent": 138.4,
+                "memory_percent": 0.12648062846588087,
+                "status": "running",
+                "runtime_hours": 0.01
+              }
+            ]
+          }
+        },
+        "process_groups_summary": {
+          "systemd": 3,
+          "nginx": 52,
+          "sessionleader": 11,
+          "bash": 26,
+          "su": 11,
+          "claude": 6,
+          "sshd": 3,
+          "node": 8,
+          "containerd-shim-runc-v2": 19,
+          "docker-proxy": 38,
+          "python": 6,
+          "python3": 3,
+          "postgres": 14
+        }
+      },
+      "duration": 1.825629472732544
+    }
+  ],
+  "baseline_metrics": {
+    "cpu_avg": 40.7,
+    "cpu_max": 43.3,
+    "memory_avg": 24.04,
+    "memory_max": 24.1,
+    "process_count": 282,
+    "swap_used": 0.1,
+    "load_avg": [
+      3.17138671875,
+      2.46728515625,
+      1.9814453125
+    ]
+  },
+  "optimized_metrics": {
+    "cpu_avg": 33.14,
+    "memory_avg": 24.3,
+    "process_count": 256,
+    "swap_used": 0.1
+  },
+  "improvements": {
+    "cpu_improvement": 7.560000000000002,
+    "memory_improvement": -0.26000000000000156,
+    "process_reduction": 26,
+    "swap_improvement": 0.0
+  }
+}

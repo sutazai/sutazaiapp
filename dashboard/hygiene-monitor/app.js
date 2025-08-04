@@ -10,9 +10,15 @@ class HygieneMonitorDashboard {
     constructor() {
         // Use configuration from environment or defaults
         const config = window.HYGIENE_CONFIG || {};
-        this.apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8080/api/hygiene';
-        this.websocketEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8080/ws';
+        this.apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8081/api/hygiene';
+        this.websocketEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8081/ws';
         this.ruleApiEndpoint = config.RULE_API_URL || 'http://localhost:8100/api';
+        
+        console.log('Dashboard initializing with configuration:', {
+            apiEndpoint: this.apiEndpoint,
+            websocketEndpoint: this.websocketEndpoint,
+            configLoaded: !!window.HYGIENE_CONFIG
+        });
         this.refreshInterval = 1000; // 1 second for real-time updates
         this.charts = {};
         this.websocket = null;
@@ -471,7 +477,7 @@ class HygieneMonitorDashboard {
             let metricsResponse = this.getCachedData(metricsKey);
             
             if (!metricsResponse) {
-                metricsResponse = await this.fetchWithFallback('http://localhost:8080/api/system/metrics', this.generateMockMetrics());
+                metricsResponse = await this.fetchWithFallback(this.apiEndpoint.replace('/hygiene', '/system/metrics'), this.generateMockMetrics());
                 this.setCachedData(metricsKey, metricsResponse);
             }
             
@@ -537,6 +543,7 @@ class HygieneMonitorDashboard {
     }
     
     async performRequest(url, fallback, retries) {
+        console.log(`Making API request to: ${url} (attempt ${retries + 1})`);
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -551,12 +558,17 @@ class HygieneMonitorDashboard {
             
             clearTimeout(timeoutId);
             
+            console.log(`API response received: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            return await response.json();
+            const data = await response.json();
+            console.log(`API data received successfully from ${url}`);
+            return data;
         } catch (error) {
+            console.error(`API request failed for ${url}:`, error);
             if (retries < this.settings.maxRetries) {
                 console.log(`Retrying request to ${url} (attempt ${retries + 1})`);
                 await new Promise(resolve => setTimeout(resolve, this.settings.retryDelay * (retries + 1)));
@@ -2721,5 +2733,14 @@ let dashboard;
 
 // Initialize dashboard when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    dashboard = new HygieneMonitorDashboard();
+    // Wait for configuration to be available
+    const initDashboard = () => {
+        if (window.HYGIENE_CONFIG) {
+            dashboard = new HygieneMonitorDashboard();
+        } else {
+            // Retry after a short delay if config not loaded yet
+            setTimeout(initDashboard, 100);
+        }
+    };
+    initDashboard();
 });

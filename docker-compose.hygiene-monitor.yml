@@ -1,6 +1,6 @@
 services:
   # PostgreSQL Database for persistence
-  postgres:
+  hygiene-postgres:
     image: postgres:16-alpine
     container_name: hygiene-postgres
     environment:
@@ -29,8 +29,8 @@ services:
       dockerfile: docker/hygiene-backend/Dockerfile
     container_name: hygiene-backend
     environment:
-      DATABASE_URL: postgresql://hygiene_user:hygiene_secure_2024@postgres:5432/hygiene_monitoring
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://hygiene_user:hygiene_secure_2024@hygiene-postgres:5432/hygiene_monitoring
+      REDIS_URL: redis://hygiene-redis:6379/0
       PROJECT_ROOT: /app/project
       LOG_LEVEL: INFO
       WEBSOCKET_PORT: 8080
@@ -41,9 +41,9 @@ services:
     networks:
       - hygiene-network
     depends_on:
-      postgres:
+      hygiene-postgres:
         condition: service_healthy
-      redis:
+      hygiene-redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/api/hygiene/status"]
@@ -86,9 +86,9 @@ services:
       dockerfile: docker/hygiene-dashboard/Dockerfile
     container_name: hygiene-dashboard
     environment:
-      BACKEND_API_URL: http://hygiene-backend:8080
-      RULE_API_URL: http://rule-control-api:8100
-      WEBSOCKET_URL: ws://hygiene-backend:8080/ws
+      BACKEND_API_URL: http://localhost:8081/api/hygiene
+      RULE_API_URL: http://localhost:8100/api
+      WEBSOCKET_URL: ws://localhost:8081/ws
     networks:
       - hygiene-network
     depends_on:
@@ -130,9 +130,10 @@ services:
       - "8082:80"   # Dashboard
 
   # Redis for caching and pub/sub
-  redis:
+  hygiene-redis:
     image: redis:7-alpine
     container_name: hygiene-redis
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     networks:
       - hygiene-network
     healthcheck:
@@ -143,6 +144,8 @@ services:
     restart: unless-stopped
     volumes:
       - redis_data:/data
+    ports:
+      - "6380:6379"  # Non-standard port to avoid conflicts
 
 networks:
   hygiene-network:

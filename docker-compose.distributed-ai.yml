@@ -1,0 +1,422 @@
+version: '3.8'
+
+# Shared networks for service communication
+networks:
+  ai-mesh:
+    driver: bridge
+  data-tier:
+    driver: bridge
+  cache-tier:
+    driver: bridge
+
+# Shared volumes for models and data
+volumes:
+  shared-models:
+    driver: local
+  shared-cache:
+    driver: local
+  shared-libs:
+    driver: local
+  consul-data:
+    driver: local
+  rabbitmq-data:
+    driver: local
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+# Base service configurations
+x-base-service: &base-service
+  restart: unless-stopped
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+x-ai-service: &ai-service
+  <<: *base-service
+  networks:
+    - ai-mesh
+  volumes:
+    - shared-models:/models:ro
+    - shared-cache:/cache
+    - shared-libs:/usr/local/lib/python3.11/site-packages:ro
+  environment:
+    - CONSUL_HTTP_ADDR=consul:8500
+    - REDIS_URL=redis://redis:6379
+    - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+  depends_on:
+    - consul
+    - redis
+    - rabbitmq
+
+services:
+  # ======================
+  # TIER 1: Core Infrastructure
+  # ======================
+  
+  # API Gateway
+  kong:
+    <<: *base-service
+    image: kong:3.5-alpine
+    networks:
+      - ai-mesh
+    ports:
+      - "8000:8000"   # HTTP
+      - "8443:8443"   # HTTPS
+      - "8001:8001"   # Admin API
+      - "8444:8444"   # Admin API SSL
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+    volumes:
+      - ./config/kong:/kong/declarative
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Service Registry
+  consul:
+    <<: *base-service
+    image: consul:1.17
+    networks:
+      - ai-mesh
+    ports:
+      - "8500:8500"   # HTTP API
+      - "8600:8600"   # DNS
+    volumes:
+      - consul-data:/consul/data
+      - ./config/consul:/consul/config
+    command: agent -server -ui -bootstrap-expect=1 -client=0.0.0.0
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Message Queue
+  rabbitmq:
+    <<: *base-service
+    image: rabbitmq:3.12-management-alpine
+    networks:
+      - ai-mesh
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - ./config/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./config/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Distributed Cache
+  redis:
+    <<: *base-service
+    image: redis:7-alpine
+    networks:
+      - cache-tier
+      - ai-mesh
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Service Mesh Sidecar (Envoy)
+  envoy:
+    <<: *base-service
+    image: envoyproxy/envoy:v1.28-latest
+    networks:
+      - ai-mesh
+    ports:
+      - "9901:9901"   # Admin interface
+      - "10000:10000" # Proxy port
+    volumes:
+      - ./config/envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml
+
+  # ======================
+  # TIER 2: Persistent AI Services
+  # ======================
+
+  # Ollama Service
+  ollama:
+    <<: *ai-service
+    image: ollama/ollama:latest
+    networks:
+      - ai-mesh
+    ports:
+      - "11434:11434"
+    volumes:
+      - shared-models:/root/.ollama
+      - ./config/ollama:/config
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_MODELS=/root/.ollama/models
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_MAX_LOADED_MODELS=2
+      - OLLAMA_KEEP_ALIVE=5m
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+        reservations:
+          memory: 2G
+          cpus: '1'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Vector Database - ChromaDB
+  chromadb:
+    <<: *ai-service
+    image: chromadb/chroma:latest
+    networks:
+      - ai-mesh
+      - data-tier
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data/chromadb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Vector Database - Qdrant
+  qdrant:
+    <<: *ai-service
+    image: qdrant/qdrant:latest
+    networks:
+      - ai-mesh
+      - data-tier
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./data/qdrant:/qdrant/storage
+    environment:
+      - QDRANT_LOG_LEVEL=INFO
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+
+  # Workflow Engine - n8n
+  n8n:
+    <<: *ai-service
+    image: n8nio/n8n:latest
+    networks:
+      - ai-mesh
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./data/n8n:/home/node/.n8n
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://n8n:5678/
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+
+  # ======================
+  # TIER 3: On-Demand AI Services
+  # ======================
+
+  # LangChain Service
+  langchain:
+    <<: *ai-service
+    image: python:3.11-slim
+    networks:
+      - ai-mesh
+    volumes:
+      - ./services/langchain:/app
+      - shared-models:/models
+      - shared-libs:/shared-libs
+    working_dir: /app
+    command: ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+    environment:
+      - SERVICE_NAME=langchain
+      - PYTHONPATH=/shared-libs:/app
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+      replicas: 0  # Start with 0, scale on demand
+
+  # AutoGPT Service
+  autogpt:
+    <<: *ai-service
+    image: significantgravitas/auto-gpt:latest
+    networks:
+      - ai-mesh
+    volumes:
+      - ./data/autogpt:/app/data
+      - shared-models:/models
+    environment:
+      - MEMORY_BACKEND=redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+      replicas: 0  # Start with 0, scale on demand
+
+  # Streamlit UI
+  streamlit:
+    <<: *ai-service
+    image: python:3.11-slim
+    networks:
+      - ai-mesh
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./services/streamlit:/app
+      - shared-libs:/shared-libs
+    working_dir: /app
+    command: ["streamlit", "run", "app.py", "--server.address", "0.0.0.0"]
+    environment:
+      - PYTHONPATH=/shared-libs:/app
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # ======================
+  # Monitoring & Observability
+  # ======================
+
+  # Prometheus
+  prometheus:
+    <<: *base-service
+    image: prom/prometheus:latest
+    networks:
+      - ai-mesh
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./config/prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+
+  # Grafana
+  grafana:
+    <<: *base-service
+    image: grafana/grafana:latest
+    networks:
+      - ai-mesh
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  # Jaeger
+  jaeger:
+    <<: *base-service
+    image: jaegertracing/all-in-one:latest
+    networks:
+      - ai-mesh
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+
+  # ======================
+  # Service Management
+  # ======================
+
+  # Service Scaler (Custom)
+  service-scaler:
+    <<: *base-service
+    build:
+      context: ./services/scaler
+      dockerfile: Dockerfile
+    networks:
+      - ai-mesh
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/scaler:/config
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - CONSUL_HTTP_ADDR=consul:8500
+      - PROMETHEUS_URL=http://prometheus:9090
+    depends_on:
+      - consul
+      - prometheus

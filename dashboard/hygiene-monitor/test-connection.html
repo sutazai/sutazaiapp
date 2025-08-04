@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Connection Test</title>
+    <script src="config.js"></script>
+</head>
+<body>
+    <h1>Dashboard Connection Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testConnection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing API connection...</p>';
+            
+            try {
+                // Load config
+                const config = window.HYGIENE_CONFIG || {};
+                const apiEndpoint = config.BACKEND_API_URL || 'http://localhost:8081/api/hygiene';
+                const wsEndpoint = config.WEBSOCKET_URL || 'ws://localhost:8081/ws';
+                
+                results.innerHTML += `<p><strong>API Endpoint:</strong> ${apiEndpoint}</p>`;
+                results.innerHTML += `<p><strong>WebSocket Endpoint:</strong> ${wsEndpoint}</p>`;
+                
+                // Test API call
+                const response = await fetch(apiEndpoint + '/status', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Tab-ID': 'test-tab'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                results.innerHTML += `<p><strong>API Response:</strong> ✅ SUCCESS</p>`;
+                results.innerHTML += `<p><strong>System Status:</strong> ${data.systemStatus}</p>`;
+                results.innerHTML += `<p><strong>Total Violations:</strong> ${data.totalViolations}</p>`;
+                results.innerHTML += `<p><strong>Critical Violations:</strong> ${data.criticalViolations}</p>`;
+                
+                // Test WebSocket connection
+                const ws = new WebSocket(wsEndpoint);
+                
+                ws.onopen = () => {
+                    results.innerHTML += `<p><strong>WebSocket:</strong> ✅ CONNECTED</p>`;
+                    ws.close();
+                };
+                
+                ws.onerror = (error) => {
+                    results.innerHTML += `<p><strong>WebSocket:</strong> ❌ ERROR - ${error}</p>`;
+                };
+                
+                ws.onmessage = (event) => {
+                    const message = JSON.parse(event.data);
+                    results.innerHTML += `<p><strong>WebSocket Message:</strong> ${message.type}</p>`;
+                };
+                
+            } catch (error) {
+                results.innerHTML += `<p><strong>Error:</strong> ❌ ${error.message}</p>`;
+                console.error('Connection test failed:', error);
+            }
+        }
+        
+        // Run test when page loads
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>
