@@ -185,7 +185,7 @@ class RollbackManager:
         }
         
         with open(rollback_file, 'w') as f:
-            json.dump(rollback_data, f, indent=2)
+            json.dump(rollback_data, f, indent=2, default=str)
             
         logger.info(f"Created rollback point: {rollback_id}")
         return rollback_id

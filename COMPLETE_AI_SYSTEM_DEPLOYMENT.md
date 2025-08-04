@@ -41,11 +41,20 @@ You now have a fully integrated AGI/ASI system with:
 ### 2. **Service Categories**
 
 #### **LLM Models (via Ollama)**
-- tinyllama:latest (default)
-- deepseek-r1:8b (complex reasoning)
-- qwen3:8b (general tasks)
-- codellama:7b (code generation)
-- llama2:7b (general AI)
+tinyllama:latest
+– Params: ~1.1 B (GGUF Q4_K_M)
+– RAM: ~0.5 GB
+– Use: Default lightweight “bootstrap” model for simple chat, system prompts, health checks.
+
+mistral:7b
+– Params: 7 B (GGUF Q4_K_M)
+– RAM: ~4.2 GB
+– Use: Your primary all-purpose model for reasoning, summarization, RAG, and most Tier-2/Tier-3 tasks.
+
+deepseek-coder:6.7b
+– Params: 6.7 B (GGUF Q4_K_M)
+– RAM: ~4.5 GB
+– Use: Phase 2 coding specialist—best for code gen, debugging, and “dev-tool” agents.
 
 #### **Vector Databases**
 - ChromaDB - Persistent vector storage

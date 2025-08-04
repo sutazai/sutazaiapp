@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Fix Validation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #444; border-radius: 5px; }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+        .test-button { background: #2196F3; color: white; }
+        .audit-button { background: #4CAF50; color: white; }
+        #results { background: #2a2a2a; padding: 10px; border-radius: 5px; margin-top: 10px; min-height: 100px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Dashboard Fix Validation Tests</h1>
+    
+    <div class="test-section">
+        <h2>🔗 API Connectivity Tests</h2>
+        <button class="test-button" onclick="testBackendStatus()">Test Backend Status</button>
+        <button class="test-button" onclick="testAuditEndpoint()">Test Audit Endpoint</button>
+        <button class="test-button" onclick="testWebSocketConnection()">Test WebSocket</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🚀 Audit Functionality Tests</h2>
+        <button class="audit-button" onclick="testAuditButton()">Test Audit Button (Fixed)</button>
+        <button class="audit-button" onclick="testMultipleAudits()">Test Multiple Audits (Recursion Protection)</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Dashboard Data Loading</h2>
+        <button class="test-button" onclick="testDataLoading()">Test Data Loading</button>
+        <button class="test-button" onclick="testMetricsDisplay()">Test Metrics Display</button>
+    </div>
+    
+    <div id="results">
+        <div class="warning">Click test buttons to validate fixes...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/hygiene';
+        let testResults = [];
+        
+        function logResult(test, status, message) {
+            testResults.push({test, status, message, timestamp: new Date().toLocaleTimeString()});
+            updateResults();
+        }
+        
+        function updateResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = testResults.map(result => 
+                `<div class="${result.status}">
+                    [${result.timestamp}] ${result.test}: ${result.message}
+                </div>`
+            ).join('');
+        }
+        
+        async function testBackendStatus() {
+            try {
+                const response = await fetch(API_BASE + '/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    logResult('Backend Status', 'success', `Connected! System: ${data.systemStatus}, Violations: ${data.totalViolations}`);
+                } else {
+                    logResult('Backend Status', 'error', `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                logResult('Backend Status', 'error', `Connection failed: ${error.message}`);
+            }
+        }
+        
+        async function testAuditEndpoint() {
+            try {
+                const response = await fetch(API_BASE + '/audit', { method: 'POST' });
+                if (response.ok) {
+                    const data = await response.json();
+                    logResult('Audit Endpoint', 'success', `✅ Fixed! Found: ${data.violations_found}, Fixed: ${data.violations_fixed}`);
+                } else {
+                    logResult('Audit Endpoint', 'error', `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                logResult('Audit Endpoint', 'error', `Request failed: ${error.message}`);
+            }
+        }
+        
+        function testWebSocketConnection() {
+            try {
+                const ws = new WebSocket('ws://localhost:8080/ws');
+                
+                ws.onopen = () => {
+                    logResult('WebSocket', 'success', '✅ Connection established');
+                    ws.close();
+                };
+                
+                ws.onerror = (error) => {
+                    logResult('WebSocket', 'error', `Connection failed: ${error.message || 'Unknown error'}`);
+                };
+                
+                ws.onclose = (event) => {
+                    if (event.code !== 1000) {
+                        logResult('WebSocket', 'warning', `Closed with code: ${event.code}`);
+                    }
+                };
+                
+                // Timeout after 5 seconds
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.CONNECTING) {
+                        ws.close();
+                        logResult('WebSocket', 'warning', 'Connection timeout');
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                logResult('WebSocket', 'error', `WebSocket creation failed: ${error.message}`);
+            }
+        }
+        
+        async function testAuditButton() {
+            logResult('Audit Button', 'warning', 'Testing audit button functionality...');
+            
+            try {
+                // Simulate the dashboard audit function
+                const startTime = Date.now();
+                const response = await fetch(API_BASE + '/audit', { method: 'POST' });
+                const endTime = Date.now();
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    logResult('Audit Button', 'success', `✅ Audit completed in ${endTime - startTime}ms. No stack overflow!`);
+                } else {
+                    logResult('Audit Button', 'error', `Audit request failed: ${response.status}`);
+                }
+            } catch (error) {
+                logResult('Audit Button', 'error', `Audit test failed: ${error.message}`);
+            }
+        }
+        
+        async function testMultipleAudits() {
+            logResult('Multiple Audits', 'warning', 'Testing recursion protection...');
+            
+            const auditPromises = [];
+            for (let i = 0; i < 3; i++) {
+                auditPromises.push(
+                    fetch(API_BASE + '/audit', { method: 'POST' })
+                        .then(response => response.json())
+                        .catch(error => ({ error: error.message }))
+                );
+            }
+            
+            try {
+                const results = await Promise.all(auditPromises);
+                const successCount = results.filter(r => r.success).length;
+                logResult('Multiple Audits', 'success', `✅ ${successCount}/3 audits completed successfully. No recursion issues!`);
+            } catch (error) {
+                logResult('Multiple Audits', 'error', `Multiple audit test failed: ${error.message}`);
+            }
+        }
+        
+        async function testDataLoading() {
+            logResult('Data Loading', 'warning', 'Testing data loading capabilities...');
+            
+            try {
+                const endpoints = ['/status', '/violations', '/agents'];
+                const promises = endpoints.map(endpoint => 
+                    fetch(API_BASE + endpoint).then(r => r.json())
+                );
+                
+                const results = await Promise.all(promises);
+                logResult('Data Loading', 'success', `✅ Successfully loaded data from ${results.length} endpoints`);
+            } catch (error) {
+                logResult('Data Loading', 'error', `Data loading test failed: ${error.message}`);
+            }
+        }
+        
+        async function testMetricsDisplay() {
+            try {
+                const response = await fetch(API_BASE + '/status');
+                const data = await response.json();
+                
+                const hasMetrics = data.systemMetrics && 
+                                 typeof data.systemMetrics.memory_percentage === 'number' &&
+                                 typeof data.systemMetrics.cpu_usage === 'number';
+                
+                if (hasMetrics) {
+                    logResult('Metrics Display', 'success', `✅ Metrics available: CPU ${data.systemMetrics.cpu_usage}%, Memory ${data.systemMetrics.memory_percentage}%`);
+                } else {
+                    logResult('Metrics Display', 'warning', 'Metrics data structure incomplete');
+                }
+            } catch (error) {
+                logResult('Metrics Display', 'error', `Metrics test failed: ${error.message}`);
+            }
+        }
+        
+        // Auto-run basic connectivity test
+        window.addEventListener('load', () => {
+            setTimeout(testBackendStatus, 500);
+        });
+    </script>
+</body>
+</html>

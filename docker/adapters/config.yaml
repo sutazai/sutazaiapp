@@ -1,0 +1,33 @@
+# Default configuration for service adapter
+adapter_port: 8080
+target_host: localhost
+target_port: 80
+
+# Service-specific configurations
+service_type: generic
+
+# Monitoring settings
+metrics:
+  enabled: true
+  port: 9090
+
+# Security settings
+security:
+  enable_auth: false
+  auth_type: basic
+  
+# Rate limiting
+rate_limit:
+  enabled: false
+  requests_per_minute: 60
+
+# Circuit breaker
+circuit_breaker:
+  enabled: true
+  failure_threshold: 5
+  recovery_timeout: 60
+
+# Logging
+logging:
+  level: INFO
+  format: json

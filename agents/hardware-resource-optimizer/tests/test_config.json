@@ -1,0 +1,207 @@
+{
+  "agent_url": "http://localhost:8116",
+  "timeout": 30,
+  "test_suites": {
+    "e2e": true,
+    "performance": true,
+    "stress": true,
+    "manual": false,
+    "continuous": false
+  },
+  "test_environment": {
+    "setup_required": true,
+    "cleanup_after": true,
+    "preserve_logs": true,
+    "test_data_size_mb": 100
+  },
+  "reporting": {
+    "detailed_json": true,
+    "summary_report": true,
+    "performance_charts": false,
+    "email_report": false
+  },
+  "thresholds": {
+    "min_success_rate": 95.0,
+    "max_avg_response_time": 2.0,
+    "max_p95_response_time": 5.0,
+    "max_memory_usage_percent": 80.0,
+    "min_requests_per_second": 10.0
+  },
+  "performance_testing": {
+    "single_request_iterations": 50,
+    "concurrent_users_light": 5,
+    "concurrent_users_medium": 15,
+    "concurrent_users_heavy": 30,
+    "sustained_test_duration_minutes": 5,
+    "escalating_load_max_users": 50,
+    "escalating_load_step_size": 5
+  },
+  "continuous_testing": {
+    "health_check_interval_minutes": 5,
+    "smoke_test_interval_minutes": 15,
+    "comprehensive_test_interval_hours": 2,
+    "performance_test_times": ["08:00", "20:00"],
+    "retention_hours": 168
+  },
+  "alert_thresholds": {
+    "success_rate_min": 90.0,
+    "response_time_max": 10.0,
+    "failure_count_max": 5
+  },
+  "notifications": {
+    "enabled": false,
+    "email": {
+      "smtp_server": "localhost",
+      "smtp_port": 587,
+      "username": "",
+      "password": "",
+      "recipients": []
+    },
+    "webhook": {
+      "url": "",
+      "headers": {}
+    }
+  },
+  "endpoints_to_test": [
+    {
+      "method": "GET",
+      "endpoint": "/health",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "GET", 
+      "endpoint": "/status",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/memory",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/cpu",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/disk",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/docker",
+      "params": null,
+      "critical": false
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/all",
+      "params": null,
+      "critical": false
+    },
+    {
+      "method": "GET",
+      "endpoint": "/analyze/storage",
+      "params": {"path": "/tmp"},
+      "critical": true
+    },
+    {
+      "method": "GET",
+      "endpoint": "/analyze/storage/duplicates",
+      "params": {"path": "/tmp"},
+      "critical": false
+    },
+    {
+      "method": "GET",
+      "endpoint": "/analyze/storage/large-files",
+      "params": {"path": "/", "min_size_mb": 100},
+      "critical": false
+    },
+    {
+      "method": "GET",
+      "endpoint": "/analyze/storage/report",
+      "params": null,
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/storage",
+      "params": {"dry_run": true},
+      "critical": true
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/storage/duplicates",
+      "params": {"path": "/tmp", "dry_run": true},
+      "critical": false
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/storage/cache",
+      "params": null,
+      "critical": false
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/storage/compress",
+      "params": {"path": "/var/log", "days_old": 30},
+      "critical": false
+    },
+    {
+      "method": "POST",
+      "endpoint": "/optimize/storage/logs",
+      "params": null,
+      "critical": false
+    }
+  ],
+  "test_scenarios": {
+    "edge_cases": [
+      {
+        "name": "invalid_path",
+        "endpoint": "/analyze/storage",
+        "params": {"path": "/nonexistent/path"},
+        "expect_success": false
+      },
+      {
+        "name": "protected_path",
+        "endpoint": "/analyze/storage", 
+        "params": {"path": "/etc"},
+        "expect_success": false
+      },
+      {
+        "name": "negative_size",
+        "endpoint": "/analyze/storage/large-files",
+        "params": {"path": "/tmp", "min_size_mb": -1},
+        "expect_success": false
+      },
+      {
+        "name": "empty_path",
+        "endpoint": "/analyze/storage",
+        "params": {"path": ""},
+        "expect_success": false
+      }
+    ],
+    "stress_scenarios": [
+      {
+        "name": "concurrent_analysis",
+        "endpoint": "/analyze/storage",
+        "params": {"path": "/tmp"},
+        "concurrent_requests": 10,
+        "duration_seconds": 30
+      },
+      {
+        "name": "rapid_optimization",
+        "endpoint": "/optimize/memory",
+        "params": null,
+        "requests_per_second": 2,
+        "duration_seconds": 60
+      }
+    ]
+  }
+}

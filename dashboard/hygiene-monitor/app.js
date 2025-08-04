@@ -217,13 +217,44 @@ class HygieneMonitorDashboard {
     
     throttle(func, limit) {
         let inThrottle;
+        let pending = false;
+        let lastArgs;
+        let lastContext;
+        
         return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
+            lastArgs = arguments;
+            lastContext = this;
+            
+            if (inThrottle) {
+                pending = true;
+                return;
+            }
+            
+            inThrottle = true;
+            
+            // Handle both sync and async functions
+            const result = func.apply(lastContext, lastArgs);
+            
+            if (result && typeof result.then === 'function') {
+                // If it's a promise (async function), wait for it to complete
+                result.finally(() => {
+                    setTimeout(() => {
+                        inThrottle = false;
+                        if (pending) {
+                            pending = false;
+                            this.apply(lastContext, []);
+                        }
+                    }, limit);
+                });
+            } else {
+                // Sync function
+                setTimeout(() => {
+                    inThrottle = false;
+                    if (pending) {
+                        pending = false;
+                        this.apply(lastContext, []);
+                    }
+                }, limit);
             }
         };
     }
@@ -765,26 +796,23 @@ class HygieneMonitorDashboard {
     }
 
     renderDashboard() {
-        // Recursion protection
+        // Stronger recursion protection - prevent all concurrent calls
         const now = Date.now();
+        
+        // If already updating or too soon, simply return (don't queue)
         if (this.isUpdating || (now - this.lastUpdateTime) < this.minUpdateInterval) {
-            // Queue the update for later if we're updating too frequently
-            if (!this.updateQueue.includes('renderDashboard')) {
-                this.updateQueue.push('renderDashboard');
-                setTimeout(() => {
-                    if (this.updateQueue.includes('renderDashboard')) {
-                        this.updateQueue = this.updateQueue.filter(item => item !== 'renderDashboard');
-                        this.renderDashboard();
-                    }
-                }, this.minUpdateInterval);
-            }
+            console.log('Render blocked: isUpdating=', this.isUpdating, 'timeDiff=', now - this.lastUpdateTime);
             return;
         }
         
+        // Depth protection
         if (this.currentUpdateDepth >= this.maxUpdateDepth) {
             console.warn('Maximum update depth reached, preventing recursion');
             return;
         }
+        
+        // Clear any queued updates since we're rendering now
+        this.updateQueue = [];
         
         this.isUpdating = true;
         this.currentUpdateDepth++;
@@ -1882,6 +1910,12 @@ class HygieneMonitorDashboard {
         const loadingToast = this.showToast('Running full hygiene audit...', 'info', 0);
         this.showLoadingOverlay('Running comprehensive audit...');
         
+        // Temporarily stop real-time updates to prevent race conditions
+        const wasRealTimeEnabled = !!this.updateInterval;
+        if (wasRealTimeEnabled) {
+            this.stopRealTimeUpdates();
+        }
+        
         try {
             const response = await this.fetchWithFallback(this.apiEndpoint + '/audit', { 
                 success: true, 
@@ -1898,15 +1932,9 @@ class HygieneMonitorDashboard {
                 // Clear cache to force fresh data
                 this.cache.clear();
                 
-                // Use setTimeout to break recursion chain
-                setTimeout(async () => {
-                    try {
-                        await this.loadInitialData();
-                        this.renderDashboard();
-                    } catch (error) {
-                        console.error('Error refreshing data after audit:', error);
-                    }
-                }, 100);
+                // Refresh data and render immediately (no setTimeout needed)
+                await this.loadInitialData();
+                this.renderDashboard();
                 
                 // Sync with other tabs
                 this.syncAllTabs({ type: 'audit-completed', data: response });
@@ -1919,6 +1947,11 @@ class HygieneMonitorDashboard {
         } finally {
             this.hideLoadingOverlay();
             this.isAuditing = false;
+            
+            // Resume real-time updates if they were enabled
+            if (wasRealTimeEnabled) {
+                this.startRealTimeUpdates();
+            }
         }
     }
 
@@ -2149,18 +2182,31 @@ class HygieneMonitorDashboard {
     startRealTimeUpdates() {
         if (this.updateInterval) {
             clearInterval(this.updateInterval);
+            this.updateInterval = null;
         }
+        
+        // Track if an update is in progress
+        let updateInProgress = false;
         
         // Use throttled update to prevent too frequent renders
         const throttledUpdate = this.throttle(async () => {
+            // Skip if already updating
+            if (updateInProgress || this.isUpdating || this.isAuditing) {
+                console.log('Skipping real-time update - operation in progress');
+                return;
+            }
+            
+            updateInProgress = true;
             try {
                 await this.loadInitialData();
                 this.renderDashboard();
             } catch (error) {
                 console.warn('Real-time update failed:', error);
                 this.updateConnectionStatus(false);
+            } finally {
+                updateInProgress = false;
             }
-        }, 1000);
+        }, Math.max(this.refreshInterval, 2000)); // Ensure at least 2 second throttle
         
         this.updateInterval = setInterval(throttledUpdate, this.refreshInterval);
         

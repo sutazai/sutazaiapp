@@ -156,13 +156,11 @@ class HygieneAgent:
                 self.worker_thread.join(timeout=5)
             
             self.status = AgentStatus.STOPPED
-            self.logger.info(f"Agent {self.name} stopped", agent_id=self.agent_id)
+            self.logger.info(f"Agent {self.name} stopped - ID: {self.agent_id}")
             
         except Exception as e:
             self.status = AgentStatus.ERROR
-            self.logger.error(f"Error stopping agent {self.name}",
-                            agent_id=self.agent_id,
-                            error_details={"error": str(e)})
+            self.logger.error(f"Error stopping agent {self.name} (ID: {self.agent_id}): {str(e)}")
 
     def assign_task(self, task: AgentTask):
         """Assign a task to this agent"""
@@ -490,8 +488,7 @@ class AgentOrchestrator:
             self.logger.info("Agent Orchestrator started")
             
         except Exception as e:
-            self.logger.error("Failed to start orchestrator",
-                            error_details={"error": str(e)})
+            self.logger.error(f"Failed to start orchestrator: {str(e)}")
 
     def stop(self):
         """Stop the orchestrator and all agents"""

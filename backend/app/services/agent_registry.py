@@ -184,51 +184,111 @@ class AgentRegistry:
         raise Exception("No available ports found")
     
     async def start_all_agents(self) -> Dict[str, Any]:
-        """Start all discovered agents"""
-        logger.info("Starting mass agent activation...")
+        """Start all discovered agents with intelligent batching and resource management"""
+        logger.info("🚀 Starting MASS AGENT ACTIVATION for 137 agents...")
+        start_time = datetime.utcnow()
         
         discovered_agents = await self.discover_agents()
         total_agents = len(discovered_agents)
         started_count = 0
         failed_count = 0
         
-        # Start agents in batches to avoid overwhelming the system
-        batch_size = 10
+        logger.info(f"📊 Discovered {total_agents} agents ready for activation")
+        
+        # Enhanced batching with resource monitoring
+        batch_size = 8  # Smaller batches for better stability
+        retry_queue = []
+        
+        # Phase 1: Initial batch activation
         for i in range(0, total_agents, batch_size):
             batch = discovered_agents[i:i + batch_size]
+            batch_num = i // batch_size + 1
+            total_batches = (total_agents + batch_size - 1) // batch_size
             
-            logger.info(f"Starting batch {i//batch_size + 1} ({len(batch)} agents)")
+            logger.info(f"⚡ Batch {batch_num}/{total_batches}: Starting {len(batch)} agents")
             
-            # Start batch concurrently
-            tasks = [self.start_agent(agent) for agent in batch]
+            # Monitor system resources before batch
+            cpu_percent = psutil.cpu_percent(interval=1)
+            memory_percent = psutil.virtual_memory().percent
+            
+            if cpu_percent > 80 or memory_percent > 85:
+                logger.warning(f"⚠️ High resource usage detected (CPU: {cpu_percent}%, RAM: {memory_percent}%) - waiting...")
+                await asyncio.sleep(3)
+            
+            # Start batch concurrently with timeout
+            tasks = [asyncio.wait_for(self.start_agent(agent), timeout=30) for agent in batch]
             results = await asyncio.gather(*tasks, return_exceptions=True)
             
             for j, result in enumerate(results):
+                agent_name = batch[j]['name']
                 if isinstance(result, Exception):
-                    logger.error(f"Exception starting agent {batch[j]['name']}: {result}")
+                    logger.error(f"❌ Exception starting agent {agent_name}: {result}")
+                    retry_queue.append(batch[j])
                     failed_count += 1
                 elif result:
+                    logger.info(f"✅ Successfully started agent {agent_name}")
                     started_count += 1
                 else:
+                    logger.warning(f"⚠️ Failed to start agent {agent_name} - adding to retry queue")
+                    retry_queue.append(batch[j])
                     failed_count += 1
             
-            # Brief pause between batches
-            await asyncio.sleep(1)
+            # Adaptive pause between batches
+            pause_time = 2 if cpu_percent < 50 else 4
+            await asyncio.sleep(pause_time)
         
-        # Verify running agents
-        await asyncio.sleep(5)  # Give agents time to fully start
+        # Phase 2: Retry failed agents with smaller batches
+        if retry_queue:
+            logger.info(f"🔄 Retrying {len(retry_queue)} failed agents...")
+            retry_batch_size = 3
+            
+            for i in range(0, len(retry_queue), retry_batch_size):
+                batch = retry_queue[i:i + retry_batch_size]
+                logger.info(f"🔄 Retry batch: {len(batch)} agents")
+                
+                tasks = [asyncio.wait_for(self.start_agent(agent), timeout=45) for agent in batch]
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                
+                for j, result in enumerate(results):
+                    if isinstance(result, Exception) or not result:
+                        # Final failure - don't retry again
+                        pass
+                    else:
+                        logger.info(f"✅ Retry successful for agent {batch[j]['name']}")
+                        started_count += 1
+                        failed_count -= 1
+                
+                await asyncio.sleep(3)
+        
+        # Phase 3: Comprehensive health verification
+        logger.info("🏥 Running comprehensive health checks...")
+        await asyncio.sleep(10)  # Extended time for agents to fully initialize
         healthy_count = await self.health_check_all()
         
+        # Phase 4: Report and enable collective intelligence
+        duration = (datetime.utcnow() - start_time).total_seconds()
+        
         summary = {
+            "status": "completed",
             "total_discovered": total_agents,
             "started_successfully": started_count,
             "failed_to_start": failed_count,
             "healthy_agents": healthy_count,
-            "timestamp": datetime.utcnow().isoformat(),
-            "active_agents": list(self.active_agents.keys())
+            "activation_duration_seconds": duration,
+            "collective_intelligence_level": "ASI" if healthy_count > 100 else "AGI" if healthy_count > 50 else "Multi-Agent",
+            "collective_active": healthy_count > 10,
+            "active_agents": list(self.active_agents.keys()),
+            "timestamp": datetime.utcnow().isoformat()
         }
         
-        logger.info(f"Agent activation complete: {started_count}/{total_agents} started, {healthy_count} healthy")
+        if healthy_count > 100:
+            logger.info(f"🧠 ASI-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
+        elif healthy_count > 50:
+            logger.info(f"🤖 AGI-LEVEL COLLECTIVE INTELLIGENCE ACHIEVED! {healthy_count}/{total_agents} agents active")
+        else:
+            logger.info(f"🔧 Multi-Agent system active: {healthy_count}/{total_agents} agents healthy")
+        
+        logger.info(f"🎉 Agent activation complete: {started_count}/{total_agents} started, {healthy_count} healthy in {duration:.1f}s")
         return summary
     
     async def health_check_all(self) -> int:
