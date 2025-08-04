@@ -105,8 +105,8 @@ class BaseAgentV2:
         self.agent_version = "2.0.0"
         
         # Service endpoints
-        self.backend_url = os.getenv('BACKEND_URL', 'http://backend:8000')
-        self.ollama_url = os.getenv('OLLAMA_URL', 'http://ollama:11434')
+        self.backend_url = os.getenv('BACKEND_URL', 'http://localhost:8000')
+        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
         
         # Agent state
         self.status = AgentStatus.INITIALIZING
@@ -393,12 +393,14 @@ class BaseAgentV2:
         
         try:
             # Use circuit breaker to protect against Ollama failures
+            config = {**self.model_config, **kwargs}
+            config.pop('model', None)  # Remove model from config to avoid duplicate
             response = await self.circuit_breaker.call(
                 self.ollama_pool.generate,
                 prompt=prompt,
                 model=model,
                 system=system,
-                **{**self.model_config, **kwargs}
+                **config
             )
             
             self.metrics.ollama_requests += 1
@@ -417,11 +419,13 @@ class BaseAgentV2:
         model = model or self.default_model
         
         try:
+            config = {**self.model_config, **kwargs}
+            config.pop('model', None)  # Remove model from config to avoid duplicate
             response = await self.circuit_breaker.call(
                 self.ollama_pool.chat,
                 messages=messages,
                 model=model,
-                **{**self.model_config, **kwargs}
+                **config
             )
             
             self.metrics.ollama_requests += 1

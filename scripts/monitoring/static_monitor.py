@@ -579,7 +579,7 @@ class EnhancedMonitor:
                         return endpoint
         
         # Fallback to common ports
-        common_ports = [8000, 8001, 8002, 8003, 8004, 8005, 3000, 5000, 9000]
+        common_ports = [8000, 8001, 8002, 8003, 8004, 8005, 8115, 3000, 5000, 9000]
         for port in common_ports:
             if self._test_port_connection(port):
                 endpoint = f"http://localhost:{port}"
@@ -606,7 +606,7 @@ class EnhancedMonitor:
             'BACK': [[8000, 8010], [5000, 5010]],    # Backend services
             'FRON': [[3000, 3010], [8080, 8090]],    # Frontend services  
             'AI': [[11434, 11444], [7860, 7870]],    # AI/ML services (Ollama, HuggingFace)
-            'INFR': [[9000, 9010], [6000, 6010]],    # Infrastructure services
+            'INFR': [[9000, 9010], [6000, 6010], [8110, 8120]],    # Infrastructure services (includes hardware-resource-optimizer on 8115)
             'SECU': [[8443, 8453], [9443, 9453]],    # Security services
             'DATA': [[5432, 5442], [6379, 6389]],    # Data services
         }
@@ -665,20 +665,33 @@ class EnhancedMonitor:
         name = agent_info.get('name', '')
         description = agent_info.get('description', '')
         
-        # Extract key type indicators
+        # Check agent name for direct matches first (most reliable)
+        if 'hardware-resource-optimizer' in name:
+            return 'INFR'
+        
+        # Extract key type indicators with word boundaries for precision
         type_indicators = {
             'backend': ['backend', 'api', 'server'],
-            'frontend': ['frontend', 'ui', 'web'],
-            'ai': ['ai', 'ml', 'model', 'agent'],
-            'infra': ['infrastructure', 'deploy', 'container'],
+            'frontend': ['frontend', 'web app', 'web ui'],  # Made more specific
+            'ai': ['ai', 'ml', 'model'],  # Removed 'agent' as it's too generic
+            'infra': ['infrastructure', 'deploy', 'container', 'hardware', 'resource', 'optimizer', 'monitoring'],
             'security': ['security', 'auth', 'vault'],
             'data': ['data', 'database', 'storage']
         }
         
         text = (name + ' ' + description).lower()
+        
+        # Count matches for each type to find the best match
+        type_scores = {}
         for agent_type, keywords in type_indicators.items():
-            if any(keyword in text for keyword in keywords):
-                return agent_type[:4].upper()
+            score = sum(1 for keyword in keywords if keyword in text)
+            if score > 0:
+                type_scores[agent_type] = score
+        
+        # Return the type with the highest score
+        if type_scores:
+            best_type = max(type_scores, key=type_scores.get)
+            return best_type[:4].upper()
         
         return 'UTIL'
     
@@ -707,6 +720,10 @@ class EnhancedMonitor:
         """Get intelligently truncated display name"""
         if len(agent_id) <= 14:
             return agent_id
+        
+        # Special handling for hardware-resource-optimizer
+        if agent_id == 'hardware-resource-optimizer':
+            return 'hardware-optim'
         
         # Try to extract meaningful parts
         parts = agent_id.split('-')
@@ -803,11 +820,94 @@ class EnhancedMonitor:
         return wsl_info
     
     def _detect_nvidia_gpu(self, wsl_info: dict) -> bool:
-        """Enhanced NVIDIA GPU detection with WSL2 support"""
+        """Enhanced NVIDIA GPU detection with comprehensive WSL2 support"""
+        # Try multiple nvidia-smi locations in priority order
+        nvidia_smi_paths = self._get_nvidia_smi_paths(wsl_info)
+        
+        for nvidia_smi_path in nvidia_smi_paths:
+            if self._test_nvidia_smi_path(nvidia_smi_path, wsl_info):
+                return True
+        
+        # WSL2-specific fallback methods
+        if wsl_info['is_wsl2']:
+            if self._detect_nvidia_wsl2_fallbacks(wsl_info):
+                return True
+        
+        # Try gpustat as final fallback
+        if self._detect_nvidia_gpustat():
+            return True
+        
+        return False
+    
+    def _get_nvidia_smi_paths(self, wsl_info: dict) -> list:
+        """Get prioritized list of nvidia-smi paths to try"""
+        paths = []
+        
+        if wsl_info['is_wsl2']:
+            # WSL2 specific paths - Windows nvidia-smi.exe is most reliable
+            paths.extend([
+                '/mnt/c/Windows/System32/nvidia-smi.exe',
+                '/mnt/c/Program Files/NVIDIA Corporation/NVSMI/nvidia-smi.exe',
+                '/mnt/c/Windows/system32/nvidia-smi.exe',  # Case variations
+                '/usr/lib/wsl/lib/nvidia-smi',  # WSL2 specific location
+                'nvidia-smi.exe'  # Try in PATH
+            ])
+        
+        # Standard paths (works for native Linux and sometimes WSL2)
+        paths.extend([
+            'nvidia-smi',  # Standard PATH lookup
+            '/usr/bin/nvidia-smi',
+            '/usr/local/cuda/bin/nvidia-smi'
+        ])
+        
+        return paths
+    
+    def _test_nvidia_smi_path(self, nvidia_smi_path: str, wsl_info: dict) -> bool:
+        """Test a specific nvidia-smi path and extract GPU info"""
         try:
-            # Try nvidia-smi first (works in native Linux and WSL2 with proper drivers)
-            result = subprocess.run(['nvidia-smi', '--query-gpu=name,driver_version', '--format=csv,noheader,nounits'], 
-                                  capture_output=True, text=True, timeout=2)
+            # First try XML output for structured parsing
+            if self._test_nvidia_smi_xml(nvidia_smi_path, wsl_info):
+                return True
+            
+            # Fallback to CSV format
+            if self._test_nvidia_smi_csv(nvidia_smi_path, wsl_info):
+                return True
+                
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"nvidia-smi path {nvidia_smi_path} failed: {e}")
+        
+        return False
+    
+    def _test_nvidia_smi_xml(self, nvidia_smi_path: str, wsl_info: dict) -> bool:
+        """Test nvidia-smi with XML output for comprehensive data"""
+        try:
+            result = subprocess.run([nvidia_smi_path, '-q', '-x'], 
+                                  capture_output=True, text=True, timeout=5)
+            
+            if result.returncode == 0 and result.stdout.strip():
+                gpu_data = self._parse_nvidia_xml(result.stdout)
+                if gpu_data:
+                    self.gpu_info = {
+                        'name': gpu_data.get('name', 'NVIDIA GPU'),
+                        'driver': f"NVIDIA {gpu_data.get('driver_version', 'Unknown')}",
+                        'wsl2': wsl_info['is_wsl2'],
+                        'xml_support': True
+                    }
+                    self.gpu_driver_type = 'nvidia_xml' if not wsl_info['is_wsl2'] else 'nvidia_wsl2_xml'
+                    self.nvidia_smi_path = nvidia_smi_path  # Store working path
+                    return True
+        except Exception:
+            pass
+        
+        return False
+    
+    def _test_nvidia_smi_csv(self, nvidia_smi_path: str, wsl_info: dict) -> bool:
+        """Test nvidia-smi with CSV output as fallback"""
+        try:
+            result = subprocess.run([nvidia_smi_path, '--query-gpu=name,driver_version', '--format=csv,noheader,nounits'], 
+                                  capture_output=True, text=True, timeout=3)
+            
             if result.returncode == 0 and result.stdout.strip():
                 lines = result.stdout.strip().split('\n')
                 if lines and lines[0]:
@@ -816,50 +916,175 @@ class EnhancedMonitor:
                     self.gpu_info = {
                         'name': parts[0].strip(), 
                         'driver': f"NVIDIA {driver_version}",
-                        'wsl2': wsl_info['is_wsl2']
+                        'wsl2': wsl_info['is_wsl2'],
+                        'xml_support': False
                     }
-                    self.gpu_driver_type = 'nvidia'
+                    self.gpu_driver_type = 'nvidia' if not wsl_info['is_wsl2'] else 'nvidia_wsl2'
+                    self.nvidia_smi_path = nvidia_smi_path  # Store working path
                     return True
         except Exception:
             pass
         
-        # WSL2-specific NVIDIA detection
-        if wsl_info['is_wsl2']:
-            try:
-                # Check for NVIDIA device files that might exist in WSL2
-                nvidia_devices = ['/dev/nvidia0', '/dev/nvidiactl', '/dev/nvidia-uvm']
-                nvidia_files_found = [dev for dev in nvidia_devices if os.path.exists(dev)]
+        return False
+    
+    def _parse_nvidia_xml(self, xml_output: str) -> dict:
+        """Parse nvidia-smi XML output for comprehensive GPU information"""
+        try:
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(xml_output)
+            
+            gpu_data = {}
+            
+            # Find first GPU
+            gpu = root.find('.//gpu')
+            if gpu is not None:
+                # Extract basic info
+                product_name = gpu.find('product_name')
+                if product_name is not None:
+                    gpu_data['name'] = product_name.text
                 
-                if nvidia_files_found:
-                    # Try nvidia-ml-py as fallback
-                    try:
-                        import pynvml
-                        pynvml.nvmlInit()
-                        device_count = pynvml.nvmlDeviceGetCount()
-                        if device_count > 0:
-                            handle = pynvml.nvmlDeviceGetHandleByIndex(0)
-                            name = pynvml.nvmlDeviceGetName(handle).decode('utf-8')
-                            driver_version = pynvml.nvmlSystemGetDriverVersion().decode('utf-8')
-                            self.gpu_info = {
-                                'name': name,
-                                'driver': f"NVIDIA {driver_version} (WSL2)",
-                                'wsl2': True
-                            }
-                            self.gpu_driver_type = 'nvidia'
-                            return True
-                    except ImportError:
-                        pass
-                    except Exception:
-                        pass
-                    
-                    # Fallback for WSL2 with NVIDIA files but no working nvidia-smi
-                    self.gpu_info = {
-                        'name': 'NVIDIA GPU (WSL2)', 
-                        'driver': 'WSL2 - Drivers incomplete',
-                        'wsl2': True
-                    }
-                    self.gpu_driver_type = 'nvidia_wsl2_limited'
+                # Driver version
+                driver_version = root.find('.//driver_version')
+                if driver_version is not None:
+                    gpu_data['driver_version'] = driver_version.text
+                
+                # GPU UUID for identification
+                uuid = gpu.find('uuid')
+                if uuid is not None:
+                    gpu_data['uuid'] = uuid.text
+                
+                # CUDA version
+                cuda_version = root.find('.//cuda_version')
+                if cuda_version is not None:
+                    gpu_data['cuda_version'] = cuda_version.text
+            
+            return gpu_data if gpu_data else None
+        
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"XML parsing failed: {e}")
+            return None
+    
+    def _detect_nvidia_wsl2_fallbacks(self, wsl_info: dict) -> bool:
+        """WSL2-specific NVIDIA detection fallback methods"""
+        try:
+            # Check for NVIDIA device files that might exist in WSL2
+            nvidia_devices = ['/dev/nvidia0', '/dev/nvidiactl', '/dev/nvidia-uvm']
+            nvidia_files_found = [dev for dev in nvidia_devices if os.path.exists(dev)]
+            
+            if nvidia_files_found:
+                # Try nvidia-ml-py (pynvml) as fallback
+                try:
+                    import pynvml
+                    pynvml.nvmlInit()
+                    device_count = pynvml.nvmlDeviceGetCount()
+                    if device_count > 0:
+                        handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                        name = pynvml.nvmlDeviceGetName(handle).decode('utf-8')
+                        driver_version = pynvml.nvmlSystemGetDriverVersion().decode('utf-8')
+                        self.gpu_info = {
+                            'name': name,
+                            'driver': f"NVIDIA {driver_version} (pynvml)",
+                            'wsl2': True,
+                            'pynvml_support': True
+                        }
+                        self.gpu_driver_type = 'nvidia_pynvml'
+                        return True
+                except ImportError:
+                    if self.logger:
+                        self.logger.debug("pynvml not available, consider installing: pip install nvidia-ml-py")
+                except Exception as e:
+                    if self.logger:
+                        self.logger.debug(f"pynvml failed: {e}")
+                
+                # Check proc filesystem for NVIDIA info
+                if self._detect_nvidia_proc_info():
                     return True
+                
+                # Fallback - we know NVIDIA files exist but can't get detailed info
+                self.gpu_info = {
+                    'name': 'NVIDIA GPU (WSL2)', 
+                    'driver': 'WSL2 - Device files detected',
+                    'wsl2': True,
+                    'device_files': nvidia_files_found
+                }
+                self.gpu_driver_type = 'nvidia_wsl2_limited'
+                return True
+        except Exception:
+            pass
+        
+        return False
+    
+    def _detect_nvidia_proc_info(self) -> bool:
+        """Try to get NVIDIA GPU info from proc filesystem"""
+        try:
+            if os.path.exists('/proc/driver/nvidia'):
+                nvidia_proc_files = os.listdir('/proc/driver/nvidia')
+                if 'gpus' in nvidia_proc_files:
+                    gpu_dirs = os.listdir('/proc/driver/nvidia/gpus')
+                    if gpu_dirs:
+                        # Try to read GPU info from proc
+                        gpu_dir = gpu_dirs[0]
+                        info_file = f'/proc/driver/nvidia/gpus/{gpu_dir}/information'
+                        if os.path.exists(info_file):
+                            with open(info_file, 'r') as f:
+                                content = f.read()
+                                # Extract GPU name from proc file
+                                for line in content.split('\n'):
+                                    if 'Model:' in line:
+                                        gpu_name = line.split('Model:')[1].strip()
+                                        self.gpu_info = {
+                                            'name': gpu_name,
+                                            'driver': 'NVIDIA (WSL2 proc)',
+                                            'wsl2': True,
+                                            'proc_info': True
+                                        }
+                                        self.gpu_driver_type = 'nvidia_wsl2_proc'
+                                        return True
+                        
+                        # Fallback if we can't read specific info
+                        self.gpu_info = {
+                            'name': 'NVIDIA GPU (WSL2)',
+                            'driver': 'WSL2 proc - Limited info',
+                            'wsl2': True,
+                            'proc_info': True
+                        }
+                        self.gpu_driver_type = 'nvidia_wsl2_proc'
+                        return True
+        except Exception:
+            pass
+        
+        return False
+    
+    def _detect_nvidia_gpustat(self) -> bool:
+        """Try to use gpustat as fallback GPU monitoring tool"""
+        try:
+            # First try to import gpustat
+            result = subprocess.run(['gpustat', '--json'], capture_output=True, text=True, timeout=3)
+            if result.returncode == 0 and result.stdout.strip():
+                import json
+                gpustat_data = json.loads(result.stdout)
+                
+                if 'gpus' in gpustat_data and gpustat_data['gpus']:
+                    gpu = gpustat_data['gpus'][0]  # First GPU
+                    self.gpu_info = {
+                        'name': gpu.get('name', 'NVIDIA GPU'),
+                        'driver': f"NVIDIA (gpustat)",
+                        'wsl2': self._detect_wsl_environment()['is_wsl2'],
+                        'gpustat_support': True
+                    }
+                    self.gpu_driver_type = 'nvidia_gpustat'
+                    return True
+        except Exception:
+            # Try to install gpustat if it's not available
+            try:
+                if self.logger:
+                    self.logger.info("Attempting to install gpustat for GPU monitoring")
+                subprocess.run(['pip', 'install', 'gpustat'], capture_output=True, timeout=30)
+                # Retry after installation
+                result = subprocess.run(['gpustat', '--json'], capture_output=True, text=True, timeout=3)
+                if result.returncode == 0:
+                    return self._detect_nvidia_gpustat()  # Recursive call after installation
             except Exception:
                 pass
         
@@ -963,17 +1188,44 @@ class EnhancedMonitor:
         return False
     
     def get_gpu_stats(self) -> Dict[str, Any]:
-        """Get GPU statistics with WSL2 and fallback handling"""
+        """Get GPU statistics with comprehensive WSL2 and fallback handling"""
         if not self.gpu_available:
             return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': 'No GPU detected'}
         
         try:
-            if self.gpu_driver_type == 'nvidia':
-                return self._get_nvidia_stats()
-            elif self.gpu_driver_type == 'nvidia_wsl2_limited':
-                return self._get_nvidia_wsl2_limited_stats()
-            elif self.gpu_driver_type == 'nvidia_wsl2_proc':
-                return self._get_nvidia_wsl2_proc_stats()
+            # All NVIDIA variants - use unified method with fallbacks
+            if self.gpu_driver_type.startswith('nvidia'):
+                # Try the primary method first
+                if self.gpu_driver_type == 'nvidia_gpustat':
+                    stats = self._get_nvidia_gpustat_stats()
+                    if stats['available']:
+                        return stats
+                
+                # Try standard nvidia-smi methods
+                stats = self._get_nvidia_stats()
+                if stats['available']:
+                    return stats
+                
+                # Try pynvml if detected
+                if self.gpu_info.get('pynvml_support'):
+                    stats = self._get_nvidia_pynvml_stats()
+                    if stats['available']:
+                        return stats
+                
+                # Try gpustat as last resort for NVIDIA
+                stats = self._get_nvidia_gpustat_stats()
+                if stats['available']:
+                    return stats
+                
+                # If all methods fail, return detection info
+                return {
+                    'available': True,
+                    'usage': 0,
+                    'memory': 0, 
+                    'temperature': 0,
+                    'name': self.gpu_info['name'],
+                    'status': f"Detected but stats unavailable - {self.gpu_info.get('driver', 'Unknown driver')}"
+                }
             elif self.gpu_driver_type == 'wsl2_directx':
                 return self._get_wsl2_directx_stats()
             elif self.gpu_driver_type == 'amd':
@@ -988,24 +1240,121 @@ class EnhancedMonitor:
             return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name'], 'error': str(e)}
     
     def _get_nvidia_stats(self) -> Dict[str, Any]:
-        """Get NVIDIA GPU statistics"""
+        """Get NVIDIA GPU statistics using the best available method"""
+        if hasattr(self, 'nvidia_smi_path'):
+            # Use stored working nvidia-smi path
+            if self.gpu_info.get('xml_support', False):
+                return self._get_nvidia_stats_xml()
+            else:
+                return self._get_nvidia_stats_csv()
+        
+        # Fallback to original method
+        return self._get_nvidia_stats_csv()
+    
+    def _get_nvidia_stats_xml(self) -> Dict[str, Any]:
+        """Get comprehensive NVIDIA GPU statistics using XML output"""
         try:
+            result = subprocess.run([self.nvidia_smi_path, '-q', '-x'], 
+                                  capture_output=True, text=True, timeout=3)
+            
+            if result.returncode == 0 and result.stdout.strip():
+                return self._parse_nvidia_xml_stats(result.stdout)
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"XML stats failed, falling back to CSV: {e}")
+        
+        # Fallback to CSV
+        return self._get_nvidia_stats_csv()
+    
+    def _parse_nvidia_xml_stats(self, xml_output: str) -> Dict[str, Any]:
+        """Parse nvidia-smi XML output for real-time statistics"""
+        try:
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(xml_output)
+            
+            # Find first GPU
+            gpu = root.find('.//gpu')
+            if gpu is not None:
+                # GPU utilization
+                utilization = gpu.find('.//utilization')
+                gpu_util = 0
+                if utilization is not None:
+                    gpu_util_elem = utilization.find('gpu_util')
+                    if gpu_util_elem is not None:
+                        gpu_util = float(gpu_util_elem.text.replace('%', '').strip())
+                
+                # Memory utilization
+                fb_memory_usage = gpu.find('.//fb_memory_usage')
+                mem_used = 0
+                mem_total = 1
+                if fb_memory_usage is not None:
+                    used_elem = fb_memory_usage.find('used')
+                    total_elem = fb_memory_usage.find('total')
+                    if used_elem is not None:
+                        mem_used = float(used_elem.text.split()[0])  # Remove 'MiB' unit
+                    if total_elem is not None:
+                        mem_total = float(total_elem.text.split()[0])  # Remove 'MiB' unit
+                
+                # Temperature
+                temperature = gpu.find('.//temperature')
+                gpu_temp = 0
+                if temperature is not None:
+                    gpu_temp_elem = temperature.find('gpu_temp')
+                    if gpu_temp_elem is not None:
+                        gpu_temp = float(gpu_temp_elem.text.replace('C', '').strip())
+                
+                # Power usage
+                power_readings = gpu.find('.//power_readings')
+                power_draw = 0
+                if power_readings is not None:
+                    power_draw_elem = power_readings.find('power_draw')
+                    if power_draw_elem is not None:
+                        power_draw = float(power_draw_elem.text.replace('W', '').strip())
+                
+                # GPU name
+                product_name = gpu.find('product_name')
+                name = product_name.text if product_name is not None else self.gpu_info['name']
+                
+                mem_percent = (mem_used / mem_total * 100) if mem_total > 0 else 0
+                
+                return {
+                    'available': True,
+                    'usage': gpu_util,
+                    'memory': mem_percent,
+                    'memory_used': mem_used / 1024,  # Convert to GB
+                    'memory_total': mem_total / 1024,  # Convert to GB
+                    'temperature': gpu_temp,
+                    'power': power_draw,
+                    'name': name[:20]  # Truncate long names
+                }
+        
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"XML stats parsing failed: {e}")
+        
+        return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name']}
+    
+    def _get_nvidia_stats_csv(self) -> Dict[str, Any]:
+        """Get NVIDIA GPU statistics using CSV output"""
+        try:
+            nvidia_smi = getattr(self, 'nvidia_smi_path', 'nvidia-smi')
             result = subprocess.run([
-                'nvidia-smi', 
-                '--query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,name',
+                nvidia_smi, 
+                '--query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,power.draw,name',
                 '--format=csv,noheader,nounits'
-            ], capture_output=True, text=True, timeout=2)
+            ], capture_output=True, text=True, timeout=3)
             
             if result.returncode == 0:
                 lines = result.stdout.strip().split('\n')
                 if lines and lines[0]:
                     parts = [p.strip() for p in lines[0].split(', ')]
                     if len(parts) >= 4:
-                        usage = float(parts[0]) if parts[0] != '[Not Supported]' else 0
-                        mem_used = float(parts[1]) if parts[1] != '[Not Supported]' else 0
-                        mem_total = float(parts[2]) if parts[2] != '[Not Supported]' else 1
-                        temp = float(parts[3]) if parts[3] != '[Not Supported]' else 0
-                        name = parts[4] if len(parts) > 4 else self.gpu_info['name']
+                        usage = float(parts[0]) if parts[0] not in ['[Not Supported]', 'N/A'] else 0
+                        mem_used = float(parts[1]) if parts[1] not in ['[Not Supported]', 'N/A'] else 0
+                        mem_total = float(parts[2]) if parts[2] not in ['[Not Supported]', 'N/A'] else 1
+                        temp = float(parts[3]) if parts[3] not in ['[Not Supported]', 'N/A'] else 0
+                        power = float(parts[4]) if len(parts) > 4 and parts[4] not in ['[Not Supported]', 'N/A'] else 0
+                        name = parts[5] if len(parts) > 5 else self.gpu_info['name']
                         
                         mem_percent = (mem_used / mem_total * 100) if mem_total > 0 else 0
                         
@@ -1016,10 +1365,12 @@ class EnhancedMonitor:
                             'memory_used': mem_used / 1024,  # Convert to GB
                             'memory_total': mem_total / 1024,  # Convert to GB
                             'temperature': temp,
+                            'power': power,
                             'name': name[:20]  # Truncate long names
                         }
-        except Exception:
-            pass
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"CSV stats failed: {e}")
         
         return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name']}
     
@@ -1123,16 +1474,115 @@ class EnhancedMonitor:
         
         return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name']}
     
-    def _get_nvidia_wsl2_limited_stats(self) -> Dict[str, Any]:
-        """Get limited NVIDIA GPU statistics for WSL2 with incomplete drivers"""
-        return {
-            'available': True,
-            'usage': 0,  # Can't get usage without proper drivers
-            'memory': 0,  # Can't get memory usage
-            'temperature': 0,  # Can't get temperature
-            'name': self.gpu_info['name'],
-            'status': 'WSL2 - Drivers incomplete'
-        }
+    def _get_nvidia_gpustat_stats(self) -> Dict[str, Any]:
+        """Get NVIDIA GPU statistics using gpustat"""
+        try:
+            result = subprocess.run(['gpustat', '--json'], capture_output=True, text=True, timeout=3)
+            if result.returncode == 0 and result.stdout.strip():
+                import json
+                gpustat_data = json.loads(result.stdout)
+                
+                if 'gpus' in gpustat_data and gpustat_data['gpus']:
+                    gpu = gpustat_data['gpus'][0]  # First GPU
+                    
+                    # Extract stats from gpustat format
+                    usage = gpu.get('utilization.gpu', 0)
+                    if isinstance(usage, str):
+                        usage = float(usage.replace('%', '').strip()) if usage.replace('%', '').strip().isdigit() else 0
+                    
+                    mem_used = gpu.get('memory.used', 0)
+                    mem_total = gpu.get('memory.total', 1)
+                    if isinstance(mem_used, str):
+                        mem_used = float(mem_used.replace('MB', '').replace('MiB', '').strip())
+                    if isinstance(mem_total, str):
+                        mem_total = float(mem_total.replace('MB', '').replace('MiB', '').strip())
+                    
+                    mem_percent = (mem_used / mem_total * 100) if mem_total > 0 else 0
+                    
+                    temp = gpu.get('temperature.gpu', 0)
+                    if isinstance(temp, str):
+                        temp = float(temp.replace('C', '').strip()) if temp.replace('C', '').strip().replace('.', '').isdigit() else 0
+                    
+                    return {
+                        'available': True,
+                        'usage': usage,
+                        'memory': mem_percent,
+                        'memory_used': mem_used / 1024 if mem_used else 0,  # Convert to GB
+                        'memory_total': mem_total / 1024 if mem_total else 0,  # Convert to GB
+                        'temperature': temp,
+                        'name': gpu.get('name', self.gpu_info['name'])[:20],
+                        'method': 'gpustat'
+                    }
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"gpustat stats failed: {e}")
+        
+        return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name']}
+    
+    def _get_nvidia_pynvml_stats(self) -> Dict[str, Any]:
+        """Get NVIDIA GPU statistics using pynvml library"""
+        try:
+            import pynvml
+            pynvml.nvmlInit()
+            device_count = pynvml.nvmlDeviceGetCount()
+            
+            if device_count > 0:
+                handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                
+                # Get utilization
+                try:
+                    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
+                    gpu_util = util.gpu
+                except:
+                    gpu_util = 0
+                
+                # Get memory info
+                try:
+                    mem_info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+                    mem_used = mem_info.used / 1024 / 1024  # Convert to MB
+                    mem_total = mem_info.total / 1024 / 1024  # Convert to MB
+                    mem_percent = (mem_used / mem_total * 100) if mem_total > 0 else 0
+                except:
+                    mem_used = mem_total = mem_percent = 0
+                
+                # Get temperature
+                try:
+                    temp = pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
+                except:
+                    temp = 0
+                
+                # Get power usage
+                try:
+                    power = pynvml.nvmlDeviceGetPowerUsage(handle) / 1000  # Convert to W
+                except:
+                    power = 0
+                
+                # Get name
+                try:
+                    name_raw = pynvml.nvmlDeviceGetName(handle)
+                    if isinstance(name_raw, bytes):
+                        name = name_raw.decode('utf-8')
+                    else:
+                        name = str(name_raw)  # Handle newer pynvml versions that return strings
+                except:
+                    name = self.gpu_info['name']
+                
+                return {
+                    'available': True,
+                    'usage': gpu_util,
+                    'memory': mem_percent,
+                    'memory_used': mem_used / 1024,  # Convert to GB
+                    'memory_total': mem_total / 1024,  # Convert to GB
+                    'temperature': temp,
+                    'power': power,
+                    'name': name[:20],
+                    'method': 'pynvml'
+                }
+        except Exception as e:
+            if self.logger:
+                self.logger.debug(f"pynvml stats failed: {e}")
+        
+        return {'available': False, 'usage': 0, 'memory': 0, 'temperature': 0, 'name': self.gpu_info['name']}
     
     def _get_nvidia_wsl2_proc_stats(self) -> Dict[str, Any]:
         """Get NVIDIA GPU statistics from WSL2 proc files"""
@@ -1183,16 +1633,57 @@ class EnhancedMonitor:
         }
     
     def _get_wsl2_directx_stats(self) -> Dict[str, Any]:
-        """Get DirectX GPU statistics for WSL2"""
-        # DirectX GPU passthrough doesn't provide detailed stats
-        # but we can indicate the GPU exists
+        """Get DirectX GPU statistics for WSL2 with fallback attempts"""
+        # Try to get some stats through alternative methods even for DirectX
+        # First try Windows nvidia-smi if available
+        wsl_nvidia_paths = [
+            '/mnt/c/Windows/System32/nvidia-smi.exe',
+            '/mnt/c/Program Files/NVIDIA Corporation/NVSMI/nvidia-smi.exe'
+        ]
+        
+        for nvidia_path in wsl_nvidia_paths:
+            if os.path.exists(nvidia_path):
+                try:
+                    result = subprocess.run([
+                        nvidia_path, 
+                        '--query-gpu=utilization.gpu,memory.used,memory.total,temperature.gpu,name',
+                        '--format=csv,noheader,nounits'
+                    ], capture_output=True, text=True, timeout=5)
+                    
+                    if result.returncode == 0 and result.stdout.strip():
+                        lines = result.stdout.strip().split('\n')
+                        if lines and lines[0]:
+                            parts = [p.strip() for p in lines[0].split(', ')]
+                            if len(parts) >= 4:
+                                usage = float(parts[0]) if parts[0] not in ['[Not Supported]', 'N/A'] else 0
+                                mem_used = float(parts[1]) if parts[1] not in ['[Not Supported]', 'N/A'] else 0
+                                mem_total = float(parts[2]) if parts[2] not in ['[Not Supported]', 'N/A'] else 1
+                                temp = float(parts[3]) if parts[3] not in ['[Not Supported]', 'N/A'] else 0
+                                name = parts[4] if len(parts) > 4 else self.gpu_info['name']
+                                
+                                mem_percent = (mem_used / mem_total * 100) if mem_total > 0 else 0
+                                
+                                return {
+                                    'available': True,
+                                    'usage': usage,
+                                    'memory': mem_percent,
+                                    'memory_used': mem_used / 1024,
+                                    'memory_total': mem_total / 1024,
+                                    'temperature': temp,
+                                    'name': name[:20],
+                                    'method': 'WSL2 DirectX + Windows nvidia-smi'
+                                }
+                except Exception:
+                    continue
+        
+        # DirectX GPU passthrough fallback - indicate detection but no stats
         return {
             'available': True,
-            'usage': 0,  # DirectX doesn't expose usage stats
-            'memory': 0,  # Memory usage not available
-            'temperature': 0,  # Temperature not available
+            'usage': 0,  # DirectX doesn't expose usage stats directly
+            'memory': 0,  # Memory usage not available through DirectX
+            'temperature': 0,  # Temperature not available through DirectX
             'name': self.gpu_info['name'],
-            'status': 'WSL2 DirectX - No stats available'
+            'status': 'WSL2 DirectX - GPU detected, stats limited'
         }
     
     def get_docker_containers(self) -> Tuple[List[str], int, int]:
@@ -1312,20 +1803,21 @@ class EnhancedMonitor:
                     gpu_temp_str = f" {stats['gpu']['temperature']:.0f}°C" if stats['gpu']['temperature'] > 0 else ""
                     gpu_mem_str = f" {stats['gpu']['memory']:.0f}%" if stats['gpu']['memory'] > 0 else ""
                     
-                    # Handle WSL2 specific display
-                    if 'status' in stats['gpu']:
-                        # WSL2 or limited capability GPU
+                    # Handle different GPU stat scenarios
+                    if 'status' in stats['gpu'] and gpu_usage == 0:
+                        # WSL2 or limited capability GPU - detected but no usage stats
                         status_msg = stats['gpu']['status']
-                        if gpu_usage > 0:
-                            # Can show usage
-                            print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str} ({stats['gpu']['name']}) - {status_msg}{self.clear_line()}", end='')
-                        else:
-                            # No usage available, show status only
-                            bar_display = '─' * 10 + '▓' * 10  # Half-filled bar to indicate detection but no stats
-                            print(f"{self.move_to(gpu_line)}GPU:    {bar_display} {self.YELLOW}  DETECTED{self.RESET} ({stats['gpu']['name']}) - {status_msg}{self.clear_line()}", end='')
+                        bar_display = '─' * 10 + '▓' * 10  # Half-filled bar to indicate detection but no stats
+                        print(f"{self.move_to(gpu_line)}GPU:    {bar_display} {self.YELLOW}  DETECTED{self.RESET} ({stats['gpu']['name']}) - {status_msg}{self.clear_line()}", end='')
+                    elif 'method' in stats['gpu']:
+                        # GPU with stats from alternative method
+                        method_str = f" [{stats['gpu']['method']}]"
+                        power_str = f" {stats['gpu']['power']:.0f}W" if stats['gpu'].get('power', 0) > 0 else ""
+                        print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){method_str}{self.clear_line()}", end='')
                     else:
                         # Normal GPU with full stats
-                        print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str} ({stats['gpu']['name']}){self.clear_line()}", end='')
+                        power_str = f" {stats['gpu']['power']:.0f}W" if stats['gpu'].get('power', 0) > 0 else ""
+                        print(f"{self.move_to(gpu_line)}GPU:    {self.create_bar(gpu_usage)} {gpu_color}{gpu_usage:5.1f}%{self.RESET} {gpu_trend}{gpu_temp_str}{gpu_mem_str}{power_str} ({stats['gpu']['name']}){self.clear_line()}", end='')
                     network_line = 7
                 else:
                     # Check if we're in WSL2 to show appropriate message

@@ -33,9 +33,9 @@ import uvicorn
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Paths
-PROJECT_ROOT = Path("/opt/sutazaiapp")
-CONFIG_DIR = PROJECT_ROOT / "config"
+# Paths - Use environment variables for Docker compatibility
+PROJECT_ROOT = Path(os.getenv("PROJECT_ROOT", "/opt/sutazaiapp"))
+CONFIG_DIR = Path(os.getenv("CONFIG_DIR", PROJECT_ROOT / "config"))
 RULES_CONFIG_FILE = CONFIG_DIR / "hygiene-rules.json"
 PROFILES_CONFIG_FILE = CONFIG_DIR / "rule-profiles.json"
 RULE_STATE_FILE = CONFIG_DIR / "rule-states.json"

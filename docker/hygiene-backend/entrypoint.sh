@@ -5,10 +5,17 @@ echo "🚀 Starting Hygiene Monitoring Backend..."
 
 # Wait for database
 echo "⏳ Waiting for PostgreSQL..."
-while ! curl -s http://postgres:5432 > /dev/null 2>&1; do
+while ! nc -z postgres 5432; do
     sleep 1
 done
 echo "✅ PostgreSQL is ready"
+
+# Wait for Redis
+echo "⏳ Waiting for Redis..."
+while ! nc -z redis 6379; do
+    sleep 1
+done
+echo "✅ Redis is ready"
 
 # Run database migrations if needed
 echo "🗄️ Running database setup..."

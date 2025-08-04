@@ -22,6 +22,15 @@ from aiohttp import web, WSMsgType
 from aiohttp_cors import setup as cors_setup, ResourceOptions
 import uvloop
 
+class DateTimeEncoder(json.JSONEncoder):
+    """Custom JSON encoder to handle datetime objects"""
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        elif hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        return super().default(obj)
+
 # Enhanced logging setup
 structlog.configure(
     processors=[
@@ -144,22 +153,47 @@ class EnhancedHygieneBackend:
     async def initialize_redis(self):
         """Initialize Redis connection pool"""
         try:
-            self.redis_pool = redis.ConnectionPool.from_url(
-                self.redis_url,
-                max_connections=20,
-                decode_responses=True
-            )
+            # Add retry logic for Redis connection
+            max_retries = 5
+            retry_delay = 2
             
-            # Test connection
-            redis_client = redis.Redis(connection_pool=self.redis_pool)
-            await redis_client.ping()
-            await redis_client.close()
-            
-            logger.info("Redis connection initialized successfully")
+            for attempt in range(max_retries):
+                try:
+                    self.redis_pool = redis.ConnectionPool.from_url(
+                        self.redis_url,
+                        max_connections=20,
+                        decode_responses=True,
+                        socket_connect_timeout=5,
+                        socket_timeout=5
+                    )
+                    
+                    # Test connection
+                    redis_client = redis.Redis(connection_pool=self.redis_pool)
+                    await redis_client.ping()
+                    await redis_client.aclose()
+                    
+                    logger.info("Redis connection initialized successfully", 
+                               url=self.redis_url, 
+                               attempt=attempt + 1)
+                    return
+                    
+                except Exception as conn_error:
+                    logger.warning("Redis connection attempt failed", 
+                                 attempt=attempt + 1,
+                                 max_retries=max_retries,
+                                 error=str(conn_error),
+                                 redis_url=self.redis_url)
+                    
+                    if attempt < max_retries - 1:
+                        await asyncio.sleep(retry_delay)
+                        retry_delay *= 2  # Exponential backoff
+                    else:
+                        raise conn_error
             
         except Exception as e:
-            logger.error("Redis initialization failed", error=str(e))
-            raise
+            logger.error("Redis initialization failed completely", error=str(e))
+            # Don't raise - allow service to continue without Redis
+            self.redis_pool = None
 
     async def collect_system_metrics(self) -> Dict[str, Any]:
         """Collect comprehensive system metrics"""
@@ -193,14 +227,18 @@ class EnhancedHygieneBackend:
             # Store in database
             await self._store_metrics(metrics)
             
-            # Cache in Redis
-            redis_client = redis.Redis(connection_pool=self.redis_pool)
-            await redis_client.setex(
-                'latest_metrics', 
-                60,  # 1 minute TTL
-                json.dumps(metrics)
-            )
-            await redis_client.close()
+            # Cache in Redis (if available)
+            if self.redis_pool:
+                try:
+                    redis_client = redis.Redis(connection_pool=self.redis_pool)
+                    await redis_client.setex(
+                        'latest_metrics', 
+                        60,  # 1 minute TTL
+                        json.dumps(metrics, cls=DateTimeEncoder)
+                    )
+                    await redis_client.aclose()
+                except Exception as redis_error:
+                    logger.warning("Redis caching failed", error=str(redis_error))
             
             self.metrics_cache = metrics
             return metrics
@@ -428,7 +466,7 @@ class EnhancedHygieneBackend:
             return
         
         closed_clients = set()
-        message_json = json.dumps(message, default=str)
+        message_json = json.dumps(message, cls=DateTimeEncoder)
         
         for ws in self.websocket_clients.copy():
             try:
@@ -503,7 +541,7 @@ async def websocket_handler(request):
             'type': 'initial_data',
             'data': dashboard_data
         }
-        await ws.send_str(json.dumps(initial_message, default=str))
+        await ws.send_str(json.dumps(initial_message, cls=DateTimeEncoder))
         
         # Handle incoming messages
         async for msg in ws:
@@ -518,7 +556,7 @@ async def websocket_handler(request):
                         await ws.send_str(json.dumps({
                             'type': 'scan_result',
                             'data': violations
-                        }, default=str))
+                        }, cls=DateTimeEncoder))
                         
                 except json.JSONDecodeError:
                     logger.warning("Invalid JSON received", client_id=client_id)
@@ -540,32 +578,48 @@ async def status_handler(request):
     backend = request.app['backend']
     data = await backend.get_dashboard_data()
     
-    return web.json_response(data, headers={
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*'
-    })
+    return web.Response(
+        text=json.dumps(data, cls=DateTimeEncoder),
+        content_type='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 async def metrics_handler(request):
     """System metrics endpoint"""
     backend = request.app['backend']
     metrics = await backend.collect_system_metrics()
     
-    return web.json_response(metrics, headers={
-        'Cache-Control': 'no-cache, max-age=10',
-        'Access-Control-Allow-Origin': '*'
-    })
+    return web.Response(
+        text=json.dumps(metrics, cls=DateTimeEncoder),
+        content_type='application/json',
+        headers={
+            'Cache-Control': 'no-cache, max-age=10',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 async def scan_handler(request):
     """Manual violation scan trigger"""
     backend = request.app['backend']
     violations = await backend.scan_violations()
     
-    return web.json_response({
+    response_data = {
         'success': True,
         'violations_found': len(violations),
         'violations': violations,
         'timestamp': datetime.now().isoformat()
-    })
+    }
+    
+    return web.Response(
+        text=json.dumps(response_data, cls=DateTimeEncoder),
+        content_type='application/json',
+        headers={
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
 
 async def health_handler(request):
     """Kubernetes health check"""
@@ -576,26 +630,38 @@ async def health_handler(request):
         if not backend.db_pool:
             raise Exception("Database pool not initialized")
         
+        # Redis is optional, log warning if not available
         if not backend.redis_pool:
-            raise Exception("Redis pool not initialized")
+            logger.warning("Redis pool not available - service running without caching")
         
         # Test database connection
         async with backend.db_pool.acquire() as conn:
             await conn.fetchval('SELECT 1')
         
-        return web.json_response({
+        health_data = {
             'status': 'healthy',
             'timestamp': datetime.now().isoformat(),
             'version': '3.0.0'
-        })
+        }
+        
+        return web.Response(
+            text=json.dumps(health_data, cls=DateTimeEncoder),
+            content_type='application/json'
+        )
         
     except Exception as e:
         logger.error("Health check failed", error=str(e))
-        return web.json_response({
+        error_data = {
             'status': 'unhealthy',
             'error': str(e),
             'timestamp': datetime.now().isoformat()
-        }, status=503)
+        }
+        
+        return web.Response(
+            text=json.dumps(error_data, cls=DateTimeEncoder),
+            content_type='application/json',
+            status=503
+        )
 
 def create_app():
     """Create and configure the application"""

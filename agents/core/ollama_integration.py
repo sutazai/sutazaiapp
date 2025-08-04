@@ -177,12 +177,12 @@ class OllamaIntegration:
             return None
 
 class OllamaConfig:
-    """Configuration for Ollama models by agent type"""
+    """Configuration for Ollama models by agent type - Limited Hardware Edition"""
     
-    # Model assignments based on complexity
-    OPUS_MODEL = "deepseek-r1:8b"  # For complex reasoning
-    SONNET_MODEL = "qwen2.5-coder:7b"  # For balanced tasks
-    DEFAULT_MODEL = "tinyllama"  # For simple tasks
+    # All models use tinyllama for limited hardware compatibility
+    OPUS_MODEL = "tinyllama"  # Would be deepseek-r1:8b on better hardware
+    SONNET_MODEL = "tinyllama"  # Would be qwen2.5-coder:7b on better hardware
+    DEFAULT_MODEL = "tinyllama"  # Universal model for all agents
     
     # Agent to model mapping
     AGENT_MODELS = {

@@ -1,13 +1,32 @@
-# Ollama configuration for local LLM usage
+# Ollama configuration for local LLM usage (Limited Hardware Optimized)
 model:
   name: tinyllama
   version: latest
   
+# Resource limits optimized for limited hardware
 resource_limits:
-  cpu: 1.0
-  memory: 512MB
-  timeout: 30s
+  cpu: 2.0
+  memory: 1GB
+  timeout: 60s
+  max_concurrent: 1  # Only one request at a time
 
+# Model settings optimized for efficiency  
 settings:
-  temperature: 0.7
-  max_tokens: 100
+  temperature: 0.3  # Lower temperature for more consistent responses
+  max_tokens: 256   # Reasonable response length
+  top_p: 0.9
+  top_k: 20
+  repeat_penalty: 1.1
+
+# Connection settings
+connection:
+  base_url: "http://ollama:11434"
+  timeout: 30
+  retries: 3
+  
+# Agent model mapping - all agents use tinyllama for limited hardware
+agent_models:
+  default: "tinyllama"
+  sonnet_agents: "tinyllama"  # Would use qwen2.5-coder:7b on better hardware
+  opus_agents: "tinyllama"    # Would use deepseek-r1:8b on better hardware
+  base_agents: "tinyllama"

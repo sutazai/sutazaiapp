@@ -104,7 +104,7 @@ sleep 10  # Give database time to initialize
 
 # Check backend health
 echo -n "Checking backend health"
-if check_service_health "Backend API" "http://localhost:8080/health"; then
+if check_service_health "Backend API" "http://localhost:8081/health"; then
     backend_healthy=true
 else
     backend_healthy=false
@@ -112,7 +112,7 @@ fi
 
 # Check rule control API health
 echo -n "Checking rule control API health"
-if check_service_health "Rule Control API" "http://localhost:8100/api/health/live"; then
+if check_service_health "Rule Control API" "http://localhost:8101/api/health/live"; then
     rule_api_healthy=true
 else
     rule_api_healthy=false
@@ -143,8 +143,8 @@ echo "=========================================="
 services=(
     "PostgreSQL Database:postgres:5433"
     "Redis Cache:redis:6379"
-    "Backend API:hygiene-backend:8080"
-    "Rule Control API:rule-control-api:8100" 
+    "Backend API:hygiene-backend:8081"
+    "Rule Control API:rule-control-api:8101" 
     "Dashboard:hygiene-dashboard:3000"
     "Nginx Proxy:nginx:80"
 )
@@ -170,14 +170,14 @@ echo "=========================================="
 
 if [ "$nginx_healthy" = true ]; then
     print_success "🎨 Main Dashboard: http://localhost"
-    print_success "🔧 Direct Backend API: http://localhost:8080"
-    print_success "⚙️  Direct Rule API: http://localhost:8100"
+    print_success "🔧 Direct Backend API: http://localhost:8081"
+    print_success "⚙️  Direct Rule API: http://localhost:8101"
     print_success "🔗 WebSocket: ws://localhost/ws"
 else
     print_warning "🎨 Dashboard (direct): http://localhost:3000"
-    print_warning "🔧 Backend API (direct): http://localhost:8080" 
-    print_warning "⚙️  Rule API (direct): http://localhost:8100"
-    print_warning "🔗 WebSocket (direct): ws://localhost:8080/ws"
+    print_warning "🔧 Backend API (direct): http://localhost:8081" 
+    print_warning "⚙️  Rule API (direct): http://localhost:8101"
+    print_warning "🔗 WebSocket (direct): ws://localhost:8081/ws"
 fi
 
 echo ""
@@ -189,21 +189,21 @@ echo "=========================================="
 print_status "Testing key endpoints..."
 
 echo -n "Backend status: "
-if curl -f -s http://localhost:8080/api/hygiene/status > /dev/null; then
+if curl -f -s http://localhost:8081/api/hygiene/status > /dev/null; then
     print_success "✅ Working"
 else
     print_error "❌ Failed"
 fi
 
 echo -n "System metrics: "
-if curl -f -s http://localhost:8080/api/system/metrics > /dev/null; then
+if curl -f -s http://localhost:8081/api/system/metrics > /dev/null; then
     print_success "✅ Working"
 else
     print_error "❌ Failed"
 fi
 
 echo -n "Rule control: "
-if curl -f -s http://localhost:8100/api/rules > /dev/null; then
+if curl -f -s http://localhost:8101/api/rules > /dev/null; then
     print_success "✅ Working"
 else
     print_error "❌ Failed"
@@ -217,7 +217,7 @@ echo "=========================================="
 # Show some real-time data
 print_status "Fetching initial dashboard data..."
 
-if curl -f -s http://localhost:8080/api/hygiene/status > /tmp/dashboard_data.json 2>/dev/null; then
+if curl -f -s http://localhost:8081/api/hygiene/status > /tmp/dashboard_data.json 2>/dev/null; then
     compliance_score=$(cat /tmp/dashboard_data.json | grep -o '"complianceScore":[0-9]*' | cut -d':' -f2)
     total_violations=$(cat /tmp/dashboard_data.json | grep -o '"totalViolations":[0-9]*' | cut -d':' -f2)
     system_status=$(cat /tmp/dashboard_data.json | grep -o '"systemStatus":"[^"]*"' | cut -d':' -f2 | tr -d '"')

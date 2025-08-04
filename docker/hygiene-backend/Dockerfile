@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     libpq-dev \
+    netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app user
