@@ -22,6 +22,10 @@
 - **verification/** - Verification and validation scripts
 - **helpers/** - Helper utilities and fixes
 
+### 🔍 verification/
+- **verify-hygiene-monitoring-system.py** - Comprehensive hygiene monitoring system verification
+- **README_HYGIENE_VERIFICATION.md** - Hygiene verification documentation
+
 ### 📊 monitoring/
 - **health/** - Health check scripts
 - **logs/** - Log management tools
