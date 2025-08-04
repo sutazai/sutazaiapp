@@ -690,6 +690,24 @@ class UltimateDeploymentOrchestrator:
         logger.info(f"Received signal {signum}, initiating graceful shutdown...")
         asyncio.create_task(self.shutdown())
     
+    async def initialize(self):
+        """Initialize the orchestrator"""
+        logger.info("Initializing Ultimate Deployment Orchestrator...")
+        
+        # Initialize health checker if needed
+        if not self.health_checker:
+            self.health_checker = HealthChecker()
+        
+        # Load latest agent configurations
+        self.agents = self._load_agent_configurations()
+        logger.info(f"Loaded {len(self.agents)} agent configurations")
+        
+        # Initialize rollback manager
+        if hasattr(self.rollback_manager, 'initialize'):
+            await self.rollback_manager.initialize()
+        
+        logger.info("Ultimate Deployment Orchestrator initialized successfully")
+    
     def _load_agent_configurations(self) -> List[AgentConfig]:
         """Load agent configurations from the filesystem"""
         agents = []

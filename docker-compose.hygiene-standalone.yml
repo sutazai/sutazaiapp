@@ -1,0 +1,76 @@
+version: '3.8'
+
+# Standalone Hygiene Monitoring System
+# This is completely independent from the main Sutazai application
+# Run with: docker-compose -f docker-compose.hygiene-standalone.yml up
+# Stop with: docker-compose -f docker-compose.hygiene-standalone.yml down
+
+networks:
+  hygiene-standalone-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16  # Different subnet from main app
+
+volumes:
+  hygiene_standalone_data:
+    driver: local
+  hygiene_standalone_logs:
+    driver: local
+
+services:
+  # Lightweight hygiene scanner
+  hygiene-scanner:
+    build:
+      context: .
+      dockerfile: docker/hygiene-scanner/Dockerfile
+    container_name: hygiene-standalone-scanner
+    environment:
+      PROJECT_ROOT: /app/project
+      SCAN_MODE: on-demand
+      LOG_LEVEL: INFO
+      REPORT_OUTPUT: /app/reports
+      CLAUDE_RULES_PATH: /app/project/CLAUDE.md
+    volumes:
+      - ./:/app/project:ro  # Read-only mount
+      - hygiene_standalone_data:/app/data
+      - hygiene_standalone_logs:/app/logs
+      - ./reports:/app/reports
+    networks:
+      - hygiene-standalone-network
+    command: ["python", "hygiene_scanner.py", "--scan-once"]
+    restart: "no"  # Only run when explicitly started
+
+  # Simple web UI for reports
+  hygiene-reporter:
+    image: nginx:alpine
+    container_name: hygiene-standalone-reporter
+    volumes:
+      - ./reports:/usr/share/nginx/html:ro
+      - ./docker/hygiene-reporter/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9080:80"  # Port 9080 - won't conflict with anything
+    networks:
+      - hygiene-standalone-network
+    restart: "no"  # Only run when needed
+    depends_on:
+      - hygiene-scanner
+
+  # Optional: Lightweight rule validator
+  hygiene-validator:
+    build:
+      context: .
+      dockerfile: docker/hygiene-validator/Dockerfile
+    container_name: hygiene-standalone-validator
+    environment:
+      PROJECT_ROOT: /app/project
+      VALIDATION_MODE: comprehensive
+      OUTPUT_FORMAT: json
+    volumes:
+      - ./:/app/project:ro
+      - ./CLAUDE.md:/app/rules/CLAUDE.md:ro
+      - ./reports:/app/reports
+    networks:
+      - hygiene-standalone-network
+    command: ["python", "rule_validator.py", "--validate-all"]
+    restart: "no"  # On-demand only

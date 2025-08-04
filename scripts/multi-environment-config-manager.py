@@ -965,7 +965,7 @@ class MultiEnvironmentConfigManager:
         
         return env_config
     
-    def deploy_environment(self, environment: Environment) -> bool:
+    async def deploy_environment(self, environment: Environment) -> bool:
         """Deploy environment configuration"""
         env_config = self.database.get_environment_config(environment)
         if not env_config:
@@ -977,7 +977,7 @@ class MultiEnvironmentConfigManager:
             return False
         
         # Deploy configuration
-        return asyncio.run(self.deployer.deploy_environment_config(env_config))
+        return await self.deployer.deploy_environment_config(env_config)
     
     def rotate_secrets(self, environment: Environment, secret_keys: List[str] = None) -> bool:
         """Rotate secrets for environment"""
