@@ -911,12 +911,12 @@ services:
       retries: 3
     networks:
     - sutazai-network
-  externalSystem, thirdPartyService-exporter:
-    image: prom/externalSystem, thirdPartyService-exporter:latest
-    container_name: sutazai-externalSystem, thirdPartyService-exporter
+  externalService, thirdPartyAPI-exporter:
+    image: prom/externalService, thirdPartyAPI-exporter:latest
+    container_name: sutazai-externalService, thirdPartyAPI-exporter
     restart: unless-stopped
     volumes:
-    - ./monitoring/externalSystem, thirdPartyService/config.yml:/etc/blackbox_exporter/config.yml
+    - ./monitoring/externalService, thirdPartyAPI/config.yml:/etc/blackbox_exporter/config.yml
     ports:
     - 9115:9115
     command:

@@ -261,12 +261,12 @@
           "refId": "E"
         },
         {
-          "expr": "probe_success{job=\"externalSystem, thirdPartyService-http-checks\",instance=\"http://chromadb:8000/api/v1/heartbeat\"}",
+          "expr": "probe_success{job=\"externalService, thirdPartyAPI-http-checks\",instance=\"http://chromadb:8000/api/v1/heartbeat\"}",
           "legendFormat": "ChromaDB",
           "refId": "F"
         },
         {
-          "expr": "probe_success{job=\"externalSystem, thirdPartyService-http-checks\",instance=\"http://qdrant:6333/\"}",
+          "expr": "probe_success{job=\"externalService, thirdPartyAPI-http-checks\",instance=\"http://qdrant:6333/\"}",
           "legendFormat": "Qdrant",
           "refId": "G"
         }

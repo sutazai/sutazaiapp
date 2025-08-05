@@ -84,7 +84,7 @@ service_categories = {
                   'dify', 'agentzero', 'autogen'],
     'ml_frameworks': ['pytorch', 'tensorflow', 'jax'],
     'monitoring': ['prometheus', 'grafana', 'loki', 'promtail', 'alertmanager', 
-                   'node-exporter', 'cadvisor', 'externalSystem, thirdPartyService-exporter', 'postgres-exporter',
+                   'node-exporter', 'cadvisor', 'externalService, thirdPartyAPI-exporter', 'postgres-exporter',
                    'redis-exporter', 'ai-metrics-exporter'],
     'infrastructure': ['n8n', 'health-monitor', 'context-framework', 'service-hub',
                        'code-improver', 'awesome-code-ai', 'fsdp', 'mcp-server'],

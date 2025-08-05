@@ -95,13 +95,13 @@ class FantasyElementsValidator:
             }
         },
         'external_service, third_party_api': {
-            'terms': ['external service, third-party API, opaque system', 'externalSystem, thirdPartyService', 'external_service, third_party_api', 'externalSystem, thirdPartyService'],
+            'terms': ['external service, third-party API, opaque system', 'externalService, thirdPartyAPI', 'external_service, third_party_api', 'externalService, thirdPartyAPI'],
             'severity': 'medium',
             'suggestions': {
                 'external service, third-party API, opaque system': 'external service, third-party API, opaque system',
-                'externalSystem, thirdPartyService': 'externalSystem, thirdPartyService',
+                'externalService, thirdPartyAPI': 'externalService, thirdPartyAPI',
                 'external_service, third_party_api': 'external_service, third_party_api',
-                'externalSystem, thirdPartyService': 'externalService, thirdPartyAPI'
+                'externalService, thirdPartyAPI': 'externalService, thirdPartyAPI'
             }
         },
         'hypothetical': {

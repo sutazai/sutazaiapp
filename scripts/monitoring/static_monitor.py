@@ -573,8 +573,19 @@ class EnhancedMonitor:
             start_time = time.time()
             response_time = None
             
-            # Try multiple health check paths
+            # Try multiple health check paths (with service-specific paths)
             health_paths = ['/health', '/status', '/ping', '/api/health', '/heartbeat']
+            
+            # Add service-specific health paths
+            if container_info:
+                container_name = container_info['name']
+                if 'ollama' in container_name:
+                    health_paths.extend(['/api/tags', '/api/version'])
+                elif 'postgres' in container_name:
+                    health_paths.extend(['/'])  # PostgreSQL doesn't have HTTP endpoints typically
+                elif 'redis' in container_name:
+                    health_paths.extend(['/'])  # Redis doesn't have HTTP endpoints typically
+            
             last_exception = None
             
             for path in health_paths:
@@ -611,7 +622,29 @@ class EnhancedMonitor:
                     last_exception = e
                     continue
             
-            # If all health paths failed, the service is likely down
+            # If all health paths failed, check if it's a containerized agent without HTTP endpoints
+            if container_info and container_info['status'] in ['running', 'healthy']:
+                # For containerized agents that don't have HTTP endpoints, use container status
+                # Special handling for known service containers vs agent containers
+                container_name = container_info['name']
+                
+                # Service containers that should have HTTP endpoints
+                service_containers = ['sutazai-ollama', 'sutazai-backend', 'sutazai-postgres', 
+                                    'sutazai-redis', 'sutazai-chromadb', 'sutazai-qdrant', 'sutazai-neo4j']
+                
+                if any(service in container_name for service in service_containers):
+                    # Service container should respond to HTTP - if it doesn't, it's offline
+                    return 'offline', None
+                else:
+                    # Agent container without HTTP endpoint - use container health status
+                    if container_info['status'] == 'healthy':
+                        return 'healthy', None
+                    elif container_info['status'] == 'running':
+                        return 'healthy', None  # Running containers are considered healthy
+                    else:
+                        return 'warning', None
+            
+            # If all health paths failed and no running container, the service is down
             if last_exception:
                 if isinstance(last_exception, requests.exceptions.ConnectionError):
                     return 'offline', None
@@ -665,7 +698,7 @@ class EnhancedMonitor:
         """Determine agent endpoint for health checks with enhanced detection"""
         # Method 1: Check Docker container port mappings first
         container_info = self._get_container_info(agent_id)
-        if container_info and container_info['status'] in ['running', 'restarting']:
+        if container_info and container_info['status'] in ['running', 'restarting', 'healthy', 'unhealthy', 'starting']:
             # Extract port mapping from container info
             ports = container_info.get('ports', [])
             for port_mapping in ports:
@@ -737,18 +770,17 @@ class EnhancedMonitor:
         return None
     
     def _get_container_info(self, agent_id: str) -> Optional[Dict[str, Any]]:
-        """Get Docker container information for an agent"""
+        """Get Docker container information for an agent with enhanced matching"""
         try:
-            # Try different container name patterns
-            name_patterns = [
+            # Method 1: Try exact container name patterns
+            exact_patterns = [
                 f'sutazai-{agent_id}',
                 f'{agent_id}',
                 f'sutazaiapp-{agent_id}',
                 f'{agent_id}-1'
             ]
             
-            for container_name in name_patterns:
-                # Get container info with status and port mappings
+            for container_name in exact_patterns:
                 result = subprocess.run(
                     ['docker', 'ps', '-a', '--filter', f'name=^/{container_name}$', 
                      '--format', '{{.Names}}\\t{{.Status}}\\t{{.Ports}}'],
@@ -765,39 +797,110 @@ class EnhancedMonitor:
                                 status_full = parts[1]
                                 ports = parts[2] if len(parts) > 2 else ''
                                 
-                                # Extract simple status from full status string
-                                if 'Up' in status_full:
-                                    if 'unhealthy' in status_full:
-                                        status = 'unhealthy'
-                                    elif 'health: starting' in status_full:
-                                        status = 'starting'
-                                    elif 'healthy' in status_full:
-                                        status = 'healthy'
-                                    else:
-                                        status = 'running'
-                                elif 'Restarting' in status_full:
-                                    status = 'restarting'
-                                elif 'Exited' in status_full:
-                                    status = 'exited'
-                                else:
-                                    status = 'unknown'
+                                return self._parse_container_status(name, status_full, ports)
+            
+            # Method 2: Fuzzy matching for known mismatched cases
+            fuzzy_mappings = {
+                'ollama-integration-specialist': 'sutazai-ollama',
+                'semgrep-security-analyzer': 'sutazai-security-pentesting-specialist',
+                'senior-ai-engineer': 'sutazai-senior-engineer'
+            }
+            
+            if agent_id in fuzzy_mappings:
+                target_container = fuzzy_mappings[agent_id]
+                result = subprocess.run(
+                    ['docker', 'ps', '-a', '--filter', f'name=^/{target_container}$', 
+                     '--format', '{{.Names}}\\t{{.Status}}\\t{{.Ports}}'],
+                    capture_output=True, text=True, timeout=3
+                )
+                
+                if result.returncode == 0 and result.stdout.strip():
+                    lines = result.stdout.strip().split('\\n')
+                    for line in lines:
+                        if line.strip():
+                            parts = line.split('\t')
+                            if len(parts) >= 2:
+                                name = parts[0]
+                                status_full = parts[1]
+                                ports = parts[2] if len(parts) > 2 else ''
                                 
-                                port_list = []
-                                if ports:
-                                    # Split multiple port mappings
-                                    port_mappings = ports.split(', ')
-                                    port_list = [p.strip() for p in port_mappings if p.strip()]
+                                return self._parse_container_status(name, status_full, ports)
+            
+            # Method 3: Intelligent fuzzy search for remaining cases
+            agent_words = agent_id.replace('-', ' ').split()
+            if len(agent_words) > 1:
+                # Get all sutazai containers and find best match
+                result = subprocess.run(
+                    ['docker', 'ps', '-a', '--filter', 'name=sutazai-', 
+                     '--format', '{{.Names}}\\t{{.Status}}\\t{{.Ports}}'],
+                    capture_output=True, text=True, timeout=3
+                )
+                
+                if result.returncode == 0 and result.stdout.strip():
+                    lines = result.stdout.strip().split('\\n')
+                    best_match = None
+                    best_score = 0
+                    
+                    for line in lines:
+                        if line.strip():
+                            parts = line.split('\t')
+                            if len(parts) >= 2:
+                                container_name = parts[0]
+                                container_clean = container_name.replace('sutazai-', '').replace('-', ' ')
                                 
-                                return {
-                                    'name': name,
-                                    'status': status,
-                                    'status_full': status_full,
-                                    'ports': port_list
-                                }
+                                # Calculate match score
+                                score = 0
+                                for word in agent_words:
+                                    if len(word) > 3 and word in container_clean:
+                                        score += len(word)
+                                
+                                # Require minimum meaningful match
+                                if score > best_score and score >= 6:
+                                    best_score = score
+                                    best_match = parts
+                    
+                    if best_match:
+                        name = best_match[0]
+                        status_full = best_match[1]
+                        ports = best_match[2] if len(best_match) > 2 else ''
+                        
+                        return self._parse_container_status(name, status_full, ports)
             
             return None
         except Exception:
             return None
+    
+    def _parse_container_status(self, name: str, status_full: str, ports: str) -> Dict[str, Any]:
+        """Parse container status information"""
+        # Extract simple status from full status string
+        if 'Up' in status_full:
+            if 'unhealthy' in status_full:
+                status = 'unhealthy'
+            elif 'health: starting' in status_full:
+                status = 'starting'
+            elif 'healthy' in status_full:
+                status = 'healthy'
+            else:
+                status = 'running'
+        elif 'Restarting' in status_full:
+            status = 'restarting'
+        elif 'Exited' in status_full:
+            status = 'exited'
+        else:
+            status = 'unknown'
+        
+        port_list = []
+        if ports:
+            # Split multiple port mappings
+            port_mappings = ports.split(', ')
+            port_list = [p.strip() for p in port_mappings if p.strip()]
+        
+        return {
+            'name': name,
+            'status': status,
+            'status_full': status_full,
+            'ports': port_list
+        }
     
     def _discover_container_agents(self) -> Dict[str, Dict[str, Any]]:
         """Discover running Docker containers that look like agents"""

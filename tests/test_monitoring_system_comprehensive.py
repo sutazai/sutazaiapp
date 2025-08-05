@@ -67,6 +67,11 @@ class TestMonitoringSystemBase(unittest.TestCase):
                 "timeout": 2,
                 "enabled": True,
                 "health_check": True
+            },
+            "logging": {
+                "enabled": False,
+                "level": "INFO",
+                "file": "/tmp/test_monitor.log"
             }
         }
         
@@ -355,6 +360,9 @@ class TestMonitoringEdgeCases(TestMonitoringSystemBase):
                         result = monitor._check_agent_health("test-agent", {"port": 8080}, timeout=1)
                         # Should not raise exception
                         self.assertIsNotNone(result)
+                    except Exception as e:
+                        # Timeout exceptions should be handled gracefully
+                        self.fail(f"Timeout should be handled gracefully, but got: {e}")
     
     def test_empty_container_list(self):
         """Test handling of empty container list"""

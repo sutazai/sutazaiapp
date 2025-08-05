@@ -1197,7 +1197,7 @@ check_and_pull_external_images() {
         "grafana/loki:2.9.0"
         "grafana/promtail:2.9.0"
         "prom/alertmanager:latest"
-        "prom/externalSystem, thirdPartyService-exporter:latest"
+        "prom/externalService, thirdPartyAPI-exporter:latest"
         "prom/node-exporter:latest"
         "gcr.io/cadvisor/cadvisor:v0.47.0"
         "prometheuscommunity/postgres-exporter:latest"

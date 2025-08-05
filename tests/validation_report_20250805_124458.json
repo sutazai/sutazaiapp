@@ -1,0 +1,28 @@
+{
+  "timestamp": "2025-08-05T12:44:58.207828",
+  "summary": {
+    "total_test_suites": 2,
+    "passed_test_suites": 2,
+    "failed_test_suites": 0,
+    "success_rate": 100.0,
+    "assessment": "EXCELLENT"
+  },
+  "detailed_results": [
+    {
+      "test_file": "tests/test_agent_detection_validation.py",
+      "description": "Agent Detection and Validation Tests",
+      "success": true,
+      "return_code": 0,
+      "stdout": "\ud83d\udd0d Running Agent Detection and Validation Tests\n==================================================\n\n\ud83d\udcca Agent Detection Test Results:\nTests Run: 9\nFailures: 0\nErrors: 0\nSuccess Rate: 100.0%\n",
+      "stderr": "test_docker_container_name_patterns (__main__.TestAgentDetectionCore.test_docker_container_name_patterns)\nTest various Docker container naming patterns are detected ... ok\ntest_health_check_responses (__main__.TestAgentDetectionCore.test_health_check_responses)\nTest different health check response scenarios ... ok\ntest_health_status_parsing (__main__.TestAgentDetectionCore.test_health_status_parsing)\nTest parsing of Docker health status strings ... ok\ntest_agent_priority_handling (__main__.TestAgentStatusIntegration.test_agent_priority_handling)\nTest that deployed agents are prioritized over non-deployed ones ... ok\ntest_combined_status_reporting (__main__.TestAgentStatusIntegration.test_combined_status_reporting)\nTest that Docker status and health checks are combined correctly ... ok\ntest_agent_configuration_validation (__main__.TestAgentValidationRules.test_agent_configuration_validation)\nTest validation of agent configurations ... ok\ntest_health_status_precedence (__main__.TestAgentValidationRules.test_health_status_precedence)\nTest the precedence rules for health status determination ... ok\ntest_actual_docker_integration (__main__.TestRealSystemValidation.test_actual_docker_integration)\nTest integration with actual Docker command patterns ... ok\ntest_communication_config_structure (__main__.TestRealSystemValidation.test_communication_config_structure)\nTest that the communication config has the expected structure ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.006s\n\nOK\n"
+    },
+    {
+      "test_file": "tests/test_live_monitoring_validation.py",
+      "description": "Live System Validation Tests",
+      "success": true,
+      "return_code": 0,
+      "stdout": "\ud83e\uddea SutazAI Monitoring System Live Validation\n==================================================\n\ud83d\udc33 Testing Docker Container Detection...\n  \u2705 Found 93 SutazAI containers\n\ud83c\udfe5 Testing Agent Health Endpoints...\n  \u2705 Tested 45 agents, 2 healthy (4.4%)\n\ud83d\udd04 Testing Monitoring System Integration...\n  \u2705 Configuration valid, health monitoring: enabled\n\ud83d\udd0d Testing Status Consistency...\n  \u2705 Status consistency validated: 51/98 agents running\n\n==================================================\n\ud83d\udcca LIVE VALIDATION RESULTS\n==================================================\nTests Run: 4\nPassed: 4\nFailed: 0\nSuccess Rate: 100.0%\n\n\u2705 docker_container_detection\n  Containers found: 93\n\n\u2705 agent_health_endpoints\n  Healthy agents: 2/45\n\n\u2705 monitoring_system_integration\n  Health monitoring: enabled\n\n\u2705 status_consistency\n  Running agents: 51/98\n\n\ud83c\udfaf OVERALL ASSESSMENT\n\ud83d\udfe2 EXCELLENT - Monitoring system is working perfectly!\n\n\ud83d\udcc4 Detailed report saved to: /opt/sutazaiapp/tests/live_validation_report_20250805_124458.json\n",
+      "stderr": ""
+    }
+  ]
+}

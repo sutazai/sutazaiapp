@@ -388,7 +388,7 @@ scrape_configs:
     scrape_interval: 60s
     scrape_timeout: 30s
 
-  - job_name: 'externalSystem, thirdPartyService-http-checks'
+  - job_name: 'externalService, thirdPartyAPI-http-checks'
     metrics_path: /probe
     params:
       module: [http_2xx]

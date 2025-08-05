@@ -79,7 +79,7 @@
       "violation_type": "forbidden_term",
       "forbidden_term": "blackbox",
       "severity": "medium",
-      "suggested_fix": "externalSystem, thirdPartyService",
+      "suggested_fix": "externalService, thirdPartyAPI",
       "context": "Category: black_box"
     },
     {
@@ -139,7 +139,7 @@
       "violation_type": "forbidden_term",
       "forbidden_term": "blackbox",
       "severity": "medium",
-      "suggested_fix": "externalSystem, thirdPartyService",
+      "suggested_fix": "externalService, thirdPartyAPI",
       "context": "Category: black_box"
     },
     {
