@@ -32,11 +32,29 @@ try:
     from routers.agent_interaction import router as agent_interaction_router
     from app.self_improvement import SelfImprovementSystem
     
+    # Knowledge Graph System
+    from knowledge_graph.manager import (
+        KnowledgeGraphManager, 
+        KnowledgeGraphConfig,
+        initialize_knowledge_graph_system,
+        shutdown_knowledge_graph_system,
+        get_knowledge_graph_manager
+    )
+    from knowledge_graph.api import router as knowledge_graph_router
+    
+    # Cognitive Architecture System
+    from cognitive_architecture.startup import integrate_with_main_app
+    from cognitive_architecture.api import router as cognitive_router
+    
     # Enterprise components available
     ENTERPRISE_FEATURES = True
+    KNOWLEDGE_GRAPH_AVAILABLE = True
+    COGNITIVE_ARCHITECTURE_AVAILABLE = True
 except ImportError as e:
     logging.warning(f"Enterprise features not available: {e}")
     ENTERPRISE_FEATURES = False
+    KNOWLEDGE_GRAPH_AVAILABLE = False
+    COGNITIVE_ARCHITECTURE_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -72,6 +90,7 @@ agent_manager: Optional["AgentManager"] = None
 reasoning_engine: Optional["ReasoningEngine"] = None
 self_improvement: Optional["SelfImprovementSystem"] = None
 monitoring_service: Optional["MonitoringService"] = None
+knowledge_graph_manager: Optional["KnowledgeGraphManager"] = None
 
 # Add CORS middleware
 app.add_middleware(
@@ -91,6 +110,14 @@ if ENTERPRISE_FEATURES:
         logger.info("Monitoring middleware initialized")
     except Exception as e:
         logger.warning(f"Monitoring setup failed: {e}")
+
+# Integrate Cognitive Architecture
+if COGNITIVE_ARCHITECTURE_AVAILABLE:
+    try:
+        integrate_with_main_app(app)
+        logger.info("Cognitive Architecture integrated successfully")
+    except Exception as e:
+        logger.warning(f"Cognitive Architecture integration failed: {e}")
 
 # Include enterprise routers
 # Include coordinator router (always available)
@@ -195,6 +222,22 @@ if ENTERPRISE_FEATURES:
     except Exception as e:
         logger.warning(f"Agent interaction router setup failed: {e}")
 
+# Knowledge Graph System Router
+if KNOWLEDGE_GRAPH_AVAILABLE:
+    try:
+        app.include_router(knowledge_graph_router, prefix="/api/v1", tags=["Knowledge Graph"])
+        logger.info("Knowledge Graph router loaded successfully")
+    except Exception as e:
+        logger.warning(f"Knowledge Graph router setup failed: {e}")
+
+# Cognitive Architecture Router
+if COGNITIVE_ARCHITECTURE_AVAILABLE:
+    try:
+        app.include_router(cognitive_router, tags=["Cognitive Architecture"])
+        logger.info("Cognitive Architecture router loaded successfully")
+    except Exception as e:
+        logger.warning(f"Cognitive Architecture router setup failed: {e}")
+
 # Helper function to gather system metrics
 def gather_system_metrics() -> Dict[str, Any]:
     """Gather system metrics for monitoring"""
@@ -210,7 +253,7 @@ def gather_system_metrics() -> Dict[str, Any]:
 @app.on_event("startup")
 async def startup_event():
     """Initialize enterprise components on startup"""
-    global orchestrator, agent_manager, reasoning_engine, self_improvement, monitoring_service
+    global orchestrator, agent_manager, reasoning_engine, self_improvement, monitoring_service, knowledge_graph_manager
     
     logger.info("Starting SutazAI automation System v17.0.0...")
     
@@ -242,6 +285,22 @@ async def startup_event():
                 logger.info("Self-improvement system initialized (monitoring disabled for stability)")
             except Exception as e:
                 logger.warning(f"Self-improvement system initialization failed: {e}")
+            
+            # Initialize Knowledge Graph System
+            if KNOWLEDGE_GRAPH_AVAILABLE:
+                try:
+                    logger.info("Initializing Knowledge Graph System...")
+                    config = KnowledgeGraphConfig.from_env()
+                    success = await initialize_knowledge_graph_system(config)
+                    
+                    if success:
+                        knowledge_graph_manager = get_knowledge_graph_manager()
+                        logger.info("Knowledge Graph System initialized successfully")
+                    else:
+                        logger.warning("Knowledge Graph System initialization failed")
+                        
+                except Exception as e:
+                    logger.error(f"Knowledge Graph System initialization failed: {e}")
                 
         except Exception as e:
             logger.error(f"Enterprise component initialization failed: {e}")
@@ -251,9 +310,17 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup enterprise components on shutdown"""
-    global orchestrator, self_improvement
+    global orchestrator, self_improvement, knowledge_graph_manager
     
     logger.info("Shutting down SutazAI system...")
+    
+    # Shutdown Knowledge Graph System
+    if KNOWLEDGE_GRAPH_AVAILABLE:
+        try:
+            await shutdown_knowledge_graph_system()
+            logger.info("Knowledge Graph System shutdown completed")
+        except Exception as e:
+            logger.error(f"Knowledge Graph System shutdown failed: {e}")
     
     if orchestrator:
         try:

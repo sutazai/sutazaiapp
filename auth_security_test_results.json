@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-08-05T02:33:19.040207",
+  "auth_services": {
+    "keycloak": {
+      "available": false,
+      "response_time": null,
+      "status_code": null,
+      "error": "HTTPConnectionPool(host='localhost', port=10050): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x70883b778a70>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    "kong": {
+      "available": false,
+      "response_time": null,
+      "status_code": null,
+      "error": null
+    },
+    "jwt_service": {
+      "available": false,
+      "response_time": null,
+      "status_code": null,
+      "error": "HTTPConnectionPool(host='localhost', port=10054): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x70883b779160>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    "vault": {
+      "available": false,
+      "response_time": null,
+      "status_code": null,
+      "error": "HTTPConnectionPool(host='localhost', port=10053): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x70883b7798e0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    }
+  },
+  "vulnerabilities": [
+    {
+      "service": "general",
+      "severity": "MEDIUM",
+      "type": "INSECURE_COOKIES",
+      "description": "Cookies lack security attributes (Secure, HttpOnly, SameSite)",
+      "recommendation": "Configure cookies with proper security attributes"
+    }
+  ],
+  "test_results": {
+    "session_security": {
+      "session_fixation": false,
+      "session_hijacking": false,
+      "secure_cookies": false,
+      "session_timeout": false
+    }
+  },
+  "security_score": 9.0,
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Authentication Infrastructure",
+      "title": "Deploy Authentication Service",
+      "description": "No centralized authentication service detected",
+      "actions": [
+        "Deploy and configure Keycloak or similar identity provider",
+        "Integrate all services with centralized authentication",
+        "Implement Single Sign-On (SSO)"
+      ]
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Authentication Security",
+      "title": "Implement Authentication Best Practices",
+      "description": "Enhance overall authentication security",
+      "actions": [
+        "Enable multi-factor authentication (MFA)",
+        "Implement strong password policies",
+        "Configure session timeouts",
+        "Enable audit logging for authentication events",
+        "Implement account lockout policies"
+      ]
+    }
+  ]
+}

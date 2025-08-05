@@ -1,0 +1,41 @@
+# Knowledge Graph System Requirements
+# Core graph database
+neo4j==5.15.0
+neo4j-driver==5.15.0
+
+# File monitoring  
+watchdog==3.0.0
+
+# Async file operations
+aiofiles==23.2.0
+
+# YAML parsing
+PyYAML==6.0.1
+
+# Data structures
+pydantic==2.5.2
+
+# Redis for caching (already included in main requirements)
+# redis==5.0.1
+
+# HTTP requests (already included)  
+# httpx==0.25.2
+
+# Async support (already included)
+# asyncio
+
+# Standard library dependencies (no install needed)
+# - ast
+# - os
+# - re
+# - json
+# - logging
+# - pathlib
+# - datetime
+# - typing
+# - dataclasses
+# - collections
+# - statistics
+# - hashlib
+# - time
+# - uuid
