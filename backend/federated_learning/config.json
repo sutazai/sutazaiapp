@@ -1,0 +1,24 @@
+{
+  "redis_url": "redis://localhost:6379",
+  "namespace": "sutazai:federated",
+  "cpu_cores": 12,
+  "max_concurrent_trainings": 3,
+  "max_memory_mb": 8192,
+  "default_privacy_level": "medium",
+  "default_aggregation_algorithm": "fedavg",
+  "checkpoint_interval": 5,
+  "model_storage_path": "/opt/sutazaiapp/backend/federated_models",
+  "enable_model_compression": true,
+  "enable_auto_cleanup": true,
+  "dashboard_host": "0.0.0.0",
+  "dashboard_port": 8080,
+  "min_clients_per_round": 3,
+  "max_clients_per_round": 20,
+  "client_timeout_seconds": 300,
+  "enable_differential_privacy": true,
+  "enable_secure_aggregation": true,
+  "default_privacy_budget": {
+    "epsilon": 1.0,
+    "delta": 1e-5
+  }
+}

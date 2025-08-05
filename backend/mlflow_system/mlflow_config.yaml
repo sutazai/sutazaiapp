@@ -1,0 +1,52 @@
+# SutazAI MLflow System Configuration
+# Production-ready configuration for 69+ AI agents
+
+# Tracking Server Configuration
+tracking_uri: "postgresql://mlflow:mlflow_secure_pwd@localhost:5432/mlflow_db"
+tracking_server_host: "0.0.0.0"
+tracking_server_port: 5000
+
+# Backend Store Configuration
+backend_store_uri: "postgresql://mlflow:mlflow_secure_pwd@localhost:5432/mlflow_db"
+
+# Artifact Store Configuration
+artifact_root: "/opt/sutazaiapp/backend/mlflow_artifacts"
+s3_artifact_root: null  # Optional S3 storage
+
+# Performance Configuration
+max_concurrent_experiments: 50
+batch_logging_size: 100
+batch_logging_timeout: 30
+
+# High-Volume Settings
+enable_async_logging: true
+enable_compression: true
+artifact_compression_level: 6
+
+# Model Registry Configuration
+model_registry_uri: null  # Uses backend_store_uri if null
+
+# Security Configuration
+enable_auth: false  # Set to true for production with authentication
+auth_config_path: "/opt/sutazaiapp/backend/mlflow_system/auth.yaml"
+
+# Agent Integration
+agent_tracking_enabled: true
+auto_log_models: true
+auto_log_params: true
+auto_log_metrics: true
+
+# Database Settings
+db_pool_size: 20
+db_max_overflow: 30
+db_pool_timeout: 30
+db_pool_recycle: 3600
+
+# Cleanup Settings
+artifact_retention_days: 90
+experiment_retention_days: 365
+enable_auto_cleanup: true
+
+# Monitoring
+enable_prometheus_metrics: true
+metrics_port: 8080

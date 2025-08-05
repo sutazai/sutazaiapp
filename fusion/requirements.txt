@@ -1,0 +1,146 @@
+# SutazAI Multi-Modal Fusion System Requirements
+# Core dependencies for multi-modal fusion processing
+
+# Deep Learning and Neural Networks
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+transformers>=4.20.0
+sentence-transformers>=2.2.0
+
+# Numerical Computing and Data Processing
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+scikit-learn>=1.0.0
+
+# Async and Concurrency
+asyncio-timeout>=4.0.0
+aiohttp>=3.8.0
+aiofiles>=0.8.0
+uvloop>=0.17.0
+
+# WebSocket and Real-time Communication
+websockets>=10.0
+websocket-client>=1.3.0
+
+# Visualization and Dashboard
+streamlit>=1.20.0
+plotly>=5.10.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+bokeh>=2.4.0
+
+# Dimensionality Reduction and Analysis
+umap-learn>=0.5.3
+scikit-manifold>=0.1.0
+
+# Database and Storage
+sqlite3  # Built-in with Python
+sqlalchemy>=1.4.0
+redis>=4.0.0
+psycopg2-binary>=2.9.0
+
+# Configuration and Serialization
+pyyaml>=6.0
+toml>=0.10.0
+jsonschema>=4.0.0
+
+# System Monitoring and Metrics
+psutil>=5.8.0
+py-cpuinfo>=8.0.0
+memory-profiler>=0.60.0
+
+# Image and Audio Processing
+pillow>=9.0.0
+opencv-python>=4.5.0
+librosa>=0.9.0
+soundfile>=0.10.0
+
+# Natural Language Processing
+nltk>=3.7
+spacy>=3.4.0
+textblob>=0.17.0
+
+# Graph Processing (for knowledge graphs)
+networkx>=2.8.0
+python-louvain>=0.16
+
+# Time Series Processing
+statsmodels>=0.13.0
+pytz>=2022.1
+dateutil>=2.8.0
+
+# Quality Assurance and Testing
+pytest>=7.0.0
+pytest-asyncio>=0.20.0
+pytest-cov>=4.0.0
+black>=22.0.0
+flake8>=5.0.0
+mypy>=0.990
+
+# Development and Debugging
+jupyter>=1.0.0
+ipython>=8.0.0
+tqdm>=4.64.0
+colorama>=0.4.5
+
+# Security and Validation
+cryptography>=37.0.0
+pydantic>=1.10.0
+validators>=0.20.0
+
+# Optional GPU Support
+# Uncomment if CUDA GPU support is available
+# torch-audio-cuda>=2.0.0
+# torch-vision-cuda>=0.15.0
+
+# Integration Dependencies (SutazAI specific)
+requests>=2.28.0
+httpx>=0.23.0
+fastapi>=0.95.0
+uvicorn>=0.20.0
+
+# Vector Database Integration
+chromadb>=0.4.0
+qdrant-client>=1.3.0
+faiss-cpu>=1.7.0  # Use faiss-gpu if GPU available
+
+# Knowledge Graph Integration
+neo4j>=5.0.0
+py2neo>=2021.2.0
+
+# Message Queue and Event Processing
+celery>=5.3.0
+kombu>=5.3.0
+pika>=1.3.0  # RabbitMQ client
+
+# Logging and Observability
+structlog>=22.0.0
+prometheus-client>=0.15.0
+opentelemetry-api>=1.15.0
+opentelemetry-sdk>=1.15.0
+
+# Configuration Management
+python-dotenv>=0.20.0
+click>=8.1.0
+
+# Data Validation and Schemas
+marshmallow>=3.19.0
+cerberus>=1.3.0
+
+# Caching and Performance
+cachetools>=5.2.0
+lru-dict>=1.1.8
+diskcache>=5.4.0
+
+# Utilities
+more-itertools>=8.14.0
+toolz>=0.12.0
+cytoolz>=0.12.0  # Faster C implementation
+
+# Development Tools (optional)
+pre-commit>=2.20.0
+isort>=5.10.0
+bandit>=1.7.0  # Security linting
+safety>=2.3.0  # Security vulnerability checking
