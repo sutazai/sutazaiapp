@@ -1,0 +1,256 @@
+# Critical Orchestration Agents for SUTAZAIAPP
+# These agents coordinate and manage other agents in the system
+
+networks:
+  sutazai-network:
+    external: true
+    name: sutazaiapp_sutazai
+
+services:
+  # 1. AgentZero Coordinator - Master orchestration agent
+  agentzero-coordinator:
+    build:
+      context: ./docker/agentzero-coordinator
+      dockerfile: Dockerfile
+    container_name: sutazai-agentzero-coordinator
+    environment:
+      AGENT_ID: agentzero-coordinator
+      AGENT_NAME: "AgentZero Coordinator"
+      PORT: 8586
+      REDIS_URL: redis://sutazai-redis:6379/0
+      OLLAMA_BASE_URL: http://sutazai-ollama:11434
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      
+      # Master coordinator settings
+      MAX_CONCURRENT_AGENTS: 50
+      COORDINATION_INTERVAL: 30
+      HEALTH_CHECK_INTERVAL: 60
+      AUTO_SCALING_ENABLED: true
+      EMERGENCY_SHUTDOWN_ENABLED: true
+      
+    ports:
+      - "8586:8586"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./agents/agentzero-coordinator:/app/agent_data:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8586/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.agentzero-coordinator.rule=Host(`agentzero.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.agentzero-coordinator.loadbalancer.server.port=8586"
+
+  # 2. Multi-Agent Coordinator - Coordinates agent workflows
+  multi-agent-coordinator:
+    build:
+      context: ./docker/multi-agent-coordinator
+      dockerfile: Dockerfile
+    container_name: sutazai-multi-agent-coordinator
+    environment:
+      AGENT_ID: multi-agent-coordinator
+      AGENT_NAME: "Multi-Agent Coordinator"
+      PORT: 8587
+      REDIS_URL: redis://sutazai-redis:6379/0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      
+      # Workflow coordination settings
+      MAX_CONCURRENT_WORKFLOWS: 20
+      MAX_TASKS_PER_WORKFLOW: 100
+      WORKFLOW_TIMEOUT_DEFAULT: 3600
+      TASK_RETRY_ATTEMPTS: 3
+      WORKFLOW_PERSISTENCE_ENABLED: true
+      
+    ports:
+      - "8587:8587"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8587/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.multi-agent-coordinator.rule=Host(`multi-coordinator.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.multi-agent-coordinator.loadbalancer.server.port=8587"
+
+  # 3. AI Agent Orchestrator - Manages agent interactions
+  ai-agent-orchestrator:
+    build:
+      context: ./docker/ai-agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-agent-orchestrator
+    environment:
+      AGENT_ID: ai-agent-orchestrator
+      AGENT_NAME: "AI Agent Orchestrator"
+      PORT: 8589
+      REDIS_URL: redis://sutazai-redis:6379/0
+      OLLAMA_BASE_URL: http://sutazai-ollama:11434
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      
+      # Orchestration settings
+      AGENT_DISCOVERY_ENABLED: true
+      INTERACTION_MONITORING: true
+      CONFLICT_RESOLUTION_ENABLED: true
+      PERFORMANCE_OPTIMIZATION: true
+      
+    ports:
+      - "8589:8589"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    volumes:
+      - ./agents/ai-agent-orchestrator:/app/agent_data:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8589/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai-agent-orchestrator.rule=Host(`ai-orchestrator.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.ai-agent-orchestrator.loadbalancer.server.port=8589"
+
+  # 4. Task Assignment Coordinator - Distributes tasks to agents
+  task-assignment-coordinator:
+    build:
+      context: ./docker/task-assignment-coordinator
+      dockerfile: Dockerfile
+    container_name: sutazai-task-assignment-coordinator
+    environment:
+      AGENT_ID: task-assignment-coordinator
+      AGENT_NAME: "Task Assignment Coordinator"
+      PORT: 8551
+      REDIS_URL: redis://sutazai-redis:6379/0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      
+      # Task assignment settings
+      LOAD_BALANCING_ALGORITHM: "weighted_round_robin"
+      TASK_PRIORITY_ENABLED: true
+      AGENT_CAPABILITY_MATCHING: true
+      PERFORMANCE_BASED_ASSIGNMENT: true
+      TASK_QUEUE_SIZE: 1000
+      
+    ports:
+      - "8551:8551"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    volumes:
+      - ./agents/task-assignment-coordinator:/app/agent_data:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8551/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.task-assignment-coordinator.rule=Host(`task-coordinator.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.task-assignment-coordinator.loadbalancer.server.port=8551"
+
+  # 5. Resource Arbitration Agent - Manages resource allocation
+  resource-arbitration-agent:
+    build:
+      context: ./docker/resource-arbitration-agent
+      dockerfile: Dockerfile
+    container_name: sutazai-resource-arbitration-agent
+    environment:
+      AGENT_ID: resource-arbitration-agent
+      AGENT_NAME: "Resource Arbitration Agent"
+      PORT: 8588
+      REDIS_URL: redis://sutazai-redis:6379/0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@sutazai-postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      
+      # Resource management settings
+      MAX_CPU_ALLOCATION: 0.8
+      MAX_MEMORY_ALLOCATION: 0.8
+      RESOURCE_MONITORING_INTERVAL: 10
+      ALLOCATION_TIMEOUT_MINUTES: 60
+      PRIORITY_QUEUE_ENABLED: true
+      AUTO_SCALING_ENABLED: true
+      TOTAL_GPU_COUNT: 0
+      
+    ports:
+      - "8588:8588"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - ./agents/resource-arbitration-agent:/app/agent_data:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8588/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.resource-arbitration-agent.rule=Host(`resource-arbitrator.${DOMAIN:-localhost}`)"
+      - "traefik.http.services.resource-arbitration-agent.loadbalancer.server.port=8588"
+
+# Volumes for persistent data
+volumes:
+  orchestration_data:
+    driver: local
+  coordination_logs:
+    driver: local
+  task_queue_data:
+    driver: local

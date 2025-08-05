@@ -1,0 +1,117 @@
+version: '3.8'
+
+# Health check fixes for containers
+# Implements Rule 17 from IMPROVED_CODEBASE_RULES_v2.0.md
+
+x-healthcheck-basic: &healthcheck-basic
+  healthcheck:
+    test: ["CMD", "sh", "-c", "nc -z localhost ${HEALTH_CHECK_PORT:-8080} || exit 1"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 60s
+
+x-healthcheck-python: &healthcheck-python
+  healthcheck:
+    test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); exit(0 if s.connect_ex(('localhost', ${HEALTH_CHECK_PORT:-8080}))==0 else 1)"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 60s
+
+x-restart-critical: &restart-critical
+  restart: unless-stopped
+
+x-restart-performance: &restart-performance
+  restart: on-failure:5
+
+x-restart-specialized: &restart-specialized
+  restart: on-failure:3
+
+services:
+  # Fix critical agents with proper health checks
+  agentzero-coordinator:
+    <<: *healthcheck-python
+    <<: *restart-critical
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  bigagi-system-manager:
+    <<: *healthcheck-python
+    <<: *restart-critical
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  # Fix performance agents
+  ml-experiment-tracker-mlflow:
+    <<: *healthcheck-python
+    <<: *restart-performance
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  financial-analysis-specialist:
+    <<: *healthcheck-python
+    <<: *restart-performance
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  # Fix specialized agents
+  federated-learning-coordinator:
+    <<: *healthcheck-python
+    <<: *restart-specialized
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+
+  deep-learning-brain-manager:
+    <<: *healthcheck-python
+    <<: *restart-specialized
+    environment:
+      HEALTH_CHECK_PORT: 8080
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M

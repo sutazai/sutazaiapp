@@ -1,6 +1,6 @@
 # SutazaiApp API Reference
 
-This document provides a complete reference to the SutazaiApp REST API.
+This document provides a complete reference to the SUTAZAI REST API.
 
 ## Base URL
 

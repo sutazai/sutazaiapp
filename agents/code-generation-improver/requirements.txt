@@ -1,0 +1,2 @@
+# Agent-specific requirements
+# Base requirements are included from base image

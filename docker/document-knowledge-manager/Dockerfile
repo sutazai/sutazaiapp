@@ -1,41 +1,30 @@
 FROM python:3.11-slim
 
+# Set working directory
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements
-COPY requirements.txt .
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir \
+    fastapi==0.104.1 \
+    uvicorn==0.24.0 \
+    pydantic==2.5.0 \
+    httpx==0.25.2 \
+    redis==5.0.1 \
+    loguru==0.7.2 \
+    psutil==5.9.8
 
-# Copy application
+# Copy application code
 COPY app.py .
 
-# Set environment variables
-ENV AGENT_ID=document-knowledge-manager
-ENV AGENT_NAME="Document Knowledge Manager"
-ENV PORT=8550
-
 # Expose port
-EXPOSE 8550
+EXPOSE 8080
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8550/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Run the application
-
-# Run as non-root user
-USER nobody
-
-# Run as non-root user
-USER nobody
 CMD ["python", "app.py"]

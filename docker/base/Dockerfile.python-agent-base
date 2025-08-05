@@ -22,13 +22,8 @@ RUN chown -R agent:agent /app
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 
+# Run as agent user
 USER agent
 
 # Default command
-
-# Run as non-root user
-USER nobody
-
-# Run as non-root user
-USER nobody
 CMD ["python", "app.py"]

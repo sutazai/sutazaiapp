@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Owner Approval Interface for AGI/ASI Self-Improvement
+Owner Approval Interface for SUTAZAI Self-Improvement
 Provides web interface and API for reviewing and approving system improvements
 
 Features:
@@ -48,7 +48,7 @@ class ApprovalDecision(BaseModel):
 
 
 class ApprovalInterface:
-    """Web interface for AGI/ASI owner approval system"""
+    """Web interface for SUTAZAI owner approval system"""
     
     def __init__(self, 
                  collective_intelligence: CollectiveIntelligence,
@@ -60,7 +60,7 @@ class ApprovalInterface:
         self.host = host
         
         # Setup FastAPI app
-        self.app = FastAPI(title="SutazAI AGI/ASI Approval System")
+        self.app = FastAPI(title="SutazAI Approval System")
         self._setup_routes()
         self._setup_middleware()
         
@@ -257,7 +257,7 @@ class ApprovalInterface:
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SutazAI AGI/ASI Approval System</title>
+    <title>SutazAI Approval System</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -544,7 +544,7 @@ class ApprovalInterface:
 <body>
     <header>
         <div class="container">
-            <h1>🧠 SutazAI AGI/ASI Control Center</h1>
+            <h1>🧠 SutazAI Control Center</h1>
             <p class="subtitle">Collective Intelligence Oversight & Approval System</p>
         </div>
     </header>
@@ -839,7 +839,7 @@ ${JSON.stringify(proposal.consensus_votes, null, 2)}
         
         // Emergency stop
         async function emergencyStop() {
-            if (confirm('Are you sure you want to trigger an EMERGENCY STOP? This will halt all AGI/ASI operations.')) {
+            if (confirm('Are you sure you want to trigger an EMERGENCY STOP? This will halt all operations.')) {
                 const response = await fetch('/api/emergency-stop', {
                     method: 'POST'
                 });

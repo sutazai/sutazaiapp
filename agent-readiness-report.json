@@ -1,0 +1,403 @@
+{
+  "ready": [
+    "agent-creator",
+    "agent-debugger",
+    "agent-orchestrator",
+    "ai-agent-orchestrator",
+    "ai-senior-backend-developer",
+    "ai-senior-engineer",
+    "ai-senior-frontend-developer",
+    "ai-senior-full-stack-developer",
+    "ai-system-architect",
+    "ai-system-validator",
+    "ai-testing-qa-validator",
+    "code-generation-improver",
+    "container-orchestrator-k3s",
+    "deployment-automation-master",
+    "hardware-resource-optimizer",
+    "infrastructure-devops-manager",
+    "kali-hacker",
+    "mega-code-auditor",
+    "ollama-integration-specialist",
+    "pentestgpt",
+    "senior-ai-engineer",
+    "testing-qa-validator"
+  ],
+  "needs_fix": {
+    "adversarial-attack-detector": [
+      "Missing Dockerfile"
+    ],
+    "agentgpt": [
+      "Missing Dockerfile"
+    ],
+    "agentgpt-autonomous-executor": [
+      "Missing Dockerfile"
+    ],
+    "agentzero-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "ai-agent-debugger": [
+      "Missing Dockerfile"
+    ],
+    "ai-product-manager": [
+      "Missing Dockerfile"
+    ],
+    "ai-qa-team-lead": [
+      "Missing Dockerfile"
+    ],
+    "ai-scrum-master": [
+      "Missing Dockerfile"
+    ],
+    "aider": [
+      "Missing Dockerfile"
+    ],
+    "attention-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "autogen": [
+      "Missing Dockerfile"
+    ],
+    "autogpt": [
+      "Missing Dockerfile"
+    ],
+    "automated-incident-responder": [
+      "Missing Dockerfile"
+    ],
+    "autonomous-task-executor": [
+      "Missing Dockerfile"
+    ],
+    "awesome-code-ai": [
+      "Missing Dockerfile"
+    ],
+    "babyagi": [
+      "Missing Dockerfile"
+    ],
+    "bias-and-fairness-auditor": [
+      "Missing Dockerfile"
+    ],
+    "bigagi-system-manager": [
+      "Missing Dockerfile"
+    ],
+    "browser-automation-orchestrator": [
+      "Missing Dockerfile"
+    ],
+    "causal-inference-expert": [
+      "Missing Dockerfile"
+    ],
+    "cicd-pipeline-orchestrator": [
+      "Missing Dockerfile"
+    ],
+    "code-improver": [
+      "Missing Dockerfile"
+    ],
+    "code-quality-gateway-sonarqube": [
+      "Missing Dockerfile"
+    ],
+    "codebase-team-lead": [
+      "Missing Dockerfile"
+    ],
+    "cognitive-architecture-designer": [
+      "Missing Dockerfile"
+    ],
+    "cognitive-load-monitor": [
+      "Missing Dockerfile"
+    ],
+    "compute-scheduler-and-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "container-vulnerability-scanner-trivy": [
+      "Missing Dockerfile"
+    ],
+    "context-framework": [
+      "Missing Dockerfile"
+    ],
+    "context-optimizer": [
+      "Missing Dockerfile",
+      "Missing Python entry point (main.py or app.py)"
+    ],
+    "cpu-only-hardware-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "crewai": [
+      "Missing Dockerfile"
+    ],
+    "data-analysis-engineer": [
+      "Missing Dockerfile"
+    ],
+    "data-drift-detector": [
+      "Missing Dockerfile"
+    ],
+    "data-lifecycle-manager": [
+      "Missing Dockerfile"
+    ],
+    "data-pipeline-engineer": [
+      "Missing Dockerfile"
+    ],
+    "data-version-controller-dvc": [
+      "Missing Dockerfile"
+    ],
+    "deep-learning-brain-architect": [
+      "Missing Dockerfile"
+    ],
+    "deep-learning-brain-manager": [
+      "Missing Dockerfile"
+    ],
+    "deep-local-brain-builder": [
+      "Missing Dockerfile"
+    ],
+    "deploy-automation-master": [
+      "Missing Dockerfile"
+    ],
+    "devika": [
+      "Missing Dockerfile"
+    ],
+    "dify-automation-specialist": [
+      "Missing Dockerfile"
+    ],
+    "distributed-computing-architect": [
+      "Missing Dockerfile"
+    ],
+    "distributed-tracing-analyzer-jaeger": [
+      "Missing Dockerfile"
+    ],
+    "document-knowledge-manager": [
+      "Missing Dockerfile"
+    ],
+    "edge-computing-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "edge-inference-proxy": [
+      "Missing Dockerfile"
+    ],
+    "emergency-shutdown-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "energy-consumption-optimize": [
+      "Missing Dockerfile"
+    ],
+    "episodic-memory-engineer": [
+      "Missing Dockerfile"
+    ],
+    "ethical-governor": [
+      "Missing Dockerfile"
+    ],
+    "evolution-strategy-trainer": [
+      "Missing Dockerfile"
+    ],
+    "experiment-tracker": [
+      "Missing Dockerfile"
+    ],
+    "explainability-and-transparency-agent": [
+      "Missing Dockerfile"
+    ],
+    "explainable-ai-specialist": [
+      "Missing Dockerfile"
+    ],
+    "federated-learning-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "finrobot": [
+      "Missing Dockerfile"
+    ],
+    "flowiseai-flow-manager": [
+      "Missing Dockerfile"
+    ],
+    "fsdp": [
+      "Missing Dockerfile"
+    ],
+    "garbage-collector": [
+      "Missing Dockerfile"
+    ],
+    "garbage-collector-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "genetic-algorithm-tuner": [
+      "Missing Dockerfile"
+    ],
+    "goal-setting-and-planning-agent": [
+      "Missing Dockerfile"
+    ],
+    "gpt-engineer": [
+      "Missing Dockerfile"
+    ],
+    "gpu-hardware-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "gradient-compression-specialist": [
+      "Missing Dockerfile"
+    ],
+    "hardware-optimizer": [
+      "Missing Dockerfile",
+      "Missing Python entry point (main.py or app.py)"
+    ],
+    "health-monitor": [
+      "Missing Dockerfile"
+    ],
+    "honeypot-deployment-agent": [
+      "Missing Dockerfile"
+    ],
+    "human-oversight-interface-agent": [
+      "Missing Dockerfile"
+    ],
+    "infrastructure-devops": [
+      "Missing Dockerfile"
+    ],
+    "intelligence-optimization-monitor": [
+      "Missing Dockerfile"
+    ],
+    "jarvis-voice-interface": [
+      "Missing Dockerfile"
+    ],
+    "knowledge-distillation-expert": [
+      "Missing Dockerfile"
+    ],
+    "knowledge-graph-builder": [
+      "Missing Dockerfile"
+    ],
+    "langflow-workflow-designer": [
+      "Missing Dockerfile"
+    ],
+    "letta": [
+      "Missing Dockerfile"
+    ],
+    "localagi-orchestration-manager": [
+      "Missing Dockerfile"
+    ],
+    "log-aggregator-loki": [
+      "Missing Dockerfile"
+    ],
+    "mcp-server": [
+      "Missing Dockerfile"
+    ],
+    "memory-persistence-manager": [
+      "Missing Dockerfile"
+    ],
+    "meta-learning-specialist": [
+      "Missing Dockerfile"
+    ],
+    "metrics-collector-prometheus": [
+      "Missing Dockerfile"
+    ],
+    "ml-experiment-tracker-mlflow": [
+      "Missing Dockerfile"
+    ],
+    "model-training-specialist": [
+      "Missing Dockerfile"
+    ],
+    "multi-modal-fusion-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "neural-architecture-search": [
+      "Missing Dockerfile"
+    ],
+    "neuromorphic-computing-expert": [
+      "Missing Dockerfile"
+    ],
+    "observability-dashboard-manager-grafana": [
+      "Missing Dockerfile"
+    ],
+    "observability-monitoring-engineer": [
+      "Missing Dockerfile"
+    ],
+    "opendevin-code-generator": [
+      "Missing Dockerfile"
+    ],
+    "private-data-analyst": [
+      "Missing Dockerfile"
+    ],
+    "private-registry-manager-harbor": [
+      "Missing Dockerfile"
+    ],
+    "privategpt": [
+      "Missing Dockerfile"
+    ],
+    "product-manager": [
+      "Missing Dockerfile"
+    ],
+    "product-strategy-architect": [
+      "Missing Dockerfile"
+    ],
+    "prompt-injection-guard": [
+      "Missing Dockerfile"
+    ],
+    "qa-team-lead": [
+      "Missing Dockerfile"
+    ],
+    "quantum-ai-researcher": [
+      "Missing Dockerfile"
+    ],
+    "quantum-computing-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "ram-hardware-optimizer": [
+      "Missing Dockerfile"
+    ],
+    "reinforcement-learning-trainer": [
+      "Missing Dockerfile"
+    ],
+    "resource-arbitration-agent": [
+      "Missing Dockerfile"
+    ],
+    "resource-visualiser": [
+      "Missing Dockerfile"
+    ],
+    "runtime-behavior-anomaly-detector": [
+      "Missing Dockerfile"
+    ],
+    "scrum-master": [
+      "Missing Dockerfile"
+    ],
+    "secrets-vault-manager-vault": [
+      "Missing Dockerfile"
+    ],
+    "self-healing-orchestrator": [
+      "Missing Dockerfile"
+    ],
+    "semgrep-security-analyzer": [
+      "Missing Dockerfile"
+    ],
+    "senior-backend-developer": [
+      "Missing Dockerfile"
+    ],
+    "senior-engineer": [
+      "Missing Dockerfile"
+    ],
+    "senior-frontend-developer": [
+      "Missing Dockerfile"
+    ],
+    "senior-full-stack-developer": [
+      "Missing Dockerfile"
+    ],
+    "service-hub": [
+      "Missing Dockerfile"
+    ],
+    "shellgpt": [
+      "Missing Dockerfile"
+    ],
+    "symbolic-reasoning-engine": [
+      "Missing Dockerfile"
+    ],
+    "synthetic-data-generator": [
+      "Missing Dockerfile"
+    ],
+    "system-knowledge-curator": [
+      "Missing Dockerfile"
+    ],
+    "system-performance-forecaster": [
+      "Missing Dockerfile"
+    ],
+    "system-validator": [
+      "Missing Dockerfile"
+    ],
+    "task-assignment-coordinator": [
+      "Missing Dockerfile"
+    ],
+    "testing-qa-team-lead": [
+      "Missing Dockerfile"
+    ],
+    "transformers-migration-specialist": [
+      "Missing Dockerfile"
+    ]
+  },
+  "critical_missing": []
+}

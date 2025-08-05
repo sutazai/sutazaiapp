@@ -2,11 +2,20 @@ FROM python:3.12.8-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies including nmap and network tools
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     curl \
+    nmap \
+    net-tools \
+    iputils-ping \
+    dnsutils \
+    git \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching

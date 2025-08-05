@@ -1,0 +1,5 @@
+# Agent-specific requirements
+# Base requirements are included from base image
+aioredis==2.0.1
+python-consul==1.1.0
+pika==1.3.2

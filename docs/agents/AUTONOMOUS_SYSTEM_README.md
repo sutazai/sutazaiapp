@@ -1,106 +1,117 @@
-# SutazAI automation system Controller
+# Automation System Controller
 
-## 🚀 Overview
+## Overview
 
-The automation system Controller is the master coordinator of the SutazAI automation system system. It operates 24/7 without human intervention, making intelligent decisions to keep your AI system running optimally.
+The Automation System Controller manages and coordinates system operations through automated monitoring and resource management. It implements concrete, production-ready automation capabilities to maintain system reliability and performance.
 
-### Key Features
+### Core Capabilities
 
-- **🤖 Fully Autonomous**: Operates independently with self-healing capabilities
-- **🧠 Machine Learning**: Learns from patterns and improves over time
-- **⚡ Real-time Decisions**: Makes decisions in seconds based on system state
-- **🛡️ Safety First**: Multiple safety mechanisms and human override capabilities
-- **📊 Comprehensive Monitoring**: Tracks all metrics and decisions
-- **🔄 Auto-scaling**: Scales resources based on demand predictions
+- **System Monitoring**: Continuous monitoring of system metrics and health indicators
+- **Resource Management**: Dynamic resource allocation based on actual usage patterns
+- **State Management**: Maintains system state and configuration consistency
+- **Fault Detection**: Identifies and logs system anomalies and failures
+- **Performance Optimization**: Adjusts system parameters based on operational metrics
+- **Load Balancing**: Distributes workload across available resources
 
-## 🎯 Quick Start
+## Quick Start
 
-### 1. Start the Controller
+### Prerequisites
+- Docker Engine 24.0+
+- Python 3.9+
+- PostgreSQL 15+
+- Redis 7.0+
 
+### 1. Configuration
 ```bash
-cd /opt/sutazaiapp
-./scripts/start_autonomous_controller.sh
+# Set required environment variables
+cp .env.example .env
+# Edit .env with your configuration
 ```
 
-### 2. Monitor the System
-
+### 2. Start Services
 ```bash
-# Real-time monitoring dashboard
-python3 scripts/monitor_autonomous_controller.py
+# Start required services
+docker-compose up -d redis postgres
 
-# Or check status via API
-curl http://localhost:8090/status | python3 -m json.tool
+# Start the controller
+./scripts/start-controller.sh
 ```
 
-### 3. Test the System
-
+### 3. Verify Installation
 ```bash
-python3 tests/test_autonomous_controller.py
+# Check controller status
+curl http://localhost:8090/health
+
+# View metrics
+curl http://localhost:8090/metrics
+
+# Run verification tests
+./scripts/verify-installation.sh
 ```
 
-## 🏗️ Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────┐
-│       automation system Controller       │
+│         System Controller                │
 ├─────────────────────────────────────────┤
 │                                         │
-│  ┌───────────┐  ┌──────────────────┐  │
-│  │ Decision  │  │ Health Monitor    │  │
-│  │ Engine    │  │ (5s interval)     │  │
-│  └───────────┘  └──────────────────┘  │
+│  ┌───────────┐  ┌──────────────────┐   │
+│  │ Metrics   │  │ Health Check      │   │
+│  │ Collector │  │ Service           │   │
+│  └───────────┘  └──────────────────┘   │
 │                                         │
-│  ┌───────────┐  ┌──────────────────┐  │
-│  │ Learning  │  │ Resource Manager  │  │
-│  │ Engine    │  │                   │  │
-│  └───────────┘  └──────────────────┘  │
+│  ┌───────────┐  ┌──────────────────┐   │
+│  │ Resource  │  │ Configuration     │   │
+│  │ Monitor   │  │ Manager          │   │
+│  └───────────┘  └──────────────────┘   │
 │                                         │
-│  ┌───────────┐  ┌──────────────────┐  │
-│  │ Safety    │  │ Strategic Planner │  │
-│  │ Controller│  │                   │  │
-│  └───────────┘  └──────────────────┘  │
+│  ┌───────────┐  ┌──────────────────┐   │
+│  │ Alert     │  │ Load Balancer     │   │
+│  │ Manager   │  │                   │   │
+│  └───────────┘  └──────────────────┘   │
 │                                         │
 └─────────────────────────────────────────┘
                     │
                     ▼
-        ┌─────────────────────┐
-        │   automation system System Agents │
-        └─────────────────────┘
+┌─────────────────────────────────────────┐
+│             Managed Services             │
+└─────────────────────────────────────────┘
 ```
 
-## 🎮 Control Interfaces
+## API Reference
 
-### Web API Endpoints
+### REST Endpoints
 
 | Endpoint | Method | Description |
 |----------|---------|-------------|
-| `http://localhost:8090/health` | GET | System health check |
-| `http://localhost:8090/status` | GET | Detailed system status |
-| `http://localhost:8090/metrics` | GET | System metrics (CPU, memory, etc.) |
-| `http://localhost:8090/decisions` | GET | Recent autonomous decisions |
-| `http://localhost:8090/learning` | GET | Machine learning patterns |
-| `http://localhost:8090/command` | POST | Send commands to controller |
-| `http://localhost:8090/override` | POST | Manual override decisions |
-| `http://localhost:8090/emergency/stop` | POST | Emergency shutdown |
+| `/v1/health` | GET | Health check endpoint |
+| `/v1/metrics` | GET | System resource metrics |
+| `/v1/config` | GET | Current configuration |
+| `/v1/services` | GET | Service status list |
+| `/v1/alerts` | GET | Active system alerts |
+| `/v1/control` | POST | Control operations |
+| `/v1/maintenance` | POST | Maintenance mode |
+| `/v1/shutdown` | POST | Graceful shutdown |
 
-### Example API Calls
+### Example Usage
 
 ```bash
-# Check system status
-curl http://localhost:8090/status
+# Check system health
+curl http://localhost:8090/v1/health
 
-# Get last 20 metrics
-curl http://localhost:8090/metrics?count=20
+# Get current metrics
+curl http://localhost:8090/v1/metrics
 
-# Send a command
-curl -X POST http://localhost:8090/command \
+# Enable maintenance mode
+curl -X POST http://localhost:8090/v1/maintenance \
   -H "Content-Type: application/json" \
-  -d '{"type": "optimize", "target": "memory"}'
+  -d '{"enabled": true, "reason": "Scheduled maintenance"}'
 
-# Manual override
-curl -X POST http://localhost:8090/override \
+# Graceful shutdown
+curl -X POST http://localhost:8090/v1/shutdown \
   -H "Content-Type: application/json" \
-  -d '{"action": "scale_down", "parameters": {"factor": 0.8}, "reason": "Reduce costs"}'
+  -d '{"reason": "Planned downtime"}'
 ```
 
 ## 🧠 Autonomous Capabilities

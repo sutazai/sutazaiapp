@@ -20,12 +20,45 @@ scrape_configs:
     static_configs:
       - targets: ['sutazai-node-exporter:9100']
 
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['sutazai-cadvisor:8080']
+
   - job_name: 'sutazai-backend'
     static_configs:
       - targets: ['sutazai-backend:8000']
-    metrics_path: '/metrics'
+    metrics_path: '/health'
     scrape_interval: 30s
     scrape_timeout: 10s
+
+  - job_name: 'sutazai-frontend'
+    static_configs:
+      - targets: ['sutazai-frontend:8501']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-ollama'
+    static_configs:
+      - targets: ['sutazai-ollama:11434']
+    metrics_path: '/api/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-databases'
+    static_configs:
+      - targets: 
+        - 'sutazai-postgres-exporter-monitoring:9187'
+        - 'sutazai-redis-exporter-monitoring:9121'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-hardware-optimizer'
+    static_configs:
+      - targets: ['sutazai-hardware-resource-optimizer:8080']
+    metrics_path: '/health'
+    scrape_interval: 60s
+    scrape_timeout: 30s
 
   - job_name: 'sutazai-agents'
     static_configs:

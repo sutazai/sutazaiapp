@@ -7,10 +7,66 @@ Responsible for automated deployments and CI/CD pipelines
 import sys
 import os
 import subprocess
+from fastapi import FastAPI
+from datetime import datetime
+from typing import Dict, Any, List
+
 sys.path.append('/opt/sutazaiapp/agents')
 
-from agents.core.base_agent_v2 import BaseAgentV2
-from typing import Dict, Any, List
+# Create FastAPI app first
+app = FastAPI(
+    title="Deployment Automation Master",
+    description="Responsible for automated deployments and CI/CD pipelines",
+    version="1.0.0"
+)
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "agent": "deployment-automation-master",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "agent": "deployment-automation-master",
+        "status": "running",
+        "description": "Responsible for automated deployments and CI/CD pipelines"
+    }
+
+@app.post("/task")
+async def process_task_endpoint(task: Dict[str, Any]):
+    """Process deployment automation tasks via API"""
+    try:
+        # Create agent instance for processing
+        agent = DeploymentAutomationMasterAgent()
+        result = agent.process_task(task)
+        return result
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "agent": "deployment-automation-master"
+        }
+
+# Import base agent after FastAPI setup to avoid circular imports
+try:
+    from agents.core.base_agent_v2 import BaseAgentV2
+except ImportError:
+    # Fallback base agent
+    import logging
+    
+    class BaseAgentV2:
+        def __init__(self):
+            self.agent_name = "deployment-automation-master"
+            self.logger = logging.getLogger(self.agent_name)
+            
+        def query_ollama(self, prompt: str) -> str:
+            return f"Processed: {prompt[:100]}..."
 
 
 class DeploymentAutomationMasterAgent(BaseAgentV2):

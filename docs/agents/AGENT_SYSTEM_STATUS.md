@@ -25,7 +25,7 @@ The SutazAI automation system/advanced automation automation system now has a co
 ### 2. Agent Categories
 
 #### Core System Agents (5)
-- `agi-system-architect` - automation system system design and architecture
+- `system-architect` - automation system system design and architecture
 - `ai-agent-orchestrator` - Multi-agent workflow coordination
 - `autonomous-system-controller` - Autonomous system operations
 - `deployment-automation-master` - Deployment and reliability

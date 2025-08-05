@@ -1,0 +1,226 @@
+version: '3.8'
+
+services:
+  # Critical Infrastructure Services
+  redis:
+    image: redis:7.2-alpine
+    container_name: sutazai-redis
+    restart: unless-stopped
+    ports:
+      - "10003:6379"
+    command: redis-server --maxmemory 2gb --maxmemory-policy allkeys-lru
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - sutazai
+
+  postgres:
+    image: postgres:16.3-alpine
+    container_name: sutazai-postgres
+    restart: unless-stopped
+    ports:
+      - "10000:5432"
+    environment:
+      POSTGRES_DB: sutazai_db
+      POSTGRES_USER: sutazai_user
+      POSTGRES_PASSWORD: sutazai_secure_pass_2025
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sutazai_user -d sutazai_db"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sutazai
+
+  # Backend API
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sutazai-backend
+    restart: unless-stopped
+    ports:
+      - "10001:8000"
+    environment:
+      - DATABASE_URL=postgresql://sutazai_user:sutazai_secure_pass_2025@postgres:5432/sutazai_db
+      - REDIS_URL=redis://redis:6379/0
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CHROMADB_HOST=localhost
+      - CHROMADB_PORT=8000
+      - QDRANT_HOST=localhost
+      - QDRANT_PORT=6333
+      - SECRET_KEY=sutazai_production_secret_key_2025_secure
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=sutazai_user
+      - POSTGRES_PASSWORD=sutazai_secure_pass_2025
+      - POSTGRES_DB=sutazai_db
+      - ENVIRONMENT=production
+      - DEBUG=false
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - sutazai
+
+  # Ollama LLM Service
+  ollama:
+    image: ollama/ollama:0.5.4
+    container_name: sutazai-ollama
+    restart: unless-stopped
+    ports:
+      - "10002:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_MAX_LOADED_MODELS=3
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./config/ollama_models.yaml:/etc/ollama/models.yaml:ro
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '4.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 120s
+    networks:
+      - sutazai
+
+  # Critical AI Agents with proper main.py
+  ai-system-architect:
+    build:
+      context: ./agents/ai-system-architect
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-system-architect
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=ai-system-architect
+      - OLLAMA_URL=http://ollama:11434
+      - BACKEND_URL=http://backend:8000
+      - REDIS_URL=redis://redis:6379/1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs/agents:/app/logs
+      - ./config/agents:/app/config:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - sutazai
+
+  ai-agent-orchestrator:
+    build:
+      context: ./agents/ai-agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-agent-orchestrator
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=ai-agent-orchestrator
+      - OLLAMA_URL=http://ollama:11434
+      - BACKEND_URL=http://backend:8000
+      - REDIS_URL=redis://redis:6379/2
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs/agents:/app/logs
+      - ./config/agents:/app/config:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - sutazai
+
+  infrastructure-devops-manager:
+    build:
+      context: ./agents/infrastructure-devops-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-infrastructure-devops-manager
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=infrastructure-devops-manager
+      - OLLAMA_URL=http://ollama:11434
+      - BACKEND_URL=http://backend:8000
+      - REDIS_URL=redis://redis:6379/3
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs/agents:/app/logs
+      - ./config/agents:/app/config:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+    networks:
+      - sutazai
+
+networks:
+  sutazai:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+
+volumes:
+  postgres_data:
+  ollama_data:

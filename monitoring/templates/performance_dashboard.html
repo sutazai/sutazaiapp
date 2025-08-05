@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SutazAI Performance Monitor</title>
+    
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: #007bff !important;
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .metric-card {
+            border-left: 4px solid #007bff;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .alert-item {
+            border-left: 4px solid;
+            margin-bottom: 0.5rem;
+        }
+        
+        .alert-critical {
+            border-left-color: #dc3545;
+        }
+        
+        .alert-warning {
+            border-left-color: #ffc107;
+        }
+        
+        .alert-info {
+            border-left-color: #17a2b8;
+        }
+        
+        .sla-gauge {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .agent-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .agent-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .agent-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        
+        .status-healthy { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-critical { background-color: #dc3545; }
+        .status-unknown { background-color: #6c757d; }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .forecast-chart {
+            height: 250px;
+        }
+        
+        .recommendation-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: #f8f9fa;
+            border-left: 3px solid #007bff;
+            border-radius: 0.25rem;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>
+                SutazAI Performance Monitor
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="fas fa-clock me-1"></i>
+                    <span id="current-time"></span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Connection Status -->
+    <div id="connection-status" class="connection-status">
+        <div class="alert alert-success alert-dismissible d-none" id="connected-alert">
+            <i class="fas fa-check-circle me-2"></i>Connected to monitoring system
+        </div>
+        <div class="alert alert-danger alert-dismissible d-none" id="disconnected-alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>Connection lost - attempting to reconnect...
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <!-- System Overview Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body text-center">
+                        <div class="metric-value" id="cpu-usage">--</div>
+                        <div class="metric-label">CPU Usage</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body text-center">
+                        <div class="metric-value" id="memory-usage">--</div>
+                        <div class="metric-label">Memory Usage</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body text-center">
+                        <div class="metric-value" id="active-agents">--</div>
+                        <div class="metric-label">Active Agents</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card metric-card">
+                    <div class="card-body text-center">
+                        <div class="metric-value" id="sla-compliance">--</div>
+                        <div class="metric-label">SLA Compliance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-area me-2"></i>
+                            System Resource Utilization
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="resource-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Active Alerts
+                        </h5>
+                    </div>
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        <div id="alerts-container">
+                            <div class="text-center text-muted">
+                                <div class="loading-spinner"></div>
+                                <div class="mt-2">Loading alerts...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Performance Row -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-robot me-2"></i>
+                            Agent Performance Overview
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="refreshAgentData()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="agents-grid" class="agent-grid">
+                            <div class="text-center text-muted col-12">
+                                <div class="loading-spinner"></div>
+                                <div class="mt-2">Loading agent data...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecasting and SLA Row -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-crystal-ball me-2"></i>
+                            Performance Forecast
+                        </h5>
+                        <div class="mt-2">
+                            <select class="form-select form-select-sm d-inline-block w-auto" id="forecast-metric-select" onchange="updateForecast()">
+                                <option value="cpu_percent">CPU Usage</option>
+                                <option value="memory_percent">Memory Usage</option>
+                                <option value="agent_health_response_time_ms">Agent Response Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="forecast-chart">
+                            <canvas id="forecast-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            SLA Violations
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="sla-violations-container">
+                            <div class="text-center text-muted">
+                                <div class="loading-spinner"></div>
+                                <div class="mt-2">Loading SLA data...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Row -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            Performance Recommendations
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recommendations-container">
+                            <div class="text-center text-muted">
+                                <div class="loading-spinner"></div>
+                                <div class="mt-2">Generating recommendations...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.2/socket.io.min.js"></script>
+
+    <script>
+        // Global variables
+        let socket;
+        let resourceChart;
+        let forecastChart;
+        let metricsData = [];
+        let alertsData = [];
+        let agentsData = {};
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            connectWebSocket();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Load initial data
+            loadMetrics();
+            loadAlerts();
+            loadSLAViolations();
+            loadAgentData();
+            
+            // Refresh data every 30 seconds
+            setInterval(loadMetrics, 30000);
+            setInterval(loadAlerts, 15000);
+            setInterval(loadSLAViolations, 30000);
+            setInterval(loadAgentData, 60000);
+        });
+
+        // WebSocket connection
+        function connectWebSocket() {
+            socket = io();
+            
+            socket.on('connect', function() {
+                console.log('Connected to performance monitor');
+                showConnectionStatus(true);
+            });
+            
+            socket.on('disconnect', function() {
+                console.log('Disconnected from performance monitor');
+                showConnectionStatus(false);
+            });
+            
+            socket.on('metrics_update', function(data) {
+                updateMetricsDisplay(data.metrics);
+            });
+            
+            socket.on('new_alert', function(alert) {
+                addNewAlert(alert);
+            });
+        }
+
+        // Connection status
+        function showConnectionStatus(connected) {
+            const connectedAlert = document.getElementById('connected-alert');
+            const disconnectedAlert = document.getElementById('disconnected-alert');
+            
+            if (connected) {
+                connectedAlert.classList.remove('d-none');
+                disconnectedAlert.classList.add('d-none');
+                setTimeout(() => connectedAlert.classList.add('d-none'), 3000);
+            } else {
+                disconnectedAlert.classList.remove('d-none');
+                connectedAlert.classList.add('d-none');
+            }
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Resource utilization chart
+            const resourceCtx = document.getElementById('resource-chart').getContext('2d');
+            resourceChart = new Chart(resourceCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'CPU %',
+                        data: [],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Memory %',
+                        data: [],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+
+            // Forecast chart
+            const forecastCtx = document.getElementById('forecast-chart').getContext('2d');
+            forecastChart = new Chart(forecastCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Historical',
+                        data: [],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)'
+                    }, {
+                        label: 'Forecast',
+                        data: [],
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load metrics
+        async function loadMetrics() {
+            try {
+                const response = await fetch('/api/metrics');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    updateMetricsDisplay(data.metrics);
+                }
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Update metrics display
+        function updateMetricsDisplay(metrics) {
+            // Process system metrics
+            const systemMetrics = metrics.filter(m => m.component === 'system');
+            
+            // Update metric cards
+            const cpuMetric = systemMetrics.find(m => m.metric_name === 'cpu_percent');
+            if (cpuMetric) {
+                document.getElementById('cpu-usage').textContent = cpuMetric.value.toFixed(1) + '%';
+            }
+            
+            const memoryMetric = systemMetrics.find(m => m.metric_name === 'memory_percent');
+            if (memoryMetric) {
+                document.getElementById('memory-usage').textContent = memoryMetric.value.toFixed(1) + '%';
+            }
+            
+            // Count active agents
+            const agentMetrics = metrics.filter(m => m.metric_name === 'agent_availability');
+            const activeAgents = agentMetrics.filter(m => m.value > 0.5).length;
+            document.getElementById('active-agents').textContent = activeAgents;
+            
+            // Update resource chart
+            updateResourceChart(systemMetrics);
+        }
+
+        // Update resource chart
+        function updateResourceChart(systemMetrics) {
+            const cpuMetric = systemMetrics.find(m => m.metric_name === 'cpu_percent');
+            const memoryMetric = systemMetrics.find(m => m.metric_name === 'memory_percent');
+            
+            if (cpuMetric && memoryMetric) {
+                const timestamp = new Date(cpuMetric.timestamp).toLocaleTimeString();
+                
+                // Keep only last 20 data points
+                if (resourceChart.data.labels.length >= 20) {
+                    resourceChart.data.labels.shift();
+                    resourceChart.data.datasets[0].data.shift();
+                    resourceChart.data.datasets[1].data.shift();
+                }
+                
+                resourceChart.data.labels.push(timestamp);
+                resourceChart.data.datasets[0].data.push(cpuMetric.value);
+                resourceChart.data.datasets[1].data.push(memoryMetric.value);
+                
+                resourceChart.update('none');
+            }
+        }
+
+        // Load alerts
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/api/alerts');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayAlerts(data.alerts);
+                }
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+            }
+        }
+
+        // Display alerts
+        function displayAlerts(alerts) {
+            const container = document.getElementById('alerts-container');
+            
+            if (alerts.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted">No active alerts</div>';
+                return;
+            }
+            
+            let html = '';
+            alerts.slice(0, 10).forEach(alert => {  // Show only first 10 alerts
+                const alertClass = `alert-${alert.severity}`;
+                const icon = alert.severity === 'critical' ? 'fas fa-exclamation-circle' : 
+                           alert.severity === 'warning' ? 'fas fa-exclamation-triangle' : 'fas fa-info-circle';
+                
+                html += `
+                    <div class="alert-item ${alertClass} p-2 mb-2 bg-white rounded">
+                        <div class="d-flex align-items-start">
+                            <i class="${icon} me-2 mt-1"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">${alert.component}</div>
+                                <div class="small text-muted">${alert.message}</div>
+                                <div class="small text-muted">
+                                    ${new Date(alert.timestamp).toLocaleString()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Add new alert
+        function addNewAlert(alert) {
+            // Flash notification
+            const notification = document.createElement('div');
+            notification.className = 'alert alert-warning alert-dismissible fade show position-fixed';
+            notification.style.cssText = 'top: 80px; right: 20px; z-index: 1060; max-width: 300px;';
+            notification.innerHTML = `
+                <strong>New Alert!</strong> ${alert.component}: ${alert.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+            
+            // Refresh alerts display
+            loadAlerts();
+        }
+
+        // Load SLA violations
+        async function loadSLAViolations() {
+            try {
+                const response = await fetch('/api/sla-violations');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displaySLAViolations(data);
+                }
+            } catch (error) {
+                console.error('Error loading SLA violations:', error);
+            }
+        }
+
+        // Display SLA violations
+        function displaySLAViolations(data) {
+            const container = document.getElementById('sla-violations-container');
+            const summary = data.summary;
+            
+            let html = `
+                <div class="row text-center mb-3">
+                    <div class="col">
+                        <div class="h4 text-danger mb-0">${summary.critical_violations}</div>
+                        <div class="small text-muted">Critical</div>
+                    </div>
+                    <div class="col">
+                        <div class="h4 text-warning mb-0">${summary.high_violations}</div>
+                        <div class="small text-muted">High</div>
+                    </div>
+                    <div class="col">
+                        <div class="h4 text-info mb-0">${summary.medium_violations}</div>
+                        <div class="small text-muted">Medium</div>
+                    </div>
+                </div>
+            `;
+            
+            if (data.violations.length > 0) {
+                html += '<div class="mt-3"><h6>Recent Violations:</h6>';
+                data.violations.slice(0, 5).forEach(violation => {
+                    const badgeClass = violation.impact_level === 'critical' ? 'bg-danger' :
+                                     violation.impact_level === 'high' ? 'bg-warning' : 'bg-info';
+                    
+                    html += `
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <div>
+                                <span class="badge ${badgeClass}">${violation.impact_level}</span>
+                                <span class="ms-2 small">${violation.component}</span>
+                            </div>
+                            <div class="small text-muted">
+                                ${violation.actual_value.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            // Calculate and display compliance percentage
+            const totalChecks = summary.critical_violations + summary.high_violations + 
+                              summary.medium_violations + summary.low_violations + 100; // Assume 100 total checks
+            const compliance = ((totalChecks - summary.total_active_violations) / totalChecks * 100).toFixed(1);
+            
+            document.getElementById('sla-compliance').textContent = compliance + '%';
+            
+            container.innerHTML = html;
+        }
+
+        // Load agent data
+        async function loadAgentData() {
+            try {
+                const response = await fetch('/api/metrics');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayAgentData(data.metrics);
+                }
+            } catch (error) {
+                console.error('Error loading agent data:', error);
+            }
+        }
+
+        // Display agent data
+        function displayAgentData(metrics) {
+            const agentMetrics = metrics.filter(m => m.component !== 'system');
+            const agentGroups = {};
+            
+            // Group metrics by agent
+            agentMetrics.forEach(metric => {
+                if (!agentGroups[metric.component]) {
+                    agentGroups[metric.component] = {};
+                }
+                agentGroups[metric.component][metric.metric_name] = metric;
+            });
+            
+            const container = document.getElementById('agents-grid');
+            let html = '';
+            
+            Object.keys(agentGroups).forEach(agentName => {
+                const agent = agentGroups[agentName];
+                const availability = agent.agent_availability ? agent.agent_availability.value : 0;
+                const responseTime = agent.agent_health_response_time_ms ? 
+                                   agent.agent_health_response_time_ms.value.toFixed(0) : 'N/A';
+                
+                const statusClass = availability > 0.8 ? 'status-healthy' :
+                                  availability > 0.5 ? 'status-warning' :
+                                  availability > 0 ? 'status-critical' : 'status-unknown';
+                
+                const statusText = availability > 0.8 ? 'Healthy' :
+                                 availability > 0.5 ? 'Warning' :
+                                 availability > 0 ? 'Critical' : 'Unknown';
+                
+                html += `
+                    <div class="agent-card">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="agent-status ${statusClass}"></span>
+                            <div class="fw-bold">${agentName}</div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="small text-muted">Status</div>
+                                <div class="fw-bold">${statusText}</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="small text-muted">Response</div>
+                                <div class="fw-bold">${responseTime}ms</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (html === '') {
+                html = '<div class="text-center text-muted col-12">No agent data available</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Refresh agent data
+        function refreshAgentData() {
+            const container = document.getElementById('agents-grid');
+            container.innerHTML = '<div class="text-center text-muted col-12"><div class="loading-spinner"></div><div class="mt-2">Refreshing...</div></div>';
+            loadAgentData();
+        }
+
+        // Update forecast
+        async function updateForecast() {
+            const metric = document.getElementById('forecast-metric-select').value;
+            
+            try {
+                const response = await fetch(`/api/forecast/${metric}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayForecast(data.forecast);
+                }
+            } catch (error) {
+                console.error('Error loading forecast:', error);
+            }
+        }
+
+        // Display forecast
+        function displayForecast(forecast) {
+            const labels = [];
+            const now = new Date();
+            
+            // Generate time labels for forecast
+            for (let i = 0; i < forecast.predictions.length; i++) {
+                const futureTime = new Date(now.getTime() + i * 60 * 60 * 1000);
+                labels.push(futureTime.toLocaleString());
+            }
+            
+            forecastChart.data.labels = labels;
+            forecastChart.data.datasets[1].data = forecast.predictions;
+            
+            // Update recommendations
+            displayRecommendations(forecast.recommendations);
+            
+            forecastChart.update();
+        }
+
+        // Display recommendations
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendations-container');
+            
+            if (!recommendations || recommendations.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted">No recommendations available</div>';
+                return;
+            }
+            
+            let html = '';
+            recommendations.forEach((rec, index) => {
+                html += `
+                    <div class="recommendation-item">
+                        <div class="d-flex align-items-start">
+                            <span class="badge bg-primary me-2">${index + 1}</span>
+                            <div>${rec}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Initialize forecast on page load
+        setTimeout(updateForecast, 2000);
+    </script>
+</body>
+</html>

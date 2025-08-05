@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-08-05T19:00:26.519297",
+  "mode": "live",
+  "statistics": {
+    "files_processed": 8637,
+    "files_archived": 0,
+    "files_deleted": 0,
+    "space_freed_mb": 0,
+    "errors": 0,
+    "start_time": 1754413224.557669,
+    "duration_seconds": 1.8583471775054932
+  },
+  "disk_usage": {
+    "total_gb": 1006.853931427002,
+    "used_gb": 223.51459884643555,
+    "free_gb": 732.1237106323242,
+    "percent_used": 23.4,
+    "logs_size_mb": 168.8530683517456,
+    "reports_size_mb": 3.099654197692871,
+    "archives_size_mb": 0.0
+  },
+  "configuration": {
+    "logs": {
+      "deployment_*.log": 7,
+      "health_*.log": 3,
+      "compliance-*.log": 14,
+      "*.log": 30,
+      "max_size_mb": 100
+    },
+    "reports": {
+      "*_report_*.json": 7,
+      "*_report_*.md": 7,
+      "latest.json": -1,
+      "*.json": 14,
+      "*.md": 14
+    },
+    "compliance-reports": {
+      "latest.json": -1,
+      "report_*.json": 7
+    },
+    "temporary": {
+      "*.tmp": 1,
+      "*.temp": 1,
+      "*.bak": 3,
+      "*.swp": 1,
+      "*.pyc": 7,
+      "__pycache__": 7
+    },
+    "archives": {
+      "*.tar.gz": 30,
+      "*.zip": 30,
+      "retention_days": 90
+    }
+  }
+}

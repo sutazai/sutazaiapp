@@ -1,326 +1,342 @@
-# Agent Configuration Guide
+# Service Configuration Guide
 
-This guide explains how to configure and use the AI agents in SutazAI for practical task automation.
+This guide explains how to configure and use the system services for task automation and analysis.
 
-## Agent Structure
+## Service Structure
 
-Each agent is a specialized component designed for specific tasks. Here's how they work:
+Each service is a specialized component designed for specific tasks. Here's how to configure them:
 
-### Basic Agent Configuration
+### Basic Service Configuration
 
 ```json
 {
-  "name": "code-review-agent",
-  "type": "reviewer",
+  "name": "code-analysis-service",
+  "type": "analyzer",
   "capabilities": [
-    "code_analysis",
-    "quality_check",
-    "suggestion_generation"
+    "static_analysis",
+    "style_check",
+    "metrics_collection"
   ],
-  "model": "tinyllama",
-  "max_tokens": 2048,
-  "temperature": 0.7
-}
+  "config": {
+    "max_file_size": "1MB",
+    "timeout": 300,
+    "concurrent_jobs": 4
+  }
 ```
 
-## Using Agents via API
+## Service API Reference
 
-### 1. List Available Agents
+### 1. List Available Services
 
 ```bash
-curl http://localhost:8000/api/v1/agents/
+curl http://localhost:8000/api/v1/services/
 ```
 
 Response:
 ```json
 {
-  "agents": [
+  "services": [
     {
-      "name": "senior-ai-engineer",
-      "description": "AI/ML implementation and optimization",
-      "status": "available"
+      "name": "code-analyzer",
+      "description": "Static code analysis service",
+      "status": "running",
+      "version": "1.0.0"
     },
     {
-      "name": "code-generation-improver",
-      "description": "Code quality and improvement analysis",
-      "status": "available"
+      "name": "test-runner",
+      "description": "Automated test execution service",
+      "status": "running",
+      "version": "1.0.0"
     }
-    // ... more agents
+    // ... more services
   ]
 }
 ```
 
-### 2. Execute Agent Task
+### 2. Execute Analysis Task
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/agents/execute \
+curl -X POST http://localhost:8000/api/v1/analyze \
   -H "Content-Type: application/json" \
   -d '{
-    "agent": "code-generation-improver",
-    "task": "review",
+    "service": "code-analyzer",
+    "operation": "analyze",
     "data": {
-      "code": "def calculate_sum(a, b):\n    return a + b",
-      "language": "python"
+      "file_path": "./src/utils.py",
+      "rules": ["style", "complexity", "bugs"]
     }
   }'
 ```
 
-## Practical Agent Examples
+## Service Integration Examples
 
-### Code Review Agent
+### Code Analysis Service
 
-**Purpose**: Analyze code for improvements
+**Purpose**: Static code analysis and linting
 
 ```python
 # Using in Python
 import httpx
+from typing import List, Dict
 
-async def review_code(code_snippet):
+async def analyze_code(file_path: str, rules: List[str]) -> Dict:
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "http://localhost:8000/api/v1/agents/execute",
+            "http://localhost:8000/api/v1/analyze",
             json={
-                "agent": "code-generation-improver",
-                "task": "review",
+                "service": "code-analyzer",
+                "operation": "analyze",
                 "data": {
-                    "code": code_snippet,
-                    "checks": ["style", "bugs", "performance"]
+                    "file_path": file_path,
+                    "rules": rules,
+                    "severity": "error"
                 }
             }
         )
         return response.json()
 ```
 
-### Security Scanning Agent
+### Security Scanner Service
 
-**Purpose**: Find security vulnerabilities
+**Purpose**: Security vulnerability scanning
 
 ```python
-async def security_scan(directory_path):
+async def scan_security(directory_path: str) -> Dict:
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "http://localhost:8000/api/v1/agents/execute",
+            "http://localhost:8000/api/v1/scan",
             json={
-                "agent": "security-pentesting-specialist",
-                "task": "scan",
+                "service": "security-scanner",
+                "operation": "scan",
                 "data": {
                     "target": directory_path,
-                    "scan_type": "comprehensive"
+                    "checks": ["cve", "secrets", "config"]
                 }
             }
         )
         return response.json()
 ```
 
-### Test Generation Agent
+### Test Runner Service
 
-**Purpose**: Create unit tests automatically
+**Purpose**: Execute test suites
 
 ```python
-async def generate_tests(function_code):
+async def run_tests(test_path: str) -> Dict:
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "http://localhost:8000/api/v1/agents/execute",
+            "http://localhost:8000/api/v1/test",
             json={
-                "agent": "testing-qa-validator",
-                "task": "generate_tests",
+                "service": "test-runner",
+                "operation": "run",
                 "data": {
-                    "code": function_code,
-                    "framework": "pytest"
+                    "path": test_path,
+                    "framework": "pytest",
+                    "coverage": true
                 }
             }
         )
         return response.json()
 ```
 
-## Agent Task Types
+## Service Types
 
-### Development Agents
+### Development Services
 
-| Agent | Tasks | Use Case |
-|-------|-------|----------|
-| `senior-ai-engineer` | implement, optimize, refactor | Complex code implementation |
-| `code-generation-improver` | review, improve, suggest | Code quality analysis |
-| `senior-backend-developer` | api_design, database_design | Backend architecture |
+| Service | Operations | Purpose |
+|---------|------------|----------|
+| `code-analyzer` | lint, analyze, measure | Static code analysis |
+| `dependency-checker` | scan, update, audit | Dependency management |
+| `api-validator` | validate, document, test | API verification |
 
-### Testing Agents
+### Testing Services
 
-| Agent | Tasks | Use Case |
-|-------|-------|----------|
-| `testing-qa-validator` | generate_tests, validate, coverage | Automated testing |
-| `security-pentesting-specialist` | scan, pentest, audit | Security assessment |
+| Service | Operations | Use Case |
+|---------|------------|-----------|
+| `test-runner` | run, coverage, report | Test execution |
+| `security-scanner` | scan, audit, report | Security testing |
 
-### Operations Agents
+### Operations Services
 
-| Agent | Tasks | Use Case |
-|-------|-------|----------|
-| `deployment-automation-master` | deploy, rollback, monitor | CI/CD automation |
-| `infrastructure-devops-manager` | provision, configure, scale | Infrastructure management |
+| Service | Operations | Use Case |
+|---------|------------|-----------|
+| `deployment-service` | deploy, rollback, verify | Deployment management |
+| `resource-monitor` | collect, analyze, alert | Resource monitoring |
 
-## Configuration Best Practices
+## Configuration Guidelines
 
-### 1. Task-Specific Configuration
+### 1. Service Configuration
 
 ```json
 {
-  "agent": "code-generation-improver",
-  "task": "review",
+  "service": "code-analyzer",
+  "operation": "analyze",
   "config": {
-    "focus_areas": ["security", "performance"],
-    "severity_threshold": "medium",
-    "include_suggestions": true
+    "rules": ["security", "performance"],
+    "threshold": "warning",
+    "output_format": "json"
   }
 }
 ```
 
-### 2. Resource Limits
+### 2. Resource Management
 
 ```json
 {
-  "agent": "testing-qa-validator",
-  "resource_limits": {
-    "max_execution_time": 300,  // seconds
+  "service": "test-runner",
+  "limits": {
+    "timeout": 300,
     "max_memory": "1GB",
-    "max_files": 100
+    "max_concurrent": 4
   }
 }
 ```
 
-### 3. Output Formatting
+### 3. Output Settings
 
 ```json
 {
-  "agent": "security-pentesting-specialist",
-  "output_format": {
-    "type": "json",
-    "include_metadata": true,
-    "group_by": "severity"
+  "service": "security-scanner",
+  "output": {
+    "format": "json",
+    "include_details": true,
+    "sort_by": "severity"
   }
 }
 ```
 
-## Common Workflows
+## Service Workflows
 
-### 1. Code Review Pipeline
+### 1. Code Analysis Pipeline
 
 ```python
-async def code_review_pipeline(file_path):
-    # Step 1: Analyze code
-    analysis = await analyze_code(file_path)
+async def analyze_codebase(project_path: str) -> Dict:
+    # Step 1: Static analysis
+    static_analysis = await run_static_analysis(project_path)
     
-    # Step 2: Generate improvements
-    improvements = await suggest_improvements(analysis)
+    # Step 2: Security scan
+    security_scan = await run_security_scan(project_path)
     
-    # Step 3: Create report
-    report = await generate_report(improvements)
+    # Step 3: Generate report
+    report = await generate_analysis_report(static_analysis, security_scan)
     
     return report
 ```
 
-### 2. Security Assessment
+### 2. Test Execution Pipeline
 
 ```python
-async def security_assessment(project_path):
-    # Step 1: Code scanning
-    code_scan = await scan_code(project_path)
+async def run_test_suite(test_path: str) -> Dict:
+    # Step 1: Run unit tests
+    unit_results = await run_unit_tests(test_path)
     
-    # Step 2: Dependency check
-    dep_scan = await check_dependencies(project_path)
+    # Step 2: Generate coverage
+    coverage = await generate_coverage(test_path)
     
-    # Step 3: Configuration audit
-    config_audit = await audit_configs(project_path)
+    # Step 3: Create test report
+    report = await create_test_report(unit_results, coverage)
     
-    return combine_results(code_scan, dep_scan, config_audit)
+    return report
 ```
 
-## Error Handling
+## Error Management
 
 ```python
+from typing import Dict, Any
+
 try:
-    result = await execute_agent_task(agent_name, task_data)
-except AgentNotAvailableError:
-    # Handle agent unavailability
-    pass
-except TaskTimeoutError:
-    # Handle timeout
-    pass
+    result = await execute_service_operation(
+        service_name="test-runner",
+        operation="run",
+        data=operation_data
+    )
+except ServiceUnavailableError:
+    # Handle service downtime
+    logger.error("Service unavailable")
+except OperationTimeoutError:
+    # Handle operation timeout
+    logger.error("Operation timed out")
 except Exception as e:
     # General error handling
-    logger.error(f"Agent task failed: {e}")
+    logger.error(f"Operation failed: {str(e)}")
 ```
 
-## Performance Tips
+## Performance Optimization
 
-1. **Batch Operations**: Group similar tasks together
-2. **Async Execution**: Use async/await for better performance
-3. **Caching**: Cache frequent analysis results
-4. **Resource Pooling**: Reuse agent connections
+1. **Request Batching**: Combine related operations
+2. **Concurrent Execution**: Use async operations
+3. **Result Caching**: Cache frequent lookups
+4. **Connection Pooling**: Reuse service connections
 
-## Monitoring Agent Performance
+## Service Monitoring
 
 ```python
-# Get agent metrics
-metrics = await get_agent_metrics("code-generation-improver")
-print(f"Tasks completed: {metrics['tasks_completed']}")
-print(f"Average time: {metrics['avg_execution_time']}s")
-print(f"Success rate: {metrics['success_rate']}%")
+from monitoring import get_service_metrics
+
+# Get service metrics
+metrics = await get_service_metrics("code-analyzer")
+print(f"Operations completed: {metrics['operations_count']}")
+print(f"Average response time: {metrics['avg_response_time']}ms")
+print(f"Error rate: {metrics['error_rate']}%")
 ```
 
-## Extending Agents
+## Service Extensions
 
-While the system comes with many pre-configured agents, you can extend their capabilities:
+The system supports custom service extensions through the standard interface:
 
 ```python
-# Custom task handler
-async def custom_task_handler(agent, task_data):
-    # Pre-process data
-    processed_data = preprocess(task_data)
-    
-    # Execute agent task
-    result = await agent.execute(processed_data)
-    
-    # Post-process results
-    return postprocess(result)
+from typing import Dict, Any
+
+class CustomAnalyzer:
+    async def analyze(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        # Pre-process input
+        processed_data = self.preprocess(data)
+        
+        # Run analysis
+        results = await self.run_analysis(processed_data)
+        
+        # Format output
+        return self.format_results(results)
 ```
 
-## Troubleshooting
+## Troubleshooting Guide
 
-### Agent Not Responding
+### Service Unavailable
 
-1. Check if the agent service is running:
+1. Check service status:
    ```bash
-   docker ps | grep agent-name
+   docker ps | grep service-name
    ```
 
-2. Check agent logs:
+2. View service logs:
    ```bash
-   docker logs sutazai-agent-name
+   docker logs service-name
    ```
 
-3. Verify model is loaded:
+3. Verify service health:
    ```bash
-   docker exec sutazai-ollama-tiny ollama list
+   curl http://localhost:8000/health/service-name
    ```
 
-### Task Timeout
+### Operation Timeouts
 
-- Increase timeout in configuration
-- Break large tasks into smaller chunks
-- Use streaming for long-running tasks
+- Review timeout configuration
+- Split large operations
+- Use pagination for large datasets
 
-### Memory Issues
+### Resource Management
 
-- Limit concurrent tasks
-- Use smaller models for simple tasks
-- Implement result pagination
+- Monitor resource usage
+- Implement rate limiting
+- Configure proper scaling
 
-## Summary
+## Overview
 
-The agent system in SutazAI provides:
-- **Specialized agents** for different tasks
-- **Simple API** for integration
-- **Local execution** for privacy
-- **Flexible configuration** for customization
-- **Practical workflows** for real tasks
+The service system provides:
+- **Specialized services** for specific operations
+- **REST API** for integration
+- **Containerized deployment** for isolation
+- **Configurable resources** for scaling
+- **Standard workflows** for common tasks
 
-Focus on using the right agent for each task and combining them for powerful automation workflows.
+Best practice is to use appropriate services for each operation type and combine them for efficient processing pipelines.

@@ -1,400 +1,59 @@
 _format_version: "3.0"
+_transform: true
 
 services:
-  # Backend API Service
-  - name: backend-service
-    url: http://backend:8000
+  - name: consul-service-discovery
+    url: http://consul:8500/v1/catalog/service
     routes:
-      - name: backend-api-route
+      - name: consul-route
         paths:
-          - /api/v1
-        strip_path: false
+          - /consul
+        strip_path: true
+        
+  # Example service that can be discovered through Consul
+  - name: upstream-services
+    host: consul.service.consul
+    port: 8500
+    protocol: http
+    routes:
+      - name: service-discovery-route
+        paths:
+          - /services
         methods:
           - GET
           - POST
           - PUT
           - DELETE
-          - PATCH
-          - OPTIONS
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 100
-          minute: 1000
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - X-Service-Name:backend
-              - X-Gateway:kong
-      - name: response-transformer
-        config:
-          add:
-            headers:
-              - X-Backend-Version:v40
 
-  # Frontend Service
-  - name: frontend-service
-    url: http://frontend:8501
-    routes:
-      - name: frontend-route
-        paths:
-          - /
-          - /app
-        strip_path: false
-    plugins:
-      - name: cors
-        config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          headers:
-            - Accept
-            - Accept-Version
-            - Content-Length
-            - Content-Type
-            - Date
-            - Authorization
-          credentials: true
-          max_age: 3600
-
-  # Ollama LLM Service
-  - name: ollama-service
-    url: http://ollama:11434
-    routes:
-      - name: ollama-route
-        paths:
-          - /api/ollama
-        strip_path: true
-        methods:
-          - GET
-          - POST
-          - PUT
-          - DELETE
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 10
-          minute: 100
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - X-Service-Name:ollama
-      - name: prometheus
-        config:
-          per_consumer: false
-
-  # ChromaDB Vector Database
-  - name: chromadb-service
-    url: http://chromadb:8000
-    routes:
-      - name: chromadb-route
-        paths:
-          - /api/chromadb
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 20
-          minute: 200
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - X-Service-Name:chromadb
-
-  # Qdrant Vector Database
-  - name: qdrant-service
-    url: http://qdrant:6333
-    routes:
-      - name: qdrant-route
-        paths:
-          - /api/qdrant
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 20
-          minute: 200
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - X-Service-Name:qdrant
-
-  # FAISS Vector Search
-  - name: faiss-service
-    url: http://faiss:8000
-    routes:
-      - name: faiss-route
-        paths:
-          - /api/faiss
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 15
-          minute: 150
-          policy: local
-
-  # AutoGPT Agent
-  - name: autogpt-service
-    url: http://autogpt:8080
-    routes:
-      - name: autogpt-route
-        paths:
-          - /api/agents/autogpt
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 2
-          minute: 20
-          policy: local
-      - name: correlation-id
-        config:
-          header_name: X-Request-ID
-          generator: uuid
-
-  # CrewAI Multi-Agent
-  - name: crewai-service
-    url: http://crewai:8080
-    routes:
-      - name: crewai-route
-        paths:
-          - /api/agents/crewai
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 5
-          minute: 50
-          policy: local
-
-  # Letta Memory Agent
-  - name: letta-service
-    url: http://letta:8080
-    routes:
-      - name: letta-route
-        paths:
-          - /api/agents/letta
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 10
-          minute: 100
-          policy: local
-
-  # Aider Code Assistant
-  - name: aider-service
-    url: http://aider:8080
-    routes:
-      - name: aider-route
-        paths:
-          - /api/agents/aider
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 5
-          minute: 50
-          policy: local
-
-  # Langflow Workflow Engine
-  - name: langflow-service
-    url: http://langflow:7860
-    routes:
-      - name: langflow-route
-        paths:
-          - /api/workflows/langflow
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 10
-          minute: 100
-          policy: local
-      - name: cors
-        config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-
-  # Flowise Workflow Engine
-  - name: flowise-service
-    url: http://flowise:3000
-    routes:
-      - name: flowise-route
-        paths:
-          - /api/workflows/flowise
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 10
-          minute: 100
-          policy: local
-
-  # Dify AI Platform
-  - name: dify-service
-    url: http://dify:5000
-    routes:
-      - name: dify-route
-        paths:
-          - /api/apps/dify
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 15
-          minute: 150
-          policy: local
-
-  # n8n Workflow Automation
-  - name: n8n-service
-    url: http://n8n:5678
-    routes:
-      - name: n8n-route
-        paths:
-          - /api/workflows/n8n
-        strip_path: true
-    plugins:
-      - name: cors
-        config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          headers:
-            - Accept
-            - Accept-Version
-            - Content-Length
-            - Content-MD5
-            - Content-Type
-            - Date
-            - X-Auth-Token
-            - Authorization
-          exposed_headers:
-            - X-Auth-Token
-          credentials: true
-          max_age: 3600
-
-  # Prometheus Metrics
-  - name: prometheus-service
-    url: http://prometheus:9090
-    routes:
-      - name: prometheus-route
-        paths:
-          - /api/metrics/prometheus
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 50
-          minute: 500
-          policy: local
-
-  # Grafana Dashboards
-  - name: grafana-service
-    url: http://grafana:3000
-    routes:
-      - name: grafana-route
-        paths:
-          - /api/dashboards/grafana
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 30
-          minute: 300
-          policy: local
-
-  # MCP Communication Server
-  - name: mcp-server-service
-    url: http://mcp-server:8080
-    routes:
-      - name: mcp-server-route
-        paths:
-          - /api/mcp
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 20
-          minute: 200
-          policy: local
-      - name: correlation-id
-        config:
-          header_name: X-Request-ID
-          generator: uuid
-
-  # Health Monitor
-  - name: health-monitor-service
-    url: http://health-monitor:8000
-    routes:
-      - name: health-monitor-route
-        paths:
-          - /api/health
-        strip_path: true
-    plugins:
-      - name: rate-limiting
-        config:
-          second: 100
-          minute: 1000
-          policy: local
-
-# Global Plugins
+# Plugins for service mesh capabilities
 plugins:
   - name: prometheus
     config:
       per_consumer: false
-  
-  - name: request-size-limiting
+      
+  - name: request-transformer
     config:
-      allowed_payload_size: 128
-      size_unit: megabytes
-
-  - name: bot-detection
-    
-  - name: http-log
+      add:
+        headers:
+          - X-Service-Mesh:sutazaiapp
+          
+  - name: cors
     config:
-      http_endpoint: http://logger:8080/logs
-      method: POST
-      timeout: 1000
-      keepalive: 1000
-      flush_timeout: 2
-      retry_count: 10
-
-consumers:
-  - username: ai-service-consumer
-    custom_id: ai-service-001
-    
-  - username: admin-consumer
-    custom_id: admin-001
-
-acls:
-  - consumer: ai-service-consumer
-    group: ai-services
-    
-  - consumer: admin-consumer
-    group: admin
+      origins:
+        - "*"
+      methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      headers:
+        - Accept
+        - Accept-Version
+        - Content-Length
+        - Content-Type
+        - Authorization
+      exposed_headers:
+        - X-Auth-Token
+      credentials: true
+      max_age: 3600

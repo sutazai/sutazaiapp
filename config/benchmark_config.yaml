@@ -1,0 +1,173 @@
+# SutazAI System Performance Benchmark Configuration
+# =================================================
+
+benchmark_settings:
+  duration: 300  # 5 minutes total benchmark time
+  concurrent_requests: 10  # Concurrent requests per agent
+  sampling_interval: 30  # Resource monitoring interval (seconds)
+  batch_size: 10  # Number of agents to test simultaneously
+  
+output_settings:
+  report_output_dir: "/opt/sutazaiapp/reports/performance"
+  database_path: "/opt/sutazaiapp/data/performance_metrics.db"
+  visualization_format: ["png", "svg"]
+  include_detailed_logs: true
+
+# Performance SLA Thresholds
+sla_thresholds:
+  agent_response_time_ms: 1000  # Maximum acceptable response time
+  cpu_utilization_percent: 80   # Maximum CPU utilization
+  memory_utilization_percent: 85 # Maximum memory utilization
+  error_rate_percent: 5         # Maximum error rate
+  throughput_min_rps: 10        # Minimum requests per second
+  agi_coordination_time_ms: 1000 # Maximum AGI coordination time
+
+# Forecasting Configuration
+forecasting:
+  enabled: true
+  historical_days: 7    # Days of historical data to use
+  forecast_horizons:    # Hours ahead to forecast
+    - 24   # 1 day
+    - 168  # 1 week  
+    - 720  # 1 month
+
+# Component-Specific Settings
+components:
+  agents:
+    health_check_timeout: 5     # seconds
+    load_test_duration: 60      # seconds per agent
+    exclude_patterns:           # Skip agents matching these patterns
+      - "*-backup-*"
+      - "*-test-*"
+    
+  agi_orchestration:
+    test_coordination: true
+    test_collective_intelligence: true
+    coordination_timeout: 10    # seconds
+    
+  service_mesh:
+    test_consul: true
+    test_kong: true  
+    test_rabbitmq: true
+    discovery_timeout: 5        # seconds
+    
+  infrastructure:
+    monitor_containers: true
+    monitor_networks: true
+    monitor_volumes: true
+    container_stats_interval: 30  # seconds
+
+# Resource Monitoring
+resource_monitoring:
+  enabled: true
+  metrics:
+    - cpu_percent
+    - memory_percent
+    - disk_io
+    - network_io
+    - container_count
+    - agent_count
+  thresholds:
+    cpu_critical: 90
+    memory_critical: 95
+    disk_space_critical: 90
+
+# Alert Configuration
+alerting:
+  enabled: true
+  channels:
+    - console
+    - file
+    - webhook  # Optional webhook URL for alerts
+  severity_levels:
+    critical: 
+      cpu_threshold: 90
+      memory_threshold: 95
+      response_time_threshold: 5000
+    warning:
+      cpu_threshold: 75
+      memory_threshold: 80
+      response_time_threshold: 2000
+
+# Optimization Recommendations
+recommendations:
+  enabled: true
+  categories:
+    - performance
+    - resource_optimization
+    - capacity_planning
+    - cost_optimization
+    - security
+  auto_generate: true
+  include_code_snippets: false
+
+# Integration Settings  
+integrations:
+  prometheus:
+    enabled: false
+    url: "http://localhost:9090"
+    
+  grafana:
+    enabled: false
+    url: "http://localhost:3000"
+    
+  elasticsearch:
+    enabled: false
+    url: "http://localhost:9200"
+
+# Advanced Settings
+advanced:
+  parallel_execution: true
+  max_workers: 20
+  memory_limit_mb: 2048
+  timeout_multiplier: 1.5  # Multiply timeouts by this factor if needed
+  retry_attempts: 3
+  retry_delay: 2  # seconds between retries
+  
+# Quantum-Ready Architecture Testing
+quantum_testing:
+  enabled: true
+  algorithms:
+    - quantum_inspired_optimization
+    - quantum_neural_networks
+    - quantum_machine_learning
+  simulation_depth: 100
+  
+# Multi-Modal Fusion Testing
+multimodal_testing:
+  enabled: true
+  modalities:
+    - text
+    - image  
+    - audio
+    - video
+    - structured_data
+  fusion_algorithms:
+    - attention_based
+    - early_fusion
+    - late_fusion
+    - hybrid_fusion
+
+# Federated Learning Testing
+federated_learning:
+  enabled: true
+  test_scenarios:
+    - horizontal_federation
+    - vertical_federation
+    - cross_silo_federation
+  privacy_preservation:
+    - differential_privacy
+    - homomorphic_encryption
+    - secure_aggregation
+
+# Energy Optimization Testing
+energy_optimization:
+  enabled: true
+  metrics:
+    - power_consumption
+    - energy_efficiency
+    - carbon_footprint
+  optimization_targets:
+    - minimize_power
+    - maximize_performance_per_watt
+    - reduce_cooling_requirements

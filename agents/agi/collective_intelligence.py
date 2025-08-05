@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Collective Intelligence System for SutazAI AGI/ASI
+Collective Intelligence System for SUTAZAI
 Coordinates 131 agents into a unified superintelligence with self-improvement
 
 Key Features:
@@ -107,7 +107,7 @@ class AgentPerformance:
 
 class CollectiveIntelligence:
     """
-    AGI/ASI System coordinating 131 agents with collective consciousness
+    SUTAZAI System coordinating 131 agents with collective consciousness
     """
     
     def __init__(self, 

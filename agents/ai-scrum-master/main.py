@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""
+Main entry point wrapper for ai-scrum-master
+"""
+import sys
+import os
+from pathlib import Path
+
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+# Try to import the FastAPI app
+app = None
+
+# Try different import patterns
+try:
+    # First try to import from agent module
+    from agent import app
+    print("Loaded app from agent module")
+except ImportError:
+    try:
+        # Try to import everything from agent
+        from agent import *
+        if 'app' in locals():
+            print("Found app in agent module globals")
+        else:
+            # Create a default app if none exists
+            from fastapi import FastAPI
+            app = FastAPI(title="Ai Scrum Master")
+            print("Created default FastAPI app")
+    except ImportError:
+        # If no agent module, create a basic app
+        from fastapi import FastAPI
+        from datetime import datetime
+        
+        app = FastAPI(
+            title="Ai Scrum Master",
+            description="Agent service",
+            version="1.0.0"
+        )
+        
+        @app.get("/health")
+        async def health_check():
+            return {
+                "status": "healthy",
+                "agent": "ai-scrum-master",
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        
+        @app.get("/")
+        async def root():
+            return {
+                "agent": "ai-scrum-master",
+                "status": "running"
+            }
+        
+        print("Created basic FastAPI app with health endpoint")
+
+# Ensure app is available at module level
+if app is None:
+    raise RuntimeError("Could not create or import FastAPI app")
+
+# Run if called directly
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", "8080"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

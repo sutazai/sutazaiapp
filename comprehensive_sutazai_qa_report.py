@@ -387,7 +387,7 @@ class SutazAIQAValidator:
             "Health Monitoring: Set up automated health checks for all agents with restart capabilities",
             "Load Testing: Perform load testing with multiple agents to validate system scalability",
             "Inter-Agent Communication: Test agent-to-agent communication protocols",
-            "Self-Improvement: Test AGI/ASI collective intelligence features with proper approval mechanisms"
+            "Self-Improvement: Test SUTAZAI collective intelligence features with proper approval mechanisms"
         ])
     
     def run_comprehensive_validation(self) -> Dict[str, Any]:
