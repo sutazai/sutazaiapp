@@ -18,6 +18,7 @@ Features:
 import asyncio
 import json
 import logging
+import os
 import time
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
@@ -40,14 +41,15 @@ class Neo4jManager:
     schema creation, data operations, and query execution.
     """
     
-    def __init__(self, uri: str = "bolt://localhost:7687", 
-                 username: str = "neo4j", 
-                 password: str = "password",
+    def __init__(self, uri: str = None, 
+                 username: str = None, 
+                 password: str = None,
                  database: str = "sutazai"):
         
-        self.uri = uri
-        self.username = username
-        self.password = password
+        # Get credentials from environment variables
+        self.uri = uri or os.getenv('NEO4J_URI', 'bolt://localhost:7687')
+        self.username = username or os.getenv('NEO4J_USER', 'neo4j')
+        self.password = password or os.getenv('NEO4J_PASSWORD', 'neo4j')
         self.database = database
         
         self.driver = None

@@ -1,0 +1,437 @@
+version: '3.8'
+
+# Missing AI Agents Deployment Configuration
+# Based on Master System Blueprint v2.2
+# Port Range: 10300-10399
+
+x-agent-base: &agent-base
+  image: sutazai/agent-base:latest
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  working_dir: /app
+  environment:
+    CONSUL_URL: http://consul:8500
+    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
+    REDIS_URL: redis://redis:6379/0
+    OLLAMA_BASE_URL: http://ollama:11434
+    LOG_LEVEL: INFO
+    AGENT_POOL: python
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.25'
+        memory: 256M
+  command: ["python", "container_startup.py"]
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  agent_workspaces:
+    external: true
+
+services:
+  # Orchestration Agents (10300-10319)
+  agentzero-coordinator:
+    <<: *agent-base
+    container_name: sutazai-agentzero-coordinator
+    ports:
+      - "11044:8080"
+    environment:
+      AGENT_NAME: agentzero-coordinator
+      AGENT_TYPE: orchestration
+      PRIORITY: critical
+    volumes:
+      - ./agents/agentzero-coordinator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  agent-orchestrator:
+    <<: *agent-base
+    container_name: sutazai-agent-orchestrator
+    ports:
+      - "11045:8080"
+    environment:
+      AGENT_NAME: agent-orchestrator
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/agent-orchestrator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  task-assignment-coordinator:
+    <<: *agent-base
+    container_name: sutazai-task-assignment-coordinator
+    ports:
+      - "11046:8080"
+    environment:
+      AGENT_NAME: task-assignment-coordinator
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/task-assignment-coordinator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  autonomous-system-controller:
+    <<: *agent-base
+    container_name: sutazai-autonomous-system-controller
+    ports:
+      - "10303:8080"
+    environment:
+      AGENT_NAME: autonomous-system-controller
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/autonomous-system-controller:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  bigagi-system-manager:
+    <<: *agent-base
+    container_name: sutazai-bigagi-system-manager
+    ports:
+      - "11047:8080"
+    environment:
+      AGENT_NAME: bigagi-system-manager
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/bigagi-system-manager:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AI/ML Agents (10320-10349)
+  deep-learning-brain-architect:
+    <<: *agent-base
+    container_name: sutazai-deep-learning-brain-architect
+    ports:
+      - "11048:8080"
+    environment:
+      AGENT_NAME: deep-learning-brain-architect
+      AGENT_TYPE: ai-ml
+      PYTORCH_ENABLE: "true"
+    volumes:
+      - ./agents/deep-learning-brain-architect:/app
+      - agent_workspaces:/workspaces
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  neural-architecture-search:
+    <<: *agent-base
+    container_name: sutazai-neural-architecture-search
+    ports:
+      - "11049:8080"
+    environment:
+      AGENT_NAME: neural-architecture-search
+      AGENT_TYPE: ai-ml
+    volumes:
+      - ./agents/neural-architecture-search:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  model-training-specialist:
+    <<: *agent-base
+    container_name: sutazai-model-training-specialist
+    ports:
+      - "11050:8080"
+    environment:
+      AGENT_NAME: model-training-specialist
+      AGENT_TYPE: ai-ml
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    volumes:
+      - ./agents/model-training-specialist:/app
+      - agent_workspaces:/workspaces
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  transformers-migration-specialist:
+    <<: *agent-base
+    container_name: sutazai-transformers-migration-specialist
+    ports:
+      - "11051:8080"
+    environment:
+      AGENT_NAME: transformers-migration-specialist
+      AGENT_TYPE: ai-ml
+    volumes:
+      - ./agents/transformers-migration-specialist:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  gradient-compression-specialist:
+    <<: *agent-base
+    container_name: sutazai-gradient-compression-specialist
+    ports:
+      - "11052:8080"
+    environment:
+      AGENT_NAME: gradient-compression-specialist
+      AGENT_TYPE: ai-ml
+    volumes:
+      - ./agents/gradient-compression-specialist:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Development Agents (10350-10379)
+  senior-ai-engineer:
+    <<: *agent-base
+    container_name: sutazai-senior-ai-engineer
+    ports:
+      - "11053:8080"
+    environment:
+      AGENT_NAME: senior-ai-engineer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/senior-ai-engineer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  senior-backend-developer:
+    <<: *agent-base
+    container_name: sutazai-senior-backend-developer
+    ports:
+      - "11054:8080"
+    environment:
+      AGENT_NAME: senior-backend-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/senior-backend-developer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  senior-frontend-developer:
+    <<: *agent-base
+    container_name: sutazai-senior-frontend-developer
+    ports:
+      - "11055:8080"
+    environment:
+      AGENT_NAME: senior-frontend-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/senior-frontend-developer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  senior-full-stack-developer:
+    <<: *agent-base
+    container_name: sutazai-senior-full-stack-developer
+    ports:
+      - "11056:8080"
+    environment:
+      AGENT_NAME: senior-full-stack-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/senior-full-stack-developer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  gpt-engineer:
+    <<: *agent-base
+    container_name: sutazai-gpt-engineer
+    ports:
+      - "11057:8080"
+    environment:
+      AGENT_NAME: gpt-engineer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/gpt-engineer:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  aider:
+    <<: *agent-base
+    container_name: sutazai-aider
+    ports:
+      - "10355:8080"
+    environment:
+      AGENT_NAME: aider
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/aider:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  code-generation-improver:
+    <<: *agent-base
+    container_name: sutazai-code-generation-improver
+    ports:
+      - "10356:8080"
+    environment:
+      AGENT_NAME: code-generation-improver
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/code-generation-improver:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  opendevin-code-generator:
+    <<: *agent-base
+    container_name: sutazai-opendevin-code-generator
+    ports:
+      - "10357:8080"
+    environment:
+      AGENT_NAME: opendevin-code-generator
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/opendevin-code-generator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Infrastructure Agents (10380-10399)
+  infrastructure-devops-manager:
+    <<: *agent-base
+    container_name: sutazai-infrastructure-devops-manager
+    ports:
+      - "11058:8080"
+    environment:
+      AGENT_NAME: infrastructure-devops-manager
+      AGENT_TYPE: infrastructure
+      DOCKER_SOCKET: /var/run/docker.sock
+    volumes:
+      - ./agents/infrastructure-devops-manager:/app
+      - agent_workspaces:/workspaces
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  deployment-automation-master:
+    <<: *agent-base
+    container_name: sutazai-deployment-automation-master
+    ports:
+      - "10381:8080"
+    environment:
+      AGENT_NAME: deployment-automation-master
+      AGENT_TYPE: infrastructure
+      KUBECTL_ENABLED: "false"
+    volumes:
+      - ./agents/deployment-automation-master:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  container-orchestrator-k3s:
+    <<: *agent-base
+    container_name: sutazai-container-orchestrator-k3s
+    ports:
+      - "11059:8080"
+    environment:
+      AGENT_NAME: container-orchestrator-k3s
+      AGENT_TYPE: infrastructure
+    volumes:
+      - ./agents/container-orchestrator-k3s:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  cicd-pipeline-orchestrator:
+    <<: *agent-base
+    container_name: sutazai-cicd-pipeline-orchestrator
+    ports:
+      - "11060:8080"
+    environment:
+      AGENT_NAME: cicd-pipeline-orchestrator
+      AGENT_TYPE: infrastructure
+    volumes:
+      - ./agents/cicd-pipeline-orchestrator:/app
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

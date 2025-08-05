@@ -3,7 +3,7 @@
 neo4j==5.15.0
 neo4j-driver==5.15.0
 
-# File monitoring  
+# File monitoring
 watchdog==3.0.0
 
 # Async file operations
@@ -13,12 +13,12 @@ aiofiles==23.2.0
 PyYAML==6.0.1
 
 # Data structures
-pydantic==2.5.2
+pydantic==2.10.4
 
 # Redis for caching (already included in main requirements)
 # redis==5.0.1
 
-# HTTP requests (already included)  
+# HTTP requests (already included)
 # httpx==0.25.2
 
 # Async support (already included)

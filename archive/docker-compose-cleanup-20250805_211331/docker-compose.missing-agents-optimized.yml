@@ -1,0 +1,237 @@
+version: '3.8'
+
+# Optimized Missing AI Agents Deployment Configuration
+# Uses pre-built image with common dependencies
+# Port Range: 10300-10399
+
+x-agent-base: &agent-base
+  build:
+    context: .
+    dockerfile: docker/agents/Dockerfile.python-agent
+  image: sutazai/python-agent:latest
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  working_dir: /app
+  environment:
+    CONSUL_URL: http://consul:8500
+    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
+    REDIS_URL: redis://redis:6379/0
+    OLLAMA_BASE_URL: http://ollama:11434
+    LOG_LEVEL: INFO
+    AGENT_POOL: python
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.25'
+        memory: 256M
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  agent_workspaces:
+    external: true
+
+services:
+  # Orchestration Agents (10300-10319)
+  agentzero-coordinator:
+    <<: *agent-base
+    container_name: sutazai-agentzero-coordinator
+    ports:
+      - "11031:8080"
+    environment:
+      AGENT_NAME: agentzero-coordinator
+      AGENT_TYPE: orchestration
+      PRIORITY: critical
+    volumes:
+      - ./agents/agentzero-coordinator:/app
+      - agent_workspaces:/workspaces
+
+  agent-orchestrator:
+    <<: *agent-base
+    container_name: sutazai-agent-orchestrator
+    ports:
+      - "11032:8080"
+    environment:
+      AGENT_NAME: agent-orchestrator
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/agent-orchestrator:/app
+      - agent_workspaces:/workspaces
+
+  task-assignment-coordinator:
+    <<: *agent-base
+    container_name: sutazai-task-assignment-coordinator
+    ports:
+      - "11033:8080"
+    environment:
+      AGENT_NAME: task-assignment-coordinator
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/task-assignment-coordinator:/app
+      - agent_workspaces:/workspaces
+
+  autonomous-system-controller:
+    <<: *agent-base
+    container_name: sutazai-autonomous-system-controller
+    ports:
+      - "10303:8080"
+    environment:
+      AGENT_NAME: autonomous-system-controller
+      AGENT_TYPE: orchestration
+    volumes:
+      - ./agents/autonomous-system-controller:/app
+      - agent_workspaces:/workspaces
+
+  # AI System Agents (10320-10339)
+  ai-system-architect:
+    <<: *agent-base
+    container_name: sutazai-ai-system-architect
+    ports:
+      - "11034:8080"
+    environment:
+      AGENT_NAME: ai-system-architect
+      AGENT_TYPE: ai-system
+    volumes:
+      - ./agents/ai-system-architect:/app
+      - agent_workspaces:/workspaces
+
+  ai-system-validator:
+    <<: *agent-base
+    container_name: sutazai-ai-system-validator
+    ports:
+      - "11035:8080"
+    environment:
+      AGENT_NAME: ai-system-validator
+      AGENT_TYPE: ai-system
+    volumes:
+      - ./agents/ai-system-validator:/app
+      - agent_workspaces:/workspaces
+
+  ai-testing-qa-validator:
+    <<: *agent-base
+    container_name: sutazai-ai-testing-qa-validator
+    ports:
+      - "11036:8080"
+    environment:
+      AGENT_NAME: ai-testing-qa-validator
+      AGENT_TYPE: ai-testing
+    volumes:
+      - ./agents/ai-testing-qa-validator:/app
+      - agent_workspaces:/workspaces
+
+  # Management Agents (10340-10359)
+  ai-product-manager:
+    <<: *agent-base
+    container_name: sutazai-ai-product-manager
+    ports:
+      - "11037:8080"
+    environment:
+      AGENT_NAME: ai-product-manager
+      AGENT_TYPE: management
+    volumes:
+      - ./agents/ai-product-manager:/app
+      - agent_workspaces:/workspaces
+
+  ai-scrum-master:
+    <<: *agent-base
+    container_name: sutazai-ai-scrum-master
+    ports:
+      - "11038:8080"
+    environment:
+      AGENT_NAME: ai-scrum-master
+      AGENT_TYPE: management
+    volumes:
+      - ./agents/ai-scrum-master:/app
+      - agent_workspaces:/workspaces
+
+  # Development Agents (10360-10379)
+  ai-senior-engineer:
+    <<: *agent-base
+    container_name: sutazai-ai-senior-engineer
+    ports:
+      - "11039:8080"
+    environment:
+      AGENT_NAME: ai-senior-engineer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/ai-senior-engineer:/app
+      - agent_workspaces:/workspaces
+
+  ai-senior-backend-developer:
+    <<: *agent-base
+    container_name: sutazai-ai-senior-backend-developer
+    ports:
+      - "11040:8080"
+    environment:
+      AGENT_NAME: ai-senior-backend-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/ai-senior-backend-developer:/app
+      - agent_workspaces:/workspaces
+
+  ai-senior-frontend-developer:
+    <<: *agent-base
+    container_name: sutazai-ai-senior-frontend-developer
+    ports:
+      - "11041:8080"
+    environment:
+      AGENT_NAME: ai-senior-frontend-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/ai-senior-frontend-developer:/app
+      - agent_workspaces:/workspaces
+
+  ai-senior-full-stack-developer:
+    <<: *agent-base
+    container_name: sutazai-ai-senior-full-stack-developer
+    ports:
+      - "11042:8080"
+    environment:
+      AGENT_NAME: ai-senior-full-stack-developer
+      AGENT_TYPE: development
+    volumes:
+      - ./agents/ai-senior-full-stack-developer:/app
+      - agent_workspaces:/workspaces
+
+  # Team Lead Agents (10380-10389)
+  ai-qa-team-lead:
+    <<: *agent-base
+    container_name: sutazai-ai-qa-team-lead
+    ports:
+      - "11043:8080"
+    environment:
+      AGENT_NAME: ai-qa-team-lead
+      AGENT_TYPE: team-lead
+    volumes:
+      - ./agents/ai-qa-team-lead:/app
+      - agent_workspaces:/workspaces
+
+  codebase-team-lead:
+    <<: *agent-base
+    container_name: sutazai-codebase-team-lead
+    ports:
+      - "10381:8080"
+    environment:
+      AGENT_NAME: codebase-team-lead
+      AGENT_TYPE: team-lead
+    volumes:
+      - ./agents/codebase-team-lead:/app
+      - agent_workspaces:/workspaces
+
+  testing-qa-team-lead:
+    <<: *agent-base
+    container_name: sutazai-testing-qa-team-lead
+    ports:
+      - "10382:8080"
+    environment:
+      AGENT_NAME: testing-qa-team-lead
+      AGENT_TYPE: team-lead
+    volumes:
+      - ./agents/testing-qa-team-lead:/app
+      - agent_workspaces:/workspaces

@@ -113,10 +113,13 @@ class FAISSVectorService:
         
         # Train the index with random vectors if it's a new index
         if not self.index.is_trained:
-            training_vectors = np.random.random((max(nlist, 1000), self.dimension)).astype('float32')
+            # FAISS requires at least 39x the number of centroids for training
+            min_training_points = max(nlist * 39, 40000)
+            training_vectors = np.random.random((min_training_points, self.dimension)).astype('float32')
             # Normalize vectors for cosine similarity
             faiss.normalize_L2(training_vectors)
             self.index.train(training_vectors)
+            logger.info(f"Trained FAISS index with {min_training_points} vectors for {nlist} centroids")
         
         self.index.nprobe = min(10, nlist)  # Default search scope
         

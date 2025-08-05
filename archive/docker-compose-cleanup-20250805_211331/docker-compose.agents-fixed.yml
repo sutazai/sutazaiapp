@@ -1,0 +1,148 @@
+version: '3.8'
+
+# Fixed Agent Deployment Configuration with Optimized Startup
+# Uses universal startup script
+
+x-agent-base: &agent-base
+  image: python:3.11-slim
+  restart: unless-stopped
+  networks:
+    - sutazai-network
+  working_dir: /app
+  environment:
+    CONSUL_URL: http://consul:8500
+    RABBITMQ_URL: amqp://sutazai:sutazai_rmq@rabbitmq:5672/sutazai
+    REDIS_URL: redis://redis:6379/0
+    OLLAMA_BASE_URL: http://ollama:11434
+    LOG_LEVEL: INFO
+    AGENT_POOL: python
+    PYTHONPATH: /app:/app/agents
+  deploy:
+    resources:
+      limits:
+        cpus: '0.5'
+        memory: 512M
+      reservations:
+        cpus: '0.25'
+        memory: 256M
+  command: >
+    sh -c "
+      if [ ! -f /tmp/deps_installed ]; then
+        pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client psutil structlog aiofiles python-multipart &&
+        touch /tmp/deps_installed
+      fi &&
+      if [ -f /app/requirements.txt ]; then
+        pip install --no-cache-dir -r /app/requirements.txt
+      fi &&
+      if [ -f /app/main.py ]; then
+        python -m uvicorn main:app --host 0.0.0.0 --port 8080
+      elif [ -f /app/app.py ]; then
+        python -m uvicorn app:app --host 0.0.0.0 --port 8080
+      elif [ -f /app/container_startup.py ]; then
+        python /app/container_startup.py
+      elif [ -f /app/universal_startup.py ]; then
+        python /app/universal_startup.py
+      else
+        python -c 'from fastapi import FastAPI; import uvicorn; app = FastAPI(); @app.get(\"/health\"); def health(): return {\"status\": \"healthy\"}; uvicorn.run(app, host=\"0.0.0.0\", port=8080)'
+      fi
+    "
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  agent_workspaces:
+    external: true
+
+services:
+  # AI System Validators
+  ai-system-validator:
+    <<: *agent-base
+    container_name: sutazai-ai-system-validator
+    ports:
+      - "11009:8080"
+    environment:
+      AGENT_NAME: ai-system-validator
+      AGENT_TYPE: ai-system
+    volumes:
+      - ./agents/ai-system-validator:/app
+      - ./agents/universal_startup.py:/app/universal_startup.py
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ai-testing-qa-validator:
+    <<: *agent-base
+    container_name: sutazai-ai-testing-qa-validator
+    ports:
+      - "11010:8080"
+    environment:
+      AGENT_NAME: ai-testing-qa-validator
+      AGENT_TYPE: ai-testing
+    volumes:
+      - ./agents/ai-testing-qa-validator:/app
+      - ./agents/universal_startup.py:/app/universal_startup.py
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # K3s Container Orchestrator (Fixed)
+  container-orchestrator-k3s:
+    <<: *agent-base
+    container_name: sutazai-container-orchestrator-k3s
+    ports:
+      - "11011:8080"
+    environment:
+      AGENT_NAME: container-orchestrator-k3s
+      AGENT_TYPE: infrastructure
+    volumes:
+      - ./agents/container-orchestrator-k3s:/app
+      - ./agents/universal_startup.py:/app/universal_startup.py
+      - agent_workspaces:/workspaces
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Deployment Automation Master
+  deployment-automation-master:
+    <<: *agent-base
+    container_name: sutazai-deployment-automation-master
+    ports:
+      - "10324:8080"
+    environment:
+      AGENT_NAME: deployment-automation-master
+      AGENT_TYPE: deployment
+    volumes:
+      - ./agents/deployment-automation-master:/app
+      - ./agents/universal_startup.py:/app/universal_startup.py
+      - agent_workspaces:/workspaces
+    command: >
+      sh -c "
+        if [ ! -f /tmp/deps_installed ]; then
+          pip install --no-cache-dir fastapi uvicorn httpx redis pydantic prometheus-client psutil structlog aiofiles python-multipart &&
+          touch /tmp/deps_installed
+        fi &&
+        if [ -f /app/requirements.txt ]; then
+          pip install --no-cache-dir -r /app/requirements.txt
+        fi &&
+        if [ -f /app/agent.py ]; then
+          python -m uvicorn agent:app --host 0.0.0.0 --port 8080 ||
+          python /app/universal_startup.py
+        else
+          python /app/universal_startup.py
+        fi
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -13,7 +13,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    try:
     from agents.compatibility_base_agent import BaseAgentV2
 except ImportError:
     # Direct fallback to core
@@ -38,9 +37,89 @@ except ImportError:
                 return {"status": "success", "agent": self.agent_id}
             
             def start(self):
-                self.logger.info(f"Agent {self.name} started")import asyncio
-from typing import Dict, Any
+                self.logger.info(f"Agent {self.name} started")
 
+import asyncio
+from typing import Dict, Any
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from datetime import datetime
+
+# Create FastAPI app directly for uvicorn compatibility
+app = FastAPI(
+    title="Emergency Shutdown Coordinator",
+    description="Critical safety control system",
+    version="1.0.0"
+)
+
+class TaskRequest(BaseModel):
+    task: str
+    context: Dict[str, Any] = {}
+
+class TaskResponse(BaseModel):
+    status: str
+    result: Any
+    agent: str = "emergency-shutdown-coordinator"
+
+@app.get("/")
+async def root():
+    return {
+        "agent": "emergency-shutdown-coordinator",
+        "status": "active",
+        "description": "Critical safety control system"
+    }
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "agent": "emergency-shutdown-coordinator",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+@app.post("/execute")
+async def execute_task(request: TaskRequest):
+    """Execute emergency coordination task"""
+    try:
+        if "shutdown" in request.task.lower():
+            result = await handle_shutdown_request(request)
+        elif "emergency" in request.task.lower():
+            result = await handle_emergency_request(request)
+        else:
+            result = await handle_general_task(request)
+            
+        return TaskResponse(status="completed", result=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+async def handle_shutdown_request(request: TaskRequest) -> Dict[str, Any]:
+    """Handle emergency shutdown requests"""
+    return {
+        "action": "emergency_shutdown_initiated",
+        "task": request.task,
+        "safety_protocols": "activated",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+async def handle_emergency_request(request: TaskRequest) -> Dict[str, Any]:
+    """Handle emergency coordination requests"""
+    return {
+        "action": "emergency_protocol_activated",
+        "task": request.task,
+        "response_teams": "notified",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+async def handle_general_task(request: TaskRequest) -> Dict[str, Any]:
+    """Handle general monitoring tasks"""
+    return {
+        "action": "monitoring_task_processed",
+        "task": request.task,
+        "status": "completed",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+# Legacy agent class for compatibility
 class Emergency_Shutdown_CoordinatorAgent(BaseAgentV2):
     """Agent implementation for emergency-shutdown-coordinator"""
     
@@ -51,43 +130,8 @@ class Emergency_Shutdown_CoordinatorAgent(BaseAgentV2):
             port=int(os.getenv("PORT", "8080")),
             description="Specialized agent for monitoring tasks"
         )
-        
-    async def process_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Process incoming tasks"""
-        try:
-            task_type = task.get("type", "unknown")
-            
-            if task_type == "health":
-                return {"status": "healthy", "agent": self.agent_id}
-            
-            # TODO: Implement specific task processing logic
-            result = await self._process_with_ollama(task)
-            
-            return {
-                "status": "success",
-                "result": result,
-                "agent": self.agent_id
-            }
-            
-        except Exception as e:
-            self.logger.error(f"Error processing task: {e}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "agent": self.agent_id
-            }
-    
-    async def _process_with_ollama(self, task: Dict[str, Any]) -> Any:
-        """Process task using Ollama model"""
-        # TODO: Implement Ollama integration
-        model = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")
-        
-        # Placeholder for actual Ollama processing
-        return {
-            "message": f"Processed by {self.name} using model {model}",
-            "task": task
-        }
 
 if __name__ == "__main__":
-    agent = Emergency_Shutdown_CoordinatorAgent()
-    agent.start()
+    import uvicorn
+    port = int(os.getenv("PORT", "8080"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -13,7 +13,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    try:
     from agents.compatibility_base_agent import BaseAgentV2
 except ImportError:
     # Direct fallback to core
@@ -38,7 +37,9 @@ except ImportError:
                 return {"status": "success", "agent": self.agent_id}
             
             def start(self):
-                self.logger.info(f"Agent {self.name} started")import asyncio
+                self.logger.info(f"Agent {self.name} started")
+
+import asyncio
 from typing import Dict, Any
 
 class Genetic_Algorithm_TunerAgent(BaseAgentV2):

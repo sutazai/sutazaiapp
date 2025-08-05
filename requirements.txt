@@ -11,7 +11,7 @@ bitsandbytes==LATEST_SECURE
 fastapi==0.115.6
 uvicorn[standard]==LATEST_SECURE
 pydantic==2.10.4
-pydantic-settings==LATEST_SECURE
+pydantic-settings==2.8.1
 
 # Database and storage
 sqlalchemy==2.0.36

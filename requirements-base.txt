@@ -1,0 +1,57 @@
+# SUTAZAIAPP Base Requirements - Centralized Version Control
+# Use this as the base for all services to avoid conflicts
+# Generated: August 5, 2025
+
+# Core Web Frameworks
+fastapi==0.115.6
+flask==3.1.0
+uvicorn[standard]==0.32.1
+
+# Data Validation
+pydantic==2.10.4
+pydantic-settings==2.8.1
+
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+redis==5.2.1
+
+# HTTP & Networking
+requests==2.32.3
+httpx==0.28.1
+aiohttp==3.11.11
+websockets==13.1
+
+# Security - CRITICAL
+cryptography==44.0.0
+PyJWT==2.10.1
+passlib[bcrypt]==1.7.4
+
+# Monitoring
+prometheus-client==0.21.1
+psutil==6.1.0
+
+# Utilities
+python-multipart==0.0.19
+structlog==24.4.0
+python-dotenv==1.0.1
+click==8.1.8
+
+# AI/ML
+openai==1.59.4
+langchain==0.3.14
+chromadb==0.5.23
+transformers==4.47.1
+torch==2.5.1
+numpy==2.2.1
+pandas==2.2.3
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.2
+pytest-cov==6.0.0
+
+# Development
+black==24.10.0
+ruff==0.8.6
+mypy==1.14.1

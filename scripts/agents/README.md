@@ -1,5 +1,11 @@
 # Agent Scripts
 
+⚠️ **CRITICAL WARNING**: Most "agent" containers are STUBS
+- The Docker containers labeled as "agents" are basic HTTP services
+- They return "Hello, I am [agent name]" responses
+- No actual AI functionality implemented in containers
+- These scripts are separate from the stub containers
+
 This directory contains executable scripts for agent implementations.
 
 ## Scripts

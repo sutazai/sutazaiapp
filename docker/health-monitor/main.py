@@ -8,7 +8,7 @@ import asyncio
 import aiohttp
 from typing import Dict, Any, Optional
 
-class Health-monitorAgent:
+class HealthMonitorAgent:
     def __init__(self):
         self.name = "health-monitor"
         self.ollama_base = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")

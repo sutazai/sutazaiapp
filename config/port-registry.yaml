@@ -1,0 +1,958 @@
+# SUTAZAIAPP Port Registry
+# Comprehensive port allocation registry for all services
+# Last Updated: 2025-08-05
+# Version: 1.0.0
+
+# Port Allocation Strategy:
+# - 10000-10199: Infrastructure services (databases, message queues, etc.)
+# - 10200-10299: Monitoring and observability stack
+# - 10300-10499: External integrations and tools
+# - 10500-10599: AGI system components
+# - 11000-11148: AI Agents (standardized range)
+# - 11434-11436: Ollama instances
+# - Other ports: Legacy and special services (to be migrated)
+
+port_ranges:
+  infrastructure:
+    range: [10000, 10199]
+    description: "Core infrastructure services"
+    reserved_for: "Databases, caches, message queues, API gateways"
+  
+  monitoring:
+    range: [10200, 10299]
+    description: "Monitoring and observability stack"
+    reserved_for: "Prometheus, Grafana, Loki, Jaeger, exporters"
+  
+  integrations:
+    range: [10300, 10499]
+    description: "External tools and integrations"
+    reserved_for: "Third-party AI tools, workflow engines"
+  
+  agi_system:
+    range: [10500, 10599]
+    description: "AGI system components"
+    reserved_for: "AGI orchestration, consensus, safety monitoring"
+  
+  agents:
+    range: [11000, 11148]
+    description: "AI Agents standardized port range"
+    reserved_for: "All AI agent services"
+  
+  ollama:
+    range: [11434, 11436]
+    description: "Ollama LLM instances"
+    reserved_for: "Primary, secondary, tertiary Ollama instances"
+
+# Infrastructure Services (10000-10199)
+infrastructure:
+  10000:
+    service: postgres-secure
+    container: sutazai-postgres-secure
+    description: "Main PostgreSQL database (secure)"
+    internal_port: 5432
+  
+  10001:
+    service: redis-secure
+    container: sutazai-redis-secure
+    description: "Main Redis cache (secure)"
+    internal_port: 6379
+  
+  10002:
+    service: api-gateway
+    container: sutazai-api-gateway
+    description: "API Gateway HTTP"
+    internal_port: 8080
+  
+  10003:
+    service: api-gateway
+    container: sutazai-api-gateway
+    description: "API Gateway HTTPS"
+    internal_port: 8443
+  
+  10005:
+    service: kong
+    container: sutazaiapp-kong
+    description: "Kong API Gateway - Proxy port"
+    internal_port: 8000
+  
+  10006:
+    service: consul
+    container: sutazaiapp-consul
+    description: "Consul service discovery - UI and HTTP API"
+    internal_port: 8500
+  
+  10007:
+    service: rabbitmq
+    container: sutazaiapp-rabbitmq
+    description: "RabbitMQ AMQP port"
+    internal_port: 5672
+  
+  10008:
+    service: rabbitmq
+    container: sutazaiapp-rabbitmq
+    description: "RabbitMQ Management UI"
+    internal_port: 15672
+  
+  10009:
+    service: resource-manager
+    container: sutazai-resource-manager
+    description: "Resource management service"
+    internal_port: 8080
+  
+  10010:
+    service: backend
+    container: sutazai-backend-secure
+    description: "Main backend API"
+    internal_port: 8000
+  
+  10011:
+    service: frontend
+    container: sutazai-frontend
+    description: "Main frontend application"
+    internal_port: 3000
+  
+  10020:
+    service: hygiene-postgres
+    container: hygiene-postgres
+    description: "Hygiene monitoring database"
+    internal_port: 5432
+  
+  10021:
+    service: hygiene-redis
+    container: hygiene-redis
+    description: "Hygiene monitoring cache"
+    internal_port: 6379
+  
+  10030:
+    service: service-mesh
+    container: sutazai-service-mesh
+    description: "Service mesh control plane"
+    internal_port: 8080
+  
+  10040:
+    service: config-service
+    container: sutazai-config-service
+    description: "Configuration management service"
+    internal_port: 8080
+  
+  10041:
+    service: consul-discovery
+    container: sutazai-consul-discovery
+    description: "Consul service discovery"
+    internal_port: 8500
+  
+  10043:
+    service: rabbitmq
+    container: sutazai-rabbitmq
+    description: "RabbitMQ message broker"
+    internal_port: 5672
+  
+  10044:
+    service: kong-gateway
+    container: sutazai-kong-gateway
+    description: "Kong API Gateway"
+    internal_port: 8000
+  
+  10046:
+    service: ai-runtime
+    container: sutazai-ai-runtime
+    description: "AI runtime environment"
+    internal_port: 8080
+  
+  10047:
+    service: haproxy
+    container: sutazai-haproxy
+    description: "HAProxy load balancer - HTTP"
+    internal_port: 80
+  
+  10048:
+    service: haproxy
+    container: sutazai-haproxy
+    description: "HAProxy load balancer - HTTPS"
+    internal_port: 443
+  
+  10049:
+    service: caddy
+    container: sutazai-caddy
+    description: "Caddy web server"
+    internal_port: 80
+  
+  10050:
+    service: integration-dashboard
+    container: sutazai-integration-dashboard
+    description: "Integration dashboard UI"
+    internal_port: 8080
+  
+  10053:
+    service: vault
+    container: sutazai-vault
+    description: "HashiCorp Vault - Secrets management"
+    internal_port: 8200
+  
+  10054:
+    service: jwt-service
+    container: sutazai-jwt-service
+    description: "JWT authentication service"
+    internal_port: 8080
+  
+  10055:
+    service: service-account-manager
+    container: sutazai-service-account-manager
+    description: "Service account management"
+    internal_port: 8080
+  
+  10056:
+    service: rbac-policy-engine
+    container: sutazai-rbac-engine
+    description: "RBAC policy engine"
+    internal_port: 8080
+  
+  10099:
+    service: circuit-breaker
+    container: sutazai-circuit-breaker
+    description: "Circuit breaker service"
+    internal_port: 8080
+  
+  10100:
+    service: postgres-adapter
+    container: sutazai-postgres-adapter
+    description: "PostgreSQL adapter service"
+    internal_port: 8080
+  
+  10101:
+    service: qdrant
+    container: sutazai-qdrant
+    description: "Qdrant vector database - HTTP"
+    internal_port: 6333
+  
+  10102:
+    service: qdrant
+    container: sutazai-qdrant
+    description: "Qdrant vector database - gRPC"
+    internal_port: 6334
+  
+  10103:
+    service: faiss
+    container: sutazai-faiss
+    description: "FAISS vector search"
+    internal_port: 8080
+  
+  10104:
+    service: ollama-secure
+    container: sutazai-ollama-secure
+    description: "Ollama LLM service (secure)"
+    internal_port: 11434
+  
+  10105:
+    service: ollama-queue
+    container: sutazai-ollama-queue
+    description: "Ollama queue manager"
+    internal_port: 8080
+  
+  10106:
+    service: ollama-tertiary
+    container: sutazai-ollama-tertiary
+    description: "Ollama tertiary instance"
+    internal_port: 11434
+  
+  10107:
+    service: ollama-loadbalancer
+    container: sutazai-ollama-lb
+    description: "Ollama load balancer"
+    internal_port: 8080
+  
+  10108:
+    service: ollama-monitor
+    container: sutazai-ollama-monitor
+    description: "Ollama monitoring service"
+    internal_port: 8080
+  
+  10110:
+    service: redis-adapter
+    container: sutazai-redis-adapter
+    description: "Redis adapter service"
+    internal_port: 8080
+
+# Monitoring Services (10200-10299)
+monitoring:
+  10200:
+    service: prometheus
+    container: sutazai-prometheus-secure
+    description: "Prometheus metrics collection"
+    internal_port: 9090
+  
+  10201:
+    service: grafana
+    container: sutazai-grafana
+    description: "Grafana visualization dashboard"
+    internal_port: 3000
+  
+  10202:
+    service: loki
+    container: sutazai-loki
+    description: "Loki log aggregation"
+    internal_port: 3100
+  
+  10203:
+    service: alertmanager
+    container: sutazai-alertmanager
+    description: "Prometheus Alertmanager"
+    internal_port: 9093
+  
+  10204:
+    service: blackbox-exporter
+    container: sutazai-blackbox-exporter
+    description: "Blackbox prober for endpoints"
+    internal_port: 9115
+  
+  10205:
+    service: node-exporter
+    container: sutazai-node-exporter
+    description: "Node metrics exporter"
+    internal_port: 9100
+  
+  10206:
+    service: cadvisor
+    container: sutazai-cadvisor
+    description: "Container metrics"
+    internal_port: 8080
+  
+  10207:
+    service: postgres-exporter
+    container: sutazai-postgres-exporter
+    description: "PostgreSQL metrics exporter"
+    internal_port: 9187
+  
+  10208:
+    service: redis-exporter
+    container: sutazai-redis-exporter
+    description: "Redis metrics exporter"
+    internal_port: 9121
+  
+  10209:
+    service: ai-metrics-exporter
+    container: sutazai-ai-metrics-exporter
+    description: "AI-specific metrics exporter"
+    internal_port: 8080
+  
+  10210:
+    service: health-monitor
+    container: sutazai-health-monitor
+    description: "System health monitoring"
+    internal_port: 8080
+  
+  10220:
+    service: node-exporter
+    container: sutazai-node-exporter
+    description: "System metrics exporter"
+    internal_port: 9100
+  
+  10221:
+    service: cadvisor
+    container: sutazai-cadvisor
+    description: "Container advisor for Docker metrics"
+    internal_port: 8080
+  
+  10223:
+    service: jaeger
+    container: sutazai-jaeger
+    description: "Jaeger UI - Distributed tracing"
+    internal_port: 16686
+  
+  10224:
+    service: jaeger
+    container: sutazai-jaeger
+    description: "Jaeger collector"
+    internal_port: 14268
+  
+  10225:
+    service: elasticsearch
+    container: sutazai-elasticsearch
+    description: "Elasticsearch for log storage"
+    internal_port: 9200
+  
+  10226:
+    service: kibana
+    container: sutazai-kibana
+    description: "Kibana log visualization"
+    internal_port: 5601
+  
+  10227:
+    service: postgres-exporter
+    container: sutazai-postgres-exporter-monitoring
+    description: "PostgreSQL metrics (monitoring stack)"
+    internal_port: 9187
+  
+  10228:
+    service: redis-exporter
+    container: sutazai-redis-exporter-monitoring
+    description: "Redis metrics (monitoring stack)"
+    internal_port: 9121
+  
+  10230:
+    service: uptime-kuma
+    container: sutazai-uptime-kuma
+    description: "Uptime monitoring dashboard"
+    internal_port: 3001
+
+# AI Agents (11000-11148)
+agents:
+  # Critical Infrastructure Agents (11000-11019)
+  11000:
+    service: agent-orchestrator
+    container: sutazai-agent-orchestrator
+    description: "Main agent orchestration service"
+    internal_port: 8080
+    priority: critical
+  
+  11001:
+    service: agentzero-coordinator
+    container: sutazai-agentzero-coordinator
+    description: "AgentZero coordination service"
+    internal_port: 8080
+    priority: critical
+  
+  11002:
+    service: ai-system-architect
+    container: sutazai-ai-system-architect
+    description: "System architecture design agent"
+    internal_port: 8080
+    priority: critical
+  
+  11003:
+    service: ai-system-validator
+    container: sutazai-ai-system-validator
+    description: "System validation and testing"
+    internal_port: 8080
+    priority: critical
+  
+  11004:
+    service: ai-senior-backend-developer
+    container: sutazai-ai-senior-backend-developer
+    description: "Backend development specialist"
+    internal_port: 8080
+    priority: critical
+  
+  11005:
+    service: ai-senior-frontend-developer
+    container: sutazai-ai-senior-frontend-developer
+    description: "Frontend development specialist"
+    internal_port: 8080
+    priority: critical
+  
+  11006:
+    service: ai-senior-full-stack-developer
+    container: sutazai-ai-senior-full-stack-developer
+    description: "Full-stack development specialist"
+    internal_port: 8080
+    priority: critical
+  
+  11007:
+    service: ai-senior-engineer
+    container: sutazai-ai-senior-engineer
+    description: "Senior engineering specialist"
+    internal_port: 8080
+    priority: critical
+  
+  11008:
+    service: ai-product-manager
+    container: sutazai-ai-product-manager
+    description: "Product management agent"
+    internal_port: 8080
+    priority: critical
+  
+  11009:
+    service: ai-scrum-master
+    container: sutazai-ai-scrum-master
+    description: "Scrum master and agile coach"
+    internal_port: 8080
+    priority: critical
+  
+  11010:
+    service: ai-qa-team-lead
+    container: sutazai-ai-qa-team-lead
+    description: "QA team leadership"
+    internal_port: 8080
+    priority: critical
+  
+  11011:
+    service: ai-testing-qa-validator
+    container: sutazai-ai-testing-qa-validator
+    description: "Testing and QA validation"
+    internal_port: 8080
+    priority: critical
+  
+  11012:
+    service: cicd-pipeline-orchestrator
+    container: sutazai-cicd-pipeline-orchestrator
+    description: "CI/CD pipeline management"
+    internal_port: 8080
+    priority: critical
+  
+  11013:
+    service: deployment-automation-master
+    container: sutazai-deployment-automation-master
+    description: "Deployment automation"
+    internal_port: 8080
+    priority: critical
+  
+  11014:
+    service: adversarial-attack-detector
+    container: sutazai-adversarial-attack-detector
+    description: "Security threat detection"
+    internal_port: 8080
+    priority: critical
+  
+  11015:
+    service: agent-creator
+    container: sutazai-agent-creator
+    description: "Dynamic agent creation"
+    internal_port: 8080
+    priority: critical
+  
+  11016:
+    service: agent-debugger
+    container: sutazai-agent-debugger
+    description: "Agent debugging and troubleshooting"
+    internal_port: 8080
+    priority: critical
+  
+  11017:
+    service: compute-scheduler-optimizer
+    container: sutazai-compute-scheduler-optimizer
+    description: "Compute resource scheduling"
+    internal_port: 8080
+    priority: critical
+  
+  11018:
+    service: emergency-shutdown-coordinator
+    container: sutazai-emergency-shutdown-coordinator
+    description: "Emergency response coordination"
+    internal_port: 8080
+    priority: critical
+  
+  11019:
+    service: cpu-hardware-optimizer
+    container: sutazai-cpu-hardware-optimizer
+    description: "CPU resource optimization"
+    internal_port: 8080
+    priority: critical
+  
+  # Specialized Agents (11020-11044)
+  11020:
+    service: deep-learning-brain-architect
+    container: sutazai-deep-learning-brain-architect
+    description: "Deep learning architecture design"
+    internal_port: 8080
+    priority: high
+  
+  11021:
+    service: deep-learning-brain-manager
+    container: sutazai-deep-learning-brain-manager
+    description: "Deep learning model management"
+    internal_port: 8080
+    priority: high
+  
+  11022:
+    service: autogen
+    container: sutazai-autogen
+    description: "Microsoft AutoGen integration"
+    internal_port: 8080
+    priority: medium
+  
+  11023:
+    service: autogpt
+    container: sutazai-autogpt
+    description: "AutoGPT autonomous agent"
+    internal_port: 8080
+    priority: medium
+  
+  11024:
+    service: crewai
+    container: sutazai-crewai
+    description: "CrewAI multi-agent framework"
+    internal_port: 8080
+    priority: medium
+  
+  11025:
+    service: aider
+    container: sutazai-aider
+    description: "Aider AI pair programmer"
+    internal_port: 8080
+    priority: medium
+  
+  11026:
+    service: code-generation-improver
+    container: sutazai-code-generation-improver
+    description: "Code generation enhancement"
+    internal_port: 8080
+    priority: high
+  
+  11027:
+    service: code-improver
+    container: sutazai-code-improver
+    description: "Code quality improvement"
+    internal_port: 8080
+    priority: high
+  
+  11028:
+    service: devika
+    container: sutazai-devika
+    description: "Devika AI assistant"
+    internal_port: 8080
+    priority: medium
+  
+  11029:
+    service: code-quality-gateway
+    container: sutazai-code-quality-gateway
+    description: "Code quality enforcement"
+    internal_port: 8080
+    priority: high
+  
+  11030:
+    service: bias-fairness-auditor
+    container: sutazai-bias-fairness-auditor
+    description: "AI bias and fairness auditing"
+    internal_port: 8080
+    priority: high
+  
+  11031:
+    service: container-orchestrator-k3s
+    container: sutazai-container-orchestrator-k3s
+    description: "K3s container orchestration"
+    internal_port: 8080
+    priority: high
+  
+  11032:
+    service: container-vulnerability-scanner
+    container: sutazai-container-vulnerability-scanner
+    description: "Container security scanning"
+    internal_port: 8080
+    priority: high
+  
+  11033:
+    service: data-drift-detector
+    container: sutazai-data-drift-detector
+    description: "Data drift detection"
+    internal_port: 8080
+    priority: medium
+  
+  11034:
+    service: data-lifecycle-manager
+    container: sutazai-data-lifecycle-manager
+    description: "Data lifecycle management"
+    internal_port: 8080
+    priority: medium
+  
+  11035:
+    service: data-version-controller
+    container: sutazai-data-version-controller
+    description: "Data version control (DVC)"
+    internal_port: 8080
+    priority: medium
+  
+  11036:
+    service: attention-optimizer
+    container: sutazai-attention-optimizer
+    description: "Attention mechanism optimization"
+    internal_port: 8080
+    priority: medium
+  
+  11037:
+    service: cognitive-architecture-designer
+    container: sutazai-cognitive-architecture-designer
+    description: "Cognitive architecture design"
+    internal_port: 8080
+    priority: medium
+  
+  11038:
+    service: cognitive-load-monitor
+    container: sutazai-cognitive-load-monitor
+    description: "Cognitive load monitoring"
+    internal_port: 8080
+    priority: medium
+  
+  11039:
+    service: autonomous-task-executor
+    container: sutazai-autonomous-task-executor
+    description: "Autonomous task execution"
+    internal_port: 8080
+    priority: high
+  
+  11040:
+    service: browser-automation-orchestrator
+    container: sutazai-browser-automation-orchestrator
+    description: "Browser automation management"
+    internal_port: 8080
+    priority: medium
+  
+  11041:
+    service: codebase-team-lead
+    container: sutazai-codebase-team-lead
+    description: "Codebase management leadership"
+    internal_port: 8080
+    priority: high
+  
+  11042:
+    service: edge-inference-proxy
+    container: sutazai-edge-inference-proxy
+    description: "Edge inference proxy service"
+    internal_port: 8080
+    priority: medium
+  
+  11043:
+    service: energy-consumption-optimizer
+    container: sutazai-energy-consumption-optimizer
+    description: "Energy efficiency optimization"
+    internal_port: 8080
+    priority: low
+  
+  11044:
+    service: ethical-governor
+    container: sutazai-ethical-governor
+    description: "Ethical AI governance"
+    internal_port: 8080
+    priority: high
+  
+  # Auxiliary Agents (11045-11068)
+  11045:
+    service: evolution-strategy-trainer
+    container: sutazai-evolution-strategy-trainer
+    description: "Evolutionary algorithm training"
+    internal_port: 8080
+    priority: low
+  
+  11046:
+    service: experiment-tracker
+    container: sutazai-experiment-tracker
+    description: "ML experiment tracking"
+    internal_port: 8080
+    priority: medium
+  
+  11047:
+    service: explainability-transparency
+    container: sutazai-explainability-transparency
+    description: "AI explainability service"
+    internal_port: 8080
+    priority: high
+  
+  11048:
+    service: distributed-tracing-analyzer
+    container: sutazai-distributed-tracing-analyzer
+    description: "Distributed tracing analysis"
+    internal_port: 8080
+    priority: medium
+  
+  11049:
+    service: log-aggregator-loki
+    container: sutazai-log-aggregator-loki
+    description: "Log aggregation with Loki"
+    internal_port: 8080
+    priority: medium
+  
+  11050:
+    service: metrics-collector-prometheus
+    container: sutazai-metrics-collector-prometheus
+    description: "Prometheus metrics collection"
+    internal_port: 8080
+    priority: high
+  
+  11051:
+    service: observability-dashboard-manager
+    container: sutazai-observability-dashboard-manager
+    description: "Observability dashboard management"
+    internal_port: 8080
+    priority: medium
+  
+  11052:
+    service: explainable-ai-specialist
+    container: sutazai-explainable-ai-specialist
+    description: "Explainable AI specialist"
+    internal_port: 8080
+    priority: medium
+  
+  11053:
+    service: federated-learning-coordinator
+    container: sutazai-federated-learning-coordinator
+    description: "Federated learning coordination"
+    internal_port: 8080
+    priority: low
+  
+  11054:
+    service: data-analysis-engineer
+    container: sutazai-data-analysis-engineer
+    description: "Data analysis engineering"
+    internal_port: 8080
+    priority: medium
+  
+  11055:
+    service: data-pipeline-engineer
+    container: sutazai-data-pipeline-engineer
+    description: "Data pipeline engineering"
+    internal_port: 8080
+    priority: high
+  
+  11056:
+    service: distributed-computing-architect
+    container: sutazai-distributed-computing-architect
+    description: "Distributed computing architecture"
+    internal_port: 8080
+    priority: medium
+  
+  11057:
+    service: edge-computing-optimizer
+    container: sutazai-edge-computing-optimizer
+    description: "Edge computing optimization"
+    internal_port: 8080
+    priority: medium
+  
+  11058:
+    service: document-knowledge-manager
+    container: sutazai-document-knowledge-manager
+    description: "Document and knowledge management"
+    internal_port: 8080
+    priority: high
+  
+  11059:
+    service: episodic-memory-engineer
+    container: sutazai-episodic-memory-engineer
+    description: "Episodic memory systems"
+    internal_port: 8080
+    priority: low
+  
+  11060:
+    service: dify-automation-specialist
+    container: sutazai-dify-automation-specialist
+    description: "Dify automation specialist"
+    internal_port: 8080
+    priority: medium
+  
+  11061:
+    service: flowiseai-flow-manager
+    container: sutazai-flowiseai-flow-manager
+    description: "FlowiseAI workflow management"
+    internal_port: 8080
+    priority: medium
+  
+  11062:
+    service: awesome-code-ai
+    container: sutazai-awesome-code-ai
+    description: "Awesome Code AI integration"
+    internal_port: 8080
+    priority: low
+  
+  11063:
+    service: finrobot
+    container: sutazai-finrobot
+    description: "Financial AI robot"
+    internal_port: 8080
+    priority: low
+  
+  11064:
+    service: garbage-collector-coordinator
+    container: sutazai-garbage-collector-coordinator
+    description: "Resource garbage collection"
+    internal_port: 8080
+    priority: high
+  
+  11065:
+    service: gradient-compression-specialist
+    container: sutazai-gradient-compression-specialist
+    description: "Gradient compression optimization"
+    internal_port: 8080
+    priority: low
+  
+  11066:
+    service: gpu-hardware-optimizer
+    container: sutazai-gpu-hardware-optimizer
+    description: "GPU resource optimization"
+    internal_port: 8080
+    priority: medium
+  
+  11067:
+    service: genetic-algorithm-tuner
+    container: sutazai-genetic-algorithm-tuner
+    description: "Genetic algorithm tuning"
+    internal_port: 8080
+    priority: low
+  
+  11068:
+    service: goal-setting-planning-agent
+    container: sutazai-goal-setting-planning-agent
+    description: "Goal setting and planning"
+    internal_port: 8080
+    priority: medium
+
+# Reserved for future agents (11069-11148)
+reserved_agent_ports:
+  range: [11069, 11148]
+  description: "Reserved for future agent deployments"
+  count: 80
+
+# Ollama LLM Instances
+ollama:
+  11434:
+    service: ollama-primary
+    container: ollama-primary
+    description: "Primary Ollama LLM instance"
+    internal_port: 11434
+  
+  11435:
+    service: ollama-secondary
+    container: ollama-secondary
+    description: "Secondary Ollama LLM instance"
+    internal_port: 11434
+  
+  11436:
+    service: ollama-tertiary
+    container: ollama-tertiary
+    description: "Tertiary Ollama LLM instance"
+    internal_port: 11434
+
+# Port Allocation Rules
+allocation_rules:
+  - "All new AI agents MUST use ports in the 11000-11148 range"
+  - "Infrastructure services should use 10000-10199"
+  - "Monitoring services should use 10200-10299"
+  - "No service should use ports below 1024 (privileged ports)"
+  - "Avoid common ports (80, 443, 8080) except for load balancers"
+  - "Each service must have a unique port assignment"
+  - "Document any port changes in this registry"
+  - "Use the validation script before deploying new services"
+
+# Migration Plan for Non-Compliant Services
+migration_required:
+  # Services currently using 8xxx ports that need migration
+  8000:
+    current: backend
+    target_port: 10010
+    status: "Migrated to 10010"
+  
+  8200-8213:
+    description: "Various agents using 8xxx range"
+    target_range: [11069, 11082]
+    status: "Migration pending"
+  
+  8365:
+    current: edge-computing-optimizer
+    target_port: 11057
+    status: "Migrated to 11057"
+  
+  8388:
+    current: data-analysis-engineer
+    target_port: 11054
+    status: "Migrated to 11054"
+
+# Conflict Detection
+known_conflicts: []
+
+# Metadata
+metadata:
+  version: "1.0.0"
+  created: "2025-08-05"
+  maintainer: "SUTAZAIAPP System Architecture Team"
+  validation_script: "/opt/sutazaiapp/scripts/validate_ports.py"
+  update_frequency: "On every service deployment"
+  source_files:
+    - "docker-compose*.yml"
+    - "config/services/*.yaml"

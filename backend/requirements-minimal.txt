@@ -3,7 +3,7 @@
 fastapi==0.115.6
 uvicorn[standard]==LATEST_SECURE
 pydantic==2.10.4
-pydantic-settings==LATEST_SECURE
+pydantic-settings==2.8.1
 
 # Database & Async
 sqlalchemy==2.0.36
@@ -17,7 +17,7 @@ requests==2.32.3
 aiohttp==3.11.11
 httpx==0.28.1
 websockets==13.1
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 
 # Security & Crypto
 cryptography==44.0.0

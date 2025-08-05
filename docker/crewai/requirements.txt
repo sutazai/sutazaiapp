@@ -5,6 +5,6 @@ uvicorn==0.32.1
 requests==2.32.3
 openai==1.58.1
 pydantic==2.10.4
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 langchain==LATEST_SECURE
 websockets==13.1

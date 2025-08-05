@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org)
 [![Docker](https://img.shields.io/badge/docker-20.0+-blue.svg)](https://www.docker.com)
-[![Status](https://img.shields.io/badge/status-production_ready-green.svg)](https://github.com)
+[![Status](https://img.shields.io/badge/status-development-yellow.svg)](https://github.com)
 
 ## 🎯 What It Does
 
@@ -23,15 +23,16 @@
 git clone https://github.com/yourusername/sutazai.git
 cd sutazai
 
-# 2. Start the system (one command!)
-./start.sh
+# 2. Start the system
+docker-compose up -d
 
 # 3. System will be available at:
-#    - API: http://localhost:8000/docs
-#    - Health: http://localhost:8000/health
+#    - Backend API: http://localhost:10010/docs
+#    - Frontend UI: http://localhost:10011
+#    - Health: http://localhost:10010/health
 ```
 
-That's it! The system will pull all necessary images and start automatically.
+The system will start the core infrastructure services.
 
 ## 💻 Example Usage
 
@@ -63,13 +64,14 @@ python workflows/deployment_automation.py
 
 ## 📦 What's Included
 
-### Working AI Agents (34 total)
-- `senior-ai-engineer` - Code implementation and optimization
-- `code-generation-improver` - Code quality analysis
-- `testing-qa-validator` - Automated testing
-- `security-pentesting-specialist` - Security scanning
-- `deployment-automation-master` - CI/CD automation
-- [See full list](docs/PRACTICAL_AGENTS_LIST.md)
+### Currently Running Services (13 containers)
+**IMPORTANT**: Most are STUB IMPLEMENTATIONS with basic "Hello World" endpoints
+- `ai-agent-orchestrator` - Basic HTTP service (stub)
+- `multi-agent-coordinator` - Basic HTTP service (stub) 
+- `task-assignment-coordinator` - Basic HTTP service (stub)
+- `ai-senior-engineer-phase1` - Basic HTTP service (stub)
+- Plus 9 other basic container services
+- **ACTUAL AI FUNCTIONALITY**: Limited to Ollama with TinyLlama model
 
 ### Local AI Models
 - **TinyLlama (637MB)**: Fast, efficient general-purpose model
@@ -80,16 +82,16 @@ python workflows/deployment_automation.py
 
 ```bash
 # Start the system
-./start.sh
+docker-compose up -d
 
 # Stop the system
-./stop.sh
+docker-compose down
 
 # View logs
-docker-compose -f docker-compose.tinyllama.yml logs -f
+docker-compose logs -f
 
 # Check status
-curl http://localhost:8000/health
+curl http://localhost:10010/health
 ```
 
 ## 📚 Documentation
@@ -101,7 +103,7 @@ curl http://localhost:8000/health
 - [Deployment Guide](docs/ci-cd/) - CI/CD and deployment processes
 - [Working Agents List](docs/PRACTICAL_AGENTS_LIST.md) - Available AI agents
 - [Example Workflows](workflows/) - Automation workflow examples
-- [Live API Docs](http://localhost:8000/docs) - Interactive API documentation (after starting)
+- [Live API Docs](http://localhost:10010/docs) - Interactive API documentation (after starting)
 
 ## 🔒 Privacy & Security
 
@@ -124,4 +126,9 @@ MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-**Note**: This is a practical tool for developers. No automation system, no system state, just useful automation.
+**CRITICAL WARNING**: 
+- This system is ~90% documentation and ~10% implementation
+- Most "AI agents" are placeholder HTTP services returning stub responses
+- NO AGI, quantum computing, or advanced AI orchestration exists
+- Documentation claiming 149 agents is FALSE - only 13 basic containers run
+- Following old documentation will lead to system failure

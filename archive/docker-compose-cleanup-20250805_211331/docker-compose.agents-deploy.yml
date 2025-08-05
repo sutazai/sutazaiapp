@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Core Agent Services (already ready)
+  ai-system-architect:
+    build:
+      context: ./agents/ai-system-architect
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-system-architect
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=ai-system-architect
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - REDIS_URL=redis://sutazai-redis:6379/1
+      - LOG_LEVEL=INFO
+    ports:
+      - "11004:8080"
+    volumes:
+      - ./logs/agents:/app/logs
+    network_mode: container:sutazai-backend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  hardware-resource-optimizer:
+    build:
+      context: ./agents/hardware-resource-optimizer
+      dockerfile: Dockerfile
+    container_name: sutazai-hardware-resource-optimizer
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=hardware-resource-optimizer
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - REDIS_URL=redis://sutazai-redis:6379/2
+      - LOG_LEVEL=INFO
+    ports:
+      - "11005:8080"
+    volumes:
+      - ./logs/agents:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: container:sutazai-backend
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Critical Agents (now fixed)
+  ai-agent-orchestrator:
+    build:
+      context: ./agents/ai-agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-agent-orchestrator
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=ai-agent-orchestrator
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - REDIS_URL=redis://sutazai-redis:6379/3
+      - LOG_LEVEL=INFO
+    ports:
+      - "11083:8080"
+    volumes:
+      - ./logs/agents:/app/logs
+    network_mode: container:sutazai-backend
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  infrastructure-devops-manager:
+    build:
+      context: ./agents/infrastructure-devops-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-infrastructure-devops-manager
+    restart: unless-stopped
+    environment:
+      - AGENT_NAME=infrastructure-devops-manager
+      - OLLAMA_URL=http://sutazai-ollama:11434
+      - BACKEND_URL=http://sutazai-backend:8000
+      - REDIS_URL=redis://sutazai-redis:6379/4
+      - LOG_LEVEL=INFO
+    ports:
+      - "11084:8080"
+    volumes:
+      - ./logs/agents:/app/logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: container:sutazai-backend
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'

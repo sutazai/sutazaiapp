@@ -2,7 +2,7 @@ fastapi==0.115.6
 uvicorn[standard]==LATEST_SECURE
 pydantic==2.10.4
 httpx==0.28.1
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 aider-chat
 gitpython
 tree-sitter

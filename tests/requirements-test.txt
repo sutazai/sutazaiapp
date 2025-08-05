@@ -9,9 +9,9 @@ pytest-timeout==2.2.0
 pytest-xdist==3.5.0
 
 # HTTP testing
-httpx==0.26.0
-requests==2.31.0
-aiohttp==3.9.1
+httpx==0.28.1
+requests==2.32.3
+aiohttp==3.11.11
 
 # Test utilities
 faker==22.0.0
@@ -40,4 +40,4 @@ aioresponses==0.7.6
 
 # Data validation
 jsonschema==4.20.0
-pydantic==2.5.3
+pydantic==2.10.4

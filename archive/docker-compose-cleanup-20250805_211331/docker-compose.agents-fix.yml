@@ -1,0 +1,74 @@
+version: '3.8'
+
+networks:
+  sutazai-network:
+    external: true
+
+services:
+  edge-computing-optimizer:
+    build:
+      context: ./docker/edge-computing-optimizer
+      dockerfile: Dockerfile
+    container_name: sutazai-edge-computing-optimizer
+    environment:
+      AGENT_NAME: edge-computing-optimizer
+      AGENT_ROLE: Edge Computing Optimizer Agent
+      OLLAMA_BASE_URL: http://ollama:11434
+      REDIS_URL: redis://redis:6379/0
+      PORT: 8080
+    ports:
+      - "11100:8080"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  data-analysis-engineer:
+    build:
+      context: ./docker/data-analysis-engineer
+      dockerfile: Dockerfile
+    container_name: sutazai-data-analysis-engineer
+    environment:
+      AGENT_NAME: data-analysis-engineer
+      AGENT_ROLE: Data Analysis Engineer Agent
+      OLLAMA_BASE_URL: http://ollama:11434
+      REDIS_URL: redis://redis:6379/0
+      PORT: 8080
+    ports:
+      - "11101:8080"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  deep-local-brain-builder:
+    build:
+      context: ./docker/deep-local-brain-builder
+      dockerfile: Dockerfile
+    container_name: sutazai-deep-local-brain-builder
+    environment:
+      AGENT_NAME: deep-local-brain-builder
+      AGENT_ROLE: Deep Local Brain Builder Agent
+      OLLAMA_BASE_URL: http://ollama:11434
+      REDIS_URL: redis://redis:6379/0
+      PORT: 8080
+    ports:
+      - "11107:8080"
+    networks:
+      - sutazai-network
+    restart: unless-stopped
+
+  document-knowledge-manager:
+    build:
+      context: ./docker/document-knowledge-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-document-knowledge-manager
+    environment:
+      AGENT_NAME: document-knowledge-manager
+      AGENT_ROLE: Document Knowledge Manager Agent
+      OLLAMA_BASE_URL: http://ollama:11434
+      REDIS_URL: redis://redis:6379/0
+      PORT: 8080
+    ports:
+      - "11008:8080"
+    networks:
+      - sutazai-network
+    restart: unless-stopped

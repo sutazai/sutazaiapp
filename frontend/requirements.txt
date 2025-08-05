@@ -20,7 +20,7 @@ aiohttp==3.11.11
 httpx==0.28.1
 websocket-client==1.8.0
 websockets==13.1
-python-multipart==0.0.12
+python-multipart==0.0.19
 
 # Core Libraries - SECURITY PATCHED
 pandas==2.2.3

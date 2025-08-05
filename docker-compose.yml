@@ -24,7 +24,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10305:3000
+    - 11066:3000
     restart: unless-stopped
     volumes:
     - agent_workspaces:/app/workspace
@@ -48,7 +48,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10411:8080
+    - 11067:8080
     restart: unless-stopped
     volumes:
     - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
@@ -80,7 +80,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10209:9200
+    - 11068:9200
     restart: unless-stopped
   aider:
     build:
@@ -133,7 +133,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10203:9093
+    - 11108:9093
     restart: unless-stopped
     volumes:
     - ./monitoring/alertmanager:/etc/alertmanager
@@ -625,7 +625,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10302:8080
+    - 11109:8080
     restart: unless-stopped
     volumes:
     - agent_workspaces:/app/workspace
@@ -702,7 +702,7 @@ services:
     - sutazai-network
     pid: host
     ports:
-    - 10413:8080
+    - 11110:8080
     privileged: true
     restart: unless-stopped
     volumes:

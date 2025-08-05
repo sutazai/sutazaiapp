@@ -1,0 +1,4069 @@
+{
+  "total_ports": 286,
+  "conflicts": [
+    {
+      "port": 10001,
+      "services": [
+        "kong",
+        "backend"
+      ],
+      "containers": [
+        "sutazai-kong",
+        "sutazai-backend"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.agents-critical-fixed.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "ollama"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-ollama"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.agents-critical-fixed.yml"
+      ]
+    },
+    {
+      "port": 8003,
+      "services": [
+        "ai-system-architect",
+        "ai-agent-orchestrator"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazai-ai-agent-orchestrator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents-deploy.yml"
+      ]
+    },
+    {
+      "port": 8004,
+      "services": [
+        "ai-agent-orchestrator",
+        "infrastructure-devops-manager"
+      ],
+      "containers": [
+        "sutazai-ai-agent-orchestrator",
+        "sutazai-infrastructure-devops-manager"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents-deploy.yml"
+      ]
+    },
+    {
+      "port": 8003,
+      "services": [
+        "ai-system-architect",
+        "ai-agent-orchestrator"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazai-ai-agent-orchestrator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents-final.yml"
+      ]
+    },
+    {
+      "port": 8004,
+      "services": [
+        "ai-agent-orchestrator",
+        "infrastructure-devops-manager"
+      ],
+      "containers": [
+        "sutazai-ai-agent-orchestrator",
+        "sutazai-infrastructure-devops-manager"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents-final.yml"
+      ]
+    },
+    {
+      "port": 8005,
+      "services": [
+        "infrastructure-devops-manager",
+        "deployment-automation-master"
+      ],
+      "containers": [
+        "sutazai-infrastructure-devops-manager",
+        "sutazai-deployment-automation-master"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents-final.yml"
+      ]
+    },
+    {
+      "port": 8003,
+      "services": [
+        "ai-system-architect",
+        "ai-agent-orchestrator"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazai-ai-agent-orchestrator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8004,
+      "services": [
+        "ai-agent-orchestrator",
+        "infrastructure-devops-manager"
+      ],
+      "containers": [
+        "sutazai-ai-agent-orchestrator",
+        "sutazai-infrastructure-devops-manager"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8005,
+      "services": [
+        "infrastructure-devops-manager",
+        "deployment-automation-master"
+      ],
+      "containers": [
+        "sutazai-infrastructure-devops-manager",
+        "sutazai-deployment-automation-master"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8006,
+      "services": [
+        "deployment-automation-master",
+        "ollama-integration-specialist"
+      ],
+      "containers": [
+        "sutazai-deployment-automation-master",
+        "sutazai-ollama-integration-specialist"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8008,
+      "services": [
+        "agent-orchestrator",
+        "testing-qa-validator"
+      ],
+      "containers": [
+        "sutazai-agent-orchestrator",
+        "sutazai-testing-qa-validator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8009,
+      "services": [
+        "code-generation-improver",
+        "agent-creator"
+      ],
+      "containers": [
+        "sutazai-code-generation-improver",
+        "sutazai-agent-creator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8010,
+      "services": [
+        "agent-creator",
+        "agent-debugger"
+      ],
+      "containers": [
+        "sutazai-agent-creator",
+        "sutazai-agent-debugger"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8011,
+      "services": [
+        "docker-specialist",
+        "agent-orchestrator"
+      ],
+      "containers": [
+        "sutazai-docker-specialist",
+        "sutazai-agent-orchestrator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8012,
+      "services": [
+        "testing-qa-validator",
+        "ai-senior-backend-developer"
+      ],
+      "containers": [
+        "sutazai-testing-qa-validator",
+        "sutazai-ai-senior-backend-developer"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8013,
+      "services": [
+        "ai-testing-qa-validator",
+        "ai-senior-engineer"
+      ],
+      "containers": [
+        "sutazai-ai-testing-qa-validator",
+        "sutazai-ai-senior-engineer"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8014,
+      "services": [
+        "ai-senior-backend-developer",
+        "ai-senior-frontend-developer"
+      ],
+      "containers": [
+        "sutazai-ai-senior-backend-developer",
+        "sutazai-ai-senior-frontend-developer"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8015,
+      "services": [
+        "ai-senior-frontend-developer",
+        "ai-senior-full-stack-developer"
+      ],
+      "containers": [
+        "sutazai-ai-senior-frontend-developer",
+        "sutazai-ai-senior-full-stack-developer"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8016,
+      "services": [
+        "ai-senior-full-stack-developer",
+        "ai-system-validator"
+      ],
+      "containers": [
+        "sutazai-ai-senior-full-stack-developer",
+        "sutazai-ai-system-validator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8017,
+      "services": [
+        "ai-system-validator",
+        "ai-testing-qa-validator"
+      ],
+      "containers": [
+        "sutazai-ai-system-validator",
+        "sutazai-ai-testing-qa-validator"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8019,
+      "services": [
+        "mega-code-auditor",
+        "kali-hacker"
+      ],
+      "containers": [
+        "sutazai-mega-code-auditor",
+        "sutazai-kali-hacker"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 8020,
+      "services": [
+        "ollama-integration-specialist",
+        "mega-code-auditor"
+      ],
+      "containers": [
+        "sutazai-ollama-integration-specialist",
+        "sutazai-mega-code-auditor"
+      ],
+      "files": [
+        "docker-compose.agents-20.yml",
+        "docker-compose.agents.yml"
+      ]
+    },
+    {
+      "port": 10050,
+      "services": [
+        "caddy",
+        "keycloak"
+      ],
+      "containers": [
+        "sutazai-caddy",
+        "sutazai-keycloak"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.auth.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.critical-immediate.yml"
+      ]
+    },
+    {
+      "port": 10003,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose.agents-critical-fixed.yml",
+        "docker-compose.critical-immediate.yml"
+      ]
+    },
+    {
+      "port": 8001,
+      "services": [
+        "kong",
+        "chromadb"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.distributed-ai.yml"
+      ]
+    },
+    {
+      "port": 8001,
+      "services": [
+        "ai-system-architect",
+        "chromadb"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "chromadb"
+      ],
+      "files": [
+        "docker-compose.agents-deploy.yml",
+        "docker-compose.distributed-ai.yml"
+      ]
+    },
+    {
+      "port": 10000,
+      "services": [
+        "postgres",
+        "envoy"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "envoy"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.distributed-ai.yml"
+      ]
+    },
+    {
+      "port": 80,
+      "services": [
+        "haproxy",
+        "traefik"
+      ],
+      "files": [
+        "docker-compose.distributed.yml",
+        "docker-compose.distributed.yml"
+      ]
+    },
+    {
+      "port": 443,
+      "services": [
+        "haproxy",
+        "traefik"
+      ],
+      "files": [
+        "docker-compose.distributed.yml",
+        "docker-compose.distributed.yml"
+      ]
+    },
+    {
+      "port": 8080,
+      "services": [
+        "nginx",
+        "traefik"
+      ],
+      "containers": [
+        "sutazai-nginx",
+        "traefik"
+      ],
+      "files": [
+        "docker-compose.autoscaling.yml",
+        "docker-compose.distributed.yml"
+      ]
+    },
+    {
+      "port": 10000,
+      "services": [
+        "postgres",
+        "sutazai-service-discovery"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-service-discovery"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10001,
+      "services": [
+        "kong",
+        "sutazai-api-gateway"
+      ],
+      "containers": [
+        "sutazai-kong",
+        "sutazai-api-gateway"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "sutazai-api-gateway"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-api-gateway"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10003,
+      "services": [
+        "redis",
+        "sutazai-api-gateway"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-api-gateway"
+      ],
+      "files": [
+        "docker-compose.agents-critical-fixed.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10010,
+      "services": [
+        "postgres",
+        "sutazai-metrics-aggregator"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-metrics-aggregator"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10100,
+      "services": [
+        "chromadb",
+        "sutazai-postgres-adapter"
+      ],
+      "containers": [
+        "sutazai-chromadb",
+        "sutazai-postgres-adapter"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10040,
+      "services": [
+        "consul",
+        "sutazai-config-service"
+      ],
+      "containers": [
+        "sutazai-consul",
+        "sutazai-config-service"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10041,
+      "services": [
+        "consul",
+        "sutazai-config-service"
+      ],
+      "containers": [
+        "sutazai-consul",
+        "sutazai-config-service"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 10050,
+      "services": [
+        "caddy",
+        "sutazai-integration-dashboard"
+      ],
+      "containers": [
+        "sutazai-caddy",
+        "sutazai-integration-dashboard"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.external-integration.yml"
+      ]
+    },
+    {
+      "port": 8501,
+      "services": [
+        "streamlit",
+        "fusion-dashboard"
+      ],
+      "containers": [
+        "streamlit",
+        "sutazai-fusion-dashboard"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.fusion.yml"
+      ]
+    },
+    {
+      "port": 10020,
+      "services": [
+        "sutazai-log-collector",
+        "hygiene-postgres"
+      ],
+      "containers": [
+        "sutazai-log-collector",
+        "hygiene-postgres"
+      ],
+      "files": [
+        "docker-compose.external-integration.yml",
+        "docker-compose.hygiene-monitor.yml"
+      ]
+    },
+    {
+      "port": 10041,
+      "services": [
+        "consul",
+        "rabbitmq"
+      ],
+      "containers": [
+        "sutazai-consul",
+        "rabbitmq"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.infrastructure.yml"
+      ]
+    },
+    {
+      "port": 9091,
+      "services": [
+        "fusion-metrics",
+        "jarvis"
+      ],
+      "containers": [
+        "sutazai-fusion-metrics",
+        "sutazai-jarvis"
+      ],
+      "files": [
+        "docker-compose.fusion.yml",
+        "docker-compose.jarvis-simple.yml"
+      ]
+    },
+    {
+      "port": 9091,
+      "services": [
+        "fusion-metrics",
+        "jarvis"
+      ],
+      "containers": [
+        "sutazai-fusion-metrics",
+        "sutazai-jarvis"
+      ],
+      "files": [
+        "docker-compose.fusion.yml",
+        "docker-compose.jarvis.yml"
+      ]
+    },
+    {
+      "port": 8001,
+      "services": [
+        "ai-system-architect",
+        "chromadb"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazai-chromadb-minimal"
+      ],
+      "files": [
+        "docker-compose.agents-deploy.yml",
+        "docker-compose.minimal.yml"
+      ]
+    },
+    {
+      "port": 8000,
+      "services": [
+        "kong",
+        "backend"
+      ],
+      "containers": [
+        "kong",
+        "sutazai-backend-minimal"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.minimal.yml"
+      ]
+    },
+    {
+      "port": 8501,
+      "services": [
+        "streamlit",
+        "frontend"
+      ],
+      "containers": [
+        "streamlit",
+        "sutazai-frontend-minimal"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.minimal.yml"
+      ]
+    },
+    {
+      "port": 10320,
+      "services": [
+        "ai-system-architect",
+        "deep-learning-brain-architect"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazai-deep-learning-brain-architect"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10321,
+      "services": [
+        "ai-system-validator",
+        "neural-architecture-search"
+      ],
+      "containers": [
+        "sutazai-ai-system-validator",
+        "sutazai-neural-architecture-search"
+      ],
+      "files": [
+        "docker-compose.agents-fixed.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10322,
+      "services": [
+        "ai-testing-qa-validator",
+        "model-training-specialist"
+      ],
+      "containers": [
+        "sutazai-ai-testing-qa-validator",
+        "sutazai-model-training-specialist"
+      ],
+      "files": [
+        "docker-compose.agents-fixed.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10323,
+      "services": [
+        "container-orchestrator-k3s",
+        "transformers-migration-specialist"
+      ],
+      "containers": [
+        "sutazai-container-orchestrator-k3s",
+        "sutazai-transformers-migration-specialist"
+      ],
+      "files": [
+        "docker-compose.agents-fixed.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10324,
+      "services": [
+        "deployment-automation-master",
+        "gradient-compression-specialist"
+      ],
+      "containers": [
+        "sutazai-deployment-automation-master",
+        "sutazai-gradient-compression-specialist"
+      ],
+      "files": [
+        "docker-compose.agents-fixed.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10380,
+      "services": [
+        "ai-qa-team-lead",
+        "infrastructure-devops-manager"
+      ],
+      "containers": [
+        "sutazai-ai-qa-team-lead",
+        "sutazai-infrastructure-devops-manager"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10381,
+      "services": [
+        "codebase-team-lead",
+        "deployment-automation-master"
+      ],
+      "containers": [
+        "sutazai-codebase-team-lead",
+        "sutazai-deployment-automation-master"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10382,
+      "services": [
+        "testing-qa-team-lead",
+        "container-orchestrator-k3s"
+      ],
+      "containers": [
+        "sutazai-testing-qa-team-lead",
+        "sutazai-container-orchestrator-k3s"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.missing-agents.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10003,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose.agents-critical-fixed.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10042,
+      "services": [
+        "rabbitmq",
+        "consul"
+      ],
+      "containers": [
+        "sutazai-rabbitmq",
+        "sutazai-consul-discovery"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10007,
+      "services": [
+        "kong",
+        "rabbitmq"
+      ],
+      "containers": [
+        "kong",
+        "sutazai-rabbitmq-queue"
+      ],
+      "files": [
+        "docker-compose.infrastructure.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10008,
+      "services": [
+        "health-check-server",
+        "rabbitmq"
+      ],
+      "containers": [
+        "health-check-server",
+        "sutazai-rabbitmq-queue"
+      ],
+      "files": [
+        "docker-compose.infrastructure.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10010,
+      "services": [
+        "postgres",
+        "backend-api"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-backend-api"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 10011,
+      "services": [
+        "redis",
+        "frontend-ui"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-frontend-ui"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.missing-services.yml"
+      ]
+    },
+    {
+      "port": 11434,
+      "services": [
+        "ollama",
+        "ollama-primary"
+      ],
+      "containers": [
+        "ollama",
+        "ollama-primary"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.ollama-cluster-optimized.yml"
+      ]
+    },
+    {
+      "port": 8080,
+      "services": [
+        "nginx",
+        "nginx-lb"
+      ],
+      "containers": [
+        "sutazai-nginx",
+        "ollama-nginx-lb"
+      ],
+      "files": [
+        "docker-compose.autoscaling.yml",
+        "docker-compose.ollama-cluster-optimized.yml"
+      ]
+    },
+    {
+      "port": 8443,
+      "services": [
+        "kong",
+        "nginx-lb"
+      ],
+      "containers": [
+        "kong",
+        "ollama-nginx-lb"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.ollama-cluster-optimized.yml"
+      ]
+    },
+    {
+      "port": 8404,
+      "services": [
+        "haproxy",
+        "nginx-lb"
+      ],
+      "containers": [
+        "haproxy",
+        "ollama-nginx-lb"
+      ],
+      "files": [
+        "docker-compose.distributed.yml",
+        "docker-compose.ollama-cluster-optimized.yml"
+      ]
+    },
+    {
+      "port": 6379,
+      "services": [
+        "redis",
+        "redis-cluster"
+      ],
+      "containers": [
+        "redis",
+        "ollama-redis"
+      ],
+      "files": [
+        "docker-compose.distributed-ai.yml",
+        "docker-compose.ollama-cluster-optimized.yml"
+      ]
+    },
+    {
+      "port": 10104,
+      "services": [
+        "ollama",
+        "ollama-primary"
+      ],
+      "containers": [
+        "sutazai-ollama",
+        "sutazai-ollama-primary"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.ollama-cluster.yml"
+      ]
+    },
+    {
+      "port": 10105,
+      "services": [
+        "ollama-secondary",
+        "ollama-queue"
+      ],
+      "containers": [
+        "sutazai-ollama-secondary",
+        "sutazai-ollama-queue"
+      ],
+      "files": [
+        "docker-compose.ollama-cluster.yml",
+        "docker-compose.ollama-fix.yml"
+      ]
+    },
+    {
+      "port": 10010,
+      "services": [
+        "postgres",
+        "backend"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-backend-secure"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10011,
+      "services": [
+        "redis",
+        "frontend"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-frontend-secure"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10000,
+      "services": [
+        "postgres",
+        "postgres-secure"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-postgres-secure"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10001,
+      "services": [
+        "kong",
+        "redis-secure"
+      ],
+      "containers": [
+        "sutazai-kong",
+        "sutazai-redis-secure"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10104,
+      "services": [
+        "ollama",
+        "ollama-secure"
+      ],
+      "containers": [
+        "sutazai-ollama",
+        "sutazai-ollama-secure"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10200,
+      "services": [
+        "prometheus",
+        "prometheus-secure"
+      ],
+      "containers": [
+        "sutazai-prometheus",
+        "sutazai-prometheus-secure"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.secure.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.self-healing-critical.yml"
+      ]
+    },
+    {
+      "port": 10003,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose.agents-critical-fixed.yml",
+        "docker-compose.self-healing-critical.yml"
+      ]
+    },
+    {
+      "port": 8001,
+      "services": [
+        "ai-system-architect",
+        "kong"
+      ],
+      "containers": [
+        "sutazai-ai-system-architect",
+        "sutazaiapp-kong"
+      ],
+      "files": [
+        "docker-compose.agents-deploy.yml",
+        "docker-compose.service-mesh.yml"
+      ]
+    },
+    {
+      "port": 10007,
+      "services": [
+        "kong",
+        "rabbitmq"
+      ],
+      "containers": [
+        "kong",
+        "sutazaiapp-rabbitmq"
+      ],
+      "files": [
+        "docker-compose.infrastructure.yml",
+        "docker-compose.service-mesh.yml"
+      ]
+    },
+    {
+      "port": 10008,
+      "services": [
+        "health-check-server",
+        "rabbitmq"
+      ],
+      "containers": [
+        "health-check-server",
+        "sutazaiapp-rabbitmq"
+      ],
+      "files": [
+        "docker-compose.infrastructure.yml",
+        "docker-compose.service-mesh.yml"
+      ]
+    },
+    {
+      "port": 10301,
+      "services": [
+        "agent-orchestrator",
+        "aider"
+      ],
+      "containers": [
+        "sutazai-agent-orchestrator",
+        "sutazai-aider"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10010,
+      "services": [
+        "postgres",
+        "backend"
+      ],
+      "containers": [
+        "sutazai-postgres",
+        "sutazai-backend"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10204,
+      "services": [
+        "ai-metrics-exporter",
+        "blackbox-exporter"
+      ],
+      "containers": [
+        "sutazai-ai-metrics",
+        "sutazai-blackbox-exporter"
+      ],
+      "files": [
+        "docker-compose.missing-services.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10304,
+      "services": [
+        "bigagi-system-manager",
+        "browser-use"
+      ],
+      "containers": [
+        "sutazai-bigagi-system-manager",
+        "sutazai-browser-use"
+      ],
+      "files": [
+        "docker-compose.missing-agents.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10300,
+      "services": [
+        "agentzero-coordinator",
+        "crewai"
+      ],
+      "containers": [
+        "sutazai-agentzero-coordinator",
+        "sutazai-crewai"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10103,
+      "services": [
+        "faiss-vector",
+        "faiss"
+      ],
+      "containers": [
+        "sutazai-faiss-vector",
+        "sutazai-faiss"
+      ],
+      "files": [
+        "docker-compose.missing-services.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10011,
+      "services": [
+        "redis",
+        "frontend"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-frontend"
+      ],
+      "files": [
+        "docker-compose.critical-immediate.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10302,
+      "services": [
+        "task-assignment-coordinator",
+        "gpt-engineer"
+      ],
+      "containers": [
+        "sutazai-task-assignment-coordinator",
+        "sutazai-gpt-engineer"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10502,
+      "services": [
+        "agi-orchestration-layer",
+        "jax"
+      ],
+      "containers": [
+        "sutazai-agi-orchestration",
+        "sutazai-jax"
+      ],
+      "files": [
+        "docker-compose.agi.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10002,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10003,
+      "services": [
+        "redis",
+        "neo4j"
+      ],
+      "containers": [
+        "sutazai-redis",
+        "sutazai-neo4j"
+      ],
+      "files": [
+        "docker-compose.agents-critical-fixed.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10500,
+      "services": [
+        "agi-orchestration-layer",
+        "pytorch"
+      ],
+      "containers": [
+        "sutazai-agi-orchestration",
+        "sutazai-pytorch"
+      ],
+      "files": [
+        "docker-compose.agi.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10001,
+      "services": [
+        "kong",
+        "redis"
+      ],
+      "containers": [
+        "sutazai-kong",
+        "sutazai-redis"
+      ],
+      "files": [
+        "docker-compose-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10303,
+      "services": [
+        "autonomous-system-controller",
+        "tabbyml"
+      ],
+      "containers": [
+        "sutazai-autonomous-system-controller",
+        "sutazai-tabbyml"
+      ],
+      "files": [
+        "docker-compose.missing-agents-optimized.yml",
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "port": 10501,
+      "services": [
+        "agi-orchestration-layer",
+        "tensorflow"
+      ],
+      "containers": [
+        "sutazai-agi-orchestration",
+        "sutazai-tensorflow"
+      ],
+      "files": [
+        "docker-compose.agi.yml",
+        "docker-compose.yml"
+      ]
+    }
+  ],
+  "non_compliant": [
+    {
+      "port": 10046,
+      "service": "ai-runtime",
+      "container": "sutazai-ai-runtime",
+      "file": "docker-compose-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10046 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8003,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8003 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8004,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8004 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8007,
+      "service": "senior-ai-engineer",
+      "container": "sutazai-senior-ai-engineer",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8007 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8008,
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8008 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8010,
+      "service": "agent-creator",
+      "container": "sutazai-agent-creator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8010 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8012,
+      "service": "testing-qa-validator",
+      "container": "sutazai-testing-qa-validator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8012 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8013,
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8013 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8014,
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8014 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8015,
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8015 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8016,
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8016 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8017,
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8017 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8018,
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8018 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8021,
+      "service": "agent-debugger",
+      "container": "sutazai-agent-debugger",
+      "file": "docker-compose.agents-20.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8021 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8001,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents-deploy.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8001 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8003,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.agents-deploy.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8003 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8001,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents-final.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8001 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8003,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.agents-final.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8003 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10321,
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.agents-fixed.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10321 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10322,
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.agents-fixed.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10322 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10323,
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.agents-fixed.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10323 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8001,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8001 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8003,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8003 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8007,
+      "service": "senior-ai-engineer",
+      "container": "sutazai-senior-ai-engineer",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8007 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8008,
+      "service": "testing-qa-validator",
+      "container": "sutazai-testing-qa-validator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8008 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8009,
+      "service": "agent-creator",
+      "container": "sutazai-agent-creator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8009 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8010,
+      "service": "agent-debugger",
+      "container": "sutazai-agent-debugger",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8010 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8011,
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8011 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8012,
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8012 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8013,
+      "service": "ai-senior-engineer",
+      "container": "sutazai-ai-senior-engineer",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8013 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8014,
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8014 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8015,
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8015 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8016,
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8016 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8017,
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8017 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8018,
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8018 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10520,
+      "service": "agi-agent-matcher",
+      "container": "sutazai-agi-agent-matcher",
+      "file": "docker-compose.agi.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10520 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10000,
+      "service": "sutazai-service-discovery",
+      "container": "sutazai-service-discovery",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10000 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10001,
+      "service": "sutazai-api-gateway",
+      "container": "sutazai-api-gateway",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10001 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10002,
+      "service": "sutazai-api-gateway",
+      "container": "sutazai-api-gateway",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10002 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10003,
+      "service": "sutazai-api-gateway",
+      "container": "sutazai-api-gateway",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10003 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10010,
+      "service": "sutazai-metrics-aggregator",
+      "container": "sutazai-metrics-aggregator",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10010 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10020,
+      "service": "sutazai-log-collector",
+      "container": "sutazai-log-collector",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10020 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10030,
+      "service": "sutazai-service-mesh",
+      "container": "sutazai-service-mesh",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10030 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10031,
+      "service": "sutazai-service-mesh",
+      "container": "sutazai-service-mesh",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10031 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10040,
+      "service": "sutazai-config-service",
+      "container": "sutazai-config-service",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10040 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10041,
+      "service": "sutazai-config-service",
+      "container": "sutazai-config-service",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10041 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10050,
+      "service": "sutazai-integration-dashboard",
+      "container": "sutazai-integration-dashboard",
+      "file": "docker-compose.external-integration.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10050 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8766,
+      "service": "fusion-coordinator",
+      "container": "sutazai-fusion-coordinator",
+      "file": "docker-compose.fusion.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8766 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10300,
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10300 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10301,
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10301 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10302,
+      "service": "task-assignment-coordinator",
+      "container": "sutazai-task-assignment-coordinator",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10302 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10320,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10320 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10321,
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10321 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10322,
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10322 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10340,
+      "service": "ai-product-manager",
+      "container": "sutazai-ai-product-manager",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10340 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10341,
+      "service": "ai-scrum-master",
+      "container": "sutazai-ai-scrum-master",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10341 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10360,
+      "service": "ai-senior-engineer",
+      "container": "sutazai-ai-senior-engineer",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10360 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10361,
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10361 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10362,
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10362 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10363,
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10363 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10380,
+      "service": "ai-qa-team-lead",
+      "container": "sutazai-ai-qa-team-lead",
+      "file": "docker-compose.missing-agents-optimized.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10380 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10300,
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10300 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10301,
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10301 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10302,
+      "service": "task-assignment-coordinator",
+      "container": "sutazai-task-assignment-coordinator",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10302 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10350,
+      "service": "senior-ai-engineer",
+      "container": "sutazai-senior-ai-engineer",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10350 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10351,
+      "service": "senior-backend-developer",
+      "container": "sutazai-senior-backend-developer",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10351 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10352,
+      "service": "senior-frontend-developer",
+      "container": "sutazai-senior-frontend-developer",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10352 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10353,
+      "service": "senior-full-stack-developer",
+      "container": "sutazai-senior-full-stack-developer",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10353 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10382,
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10382 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10383,
+      "service": "cicd-pipeline-orchestrator",
+      "container": "sutazai-cicd-pipeline-orchestrator",
+      "file": "docker-compose.missing-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10383 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8586,
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator",
+      "file": "docker-compose.orchestration-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8586 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8587,
+      "service": "multi-agent-coordinator",
+      "container": "sutazai-multi-agent-coordinator",
+      "file": "docker-compose.orchestration-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8587 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8589,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.orchestration-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8589 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8551,
+      "service": "task-assignment-coordinator",
+      "container": "sutazai-task-assignment-coordinator",
+      "file": "docker-compose.orchestration-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8551 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8588,
+      "service": "resource-arbitration-agent",
+      "container": "sutazai-resource-arbitration-agent",
+      "file": "docker-compose.orchestration-agents.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8588 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8200,
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8200 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8207,
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8207 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8208,
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8208 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8209,
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8209 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8210,
+      "service": "testing-qa-validator",
+      "container": "sutazai-testing-qa-validator-critical",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8210 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 8213,
+      "service": "cicd-pipeline-orchestrator",
+      "container": "sutazai-cicd-pipeline-orchestrator",
+      "file": "docker-compose.phase1-critical-activation.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 8213 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10305,
+      "service": "agentgpt",
+      "container": "sutazai-agentgpt",
+      "file": "docker-compose.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10305 outside standard range (11000, 11148)"
+    },
+    {
+      "port": 10411,
+      "service": "agentzero",
+      "container": "sutazai-agentzero",
+      "file": "docker-compose.yml",
+      "expected_range": [
+        11000,
+        11148
+      ],
+      "reason": "Agent service using port 10411 outside standard range (11000, 11148)"
+    }
+  ],
+  "warnings": [
+    {
+      "port": 8000,
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 8000 outside recommended range"
+    },
+    {
+      "port": 8443,
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 8443 outside recommended range"
+    },
+    {
+      "port": 8444,
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 8444 outside recommended range"
+    },
+    {
+      "port": 8500,
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 8500 outside recommended range"
+    },
+    {
+      "port": 8600,
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 8600 outside recommended range"
+    },
+    {
+      "port": 5672,
+      "service": "rabbitmq",
+      "container": "rabbitmq",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 5672 outside recommended range"
+    },
+    {
+      "port": 15672,
+      "service": "rabbitmq",
+      "container": "rabbitmq",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 15672 outside recommended range"
+    },
+    {
+      "port": 6379,
+      "service": "redis",
+      "container": "redis",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 6379 outside recommended range"
+    },
+    {
+      "port": 6333,
+      "service": "qdrant",
+      "container": "qdrant",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 6333 outside recommended range"
+    },
+    {
+      "port": 6334,
+      "service": "qdrant",
+      "container": "qdrant",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10000,
+        10199
+      ],
+      "reason": "Infrastructure service using port 6334 outside recommended range"
+    },
+    {
+      "port": 9090,
+      "service": "prometheus",
+      "container": "prometheus",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 9090 outside recommended range"
+    },
+    {
+      "port": 3000,
+      "service": "grafana",
+      "container": "grafana",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 3000 outside recommended range"
+    },
+    {
+      "port": 5775,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 5775 outside recommended range"
+    },
+    {
+      "port": 6831,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 6831 outside recommended range"
+    },
+    {
+      "port": 6832,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 6832 outside recommended range"
+    },
+    {
+      "port": 5778,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 5778 outside recommended range"
+    },
+    {
+      "port": 16686,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 16686 outside recommended range"
+    },
+    {
+      "port": 14268,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 14268 outside recommended range"
+    },
+    {
+      "port": 14250,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 14250 outside recommended range"
+    },
+    {
+      "port": 9411,
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml",
+      "expected_range": [
+        10200,
+        10299
+      ],
+      "reason": "Monitoring service using port 9411 outside recommended range"
+    }
+  ],
+  "port_allocations": {
+    "80": {
+      "service": "traefik",
+      "container": "traefik",
+      "file": "docker-compose.distributed.yml"
+    },
+    "443": {
+      "service": "traefik",
+      "container": "traefik",
+      "file": "docker-compose.distributed.yml"
+    },
+    "3000": {
+      "service": "grafana",
+      "container": "grafana",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "5432": {
+      "service": "postgres",
+      "container": "sutazai-postgres-minimal",
+      "file": "docker-compose.minimal.yml"
+    },
+    "5555": {
+      "service": "flower",
+      "container": "flower",
+      "file": "docker-compose.distributed.yml"
+    },
+    "5672": {
+      "service": "rabbitmq",
+      "container": "rabbitmq",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "5678": {
+      "service": "n8n",
+      "container": "n8n",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "5775": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "5778": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "6333": {
+      "service": "qdrant",
+      "container": "qdrant",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "6334": {
+      "service": "qdrant",
+      "container": "qdrant",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "6379": {
+      "service": "redis",
+      "container": "redis",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "6380": {
+      "service": "fusion-redis",
+      "container": "sutazai-fusion-redis",
+      "file": "docker-compose.fusion.yml"
+    },
+    "6831": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "6832": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8000": {
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8001": {
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents-deploy.yml"
+    },
+    "8002": {
+      "service": "hardware-resource-optimizer",
+      "container": "sutazai-hardware-resource-optimizer",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8003": {
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8004": {
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8005": {
+      "service": "infrastructure-devops-manager",
+      "container": "sutazai-infrastructure-devops-manager",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8006": {
+      "service": "deployment-automation-master",
+      "container": "sutazai-deployment-automation-master",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8007": {
+      "service": "senior-ai-engineer",
+      "container": "sutazai-senior-ai-engineer",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8008": {
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8009": {
+      "service": "code-generation-improver",
+      "container": "sutazai-code-generation-improver",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8010": {
+      "service": "agent-creator",
+      "container": "sutazai-agent-creator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8011": {
+      "service": "docker-specialist",
+      "container": "sutazai-docker-specialist",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8012": {
+      "service": "testing-qa-validator",
+      "container": "sutazai-testing-qa-validator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8013": {
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8014": {
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8015": {
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8016": {
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8017": {
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8018": {
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8019": {
+      "service": "mega-code-auditor",
+      "container": "sutazai-mega-code-auditor",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8020": {
+      "service": "ollama-integration-specialist",
+      "container": "sutazai-ollama-integration-specialist",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8021": {
+      "service": "agent-debugger",
+      "container": "sutazai-agent-debugger",
+      "file": "docker-compose.agents-20.yml"
+    },
+    "8080": {
+      "service": "nginx",
+      "container": "sutazai-nginx",
+      "file": "docker-compose.autoscaling.yml"
+    },
+    "8081": {
+      "service": "pool-manager",
+      "container": "ollama-pool-manager",
+      "file": "docker-compose.ollama-cluster-optimized.yml"
+    },
+    "8200": {
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8201": {
+      "service": "deployment-automation-master",
+      "container": "sutazai-deployment-automation-master",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8202": {
+      "service": "mega-code-auditor",
+      "container": "sutazai-mega-code-auditor",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8203": {
+      "service": "system-optimizer-reorganizer",
+      "container": "sutazai-system-optimizer-reorganizer",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8204": {
+      "service": "hardware-resource-optimizer",
+      "container": "sutazai-hardware-resource-optimizer-critical",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8205": {
+      "service": "ollama-integration-specialist",
+      "container": "sutazai-ollama-integration-specialist",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8206": {
+      "service": "infrastructure-devops-manager",
+      "container": "sutazai-infrastructure-devops-manager",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8207": {
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8208": {
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8209": {
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8210": {
+      "service": "testing-qa-validator",
+      "container": "sutazai-testing-qa-validator-critical",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8211": {
+      "service": "document-knowledge-manager",
+      "container": "sutazai-document-knowledge-manager",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8212": {
+      "service": "security-pentesting-specialist",
+      "container": "sutazai-security-pentesting-specialist",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8213": {
+      "service": "cicd-pipeline-orchestrator",
+      "container": "sutazai-cicd-pipeline-orchestrator",
+      "file": "docker-compose.phase1-critical-activation.yml"
+    },
+    "8300": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "8301": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "8302": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "8365": {
+      "service": "edge-computing-optimizer",
+      "container": "sutazai-edge-computing-optimizer",
+      "file": "docker-compose.agents-fix.yml"
+    },
+    "8388": {
+      "service": "data-analysis-engineer",
+      "container": "sutazai-data-analysis-engineer",
+      "file": "docker-compose.agents-fix.yml"
+    },
+    "8404": {
+      "service": "haproxy",
+      "container": "haproxy",
+      "file": "docker-compose.distributed.yml"
+    },
+    "8443": {
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8444": {
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8500": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8501": {
+      "service": "streamlit",
+      "container": "streamlit",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8551": {
+      "service": "task-assignment-coordinator",
+      "container": "sutazai-task-assignment-coordinator",
+      "file": "docker-compose.orchestration-agents.yml"
+    },
+    "8586": {
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator",
+      "file": "docker-compose.orchestration-agents.yml"
+    },
+    "8587": {
+      "service": "multi-agent-coordinator",
+      "container": "sutazai-multi-agent-coordinator",
+      "file": "docker-compose.orchestration-agents.yml"
+    },
+    "8588": {
+      "service": "resource-arbitration-agent",
+      "container": "sutazai-resource-arbitration-agent",
+      "file": "docker-compose.orchestration-agents.yml"
+    },
+    "8589": {
+      "service": "ai-agent-orchestrator",
+      "container": "sutazai-ai-agent-orchestrator",
+      "file": "docker-compose.orchestration-agents.yml"
+    },
+    "8600": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "8726": {
+      "service": "deep-local-brain-builder",
+      "container": "sutazai-deep-local-brain-builder",
+      "file": "docker-compose.agents-fix.yml"
+    },
+    "8729": {
+      "service": "document-knowledge-manager",
+      "container": "sutazai-document-knowledge-manager",
+      "file": "docker-compose.agents-fix.yml"
+    },
+    "8760": {
+      "service": "fusion-gateway",
+      "container": "sutazai-fusion-gateway",
+      "file": "docker-compose.fusion.yml"
+    },
+    "8765": {
+      "service": "fusion-pipeline",
+      "container": "sutazai-fusion-pipeline",
+      "file": "docker-compose.fusion.yml"
+    },
+    "8766": {
+      "service": "fusion-coordinator",
+      "container": "sutazai-fusion-coordinator",
+      "file": "docker-compose.fusion.yml"
+    },
+    "8767": {
+      "service": "fusion-pipeline",
+      "container": "sutazai-fusion-pipeline",
+      "file": "docker-compose.fusion.yml"
+    },
+    "8768": {
+      "service": "fusion-learning",
+      "container": "sutazai-fusion-learning",
+      "file": "docker-compose.fusion.yml"
+    },
+    "9080": {
+      "service": "hygiene-reporter-standalone",
+      "container": "hygiene-standalone-reporter-isolated",
+      "file": "docker-compose.hygiene-standalone.yml"
+    },
+    "9090": {
+      "service": "prometheus",
+      "container": "prometheus",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "9091": {
+      "service": "fusion-metrics",
+      "container": "sutazai-fusion-metrics",
+      "file": "docker-compose.fusion.yml"
+    },
+    "9093": {
+      "service": "alertmanager",
+      "container": "alertmanager",
+      "file": "docker-compose.distributed.yml"
+    },
+    "9411": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "9901": {
+      "service": "envoy",
+      "container": "envoy",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "10000": {
+      "service": "postgres",
+      "container": "sutazai-postgres",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10001": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10002": {
+      "service": "redis",
+      "container": "sutazai-redis",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10003": {
+      "service": "redis",
+      "container": "sutazai-redis",
+      "file": "docker-compose.agents-critical-fixed.yml"
+    },
+    "10005": {
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "10006": {
+      "service": "consul",
+      "container": "consul",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "10007": {
+      "service": "kong",
+      "container": "kong",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "10008": {
+      "service": "health-check-server",
+      "container": "health-check-server",
+      "file": "docker-compose.infrastructure.yml"
+    },
+    "10009": {
+      "service": "resource-manager",
+      "container": "sutazai-resource-manager",
+      "file": "docker-compose.missing-services.yml"
+    },
+    "10010": {
+      "service": "postgres",
+      "container": "sutazai-postgres",
+      "file": "docker-compose.critical-immediate.yml"
+    },
+    "10011": {
+      "service": "redis",
+      "container": "sutazai-redis",
+      "file": "docker-compose.critical-immediate.yml"
+    },
+    "10020": {
+      "service": "sutazai-log-collector",
+      "container": "sutazai-log-collector",
+      "file": "docker-compose.external-integration.yml"
+    },
+    "10021": {
+      "service": "hygiene-redis",
+      "container": "hygiene-redis",
+      "file": "docker-compose.hygiene-monitor.yml"
+    },
+    "10030": {
+      "service": "sutazai-service-mesh",
+      "container": "sutazai-service-mesh",
+      "file": "docker-compose.external-integration.yml"
+    },
+    "10031": {
+      "service": "sutazai-service-mesh",
+      "container": "sutazai-service-mesh",
+      "file": "docker-compose.external-integration.yml"
+    },
+    "10040": {
+      "service": "consul",
+      "container": "sutazai-consul",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10041": {
+      "service": "consul",
+      "container": "sutazai-consul",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10042": {
+      "service": "rabbitmq",
+      "container": "sutazai-rabbitmq",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10043": {
+      "service": "rabbitmq",
+      "container": "sutazai-rabbitmq",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10044": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10045": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10046": {
+      "service": "ai-runtime",
+      "container": "sutazai-ai-runtime",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10047": {
+      "service": "haproxy",
+      "container": "sutazai-haproxy",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10048": {
+      "service": "haproxy",
+      "container": "sutazai-haproxy",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10049": {
+      "service": "caddy",
+      "container": "sutazai-caddy",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10050": {
+      "service": "caddy",
+      "container": "sutazai-caddy",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10051": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "file": "docker-compose.auth.yml"
+    },
+    "10052": {
+      "service": "kong",
+      "container": "sutazai-kong",
+      "file": "docker-compose.auth.yml"
+    },
+    "10053": {
+      "service": "vault",
+      "container": "sutazai-vault",
+      "file": "docker-compose.auth.yml"
+    },
+    "10054": {
+      "service": "jwt-service",
+      "container": "sutazai-jwt-service",
+      "file": "docker-compose.auth.yml"
+    },
+    "10055": {
+      "service": "service-account-manager",
+      "container": "sutazai-service-account-manager",
+      "file": "docker-compose.auth.yml"
+    },
+    "10056": {
+      "service": "rbac-policy-engine",
+      "container": "sutazai-rbac-engine",
+      "file": "docker-compose.auth.yml"
+    },
+    "10099": {
+      "service": "circuit-breaker",
+      "container": "sutazai-circuit-breaker",
+      "file": "docker-compose.self-healing-critical.yml"
+    },
+    "10100": {
+      "service": "chromadb",
+      "container": "sutazai-chromadb",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10101": {
+      "service": "qdrant",
+      "container": "sutazai-qdrant",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10102": {
+      "service": "qdrant",
+      "container": "sutazai-qdrant",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10103": {
+      "service": "faiss-vector",
+      "container": "sutazai-faiss-vector",
+      "file": "docker-compose.missing-services.yml"
+    },
+    "10104": {
+      "service": "ollama",
+      "container": "sutazai-ollama",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10105": {
+      "service": "ollama-secondary",
+      "container": "sutazai-ollama-secondary",
+      "file": "docker-compose.ollama-cluster.yml"
+    },
+    "10106": {
+      "service": "ollama-tertiary",
+      "container": "sutazai-ollama-tertiary",
+      "file": "docker-compose.ollama-cluster.yml"
+    },
+    "10107": {
+      "service": "ollama-loadbalancer",
+      "container": "sutazai-ollama-lb",
+      "file": "docker-compose.ollama-cluster.yml"
+    },
+    "10108": {
+      "service": "ollama-monitor",
+      "container": "sutazai-ollama-monitor",
+      "file": "docker-compose.ollama-cluster.yml"
+    },
+    "10110": {
+      "service": "sutazai-redis-adapter",
+      "container": "sutazai-redis-adapter",
+      "file": "docker-compose.external-integration.yml"
+    },
+    "10200": {
+      "service": "prometheus",
+      "container": "sutazai-prometheus",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10201": {
+      "service": "grafana",
+      "container": "sutazai-grafana",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10202": {
+      "service": "loki",
+      "container": "sutazai-loki",
+      "file": "docker-compose.missing-services.yml"
+    },
+    "10203": {
+      "service": "alertmanager",
+      "container": "sutazai-alertmanager",
+      "file": "docker-compose.missing-services.yml"
+    },
+    "10204": {
+      "service": "ai-metrics-exporter",
+      "container": "sutazai-ai-metrics",
+      "file": "docker-compose.missing-services.yml"
+    },
+    "10205": {
+      "service": "node-exporter",
+      "container": "sutazai-node-exporter",
+      "file": "docker-compose.yml"
+    },
+    "10206": {
+      "service": "cadvisor",
+      "container": "sutazai-cadvisor",
+      "file": "docker-compose.yml"
+    },
+    "10207": {
+      "service": "postgres-exporter",
+      "container": "sutazai-postgres-exporter",
+      "file": "docker-compose.yml"
+    },
+    "10208": {
+      "service": "redis-exporter",
+      "container": "sutazai-redis-exporter",
+      "file": "docker-compose.yml"
+    },
+    "10209": {
+      "service": "ai-metrics-exporter",
+      "container": "sutazai-ai-metrics-exporter",
+      "file": "docker-compose.yml"
+    },
+    "10210": {
+      "service": "health-monitor",
+      "container": "sutazai-health-monitor",
+      "file": "docker-compose.yml"
+    },
+    "10220": {
+      "service": "node-exporter",
+      "container": "sutazai-node-exporter",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10221": {
+      "service": "cadvisor",
+      "container": "sutazai-cadvisor",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10223": {
+      "service": "jaeger",
+      "container": "sutazai-jaeger",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10224": {
+      "service": "jaeger",
+      "container": "sutazai-jaeger",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10225": {
+      "service": "elasticsearch",
+      "container": "sutazai-elasticsearch",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10226": {
+      "service": "kibana",
+      "container": "sutazai-kibana",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10227": {
+      "service": "postgres-exporter",
+      "container": "sutazai-postgres-exporter-monitoring",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10228": {
+      "service": "redis-exporter",
+      "container": "sutazai-redis-exporter-monitoring",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10229": {
+      "service": "blackbox-exporter",
+      "container": "sutazai-blackbox-exporter",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10230": {
+      "service": "uptime-kuma",
+      "container": "sutazai-uptime-kuma",
+      "file": "docker-compose.monitoring.yml"
+    },
+    "10300": {
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10301": {
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10302": {
+      "service": "task-assignment-coordinator",
+      "container": "sutazai-task-assignment-coordinator",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10303": {
+      "service": "autonomous-system-controller",
+      "container": "sutazai-autonomous-system-controller",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10304": {
+      "service": "bigagi-system-manager",
+      "container": "sutazai-bigagi-system-manager",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10305": {
+      "service": "agentgpt",
+      "container": "sutazai-agentgpt",
+      "file": "docker-compose.yml"
+    },
+    "10306": {
+      "service": "privategpt",
+      "container": "sutazai-privategpt",
+      "file": "docker-compose.yml"
+    },
+    "10307": {
+      "service": "shellgpt",
+      "container": "sutazai-shellgpt",
+      "file": "docker-compose.yml"
+    },
+    "10308": {
+      "service": "documind",
+      "container": "sutazai-documind",
+      "file": "docker-compose.yml"
+    },
+    "10320": {
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10321": {
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator",
+      "file": "docker-compose.agents-fixed.yml"
+    },
+    "10322": {
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator",
+      "file": "docker-compose.agents-fixed.yml"
+    },
+    "10323": {
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s",
+      "file": "docker-compose.agents-fixed.yml"
+    },
+    "10324": {
+      "service": "deployment-automation-master",
+      "container": "sutazai-deployment-automation-master",
+      "file": "docker-compose.agents-fixed.yml"
+    },
+    "10340": {
+      "service": "ai-product-manager",
+      "container": "sutazai-ai-product-manager",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10341": {
+      "service": "ai-scrum-master",
+      "container": "sutazai-ai-scrum-master",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10350": {
+      "service": "senior-ai-engineer",
+      "container": "sutazai-senior-ai-engineer",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10351": {
+      "service": "senior-backend-developer",
+      "container": "sutazai-senior-backend-developer",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10352": {
+      "service": "senior-frontend-developer",
+      "container": "sutazai-senior-frontend-developer",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10353": {
+      "service": "senior-full-stack-developer",
+      "container": "sutazai-senior-full-stack-developer",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10354": {
+      "service": "gpt-engineer",
+      "container": "sutazai-gpt-engineer",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10355": {
+      "service": "aider",
+      "container": "sutazai-aider",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10356": {
+      "service": "code-generation-improver",
+      "container": "sutazai-code-generation-improver",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10357": {
+      "service": "opendevin-code-generator",
+      "container": "sutazai-opendevin-code-generator",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10360": {
+      "service": "ai-senior-engineer",
+      "container": "sutazai-ai-senior-engineer",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10361": {
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10362": {
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10363": {
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10380": {
+      "service": "ai-qa-team-lead",
+      "container": "sutazai-ai-qa-team-lead",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10381": {
+      "service": "codebase-team-lead",
+      "container": "sutazai-codebase-team-lead",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10382": {
+      "service": "testing-qa-team-lead",
+      "container": "sutazai-testing-qa-team-lead",
+      "file": "docker-compose.missing-agents-optimized.yml"
+    },
+    "10383": {
+      "service": "cicd-pipeline-orchestrator",
+      "container": "sutazai-cicd-pipeline-orchestrator",
+      "file": "docker-compose.missing-agents.yml"
+    },
+    "10400": {
+      "service": "langflow",
+      "container": "sutazai-langflow",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10401": {
+      "service": "flowise",
+      "container": "sutazai-flowise",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10402": {
+      "service": "llamaindex",
+      "container": "sutazai-llamaindex",
+      "file": "docker-compose.yml"
+    },
+    "10403": {
+      "service": "n8n",
+      "container": "sutazai-n8n",
+      "file": "docker-compose-optimized.yml"
+    },
+    "10404": {
+      "service": "context-framework",
+      "container": "sutazai-context-framework",
+      "file": "docker-compose.yml"
+    },
+    "10405": {
+      "service": "autogen",
+      "container": "sutazai-autogen",
+      "file": "docker-compose.yml"
+    },
+    "10406": {
+      "service": "opendevin",
+      "container": "sutazai-opendevin",
+      "file": "docker-compose.yml"
+    },
+    "10407": {
+      "service": "finrobot",
+      "container": "sutazai-finrobot",
+      "file": "docker-compose.yml"
+    },
+    "10408": {
+      "service": "code-improver",
+      "container": "sutazai-code-improver",
+      "file": "docker-compose.yml"
+    },
+    "10409": {
+      "service": "service-hub",
+      "container": "sutazai-service-hub",
+      "file": "docker-compose.yml"
+    },
+    "10410": {
+      "service": "awesome-code-ai",
+      "container": "sutazai-awesome-code-ai",
+      "file": "docker-compose.yml"
+    },
+    "10411": {
+      "service": "agentzero",
+      "container": "sutazai-agentzero",
+      "file": "docker-compose.yml"
+    },
+    "10412": {
+      "service": "dify",
+      "container": "sutazai-dify",
+      "file": "docker-compose.yml"
+    },
+    "10413": {
+      "service": "hardware-resource-optimizer",
+      "container": "sutazai-hardware-resource-optimizer",
+      "file": "docker-compose.yml"
+    },
+    "10420": {
+      "service": "hygiene-backend",
+      "container": "hygiene-backend",
+      "file": "docker-compose.hygiene-monitor.yml"
+    },
+    "10421": {
+      "service": "rule-control-api",
+      "container": "rule-control-api",
+      "file": "docker-compose.hygiene-monitor.yml"
+    },
+    "10422": {
+      "service": "hygiene-dashboard",
+      "container": "hygiene-dashboard",
+      "file": "docker-compose.hygiene-monitor.yml"
+    },
+    "10423": {
+      "service": "nginx",
+      "container": "hygiene-nginx",
+      "file": "docker-compose.hygiene-monitor.yml"
+    },
+    "10500": {
+      "service": "agi-orchestration-layer",
+      "container": "sutazai-agi-orchestration",
+      "file": "docker-compose.agi.yml"
+    },
+    "10501": {
+      "service": "agi-orchestration-layer",
+      "container": "sutazai-agi-orchestration",
+      "file": "docker-compose.agi.yml"
+    },
+    "10502": {
+      "service": "agi-orchestration-layer",
+      "container": "sutazai-agi-orchestration",
+      "file": "docker-compose.agi.yml"
+    },
+    "10510": {
+      "service": "agi-task-decomposer",
+      "container": "sutazai-agi-task-decomposer",
+      "file": "docker-compose.agi.yml"
+    },
+    "10520": {
+      "service": "agi-agent-matcher",
+      "container": "sutazai-agi-agent-matcher",
+      "file": "docker-compose.agi.yml"
+    },
+    "10530": {
+      "service": "agi-consensus-manager",
+      "container": "sutazai-agi-consensus",
+      "file": "docker-compose.agi.yml"
+    },
+    "10540": {
+      "service": "agi-behavior-detector",
+      "container": "sutazai-agi-behavior-detector",
+      "file": "docker-compose.agi.yml"
+    },
+    "10550": {
+      "service": "agi-meta-learner",
+      "container": "sutazai-agi-meta-learner",
+      "file": "docker-compose.agi.yml"
+    },
+    "10560": {
+      "service": "agi-safety-monitor",
+      "container": "sutazai-agi-safety-monitor",
+      "file": "docker-compose.agi.yml"
+    },
+    "10570": {
+      "service": "agi-performance-optimizer",
+      "container": "sutazai-agi-optimizer",
+      "file": "docker-compose.agi.yml"
+    },
+    "10580": {
+      "service": "agi-resource-allocator",
+      "container": "sutazai-agi-resource-allocator",
+      "file": "docker-compose.agi.yml"
+    },
+    "10590": {
+      "service": "agi-dashboard",
+      "container": "sutazai-agi-dashboard",
+      "file": "docker-compose.agi.yml"
+    },
+    "10591": {
+      "service": "agi-metrics-collector",
+      "container": "sutazai-agi-metrics",
+      "file": "docker-compose.agi.yml"
+    },
+    "11000": {
+      "service": "agent-orchestrator",
+      "container": "sutazai-agent-orchestrator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11001": {
+      "service": "agentzero-coordinator",
+      "container": "sutazai-agentzero-coordinator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11002": {
+      "service": "ai-system-architect",
+      "container": "sutazai-ai-system-architect-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11003": {
+      "service": "ai-system-validator",
+      "container": "sutazai-ai-system-validator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11004": {
+      "service": "ai-senior-backend-developer",
+      "container": "sutazai-ai-senior-backend-developer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11005": {
+      "service": "ai-senior-frontend-developer",
+      "container": "sutazai-ai-senior-frontend-developer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11006": {
+      "service": "ai-senior-full-stack-developer",
+      "container": "sutazai-ai-senior-full-stack-developer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11007": {
+      "service": "ai-senior-engineer",
+      "container": "sutazai-ai-senior-engineer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11008": {
+      "service": "ai-product-manager",
+      "container": "sutazai-ai-product-manager-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11009": {
+      "service": "ai-scrum-master",
+      "container": "sutazai-ai-scrum-master-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11010": {
+      "service": "ai-qa-team-lead",
+      "container": "sutazai-ai-qa-team-lead-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11011": {
+      "service": "ai-testing-qa-validator",
+      "container": "sutazai-ai-testing-qa-validator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11012": {
+      "service": "cicd-pipeline-orchestrator",
+      "container": "sutazai-cicd-pipeline-orchestrator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11013": {
+      "service": "deployment-automation-master",
+      "container": "sutazai-deployment-automation-master-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11014": {
+      "service": "adversarial-attack-detector",
+      "container": "sutazai-adversarial-attack-detector-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11015": {
+      "service": "agent-creator",
+      "container": "sutazai-agent-creator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11016": {
+      "service": "agent-debugger",
+      "container": "sutazai-agent-debugger-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11017": {
+      "service": "compute-scheduler-and-optimizer",
+      "container": "sutazai-compute-scheduler-optimizer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11018": {
+      "service": "emergency-shutdown-coordinator",
+      "container": "sutazai-emergency-shutdown-coordinator-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11019": {
+      "service": "cpu-only-hardware-optimizer",
+      "container": "sutazai-cpu-hardware-optimizer-phase1",
+      "file": "docker-compose.phase1-critical.yml"
+    },
+    "11020": {
+      "service": "deep-learning-brain-architect",
+      "container": "sutazai-deep-learning-brain-architect-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11021": {
+      "service": "deep-learning-brain-manager",
+      "container": "sutazai-deep-learning-brain-manager-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11022": {
+      "service": "autogen",
+      "container": "sutazai-autogen-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11023": {
+      "service": "autogpt",
+      "container": "sutazai-autogpt-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11024": {
+      "service": "crewai",
+      "container": "sutazai-crewai-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11025": {
+      "service": "aider",
+      "container": "sutazai-aider-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11026": {
+      "service": "code-generation-improver",
+      "container": "sutazai-code-generation-improver-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11027": {
+      "service": "code-improver",
+      "container": "sutazai-code-improver-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11028": {
+      "service": "devika",
+      "container": "sutazai-devika-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11029": {
+      "service": "code-quality-gateway-sonarqube",
+      "container": "sutazai-code-quality-gateway-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11030": {
+      "service": "bias-and-fairness-auditor",
+      "container": "sutazai-bias-fairness-auditor-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11031": {
+      "service": "container-orchestrator-k3s",
+      "container": "sutazai-container-orchestrator-k3s-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11032": {
+      "service": "container-vulnerability-scanner-trivy",
+      "container": "sutazai-container-vulnerability-scanner-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11033": {
+      "service": "data-drift-detector",
+      "container": "sutazai-data-drift-detector-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11034": {
+      "service": "data-lifecycle-manager",
+      "container": "sutazai-data-lifecycle-manager-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11035": {
+      "service": "data-version-controller-dvc",
+      "container": "sutazai-data-version-controller-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11036": {
+      "service": "attention-optimizer",
+      "container": "sutazai-attention-optimizer-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11037": {
+      "service": "cognitive-architecture-designer",
+      "container": "sutazai-cognitive-architecture-designer-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11038": {
+      "service": "cognitive-load-monitor",
+      "container": "sutazai-cognitive-load-monitor-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11039": {
+      "service": "autonomous-task-executor",
+      "container": "sutazai-autonomous-task-executor-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11040": {
+      "service": "browser-automation-orchestrator",
+      "container": "sutazai-browser-automation-orchestrator-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11041": {
+      "service": "codebase-team-lead",
+      "container": "sutazai-codebase-team-lead-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11042": {
+      "service": "edge-inference-proxy",
+      "container": "sutazai-edge-inference-proxy-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11043": {
+      "service": "energy-consumption-optimize",
+      "container": "sutazai-energy-consumption-optimizer-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11044": {
+      "service": "ethical-governor",
+      "container": "sutazai-ethical-governor-phase2",
+      "file": "docker-compose.phase2-specialized.yml"
+    },
+    "11045": {
+      "service": "evolution-strategy-trainer",
+      "container": "sutazai-evolution-strategy-trainer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11046": {
+      "service": "experiment-tracker",
+      "container": "sutazai-experiment-tracker-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11047": {
+      "service": "explainability-and-transparency-agent",
+      "container": "sutazai-explainability-transparency-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11048": {
+      "service": "distributed-tracing-analyzer-jaeger",
+      "container": "sutazai-distributed-tracing-analyzer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11049": {
+      "service": "log-aggregator-loki",
+      "container": "sutazai-log-aggregator-loki-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11050": {
+      "service": "metrics-collector-prometheus",
+      "container": "sutazai-metrics-collector-prometheus-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11051": {
+      "service": "observability-dashboard-manager-grafana",
+      "container": "sutazai-observability-dashboard-manager-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11052": {
+      "service": "explainable-ai-specialist",
+      "container": "sutazai-explainable-ai-specialist-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11053": {
+      "service": "federated-learning-coordinator",
+      "container": "sutazai-federated-learning-coordinator-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11054": {
+      "service": "data-analysis-engineer",
+      "container": "sutazai-data-analysis-engineer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11055": {
+      "service": "data-pipeline-engineer",
+      "container": "sutazai-data-pipeline-engineer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11056": {
+      "service": "distributed-computing-architect",
+      "container": "sutazai-distributed-computing-architect-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11057": {
+      "service": "edge-computing-optimizer",
+      "container": "sutazai-edge-computing-optimizer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11058": {
+      "service": "document-knowledge-manager",
+      "container": "sutazai-document-knowledge-manager-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11059": {
+      "service": "episodic-memory-engineer",
+      "container": "sutazai-episodic-memory-engineer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11060": {
+      "service": "dify-automation-specialist",
+      "container": "sutazai-dify-automation-specialist-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11061": {
+      "service": "flowiseai-flow-manager",
+      "container": "sutazai-flowiseai-flow-manager-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11062": {
+      "service": "awesome-code-ai",
+      "container": "sutazai-awesome-code-ai-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11063": {
+      "service": "finrobot",
+      "container": "sutazai-finrobot-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11064": {
+      "service": "garbage-collector-coordinator",
+      "container": "sutazai-garbage-collector-coordinator-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11065": {
+      "service": "gradient-compression-specialist",
+      "container": "sutazai-gradient-compression-specialist-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11066": {
+      "service": "gpu-hardware-optimizer",
+      "container": "sutazai-gpu-hardware-optimizer-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11067": {
+      "service": "genetic-algorithm-tuner",
+      "container": "sutazai-genetic-algorithm-tuner-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11068": {
+      "service": "goal-setting-and-planning-agent",
+      "container": "sutazai-goal-setting-planning-agent-phase3",
+      "file": "docker-compose.phase3-auxiliary.yml"
+    },
+    "11270": {
+      "service": "ollama",
+      "container": "sutazai-ollama",
+      "file": "docker-compose.critical-immediate.yml"
+    },
+    "11434": {
+      "service": "ollama",
+      "container": "ollama",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "11435": {
+      "service": "ollama-secondary",
+      "container": "ollama-secondary",
+      "file": "docker-compose.ollama-cluster-optimized.yml"
+    },
+    "11436": {
+      "service": "ollama-tertiary",
+      "container": "ollama-tertiary",
+      "file": "docker-compose.ollama-cluster-optimized.yml"
+    },
+    "14250": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "14268": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "15672": {
+      "service": "rabbitmq",
+      "container": "rabbitmq",
+      "file": "docker-compose.distributed-ai.yml"
+    },
+    "16686": {
+      "service": "jaeger",
+      "container": "jaeger",
+      "file": "docker-compose.distributed-ai.yml"
+    }
+  },
+  "available_agent_ports": [
+    11069,
+    11070,
+    11071,
+    11072,
+    11073,
+    11074,
+    11075,
+    11076,
+    11077,
+    11078,
+    11079,
+    11080,
+    11081,
+    11082,
+    11083,
+    11084,
+    11085,
+    11086,
+    11087,
+    11088,
+    11089,
+    11090,
+    11091,
+    11092,
+    11093,
+    11094,
+    11095,
+    11096,
+    11097,
+    11098,
+    11099,
+    11100,
+    11101,
+    11102,
+    11103,
+    11104,
+    11105,
+    11106,
+    11107,
+    11108,
+    11109,
+    11110,
+    11111,
+    11112,
+    11113,
+    11114,
+    11115,
+    11116,
+    11117,
+    11118
+  ]
+}

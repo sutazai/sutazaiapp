@@ -118,7 +118,7 @@ services:
     container_name: sutazai-alertmanager
     restart: unless-stopped
     ports:
-      - "10203:9093"
+      - "11064:9093"
     volumes:
       - ./monitoring/alertmanager:/etc/alertmanager
       - alertmanager_data:/alertmanager

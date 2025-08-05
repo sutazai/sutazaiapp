@@ -37,7 +37,9 @@ except ImportError:
                 return {"status": "success", "agent": self.agent_id}
             
             def start(self):
-                self.logger.info(f"Agent {self.name} started")import asyncio
+                self.logger.info(f"Agent {self.name} started")
+
+import asyncio
 from typing import Dict, Any
 
 class Container_Orchestrator_K3SAgent(BaseAgentV2):

@@ -1,216 +1,346 @@
-🔧 Codebase Hygiene
-A clean, consistent, and organized codebase is non-negotiable. It reflects engineering discipline and enables scalability, team velocity, and fault tolerance.
-
-Every contributor is accountable for maintaining and improving hygiene—not just avoiding harm.
-
-🧼 Enforce Consistency Relentlessly
-✅ Follow the existing structure, naming patterns, and conventions. Never introduce your own style or shortcuts.
-
-✅ Centralize logic — do not duplicate code across files, modules, or services.
-
-🚫 Avoid multiple versions of:
-
-APIs doing the same task (REST + GraphQL duplicating effort, for example)
-
-UI components or CSS/SCSS modules with near-identical logic or styling
-
-Scripts that solve the same problem in slightly different ways
-
-Requirements files scattered across environments with conflicting dependencies
-
-Documentation split across folders with different levels of accuracy
-
-📂 Project Structure Discipline
-📌 Never dump files or code in random or top-level folders.
-
-📌 Place everything intentionally, following modular boundaries:
-
-components/ for reusable UI parts
-
-services/ or api/ for network interactions
-
-utils/ for pure logic or helpers
-
-hooks/ for reusable frontend logic
-
-schemas/ or types/ for data validation
-
-If the ideal location doesn't exist, propose a clear structure and open a small RFC (Request for Comments) before proceeding.
-
-🗑️ Dead Code is Debt
-🔥 Regularly delete unused code, legacy assets, stale test files, or experimental stubs.
-
-❌ "Just in case" or "might be useful later" is not a valid reason to keep clutter.
-
-🧪 Temporary test code must be removed or clearly gated (e.g. with feature flags or development-only checks).
-
-🧪 Use Tools to Automate Discipline
-✅ Mandatory for all contributors:
-
-Linters: ESLint, Flake8, RuboCop
-
-Formatters: Prettier, Black, gofmt
-
-Static analysis: TypeScript, mypy, SonarQube, Bandit
-
-Dependency managers: pip-tools, Poetry, pnpm, npm lockfiles
-
-Schema enforcement: JSON schema, Pydantic, zod
-
-Test coverage tooling: Jest, pytest-cov, Istanbul
-
-🔄 Integrate these tools in pre-commit, pre-push, and CI/CD workflows:
-
-No code gets into production branches without passing hygiene checks.
-
-Every PR should be green and self-explanatory.
-
-✍️ Commits Are Contracts
-✅ Write atomic commits—one logical change per commit.
-
-🧾 Follow conventional commit patterns or similar style guides (feat:, fix:, refactor:, etc.).
-
-🧪 No skipping reviews or tests for "quick fixes." These introduce long-term chaos.
-
-🧠 Execution Mindset: Act Like a Top-Level Engineer
-🛠️ Think like an Architect, Engineer, QA, and PM—all at once.
-
-🔬 Examine the full context of any change before writing code.
-
-🧭 Prioritize long-term clarity over short-term speed.
-
-🧱 Every change should make the codebase easier to maintain for someone else later.
-
-🚩 Red Flags (Anti-Patterns to Avoid)
-🔴 "I'll just put this here for now" — No, there is no "for now."
-
-🔴 "It's just a tiny change" — That's how tech debt begins.
-
-🔴 "We can clean this up later" — "Later" rarely comes.
-
-🔴 Duplicate modules named utils.js, helper.py, or service.ts across packages.
-
-🔴 PRs that include: unrelated changes, commented-out code, unreviewed temporary logs.
-
-🧭 Final Reminder
-A healthy codebase is a shared responsibility.
-Every line of code you touch should be better than you found it.
-
-🚫 Rules to Follow
-
--------
-📌 Rule 1: No Fantasy Elements
-✨ Only real, production-ready implementations are allowed.
-Do not write speculative, placeholder, "in-theory," or overly abstract code unless it's been fully validated and grounded in current platform constraints.
-
-✨ Avoid overengineering or unnecessary abstraction.
-No fictional components, fake classes, dream APIs, or concrete implementation or real example infrastructure. All code must reflect actual, working systems.
-
-✨ No 'specific future version or roadmap item' solutions.
-Avoid comments like // TODO: automatically, programmatically scale this later or // imagine this uses a future AI module. If it doesn't exist now, it doesn't go in the codebase.
-
-✨ Be honest with the present limitations.
-Code must work today, not in a hypothetical perfect setup. Assume real-world constraints like flaky hardware, latency, cold starts, and limited memory.
-All code and documentation must use real, grounded constructs—no metaphors, specific implementation name (e.g., emailSender, dataProcessor) terms, or hypothetical "black-box" AI.
-
-✨ Forbidden:
-
-Terms like wizardService, specificHandler (e.g., authHandler, dataHandler), teleportData(), or comments such as // TODO: add telekinesis here.
-
-Pseudo-functions that don't map to an actual library or API (e.g. superIntuitiveAI.optimize()).
-
-✨ Mandated Practices:
-
-Name things concretely: emailSender, not magicMailer.
-
-Use real libraries: import from nodemailer, not from "the built-in mailer."
-
-Link to docs in comments or README—every external API or framework must be verifiable.
-
-✅ Pre-Commit Checks:
-
- Search for banned keywords (specific implementation name (e.g., emailSender, dataProcessor), wizard, black-box, etc.) in your diff.
-
- Verify every new dependency is in package.json (or requirements.txt) with a valid version.
-
- Ensure code examples in docs actually compile or run.
-
-----
- Rule 2: Do Not Break Existing Functionality
-✨ Every change must respect what already works.
-Before modifying any file, component, or flow, verify exactly what it currently does and why. Don't assume anything.
-
-✨ Regression = failure.
-If your change breaks or downgrades existing features—even temporarily—it's considered a critical issue. Stability comes first.
-
-✨ Backwards compatibility is a must.
-If your refactor or feature update changes existing behavior, either support legacy use cases or migrate them gracefully.
-
-✨ Always test before merging.
-Write or update test cases to explicitly cover both new logic and old logic. Nothing ships unless it's verified to not break production behavior.
-
-✨ Communicate impact clearly.
-If there's any risk of side effects, escalate and document. Silent changes are forbidden.
-
-🔍 Before modifying any file, investigate the full functionality and behavior of the existing code—understand what it does, how it's used, and whether it's actively supporting a feature or integration.
-
-🧪 If a change is required, test the full end-to-end flow before and after. Confirm the logic is preserved or improved—never regressed.
-
-🔁 Refactor only when necessary and with proper safeguards. If existing advanced functionality is present (e.g., dynamic routing, lazy loading, caching, etc.), it must be preserved or enhanced, not removed.
-
-📊 Maintain proper version control and rollback strategies in case a new change introduces instability or conflict.
-
-💡 Document what was changed, why, and what was verified to ensure that others won't unknowingly override or disrupt a critical flow later.
-
-❗ Breaking changes must never be merged without full validation across all dependent systems and deployment scenarios.
-Every change must preserve or improve current behavior—no regressions, ever.
-
-✨ Investigation Steps:
-
-Trace usage:
-
-grep -R "functionName" .
-
-Check import graphs or IDE "Find Usages."
-
-Run baseline tests:
-
-npm test, pytest, or your CI suite.
-
-Manual sanity check of any affected UI or API endpoints.
-
-Review consumers:
-
-Frontend pages that call an endpoint
-
-Cron jobs or scripts that rely on a helper
-
-✨ Testing & Safeguards:
-
- Write or update tests covering both old and new behavior.
-
- Gate big changes behind feature flags until fully validated.
-
- Prepare a rollback plan—document the exact revert commit or steps.
-
-✅ Merge Criteria:
-
- Green build with 100% test pass rate
-
- No new lint/type errors
-
- Explicit sign-off from the original feature owner or lead
-
-❗ Do Not merge breaking changes without:
-
-A clear "Breaking Change" section in the PR description
-
-A migration or upgrade guide in CHANGELOG.md or docs
-
-[NEW MEMORY ENTRY]
-📝 Captured Insights from First Deployment Cycle
-• Successfully integrated comprehensive deployment script following Rule 12
-• Identified key challenges in environment-specific configurations
-• Developed robust error handling and rollback mechanisms
-• Implemented version pinning for critical dependencies
-• Created centralized logging for deployment events
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+SutazAI is a local AI task automation system that runs entirely on-premises without cloud dependencies. The system uses Docker containers for microservices and Ollama for local LLM inference (primarily TinyLlama model).
+
+**⚠️ CRITICAL REALITY CHECK ⚠️**
+- **90% Fantasy**: Most documentation describes non-existent features
+- **10% Working**: Basic backend, frontend, databases, and Ollama
+- **Agent Truth**: Almost all "AI agents" are stub services returning hardcoded responses
+- **No Magic**: No quantum computing, AGI, service mesh, or complex orchestration exists
+
+**ALWAYS VERIFY**: Check docker-compose.yml and actual code before trusting any documentation.
+
+## Key Commands
+
+### Development & Testing
+```bash
+# Start the system (requires Docker network first)
+docker network create sutazai-network
+docker-compose up -d
+
+# View logs
+docker-compose logs -f [service-name]
+
+# Stop system
+docker-compose down
+
+# Run tests (uses Makefile with Poetry)
+make test           # Run unit tests
+make test-unit      # Unit tests only
+make test-integration # Integration tests (starts services)
+make test-all       # All test types
+make coverage       # Generate coverage report with HTML output
+
+# Code quality
+make lint          # Run linters (black, isort, flake8, mypy)
+make format        # Auto-format code (black, isort)
+make security-scan # Security analysis (bandit, safety)
+make check         # Run complete system check (lint + test + security)
+
+# Check system health
+curl http://localhost:10010/health
+
+# Database operations
+make db-migrate    # Run database migrations
+make shell-db      # Open PostgreSQL shell
+make shell-backend # Open backend container shell
+
+# Single test execution
+poetry run pytest tests/test_api_endpoints.py -v
+poetry run pytest -k "test_function_name" -v
+```
+
+### Key Service Ports
+- Backend API: `http://localhost:10010` (FastAPI with `/docs` for interactive API docs)
+- Frontend: `http://localhost:10011`
+- Ollama: `http://localhost:11434`
+- PostgreSQL: `localhost:5432` (user: sutazai, password: from env, db: sutazai)
+- Redis: `localhost:6379`
+- Neo4j: `localhost:7474` (browser), `bolt://localhost:7687`
+- AI Metrics Exporter: `http://localhost:11068`
+
+## Architecture & Patterns
+
+### Service Architecture
+The system follows a microservices pattern with Docker containers:
+- **Core Services**: `backend`, `frontend`, `postgres`, `redis`, `neo4j`, `ollama`
+- **Agent Services**: Individual containers for each agent (mostly stubs returning basic responses)
+- **Monitoring**: `ai-metrics-exporter`, health monitoring endpoints
+
+### Code Organization
+```
+/opt/sutazaiapp/
+├── backend/           # FastAPI backend service
+│   ├── app/          # Main application code
+│   ├── requirements.txt # Pinned dependencies
+│   └── main.py       # Entry point with enterprise feature flags
+├── frontend/         # React frontend
+├── agents/           # AI agent implementations (mostly stubs)
+│   └── */           # Each agent has app.py + requirements.txt
+├── docker/          # Additional Docker services
+├── workflows/       # Example automation workflows
+├── scripts/         # Deployment and utility scripts
+└── docker-compose.yml # Main orchestration file
+```
+
+### Key Design Decisions
+
+1. **Local-First**: All AI inference through Ollama, no external API dependencies
+2. **Stub Pattern**: Most agents are placeholder implementations - check if actually working before relying on them
+3. **Port Registry**: Each service has a designated port in the 10000-12000 range
+4. **Shared Network**: All services communicate via `sutazai-network` Docker network
+5. **Environment Variables**: Configuration through `.env` file and Docker environment vars
+
+### Agent Implementation Pattern
+All agents follow this structure:
+```python
+# agents/[agent-name]/app.py
+from flask import Flask, jsonify, request
+app = Flask(__name__)
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy", "agent": "agent-name"})
+
+@app.route('/process', methods=['POST'])
+def process():
+    data = request.get_json()
+    # Actual implementation or stub
+    return jsonify({"result": "processed", "input": data})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+```
+
+### Backend API Pattern
+The backend uses FastAPI with async handlers:
+```python
+# backend/app/api/v1/endpoints/example.py
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+
+router = APIRouter()
+
+class RequestModel(BaseModel):
+    data: str
+
+@router.post("/process")
+async def process(request: RequestModel):
+    # Implementation
+    return {"status": "success", "result": processed_data}
+```
+
+## Working with the Codebase
+
+### Before Making Changes
+1. Check if the feature/agent actually exists or is just documented
+2. Verify service health: `docker-compose ps`
+3. Check logs for errors: `docker-compose logs [service]`
+4. Test locally before deploying
+
+### Common Issues & Solutions
+- **Port conflicts**: Check `/config/port-registry.yaml` for assigned ports
+- **Container restarts**: Usually missing dependencies or incorrect requirements.txt
+- **"Agent not working"**: Most agents are stubs - check `app.py` for actual implementation
+- **Database connection**: Ensure PostgreSQL is healthy before starting dependent services
+
+### Adding New Features
+1. Reuse existing patterns and services where possible
+2. Follow the existing Docker service pattern for new agents
+3. Pin all dependency versions in requirements.txt
+4. Update port registry if adding new services
+5. Test with minimal resources (system should run on 8GB RAM)
+
+### Critical Files to Understand
+- `backend/app/main.py`: Main API entry point with feature flags
+- `docker-compose.yml`: Service orchestration and dependencies
+- `agents/compatibility_base_agent.py`: Base class for agent implementations
+- `workflows/simple_code_review.py`: Example of practical workflow
+
+## Important Constraints
+
+1. **No Fantasy Features**: Only implement what can actually work today
+2. **Resource Limits**: System must run on modest hardware (8GB RAM, 4 cores)
+3. **Local Only**: No external API calls, everything runs offline
+4. **Ollama Models**: Default to TinyLlama (637MB) for efficiency
+
+## Testing Strategy
+
+The project uses pytest with extensive fixtures. Key test patterns:
+- Unit tests in `tests/unit/`
+- Integration tests in `tests/integration/`
+- Mock external services rather than calling them
+- Use `pytest-asyncio` for async code testing
+- Coverage goal: 80% for new code
+
+## Deployment Notes
+
+Production deployment uses Docker Compose with health checks:
+1. Ensure Docker network exists: `docker network create sutazai-network`
+2. Start core services first: `docker-compose up -d postgres redis neo4j`
+3. Wait for health checks to pass
+4. Start remaining services: `docker-compose up -d`
+5. Verify all services healthy: `docker-compose ps`
+
+## Security Considerations
+
+- All dependencies are pinned to specific versions
+- Regular security scans via `make security-scan`
+- No secrets in code - use environment variables
+- CORS configured for local development only
+- JWT tokens for API authentication (when implemented)
+
+## Universal Deployment Script
+
+Use `/deploy.sh` for ALL deployments (replaces 100+ legacy scripts):
+```bash
+./deploy.sh deploy local       # Local development
+./deploy.sh deploy production  # Production deployment
+./deploy.sh status             # Check system status
+./deploy.sh health             # Run health checks
+./deploy.sh logs backend       # View specific service logs
+./deploy.sh rollback           # Rollback to previous version
+```
+
+Environment variables:
+- `SUTAZAI_ENV`: Deployment environment (local|staging|production)
+- `LIGHTWEIGHT_MODE=true`: Use minimal resources
+- `ENABLE_MONITORING=true`: Include Prometheus/Grafana stack
+- `DEBUG=true`: Enable verbose logging
+
+## Requirements Management
+
+Each component has its own requirements file:
+- `/backend/requirements.txt`: FastAPI backend (security-pinned)
+- `/frontend/requirements.txt`: Streamlit frontend
+- `/agents/*/requirements.txt`: Per-agent dependencies (many outdated/conflicting)
+- `/requirements-base.txt`: Shared base dependencies
+
+⚠️ **Warning**: Agent requirements often conflict. Most agents use Flask==2.3.3 while others use incompatible versions.
+
+## Working Components vs Fantasy
+
+**✅ ACTUALLY WORKING (Verified):**
+- Backend API: FastAPI on port 10010 with basic CRUD
+- Frontend: Streamlit on port 10011
+- Ollama: Local LLM on port 11434 with TinyLlama
+- Databases: PostgreSQL (10000), Redis (10001), Neo4j (10002-10003)
+- Basic Monitoring: Prometheus (10200), Grafana (10201)
+
+**⚠️ STUB IMPLEMENTATIONS (Return fake responses):**
+- 95% of agents in `/agents/*` - just Flask apps with hardcoded JSON
+- All "orchestration" agents
+- All "optimization" agents
+- Most "specialist" agents
+
+**❌ COMPLETE FANTASY (Don't exist at all):**
+- Kong API Gateway, Consul, RabbitMQ, Vault
+- Service mesh, Jaeger tracing, Elasticsearch
+- Quantum computing modules (`/backend/quantum_architecture/` - deleted)
+- AGI orchestration (`/config/agi_orchestration.yaml` - deleted)
+- Complex agent communication (no message passing exists)
+- 69 agents (only ~30 defined, <5 actually work)
+
+## How to Verify Reality vs Fantasy
+
+```bash
+# 1. Check if service actually exists in Docker:
+docker-compose ps | grep [service-name]
+
+# 2. Check if agent has real implementation:
+grep -l "stub\|placeholder\|TODO\|not implemented" agents/[agent-name]/app.py
+
+# 3. Test actual functionality:
+curl http://localhost:[port]/process -X POST -H "Content-Type: application/json" -d '{"test": "data"}'
+# If response is always the same regardless of input = STUB
+
+# 4. Check docker-compose.yml for truth about ports:
+grep -A 5 [service-name]: docker-compose.yml
+
+# 5. IGNORE these documentation files (mostly fantasy):
+# - /opt/sutazaiapp/IMPORTANT/*.md (except ACTUAL_SYSTEM_STATUS.md)
+# - Most files in /docs/
+# - Any mention of "69 agents", "quantum", "AGI", "service mesh"
+```
+
+## Critical Codebase Rules (from CLAUDE.local.md)
+
+1. **No Fantasy Elements**: No "magic" functions, wizards, or theoretical implementations
+2. **Don't Break Working Code**: Always test existing functionality before changes
+3. **Codebase Hygiene**: Follow existing patterns, no duplicate code, proper file organization
+4. **Reuse Before Creating**: Check for existing solutions before writing new code
+5. **Local LLMs Only**: Use Ollama with TinyLlama, no external AI APIs
+
+## Frequent Issues & Quick Fixes
+
+**Container keeps restarting:**
+```bash
+docker-compose logs [container-name] | tail -20  # Check error
+docker-compose restart [container-name]           # Quick restart
+```
+
+**Port already in use:**
+```bash
+# Find process using port
+lsof -i :PORT_NUMBER
+# Kill process or change port in docker-compose.yml
+```
+
+**Ollama not responding:**
+```bash
+docker-compose restart ollama
+docker exec sutazai-ollama ollama pull tinyllama  # Ensure model is downloaded
+docker exec sutazai-ollama ollama list            # Verify models
+```
+
+**Database connection errors:**
+```bash
+docker-compose restart postgres redis neo4j
+# Wait 30 seconds for initialization
+sleep 30
+docker-compose ps  # Verify all are healthy
+```
+
+**Import errors in backend:**
+```bash
+# Enterprise features may not be available
+# Check ENTERPRISE_FEATURES flag in backend/app/main.py
+# Most advanced features are optional and fall back to basic functionality
+```
+
+## Debugging Tips
+
+```bash
+# Check container logs
+docker-compose logs -f backend --tail=100
+
+# Enter container shell for debugging
+docker exec -it sutazai-backend /bin/bash
+
+# Check resource usage
+docker stats
+
+# Test API endpoint directly
+curl -X POST http://localhost:10010/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "test"}'
+
+# Check Ollama models and status
+docker exec sutazai-ollama ollama list
+curl http://localhost:11434/api/tags
+
+# PostgreSQL direct queries
+docker exec -it sutazai-postgres psql -U sutazai -d sutazai
+```
+
+## Performance Optimization
+
+- Use `LIGHTWEIGHT_MODE=true` environment variable for resource-constrained systems
+- Limit Ollama memory: Set `OLLAMA_MAX_LOADED_MODELS=1` 
+- Redis caching enabled for frequent queries
+- PostgreSQL connection pooling configured in backend
+- Consider using smaller models if TinyLlama is still too large

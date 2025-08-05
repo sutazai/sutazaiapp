@@ -34,7 +34,7 @@ aio-pika==LATEST_SECURE
 
 # Configuration and logging
 PyYAML==LATEST_SECURE
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 python-dotenv==1.0.1
 
 # Monitoring and metrics

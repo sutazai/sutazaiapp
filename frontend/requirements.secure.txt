@@ -17,7 +17,7 @@ st-pages==LATEST_SECURE
 requests==2.32.3
 aiohttp==3.11.11
 websocket-client==LATEST_SECURE
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 
 # Core Libraries - SECURITY PATCHED
 pandas==2.2.3

@@ -61,7 +61,20 @@ KEYCLOAK_CLIENT_SECRET = os.getenv('KEYCLOAK_CLIENT_SECRET', '')
 VAULT_ADDR = os.getenv('VAULT_ADDR', 'http://vault:8200')
 VAULT_TOKEN = os.getenv('VAULT_TOKEN', '')
 
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://sutazai:password@postgres:5432/sutazai')
+# Database URL should be provided via environment variable
+# Format: postgresql://user:password@host:port/database
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    # Build from individual components if DATABASE_URL not provided
+    db_user = os.getenv('POSTGRES_USER', 'postgres')
+    db_pass = os.getenv('POSTGRES_PASSWORD', '')
+    db_host = os.getenv('POSTGRES_HOST', 'postgres')
+    db_port = os.getenv('POSTGRES_PORT', '5432')
+    db_name = os.getenv('POSTGRES_DB', 'sutazai')
+    if db_pass:
+        DATABASE_URL = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+    else:
+        DATABASE_URL = f'postgresql://{db_user}@{db_host}:{db_port}/{db_name}'
 REDIS_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 
 # Global connections

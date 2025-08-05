@@ -190,12 +190,8 @@ PARAMETER top_p {agent.model_config['top_p']}
 """
         return modelfile
     
-        
-        Args:
-            agent_name: Name of the agent
-            
-        Returns:
-        """
+    def _another_method(self, agent_name: str):
+        """Helper method implementation."""
         agent = self.get_agent(agent_name)
         if not agent:
             return None
@@ -214,7 +210,6 @@ PARAMETER top_p {agent.model_config['top_p']}
                     "system_prompt": agent.system_prompt
                 }
             }
-        }
     
     def create_docker_service(self, agent_name: str) -> Optional[Dict[str, Any]]:
         """Create a Docker service configuration for the agent.

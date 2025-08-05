@@ -9,6 +9,7 @@ import json
 import requests
 import argparse
 import logging
+import os
 from typing import Dict, List, Any
 from requests.auth import HTTPBasicAuth
 
@@ -24,8 +25,11 @@ class RabbitMQConfigurator:
     """Handle RabbitMQ configuration for service mesh."""
     
     def __init__(self, host: str = "localhost", port: int = 10042, 
-                 username: str = "admin", password: str = "adminpass"):
+                 username: str = None, password: str = None):
         self.base_url = f"http://{host}:{port}/api"
+        # Get credentials from environment variables
+        username = username or os.getenv('RABBITMQ_USER', 'guest')
+        password = password or os.getenv('RABBITMQ_PASS', 'guest')
         self.auth = HTTPBasicAuth(username, password)
         self.session = requests.Session()
         self.session.auth = self.auth
@@ -317,8 +321,8 @@ def main():
     parser = argparse.ArgumentParser(description="Configure RabbitMQ for SutazAI service mesh")
     parser.add_argument("--rabbitmq-host", default="localhost", help="RabbitMQ host")
     parser.add_argument("--port", type=int, default=10042, help="RabbitMQ management port")
-    parser.add_argument("--username", default="admin", help="RabbitMQ username")
-    parser.add_argument("--password", default="adminpass", help="RabbitMQ password")
+    parser.add_argument("--username", default=os.getenv('RABBITMQ_USER'), help="RabbitMQ username")
+    parser.add_argument("--password", default=os.getenv('RABBITMQ_PASS'), help="RabbitMQ password")
     parser.add_argument("--config", default="/opt/sutazaiapp/config/rabbitmq/definitions.json",
                         help="Path to RabbitMQ definitions file")
     

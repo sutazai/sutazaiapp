@@ -3,7 +3,7 @@ uvicorn==0.32.1
 requests==2.32.3
 aiohttp==3.11.11
 pydantic==2.10.4
-python-multipart==LATEST_SECURE
+python-multipart==0.0.19
 transformers==4.48.0
 openai==1.58.1
 langchain==LATEST_SECURE
