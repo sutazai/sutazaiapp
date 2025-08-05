@@ -200,7 +200,7 @@ class EnhancedMonitor:
             'agent_monitoring': {
                 'enabled': True,
                 'timeout': 3,  # Increased from 2 to 3 seconds for slower agents
-                'max_agents_display': 6
+                'max_agents_display': 20
             },
             'logging': {
                 'enabled': False,
@@ -426,11 +426,38 @@ class EnhancedMonitor:
         healthy_count = 0
         total_count = 0
         
-        max_display = self.config['agent_monitoring'].get('max_agents_display', 6)
+        max_display = self.config['agent_monitoring'].get('max_agents_display', 20)
         timeout = self.config['agent_monitoring'].get('timeout', 2)
         
         try:
-            agent_items = list(self.agent_registry.get('agents', {}).items())[:max_display]
+            # Combine registry agents with discovered container agents
+            all_agents = {}
+            
+            # Add agents from registry
+            registry_agents = self.agent_registry.get('agents', {})
+            all_agents.update(registry_agents)
+            
+            # Discover running Docker containers that might not be in registry
+            container_agents = self._discover_container_agents()
+            for agent_id, agent_info in container_agents.items():
+                if agent_id not in all_agents:
+                    all_agents[agent_id] = agent_info
+            
+            # Prioritize deployed/running containers for display
+            deployed_agents = []
+            non_deployed_agents = []
+            
+            for agent_id, agent_info in all_agents.items():
+                if self._is_agent_deployed(agent_id):
+                    deployed_agents.append((agent_id, agent_info))
+                else:
+                    non_deployed_agents.append((agent_id, agent_info))
+            
+            # Show deployed agents first, then non-deployed up to the limit
+            agent_items = deployed_agents[:max_display]
+            if len(agent_items) < max_display:
+                remaining_slots = max_display - len(agent_items)
+                agent_items.extend(non_deployed_agents[:remaining_slots])
             total_count = len(agent_items)
             
             if not agent_items:
@@ -519,9 +546,28 @@ class EnhancedMonitor:
             if not self._is_agent_deployed(agent_id):
                 return 'offline', None
             
+            # Check container status if it's a containerized agent
+            container_info = self._get_container_info(agent_id)
+            if container_info:
+                container_status = container_info['status']
+                
+                # Handle different container states
+                if container_status == 'exited':
+                    return 'offline', None
+                elif container_status == 'restarting':
+                    return 'warning', None  # Container is restarting, not fully healthy
+                elif container_status == 'unhealthy':
+                    return 'critical', None  # Container health check failed
+                elif container_status == 'starting':
+                    return 'warning', None  # Container is still starting up
+                # For 'running' and 'healthy' states, continue with endpoint checks
+            
             # Try to determine agent endpoint
             endpoint = self._get_agent_endpoint(agent_id, agent_info)
             if not endpoint:
+                # If container is running but no endpoint, it might still be starting
+                if container_info and container_info['status'] in ['running', 'healthy']:
+                    return 'warning', None  # Container running but no accessible endpoint
                 return 'offline', None
             
             start_time = time.time()
@@ -617,21 +663,58 @@ class EnhancedMonitor:
     
     def _get_agent_endpoint(self, agent_id: str, agent_info: Dict) -> Optional[str]:
         """Determine agent endpoint for health checks with enhanced detection"""
-        # Check if endpoint is specified in agent config
+        # Method 1: Check Docker container port mappings first
+        container_info = self._get_container_info(agent_id)
+        if container_info and container_info['status'] in ['running', 'restarting']:
+            # Extract port mapping from container info
+            ports = container_info.get('ports', [])
+            for port_mapping in ports:
+                if '->' in port_mapping and 'tcp' in port_mapping:
+                    try:
+                        # Parse port mapping like "0.0.0.0:8116->8080/tcp"
+                        external_part = port_mapping.split('->')[0]
+                        if ':' in external_part:
+                            external_port = external_part.split(':')[-1]
+                            endpoint = f"http://localhost:{external_port}"
+                            if self._test_port_connection(int(external_port)):
+                                return endpoint
+                    except (ValueError, IndexError):
+                        continue
+        
+        # Method 2: Check communication config for registered agents
+        comm_config_path = Path('/opt/sutazaiapp/agents/communication_config.json')
+        if comm_config_path.exists():
+            try:
+                with open(comm_config_path, 'r') as f:
+                    comm_config = json.load(f)
+                    agent_registry = comm_config.get('agent_registry', {})
+                    if agent_id in agent_registry:
+                        endpoint = agent_registry[agent_id].get('endpoint')
+                        if endpoint:
+                            return endpoint
+            except Exception:
+                pass
+        
+        # Method 3: Check if endpoint is specified in agent config
         config_path = agent_info.get('config_path')
         if config_path:
             endpoint = self._extract_endpoint_from_config(config_path)
             if endpoint:
                 return endpoint
         
-        # First check if this is the hardware-resource-optimizer agent (special case)
-        if agent_id == 'hardware-resource-optimizer':
-            endpoint = "http://localhost:8116"
-            if self._test_port_connection(8116):
-                if self._verify_agent_endpoint(endpoint, agent_id):
-                    return endpoint
+        # Method 4: Known agent port mappings (special cases)
+        known_ports = {
+            'hardware-resource-optimizer': 8116,
+            'backend': 10010,  # Based on docker ps output
+            'system-knowledge-curator': 8544
+        }
         
-        # Try agent-specific port patterns based on agent type
+        if agent_id in known_ports:
+            port = known_ports[agent_id]
+            if self._test_port_connection(port):
+                return f"http://localhost:{port}"
+        
+        # Method 5: Try agent-specific port patterns based on agent type
         agent_type = self._get_agent_type(agent_info)
         port_ranges = self._get_port_ranges_by_type(agent_type)
         
@@ -643,8 +726,8 @@ class EnhancedMonitor:
                     if self._verify_agent_endpoint(endpoint, agent_id):
                         return endpoint
         
-        # Fallback to common ports, with hardware-resource-optimizer port prioritized
-        common_ports = [8116, 8000, 8001, 8002, 8003, 8004, 8005, 3000, 5000, 9000]
+        # Method 6: Fallback to common ports
+        common_ports = [8116, 8544, 10010, 8000, 8001, 8002, 8003, 8004, 8005, 3000, 5000, 9000]
         for port in common_ports:
             if self._test_port_connection(port):
                 endpoint = f"http://localhost:{port}"
@@ -652,6 +735,118 @@ class EnhancedMonitor:
                     return endpoint
         
         return None
+    
+    def _get_container_info(self, agent_id: str) -> Optional[Dict[str, Any]]:
+        """Get Docker container information for an agent"""
+        try:
+            # Try different container name patterns
+            name_patterns = [
+                f'sutazai-{agent_id}',
+                f'{agent_id}',
+                f'sutazaiapp-{agent_id}',
+                f'{agent_id}-1'
+            ]
+            
+            for container_name in name_patterns:
+                # Get container info with status and port mappings
+                result = subprocess.run(
+                    ['docker', 'ps', '-a', '--filter', f'name=^/{container_name}$', 
+                     '--format', '{{.Names}}\\t{{.Status}}\\t{{.Ports}}'],
+                    capture_output=True, text=True, timeout=3
+                )
+                
+                if result.returncode == 0 and result.stdout.strip():
+                    lines = result.stdout.strip().split('\\n')
+                    for line in lines:
+                        if line.strip():
+                            parts = line.split('\t')
+                            if len(parts) >= 2:
+                                name = parts[0]
+                                status_full = parts[1]
+                                ports = parts[2] if len(parts) > 2 else ''
+                                
+                                # Extract simple status from full status string
+                                if 'Up' in status_full:
+                                    if 'unhealthy' in status_full:
+                                        status = 'unhealthy'
+                                    elif 'health: starting' in status_full:
+                                        status = 'starting'
+                                    elif 'healthy' in status_full:
+                                        status = 'healthy'
+                                    else:
+                                        status = 'running'
+                                elif 'Restarting' in status_full:
+                                    status = 'restarting'
+                                elif 'Exited' in status_full:
+                                    status = 'exited'
+                                else:
+                                    status = 'unknown'
+                                
+                                port_list = []
+                                if ports:
+                                    # Split multiple port mappings
+                                    port_mappings = ports.split(', ')
+                                    port_list = [p.strip() for p in port_mappings if p.strip()]
+                                
+                                return {
+                                    'name': name,
+                                    'status': status,
+                                    'status_full': status_full,
+                                    'ports': port_list
+                                }
+            
+            return None
+        except Exception:
+            return None
+    
+    def _discover_container_agents(self) -> Dict[str, Dict[str, Any]]:
+        """Discover running Docker containers that look like agents"""
+        discovered_agents = {}
+        
+        try:
+            # Get all sutazai containers
+            result = subprocess.run(
+                ['docker', 'ps', '-a', '--filter', 'name=sutazai-', 
+                 '--format', '{{.Names}}\\t{{.Status}}\\t{{.Ports}}'],
+                capture_output=True, text=True, timeout=5
+            )
+            
+            if result.returncode == 0 and result.stdout.strip():
+                lines = result.stdout.strip().split('\n')
+                for line in lines:
+                    if line.strip():
+                        parts = line.split('\t')
+                        if len(parts) >= 2:
+                            container_name = parts[0]
+                            status_full = parts[1]
+                            ports = parts[2] if len(parts) > 2 else ''
+                            
+                            # Extract agent ID from container name
+                            if container_name.startswith('sutazai-'):
+                                agent_id = container_name[8:]  # Remove 'sutazai-' prefix
+                                
+                                # Skip non-agent containers
+                                if agent_id in ['postgres', 'redis', 'ollama', 'chromadb', 'qdrant', 'neo4j', 'backend', 'node-exporter']:
+                                    continue
+                                
+                                # Create agent info for discovered container
+                                agent_info = {
+                                    'name': agent_id,
+                                    'description': f'Containerized agent for {agent_id.replace("-", " ")} operations',
+                                    'capabilities': ['containerized'],
+                                    'config_path': f'configs/{agent_id}_universal.json',
+                                    'container_name': container_name,
+                                    'container_status': status_full,
+                                    'container_ports': ports
+                                }
+                                
+                                discovered_agents[agent_id] = agent_info
+        
+        except Exception as e:
+            if hasattr(self, 'logger') and self.logger:
+                self.logger.debug(f"Error discovering container agents: {e}")
+        
+        return discovered_agents
     
     def _extract_endpoint_from_config(self, config_path: str) -> Optional[str]:
         """Extract endpoint from agent configuration file"""
@@ -764,21 +959,44 @@ class EnhancedMonitor:
         return 'UTIL'
     
     def _is_agent_deployed(self, agent_id: str) -> bool:
-        """Check if agent is actually deployed (has directory and/or container)"""
+        """Check if agent is actually deployed (running as process or container)"""
         try:
-            # Check if agent directory exists
+            # Method 1: Check Docker containers first (most agents run as containers)
+            container_info = self._get_container_info(agent_id)
+            if container_info:
+                # Container exists - check if it's running
+                return container_info['status'] in ['running', 'restarting', 'unhealthy', 'healthy', 'starting']
+            
+            # Method 2: Check if running as Python process
+            # Look for python processes running agent app.py files
             agent_dir = Path('/opt/sutazaiapp/agents') / agent_id
             if agent_dir.exists():
-                return True
+                # Look for running Python processes with this agent's app.py
+                ps_result = subprocess.run(
+                    ['ps', 'aux'],
+                    capture_output=True, text=True, timeout=2
+                )
+                if ps_result.returncode == 0:
+                    processes = ps_result.stdout.strip().split('\n')
+                    for proc in processes:
+                        if 'python' in proc and agent_id in proc and 'app.py' in proc:
+                            return True
             
-            # Check if container exists
-            import subprocess
-            result = subprocess.run(
-                ['docker', 'ps', '-a', '--filter', f'name={agent_id}', '--format', '{{.Names}}'],
-                capture_output=True, text=True, timeout=2
-            )
-            if result.returncode == 0 and result.stdout.strip():
-                return True
+            # Method 3: Check if agent registry communication config exists
+            # This indicates agents were activated through the orchestrator
+            comm_config_path = Path('/opt/sutazaiapp/agents/communication_config.json')
+            if comm_config_path.exists():
+                try:
+                    with open(comm_config_path, 'r') as f:
+                        comm_config = json.load(f)
+                        agent_registry = comm_config.get('agent_registry', {})
+                        if agent_id in agent_registry:
+                            # Agent was registered, check if endpoint is reachable
+                            endpoint = agent_registry[agent_id].get('endpoint')
+                            if endpoint:
+                                return True
+                except Exception:
+                    pass
             
             return False
         except Exception:

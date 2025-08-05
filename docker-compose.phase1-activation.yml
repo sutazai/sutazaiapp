@@ -1,0 +1,99 @@
+networks:
+  sutazai-network:
+    external: true
+services:
+  ai-system-validator:
+    build:
+      context: ./docker/ai-system-validator
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-system-validator
+    depends_on:
+    - postgres
+    - redis
+    - ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4Gi
+        reservations:
+          cpus: '0.4'
+          memory: 1Gi
+    environment:
+      AGENT_NAME: ai-system-validator
+      CLAUDE_RULES_PATH: /app/CLAUDE.md
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      OLLAMA_API_KEY: local
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      PHASE: '1'
+      PRIORITY: high
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+      - CMD
+      - python3
+      - -c
+      - import requests; requests.get('http://localhost:8081/health', timeout=5)
+      timeout: 10s
+    networks:
+    - sutazai-network
+    restart: unless-stopped
+    volumes:
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+    - agent_workspaces:/app/workspace
+  cicd-pipeline-orchestrator:
+    build:
+      context: ./docker/cicd-pipeline-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-cicd-pipeline-orchestrator
+    depends_on:
+    - postgres
+    - redis
+    - ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4Gi
+        reservations:
+          cpus: '0.4'
+          memory: 1Gi
+    environment:
+      AGENT_NAME: cicd-pipeline-orchestrator
+      CLAUDE_RULES_PATH: /app/CLAUDE.md
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      OLLAMA_API_KEY: local
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_ORIGINS: '*'
+      PHASE: '1'
+      PRIORITY: high
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+      - CMD
+      - python3
+      - -c
+      - import requests; requests.get('http://localhost:8081/health', timeout=5)
+      timeout: 10s
+    networks:
+    - sutazai-network
+    restart: unless-stopped
+    volumes:
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+    - agent_workspaces:/app/workspace
+version: '3.8'
+volumes:
+  agent_workspaces: {}

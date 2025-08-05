@@ -2205,6 +2205,9 @@ EOF
 handle_deploy() {
     local target="${1:-local}"
     
+    # Set up logging first to ensure directories and state file are created
+    setup_logging
+    
     if [[ ! -v DEPLOYMENT_TARGETS[$target] ]]; then
         log_error "Invalid deployment target: $target"
         log_info "Available targets: ${!DEPLOYMENT_TARGETS[*]}"

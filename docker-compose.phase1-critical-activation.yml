@@ -1,0 +1,645 @@
+version: '3.8'
+
+networks:
+  sutazai-network:
+    external: true
+
+volumes:
+  agent_workspaces:
+  shared_models:
+  logs_and_metrics:
+
+services:
+  # Phase 1: Critical Core Agents (15 agents)
+  # Essential system functionality agents
+  
+  ai-system-architect:
+    build:
+      context: ./agents/ai-system-architect
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-system-architect
+    environment:
+      AGENT_NAME: "ai-system-architect"
+      AGENT_ROLE: "System Architecture Design and Coordination"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      OLLAMA_HOST: "0.0.0.0"
+      OLLAMA_ORIGINS: "*"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      TZ: "${TZ:-UTC}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8200:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - shared_models:/app/models:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6G
+        reservations:
+          cpus: '0.6'
+          memory: 1.5G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  deployment-automation-master:
+    build:
+      context: ./agents/deployment-automation-master
+      dockerfile: Dockerfile
+    container_name: sutazai-deployment-automation-master
+    environment:
+      AGENT_NAME: "deployment-automation-master"
+      AGENT_ROLE: "Automated Deployment Management"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8201:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  mega-code-auditor:
+    build:
+      context: ./agents/mega-code-auditor
+      dockerfile: Dockerfile
+    container_name: sutazai-mega-code-auditor
+    environment:
+      AGENT_NAME: "mega-code-auditor"
+      AGENT_ROLE: "Code Quality Enforcement and Auditing"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8202:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /opt/sutazaiapp:/app/codebase:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  system-optimizer-reorganizer:
+    build:
+      context: ./agents/system-optimizer-reorganizer
+      dockerfile: Dockerfile
+    container_name: sutazai-system-optimizer-reorganizer
+    environment:
+      AGENT_NAME: "system-optimizer-reorganizer"
+      AGENT_ROLE: "System Performance Optimization"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8203:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  hardware-resource-optimizer:
+    build:
+      context: ./agents/hardware-resource-optimizer
+      dockerfile: Dockerfile
+    container_name: sutazai-hardware-resource-optimizer-critical
+    environment:
+      AGENT_NAME: "hardware-resource-optimizer"
+      AGENT_ROLE: "Hardware Resource Management"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8204:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3G
+        reservations:
+          cpus: '0.3'
+          memory: 768M
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  ollama-integration-specialist:
+    build:
+      context: ./agents/ollama-integration-specialist
+      dockerfile: Dockerfile
+    container_name: sutazai-ollama-integration-specialist
+    environment:
+      AGENT_NAME: "ollama-integration-specialist"
+      AGENT_ROLE: "Ollama Model Management and Integration"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8205:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - shared_models:/app/models
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  infrastructure-devops-manager:
+    build:
+      context: ./agents/infrastructure-devops-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-infrastructure-devops-manager
+    environment:
+      AGENT_NAME: "infrastructure-devops-manager"
+      AGENT_ROLE: "Infrastructure and DevOps Management"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8206:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  ai-agent-orchestrator:
+    build:
+      context: ./agents/ai-agent-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-agent-orchestrator
+    environment:
+      AGENT_NAME: "ai-agent-orchestrator"
+      AGENT_ROLE: "AI Agent Coordination and Management"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8207:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  ai-senior-backend-developer:
+    build:
+      context: ./agents/ai-senior-backend-developer
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-senior-backend-developer
+    environment:
+      AGENT_NAME: "ai-senior-backend-developer"
+      AGENT_ROLE: "Backend Development and Architecture"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8208:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /opt/sutazaiapp:/app/codebase
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  ai-senior-frontend-developer:
+    build:
+      context: ./agents/ai-senior-frontend-developer
+      dockerfile: Dockerfile
+    container_name: sutazai-ai-senior-frontend-developer
+    environment:
+      AGENT_NAME: "ai-senior-frontend-developer"
+      AGENT_ROLE: "Frontend Development and User Experience"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8209:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /opt/sutazaiapp:/app/codebase
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  testing-qa-validator:
+    build:
+      context: ./agents/testing-qa-validator
+      dockerfile: Dockerfile
+    container_name: sutazai-testing-qa-validator-critical
+    environment:
+      AGENT_NAME: "testing-qa-validator"
+      AGENT_ROLE: "Quality Assurance and Testing"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8210:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /opt/sutazaiapp:/app/codebase:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  document-knowledge-manager:
+    build:
+      context: ./agents/document-knowledge-manager
+      dockerfile: Dockerfile
+    container_name: sutazai-document-knowledge-manager
+    environment:
+      AGENT_NAME: "document-knowledge-manager"
+      AGENT_ROLE: "Documentation and Knowledge Management"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8211:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /opt/sutazaiapp/docs:/app/docs
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  security-pentesting-specialist:
+    build:
+      context: ./agents/security-pentesting-specialist
+      dockerfile: Dockerfile
+    container_name: sutazai-security-pentesting-specialist
+    environment:
+      AGENT_NAME: "security-pentesting-specialist"
+      AGENT_ROLE: "Security Testing and Penetration Testing"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "llama3.2:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8212:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  cicd-pipeline-orchestrator:
+    build:
+      context: ./agents/cicd-pipeline-orchestrator
+      dockerfile: Dockerfile
+    container_name: sutazai-cicd-pipeline-orchestrator
+    environment:
+      AGENT_NAME: "cicd-pipeline-orchestrator"
+      AGENT_ROLE: "CI/CD Pipeline Management and Automation"
+      CLAUDE_RULES_PATH: "/app/CLAUDE.md"
+      OLLAMA_API_KEY: "local"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+      REDIS_URL: "redis://redis:6379/0"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}"
+      SUTAZAI_ENV: "${SUTAZAI_ENV:-production}"
+      PHASE: "1"
+      PRIORITY: "high"
+      MODEL: "codellama:latest"
+    depends_on:
+      - postgres
+      - redis
+      - ollama
+    networks:
+      - sutazai-network
+    ports:
+      - "8213:8080"
+    restart: unless-stopped
+    volumes:
+      - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+      - agent_workspaces:/app/workspace
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.4'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

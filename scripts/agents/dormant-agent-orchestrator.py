@@ -154,9 +154,9 @@ class DormantAgentOrchestrator:
         
         # Resource limits per phase
         self.resource_limits = {
-            1: {"cpu_limit": "2.0", "memory_limit": "4Gi", "max_agents": 15},
-            2: {"cpu_limit": "1.0", "memory_limit": "2Gi", "max_agents": 25}, 
-            3: {"cpu_limit": "0.5", "memory_limit": "1Gi", "max_agents": 70}
+            1: {"cpu_limit": "2.0", "memory_limit": "4G", "max_agents": 15},
+            2: {"cpu_limit": "1.0", "memory_limit": "2G", "max_agents": 25}, 
+            3: {"cpu_limit": "0.5", "memory_limit": "1G", "max_agents": 70}
         }
     
     def log_action(self, message: str, level: str = "INFO"):
@@ -274,7 +274,7 @@ class DormantAgentOrchestrator:
                     },
                     "reservations": {
                         "cpus": str(float(limits["cpu_limit"]) * 0.2),
-                        "memory": str(int(limits["memory_limit"].replace("Gi", "")) // 4) + "Gi"
+                        "memory": str(int(limits["memory_limit"].replace("G", "")) // 4) + "G"
                     }
                 }
             },
