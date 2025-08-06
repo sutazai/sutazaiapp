@@ -153,7 +153,7 @@ async def capabilities():
             }
         },
         "supported_formats": ["pdf", "docx", "txt", "html", "markdown", "csv"],
-        "supported_models": ["tinyllama", "codellama", "mistral"],
+        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss"],
         "api_version": "2.2.0"
     }
 

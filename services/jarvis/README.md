@@ -13,7 +13,7 @@ JARVIS serves as the central voice interface for SutazAI, enabling natural langu
 - **🎤 Advanced Voice Recognition**: Real-time speech-to-text with wake word detection
 - **🗣️ Natural Speech Synthesis**: High-quality text-to-speech responses
 - **🤖 Intelligent Agent Routing**: Automatically routes commands to the most suitable AI agents
-- **🧠 Smart Task Planning**: Uses local LLM (TinyLlama) for intelligent task decomposition
+- **🧠 Smart Task Planning**: Uses local LLM (gpt-oss) for intelligent task decomposition
 - **💾 Contextual Memory**: Maintains conversation history and learns from interactions
 - **🔌 Plugin System**: Extensible architecture for custom functionality
 - **🌐 Web Interface**: Modern web-based control panel
@@ -201,7 +201,7 @@ agents:
 # Task planning with Ollama
 planner:
   ollama_url: "http://ollama:11434"
-  planning_model: "tinyllama"
+  planning_model: "gpt-oss"
   max_steps: 10
   enable_reflection: true
 ```

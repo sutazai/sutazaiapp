@@ -1031,7 +1031,7 @@ class ModelSelectionOrchestrator:
         # Default model profiles
         default_models = [
             ModelProfile(
-                name="tinyllama",
+                name="gpt-oss",
                 avg_latency=1.5,
                 avg_throughput=25.0,
                 avg_quality=0.7,
@@ -1041,7 +1041,7 @@ class ModelSelectionOrchestrator:
                 max_context_length=2048
             ),
             ModelProfile(
-                name="qwen2.5-coder:7b",
+                name="gpt-oss2.5-coder:7b",
                 avg_latency=3.0,
                 avg_throughput=15.0,
                 avg_quality=0.85,

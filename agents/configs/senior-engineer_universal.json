@@ -2,7 +2,7 @@
   "name": "senior-engineer",
   "description": "Agent for development operations",
   "model": "ollama",
-  "base_model": "qwen2.5-coder:7b",
+  "base_model": "gpt-oss2.5-coder:7b",
   "port": 9342,
   "capabilities": [
     "code_generation",

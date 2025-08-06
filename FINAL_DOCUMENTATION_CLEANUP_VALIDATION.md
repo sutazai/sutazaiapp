@@ -14,7 +14,7 @@
 ### Core Services Status:
 - ✅ PostgreSQL: Connected
 - ✅ Redis: Connected  
-- ✅ Ollama: Connected (1 model loaded - TinyLlama)
+- ✅ Ollama: Connected (1 model loaded - GPT-OSS)
 - ✅ Qdrant: Connected
 - ❌ ChromaDB: Disconnected (known issue)
 - ✅ Backend API: Running on port 10010
@@ -45,7 +45,7 @@
 - Basic web services (FastAPI backend, Streamlit frontend)
 - Database storage (PostgreSQL, Redis, Neo4j)
 - Vector stores (Qdrant, partially ChromaDB)
-- One LLM model (TinyLlama via Ollama)
+- One LLM model (GPT-OSS via Ollama)
 - Basic monitoring (Prometheus, Grafana)
 - 13 stub agent containers (return "Hello" messages)
 

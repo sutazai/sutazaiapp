@@ -52,7 +52,7 @@ except ImportError:
 
 class AgentOrchestrator(BaseService):
     """
-    Enhanced orchestrator for 131 AI agents with Ollama/TinyLlama integration
+    Enhanced orchestrator for 131 AI agents with Ollama/gpt-oss integration
     """
     
     def __init__(self):
@@ -239,7 +239,7 @@ class AgentOrchestrator(BaseService):
                 if response.status_code == 200:
                     self.ollama_ready = True
                     logger.info("✅ Ollama is already running")
-                    return await self.ensure_tinyllama()
+                    return await self.ensure_gpt_oss()
             except requests.exceptions.RequestException:
                 pass
             
@@ -256,7 +256,7 @@ class AgentOrchestrator(BaseService):
                     if response.status_code == 200:
                         self.ollama_ready = True
                         logger.info("✅ Ollama started successfully")
-                        return await self.ensure_tinyllama()
+                        return await self.ensure_gpt_oss()
                 except requests.exceptions.RequestException:
                     await asyncio.sleep(1)
             
@@ -267,35 +267,35 @@ class AgentOrchestrator(BaseService):
             logger.error(f"❌ Error initializing Ollama: {e}")
             return False
     
-    async def ensure_tinyllama(self) -> bool:
-        """Ensure TinyLlama model is available"""
+    async def ensure_gpt_oss(self) -> bool:
+        """Ensure GPT-OSS model is available"""
         try:
             # Check existing models
             response = requests.get(f"{self.ollama_base_url}/api/tags", timeout=10)
             if response.status_code == 200:
                 models = response.json().get("models", [])
-                if any("tinyllama" in model.get("name", "").lower() for model in models):
-                    logger.info("✅ TinyLlama model is available")
+                if any("gpt-oss" in model.get("name", "").lower() for model in models):
+                    logger.info("✅ GPT-OSS model is available")
                     return True
             
-            # Pull TinyLlama
-            logger.info("📥 Pulling TinyLlama model...")
+            # Pull GPT-OSS
+            logger.info("📥 Pulling GPT-OSS model...")
             pull_process = subprocess.run(
-                ["ollama", "pull", "tinyllama"],
+                ["ollama", "pull", "gpt-oss"],
                 capture_output=True,
                 text=True,
                 timeout=300
             )
             
             if pull_process.returncode == 0:
-                logger.info("✅ TinyLlama model ready")
+                logger.info("✅ GPT-OSS model ready")
                 return True
             else:
-                logger.error(f"❌ Failed to pull TinyLlama: {pull_process.stderr}")
+                logger.error(f"❌ Failed to pull GPT-OSS: {pull_process.stderr}")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ Error ensuring TinyLlama: {e}")
+            logger.error(f"❌ Error ensuring GPT-OSS: {e}")
             return False
     
     async def discover_all_agents(self) -> List[Dict[str, Any]]:
@@ -416,7 +416,7 @@ class AgentOrchestrator(BaseService):
                 'AGENT_NAME': agent_name,
                 'AGENT_PORT': str(port),
                 'OLLAMA_BASE_URL': self.ollama_base_url,
-                'OLLAMA_MODEL': 'tinyllama',
+                'OLLAMA_MODEL': 'gpt-oss',
                 'PYTHONPATH': '/opt/sutazaiapp:/opt/sutazaiapp/agents'
             })
             

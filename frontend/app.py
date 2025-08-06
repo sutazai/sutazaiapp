@@ -1,11 +1,9 @@
 
-# Small model configuration for memory efficiency
-DEFAULT_MODEL = "qwen2.5:3b"
-AVAILABLE_MODELS = ["qwen2.5:3b", "llama3.2:3b", "qwen2.5-coder:3b"]
+# GPT-OSS model configuration
+DEFAULT_MODEL = "gpt-oss"
+AVAILABLE_MODELS = ["gpt-oss"]
 MODEL_DESCRIPTIONS = {
-    "qwen2.5:3b": "Primary small model (2GB RAM)",
-    "llama3.2:3b": "Backup small model (2GB RAM)", 
-    "qwen2.5-coder:3b": "Coding-focused small model (2GB RAM)"
+    "gpt-oss": "GPT-OSS model from Ollama"
 }
 """
 SutazAI automation/advanced automation System - Enhanced Frontend
@@ -1731,11 +1729,7 @@ def show_ai_chat():
     col1, col2, col3 = st.columns([2, 2, 1])
     with col1:
         model = st.selectbox("Select Model:", [
-            "automation Coordinator (Enterprise)",
-            "Llama 3.2 1B",
-            "Qwen 2.5 3B",
-            "CodeQwen 1.5 7B",
-            "DeepSeek Coder 6.7B"
+            "GPT-OSS"
         ])
     
     with col2:
@@ -1780,7 +1774,7 @@ def show_ai_chat():
                 # Use models/chat for faster response with optimized models
                 response = asyncio.run(call_api("/api/v1/models/chat", "POST", {
                     "messages": [{"role": "user", "content": prompt}],
-                    "model": "qwen2.5:3b"  # Use the lightweight model
+                    "model": "gpt-oss"  # Use the GPT-OSS model
                 }))
             
             if response:
@@ -2200,10 +2194,10 @@ def show_system_config():
         
         # Model settings
         st.selectbox("Default Model:", [
-            "qwen2.5:3b",
-            "qwen3:8b",
-            "qwen2.5-coder:3b",
-            "qwen2.5:3b"
+            "gpt-oss2.5:3b",
+            "gpt-oss3:8b",
+            "gpt-oss2.5-coder:3b",
+            "gpt-oss2.5:3b"
         ])
         
         st.slider("Default Temperature:", 0.0, 1.0, 0.7)
@@ -2930,7 +2924,7 @@ def show_api_gateway():
     if method in ["POST", "PUT"]:
         request_body = st.text_area(
             "Request Body (JSON)",
-            value='{\n  "message": "Hello automation",\n  "model": "qwen2.5:3b"\n}',
+            value='{\n  "message": "Hello automation",\n  "model": "gpt-oss2.5:3b"\n}',
             height=150
         )
     
@@ -3996,10 +3990,10 @@ def show_ollama_management():
         
         models = [
             {"name": "llama2:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "45K"},
-            {"name": "qwen2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
-            {"name": "qwen2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
-            {"name": "qwen2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
-            {"name": "qwen2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
+            {"name": "gpt-oss2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
+            {"name": "gpt-oss2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
+            {"name": "gpt-oss2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
+            {"name": "gpt-oss2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
         ]
         
         for model in models:
@@ -4027,7 +4021,7 @@ def show_ollama_management():
         
         running = [
             {"model": "llama2:7b", "memory": "3.2GB", "gpu": "Yes", "requests": 1247},
-            {"model": "qwen2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
+            {"model": "gpt-oss2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
         ]
         
         for model in running:
@@ -4760,7 +4754,7 @@ def show_autonomous_improvement():
             
             st.checkbox("Include Dependencies", True)
             st.checkbox("Deep Analysis", False)
-            st.selectbox("AI Model", ["CodeLlama", "DeepSeek-Coder", "GPT-4"])
+            st.selectbox("AI Model", ["gpt-oss"])
             
             st.markdown("### Recent Analyses")
             recent_analyses = [
@@ -4964,7 +4958,7 @@ def show_realtime_chat():
             st.slider("Analysis Frequency (hours)", 1, 24, 6)
             st.checkbox("Auto-apply Safe Improvements", False)
             st.checkbox("Generate Documentation", True)
-            st.selectbox("AI Model for Analysis", ["CodeLlama:7b", "DeepSeek-R1:8b", "Qwen2.5:7b"])
+            st.selectbox("AI Model for Analysis", ["gpt-oss"])
             
         with col2:
             st.markdown("#### Notification Settings")
@@ -6073,12 +6067,12 @@ def show_real_ollama_management():
         
         # Recommended models for SutazAI
         recommended_models = [
-            {"name": "qwen2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
-            {"name": "qwen2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
-            {"name": "qwen2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
+            {"name": "gpt-oss2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
+            {"name": "gpt-oss2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
+            {"name": "gpt-oss2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
             {"name": "llama2:7b", "description": "General purpose conversational AI", "size": "3.8GB"},
-            {"name": "qwen2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
-            {"name": "phi3:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
+            {"name": "gpt-oss2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
+            {"name": "gpt-oss:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
         ]
         
         st.markdown("#### Recommended Models")
@@ -6110,7 +6104,7 @@ def show_real_ollama_management():
         st.markdown("---")
         st.markdown("#### Custom Model Download")
         
-        custom_model = st.text_input("Model name:", placeholder="e.g., llama2:13b, mistral:latest")
+        custom_model = st.text_input("Model name:", placeholder="e.g., llama2:13b, gpt-oss:latest")
         if st.button("⬇️ Download Custom Model") and custom_model:
             with st.spinner(f"Downloading {custom_model}..."):
                 download_response = asyncio.run(call_api(

@@ -2,7 +2,7 @@
   "name": "data-drift-detector",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "qwen2.5-coder:7b",
+  "base_model": "gpt-oss2.5-coder:7b",
   "port": 9215,
   "capabilities": [
     "code_generation",

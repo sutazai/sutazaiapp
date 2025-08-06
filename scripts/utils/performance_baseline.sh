@@ -98,7 +98,7 @@ echo -e "${YELLOW}Testing Ollama inference...${NC}"
 inference_start=$(date +%s.%N)
 inference_response=$(curl -s -X POST http://localhost:11434/api/generate \
     -d '{
-        "model": "tinyllama:latest",
+        "model": "gpt-oss:latest",
         "prompt": "Hello, how are you?",
         "stream": false,
         "options": {"num_predict": 10}

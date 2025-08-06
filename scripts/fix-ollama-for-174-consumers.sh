@@ -135,33 +135,33 @@ deploy_optimized_single_instance() {
     fi
 }
 
-# Step 4: Install and configure TinyLlama (Rule 16 compliance)
-configure_tinyllama() {
-    header "Step 4: TinyLlama Configuration (Rule 16 Compliance)"
+# Step 4: Install and configure gpt-oss (Rule 16 compliance)
+configure_gpt-oss() {
+    header "Step 4: gpt-oss Configuration (Rule 16 Compliance)"
     
-    log "Installing TinyLlama model per Rule 16 requirements..."
+    log "Installing gpt-oss model per Rule 16 requirements..."
     
-    # Pull TinyLlama model
-    if docker exec sutazai-ollama ollama pull tinyllama; then
-        success "TinyLlama model installed successfully"
+    # Pull gpt-oss model
+    if docker exec sutazai-ollama ollama pull gpt-oss; then
+        success "gpt-oss model installed successfully"
     else
-        error "Failed to install TinyLlama model"
+        error "Failed to install gpt-oss model"
         return 1
     fi
     
-    # Verify TinyLlama is available
-    if docker exec sutazai-ollama ollama list | grep -q "tinyllama"; then
-        success "TinyLlama model verified in model list"
+    # Verify gpt-oss is available
+    if docker exec sutazai-ollama ollama list | grep -q "gpt-oss"; then
+        success "gpt-oss model verified in model list"
     else
-        error "TinyLlama model verification failed"
+        error "gpt-oss model verification failed"
         return 1
     fi
     
     # Warm up the model
-    log "Warming up TinyLlama model..."
-    docker exec sutazai-ollama ollama run tinyllama --prompt "Hello, this is a warmup test." --stream false >/dev/null 2>&1 || true
+    log "Warming up gpt-oss model..."
+    docker exec sutazai-ollama ollama run gpt-oss --prompt "Hello, this is a warmup test." --stream false >/dev/null 2>&1 || true
     
-    success "TinyLlama configured as default model per Rule 16"
+    success "gpt-oss configured as default model per Rule 16"
 }
 
 # Step 5: Configure for high concurrency
@@ -217,7 +217,7 @@ run_performance_tests() {
     log "Testing basic connectivity..."
     if curl -f -s -X POST "http://localhost:10104/api/generate" \
         -H "Content-Type: application/json" \
-        -d '{"model": "tinyllama", "prompt": "Hello world", "stream": false}' >/dev/null; then
+        -d '{"model": "gpt-oss", "prompt": "Hello world", "stream": false}' >/dev/null; then
         success "Basic connectivity test passed"
     else
         error "Basic connectivity test failed"
@@ -233,7 +233,7 @@ run_performance_tests() {
         {
             if curl -f -s -X POST "http://localhost:10104/api/generate" \
                 -H "Content-Type: application/json" \
-                -d "{\"model\": \"tinyllama\", \"prompt\": \"Test $i\", \"stream\": false}" \
+                -d "{\"model\": \"gpt-oss\", \"prompt\": \"Test $i\", \"stream\": false}" \
                 --max-time 60 >/dev/null 2>&1; then
                 ((success_count++))
             fi
@@ -340,7 +340,7 @@ generate_deployment_report() {
         echo "- **Parallel Requests:** 50"
         echo "- **Max Loaded Models:** 3"
         echo "- **Keep Alive:** 10 minutes"
-        echo "- **Default Model:** TinyLlama (Rule 16 compliant)"
+        echo "- **Default Model:** gpt-oss (Rule 16 compliant)"
         echo ""
         
         echo "## Service Status"
@@ -352,10 +352,10 @@ generate_deployment_report() {
             echo "❌ **Ollama Service:** Not responding"
         fi
         
-        if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "tinyllama"; then
-            echo "✅ **TinyLlama Model:** Installed and available"
+        if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "gpt-oss"; then
+            echo "✅ **gpt-oss Model:** Installed and available"
         else
-            echo "❌ **TinyLlama Model:** Not found"
+            echo "❌ **gpt-oss Model:** Not found"
         fi
         
         echo ""
@@ -394,7 +394,7 @@ generate_deployment_report() {
         echo "- ✅ **174+ concurrent consumers**"
         echo "- ✅ **Sub-second response times** for simple prompts"
         echo "- ✅ **High availability** with automatic restarts"
-        echo "- ✅ **Rule 16 compliance** with TinyLlama default"
+        echo "- ✅ **Rule 16 compliance** with gpt-oss default"
         echo ""
         
         echo "## Next Steps"
@@ -436,7 +436,7 @@ main() {
     validate_system
     stop_existing_services
     deploy_optimized_single_instance
-    configure_tinyllama
+    configure_gpt-oss
     configure_high_concurrency
     run_performance_tests
     setup_monitoring
@@ -447,7 +447,7 @@ main() {
     header "====================="
     echo ""
     success "Ollama is now configured to handle 174+ concurrent consumers"
-    success "TinyLlama is set as the default model (Rule 16 compliant)"
+    success "gpt-oss is set as the default model (Rule 16 compliant)"
     success "High concurrency settings applied (50 parallel requests)"
     success "Resource limits optimized for available hardware"
     echo ""
@@ -455,7 +455,7 @@ main() {
     log "Service Information:"
     echo "  🔗 Ollama API: http://localhost:10104"
     echo "  📊 Health Check: curl http://localhost:10104/api/tags"
-    echo "  🧠 Default Model: TinyLlama"
+    echo "  🧠 Default Model: gpt-oss"
     echo "  ⚡ Max Parallel: 50 requests"
     echo "  💾 Memory Limit: 20GB"
     echo "  🔄 CPU Limit: 10 cores"

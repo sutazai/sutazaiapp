@@ -129,7 +129,7 @@ Provide a clear, accurate answer based on the context provided."""
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "llama3.2:1b",
+                    "model": "gpt-oss.2:1b",
                     "prompt": prompt,
                     "stream": False
                 },

@@ -439,11 +439,11 @@ class AIPerformanceValidator:
         for model, times in model_response_times.items():
             avg_time = statistics.mean(times)
             if model == OllamaConfig.DEFAULT_MODEL and avg_time > 2:
-                recommendations.append(f"TinyLlama average response time ({avg_time:.1f}s) is high. Check system load.")
+                recommendations.append(f"gpt-oss average response time ({avg_time:.1f}s) is high. Check system load.")
             elif model == OllamaConfig.SONNET_MODEL and avg_time > 5:
-                recommendations.append(f"Qwen2.5 average response time ({avg_time:.1f}s) is high. Consider optimization.")
+                recommendations.append(f"GPT-OSS average response time ({avg_time:.1f}s) is high. Consider optimization.")
             elif model == OllamaConfig.OPUS_MODEL and avg_time > 10:
-                recommendations.append(f"DeepSeek average response time ({avg_time:.1f}s) is high. Review complex prompts.")
+                recommendations.append(f"GPT-OSS average response time ({avg_time:.1f}s) is high. Review complex prompts.")
         
         # Check quality scores
         low_quality_agents = [
@@ -457,7 +457,7 @@ class AIPerformanceValidator:
         
         # Memory recommendations
         if any(m == OllamaConfig.OPUS_MODEL for m in model_response_times.keys()):
-            recommendations.append("Consider quantization for DeepSeek model to reduce memory usage.")
+            recommendations.append("Consider quantization for GPT-OSS model to reduce memory usage.")
         
         if not recommendations:
             recommendations.append("System is performing well within expected parameters.")

@@ -147,7 +147,7 @@ async def main():
     # Create inference request
     request = InferenceRequest(
         request_id="test_001",
-        model_name="tinyllama",
+        model_name="gpt-oss",
         prompt="Hello, how are you?",
         parameters={"temperature": 0.7},
         priority=1,
@@ -176,7 +176,7 @@ curl -X POST http://localhost:8000/inference \
   -H "Content-Type: application/json" \
   -d '{
     "request_id": "test_001",
-    "model_name": "tinyllama", 
+    "model_name": "gpt-oss", 
     "prompt": "Explain quantum computing",
     "parameters": {"temperature": 0.7},
     "priority": 1
@@ -243,7 +243,7 @@ node = EdgeNode(
     capabilities={"gpu": False, "cpu_cores": 4},
     cpu_cores=4,
     memory_gb=8.0,
-    models_loaded={"tinyllama", "codellama"},
+    models_loaded={"gpt-oss", "gpt-oss"},
     location="datacenter_1",
     max_concurrent=20
 )
@@ -375,7 +375,7 @@ metric = Metric(
     value=150.5,
     metric_type=MetricType.HISTOGRAM,
     timestamp=datetime.now(),
-    labels={"model": "tinyllama", "node": "edge_1"},
+    labels={"model": "gpt-oss", "node": "edge_1"},
     unit="ms"
 )
 
@@ -425,7 +425,7 @@ router = get_intelligent_router()
 # Create routing request
 request = RoutingRequest(
     request_id="route_001",
-    model_name="tinyllama",
+    model_name="gpt-oss",
     priority_level=1,
     estimated_complexity=0.7,
     latency_requirement=200.0,
@@ -473,7 +473,7 @@ async def integrate_with_agents():
     cache = get_model_cache()
     
     # Preload models used by agents
-    agent_models = ["tinyllama", "codellama", "deepseek-coder"]
+    agent_models = ["gpt-oss", "gpt-oss", "gpt-oss-coder"]
     for model in agent_models:
         await cache.preload_models([model], quantization_level="int8")
     

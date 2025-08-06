@@ -42,7 +42,7 @@ class WorkingLettaManager:
         self.workspace = "/app/workspace"
         self.agents = {}
         self.ollama_url = "http://ollama:11434"
-        self.model = "llama3.2:1b"
+        self.model = "gpt-oss.2:1b"
         
         # Ensure workspace exists
         os.makedirs(self.workspace, exist_ok=True)

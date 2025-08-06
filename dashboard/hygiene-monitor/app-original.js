@@ -153,10 +153,10 @@ class HygieneMonitorDashboard {
                 dependencies: ['rule_6']
             },
             'rule_16': { 
-                name: 'Ollama/TinyLlama Standard', 
+                name: 'Ollama/gpt-oss Standard', 
                 priority: 'LOW', 
                 category: 'AI Models',
-                description: 'Use local LLMs exclusively via Ollama, default to TinyLlama.',
+                description: 'Use local LLMs exclusively via Ollama, default to gpt-oss.',
                 enabled: true,
                 dependencies: []
             }

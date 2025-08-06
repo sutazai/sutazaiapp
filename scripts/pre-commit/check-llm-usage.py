@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Purpose: Verify Ollama/TinyLlama usage compliance (Rule 16 enforcement)
+Purpose: Verify Ollama/GPT-OSS usage compliance (Rule 16 enforcement)
 Usage: python check-llm-usage.py <file1> <file2> ...
 Requirements: Python 3.8+
 """
@@ -19,13 +19,13 @@ FORBIDDEN_PATTERNS = [
     r'palm\.generate',
     r'cohere\.Client',
     r'huggingface_hub',
-    r'transformers\.pipeline.*model=(?!tinyllama)',
+    r'transformers\.pipeline.*model=(?!gpt-oss)',
 ]
 
 # Allowed patterns
 ALLOWED_PATTERNS = [
     r'ollama',
-    r'tinyllama',
+    r'gpt-oss',
     r'localhost:11434',  # Ollama default port
 ]
 
@@ -43,7 +43,7 @@ def check_llm_usage(filepath: Path) -> List[str]:
             for pattern in FORBIDDEN_PATTERNS:
                 if re.search(pattern, line, re.IGNORECASE):
                     violations.append(
-                        f"{filepath}:{line_num}: Forbidden LLM usage detected - use Ollama with TinyLlama"
+                        f"{filepath}:{line_num}: Forbidden LLM usage detected - use Ollama with GPT-OSS"
                     )
             
             # Check for direct model loading without Ollama
@@ -75,7 +75,7 @@ def main():
         print("❌ Rule 16 Violation: Non-Ollama LLM usage detected")
         for violation in all_violations:
             print(f"  - {violation}")
-        print("\n📋 Fix: Use 'ollama run tinyllama' for all local LLM tasks")
+        print("\n📋 Fix: Use 'ollama run gpt-oss' for all local LLM tasks")
         return 1
     
     print("✅ Rule 16: LLM usage check passed")

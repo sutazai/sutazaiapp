@@ -19,7 +19,7 @@ app = FastAPI(title="SutazAI LlamaIndex Service")
 
 # Initialize LlamaIndex components
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
-llm = Ollama(model="tinyllama", base_url=os.getenv("OLLAMA_BASE_URL", "http://ollama:11434"))
+llm = Ollama(model="gpt-oss", base_url=os.getenv("OLLAMA_BASE_URL", "http://ollama:11434"))
 service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
 
 class QueryRequest(BaseModel):

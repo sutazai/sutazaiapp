@@ -207,7 +207,7 @@ class PerformanceBaseline:
             response = requests.post(
                 'http://localhost:10104/api/generate',
                 json={
-                    'model': 'tinyllama:latest',
+                    'model': 'gpt-oss:latest',
                     'prompt': 'Hello, world!',
                     'stream': False
                 },
@@ -221,7 +221,7 @@ class PerformanceBaseline:
                 'timestamp': datetime.now().isoformat(),
                 'inference_time_ms': inference_time,
                 'success': success,
-                'model': 'tinyllama:latest'
+                'model': 'gpt-oss:latest'
             }
             
         except Exception as e:

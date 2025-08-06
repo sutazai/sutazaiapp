@@ -378,7 +378,7 @@ class SutazAIQAValidator:
             if self.validation_results["Ollama Models"]["status"] == "WARN":
                 self.recommendations.append(
                     "AI Models: Download additional Ollama models for better agent functionality. "
-                    "Current system only has TinyLlama which is minimal."
+                    "Current system only has gpt-oss which is minimal."
                 )
         
         # Agent orchestration recommendations

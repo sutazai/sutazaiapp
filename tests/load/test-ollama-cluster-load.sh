@@ -82,9 +82,9 @@ pre_test_health_check() {
         warning "Cluster monitor health check failed"
     fi
     
-    # Verify TinyLlama is default
-    if ! docker exec sutazai-ollama-primary ollama list | grep -q "tinyllama"; then
-        error "TinyLlama model not found on primary instance (Rule 16 violation)"
+    # Verify GPT-OSS is default
+    if ! docker exec sutazai-ollama-primary ollama list | grep -q "gpt-oss"; then
+        error "GPT-OSS model not found on primary instance"
         ((health_issues++))
     fi
     
@@ -105,7 +105,7 @@ test_single_request() {
     
     local response=$(curl -s -w "%{http_code}:%{time_total}" -X POST "$url/api/generate" \
         -H "Content-Type: application/json" \
-        -d "{\"model\": \"tinyllama\", \"prompt\": \"Test request $request_id\", \"stream\": false}" \
+        -d "{\"model\": \"gpt-oss\", \"prompt\": \"Test request $request_id\", \"stream\": false}" \
         --max-time 60 2>/dev/null || echo "000:timeout")
     
     local end_time=$(date +%s.%N)
@@ -308,7 +308,7 @@ test_load_balancer_distribution() {
         # Make request and capture which instance handled it
         local response=$(curl -s -X POST "$LOAD_BALANCER_URL/api/generate" \
             -H "Content-Type: application/json" \
-            -d '{"model": "tinyllama", "prompt": "Distribution test", "stream": false}' \
+            -d '{"model": "gpt-oss", "prompt": "Distribution test", "stream": false}' \
             --max-time 30 2>/dev/null || echo '{"error": "timeout"}')
         
         # For this test, we'll assume even distribution
@@ -404,12 +404,12 @@ generate_test_report() {
         fi
         
         echo ""
-        echo "## TinyLlama Compliance (Rule 16)"
+        echo "## GPT-OSS Model Compliance"
         echo ""
-        if docker exec sutazai-ollama-primary ollama list 2>/dev/null | grep -q "tinyllama"; then
-            echo "✅ TinyLlama is properly configured as default model"
+        if docker exec sutazai-ollama-primary ollama list 2>/dev/null | grep -q "gpt-oss"; then
+            echo "✅ GPT-OSS is properly configured as default model"
         else
-            echo "❌ TinyLlama configuration issue detected"
+            echo "❌ GPT-OSS configuration issue detected"
         fi
         
         echo ""

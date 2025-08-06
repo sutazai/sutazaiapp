@@ -12486,7 +12486,7 @@
         "classes_count": 1
       }
     },
-    "/opt/sutazaiapp/scripts/models/ollama/update_agent_configs_to_tinyllama.py": {
+    "/opt/sutazaiapp/scripts/models/ollama/update_agent_configs_to_gpt-oss.py": {
       "misleading_functions": [],
       "empty_implementations": [],
       "stub_code": [],
@@ -12520,7 +12520,7 @@
         "classes_count": 0
       }
     },
-    "/opt/sutazaiapp/scripts/agents/management/update_agents_to_tinyllama.py": {
+    "/opt/sutazaiapp/scripts/agents/management/update_agents_to_gpt-oss.py": {
       "misleading_functions": [],
       "empty_implementations": [],
       "stub_code": [],
@@ -35593,14 +35593,14 @@
       }
     },
     {
-      "file": "/opt/sutazaiapp/scripts/models/ollama/update_agent_configs_to_tinyllama.py",
+      "file": "/opt/sutazaiapp/scripts/models/ollama/update_agent_configs_to_gpt-oss.py",
       "issue_count": 2,
       "critical_issues": {
         "security_issues": 1
       }
     },
     {
-      "file": "/opt/sutazaiapp/scripts/agents/management/update_agents_to_tinyllama.py",
+      "file": "/opt/sutazaiapp/scripts/agents/management/update_agents_to_gpt-oss.py",
       "issue_count": 2,
       "critical_issues": {
         "security_issues": 1

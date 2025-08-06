@@ -35,7 +35,7 @@ class TestOllamaServiceFailures:
         """Test behavior when Ollama service is completely down"""
         # Mock connection error
         with patch.object(ollama_integration.client, 'get', side_effect=httpx.ConnectError("Connection refused")):
-            result = await ollama_integration.ensure_model_available("tinyllama")
+            result = await ollama_integration.ensure_model_available("gpt-oss")
             assert result is False
         
         # Generation should fail gracefully
@@ -100,8 +100,8 @@ class TestOllamaServiceFailures:
             mock_response.status_code = 200
             mock_response.json.return_value = {
                 "models": [
-                    {"name": "tinyllama:latest"},
-                    # qwen2.5-coder and deepseek-r1 missing
+                    {"name": "gpt-oss:latest"},
+                    # gpt-oss2.5-coder and gpt-oss-r1 missing
                 ]
             }
             return mock_response
@@ -116,11 +116,11 @@ class TestOllamaServiceFailures:
             with patch.object(ollama_integration.client, 'post', side_effect=mock_failed_pull):
                 
                 # Available model should work
-                result = await ollama_integration.ensure_model_available("tinyllama")
+                result = await ollama_integration.ensure_model_available("gpt-oss")
                 assert result is True
                 
                 # Unavailable model should fail
-                result = await ollama_integration.ensure_model_available("qwen2.5-coder:7b")
+                result = await ollama_integration.ensure_model_available("gpt-oss2.5-coder:7b")
                 assert result is False
 
 
@@ -132,7 +132,7 @@ class TestConnectionPoolFailures:
         return OllamaConnectionPool(
             max_connections=3,
             min_connections=1,
-            default_model="tinyllama",
+            default_model="gpt-oss",
             connection_timeout=5,
             request_timeout=10
         )
@@ -608,7 +608,7 @@ class TestResourceExhaustionScenarios:
         pool = OllamaConnectionPool(
             max_connections=2,  # Very low limit
             min_connections=1,
-            default_model="tinyllama"
+            default_model="gpt-oss"
         )
         
         # Create concurrent requests that exceed connection limit

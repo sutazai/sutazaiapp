@@ -131,7 +131,7 @@ deploy_ai_services() {
     
     # Pull Ollama models
     log_info "Pulling Ollama models..."
-    models=("tinyllama" "deepseek-r1:8b" "qwen3:8b" "codellama:7b")
+    models=("gpt-oss" "gpt-oss-r1:8b" "gpt-oss3:8b" "gpt-oss:7b")
     
     for model in "${models[@]}"; do
         log_info "Pulling model: $model"

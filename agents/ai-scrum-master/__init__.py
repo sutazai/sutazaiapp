@@ -1,1 +1,0 @@
-# AI Scrum Master Agent

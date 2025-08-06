@@ -6640,7 +6640,7 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "scripts/models/ollama/update_agent_configs_to_tinyllama.py",
+      "file": "scripts/models/ollama/update_agent_configs_to_gpt-oss.py",
       "line": 38,
       "pattern": "temp_?.*",
       "match": "temperature'] = 0.7"
@@ -11204,35 +11204,35 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 19,
       "pattern": "temp_?.*",
       "match": "templates = {"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 71,
       "pattern": "temp_?.*",
       "match": "temperature=0.2"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 94,
       "pattern": "temp_?.*",
       "match": "temperature=0.1"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 116,
       "pattern": "temp_?.*",
       "match": "temperature=0.3"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 139,
       "pattern": "temp_?.*",
       "match": "temperature=0.2"
@@ -19005,7 +19005,7 @@
       "file": "frontend/app.py",
       "line": 6113,
       "pattern": "old_?.*",
-      "match": "older=\"e.g., llama2:13b, mistral:latest\")"
+      "match": "older=\"e.g., llama2:13b, gpt-oss:latest\")"
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -21298,35 +21298,35 @@
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 19,
       "pattern": "temp_?.*",
       "match": "templates = {"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 71,
       "pattern": "temp_?.*",
       "match": "temperature=0.2"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 94,
       "pattern": "temp_?.*",
       "match": "temperature=0.1"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 116,
       "pattern": "temp_?.*",
       "match": "temperature=0.3"
     },
     {
       "type": "forbidden_garbage_patterns",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "line": 139,
       "pattern": "temp_?.*",
       "match": "temperature=0.2"
@@ -22281,7 +22281,7 @@
       "file": "agents/core/prompt_optimizer.py",
       "line": 407,
       "pattern": "temp_?.*",
-      "match": "template = templates.get(model, templates.get('tinyllama', ''))"
+      "match": "template = templates.get(model, templates.get('gpt-oss', ''))"
     },
     {
       "type": "forbidden_garbage_patterns",
@@ -24556,7 +24556,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/models/ollama/update_agent_configs_to_tinyllama.py",
+      "file": "scripts/models/ollama/update_agent_configs_to_gpt-oss.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -24580,7 +24580,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/models/ollama/update_all_to_tinyllama.sh",
+      "file": "scripts/models/ollama/update_all_to_gpt-oss.sh",
       "expected_location": "scripts",
       "pattern": "*.sh"
     },
@@ -25054,7 +25054,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "scripts/agents/management/update_agents_to_tinyllama.py",
+      "file": "scripts/agents/management/update_agents_to_gpt-oss.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -25336,7 +25336,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -27382,7 +27382,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "expected_location": "scripts",
       "pattern": "*.py"
     },
@@ -31192,7 +31192,7 @@
     },
     {
       "type": "misplaced_file",
-      "file": "archive/20250803_193506_pre_cleanup/docker/docker-compose.tinyllama.yml",
+      "file": "archive/20250803_193506_pre_cleanup/docker/docker-compose.gpt-oss.yml",
       "expected_location": "docker",
       "pattern": "docker-compose*.yml"
     },
@@ -34888,12 +34888,12 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/models/ollama/update_all_to_tinyllama.sh",
+      "file": "scripts/models/ollama/update_all_to_gpt-oss.sh",
       "expected_pattern": "^[a-z][a-z0-9-]*\\.(py|sh)$"
     },
     {
       "type": "naming_convention",
-      "file": "scripts/models/ollama/update_agent_configs_to_tinyllama.py",
+      "file": "scripts/models/ollama/update_agent_configs_to_gpt-oss.py",
       "expected_pattern": "^[a-z][a-z0-9-]*\\.(py|sh)$"
     },
     {
@@ -35298,7 +35298,7 @@
     },
     {
       "type": "naming_convention",
-      "file": "scripts/agents/management/update_agents_to_tinyllama.py",
+      "file": "scripts/agents/management/update_agents_to_gpt-oss.py",
       "expected_pattern": "^[a-z][a-z0-9-]*\\.(py|sh)$"
     },
     {

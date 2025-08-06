@@ -775,7 +775,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description='Ollama Model Manager and Benchmarking System')
     parser.add_argument('--discover', action='store_true', help='Discover available models')
-    parser.add_argument('--benchmark', choices=['tinyllama', 'llama3.2:3b', 'deepseek-r1:8b', 'all'], help='Run benchmark')
+    parser.add_argument('--benchmark', choices=['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b', 'all'], help='Run benchmark')
     parser.add_argument('--benchmark-type', choices=['quick', 'standard', 'comprehensive'], default='standard', help='Benchmark type')
     parser.add_argument('--report', action='store_true', help='Generate performance report')
     parser.add_argument('--history', help='Show performance history for model')

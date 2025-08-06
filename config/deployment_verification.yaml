@@ -310,10 +310,10 @@ model_tests:
     timeout: 60
     required_models: []  # Empty means any model is acceptable
     preferred_models:
-      - "llama3.2:1b"
-      - "qwen2.5:3b"
-      - "deepseek-r1:8b"
-      - "codellama:7b"
+      - "gpt-oss.2:1b"
+      - "gpt-oss2.5:3b"
+      - "gpt-oss-r1:8b"
+      - "gpt-oss:7b"
 
 # Report configuration
 reporting:

@@ -209,7 +209,7 @@ chmod +x scripts/*.sh
 curl http://localhost:11434/api/tags
 
 # Pull a lightweight model
-docker exec sutazai-ollama ollama pull llama3.2:1b
+docker exec sutazai-ollama ollama pull gpt-oss.2:1b
 ```
 
 ### Log Files

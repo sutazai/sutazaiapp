@@ -2,7 +2,7 @@
   "name": "neural-architecture-search",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9216,
   "capabilities": [
     "code_generation",

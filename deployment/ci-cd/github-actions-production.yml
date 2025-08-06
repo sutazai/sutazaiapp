@@ -204,7 +204,7 @@ jobs:
 
       - name: Set up Test Environment
         run: |
-          cp docker-compose.tinyllama.yml docker-compose.test.yml
+          cp docker-compose.gpt-oss.yml docker-compose.test.yml
           sed -i 's/5432:5432/5433:5432/' docker-compose.test.yml
           sed -i 's/6379:6379/6380:6379/' docker-compose.test.yml
 

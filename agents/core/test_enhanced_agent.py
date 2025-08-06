@@ -102,7 +102,7 @@ async def test_ollama_pool():
     try:
         async with OllamaConnectionPool(
             max_connections=2,
-            default_model="tinyllama"
+            default_model="gpt-oss"
         ) as pool:
             
             # Test basic generation

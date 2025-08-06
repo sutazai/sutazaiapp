@@ -2,7 +2,7 @@
   "name": "resource-arbitration-agent",
   "description": "Agent for system operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9518,
   "capabilities": [
     "architecture",

@@ -233,16 +233,16 @@ check_ai_agents() {
 check_model_availability() {
     log "INFO" "Checking model availability..."
     
-    # Test TinyLlama model
+    # Test gpt-oss model
     local test_response=$(curl -s -X POST http://localhost:11434/api/generate \
-        -d '{"model": "tinyllama", "prompt": "Hello", "stream": false}' \
+        -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false}' \
         --max-time 30 2>/dev/null | jq -r '.response // empty' 2>/dev/null)
     
     if [[ -n "$test_response" && "$test_response" != "null" ]]; then
-        local model_size=$(curl -s http://localhost:11434/api/show -d '{"name": "tinyllama"}' | jq -r '.details.parameter_size // "unknown"' 2>/dev/null)
-        add_check_result "TinyLlama Model" "PASS" "Model is responding correctly" "{\"parameter_size\": \"$model_size\", \"test_response_length\": ${#test_response}}"
+        local model_size=$(curl -s http://localhost:11434/api/show -d '{"name": "gpt-oss"}' | jq -r '.details.parameter_size // "unknown"' 2>/dev/null)
+        add_check_result "gpt-oss Model" "PASS" "Model is responding correctly" "{\"parameter_size\": \"$model_size\", \"test_response_length\": ${#test_response}}"
     else
-        add_check_result "TinyLlama Model" "FAIL" "Model is not responding or returned empty response" "{}"
+        add_check_result "gpt-oss Model" "FAIL" "Model is not responding or returned empty response" "{}"
     fi
 }
 

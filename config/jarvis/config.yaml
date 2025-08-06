@@ -12,7 +12,7 @@ agents:
 planner:
   max_steps: 10
   enable_reflection: true
-  planning_model: "tinyllama"
+  planning_model: "gpt-oss"
   strategies:
     - "decomposition"     # Break complex tasks into subtasks
     - "chain_of_thought"  # Step-by-step reasoning
@@ -54,7 +54,7 @@ memory:
   ttl: 86400  # 24 hours
   embeddings:
     enabled: true
-    model: "tinyllama"
+    model: "gpt-oss"
     dimension: 384
     
 # Multi-modal capabilities
@@ -73,7 +73,7 @@ multimodal:
 integrations:
   ollama:
     url: "http://localhost:11434"
-    default_model: "tinyllama"
+    default_model: "gpt-oss"
   chromadb:
     url: "http://localhost:8001"
     collection: "jarvis_memory"

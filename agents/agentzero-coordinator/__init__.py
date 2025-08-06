@@ -1,1 +1,0 @@
-# AgentZero Coordinator Agent

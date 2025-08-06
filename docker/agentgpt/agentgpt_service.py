@@ -247,7 +247,7 @@ Provide a concise summary of what was accomplished."""
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "llama3.2:1b",
+                    "model": "gpt-oss.2:1b",
                     "prompt": prompt,
                     "stream": False
                 },

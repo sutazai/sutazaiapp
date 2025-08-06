@@ -33,7 +33,7 @@ class MemoryCleanupService:
         self.emergency_threshold = int(os.getenv('EMERGENCY_THRESHOLD', 95))
         
         # Small model configuration
-        self.small_models = ['qwen2.5:3b', 'llama3.2:3b', 'qwen2.5-coder:3b']
+        self.small_models = ['gpt-oss2.5:3b', 'gpt-oss.2:3b', 'gpt-oss2.5-coder:3b']
         self.max_model_memory_gb = 3.0  # Max memory per small model
         self.system_reserved_gb = 4.0   # Reserve 4GB for system
         

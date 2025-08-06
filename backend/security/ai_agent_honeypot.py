@@ -542,10 +542,10 @@ class AIAgentHoneypotServer:
             try:
                 data = json.loads(body)
                 prompt = data.get('prompt', '')
-                model = data.get('model', 'tinyllama')
+                model = data.get('model', 'gpt-oss')
             except:
                 prompt = ''
-                model = 'tinyllama'
+                model = 'gpt-oss'
             
             # Return streaming-style response
             response_text = "I'm an AI assistant running on the SutazAI system. I can help with various tasks including coding, analysis, and problem-solving."

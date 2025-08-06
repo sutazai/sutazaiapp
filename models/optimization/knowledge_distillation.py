@@ -42,8 +42,8 @@ class DistillationConfig:
     progressive_distillation: bool = False  # Progressive knowledge transfer
     
     # Ollama-specific configuration
-    teacher_model: str = "qwen2.5-coder:7b"  # Teacher model name
-    student_model: str = "tinyllama"  # Student model name
+    teacher_model: str = "gpt-oss2.5-coder:7b"  # Teacher model name
+    student_model: str = "gpt-oss"  # Student model name
     ollama_host: str = "http://localhost:11434"
     max_context_length: int = 2048
     
@@ -657,7 +657,7 @@ class DistillationAnalyzer:
         
         return {
             'speed_gain': final_perf.get('avg_generation_time', 0),
-            'size_reduction': 0.7,  # Estimated for tinyllama vs larger models
+            'size_reduction': 0.7,  # Estimated for gpt-oss vs larger models
             'memory_efficiency': 0.8,  # Estimated
             'throughput_increase': 2.5  # Estimated improvement factor
         }
@@ -740,8 +740,8 @@ class DistillationAnalyzer:
         return recommendations
 
 # Factory function for easy integration
-async def create_distillation_pipeline(teacher_model: str = "qwen2.5-coder:7b",
-                                     student_model: str = "tinyllama",
+async def create_distillation_pipeline(teacher_model: str = "gpt-oss2.5-coder:7b",
+                                     student_model: str = "gpt-oss",
                                      config: DistillationConfig = None) -> KnowledgeDistiller:
     """Create and initialize a knowledge distillation pipeline"""
     if config is None:

@@ -72,7 +72,7 @@ def mock_ollama_service():
     """Mock Ollama service responses"""
     class MockOllamaService:
         def __init__(self):
-            self.models = ["tinyllama", "qwen2.5-coder:7b", "deepseek-r1:8b"]
+            self.models = ["gpt-oss"]
             self.responses = {}
         
         def set_response(self, prompt, response):
@@ -181,7 +181,7 @@ def sample_task():
         "type": "test",
         "data": {
             "prompt": "This is a test prompt",
-            "model": "tinyllama",
+            "model": "gpt-oss",
             "max_tokens": 100
         },
         "created_at": datetime.utcnow().isoformat()
@@ -198,7 +198,7 @@ def sample_task_result():
         status="completed",
         result={
             "output": "Test task completed successfully",
-            "model_used": "tinyllama",
+            "model_used": "gpt-oss",
             "tokens_used": 50
         },
         processing_time=1.5

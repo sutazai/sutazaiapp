@@ -12,10 +12,7 @@ from pathlib import Path
 
 REQUIRED_FIELDS = ['name', 'model', 'temperature']
 VALID_MODELS = [
-    'gpt-4', 'gpt-3.5-turbo', 'claude-3-opus', 'claude-3-sonnet', 
-    'claude-2.1', 'claude-2', 'llama-2-70b', 'llama-2-13b', 
-    'mistral-7b', 'mixtral-8x7b', 'deepseek-coder', 'codellama',
-    'gpt-4-turbo', 'gpt-4o', 'claude-3-haiku', 'gemini-pro'
+    'gpt-oss'
 ]
 
 def extract_yaml_frontmatter(content):

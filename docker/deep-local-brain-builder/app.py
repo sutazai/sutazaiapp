@@ -152,7 +152,7 @@ async def capabilities():
                 "methods": ["text_embeddings", "image_embeddings", "multimodal_embeddings"]
             }
         },
-        "supported_models": ["tinyllama", "codellama", "mistral", "nomic-embed-text"],
+        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss", "nomic-embed-text"],
         "api_version": "2.2.0"
     }
 

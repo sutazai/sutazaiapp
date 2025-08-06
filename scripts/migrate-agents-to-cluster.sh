@@ -247,7 +247,7 @@ create_update_summary() {
         echo "2. Restart all services: docker-compose down && docker-compose up -d"
         echo "3. Check cluster monitor: http://localhost:10108"
         echo "4. Test load balancer: curl http://localhost:10107/health"
-        echo "5. Verify TinyLlama default: docker exec sutazai-ollama-primary ollama list"
+        echo "5. Verify gpt-oss default: docker exec sutazai-ollama-primary ollama list"
         
     } > "$summary_file"
     
@@ -355,7 +355,7 @@ main() {
     echo "  3. Monitor cluster health: http://localhost:10108"
     echo "  4. Test load balancer: curl http://localhost:10107/health"
     echo ""
-    warning "Remember: TinyLlama is configured as the default model per Rule 16"
+    warning "Remember: gpt-oss is configured as the default model per Rule 16"
 }
 
 # Run main function

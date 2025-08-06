@@ -1590,8 +1590,8 @@ download_essential_models() {
     log_info "Downloading essential AI models..."
     
     local essential_models=(
-        "tinyllama:latest"
-        "qwen2.5:3b"
+        "gpt-oss:latest"
+        "gpt-oss2.5:3b"
         "nomic-embed-text:latest"
     )
     
@@ -1722,7 +1722,7 @@ check_ai_services_health() {
     log_info "Checking AI services health..."
     
     # Ollama model availability
-    if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "tinyllama"; then
+    if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "gpt-oss"; then
         results+=("✅ AI: Ollama models - AVAILABLE")
     else
         results+=("❌ AI: Ollama models - NOT AVAILABLE")
@@ -1791,7 +1791,7 @@ test_ai_inference() {
     
     response=$(curl -s --max-time 30 -X POST http://localhost:11434/api/generate \
         -H "Content-Type: application/json" \
-        -d "{\"model\": \"tinyllama\", \"prompt\": \"$test_prompt\", \"stream\": false}" 2>/dev/null)
+        -d "{\"model\": \"gpt-oss\", \"prompt\": \"$test_prompt\", \"stream\": false}" 2>/dev/null)
     
     # Check if response contains expected fields
     echo "$response" | grep -q '"response"' && echo "$response" | grep -q '"done"'

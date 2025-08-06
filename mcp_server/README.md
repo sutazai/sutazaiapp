@@ -82,7 +82,7 @@ Shows all AI models available through Ollama.
 {
   "models": [
     {
-      "name": "deepseek-r1:8b",
+      "name": "gpt-oss-r1:8b",
       "size": 4800000000,
       "modified_at": "2024-12-01T09:15:00Z"
     }
@@ -161,7 +161,7 @@ Manage AI models through Ollama.
 ```json
 {
   "action": "pull",
-  "model_name": "deepseek-r1:8b",
+  "model_name": "gpt-oss-r1:8b",
   "parameters": {}
 }
 ```

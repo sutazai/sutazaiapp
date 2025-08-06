@@ -34979,7 +34979,7 @@
       "issues": []
     },
     {
-      "file": "scripts/models/ollama/update_agent_configs_to_tinyllama.py",
+      "file": "scripts/models/ollama/update_agent_configs_to_gpt-oss.py",
       "imports": [
         {
           "type": "standard",
@@ -35003,7 +35003,7 @@
       "issues": []
     },
     {
-      "file": "scripts/agents/management/update_agents_to_tinyllama.py",
+      "file": "scripts/agents/management/update_agents_to_gpt-oss.py",
       "imports": [
         {
           "type": "standard",
@@ -37018,7 +37018,7 @@
       "issues": []
     },
     {
-      "file": "docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "docker/enhanced-model-manager/gpt-oss_integration.py",
       "imports": [
         {
           "type": "standard",
@@ -37192,7 +37192,7 @@
         },
         {
           "type": "from",
-          "module": "deepseek_integration",
+          "module": "gpt-oss_integration",
           "names": [
             [
               "DeepSeekIntegration",
@@ -37212,9 +37212,9 @@
         },
         {
           "type": "missing_module",
-          "message": "Module 'deepseek_integration' not found at line 19",
+          "message": "Module 'gpt-oss_integration' not found at line 19",
           "line": 19,
-          "module": "deepseek_integration"
+          "module": "gpt-oss_integration"
         }
       ]
     },
@@ -146313,7 +146313,7 @@
       ]
     },
     {
-      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/deepseek_integration.py",
+      "file": "archive/20250803_193506_pre_cleanup/docker/enhanced-model-manager/gpt-oss_integration.py",
       "imports": [
         {
           "type": "standard",
@@ -146487,7 +146487,7 @@
         },
         {
           "type": "from",
-          "module": "deepseek_integration",
+          "module": "gpt-oss_integration",
           "names": [
             [
               "DeepSeekIntegration",
@@ -146507,9 +146507,9 @@
         },
         {
           "type": "missing_module",
-          "message": "Module 'deepseek_integration' not found at line 19",
+          "message": "Module 'gpt-oss_integration' not found at line 19",
           "line": 19,
-          "module": "deepseek_integration"
+          "module": "gpt-oss_integration"
         }
       ]
     },

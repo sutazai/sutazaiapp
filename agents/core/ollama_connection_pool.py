@@ -203,7 +203,7 @@ class OllamaConnectionPool:
         Generate text using Ollama with intelligent routing and queuing.
         
         Args:
-            model: Model name (defaults to tinyllama per Rule 16)
+            model: Model name (defaults to gpt-oss per Rule 16)
             prompt: Input prompt
             options: Generation options
             priority: Request priority (1=high, 10=low)
@@ -212,7 +212,7 @@ class OllamaConnectionPool:
             Generation response dict
         """
         if model is None:
-            model = "tinyllama"  # Rule 16 compliance
+            model = "gpt-oss"  # Rule 16 compliance
             
         request_start = time.time()
         
@@ -481,7 +481,7 @@ async def get_connection_pool() -> OllamaConnectionPool:
     
     return _connection_pool
 
-async def ollama_generate(model: str = "tinyllama", 
+async def ollama_generate(model: str = "gpt-oss", 
                          prompt: str = "", 
                          options: Dict[str, Any] = None,
                          priority: int = 5) -> Dict[str, Any]:
@@ -499,7 +499,7 @@ if __name__ == "__main__":
         
         # Test basic generation
         response = await pool.generate(
-            model="tinyllama",
+            model="gpt-oss",
             prompt="Hello, how are you?",
             options={"max_tokens": 50}
         )

@@ -331,7 +331,7 @@ async def generate_inference_load():
         for i in range(100):
             task = session.post(
                 'http://localhost:11434/api/generate',
-                json={'model': 'tinyllama', 'prompt': f'Test prompt {i}'}
+                json={'model': 'gpt-oss', 'prompt': f'Test prompt {i}'}
             )
             tasks.append(task)
         

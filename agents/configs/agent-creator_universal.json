@@ -2,7 +2,7 @@
   "name": "agent-creator",
   "description": "Agent for utility operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9901,
   "capabilities": [
     "automation",

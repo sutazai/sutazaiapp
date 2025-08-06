@@ -24,7 +24,7 @@ The Multi-Modal Fusion System provides advanced capabilities for integrating het
    - Main fusion processing engine
    - Supports early, late, and hybrid fusion strategies
    - Temporal synchronization across modalities
-   - Integration with Ollama/TinyLlama for text processing
+   - Integration with Ollama/gpt-oss for text processing
 
 2. **Unified Representation Framework** (`core/unified_representation.py`)
    - Cross-modal embedding alignment
@@ -181,7 +181,7 @@ Then open http://localhost:8501 to access the dashboard.
 - **Network**: WebSocket support for real-time monitoring
 
 ### Supported Modalities
-- **Text**: Natural language processing via Ollama/TinyLlama
+- **Text**: Natural language processing via Ollama/gpt-oss
 - **Voice**: Audio processing with spectral analysis
 - **Visual**: Image/video processing with CNN features
 - **Sensor**: Time-series data with statistical features

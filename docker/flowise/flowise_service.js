@@ -133,7 +133,7 @@ class FlowiseService {
         try {
             // Call local Ollama instance
             const response = await axios.post('http://ollama:11434/api/generate', {
-                model: 'llama3.2:1b',
+                model: 'gpt-oss',
                 prompt: data.query || data.prompt || 'Hello',
                 stream: false
             }, { timeout: 30000 });
@@ -141,7 +141,7 @@ class FlowiseService {
             return {
                 type: 'llm_response',
                 response: response.data.response || 'LLM response generated',
-                model: 'llama3.2:1b'
+                model: 'gpt-oss'
             };
         } catch (error) {
             return {

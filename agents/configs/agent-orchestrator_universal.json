@@ -2,7 +2,7 @@
   "name": "agent-orchestrator",
   "description": "Agent for utility operations",
   "model": "ollama",
-  "base_model": "qwen2.5-coder:7b",
+  "base_model": "gpt-oss2.5-coder:7b",
   "port": 9901,
   "capabilities": [
     "automation",

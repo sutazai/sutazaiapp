@@ -245,9 +245,9 @@ check_models() {
     log_header "Model Availability Check"
     
     local required_models=(
-        "qwen2.5:3b"
-        "qwen2.5-coder:3b"
-        "qwen2.5:3b"
+        "gpt-oss2.5:3b"
+        "gpt-oss2.5-coder:3b"
+        "gpt-oss2.5:3b"
         "nomic-embed-text"
     )
     

@@ -1,12 +1,12 @@
 [model]
 kind = "ollama"
-model_id = "tinyllama"
+model_id = "gpt-oss"
 api_endpoint = "http://ollama:11434"
 
 [llm]
 provider = "ollama"
 base_url = "http://ollama:11434"
-model = "tinyllama"
+model = "gpt-oss"
 
 [embeddings]
 provider = "ollama"

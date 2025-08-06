@@ -15,7 +15,7 @@ mv Makefile build/make/ 2>/dev/null
 # Move Docker Compose files to config/docker
 echo "🐳 Moving Docker configurations..."
 mv docker-compose.yml config/docker/ 2>/dev/null
-mv docker-compose.tinyllama.yml config/docker/ 2>/dev/null
+mv docker-compose.gpt-oss.yml config/docker/ 2>/dev/null
 
 # Move project configuration files
 echo "📋 Moving project configurations..."
@@ -31,21 +31,21 @@ mv semgrep_custom_rules.yaml config/security/ 2>/dev/null
 
 # Move any remaining status/report files
 echo "📊 Moving status files..."
-mv TINYLLAMA_CONFIGURATION_COMPLETE.md docs/system/ 2>/dev/null
-mv COMPLETE_TINYLLAMA_LITELLM_REMOVAL.md docs/system/ 2>/dev/null
+mv GPT-OSS_CONFIGURATION_COMPLETE.md docs/system/ 2>/dev/null
+mv COMPLETE_GPT-OSS_LITELLM_REMOVAL.md docs/system/ 2>/dev/null
 mv PROJECT_ORGANIZATION_COMPLETE.md docs/system/ 2>/dev/null
 
 # Create symlinks for commonly used files
 echo "🔗 Creating convenient symlinks..."
 ln -sf config/docker/docker-compose.yml docker-compose.yml
-ln -sf config/docker/docker-compose.tinyllama.yml docker-compose.tinyllama.yml
+ln -sf config/docker/docker-compose.gpt-oss.yml docker-compose.gpt-oss.yml
 ln -sf build/make/Makefile Makefile
 
 # Create a root README for navigation
 cat > README.md << 'EOF'
 # SutazAI automation/advanced automation Autonomous System
 
-A lightweight, fully local automation system running on TinyLlama.
+A lightweight, fully local automation system running on gpt-oss.
 
 ## 🚀 Quick Start
 
@@ -85,9 +85,9 @@ make verify     # Verify configuration
 
 ## 🔧 Configuration Files
 
-- **Docker Compose**: `config/docker/docker-compose.tinyllama.yml`
+- **Docker Compose**: `config/docker/docker-compose.gpt-oss.yml`
 - **Makefile**: `build/make/Makefile`
-- **Environment**: `.env`, `.env.tinyllama`
+- **Environment**: `.env`, `.env.gpt-oss`
 
 ## 📚 Documentation
 
@@ -99,10 +99,10 @@ make verify     # Verify configuration
 
 ```bash
 # Deployment
-./scripts/deployment/system/start_tinyllama.sh
+./scripts/deployment/system/start_gpt-oss.sh
 
 # Verification
-./scripts/utils/verification/verify_tinyllama_config.sh
+./scripts/utils/verification/verify_gpt-oss_config.sh
 ./scripts/utils/verification/verify_litellm_removal.sh
 
 # Using Make (recommended)
@@ -111,7 +111,7 @@ make help       # Show all available commands
 
 ## 🤖 System Status
 
-- **Model**: TinyLlama (637MB)
+- **Model**: gpt-oss (637MB)
 - **API**: Native Ollama
 - **Agents**: 37 specialized AI agents
 - **External APIs**: None (100% local)
@@ -134,6 +134,6 @@ echo ""
 echo "🔗 Symlinks created for convenience:"
 echo "  - Makefile (→ build/make/Makefile)"
 echo "  - docker-compose.yml (→ config/docker/docker-compose.yml)"
-echo "  - docker-compose.tinyllama.yml (→ config/docker/docker-compose.tinyllama.yml)"
+echo "  - docker-compose.gpt-oss.yml (→ config/docker/docker-compose.gpt-oss.yml)"
 echo ""
 echo "📝 New README.md created with project overview"

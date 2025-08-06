@@ -319,7 +319,7 @@ except Exception as e:
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "llama3.2:1b",
+                    "model": "gpt-oss.2:1b",
                     "prompt": f"As AutoGPT, help with this task: {task}",
                     "stream": False
                 },
@@ -332,7 +332,7 @@ except Exception as e:
                     "success": True,
                     "result": result.get("response", "Task completed"),
                     "task_type": "general",
-                    "model": "llama3.2:1b"
+                    "model": "gpt-oss.2:1b"
                 }
             else:
                 return {

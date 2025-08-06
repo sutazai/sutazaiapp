@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Purpose: Test Ollama TinyLlama concurrent capacity
+# Purpose: Test Ollama GPT-OSS concurrent capacity
 # Usage: ./test_ollama_concurrency.sh [num_requests]
 # Requirements: curl, jq
 
 NUM_REQUESTS=${1:-20}
 OLLAMA_URL="http://localhost:11434"
-MODEL="tinyllama"
+MODEL="gpt-oss"
 
 echo "Testing Ollama concurrency with $NUM_REQUESTS concurrent requests..."
 echo "Model: $MODEL"

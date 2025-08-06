@@ -91,7 +91,7 @@ services:
     - ollama
     environment:
       AGENT_NAME: Aider
-      MODEL: deepseek-r1:8b
+      MODEL: gpt-oss:latest
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
@@ -615,7 +615,7 @@ services:
     - ollama
     environment:
       AGENT_NAME: GPT-Engineer
-      MODEL: deepseek-r1:8b
+      MODEL: gpt-oss:latest
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
@@ -686,7 +686,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: qwen2.5-coder:7b
+      OLLAMA_MODEL: gpt-oss:latest
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       REDIS_URL: redis://redis:6379/0
@@ -713,6 +713,255 @@ services:
     - /sys:/host/sys:ro
     - /var/run/docker.sock:/var/run/docker.sock
     - /tmp:/host/tmp
+  jarvis-voice-interface:
+    build:
+      context: ./agents/jarvis-voice-interface
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis-voice-interface
+    depends_on:
+      backend:
+        condition: service_started
+      ollama:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    environment:
+      AGENT_TYPE: jarvis-voice-interface
+      API_ENDPOINT: http://backend:8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      OLLAMA_API_KEY: local
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_MODEL: tinyllama:latest
+      OLLAMA_ORIGINS: '*'
+      PORT: 8080
+      PORCUPINE_ACCESS_KEY: ${PORCUPINE_ACCESS_KEY:-demo}
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      interval: 60s
+      retries: 5
+      start_period: 180s
+      test: *id001
+      timeout: 30s
+    networks:
+    - sutazai-network
+    ports:
+    - 11150:8080
+    restart: unless-stopped
+    volumes:
+    - ./data:/app/data
+    - ./configs:/app/configs
+    - ./logs:/app/logs
+    - agent_workspaces:/app/workspace
+    - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
+  jarvis-knowledge-management:
+    build:
+      context: ./agents/jarvis-knowledge-management
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis-knowledge-management
+    depends_on:
+      backend:
+        condition: service_started
+      ollama:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      faiss-vector:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: jarvis-knowledge-management
+      API_ENDPOINT: http://backend:8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: tinyllama:latest
+      PORT: 8080
+      REDIS_URL: redis://redis:6379/0
+      CHROMADB_URL: http://chromadb:8000
+      QDRANT_URL: http://qdrant:6333
+      FAISS_URL: http://faiss-vector:8000
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+    networks:
+    - sutazai-network
+    ports:
+    - 11101:8080
+    restart: unless-stopped
+    volumes:
+    - ./data:/app/data
+    - ./configs:/app/configs
+    - ./logs:/app/logs
+  jarvis-automation-agent:
+    build:
+      context: ./agents/jarvis-automation-agent
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis-automation-agent
+    depends_on:
+      backend:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: jarvis-automation-agent
+      API_ENDPOINT: http://backend:8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      OLLAMA_BASE_URL: http://ollama:11434
+      PORT: 8080
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+    networks:
+    - sutazai-network
+    ports:
+    - 11102:8080
+    restart: unless-stopped
+    volumes:
+    - ./data:/app/data
+    - ./configs:/app/configs
+    - ./logs:/app/logs
+    - /tmp:/tmp
+    - /opt/sutazaiapp:/opt/sutazaiapp:ro
+  jarvis-multimodal-ai:
+    build:
+      context: ./agents/jarvis-multimodal-ai
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis-multimodal-ai
+    depends_on:
+      backend:
+        condition: service_started
+      ollama:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 512M
+    environment:
+      AGENT_TYPE: jarvis-multimodal-ai
+      API_ENDPOINT: http://backend:8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
+      LOG_LEVEL: INFO
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: tinyllama:latest
+      PORT: 8080
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+    networks:
+    - sutazai-network
+    ports:
+    - 11103:8080
+    restart: unless-stopped
+    volumes:
+    - ./data:/app/data
+    - ./configs:/app/configs
+    - ./logs:/app/logs
+    - ./temp:/app/temp
+  jarvis-hardware-resource-optimizer:
+    build:
+      context: ./agents/jarvis-hardware-resource-optimizer
+      dockerfile: Dockerfile
+    container_name: sutazai-jarvis-hardware-resource-optimizer
+    depends_on:
+      backend:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: jarvis-hardware-resource-optimizer
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      PORT: 8080
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+    networks:
+    - sutazai-network
+    pid: host
+    ports:
+    - 11104:8080
+    privileged: true
+    restart: unless-stopped
+    volumes:
+    - ./data:/app/data
+    - ./configs:/app/configs
+    - ./logs:/app/logs
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /var/run/docker.sock:/var/run/docker.sock
   health-monitor:
     build:
       context: ./docker/health-monitor

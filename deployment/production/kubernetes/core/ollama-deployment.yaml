@@ -129,11 +129,7 @@ spec:
               - |
                 # Pull models after startup
                 sleep 30
-                ollama pull tinyllama
-                ollama pull deepseek-r1:8b
-                ollama pull qwen3:8b
-                ollama pull codellama:7b
-                ollama pull llama2
+                ollama pull gpt-oss
       initContainers:
       - name: model-downloader
         image: busybox:latest

@@ -1,1 +1,0 @@
-# Quantum Computing Optimizer Agent

@@ -536,11 +536,11 @@
         "ollama": "0.1.0+"
       },
       "ai_models": {
-        "tinyllama": {
+        "gpt-oss": {
           "version": "latest",
           "purpose": "lightweight rule checking"
         },
-        "codellama": {
+        "gpt-oss": {
           "version": "13b",
           "purpose": "code analysis and generation"
         }

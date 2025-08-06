@@ -13,10 +13,10 @@
     "language": "en-US"
   },
   "ai_models": {
-    "reasoning": "tinyllama",
-    "conversation": "llama3.2:1b",
-    "analysis": "qwen2.5:7b",
-    "coding": "tinyllama",
+    "reasoning": "gpt-oss",
+    "conversation": "gpt-oss.2:1b",
+    "analysis": "gpt-oss2.5:7b",
+    "coding": "gpt-oss",
     "embedding": "nomic-embed-text"
   },
   "integrations": {

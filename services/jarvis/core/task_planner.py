@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Task Planner - Creates execution plans for voice commands and tasks
-Integrates with Ollama/TinyLlama for intelligent planning
+Integrates with Ollama/gpt-oss for intelligent planning
 """
 
 import asyncio
@@ -19,7 +19,7 @@ class TaskPlanner:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         self.ollama_url = config.get('ollama_url', 'http://ollama:11434')
-        self.planning_model = config.get('planning_model', 'tinyllama')
+        self.planning_model = config.get('planning_model', 'gpt-oss')
         self.max_steps = config.get('max_steps', 10)
         self.enable_reflection = config.get('enable_reflection', True)
         self.planning_templates = self._load_planning_templates()

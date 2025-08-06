@@ -54,7 +54,7 @@ conversations = {}
 class ChainRequest(BaseModel):
     """Request model for chain execution"""
     prompt: str
-    model: str = "tinyllama"
+    model: str = "gpt-oss"
     temperature: float = 0.7
     max_tokens: int = 256
     conversation_id: Optional[str] = None

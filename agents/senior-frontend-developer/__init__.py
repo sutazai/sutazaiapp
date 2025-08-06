@@ -1,1 +1,0 @@
-# Senior Frontend Developer Agent

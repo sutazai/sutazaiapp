@@ -104,7 +104,7 @@ class OllamaPerformanceOptimizer:
             'ollama_optimization': {
                 'performance': {
                     'model_loading': {
-                        'preload_models': ['tinyllama'],
+                        'preload_models': ['gpt-oss'],
                         'max_loaded_models': 2,
                         'model_unload_timeout': 120
                     },
@@ -136,9 +136,9 @@ class OllamaPerformanceOptimizer:
     def _calculate_model_priorities(self) -> Dict[str, int]:
         """Calculate model priorities based on usage patterns"""
         priorities = {
-            'tinyllama': 1,  # Highest priority
-            'llama3.2:3b': 2,
-            'deepseek-r1:8b': 3
+            'gpt-oss': 1,  # Highest priority
+            'gpt-oss.2:3b': 2,
+            'gpt-oss-r1:8b': 3
         }
         return priorities
     
@@ -477,7 +477,7 @@ class OllamaPerformanceOptimizer:
             await self._setup_dedicated_instance(agent_name)
         
         if agent_config.get('preload_model'):
-            model = agent_config.get('model', 'tinyllama')
+            model = agent_config.get('model', 'gpt-oss')
             await self._preload_models([model])
         
         if agent_config.get('cache_responses'):
@@ -528,7 +528,7 @@ class OllamaPerformanceOptimizer:
         """Run comprehensive benchmark across all models"""
         logger.info("Running comprehensive performance benchmark")
         
-        models = ['tinyllama', 'llama3.2:3b', 'deepseek-r1:8b']
+        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
         benchmarks = {}
         
         for model in models:
@@ -581,7 +581,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description='Ollama Performance Optimizer')
     parser.add_argument('--start', action='store_true', help='Start optimization daemon')
-    parser.add_argument('--benchmark', choices=['all', 'tinyllama', 'llama3.2:3b', 'deepseek-r1:8b'], help='Run benchmark')
+    parser.add_argument('--benchmark', choices=['all', 'gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b'], help='Run benchmark')
     parser.add_argument('--report', action='store_true', help='Generate performance report')
     parser.add_argument('--optimize-agent', help='Optimize for specific agent')
     parser.add_argument('--config', help='Configuration file path')

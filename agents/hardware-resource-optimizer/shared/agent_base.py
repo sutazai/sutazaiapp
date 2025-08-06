@@ -159,7 +159,7 @@ class BaseAgent:
             "task_id": task.get("id", "unknown")
         }
     
-    def query_ollama(self, prompt: str, model: str = "tinyllama") -> Optional[str]:
+    def query_ollama(self, prompt: str, model: str = "gpt-oss") -> Optional[str]:
         """Query Ollama for AI assistance"""
         try:
             response = requests.post(

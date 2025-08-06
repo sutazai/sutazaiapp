@@ -94,7 +94,7 @@ class OllamaBatchProcessor:
         self.running = True
         
         # Start batch processors for each model
-        models = ['tinyllama', 'llama3.2:3b', 'deepseek-r1:8b']
+        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
         for model in models:
             self.processing_tasks[model] = asyncio.create_task(self._process_model_queue(model))
         
@@ -500,7 +500,7 @@ async def main():
             
             tasks = []
             for i, prompt in enumerate(test_prompts):
-                task = asyncio.create_task(processor.submit_request('tinyllama', prompt))
+                task = asyncio.create_task(processor.submit_request('gpt-oss', prompt))
                 tasks.append(task)
             
             responses = await asyncio.gather(*tasks)
@@ -514,11 +514,11 @@ async def main():
             await processor.start()
             
             common_prompts = [
-                ('tinyllama', 'Hello, how are you?'),
-                ('tinyllama', 'What is the weather like?'),
-                ('tinyllama', 'Explain artificial intelligence.'),
-                ('tinyllama', 'What is machine learning?'),
-                ('tinyllama', 'How does deep learning work?')
+                ('gpt-oss', 'Hello, how are you?'),
+                ('gpt-oss', 'What is the weather like?'),
+                ('gpt-oss', 'Explain artificial intelligence.'),
+                ('gpt-oss', 'What is machine learning?'),
+                ('gpt-oss', 'How does deep learning work?')
             ]
             
             await processor.warm_cache(common_prompts)

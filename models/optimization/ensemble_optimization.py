@@ -40,7 +40,7 @@ class EnsembleConfig:
     strategy: EnsembleStrategy = EnsembleStrategy.WEIGHTED_AVERAGE
     
     # Model selection
-    models: List[str] = field(default_factory=lambda: ["qwen2.5-coder:7b", "tinyllama"])
+    models: List[str] = field(default_factory=lambda: ["gpt-oss2.5-coder:7b", "gpt-oss"])
     model_weights: Optional[List[float]] = None
     
     # Ensemble parameters
@@ -62,7 +62,7 @@ class EnsembleConfig:
     parallel_execution: bool = True
     max_concurrent_models: int = 3
     timeout_seconds: float = 30.0
-    fallback_model: str = "tinyllama"
+    fallback_model: str = "gpt-oss"
     
     # Quality control
     consensus_requirement: float = 0.6
@@ -928,7 +928,7 @@ async def create_ensemble(models: List[str] = None,
     """Create and initialize a model ensemble"""
     if config is None:
         config = EnsembleConfig(
-            models=models or ["qwen2.5-coder:7b", "tinyllama"],
+            models=models or ["gpt-oss2.5-coder:7b", "gpt-oss"],
             strategy=strategy
         )
     
@@ -942,7 +942,7 @@ async def example_ensemble_usage():
     """Example usage of the ensemble system"""
     # Create ensemble
     ensemble = await create_ensemble(
-        models=["qwen2.5-coder:7b", "tinyllama"],
+        models=["gpt-oss2.5-coder:7b", "gpt-oss"],
         strategy=EnsembleStrategy.ADAPTIVE_WEIGHTING
     )
     

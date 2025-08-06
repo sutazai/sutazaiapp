@@ -345,7 +345,7 @@ collect_ollama_metrics() {
         # Test model performance
         local start_time=$(date +%s.%N)
         local test_response=$(curl -s -X POST http://localhost:11434/api/generate \
-            -d '{"model": "tinyllama", "prompt": "Hello world", "stream": false}' \
+            -d '{"model": "gpt-oss", "prompt": "Hello world", "stream": false}' \
             --max-time 30 2>/dev/null | jq -r '.response // empty' 2>/dev/null)
         local end_time=$(date +%s.%N)
         local response_time=$(echo "$end_time - $start_time" | bc -l)
@@ -359,7 +359,7 @@ collect_ollama_metrics() {
         fi
         
         # Get model information
-        local model_info=$(curl -s http://localhost:11434/api/show -d '{"name": "tinyllama"}' 2>/dev/null || echo "{}")
+        local model_info=$(curl -s http://localhost:11434/api/show -d '{"name": "gpt-oss"}' 2>/dev/null || echo "{}")
         local model_size=$(echo "$model_info" | jq -r '.details.parameter_size // "unknown"' 2>/dev/null || echo "unknown")
         
         ollama_metrics=$(jq -n \
@@ -373,7 +373,7 @@ collect_ollama_metrics() {
                 "test_response_time": ($response_time | tonumber),
                 "test_response_length": ($response_length | tonumber),
                 "model_info": {
-                    "name": "tinyllama",
+                    "name": "gpt-oss",
                     "parameter_size": $model_size
                 }
             }')

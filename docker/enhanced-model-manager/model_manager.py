@@ -27,13 +27,7 @@ auto_pull_models = os.environ.get('AUTO_PULL_MODELS', 'true').lower() == 'true'
 models_cache = {}
 
 required_models = [
-    "tinyllama",
-    "qwen3:8b", 
-    "deepseek-coder:33b",
-    "llama2:7b",
-    "llama2:13b",
-    "codellama:7b",
-    "codellama:13b"
+    "gpt-oss"
 ]
 
 logging.basicConfig(level=logging.INFO)

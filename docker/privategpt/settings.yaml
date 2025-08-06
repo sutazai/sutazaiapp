@@ -2,7 +2,7 @@ llm:
   mode: ollama
   
 ollama:
-  llm_model: tinyllama
+  llm_model: gpt-oss
   embedding_model: nomic-embed-text
   api_base: http://ollama:11434
   embedding_api_base: http://ollama:11434

@@ -27,7 +27,7 @@ services:
       # Use lightweight models for initial deployment
       DEFAULT_MODEL_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
-      DEFAULT_MODEL: tinyllama:latest
+      DEFAULT_MODEL: gpt-oss:latest
     ports:
       - "8107:5001"
     volumes:

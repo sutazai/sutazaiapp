@@ -1,1 +1,0 @@
-# Observability Monitoring Engineer Agent

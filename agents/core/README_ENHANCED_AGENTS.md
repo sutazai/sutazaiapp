@@ -138,23 +138,23 @@ from core.ollama_integration import OllamaConfig
 
 # Get model for specific agent
 model = OllamaConfig.get_model_for_agent("ai-system-architect")
-# Returns: "deepseek-r1:8b" (Opus model for complex reasoning)
+# Returns: "gpt-oss-r1:8b" (Opus model for complex reasoning)
 
 config = OllamaConfig.get_model_config("simple-task-agent") 
-# Returns: Full config with tinyllama for simple tasks
+# Returns: Full config with gpt-oss for simple tasks
 ```
 
 **Model Tiers:**
-- **Opus Models** (`deepseek-r1:8b`): Complex reasoning agents (31 agents)
-- **Sonnet Models** (`qwen2.5-coder:7b`): Balanced performance (59 agents)
-- **Default Model** (`tinyllama`): Simple tasks and monitoring (41 agents)
+- **Opus Models** (`gpt-oss-r1:8b`): Complex reasoning agents (31 agents)
+- **Sonnet Models** (`gpt-oss2.5-coder:7b`): Balanced performance (59 agents)
+- **Default Model** (`gpt-oss`): Simple tasks and monitoring (41 agents)
 
 ### Environment Variables
 
 ```bash
 # Ollama Configuration
 OLLAMA_URL=http://ollama:11434
-OLLAMA_DEFAULT_MODEL=tinyllama
+OLLAMA_DEFAULT_MODEL=gpt-oss
 
 # Agent Configuration  
 AGENT_NAME=my-agent
@@ -340,9 +340,9 @@ CMD ["python", "/app/agents/my-agent/app.py"]
 curl http://localhost:11434/api/version
 
 # Pull required models
-ollama pull tinyllama
-ollama pull qwen2.5-coder:7b  
-ollama pull deepseek-r1:8b
+ollama pull gpt-oss
+ollama pull gpt-oss2.5-coder:7b  
+ollama pull gpt-oss-r1:8b
 
 # Start agent
 python -m agents.my-agent.app
@@ -373,7 +373,7 @@ python -m agents.my-agent.app
 3. **Model Not Found**
    ```bash
    # Pull missing model
-   ollama pull tinyllama
+   ollama pull gpt-oss
    ```
 
 4. **Legacy Agent Issues**

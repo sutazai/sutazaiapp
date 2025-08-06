@@ -124,23 +124,23 @@ deploy_ollama_config() {
     return 0
 }
 
-# Install TinyLlama model (Rule 16 compliance)
-install_tinyllama() {
-    log "Installing TinyLlama model (Rule 16 compliance)..."
+# Install GPT-OSS model (exclusive model compliance)
+install_gpt_oss() {
+    log "Installing GPT-OSS model (exclusive model compliance)..."
     
-    # Check if TinyLlama is already installed
-    if OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "tinyllama"; then
-        log "TinyLlama already installed ✓"
+    # Check if GPT-OSS is already installed
+    if OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss"; then
+        log "GPT-OSS already installed ✓"
         return 0
     fi
     
-    log "Downloading TinyLlama model..."
-    if ! OLLAMA_HOST=http://localhost:11434 ollama pull tinyllama; then
-        log_error "Failed to download TinyLlama model"
+    log "Downloading GPT-OSS model..."
+    if ! OLLAMA_HOST=http://localhost:11434 ollama pull gpt-oss; then
+        log_error "Failed to download GPT-OSS model"
         return 1
     fi
     
-    log "TinyLlama model installed successfully ✓"
+    log "GPT-OSS model installed successfully ✓"
     return 0
 }
 
@@ -156,18 +156,18 @@ test_basic_functionality() {
     log "API endpoint responding ✓"
     
     # Test model availability
-    if ! OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "tinyllama"; then
-        log_error "TinyLlama model not available"
+    if ! OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss"; then
+        log_error "GPT-OSS model not available"
         return 1
     fi
-    log "TinyLlama model available ✓"
+    log "GPT-OSS model available ✓"
     
     # Test simple generation
     log "Testing simple generation..."
     local test_response
     test_response=$(curl -s -X POST http://localhost:11434/api/generate \
         -H "Content-Type: application/json" \
-        -d '{"model": "tinyllama", "prompt": "Hello", "stream": false, "options": {"num_predict": 10}}')
+        -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false, "options": {"num_predict": 10}}')
     
     if [[ -z "$test_response" ]] || ! echo "$test_response" | jq -e '.response' >/dev/null 2>&1; then
         log_error "Simple generation test failed"
@@ -195,7 +195,7 @@ run_concurrency_test() {
         --output-file "${PROJECT_ROOT}/logs/quick_test_results.json" >/dev/null 2>&1; then
         log "Quick concurrency test passed ✓"
     else
-        log_warning "Quick concurrency test failed (this may be normal if TinyLlama is still downloading)"
+        log_warning "Quick concurrency test failed (this may be normal if gpt-oss is still downloading)"
     fi
     
     return 0
@@ -245,7 +245,7 @@ generate_report() {
 ### Service Status:
 - **Ollama Service:** $(systemctl is-active ollama.service)
 - **API Endpoint:** $(curl -s http://localhost:11434/api/tags >/dev/null && echo "✅ Responding" || echo "❌ Not responding")
-- **TinyLlama Model:** $(OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "tinyllama" && echo "✅ Installed" || echo "❌ Not installed")
+- **GPT-OSS Model:** $(OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss" && echo "✅ Installed" || echo "❌ Not installed")
 
 ### Capacity Analysis:
 - **Theoretical Capacity:** 50 simultaneous connections
@@ -260,7 +260,7 @@ generate_report() {
 - **Memory Usage:** 60-80% of allocated 20GB
 
 ## Rule 16 Compliance:
-- ✅ **TinyLlama as Default Model:** Configured and installed
+- ✅ **gpt-oss as Default Model:** Configured and installed
 - ✅ **Ollama Framework:** All LLM access through Ollama
 - ✅ **Resource Constraints:** Defined and enforced
 
@@ -310,7 +310,7 @@ EOF
     echo -e "${BLUE}Configuration:${NC} High-concurrency optimized"
     echo -e "${BLUE}Capacity:${NC} 50 concurrent + 500 queued = 550 total"
     echo -e "${BLUE}Target Load:${NC} 174+ concurrent connections ✅"
-    echo -e "${BLUE}Model:${NC} TinyLlama (Rule 16 compliant)"
+    echo -e "${BLUE}Model:${NC} gpt-oss (Rule 16 compliant)"
     echo -e "${BLUE}Status:${NC} $(systemctl is-active ollama.service)"
     echo
     echo -e "${BLUE}API Endpoint:${NC} http://localhost:11434"
@@ -338,7 +338,7 @@ main() {
     create_backup || { log_error "Backup failed"; exit 1; }
     check_system_requirements || { log_error "System requirements not met"; exit 1; }
     deploy_ollama_config || { log_error "Ollama configuration deployment failed"; exit 1; }
-    install_tinyllama || { log_error "TinyLlama installation failed"; exit 1; }
+    install_gpt_oss || { log_error "GPT-OSS installation failed"; exit 1; }
     test_basic_functionality || { log_error "Basic functionality tests failed"; exit 1; }
     run_concurrency_test
     start_monitoring

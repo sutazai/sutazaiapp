@@ -6,11 +6,11 @@ set -e
 
 OLLAMA_URL="${OLLAMA_URL:-http://localhost:10104}"
 REQUIRED_MODELS=(
-    "tinyllama"
-    "qwen2.5-coder:7b"
+    "gpt-oss"
+    "gpt-oss2.5-coder:7b"
     "nomic-embed-text"
-    "deepseek-coder:6.7b"
-    "phi3:mini"
+    "gpt-oss-coder:6.7b"
+    "gpt-oss:mini"
 )
 
 echo "=== Sutazai Model Management ==="

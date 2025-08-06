@@ -11,7 +11,7 @@ This document contains the ACTUAL state of the SUTAZAIAPP system, not fantasy cl
 - **Total Containers Running:** 57
 - **Infrastructure Services:** 13 (databases, monitoring, etc.)
 - **"AI Agent" Services:** 44 (mostly stubs)
-- **Actually Functional AI:** 1 (Ollama with TinyLlama)
+- **Actually Functional AI:** 1 (Ollama with gpt-oss)
 - **Production Ready:** 0%
 
 ---
@@ -29,7 +29,7 @@ This document contains the ACTUAL state of the SUTAZAIAPP system, not fantasy cl
 - `sutazai-faiss-vector` - Vector index (Port 10103)
 
 ### LLM Service (1)
-- `sutazai-ollama` - Ollama with TinyLlama model (Port 10104)
+- `sutazai-ollama` - Ollama with gpt-oss model (Port 10104)
 
 ### Monitoring Stack (4)
 - `sutazai-prometheus` - Metrics collection (Port 10200)
@@ -106,9 +106,9 @@ This document contains the ACTUAL state of the SUTAZAIAPP system, not fantasy cl
    - Vector stores (ChromaDB, Qdrant)
    - Basic monitoring stack
 
-2. **Ollama with TinyLlama**
-   - Only actual AI functionality
-   - Small language model (637MB)
+2. **Ollama with gpt-oss**
+   - Only actual AI functionality using gpt-oss
+   - Small language model
    - Limited capabilities
 
 3. **Basic Web Services**

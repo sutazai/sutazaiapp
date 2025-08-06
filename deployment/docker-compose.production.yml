@@ -161,7 +161,7 @@ services:
       
       # Ollama Configuration
       - OLLAMA_BASE_URL=http://ollama:11434
-      - MODEL_NAME=tinyllama:latest
+      - MODEL_NAME=gpt-oss:latest
       - USE_NATIVE_OLLAMA=true
       - OLLAMA_TIMEOUT=60
       
@@ -497,8 +497,8 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command: |
       "echo 'Initializing models...' &&
-      ollama pull tinyllama:latest &&
-      ollama pull qwen2:0.5b &&
+      ollama pull gpt-oss:latest &&
+      ollama pull gpt-oss2:0.5b &&
       echo 'Model initialization complete!'"
     deploy:
       resources:

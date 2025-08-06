@@ -240,7 +240,7 @@ class SutazAISystemFixer:
         """Ensure Ollama models are available"""
         self.print_status("Checking Ollama models...", "info")
         
-        required_models = ['llama3.2:1b', 'qwen2.5:3b']
+        required_models = ['gpt-oss.2:1b', 'gpt-oss2.5:3b']
         
         try:
             response = requests.get("http://localhost:11434/api/tags", timeout=5)

@@ -27,7 +27,7 @@ class OllamaClient:
     def __init__(self, base_url="http://ollama:11434"):
         self.base_url = base_url
         
-    async def chat(self, messages, model="tinyllama:latest"):
+    async def chat(self, messages, model="gpt-oss:latest"):
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 f"{self.base_url}/api/chat",
@@ -45,7 +45,7 @@ def get_llm_config():
     """Get LLM configuration for native Ollama"""
     return {
         "config_list": [{
-            "model": "tinyllama:latest",
+            "model": "gpt-oss:latest",
             "base_url": "http://ollama:11434",
             "api_type": "ollama"
         }],

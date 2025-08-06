@@ -206,7 +206,7 @@ repos:
         types: [python]
 
       - id: llm-usage
-        name: "Rule 16: Verify Ollama/TinyLlama usage"
+        name: "Rule 16: Verify Ollama/gpt-oss usage"
         entry: python scripts/pre-commit/check-llm-usage.py
         language: python
         types: [python, yaml]

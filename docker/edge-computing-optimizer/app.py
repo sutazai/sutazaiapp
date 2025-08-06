@@ -148,7 +148,7 @@ async def capabilities():
                 "methods": ["metrics_collection", "anomaly_detection", "performance_tuning"]
             }
         },
-        "supported_models": ["tinyllama", "codellama", "mistral"],
+        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss"],
         "api_version": "2.2.0"
     }
 

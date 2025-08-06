@@ -71,8 +71,8 @@ preload_models() {
     log "Preloading essential models..."
     
     ESSENTIAL_MODELS=(
-        "qwen2.5-coder:3b"
-        "qwen2.5:3b"
+        "gpt-oss2.5-coder:3b"
+        "gpt-oss2.5:3b"
         "nomic-embed-text"
     )
     
@@ -95,7 +95,7 @@ configure_model_optimizations() {
     docker exec sutazai-ollama bash -c 'mkdir -p /root/.ollama/configs'
     
     # Codellama optimization
-    docker exec sutazai-ollama bash -c 'cat > /root/.ollama/configs/codellama.json << EOF
+    docker exec sutazai-ollama bash -c 'cat > /root/.ollama/configs/gpt-oss.json << EOF
 {
     "num_ctx": 4096,
     "num_batch": 512,
@@ -189,7 +189,7 @@ optimize_model_loading() {
 #!/bin/bash
 # Preload models on startup
 
-MODELS=("qwen2.5-coder:3b" "qwen2.5:3b" "nomic-embed-text")
+MODELS=("gpt-oss2.5-coder:3b" "gpt-oss2.5:3b" "nomic-embed-text")
 
 for model in "${MODELS[@]}"; do
     echo "Preloading $model..."

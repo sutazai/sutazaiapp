@@ -10,9 +10,9 @@ buffer_size: 1000            # Maximum items in temporal buffers
 feature_dim: 768             # Unified feature dimension (matches transformer models)
 embedding_model: "nomic-embed-text"  # Primary embedding model via Ollama
 secondary_models:
-  text: "tinyllama"          # Text processing model per Rule 16
-  coding: "qwen2.5-coder:3b" # Coding analysis model
-  analysis: "qwen2.5:3b"     # General analysis model
+  text: "gpt-oss"          # Text processing model per Rule 16
+  coding: "gpt-oss2.5-coder:3b" # Coding analysis model
+  analysis: "gpt-oss2.5:3b"     # General analysis model
 
 # Fusion strategy configuration
 default_fusion_strategy: "hybrid"

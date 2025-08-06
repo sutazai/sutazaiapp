@@ -144,7 +144,7 @@ echo "All services registered with Consul successfully!"
 echo "Setting service configurations..."
 
 # Ollama configuration
-curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/models" -d 'tinyllama,qwen2.5-coder:7b,nomic-embed-text'
+curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/models" -d 'gpt-oss'
 curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/max_parallel" -d '2'
 curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/cpu_only" -d 'true'
 

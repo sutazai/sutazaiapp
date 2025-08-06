@@ -1,1 +1,0 @@
-# Gradient Compression Specialist Agent

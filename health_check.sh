@@ -109,13 +109,13 @@ echo "• Ollama API: http://localhost:11434"
 
 echo
 echo "=== Model Test ==="
-echo "Testing tinyllama model..."
-response=$(curl -s -X POST http://localhost:11434/api/generate -d '{"model": "tinyllama", "prompt": "Hello", "stream": false}' | jq -r .response 2>/dev/null)
+echo "Testing gpt-oss model..."
+response=$(curl -s -X POST http://localhost:11434/api/generate -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false}' | jq -r .response 2>/dev/null)
 if [ -n "$response" ] && [ "$response" != "null" ]; then
-    echo -e "${GREEN}✓${NC} TinyLlama model is working"
+    echo -e "${GREEN}✓${NC} GPT-OSS model is working"
     echo "  Response preview: ${response:0:50}..."
 else
-    echo -e "${RED}✗${NC} TinyLlama model is not responding"
+    echo -e "${RED}✗${NC} GPT-OSS model is not responding"
 fi
 
 echo

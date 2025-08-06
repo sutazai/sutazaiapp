@@ -45,10 +45,7 @@ SAMPLE_AGENTS = [
 ]
 
 SAMPLE_MODELS = [
-    "llama3.2:1b",
-    "mistral:7b",
-    "codellama:7b",
-    "phi:2.7b"
+    "gpt-oss"
 ]
 
 
@@ -150,7 +147,7 @@ class SutazAIUser(HttpUser):
         """Test chat message sending - primary load test."""
         message = random.choice(SAMPLE_MESSAGES)
         agent = self.user_context.get("preferred_agent", "task_coordinator")
-        model = self.user_context.get("preferred_model", "llama3.2:1b")
+        model = self.user_context.get("preferred_model", "gpt-oss")
         
         payload = {
             "message": message,
@@ -347,7 +344,7 @@ class SpikeTestUser(HttpUser):
         payload = {
             "message": message,
             "agent": "task_coordinator",
-            "model": "llama3.2:1b"
+            "model": "gpt-oss"
         }
         
         with self.client.post(

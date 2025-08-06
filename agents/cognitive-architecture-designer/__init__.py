@@ -1,1 +1,0 @@
-# Cognitive Architecture Designer Agent

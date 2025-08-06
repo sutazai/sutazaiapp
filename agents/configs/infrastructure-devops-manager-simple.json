@@ -9,7 +9,7 @@
     "performance_optimization"
   ],
   "ollama_endpoint": "http://ollama:11435",
-  "model": "tinyllama",
+  "model": "gpt-oss",
   "max_tokens": 2048,
   "priority": "high",
   "agent_type": "infrastructure_manager",

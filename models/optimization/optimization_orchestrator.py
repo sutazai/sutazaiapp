@@ -64,31 +64,25 @@ class OptimizationOrchestrator:
     def _initialize_agent_mapping(self) -> Dict[str, str]:
         """Initialize mapping of agents to their models"""
         
-        # Common models shared across agents
+        # Common models shared across agents - all using GPT-OSS
         base_models = {
-            'tinyllama': [
+            'gpt-oss': [
                 'code-generation-improver',
                 'testing-qa-validator',
                 'documentation-generator',
                 'code-reviewer',
                 'bug-finder',
-                'refactoring-assistant'
-            ],
-            'codellama-7b': [
+                'refactoring-assistant',
                 'ai-senior-backend-developer',
                 'ai-senior-frontend-developer',
                 'ai-senior-full-stack-developer',
                 'neural-architecture-search',
-                'deep-learning-brain-architect'
-            ],
-            'mistral-7b': [
+                'deep-learning-brain-architect',
                 'ai-system-architect',
                 'infrastructure-devops-manager',
                 'deployment-automation-master',
                 'container-orchestrator-k3s',
-                'cloud-architect'
-            ],
-            'phi-2': [
+                'cloud-architect',
                 'edge-inference-proxy',
                 'hardware-resource-optimizer',
                 'cpu-only-hardware-optimizer',
@@ -103,7 +97,7 @@ class OptimizationOrchestrator:
             for agent in agents:
                 agent_mapping[agent] = model
         
-        # Add remaining agents with tinyllama (default)
+        # Add remaining agents with gpt-oss (default)
         remaining_agents = [
             'ollama-integration-specialist',
             'bias-and-fairness-auditor',
@@ -115,7 +109,7 @@ class OptimizationOrchestrator:
         
         for agent in remaining_agents:
             if agent not in agent_mapping:
-                agent_mapping[agent] = 'tinyllama'
+                agent_mapping[agent] = 'gpt-oss'
         
         return agent_mapping
     
@@ -177,12 +171,9 @@ class OptimizationOrchestrator:
                 model_agent_count[model] = []
             model_agent_count[model].append(agent)
         
-        # Define model characteristics
+        # Define model characteristics - all using GPT-OSS
         model_info = {
-            'tinyllama': {'size_mb': 250, 'type': 'general'},
-            'codellama-7b': {'size_mb': 3500, 'type': 'code'},
-            'mistral-7b': {'size_mb': 3800, 'type': 'general'},
-            'phi-2': {'size_mb': 1300, 'type': 'efficient'}
+            'gpt-oss': {'size_mb': 250, 'type': 'general'}
         }
         
         for model, agents in model_agent_count.items():
@@ -366,7 +357,7 @@ class OptimizationOrchestrator:
         # Create batch configurations
         for model in high_volume_models:
             config = BatchConfig(
-                max_batch_size=16 if model == 'tinyllama' else 8,
+                max_batch_size=16,  # GPT-OSS optimized batch size
                 max_wait_time_ms=30,
                 dynamic_batching=True,
                 cpu_cores=12

@@ -152,7 +152,7 @@ async def capabilities():
                 "methods": ["charts", "dashboards", "reports"]
             }
         },
-        "supported_models": ["tinyllama", "codellama", "mistral"],
+        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss"],
         "api_version": "2.2.0"
     }
 

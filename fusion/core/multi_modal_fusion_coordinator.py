@@ -370,7 +370,7 @@ class MultiModalFusionCoordinator:
     Main coordinator for multi-modal fusion processing
     
     Integrates with SutazAI's existing infrastructure:
-    - Ollama/TinyLlama for text processing
+    - Ollama/gpt-oss for text processing
     - Jarvis for voice interface
     - Vector databases for embeddings
     - Agent orchestration system
@@ -827,7 +827,7 @@ class MultiModalFusionCoordinator:
                     'score': sentiment_score,
                     'confidence': data.confidence,
                     'decision': 'positive' if sentiment_score > 0.5 else 'negative',
-                    'metadata': {'analysis_type': 'sentiment', 'model': 'tinyllama'}
+                    'metadata': {'analysis_type': 'sentiment', 'model': 'gpt-oss'}
                 }
             
             elif data.modality_type == ModalityType.VOICE:

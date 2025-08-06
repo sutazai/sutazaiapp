@@ -21,7 +21,7 @@
 - **Initial Stub Containers**: 7
 - **Final Stub Containers**: 90 (all return "Hello" messages)
 - **Actual AI Agents**: 0
-- **Real AI Functionality**: Only Ollama with TinyLlama
+- **Real AI Functionality**: Only Ollama with gpt-oss
 - **Achievement**: Started 83 more placeholder containers
 
 ### System Performance

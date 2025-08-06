@@ -243,7 +243,7 @@ class DataAnalysisEngineerAgent(BaseAgentV2):
         
         insights = await self.query_ollama(
             f"Analyze this data and provide key insights: {data_summary}",
-            model="qwen2.5-coder:7b"  # Use coding model for data analysis
+            model="gpt-oss2.5-coder:7b"  # Use coding model for data analysis
         )
         
         return {

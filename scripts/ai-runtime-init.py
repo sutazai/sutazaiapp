@@ -189,7 +189,7 @@ async def startup_event():
     # Pre-load essential models
     try:
         # Load a small model for testing
-        get_or_load_model("tinyllama", "ollama")
+        get_or_load_model("gpt-oss", "ollama")
         logger.info("Essential models pre-loaded")
     except Exception as e:
         logger.warning(f"Failed to pre-load models: {e}")

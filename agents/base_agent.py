@@ -17,7 +17,7 @@ class OllamaLocalAgent:
     def __init__(self, agent_name: str):
         self.agent_name = agent_name
         self.ollama_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
-        self.model = os.getenv("MODEL_NAME", "tinyllama:latest")
+        self.model = os.getenv("MODEL_NAME", "gpt-oss:latest")
         self.context_window = int(os.getenv("AGENT_CONTEXT_WINDOW", "2048"))
         self.timeout = int(os.getenv("AGENT_TIMEOUT_SECONDS", "30"))
         

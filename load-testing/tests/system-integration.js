@@ -515,7 +515,7 @@ function testExternalServiceIntegration() {
   
   // Test Ollama integration
   const ollamaResponse = http.post(`${config.services.ollama}/api/generate`, JSON.stringify({
-    model: 'tinyllama',
+    model: 'gpt-oss',
     prompt: 'Test external service integration',
     stream: false
   }), {

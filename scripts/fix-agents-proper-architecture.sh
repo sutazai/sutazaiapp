@@ -72,7 +72,7 @@ async def info():
             "task_execution",
             "system_coordination"
         ],
-        "model_backend": "ollama/tinyllama",
+        "model_backend": "ollama/gpt-oss",
         "version": "1.0.0"
     }
 

@@ -28,7 +28,7 @@ class GPTEngineerRequest(BaseModel):
     prompt: str
     project_name: Optional[str] = "sutazai_project"
     workspace: Optional[str] = "/app/workspace"
-    model: Optional[str] = "deepseek-r1:8b"
+    model: Optional[str] = "gpt-oss-r1:8b"
 
 class GPTEngineerResponse(BaseModel):
     status: str
@@ -41,7 +41,7 @@ class GPTEngineerManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "model": "deepseek-r1:8b",
+            "model": "gpt-oss-r1:8b",
             "api_base": "http://ollama:11434/v1",
             "api_key": "local"
         }
@@ -72,15 +72,15 @@ class GPTEngineerManager:
             env = os.environ.copy()
             env.update({
                 "OPENAI_API_BASE": "http://ollama:11434/v1",
-                "OPENAI_API_KEY": "ollama",  # Ollama doesn't need real API key
-                "OPENAI_API_MODEL": request.model or "deepseek-r1:8b"
+                "OLLAMA_HOST": "http://ollama:11434,  # Ollama doesn't need real API key
+                "OPENAI_API_MODEL": request.model or "gpt-oss-r1:8b"
             })
             
             # Execute GPT-Engineer with local model
             cmd = [
                 "gpt-engineer",
                 project_path,
-                "--model", request.model or "deepseek-r1:8b",
+                "--model", request.model or "gpt-oss-r1:8b",
                 "--temperature", "0.7"
             ]
             

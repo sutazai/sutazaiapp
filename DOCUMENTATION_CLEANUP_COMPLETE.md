@@ -93,7 +93,7 @@ Per your request to "make sure to place any misleading or unproper or incorrect 
 ### ⚠️ What the System Actually Is:
 
 - Basic containerized web services
-- One working LLM (Ollama with TinyLlama)
+- One working LLM (Ollama with gpt-oss)
 - Standard infrastructure (databases, monitoring)
 - 44 placeholder "agent" containers that do nothing
 - NO AI orchestration, AGI, or quantum computing

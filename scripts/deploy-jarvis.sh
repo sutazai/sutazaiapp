@@ -234,14 +234,14 @@ verify_ollama() {
         if curl -f -s http://localhost:11434/api/tags >/dev/null 2>&1; then
             success "Ollama is available"
             
-            # Check if TinyLlama is available
-            if curl -s http://localhost:11434/api/tags | grep -q "tinyllama"; then
-                success "TinyLlama model is available"
+            # Check if gpt-oss is available
+            if curl -s http://localhost:11434/api/tags | grep -q "gpt-oss"; then
+                success "gpt-oss model is available"
             else
-                info "Pulling TinyLlama model..."
+                info "Pulling gpt-oss model..."
                 curl -X POST http://localhost:11434/api/pull \
                     -H "Content-Type: application/json" \
-                    -d '{"name": "tinyllama"}' || warning "Failed to pull TinyLlama"
+                    -d '{"name": "gpt-oss"}' || warning "Failed to pull gpt-oss"
             fi
             break
         fi

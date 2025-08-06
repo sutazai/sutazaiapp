@@ -2,7 +2,7 @@
   "name": "deep-learning-brain-manager",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9209,
   "capabilities": [
     "code_generation",

@@ -98,7 +98,7 @@
       "port": 11434,
       "meta": {
         "version": "latest",
-        "models": "tinyllama,deepseek-r1:8b,qwen2.5-coder:7b,codellama:7b",
+        "models": "gpt-oss,gpt-oss-r1:8b,gpt-oss2.5-coder:7b,gpt-oss:7b",
         "type": "llm-inference"
       },
       "check": {

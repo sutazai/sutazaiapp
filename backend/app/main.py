@@ -1040,20 +1040,16 @@ async def chat_with_ai(request: ChatRequest):
     """Chat with AI models - XSS protected endpoint"""
     models = await get_ollama_models()
     
-    # Select appropriate model (prioritize smaller, faster models for CPU inference)
+    # Select appropriate model (prioritize GPT-OSS as the exclusive model)
     model = request.model if request.model else (
-        "llama3.2:1b" if "llama3.2:1b" in models else (
-            "qwen2.5:3b" if "qwen2.5:3b" in models else (
-                "codellama:7b" if "codellama:7b" in models else (
-                    models[0] if models else None
-                )
-            )
+        "gpt-oss" if "gpt-oss" in models else (
+            models[0] if models else "gpt-oss"
         )
     )
     
     if not model:
         return {
-            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull deepseek-r1:8b\n- ollama pull qwen3:8b\n- ollama pull codellama:7b",
+            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull gpt-oss-r1:8b\n- ollama pull gpt-oss3:8b\n- ollama pull gpt-oss:7b",
             "model": "unavailable",
             "agent": request.agent,
             "error": "No models available",
@@ -1106,8 +1102,8 @@ async def chat_with_ai(request: ChatRequest):
 async def public_think(request: ThinkRequest):
     """Public thinking endpoint without authentication"""
     models = await get_ollama_models()
-    model = "llama3.2:1b" if "llama3.2:1b" in models else (
-        "qwen2.5:3b" if "qwen2.5:3b" in models else (models[0] if models else None)
+    model = "gpt-oss" if "gpt-oss" in models else (
+        models[0] if models else "gpt-oss"
     )
     
     if not model:
@@ -1160,8 +1156,8 @@ async def public_think(request: ThinkRequest):
 async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_current_user)):
     """automation Coordinator deep thinking process"""
     models = await get_ollama_models()
-    model = "llama3.2:1b" if "llama3.2:1b" in models else (
-        "qwen2.5:3b" if "qwen2.5:3b" in models else (models[0] if models else None)
+    model = "gpt-oss" if "gpt-oss" in models else (
+        models[0] if models else "gpt-oss"
     )
     
     if not model:
@@ -1288,8 +1284,8 @@ async def execute_task(request: TaskRequest, current_user: Dict = Depends(get_cu
 async def reason_about_problem(request: ReasoningRequest):
     """Apply advanced reasoning to complex problems"""
     models = await get_ollama_models()
-    model = "llama3.2:1b" if "llama3.2:1b" in models else (
-        "qwen2.5:3b" if "qwen2.5:3b" in models else (models[0] if models else None)
+    model = "gpt-oss" if "gpt-oss" in models else (
+        models[0] if models else "gpt-oss"
     )
     
     if not model:
@@ -1623,7 +1619,7 @@ async def get_available_models():
         "models": model_info,
         "total_models": len(models),
         "default_model": models[0] if models else None,
-        "recommended_models": ["deepseek-r1:8b", "qwen3:8b", "codellama:7b"]
+        "recommended_models": ["gpt-oss-r1:8b", "gpt-oss3:8b", "gpt-oss:7b"]
     }
 
 # Simple chat endpoint for testing
@@ -1634,10 +1630,8 @@ async def simple_chat(request: dict):
     
     # Get available models and select the fastest one
     models = await get_ollama_models()
-    model = "llama3.2:1b" if "llama3.2:1b" in models else (
-        "qwen2.5:3b" if "qwen2.5:3b" in models else (
-            models[0] if models else "llama3.2:1b"
-        )
+    model = "gpt-oss" if "gpt-oss" in models else (
+        models[0] if models else "gpt-oss"
     )
     
     try:
@@ -1655,7 +1649,7 @@ async def simple_chat(request: dict):
                 data = response.json()
                 return {
                     "response": data.get("response", "No response"),
-                    "model": "codellama:7b",
+                    "model": "gpt-oss:7b",
                     "timestamp": datetime.utcnow().isoformat(),
                     "processing_time": data.get("total_duration", 0) / 1e9  # Convert to seconds
                 }

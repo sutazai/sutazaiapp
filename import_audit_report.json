@@ -1263,9 +1263,9 @@
         },
         {
           "type": "non_existent_module",
-          "module": "deepseek_integration",
+          "module": "gpt-oss_integration",
           "line": 19,
-          "message": "Module 'deepseek_integration' does not exist"
+          "message": "Module 'gpt-oss_integration' does not exist"
         }
       ]
     },
@@ -6532,9 +6532,9 @@
         },
         {
           "type": "non_existent_module",
-          "module": "deepseek_integration",
+          "module": "gpt-oss_integration",
           "line": 19,
-          "message": "Module 'deepseek_integration' does not exist"
+          "message": "Module 'gpt-oss_integration' does not exist"
         }
       ]
     },

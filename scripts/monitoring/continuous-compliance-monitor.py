@@ -141,8 +141,8 @@ class ComplianceMonitor:
                 "auto_fix": True
             },
             16: {
-                "name": "Ollama/TinyLlama Usage",
-                "checks": ["ollama_config", "tinyllama_default"],
+                "name": "Ollama/gpt-oss Usage",
+                "checks": ["ollama_config", "gpt-oss_default"],
                 "severity": "low",
                 "auto_fix": True
             }

@@ -30,8 +30,8 @@ class PromptOptimizer:
     
     # Model-specific configurations
     MODEL_CONFIGS = {
-        'tinyllama': OptimizationConfig(
-            model_type='tinyllama',
+        'gpt-oss': OptimizationConfig(
+            model_type='gpt-oss',
             max_tokens=500,
             compression_level=0.8,  # Aggressive compression
             preserve_keywords=['error', 'bug', 'fix', 'security', 'critical'],
@@ -53,8 +53,8 @@ class PromptOptimizer:
                 'administrator': 'admin'
             }
         ),
-        'qwen2.5-coder:7b': OptimizationConfig(
-            model_type='qwen2.5-coder:7b',
+        'gpt-oss2.5-coder:7b': OptimizationConfig(
+            model_type='gpt-oss2.5-coder:7b',
             max_tokens=1500,
             compression_level=0.5,  # Moderate compression
             preserve_keywords=['error', 'bug', 'fix', 'security', 'critical', 'test', 'deploy'],
@@ -71,8 +71,8 @@ class PromptOptimizer:
                 'production': 'prod'
             }
         ),
-        'deepseek-r1:8b': OptimizationConfig(
-            model_type='deepseek-r1:8b',
+        'gpt-oss-r1:8b': OptimizationConfig(
+            model_type='gpt-oss-r1:8b',
             max_tokens=3000,
             compression_level=0.2,  # Minimal compression
             preserve_keywords=['error', 'bug', 'fix', 'security', 'critical', 'architecture', 'design'],
@@ -94,7 +94,7 @@ class PromptOptimizer:
         
         Args:
             prompt: Original prompt text
-            model: Model name (tinyllama, qwen2.5-coder:7b, deepseek-r1:8b)
+            model: Model name (gpt-oss, gpt-oss2.5-coder:7b, gpt-oss-r1:8b)
             task_type: Type of task (code_generation, analysis, etc.)
             context: Additional context for optimization
             
@@ -102,7 +102,7 @@ class PromptOptimizer:
             Optimized prompt string
         """
         # Get model configuration
-        config = self.MODEL_CONFIGS.get(model, self.MODEL_CONFIGS['tinyllama'])
+        config = self.MODEL_CONFIGS.get(model, self.MODEL_CONFIGS['gpt-oss'])
         
         # Check cache
         cache_key = self._get_cache_key(prompt, model, task_type)
@@ -302,7 +302,7 @@ class PromptOptimizer:
                            model: str,
                            capabilities: List[str]) -> str:
         """Create an optimized system prompt for an agent"""
-        config = self.MODEL_CONFIGS.get(model, self.MODEL_CONFIGS['tinyllama'])
+        config = self.MODEL_CONFIGS.get(model, self.MODEL_CONFIGS['gpt-oss'])
         
         if config.compression_level > 0.6:
             # Highly compressed format
@@ -362,9 +362,9 @@ class PromptTemplate:
     
     TEMPLATES = {
         'code_generation': {
-            'tinyllama': "Write {language} code: {task}. Requirements: {requirements}",
-            'qwen2.5-coder:7b': "Create {language} code for: {task}\nRequirements:\n{requirements}\nOutput clean, efficient code.",
-            'deepseek-r1:8b': """Develop a {language} solution for the following task:
+            'gpt-oss': "Write {language} code: {task}. Requirements: {requirements}",
+            'gpt-oss2.5-coder:7b': "Create {language} code for: {task}\nRequirements:\n{requirements}\nOutput clean, efficient code.",
+            'gpt-oss-r1:8b': """Develop a {language} solution for the following task:
 {task}
 
 Requirements:
@@ -373,9 +373,9 @@ Requirements:
 Consider best practices, error handling, and performance optimization."""
         },
         'analysis': {
-            'tinyllama': "Analyze: {subject}. Focus: {aspects}. Output: {format}",
-            'qwen2.5-coder:7b': "Analyze {subject}\nKey aspects: {aspects}\nProvide {format} format analysis.",
-            'deepseek-r1:8b': """Conduct a comprehensive analysis of {subject}.
+            'gpt-oss': "Analyze: {subject}. Focus: {aspects}. Output: {format}",
+            'gpt-oss2.5-coder:7b': "Analyze {subject}\nKey aspects: {aspects}\nProvide {format} format analysis.",
+            'gpt-oss-r1:8b': """Conduct a comprehensive analysis of {subject}.
 
 Focus on these aspects:
 {aspects}
@@ -383,9 +383,9 @@ Focus on these aspects:
 Provide your analysis in {format} format with detailed reasoning."""
         },
         'debugging': {
-            'tinyllama': "Debug: {code_snippet}. Error: {error}. Fix it.",
-            'qwen2.5-coder:7b': "Debug this code:\n{code_snippet}\nError: {error}\nProvide fixed code and explanation.",
-            'deepseek-r1:8b': """Debug the following code that produces this error:
+            'gpt-oss': "Debug: {code_snippet}. Error: {error}. Fix it.",
+            'gpt-oss2.5-coder:7b': "Debug this code:\n{code_snippet}\nError: {error}\nProvide fixed code and explanation.",
+            'gpt-oss-r1:8b': """Debug the following code that produces this error:
 
 Code:
 {code_snippet}
@@ -404,7 +404,7 @@ Provide:
     def get_template(cls, task_type: str, model: str, **kwargs) -> str:
         """Get and fill a template"""
         templates = cls.TEMPLATES.get(task_type, {})
-        template = templates.get(model, templates.get('tinyllama', ''))
+        template = templates.get(model, templates.get('gpt-oss', ''))
         
         try:
             return template.format(**kwargs)
@@ -427,7 +427,7 @@ if __name__ == "__main__":
     """
     
     # Optimize for different models
-    for model in ['tinyllama', 'qwen2.5-coder:7b', 'deepseek-r1:8b']:
+    for model in ['gpt-oss', 'gpt-oss2.5-coder:7b', 'gpt-oss-r1:8b']:
         optimized = optimizer.optimize_prompt(
             original_prompt, 
             model, 

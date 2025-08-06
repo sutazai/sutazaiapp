@@ -160,7 +160,7 @@ class OllamaLoadTester:
         """Generate a test request with varied parameters."""
         return TestRequest(
             id=request_id,
-            model="tinyllama",  # Rule 16 compliance
+            model="gpt-oss",  # Using GPT-OSS model
             prompt=random.choice(self.test_prompts),
             max_tokens=random.randint(50, 200),
             temperature=random.uniform(0.1, 0.8),
@@ -452,7 +452,7 @@ class OllamaLoadTester:
         print(f"  Concurrent Users: {metrics.concurrent_users}")
         print(f"  Total Duration: {metrics.total_test_duration_s:.1f}s")
         print(f"  Ollama Instances: {len(self.ollama_urls)}")
-        print(f"  Target Model: tinyllama (Rule 16 compliant)")
+        print(f"  Target Model: gpt-oss")
         
         print(f"\nRequest Statistics:")
         print(f"  Total Requests: {metrics.total_requests}")
@@ -567,7 +567,7 @@ async def main():
         print(f"\n🚀 Starting Ollama High-Concurrency Load Test")
         print(f"Target: {args.concurrent_users} concurrent connections")
         print(f"Ollama instances: {args.urls}")
-        print(f"Model: tinyllama (Rule 16 compliant)")
+        print(f"Model: gpt-oss")
         
         # Run tests based on type
         if args.test_type in ["concurrent", "both"]:

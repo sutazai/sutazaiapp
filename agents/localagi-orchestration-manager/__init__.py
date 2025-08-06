@@ -1,1 +1,0 @@
-# LocalAGI Orchestration Manager Agent

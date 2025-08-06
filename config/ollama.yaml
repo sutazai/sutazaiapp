@@ -2,7 +2,7 @@
 # Optimized to handle 174 concurrent consumers
 
 model:
-  name: tinyllama
+  name: gpt-oss
   version: latest
   
 # Resource limits optimized for high concurrency (29GB RAM available)
@@ -40,12 +40,12 @@ load_balancing:
     - "http://ollama-secondary:11435"  # Secondary instance for scaling
     - "http://ollama-tertiary:11436"   # Tertiary instance for peak load
   
-# Agent model mapping - optimized for available hardware
+# Agent model mapping - GPT-OSS as exclusive model
 agent_models:
-  default: "tinyllama"                    # Default lightweight model per Rule 16
-  coding_agents: "qwen2.5-coder:3b"       # Better model for coding tasks
-  analysis_agents: "qwen2.5:3b"           # Better model for analysis
-  embedding_agents: "nomic-embed-text"     # Specialized embedding model
+  default: "gpt-oss"                      # GPT-OSS as the exclusive model
+  coding_agents: "gpt-oss"                # GPT-OSS for coding tasks
+  analysis_agents: "gpt-oss"              # GPT-OSS for analysis
+  embedding_agents: "gpt-oss"             # GPT-OSS as the universal model
   
 # Performance monitoring
 monitoring:

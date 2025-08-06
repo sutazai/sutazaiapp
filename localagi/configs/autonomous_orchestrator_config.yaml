@@ -24,10 +24,10 @@ agent_registry:
 ollama:
   base_url: "http://ollama:11434"
   models:
-    reasoning: "tinyllama"
-    planning: "qwen2.5:14b"
-    coordination: "llama3.2:3b"
-    execution: "phi3:mini"
+    reasoning: "gpt-oss"
+    planning: "gpt-oss2.5:14b"
+    coordination: "gpt-oss.2:3b"
+    execution: "gpt-oss:mini"
   fallback_strategy: "cascade"
   
 # LiteLLM Proxy

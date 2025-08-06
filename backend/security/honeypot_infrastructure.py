@@ -1240,9 +1240,9 @@ Server: SutazAI/1.0\r
     def _generate_ollama_response(self, method: str) -> str:
         """Generate Ollama API response"""
         if method == "POST":
-            return """{"model": "tinyllama", "response": "I am a helpful AI assistant.", "done": true}"""
+            return """{"model": "gpt-oss", "response": "I am a helpful AI assistant.", "done": true}"""
         else:
-            return """{"models": [{"name": "tinyllama", "size": "1.1GB"}]}"""
+            return """{"models": [{"name": "gpt-oss", "size": "1.1GB"}]}"""
 
 class HoneypotOrchestrator:
     """Orchestrates multiple honeypots and manages the overall deception infrastructure"""

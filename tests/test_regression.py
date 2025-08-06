@@ -180,11 +180,11 @@ class TestOllamaConfigRegression:
         """Test that existing agent model assignments haven't changed"""
         # Test critical agent model assignments that shouldn't change
         stable_assignments = {
-            "ai-system-architect": "deepseek-r1:8b",
-            "ai-product-manager": "qwen2.5-coder:7b",
-            "garbage-collector": "tinyllama",
-            "testing-qa-validator": "qwen2.5-coder:7b",
-            "ai-senior-backend-developer": "qwen2.5-coder:7b"
+            "ai-system-architect": "gpt-oss-r1:8b",
+            "ai-product-manager": "gpt-oss2.5-coder:7b",
+            "garbage-collector": "gpt-oss",
+            "testing-qa-validator": "gpt-oss2.5-coder:7b",
+            "ai-senior-backend-developer": "gpt-oss2.5-coder:7b"
         }
         
         for agent_name, expected_model in stable_assignments.items():
@@ -374,7 +374,7 @@ class TestIntegrationRegression:
         # These will fail due to network issues, but should not fail due to API changes
         
         try:
-            await integration.ensure_model_available("tinyllama")
+            await integration.ensure_model_available("gpt-oss")
         except Exception as e:
             # Should be network/service error, not API error
             assert "TypeError" not in str(type(e))

@@ -212,7 +212,7 @@ async def mass_agent_activation(background_tasks: BackgroundTasks):
             "status": "mass_activation_initiated",
             "message": "🚀 Mass activation of all 131 agents initiated",
             "expected_agents": 131,
-            "integration": "ollama_tinyllama",
+            "integration": "ollama_gpt_oss",
             "collective_intelligence": "ASI_level",
             "timestamp": datetime.utcnow().isoformat()
         }

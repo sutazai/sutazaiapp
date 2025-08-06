@@ -2,7 +2,7 @@
     "llm_provider": "ollama",
     "ollama_base_url": "http://ollama:11434",
     "ollama_api_key": "local",
-    "model": "tinyllama",
+    "model": "gpt-oss",
     "embedding_model": "nomic-embed-text",
     "api_compatibility_mode": "openai",
     "openai_api_base": "http://ollama:11434/v1",

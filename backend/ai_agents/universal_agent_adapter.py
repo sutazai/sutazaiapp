@@ -94,11 +94,7 @@ class UniversalAgentAdapter:
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
             "preferred_models": [
-                "ollama/llama2:latest",
-                "ollama/mistral:latest",
-                "ollama/processing-chat:latest",
-                "gpt-3.5-turbo",
-                "gpt-4"
+                "ollama/gpt-oss:latest"
             ]
         }
         
@@ -176,7 +172,7 @@ class UniversalAgentAdapter:
     
     def _create_ollama_modelfile(self, agent: UniversalAgent) -> str:
         """Create an Ollama Modelfile for the agent."""
-        modelfile = f"""FROM llama2:latest
+        modelfile = f"""FROM gpt-oss:latest
 
 SYSTEM {agent.system_prompt}
 
@@ -231,7 +227,7 @@ PARAMETER top_p {agent.model_config['top_p']}
                 "AGENT_NAME": agent.name,
                 "AGENT_CAPABILITIES": ",".join(agent.capabilities),
                 "MODEL_PROVIDER": "ollama",
-                "MODEL_NAME": "llama2:latest",
+                "MODEL_NAME": "gpt-oss:latest",
                 "MODEL_TEMPERATURE": str(agent.model_config["temperature"]),
                 "MODEL_MAX_TOKENS": str(agent.model_config["max_tokens"]),
                 "SYSTEM_PROMPT": agent.system_prompt

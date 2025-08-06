@@ -33,7 +33,7 @@ class TestAgent:
         
         self.ollama = OllamaIntegration(
             base_url="http://localhost:11434",
-            default_model="tinyllama"
+            default_model="gpt-oss"
         )
     
     async def test_basic_integration(self):
@@ -47,7 +47,7 @@ class TestAgent:
             # Test Ollama query
             response = await self.agent.query_ollama(
                 "Hello! Please respond with exactly: 'Agent integration successful'",
-                model="tinyllama"
+                model="gpt-oss"
             )
             
             if response and "successful" in response.lower():
@@ -71,7 +71,7 @@ class TestAgent:
             async with self.ollama:
                 response = await self.ollama.generate(
                     "Say 'Direct Ollama works' and nothing else",
-                    model="tinyllama",
+                    model="gpt-oss",
                     temperature=0.1,
                     max_tokens=10
                 )

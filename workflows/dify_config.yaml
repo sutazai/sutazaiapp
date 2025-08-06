@@ -27,13 +27,13 @@ models:
     ollama:
       base_url: "http://ollama:11434"
       models:
-        - name: "tinyllama:latest"
+        - name: "gpt-oss:latest"
           type: "chat"
           context_length: 2048
-        - name: "llama3.2:1b"
+        - name: "gpt-oss.2:1b"
           type: "chat" 
           context_length: 4096
-        - name: "qwen2.5:0.5b"
+        - name: "gpt-oss2.5:0.5b"
           type: "code"
           context_length: 8192
     litellm:

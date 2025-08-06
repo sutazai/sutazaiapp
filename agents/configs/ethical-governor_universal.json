@@ -2,7 +2,7 @@
   "name": "ethical-governor",
   "description": "Agent for security operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9012,
   "capabilities": [
     "security_analysis",

@@ -52,7 +52,7 @@ class AutoGenAgentServer:
             llm_config = {
                 "config_list": [
                     {
-                        "model": "llama3.2:1b",
+                        "model": "gpt-oss.2:1b",
                         "base_url": self.ollama_base,
                         "api_key": "dummy"
                     }

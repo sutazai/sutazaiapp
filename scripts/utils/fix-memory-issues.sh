@@ -149,7 +149,7 @@ sleep 30
 
 # Load minimal model
 echo -e "${YELLOW}Step 8: Loading minimal model...${NC}"
-docker-compose -f docker-compose-emergency.yml exec ollama ollama pull qwen2.5:3b || true
+docker-compose -f docker-compose-emergency.yml exec ollama ollama pull gpt-oss2.5:3b || true
 
 echo -e "${GREEN}
 ✅ Emergency fix completed!

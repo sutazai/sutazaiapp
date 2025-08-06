@@ -2,7 +2,7 @@
   "name": "runtime-behavior-anomaly-detector",
   "description": "Agent for monitoring operations",
   "model": "ollama",
-  "base_model": "deepseek-r1:8b",
+  "base_model": "gpt-oss-r1:8b",
   "port": 9719,
   "capabilities": [
     "observability",

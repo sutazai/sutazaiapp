@@ -412,7 +412,7 @@ services:
       <<: *common-variables
       OLLAMA_BASE_URL: http://ollama:11434
       AGENT_NAME: Aider
-      MODEL: deepseek-r1:8b
+      MODEL: gpt-oss-r1:8b
     volumes:
       - ./data/agent_workspaces:/app/workspace
     networks:

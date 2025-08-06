@@ -1,1 +1,0 @@
-# BabyAGI Agent

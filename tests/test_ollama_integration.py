@@ -27,7 +27,7 @@ class TestOllamaIntegration:
         """Create OllamaIntegration instance for testing"""
         return OllamaIntegration(
             base_url="http://test-ollama:11434",
-            default_model="tinyllama",
+            default_model="gpt-oss",
             timeout=30
         )
     
@@ -41,7 +41,7 @@ class TestOllamaIntegration:
     async def test_initialization(self, ollama_integration):
         """Test OllamaIntegration initialization"""
         assert ollama_integration.base_url == "http://test-ollama:11434"
-        assert ollama_integration.default_model == "tinyllama"
+        assert ollama_integration.default_model == "gpt-oss"
         assert ollama_integration.timeout == 30
         assert ollama_integration.client is not None
     
@@ -60,13 +60,12 @@ class TestOllamaIntegration:
         mock_response.status_code = 200
         mock_response.json.return_value = {
             "models": [
-                {"name": "tinyllama:latest"},
-                {"name": "qwen2.5-coder:7b"}
+                {"name": "gpt-oss:latest"}
             ]
         }
         
         with patch.object(ollama_integration.client, 'get', return_value=mock_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
+            result = await ollama_integration.ensure_model_available("gpt-oss")
             assert result is True
     
     @pytest.mark.asyncio
@@ -85,7 +84,7 @@ class TestOllamaIntegration:
         
         with patch.object(ollama_integration.client, 'get', return_value=mock_list_response), \
              patch.object(ollama_integration.client, 'post', return_value=mock_pull_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
+            result = await ollama_integration.ensure_model_available("gpt-oss")
             assert result is True
     
     @pytest.mark.asyncio
@@ -95,7 +94,7 @@ class TestOllamaIntegration:
         mock_response.status_code = 500
         
         with patch.object(ollama_integration.client, 'get', return_value=mock_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
+            result = await ollama_integration.ensure_model_available("gpt-oss")
             assert result is False
     
     @pytest.mark.asyncio
@@ -105,7 +104,7 @@ class TestOllamaIntegration:
         mock_response.status_code = 200
         
         with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-            result = await ollama_integration.pull_model("tinyllama")
+            result = await ollama_integration.pull_model("gpt-oss")
             assert result is True
     
     @pytest.mark.asyncio
@@ -133,7 +132,7 @@ class TestOllamaIntegration:
             with patch.object(ollama_integration.client, 'post', return_value=mock_response):
                 result = await ollama_integration.generate(
                     prompt="Test prompt",
-                    model="tinyllama",
+                    model="gpt-oss",
                     system="You are a helpful assistant"
                 )
                 
@@ -319,9 +318,9 @@ class TestOllamaConfig:
     
     def test_model_constants(self):
         """Test that model constants are defined correctly"""
-        assert OllamaConfig.OPUS_MODEL == "deepseek-r1:8b"
-        assert OllamaConfig.SONNET_MODEL == "qwen2.5-coder:7b"
-        assert OllamaConfig.DEFAULT_MODEL == "tinyllama"
+        assert OllamaConfig.OPUS_MODEL == "gpt-oss"
+        assert OllamaConfig.SONNET_MODEL == "gpt-oss"
+        assert OllamaConfig.DEFAULT_MODEL == "gpt-oss"
     
     def test_agent_models_coverage(self):
         """Test that agent models mapping has reasonable coverage"""

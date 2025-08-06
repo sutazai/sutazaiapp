@@ -51,7 +51,7 @@ A comprehensive deployment script that orchestrates the entire SutazAI system de
 #### Core Infrastructure
 - **PostgreSQL**: Primary database for system state and data persistence
 - **Redis**: In-memory cache and session storage
-- **Ollama**: Local LLM inference service with TinyLlama model
+- **Ollama**: Local LLM inference service with gpt-oss model
 
 #### Backend Services
 - **backend**: Main API backend service
@@ -86,7 +86,7 @@ POSTGRES_DB=sutazai
 REDIS_PASSWORD=redis_password
 
 # Ollama configuration
-OLLAMA_MODELS=tinyllama
+OLLAMA_MODELS=gpt-oss
 OLLAMA_HOST=0.0.0.0
 OLLAMA_ORIGINS=*
 ```

@@ -2,7 +2,7 @@
   "name": "cpu-only-hardware-optimizer",
   "description": "Agent for optimization operations",
   "model": "ollama",
-  "base_model": "qwen2.5-coder:7b",
+  "base_model": "gpt-oss2.5-coder:7b",
   "port": 9614,
   "capabilities": [
     "performance",

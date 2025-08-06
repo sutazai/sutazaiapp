@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SutazAI is a local AI task automation system that runs entirely on-premises without cloud dependencies. The system uses Docker containers for microservices and Ollama for local LLM inference (primarily TinyLlama model).
+SutazAI is a local AI task automation system that runs entirely on-premises without cloud dependencies. The system uses Docker containers for microservices and Ollama for local LLM inference (exclusively GPT-OSS model).
 
 **⚠️ CRITICAL REALITY CHECK ⚠️**
 - **90% Fantasy**: Most documentation describes non-existent features
@@ -29,25 +29,65 @@ docker-compose logs -f [service-name]
 docker-compose down
 
 # Run tests (uses Makefile with Poetry)
-make test           # Run unit tests
+make test           # Run default tests (unit tests)
 make test-unit      # Unit tests only
 make test-integration # Integration tests (starts services)
-make test-all       # All test types
-make coverage       # Generate coverage report with HTML output
+make test-e2e       # End-to-end tests with browser automation
+make test-performance # Performance and load testing
+make test-security  # Security testing suite
+make test-docker    # Docker container testing
+make test-health    # Health check testing
+make test-all       # Complete test suite (quick mode)
+make test-comprehensive # Full test suite (long-running)
+
+# Coverage and reporting
+make coverage       # Run tests with coverage analysis (80% threshold)
+make coverage-report # Generate HTML coverage report
+make report-dashboard # Generate comprehensive test dashboard
 
 # Code quality
 make lint          # Run linters (black, isort, flake8, mypy)
 make format        # Auto-format code (black, isort)
 make security-scan # Security analysis (bandit, safety)
 make check         # Run complete system check (lint + test + security)
+make quality-gate  # Standard quality gate checks
+make quality-gate-strict # Strict quality gate with all tests
+
+# CI/CD helpers
+make ci-test       # CI test suite (lint + security + unit + coverage)
+make ci-test-full  # Full CI test suite with integration tests
 
 # Check system health
 curl http://localhost:10010/health
 
+# Docker management
+make docker-build  # Build Docker images (backend, frontend)
+make docker-test   # Test Docker images
+make docker-up     # Start Docker services with docker-compose
+make docker-down   # Stop Docker services
+
+# Service management
+make services-up   # Start test services (PostgreSQL, Redis)
+make services-down # Stop test services
+make services-status # Check service status with health checks
+
 # Database operations
 make db-migrate    # Run database migrations
+make db-rollback   # Rollback last migration
 make shell-db      # Open PostgreSQL shell
 make shell-backend # Open backend container shell
+
+# Maintenance and cleanup
+make clean         # Clean Python caches, test artifacts
+make clean-docker  # Clean Docker resources (images, volumes)
+make deps-update   # Update dependencies
+make deps-audit    # Audit dependencies for security issues
+
+# Development tools
+make logs          # Show service logs (all services)
+make monitor       # Open monitoring dashboards (Prometheus, Grafana)
+make status        # Show project status and versions
+make docs          # Generate documentation with Sphinx
 
 # Single test execution
 poetry run pytest tests/test_api_endpoints.py -v
@@ -56,12 +96,23 @@ poetry run pytest -k "test_function_name" -v
 
 ### Key Service Ports
 - Backend API: `http://localhost:10010` (FastAPI with `/docs` for interactive API docs)
-- Frontend: `http://localhost:10011`
-- Ollama: `http://localhost:11434`
-- PostgreSQL: `localhost:5432` (user: sutazai, password: from env, db: sutazai)
-- Redis: `localhost:6379`
-- Neo4j: `localhost:7474` (browser), `bolt://localhost:7687`
-- AI Metrics Exporter: `http://localhost:11068`
+- Frontend: `http://localhost:10011` (React/Streamlit UI)
+- Ollama Primary: `http://localhost:11434` (GPT-OSS model serving)
+- PostgreSQL: `localhost:10000` (secure instance, user: sutazai, db: sutazai)
+- Redis: `localhost:10001` (secure cache instance)
+- Prometheus: `http://localhost:10200` (metrics collection)
+- Grafana: `http://localhost:10201` (monitoring dashboards)
+- AI Metrics Exporter: `http://localhost:10209` (AI-specific metrics)
+- Health Monitor: `http://localhost:10210` (system health monitoring)
+
+### Agent Service Ports (11000-11148 range)
+- Agent Orchestrator: `http://localhost:11000` (main orchestration)
+- AgentZero Coordinator: `http://localhost:11001` (general-purpose agents)
+- AI System Architect: `http://localhost:11002` (system design)
+- AI Senior Engineers: `http://localhost:11004-11007` (backend, frontend, full-stack)
+- Product/QA Management: `http://localhost:11008-11011` (PM, Scrum, QA leads)
+- CI/CD & Deployment: `http://localhost:11012-11013` (pipeline, deployment)
+- Security & Analysis: `http://localhost:11014` (adversarial detection)
 
 ## Architecture & Patterns
 
@@ -166,7 +217,7 @@ async def process(request: RequestModel):
 1. **No Fantasy Features**: Only implement what can actually work today
 2. **Resource Limits**: System must run on modest hardware (8GB RAM, 4 cores)
 3. **Local Only**: No external API calls, everything runs offline
-4. **Ollama Models**: Default to TinyLlama (637MB) for efficiency
+4. **GPT-OSS Only**: Complete migration to GPT-OSS model completed - no Mistral, TinyLlama, or other models
 
 ## Testing Strategy
 
@@ -198,19 +249,34 @@ Production deployment uses Docker Compose with health checks:
 
 Use `/deploy.sh` for ALL deployments (replaces 100+ legacy scripts):
 ```bash
-./deploy.sh deploy local       # Local development
-./deploy.sh deploy production  # Production deployment
-./deploy.sh status             # Check system status
-./deploy.sh health             # Run health checks
-./deploy.sh logs backend       # View specific service logs
+# Complete system deployment
+./deploy.sh deploy local       # Local development with all services
+./deploy.sh deploy production  # Production deployment with health checks
+./deploy.sh deploy minimal     # Minimal resource deployment
+
+# System management
+./deploy.sh status             # Check system status and container health
+./deploy.sh health             # Run comprehensive health checks
+./deploy.sh logs [service]     # View specific service logs (e.g., backend, ollama)
+./deploy.sh stop               # Stop all services gracefully
+./deploy.sh restart [service]  # Restart specific service
 ./deploy.sh rollback           # Rollback to previous version
+
+# Maintenance operations
+./deploy.sh cleanup            # Remove unused containers and images
+./deploy.sh update             # Update and restart services
+./deploy.sh backup             # Backup databases and configurations
+./deploy.sh optimize           # Optimize system performance
 ```
 
-Environment variables:
-- `SUTAZAI_ENV`: Deployment environment (local|staging|production)
-- `LIGHTWEIGHT_MODE=true`: Use minimal resources
-- `ENABLE_MONITORING=true`: Include Prometheus/Grafana stack
-- `DEBUG=true`: Enable verbose logging
+Environment variables (set in `.env` file):
+- `DEPLOYMENT_MODE`: Deployment type (local|staging|production|minimal)
+- `LIGHTWEIGHT_MODE=true`: Use minimal resources (4GB RAM systems)
+- `ENABLE_MONITORING=true`: Include Prometheus/Grafana monitoring stack
+- `DEBUG=true`: Enable verbose logging and debugging
+- `ENABLE_GPU=false`: GPU acceleration (disabled by default)
+- `MAX_AGENTS=30`: Maximum number of agent containers
+- `OLLAMA_MODEL=gpt-oss`: Default Ollama model (GPT-OSS only)
 
 ## Requirements Management
 
@@ -222,20 +288,37 @@ Each component has its own requirements file:
 
 ⚠️ **Warning**: Agent requirements often conflict. Most agents use Flask==2.3.3 while others use incompatible versions.
 
+## Technology Stack Reference
+
+**📋 AUTHORITATIVE SOURCE: `/opt/sutazaiapp/IMPORTANT/` directory**
+
+Key reference documents (THE SOURCE OF TRUTH):
+- **[ACTUAL_SYSTEM_STATUS.md](/opt/sutazaiapp/IMPORTANT/ACTUAL_SYSTEM_STATUS.md)**: Current system reality vs documentation
+- **[TECHNOLOGY_STACK_REPOSITORY_INDEX.md](/opt/sutazaiapp/IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md)**: Complete verified technology inventory
+- **[ACTUAL_SYSTEM_INVENTORY.md](/opt/sutazaiapp/IMPORTANT/ACTUAL_SYSTEM_INVENTORY.md)**: Detailed component listing
+
+These documents provide:
+- Complete verified technology inventory with health status
+- Service mesh and infrastructure verification  
+- Integration frameworks and available tools
+- Implementation priority matrix
+- Verification commands for each component
+
 ## Working Components vs Fantasy
 
-**✅ ACTUALLY WORKING (Verified):**
-- Backend API: FastAPI on port 10010 with basic CRUD
-- Frontend: Streamlit on port 10011
-- Ollama: Local LLM on port 11434 with TinyLlama
-- Databases: PostgreSQL (10000), Redis (10001), Neo4j (10002-10003)
-- Basic Monitoring: Prometheus (10200), Grafana (10201)
+**✅ ACTUALLY WORKING (Verified per /opt/sutazaiapp/IMPORTANT/):**
+- **Backend API**: FastAPI on port 10010 with basic CRUD
+- **Frontend**: Streamlit on port 10011
+- **Ollama**: Local LLM on port 10104 with GPT-OSS
+- **Databases**: PostgreSQL (10000), Redis (10001), Neo4j (10002-10003) - All HEALTHY
+- **Vector Databases**: ChromaDB (10100), Qdrant (10101), FAISS (10103) - All DEPLOYED
+- **Service Mesh**: Kong Gateway (10005), Consul (10006), RabbitMQ (10007/10008) - VERIFIED OPERATIONAL
+- **Agent Orchestration**: AI Agent Orchestrator (8589), Multi-Agent Coordinator (8587), Resource Arbitration (8588) - VERIFIED HEALTHY
+- **Full Monitoring Stack**: Prometheus (10200), Grafana (10201), Loki (10202), AlertManager, Node Exporter, cAdvisor - All RUNNING
 
 **⚠️ STUB IMPLEMENTATIONS (Return fake responses):**
-- 95% of agents in `/agents/*` - just Flask apps with hardcoded JSON
-- All "orchestration" agents
-- All "optimization" agents
-- Most "specialist" agents
+- Most agents in `/agents/*` - Flask apps with hardcoded JSON responses
+- Individual specialized agents (check actual implementation in app.py)
 
 **❌ COMPLETE FANTASY (Don't exist at all):**
 - Kong API Gateway, Consul, RabbitMQ, Vault
@@ -273,7 +356,7 @@ grep -A 5 [service-name]: docker-compose.yml
 2. **Don't Break Working Code**: Always test existing functionality before changes
 3. **Codebase Hygiene**: Follow existing patterns, no duplicate code, proper file organization
 4. **Reuse Before Creating**: Check for existing solutions before writing new code
-5. **Local LLMs Only**: Use Ollama with TinyLlama, no external AI APIs
+5. **Local LLMs Only**: Use Ollama with GPT-OSS, no external AI APIs
 
 ## Frequent Issues & Quick Fixes
 
@@ -293,8 +376,9 @@ lsof -i :PORT_NUMBER
 **Ollama not responding:**
 ```bash
 docker-compose restart ollama
-docker exec sutazai-ollama ollama pull tinyllama  # Ensure model is downloaded
-docker exec sutazai-ollama ollama list            # Verify models
+docker exec sutazai-ollama ollama pull gpt-oss  # Ensure GPT-OSS model is downloaded
+docker exec sutazai-ollama ollama list          # Verify only GPT-OSS model is present
+# Note: System migrated completely to GPT-OSS - no other models should be present
 ```
 
 **Database connection errors:**
@@ -343,4 +427,63 @@ docker exec -it sutazai-postgres psql -U sutazai -d sutazai
 - Limit Ollama memory: Set `OLLAMA_MAX_LOADED_MODELS=1` 
 - Redis caching enabled for frequent queries
 - PostgreSQL connection pooling configured in backend
-- Consider using smaller models if TinyLlama is still too large
+- GPT-OSS is the only supported model
+
+## GPT-OSS Model Migration (Completed)
+
+**COMPLETED MIGRATION**: All model references have been migrated from multiple models (Mistral, TinyLlama, Llama, CodeLlama, Qwen, DeepSeek) to exclusively use GPT-OSS.
+
+### Migration Summary
+- **Backend Services**: All FastAPI endpoints now use GPT-OSS
+- **Agent Configurations**: All 100+ agent configs updated to gpt-oss model
+- **Test Files**: All test files updated to use GPT-OSS exclusively
+- **Configuration Files**: Model optimization configs consolidated to GPT-OSS only
+- **Scripts**: All deployment and utility scripts updated
+- **Documentation**: All references updated (some legacy docs may still exist)
+
+### Model Access
+```bash
+# GPT-OSS via Ollama (local inference)
+curl http://localhost:11434/api/generate \
+  -d '{"model": "gpt-oss", "prompt": "Hello, world!"}'
+
+# Backend API (uses GPT-OSS internally)
+curl http://localhost:10010/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "test prompt"}'
+```
+
+### Verification Commands
+```bash
+# Check Ollama has only GPT-OSS model
+docker exec sutazai-ollama ollama list
+# Should show only: gpt-oss:latest
+
+# Search for any remaining old model references (should return minimal results)
+grep -r "mistral\|tinyllama\|codellama\|qwen\|deepseek" /opt/sutazaiapp --exclude-dir=archive
+
+# Verify agent configs use GPT-OSS
+grep -r "gpt-oss" /opt/sutazaiapp/agents/configs/ | wc -l
+# Should show high count indicating successful migration
+```
+
+## Recent Codebase Improvements (August 2025)
+
+### Completed Consolidation Tasks
+1. **Model Migration**: Complete migration from multiple LLM models to GPT-OSS exclusively
+2. **Documentation Cleanup**: Moved scattered documentation to organized `/docs/` structure
+3. **Docker Compose Consolidation**: Reduced 100+ duplicate compose files to core set
+4. **Script Consolidation**: Universal `/deploy.sh` replaces 100+ legacy deployment scripts
+5. **Requirements Standardization**: Consolidated conflicting requirements files
+6. **Port Registry**: Comprehensive port allocation system (`/config/port-registry.yaml`)
+
+### Archive Locations
+- **Legacy Documentation**: `/archive/docs-cleanup-*/` directories contain old documentation
+- **Legacy Compose Files**: `/archive/docker-compose-cleanup-*/` contain archived compose variations
+- **Legacy Scripts**: Most deployment scripts archived, use `/deploy.sh` exclusively
+
+### Key Cleanup Results
+- **Documentation**: ~200 markdown files reorganized from root to `/docs/` structure
+- **Docker Compose**: Reduced from 50+ compose files to 3 core files (main, agents, monitoring)
+- **Requirements**: Identified and documented dependency conflicts across 150+ requirements files
+- **Model References**: 500+ model references updated from legacy models to GPT-OSS

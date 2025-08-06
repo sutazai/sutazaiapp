@@ -16,7 +16,7 @@
 ## Reality Breakdown
 - Agent Directories Found: ~70 (all contain stubs)
 - Actual AI Implementations: 0
-- Working AI Services: 1 (Ollama with TinyLlama)
+- Working AI Services: 1 (Ollama with gpt-oss)
 - Stub HTTP Services: ~70
 - Fantasy Config Files: 107 (describe non-existent features)
 

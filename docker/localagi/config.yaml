@@ -2,7 +2,7 @@ llm:
   provider: ollama
   base_url: http://ollama:11434
   api_key: local
-  model: tinyllama
+  model: gpt-oss
   
 embeddings:
   provider: ollama

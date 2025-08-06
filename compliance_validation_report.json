@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-08-06T00:28:34.936368",
+  "overall_score": 37,
+  "rules": {
+    "Rule 1: No Fantasy Elements": {
+      "score": 0,
+      "status": "\u274c FAIL",
+      "issues": [
+        "comprehensive_sutazai_qa_report.py: contains 'agi'",
+        "agent_cleanup_implementation.py: contains 'quantum'",
+        "detailed_import_analysis.py: contains 'wizard'",
+        "comprehensive_agent_analysis.py: contains 'magic'",
+        "import_audit.py: contains 'wizard'",
+        "analyze_service_deps.py: contains 'agi'",
+        "service_dependency_graph.py: contains 'agi'",
+        "test_ollama_integration.py: contains 'quantum'",
+        "scripts/compliance-monitor-core.py: contains 'wizard'",
+        "scripts/validate_ports.py: contains 'agi'"
+      ]
+    },
+    "Rule 2: Don't Break Existing": {
+      "score": 80,
+      "status": "\u26a0\ufe0f WARN",
+      "issues": [
+        "Missing essential file: backend/main.py"
+      ]
+    },
+    "Rule 3: Codebase Hygiene": {
+      "score": 50,
+      "status": "\u274c FAIL",
+      "issues": [
+        "Too many scripts: 362 (max 50)",
+        "Too many documentation files: 367 (max 50)",
+        "Found 2 junk files"
+      ]
+    },
+    "Rule 4: Reuse Before Creating": {
+      "score": 55,
+      "status": "\u274c FAIL",
+      "issues": [
+        "Potential duplicates: 16 files matching deploy*.sh",
+        "Potential duplicates: 8 files matching validate*.py",
+        "Potential duplicates: 72 files matching requirements*.txt"
+      ]
+    },
+    "Rule 5: Local LLMs Only": {
+      "score": 0,
+      "status": "\u274c FAIL",
+      "issues": [
+        "scripts/create-container-requirements-map.py: references 'anthropic'",
+        "scripts/pin_all_dependencies.py: references 'anthropic'",
+        "scripts/emergency-compliance-fix.py: references 'OPENAI_API_KEY'",
+        "scripts/validate-compliance.py: references 'OPENAI_API_KEY'",
+        "scripts/pre-commit/check-llm-usage.py: references 'anthropic'",
+        "docker/aider/aider_service.py: references 'OPENAI_API_KEY'",
+        "backend/ai_agents/orchestration/localagi_orchestrator.py: references 'claude-3'",
+        "compliance_backup_20250806_002827/docker/autogpt/autogpt_service.py: references 'OPENAI_API_KEY'",
+        "compliance_backup_20250806_002827/docker/gpt-engineer/gpt_engineer_service.py: references 'OPENAI_API_KEY'",
+        "compliance_backup_20250806_002827/docker/aider/aider_service.py: references 'OPENAI_API_KEY'"
+      ]
+    }
+  }
+}

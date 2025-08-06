@@ -98,7 +98,7 @@ class TaskPlanner:
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         self.max_steps = config.get('max_steps', 10)
-        self.planning_model = config.get('planning_model', 'tinyllama')
+        self.planning_model = config.get('planning_model', 'gpt-oss')
         self.enable_reflection = config.get('enable_reflection', True)
         self.ollama_url = "http://localhost:11434"
         

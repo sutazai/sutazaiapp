@@ -264,7 +264,7 @@ class GenericAgent:
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "tinyllama:1.1b",
+                    "model": "gpt-oss:1.1b",
                     "prompt": prompt,
                     "stream": False
                 },

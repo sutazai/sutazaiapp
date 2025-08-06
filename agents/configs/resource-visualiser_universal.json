@@ -2,7 +2,7 @@
   "name": "resource-visualiser",
   "description": "Agent for system operations",
   "model": "ollama",
-  "base_model": "qwen2.5-coder:7b",
+  "base_model": "gpt-oss2.5-coder:7b",
   "port": 9539,
   "capabilities": [
     "architecture",

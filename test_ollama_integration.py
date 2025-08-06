@@ -109,7 +109,7 @@ class OllamaIntegrationTester:
             return False
     
     async def test_model_availability(self) -> bool:
-        """Test if TinyLlama model is available"""
+        """Test if GPT-OSS model is available"""
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.get(f"{self.ollama_url}/api/tags")
@@ -117,11 +117,11 @@ class OllamaIntegrationTester:
                     models = response.json().get("models", [])
                     model_names = [m.get("name", "").split(":")[0] for m in models]
                     
-                    if "tinyllama" in model_names:
-                        logger.info("TinyLlama model is available")
+                    if "gpt-oss" in model_names:
+                        logger.info("GPT-OSS model is available")
                         return True
                     else:
-                        logger.error(f"TinyLlama model not found. Available: {model_names}")
+                        logger.error(f"GPT-OSS model not found. Available: {model_names}")
                         return False
         except Exception as e:
             logger.error(f"Model availability check error: {e}")
@@ -132,7 +132,7 @@ class OllamaIntegrationTester:
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 payload = {
-                    "model": "tinyllama",
+                    "model": "gpt-oss",
                     "prompt": "Hello, respond with exactly one word: 'SUCCESS'",
                     "stream": False,
                     "options": {
@@ -170,7 +170,7 @@ class OllamaIntegrationTester:
                     "agent_version": "1.0.0",
                     "capabilities": ["test"],
                     "status": "active",
-                    "model": "tinyllama",
+                    "model": "gpt-oss",
                     "max_concurrent_tasks": 1,
                     "timestamp": datetime.utcnow().isoformat()
                 }
@@ -199,8 +199,8 @@ class OllamaIntegrationTester:
             
             # Test model configuration
             test_config = OllamaConfig.get_model_config("test-agent")
-            if test_config["model"] != "tinyllama":
-                logger.error(f"Expected tinyllama, got {test_config['model']}")
+            if test_config["model"] != "gpt-oss":
+                logger.error(f"Expected gpt-oss, got {test_config['model']}")
                 return False
             
             logger.info("BaseAgentV2 configuration is correct")
