@@ -9,7 +9,7 @@
     "rag_system_building"
   ],
   "ollama_endpoint": "http://sutazai-ollama-minimal:11434",
-  "model": "gpt-oss",
+  "model": "tinyllama",
   "max_tokens": 2048,
   "priority": "high",
   "agent_type": "specialized_engineer",

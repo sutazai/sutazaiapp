@@ -30,7 +30,7 @@ ollama_config:
   # Model Priority (for automatic unloading)
   model_priority:
     high_priority:
-      - "gpt-oss"          # GPT-OSS is the exclusive model
+      - "tinyllama"          # TinyLlama is the exclusive model
     low_priority: []        # No other models
       
   # Emergency Controls

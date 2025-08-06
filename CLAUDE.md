@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SutazAI is a local AI task automation system that runs entirely on-premises without cloud dependencies. The system uses Docker containers for microservices and Ollama for local LLM inference (exclusively GPT-OSS model).
+SutazAI is a local AI task automation system that runs entirely on-premises without cloud dependencies. The system uses Docker containers for microservices and Ollama for local LLM inference.
 
 **⚠️ CRITICAL REALITY CHECK ⚠️**
-- **90% Fantasy**: Most documentation describes non-existent features
-- **10% Working**: Basic backend, frontend, databases, and Ollama
-- **Agent Truth**: Almost all "AI agents" are stub services returning hardcoded responses
-- **No Magic**: No quantum computing, AGI, service mesh, or complex orchestration exists
+- **Model Truth**: Currently using **TinyLlama** (NOT gpt-oss) on port 10104
+- **35% Working**: Backend API, Frontend, Databases, Ollama, Monitoring Stack, Service Mesh Infrastructure
+- **Agent Truth**: 7 agents running but are Flask stubs with basic health endpoints only
+- **Service Mesh EXISTS**: Kong Gateway, Consul, RabbitMQ are VERIFIED RUNNING (not fantasy)
+- **No Magic**: No quantum computing, AGI, or ASI capabilities
 
-**ALWAYS VERIFY**: Check docker-compose.yml and actual code before trusting any documentation.
+**ALWAYS VERIFY**: Check docker-compose.yml and actual running containers before trusting documentation.
 
 ## Key Commands
 
@@ -94,33 +95,46 @@ poetry run pytest tests/test_api_endpoints.py -v
 poetry run pytest -k "test_function_name" -v
 ```
 
-### Key Service Ports
-- Backend API: `http://localhost:10010` (FastAPI with `/docs` for interactive API docs)
-- Frontend: `http://localhost:10011` (React/Streamlit UI)
-- Ollama Primary: `http://localhost:11434` (GPT-OSS model serving)
-- PostgreSQL: `localhost:10000` (secure instance, user: sutazai, db: sutazai)
-- Redis: `localhost:10001` (secure cache instance)
+### Key Service Ports (VERIFIED RUNNING)
+- Backend API: `http://localhost:10010` (FastAPI v17.0.0 with 70+ endpoints, `/docs` for interactive API docs)
+- Frontend: `http://localhost:10011` (Streamlit UI)
+- Ollama: `http://localhost:10104` (TinyLlama model loaded - NOT gpt-oss)
+- PostgreSQL: `localhost:10000` (HEALTHY but no tables created yet)
+- Redis: `localhost:10001` (HEALTHY cache instance)
+- Neo4j: `http://localhost:10002` (browser), `bolt://localhost:10003` (HEALTHY)
 - Prometheus: `http://localhost:10200` (metrics collection)
 - Grafana: `http://localhost:10201` (monitoring dashboards)
-- AI Metrics Exporter: `http://localhost:10209` (AI-specific metrics)
-- Health Monitor: `http://localhost:10210` (system health monitoring)
+- Loki: `http://localhost:10202` (log aggregation)
+- AlertManager: `http://localhost:10203` (alert routing)
 
-### Agent Service Ports (11000-11148 range)
-- Agent Orchestrator: `http://localhost:11000` (main orchestration)
-- AgentZero Coordinator: `http://localhost:11001` (general-purpose agents)
-- AI System Architect: `http://localhost:11002` (system design)
-- AI Senior Engineers: `http://localhost:11004-11007` (backend, frontend, full-stack)
-- Product/QA Management: `http://localhost:11008-11011` (PM, Scrum, QA leads)
-- CI/CD & Deployment: `http://localhost:11012-11013` (pipeline, deployment)
-- Security & Analysis: `http://localhost:11014` (adversarial detection)
+### Vector Database Ports (VERIFIED RUNNING)
+- Qdrant: `http://localhost:10101` (HTTP), `10102` (gRPC) - HEALTHY
+- FAISS: `http://localhost:10103` - HEALTHY
+- ChromaDB: `http://localhost:10100` - STARTING/Connection issues
+
+### Service Mesh Infrastructure (VERIFIED RUNNING)
+- Kong Gateway: `http://localhost:10005` (proxy), `8001` (admin) - OPERATIONAL
+- Consul: `http://localhost:10006` (UI), `8600` (DNS) - SERVICE DISCOVERY RUNNING
+- RabbitMQ: `localhost:10007` (AMQP), `http://localhost:10008` (management) - MESSAGE QUEUE RUNNING
+
+### Actually Working Agent Ports (7 Flask Stubs)
+- AI Agent Orchestrator: `http://localhost:8589` - Basic health endpoint
+- Multi-Agent Coordinator: `http://localhost:8587` - Basic coordination stub
+- Resource Arbitration: `http://localhost:8588` - Resource allocation stub
+- Task Assignment: `http://localhost:8551` - Task routing stub
+- Hardware Optimizer: `http://localhost:8002` - Hardware monitoring stub
+- Ollama Integration: `http://localhost:11015` - Ollama interaction wrapper
+- AI Metrics Exporter: `http://localhost:11063` - Metrics collection (UNHEALTHY)
 
 ## Architecture & Patterns
 
-### Service Architecture
-The system follows a microservices pattern with Docker containers:
-- **Core Services**: `backend`, `frontend`, `postgres`, `redis`, `neo4j`, `ollama`
-- **Agent Services**: Individual containers for each agent (mostly stubs returning basic responses)
-- **Monitoring**: `ai-metrics-exporter`, health monitoring endpoints
+### Service Architecture (ACTUAL RUNNING SYSTEM)
+The system runs 26-28 Docker containers:
+- **Core Services**: `backend`, `frontend`, `postgres`, `redis`, `neo4j`, `ollama` (ALL HEALTHY)
+- **Vector Databases**: `qdrant`, `faiss` (HEALTHY), `chromadb` (CONNECTION ISSUES)
+- **Service Mesh**: `kong`, `consul`, `rabbitmq` (ALL VERIFIED OPERATIONAL)
+- **Monitoring Stack**: `prometheus`, `grafana`, `loki`, `alertmanager`, `node-exporter`, `cadvisor` (ALL RUNNING)
+- **Agent Services**: 7 Flask containers with stub implementations (health endpoints only)
 
 ### Code Organization
 ```
@@ -140,11 +154,12 @@ The system follows a microservices pattern with Docker containers:
 
 ### Key Design Decisions
 
-1. **Local-First**: All AI inference through Ollama, no external API dependencies
-2. **Stub Pattern**: Most agents are placeholder implementations - check if actually working before relying on them
-3. **Port Registry**: Each service has a designated port in the 10000-12000 range
+1. **Local-First**: All AI inference through Ollama (TinyLlama model), no external API dependencies
+2. **Stub Pattern**: ALL 7 agents are Flask stubs - no actual AI logic implemented
+3. **Port Registry**: Services use ports 8000-11100 range (not well organized)
 4. **Shared Network**: All services communicate via `sutazai-network` Docker network
 5. **Environment Variables**: Configuration through `.env` file and Docker environment vars
+6. **Database Status**: PostgreSQL running but NO TABLES created yet
 
 ### Agent Implementation Pattern
 All agents follow this structure:
@@ -217,7 +232,7 @@ async def process(request: RequestModel):
 1. **No Fantasy Features**: Only implement what can actually work today
 2. **Resource Limits**: System must run on modest hardware (8GB RAM, 4 cores)
 3. **Local Only**: No external API calls, everything runs offline
-4. **GPT-OSS Only**: Complete migration to GPT-OSS model completed - no Mistral, TinyLlama, or other models
+4. **Model Reality**: Currently using **TinyLlama** (GPT-OSS migration NOT complete despite documentation)
 
 ## Testing Strategy
 
@@ -276,7 +291,7 @@ Environment variables (set in `.env` file):
 - `DEBUG=true`: Enable verbose logging and debugging
 - `ENABLE_GPU=false`: GPU acceleration (disabled by default)
 - `MAX_AGENTS=30`: Maximum number of agent containers
-- `OLLAMA_MODEL=gpt-oss`: Default Ollama model (GPT-OSS only)
+- `OLLAMA_MODEL=tinyllama`: Current Ollama model (TinyLlama loaded, not gpt-oss)
 
 ## Requirements Management
 
@@ -306,27 +321,30 @@ These documents provide:
 
 ## Working Components vs Fantasy
 
-**✅ ACTUALLY WORKING (Verified per /opt/sutazaiapp/IMPORTANT/):**
-- **Backend API**: FastAPI on port 10010 with basic CRUD
+**✅ ACTUALLY WORKING (Verified Running):**
+- **Backend API**: FastAPI v17.0.0 on port 10010 with 70+ endpoints
 - **Frontend**: Streamlit on port 10011
-- **Ollama**: Local LLM on port 10104 with GPT-OSS
-- **Databases**: PostgreSQL (10000), Redis (10001), Neo4j (10002-10003) - All HEALTHY
-- **Vector Databases**: ChromaDB (10100), Qdrant (10101), FAISS (10103) - All DEPLOYED
+- **Ollama**: Local LLM on port 10104 with **TinyLlama** (637 MB model)
+- **Databases**: PostgreSQL (10000 - no tables), Redis (10001), Neo4j (10002-10003) - All HEALTHY
+- **Vector Databases**: Qdrant (10101), FAISS (10103) HEALTHY; ChromaDB (10100) CONNECTION ISSUES
 - **Service Mesh**: Kong Gateway (10005), Consul (10006), RabbitMQ (10007/10008) - VERIFIED OPERATIONAL
-- **Agent Orchestration**: AI Agent Orchestrator (8589), Multi-Agent Coordinator (8587), Resource Arbitration (8588) - VERIFIED HEALTHY
-- **Full Monitoring Stack**: Prometheus (10200), Grafana (10201), Loki (10202), AlertManager, Node Exporter, cAdvisor - All RUNNING
+- **Full Monitoring Stack**: Prometheus (10200), Grafana (10201), Loki (10202), AlertManager (10203) - All RUNNING
+- **Monitoring Tools**: Node Exporter (10220), cAdvisor (10221), Blackbox Exporter (10229)
 
-**⚠️ STUB IMPLEMENTATIONS (Return fake responses):**
-- Most agents in `/agents/*` - Flask apps with hardcoded JSON responses
-- Individual specialized agents (check actual implementation in app.py)
+**⚠️ STUB IMPLEMENTATIONS (Only health endpoints):**
+- 7 Working Agent Stubs (ports 8002, 8551, 8587-8589, 11015, 11063)
+- All return basic JSON responses, no actual AI logic
+- 44 agents defined in docker-compose but only 7 running
 
 **❌ COMPLETE FANTASY (Don't exist at all):**
-- Kong API Gateway, Consul, RabbitMQ, Vault
-- Service mesh, Jaeger tracing, Elasticsearch
-- Quantum computing modules (`/backend/quantum_architecture/` - deleted)
-- AGI orchestration (`/config/agi_orchestration.yaml` - deleted)
-- Complex agent communication (no message passing exists)
-- 69 agents (only ~30 defined, <5 actually work)
+- HashiCorp Vault (secrets management)
+- Jaeger tracing, Elasticsearch
+- Kubernetes orchestration, Terraform
+- Quantum computing modules
+- AGI/ASI capabilities
+- 60+ additional AI agents claimed in docs
+- Complex agent communication/message passing
+- GPT-OSS model (migration incomplete - using TinyLlama)
 
 ## How to Verify Reality vs Fantasy
 
@@ -344,10 +362,11 @@ curl http://localhost:[port]/process -X POST -H "Content-Type: application/json"
 # 4. Check docker-compose.yml for truth about ports:
 grep -A 5 [service-name]: docker-compose.yml
 
-# 5. IGNORE these documentation files (mostly fantasy):
-# - /opt/sutazaiapp/IMPORTANT/*.md (except ACTUAL_SYSTEM_STATUS.md)
-# - Most files in /docs/
-# - Any mention of "69 agents", "quantum", "AGI", "service mesh"
+# 5. TRUST these documentation files (verified accurate):
+# - /opt/sutazaiapp/IMPORTANT/ACTUAL_SYSTEM_STATUS.md
+# - /opt/sutazaiapp/IMPORTANT/TRUTH_SYSTEM_INVENTORY.md
+# - docker-compose.yml for actual service definitions
+# IGNORE: Most other docs claiming advanced features
 ```
 
 ## Critical Codebase Rules (from CLAUDE.local.md)
@@ -356,7 +375,7 @@ grep -A 5 [service-name]: docker-compose.yml
 2. **Don't Break Working Code**: Always test existing functionality before changes
 3. **Codebase Hygiene**: Follow existing patterns, no duplicate code, proper file organization
 4. **Reuse Before Creating**: Check for existing solutions before writing new code
-5. **Local LLMs Only**: Use Ollama with GPT-OSS, no external AI APIs
+5. **Local LLMs Only**: Use Ollama with TinyLlama (current), no external AI APIs
 
 ## Frequent Issues & Quick Fixes
 
@@ -376,9 +395,11 @@ lsof -i :PORT_NUMBER
 **Ollama not responding:**
 ```bash
 docker-compose restart ollama
-docker exec sutazai-ollama ollama pull gpt-oss  # Ensure GPT-OSS model is downloaded
-docker exec sutazai-ollama ollama list          # Verify only GPT-OSS model is present
-# Note: System migrated completely to GPT-OSS - no other models should be present
+docker exec sutazai-ollama ollama list          # Should show tinyllama:latest (637 MB)
+# Current model: TinyLlama (NOT gpt-oss despite documentation claims)
+# To test:
+curl http://localhost:10104/api/generate \
+  -d '{"model": "tinyllama", "prompt": "Hello"}'
 ```
 
 **Database connection errors:**
@@ -414,8 +435,8 @@ curl -X POST http://localhost:10010/api/v1/chat \
   -d '{"message": "test"}'
 
 # Check Ollama models and status
-docker exec sutazai-ollama ollama list
-curl http://localhost:11434/api/tags
+docker exec sutazai-ollama ollama list  # Shows tinyllama:latest
+curl http://localhost:10104/api/tags    # Note: port 10104, not 11434
 
 # PostgreSQL direct queries
 docker exec -it sutazai-postgres psql -U sutazai -d sutazai
@@ -426,28 +447,26 @@ docker exec -it sutazai-postgres psql -U sutazai -d sutazai
 - Use `LIGHTWEIGHT_MODE=true` environment variable for resource-constrained systems
 - Limit Ollama memory: Set `OLLAMA_MAX_LOADED_MODELS=1` 
 - Redis caching enabled for frequent queries
-- PostgreSQL connection pooling configured in backend
-- GPT-OSS is the only supported model
+- PostgreSQL connection pooling configured in backend (but no tables created yet)
+- TinyLlama (637 MB) is currently loaded model
 
-## GPT-OSS Model Migration (Completed)
+## Model Reality Check
 
-**COMPLETED MIGRATION**: All model references have been migrated from multiple models (Mistral, TinyLlama, Llama, CodeLlama, Qwen, DeepSeek) to exclusively use GPT-OSS.
+**ACTUAL MODEL STATUS**: Despite documentation claims, the system is running **TinyLlama**, NOT gpt-oss
 
-### Migration Summary
-- **Backend Services**: All FastAPI endpoints now use GPT-OSS
-- **Agent Configurations**: All 100+ agent configs updated to gpt-oss model
-- **Test Files**: All test files updated to use GPT-OSS exclusively
-- **Configuration Files**: Model optimization configs consolidated to GPT-OSS only
-- **Scripts**: All deployment and utility scripts updated
-- **Documentation**: All references updated (some legacy docs may still exist)
+### Current Reality
+- **Loaded Model**: TinyLlama (637 MB) on port 10104
+- **Documentation Claims**: GPT-OSS migration complete (FALSE)
+- **Config Files**: May reference gpt-oss but TinyLlama is what's actually loaded
+- **Agent Configs**: Likely configured for gpt-oss but using TinyLlama in practice
 
 ### Model Access
 ```bash
-# GPT-OSS via Ollama (local inference)
-curl http://localhost:11434/api/generate \
-  -d '{"model": "gpt-oss", "prompt": "Hello, world!"}'
+# TinyLlama via Ollama (actual working commands)
+curl http://localhost:10104/api/generate \
+  -d '{"model": "tinyllama", "prompt": "Hello, world!"}'
 
-# Backend API (uses GPT-OSS internally)
+# Backend API (uses TinyLlama internally despite config)
 curl http://localhost:10010/api/v1/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "test prompt"}'
@@ -455,35 +474,43 @@ curl http://localhost:10010/api/v1/chat \
 
 ### Verification Commands
 ```bash
-# Check Ollama has only GPT-OSS model
+# Check what model is ACTUALLY loaded
 docker exec sutazai-ollama ollama list
-# Should show only: gpt-oss:latest
+# Shows: tinyllama:latest    637 MB
 
-# Search for any remaining old model references (should return minimal results)
-grep -r "mistral\|tinyllama\|codellama\|qwen\|deepseek" /opt/sutazaiapp --exclude-dir=archive
-
-# Verify agent configs use GPT-OSS
-grep -r "gpt-oss" /opt/sutazaiapp/agents/configs/ | wc -l
-# Should show high count indicating successful migration
+# Check Ollama API
+curl http://localhost:10104/api/tags
+# Will show tinyllama model info
 ```
 
 ## Recent Codebase Improvements (August 2025)
 
-### Completed Consolidation Tasks
-1. **Model Migration**: Complete migration from multiple LLM models to GPT-OSS exclusively
-2. **Documentation Cleanup**: Moved scattered documentation to organized `/docs/` structure
-3. **Docker Compose Consolidation**: Reduced 100+ duplicate compose files to core set
-4. **Script Consolidation**: Universal `/deploy.sh` replaces 100+ legacy deployment scripts
-5. **Requirements Standardization**: Consolidated conflicting requirements files
-6. **Port Registry**: Comprehensive port allocation system (`/config/port-registry.yaml`)
+### System Reality Summary
 
-### Archive Locations
-- **Legacy Documentation**: `/archive/docs-cleanup-*/` directories contain old documentation
-- **Legacy Compose Files**: `/archive/docker-compose-cleanup-*/` contain archived compose variations
-- **Legacy Scripts**: Most deployment scripts archived, use `/deploy.sh` exclusively
+#### What's Actually Running (26-28 containers):
+1. **Core Infrastructure**: All databases, cache, and Ollama working
+2. **Service Mesh**: Kong, Consul, RabbitMQ VERIFIED OPERATIONAL (not fantasy!)
+3. **Monitoring Stack**: Full Prometheus/Grafana/Loki stack running
+4. **Agent Stubs**: 7 Flask apps with health endpoints only
+5. **Model**: TinyLlama (637 MB), NOT gpt-oss
 
-### Key Cleanup Results
-- **Documentation**: ~200 markdown files reorganized from root to `/docs/` structure
-- **Docker Compose**: Reduced from 50+ compose files to 3 core files (main, agents, monitoring)
-- **Requirements**: Identified and documented dependency conflicts across 150+ requirements files
-- **Model References**: 500+ model references updated from legacy models to GPT-OSS
+#### Documentation vs Reality Gaps:
+- Claims GPT-OSS migration complete → FALSE (using TinyLlama)
+- Claims 69-150 agents → Only 7 running (all stubs)
+- Claims advanced AI features → Basic LLM queries only
+- Claims no service mesh → Kong, Consul, RabbitMQ ACTUALLY RUNNING
+- PostgreSQL "working" → Running but NO TABLES created
+
+#### Quick Reality Check Commands:
+```bash
+# See what's ACTUALLY running
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Check actual model
+docker exec sutazai-ollama ollama list
+
+# Test service mesh components
+curl http://localhost:10005  # Kong
+curl http://localhost:10006  # Consul
+curl http://localhost:10008  # RabbitMQ Management
+```

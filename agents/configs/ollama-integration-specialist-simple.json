@@ -9,7 +9,7 @@
     "model_deployment"
   ],
   "ollama_endpoint": "http://ollama:11435",
-  "model": "gpt-oss",
+  "model": "tinyllama",
   "max_tokens": 2048,
   "priority": "high",
   "agent_type": "model_specialist",

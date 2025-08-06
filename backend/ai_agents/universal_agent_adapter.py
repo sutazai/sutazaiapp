@@ -94,7 +94,7 @@ class UniversalAgentAdapter:
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
             "preferred_models": [
-                "ollama/gpt-oss:latest"
+                "ollama/tinyllama:latest"
             ]
         }
         

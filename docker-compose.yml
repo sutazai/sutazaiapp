@@ -91,7 +91,7 @@ services:
     - ollama
     environment:
       AGENT_NAME: Aider
-      MODEL: gpt-oss:latest
+      MODEL: tinyllama:latest
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
@@ -615,7 +615,7 @@ services:
     - ollama
     environment:
       AGENT_NAME: GPT-Engineer
-      MODEL: gpt-oss:latest
+      MODEL: tinyllama:latest
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
@@ -686,7 +686,7 @@ services:
       OLLAMA_API_KEY: local
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_HOST: 0.0.0.0
-      OLLAMA_MODEL: gpt-oss:latest
+      OLLAMA_MODEL: tinyllama:latest
       OLLAMA_ORIGINS: '*'
       PORT: 8080
       REDIS_URL: redis://redis:6379/0
