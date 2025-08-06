@@ -2,7 +2,7 @@
 
 ## ⚠️ REALITY CHECK ⚠️
 **Last Verified**: Via `docker ps` command
-**Model Reality**: System uses `tinyllama:latest` NOT gpt-oss
+**Model Reality**: System uses `tinyllama:latest` and  gpt-oss
 **Agent Reality**: Only 7 agent containers running, most are stubs
 
 ## Overview
