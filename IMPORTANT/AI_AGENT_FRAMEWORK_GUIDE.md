@@ -1,20 +1,32 @@
 # AI Agent Framework Implementation Guide
 
+**Last Updated:** 2025-08-06T15:05:00Z  
+**Version:** v2.0 - August 6, 2025  
+**Status:** Verified - Agents are Flask Stubs Only
+
+## ⚠️ CRITICAL REALITY CHECK
+
+**ALL AGENTS ARE FLASK STUBS** - They return hardcoded JSON responses and perform NO actual AI processing. This guide documents what exists (stubs) versus what was claimed (intelligent agents).
+
 ## Executive Summary
 
-This guide documents the AI agent frameworks available in the SutazAI system, their current deployment status, and implementation patterns. The system uses a hybrid approach combining deployed agent containers with available framework repositories.
+This guide documents the ACTUAL state of AI agents in SutazAI. Currently, 7 Flask stub services are running that return hardcoded responses. The claimed "69 intelligent agents" do not exist.
 
 ## Deployment Status Overview
 
-### Currently Deployed (Running in Docker)
-- ✅ **AI Agent Orchestrator** - Port 8589
-- ✅ **Multi-Agent Coordinator** - Port 8587
-- ✅ **Hardware Resource Optimizer** - Port 8002
-- ✅ **Resource Arbitration Agent** - Port 8588
-- ✅ **Task Assignment Coordinator** - Port 8551
-- ⚠️ **AgentGPT** - Available in compose but needs activation
-- ⚠️ **AgentZero** - Available in compose but needs activation
-- ⚠️ **Aider** - Available in compose but needs activation
+### Actually Running (7 Flask Stubs - Verified)
+- 🔴 **AI Agent Orchestrator** - Port 8589 - Returns `{"status": "healthy", "result": "processed"}`
+- 🔴 **Multi-Agent Coordinator** - Port 8587 - Hardcoded JSON response
+- 🔴 **Hardware Resource Optimizer** - Port 8002 - No actual optimization
+- 🔴 **Resource Arbitration Agent** - Port 8588 - No arbitration logic
+- 🔴 **Task Assignment Coordinator** - Port 8551 - No task routing
+- 🔴 **Ollama Integration Specialist** - Port 11015 - Basic wrapper
+- 🔴 **AI Metrics Exporter** - Port 11063 - Returns UNHEALTHY
+
+### NOT Running (Despite Documentation Claims)
+- ❌ 62 other agents mentioned in various docs
+- ❌ AgentGPT, AgentZero, Aider - defined but not deployed
+- ❌ Any actual AI processing agents
 
 ### Available Framework Repositories (Ready for Integration)
 
@@ -766,3 +778,20 @@ async def test_agent_integration():
 - Setup monitoring and alerting
 - Implement circuit breakers for resilience
 - Configure horizontal scaling for high-load agents
+
+---
+
+## Change Log
+
+- **2025-08-06T15:05:00Z**: Complete reality check update
+  - Added critical warning that all agents are Flask stubs
+  - Corrected deployment status from "production ready" to "stubs only"
+  - Listed actual behavior of each running agent (hardcoded responses)
+  - Removed claims about 69 intelligent agents
+  - Added verification timestamps
+  
+- **Previous Version**: Significant inaccuracies
+  - Claimed agents were production-ready
+  - Listed non-existent agents as deployed
+  - Provided complex implementation patterns for stubs
+  - No distinction between claims and reality

@@ -921,7 +921,7 @@ async def example_continuous_learning():
     experiences = [
         ("What is machine learning?", "ML is a subset of AI...", 0.8),
         ("Write a Python function", "def example():\n    pass", 0.6),
-        ("Explain quantum computing", "Quantum computing uses qubits...", -0.2),  # Negative feedback
+        ("Explain neural networks", "Neural networks use nodes...", -0.2),  # Negative feedback
         ("Debug this code", "The error is in line 5...", 0.9),
     ]
     

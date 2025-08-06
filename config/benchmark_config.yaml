@@ -124,13 +124,13 @@ advanced:
   retry_attempts: 3
   retry_delay: 2  # seconds between retries
   
-# Quantum-Ready Architecture Testing
-quantum_testing:
+# Scalable Architecture Testing
+scalable_testing:
   enabled: true
   algorithms:
-    - quantum_inspired_optimization
-    - quantum_neural_networks
-    - quantum_machine_learning
+    - distributed_optimization
+    - neural_networks
+    - machine_learning
   simulation_depth: 100
   
 # Multi-Modal Fusion Testing

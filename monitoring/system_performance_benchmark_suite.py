@@ -6,7 +6,7 @@ SutazAI System Performance Benchmark Suite
 Comprehensive benchmarking framework for the entire SutazAI ecosystem including:
 - 90+ AI agents across all categories
 - Advanced AGI orchestration layer
-- Quantum-ready architecture components
+- Scalable architecture components
 - Service mesh infrastructure
 - Self-healing container systems
 - Knowledge graph systems

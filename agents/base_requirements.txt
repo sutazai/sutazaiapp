@@ -1,32 +1,53 @@
-# SutazAI Base Agent Requirements
-# All agents should use these versions for consistency
-# Last updated: 2025-08-06
+# SutazAI Agents Base Requirements - CONSOLIDATED VERSION
+# Generated: 2025-08-06
+# All agents inherit from this file for consistency
 
-# Web Framework
-Flask==2.3.3
-flask-cors==5.0.0
+# Core Web Framework - FastAPI only (resolves Flask/FastAPI conflicts)
+fastapi==0.115.6
+uvicorn==0.32.1
+pydantic==2.10.4
+starlette==0.41.3
 
 # HTTP & Networking
 requests==2.32.3
+httpx==0.28.1
 aiohttp==3.11.11
+python-multipart==0.0.19
 websockets==13.1
 
-# Database & Cache
+# Database Connections
 redis==5.2.1
 psycopg2-binary==2.9.10
+asyncpg==0.29.0
 
-# Monitoring
+# Monitoring & Health Checks
 prometheus-client==0.21.1
+psutil==6.1.0
+structlog==24.4.0
 
-# Utilities
+# Core Utilities
 python-dotenv==1.0.1
-pydantic==2.10.4
-structlog==25.1.0
+pyyaml==6.0.2
+click==8.1.8
+rich==13.9.4
+jsonschema==4.24.0
 
-# Security
+# Security Essentials
 cryptography==44.0.0
 PyJWT==2.10.1
+passlib[bcrypt]==1.7.4
 
-# JSON & Data
-jsonschema==4.24.0
-pyyaml==6.0.2
+# Basic ML/AI (lightweight for agents)
+openai==1.58.1
+langchain==0.3.11
+transformers==4.48.0
+torch==2.5.1
+numpy==2.1.3
+
+# Infrastructure
+docker==7.1.0
+schedule==1.2.2
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.2

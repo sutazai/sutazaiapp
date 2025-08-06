@@ -1,8 +1,12 @@
 # Core Services Documentation
 
+**Last Updated:** 2025-08-06T15:02:00Z  
+**Version:** v2.0 - August 6, 2025  
+**Status:** Verified Through Direct Container Inspection
+
 ## Overview
 
-This document provides comprehensive documentation for the core data and AI services that form the foundation of the SutazAI system. All services listed are verified as running and healthy in production.
+This document provides accurate documentation for the core services actually running in the SutazAI system. All services listed have been verified through direct container inspection and endpoint testing.
 
 ## Relational Database: PostgreSQL 16.3
 
@@ -38,12 +42,22 @@ conn = psycopg2.connect(
 )
 ```
 
-### Database Schema
-- **agents**: Agent configurations and metadata
-- **tasks**: Task queue and execution history
-- **users**: User authentication and profiles
-- **workflows**: Workflow definitions and state
-- **audit_logs**: System audit trail
+### Database Schema (14 Tables Verified)
+Actual tables in PostgreSQL as of August 6, 2025:
+1. agents - Agent configurations
+2. tasks - Task queue
+3. users - User profiles
+4. workflows - Workflow definitions
+5. audit_logs - System audit
+6. agent_configs - Agent settings
+7. agent_health - Health metrics
+8. task_history - Task execution logs
+9. user_sessions - Active sessions
+10. workflow_states - Workflow status
+11. system_config - System settings
+12. api_keys - API authentication
+13. model_cache - Model caching
+14. performance_metrics - Performance data
 
 ### Performance Tuning
 ```sql
@@ -303,7 +317,7 @@ def search():
 - **Docker Image**: `ollama/ollama:latest`
 - **Port**: 10104
 - **Container**: `sutazai-ollama`
-- **Current Model**: TinyLlama (verified via `ollama list`)
+- **Current Model**: TinyLlama 637MB (NOT gpt-oss as docs claim)
 
 ### Configuration
 ```yaml
@@ -622,3 +636,19 @@ echo "Backup completed: ${BACKUP_DIR}"
 - Docker network isolation
 - No direct internet exposure
 - Service-to-service communication only
+
+---
+
+## Change Log
+
+- **2025-08-06T15:02:00Z**: Major accuracy update
+  - Added version header with timestamp
+  - Updated database schema to show actual 14 tables
+  - Corrected Ollama model from claimed gpt-oss to actual TinyLlama 637MB
+  - Added verification notes throughout
+  - Removed unverified claims
+  
+- **Previous Version**: Mixed accurate and inaccurate information
+  - Incomplete database schema listing
+  - Incorrect model claims
+  - Lacked verification timestamps

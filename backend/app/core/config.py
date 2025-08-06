@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
     
     # Model Configuration - Emergency small models to prevent freezing
-    OLLAMA_HOST: str = Field("http://ollama:9005", env="OLLAMA_HOST")
+    OLLAMA_HOST: str = Field("http://sutazai-ollama:11434", env="OLLAMA_HOST")
     OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
     OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
     OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
@@ -92,9 +92,9 @@ class Settings(BaseSettings):
     def validate_ollama_host(cls, v: str) -> str:
         """Ensure OLLAMA_HOST has proper format"""
         if v == "0.0.0.0" or v == "ollama":
-            return "http://ollama:9005"
+            return "http://sutazai-ollama:11434"
         if not v.startswith("http"):
-            return f"http://{v}:9005"
+            return f"http://{v}:11434"
         return v
     
     # GPU Configuration

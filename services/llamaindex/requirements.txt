@@ -1,8 +1,0 @@
-llama-index==LATEST_SECURE
-fastapi==0.115.6
-uvicorn[standard]==LATEST_SECURE
-chromadb==LATEST_SECURE
-openai==1.58.1
-tiktoken==LATEST_SECURE
-langchain==LATEST_SECURE
-sentence-transformers==LATEST_SECURE
