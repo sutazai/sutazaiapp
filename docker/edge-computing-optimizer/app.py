@@ -16,7 +16,7 @@ import psutil
 # Configuration
 AGENT_NAME = "edge-computing-optimizer"
 AGENT_ROLE = "Edge Computing Optimizer Agent"
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:10104")
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 PORT = int(os.getenv("PORT", "8080"))
 
@@ -148,7 +148,7 @@ async def capabilities():
                 "methods": ["metrics_collection", "anomaly_detection", "performance_tuning"]
             }
         },
-        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss"],
+        "supported_models": ["tinyllama", "tinyllama", "tinyllama"],
         "api_version": "2.2.0"
     }
 

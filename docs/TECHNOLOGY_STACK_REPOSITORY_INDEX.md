@@ -228,7 +228,7 @@ curl -f http://localhost:10201/api/health          # Grafana
 
 ### LLM Orchestration & Models
 - **Ollama**: `curl -fsSL https://ollama.com/install.sh | sh`
-  - **gpt-oss**: `ollama run gpt-oss` (Currently deployed - exclusive model)
+  - **tinyllama**: `ollama run tinyllama` (Currently deployed - exclusive model)
 
 ### Vector Stores & Data Frameworks
 - **ChromaDB**: https://github.com/johnnycode8/chromadb_quickstart (✅ DEPLOYED)
@@ -287,7 +287,7 @@ curl -f http://localhost:10201/api/health          # Grafana
 ## IMPLEMENTATION PRIORITY MATRIX
 
 ### Phase 1: Already Deployed (✅)
-- Ollama with gpt-oss (exclusive model)
+- Ollama with tinyllama (exclusive model)
 - ChromaDB, Qdrant, FAISS vector stores
 - Streamlit frontend framework
 - AgentGPT and AgentZero (available but need activation)
@@ -332,7 +332,7 @@ curl -f http://localhost:10202/ready          # Loki
 
 # Test Ollama with GPT-OSS
 curl http://localhost:10104/api/generate \
-  -d '{"model": "gpt-oss", "prompt": "Hello, world!"}'
+  -d '{"model": "tinyllama", "prompt": "Hello, world!"}'
 
 # Backend API verification
 curl http://localhost:10010/docs              # FastAPI Swagger UI

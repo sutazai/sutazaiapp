@@ -154,10 +154,10 @@ async def batch_generate(request: BatchGenerationRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/generate")
-async def generate_code(prompt: str, language: str = "python", model: str = "gpt-oss"):
+async def generate_code(prompt: str, language: str = "python", model: str = "tinyllama"):
     """Generate code using GPT-OSS or other code models"""
     try:
-        if model == "gpt-oss":
+        if model == "tinyllama":
             result = await gpt_oss_integration.generate_code(prompt, language)
         else:
             result = await model_manager.generate_code(prompt, language, model)
@@ -172,10 +172,10 @@ async def generate_code(prompt: str, language: str = "python", model: str = "gpt
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/complete")
-async def complete_code(code: str, language: str = "python", model: str = "gpt-oss"):
+async def complete_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Complete partial code"""
     try:
-        if model == "gpt-oss":
+        if model == "tinyllama":
             result = await gpt_oss_integration.complete_code(code, language)
         else:
             result = await model_manager.complete_code(code, language, model)
@@ -190,10 +190,10 @@ async def complete_code(code: str, language: str = "python", model: str = "gpt-o
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/explain")
-async def explain_code(code: str, language: str = "python", model: str = "gpt-oss"):
+async def explain_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Explain what a piece of code does"""
     try:
-        if model == "gpt-oss":
+        if model == "tinyllama":
             explanation = await gpt_oss_integration.explain_code(code, language)
         else:
             explanation = await model_manager.explain_code(code, language, model)
@@ -209,10 +209,10 @@ async def explain_code(code: str, language: str = "python", model: str = "gpt-os
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/optimize")
-async def optimize_code(code: str, language: str = "python", model: str = "gpt-oss"):
+async def optimize_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Optimize code for performance and readability"""
     try:
-        if model == "gpt-oss":
+        if model == "tinyllama":
             optimized = await gpt_oss_integration.optimize_code(code, language)
         else:
             optimized = await model_manager.optimize_code(code, language, model)

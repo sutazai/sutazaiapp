@@ -43,29 +43,29 @@ class ContextManager:
     
     # Model context configurations
     CONTEXT_CONFIGS = {
-        'gpt-oss': ContextWindow(
-            model='gpt-oss',
+        'tinyllama': ContextWindow(
+            model='tinyllama',
             max_tokens=2048,
             optimal_tokens=1500,
             compression_threshold=0.75
         ),
-        'gpt-oss2.5-coder:7b': ContextWindow(
-            model='gpt-oss2.5-coder:7b',
+        'tinyllama2.5-coder:7b': ContextWindow(
+            model='tinyllama2.5-coder:7b',
             max_tokens=32768,
             optimal_tokens=8192,
             compression_threshold=0.8
         ),
-        'gpt-oss-r1:8b': ContextWindow(
-            model='gpt-oss-r1:8b',
+        'tinyllama': ContextWindow(
+            model='tinyllama',
             max_tokens=32768,
             optimal_tokens=16384,
             compression_threshold=0.85
         )
     }
     
-    def __init__(self, model: str = 'gpt-oss'):
+    def __init__(self, model: str = 'tinyllama'):
         self.model = model
-        self.config = self.CONTEXT_CONFIGS.get(model, self.CONTEXT_CONFIGS['gpt-oss'])
+        self.config = self.CONTEXT_CONFIGS.get(model, self.CONTEXT_CONFIGS['tinyllama'])
         self.messages: List[Message] = []
         self.summary_cache: Dict[str, str] = {}
         self.importance_scorer = ImportanceScorer()
@@ -393,7 +393,7 @@ class ContextManager:
     def import_context(self, data: Dict[str, Any]) -> None:
         """Import previously exported context"""
         self.model = data.get('model', self.model)
-        self.config = self.CONTEXT_CONFIGS.get(self.model, self.CONTEXT_CONFIGS['gpt-oss'])
+        self.config = self.CONTEXT_CONFIGS.get(self.model, self.CONTEXT_CONFIGS['tinyllama'])
         
         self.messages = []
         for msg_data in data.get('messages', []):
@@ -474,7 +474,7 @@ class SimpleTokenCounter:
 class ContextWindowManager:
     """Manage multiple context windows for different conversations"""
     
-    def __init__(self, default_model: str = 'gpt-oss'):
+    def __init__(self, default_model: str = 'tinyllama'):
         self.default_model = default_model
         self.contexts: Dict[str, ContextManager] = {}
         self.max_contexts = 100
@@ -516,7 +516,7 @@ class ContextWindowManager:
 # Example usage
 if __name__ == "__main__":
     # Test context management
-    manager = ContextManager('gpt-oss')
+    manager = ContextManager('tinyllama')
     
     # Add some messages
     manager.add_message('system', 'You are a helpful assistant.')

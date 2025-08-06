@@ -26,7 +26,7 @@ app = FastAPI(
 class AiderRequest(BaseModel):
     message: str
     files: Optional[List[str]] = []
-    model: Optional[str] = "gpt-oss-r1:8b"
+    model: Optional[str] = "tinyllama"
     workspace: Optional[str] = "/app/workspace"
 
 class AiderResponse(BaseModel):
@@ -39,8 +39,8 @@ class AiderManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "model": "ollama/gpt-oss.2:1b",
-            "api_base": "http://ollama:11434",
+            "model": "ollama/tinyllama.2:1b",
+            "api_base": "http://ollama:10104",
             "api_key": "local"
         }
         
@@ -66,7 +66,7 @@ class AiderManager:
             # Build Aider command
             cmd = [
                 "aider",
-                "--model", f"ollama/{request.model or 'gpt-oss.2:1b'}",
+                "--model", f"ollama/{request.model or 'tinyllama.2:1b'}",
                 "--openai-api-base", self.config["api_base"] + "/v1",
                 "--openai-api-key", self.config["api_key"],
                 "--message", request.message,

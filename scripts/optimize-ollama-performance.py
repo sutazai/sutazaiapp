@@ -115,11 +115,11 @@ class SutazAIPerformanceOrchestrator:
             
             # Warm up cache with common prompts
             common_prompts = [
-                ('gpt-oss', 'Hello, how can I help you?'),
-                ('gpt-oss', 'What is artificial intelligence?'),
-                ('gpt-oss', 'Explain machine learning briefly.'),
-                ('gpt-oss', 'What are the benefits of AI?'),
-                ('gpt-oss', 'How does deep learning work?')
+                ('tinyllama', 'Hello, how can I help you?'),
+                ('tinyllama', 'What is artificial intelligence?'),
+                ('tinyllama', 'Explain machine learning briefly.'),
+                ('tinyllama', 'What are the benefits of AI?'),
+                ('tinyllama', 'How does deep learning work?')
             ]
             
             await self.batch_processor.warm_cache(common_prompts)
@@ -345,7 +345,7 @@ class SutazAIPerformanceOrchestrator:
             # Check Ollama service
             import httpx
             async with httpx.AsyncClient(timeout=10.0) as client:
-                response = await client.get("http://localhost:11434/api/tags")
+                response = await client.get("http://localhost:10104/api/tags")
                 if response.status_code == 200:
                     models = response.json().get('models', [])
                     health_status['ollama_service'] = 'healthy'

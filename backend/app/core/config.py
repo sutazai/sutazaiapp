@@ -78,8 +78,8 @@ class Settings(BaseSettings):
     OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
     OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
     
-    DEFAULT_MODEL: str = "gpt-oss"  # GPT-OSS as the exclusive model
-    FALLBACK_MODEL: str = "gpt-oss"  # GPT-OSS as the exclusive model
+    DEFAULT_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
+    FALLBACK_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
     

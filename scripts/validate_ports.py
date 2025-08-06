@@ -19,7 +19,7 @@ PORT_RANGES = {
     'integrations': (10300, 10499),
     'agi_system': (10500, 10599),
     'agents': (11000, 11148),
-    'ollama': (11434, 11436)
+    'ollama': (10104, 11436)
 }
 
 # Service type patterns

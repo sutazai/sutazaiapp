@@ -110,7 +110,7 @@ deploy_ollama_config() {
     sleep 10
     
     local retries=0
-    while ! curl -sf http://localhost:11434/api/tags >/dev/null 2>&1; do
+    while ! curl -sf http://localhost:10104/api/tags >/dev/null 2>&1; do
         retries=$((retries + 1))
         if [[ $retries -gt 30 ]]; then
             log_error "Ollama service failed to start after 30 attempts"
@@ -129,13 +129,13 @@ install_gpt_oss() {
     log "Installing GPT-OSS model (exclusive model compliance)..."
     
     # Check if GPT-OSS is already installed
-    if OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss"; then
+    if OLLAMA_HOST=http://localhost:10104 ollama list | grep -q "tinyllama"; then
         log "GPT-OSS already installed ✓"
         return 0
     fi
     
     log "Downloading GPT-OSS model..."
-    if ! OLLAMA_HOST=http://localhost:11434 ollama pull gpt-oss; then
+    if ! OLLAMA_HOST=http://localhost:10104 ollama pull tinyllama; then
         log_error "Failed to download GPT-OSS model"
         return 1
     fi
@@ -149,14 +149,14 @@ test_basic_functionality() {
     log "Testing basic Ollama functionality..."
     
     # Test API endpoint
-    if ! curl -sf http://localhost:11434/api/tags >/dev/null; then
+    if ! curl -sf http://localhost:10104/api/tags >/dev/null; then
         log_error "Ollama API not responding"
         return 1
     fi
     log "API endpoint responding ✓"
     
     # Test model availability
-    if ! OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss"; then
+    if ! OLLAMA_HOST=http://localhost:10104 ollama list | grep -q "tinyllama"; then
         log_error "GPT-OSS model not available"
         return 1
     fi
@@ -165,9 +165,9 @@ test_basic_functionality() {
     # Test simple generation
     log "Testing simple generation..."
     local test_response
-    test_response=$(curl -s -X POST http://localhost:11434/api/generate \
+    test_response=$(curl -s -X POST http://localhost:10104/api/generate \
         -H "Content-Type: application/json" \
-        -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false, "options": {"num_predict": 10}}')
+        -d '{"model": "tinyllama", "prompt": "Hello", "stream": false, "options": {"num_predict": 10}}')
     
     if [[ -z "$test_response" ]] || ! echo "$test_response" | jq -e '.response' >/dev/null 2>&1; then
         log_error "Simple generation test failed"
@@ -195,7 +195,7 @@ run_concurrency_test() {
         --output-file "${PROJECT_ROOT}/logs/quick_test_results.json" >/dev/null 2>&1; then
         log "Quick concurrency test passed ✓"
     else
-        log_warning "Quick concurrency test failed (this may be normal if gpt-oss is still downloading)"
+        log_warning "Quick concurrency test failed (this may be normal if tinyllama is still downloading)"
     fi
     
     return 0
@@ -209,7 +209,7 @@ start_monitoring() {
     if [[ -f "${PROJECT_ROOT}/monitoring/ollama_performance_monitor.py" ]]; then
         log "Starting Ollama performance monitor..."
         nohup python3 "${PROJECT_ROOT}/monitoring/ollama_performance_monitor.py" \
-            --instances http://localhost:11434 \
+            --instances http://localhost:10104 \
             --api-port 8082 \
             >/dev/null 2>&1 &
         echo $! > "${PROJECT_ROOT}/logs/monitor.pid"
@@ -244,8 +244,8 @@ generate_report() {
 
 ### Service Status:
 - **Ollama Service:** $(systemctl is-active ollama.service)
-- **API Endpoint:** $(curl -s http://localhost:11434/api/tags >/dev/null && echo "✅ Responding" || echo "❌ Not responding")
-- **GPT-OSS Model:** $(OLLAMA_HOST=http://localhost:11434 ollama list | grep -q "gpt-oss" && echo "✅ Installed" || echo "❌ Not installed")
+- **API Endpoint:** $(curl -s http://localhost:10104/api/tags >/dev/null && echo "✅ Responding" || echo "❌ Not responding")
+- **GPT-OSS Model:** $(OLLAMA_HOST=http://localhost:10104 ollama list | grep -q "tinyllama" && echo "✅ Installed" || echo "❌ Not installed")
 
 ### Capacity Analysis:
 - **Theoretical Capacity:** 50 simultaneous connections
@@ -260,7 +260,7 @@ generate_report() {
 - **Memory Usage:** 60-80% of allocated 20GB
 
 ## Rule 16 Compliance:
-- ✅ **gpt-oss as Default Model:** Configured and installed
+- ✅ **tinyllama as Default Model:** Configured and installed
 - ✅ **Ollama Framework:** All LLM access through Ollama
 - ✅ **Resource Constraints:** Defined and enforced
 
@@ -279,7 +279,7 @@ generate_report() {
 \`\`\`bash
 # Check status
 systemctl status ollama.service
-curl http://localhost:11434/api/tags
+curl http://localhost:10104/api/tags
 
 # View logs
 journalctl -u ollama.service -f
@@ -310,10 +310,10 @@ EOF
     echo -e "${BLUE}Configuration:${NC} High-concurrency optimized"
     echo -e "${BLUE}Capacity:${NC} 50 concurrent + 500 queued = 550 total"
     echo -e "${BLUE}Target Load:${NC} 174+ concurrent connections ✅"
-    echo -e "${BLUE}Model:${NC} gpt-oss (Rule 16 compliant)"
+    echo -e "${BLUE}Model:${NC} tinyllama (Rule 16 compliant)"
     echo -e "${BLUE}Status:${NC} $(systemctl is-active ollama.service)"
     echo
-    echo -e "${BLUE}API Endpoint:${NC} http://localhost:11434"
+    echo -e "${BLUE}API Endpoint:${NC} http://localhost:10104"
     echo -e "${BLUE}Monitoring:${NC} http://localhost:8082/metrics"
     echo -e "${BLUE}Report:${NC} $report_file"
     echo

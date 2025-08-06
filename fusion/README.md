@@ -24,7 +24,7 @@ The Multi-Modal Fusion System provides advanced capabilities for integrating het
    - Main fusion processing engine
    - Supports early, late, and hybrid fusion strategies
    - Temporal synchronization across modalities
-   - Integration with Ollama/gpt-oss for text processing
+   - Integration with Ollama/tinyllama for text processing
 
 2. **Unified Representation Framework** (`core/unified_representation.py`)
    - Cross-modal embedding alignment
@@ -181,7 +181,7 @@ Then open http://localhost:8501 to access the dashboard.
 - **Network**: WebSocket support for real-time monitoring
 
 ### Supported Modalities
-- **Text**: Natural language processing via Ollama/gpt-oss
+- **Text**: Natural language processing via Ollama/tinyllama
 - **Voice**: Audio processing with spectral analysis
 - **Visual**: Image/video processing with CNN features
 - **Sensor**: Time-series data with statistical features
@@ -206,7 +206,7 @@ batch_size: 32
 queue_max_size: 1000
 
 # Integration endpoints
-ollama_url: "http://ollama:11434"
+ollama_url: "http://ollama:10104"
 jarvis_url: "http://jarvis:8080" 
 chromadb_url: "http://chromadb:8000"
 neo4j_url: "bolt://neo4j:7687"
@@ -249,7 +249,7 @@ from fusion import integrate_with_sutazai
 # Configure integration
 integration_config = integrate_with_sutazai(
     agent_orchestrator_url="http://backend:8000/api/v1/agents",
-    ollama_url="http://ollama:11434"
+    ollama_url="http://ollama:10104"
 )
 
 # Initialize with integration

@@ -26,7 +26,7 @@ class OllamaMemoryOptimizer:
     def __init__(self, config_path: str = "/opt/sutazaiapp/config/ollama_optimization.yaml"):
         """Initialize the Ollama Memory Optimizer"""
         self.config = self.load_config(config_path)
-        self.ollama_url = "http://localhost:11434"
+        self.ollama_url = "http://localhost:10104"
         self.running = True
         self.last_activity = {}
         

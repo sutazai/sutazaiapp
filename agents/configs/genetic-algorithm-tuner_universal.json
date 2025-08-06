@@ -2,7 +2,7 @@
   "name": "genetic-algorithm-tuner",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9214,
   "capabilities": [
     "code_generation",

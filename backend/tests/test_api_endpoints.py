@@ -359,7 +359,7 @@ class TestChatEndpoints:
         """Test basic chat functionality"""
         request_data = {
             "message": "Hello, how are you?",
-            "model": "gpt-oss.2:1b"
+            "model": "tinyllama.2:1b"
         }
         
         response = client_chat.post("/api/v1/chat/", json=request_data)
@@ -509,8 +509,8 @@ def mock_models_app():
         async def list_models():
             return {
                 "models": [
-                    {"id": "gpt-oss", "name": "GPT-OSS", "status": "loaded"},
-                    {"id": "gpt-oss", "name": "GPT-OSS", "status": "loaded"}
+                    {"id": "tinyllama", "name": "GPT-OSS", "status": "loaded"},
+                    {"id": "tinyllama", "name": "GPT-OSS", "status": "loaded"}
                 ],
                 "total": 2
             }
@@ -560,24 +560,24 @@ class TestModelEndpoints:
     
     def test_load_model(self, client_models):
         """Test loading a model"""
-        request_data = {"model_id": "gpt-oss.2:1b"}
+        request_data = {"model_id": "tinyllama.2:1b"}
         
         response = client_models.post("/api/v1/models/load", json=request_data)
         assert response.status_code == 200
         
         data = response.json()
-        assert data["model_id"] == "gpt-oss.2:1b"
+        assert data["model_id"] == "tinyllama.2:1b"
         assert data["status"] == "loading"
     
     def test_unload_model(self, client_models):
         """Test unloading a model"""
-        request_data = {"model_id": "gpt-oss2.5:3b"}
+        request_data = {"model_id": "tinyllama2.5:3b"}
         
         response = client_models.post("/api/v1/models/unload", json=request_data)
         assert response.status_code == 200
         
         data = response.json()
-        assert data["model_id"] == "gpt-oss2.5:3b"
+        assert data["model_id"] == "tinyllama2.5:3b"
         assert data["status"] == "unloaded"
 
 @pytest.fixture

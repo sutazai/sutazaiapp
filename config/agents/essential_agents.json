@@ -4,7 +4,7 @@
       "id": "general-assistant",
       "name": "General AI Assistant",
       "type": "general",
-      "model": "gpt-oss:latest",
+      "model": "tinyllama:latest",
       "capabilities": ["conversation", "analysis", "planning"],
       "system_prompt": "You are a helpful AI assistant capable of handling general tasks."
     },
@@ -12,7 +12,7 @@
       "id": "code-helper",
       "name": "Code Helper",
       "type": "code_assistant",
-      "model": "gpt-oss.2:1b",
+      "model": "tinyllama.2:1b",
       "capabilities": ["code_generation", "debugging", "refactoring"],
       "system_prompt": "You are an expert programming assistant."
     },
@@ -20,7 +20,7 @@
       "id": "task-planner",
       "name": "Task Planner",
       "type": "orchestrator",
-      "model": "gpt-oss:latest",
+      "model": "tinyllama:latest",
       "capabilities": ["task_planning", "workflow_design", "coordination"],
       "system_prompt": "You are a task planning and coordination specialist."
     }

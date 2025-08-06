@@ -67,7 +67,7 @@ class AIAgentOrchestrator:
             logger.info("Connected to Redis successfully")
             
             # Initialize Ollama
-            ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+            ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:10104")
             self.ollama_client = ollama.AsyncClient(host=ollama_base_url)
             logger.info("Connected to Ollama successfully")
             

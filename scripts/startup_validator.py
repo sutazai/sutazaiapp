@@ -263,7 +263,7 @@ class StartupValidator:
         """Test availability of key API endpoints"""
         endpoints = {
             "backend": "http://localhost:8000/health",
-            "ollama": "http://localhost:11434/api/tags",
+            "ollama": "http://localhost:10104/api/tags",
             "frontend": "http://localhost:8501"
         }
         

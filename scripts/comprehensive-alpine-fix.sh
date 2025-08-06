@@ -138,7 +138,7 @@ for container in $ALPINE_CONTAINERS; do
         -p "${port}:8080" \
         -e "AGENT_NAME=${agent_name}" \
         -e "AGENT_ROLE=${agent_name} Agent" \
-        -e "OLLAMA_BASE_URL=http://ollama:11434" \
+        -e "OLLAMA_BASE_URL=http://ollama:10104" \
         -e "REDIS_URL=redis://redis:6379/0" \
         -v "/tmp/startup_${agent_name}.sh:/startup.sh:ro" \
         --restart unless-stopped \

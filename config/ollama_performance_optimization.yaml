@@ -1,18 +1,18 @@
 # Advanced Ollama Performance Optimization Configuration
-# Optimized for SutazAI 69-agent deployment with gpt-oss default
+# Optimized for SutazAI 69-agent deployment with tinyllama default
 
 ollama_optimization:
   # Core Performance Settings
   performance:
     model_loading:
-      preload_models: ["gpt-oss"]     # Always keep gpt-oss loaded
+      preload_models: ["tinyllama"]     # Always keep tinyllama loaded
       max_loaded_models: 2              # Keep 2 models in memory max
       model_unload_timeout: 120s        # Unload unused models after 2 minutes
       lazy_loading: false               # Disable for critical models
       model_switching_delay: 100ms      # Minimize model switching overhead
     
     inference_optimization:
-      batch_size: 16                    # Optimal batch size for gpt-oss
+      batch_size: 16                    # Optimal batch size for tinyllama
       max_concurrent_requests: 32       # Handle multiple requests efficiently
       queue_timeout: 30s                # Maximum queue wait time
       request_timeout: 120s             # Maximum inference time
@@ -32,8 +32,8 @@ ollama_optimization:
       swap_prevention: true            # Prevent swapping to disk
       memory_mapping: true             # Use memory mapping for models
       
-  # gpt-oss Specific Optimizations
-  gpt-oss_config:
+  # tinyllama Specific Optimizations
+  tinyllama_config:
     temperature: 0.3                   # Consistent responses
     top_p: 0.85                       # Balanced creativity
     top_k: 25                         # Optimal token selection
@@ -47,19 +47,19 @@ ollama_optimization:
     
   # Multi-Model Configuration
   model_configs:
-    gpt-oss:
+    tinyllama:
       priority: 1                     # Highest priority
       keep_loaded: true              # Always keep in memory
       batch_size: 16                 # Optimal batch size
       concurrent_requests: 32        # High concurrency
       
-    "gpt-oss.2:3b":
+    "tinyllama.2:3b":
       priority: 2                     # Medium priority
       keep_loaded: false             # Load on demand
       batch_size: 8                  # Smaller batch for larger model
       concurrent_requests: 16        # Lower concurrency
       
-    "gpt-oss-r1:8b":
+    "tinyllama":
       priority: 3                     # Lower priority
       keep_loaded: false             # Load on demand
       batch_size: 4                  # Small batch for large model
@@ -217,6 +217,6 @@ emergency_controls:
     max_queue_length: 1000           # Drop requests if queue too long
     
   fallback_strategies:
-    model_fallback: "gpt-oss"       # Fallback to gpt-oss
+    model_fallback: "tinyllama"       # Fallback to tinyllama
     response_fallback: "I'm experiencing high load. Please try again shortly."
     graceful_degradation: true       # Reduce features under load

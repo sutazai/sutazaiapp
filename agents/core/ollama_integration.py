@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Purpose: Ollama integration for all agents with gpt-oss default
+Purpose: Ollama integration for all agents with tinyllama default
 Usage: Imported by all agent implementations
 Requirements: ollama, httpx, asyncio
 """
@@ -18,8 +18,8 @@ class OllamaIntegration:
     """Handles all Ollama interactions for agents"""
     
     def __init__(self, 
-                 base_url: str = "http://localhost:11434",
-                 default_model: str = "gpt-oss",
+                 base_url: str = "http://localhost:10104",
+                 default_model: str = "tinyllama",
                  timeout: int = 300):
         self.base_url = base_url
         self.default_model = default_model
@@ -179,10 +179,10 @@ class OllamaIntegration:
 class OllamaConfig:
     """Configuration for Ollama models by agent type - Limited Hardware Edition"""
     
-    # All models use gpt-oss for limited hardware compatibility
-    OPUS_MODEL = "gpt-oss"  # Would be gpt-oss-r1:8b on better hardware
-    SONNET_MODEL = "gpt-oss"  # Would be gpt-oss2.5-coder:7b on better hardware
-    DEFAULT_MODEL = "gpt-oss"  # Universal model for all agents
+    # All models use tinyllama for limited hardware compatibility
+    OPUS_MODEL = "tinyllama"  # Would be tinyllama on better hardware
+    SONNET_MODEL = "tinyllama"  # Would be tinyllama2.5-coder:7b on better hardware
+    DEFAULT_MODEL = "tinyllama"  # Universal model for all agents
     
     # Agent to model mapping
     AGENT_MODELS = {

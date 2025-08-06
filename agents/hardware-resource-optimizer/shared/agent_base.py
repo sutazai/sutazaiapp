@@ -31,7 +31,7 @@ class BaseAgent:
         self.agent_name = os.getenv('AGENT_NAME', 'base-agent')
         self.agent_type = os.getenv('AGENT_TYPE', 'base')
         self.backend_url = os.getenv('BACKEND_URL', 'http://backend:8000')
-        self.ollama_url = os.getenv('OLLAMA_URL', 'http://ollama:11434')
+        self.ollama_url = os.getenv('OLLAMA_URL', 'http://ollama:10104')
         self.is_running = False
         self.tasks_processed = 0
         self.last_heartbeat = time.time()
@@ -159,7 +159,7 @@ class BaseAgent:
             "task_id": task.get("id", "unknown")
         }
     
-    def query_ollama(self, prompt: str, model: str = "gpt-oss") -> Optional[str]:
+    def query_ollama(self, prompt: str, model: str = "tinyllama") -> Optional[str]:
         """Query Ollama for AI assistance"""
         try:
             response = requests.post(

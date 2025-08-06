@@ -81,7 +81,7 @@ class OllamaLoadTester:
                  request_timeout: int = 120,
                  connection_pool_size: int = 300):
         
-        self.ollama_urls = ollama_urls or ["http://localhost:11434"]
+        self.ollama_urls = ollama_urls or ["http://localhost:10104"]
         self.max_concurrent = max_concurrent
         self.request_timeout = request_timeout
         self.connection_pool_size = connection_pool_size
@@ -160,7 +160,7 @@ class OllamaLoadTester:
         """Generate a test request with varied parameters."""
         return TestRequest(
             id=request_id,
-            model="gpt-oss",  # Using GPT-OSS model
+            model="tinyllama",  # Using GPT-OSS model
             prompt=random.choice(self.test_prompts),
             max_tokens=random.randint(50, 200),
             temperature=random.uniform(0.1, 0.8),
@@ -452,7 +452,7 @@ class OllamaLoadTester:
         print(f"  Concurrent Users: {metrics.concurrent_users}")
         print(f"  Total Duration: {metrics.total_test_duration_s:.1f}s")
         print(f"  Ollama Instances: {len(self.ollama_urls)}")
-        print(f"  Target Model: gpt-oss")
+        print(f"  Target Model: tinyllama")
         
         print(f"\nRequest Statistics:")
         print(f"  Total Requests: {metrics.total_requests}")
@@ -527,7 +527,7 @@ class OllamaLoadTester:
 async def main():
     """Main entry point for load testing."""
     parser = argparse.ArgumentParser(description="Ollama High-Concurrency Load Tester")
-    parser.add_argument("--urls", nargs="+", default=["http://localhost:11434"],
+    parser.add_argument("--urls", nargs="+", default=["http://localhost:10104"],
                        help="Ollama instance URLs")
     parser.add_argument("--concurrent-users", type=int, default=174,
                        help="Number of concurrent users (default: 174)")
@@ -567,7 +567,7 @@ async def main():
         print(f"\n🚀 Starting Ollama High-Concurrency Load Test")
         print(f"Target: {args.concurrent_users} concurrent connections")
         print(f"Ollama instances: {args.urls}")
-        print(f"Model: gpt-oss")
+        print(f"Model: tinyllama")
         
         # Run tests based on type
         if args.test_type in ["concurrent", "both"]:

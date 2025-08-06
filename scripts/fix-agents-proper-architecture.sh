@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 # Get agent configuration from environment
 AGENT_NAME = os.getenv("AGENT_NAME", "unknown-agent")
 AGENT_PORT = int(os.getenv("AGENT_PORT", "8000"))
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:10104")
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 
 # Create FastAPI app
@@ -72,7 +72,7 @@ async def info():
             "task_execution",
             "system_coordination"
         ],
-        "model_backend": "ollama/gpt-oss",
+        "model_backend": "ollama/tinyllama",
         "version": "1.0.0"
     }
 
@@ -150,7 +150,7 @@ for container in $PROBLEMATIC_CONTAINERS; do
         -p "${port}:8000" \
         -e "AGENT_NAME=${agent_name}" \
         -e "AGENT_PORT=8000" \
-        -e "OLLAMA_BASE_URL=http://ollama:11434" \
+        -e "OLLAMA_BASE_URL=http://ollama:10104" \
         -e "REDIS_URL=redis://redis:6379/0" \
         -v "/tmp/agent_base.py:/app/main.py:ro" \
         --restart unless-stopped \

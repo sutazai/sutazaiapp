@@ -395,7 +395,7 @@ class HygieneDashboardHandler(SimpleHTTPRequestHandler):
             'Script Organization', 'Python Script Standards', 'No Code Duplication',
             'Verify Before Cleanup', 'Clean Docker Structure', 'Single Deployment Script',
             'No Garbage Files', 'Correct AI Agent Usage', 'Clean Documentation',
-            'Ollama/gpt-oss Standard'
+            'Ollama/tinyllama Standard'
         ]
         
         for i, name in enumerate(rule_names, 1):

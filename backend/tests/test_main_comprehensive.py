@@ -54,7 +54,7 @@ def mock_external_services():
         mock_ollama.return_value = True
         mock_chromadb.return_value = True
         mock_qdrant.return_value = True
-        mock_models.return_value = ["gpt-oss.2:1b", "gpt-oss2.5:3b", "gpt-oss:7b"]
+        mock_models.return_value = ["tinyllama.2:1b", "tinyllama2.5:3b", "tinyllama:7b"]
         mock_query.return_value = "Mock AI response"
         
         yield {
@@ -201,7 +201,7 @@ class TestChatEndpoints:
         """Test successful chat interaction"""
         request_data = {
             "message": "Hello, AI assistant",
-            "model": "gpt-oss.2:1b",
+            "model": "tinyllama.2:1b",
             "agent": "task_coordinator",
             "temperature": 0.7
         }
@@ -211,7 +211,7 @@ class TestChatEndpoints:
         
         data = response.json()
         assert "response" in data
-        assert data["model"] == "gpt-oss.2:1b"
+        assert data["model"] == "tinyllama.2:1b"
         assert data["agent"] == "task_coordinator"
         assert "timestamp" in data
         assert data["processing_enhancement"] is True
@@ -660,7 +660,7 @@ class TestModelManagement:
         """Test model generation endpoint"""
         request_data = {
             "prompt": "Explain quantum computing",
-            "model": "gpt-oss.2:1b",
+            "model": "tinyllama.2:1b",
             "max_tokens": 1024,
             "temperature": 0.7
         }
@@ -670,7 +670,7 @@ class TestModelManagement:
         
         data = response.json()
         assert "generated_text" in data
-        assert data["model_used"] == "gpt-oss.2:1b"
+        assert data["model_used"] == "tinyllama.2:1b"
         assert "tokens_used" in data
 
 class TestAPIDocumentation:

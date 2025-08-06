@@ -2,7 +2,7 @@
   "name": "deep-local-brain-builder",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9210,
   "capabilities": [
     "code_generation",

@@ -165,7 +165,7 @@ class DistributedTask(Task):
 
 # AI Inference Tasks
 @app.task(base=DistributedTask, bind=True, name='ai.inference.process_prompt')
-def process_prompt(self, prompt: str, model: str = 'gpt-oss', **kwargs) -> Dict[str, Any]:
+def process_prompt(self, prompt: str, model: str = 'tinyllama', **kwargs) -> Dict[str, Any]:
     """Process AI prompt using distributed Ollama instances"""
     try:
         # Get available Ollama instances from Consul
@@ -428,7 +428,7 @@ def complete_analysis(data: Dict) -> Dict[str, Any]:
         # Step 3: Process with AI
         process_prompt.s(
             prompt=f"Analyze the following: {data.get('text', '')}",
-            model='gpt-oss'
+            model='tinyllama'
         ),
         
         # Step 4: Post-process results

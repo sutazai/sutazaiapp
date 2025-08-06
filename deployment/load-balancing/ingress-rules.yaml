@@ -118,7 +118,7 @@ spec:
           service:
             name: sutazai-ollama
             port:
-              number: 11434
+              number: 10104
   - host: ai.sutazai.local
     http:
       paths:
@@ -128,7 +128,7 @@ spec:
           service:
             name: sutazai-ollama
             port:
-              number: 11434
+              number: 10104
 
 ---
 # Vector Database Ingress

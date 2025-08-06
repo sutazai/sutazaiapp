@@ -41,7 +41,7 @@ mv scripts/update_agents_*.py scripts/agents/management/ 2>/dev/null
 
 # Model-related scripts
 mv scripts/ollama_*.sh scripts/models/ollama/ 2>/dev/null
-mv scripts/update_*_to_gpt-oss.* scripts/models/ollama/ 2>/dev/null
+mv scripts/update_*_to_tinyllama.* scripts/models/ollama/ 2>/dev/null
 
 # Cleanup and verification scripts
 mv scripts/remove_*.sh scripts/utils/cleanup/ 2>/dev/null
@@ -168,14 +168,14 @@ cat > scripts/README.md << 'EOF'
 
 ### System Deployment
 - `deployment/system/deploy_complete_system.sh` - Main deployment script
-- `deployment/system/start_gpt-oss.sh` - Start system with gpt-oss
+- `deployment/system/start_tinyllama.sh` - Start system with tinyllama
 
 ### Agent Management
 - `agents/configuration/configure_all_agents.sh` - Configure all agents
-- `agents/management/update_agents_to_gpt-oss.py` - Update agent models
+- `agents/management/update_agents_to_tinyllama.py` - Update agent models
 
 ### Verification
-- `utils/verification/verify_gpt-oss_config.sh` - Verify gpt-oss setup
+- `utils/verification/verify_tinyllama_config.sh` - Verify tinyllama setup
 - `utils/verification/verify_litellm_removal.sh` - Verify LiteLLM removal
 
 ### Model Management
@@ -220,7 +220,7 @@ cat > docs/README.md << 'EOF'
 
 ### Getting Started
 - `guides/quickstart/QUICK_START_ENHANCED.md` - Enhanced quick start guide
-- `GPT-OSS_CONFIGURATION_COMPLETE.md` - gpt-oss setup complete
+- `GPT-OSS_CONFIGURATION_COMPLETE.md` - tinyllama setup complete
 
 ### System Overview
 - `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - automation architecture

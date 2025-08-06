@@ -176,7 +176,7 @@ The following environment variables can be set to customize test behavior:
 ```bash
 # Service URLs (defaults provided)
 export BACKEND_URL="http://test-backend:8000"
-export OLLAMA_URL="http://test-ollama:11434"
+export OLLAMA_URL="http://test-ollama:10104"
 
 # Test configuration
 export LOG_LEVEL="WARNING"

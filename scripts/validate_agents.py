@@ -12,7 +12,7 @@ from pathlib import Path
 
 REQUIRED_FIELDS = ['name', 'model', 'temperature']
 VALID_MODELS = [
-    'gpt-oss'
+    'tinyllama'
 ]
 
 def extract_yaml_frontmatter(content):

@@ -101,7 +101,7 @@ NEO4J_URL=bolt://neo4j:${NEO4J_PASSWORD}@neo4j:7687
 OLLAMA_HOST=localhost
 OLLAMA_PORT=10104
 OLLAMA_LEGACY_PORT=11270
-OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_BASE_URL=http://ollama:10104
 OLLAMA_EXTERNAL_URL=http://localhost:10104
 OLLAMA_LEGACY_URL=http://localhost:11270
 
@@ -239,7 +239,7 @@ generate_report() {
             "status": "$ollama_status",
             "endpoint": "localhost:10104",
             "legacy_endpoint": "localhost:11270",
-            "internal": "ollama:11434"
+            "internal": "ollama:10104"
         }
     },
     "agents": {

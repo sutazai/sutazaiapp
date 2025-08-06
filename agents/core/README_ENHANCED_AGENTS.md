@@ -138,23 +138,23 @@ from core.ollama_integration import OllamaConfig
 
 # Get model for specific agent
 model = OllamaConfig.get_model_for_agent("ai-system-architect")
-# Returns: "gpt-oss-r1:8b" (Opus model for complex reasoning)
+# Returns: "tinyllama" (Opus model for complex reasoning)
 
 config = OllamaConfig.get_model_config("simple-task-agent") 
-# Returns: Full config with gpt-oss for simple tasks
+# Returns: Full config with tinyllama for simple tasks
 ```
 
 **Model Tiers:**
-- **Opus Models** (`gpt-oss-r1:8b`): Complex reasoning agents (31 agents)
-- **Sonnet Models** (`gpt-oss2.5-coder:7b`): Balanced performance (59 agents)
-- **Default Model** (`gpt-oss`): Simple tasks and monitoring (41 agents)
+- **Opus Models** (`tinyllama`): Complex reasoning agents (31 agents)
+- **Sonnet Models** (`tinyllama2.5-coder:7b`): Balanced performance (59 agents)
+- **Default Model** (`tinyllama`): Simple tasks and monitoring (41 agents)
 
 ### Environment Variables
 
 ```bash
 # Ollama Configuration
-OLLAMA_URL=http://ollama:11434
-OLLAMA_DEFAULT_MODEL=gpt-oss
+OLLAMA_URL=http://ollama:10104
+OLLAMA_DEFAULT_MODEL=tinyllama
 
 # Agent Configuration  
 AGENT_NAME=my-agent
@@ -337,12 +337,12 @@ CMD ["python", "/app/agents/my-agent/app.py"]
 ### Environment Setup
 ```bash
 # Ensure Ollama is running
-curl http://localhost:11434/api/version
+curl http://localhost:10104/api/version
 
 # Pull required models
-ollama pull gpt-oss
-ollama pull gpt-oss2.5-coder:7b  
-ollama pull gpt-oss-r1:8b
+ollama pull tinyllama
+ollama pull tinyllama2.5-coder:7b  
+ollama pull tinyllama
 
 # Start agent
 python -m agents.my-agent.app
@@ -355,10 +355,10 @@ python -m agents.my-agent.app
 1. **Connection Errors**
    ```bash
    # Check Ollama connectivity
-   curl http://ollama:11434/api/version
+   curl http://ollama:10104/api/version
    
    # Verify model availability
-   curl http://ollama:11434/api/tags
+   curl http://ollama:10104/api/tags
    ```
 
 2. **Memory Issues**
@@ -373,7 +373,7 @@ python -m agents.my-agent.app
 3. **Model Not Found**
    ```bash
    # Pull missing model
-   ollama pull gpt-oss
+   ollama pull tinyllama
    ```
 
 4. **Legacy Agent Issues**

@@ -62,7 +62,7 @@ class GPTOSSIntegration:
         
         # Use the model manager to generate (will be injected)
         if self.model_manager:
-            model_name = "gpt-oss"  # Use unified model
+            model_name = "tinyllama"  # Use unified model
             if model_name not in self.model_manager.loaded_models:
                 await self.model_manager.load_model(model_name)
             
@@ -85,7 +85,7 @@ class GPTOSSIntegration:
         completion_prompt = self._create_completion_prompt(partial_code, language)
         
         if self.model_manager:
-            model_name = "gpt-oss"
+            model_name = "tinyllama"
             if model_name not in self.model_manager.loaded_models:
                 await self.model_manager.load_model(model_name)
             
@@ -107,7 +107,7 @@ class GPTOSSIntegration:
         explanation_prompt = self._create_explanation_prompt(code, language)
         
         if self.model_manager:
-            model_name = "gpt-oss"
+            model_name = "tinyllama"
             if model_name not in self.model_manager.loaded_models:
                 await self.model_manager.load_model(model_name)
             
@@ -130,7 +130,7 @@ class GPTOSSIntegration:
         optimization_prompt = self._create_optimization_prompt(optimized, language)
         
         if self.model_manager:
-            model_name = "gpt-oss"
+            model_name = "tinyllama"
             if model_name not in self.model_manager.loaded_models:
                 await self.model_manager.load_model(model_name)
             

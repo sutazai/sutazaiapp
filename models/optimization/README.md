@@ -1,6 +1,6 @@
 # Neural Architecture Optimization System for SutazAI
 
-This comprehensive optimization system maximizes AI model performance on CPU-only infrastructure, enabling efficient deployment of 69 AI agents on a 12-core system with gpt-oss as the default model.
+This comprehensive optimization system maximizes AI model performance on CPU-only infrastructure, enabling efficient deployment of 69 AI agents on a 12-core system with tinyllama as the default model.
 
 ## Overview
 
@@ -71,7 +71,7 @@ python optimization_orchestrator.py
 This will:
 1. Analyze all 69 agents and their model requirements
 2. Create an optimization plan
-3. Optimize each unique model (gpt-oss)
+3. Optimize each unique model (tinyllama)
 4. Deploy optimized models
 5. Generate performance report
 
@@ -101,7 +101,7 @@ Expected improvements on 12-core CPU:
 
 | Model | Original Size | Optimized Size | Speedup | Quality |
 |-------|--------------|----------------|---------|---------|
-| gpt-oss | 250MB | 62MB | 3.2x | 98% |
+| tinyllama | 250MB | 62MB | 3.2x | 98% |
 
 ## Configuration
 
@@ -217,7 +217,7 @@ optimizer.optimize_for_cpu(model, strategy)
 ```python
 # Share base model across agents
 await cache.share_model(
-    "gpt-oss",
+    "tinyllama",
     source_agent="agent_0",
     target_agents=["agent_1", "agent_2", "agent_3"]
 )

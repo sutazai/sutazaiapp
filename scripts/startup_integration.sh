@@ -195,7 +195,7 @@ alias sutazai-benchmark='${SUTAZAI_ROOT}/scripts/startup_validator.py && echo "B
 # System management
 alias sutazai-stop='docker compose -f ${SUTAZAI_ROOT}/docker-compose.yml down'
 alias sutazai-restart='sutazai-stop && sleep 5 && sutazai-start'
-alias sutazai-health='curl -s http://localhost:8000/health && curl -s http://localhost:11434/api/tags'
+alias sutazai-health='curl -s http://localhost:8000/health && curl -s http://localhost:10104/api/tags'
 
 # Development helpers
 alias sutazai-dev='${SUTAZAI_ROOT}/scripts/fast_start.sh core --monitor --parallel 4'
@@ -277,7 +277,7 @@ case "$CHECK_TYPE" in
                 curl -f http://localhost:8501 >/dev/null 2>&1
                 ;;
             "ollama")
-                curl -f http://localhost:11434/api/tags >/dev/null 2>&1
+                curl -f http://localhost:10104/api/tags >/dev/null 2>&1
                 ;;
             *)
                 exit 0  # Default to healthy for unknown services

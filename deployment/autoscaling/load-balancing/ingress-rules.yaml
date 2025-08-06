@@ -92,7 +92,7 @@ spec:
             service:
               name: sutazai-ollama
               port:
-                number: 11434
+                number: 10104
     
     # AutoGPT
     - http:
@@ -221,7 +221,7 @@ spec:
       kind: Rule
       services:
         - name: sutazai-ollama
-          port: 11434
+          port: 10104
       middlewares:
         - name: circuit-breaker
         - name: retry

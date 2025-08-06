@@ -54,7 +54,7 @@ performance_targets:
   size_reduction: 0.3       # 30% smaller
 
 integrations:
-  ollama_url: "http://ollama:11434"
+  ollama_url: "http://ollama:10104"
   backend_url: "http://backend:8000"
   
 logging:

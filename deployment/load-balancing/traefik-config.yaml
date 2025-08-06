@@ -243,7 +243,7 @@ spec:
     kind: Rule
     services:
     - name: sutazai-ollama
-      port: 11434
+      port: 10104
       strategy: RoundRobin
       healthCheck:
         path: /

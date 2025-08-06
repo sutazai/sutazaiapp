@@ -96,9 +96,9 @@ echo "    \"list_agents_ms\": $(echo "$agents_time * 1000" | bc)," >> "$REPORT_F
 # Test model inference if available
 echo -e "${YELLOW}Testing Ollama inference...${NC}"
 inference_start=$(date +%s.%N)
-inference_response=$(curl -s -X POST http://localhost:11434/api/generate \
+inference_response=$(curl -s -X POST http://localhost:10104/api/generate \
     -d '{
-        "model": "gpt-oss:latest",
+        "model": "tinyllama:latest",
         "prompt": "Hello, how are you?",
         "stream": false,
         "options": {"num_predict": 10}
@@ -133,7 +133,7 @@ echo '  },' >> "$REPORT_FILE"
 echo -e "${GREEN}🏥 Checking Service Availability${NC}"
 echo '  "service_availability": {' >> "$REPORT_FILE"
 
-services=("postgres:5432" "redis:6379" "backend:8000" "frontend:8501" "ollama:11434")
+services=("postgres:5432" "redis:6379" "backend:8000" "frontend:8501" "ollama:10104")
 available_count=0
 total_count=${#services[@]}
 

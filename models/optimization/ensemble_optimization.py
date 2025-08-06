@@ -40,7 +40,7 @@ class EnsembleConfig:
     strategy: EnsembleStrategy = EnsembleStrategy.WEIGHTED_AVERAGE
     
     # Model selection
-    models: List[str] = field(default_factory=lambda: ["gpt-oss2.5-coder:7b", "gpt-oss"])
+    models: List[str] = field(default_factory=lambda: ["tinyllama2.5-coder:7b", "tinyllama"])
     model_weights: Optional[List[float]] = None
     
     # Ensemble parameters
@@ -62,7 +62,7 @@ class EnsembleConfig:
     parallel_execution: bool = True
     max_concurrent_models: int = 3
     timeout_seconds: float = 30.0
-    fallback_model: str = "gpt-oss"
+    fallback_model: str = "tinyllama"
     
     # Quality control
     consensus_requirement: float = 0.6
@@ -77,7 +77,7 @@ class EnsembleConfig:
 class ModelProxy:
     """Proxy for individual models in the ensemble"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:11434"):
+    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None
@@ -928,7 +928,7 @@ async def create_ensemble(models: List[str] = None,
     """Create and initialize a model ensemble"""
     if config is None:
         config = EnsembleConfig(
-            models=models or ["gpt-oss2.5-coder:7b", "gpt-oss"],
+            models=models or ["tinyllama2.5-coder:7b", "tinyllama"],
             strategy=strategy
         )
     
@@ -942,7 +942,7 @@ async def example_ensemble_usage():
     """Example usage of the ensemble system"""
     # Create ensemble
     ensemble = await create_ensemble(
-        models=["gpt-oss2.5-coder:7b", "gpt-oss"],
+        models=["tinyllama2.5-coder:7b", "tinyllama"],
         strategy=EnsembleStrategy.ADAPTIVE_WEIGHTING
     )
     

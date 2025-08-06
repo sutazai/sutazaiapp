@@ -209,11 +209,11 @@ test_ai_models() {
     local details=""
     
     # Test Ollama service
-    if curl -sf "http://localhost:11434/api/tags" >/dev/null 2>&1; then
+    if curl -sf "http://localhost:10104/api/tags" >/dev/null 2>&1; then
         details+="- ✅ Ollama service: Accessible\n"
         
         # Get model count
-        local model_count=$(curl -s "http://localhost:11434/api/tags" | jq '.models | length' 2>/dev/null || echo 0)
+        local model_count=$(curl -s "http://localhost:10104/api/tags" | jq '.models | length' 2>/dev/null || echo 0)
         details+="- ℹ️ Available models: $model_count\n"
         
         if [ "$model_count" -gt 0 ]; then

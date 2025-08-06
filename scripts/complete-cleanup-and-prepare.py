@@ -165,7 +165,7 @@ SutazAI is a local AI automation platform using Docker, FastAPI, and Ollama.
 - PostgreSQL Database (port 10000)
 - Redis Cache (port 10001)
 - Neo4j Graph DB (ports 10002-10003)
-- Ollama Local LLM (port 11434)
+- Ollama Local LLM (port 10104)
 - Basic Monitoring Stack
 
 ## 🚀 Quick Start
@@ -265,7 +265,7 @@ import httpx
 
 class OllamaService:
     def __init__(self):
-        self.base_url = "http://ollama:11434"
+        self.base_url = "http://ollama:10104"
     
     async def generate(self, prompt: str):
         async with httpx.AsyncClient() as client:
@@ -537,7 +537,7 @@ CREATE INDEX idx_system_metrics_recorded_at ON system_metrics(recorded_at);
 INSERT INTO agents (name, type, endpoint, port, capabilities) VALUES
 ('health-monitor', 'monitoring', 'http://health-monitor:8080', 10210, '["health_check", "metrics"]'),
 ('task-coordinator', 'orchestration', 'http://task-coordinator:8080', 10450, '["task_routing", "scheduling"]'),
-('ollama-service', 'llm', 'http://ollama:11434', 11434, '["text_generation", "chat"]');
+('ollama-service', 'llm', 'http://ollama:10104', 10104, '["text_generation", "chat"]');
 """)
     
     print(f"  ✓ Created: DATABASE_SCHEMA.sql")
@@ -590,7 +590,7 @@ services:
     environment:
       DATABASE_URL: postgresql://sutazai:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/sutazai
       REDIS_URL: redis://redis:6379
-      OLLAMA_URL: http://ollama:11434
+      OLLAMA_URL: http://ollama:10104
     depends_on:
       postgres:
         condition: service_healthy
@@ -617,12 +617,12 @@ services:
     image: ollama/ollama:latest
     container_name: sutazai-ollama
     ports:
-      - "11434:11434"
+      - "10104:10104"
     volumes:
       - ollama_data:/root/.ollama
     command: serve
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD", "curl", "-f", "http://localhost:10104/api/tags"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -887,7 +887,7 @@ curl http://localhost:10010/health
 curl http://localhost:10011
 
 # Check Ollama
-curl http://localhost:11434/api/tags
+curl http://localhost:10104/api/tags
 ```
 
 ## Monitoring

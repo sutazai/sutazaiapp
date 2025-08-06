@@ -1,8 +1,8 @@
 llm:
   provider: ollama
-  base_url: http://ollama:11434
+  base_url: http://ollama:10104
   api_key: local
-  model: gpt-oss
+  model: tinyllama
   
 embeddings:
   provider: ollama
@@ -10,5 +10,5 @@ embeddings:
   
 api:
   compatibility_mode: openai
-  base_url: http://ollama:11434/v1
+  base_url: http://ollama:10104/v1
   key: dummy

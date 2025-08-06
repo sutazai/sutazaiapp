@@ -38,7 +38,7 @@ spec:
           containerPort: 9200
         env:
         - name: OLLAMA_BASE_URL
-          value: "http://sutazai-ollama.sutazai-core:11434"
+          value: "http://sutazai-ollama.sutazai-core:10104"
         - name: BACKEND_URL
           value: "http://sutazai-backend.sutazai-core:8000"
         - name: CHROMADB_URL
@@ -289,7 +289,7 @@ data:
     
     class AIMetricsExporter:
         def __init__(self):
-            self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://ollama:11434')
+            self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://ollama:10104')
             self.backend_url = os.getenv('BACKEND_URL', 'http://backend:8000')
             self.chromadb_url = os.getenv('CHROMADB_URL', 'http://chromadb:8000')
             self.qdrant_url = os.getenv('QDRANT_URL', 'http://qdrant:6333')
@@ -632,7 +632,7 @@ data:
       
     services:
       ollama:
-        url: "http://sutazai-ollama.sutazai-core:11434"
+        url: "http://sutazai-ollama.sutazai-core:10104"
         endpoints:
           - "/api/tags"
           - "/api/show"

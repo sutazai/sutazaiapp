@@ -32,7 +32,7 @@ def test_port_scanning():
         8001,  # Common dev port
         8080,  # Common web server
         8116,  # Hardware resource optimizer
-        11434, # Ollama default
+        10104, # Ollama default
     ]
     
     print("Scanning common ports...")

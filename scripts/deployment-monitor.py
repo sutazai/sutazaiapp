@@ -232,7 +232,7 @@ class DeploymentMonitor:
         
         try:
             # Check Ollama service health
-            response = requests.get("http://localhost:11434/api/tags", timeout=10)
+            response = requests.get("http://localhost:10104/api/tags", timeout=10)
             ollama_healthy = response.status_code == 200
             
             metrics['ollama_health'] = MetricValue(

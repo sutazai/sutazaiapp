@@ -26,7 +26,7 @@ scrape_configs:
   # Ollama service monitoring
   - job_name: 'ollama'
     static_configs:
-      - targets: ['ollama-primary:11434']
+      - targets: ['ollama-primary:10104']
     metrics_path: '/metrics'
     scrape_interval: 30s
     scrape_timeout: 10s

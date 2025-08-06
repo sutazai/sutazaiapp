@@ -19,9 +19,9 @@ curl -X PUT "${CONSUL_URL}/v1/agent/service/register" -d '{
   "Name": "ollama",
   "Tags": ["ai", "llm", "primary"],
   "Address": "ollama",
-  "Port": 11434,
+  "Port": 10104,
   "Check": {
-    "HTTP": "http://ollama:11434/api/tags",
+    "HTTP": "http://ollama:10104/api/tags",
     "Interval": "10s",
     "Timeout": "5s"
   }
@@ -144,7 +144,7 @@ echo "All services registered with Consul successfully!"
 echo "Setting service configurations..."
 
 # Ollama configuration
-curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/models" -d 'gpt-oss'
+curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/models" -d 'tinyllama'
 curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/max_parallel" -d '2'
 curl -X PUT "${CONSUL_URL}/v1/kv/config/ollama/cpu_only" -d 'true'
 

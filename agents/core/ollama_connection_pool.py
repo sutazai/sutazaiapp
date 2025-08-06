@@ -76,7 +76,7 @@ class OllamaConnectionPool:
         
         # Default to single local instance if none provided
         if instances is None:
-            instances = [("localhost", 11434)]
+            instances = [("localhost", 10104)]
         
         self.instances = [
             OllamaInstance(host, port, max_connections_per_instance)
@@ -203,7 +203,7 @@ class OllamaConnectionPool:
         Generate text using Ollama with intelligent routing and queuing.
         
         Args:
-            model: Model name (defaults to gpt-oss per Rule 16)
+            model: Model name (defaults to tinyllama per Rule 16)
             prompt: Input prompt
             options: Generation options
             priority: Request priority (1=high, 10=low)
@@ -212,7 +212,7 @@ class OllamaConnectionPool:
             Generation response dict
         """
         if model is None:
-            model = "gpt-oss"  # Rule 16 compliance
+            model = "tinyllama"  # Rule 16 compliance
             
         request_start = time.time()
         
@@ -467,7 +467,7 @@ async def get_connection_pool() -> OllamaConnectionPool:
     
     if _connection_pool is None:
         # Configure instances based on available setup
-        instances = [("localhost", 11434)]  # Start with single instance
+        instances = [("localhost", 10104)]  # Start with single instance
         
         _connection_pool = OllamaConnectionPool(
             instances=instances,
@@ -481,7 +481,7 @@ async def get_connection_pool() -> OllamaConnectionPool:
     
     return _connection_pool
 
-async def ollama_generate(model: str = "gpt-oss", 
+async def ollama_generate(model: str = "tinyllama", 
                          prompt: str = "", 
                          options: Dict[str, Any] = None,
                          priority: int = 5) -> Dict[str, Any]:
@@ -499,7 +499,7 @@ if __name__ == "__main__":
         
         # Test basic generation
         response = await pool.generate(
-            model="gpt-oss",
+            model="tinyllama",
             prompt="Hello, how are you?",
             options={"max_tokens": 50}
         )

@@ -61,7 +61,7 @@
 **Status: ✅ PASS (100% success rate)**
 
 ✅ **Ollama Service:**
-- Service available on port 11434
+- Service available on port 10104
 - 2 models loaded and accessible
 - Model inference working
 - API endpoints responsive

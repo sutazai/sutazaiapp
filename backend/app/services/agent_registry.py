@@ -22,7 +22,7 @@ class AgentRegistry:
         self.registry_file = self.agents_dir / "agent_registry.json"
         self.active_agents: Dict[str, Dict[str, Any]] = {}
         self.agent_processes: Dict[str, subprocess.Popen] = {}
-        self.ollama_port_start = 11434
+        self.ollama_port_start = 10104
         self.agent_port_start = 8000
         
     async def load_agent_registry(self) -> Dict[str, Any]:

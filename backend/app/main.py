@@ -482,7 +482,7 @@ async def cached_service_check(service_name: str, check_func):
 
 async def check_ollama():
     """Check if Ollama service is available"""
-    urls = ["http://sutazai-ollama:11434/api/tags", "http://ollama:11434/api/tags"]
+    urls = ["http://sutazai-ollama:10104/api/tags", "http://ollama:10104/api/tags"]
     for url in urls:
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
@@ -522,7 +522,7 @@ async def check_qdrant():
 async def get_ollama_models():
     """Get available models from Ollama"""
     try:
-        for host in ["ollama:11434", "sutazai-ollama:11434"]:
+        for host in ["ollama:10104", "sutazai-ollama:10104"]:
             try:
                 async with httpx.AsyncClient(timeout=10.0) as client:
                     response = await client.get(f"http://{host}/api/tags")
@@ -538,7 +538,7 @@ async def get_ollama_models():
 async def query_ollama(model: str, prompt: str):
     """Query Ollama model"""
     try:
-        for host in ["ollama:11434", "sutazai-ollama:11434"]:
+        for host in ["ollama:10104", "sutazai-ollama:10104"]:
             try:
                 async with httpx.AsyncClient(timeout=90.0) as client:
                     response = await client.post(f"http://{host}/api/generate", json={
@@ -1042,14 +1042,14 @@ async def chat_with_ai(request: ChatRequest):
     
     # Select appropriate model (prioritize GPT-OSS as the exclusive model)
     model = request.model if request.model else (
-        "gpt-oss" if "gpt-oss" in models else (
-            models[0] if models else "gpt-oss"
+        "tinyllama" if "tinyllama" in models else (
+            models[0] if models else "tinyllama"
         )
     )
     
     if not model:
         return {
-            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull gpt-oss-r1:8b\n- ollama pull gpt-oss3:8b\n- ollama pull gpt-oss:7b",
+            "response": "❌ No language models are currently available. Please ensure Ollama is running with models installed.\n\nTo install models:\n- ollama pull tinyllama\n- ollama pull tinyllama3:8b\n- ollama pull tinyllama:7b",
             "model": "unavailable",
             "agent": request.agent,
             "error": "No models available",
@@ -1102,8 +1102,8 @@ async def chat_with_ai(request: ChatRequest):
 async def public_think(request: ThinkRequest):
     """Public thinking endpoint without authentication"""
     models = await get_ollama_models()
-    model = "gpt-oss" if "gpt-oss" in models else (
-        models[0] if models else "gpt-oss"
+    model = "tinyllama" if "tinyllama" in models else (
+        models[0] if models else "tinyllama"
     )
     
     if not model:
@@ -1156,8 +1156,8 @@ async def public_think(request: ThinkRequest):
 async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_current_user)):
     """automation Coordinator deep thinking process"""
     models = await get_ollama_models()
-    model = "gpt-oss" if "gpt-oss" in models else (
-        models[0] if models else "gpt-oss"
+    model = "tinyllama" if "tinyllama" in models else (
+        models[0] if models else "tinyllama"
     )
     
     if not model:
@@ -1284,8 +1284,8 @@ async def execute_task(request: TaskRequest, current_user: Dict = Depends(get_cu
 async def reason_about_problem(request: ReasoningRequest):
     """Apply advanced reasoning to complex problems"""
     models = await get_ollama_models()
-    model = "gpt-oss" if "gpt-oss" in models else (
-        models[0] if models else "gpt-oss"
+    model = "tinyllama" if "tinyllama" in models else (
+        models[0] if models else "tinyllama"
     )
     
     if not model:
@@ -1619,7 +1619,7 @@ async def get_available_models():
         "models": model_info,
         "total_models": len(models),
         "default_model": models[0] if models else None,
-        "recommended_models": ["gpt-oss-r1:8b", "gpt-oss3:8b", "gpt-oss:7b"]
+        "recommended_models": ["tinyllama", "tinyllama3:8b", "tinyllama:7b"]
     }
 
 # Simple chat endpoint for testing
@@ -1630,14 +1630,14 @@ async def simple_chat(request: dict):
     
     # Get available models and select the fastest one
     models = await get_ollama_models()
-    model = "gpt-oss" if "gpt-oss" in models else (
-        models[0] if models else "gpt-oss"
+    model = "tinyllama" if "tinyllama" in models else (
+        models[0] if models else "tinyllama"
     )
     
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:  # Increased timeout for CPU inference
             response = await client.post(
-                "http://ollama:11434/api/generate",
+                "http://ollama:10104/api/generate",
                 json={
                     "model": model,
                     "prompt": message,
@@ -1649,7 +1649,7 @@ async def simple_chat(request: dict):
                 data = response.json()
                 return {
                     "response": data.get("response", "No response"),
-                    "model": "gpt-oss:7b",
+                    "model": "tinyllama:7b",
                     "timestamp": datetime.utcnow().isoformat(),
                     "processing_time": data.get("total_duration", 0) / 1e9  # Convert to seconds
                 }

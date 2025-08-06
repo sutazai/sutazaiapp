@@ -9,7 +9,7 @@
 # - 10300-10499: External integrations and tools
 # - 10500-10599: AGI system components
 # - 11000-11148: AI Agents (standardized range)
-# - 11434-11436: Ollama instances
+# - 10104-11436: Ollama instances
 # - Other ports: Legacy and special services (to be migrated)
 
 port_ranges:
@@ -39,7 +39,7 @@ port_ranges:
     reserved_for: "All AI agent services"
   
   ollama:
-    range: [11434, 11436]
+    range: [10104, 11436]
     description: "Ollama LLM instances"
     reserved_for: "Primary, secondary, tertiary Ollama instances"
 
@@ -241,7 +241,7 @@ infrastructure:
     service: ollama-secure
     container: sutazai-ollama-secure
     description: "Ollama LLM service (secure)"
-    internal_port: 11434
+    internal_port: 10104
   
   10105:
     service: ollama-queue
@@ -253,7 +253,7 @@ infrastructure:
     service: ollama-tertiary
     container: sutazai-ollama-tertiary
     description: "Ollama tertiary instance"
-    internal_port: 11434
+    internal_port: 10104
   
   10107:
     service: ollama-loadbalancer
@@ -891,23 +891,23 @@ reserved_agent_ports:
 
 # Ollama LLM Instances
 ollama:
-  11434:
+  10104:
     service: ollama-primary
     container: ollama-primary
     description: "Primary Ollama LLM instance"
-    internal_port: 11434
+    internal_port: 10104
   
   11435:
     service: ollama-secondary
     container: ollama-secondary
     description: "Secondary Ollama LLM instance"
-    internal_port: 11434
+    internal_port: 10104
   
   11436:
     service: ollama-tertiary
     container: ollama-tertiary
     description: "Tertiary Ollama LLM instance"
-    internal_port: 11434
+    internal_port: 10104
 
 # Port Allocation Rules
 allocation_rules:

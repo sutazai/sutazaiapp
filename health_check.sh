@@ -44,7 +44,7 @@ else
 fi
 
 # Ollama
-check_service "Ollama" "http://localhost:11434/api/tags"
+check_service "Ollama" "http://localhost:10104/api/tags"
 
 # Backend
 check_service "Backend API" "http://localhost:8000/health"
@@ -84,7 +84,7 @@ healthy_count=0
 # Recheck all services for summary
 docker exec sutazai-postgres-minimal pg_isready -U sutazai >/dev/null 2>&1 && ((healthy_count++))
 docker exec sutazai-redis-minimal redis-cli ping >/dev/null 2>&1 && ((healthy_count++))
-curl -s -o /dev/null "http://localhost:11434/api/tags" && ((healthy_count++))
+curl -s -o /dev/null "http://localhost:10104/api/tags" && ((healthy_count++))
 curl -s -o /dev/null "http://localhost:8000/health" && ((healthy_count++))
 curl -s -o /dev/null "http://localhost:8501" && ((healthy_count++))
 
@@ -105,12 +105,12 @@ echo "=== Access URLs ==="
 echo "• Frontend: http://localhost:8501"
 echo "• Backend API: http://localhost:8000"
 echo "• API Documentation: http://localhost:8000/docs"
-echo "• Ollama API: http://localhost:11434"
+echo "• Ollama API: http://localhost:10104"
 
 echo
 echo "=== Model Test ==="
-echo "Testing gpt-oss model..."
-response=$(curl -s -X POST http://localhost:11434/api/generate -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false}' | jq -r .response 2>/dev/null)
+echo "Testing tinyllama model..."
+response=$(curl -s -X POST http://localhost:10104/api/generate -d '{"model": "tinyllama", "prompt": "Hello", "stream": false}' | jq -r .response 2>/dev/null)
 if [ -n "$response" ] && [ "$response" != "null" ]; then
     echo -e "${GREEN}✓${NC} GPT-OSS model is working"
     echo "  Response preview: ${response:0:50}..."

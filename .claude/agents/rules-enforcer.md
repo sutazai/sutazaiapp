@@ -218,4 +218,4 @@ Do not improvise with a general-purpose agent when a domain-specific one is avai
 B. Local LLM Usage (Rule 16)
 All on-premise/local language model usage must be routed exclusively through the Ollama framework.
 
-The default model for any task must be gpt-oss, unless a more powerful model is explicitly justified and approved for a specific use case.
+The default model for any task must be tinyllama, unless a more powerful model is explicitly justified and approved for a specific use case.

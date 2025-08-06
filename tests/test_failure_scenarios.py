@@ -28,14 +28,14 @@ class TestOllamaServiceFailures:
     
     @pytest.fixture
     def ollama_integration(self):
-        return OllamaIntegration(base_url="http://test-ollama:11434")
+        return OllamaIntegration(base_url="http://test-ollama:10104")
     
     @pytest.mark.asyncio
     async def test_ollama_service_down(self, ollama_integration):
         """Test behavior when Ollama service is completely down"""
         # Mock connection error
         with patch.object(ollama_integration.client, 'get', side_effect=httpx.ConnectError("Connection refused")):
-            result = await ollama_integration.ensure_model_available("gpt-oss")
+            result = await ollama_integration.ensure_model_available("tinyllama")
             assert result is False
         
         # Generation should fail gracefully
@@ -100,8 +100,8 @@ class TestOllamaServiceFailures:
             mock_response.status_code = 200
             mock_response.json.return_value = {
                 "models": [
-                    {"name": "gpt-oss:latest"},
-                    # gpt-oss2.5-coder and gpt-oss-r1 missing
+                    {"name": "tinyllama:latest"},
+                    # tinyllama2.5-coder and tinyllama-r1 missing
                 ]
             }
             return mock_response
@@ -116,11 +116,11 @@ class TestOllamaServiceFailures:
             with patch.object(ollama_integration.client, 'post', side_effect=mock_failed_pull):
                 
                 # Available model should work
-                result = await ollama_integration.ensure_model_available("gpt-oss")
+                result = await ollama_integration.ensure_model_available("tinyllama")
                 assert result is True
                 
                 # Unavailable model should fail
-                result = await ollama_integration.ensure_model_available("gpt-oss2.5-coder:7b")
+                result = await ollama_integration.ensure_model_available("tinyllama2.5-coder:7b")
                 assert result is False
 
 
@@ -132,7 +132,7 @@ class TestConnectionPoolFailures:
         return OllamaConnectionPool(
             max_connections=3,
             min_connections=1,
-            default_model="gpt-oss",
+            default_model="tinyllama",
             connection_timeout=5,
             request_timeout=10
         )
@@ -331,7 +331,7 @@ class TestAgentFailureScenarios:
             'AGENT_NAME': 'test-failure-agent',
             'AGENT_TYPE': 'failure-test',
             'BACKEND_URL': 'http://test-backend:8000',
-            'OLLAMA_URL': 'http://test-ollama:11434'
+            'OLLAMA_URL': 'http://test-ollama:10104'
         }):
             return BaseAgentV2(max_concurrent_tasks=2)
     
@@ -545,7 +545,7 @@ class TestNetworkFailures:
         # Create agent with invalid hostname
         with patch.dict(os.environ, {
             'BACKEND_URL': 'http://nonexistent-backend-host:8000',
-            'OLLAMA_URL': 'http://nonexistent-ollama-host:11434'
+            'OLLAMA_URL': 'http://nonexistent-ollama-host:10104'
         }):
             agent = BaseAgentV2()
             await agent._setup_async_components()
@@ -608,7 +608,7 @@ class TestResourceExhaustionScenarios:
         pool = OllamaConnectionPool(
             max_connections=2,  # Very low limit
             min_connections=1,
-            default_model="gpt-oss"
+            default_model="tinyllama"
         )
         
         # Create concurrent requests that exceed connection limit

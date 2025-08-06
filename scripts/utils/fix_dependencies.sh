@@ -347,14 +347,14 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     ports:
-      - "11434:11434"  # Ollama standard port
+      - "10104:10104"  # Ollama standard port
     environment:
       - OLLAMA_HOST=0.0.0.0
       - OLLAMA_ORIGINS="*"
     networks:
       - sutazai-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:10104/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -376,7 +376,7 @@ services:
       <<: *common-variables
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD:-sutazai_password}@postgres:5432/${POSTGRES_DB:-sutazai}
       REDIS_URL: redis://:${REDIS_PASSWORD:-redis_password}@redis:6379/0
-      OLLAMA_URL: http://ollama:11434
+      OLLAMA_URL: http://ollama:10104
       CHROMADB_URL: http://chromadb:8000  # Internal communication
       QDRANT_URL: http://qdrant:6333
     ports:
@@ -534,7 +534,7 @@ validate_fixes() {
     fi
     
     # Test port availability
-    critical_ports=(5432 6379 8000 8501 11434)
+    critical_ports=(5432 6379 8000 8501 10104)
     for port in "${critical_ports[@]}"; do
         if ! netstat -tuln | grep -q ":$port "; then
             success "Port $port is available"

@@ -4,8 +4,8 @@
     "namespace": "sutazai"
   },
   "ollama": {
-    "url": "http://localhost:11434",
-    "default_model": "gpt-oss"
+    "url": "http://localhost:10104",
+    "default_model": "tinyllama"
   },
   "system": {
     "max_concurrent_workflows": 10,
@@ -20,7 +20,7 @@
       "name": "Master Orchestrator",
       "description": "Primary orchestration agent for coordinating complex workflows",
       "config": {
-        "model": "gpt-oss",
+        "model": "tinyllama",
         "max_concurrent_tasks": 10,
         "temperature": 0.4,
         "capabilities": ["orchestration", "communication", "reasoning", "autonomous_execution"]
@@ -32,7 +32,7 @@
       "name": "Primary Code Generator",
       "description": "Main code generation agent using GPT-OSS model",
       "config": {
-        "model": "gpt-oss",
+        "model": "tinyllama",
         "max_concurrent_tasks": 5,
         "temperature": 0.2,
         "capabilities": ["code_generation", "reasoning"]
@@ -44,7 +44,7 @@
       "name": "Secondary Code Generator",
       "description": "Backup code generation agent for load balancing",
       "config": {
-        "model": "gpt-oss",
+        "model": "tinyllama",
         "max_concurrent_tasks": 3,
         "temperature": 0.3,
         "capabilities": ["code_generation", "reasoning"]
@@ -56,7 +56,7 @@
       "name": "Universal Assistant Alpha",
       "description": "Primary general-purpose agent for diverse tasks",
       "config": {
-        "model": "gpt-oss",
+        "model": "tinyllama",
         "max_concurrent_tasks": 8,
         "temperature": 0.5,
         "capabilities": ["reasoning", "communication"]
@@ -68,7 +68,7 @@
       "name": "Universal Assistant Beta",
       "description": "Secondary general-purpose agent for load distribution",
       "config": {
-        "model": "gpt-oss",
+        "model": "tinyllama",
         "max_concurrent_tasks": 6,
         "temperature": 0.6,
         "capabilities": ["reasoning", "communication", "data_processing"]

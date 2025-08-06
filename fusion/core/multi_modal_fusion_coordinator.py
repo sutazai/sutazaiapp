@@ -370,7 +370,7 @@ class MultiModalFusionCoordinator:
     Main coordinator for multi-modal fusion processing
     
     Integrates with SutazAI's existing infrastructure:
-    - Ollama/gpt-oss for text processing
+    - Ollama/tinyllama for text processing
     - Jarvis for voice interface
     - Vector databases for embeddings
     - Agent orchestration system
@@ -408,7 +408,7 @@ class MultiModalFusionCoordinator:
         self.fusion_cache = {}
         
         # Integration endpoints
-        self.ollama_url = self.config.get('ollama_url', 'http://ollama:11434')
+        self.ollama_url = self.config.get('ollama_url', 'http://ollama:10104')
         self.jarvis_url = self.config.get('jarvis_url', 'http://jarvis:8080')
         self.chromadb_url = self.config.get('chromadb_url', 'http://chromadb:8000')
         
@@ -425,7 +425,7 @@ class MultiModalFusionCoordinator:
             'max_processes': 6,
             'cache_size': 1000,
             'enable_attention': True,
-            'ollama_url': 'http://ollama:11434',
+            'ollama_url': 'http://ollama:10104',
             'jarvis_url': 'http://jarvis:8080',
             'chromadb_url': 'http://chromadb:8000'
         }
@@ -827,7 +827,7 @@ class MultiModalFusionCoordinator:
                     'score': sentiment_score,
                     'confidence': data.confidence,
                     'decision': 'positive' if sentiment_score > 0.5 else 'negative',
-                    'metadata': {'analysis_type': 'sentiment', 'model': 'gpt-oss'}
+                    'metadata': {'analysis_type': 'sentiment', 'model': 'tinyllama'}
                 }
             
             elif data.modality_type == ModalityType.VOICE:

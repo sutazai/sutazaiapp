@@ -1,0 +1,54 @@
+# SutazAI Actual Port Registry
+# Based on real running containers (28 services)
+# Updated: 2025-08-06
+
+core_services:
+  backend: 10010
+  frontend: 10011
+  postgres: 10000
+  redis: 10001
+  neo4j:
+    browser: 10002
+    bolt: 10003
+  ollama: 10104  # TinyLlama model
+
+vector_databases:
+  chromadb: 10100
+  qdrant:
+    http: 10101
+    grpc: 10102
+  faiss: 10103
+
+service_mesh:
+  kong:
+    proxy: 10005
+    admin: 8001
+  consul: 10006
+  rabbitmq:
+    amqp: 10007
+    management: 10008
+
+monitoring:
+  prometheus: 10200
+  grafana: 10201
+  loki: 10202
+  alertmanager: 10203
+  node_exporter: 10220
+  cadvisor: 10221
+  blackbox_exporter: 10229
+  ai_metrics: 11063
+
+agent_orchestration:
+  orchestrator: 8589
+  multi_agent_coordinator: 8587
+  resource_arbitration: 8588
+  task_assignment: 8551
+  hardware_optimizer: 8002
+
+active_agents:
+  ollama_integration_specialist: 11015
+  # Most other agents are stubs - verify before using
+
+total_containers: 28
+model: tinyllama
+deployment: docker-compose

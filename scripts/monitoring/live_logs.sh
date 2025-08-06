@@ -1530,10 +1530,10 @@ show_system_overview() {
     fi
     
     # Test Ollama
-    if curl -f http://localhost:11434/api/tags >/dev/null 2>&1; then
-        echo -e "Ollama API (11434): ${GREEN}✓ Responding${NC}"
+    if curl -f http://localhost:10104/api/tags >/dev/null 2>&1; then
+        echo -e "Ollama API (10104): ${GREEN}✓ Responding${NC}"
     else
-        echo -e "Ollama API (11434): ${RED}✗ Not responding${NC}"
+        echo -e "Ollama API (10104): ${RED}✗ Not responding${NC}"
     fi
     
     echo ""

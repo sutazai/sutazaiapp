@@ -110,10 +110,10 @@ class OllamaAutoscaler:
                     "OLLAMA_NUM_PARALLEL": "50",
                     "OLLAMA_MAX_LOADED_MODELS": "3",
                     "OLLAMA_KEEP_ALIVE": "10m",
-                    "OLLAMA_HOST": "0.0.0.0:11434",
+                    "OLLAMA_HOST": "0.0.0.0:10104",
                     "OLLAMA_MAX_MEMORY": "16384"
                 },
-                "ports": {"11434/tcp": 11434},
+                "ports": {"10104/tcp": 10104},
                 "mem_limit": "16g",
                 "cpu_count": 8,
                 "priority": 1
@@ -124,10 +124,10 @@ class OllamaAutoscaler:
                     "OLLAMA_NUM_PARALLEL": "30",
                     "OLLAMA_MAX_LOADED_MODELS": "2",
                     "OLLAMA_KEEP_ALIVE": "8m",
-                    "OLLAMA_HOST": "0.0.0.0:11434",
+                    "OLLAMA_HOST": "0.0.0.0:10104",
                     "OLLAMA_MAX_MEMORY": "10240"
                 },
-                "ports": {"11434/tcp": 11435},
+                "ports": {"10104/tcp": 11435},
                 "mem_limit": "10g",
                 "cpu_count": 6,
                 "priority": 2
@@ -138,10 +138,10 @@ class OllamaAutoscaler:
                     "OLLAMA_NUM_PARALLEL": "20",
                     "OLLAMA_MAX_LOADED_MODELS": "1",
                     "OLLAMA_KEEP_ALIVE": "5m",
-                    "OLLAMA_HOST": "0.0.0.0:11434",
+                    "OLLAMA_HOST": "0.0.0.0:10104",
                     "OLLAMA_MAX_MEMORY": "6144"
                 },
-                "ports": {"11434/tcp": 11436},
+                "ports": {"10104/tcp": 11436},
                 "mem_limit": "6g",
                 "cpu_count": 4,
                 "priority": 3
@@ -512,7 +512,7 @@ class OllamaAutoscaler:
                 
                 if container.status == "running":
                     # Try to connect to the API
-                    port_mapping = container.ports.get("11434/tcp")
+                    port_mapping = container.ports.get("10104/tcp")
                     if port_mapping:
                         port = port_mapping[0]["HostPort"]
                         

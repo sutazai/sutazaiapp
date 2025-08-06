@@ -308,7 +308,7 @@ sudo sync && sudo sysctl vm.drop_caches=3
 #### Ollama Connection Issues
 ```bash
 # Test Ollama
-curl http://localhost:11434/api/ps
+curl http://localhost:10104/api/ps
 
 # Restart if needed
 docker restart ollama

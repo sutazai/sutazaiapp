@@ -32,7 +32,7 @@ class LlamaIndexService:
     """LlamaIndex document processing service"""
     
     def __init__(self):
-        self.ollama_url = "http://ollama:11434"
+        self.ollama_url = "http://ollama:10104"
         self.service_name = "LlamaIndex"
         self.indexes = {}
         
@@ -129,7 +129,7 @@ Provide a clear, accurate answer based on the context provided."""
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "gpt-oss.2:1b",
+                    "model": "tinyllama.2:1b",
                     "prompt": prompt,
                     "stream": False
                 },

@@ -83,7 +83,7 @@ class OllamaModelManager:
     """Comprehensive model management and benchmarking system"""
     
     def __init__(self, 
-                 ollama_url: str = "http://localhost:11434",
+                 ollama_url: str = "http://localhost:10104",
                  db_path: str = "/opt/sutazaiapp/data/model_management.db"):
         
         self.ollama_url = ollama_url
@@ -775,7 +775,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description='Ollama Model Manager and Benchmarking System')
     parser.add_argument('--discover', action='store_true', help='Discover available models')
-    parser.add_argument('--benchmark', choices=['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b', 'all'], help='Run benchmark')
+    parser.add_argument('--benchmark', choices=['tinyllama', 'tinyllama.2:3b', 'tinyllama', 'all'], help='Run benchmark')
     parser.add_argument('--benchmark-type', choices=['quick', 'standard', 'comprehensive'], default='standard', help='Benchmark type')
     parser.add_argument('--report', action='store_true', help='Generate performance report')
     parser.add_argument('--history', help='Show performance history for model')

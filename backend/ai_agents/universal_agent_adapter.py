@@ -172,7 +172,7 @@ class UniversalAgentAdapter:
     
     def _create_ollama_modelfile(self, agent: UniversalAgent) -> str:
         """Create an Ollama Modelfile for the agent."""
-        modelfile = f"""FROM gpt-oss:latest
+        modelfile = f"""FROM tinyllama:latest
 
 SYSTEM {agent.system_prompt}
 
@@ -227,7 +227,7 @@ PARAMETER top_p {agent.model_config['top_p']}
                 "AGENT_NAME": agent.name,
                 "AGENT_CAPABILITIES": ",".join(agent.capabilities),
                 "MODEL_PROVIDER": "ollama",
-                "MODEL_NAME": "gpt-oss:latest",
+                "MODEL_NAME": "tinyllama:latest",
                 "MODEL_TEMPERATURE": str(agent.model_config["temperature"]),
                 "MODEL_MAX_TOKENS": str(agent.model_config["max_tokens"]),
                 "SYSTEM_PROMPT": agent.system_prompt

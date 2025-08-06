@@ -15,7 +15,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       ENFORCE_CLAUDE_RULES: 'true'
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       REDIS_URL: redis://redis:6379/0
@@ -39,7 +39,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       ENFORCE_CLAUDE_RULES: 'true'
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       REDIS_URL: redis://redis:6379/0
@@ -70,10 +70,10 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       METRICS_PORT: 9200
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
-      OLLAMA_URL: http://ollama:11434
+      OLLAMA_URL: http://ollama:10104
       REDIS_URL: redis://redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
@@ -93,7 +93,7 @@ services:
       AGENT_NAME: Aider
       MODEL: tinyllama:latest
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -146,7 +146,7 @@ services:
     environment:
       AUTOGEN_USE_DOCKER: 'True'
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -170,7 +170,7 @@ services:
       AGENT_NAME: AutoGPT
       BACKEND_URL: http://backend:8000
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -189,7 +189,7 @@ services:
     container_name: sutazai-awesome-code-ai
     environment:
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -240,7 +240,7 @@ services:
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       POSTGRES_DB: ${POSTGRES_DB:-sutazai}
@@ -313,7 +313,7 @@ services:
       AGENT_NAME: BrowserUse
       DISPLAY: :99
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -382,7 +382,7 @@ services:
       GIT_REPO_PATH: /opt/sutazaiapp
       IMPROVEMENT_SCHEDULE: 0 */6 * * *
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       REDIS_URL: redis://redis:6379/0
@@ -409,7 +409,7 @@ services:
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       QDRANT_URL: http://qdrant:6333
@@ -435,7 +435,7 @@ services:
       BACKEND_URL: http://backend:8000
       CREW_SIZE: 5
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -525,7 +525,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       REDIS_URL: redis://redis:6379/0
@@ -617,7 +617,7 @@ services:
       AGENT_NAME: GPT-Engineer
       MODEL: tinyllama:latest
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -684,7 +684,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_MODEL: tinyllama:latest
       OLLAMA_ORIGINS: '*'
@@ -741,7 +741,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_MODEL: tinyllama:latest
       OLLAMA_ORIGINS: '*'
@@ -785,7 +785,7 @@ services:
         condition: service_started
       qdrant:
         condition: service_started
-      faiss-vector:
+      faiss:
         condition: service_started
     deploy:
       resources:
@@ -800,7 +800,7 @@ services:
       API_ENDPOINT: http://backend:8000
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_MODEL: tinyllama:latest
       PORT: 8080
       REDIS_URL: redis://redis:6379/0
@@ -847,7 +847,7 @@ services:
       API_ENDPOINT: http://backend:8000
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       PORT: 8080
       REDIS_URL: redis://redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -894,7 +894,7 @@ services:
       API_ENDPOINT: http://backend:8000
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       LOG_LEVEL: INFO
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_MODEL: tinyllama:latest
       PORT: 8080
       REDIS_URL: redis://redis:6379/0
@@ -1040,7 +1040,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-sutazai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sutazai}
       MEMORY_BACKEND: postgres
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       REDIS_URL: redis://redis:6379/0
@@ -1067,7 +1067,7 @@ services:
       NEO4J_URI: bolt://neo4j:7687
       NEO4J_USER: neo4j
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       QDRANT_URL: http://qdrant:6333
@@ -1137,10 +1137,10 @@ services:
       NEO4J_USER: neo4j
       NODE_ENV: production
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
-      OLLAMA_URL: http://ollama:11434
+      OLLAMA_URL: http://ollama:10104
       QDRANT_URL: http://qdrant:6333
       REDIS_URL: redis://redis:6379/0
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1253,7 +1253,7 @@ services:
       CLAUDE_RULES_PATH: /app/CLAUDE.md
       ENFORCE_CLAUDE_RULES: 'true'
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_DEBUG: false
       OLLAMA_FLASH_ATTENTION: 1
       OLLAMA_HOST: 0.0.0.0
@@ -1277,7 +1277,7 @@ services:
     networks:
     - sutazai-network
     ports:
-    - 10104:11434
+    - 10104:10104
     restart: unless-stopped
     sysctls:
     - net.core.somaxconn=65535
@@ -1297,7 +1297,7 @@ services:
     container_name: sutazai-opendevin
     environment:
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1321,7 +1321,7 @@ services:
     environment:
       AGENT_NAME: PentestGPT
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1387,7 +1387,7 @@ services:
     environment:
       AGENT_NAME: PrivateGPT
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1582,10 +1582,10 @@ services:
     - ollama
     environment:
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
-      OPENAI_API_HOST: http://ollama:11434/v1
+      OPENAI_API_HOST: http://ollama:10104/v1
       OPENAI_API_KEY: not_needed
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
@@ -1606,7 +1606,7 @@ services:
     environment:
       AGENT_NAME: Skyvern
       OLLAMA_API_KEY: local
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://ollama:10104
       OLLAMA_HOST: 0.0.0.0
       OLLAMA_ORIGINS: '*'
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
@@ -1682,7 +1682,7 @@ x-gpu-config:
   deploy: *id002
 x-ollama-config:
   OLLAMA_API_KEY: local
-  OLLAMA_BASE_URL: http://ollama:11434
+  OLLAMA_BASE_URL: http://ollama:10104
   OLLAMA_HOST: 0.0.0.0
   OLLAMA_ORIGINS: '*'
 x-vector-config:

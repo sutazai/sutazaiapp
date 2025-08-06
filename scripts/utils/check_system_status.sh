@@ -73,7 +73,7 @@ echo ""
 
 # Check AI Services
 echo -e "${BLUE}AI Services:${NC}"
-check_service "Ollama" "http://localhost:11434/api/tags" "200"
+check_service "Ollama" "http://localhost:10104/api/tags" "200"
 
 echo ""
 

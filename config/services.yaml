@@ -237,7 +237,7 @@ services:
       config:
         base_url: "http://aider:8000"
         git_path: "/data/aider/repos"
-        model: "gpt-oss"
+        model: "tinyllama"
       resources:
         cpu: "2"
         memory: "4Gi"
@@ -248,7 +248,7 @@ services:
       config:
         base_url: "http://continue:8080"
         models:
-          - "gpt-oss"
+          - "tinyllama"
         extensions_path: "/data/continue/extensions"
       resources:
         cpu: "2"

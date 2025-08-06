@@ -121,7 +121,7 @@ class TestConnectionPoolPerformance:
         return OllamaConnectionPool(
             max_connections=5,
             min_connections=2,
-            default_model="gpt-oss",
+            default_model="tinyllama",
             connection_timeout=10,
             request_timeout=30
         )
@@ -241,7 +241,7 @@ class TestConnectionPoolPerformance:
         metrics = TestPerformanceMetrics()
         metrics.start_monitoring()
         
-        models = ["gpt-oss", "gpt-oss2.5-coder:7b", "gpt-oss-r1:8b"]
+        models = ["tinyllama", "tinyllama2.5-coder:7b", "tinyllama"]
         
         async def request_with_model(model):
             start_time = time.time()
@@ -566,9 +566,9 @@ class TestSystemWidePerfomance:
         """Test performance impact of different model assignments"""
         # Test different model configurations
         model_test_cases = [
-            ("gpt-oss", 10),  # Default model, more requests
-            ("gpt-oss2.5-coder:7b", 5),  # Sonnet model, fewer requests
-            ("gpt-oss-r1:8b", 3)  # Opus model, least requests
+            ("tinyllama", 10),  # Default model, more requests
+            ("tinyllama2.5-coder:7b", 5),  # Sonnet model, fewer requests
+            ("tinyllama", 3)  # Opus model, least requests
         ]
         
         metrics = TestPerformanceMetrics()

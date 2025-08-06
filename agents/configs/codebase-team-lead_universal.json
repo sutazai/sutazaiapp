@@ -2,7 +2,7 @@
   "name": "codebase-team-lead",
   "description": "Agent for development operations",
   "model": "ollama",
-  "base_model": "gpt-oss2.5-coder:7b",
+  "base_model": "tinyllama2.5-coder:7b",
   "port": 9310,
   "capabilities": [
     "code_generation",

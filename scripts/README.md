@@ -49,14 +49,14 @@
 
 ### System Deployment
 - `deployment/system/deploy_complete_system.sh` - Main deployment script
-- `deployment/system/start_gpt-oss.sh` - Start system with gpt-oss
+- `deployment/system/start_tinyllama.sh` - Start system with tinyllama
 
 ### Agent Management
 - `agents/configuration/configure_all_agents.sh` - Configure all agents
-- `agents/management/update_agents_to_gpt-oss.py` - Update agent models to gpt-oss
+- `agents/management/update_agents_to_tinyllama.py` - Update agent models to tinyllama
 
 ### Verification
-- `utils/verification/verify_gpt-oss_config.sh` - Verify gpt-oss setup
+- `utils/verification/verify_tinyllama_config.sh` - Verify tinyllama setup
 - `utils/verification/verify_litellm_removal.sh` - Verify LiteLLM removal
 
 ### Model Management

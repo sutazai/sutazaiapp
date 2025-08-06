@@ -1,9 +1,9 @@
 
 # GPT-OSS model configuration
-DEFAULT_MODEL = "gpt-oss"
-AVAILABLE_MODELS = ["gpt-oss"]
+DEFAULT_MODEL = "tinyllama"
+AVAILABLE_MODELS = ["tinyllama"]
 MODEL_DESCRIPTIONS = {
-    "gpt-oss": "GPT-OSS model from Ollama"
+    "tinyllama": "GPT-OSS model from Ollama"
 }
 """
 SutazAI automation/advanced automation System - Enhanced Frontend
@@ -1774,7 +1774,7 @@ def show_ai_chat():
                 # Use models/chat for faster response with optimized models
                 response = asyncio.run(call_api("/api/v1/models/chat", "POST", {
                     "messages": [{"role": "user", "content": prompt}],
-                    "model": "gpt-oss"  # Use the GPT-OSS model
+                    "model": "tinyllama"  # Use the GPT-OSS model
                 }))
             
             if response:
@@ -2194,10 +2194,10 @@ def show_system_config():
         
         # Model settings
         st.selectbox("Default Model:", [
-            "gpt-oss2.5:3b",
-            "gpt-oss3:8b",
-            "gpt-oss2.5-coder:3b",
-            "gpt-oss2.5:3b"
+            "tinyllama2.5:3b",
+            "tinyllama3:8b",
+            "tinyllama2.5-coder:3b",
+            "tinyllama2.5:3b"
         ])
         
         st.slider("Default Temperature:", 0.0, 1.0, 0.7)
@@ -2924,7 +2924,7 @@ def show_api_gateway():
     if method in ["POST", "PUT"]:
         request_body = st.text_area(
             "Request Body (JSON)",
-            value='{\n  "message": "Hello automation",\n  "model": "gpt-oss2.5:3b"\n}',
+            value='{\n  "message": "Hello automation",\n  "model": "tinyllama2.5:3b"\n}',
             height=150
         )
     
@@ -3320,7 +3320,7 @@ def show_enterprise_dashboard():
         {"name": "BigAGI", "url": "http://bigagi:3000", "port": "8106"},
         {"name": "Dify", "url": "http://dify:5001/health", "port": "8107"},
         {"name": "n8n", "url": "http://n8n:5678/healthz", "port": "5678"},
-        {"name": "Ollama", "url": "http://ollama:11434/api/tags", "port": "11434"},
+        {"name": "Ollama", "url": "http://ollama:10104/api/tags", "port": "10104"},
         {"name": "ChromaDB", "url": "http://chromadb:8000/api/v1/heartbeat", "port": "8001"},
         {"name": "Qdrant", "url": "http://qdrant:6333", "port": "6333"},
         {"name": "Neo4j", "url": "http://neo4j:7474", "port": "7474"},
@@ -3990,10 +3990,10 @@ def show_ollama_management():
         
         models = [
             {"name": "llama2:7b", "size": "3.8GB", "status": "Downloaded", "pulls": "45K"},
-            {"name": "gpt-oss2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
-            {"name": "gpt-oss2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
-            {"name": "gpt-oss2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
-            {"name": "gpt-oss2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
+            {"name": "tinyllama2.5-coder:3b", "size": "3.8GB", "status": "Downloaded", "pulls": "32K"},
+            {"name": "tinyllama2.5:3b", "size": "4.1GB", "status": "Downloaded", "pulls": "67K"},
+            {"name": "tinyllama2.5:3b", "size": "4.7GB", "status": "Downloading", "pulls": "12K"},
+            {"name": "tinyllama2:7b", "size": "4.4GB", "status": "Available", "pulls": "28K"}
         ]
         
         for model in models:
@@ -4021,7 +4021,7 @@ def show_ollama_management():
         
         running = [
             {"model": "llama2:7b", "memory": "3.2GB", "gpu": "Yes", "requests": 1247},
-            {"model": "gpt-oss2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
+            {"model": "tinyllama2.5-coder:3b", "memory": "3.5GB", "gpu": "Yes", "requests": 856}
         ]
         
         for model in running:
@@ -4754,7 +4754,7 @@ def show_autonomous_improvement():
             
             st.checkbox("Include Dependencies", True)
             st.checkbox("Deep Analysis", False)
-            st.selectbox("AI Model", ["gpt-oss"])
+            st.selectbox("AI Model", ["tinyllama"])
             
             st.markdown("### Recent Analyses")
             recent_analyses = [
@@ -4958,7 +4958,7 @@ def show_realtime_chat():
             st.slider("Analysis Frequency (hours)", 1, 24, 6)
             st.checkbox("Auto-apply Safe Improvements", False)
             st.checkbox("Generate Documentation", True)
-            st.selectbox("AI Model for Analysis", ["gpt-oss"])
+            st.selectbox("AI Model for Analysis", ["tinyllama"])
             
         with col2:
             st.markdown("#### Notification Settings")
@@ -6016,16 +6016,16 @@ def show_real_ollama_management():
     st.title("🦙 Ollama Model Management")
     
     # Check Ollama service health
-    ollama_health = asyncio.run(check_service_health("http://ollama:11434/api/tags"))
+    ollama_health = asyncio.run(check_service_health("http://ollama:10104/api/tags"))
     
     if not ollama_health:
         st.error("🔴 Ollama service is not responding")
-        st.info("Please ensure Ollama is running on port 11434")
+        st.info("Please ensure Ollama is running on port 10104")
         return
     
     # Fetch real model data from Ollama
     with st.spinner("Loading Ollama models..."):
-        models_response = asyncio.run(call_api("http://localhost:11434/api/tags", "GET", timeout=10.0))
+        models_response = asyncio.run(call_api("http://localhost:10104/api/tags", "GET", timeout=10.0))
     
     tab1, tab2, tab3, tab4 = st.tabs(["📚 Installed Models", "⬇️ Download Models", "🚀 Running Models", "⚙️ Configuration"])
     
@@ -6067,12 +6067,12 @@ def show_real_ollama_management():
         
         # Recommended models for SutazAI
         recommended_models = [
-            {"name": "gpt-oss2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
-            {"name": "gpt-oss2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
-            {"name": "gpt-oss2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
+            {"name": "tinyllama2.5:3b", "description": "Advanced reasoning model", "size": "4.7GB"},
+            {"name": "tinyllama2.5:3b", "description": "Multilingual large language model", "size": "4.4GB"},
+            {"name": "tinyllama2.5-coder:3b", "description": "Code generation and understanding", "size": "3.8GB"},
             {"name": "llama2:7b", "description": "General purpose conversational AI", "size": "3.8GB"},
-            {"name": "gpt-oss2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
-            {"name": "gpt-oss:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
+            {"name": "tinyllama2.5:3b", "description": "High-performance language model", "size": "4.1GB"},
+            {"name": "tinyllama:mini", "description": "Lightweight but powerful model", "size": "2.3GB"}
         ]
         
         st.markdown("#### Recommended Models")
@@ -6089,7 +6089,7 @@ def show_real_ollama_management():
                     with st.spinner(f"Downloading {model['name']}..."):
                         # Real Ollama download API call
                         download_response = asyncio.run(call_api(
-                            f"http://localhost:11434/api/pull", 
+                            f"http://localhost:10104/api/pull", 
                             "POST", 
                             {"name": model['name']},
                             timeout=300.0  # 5 minute timeout for downloads
@@ -6104,11 +6104,11 @@ def show_real_ollama_management():
         st.markdown("---")
         st.markdown("#### Custom Model Download")
         
-        custom_model = st.text_input("Model name:", placeholder="e.g., llama2:13b, gpt-oss:latest")
+        custom_model = st.text_input("Model name:", placeholder="e.g., llama2:13b, tinyllama:latest")
         if st.button("⬇️ Download Custom Model") and custom_model:
             with st.spinner(f"Downloading {custom_model}..."):
                 download_response = asyncio.run(call_api(
-                    f"http://localhost:11434/api/pull", 
+                    f"http://localhost:10104/api/pull", 
                     "POST", 
                     {"name": custom_model},
                     timeout=600.0  # 10 minute timeout for large models
@@ -6123,7 +6123,7 @@ def show_real_ollama_management():
         st.markdown("### Running Models")
         
         # Check which models are currently running
-        ps_response = asyncio.run(call_api("http://localhost:11434/api/ps", "GET"))
+        ps_response = asyncio.run(call_api("http://localhost:10104/api/ps", "GET"))
         
         if ps_response and "models" in ps_response:
             running_models = ps_response["models"]

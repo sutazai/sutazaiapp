@@ -455,7 +455,7 @@ class DistributedHealthMonitor:
                 suggested_actions=[
                     "Enable request batching",
                     "Increase cache TTL",
-                    "Switch to lighter models (gpt-oss)",
+                    "Switch to lighter models (tinyllama)",
                     "Implement more aggressive request filtering"
                 ]
             ))

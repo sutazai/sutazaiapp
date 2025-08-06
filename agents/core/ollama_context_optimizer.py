@@ -44,7 +44,7 @@ class QuantizationConfig:
 class OllamaContextOptimizer:
     """Advanced context window and quantization optimizer"""
     
-    def __init__(self, ollama_url: str = "http://localhost:11434"):
+    def __init__(self, ollama_url: str = "http://localhost:10104"):
         self.ollama_url = ollama_url
         self.client = httpx.AsyncClient(timeout=120.0)
         
@@ -213,7 +213,7 @@ class OllamaContextOptimizer:
         """Optimize context window sizes for all models"""
         logger.info("Optimizing context windows for all models")
         
-        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
+        models = ['tinyllama', 'tinyllama.2:3b', 'tinyllama']
         optimized_windows = {}
         
         for model in models:
@@ -406,7 +406,7 @@ class OllamaContextOptimizer:
         """Run complete context and quantization optimization"""
         logger.info("Starting full optimization process")
         
-        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
+        models = ['tinyllama', 'tinyllama.2:3b', 'tinyllama']
         
         # 1. Analyze context usage for all models
         for model in models:
@@ -437,7 +437,7 @@ async def main():
     import argparse
     
     parser = argparse.ArgumentParser(description='Ollama Context and Quantization Optimizer')
-    parser.add_argument('--analyze', choices=['all', 'gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b'], help='Analyze context usage')
+    parser.add_argument('--analyze', choices=['all', 'tinyllama', 'tinyllama.2:3b', 'tinyllama'], help='Analyze context usage')
     parser.add_argument('--optimize', action='store_true', help='Run full optimization')
     parser.add_argument('--quantization', action='store_true', help='Analyze quantization opportunities')
     parser.add_argument('--report', action='store_true', help='Generate optimization report')
@@ -450,7 +450,7 @@ async def main():
     try:
         if args.analyze:
             if args.analyze == 'all':
-                models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
+                models = ['tinyllama', 'tinyllama.2:3b', 'tinyllama']
                 for model in models:
                     await optimizer.analyze_context_usage(model, args.samples)
             else:

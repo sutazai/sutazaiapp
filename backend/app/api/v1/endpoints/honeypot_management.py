@@ -732,7 +732,7 @@ async def get_honeypot_capabilities():
                 "type": "ai_agent",
                 "description": "AI agent honeypots mimicking SutazAI services",
                 "protocols": ["HTTP", "WebSocket"],
-                "default_ports": [8000, 11434, 9000],
+                "default_ports": [8000, 10104, 9000],
                 "attack_detection": ["prompt_injection", "model_extraction", "ai_manipulation"]
             }
         ],

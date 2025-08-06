@@ -75,7 +75,7 @@ class AgentZeroCoordinator:
             
             # Initialize Ollama
             try:
-                ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+                ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:10104")
                 self.ollama_client = ollama.AsyncClient(host=ollama_base_url)
                 logger.info("AgentZero: Connected to Ollama successfully")
             except Exception as e:

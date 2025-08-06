@@ -120,8 +120,8 @@ class UniversalAgentFactory:
                 "description": "Generates code using local AI models",
                 "capabilities": ["code_generation", "reasoning"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.2,
                     "max_tokens": 4000
                 },
@@ -141,8 +141,8 @@ class UniversalAgentFactory:
                 "description": "Analyzes code for security vulnerabilities",
                 "capabilities": ["security_analysis", "code_analysis"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.1,
                     "max_tokens": 3000
                 },
@@ -162,8 +162,8 @@ class UniversalAgentFactory:
                 "description": "Creates and runs tests for code",
                 "capabilities": ["testing", "code_analysis"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.3,
                     "max_tokens": 2000
                 },
@@ -184,7 +184,7 @@ class UniversalAgentFactory:
                 "capabilities": ["orchestration", "communication", "reasoning"],
                 "model_config": {
                     "model": "llama2",
-                    "ollama_url": "http://localhost:11434",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.4,
                     "max_tokens": 3000
                 },
@@ -204,8 +204,8 @@ class UniversalAgentFactory:
                 "description": "Processes and analyzes data",
                 "capabilities": ["data_processing", "file_operations"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.5,
                     "max_tokens": 2500
                 },
@@ -225,8 +225,8 @@ class UniversalAgentFactory:
                 "description": "Handles application deployment and operations",
                 "capabilities": ["deployment", "monitoring", "autonomous_execution"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.2,
                     "max_tokens": 2000
                 },
@@ -246,8 +246,8 @@ class UniversalAgentFactory:
                 "description": "Handles API integrations and external communications",
                 "capabilities": ["api_integration", "communication"],
                 "model_config": {
-                    "model": "gpt-oss",
-                    "ollama_url": "http://localhost:11434",
+                    "model": "tinyllama",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.3,
                     "max_tokens": 2000
                 },
@@ -268,7 +268,7 @@ class UniversalAgentFactory:
                 "capabilities": ["learning", "reasoning", "autonomous_execution"],
                 "model_config": {
                     "model": "llama2",
-                    "ollama_url": "http://localhost:11434",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.6,
                     "max_tokens": 3000
                 },
@@ -289,7 +289,7 @@ class UniversalAgentFactory:
                 "capabilities": ["reasoning", "communication"],
                 "model_config": {
                     "model": "llama2",
-                    "ollama_url": "http://localhost:11434",
+                    "ollama_url": "http://localhost:10104",
                     "temperature": 0.5,
                     "max_tokens": 2000
                 },

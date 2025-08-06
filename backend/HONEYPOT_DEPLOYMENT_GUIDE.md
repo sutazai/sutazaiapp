@@ -75,7 +75,7 @@ Create a JSON configuration file for custom deployment:
     "mysql": 13306,
     "postgresql": 15432,
     "redis": 16379,
-    "ai_agent_primary": 11434,
+    "ai_agent_primary": 10104,
     "ai_agent_secondary": 8000
   },
   "enable_cowrie": true,

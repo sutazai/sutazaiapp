@@ -2,24 +2,24 @@
 # Ollama Model Configuration for SutazAI
 # Using GPT-OSS as the exclusive model
 
-default_model: "gpt-oss:latest"
+default_model: "tinyllama:latest"
 
 models:
-  gpt-oss:
-    name: "gpt-oss:latest"
+  tinyllama:
+    name: "tinyllama:latest"
     size: "8GB"
     context_window: 4096
     description: "GPT-OSS - The exclusive model for all tasks"
-    pull_command: "ollama pull gpt-oss:latest"
+    pull_command: "ollama pull tinyllama:latest"
     
   # All models use GPT-OSS exclusively
-  code_model: "gpt-oss:latest"
-  reasoning_model: "gpt-oss:latest"
-  chat_model: "gpt-oss:latest"
+  code_model: "tinyllama:latest"
+  reasoning_model: "tinyllama:latest"
+  chat_model: "tinyllama:latest"
 
-# Model assignments for agents (all using gpt-oss)
+# Model assignments for agents (all using tinyllama)
 agent_models:
-  default: "gpt-oss:latest"
+  default: "tinyllama:latest"
   
   # GPT-OSS is the exclusive model for all agents
 
@@ -34,9 +34,9 @@ resource_config:
 init_commands: |
   #!/bin/bash
   echo "Pulling GPT-OSS model..."
-  ollama pull gpt-oss:latest
+  ollama pull tinyllama:latest
   echo "GPT-OSS ready!"
   
   # Test the model
   echo "Testing GPT-OSS..."
-  ollama run gpt-oss:latest "Hello, I am GPT-OSS. I am ready to help!" --verbose
+  ollama run tinyllama:latest "Hello, I am GPT-OSS. I am ready to help!" --verbose

@@ -2,7 +2,7 @@
   "name": "log-aggregator-loki",
   "description": "Agent for infrastructure operations",
   "model": "ollama",
-  "base_model": "gpt-oss2.5-coder:7b",
+  "base_model": "tinyllama2.5-coder:7b",
   "port": 9129,
   "capabilities": [
     "deployment",

@@ -72,7 +72,7 @@ def create_architecture_diagram():
     ax.add_patch(ai_box)
     ax.text(5, 4.7, 'AI Model & Agent Layer', 
             ha='center', va='center', fontsize=12, fontweight='bold')
-    ax.text(2, 4.3, 'Ollama\n(Port 11434)', 
+    ax.text(2, 4.3, 'Ollama\n(Port 10104)', 
             ha='center', va='center', fontsize=9)
     ax.text(3.5, 4.3, 'AutoGPT\nCrewAI', 
             ha='center', va='center', fontsize=9)

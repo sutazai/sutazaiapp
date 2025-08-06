@@ -13,9 +13,9 @@ echo ""
 
 # Check if Ollama is running
 echo "1. Checking Ollama service..."
-if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+if curl -s http://localhost:10104/api/tags > /dev/null 2>&1; then
     echo "   ✓ Ollama service is running"
-    MODELS=$(curl -s http://localhost:11434/api/tags | python3 -c "import sys, json; print(len(json.load(sys.stdin).get('models', [])))")
+    MODELS=$(curl -s http://localhost:10104/api/tags | python3 -c "import sys, json; print(len(json.load(sys.stdin).get('models', [])))")
     echo "   ✓ $MODELS models available"
 else
     echo "   ✗ Ollama service is not accessible"

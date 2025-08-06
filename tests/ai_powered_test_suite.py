@@ -392,7 +392,7 @@ class SutazAITestSuite:
         try:
             # Test a simple inference request
             payload = {
-                "model": "gpt-oss",
+                "model": "tinyllama",
                 "prompt": "Hello, how are you?",
                 "stream": False
             }

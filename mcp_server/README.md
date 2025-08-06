@@ -82,7 +82,7 @@ Shows all AI models available through Ollama.
 {
   "models": [
     {
-      "name": "gpt-oss-r1:8b",
+      "name": "tinyllama",
       "size": 4800000000,
       "modified_at": "2024-12-01T09:15:00Z"
     }
@@ -161,7 +161,7 @@ Manage AI models through Ollama.
 ```json
 {
   "action": "pull",
-  "model_name": "gpt-oss-r1:8b",
+  "model_name": "tinyllama",
   "parameters": {}
 }
 ```
@@ -297,7 +297,7 @@ REDIS_URL=redis://:password@localhost:6379/0
 
 # Service URLs
 BACKEND_API_URL=http://localhost:8000
-OLLAMA_URL=http://localhost:11434
+OLLAMA_URL=http://localhost:10104
 CHROMADB_URL=http://localhost:8000
 QDRANT_URL=http://localhost:6333
 
@@ -333,7 +333,7 @@ The setup script automatically creates the Claude Desktop configuration:
         "DATABASE_URL": "postgresql://sutazai:${POSTGRES_PASSWORD}@localhost:5432/sutazai",
         "REDIS_URL": "redis://:${REDIS_PASSWORD}@localhost:6379/0",
         "BACKEND_API_URL": "http://localhost:8000",
-        "OLLAMA_URL": "http://localhost:11434"
+        "OLLAMA_URL": "http://localhost:10104"
       }
     }
   }

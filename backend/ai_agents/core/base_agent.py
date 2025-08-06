@@ -138,8 +138,8 @@ class BaseAgent(ABC):
         
         # Ollama client for local AI models
         self.ollama_client: Optional[httpx.AsyncClient] = None
-        self.ollama_base_url = config.model_config.get("ollama_url", "http://localhost:11434")
-        self.model_name = config.model_config.get("model", "gpt-oss")
+        self.ollama_base_url = config.model_config.get("ollama_url", "http://localhost:10104")
+        self.model_name = config.model_config.get("model", "tinyllama")
         
         # Internal state
         self.active_tasks: Set[str] = set()

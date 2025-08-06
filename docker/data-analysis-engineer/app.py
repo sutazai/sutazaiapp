@@ -16,7 +16,7 @@ import psutil
 # Configuration
 AGENT_NAME = "data-analysis-engineer"
 AGENT_ROLE = "Data Analysis Engineer Agent"
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:10104")
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 PORT = int(os.getenv("PORT", "8080"))
 
@@ -152,7 +152,7 @@ async def capabilities():
                 "methods": ["charts", "dashboards", "reports"]
             }
         },
-        "supported_models": ["gpt-oss", "gpt-oss", "gpt-oss"],
+        "supported_models": ["tinyllama", "tinyllama", "tinyllama"],
         "api_version": "2.2.0"
     }
 

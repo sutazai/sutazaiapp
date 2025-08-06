@@ -147,7 +147,7 @@ async def main():
     # Create inference request
     request = InferenceRequest(
         request_id="test_001",
-        model_name="gpt-oss",
+        model_name="tinyllama",
         prompt="Hello, how are you?",
         parameters={"temperature": 0.7},
         priority=1,
@@ -176,7 +176,7 @@ curl -X POST http://localhost:8000/inference \
   -H "Content-Type: application/json" \
   -d '{
     "request_id": "test_001",
-    "model_name": "gpt-oss", 
+    "model_name": "tinyllama", 
     "prompt": "Explain quantum computing",
     "parameters": {"temperature": 0.7},
     "priority": 1
@@ -243,7 +243,7 @@ node = EdgeNode(
     capabilities={"gpu": False, "cpu_cores": 4},
     cpu_cores=4,
     memory_gb=8.0,
-    models_loaded={"gpt-oss", "gpt-oss"},
+    models_loaded={"tinyllama", "tinyllama"},
     location="datacenter_1",
     max_concurrent=20
 )
@@ -321,7 +321,7 @@ config = DeploymentConfig(
         "memory_limit": "4Gi"
     },
     environment={
-        "OLLAMA_HOST": "http://ollama-service:11434",
+        "OLLAMA_HOST": "http://ollama-service:10104",
         "MODEL_CACHE_SIZE": "2GB",
         "ENABLE_BATCHING": "true"
     },
@@ -351,7 +351,7 @@ config = DeploymentConfig(
         "cpu_limit": "2"
     },
     environment={
-        "OLLAMA_HOST": "http://localhost:11434",
+        "OLLAMA_HOST": "http://localhost:10104",
         "LIGHTWEIGHT_MODE": "true"
     },
     networking={
@@ -375,7 +375,7 @@ metric = Metric(
     value=150.5,
     metric_type=MetricType.HISTOGRAM,
     timestamp=datetime.now(),
-    labels={"model": "gpt-oss", "node": "edge_1"},
+    labels={"model": "tinyllama", "node": "edge_1"},
     unit="ms"
 )
 
@@ -425,7 +425,7 @@ router = get_intelligent_router()
 # Create routing request
 request = RoutingRequest(
     request_id="route_001",
-    model_name="gpt-oss",
+    model_name="tinyllama",
     priority_level=1,
     estimated_complexity=0.7,
     latency_requirement=200.0,
@@ -473,14 +473,14 @@ async def integrate_with_agents():
     cache = get_model_cache()
     
     # Preload models used by agents
-    agent_models = ["gpt-oss", "gpt-oss", "gpt-oss-coder"]
+    agent_models = ["tinyllama", "tinyllama", "tinyllama-coder"]
     for model in agent_models:
         await cache.preload_models([model], quantization_level="int8")
     
     # Register local Ollama as edge node
     ollama_node = EdgeNode(
         node_id="local_ollama",
-        endpoint="http://localhost:11434",
+        endpoint="http://localhost:10104",
         capabilities={"cpu_cores": 12, "memory_gb": 32},
         models_loaded=set(agent_models),
         max_concurrent=174  # Support 174+ connections

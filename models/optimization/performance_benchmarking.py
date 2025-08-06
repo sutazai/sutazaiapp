@@ -74,7 +74,7 @@ class BenchmarkConfig:
     prompt_categories: Dict[str, List[str]] = field(default_factory=dict)
     
     # Models to benchmark
-    models: List[str] = field(default_factory=lambda: ["gpt-oss"])
+    models: List[str] = field(default_factory=lambda: ["tinyllama"])
     model_configs: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     
     # Resource monitoring
@@ -299,7 +299,7 @@ class LoadGenerator:
 class ModelBenchmarker:
     """Benchmarks individual models"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:11434"):
+    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None
@@ -1298,7 +1298,7 @@ def create_latency_benchmark(models: List[str] = None) -> BenchmarkConfig:
     return BenchmarkConfig(
         name="Latency Benchmark",
         benchmark_types=[BenchmarkType.LATENCY],
-        models=models or ["gpt-oss"],
+        models=models or ["tinyllama"],
         duration_seconds=300,  # 5 minutes
         requests_per_second=2.0,
         max_concurrent_requests=5
@@ -1309,7 +1309,7 @@ def create_throughput_benchmark(models: List[str] = None) -> BenchmarkConfig:
     return BenchmarkConfig(
         name="Throughput Benchmark",
         benchmark_types=[BenchmarkType.THROUGHPUT],
-        models=models or ["gpt-oss"],
+        models=models or ["tinyllama"],
         duration_seconds=600,  # 10 minutes
         requests_per_second=10.0,
         max_concurrent_requests=20,
@@ -1321,7 +1321,7 @@ def create_stress_test_benchmark(models: List[str] = None) -> BenchmarkConfig:
     return BenchmarkConfig(
         name="Stress Test Benchmark",
         benchmark_types=[BenchmarkType.STRESS_TEST, BenchmarkType.MEMORY_USAGE],
-        models=models or ["gpt-oss"],
+        models=models or ["tinyllama"],
         duration_seconds=1800,  # 30 minutes
         requests_per_second=20.0,
         max_concurrent_requests=50,
@@ -1332,7 +1332,7 @@ def create_stress_test_benchmark(models: List[str] = None) -> BenchmarkConfig:
 async def example_benchmarking():
     """Example benchmarking usage"""
     # Create benchmark configuration
-    config = create_latency_benchmark(["gpt-oss", "gpt-oss2.5-coder:7b"])
+    config = create_latency_benchmark(["tinyllama", "tinyllama2.5-coder:7b"])
     config.duration_seconds = 60  # 1 minute for demo
     
     # Create and initialize benchmark suite

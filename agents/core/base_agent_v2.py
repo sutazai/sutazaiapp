@@ -114,7 +114,7 @@ class BaseAgentV2:
         
         # Service endpoints
         self.backend_url = os.getenv('BACKEND_URL', 'http://localhost:8000')
-        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
+        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:10104')
         
         # Agent state
         self.status = AgentStatus.INITIALIZING

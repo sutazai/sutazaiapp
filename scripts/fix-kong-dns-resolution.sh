@@ -69,7 +69,7 @@ update_upstream_target() {
 echo "=== Updating Core Services ==="
 update_upstream_target "backend-upstream" "sutazai-backend" "8000"
 update_upstream_target "redis-upstream" "sutazai-redis" "6379"
-update_upstream_target "ollama-upstream" "sutazai-ollama" "11434"
+update_upstream_target "ollama-upstream" "sutazai-ollama" "10104"
 update_upstream_target "prometheus-upstream" "sutazai-prometheus" "9090"
 
 # Update vector databases

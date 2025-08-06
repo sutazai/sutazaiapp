@@ -200,7 +200,7 @@ configure_claude_desktop() {
         "DATABASE_URL": "postgresql://sutazai:\${POSTGRES_PASSWORD}@localhost:5432/sutazai",
         "REDIS_URL": "redis://:\${REDIS_PASSWORD}@localhost:6379/0",
         "BACKEND_API_URL": "http://localhost:8000",
-        "OLLAMA_URL": "http://localhost:11434",
+        "OLLAMA_URL": "http://localhost:10104",
         "CHROMADB_URL": "http://localhost:8000",
         "QDRANT_URL": "http://localhost:6333"
       }
@@ -234,7 +234,7 @@ setup_mcp_inspector() {
         "DATABASE_URL": "postgresql://sutazai:sutazai_password@localhost:5432/sutazai",
         "REDIS_URL": "redis://:redis_password@localhost:6379/0",
         "BACKEND_API_URL": "http://localhost:8000",
-        "OLLAMA_URL": "http://localhost:11434",
+        "OLLAMA_URL": "http://localhost:10104",
         "LOG_LEVEL": "DEBUG"
       }
     }

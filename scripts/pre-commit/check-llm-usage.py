@@ -19,14 +19,14 @@ FORBIDDEN_PATTERNS = [
     r'palm\.generate',
     r'cohere\.Client',
     r'huggingface_hub',
-    r'transformers\.pipeline.*model=(?!gpt-oss)',
+    r'transformers\.pipeline.*model=(?!tinyllama)',
 ]
 
 # Allowed patterns
 ALLOWED_PATTERNS = [
     r'ollama',
-    r'gpt-oss',
-    r'localhost:11434',  # Ollama default port
+    r'tinyllama',
+    r'localhost:10104',  # Ollama default port
 ]
 
 def check_llm_usage(filepath: Path) -> List[str]:
@@ -75,7 +75,7 @@ def main():
         print("❌ Rule 16 Violation: Non-Ollama LLM usage detected")
         for violation in all_violations:
             print(f"  - {violation}")
-        print("\n📋 Fix: Use 'ollama run gpt-oss' for all local LLM tasks")
+        print("\n📋 Fix: Use 'ollama run tinyllama' for all local LLM tasks")
         return 1
     
     print("✅ Rule 16: LLM usage check passed")

@@ -23,11 +23,11 @@ app = FastAPI(title="LangChain Agent Server", version="1.0.0")
 class TaskRequest(BaseModel):
     task: str
     agent_type: Optional[str] = "general"
-    model: Optional[str] = "gpt-oss.2:1b"
+    model: Optional[str] = "tinyllama.2:1b"
 
 class LangChainAgentServer:
     def __init__(self):
-        self.ollama_base = os.getenv("OLLAMA_API_BASE", "http://localhost:11434")
+        self.ollama_base = os.getenv("OLLAMA_API_BASE", "http://localhost:10104")
         self.agents = {}
         self.setup_agents()
     
@@ -37,7 +37,7 @@ class LangChainAgentServer:
             # Initialize Ollama LLM
             llm = Ollama(
                 base_url=self.ollama_base,
-                model="gpt-oss.2:1b"
+                model="tinyllama.2:1b"
             )
             
             # Create tools

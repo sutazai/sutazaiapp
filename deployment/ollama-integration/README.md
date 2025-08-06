@@ -247,7 +247,7 @@ ls -la /opt/sutazaiapp/agents/configs/
 #### Ollama Connection Issues
 ```bash
 # Check Ollama service
-curl -f http://localhost:11434/api/tags
+curl -f http://localhost:10104/api/tags
 
 # Check Ollama logs
 docker logs ollama-optimized

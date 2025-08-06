@@ -231,17 +231,17 @@ verify_ollama() {
     local attempt=0
     
     while [[ $attempt -lt $max_attempts ]]; do
-        if curl -f -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+        if curl -f -s http://localhost:10104/api/tags >/dev/null 2>&1; then
             success "Ollama is available"
             
-            # Check if gpt-oss is available
-            if curl -s http://localhost:11434/api/tags | grep -q "gpt-oss"; then
-                success "gpt-oss model is available"
+            # Check if tinyllama is available
+            if curl -s http://localhost:10104/api/tags | grep -q "tinyllama"; then
+                success "tinyllama model is available"
             else
-                info "Pulling gpt-oss model..."
-                curl -X POST http://localhost:11434/api/pull \
+                info "Pulling tinyllama model..."
+                curl -X POST http://localhost:10104/api/pull \
                     -H "Content-Type: application/json" \
-                    -d '{"name": "gpt-oss"}' || warning "Failed to pull gpt-oss"
+                    -d '{"name": "tinyllama"}' || warning "Failed to pull tinyllama"
             fi
             break
         fi

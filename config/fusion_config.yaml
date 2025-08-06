@@ -10,9 +10,9 @@ buffer_size: 1000            # Maximum items in temporal buffers
 feature_dim: 768             # Unified feature dimension (matches transformer models)
 embedding_model: "nomic-embed-text"  # Primary embedding model via Ollama
 secondary_models:
-  text: "gpt-oss"          # Text processing model per Rule 16
-  coding: "gpt-oss2.5-coder:3b" # Coding analysis model
-  analysis: "gpt-oss2.5:3b"     # General analysis model
+  text: "tinyllama"          # Text processing model per Rule 16
+  coding: "tinyllama2.5-coder:3b" # Coding analysis model
+  analysis: "tinyllama2.5:3b"     # General analysis model
 
 # Fusion strategy configuration
 default_fusion_strategy: "hybrid"
@@ -36,7 +36,7 @@ enable_cache: true
 cache_compression: true
 
 # Integration endpoints (SutazAI infrastructure)
-ollama_url: "http://ollama:11434"
+ollama_url: "http://ollama:10104"
 ollama_backup_urls:
   - "http://ollama-secondary:11435"
   - "http://ollama-tertiary:11436"

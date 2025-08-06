@@ -34,7 +34,7 @@ class BaseAgentV2:
         self.status = "initializing"
         
         # Environment variables
-        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
+        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:10104')
         self.backend_url = os.getenv('BACKEND_URL', 'http://localhost:8000')
         
         # Simple metrics

@@ -71,7 +71,7 @@ data:
         """Collects and exports AI-specific metrics"""
         
         def __init__(self):
-            self.ollama_url = os.getenv('OLLAMA_URL', 'http://sutazai-ollama:11434')
+            self.ollama_url = os.getenv('OLLAMA_URL', 'http://sutazai-ollama:10104')
             self.backend_url = os.getenv('BACKEND_URL', 'http://sutazai-backend:8000')
             self.autogpt_url = os.getenv('AUTOGPT_URL', 'http://sutazai-autogpt:8100')
             self.crewai_url = os.getenv('CREWAI_URL', 'http://sutazai-crewai:8200')
@@ -297,7 +297,7 @@ spec:
               protocol: TCP
           env:
             - name: OLLAMA_URL
-              value: "http://sutazai-ollama:11434"
+              value: "http://sutazai-ollama:10104"
             - name: BACKEND_URL
               value: "http://sutazai-backend:8000"
             - name: AUTOGPT_URL

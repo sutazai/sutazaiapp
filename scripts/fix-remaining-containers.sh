@@ -53,7 +53,7 @@ for container in "${CONTAINERS[@]}"; do
         --name "$container" \
         --network sutazai-network \
         -e "AGENT_NAME=$container" \
-        -e "OLLAMA_BASE_URL=http://ollama:11434" \
+        -e "OLLAMA_BASE_URL=http://ollama:10104" \
         -e "REDIS_URL=redis://redis:6379/0" \
         --memory="1g" \
         --cpus="0.5" \

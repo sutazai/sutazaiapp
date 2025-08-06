@@ -517,7 +517,7 @@ async def benchmark_all_optimizations():
     
     # Test configuration
     config = BenchmarkConfig(
-        model_name="gpt-oss",
+        model_name="tinyllama",
         test_prompts=[
             "Explain quantum computing",
             "Write a Python function to sort a list",
@@ -532,25 +532,25 @@ async def benchmark_all_optimizations():
     
     # Benchmark different optimizations
     optimizations = [
-        ("baseline", "/models/gpt-oss.onnx"),
-        ("int8", "/models/gpt-oss_int8.onnx"),
-        ("int4", "/models/gpt-oss_int4.onnx"),
-        ("pruned", "/models/gpt-oss_pruned.onnx"),
-        ("distilled", "/models/gpt-oss_distilled.onnx")
+        ("baseline", "/models/tinyllama.onnx"),
+        ("int8", "/models/tinyllama_int8.onnx"),
+        ("int4", "/models/tinyllama_int4.onnx"),
+        ("pruned", "/models/tinyllama_pruned.onnx"),
+        ("distilled", "/models/tinyllama_distilled.onnx")
     ]
     
     for opt_type, model_path in optimizations:
         await benchmark.benchmark_model(model_path, config, opt_type)
     
     # Generate report
-    report = benchmark.generate_report("gpt-oss")
+    report = benchmark.generate_report("tinyllama")
     print(json.dumps(report, indent=2))
     
     # Create visualizations
-    benchmark.plot_results("gpt-oss")
+    benchmark.plot_results("tinyllama")
     
     # Save results
-    benchmark.save_results("gpt-oss")
+    benchmark.save_results("tinyllama")
 
 
 if __name__ == "__main__":

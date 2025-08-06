@@ -295,7 +295,7 @@ validation:
       command: "python -m pytest /opt/sutazaiapp/agents/core/test_enhanced_agent.py"
     - name: "ollama_connectivity"
       type: "integration_test"
-      command: "curl -f http://ollama:11434/api/tags"
+      command: "curl -f http://ollama:10104/api/tags"
     - name: "resource_availability"
       type: "system_check"
       command: "bash /opt/sutazaiapp/scripts/check-resources.sh"

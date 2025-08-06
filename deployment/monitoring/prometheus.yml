@@ -53,7 +53,7 @@ scrape_configs:
   # Ollama Model Server
   - job_name: 'ollama'
     static_configs:
-      - targets: ['ollama:11434']
+      - targets: ['ollama:10104']
     metrics_path: '/metrics'
     scrape_interval: 30s
     scrape_timeout: 15s

@@ -149,7 +149,7 @@ class UniversalAgentSystem:
     """
     
     def __init__(self, redis_url: str = "redis://localhost:6379",
-                 ollama_url: str = "http://localhost:11434",
+                 ollama_url: str = "http://localhost:10104",
                  namespace: str = "sutazai"):
         
         self.redis_url = redis_url

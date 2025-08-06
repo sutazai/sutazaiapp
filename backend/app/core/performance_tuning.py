@@ -251,7 +251,7 @@ class ModelOptimizer:
             "model_cache": {
                 "max_models": 5,
                 "eviction_policy": "lru",
-                "preload": ["gpt-oss"]
+                "preload": ["tinyllama"]
             },
             "gpu_memory_fraction": 0.8,
             "allow_growth": True

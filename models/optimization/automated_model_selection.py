@@ -719,7 +719,7 @@ class ModelSelectionEngine:
 class AutoDeployer:
     """Handles automated model deployment"""
     
-    def __init__(self, ollama_host: str = "http://localhost:11434"):
+    def __init__(self, ollama_host: str = "http://localhost:10104"):
         self.ollama_host = ollama_host
         self.deployed_models = set()
         self.deployment_history = []
@@ -1031,7 +1031,7 @@ class ModelSelectionOrchestrator:
         # Default model profiles
         default_models = [
             ModelProfile(
-                name="gpt-oss",
+                name="tinyllama",
                 avg_latency=1.5,
                 avg_throughput=25.0,
                 avg_quality=0.7,
@@ -1041,7 +1041,7 @@ class ModelSelectionOrchestrator:
                 max_context_length=2048
             ),
             ModelProfile(
-                name="gpt-oss2.5-coder:7b",
+                name="tinyllama2.5-coder:7b",
                 avg_latency=3.0,
                 avg_throughput=15.0,
                 avg_quality=0.85,

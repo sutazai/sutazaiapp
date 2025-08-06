@@ -227,13 +227,13 @@ spec:
         app: sutazai-ollama
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "11434"
+        prometheus.io/port: "10104"
     spec:
       containers:
       - name: ollama
         image: ollama/ollama:latest
         ports:
-        - containerPort: 11434
+        - containerPort: 10104
           name: http
         env:
         - name: OLLAMA_HOST
@@ -261,14 +261,14 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: 11434
+            port: 10104
           initialDelaySeconds: 60
           periodSeconds: 30
           timeoutSeconds: 10
         readinessProbe:
           httpGet:
             path: /
-            port: 11434
+            port: 10104
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
@@ -297,12 +297,12 @@ metadata:
     app: sutazai-ollama
   annotations:
     prometheus.io/scrape: "true"
-    prometheus.io/port: "11434"
+    prometheus.io/port: "10104"
 spec:
   type: ClusterIP
   ports:
-  - port: 11434
-    targetPort: 11434
+  - port: 10104
+    targetPort: 10104
     name: http
   selector:
     app: sutazai-ollama
@@ -355,7 +355,7 @@ spec:
               name: sutazai-secrets
               key: redis-url
         - name: OLLAMA_BASE_URL
-          value: "http://sutazai-ollama:11434"
+          value: "http://sutazai-ollama:10104"
         - name: CHROMADB_URL
           value: "http://sutazai-chromadb.sutazai-infrastructure:8000"
         - name: QDRANT_URL

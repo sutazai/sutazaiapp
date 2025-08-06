@@ -46,7 +46,7 @@ consul_client = consul.Consul(host='consul', port=8500)
 # Service configuration
 SERVICE_NAME = os.getenv('SERVICE_NAME', 'langchain')
 INSTANCE_ID = os.getenv('INSTANCE_ID', '0')
-OLLAMA_BASE_URL = 'http://ollama:11434'
+OLLAMA_BASE_URL = 'http://ollama:10104'
 
 # Memory storage
 conversations = {}
@@ -54,7 +54,7 @@ conversations = {}
 class ChainRequest(BaseModel):
     """Request model for chain execution"""
     prompt: str
-    model: str = "gpt-oss"
+    model: str = "tinyllama"
     temperature: float = 0.7
     max_tokens: int = 256
     conversation_id: Optional[str] = None

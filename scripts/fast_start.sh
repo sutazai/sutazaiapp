@@ -445,7 +445,7 @@ run_startup_health_checks() {
     fi
     
     # Test Ollama
-    if curl -s --max-time 10 http://localhost:11434/api/tags >/dev/null 2>&1; then
+    if curl -s --max-time 10 http://localhost:10104/api/tags >/dev/null 2>&1; then
         health_results+=("✅ Ollama API - Responding")
     else
         health_results+=("❌ Ollama API - Not responding")

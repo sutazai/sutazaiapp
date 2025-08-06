@@ -52,7 +52,7 @@ class TestBaseAgentV2:
             'AGENT_NAME': 'test-agent',
             'AGENT_TYPE': 'testing',
             'BACKEND_URL': 'http://test-backend:8000',
-            'OLLAMA_URL': 'http://test-ollama:11434'
+            'OLLAMA_URL': 'http://test-ollama:10104'
         }):
             return BaseAgentV2(
                 config_path=temp_config,
@@ -68,7 +68,7 @@ class TestBaseAgentV2:
         assert agent.agent_type == 'testing'
         assert agent.agent_version == "2.0.0"
         assert agent.backend_url == 'http://test-backend:8000'
-        assert agent.ollama_url == 'http://test-ollama:11434'
+        assert agent.ollama_url == 'http://test-ollama:10104'
         assert agent.status == AgentStatus.INITIALIZING
         assert agent.max_concurrent_tasks == 2
         assert isinstance(agent.metrics, AgentMetrics)

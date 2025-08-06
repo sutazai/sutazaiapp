@@ -85,10 +85,10 @@ class OllamaConnectionPool:
     """
     
     def __init__(self,
-                 base_url: str = "http://localhost:11434",
+                 base_url: str = "http://localhost:10104",
                  max_connections: int = 2,  # Conservative for limited hardware
                  min_connections: int = 1,
-                 default_model: str = "gpt-oss",
+                 default_model: str = "tinyllama",
                  connection_timeout: int = 30,
                  request_timeout: int = 300,
                  max_retries: int = 3,
@@ -717,7 +717,7 @@ class OllamaConnectionPool:
 
 # Factory function for easy instantiation
 def create_ollama_pool(max_connections: int = 2, 
-                      default_model: str = "gpt-oss",
+                      default_model: str = "tinyllama",
                       **kwargs) -> OllamaConnectionPool:
     """Factory function to create an Ollama connection pool"""
     return OllamaConnectionPool(

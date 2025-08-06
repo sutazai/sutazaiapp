@@ -47,7 +47,7 @@ class AgentHealthCheckFixer:
                 'start_period': "120s"
             },
             'ollama_service': {
-                'test': ["CMD", "curl", "-f", "-m", "3", "http://localhost:11434/api/version"],
+                'test': ["CMD", "curl", "-f", "-m", "3", "http://localhost:10104/api/version"],
                 'interval': "30s",
                 'timeout': "10s",
                 'retries': 3,

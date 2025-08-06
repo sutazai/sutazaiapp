@@ -2,7 +2,7 @@
   "name": "container-orchestrator-k3s",
   "description": "Agent for infrastructure operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9107,
   "capabilities": [
     "deployment",

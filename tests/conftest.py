@@ -59,7 +59,7 @@ def mock_environment():
         'AGENT_NAME': 'test-agent',
         'AGENT_TYPE': 'test',
         'BACKEND_URL': 'http://test-backend:8000',
-        'OLLAMA_URL': 'http://test-ollama:11434',
+        'OLLAMA_URL': 'http://test-ollama:10104',
         'LOG_LEVEL': 'WARNING'
     }
     
@@ -72,7 +72,7 @@ def mock_ollama_service():
     """Mock Ollama service responses"""
     class MockOllamaService:
         def __init__(self):
-            self.models = ["gpt-oss"]
+            self.models = ["tinyllama"]
             self.responses = {}
         
         def set_response(self, prompt, response):
@@ -181,7 +181,7 @@ def sample_task():
         "type": "test",
         "data": {
             "prompt": "This is a test prompt",
-            "model": "gpt-oss",
+            "model": "tinyllama",
             "max_tokens": 100
         },
         "created_at": datetime.utcnow().isoformat()
@@ -198,7 +198,7 @@ def sample_task_result():
         status="completed",
         result={
             "output": "Test task completed successfully",
-            "model_used": "gpt-oss",
+            "model_used": "tinyllama",
             "tokens_used": 50
         },
         processing_time=1.5

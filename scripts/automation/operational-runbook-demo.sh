@@ -20,7 +20,7 @@ RUNNING_CONTAINERS=$(docker ps | wc -l)
 echo "Running containers: $RUNNING_CONTAINERS"
 
 echo "Checking Ollama service..."
-if curl -s --max-time 5 http://localhost:11434/api/tags > /dev/null 2>&1; then
+if curl -s --max-time 5 http://localhost:10104/api/tags > /dev/null 2>&1; then
     echo "✓ Ollama service responding"
 else
     echo "✗ Ollama service check failed"

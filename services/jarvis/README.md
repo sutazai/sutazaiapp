@@ -13,7 +13,7 @@ JARVIS serves as the central voice interface for SutazAI, enabling natural langu
 - **🎤 Advanced Voice Recognition**: Real-time speech-to-text with wake word detection
 - **🗣️ Natural Speech Synthesis**: High-quality text-to-speech responses
 - **🤖 Intelligent Agent Routing**: Automatically routes commands to the most suitable AI agents
-- **🧠 Smart Task Planning**: Uses local LLM (gpt-oss) for intelligent task decomposition
+- **🧠 Smart Task Planning**: Uses local LLM (tinyllama) for intelligent task decomposition
 - **💾 Contextual Memory**: Maintains conversation history and learns from interactions
 - **🔌 Plugin System**: Extensible architecture for custom functionality
 - **🌐 Web Interface**: Modern web-based control panel
@@ -200,8 +200,8 @@ agents:
 
 # Task planning with Ollama
 planner:
-  ollama_url: "http://ollama:11434"
-  planning_model: "gpt-oss"
+  ollama_url: "http://ollama:10104"
+  planning_model: "tinyllama"
   max_steps: 10
   enable_reflection: true
 ```
@@ -215,7 +215,7 @@ JARVIS_PORT=8888
 JARVIS_DEBUG=false
 
 # Ollama integration
-OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_BASE_URL=http://ollama:10104
 OLLAMA_API_KEY=local
 
 # Database connections
@@ -405,7 +405,7 @@ docker exec sutazai-jarvis ls -la /dev/snd/
 **Ollama Connection Issues:**
 ```bash
 # Check Ollama status
-curl http://localhost:11434/api/tags
+curl http://localhost:10104/api/tags
 
 # Restart Ollama
 docker-compose restart ollama

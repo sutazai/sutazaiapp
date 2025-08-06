@@ -135,7 +135,7 @@ The `static_monitor.py` has undergone comprehensive testing across all major fun
 - Port 22 (SSH): OPEN
 - Port 80 (HTTP): OPEN  
 - Port 8116 (Agent): OPEN (hardware-resource-optimizer responding)
-- Port 11434 (Ollama): CLOSED
+- Port 10104 (Ollama): CLOSED
 - Other test ports: CLOSED
 
 ## Performance Metrics

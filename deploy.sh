@@ -1590,8 +1590,8 @@ download_essential_models() {
     log_info "Downloading essential AI models..."
     
     local essential_models=(
-        "gpt-oss:latest"
-        "gpt-oss2.5:3b"
+        "tinyllama:latest"
+        "tinyllama2.5:3b"
         "nomic-embed-text:latest"
     )
     
@@ -1677,7 +1677,7 @@ check_infrastructure_health() {
         "neo4j:7474"
         "chromadb:8000"
         "qdrant:6333"
-        "ollama:11434"
+        "ollama:10104"
     )
     
     for service_port in "${infrastructure_services[@]}"; do
@@ -1722,7 +1722,7 @@ check_ai_services_health() {
     log_info "Checking AI services health..."
     
     # Ollama model availability
-    if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "gpt-oss"; then
+    if docker exec sutazai-ollama ollama list 2>/dev/null | grep -q "tinyllama"; then
         results+=("✅ AI: Ollama models - AVAILABLE")
     else
         results+=("❌ AI: Ollama models - NOT AVAILABLE")
@@ -1789,9 +1789,9 @@ test_ai_inference() {
     local test_prompt="Hello, this is a test."
     local response
     
-    response=$(curl -s --max-time 30 -X POST http://localhost:11434/api/generate \
+    response=$(curl -s --max-time 30 -X POST http://localhost:10104/api/generate \
         -H "Content-Type: application/json" \
-        -d "{\"model\": \"gpt-oss\", \"prompt\": \"$test_prompt\", \"stream\": false}" 2>/dev/null)
+        -d "{\"model\": \"tinyllama\", \"prompt\": \"$test_prompt\", \"stream\": false}" 2>/dev/null)
     
     # Check if response contains expected fields
     echo "$response" | grep -q '"response"' && echo "$response" | grep -q '"done"'
@@ -1991,7 +1991,7 @@ API Documentation: http://$local_ip:8000/docs
 
 AI SERVICES
 -----------
-Ollama API: http://$local_ip:11434
+Ollama API: http://$local_ip:10104
 LangFlow: http://$local_ip:8090
 FlowiseAI: http://$local_ip:8099
 Dify: http://$local_ip:8107

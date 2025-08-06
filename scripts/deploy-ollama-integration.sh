@@ -159,7 +159,7 @@ check_system_resources() {
     fi
     
     # Check Ollama service
-    if ! curl -f -s "http://localhost:11434/api/tags" > /dev/null; then
+    if ! curl -f -s "http://localhost:10104/api/tags" > /dev/null; then
         error "Ollama service is not accessible"
         exit 1
     fi
@@ -359,7 +359,7 @@ deploy_single_agent() {
         --env-file "${PROJECT_ROOT}/.env" \
         -e AGENT_NAME="$agent_name" \
         -e AGENT_VERSION="2.0.0" \
-        -e OLLAMA_URL="http://ollama:11434" \
+        -e OLLAMA_URL="http://ollama:10104" \
         -e BACKEND_URL="http://backend:8000" \
         -v "${PROJECT_ROOT}/agents/configs/${agent_name}.json:/app/config.json:ro" \
         sutazai-agent-v2

@@ -66,7 +66,7 @@ class OptimizationOrchestrator:
         
         # Common models shared across agents - all using GPT-OSS
         base_models = {
-            'gpt-oss': [
+            'tinyllama': [
                 'code-generation-improver',
                 'testing-qa-validator',
                 'documentation-generator',
@@ -97,7 +97,7 @@ class OptimizationOrchestrator:
             for agent in agents:
                 agent_mapping[agent] = model
         
-        # Add remaining agents with gpt-oss (default)
+        # Add remaining agents with tinyllama (default)
         remaining_agents = [
             'ollama-integration-specialist',
             'bias-and-fairness-auditor',
@@ -109,7 +109,7 @@ class OptimizationOrchestrator:
         
         for agent in remaining_agents:
             if agent not in agent_mapping:
-                agent_mapping[agent] = 'gpt-oss'
+                agent_mapping[agent] = 'tinyllama'
         
         return agent_mapping
     
@@ -173,7 +173,7 @@ class OptimizationOrchestrator:
         
         # Define model characteristics - all using GPT-OSS
         model_info = {
-            'gpt-oss': {'size_mb': 250, 'type': 'general'}
+            'tinyllama': {'size_mb': 250, 'type': 'general'}
         }
         
         for model, agents in model_agent_count.items():

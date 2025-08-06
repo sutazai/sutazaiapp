@@ -30,7 +30,7 @@ warning() {
 
 # Configuration
 PROJECT_ROOT="/opt/sutazaiapp"
-OLD_OLLAMA_URL="http://ollama:11434"
+OLD_OLLAMA_URL="http://ollama:10104"
 NEW_OLLAMA_URL="http://ollama-lb:80"
 BACKUP_DIR="${PROJECT_ROOT}/backups/agent_configs_$(date +%Y%m%d_%H%M%S)"
 
@@ -68,8 +68,8 @@ update_docker_compose_files() {
             sed -i.bak "s|${OLD_OLLAMA_URL}|${NEW_OLLAMA_URL}|g" "$file"
             
             # Update environment variables to use load balancer
-            sed -i "s|OLLAMA_BASE_URL: http://ollama:11434|OLLAMA_BASE_URL: http://ollama-lb:80|g" "$file"
-            sed -i "s|OLLAMA_BASE_URL=http://ollama:11434|OLLAMA_BASE_URL=http://ollama-lb:80|g" "$file"
+            sed -i "s|OLLAMA_BASE_URL: http://ollama:10104|OLLAMA_BASE_URL: http://ollama-lb:80|g" "$file"
+            sed -i "s|OLLAMA_BASE_URL=http://ollama:10104|OLLAMA_BASE_URL=http://ollama-lb:80|g" "$file"
             
             ((updated_files++))
             success "Updated $file"
@@ -247,7 +247,7 @@ create_update_summary() {
         echo "2. Restart all services: docker-compose down && docker-compose up -d"
         echo "3. Check cluster monitor: http://localhost:10108"
         echo "4. Test load balancer: curl http://localhost:10107/health"
-        echo "5. Verify gpt-oss default: docker exec sutazai-ollama-primary ollama list"
+        echo "5. Verify tinyllama default: docker exec sutazai-ollama-primary ollama list"
         
     } > "$summary_file"
     
@@ -355,7 +355,7 @@ main() {
     echo "  3. Monitor cluster health: http://localhost:10108"
     echo "  4. Test load balancer: curl http://localhost:10107/health"
     echo ""
-    warning "Remember: gpt-oss is configured as the default model per Rule 16"
+    warning "Remember: tinyllama is configured as the default model per Rule 16"
 }
 
 # Run main function

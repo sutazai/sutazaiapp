@@ -94,7 +94,7 @@ data:
     
     - job_name: 'ollama'
       static_configs:
-      - targets: ['ollama.sutazai-core:11434']
+      - targets: ['ollama.sutazai-core:10104']
       metrics_path: '/metrics'
     
     - job_name: 'postgres'

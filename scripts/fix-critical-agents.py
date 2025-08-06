@@ -77,7 +77,7 @@ app = FastAPI(title="{agent_title}")
 
 # Agent configuration
 AGENT_NAME = os.getenv("AGENT_NAME", "{agent_name}")
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:10104")
 BACKEND_URL = os.getenv("BACKEND_URL", "http://backend:8000")
 
 class TaskRequest(BaseModel):

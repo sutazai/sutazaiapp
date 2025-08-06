@@ -2,7 +2,7 @@
   "name": "code-quality-gateway-sonarqube",
   "description": "Agent for development operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9306,
   "capabilities": [
     "code_generation",

@@ -131,7 +131,7 @@ deploy_ai_services() {
     
     # Pull Ollama models
     log_info "Pulling Ollama models..."
-    models=("gpt-oss" "gpt-oss-r1:8b" "gpt-oss3:8b" "gpt-oss:7b")
+    models=("tinyllama" "tinyllama" "tinyllama3:8b" "tinyllama:7b")
     
     for model in "${models[@]}"; do
         log_info "Pulling model: $model"
@@ -191,7 +191,7 @@ health_check() {
         "http://localhost:15672/api/overview"      # RabbitMQ
         "http://localhost:9090/-/healthy"          # Prometheus
         "http://localhost:3000/api/health"         # Grafana
-        "http://localhost:11434/api/tags"          # Ollama
+        "http://localhost:10104/api/tags"          # Ollama
     )
     
     failed=0
@@ -222,7 +222,7 @@ display_urls() {
     echo "  Prometheus:       http://localhost:9090"
     echo "  Grafana:          http://localhost:3000 (admin/admin)"
     echo "  Jaeger UI:        http://localhost:16686"
-    echo "  Ollama API:       http://localhost:11434"
+    echo "  Ollama API:       http://localhost:10104"
     echo "  n8n Workflow:     http://localhost:5678"
     echo
 }

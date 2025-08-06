@@ -2,7 +2,7 @@
   "name": "distributed-tracing-analyzer-jaeger",
   "description": "Agent for monitoring operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9711,
   "capabilities": [
     "observability",

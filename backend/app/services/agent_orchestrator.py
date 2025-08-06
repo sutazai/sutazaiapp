@@ -52,7 +52,7 @@ except ImportError:
 
 class AgentOrchestrator(BaseService):
     """
-    Enhanced orchestrator for 131 AI agents with Ollama/gpt-oss integration
+    Enhanced orchestrator for 131 AI agents with Ollama/tinyllama integration
     """
     
     def __init__(self):
@@ -64,7 +64,7 @@ class AgentOrchestrator(BaseService):
         
         # Enhanced attributes for mass deployment
         self.agents_dir = Path("/opt/sutazaiapp/agents")
-        self.ollama_base_url = "http://localhost:11434"
+        self.ollama_base_url = "http://localhost:10104"
         self.active_agents: Dict[str, Any] = {}
         self.agent_processes: Dict[str, subprocess.Popen] = {}
         self.ollama_ready = False
@@ -274,14 +274,14 @@ class AgentOrchestrator(BaseService):
             response = requests.get(f"{self.ollama_base_url}/api/tags", timeout=10)
             if response.status_code == 200:
                 models = response.json().get("models", [])
-                if any("gpt-oss" in model.get("name", "").lower() for model in models):
+                if any("tinyllama" in model.get("name", "").lower() for model in models):
                     logger.info("✅ GPT-OSS model is available")
                     return True
             
             # Pull GPT-OSS
             logger.info("📥 Pulling GPT-OSS model...")
             pull_process = subprocess.run(
-                ["ollama", "pull", "gpt-oss"],
+                ["ollama", "pull", "tinyllama"],
                 capture_output=True,
                 text=True,
                 timeout=300
@@ -416,7 +416,7 @@ class AgentOrchestrator(BaseService):
                 'AGENT_NAME': agent_name,
                 'AGENT_PORT': str(port),
                 'OLLAMA_BASE_URL': self.ollama_base_url,
-                'OLLAMA_MODEL': 'gpt-oss',
+                'OLLAMA_MODEL': 'tinyllama',
                 'PYTHONPATH': '/opt/sutazaiapp:/opt/sutazaiapp/agents'
             })
             

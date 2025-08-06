@@ -96,7 +96,7 @@ class SutazAISystemFixer:
         expected_containers = {
             'sutazai-postgres': {'port': 5432, 'image': 'postgres:15'},
             'sutazai-redis': {'port': 6379, 'image': 'redis:7-alpine'},
-            'sutazai-ollama': {'port': 11434, 'image': 'ollama/ollama:latest'},
+            'sutazai-ollama': {'port': 10104, 'image': 'ollama/ollama:latest'},
             'sutazai-qdrant': {'port': 6333, 'image': 'qdrant/qdrant:latest'},
             'sutazai-chromadb': {'port': 8001, 'image': 'chromadb/chroma:latest'}
         }
@@ -240,10 +240,10 @@ class SutazAISystemFixer:
         """Ensure Ollama models are available"""
         self.print_status("Checking Ollama models...", "info")
         
-        required_models = ['gpt-oss.2:1b', 'gpt-oss2.5:3b']
+        required_models = ['tinyllama.2:1b', 'tinyllama2.5:3b']
         
         try:
-            response = requests.get("http://localhost:11434/api/tags", timeout=5)
+            response = requests.get("http://localhost:10104/api/tags", timeout=5)
             if response.status_code == 200:
                 installed_models = [m['name'] for m in response.json().get('models', [])]
                 
@@ -251,7 +251,7 @@ class SutazAISystemFixer:
                     if model not in installed_models:
                         self.print_status(f"Pulling Ollama model: {model}", "warning")
                         # Initiate model pull (non-blocking)
-                        requests.post("http://localhost:11434/api/pull", 
+                        requests.post("http://localhost:10104/api/pull", 
                                     json={"name": model}, timeout=5)
                         self.fixes_applied.append(f"Initiated pull for {model}")
                     else:

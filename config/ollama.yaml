@@ -2,7 +2,7 @@
 # Optimized to handle 174 concurrent consumers
 
 model:
-  name: gpt-oss
+  name: tinyllama
   version: latest
   
 # Resource limits optimized for high concurrency (29GB RAM available)
@@ -24,7 +24,7 @@ settings:
   
 # Connection settings optimized for high load
 connection:
-  base_url: "http://ollama:11434"
+  base_url: "http://ollama:10104"
   timeout: 60                  # Increased timeout
   retries: 5                   # More retries for reliability
   keepalive: 300               # 5 minute keepalive
@@ -36,16 +36,16 @@ load_balancing:
   strategy: "round_robin"
   health_check_interval: 30
   instances:
-    - "http://ollama-primary:11434"
+    - "http://ollama-primary:10104"
     - "http://ollama-secondary:11435"  # Secondary instance for scaling
     - "http://ollama-tertiary:11436"   # Tertiary instance for peak load
   
 # Agent model mapping - GPT-OSS as exclusive model
 agent_models:
-  default: "gpt-oss"                      # GPT-OSS as the exclusive model
-  coding_agents: "gpt-oss"                # GPT-OSS for coding tasks
-  analysis_agents: "gpt-oss"              # GPT-OSS for analysis
-  embedding_agents: "gpt-oss"             # GPT-OSS as the universal model
+  default: "tinyllama"                      # GPT-OSS as the exclusive model
+  coding_agents: "tinyllama"                # GPT-OSS for coding tasks
+  analysis_agents: "tinyllama"              # GPT-OSS for analysis
+  embedding_agents: "tinyllama"             # GPT-OSS as the universal model
   
 # Performance monitoring
 monitoring:

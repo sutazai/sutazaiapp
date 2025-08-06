@@ -171,7 +171,7 @@ Status: Investigating
 
 IMMEDIATE ACTIONS:
 1. Identify affected agent: {agent_name}
-2. Check Ollama dependency: curl http://ollama:11434/
+2. Check Ollama dependency: curl http://ollama:10104/
 3. Check agent logs: docker logs {agent_container}
 4. Restart agent: docker-compose restart {agent_name}
 5. Test agent endpoint: curl http://{agent}:8080/health

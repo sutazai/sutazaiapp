@@ -50,7 +50,7 @@ services:
     weight: 1
     
   ollama:
-    url: "http://ollama:11434"
+    url: "http://ollama:10104"
     health_check: "/api/tags"
     timeout: 60
     retry_count: 3

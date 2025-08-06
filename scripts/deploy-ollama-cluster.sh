@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Deploy High-Availability Ollama Cluster for SutazAI
-# Optimized for 174+ concurrent consumers with gpt-oss default model
+# Optimized for 174+ concurrent consumers with tinyllama default model
 
 set -euo pipefail
 
@@ -78,9 +78,9 @@ validate_configuration() {
         exit 1
     fi
     
-    # Verify gpt-oss is set as default
-    if ! grep -q 'default: "gpt-oss"' "$OLLAMA_CONFIG_FILE"; then
-        error "gpt-oss is not set as default model (Rule 16 violation)"
+    # Verify tinyllama is set as default
+    if ! grep -q 'default: "tinyllama"' "$OLLAMA_CONFIG_FILE"; then
+        error "tinyllama is not set as default model (Rule 16 violation)"
         exit 1
     fi
     
@@ -152,35 +152,35 @@ deploy_cluster() {
     fi
 }
 
-# Install and configure gpt-oss model (Rule 16 compliance)
-install_gpt-oss() {
-    log "Installing gpt-oss model per Rule 16..."
+# Install and configure tinyllama model (Rule 16 compliance)
+install_tinyllama() {
+    log "Installing tinyllama model per Rule 16..."
     
-    # Install gpt-oss on primary instance
-    docker exec sutazai-ollama-primary ollama pull gpt-oss || {
-        error "Failed to pull gpt-oss model"
+    # Install tinyllama on primary instance
+    docker exec sutazai-ollama-primary ollama pull tinyllama || {
+        error "Failed to pull tinyllama model"
         return 1
     }
     
     # Verify model is installed
-    if docker exec sutazai-ollama-primary ollama list | grep -q "gpt-oss"; then
-        success "gpt-oss model installed on primary instance"
+    if docker exec sutazai-ollama-primary ollama list | grep -q "tinyllama"; then
+        success "tinyllama model installed on primary instance"
     else
-        error "gpt-oss model installation verification failed"
+        error "tinyllama model installation verification failed"
         return 1
     fi
     
     # Install on secondary instances
-    log "Installing gpt-oss on secondary instances..."
-    docker exec sutazai-ollama-secondary ollama pull gpt-oss || warning "Failed to install gpt-oss on secondary"
-    docker exec sutazai-ollama-tertiary ollama pull gpt-oss || warning "Failed to install gpt-oss on tertiary"
+    log "Installing tinyllama on secondary instances..."
+    docker exec sutazai-ollama-secondary ollama pull tinyllama || warning "Failed to install tinyllama on secondary"
+    docker exec sutazai-ollama-tertiary ollama pull tinyllama || warning "Failed to install tinyllama on tertiary"
     
-    # Set gpt-oss as active model on all instances
-    docker exec sutazai-ollama-primary ollama run gpt-oss --prompt "test" --stream false >/dev/null 2>&1 || true
-    docker exec sutazai-ollama-secondary ollama run gpt-oss --prompt "test" --stream false >/dev/null 2>&1 || true
-    docker exec sutazai-ollama-tertiary ollama run gpt-oss --prompt "test" --stream false >/dev/null 2>&1 || true
+    # Set tinyllama as active model on all instances
+    docker exec sutazai-ollama-primary ollama run tinyllama --prompt "test" --stream false >/dev/null 2>&1 || true
+    docker exec sutazai-ollama-secondary ollama run tinyllama --prompt "test" --stream false >/dev/null 2>&1 || true
+    docker exec sutazai-ollama-tertiary ollama run tinyllama --prompt "test" --stream false >/dev/null 2>&1 || true
     
-    success "gpt-oss model configured as default on all instances"
+    success "tinyllama model configured as default on all instances"
 }
 
 # Configure additional models for specialized tasks
@@ -188,7 +188,7 @@ install_additional_models() {
     log "Installing additional models for specialized tasks..."
     
     # Install coding model (lightweight version)
-    docker exec sutazai-ollama-primary ollama pull gpt-oss2.5-coder:3b || warning "Failed to install coding model"
+    docker exec sutazai-ollama-primary ollama pull tinyllama2.5-coder:3b || warning "Failed to install coding model"
     
     # Install embedding model
     docker exec sutazai-ollama-primary ollama pull nomic-embed-text || warning "Failed to install embedding model"
@@ -256,7 +256,7 @@ for i in $(seq 1 $CONCURRENT_REQUESTS); do
     {
         curl -s -X POST "$ENDPOINT" \
             -H "Content-Type: application/json" \
-            -d '{"model": "gpt-oss", "prompt": "Hello, test request #'$i'", "stream": false}' \
+            -d '{"model": "tinyllama", "prompt": "Hello, test request #'$i'", "stream": false}' \
             >/dev/null 2>&1
         echo "Request $i completed"
     } &
@@ -300,7 +300,7 @@ generate_report() {
         docker exec sutazai-ollama-primary ollama list 2>/dev/null || echo "Failed to list models"
         echo ""
         echo "Configuration Compliance:"
-        echo "- gpt-oss set as default: $(grep -q 'default: \"gpt-oss\"' "$OLLAMA_CONFIG_FILE" && echo 'YES' || echo 'NO')"
+        echo "- tinyllama set as default: $(grep -q 'default: \"tinyllama\"' "$OLLAMA_CONFIG_FILE" && echo 'YES' || echo 'NO')"
         echo "- High concurrency configured: $(grep -q 'max_concurrent: 50' "$OLLAMA_CONFIG_FILE" && echo 'YES' || echo 'NO')"
         echo "- Load balancing enabled: $(grep -q 'enabled: true' "$OLLAMA_CONFIG_FILE" && echo 'YES' || echo 'NO')"
         echo ""
@@ -325,7 +325,7 @@ main() {
     pull_docker_images
     setup_directories
     deploy_cluster
-    install_gpt-oss
+    install_tinyllama
     install_additional_models
     
     # Wait a bit for everything to stabilize
@@ -347,7 +347,7 @@ main() {
     echo "  🔥 Tertiary Instance: http://localhost:10106"
     echo ""
     log "The cluster is now ready to handle 174+ concurrent consumers!"
-    log "gpt-oss is configured as the default model per Rule 16."
+    log "tinyllama is configured as the default model per Rule 16."
     echo ""
     log "Next steps:"
     echo "  1. Monitor cluster health at http://localhost:10108"

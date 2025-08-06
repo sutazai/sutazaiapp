@@ -168,7 +168,7 @@ service_profiles:
       egress_only: true
       allowed_destinations:
         - backend:8000
-        - ollama:11434
+        - ollama:10104
         - redis:6379
 
 # Security Scanning Configuration

@@ -38,10 +38,10 @@ for i in {1..30}; do
     sleep 2
 done
 
-# Step 5: Pull and configure gpt-oss
-echo -e "\n🤖 Step 5: Configuring gpt-oss model..."
-docker exec sutazai-ollama ollama pull gpt-oss:latest || {
-    echo "⚠️  Failed to pull gpt-oss, but continuing..."
+# Step 5: Pull and configure tinyllama
+echo -e "\n🤖 Step 5: Configuring tinyllama model..."
+docker exec sutazai-ollama ollama pull tinyllama:latest || {
+    echo "⚠️  Failed to pull tinyllama, but continuing..."
 }
 
 # Step 6: Create Ollama connection pooling script

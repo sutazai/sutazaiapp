@@ -557,7 +557,7 @@ class CollaborativeProblemSolver:
             """
             
             response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'gpt-oss'),
+                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'tinyllama'),
                 "prompt": decomposition_prompt,
                 "stream": False
             })
@@ -679,7 +679,7 @@ class CollaborativeProblemSolver:
                 """
                 
                 response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                    "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'gpt-oss'),
+                    "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'tinyllama'),
                     "prompt": solution_prompt,
                     "stream": False
                 })
@@ -757,7 +757,7 @@ class CollaborativeProblemSolver:
             """
             
             response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'gpt-oss'),
+                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('reasoning', 'tinyllama'),
                 "prompt": integration_prompt,
                 "stream": False
             })

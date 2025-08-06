@@ -193,7 +193,7 @@ class HoneypotDeploymentManager:
         
         # AI agent honeypots
         ai_honeypots = results.get('ai_agent_honeypots', {})
-        ai_ports = {"port_11434": 11434, "port_8000": 8000, "port_8080": 8080, "port_9000": 9000}
+        ai_ports = {"port_10104": 10104, "port_8000": 8000, "port_8080": 8080, "port_9000": 9000}
         for hp_config, result in ai_honeypots.items():
             if result:
                 port = ai_ports.get(hp_config, "unknown")

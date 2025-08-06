@@ -42,9 +42,9 @@ class DistillationConfig:
     progressive_distillation: bool = False  # Progressive knowledge transfer
     
     # Ollama-specific configuration
-    teacher_model: str = "gpt-oss2.5-coder:7b"  # Teacher model name
-    student_model: str = "gpt-oss"  # Student model name
-    ollama_host: str = "http://localhost:11434"
+    teacher_model: str = "tinyllama2.5-coder:7b"  # Teacher model name
+    student_model: str = "tinyllama"  # Student model name
+    ollama_host: str = "http://localhost:10104"
     max_context_length: int = 2048
     
     # Training data configuration
@@ -55,7 +55,7 @@ class DistillationConfig:
 class TeacherModel:
     """Wrapper for teacher model (typically larger, more capable)"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:11434"):
+    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None
@@ -145,7 +145,7 @@ class TeacherModel:
 class StudentModel:
     """Wrapper for student model (typically smaller, faster)"""
     
-    def __init__(self, model_name: str, ollama_host: str = "http://localhost:11434"):
+    def __init__(self, model_name: str, ollama_host: str = "http://localhost:10104"):
         self.model_name = model_name
         self.ollama_host = ollama_host
         self.session = None
@@ -657,7 +657,7 @@ class DistillationAnalyzer:
         
         return {
             'speed_gain': final_perf.get('avg_generation_time', 0),
-            'size_reduction': 0.7,  # Estimated for gpt-oss vs larger models
+            'size_reduction': 0.7,  # Estimated for tinyllama vs larger models
             'memory_efficiency': 0.8,  # Estimated
             'throughput_increase': 2.5  # Estimated improvement factor
         }
@@ -740,8 +740,8 @@ class DistillationAnalyzer:
         return recommendations
 
 # Factory function for easy integration
-async def create_distillation_pipeline(teacher_model: str = "gpt-oss2.5-coder:7b",
-                                     student_model: str = "gpt-oss",
+async def create_distillation_pipeline(teacher_model: str = "tinyllama2.5-coder:7b",
+                                     student_model: str = "tinyllama",
                                      config: DistillationConfig = None) -> KnowledgeDistiller:
     """Create and initialize a knowledge distillation pipeline"""
     if config is None:

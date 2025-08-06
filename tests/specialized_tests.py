@@ -29,7 +29,7 @@ class SpecializedTestSuite:
         """Test Ollama inference with shorter timeout and retry logic"""
         logger.info("Testing Ollama inference with optimized parameters...")
         
-        # First, check if gpt-oss model is available and loaded
+        # First, check if tinyllama model is available and loaded
         try:
             response = requests.get(f"{self.ollama_url}/api/tags", timeout=5)
             models = response.json().get("models", [])

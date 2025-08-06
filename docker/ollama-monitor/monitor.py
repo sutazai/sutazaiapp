@@ -69,7 +69,7 @@ class ClusterMonitor:
         self.setup_routes()
         
         # Parse monitor targets from environment
-        targets = os.getenv('MONITOR_TARGETS', 'ollama-primary:11434,ollama-secondary:11434,ollama-tertiary:11434')
+        targets = os.getenv('MONITOR_TARGETS', 'ollama-primary:10104,ollama-secondary:10104,ollama-tertiary:10104')
         self.instances = self._parse_targets(targets)
         
         # Configuration

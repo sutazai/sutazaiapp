@@ -1,0 +1,32 @@
+# SutazAI Base Agent Requirements
+# All agents should use these versions for consistency
+# Last updated: 2025-08-06
+
+# Web Framework
+Flask==2.3.3
+flask-cors==5.0.0
+
+# HTTP & Networking
+requests==2.32.3
+aiohttp==3.11.11
+websockets==13.1
+
+# Database & Cache
+redis==5.2.1
+psycopg2-binary==2.9.10
+
+# Monitoring
+prometheus-client==0.21.1
+
+# Utilities
+python-dotenv==1.0.1
+pydantic==2.10.4
+structlog==25.1.0
+
+# Security
+cryptography==44.0.0
+PyJWT==2.10.1
+
+# JSON & Data
+jsonschema==4.24.0
+pyyaml==6.0.2

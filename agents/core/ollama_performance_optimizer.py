@@ -64,7 +64,7 @@ class OllamaPerformanceOptimizer:
     def __init__(self, config_path: str = "/opt/sutazaiapp/config/ollama_performance_optimization.yaml"):
         self.config_path = config_path
         self.config = self._load_config()
-        self.base_url = "http://localhost:11434"
+        self.base_url = "http://localhost:10104"
         self.client = httpx.AsyncClient(timeout=30.0)
         
         # Performance tracking
@@ -104,7 +104,7 @@ class OllamaPerformanceOptimizer:
             'ollama_optimization': {
                 'performance': {
                     'model_loading': {
-                        'preload_models': ['gpt-oss'],
+                        'preload_models': ['tinyllama'],
                         'max_loaded_models': 2,
                         'model_unload_timeout': 120
                     },
@@ -136,9 +136,9 @@ class OllamaPerformanceOptimizer:
     def _calculate_model_priorities(self) -> Dict[str, int]:
         """Calculate model priorities based on usage patterns"""
         priorities = {
-            'gpt-oss': 1,  # Highest priority
-            'gpt-oss.2:3b': 2,
-            'gpt-oss-r1:8b': 3
+            'tinyllama': 1,  # Highest priority
+            'tinyllama.2:3b': 2,
+            'tinyllama': 3
         }
         return priorities
     
@@ -477,7 +477,7 @@ class OllamaPerformanceOptimizer:
             await self._setup_dedicated_instance(agent_name)
         
         if agent_config.get('preload_model'):
-            model = agent_config.get('model', 'gpt-oss')
+            model = agent_config.get('model', 'tinyllama')
             await self._preload_models([model])
         
         if agent_config.get('cache_responses'):
@@ -528,7 +528,7 @@ class OllamaPerformanceOptimizer:
         """Run comprehensive benchmark across all models"""
         logger.info("Running comprehensive performance benchmark")
         
-        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
+        models = ['tinyllama', 'tinyllama.2:3b', 'tinyllama']
         benchmarks = {}
         
         for model in models:
@@ -581,7 +581,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description='Ollama Performance Optimizer')
     parser.add_argument('--start', action='store_true', help='Start optimization daemon')
-    parser.add_argument('--benchmark', choices=['all', 'gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b'], help='Run benchmark')
+    parser.add_argument('--benchmark', choices=['all', 'tinyllama', 'tinyllama.2:3b', 'tinyllama'], help='Run benchmark')
     parser.add_argument('--report', action='store_true', help='Generate performance report')
     parser.add_argument('--optimize-agent', help='Optimize for specific agent')
     parser.add_argument('--config', help='Configuration file path')

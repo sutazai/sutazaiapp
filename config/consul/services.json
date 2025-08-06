@@ -95,14 +95,14 @@
       "name": "ollama",
       "tags": ["ai", "llm", "inference", "core"],
       "address": "ollama",
-      "port": 11434,
+      "port": 10104,
       "meta": {
         "version": "latest",
-        "models": "gpt-oss,gpt-oss-r1:8b,gpt-oss2.5-coder:7b,gpt-oss:7b",
+        "models": "tinyllama,tinyllama,tinyllama2.5-coder:7b,tinyllama:7b",
         "type": "llm-inference"
       },
       "check": {
-        "http": "http://ollama:11434/api/tags",
+        "http": "http://ollama:10104/api/tags",
         "interval": "30s",
         "timeout": "10s"
       },

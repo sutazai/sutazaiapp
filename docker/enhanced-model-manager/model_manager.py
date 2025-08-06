@@ -22,12 +22,12 @@ class ModelInfo(BaseModel):
     memory_usage: str
     quantization: str
 
-ollama_url = os.environ.get('OLLAMA_URL', 'http://ollama:11434')
+ollama_url = os.environ.get('OLLAMA_URL', 'http://ollama:10104')
 auto_pull_models = os.environ.get('AUTO_PULL_MODELS', 'true').lower() == 'true'
 models_cache = {}
 
 required_models = [
-    "gpt-oss"
+    "tinyllama"
 ]
 
 logging.basicConfig(level=logging.INFO)

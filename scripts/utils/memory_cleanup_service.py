@@ -33,14 +33,14 @@ class MemoryCleanupService:
         self.emergency_threshold = int(os.getenv('EMERGENCY_THRESHOLD', 95))
         
         # Small model configuration
-        self.small_models = ['gpt-oss2.5:3b', 'gpt-oss.2:3b', 'gpt-oss2.5-coder:3b']
+        self.small_models = ['tinyllama2.5:3b', 'tinyllama.2:3b', 'tinyllama2.5-coder:3b']
         self.max_model_memory_gb = 3.0  # Max memory per small model
         self.system_reserved_gb = 4.0   # Reserve 4GB for system
         
         self.cleanup_event = Event()
         
         # Ollama connection
-        self.ollama_url = "http://localhost:11434"
+        self.ollama_url = "http://localhost:10104"
         
         logger.info("Memory Cleanup Service initialized for small model system")
         logger.info(f"Small models configured: {', '.join(self.small_models)}")

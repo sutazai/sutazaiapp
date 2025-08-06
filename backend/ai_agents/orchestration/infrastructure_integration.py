@@ -119,7 +119,7 @@ class InfrastructureIntegration:
         
         # Ollama Integration
         self.ollama_config = {
-            "base_url": "http://ollama:11434",
+            "base_url": "http://ollama:10104",
             "models": [],
             "model_optimization": True,
             "auto_model_management": True
@@ -255,7 +255,7 @@ class InfrastructureIntegration:
                 container_spec=ContainerSpec(
                     name="sutazai-ollama",
                     image="ollama/ollama:latest",
-                    ports={"11434": 11434},
+                    ports={"10104": 10104},
                     environment={
                         "OLLAMA_HOST": "0.0.0.0",
                         "OLLAMA_ORIGINS": "*",
@@ -311,7 +311,7 @@ class InfrastructureIntegration:
             "environment": {
                 "REDIS_URL": "redis://redis:6379",
                 "BACKEND_URL": "http://backend:8000",
-                "OLLAMA_BASE_URL": "http://ollama:11434"
+                "OLLAMA_BASE_URL": "http://ollama:10104"
             },
             "volumes": {
                 "agent_workspaces": "/app/workspace",

@@ -9,8 +9,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 11434
-    targetPort: 11434
+  - port: 10104
+    targetPort: 10104
     protocol: TCP
     name: http
   selector:
@@ -26,8 +26,8 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - port: 11434
-    targetPort: 11434
+  - port: 10104
+    targetPort: 10104
   selector:
     app: ollama
 ---
@@ -52,7 +52,7 @@ spec:
         tier: inference
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "11434"
+        prometheus.io/port: "10104"
         prometheus.io/path: "/metrics"
     spec:
       affinity:
@@ -75,7 +75,7 @@ spec:
       - name: ollama
         image: ollama/ollama:latest
         ports:
-        - containerPort: 11434
+        - containerPort: 10104
           name: http
         env:
         - name: OLLAMA_HOST
@@ -109,14 +109,14 @@ spec:
         livenessProbe:
           httpGet:
             path: /api/tags
-            port: 11434
+            port: 10104
           initialDelaySeconds: 60
           periodSeconds: 30
           timeoutSeconds: 10
         readinessProbe:
           httpGet:
             path: /api/tags
-            port: 11434
+            port: 10104
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
@@ -129,7 +129,7 @@ spec:
               - |
                 # Pull models after startup
                 sleep 30
-                ollama pull gpt-oss
+                ollama pull tinyllama
       initContainers:
       - name: model-downloader
         image: busybox:latest

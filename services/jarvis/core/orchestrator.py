@@ -114,7 +114,7 @@ class JarvisOrchestrator:
             'planner': {
                 'max_steps': 10,
                 'enable_reflection': True,
-                'planning_model': 'gpt-oss'
+                'planning_model': 'tinyllama'
             },
             'voice': {
                 'enable_speech_recognition': True,

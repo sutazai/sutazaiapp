@@ -23,7 +23,7 @@ SERVICE_URLS = {
     "frontend": "http://localhost:8501", 
     "redis": "redis://localhost:6379",
     "postgres": "postgresql://localhost:5432",
-    "ollama": "http://localhost:11434",
+    "ollama": "http://localhost:10104",
     "chromadb": "http://localhost:8001",
     "qdrant": "http://localhost:6333"
 }

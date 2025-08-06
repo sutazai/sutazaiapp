@@ -293,7 +293,7 @@ services:
       retries: 3
       start_period: 60s
     environment:
-      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_HOST=http://ollama:10104
       - CONSUL_HOST=http://consul:8500
       - RABBITMQ_HOST=amqp://rabbitmq:5672/sutazai
       - REDIS_HOST=redis://redis:6379/0

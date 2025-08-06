@@ -47,7 +47,7 @@ class OllamaBatchProcessor:
     def __init__(self, 
                  redis_host: str = "localhost",
                  redis_port: int = 10001,
-                 ollama_url: str = "http://localhost:11434",
+                 ollama_url: str = "http://localhost:10104",
                  max_batch_size: int = 16,
                  batch_timeout: float = 0.1,
                  cache_ttl: int = 3600):
@@ -94,7 +94,7 @@ class OllamaBatchProcessor:
         self.running = True
         
         # Start batch processors for each model
-        models = ['gpt-oss', 'gpt-oss.2:3b', 'gpt-oss-r1:8b']
+        models = ['tinyllama', 'tinyllama.2:3b', 'tinyllama']
         for model in models:
             self.processing_tasks[model] = asyncio.create_task(self._process_model_queue(model))
         
@@ -500,7 +500,7 @@ async def main():
             
             tasks = []
             for i, prompt in enumerate(test_prompts):
-                task = asyncio.create_task(processor.submit_request('gpt-oss', prompt))
+                task = asyncio.create_task(processor.submit_request('tinyllama', prompt))
                 tasks.append(task)
             
             responses = await asyncio.gather(*tasks)
@@ -514,11 +514,11 @@ async def main():
             await processor.start()
             
             common_prompts = [
-                ('gpt-oss', 'Hello, how are you?'),
-                ('gpt-oss', 'What is the weather like?'),
-                ('gpt-oss', 'Explain artificial intelligence.'),
-                ('gpt-oss', 'What is machine learning?'),
-                ('gpt-oss', 'How does deep learning work?')
+                ('tinyllama', 'Hello, how are you?'),
+                ('tinyllama', 'What is the weather like?'),
+                ('tinyllama', 'Explain artificial intelligence.'),
+                ('tinyllama', 'What is machine learning?'),
+                ('tinyllama', 'How does deep learning work?')
             ]
             
             await processor.warm_cache(common_prompts)

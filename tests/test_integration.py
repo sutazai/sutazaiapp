@@ -33,7 +33,7 @@ class TestAgentOllamaIntegration:
             'AGENT_NAME': 'integration-test-agent',
             'AGENT_TYPE': 'integration-test',
             'BACKEND_URL': 'http://test-backend:8000',
-            'OLLAMA_URL': 'http://test-ollama:11434'
+            'OLLAMA_URL': 'http://test-ollama:10104'
         }):
             return BaseAgentV2(
                 max_concurrent_tasks=3,
@@ -55,7 +55,7 @@ class TestAgentOllamaIntegration:
                 "type": "text-generation",
                 "data": {
                     "prompt": "Generate a test response",
-                    "model": "gpt-oss",
+                    "model": "tinyllama",
                     "max_tokens": 100
                 }
             }
@@ -79,9 +79,9 @@ class TestAgentOllamaIntegration:
         
         # Test different model responses - all using GPT-OSS
         model_responses = {
-            "gpt-oss": "GPT-OSS response for simple task",
-            "gpt-oss": "GPT-OSS response for coding task",
-            "gpt-oss": "GPT-OSS response for complex reasoning"
+            "tinyllama": "GPT-OSS response for simple task",
+            "tinyllama": "GPT-OSS response for coding task",
+            "tinyllama": "GPT-OSS response for complex reasoning"
         }
         
         def mock_ollama_call(*args, **kwargs):
@@ -93,9 +93,9 @@ class TestAgentOllamaIntegration:
             
             # Test tasks with different model requirements - all using GPT-OSS
             test_cases = [
-                ("simple-task", "gpt-oss", "Simple question"),
-                ("coding-task", "gpt-oss", "Write a function"),
-                ("reasoning-task", "gpt-oss", "Solve this complex problem")
+                ("simple-task", "tinyllama", "Simple question"),
+                ("coding-task", "tinyllama", "Write a function"),
+                ("reasoning-task", "tinyllama", "Solve this complex problem")
             ]
             
             results = []
@@ -217,7 +217,7 @@ class TestMultiAgentCoordination:
                 'AGENT_NAME': agent_name,
                 'AGENT_TYPE': agent_type,
                 'BACKEND_URL': 'http://test-backend:8000',
-                'OLLAMA_URL': 'http://test-ollama:11434'
+                'OLLAMA_URL': 'http://test-ollama:10104'
             }):
                 agent = BaseAgentV2(max_concurrent_tasks=2)
                 if model:
@@ -240,9 +240,9 @@ class TestMultiAgentCoordination:
         """Test multiple agents using different models concurrently"""
         # Create agents with different model assignments - all using GPT-OSS
         agents = [
-            agent_factory("test-gpt-oss-agent-1", "complex-reasoning", "gpt-oss"),
-            agent_factory("test-gpt-oss-agent-2", "balanced-task", "gpt-oss"),
-            agent_factory("test-default-agent", "simple-task", "gpt-oss")
+            agent_factory("test-tinyllama-agent-1", "complex-reasoning", "tinyllama"),
+            agent_factory("test-tinyllama-agent-2", "balanced-task", "tinyllama"),
+            agent_factory("test-default-agent", "simple-task", "tinyllama")
         ]
         
         # Setup all agents
@@ -251,7 +251,7 @@ class TestMultiAgentCoordination:
         
         # Mock different responses for GPT-OSS model
         def mock_model_response(*args, **kwargs):
-            model = kwargs.get('model', 'gpt-oss')
+            model = kwargs.get('model', 'tinyllama')
             return "Response from GPT-OSS model"
         
         with patch.object(BaseAgentV2, 'query_ollama', side_effect=mock_model_response):
@@ -277,8 +277,8 @@ class TestMultiAgentCoordination:
             assert len(results) == 9  # 3 agents × 3 tasks each
             
             # Verify all agents used GPT-OSS model
-            gpt_oss_1_results = [r[1] for r in results if 'gpt-oss-agent-1' in r[0]]
-            gpt_oss_2_results = [r[1] for r in results if 'gpt-oss-agent-2' in r[0]]
+            gpt_oss_1_results = [r[1] for r in results if 'tinyllama-agent-1' in r[0]]
+            gpt_oss_2_results = [r[1] for r in results if 'tinyllama-agent-2' in r[0]]
             default_results = [r[1] for r in results if 'default' in r[0]]
             
             assert all("GPT-OSS" in r for r in gpt_oss_1_results)
@@ -299,7 +299,7 @@ class TestMultiAgentCoordination:
         """Test that agents properly share Ollama resources"""
         # Create multiple agents that would share the same Ollama instance
         agents = [
-            agent_factory(f"shared-resource-agent-{i}", "shared-test", "gpt-oss")
+            agent_factory(f"shared-resource-agent-{i}", "shared-test", "tinyllama")
             for i in range(5)
         ]
         
@@ -452,7 +452,7 @@ class TestSystemIntegration:
                 "type": "full-workflow-test",
                 "data": {
                     "prompt": "Complete system workflow test",
-                    "model": "gpt-oss"
+                    "model": "tinyllama"
                 }
             }
             return response
@@ -574,9 +574,9 @@ class TestConfigurationIntegration:
         """Test integration with different model configurations"""
         # Test different agent types and their model assignments - all using GPT-OSS
         test_cases = [
-            ("ai-system-architect", "gpt-oss"),
-            ("ai-product-manager", "gpt-oss"),
-            ("garbage-collector", "gpt-oss"),
+            ("ai-system-architect", "tinyllama"),
+            ("ai-product-manager", "tinyllama"),
+            ("garbage-collector", "tinyllama"),
         ]
         
         for agent_name, expected_model in test_cases:
@@ -587,12 +587,12 @@ class TestConfigurationIntegration:
                 agent = BaseAgentV2()
                 
                 # Verify model configuration - should be GPT-OSS
-                assert agent.default_model == "gpt-oss"
+                assert agent.default_model == "tinyllama"
                 
                 # Verify model config parameters
                 try:
                     model_config = OllamaConfig.get_model_config(agent_name)
-                    assert model_config["model"] == "gpt-oss"
+                    assert model_config["model"] == "tinyllama"
                 except:
                     # Config might not exist, that's OK as long as default model is correct
                     pass

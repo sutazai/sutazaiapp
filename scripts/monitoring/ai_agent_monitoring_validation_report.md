@@ -51,7 +51,7 @@ The system properly integrates with the agent registry at `/opt/sutazaiapp/agent
 
 **Health Check Logic**:
 ```
-AI Services: ports 11434-11444, 7860-7870 (Ollama, HuggingFace)
+AI Services: ports 10104-11444, 7860-7870 (Ollama, HuggingFace)
 Backend: ports 8000-8010, 5000-5010
 Frontend: ports 3000-3010, 8080-8090
 Infrastructure: ports 9000-9010, 6000-6010

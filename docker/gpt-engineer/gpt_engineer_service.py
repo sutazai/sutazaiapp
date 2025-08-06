@@ -28,7 +28,7 @@ class GPTEngineerRequest(BaseModel):
     prompt: str
     project_name: Optional[str] = "sutazai_project"
     workspace: Optional[str] = "/app/workspace"
-    model: Optional[str] = "gpt-oss-r1:8b"
+    model: Optional[str] = "tinyllama"
 
 class GPTEngineerResponse(BaseModel):
     status: str
@@ -41,8 +41,8 @@ class GPTEngineerManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "model": "gpt-oss-r1:8b",
-            "api_base": "http://ollama:11434/v1",
+            "model": "tinyllama",
+            "api_base": "http://ollama:10104/v1",
             "api_key": "local"
         }
         
@@ -71,16 +71,16 @@ class GPTEngineerManager:
             # Set environment variables for local Ollama
             env = os.environ.copy()
             env.update({
-                "OPENAI_API_BASE": "http://ollama:11434/v1",
-                "OLLAMA_HOST": "http://ollama:11434,  # Ollama doesn't need real API key
-                "OPENAI_API_MODEL": request.model or "gpt-oss-r1:8b"
+                "OPENAI_API_BASE": "http://ollama:10104/v1",
+                "OLLAMA_HOST": "http://ollama:10104,  # Ollama doesn't need real API key
+                "OPENAI_API_MODEL": request.model or "tinyllama"
             })
             
             # Execute GPT-Engineer with local model
             cmd = [
                 "gpt-engineer",
                 project_path,
-                "--model", request.model or "gpt-oss-r1:8b",
+                "--model", request.model or "tinyllama",
                 "--temperature", "0.7"
             ]
             

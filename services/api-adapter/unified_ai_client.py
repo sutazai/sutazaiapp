@@ -172,7 +172,7 @@ class UnifiedAIClient:
     # LLM Operations
     def chat_completion(self, 
                        prompt: str, 
-                       model: str = "gpt-oss",
+                       model: str = "tinyllama",
                        service: str = "ollama",
                        **kwargs) -> Dict[str, Any]:
         """Execute chat completion"""
@@ -388,7 +388,7 @@ if __name__ == "__main__":
     try:
         response = client.chat_completion(
             prompt="What is the capital of France?",
-            model="gpt-oss"
+            model="tinyllama"
         )
         print(f"Chat response: {response}")
     except Exception as e:

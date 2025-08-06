@@ -603,7 +603,7 @@ async def main():
     
     # Simulate agent requests
     agents = [f"agent_{i}" for i in range(10)]
-    models = ["gpt-oss"]  # Only using GPT-OSS model
+    models = ["tinyllama"]  # Only using GPT-OSS model
     
     # Random access pattern
     for _ in range(50):
@@ -615,7 +615,7 @@ async def main():
         await asyncio.sleep(0.1)
     
     # Test model sharing
-    await cache.share_model("gpt-oss", "agent_0", ["agent_1", "agent_2", "agent_3"])
+    await cache.share_model("tinyllama", "agent_0", ["agent_1", "agent_2", "agent_3"])
     
     # Get stats
     stats = cache.get_cache_stats()

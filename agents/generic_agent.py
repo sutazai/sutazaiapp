@@ -35,7 +35,7 @@ class GenericAgent:
         self.config = self._load_config()
         self.agent_name = os.getenv("AGENT_NAME", "generic-agent")
         self.agent_type = os.getenv("AGENT_TYPE", "generic")
-        self.ollama_url = os.getenv("OLLAMA_URL", "http://sutazai-ollama:11434")
+        self.ollama_url = os.getenv("OLLAMA_URL", "http://sutazai-ollama:10104")
         self.backend_url = os.getenv("BACKEND_URL", "http://sutazai-backend:8000")
         
         # Setup logging
@@ -264,7 +264,7 @@ class GenericAgent:
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "gpt-oss:1.1b",
+                    "model": "tinyllama:1.1b",
                     "prompt": prompt,
                     "stream": False
                 },

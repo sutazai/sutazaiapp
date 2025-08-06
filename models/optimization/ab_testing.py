@@ -881,8 +881,8 @@ async def example_ab_testing():
     
     # Create experiment configuration
     config = create_model_comparison_experiment(
-        "gpt-oss2.5-coder:7b", 
-        "gpt-oss",
+        "tinyllama2.5-coder:7b", 
+        "tinyllama",
         "Model Performance Comparison"
     )
     
@@ -896,11 +896,11 @@ async def example_ab_testing():
         variant = manager.assign_variant(experiment_id, f"user_{i}")
         
         # Simulate different performance for each variant
-        if variant == "gpt-oss2.5-coder:7b":
+        if variant == "tinyllama2.5-coder:7b":
             quality = np.random.normal(0.8, 0.1)
             response_time = np.random.normal(3.0, 0.5)
             confidence = np.random.normal(0.85, 0.1)
-        else:  # gpt-oss
+        else:  # tinyllama
             quality = np.random.normal(0.7, 0.15)
             response_time = np.random.normal(1.5, 0.3)
             confidence = np.random.normal(0.75, 0.15)

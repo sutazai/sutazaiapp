@@ -5,8 +5,8 @@
 # Requirements: curl, jq
 
 NUM_REQUESTS=${1:-20}
-OLLAMA_URL="http://localhost:11434"
-MODEL="gpt-oss"
+OLLAMA_URL="http://localhost:10104"
+MODEL="tinyllama"
 
 echo "Testing Ollama concurrency with $NUM_REQUESTS concurrent requests..."
 echo "Model: $MODEL"

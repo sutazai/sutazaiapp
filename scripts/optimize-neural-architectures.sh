@@ -155,7 +155,7 @@ async def validate():
     benchmark = PerformanceBenchmark()
     
     # Test key models
-    models = ['gpt-oss']
+    models = ['tinyllama']
     
     for model in models:
         config = BenchmarkConfig(
@@ -228,7 +228,7 @@ updated = 0
 
 # Map of optimized models
 optimized_models = {
-    "gpt-oss": "gpt_oss_optimized"
+    "tinyllama": "gpt_oss_optimized"
 }
 
 # Update each agent's config

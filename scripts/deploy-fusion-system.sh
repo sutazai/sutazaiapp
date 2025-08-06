@@ -145,7 +145,7 @@ validate_sutazai_services() {
     log "Validating existing SutazAI services..."
     
     required_services=(
-        "ollama:11434"
+        "ollama:10104"
         "chromadb:8000"
         "qdrant:6333"
         "neo4j:7687"

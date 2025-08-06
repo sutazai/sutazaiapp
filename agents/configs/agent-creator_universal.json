@@ -2,7 +2,7 @@
   "name": "agent-creator",
   "description": "Agent for utility operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9901,
   "capabilities": [
     "automation",

@@ -2,7 +2,7 @@
   "name": "adversarial-attack-detector",
   "description": "Agent for security operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9000,
   "capabilities": [
     "security_analysis",

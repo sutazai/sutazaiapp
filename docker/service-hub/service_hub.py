@@ -57,7 +57,7 @@ class ServiceRegistry:
     def __init__(self):
         self.services = {
             # Core Services
-            'ollama': 'http://ollama:11434',
+            'ollama': 'http://ollama:10104',
             'chromadb': 'http://chromadb:8000',
             'qdrant': 'http://qdrant:6333',
             'backend': 'http://backend:8000',

@@ -41,7 +41,7 @@ class OllamaModelBackupSystem:
         self.model_backup_dir.mkdir(parents=True, exist_ok=True)
         
         # Ollama configuration
-        self.ollama_host = os.environ.get('OLLAMA_HOST', 'http://localhost:11434')
+        self.ollama_host = os.environ.get('OLLAMA_HOST', 'http://localhost:10104')
         self.ollama_data_dir = os.environ.get('OLLAMA_MODELS', '/root/.ollama')
         
         # Model storage paths

@@ -60,7 +60,7 @@ check_service "faiss" "http://localhost:8002/health" "healthy"
 
 echo ""
 echo "🔍 AI Services:"
-check_service "ollama" "http://localhost:11434/api/tags" ""
+check_service "ollama" "http://localhost:10104/api/tags" ""
 check_service "backend" "http://localhost:8000/health" "status"
 check_service "frontend" "http://localhost:8501/healthz" ""
 

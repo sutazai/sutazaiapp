@@ -74,7 +74,7 @@ scrape_configs:
   # Ollama
   - job_name: 'ollama'
     static_configs:
-      - targets: ['ollama:11434']
+      - targets: ['ollama:10104']
     metrics_path: '/api/metrics'
 
   # Vector Databases
@@ -95,7 +95,7 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-          - http://ollama:11434/api/tags
+          - http://ollama:10104/api/tags
           - http://chromadb:8000/api/v1/heartbeat
           - http://qdrant:6333/health
           - http://kong:8001/status

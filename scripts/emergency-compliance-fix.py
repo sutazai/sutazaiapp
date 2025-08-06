@@ -134,7 +134,7 @@ class ComplianceFixer:
                 
                 # Replace OpenAI references with Ollama
                 content = re.sub(r'OPENAI_API_KEY["\']?\s*:\s*["\'][^"\']*["\']',
-                                'OLLAMA_HOST": "http://ollama:11434', content)
+                                'OLLAMA_HOST": "http://ollama:10104', content)
                 content = re.sub(r'from openai import.*\n', '', content)
                 content = re.sub(r'import openai.*\n', '', content)
                 content = re.sub(r'ChatOpenAI', 'Ollama', content)

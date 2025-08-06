@@ -160,7 +160,7 @@ check_api_endpoints() {
     log "INFO" "Checking API endpoints..."
     
     local endpoints=(
-        "Ollama API:http://localhost:11434/api/tags:200"
+        "Ollama API:http://localhost:10104/api/tags:200"
         "Backend Health:http://localhost:8000/health:200"
         "Backend API v1:http://localhost:8000/api/v1/health:200"
         "Frontend:http://localhost:8501:200"
@@ -233,16 +233,16 @@ check_ai_agents() {
 check_model_availability() {
     log "INFO" "Checking model availability..."
     
-    # Test gpt-oss model
-    local test_response=$(curl -s -X POST http://localhost:11434/api/generate \
-        -d '{"model": "gpt-oss", "prompt": "Hello", "stream": false}' \
+    # Test tinyllama model
+    local test_response=$(curl -s -X POST http://localhost:10104/api/generate \
+        -d '{"model": "tinyllama", "prompt": "Hello", "stream": false}' \
         --max-time 30 2>/dev/null | jq -r '.response // empty' 2>/dev/null)
     
     if [[ -n "$test_response" && "$test_response" != "null" ]]; then
-        local model_size=$(curl -s http://localhost:11434/api/show -d '{"name": "gpt-oss"}' | jq -r '.details.parameter_size // "unknown"' 2>/dev/null)
-        add_check_result "gpt-oss Model" "PASS" "Model is responding correctly" "{\"parameter_size\": \"$model_size\", \"test_response_length\": ${#test_response}}"
+        local model_size=$(curl -s http://localhost:10104/api/show -d '{"name": "tinyllama"}' | jq -r '.details.parameter_size // "unknown"' 2>/dev/null)
+        add_check_result "tinyllama Model" "PASS" "Model is responding correctly" "{\"parameter_size\": \"$model_size\", \"test_response_length\": ${#test_response}}"
     else
-        add_check_result "gpt-oss Model" "FAIL" "Model is not responding or returned empty response" "{}"
+        add_check_result "tinyllama Model" "FAIL" "Model is not responding or returned empty response" "{}"
     fi
 }
 

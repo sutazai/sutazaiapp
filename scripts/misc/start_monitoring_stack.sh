@@ -91,7 +91,7 @@ scrape_configs:
 
   - job_name: 'ollama'
     static_configs:
-      - targets: ['ollama:11434']
+      - targets: ['ollama:10104']
     scrape_interval: 10s
 
   - job_name: 'node-exporter'
@@ -213,7 +213,7 @@ services:
     container_name: sutazai-ollama-monitor
     restart: unless-stopped
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://ollama:10104
       - BACKEND_URL=http://backend:8000
       - METRICS_PORT=8091
       - LOG_LEVEL=INFO

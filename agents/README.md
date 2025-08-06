@@ -26,7 +26,7 @@ def process():
 ### Reality Check:
 - **Claimed**: 149 specialized AI agents
 - **Reality**: ~70 directories with stub HTTP services
-- **Working AI**: Only Ollama with gpt-oss actually works
+- **Working AI**: Only Ollama with tinyllama actually works
 
 ### Directory Structure:
 Each agent directory typically contains:
@@ -39,7 +39,7 @@ Each agent directory typically contains:
 1. **Ollama Integration**: The only real AI functionality
    - Located at `/agents/ollama-integration-specialist/`
    - Actually connects to Ollama service
-   - Uses gpt-oss model for basic AI responses
+   - Uses tinyllama model for basic AI responses
 
 2. **Hardware Resource Optimizer**: Has some actual implementation
    - Located at `/agents/hardware-resource-optimizer/`

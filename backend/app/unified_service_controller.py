@@ -71,7 +71,7 @@ class UnifiedServiceController:
             # ML/AI Frameworks
             "jax": {"port": 8089, "health": "/health", "type": "ml", "description": "JAX Machine Learning"},
             "llamaindex": {"port": 8098, "health": "/health", "type": "ml", "description": "LlamaIndex RAG"},
-            "ollama": {"port": 11434, "health": "/api/tags", "type": "ml", "description": "Local LLM Server"},
+            "ollama": {"port": 10104, "health": "/api/tags", "type": "ml", "description": "Local LLM Server"},
             "pytorch": {"port": 8888, "health": "/health", "type": "ml", "description": "PyTorch Framework"},
             "tensorflow": {"port": 8889, "health": "/health", "type": "ml", "description": "TensorFlow Framework"},
             

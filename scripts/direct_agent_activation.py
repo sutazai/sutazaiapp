@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 class DirectAgentActivator:
     def __init__(self):
         self.agents_dir = Path("/opt/sutazaiapp/agents")
-        self.ollama_base_url = "http://localhost:11434"
+        self.ollama_base_url = "http://localhost:10104"
         self.active_agents = {}
         self.agent_processes = {}
         self.port_start = 9000  # Start from port 9000 to avoid conflicts
@@ -65,9 +65,9 @@ class DirectAgentActivator:
         logger.error("❌ Failed to start Ollama")
         return False
     
-    async def ensure_gpt-oss(self):
-        """Ensure gpt-oss model is available"""
-        logger.info("📥 Ensuring gpt-oss model...")
+    async def ensure_tinyllama(self):
+        """Ensure tinyllama model is available"""
+        logger.info("📥 Ensuring tinyllama model...")
         
         try:
             # Check if model exists
@@ -75,22 +75,22 @@ class DirectAgentActivator:
             response = requests.get(f"{self.ollama_base_url}/api/tags")
             if response.status_code == 200:
                 models = response.json().get("models", [])
-                if any("gpt-oss" in model.get("name", "").lower() for model in models):
-                    logger.info("✅ gpt-oss available")
+                if any("tinyllama" in model.get("name", "").lower() for model in models):
+                    logger.info("✅ tinyllama available")
                     return True
             
             # Pull model
-            logger.info("📥 Pulling gpt-oss...")
-            result = subprocess.run(["ollama", "pull", "gpt-oss"], capture_output=True, timeout=300)
+            logger.info("📥 Pulling tinyllama...")
+            result = subprocess.run(["ollama", "pull", "tinyllama"], capture_output=True, timeout=300)
             if result.returncode == 0:
-                logger.info("✅ gpt-oss ready")
+                logger.info("✅ tinyllama ready")
                 return True
             else:
-                logger.warning("⚠️ gpt-oss pull failed, will try to use available models")
+                logger.warning("⚠️ tinyllama pull failed, will try to use available models")
                 return True  # Continue anyway
                 
         except Exception as e:
-            logger.warning(f"⚠️ gpt-oss setup issue: {e}, will continue anyway")
+            logger.warning(f"⚠️ tinyllama setup issue: {e}, will continue anyway")
             return True
     
     async def discover_agents(self):
@@ -150,7 +150,7 @@ class DirectAgentActivator:
                 'AGENT_NAME': agent_name,
                 'AGENT_PORT': str(port),
                 'OLLAMA_BASE_URL': self.ollama_base_url,
-                'OLLAMA_MODEL': 'gpt-oss',
+                'OLLAMA_MODEL': 'tinyllama',
                 'PYTHONPATH': '/opt/sutazaiapp:/opt/sutazaiapp/agents',
                 'LOG_LEVEL': 'INFO'
             })
@@ -198,7 +198,7 @@ class DirectAgentActivator:
             logger.error("❌ Ollama initialization failed")
             return
         
-        await self.ensure_gpt-oss()
+        await self.ensure_tinyllama()
         
         # Phase 2: Discover agents
         logger.info("🔍 Phase 2: Agent Discovery")

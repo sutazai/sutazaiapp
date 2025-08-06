@@ -48,7 +48,7 @@ OLLAMA_KEEP_ALIVE=5m
 OLLAMA_CPU_THREADS=10
 OLLAMA_GPU_LAYERS=99
 OLLAMA_MODELS=/root/.ollama/models
-OLLAMA_HOST=0.0.0.0:11434
+OLLAMA_HOST=0.0.0.0:10104
 
 # Memory settings
 OLLAMA_MAX_MEMORY=8192
@@ -71,8 +71,8 @@ preload_models() {
     log "Preloading essential models..."
     
     ESSENTIAL_MODELS=(
-        "gpt-oss2.5-coder:3b"
-        "gpt-oss2.5:3b"
+        "tinyllama2.5-coder:3b"
+        "tinyllama2.5:3b"
         "nomic-embed-text"
     )
     
@@ -95,7 +95,7 @@ configure_model_optimizations() {
     docker exec sutazai-ollama bash -c 'mkdir -p /root/.ollama/configs'
     
     # Codellama optimization
-    docker exec sutazai-ollama bash -c 'cat > /root/.ollama/configs/gpt-oss.json << EOF
+    docker exec sutazai-ollama bash -c 'cat > /root/.ollama/configs/tinyllama.json << EOF
 {
     "num_ctx": 4096,
     "num_batch": 512,
@@ -150,15 +150,15 @@ create_health_check() {
 
 check_ollama_health() {
     # Check if Ollama is responding
-    if curl -f -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+    if curl -f -s http://localhost:10104/api/tags > /dev/null 2>&1; then
         echo "Ollama is healthy"
         
         # Check loaded models
-        MODELS=$(curl -s http://localhost:11434/api/tags | jq -r '.models[].name' 2>/dev/null | wc -l)
+        MODELS=$(curl -s http://localhost:10104/api/tags | jq -r '.models[].name' 2>/dev/null | wc -l)
         echo "Loaded models: $MODELS"
         
         # Check response time
-        RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:11434/api/tags)
+        RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:10104/api/tags)
         echo "API response time: ${RESPONSE_TIME}s"
         
         # Memory usage
@@ -189,11 +189,11 @@ optimize_model_loading() {
 #!/bin/bash
 # Preload models on startup
 
-MODELS=("gpt-oss2.5-coder:3b" "gpt-oss2.5:3b" "nomic-embed-text")
+MODELS=("tinyllama2.5-coder:3b" "tinyllama2.5:3b" "nomic-embed-text")
 
 for model in "${MODELS[@]}"; do
     echo "Preloading $model..."
-    curl -X POST http://localhost:11434/api/generate \
+    curl -X POST http://localhost:10104/api/generate \
         -d "{\"model\": \"$model\", \"prompt\": \"test\", \"stream\": false}" \
         > /dev/null 2>&1 &
 done

@@ -2,7 +2,7 @@
   "name": "evolution-strategy-trainer",
   "description": "Agent for ai-ml operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9213,
   "capabilities": [
     "code_generation",

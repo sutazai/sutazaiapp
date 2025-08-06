@@ -206,10 +206,10 @@ chmod +x scripts/*.sh
 #### Model inference failures
 ```bash
 # Check Ollama status
-curl http://localhost:11434/api/tags
+curl http://localhost:10104/api/tags
 
 # Pull a lightweight model
-docker exec sutazai-ollama ollama pull gpt-oss.2:1b
+docker exec sutazai-ollama ollama pull tinyllama.2:1b
 ```
 
 ### Log Files

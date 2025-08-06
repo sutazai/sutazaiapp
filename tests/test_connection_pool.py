@@ -29,10 +29,10 @@ class TestOllamaConnectionPool:
     def pool_config(self):
         """Standard pool configuration for testing"""
         return {
-            "base_url": "http://test-ollama:11434",
+            "base_url": "http://test-ollama:10104",
             "max_connections": 2,
             "min_connections": 1,
-            "default_model": "gpt-oss",
+            "default_model": "tinyllama",
             "connection_timeout": 10,
             "request_timeout": 30,
             "cleanup_interval": 60,
@@ -46,10 +46,10 @@ class TestOllamaConnectionPool:
     
     def test_initialization(self, pool):
         """Test pool initialization"""
-        assert pool.base_url == "http://test-ollama:11434"
+        assert pool.base_url == "http://test-ollama:10104"
         assert pool.max_connections == 2
         assert pool.min_connections == 1
-        assert pool.default_model == "gpt-oss"
+        assert pool.default_model == "tinyllama"
         assert pool.connection_timeout == 10
         assert pool.request_timeout == 30
         assert len(pool._connections) == 0
@@ -169,8 +169,8 @@ class TestOllamaConnectionPool:
         mock_response.status_code = 200
         mock_response.json.return_value = {
             "models": [
-                {"name": "gpt-oss:latest"},
-                {"name": "gpt-oss2.5-coder:7b"}
+                {"name": "tinyllama:latest"},
+                {"name": "tinyllama2.5-coder:7b"}
             ]
         }
         
@@ -180,7 +180,7 @@ class TestOllamaConnectionPool:
         
         await pool._refresh_available_models()
         
-        assert pool._available_models == {"gpt-oss", "gpt-oss2.5-coder"}
+        assert pool._available_models == {"tinyllama", "tinyllama2.5-coder"}
         assert pool.stats.models_cached == 2
     
     @pytest.mark.asyncio
@@ -201,7 +201,7 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_ensure_model_available_cached(self, pool):
         """Test model availability check with cached model"""
-        model_name = "gpt-oss"
+        model_name = "tinyllama"
         
         # Add model to cache
         cache_entry = ModelCache(model_name=model_name, is_warmed=True)
@@ -216,10 +216,10 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_ensure_model_available_in_registry(self, pool):
         """Test model availability check with model in registry"""
-        model_name = "gpt-oss"
+        model_name = "tinyllama"
         
         # Mock available models
-        pool._available_models = {"gpt-oss", "other-model"}
+        pool._available_models = {"tinyllama", "other-model"}
         pool._models_last_checked = datetime.utcnow()
         
         result = await pool._ensure_model_available(model_name)
@@ -232,7 +232,7 @@ class TestOllamaConnectionPool:
         model_name = "new-model"
         
         # Mock model not in available list
-        pool._available_models = {"gpt-oss"}
+        pool._available_models = {"tinyllama"}
         pool._models_last_checked = datetime.utcnow()
         
         # Mock successful pull
@@ -284,7 +284,7 @@ class TestOllamaConnectionPool:
     @pytest.mark.asyncio
     async def test_warm_model_success(self, pool):
         """Test successful model warming"""
-        model_name = "gpt-oss"
+        model_name = "tinyllama"
         
         # Mock model availability and generation
         with patch.object(pool, '_ensure_model_available', return_value=True), \
@@ -300,7 +300,7 @@ class TestOllamaConnectionPool:
     async def test_generate_success(self, pool):
         """Test successful text generation"""
         prompt = "Test prompt"
-        model = "gpt-oss"
+        model = "tinyllama"
         
         # Mock model availability
         with patch.object(pool, '_ensure_model_available', return_value=True):

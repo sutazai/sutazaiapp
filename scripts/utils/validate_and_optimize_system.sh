@@ -245,9 +245,9 @@ check_models() {
     log_header "Model Availability Check"
     
     local required_models=(
-        "gpt-oss2.5:3b"
-        "gpt-oss2.5-coder:3b"
-        "gpt-oss2.5:3b"
+        "tinyllama2.5:3b"
+        "tinyllama2.5-coder:3b"
+        "tinyllama2.5:3b"
         "nomic-embed-text"
     )
     

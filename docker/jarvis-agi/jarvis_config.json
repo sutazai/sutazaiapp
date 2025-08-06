@@ -1,14 +1,14 @@
 {
   "ai_models": {
     "text_model": "ollama",
-    "local_llm_model": "gpt-oss.2:latest",
-    "local_llm_endpoint": "http://ollama:11434",
+    "local_llm_model": "tinyllama.2:latest",
+    "local_llm_endpoint": "http://ollama:10104",
     "vision_model": "clip-vit-base-patch32", 
     "speech_model": "whisper-base",
     "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
-    "orchestration_model": "gpt-oss.2:latest",
-    "agi_model": "gpt-oss.2:latest",
-    "fallback_models": ["gpt-oss:latest"]
+    "orchestration_model": "tinyllama.2:latest",
+    "agi_model": "tinyllama.2:latest",
+    "fallback_models": ["tinyllama:latest"]
   },
   "services": {
     "web_port": 8080,
@@ -34,7 +34,7 @@
     "creative_capabilities": true
   },
   "integrations": {
-    "ollama_endpoint": "http://ollama:11434",
+    "ollama_endpoint": "http://ollama:10104",
     "ollama_api_key": "local",
     "primary_llm": "local_ollama",
     "openai_api_key": "${OPENAI_API_KEY:-not_required_for_local}",

@@ -2,7 +2,7 @@
   "name": "goal-setting-and-planning-agent",
   "description": "Agent for utility operations",
   "model": "ollama",
-  "base_model": "gpt-oss-r1:8b",
+  "base_model": "tinyllama",
   "port": 9915,
   "capabilities": [
     "automation",

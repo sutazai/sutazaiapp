@@ -542,10 +542,10 @@ class AIAgentHoneypotServer:
             try:
                 data = json.loads(body)
                 prompt = data.get('prompt', '')
-                model = data.get('model', 'gpt-oss')
+                model = data.get('model', 'tinyllama')
             except:
                 prompt = ''
-                model = 'gpt-oss'
+                model = 'tinyllama'
             
             # Return streaming-style response
             response_text = "I'm an AI assistant running on the SutazAI system. I can help with various tasks including coding, analysis, and problem-solving."
@@ -694,7 +694,7 @@ class AIAgentHoneypotManager:
         self.intelligence_engine = intelligence_engine
         self.honeypots = {}
         
-    async def deploy_ai_agent_honeypot(self, port: int = 11434) -> bool:
+    async def deploy_ai_agent_honeypot(self, port: int = 10104) -> bool:
         """Deploy AI agent honeypot"""
         try:
             honeypot_id = f"ai_agent_{port}"
@@ -718,7 +718,7 @@ class AIAgentHoneypotManager:
         results = {}
         
         # Deploy on multiple ports to catch different attack vectors
-        ports = [11434, 8000, 8080, 9000]  # Common AI service ports
+        ports = [10104, 8000, 8080, 9000]  # Common AI service ports
         
         for port in ports:
             try:

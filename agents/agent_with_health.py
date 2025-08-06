@@ -110,7 +110,7 @@ class GenericAgentWithHealth:
         self.config = self._load_config()
         self.agent_name = os.getenv("AGENT_NAME", "generic-agent")
         self.agent_type = os.getenv("AGENT_TYPE", "generic")
-        self.ollama_url = os.getenv("OLLAMA_URL", "http://sutazai-ollama:11434")
+        self.ollama_url = os.getenv("OLLAMA_URL", "http://sutazai-ollama:10104")
         self.backend_url = os.getenv("BACKEND_URL", "http://sutazai-backend:8000")
         self.health_port = int(os.getenv("HEALTH_PORT", "8080"))
         

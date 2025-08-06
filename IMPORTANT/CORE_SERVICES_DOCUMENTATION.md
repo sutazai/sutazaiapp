@@ -323,7 +323,7 @@ deploy:
 docker exec sutazai-ollama ollama list
 
 # Pull new model
-docker exec sutazai-ollama ollama pull gpt-oss
+docker exec sutazai-ollama ollama pull tinyllama
 
 # Run inference
 curl http://localhost:10104/api/generate \

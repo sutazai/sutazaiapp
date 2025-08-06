@@ -177,11 +177,11 @@ class AdvancedReasoningEngine:
         }
         
         # Use the best reasoning agent
-        result = await self._execute_reasoning_task("gpt-oss", hypothesis_task)
+        result = await self._execute_reasoning_task("tinyllama", hypothesis_task)
         
         step = ReasoningStep(
             stage=ReasoningStage.HYPOTHESIS,
-            agent_id="gpt-oss",
+            agent_id="tinyllama",
             thought=result.get("hypotheses", ""),
             confidence=result.get("confidence", 0.7),
             evidence=result.get("evidence", []),
@@ -203,7 +203,7 @@ class AdvancedReasoningEngine:
             # Get multiple agents to verify each hypothesis
             verification_tasks = []
             
-            verification_agents = ["gpt-oss"]
+            verification_agents = ["tinyllama"]
             
             for agent_type in verification_agents:
                 task = {
@@ -269,11 +269,11 @@ class AdvancedReasoningEngine:
             """
         }
         
-        result = await self._execute_reasoning_task("gpt-oss", synthesis_task)
+        result = await self._execute_reasoning_task("tinyllama", synthesis_task)
         
         return ReasoningStep(
             stage=ReasoningStage.SYNTHESIS,
-            agent_id="gpt-oss",
+            agent_id="tinyllama",
             thought=result.get("synthesis", ""),
             confidence=result.get("confidence", 0.8),
             evidence=result.get("evidence", []),
@@ -283,11 +283,11 @@ class AdvancedReasoningEngine:
     def _select_agents_for_domain(self, domain: str) -> List[str]:
         """Select best agents for specific domain"""
         domain_mapping = {
-            "code": ["gpt-oss"],
-            "math": ["gpt-oss"],
-            "science": ["gpt-oss"],
-            "general": ["gpt-oss"],
-            "analysis": ["gpt-oss"]
+            "code": ["tinyllama"],
+            "math": ["tinyllama"],
+            "science": ["tinyllama"],
+            "general": ["tinyllama"],
+            "analysis": ["tinyllama"]
         }
         
         return domain_mapping.get(domain, domain_mapping["general"])

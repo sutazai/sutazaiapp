@@ -34,7 +34,7 @@ class OllamaIntegrationTester:
     """Test Ollama integration for all SutazAI agents"""
     
     def __init__(self):
-        self.ollama_url = "http://localhost:11434"
+        self.ollama_url = "http://localhost:10104"
         self.backend_url = "http://localhost:8000"
         self.results = {}
         
@@ -117,7 +117,7 @@ class OllamaIntegrationTester:
                     models = response.json().get("models", [])
                     model_names = [m.get("name", "").split(":")[0] for m in models]
                     
-                    if "gpt-oss" in model_names:
+                    if "tinyllama" in model_names:
                         logger.info("GPT-OSS model is available")
                         return True
                     else:
@@ -132,7 +132,7 @@ class OllamaIntegrationTester:
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 payload = {
-                    "model": "gpt-oss",
+                    "model": "tinyllama",
                     "prompt": "Hello, respond with exactly one word: 'SUCCESS'",
                     "stream": False,
                     "options": {
@@ -170,7 +170,7 @@ class OllamaIntegrationTester:
                     "agent_version": "1.0.0",
                     "capabilities": ["test"],
                     "status": "active",
-                    "model": "gpt-oss",
+                    "model": "tinyllama",
                     "max_concurrent_tasks": 1,
                     "timestamp": datetime.utcnow().isoformat()
                 }
@@ -199,8 +199,8 @@ class OllamaIntegrationTester:
             
             # Test model configuration
             test_config = OllamaConfig.get_model_config("test-agent")
-            if test_config["model"] != "gpt-oss":
-                logger.error(f"Expected gpt-oss, got {test_config['model']}")
+            if test_config["model"] != "tinyllama":
+                logger.error(f"Expected tinyllama, got {test_config['model']}")
                 return False
             
             logger.info("BaseAgentV2 configuration is correct")

@@ -23,13 +23,13 @@ check_ollama() {
     if docker ps | grep -q "sutazai-ollama"; then
         echo -e "${GREEN}✓ Ollama container is running${NC}"
         OLLAMA_EXEC="docker exec sutazai-ollama"
-        OLLAMA_URL="http://localhost:11434"
+        OLLAMA_URL="http://localhost:10104"
     else
         # Check if Ollama is installed locally
         if command -v ollama &> /dev/null; then
             echo -e "${GREEN}✓ Ollama is installed locally${NC}"
             OLLAMA_EXEC=""
-            OLLAMA_URL="http://localhost:11434"
+            OLLAMA_URL="http://localhost:10104"
         else
             echo -e "${RED}✗ Ollama is not running. Please start Ollama first.${NC}"
             echo "Run: docker-compose up -d ollama"
@@ -53,10 +53,10 @@ pull_gptoss() {
     
     if [ -n "$OLLAMA_EXEC" ]; then
         # Running in Docker
-        $OLLAMA_EXEC ollama pull gpt-oss
+        $OLLAMA_EXEC ollama pull tinyllama
     else
         # Running locally
-        ollama pull gpt-oss
+        ollama pull tinyllama
     fi
     
     if [ $? -eq 0 ]; then
@@ -68,21 +68,21 @@ pull_gptoss() {
 }
 
 # Remove old Mistral model (optional)
-remove_gpt-oss() {
+remove_tinyllama() {
     echo -e "\n${YELLOW}Checking for Mistral model...${NC}"
     
     if [ -n "$OLLAMA_EXEC" ]; then
-        if $OLLAMA_EXEC ollama list | grep -q "gpt-oss"; then
+        if $OLLAMA_EXEC ollama list | grep -q "tinyllama"; then
             echo -e "${YELLOW}Found Mistral model. Removing to save space...${NC}"
-            $OLLAMA_EXEC ollama rm gpt-oss
+            $OLLAMA_EXEC ollama rm tinyllama
             echo -e "${GREEN}✓ Mistral model removed${NC}"
         else
             echo "No Mistral model found"
         fi
     else
-        if ollama list | grep -q "gpt-oss"; then
+        if ollama list | grep -q "tinyllama"; then
             echo -e "${YELLOW}Found Mistral model. Removing to save space...${NC}"
-            ollama rm gpt-oss
+            ollama rm tinyllama
             echo -e "${GREEN}✓ Mistral model removed${NC}"
         else
             echo "No Mistral model found"
@@ -100,7 +100,7 @@ verify_installation() {
         MODEL_LIST=$(ollama list)
     fi
     
-    if echo "$MODEL_LIST" | grep -q "gpt-oss"; then
+    if echo "$MODEL_LIST" | grep -q "tinyllama"; then
         echo -e "${GREEN}✓ GPT-OSS model is installed and ready${NC}"
         echo -e "\nInstalled models:"
         echo "$MODEL_LIST"
@@ -118,7 +118,7 @@ test_model() {
     TEST_RESPONSE=$(curl -s -X POST "$OLLAMA_URL/api/generate" \
         -H "Content-Type: application/json" \
         -d '{
-            "model": "gpt-oss",
+            "model": "tinyllama",
             "prompt": "Hello, please respond with OK if you are working.",
             "stream": false,
             "options": {
@@ -151,15 +151,15 @@ update_env() {
     
     # Update or add model configuration
     if grep -q "^DEFAULT_MODEL=" "$ENV_FILE" 2>/dev/null; then
-        sed -i 's/^DEFAULT_MODEL=.*/DEFAULT_MODEL=gpt-oss/' "$ENV_FILE"
+        sed -i 's/^DEFAULT_MODEL=.*/DEFAULT_MODEL=tinyllama/' "$ENV_FILE"
     else
-        echo "DEFAULT_MODEL=gpt-oss" >> "$ENV_FILE"
+        echo "DEFAULT_MODEL=tinyllama" >> "$ENV_FILE"
     fi
     
     if grep -q "^OLLAMA_MODEL=" "$ENV_FILE" 2>/dev/null; then
-        sed -i 's/^OLLAMA_MODEL=.*/OLLAMA_MODEL=gpt-oss/' "$ENV_FILE"
+        sed -i 's/^OLLAMA_MODEL=.*/OLLAMA_MODEL=tinyllama/' "$ENV_FILE"
     else
-        echo "OLLAMA_MODEL=gpt-oss" >> "$ENV_FILE"
+        echo "OLLAMA_MODEL=tinyllama" >> "$ENV_FILE"
     fi
     
     echo -e "${GREEN}✓ Environment configuration updated${NC}"
@@ -172,7 +172,7 @@ main() {
     
     check_ollama
     pull_gptoss
-    remove_gpt-oss  # Optional: remove old model to save space
+    remove_tinyllama  # Optional: remove old model to save space
     verify_installation
     test_model
     update_env
@@ -184,7 +184,7 @@ main() {
     echo "GPT-OSS model is now the default model for SutazAI."
     echo ""
     echo "To use GPT-OSS directly with Ollama:"
-    echo "  ollama run gpt-oss"
+    echo "  ollama run tinyllama"
     echo ""
     echo "To restart SutazAI with the new model:"
     echo "  docker-compose restart backend frontend"

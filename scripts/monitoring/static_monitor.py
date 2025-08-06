@@ -968,7 +968,7 @@ class EnhancedMonitor:
         type_port_map = {
             'BACK': [[8000, 8010], [5000, 5010]],    # Backend services
             'FRON': [[3000, 3010], [8080, 8090]],    # Frontend services  
-            'AI': [[11434, 11444], [7860, 7870]],    # AI/ML services (Ollama, HuggingFace)
+            'AI': [[10104, 11444], [7860, 7870]],    # AI/ML services (Ollama, HuggingFace)
             'INFR': [[9000, 9010], [6000, 6010], [8110, 8125]],    # Infrastructure services (includes hardware-resource-optimizer on 8116)
             'SECU': [[8443, 8453], [9443, 9453]],    # Security services
             'DATA': [[5432, 5442], [6379, 6389]],    # Data services

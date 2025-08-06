@@ -57,7 +57,7 @@ class TestBackwardCompatibility:
             'AGENT_NAME': 'legacy-test-agent',
             'AGENT_TYPE': 'legacy-type',
             'BACKEND_URL': 'http://legacy-backend:8000',
-            'OLLAMA_URL': 'http://legacy-ollama:11434'
+            'OLLAMA_URL': 'http://legacy-ollama:10104'
         }
         
         with patch.dict(os.environ, test_env):
@@ -66,7 +66,7 @@ class TestBackwardCompatibility:
             assert agent.agent_name == 'legacy-test-agent'
             assert agent.agent_type == 'legacy-type'
             assert agent.backend_url == 'http://legacy-backend:8000'
-            assert agent.ollama_url == 'http://legacy-ollama:11434'
+            assert agent.ollama_url == 'http://legacy-ollama:10104'
     
     def test_config_loading_backward_compatibility(self):
         """Test that existing config file formats are supported"""
@@ -180,11 +180,11 @@ class TestOllamaConfigRegression:
         """Test that existing agent model assignments haven't changed"""
         # Test critical agent model assignments that shouldn't change
         stable_assignments = {
-            "ai-system-architect": "gpt-oss-r1:8b",
-            "ai-product-manager": "gpt-oss2.5-coder:7b",
-            "garbage-collector": "gpt-oss",
-            "testing-qa-validator": "gpt-oss2.5-coder:7b",
-            "ai-senior-backend-developer": "gpt-oss2.5-coder:7b"
+            "ai-system-architect": "tinyllama",
+            "ai-product-manager": "tinyllama2.5-coder:7b",
+            "garbage-collector": "tinyllama",
+            "testing-qa-validator": "tinyllama2.5-coder:7b",
+            "ai-senior-backend-developer": "tinyllama2.5-coder:7b"
         }
         
         for agent_name, expected_model in stable_assignments.items():
@@ -374,7 +374,7 @@ class TestIntegrationRegression:
         # These will fail due to network issues, but should not fail due to API changes
         
         try:
-            await integration.ensure_model_available("gpt-oss")
+            await integration.ensure_model_available("tinyllama")
         except Exception as e:
             # Should be network/service error, not API error
             assert "TypeError" not in str(type(e))

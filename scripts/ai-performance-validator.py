@@ -63,7 +63,7 @@ class PerformanceMetrics:
 class AIPerformanceValidator:
     """Validate AI system performance across all agents"""
     
-    def __init__(self, ollama_url: str = "http://localhost:11434"):
+    def __init__(self, ollama_url: str = "http://localhost:10104"):
         self.ollama_url = ollama_url
         self.test_results: List[TestResult] = []
         self.agent_metrics: Dict[str, PerformanceMetrics] = {}
@@ -439,7 +439,7 @@ class AIPerformanceValidator:
         for model, times in model_response_times.items():
             avg_time = statistics.mean(times)
             if model == OllamaConfig.DEFAULT_MODEL and avg_time > 2:
-                recommendations.append(f"gpt-oss average response time ({avg_time:.1f}s) is high. Check system load.")
+                recommendations.append(f"tinyllama average response time ({avg_time:.1f}s) is high. Check system load.")
             elif model == OllamaConfig.SONNET_MODEL and avg_time > 5:
                 recommendations.append(f"GPT-OSS average response time ({avg_time:.1f}s) is high. Consider optimization.")
             elif model == OllamaConfig.OPUS_MODEL and avg_time > 10:
@@ -527,7 +527,7 @@ class AIPerformanceValidator:
 async def main():
     parser = argparse.ArgumentParser(description='Validate AI system performance')
     parser.add_argument('--full-test', action='store_true', help='Run full test on all agents')
-    parser.add_argument('--ollama-url', default='http://localhost:11434', help='Ollama API URL')
+    parser.add_argument('--ollama-url', default='http://localhost:10104', help='Ollama API URL')
     args = parser.parse_args()
     
     validator = AIPerformanceValidator(ollama_url=args.ollama_url)

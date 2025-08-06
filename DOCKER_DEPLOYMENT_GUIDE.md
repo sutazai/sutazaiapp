@@ -17,7 +17,7 @@ This guide covers the **new consolidated Docker deployment system** for SutazAI.
 ### ✅ KEPT (Working Services Only)
 - **Core Infrastructure**: PostgreSQL, Redis, Neo4j
 - **Vector Databases**: ChromaDB, Qdrant  
-- **LLM Service**: Ollama with gpt-oss
+- **LLM Service**: Ollama with tinyllama
 - **Application**: Backend (FastAPI) + Frontend (Streamlit)
 - **Monitoring**: Prometheus, Grafana, Loki
 - **Health Monitoring**: Real container health checks
@@ -150,9 +150,9 @@ All services follow the standardized port registry:
 
 #### Ollama (`sutazai-ollama`)
 - **Image**: `ollama/ollama:latest`
-- **Port**: `10104:11434`
+- **Port**: `10104:10104`
 - **Purpose**: Local LLM inference
-- **Models**: gpt-oss (auto-downloaded)
+- **Models**: tinyllama (auto-downloaded)
 - **Resources**: 20GB RAM limit, 8GB reserved
 - **Features**: Flash attention, multi-threading
 
