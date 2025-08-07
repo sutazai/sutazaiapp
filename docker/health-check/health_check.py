@@ -26,11 +26,11 @@ class HealthChecker:
         
         # Service health endpoints
         self.health_endpoints = {
-            'sutazai-backend-agi': 'http://sutazai-backend-agi:8000/health',
-            'sutazai-frontend-agi': 'http://sutazai-frontend-agi:8501/healthz',
+            'sutazai-backend': 'http://sutazai-backend:8000/health',
+            'sutazai-frontend': 'http://sutazai-frontend:8501/healthz',
             'sutazai-qdrant': 'http://sutazai-qdrant:6333/healthz',
             'sutazai-chromadb': 'http://sutazai-chromadb:8000/api/v1/heartbeat',
-            'sutazai-ollama': 'http://sutazai-ollama:11434/api/tags',
+            'sutazai-ollama': 'http://sutazai-ollama:10104/api/tags',
             'sutazai-prometheus': 'http://sutazai-prometheus:9090/-/healthy',
             'sutazai-grafana': 'http://sutazai-grafana:3000/api/health',
             'sutazai-neo4j': 'http://sutazai-neo4j:7474',

@@ -41,8 +41,8 @@ class WorkingLettaManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.agents = {}
-        self.ollama_url = "http://ollama:11434"
-        self.model = "llama3.2:1b"
+        self.ollama_url = "http://ollama:10104"
+        self.model = "tinyllama.2:1b"
         
         # Ensure workspace exists
         os.makedirs(self.workspace, exist_ok=True)

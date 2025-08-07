@@ -57,10 +57,10 @@ class ServiceRegistry:
     def __init__(self):
         self.services = {
             # Core Services
-            'ollama': 'http://ollama:11434',
+            'ollama': 'http://ollama:10104',
             'chromadb': 'http://chromadb:8000',
             'qdrant': 'http://qdrant:6333',
-            'backend': 'http://backend-agi:8000',
+            'backend': 'http://backend:8000',
             # AI Agents (all configured to use Ollama)
             'autogpt': 'http://autogpt:8080',
             'crewai': 'http://crewai:8080',
@@ -87,7 +87,6 @@ class ServiceRegistry:
             'modelmanager': 'http://modelmanager:8080',
             'llm-autoeval': 'http://llm-autoeval:8080',
             'context-framework': 'http://context-framework:8080',
-            'realtimestt': 'http://realtimestt:8080',
             'awesome-code-ai': 'http://awesome-code-ai:8080',
             'ollama-webui': 'http://ollama-webui:8080'
         }

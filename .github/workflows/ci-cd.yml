@@ -2,11 +2,11 @@ name: SutazAI CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop, "release/*"]
-  pull_request:
     branches: [main, develop]
-  schedule:
-    - cron: '0 0 * * *'  # Daily security scan
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       deploy_environment:
@@ -15,7 +15,6 @@ on:
         default: 'staging'
         type: choice
         options:
-          - development
           - staging
           - production
 
@@ -23,7 +22,8 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18'
+  AWS_REGION: us-west-2
+  DOCKERHUB_USERNAME: sutazai
 
 jobs:
   # Code Quality Checks

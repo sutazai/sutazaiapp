@@ -1,0 +1,382 @@
+groups:
+  - name: sutazai.aggregation.1m
+    interval: 1m
+    rules:
+      # High-frequency aggregations (1-minute intervals)
+      
+      # Agent task rates
+      - record: sutazai:agent_task_rate_1m
+        expr: rate(sutazai_agent_tasks_total[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      - record: sutazai:agent_success_rate_1m
+        expr: rate(sutazai_agent_tasks_successful_total[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      - record: sutazai:agent_error_rate_1m
+        expr: rate(sutazai_agent_tasks_failed_total[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      # API request rates
+      - record: sutazai:api_request_rate_1m
+        expr: rate(sutazai_api_requests_total[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      - record: sutazai:api_error_rate_1m
+        expr: rate(sutazai_api_requests_total{status=~"5.."}[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      # System resource rates
+      - record: sutazai:cpu_usage_rate_1m
+        expr: rate(container_cpu_usage_seconds_total{name=~"sutazai-.*"}[1m])
+        labels:
+          aggregation_interval: "1m"
+      
+      - record: sutazai:network_io_rate_1m
+        expr: rate(container_network_transmit_bytes_total{name=~"sutazai-.*"}[1m]) + rate(container_network_receive_bytes_total{name=~"sutazai-.*"}[1m])
+        labels:
+          aggregation_interval: "1m"
+
+  - name: sutazai.aggregation.5m
+    interval: 5m
+    rules:
+      # Standard aggregations (5-minute intervals)
+      
+      # Agent performance aggregations
+      - record: sutazai:agent_task_rate_5m
+        expr: rate(sutazai_agent_tasks_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:agent_success_rate_5m
+        expr: rate(sutazai_agent_tasks_successful_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:agent_error_rate_5m
+        expr: rate(sutazai_agent_tasks_failed_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:agent_task_latency_p50_5m
+        expr: histogram_quantile(0.50, rate(sutazai_agent_task_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.50"
+      
+      - record: sutazai:agent_task_latency_p95_5m
+        expr: histogram_quantile(0.95, rate(sutazai_agent_task_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.95"
+      
+      - record: sutazai:agent_task_latency_p99_5m
+        expr: histogram_quantile(0.99, rate(sutazai_agent_task_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.99"
+      
+      # API performance aggregations
+      - record: sutazai:api_request_rate_5m
+        expr: rate(sutazai_api_requests_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:api_error_rate_5m
+        expr: rate(sutazai_api_requests_total{status=~"5.."}[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:api_latency_p50_5m
+        expr: histogram_quantile(0.50, rate(sutazai_api_request_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.50"
+      
+      - record: sutazai:api_latency_p95_5m
+        expr: histogram_quantile(0.95, rate(sutazai_api_request_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.95"
+      
+      - record: sutazai:api_latency_p99_5m
+        expr: histogram_quantile(0.99, rate(sutazai_api_request_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.99"
+      
+      # Model inference aggregations
+      - record: sutazai:model_inference_rate_5m
+        expr: rate(sutazai_model_inference_requests_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:model_inference_latency_p95_5m
+        expr: histogram_quantile(0.95, rate(sutazai_model_inference_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.95"
+      
+      - record: sutazai:model_token_rate_5m
+        expr: rate(sutazai_model_tokens_processed_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      # Vector database aggregations
+      - record: sutazai:vector_db_operation_rate_5m
+        expr: rate(sutazai_vector_db_operations_total[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:vector_db_query_latency_p95_5m
+        expr: histogram_quantile(0.95, rate(sutazai_vector_db_query_duration_seconds_bucket[5m]))
+        labels:
+          aggregation_interval: "5m"
+          quantile: "0.95"
+      
+      # System resource aggregations
+      - record: sutazai:cpu_usage_rate_5m
+        expr: rate(container_cpu_usage_seconds_total{name=~"sutazai-.*"}[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:memory_usage_bytes_5m
+        expr: container_memory_usage_bytes{name=~"sutazai-.*"}
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:network_io_rate_5m
+        expr: rate(container_network_transmit_bytes_total{name=~"sutazai-.*"}[5m]) + rate(container_network_receive_bytes_total{name=~"sutazai-.*"}[5m])
+        labels:
+          aggregation_interval: "5m"
+      
+      - record: sutazai:disk_io_rate_5m
+        expr: rate(container_fs_reads_bytes_total{name=~"sutazai-.*"}[5m]) + rate(container_fs_writes_bytes_total{name=~"sutazai-.*"}[5m])
+        labels:
+          aggregation_interval: "5m"
+
+  - name: sutazai.summary.15m
+    interval: 15m
+    rules:
+      # Summary aggregations (15-minute intervals)
+      
+      # Agent health summary
+      - record: sutazai:agent_health_score_15m
+        expr: (sutazai:agent_success_rate_5m / (sutazai:agent_success_rate_5m + sutazai:agent_error_rate_5m)) * 100
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:active_agents_15m
+        expr: count(up{job="sutazai-agents"} == 1)
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:total_agents_15m
+        expr: count(up{job="sutazai-agents"})
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:agent_availability_15m
+        expr: (sutazai:active_agents_15m / sutazai:total_agents_15m) * 100
+        labels:
+          aggregation_interval: "15m"
+      
+      # System health summary
+      - record: sutazai:system_cpu_utilization_15m
+        expr: avg(sutazai:cpu_usage_rate_5m) * 100
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:system_memory_utilization_15m
+        expr: (sum(sutazai:memory_usage_bytes_5m) / sum(container_spec_memory_limit_bytes{name=~"sutazai-.*"})) * 100
+        labels:
+          aggregation_interval: "15m"
+      
+      # API health summary
+      - record: sutazai:api_success_rate_15m
+        expr: ((sutazai:api_request_rate_5m - sutazai:api_error_rate_5m) / sutazai:api_request_rate_5m) * 100
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:api_throughput_15m
+        expr: sum(sutazai:api_request_rate_5m)
+        labels:
+          aggregation_interval: "15m"
+      
+      # Orchestration summary
+      - record: sutazai:workflow_completion_rate_15m
+        expr: rate(sutazai_agent_tasks_successful_total[15m])
+        labels:
+          aggregation_interval: "15m"
+      
+      - record: sutazai:average_task_queue_size_15m
+        expr: avg_over_time(sutazai_task_queue_size[15m])
+        labels:
+          aggregation_interval: "15m"
+
+  - name: sutazai.daily.1h
+    interval: 1h
+    rules:
+      # Daily aggregations (1-hour intervals)
+      
+      # Daily performance trends
+      - record: sutazai:agent_tasks_completed_1h
+        expr: increase(sutazai_agent_tasks_successful_total[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:agent_tasks_failed_1h
+        expr: increase(sutazai_agent_tasks_failed_total[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:api_requests_total_1h
+        expr: increase(sutazai_api_requests_total[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:api_errors_total_1h
+        expr: increase(sutazai_api_requests_total{status=~"5.."}[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      # Daily resource consumption
+      - record: sutazai:cpu_hours_consumed_1h
+        expr: sum(increase(container_cpu_usage_seconds_total{name=~"sutazai-.*"}[1h])) / 3600
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:memory_gb_hours_consumed_1h
+        expr: sum(avg_over_time(container_memory_usage_bytes{name=~"sutazai-.*"}[1h])) / (1024^3)
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:network_gb_transferred_1h
+        expr: sum(increase(container_network_transmit_bytes_total{name=~"sutazai-.*"}[1h]) + increase(container_network_receive_bytes_total{name=~"sutazai-.*"}[1h])) / (1024^3)
+        labels:
+          aggregation_interval: "1h"
+      
+      # Model usage statistics
+      - record: sutazai:model_inferences_total_1h
+        expr: increase(sutazai_model_inference_requests_total[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      - record: sutazai:model_tokens_processed_1h
+        expr: increase(sutazai_model_tokens_processed_total[1h])
+        labels:
+          aggregation_interval: "1h"
+      
+      # Vector database statistics
+      - record: sutazai:vector_db_operations_1h
+        expr: increase(sutazai_vector_db_operations_total[1h])
+        labels:
+          aggregation_interval: "1h"
+
+  - name: sutazai.sla.1h
+    interval: 1h
+    rules:
+      # SLA metrics (1-hour intervals)
+      
+      # Availability SLA
+      - record: sutazai:sla_availability_1h
+        expr: (sum(up{job="sutazai-backend"}) + sum(up{job="ollama"}) + sum(up{job="postgres"}) + sum(up{job="redis"})) / 4 * 100
+        labels:
+          sla_type: "availability"
+          aggregation_interval: "1h"
+      
+      - record: sutazai:sla_agent_availability_1h
+        expr: (count(up{job="sutazai-agents"} == 1) / count(up{job="sutazai-agents"})) * 100
+        labels:
+          sla_type: "agent_availability"
+          aggregation_interval: "1h"
+      
+      # Performance SLA
+      - record: sutazai:sla_api_latency_p95_1h
+        expr: histogram_quantile(0.95, rate(sutazai_api_request_duration_seconds_bucket[1h]))
+        labels:
+          sla_type: "performance"
+          metric: "api_latency_p95"
+          aggregation_interval: "1h"
+      
+      - record: sutazai:sla_agent_latency_p95_1h
+        expr: histogram_quantile(0.95, rate(sutazai_agent_task_duration_seconds_bucket[1h]))
+        labels:
+          sla_type: "performance"
+          metric: "agent_latency_p95"
+          aggregation_interval: "1h"
+      
+      # Reliability SLA
+      - record: sutazai:sla_error_rate_1h
+        expr: (sum(rate(sutazai_api_requests_total{status=~"5.."}[1h])) / sum(rate(sutazai_api_requests_total[1h]))) * 100
+        labels:
+          sla_type: "reliability"
+          metric: "error_rate"
+          aggregation_interval: "1h"
+      
+      - record: sutazai:sla_agent_error_rate_1h
+        expr: (sum(rate(sutazai_agent_tasks_failed_total[1h])) / sum(rate(sutazai_agent_tasks_total[1h]))) * 100
+        labels:
+          sla_type: "reliability"
+          metric: "agent_error_rate"
+          aggregation_interval: "1h"
+      
+      # Throughput SLA
+      - record: sutazai:sla_api_throughput_1h
+        expr: sum(rate(sutazai_api_requests_total[1h]))
+        labels:
+          sla_type: "throughput"
+          metric: "api_requests_per_second"
+          aggregation_interval: "1h"
+      
+      - record: sutazai:sla_agent_throughput_1h
+        expr: sum(rate(sutazai_agent_tasks_total[1h]))
+        labels:
+          sla_type: "throughput"
+          metric: "agent_tasks_per_second"
+          aggregation_interval: "1h"
+
+  - name: sutazai.capacity.6h
+    interval: 6h
+    rules:
+      # Capacity planning metrics (6-hour intervals)
+      
+      # Resource trend analysis
+      - record: sutazai:cpu_trend_6h
+        expr: predict_linear(sutazai:system_cpu_utilization_15m[6h], 24*3600)
+        labels:
+          trend_type: "cpu_utilization"
+          prediction_horizon: "24h"
+          aggregation_interval: "6h"
+      
+      - record: sutazai:memory_trend_6h
+        expr: predict_linear(sutazai:system_memory_utilization_15m[6h], 24*3600)
+        labels:
+          trend_type: "memory_utilization"
+          prediction_horizon: "24h"
+          aggregation_interval: "6h"
+      
+      - record: sutazai:task_volume_trend_6h
+        expr: predict_linear(sutazai:workflow_completion_rate_15m[6h], 24*3600)
+        labels:
+          trend_type: "task_volume"
+          prediction_horizon: "24h"
+          aggregation_interval: "6h"
+      
+      # Growth rates
+      - record: sutazai:task_growth_rate_6h
+        expr: (sutazai:workflow_completion_rate_15m - sutazai:workflow_completion_rate_15m offset 6h) / sutazai:workflow_completion_rate_15m offset 6h * 100
+        labels:
+          growth_type: "task_completion"
+          aggregation_interval: "6h"
+      
+      - record: sutazai:api_usage_growth_rate_6h
+        expr: (sutazai:api_throughput_15m - sutazai:api_throughput_15m offset 6h) / sutazai:api_throughput_15m offset 6h * 100
+        labels:
+          growth_type: "api_usage"
+          aggregation_interval: "6h"

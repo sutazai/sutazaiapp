@@ -1,0 +1,236 @@
+groups:
+  - name: sutazai-executive-alerts
+    rules:
+      - alert: SystemUnavailable
+        expr: avg(up{job=~"sutazai-.*"}) < 0.8
+        for: 5m
+        labels:
+          severity: critical
+          team: executive
+        annotations:
+          summary: "SutazAI System Availability Critical"
+          description: "System availability is below 80% for 5 minutes"
+
+      - alert: HighErrorRate
+        expr: (sum(rate(http_requests_total{job="sutazai-backend",code=~"5.."}[5m])) / sum(rate(http_requests_total{job="sutazai-backend"}[5m]))) * 100 > 5
+        for: 3m
+        labels:
+          severity: critical
+          team: executive
+        annotations:
+          summary: "High Error Rate Detected"
+          description: "Error rate is above 5% for 3 minutes"
+
+  - name: sutazai-operations-alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          team: operations
+        annotations:
+          summary: "High CPU Usage"
+          description: "CPU usage is above 85% for 5 minutes"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          team: operations
+        annotations:
+          summary: "High Memory Usage"
+          description: "Memory usage is above 85% for 5 minutes"
+
+      - alert: DiskSpaceLow
+        expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+          team: operations
+        annotations:
+          summary: "Low Disk Space"
+          description: "Disk usage is above 85% for 10 minutes"
+
+      - alert: ServiceDown
+        expr: up{job=~"sutazai-.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: operations
+        annotations:
+          summary: "Service Down"
+          description: "Service {{ $labels.job }} has been down for 2 minutes"
+
+  - name: sutazai-developer-alerts
+    rules:
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="sutazai-backend"}[5m])) by (le)) * 1000 > 1000
+        for: 5m
+        labels:
+          severity: warning
+          team: developer
+        annotations:
+          summary: "High API Response Time"
+          description: "95th percentile response time is above 1000ms for 5 minutes"
+
+      - alert: DatabaseConnectionsHigh
+        expr: postgres_stat_database_numbackends{datname="sutazai"} > 50
+        for: 5m
+        labels:
+          severity: warning
+          team: developer
+        annotations:
+          summary: "High Database Connections"
+          description: "Database connections exceed 50 for 5 minutes"
+
+      - alert: ContainerMemoryHigh
+        expr: sum(container_memory_usage_bytes{name=~"sutazai-.*"}) / sum(container_spec_memory_limit_bytes{name=~"sutazai-.*"}) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: developer
+        annotations:
+          summary: "High Container Memory Usage"
+          description: "Container memory usage is above 80% for 5 minutes"
+
+  - name: sutazai-security-alerts
+    rules:
+      - alert: HighFailedRequests
+        expr: sum(rate(http_requests_total{job="sutazai-backend",code=~"4..|5.."}[5m])) * 60 > 100
+        for: 2m
+        labels:
+          severity: critical
+          team: security
+        annotations:
+          summary: "High Failed Request Rate"
+          description: "Failed requests exceed 100/minute for 2 minutes"
+
+      - alert: AuthenticationFailures
+        expr: sum(rate(http_requests_total{job="sutazai-backend",code="401"}[5m])) * 60 > 20
+        for: 3m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "High Authentication Failures"
+          description: "Authentication failures exceed 20/minute for 3 minutes"
+
+      - alert: AccessViolations
+        expr: sum(rate(http_requests_total{job="sutazai-backend",code="403"}[5m])) * 60 > 50
+        for: 3m
+        labels:
+          severity: warning
+          team: security
+        annotations:
+          summary: "High Access Violations"
+          description: "Access violations exceed 50/minute for 3 minutes"
+
+      - alert: PotentialDDoS
+        expr: sum(rate(http_requests_total{job="sutazai-backend"}[1m])) > 5000
+        for: 1m
+        labels:
+          severity: critical
+          team: security
+        annotations:
+          summary: "Potential DDoS Attack"
+          description: "Request rate exceeds 5000/second for 1 minute"
+
+  - name: sutazai-business-alerts
+    rules:
+      - alert: LowServiceQuality
+        expr: (sum(rate(http_requests_total{job="sutazai-backend",code!~"5.."}[5m])) / sum(rate(http_requests_total{job="sutazai-backend"}[5m]))) * 100 < 95
+        for: 10m
+        labels:
+          severity: warning
+          team: business
+        annotations:
+          summary: "Service Quality Below SLA"
+          description: "Service quality is below 95% for 10 minutes"
+
+      - alert: AIAgentsDown
+        expr: sum(up{job=~"sutazai-.*agent.*"}) < 5
+        for: 5m
+        labels:
+          severity: warning
+          team: business
+        annotations:
+          summary: "AI Agents Insufficient"
+          description: "Less than 5 AI agents are active for 5 minutes"
+
+  - name: sutazai-cost-alerts
+    rules:
+      - alert: ResourceWastage
+        expr: ((sum(container_memory_usage_bytes{name=~"sutazai-.*"}) / sum(container_spec_memory_limit_bytes{name=~"sutazai-.*"})) * 100) < 30
+        for: 30m
+        labels:
+          severity: info
+          team: cost
+        annotations:
+          summary: "Low Resource Utilization"
+          description: "Resource utilization is below 30% for 30 minutes"
+
+      - alert: HighResourceUsage
+        expr: ((sum(container_memory_usage_bytes{name=~"sutazai-.*"}) / sum(container_spec_memory_limit_bytes{name=~"sutazai-.*"})) * 100) > 90
+        for: 15m
+        labels:
+          severity: warning
+          team: cost
+        annotations:
+          summary: "High Resource Utilization"
+          description: "Resource utilization is above 90% for 15 minutes"
+
+  - name: sutazai-ux-alerts
+    rules:
+      - alert: PoorUserExperience
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="sutazai-backend"}[5m])) by (le)) * 1000 > 500
+        for: 5m
+        labels:
+          severity: warning
+          team: ux
+        annotations:
+          summary: "Poor User Experience"
+          description: "95th percentile response time is above 500ms for 5 minutes"
+
+      - alert: SystemUnavailableUX
+        expr: avg(up{job=~"sutazai-.*"}) * 100 < 95
+        for: 2m
+        labels:
+          severity: critical
+          team: ux
+        annotations:
+          summary: "System Availability Impacting UX"
+          description: "System availability is below 95% affecting user experience"
+
+  - name: sutazai-capacity-alerts
+    rules:
+      - alert: CapacityThresholdCPU
+        expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m]))) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          team: capacity
+        annotations:
+          summary: "CPU Capacity Threshold Reached"
+          description: "CPU usage is above 80% for 10 minutes - scaling recommended"
+
+      - alert: CapacityThresholdMemory
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          team: capacity
+        annotations:
+          summary: "Memory Capacity Threshold Reached"
+          description: "Memory usage is above 80% for 10 minutes - scaling recommended"
+
+      - alert: StorageCapacityLow
+        expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100 > 80
+        for: 15m
+        labels:
+          severity: warning
+          team: capacity
+        annotations:
+          summary: "Storage Capacity Low"
+          description: "Storage usage is above 80% for 15 minutes - expansion recommended"

@@ -1,6 +1,6 @@
 """
-Unified Service Controller for AGI Brain
-Controls and manages all 31+ services through the AGI Brain interface
+Unified Service Controller for automation Coordinator
+Controls and manages all 31+ services through the automation Coordinator interface
 """
 
 import asyncio
@@ -45,7 +45,7 @@ class UnifiedServiceController:
             "crewai": {"port": 8096, "health": "/health", "type": "agent", "description": "Multi-Agent Collaboration"},
             "gpt-engineer": {"port": 8097, "health": "/health", "type": "agent", "description": "Full-Stack Code Generation"},
             "letta": {"port": None, "health": None, "type": "agent", "description": "Memory-Enhanced Agent"},
-            "localagi": {"port": 8115, "health": "/health", "type": "agent", "description": "Local AGI Implementation"},
+            "localagi": {"port": 8116, "health": "/health", "type": "agent", "description": "Local automation Implementation"},
             
             # Workflow & Automation
             "bigagi": {"port": 8106, "health": "/health", "type": "workflow", "description": "BigAGI Interface"},
@@ -55,8 +55,8 @@ class UnifiedServiceController:
             "n8n": {"port": 5678, "health": "/health", "type": "workflow", "description": "Workflow Automation Platform"},
             
             # Core Services
-            "backend-agi": {"port": 8000, "health": "/health", "type": "core", "description": "AGI Brain Backend"},
-            "frontend-agi": {"port": 8501, "health": "/health", "type": "core", "description": "Streamlit Frontend"},
+            "backend": {"port": 8000, "health": "/health", "type": "core", "description": "automation Coordinator Backend"},
+            "frontend": {"port": 8501, "health": "/health", "type": "core", "description": "Streamlit Frontend"},
             "health-monitor": {"port": 8100, "health": "/health", "type": "core", "description": "System Health Monitor"},
             "service-hub": {"port": 8114, "health": "/health", "type": "core", "description": "Service Hub Manager"},
             
@@ -71,7 +71,7 @@ class UnifiedServiceController:
             # ML/AI Frameworks
             "jax": {"port": 8089, "health": "/health", "type": "ml", "description": "JAX Machine Learning"},
             "llamaindex": {"port": 8098, "health": "/health", "type": "ml", "description": "LlamaIndex RAG"},
-            "ollama": {"port": 11434, "health": "/api/tags", "type": "ml", "description": "Local LLM Server"},
+            "ollama": {"port": 10104, "health": "/api/tags", "type": "ml", "description": "Local LLM Server"},
             "pytorch": {"port": 8888, "health": "/health", "type": "ml", "description": "PyTorch Framework"},
             "tensorflow": {"port": 8889, "health": "/health", "type": "ml", "description": "TensorFlow Framework"},
             
@@ -177,9 +177,9 @@ class UnifiedServiceController:
                 
         # Check for common aliases
         aliases = {
-            "brain": "backend-agi",
-            "frontend": "frontend-agi",
-            "ui": "frontend-agi",
+            "coordinator": "backend",
+            "frontend": "frontend",
+            "ui": "frontend",
             "vector": "chromadb",
             "graph": "neo4j",
             "cache": "redis",
@@ -246,11 +246,11 @@ class UnifiedServiceController:
     async def stop_service(self, service_name: str) -> Dict[str, Any]:
         """Stop a specific service"""
         # Protect critical services
-        if service_name in ["backend-agi", "frontend-agi", "ollama"]:
+        if service_name in ["backend", "frontend", "ollama"]:
             return {
                 "status": "warning",
                 "service": service_name,
-                "message": f"⚠️ Cannot stop critical service {service_name}. This would break the AGI Brain."
+                "message": f"⚠️ Cannot stop critical service {service_name}. This would break the automation Coordinator."
             }
             
         try:
@@ -656,7 +656,7 @@ class UnifiedServiceController:
                 cpu_usage = self._calculate_cpu_usage(stats)
                 
                 # Stop services with very low CPU usage (except critical ones)
-                if cpu_usage < 0.1 and name not in ["backend-agi", "frontend-agi", "ollama", "postgres", "redis"]:
+                if cpu_usage < 0.1 and name not in ["backend", "frontend", "ollama", "postgres", "redis"]:
                     try:
                         container.stop()
                         optimizations.append(f"Stopped idle service: {name}")

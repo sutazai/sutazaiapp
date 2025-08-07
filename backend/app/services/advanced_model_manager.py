@@ -201,7 +201,7 @@ class AdvancedModelManager(BaseService):
         """Warm up cache with priority models"""
         priority_models = [
             self.default_model,
-            getattr(settings, 'FALLBACK_MODEL', 'qwen2.5:3b'),
+            getattr(settings, 'FALLBACK_MODEL', 'tinyllama2.5:3b'),
             self.embedding_model
         ]
         
@@ -279,7 +279,7 @@ class AdvancedModelManager(BaseService):
         logger.info("Starting batch processors...")
         
         # Create batch processors for commonly used models
-        priority_models = [self.default_model, getattr(settings, 'FALLBACK_MODEL', 'qwen2.5:3b')]
+        priority_models = [self.default_model, getattr(settings, 'FALLBACK_MODEL', 'tinyllama2.5:3b')]
         
         for model_name in priority_models:
             if model_name not in self.batch_processors:

@@ -1,0 +1,332 @@
+# Vertical Pod Autoscaler configurations for SutazAI platform
+# VPA automatically adjusts CPU and memory requests based on actual usage
+
+---
+# Backend VPA - Critical component with wide resource range
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-backend-vpa
+  namespace: sutazai-core
+  labels:
+    app: sutazai-backend
+    component: vpa
+    tier: critical
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sutazai-backend
+  updatePolicy:
+    updateMode: "Auto" # Automatically restart pods with new resource requests
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-backend
+      minAllowed:
+        cpu: "1"
+        memory: "2Gi"
+      maxAllowed:
+        cpu: "8"
+        memory: "16Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Ollama VPA - AI inference engine
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-ollama-vpa
+  namespace: sutazai-core
+  labels:
+    app: sutazai-ollama
+    component: vpa
+    tier: critical
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-ollama
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-ollama
+      minAllowed:
+        cpu: "2"
+        memory: "4Gi"
+      maxAllowed:
+        cpu: "16"
+        memory: "32Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Frontend VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-frontend-vpa
+  namespace: sutazai-core
+  labels:
+    app: sutazai-frontend
+    component: vpa
+    tier: standard
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sutazai-frontend
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-frontend
+      minAllowed:
+        cpu: "0.5"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "4"
+        memory: "8Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# PostgreSQL VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-postgres-vpa
+  namespace: sutazai-infrastructure
+  labels:
+    app: sutazai-postgres
+    component: vpa
+    tier: data
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-postgres
+  updatePolicy:
+    updateMode: "Initial" # Only set on pod creation, not restart existing
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-postgres
+      minAllowed:
+        cpu: "1"
+        memory: "2Gi"
+      maxAllowed:
+        cpu: "8"
+        memory: "16Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Redis VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-redis-vpa
+  namespace: sutazai-infrastructure
+  labels:
+    app: sutazai-redis
+    component: vpa
+    tier: data
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-redis
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-redis
+      minAllowed:
+        cpu: "0.5"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "4"
+        memory: "8Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# ChromaDB VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-chromadb-vpa
+  namespace: sutazai-infrastructure
+  labels:
+    app: sutazai-chromadb
+    component: vpa
+    tier: data
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-chromadb
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-chromadb
+      minAllowed:
+        cpu: "1"
+        memory: "2Gi"
+      maxAllowed:
+        cpu: "8"
+        memory: "16Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Qdrant VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-qdrant-vpa
+  namespace: sutazai-infrastructure
+  labels:
+    app: sutazai-qdrant
+    component: vpa
+    tier: data
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-qdrant
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-qdrant
+      minAllowed:
+        cpu: "1"
+        memory: "2Gi"
+      maxAllowed:
+        cpu: "8"
+        memory: "16Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Agent Services VPA Template - AutoGPT
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-autogpt-vpa
+  namespace: sutazai-agents
+  labels:
+    app: sutazai-autogpt
+    component: vpa
+    tier: agent
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sutazai-autogpt
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-autogpt
+      minAllowed:
+        cpu: "0.5"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "4"
+        memory: "8Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Agent Services VPA Template - CrewAI
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-crewai-vpa
+  namespace: sutazai-agents
+  labels:
+    app: sutazai-crewai
+    component: vpa
+    tier: agent
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sutazai-crewai
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-crewai
+      minAllowed:
+        cpu: "0.5"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "6"
+        memory: "12Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Prometheus VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-prometheus-vpa
+  namespace: sutazai-monitoring
+  labels:
+    app: sutazai-prometheus
+    component: vpa
+    tier: monitoring
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: sutazai-prometheus
+  updatePolicy:
+    updateMode: "Initial" # Conservative for monitoring data
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-prometheus
+      minAllowed:
+        cpu: "1"
+        memory: "2Gi"
+      maxAllowed:
+        cpu: "8"
+        memory: "16Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits
+
+---
+# Grafana VPA
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: sutazai-grafana-vpa
+  namespace: sutazai-monitoring
+  labels:
+    app: sutazai-grafana
+    component: vpa
+    tier: monitoring
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sutazai-grafana
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: sutazai-grafana
+      minAllowed:
+        cpu: "0.5"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "4"
+        memory: "8Gi"
+      controlledResources: ["cpu", "memory"]
+      controlledValues: RequestsAndLimits

@@ -1,0 +1,439 @@
+# Prometheus Alerting Rules for Sutazai 69-Agent System
+# Implements comprehensive monitoring and alerting for resource-constrained environment
+
+groups:
+  - name: sutazai.system.resources
+    interval: 30s
+    rules:
+      - alert: SystemCPUHigh
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 85
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "System CPU usage is {{ $value }}% which exceeds the 85% threshold"
+          
+      - alert: SystemCPUWarning
+        expr: (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 75
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "CPU usage above warning threshold"
+          description: "System CPU usage is {{ $value }}% which exceeds the 75% warning threshold"
+          
+      - alert: SystemMemoryHigh
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "System memory usage is {{ $value }}% which exceeds the 90% threshold"
+          
+      - alert: SystemMemoryWarning
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Memory usage above warning threshold"
+          description: "System memory usage is {{ $value }}% which exceeds the 80% warning threshold"
+          
+      - alert: SystemDiskSpaceLow
+        expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Low disk space on root filesystem"
+          description: "Root filesystem usage is {{ $value }}% which exceeds the 90% threshold"
+
+  - name: sutazai.containers.resources
+    interval: 15s
+    rules:
+      - alert: ContainerCPUThrottling
+        expr: rate(container_cpu_cfs_throttled_seconds_total{name=~"sutazai-.*"}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} is being CPU throttled"
+          description: "Container {{ $labels.name }} has been CPU throttled {{ $value }} times per second over the last 5 minutes"
+          
+      - alert: ContainerMemoryUsageHigh
+        expr: (container_memory_usage_bytes{name=~"sutazai-.*"} / container_spec_memory_limit_bytes{name=~"sutazai-.*"}) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} memory usage is high"
+          description: "Container {{ $labels.name }} is using {{ $value }}% of its memory limit"
+          
+      - alert: ContainerMemoryUsageWarning
+        expr: (container_memory_usage_bytes{name=~"sutazai-.*"} / container_spec_memory_limit_bytes{name=~"sutazai-.*"}) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} memory usage is elevated"
+          description: "Container {{ $labels.name }} is using {{ $value }}% of its memory limit"
+          
+      - alert: ContainerRestartLoop
+        expr: rate(container_last_seen{name=~"sutazai-.*"}[10m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          component: container
+        annotations:
+          summary: "Container {{ $labels.name }} is in restart loop"
+          description: "Container {{ $labels.name }} has been restarting frequently"
+          
+      - alert: ContainerDown
+        expr: up{job="docker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: container
+        annotations:
+          summary: "Container monitoring is down"
+          description: "Docker daemon or container exporter is not responding"
+
+  - name: sutazai.agents.health
+    interval: 30s
+    rules:
+      - alert: AgentHealthCheckFailed
+        expr: up{job=~"sutazai-.*"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: agent
+          tier: "{{ $labels.sutazai_tier }}"
+        annotations:
+          summary: "Agent {{ $labels.job }} health check failed"
+          description: "Agent {{ $labels.job }} has failed health checks for 2 minutes"
+          
+      - alert: AgentResponseTimeHigh
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=~"sutazai-.*"}[5m])) > 5
+        for: 3m
+        labels:
+          severity: warning
+          component: agent
+        annotations:
+          summary: "Agent {{ $labels.job }} response time is high"
+          description: "95th percentile response time for {{ $labels.job }} is {{ $value }}s"
+          
+      - alert: AgentErrorRateHigh
+        expr: (rate(http_requests_total{job=~"sutazai-.*",status=~"5.."}[5m]) / rate(http_requests_total{job=~"sutazai-.*"}[5m])) * 100 > 5
+        for: 3m
+        labels:
+          severity: warning
+          component: agent
+        annotations:
+          summary: "Agent {{ $labels.job }} error rate is high"
+          description: "Agent {{ $labels.job }} has {{ $value }}% error rate over the last 5 minutes"
+          
+      - alert: TierCriticalAgentsDown
+        expr: count(up{job=~"sutazai-.*",sutazai_tier="critical"} == 0) > 2
+        for: 1m
+        labels:
+          severity: critical
+          component: tier
+          tier: critical
+        annotations:
+          summary: "Multiple critical tier agents are down"
+          description: "{{ $value }} critical tier agents are currently down"
+          
+      - alert: TierPerformanceAgentsDown
+        expr: count(up{job=~"sutazai-.*",sutazai_tier="performance"} == 0) > 5
+        for: 2m
+        labels:
+          severity: warning
+          component: tier
+          tier: performance
+        annotations:
+          summary: "Multiple performance tier agents are down"
+          description: "{{ $value }} performance tier agents are currently down"
+
+  - name: sutazai.infrastructure.health
+    interval: 30s
+    rules:
+      - alert: PostgreSQLDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "PostgreSQL database has been down for 1 minute"
+          
+      - alert: PostgreSQLConnectionsHigh
+        expr: pg_stat_database_numbackends{datname="sutazai"} > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL connection count is high"
+          description: "PostgreSQL has {{ $value }} active connections to sutazai database"
+          
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Redis cache is down"
+          description: "Redis cache has been down for 1 minute"
+          
+      - alert: RedisMemoryUsageHigh
+        expr: (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis is using {{ $value }}% of its allocated memory"
+          
+      - alert: Neo4jDown
+        expr: up{job="neo4j-exporter"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          component: graph-database
+        annotations:
+          summary: "Neo4j graph database is down"
+          description: "Neo4j graph database has been down for 2 minutes"
+          
+      - alert: ConsulDown
+        expr: up{job="consul"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: service-discovery
+        annotations:
+          summary: "Consul service discovery is down"
+          description: "Consul has been down for 1 minute - service discovery will be affected"
+          
+      - alert: KongDown
+        expr: up{job="kong"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: api-gateway
+        annotations:
+          summary: "Kong API gateway is down"
+          description: "Kong API gateway has been down for 1 minute"
+          
+      - alert: RabbitMQDown
+        expr: up{job="rabbitmq"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          component: message-queue
+        annotations:
+          summary: "RabbitMQ message queue is down"
+          description: "RabbitMQ has been down for 2 minutes"
+
+  - name: sutazai.performance.degradation
+    interval: 60s
+    rules:
+      - alert: SystemPerformanceDegraded
+        expr: |
+          (
+            (100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+            and
+            (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+          )
+        for: 5m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "System performance is degraded"
+          description: "Both CPU and memory usage are elevated indicating system stress"
+          
+      - alert: TooManyContainerRestarts
+        expr: rate(container_last_seen{name=~"sutazai-.*"}[1h]) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          component: stability
+        annotations:
+          summary: "High container restart rate detected"
+          description: "Container restart rate is {{ $value }} per second over the last hour"
+          
+      - alert: ResourcePoolSaturation
+        expr: |
+          (
+            count(up{job=~"sutazai-.*",sutazai_tier="critical"} == 1) / 15 > 0.9
+            or
+            count(up{job=~"sutazai-.*",sutazai_tier="performance"} == 1) / 25 > 0.9
+            or
+            count(up{job=~"sutazai-.*",sutazai_tier="specialized"} == 1) / 29 > 0.95
+          )
+        for: 5m
+        labels:
+          severity: warning
+          component: capacity
+        annotations:
+          summary: "Resource pool approaching saturation"
+          description: "One or more agent tiers are approaching maximum capacity"
+
+  - name: sutazai.predictive.alerts
+    interval: 120s
+    rules:
+      - alert: CPUTrendIncreasing
+        expr: predict_linear(node_cpu_seconds_total{mode="idle"}[1h], 3600) < 0.1
+        for: 10m
+        labels:
+          severity: warning
+          component: predictive
+        annotations:
+          summary: "CPU usage trend indicates potential exhaustion"
+          description: "Based on current trends, CPU may be exhausted within 1 hour"
+          
+      - alert: MemoryTrendIncreasing
+        expr: predict_linear(node_memory_MemAvailable_bytes[1h], 3600) < 1073741824
+        for: 10m
+        labels:
+          severity: warning
+          component: predictive
+        annotations:
+          summary: "Memory usage trend indicates potential exhaustion"
+          description: "Based on current trends, available memory may drop below 1GB within 1 hour"
+          
+      - alert: DiskFillRatePrediction
+        expr: predict_linear(node_filesystem_avail_bytes{mountpoint="/"}[2h], 24*3600) < 5368709120
+        for: 15m
+        labels:
+          severity: warning
+          component: predictive
+        annotations:
+          summary: "Disk space may be exhausted within 24 hours"
+          description: "Based on current usage trends, disk space may drop below 5GB within 24 hours"
+
+  - name: sutazai.security.alerts
+    interval: 60s
+    rules:
+      - alert: UnauthorizedAccessAttempt
+        expr: increase(kong_http_status{code=~"401|403"}[5m]) > 10
+        for: 2m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "Multiple unauthorized access attempts detected"
+          description: "{{ $value }} unauthorized access attempts in the last 5 minutes"
+          
+      - alert: RateLimitExceeded
+        expr: increase(kong_http_status{code="429"}[5m]) > 50
+        for: 2m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "Rate limit exceeded frequently"
+          description: "{{ $value }} requests were rate limited in the last 5 minutes"
+          
+      - alert: ContainerPrivilegeEscalation
+        expr: container_processes{name=~"sutazai-.*"} > 50
+        for: 5m
+        labels:
+          severity: critical
+          component: security
+        annotations:
+          summary: "Unusual process activity in container {{ $labels.name }}"
+          description: "Container {{ $labels.name }} has {{ $value }} processes running"
+
+  - name: sutazai.business.continuity
+    interval: 300s
+    rules:
+      - alert: CriticalServiceUnavailable
+        expr: |
+          (
+            up{job="postgres-exporter"} == 0
+            or
+            up{job="consul"} == 0
+            or
+            up{job="kong"} == 0
+          )
+        for: 2m
+        labels:
+          severity: critical
+          component: business-continuity
+        annotations:
+          summary: "Critical infrastructure service is unavailable"
+          description: "A critical infrastructure service is down - business continuity may be affected"
+          
+      - alert: AgentDeploymentStalled
+        expr: |
+          (
+            count(up{job=~"sutazai-.*"} == 1) < 30
+            and
+            time() - on() group_left() (node_boot_time_seconds) > 1800
+          )
+        for: 10m
+        labels:
+          severity: warning
+          component: deployment
+        annotations:
+          summary: "Agent deployment appears stalled"
+          description: "Only {{ $value }} agents are running 30 minutes after system start"
+          
+      - alert: SystemRecoveryRequired
+        expr: |
+          (
+            (100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+            or
+            (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 98
+          )
+        for: 1m
+        labels:
+          severity: critical
+          component: emergency
+        annotations:
+          summary: "System requires immediate recovery action"
+          description: "System resources are critically exhausted - emergency procedures may be required"
+
+# Recording rules for performance optimization
+  - name: sutazai.recording.rules
+    interval: 30s
+    rules:
+      - record: sutazai:system_cpu_usage_percent
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+        
+      - record: sutazai:system_memory_usage_percent
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+        
+      - record: sutazai:container_cpu_usage_percent
+        expr: rate(container_cpu_usage_seconds_total{name=~"sutazai-.*"}[5m]) * 100
+        
+      - record: sutazai:container_memory_usage_percent
+        expr: (container_memory_usage_bytes{name=~"sutazai-.*"} / container_spec_memory_limit_bytes{name=~"sutazai-.*"}) * 100
+        
+      - record: sutazai:tier_availability_percent
+        expr: |
+          (
+            count(up{job=~"sutazai-.*",sutazai_tier="critical"} == 1) / 15 * 100,
+            count(up{job=~"sutazai-.*",sutazai_tier="performance"} == 1) / 25 * 100,
+            count(up{job=~"sutazai-.*",sutazai_tier="specialized"} == 1) / 29 * 100
+          )
+        
+      - record: sutazai:agent_response_time_p95
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=~"sutazai-.*"}[5m]))
+        
+      - record: sutazai:agent_error_rate_percent
+        expr: (rate(http_requests_total{job=~"sutazai-.*",status=~"5.."}[5m]) / rate(http_requests_total{job=~"sutazai-.*"}[5m])) * 100

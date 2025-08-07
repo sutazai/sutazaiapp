@@ -4,31 +4,26 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus:9090
+    url: http://sutazai-prometheus:9090
     isDefault: true
-    
+    editable: true
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 60s
+      timeInterval: 15s
+
   - name: Loki
     type: loki
     access: proxy
     url: http://loki:3100
-    
-  - name: PostgreSQL
-    type: postgres
-    url: postgres:5432
-    database: sutazai
-    user: sutazai
-    secureJsonData:
-      password: ${POSTGRES_PASSWORD}
-      
-  - name: Redis
-    type: redis-datasource
-    url: redis:6379
-    secureJsonData:
-      password: ${REDIS_PASSWORD}
-      
-  - name: Neo4j
-    type: neo4j-datasource
-    url: neo4j:7687
-    user: neo4j
-    secureJsonData:
-      password: ${NEO4J_PASSWORD}
+    editable: true
+    jsonData:
+      maxLines: 1000
+
+  - name: Alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    editable: true
+    jsonData:
+      implementation: prometheus

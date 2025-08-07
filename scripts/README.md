@@ -22,6 +22,10 @@
 - **verification/** - Verification and validation scripts
 - **helpers/** - Helper utilities and fixes
 
+### 🔍 verification/
+- **verify-hygiene-monitoring-system.py** - Comprehensive hygiene monitoring system verification
+- **README_HYGIENE_VERIFICATION.md** - Hygiene verification documentation
+
 ### 📊 monitoring/
 - **health/** - Health check scripts
 - **logs/** - Log management tools
@@ -45,14 +49,14 @@
 
 ### System Deployment
 - `deployment/system/deploy_complete_system.sh` - Main deployment script
-- `deployment/system/start_tinyllama.sh` - Start system with TinyLlama
+- `deployment/system/start_tinyllama.sh` - Start system with tinyllama
 
 ### Agent Management
 - `agents/configuration/configure_all_agents.sh` - Configure all agents
-- `agents/management/update_agents_to_tinyllama.py` - Update agent models
+- `agents/management/update_agents_to_tinyllama.py` - Update agent models to tinyllama
 
 ### Verification
-- `utils/verification/verify_tinyllama_config.sh` - Verify TinyLlama setup
+- `utils/verification/verify_tinyllama_config.sh` - Verify tinyllama setup
 - `utils/verification/verify_litellm_removal.sh` - Verify LiteLLM removal
 
 ### Model Management

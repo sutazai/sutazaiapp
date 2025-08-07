@@ -1,0 +1,46 @@
+apiVersion: 1
+
+providers:
+  # SutazAI Core Dashboards
+  - name: 'sutazai-core'
+    orgId: 1
+    folder: 'SutazAI Core'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+
+  # SutazAI Agents Dashboards
+  - name: 'sutazai-agents'
+    orgId: 1
+    folder: 'SutazAI Agents'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+
+  # SutazAI Infrastructure Dashboards
+  - name: 'sutazai-infrastructure'
+    orgId: 1
+    folder: 'SutazAI Infrastructure'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+
+  # SutazAI Alerts Dashboards
+  - name: 'sutazai-alerts'
+    orgId: 1
+    folder: 'SutazAI Alerts'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards

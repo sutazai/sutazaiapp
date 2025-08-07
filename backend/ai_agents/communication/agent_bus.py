@@ -1,5 +1,5 @@
 """
-AGI Agent Communication Bus
+automation Agent Communication Bus
 ==========================
 
 High-performance, Redis-based communication system for 28+ AI agents
@@ -102,7 +102,7 @@ class AgentMessage:
 
 class AgentCommunicationBus:
     """
-    High-performance communication bus for AGI agents
+    High-performance communication bus for automation agents
     
     Features:
     - Priority-based message queuing

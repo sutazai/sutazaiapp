@@ -1,0 +1,503 @@
+{
+  "timestamp": "2025-08-03T00:06:37.700036",
+  "test_suite": "SutazAI Testing QA Validator",
+  "summary": {
+    "total_test_suites": 3,
+    "passed_suites": 0,
+    "failed_suites": 2,
+    "warning_suites": 1,
+    "total_individual_tests": 24,
+    "passed_individual_tests": 18,
+    "failed_individual_tests": 6,
+    "critical_issues": [
+      "Database connectivity issues detected",
+      "neo4j: Error: Couldn't connect to localhost:7687 (resolved to ('127.0.0.1:7687',)):\nFailed to read four byte Bolt handshake response from server ResolvedIPv4Address(('127.0.0.1', 7687)) (deadline Deadline(timeout=60.0))",
+      "chromadb: Error: {\"detail\":\"Not Found\"}",
+      "Container sutazai-postgres health issue",
+      "Container sutazai-redis health issue",
+      "Container sutazai-neo4j health issue",
+      "Container sutazai-chromadb health issue"
+    ],
+    "warnings": [
+      "Port conflict detected: Port 7687 has multiple listeners",
+      "Port conflict detected: Port 8001 has multiple listeners",
+      "Port conflict detected: Port 7474 has multiple listeners",
+      "Port conflict detected: Port 6379 has multiple listeners",
+      "Port conflict detected: Port 5432 has multiple listeners"
+    ],
+    "success_rate": 75.0
+  },
+  "detailed_results": {
+    "database_tests": {
+      "timestamp": "2025-08-02T23:45:08.765896",
+      "postgres": {
+        "status": "passed",
+        "tests": [
+          {
+            "name": "basic_connection",
+            "status": "passed",
+            "duration": 0.006005048751831055,
+            "message": "Connected successfully in 0.006s"
+          },
+          {
+            "name": "version_check",
+            "status": "passed",
+            "duration": 0.001,
+            "message": "PostgreSQL version: PostgreSQL 16.3 on x86_64-pc-linux-musl, compiled ..."
+          },
+          {
+            "name": "table_creation",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "Test table created successfully"
+          },
+          {
+            "name": "data_insertion",
+            "status": "passed",
+            "duration": 0.003,
+            "message": "Test record inserted with ID: 5"
+          },
+          {
+            "name": "data_query",
+            "status": "passed",
+            "duration": 0.001,
+            "message": "Query successful, 1 records in test table"
+          },
+          {
+            "name": "transaction_test",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "Transaction rollback successful"
+          }
+        ]
+      },
+      "redis": {
+        "status": "passed",
+        "tests": [
+          {
+            "name": "basic_connection",
+            "status": "passed",
+            "duration": 0.0015230178833007812,
+            "message": "Connected successfully in 0.002s"
+          },
+          {
+            "name": "server_info",
+            "status": "passed",
+            "duration": 0.001,
+            "message": "Redis version: 7.2.10"
+          },
+          {
+            "name": "set_get_operation",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "Set/Get operation successful for key: test_key_1754171108"
+          },
+          {
+            "name": "list_operations",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "List operations successful, length: 3"
+          },
+          {
+            "name": "hash_operations",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "Hash operations successful, retrieved: value1"
+          },
+          {
+            "name": "ttl_operations",
+            "status": "passed",
+            "duration": 0.002,
+            "message": "TTL operations successful, TTL: 60s"
+          }
+        ]
+      },
+      "neo4j": {
+        "status": "failed",
+        "tests": [
+          {
+            "name": "connection_error",
+            "status": "failed",
+            "duration": 0,
+            "message": "Error: Couldn't connect to localhost:7687 (resolved to ('127.0.0.1:7687',)):\nFailed to read four byte Bolt handshake response from server ResolvedIPv4Address(('127.0.0.1', 7687)) (deadline Deadline(timeout=60.0))"
+          }
+        ]
+      },
+      "chromadb": {
+        "status": "failed",
+        "tests": [
+          {
+            "name": "api_heartbeat",
+            "status": "passed",
+            "duration": 0.00786900520324707,
+            "message": "API heartbeat successful in 0.008s"
+          },
+          {
+            "name": "connection_error",
+            "status": "failed",
+            "duration": 0,
+            "message": "Error: {\"detail\":\"Not Found\"}"
+          }
+        ]
+      },
+      "overall": {
+        "status": "failed",
+        "success_rate": 86.66666666666667,
+        "total_tests": 15,
+        "passed_tests": 13,
+        "failed_tests": 2
+      }
+    },
+    "network_validation": {
+      "timestamp": 1754170873.4782023,
+      "port_availability": {
+        "5432": {
+          "service": "PostgreSQL",
+          "status": "open",
+          "accessible": true,
+          "response_time_ms": 0.07,
+          "message": "PostgreSQL port 5432 is accessible"
+        },
+        "6379": {
+          "service": "Redis",
+          "status": "open",
+          "accessible": true,
+          "response_time_ms": 0.04,
+          "message": "Redis port 6379 is accessible"
+        },
+        "7474": {
+          "service": "Neo4j HTTP",
+          "status": "open",
+          "accessible": true,
+          "response_time_ms": 0.04,
+          "message": "Neo4j HTTP port 7474 is accessible"
+        },
+        "7687": {
+          "service": "Neo4j Bolt",
+          "status": "open",
+          "accessible": true,
+          "response_time_ms": 0.06,
+          "message": "Neo4j Bolt port 7687 is accessible"
+        },
+        "8001": {
+          "service": "ChromaDB",
+          "status": "open",
+          "accessible": true,
+          "response_time_ms": 0.03,
+          "message": "ChromaDB port 8001 is accessible"
+        }
+      },
+      "port_conflicts": [
+        {
+          "port": 53,
+          "services": [
+            "tcp        0      0 10.255.255.254:53       0.0.0.0:*               LISTEN      -",
+            "tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      120/systemd-resolve"
+          ],
+          "severity": "high",
+          "message": "Port 53 has multiple listeners"
+        },
+        {
+          "port": 53,
+          "services": [
+            "tcp        0      0 10.255.255.254:53       0.0.0.0:*               LISTEN      -",
+            "tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      120/systemd-resolve"
+          ],
+          "severity": "high",
+          "message": "Port 53 has multiple listeners"
+        },
+        {
+          "port": 22,
+          "services": [
+            "tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1/init",
+            "tcp6       0      0 :::22                   :::*                    LISTEN      1/init"
+          ],
+          "severity": "high",
+          "message": "Port 22 has multiple listeners"
+        },
+        {
+          "port": 80,
+          "services": [
+            "tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      259/nginx: master p",
+            "tcp6       0      0 :::80                   :::*                    LISTEN      259/nginx: master p"
+          ],
+          "severity": "high",
+          "message": "Port 80 has multiple listeners"
+        },
+        {
+          "port": 7687,
+          "services": [
+            "tcp        0      0 0.0.0.0:7687            0.0.0.0:*               LISTEN      26103/docker-proxy",
+            "tcp6       0      0 :::7687                 :::*                    LISTEN      26111/docker-proxy"
+          ],
+          "severity": "high",
+          "message": "Port 7687 has multiple listeners"
+        },
+        {
+          "port": 8001,
+          "services": [
+            "tcp        0      0 0.0.0.0:8001            0.0.0.0:*               LISTEN      26766/docker-proxy",
+            "tcp6       0      0 :::8001                 :::*                    LISTEN      26773/docker-proxy"
+          ],
+          "severity": "high",
+          "message": "Port 8001 has multiple listeners"
+        },
+        {
+          "port": 7474,
+          "services": [
+            "tcp        0      0 0.0.0.0:7474            0.0.0.0:*               LISTEN      26088/docker-proxy",
+            "tcp6       0      0 :::7474                 :::*                    LISTEN      26094/docker-proxy"
+          ],
+          "severity": "high",
+          "message": "Port 7474 has multiple listeners"
+        },
+        {
+          "port": 6379,
+          "services": [
+            "tcp        0      0 0.0.0.0:6379            0.0.0.0:*               LISTEN      25597/docker-proxy",
+            "tcp6       0      0 :::6379                 :::*                    LISTEN      25604/docker-proxy"
+          ],
+          "severity": "high",
+          "message": "Port 6379 has multiple listeners"
+        },
+        {
+          "port": 5432,
+          "services": [
+            "tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN      25147/docker-proxy",
+            "tcp6       0      0 :::5432                 :::*                    LISTEN      25153/docker-proxy"
+          ],
+          "severity": "high",
+          "message": "Port 5432 has multiple listeners"
+        }
+      ],
+      "network_connectivity": {
+        "postgres": {
+          "status": "accessible",
+          "response_time_ms": 0.15,
+          "endpoint": "localhost:5432"
+        },
+        "redis": {
+          "status": "accessible",
+          "response_time_ms": 0.04,
+          "endpoint": "localhost:6379"
+        },
+        "neo4j_http": {
+          "status": "accessible",
+          "status_code": 200,
+          "response_time_ms": 56.88,
+          "endpoint": "http://localhost:7474/"
+        },
+        "neo4j_bolt": {
+          "status": "accessible",
+          "response_time_ms": 0.13,
+          "endpoint": "localhost:7687"
+        },
+        "chromadb": {
+          "status": "accessible",
+          "status_code": 200,
+          "response_time_ms": 4.65,
+          "endpoint": "http://localhost:8001/api/v1/heartbeat"
+        }
+      },
+      "docker_networking": {
+        "networks": [
+          {
+            "id": "cc1c15586df8",
+            "name": "bridge",
+            "driver": "bridge"
+          },
+          {
+            "id": "b8498846ae40",
+            "name": "host",
+            "driver": "host"
+          },
+          {
+            "id": "01cb0f448ed3",
+            "name": "none",
+            "driver": "null"
+          },
+          {
+            "id": "f95204fe7ab9",
+            "name": "sutazai-network",
+            "driver": "bridge"
+          },
+          {
+            "id": "c1a1646da97c",
+            "name": "sutazai_network",
+            "driver": "bridge"
+          }
+        ],
+        "network_count": 5,
+        "container_connectivity": {
+          "sutazai-postgres": {
+            "ip": null,
+            "status": "not_running",
+            "network_accessible": false
+          },
+          "sutazai-redis": {
+            "ip": null,
+            "status": "not_running",
+            "network_accessible": false
+          },
+          "sutazai-neo4j": {
+            "ip": null,
+            "status": "not_running",
+            "network_accessible": false
+          },
+          "sutazai-chromadb": {
+            "ip": null,
+            "status": "not_running",
+            "network_accessible": false
+          }
+        }
+      },
+      "overall_status": "warning"
+    },
+    "deployment_validation": {
+      "timestamp": "2025-08-02T23:43:42.994579",
+      "deployment_status": {
+        "docker_available": true,
+        "running_containers": [],
+        "stopped_containers": [],
+        "total_containers": 0,
+        "expected_containers": 4,
+        "all_containers_running": false,
+        "compose_file_exists": true,
+        "compose_status": "accessible"
+      },
+      "container_health": {
+        "sutazai-postgres": {
+          "status": "not_found",
+          "health": "not_found",
+          "accessible": false,
+          "error": "Error: No such object: sutazai-postgres"
+        },
+        "sutazai-redis": {
+          "status": "not_found",
+          "health": "not_found",
+          "accessible": false,
+          "error": "Error: No such object: sutazai-redis"
+        },
+        "sutazai-neo4j": {
+          "status": "not_found",
+          "health": "not_found",
+          "accessible": false,
+          "error": "Error: No such object: sutazai-neo4j"
+        },
+        "sutazai-chromadb": {
+          "status": "not_found",
+          "health": "not_found",
+          "accessible": false,
+          "error": "Error: No such object: sutazai-chromadb"
+        }
+      },
+      "log_analysis": {
+        "sutazai-postgres": {
+          "status": "error",
+          "error": "Error response from daemon: No such container: sutazai-postgres",
+          "log_lines": 0
+        },
+        "sutazai-redis": {
+          "status": "error",
+          "error": "Error response from daemon: No such container: sutazai-redis",
+          "log_lines": 0
+        },
+        "sutazai-neo4j": {
+          "status": "error",
+          "error": "Error response from daemon: No such container: sutazai-neo4j",
+          "log_lines": 0
+        },
+        "sutazai-chromadb": {
+          "status": "error",
+          "error": "Error response from daemon: No such container: sutazai-chromadb",
+          "log_lines": 0
+        }
+      },
+      "resource_usage": {
+        "memory": {
+          "total_bytes": 31542411264,
+          "used_bytes": 3795529728,
+          "available_bytes": 27746881536,
+          "usage_percent": 12.03
+        },
+        "cpu": {
+          "load_1min": 0.32,
+          "load_5min": 0.52,
+          "load_15min": 0.49
+        },
+        "disk": {
+          "total_kb": 1055762868,
+          "used_kb": 145676476,
+          "available_kb": 856382920,
+          "usage_percent": 15
+        }
+      },
+      "overall_status": "failed"
+    }
+  },
+  "recommendations": [
+    {
+      "category": "Database",
+      "priority": "High",
+      "issue": "Neo4j connection failed",
+      "recommendation": "Check neo4j service status, credentials, and network connectivity",
+      "action_items": [
+        "Verify neo4j container is running and healthy",
+        "Check neo4j logs for error messages",
+        "Validate neo4j configuration and credentials",
+        "Test neo4j connectivity from host system"
+      ]
+    },
+    {
+      "category": "Database",
+      "priority": "High",
+      "issue": "Chromadb connection failed",
+      "recommendation": "Check chromadb service status, credentials, and network connectivity",
+      "action_items": [
+        "Verify chromadb container is running and healthy",
+        "Check chromadb logs for error messages",
+        "Validate chromadb configuration and credentials",
+        "Test chromadb connectivity from host system"
+      ]
+    },
+    {
+      "category": "Network",
+      "priority": "Medium",
+      "issue": "Network connectivity issues detected",
+      "recommendation": "Review Docker networking and port configurations",
+      "action_items": [
+        "Check Docker network configuration",
+        "Verify port mappings are correct",
+        "Review firewall settings",
+        "Test inter-container communication"
+      ]
+    },
+    {
+      "category": "Security",
+      "priority": "High",
+      "issue": "Security hardening recommendations",
+      "recommendation": "Implement additional security measures",
+      "action_items": [
+        "Rotate default passwords and API keys",
+        "Enable SSL/TLS for all database connections",
+        "Implement network segmentation",
+        "Regular security vulnerability scans",
+        "Enable audit logging for all services"
+      ]
+    },
+    {
+      "category": "Monitoring",
+      "priority": "Medium",
+      "issue": "Comprehensive monitoring setup",
+      "recommendation": "Implement full observability stack",
+      "action_items": [
+        "Deploy Prometheus metrics collection",
+        "Set up Grafana dashboards",
+        "Configure alerting rules",
+        "Implement distributed tracing",
+        "Set up log aggregation and analysis"
+      ]
+    }
+  ],
+  "overall_assessment": "poor"
+}

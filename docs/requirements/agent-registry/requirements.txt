@@ -1,9 +1,0 @@
-fastapi>=0.115.6
-uvicorn==0.24.0
-redis==5.0.1
-pydantic==2.5.0
-sqlalchemy>=2.0.36
-asyncpg==0.29.0
-python-json-logger==2.0.7
-aiofiles==23.2.1
-requests>=2.32.3

@@ -1,18 +1,20 @@
 """
-Streaming API Endpoints for SutazAI
+Streaming API Endpoints for SutazAI with XSS Protection
 Provides real-time streaming responses using advanced model management
 """
 import asyncio
 import json
+import html
 from typing import Dict, List, Optional, Any
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 import logging
 from datetime import datetime
 
 from app.services.advanced_model_manager import AdvancedModelManager, StreamingResponse as ModelStreamingResponse
 from app.core.dependencies import get_advanced_model_manager
+from app.core.security import xss_protection
 
 logger = logging.getLogger(__name__)
 
@@ -20,23 +22,83 @@ router = APIRouter()
 
 
 class StreamingChatRequest(BaseModel):
-    """Streaming chat request model"""
+    """Streaming chat request model with XSS protection"""
     messages: List[Dict[str, str]] = Field(..., description="Chat messages")
     model: Optional[str] = Field(None, description="Model to use for generation")
     temperature: Optional[float] = Field(0.7, ge=0.0, le=2.0, description="Sampling temperature")
     max_tokens: Optional[int] = Field(2048, ge=1, le=8192, description="Maximum tokens to generate")
     top_p: Optional[float] = Field(0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     stream: bool = Field(True, description="Enable streaming")
+    
+    @validator('messages')
+    def validate_messages(cls, v):
+        """Validate and sanitize chat messages"""
+        if not v:
+            raise ValueError("Messages cannot be empty")
+        
+        sanitized_messages = []
+        for msg in v:
+            if not isinstance(msg, dict):
+                raise ValueError("Each message must be a dictionary")
+            
+            # Validate required fields
+            if 'role' not in msg or 'content' not in msg:
+                raise ValueError("Each message must have 'role' and 'content' fields")
+            
+            # Sanitize content
+            try:
+                sanitized_content = xss_protection.validator.validate_input(msg['content'], "chat_message")
+                sanitized_role = xss_protection.validator.validate_input(msg['role'], "text")
+                
+                sanitized_messages.append({
+                    'role': sanitized_role,
+                    'content': sanitized_content
+                })
+            except ValueError as e:
+                raise ValueError(f"Invalid message content: {str(e)}")
+        
+        return sanitized_messages
+    
+    @validator('model')
+    def validate_model(cls, v):
+        """Validate model name"""
+        if v is not None:
+            v = v.strip()
+            import re
+            if not re.match(r'^[a-zA-Z0-9._:-]+$', v):
+                raise ValueError("Invalid model name format")
+        return v
 
 
 class StreamingTextRequest(BaseModel):
-    """Streaming text generation request model"""
+    """Streaming text generation request model with XSS protection"""
     prompt: str = Field(..., description="Text prompt for generation")
     model: Optional[str] = Field(None, description="Model to use for generation")
     temperature: Optional[float] = Field(0.7, ge=0.0, le=2.0, description="Sampling temperature")
     max_tokens: Optional[int] = Field(2048, ge=1, le=8192, description="Maximum tokens to generate")
     top_p: Optional[float] = Field(0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     stream: bool = Field(True, description="Enable streaming")
+    
+    @validator('prompt')
+    def validate_prompt(cls, v):
+        """Validate and sanitize prompt"""
+        if not v or not v.strip():
+            raise ValueError("Prompt cannot be empty")
+        
+        try:
+            return xss_protection.validator.validate_input(v, "text")
+        except ValueError as e:
+            raise ValueError(f"Invalid prompt content: {str(e)}")
+    
+    @validator('model')
+    def validate_model(cls, v):
+        """Validate model name"""
+        if v is not None:
+            v = v.strip()
+            import re
+            if not re.match(r'^[a-zA-Z0-9._:-]+$', v):
+                raise ValueError("Invalid model name format")
+        return v
 
 
 class BatchRequest(BaseModel):
@@ -84,10 +146,18 @@ async def stream_chat(
                     max_tokens=request.max_tokens,
                     top_p=request.top_p
                 ):
+                    # Sanitize chunk content before streaming
+                    safe_content = chunk.chunk
+                    try:
+                        safe_content = xss_protection.validator.validate_input(chunk.chunk, "text")
+                    except ValueError:
+                        safe_content = "[Content filtered for security]"
+                        logger.warning("Streaming content blocked by XSS protection")
+                    
                     chunk_data = {
                         "type": "chunk",
                         "request_id": chunk.request_id,
-                        "content": chunk.chunk,
+                        "content": safe_content,
                         "is_final": chunk.is_final,
                         "metadata": chunk.metadata
                     }
@@ -157,10 +227,18 @@ async def stream_text(
                     max_tokens=request.max_tokens,
                     top_p=request.top_p
                 ):
+                    # Sanitize chunk content before streaming
+                    safe_content = chunk.chunk
+                    try:
+                        safe_content = xss_protection.validator.validate_input(chunk.chunk, "text")
+                    except ValueError:
+                        safe_content = "[Content filtered for security]"
+                        logger.warning("Text streaming content blocked by XSS protection")
+                    
                     chunk_data = {
                         "type": "chunk",
                         "request_id": chunk.request_id,
-                        "content": chunk.chunk,
+                        "content": safe_content,
                         "is_final": chunk.is_final,
                         "metadata": chunk.metadata
                     }

@@ -1,7 +1,10 @@
--- Create additional databases
-CREATE DATABASE vector_store;
-CREATE DATABASE agent_memory;
-CREATE DATABASE langflow;
+-- Create user and additional databases
+CREATE USER sutazai WITH PASSWORD 'sutazai_secure_2024' CREATEDB SUPERUSER;
+ALTER USER sutazai CREATEDB;
+
+CREATE DATABASE vector_store OWNER sutazai;
+CREATE DATABASE agent_memory OWNER sutazai;
+CREATE DATABASE langflow OWNER sutazai;
 
 -- Create extensions
 \c sutazai;

@@ -1,0 +1,71 @@
+apiVersion: 1
+
+datasources:
+  # Prometheus - Primary metrics source
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 15s
+      queryTimeout: 60s
+      httpMethod: GET
+    version: 1
+    editable: true
+
+  # Loki - Logs aggregation
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: jaeger
+          matcherRegex: "trace_id=(\\w+)"
+          name: TraceID
+          url: "$${__value.raw}"
+    version: 1
+    editable: true
+
+  # Jaeger - Distributed tracing
+  - name: Jaeger
+    type: jaeger
+    uid: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    jsonData:
+      tracesToLogs:
+        datasourceUid: 'loki'
+        tags: ['job', 'instance', 'pod', 'namespace']
+        mappedTags: [
+          { key: 'service.name', value: 'service' }
+        ]
+        mapTagNamesEnabled: true
+        spanStartTimeShift: '1h'
+        spanEndTimeShift: '1h'
+        filterByTraceID: true
+        filterBySpanID: true
+    version: 1
+    editable: true
+
+  # AlertManager - Alerts
+  - name: AlertManager
+    type: camptocamp-prometheus-alertmanager-datasource
+    access: proxy
+    url: http://alertmanager:9093
+    jsonData:
+      severity_critical: "critical"
+      severity_high: "warning" 
+      severity_warning: "warning"
+      severity_info: "info"
+    version: 1
+    editable: true
+
+  # TestData - For demo and testing
+  - name: TestData DB
+    type: testdata
+    access: direct
+    version: 1
+    editable: true

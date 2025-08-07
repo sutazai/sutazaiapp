@@ -1,0 +1,39 @@
+FROM nvidia/cuda:11.8-runtime-ubuntu20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python and system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.11 \
+    python3-pip \
+    python3.11-dev \
+    git \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic links
+RUN ln -s /usr/bin/python3.11 /usr/bin/python
+
+WORKDIR /app
+
+# Copy GPU-optimized requirements
+COPY gpu-requirements.txt .
+RUN pip install --no-cache-dir -r gpu-requirements.txt
+
+# Create user
+RUN groupadd -r gpuuser && useradd -r -g gpuuser gpuuser
+RUN chown -R gpuuser:gpuuser /app
+
+USER gpuuser
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

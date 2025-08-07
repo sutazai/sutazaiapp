@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     chromium \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Clone Skyvern
 RUN git clone https://github.com/Skyvern-AI/skyvern.git .
@@ -23,4 +23,10 @@ python -m skyvern.app --host 0.0.0.0 --port 8080\n\
 
 EXPOSE 8080
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["./start.sh"]

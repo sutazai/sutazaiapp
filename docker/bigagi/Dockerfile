@@ -21,4 +21,7 @@ npm start\n\
 
 EXPOSE 3000
 
+
+# Run as non-root user
+USER nobody
 CMD ["./start.sh"]

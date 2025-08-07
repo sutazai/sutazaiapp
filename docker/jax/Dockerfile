@@ -13,4 +13,7 @@ COPY web_interface.py .
 
 EXPOSE 8080
 
+
+# Run as non-root user
+USER nobody
 CMD ["python", "web_interface.py"]

@@ -1,0 +1,67 @@
+# Caddy configuration for Sutazai AI Platform
+
+:80 {
+    # Enable compression
+    encode gzip
+
+    # API Gateway routes
+    handle_path /ollama* {
+        reverse_proxy ollama:11434
+    }
+
+    handle_path /ai-runtime* {
+        reverse_proxy ai-runtime:8000
+    }
+
+    handle_path /langflow* {
+        reverse_proxy langflow:7860
+    }
+
+    handle_path /flowise* {
+        reverse_proxy flowise:3000
+    }
+
+    handle_path /n8n* {
+        reverse_proxy n8n:5678
+    }
+
+    handle_path /chromadb* {
+        reverse_proxy chromadb:8000
+    }
+
+    handle_path /qdrant* {
+        reverse_proxy qdrant:6333
+    }
+
+    handle_path /consul* {
+        reverse_proxy consul:8500
+    }
+
+    handle_path /rabbitmq* {
+        reverse_proxy rabbitmq:15672
+    }
+
+    handle_path /prometheus* {
+        reverse_proxy prometheus:9090
+    }
+
+    handle_path /grafana* {
+        reverse_proxy grafana:3000
+    }
+
+    # Default backend
+    handle {
+        reverse_proxy ai-runtime:8000
+    }
+
+    # Health check endpoint
+    handle /health {
+        respond "OK" 200
+    }
+
+    # Request logging
+    log {
+        output stdout
+        format console
+    }
+}

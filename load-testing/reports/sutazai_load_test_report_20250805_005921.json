@@ -1,0 +1,107 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "total_requests": 147617,
+    "successful_requests": 144643,
+    "overall_success_rate": 97.98532689324401,
+    "overall_error_rate": 2.014673106755997,
+    "test_duration_total": 572.2367808818817
+  },
+  "performance_metrics": {
+    "avg_response_time_ms": 48.9834542562823,
+    "max_response_time_ms": 79.78745913609298,
+    "avg_p95_response_time_ms": 268.11742782592773,
+    "max_throughput_rps": 708.7397023475955,
+    "avg_throughput_rps": 311.9555432145736
+  },
+  "breaking_points": [
+    {
+      "test": "Service Resilience Test",
+      "error_rate": 54.4289897510981,
+      "p95_response_time_ms": 241.91040992736816,
+      "requests_per_second": 90.40256170025292
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "Reliability",
+      "severity": "Critical",
+      "issue": "High error rate in 1 test(s)",
+      "recommendation": "Investigate error logs, improve error handling, add circuit breakers"
+    }
+  ],
+  "production_capacity": {
+    "max_requests_per_second": 708.7397023475955,
+    "estimated_daily_requests": 61235110.28283226,
+    "recommended_max_concurrent_users": 1417,
+    "current_avg_response_time_ms": 48.9834542562823,
+    "current_p95_response_time_ms": 268.11742782592773
+  },
+  "detailed_results": [
+    {
+      "test_name": "hygiene-backend - 100 users",
+      "duration_seconds": 60.289891958236694,
+      "total_requests": 23949,
+      "successful_requests": 23949,
+      "failed_requests": 0,
+      "avg_response_time_ms": 50.40391924346512,
+      "p95_response_time_ms": 266.51453971862793,
+      "requests_per_second": 397.2307665867053,
+      "error_rate_percent": 0.0,
+      "error_count": 0,
+      "unique_errors": 0
+    },
+    {
+      "test_name": "hygiene-backend - 200 users",
+      "duration_seconds": 60.31269288063049,
+      "total_requests": 42746,
+      "successful_requests": 42746,
+      "failed_requests": 0,
+      "avg_response_time_ms": 79.78745913609298,
+      "p95_response_time_ms": 324.84960556030273,
+      "requests_per_second": 708.7397023475955,
+      "error_rate_percent": 0.0,
+      "error_count": 0,
+      "unique_errors": 0
+    },
+    {
+      "test_name": "hygiene-backend - 50 users",
+      "duration_seconds": 300.4233286380768,
+      "total_requests": 60860,
+      "successful_requests": 60860,
+      "failed_requests": 0,
+      "avg_response_time_ms": 45.82375876025232,
+      "p95_response_time_ms": 249.8931646347046,
+      "requests_per_second": 202.58080581125142,
+      "error_rate_percent": 0.0,
+      "error_count": 0,
+      "unique_errors": 0
+    },
+    {
+      "test_name": "Spike Test (10->100->10 users)",
+      "duration_seconds": 90.77010226249695,
+      "total_requests": 14598,
+      "successful_requests": 14598,
+      "failed_requests": 0,
+      "avg_response_time_ms": 47.644288961993624,
+      "p95_response_time_ms": 257.41941928863525,
+      "requests_per_second": 160.82387962706292,
+      "error_rate_percent": 0.0,
+      "error_count": 0,
+      "unique_errors": 0
+    },
+    {
+      "test_name": "Service Resilience Test",
+      "duration_seconds": 60.440765142440796,
+      "total_requests": 5464,
+      "successful_requests": 2490,
+      "failed_requests": 2974,
+      "avg_response_time_ms": 21.257845179607457,
+      "p95_response_time_ms": 241.91040992736816,
+      "requests_per_second": 90.40256170025292,
+      "error_rate_percent": 54.4289897510981,
+      "error_count": 0,
+      "unique_errors": 0
+    }
+  ]
+}

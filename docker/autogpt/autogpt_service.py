@@ -39,8 +39,8 @@ class AutoGPTManager:
     def __init__(self):
         self.workspace = "/app/workspace"
         self.config = {
-            "ai_model": "llama3.2:1b",
-            "api_base": "http://ollama:11434/v1",
+            "ai_model": "tinyllama.2:1b",
+            "api_base": "http://ollama:10104/v1",
             "api_key": "local"
         }
         
@@ -74,10 +74,10 @@ class AutoGPTManager:
             # Set environment variables for local Ollama
             env = os.environ.copy()
             env.update({
-                "OPENAI_API_BASE": "http://ollama:11434/v1",
-                "OPENAI_API_KEY": "ollama",  # Ollama doesn't need real API key
+                "OPENAI_API_BASE": "http://ollama:10104/v1",
+                "OLLAMA_HOST": "http://ollama:10104,  # Ollama doesn't need real API key
                 "AUTOGPT_WORKSPACE": request.workspace,
-                "LLM_MODEL": "llama3.2:1b"
+                "LLM_MODEL": "tinyllama.2:1b"
             })
             
             # Change to autogpt classic directory

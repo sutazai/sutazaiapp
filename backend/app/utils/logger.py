@@ -1,5 +1,5 @@
 """
-Logger utility for SutazAI AGI/ASI System
+Logger utility for SutazAI automation/advanced automation System
 Provides structured logging with file and console output
 """
 

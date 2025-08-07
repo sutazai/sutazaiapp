@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dify Workflow Deployment Script for SutazAI AGI System
+Dify Workflow Deployment Script for SutazAI automation System
 Deploys and configures Dify workflows with full agent integration
 """
 
@@ -376,7 +376,7 @@ from typing import Dict, List, Optional
 
 class TaskRouter:
     def __init__(self):
-        self.redis_client = redis.Redis(host='redis', port=6379, password='redis_password')
+        self.redis_client = redis.Redis(host='redis', port=6379, password=os.getenv('REDIS_PASSWORD', 'redis_password'))
         self.agent_registry_url = "{self.agent_registry_base}"
         self.routing_config = {json.dumps(self.task_router_config, indent=8)}
         
@@ -467,7 +467,7 @@ if __name__ == "__main__":
       SECRET_KEY: ${SECRET_KEY:-sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U}
       AGENT_REGISTRY_URL: http://agent-registry:8300
       MESSAGE_BUS_URL: http://agent-message-bus:8299  
-      BACKEND_API_URL: http://backend-agi:8000
+      BACKEND_API_URL: http://backend:8000
       STORAGE_TYPE: local
       STORAGE_LOCAL_PATH: /app/storage
       WORKFLOW_CONFIG_PATH: /app/workflows
@@ -481,7 +481,7 @@ if __name__ == "__main__":
       - redis
       - agent-registry
       - agent-message-bus
-      - backend-agi
+      - backend
     networks:
       - sutazai-network
     restart: unless-stopped

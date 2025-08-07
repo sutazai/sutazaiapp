@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     docker.io \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Clone OpenDevin repository
 RUN git clone https://github.com/OpenDevin/OpenDevin.git . || mkdir -p /app
@@ -167,4 +167,10 @@ async def root():\n\
 
 EXPOSE 3000
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3000"]

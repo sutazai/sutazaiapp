@@ -1,0 +1,2540 @@
+{
+  "timestamp": "2025-08-02T15:32:27.097058",
+  "summary": {
+    "total_containers": 98,
+    "healthy": 78,
+    "unhealthy": 0,
+    "starting": 0,
+    "no_healthcheck": 20,
+    "not_running": 0,
+    "unknown": 0,
+    "containers_by_status": {
+      "healthy": [
+        "sutazai-deployment-automation-master",
+        "sutazai-senior-ai-engineer",
+        "sutazai-task-assignment-coordinator",
+        "sutazai-jarvis-voice-interface",
+        "sutazai-private-data-analyst",
+        "sutazai-document-knowledge-manager",
+        "sutazai-agentgpt-autonomous-executor",
+        "sutazai-langflow-workflow-designer",
+        "sutazai-model-training-specialist",
+        "sutazai-dify-automation-specialist",
+        "sutazai-quantum-computing-optimizer",
+        "sutazai-data-pipeline-engineer",
+        "sutazai-mcp-server",
+        "sutazai-code-improver",
+        "sutazai-semgrep-security-analyzer",
+        "sutazai-agentzero-coordinator",
+        "sutazai-federated-learning-coordinator",
+        "sutazai-opendevin-code-generator",
+        "sutazai-awesome-code-ai",
+        "sutazai-flowiseai-flow-manager",
+        "sutazai-symbolic-reasoning-engine",
+        "sutazai-knowledge-graph-builder",
+        "sutazai-intelligence-optimization-monitor",
+        "sutazai-observability-monitoring-engineer",
+        "sutazai-realtimestt",
+        "sutazai-meta-learning-specialist",
+        "sutazai-cognitive-architecture-designer",
+        "sutazai-reinforcement-learning-trainer",
+        "sutazai-bigagi-system-manager",
+        "sutazai-attention-optimizer",
+        "sutazai-distributed-computing-architect",
+        "sutazai-autogen",
+        "sutazai-product-strategy-architect",
+        "sutazai-finrobot",
+        "sutazai-litellm-proxy-manager",
+        "sutazai-health-monitor",
+        "sutazai-explainable-ai-specialist",
+        "sutazai-episodic-memory-engineer",
+        "sutazai-ai-agent-debugger",
+        "sutazai-transformers-migration-specialist",
+        "sutazai-knowledge-distillation-expert",
+        "sutazai-service-hub",
+        "sutazai-multi-modal-fusion-coordinator",
+        "sutazai-self-healing-orchestrator",
+        "sutazai-gradient-compression-specialist",
+        "sutazai-fsdp",
+        "sutazai-causal-inference-expert",
+        "sutazai-localagi-orchestration-manager",
+        "sutazai-memory-persistence-manager",
+        "sutazai-edge-computing-optimizer",
+        "sutazai-synthetic-data-generator",
+        "sutazai-garbage-collector-coordinator",
+        "sutazai-neuromorphic-computing-expert",
+        "sutazai-context-framework",
+        "sutazai-senior-frontend-developer",
+        "sutazai-senior-backend-developer",
+        "sutazai-ai-scrum-master",
+        "sutazai-browser-automation-orchestrator",
+        "sutazai-ai-product-manager",
+        "sutazai-data-analysis-engineer",
+        "sutazai-gpt-engineer",
+        "sutazai-devika",
+        "sutazai-crewai",
+        "sutazai-shellgpt",
+        "sutazai-letta",
+        "sutazai-privategpt",
+        "sutazai-autogpt",
+        "sutazai-babyagi",
+        "sutazai-agentgpt",
+        "sutazai-pentestgpt",
+        "sutazai-aider",
+        "sutazai-backend",
+        "sutazai-qdrant",
+        "sutazai-chromadb",
+        "sutazai-neo4j",
+        "sutazai-redis",
+        "sutazai-ollama",
+        "sutazai-postgres"
+      ],
+      "unhealthy": [],
+      "starting": [],
+      "no_healthcheck": [
+        "sutazai-complex-problem-solver",
+        "sutazai-kali-security-specialist",
+        "sutazai-financial-analysis-specialist",
+        "sutazai-security-pentesting-specialist",
+        "sutazai-infrastructure-devops-manager",
+        "sutazai-system-optimizer-reorganizer",
+        "sutazai-autonomous-system-controller",
+        "sutazai-ai-agent-orchestrator",
+        "sutazai-ollama-integration-specialist",
+        "sutazai-system-architect",
+        "sutazai-shell-automation-specialist",
+        "sutazai-ai-agent-creator",
+        "sutazai-testing-qa-validator",
+        "sutazai-context-optimization-engineer",
+        "sutazai-hardware-resource-optimizer",
+        "sutazai-frontend",
+        "sutazai-grafana",
+        "sutazai-prometheus",
+        "sutazai-n8n",
+        "buildx_buildkit_sutazai-builder0"
+      ],
+      "not_running": [],
+      "unknown": []
+    }
+  },
+  "detailed_results": {
+    "sutazai-deployment-automation-master": {
+      "container_name": "sutazai-deployment-automation-master",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8080/health"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 60000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.449835944+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   184    0   184    0     0   239k      0 --:--:-- --:--:-- --:--:--  179k\n{\"status\": \"healthy\", \"agent_name\": \"deployment-automation-master\", \"agent_type\": \"deployment-automation-master\", \"timestamp\": \"2025-08-02T15:32:02.485417\", \"uptime\": 727.112158536911}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.976147",
+      "overall_status": "healthy"
+    },
+    "sutazai-senior-ai-engineer": {
+      "container_name": "sutazai-senior-ai-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8080/health"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 60000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:31:56.324794532+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\": \"healthy\", \"agent_name\": \"senior-ai-engineer\", \"agent_type\": \"senior-ai-engineer\", \"timestamp\": \"2025-08-02T15:31:56.358827\", \"uptime\": 852.9410018920898}\r100   165    0   165    0     0   242k      0 --:--:-- --:--:-- --:--:--  161k\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.977687",
+      "overall_status": "healthy"
+    },
+    "sutazai-task-assignment-coordinator": {
+      "container_name": "sutazai-task-assignment-coordinator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8551/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.093101307+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    58  100    58    0     0  62365      0 --:--:-- --:--:-- --:--:-- 58000\n{\"status\":\"healthy\",\"agent\":\"task-assignment-coordinator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.979205",
+      "overall_status": "healthy"
+    },
+    "sutazai-jarvis-voice-interface": {
+      "container_name": "sutazai-jarvis-voice-interface",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8582/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.029062544+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    53  100    53    0     0  54695      0 --:--:-- --:--:-- --:--:-- 53000\n{\"status\":\"healthy\",\"agent\":\"jarvis-voice-interface\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.980111",
+      "overall_status": "healthy"
+    },
+    "sutazai-private-data-analyst": {
+      "container_name": "sutazai-private-data-analyst",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8548/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.147064601+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    51  100    51    0     0  51671      0 --:--:-- --:--:-- --:--:-- 51000\n{\"status\":\"healthy\",\"agent\":\"private-data-analyst\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.981306",
+      "overall_status": "healthy"
+    },
+    "sutazai-document-knowledge-manager": {
+      "container_name": "sutazai-document-knowledge-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8550/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:05.254544847+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"document-knowledge-manager\"}\r100    57  100    57    0     0  56435      0 --:--:-- --:--:-- --:--:-- 57000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.983129",
+      "overall_status": "healthy"
+    },
+    "sutazai-agentgpt-autonomous-executor": {
+      "container_name": "sutazai-agentgpt-autonomous-executor",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8585/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:05.564645015+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    59  100    59    0     0  65774      0 --:--:-- --:--:-- --:--:-- 59000\n{\"status\":\"healthy\",\"agent\":\"agentgpt-autonomous-executor\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.984443",
+      "overall_status": "healthy"
+    },
+    "sutazai-langflow-workflow-designer": {
+      "container_name": "sutazai-langflow-workflow-designer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8552/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.377572586+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    57  100    57    0     0  58762      0 --:--:-- --:--:-- --:--:-- 57000\n{\"status\":\"healthy\",\"agent\":\"langflow-workflow-designer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.985277",
+      "overall_status": "healthy"
+    },
+    "sutazai-model-training-specialist": {
+      "container_name": "sutazai-model-training-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8559/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.511605805+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r{\"status\":\"healthy\",\"agent\":\"model-training-specialist\"}100    56  100    56    0     0  65420      0 --:--:-- --:--:-- --:--:-- 56000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.986563",
+      "overall_status": "healthy"
+    },
+    "sutazai-dify-automation-specialist": {
+      "container_name": "sutazai-dify-automation-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8554/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.530749209+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    57  100    57    0     0  61889      0 --:--:-- --:--:-- --:--:-- 57000\n{\"status\":\"healthy\",\"agent\":\"dify-automation-specialist\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.987810",
+      "overall_status": "healthy"
+    },
+    "sutazai-quantum-computing-optimizer": {
+      "container_name": "sutazai-quantum-computing-optimizer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8563/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.882348141+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    58  100    58    0     0  64088      0 --:--:-- --:--:-- --:--:-- 58000\n{\"status\":\"healthy\",\"agent\":\"quantum-computing-optimizer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.988950",
+      "overall_status": "healthy"
+    },
+    "sutazai-data-pipeline-engineer": {
+      "container_name": "sutazai-data-pipeline-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8547/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.218649219+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    53  100    53    0     0  43371      0 --:--:-- --:--:-- --:--:-- 53000\n{\"status\":\"healthy\",\"agent\":\"data-pipeline-engineer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.990098",
+      "overall_status": "healthy"
+    },
+    "sutazai-mcp-server": {
+      "container_name": "sutazai-mcp-server",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8597/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.164264599+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"mcp-server\"}\r100    41  100    41    0     0  41247      0 --:--:-- --:--:-- --:--:-- 41000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.991084",
+      "overall_status": "healthy"
+    },
+    "sutazai-code-improver": {
+      "container_name": "sutazai-code-improver",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8593/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:09.306481716+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    44  100    44    0     0  46808      0 --:--:-- --:--:-- --:--:-- 44000\n{\"status\":\"healthy\",\"agent\":\"code-improver\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.991834",
+      "overall_status": "healthy"
+    },
+    "sutazai-semgrep-security-analyzer": {
+      "container_name": "sutazai-semgrep-security-analyzer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8557/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.844362453+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    56  100    56    0     0  58394      0 --:--:-- --:--:-- --:--:-- 56000\n{\"status\":\"healthy\",\"agent\":\"semgrep-security-analyzer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.992756",
+      "overall_status": "healthy"
+    },
+    "sutazai-agentzero-coordinator": {
+      "container_name": "sutazai-agentzero-coordinator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8586/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.156506043+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    52  100    52    0     0  54968      0 --:--:-- --:--:-- --:--:-- 52000\n{\"status\":\"healthy\",\"agent\":\"agentzero-coordinator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.993936",
+      "overall_status": "healthy"
+    },
+    "sutazai-federated-learning-coordinator": {
+      "container_name": "sutazai-federated-learning-coordinator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8564/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.316877158+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"federated-learning-coordinator\"}\r100    61  100    61    0     0  52495      0 --:--:-- --:--:-- --:--:-- 61000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.995088",
+      "overall_status": "healthy"
+    },
+    "sutazai-opendevin-code-generator": {
+      "container_name": "sutazai-opendevin-code-generator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8584/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.601895489+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    55  100    55    0     0  55443      0 --:--:-- --:--:-- --:--:-- 55000\n{\"status\":\"healthy\",\"agent\":\"opendevin-code-generator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.995853",
+      "overall_status": "healthy"
+    },
+    "sutazai-awesome-code-ai": {
+      "container_name": "sutazai-awesome-code-ai",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8595/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.681592918+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    46  100    46    0     0  49092      0 --:--:-- --:--:-- --:--:-- 46000\n{\"status\":\"healthy\",\"agent\":\"awesome-code-ai\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.996882",
+      "overall_status": "healthy"
+    },
+    "sutazai-flowiseai-flow-manager": {
+      "container_name": "sutazai-flowiseai-flow-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8553/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:09.307042658+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    53  100    53    0     0  53000      0 --:--:-- --:--:-- --:--:-- 53000\n{\"status\":\"healthy\",\"agent\":\"flowiseai-flow-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:26.998206",
+      "overall_status": "healthy"
+    },
+    "sutazai-symbolic-reasoning-engine": {
+      "container_name": "sutazai-symbolic-reasoning-engine",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8573/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.558652972+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"symbolic-reasoning-engine\"}\r100    56  100    56    0     0  54634      0 --:--:-- --:--:-- --:--:-- 56000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:26.999087",
+      "overall_status": "healthy"
+    },
+    "sutazai-knowledge-graph-builder": {
+      "container_name": "sutazai-knowledge-graph-builder",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8549/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.530727223+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"knowledge-graph-builder\"}\r100    54  100    54    0     0  60133      0 --:--:-- --:--:-- --:--:-- 54000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.000126",
+      "overall_status": "healthy"
+    },
+    "sutazai-intelligence-optimization-monitor": {
+      "container_name": "sutazai-intelligence-optimization-monitor",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8578/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:08.235740344+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    64  100    64    0     0  75205      0 --:--:-- --:--:-- --:--:-- 64000\n{\"status\":\"healthy\",\"agent\":\"intelligence-optimization-monitor\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.000988",
+      "overall_status": "healthy"
+    },
+    "sutazai-observability-monitoring-engineer": {
+      "container_name": "sutazai-observability-monitoring-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8580/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.282302377+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"observability-monitoring-engineer\"}\r100    64  100    64    0     0  61895      0 --:--:-- --:--:-- --:--:-- 64000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.002855",
+      "overall_status": "healthy"
+    },
+    "sutazai-realtimestt": {
+      "container_name": "sutazai-realtimestt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8592/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.00317024+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    42  100    42    0     0  20874      0 --:--:-- --:--:-- --:--:-- 42000\n{\"status\":\"healthy\",\"agent\":\"realtimestt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.003927",
+      "overall_status": "healthy"
+    },
+    "sutazai-meta-learning-specialist": {
+      "container_name": "sutazai-meta-learning-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8567/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.850476299+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    55  100    55    0     0  43103      0 --:--:-- --:--:-- --:--:-- 55000\n{\"status\":\"healthy\",\"agent\":\"meta-learning-specialist\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.005772",
+      "overall_status": "healthy"
+    },
+    "sutazai-cognitive-architecture-designer": {
+      "container_name": "sutazai-cognitive-architecture-designer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8572/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:09.306375199+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"cognitive-architecture-designer\"}\r100    62  100    62    0     0  52765      0 --:--:-- --:--:-- --:--:-- 62000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.006747",
+      "overall_status": "healthy"
+    },
+    "sutazai-reinforcement-learning-trainer": {
+      "container_name": "sutazai-reinforcement-learning-trainer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8565/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.640485586+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    61  100    61    0     0  69634      0 --:--:-- --:--:-- --:--:-- 61000\n{\"status\":\"healthy\",\"agent\":\"reinforcement-learning-trainer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.007658",
+      "overall_status": "healthy"
+    },
+    "sutazai-bigagi-system-manager": {
+      "container_name": "sutazai-bigagi-system-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8588/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.276075901+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    52  100    52    0     0  61032      0 --:--:-- --:--:-- --:--:-- 52000\n{\"status\":\"healthy\",\"agent\":\"bigagi-system-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.009244",
+      "overall_status": "healthy"
+    },
+    "sutazai-attention-optimizer": {
+      "container_name": "sutazai-attention-optimizer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8575/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.15412009+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    50  100    50    0     0  45578      0 --:--:-- --:--:-- --:--:-- 50000\n{\"status\":\"healthy\",\"agent\":\"attention-optimizer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.010529",
+      "overall_status": "healthy"
+    },
+    "sutazai-distributed-computing-architect": {
+      "container_name": "sutazai-distributed-computing-architect",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8561/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:08.406208009+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    62  100    62    0     0  62000      0 --:--:-- --:--:-- --:--:-- 62000\n{\"status\":\"healthy\",\"agent\":\"distributed-computing-architect\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.011359",
+      "overall_status": "healthy"
+    },
+    "sutazai-autogen": {
+      "container_name": "sutazai-autogen",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8590/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:05.716025402+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    38  100    38    0     0  35680      0 --:--:-- --:--:-- --:--:-- 38000\n{\"status\":\"healthy\",\"agent\":\"autogen\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.012190",
+      "overall_status": "healthy"
+    },
+    "sutazai-product-strategy-architect": {
+      "container_name": "sutazai-product-strategy-architect",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8579/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.325100145+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    57  100    57    0     0  58222      0 --:--:-- --:--:-- --:--:-- 57000\n{\"status\":\"healthy\",\"agent\":\"product-strategy-architect\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.013055",
+      "overall_status": "healthy"
+    },
+    "sutazai-finrobot": {
+      "container_name": "sutazai-finrobot",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8591/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.757676251+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    39  100    39    0     0  38883      0 --:--:-- --:--:-- --:--:-- 39000\n{\"status\":\"healthy\",\"agent\":\"finrobot\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.014068",
+      "overall_status": "healthy"
+    },
+    "sutazai-litellm-proxy-manager": {
+      "container_name": "sutazai-litellm-proxy-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8583/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.948299948+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    52  100    52    0     0  61176      0 --:--:-- --:--:-- --:--:-- 52000\n{\"status\":\"healthy\",\"agent\":\"litellm-proxy-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.015550",
+      "overall_status": "healthy"
+    },
+    "sutazai-health-monitor": {
+      "container_name": "sutazai-health-monitor",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8598/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.00316288+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"health-monitor\"}\r100    45  100    45    0     0  33532      0 --:--:-- --:--:-- --:--:-- 45000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.016588",
+      "overall_status": "healthy"
+    },
+    "sutazai-explainable-ai-specialist": {
+      "container_name": "sutazai-explainable-ai-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8568/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.154232568+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    56  100    56    0     0  42682      0 --:--:-- --:--:-- --:--:-- 56000\n{\"status\":\"healthy\",\"agent\":\"explainable-ai-specialist\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.018165",
+      "overall_status": "healthy"
+    },
+    "sutazai-episodic-memory-engineer": {
+      "container_name": "sutazai-episodic-memory-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8574/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.50150375+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    55  100    55    0     0  24774      0 --:--:-- --:--:-- --:--:-- 27500\n{\"status\":\"healthy\",\"agent\":\"episodic-memory-engineer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.019446",
+      "overall_status": "healthy"
+    },
+    "sutazai-ai-agent-debugger": {
+      "container_name": "sutazai-ai-agent-debugger",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8581/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:08.70813378+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"ai-agent-debugger\"}\r100    48  100    48    0     0  50739      0 --:--:-- --:--:-- --:--:-- 48000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.020799",
+      "overall_status": "healthy"
+    },
+    "sutazai-transformers-migration-specialist": {
+      "container_name": "sutazai-transformers-migration-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8558/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.782370615+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    64  100    64    0     0  54008      0 --:--:-- --:--:-- --:--:-- 64000\n{\"status\":\"healthy\",\"agent\":\"transformers-migration-specialist\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.022917",
+      "overall_status": "healthy"
+    },
+    "sutazai-knowledge-distillation-expert": {
+      "container_name": "sutazai-knowledge-distillation-expert",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8570/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:08.406662434+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    60  100    60    0     0  59171      0 --:--:-- --:--:-- --:--:-- 60000\n{\"status\":\"healthy\",\"agent\":\"knowledge-distillation-expert\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.023775",
+      "overall_status": "healthy"
+    },
+    "sutazai-service-hub": {
+      "container_name": "sutazai-service-hub",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8594/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.378464924+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"service-hub\"}\r100    42  100    42    0     0  45602      0 --:--:-- --:--:-- --:--:-- 42000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.024558",
+      "overall_status": "healthy"
+    },
+    "sutazai-multi-modal-fusion-coordinator": {
+      "container_name": "sutazai-multi-modal-fusion-coordinator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8571/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.643340803+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    61  100    61    0     0  61740      0 --:--:-- --:--:-- --:--:-- 61000\n{\"status\":\"healthy\",\"agent\":\"multi-modal-fusion-coordinator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.025736",
+      "overall_status": "healthy"
+    },
+    "sutazai-self-healing-orchestrator": {
+      "container_name": "sutazai-self-healing-orchestrator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8577/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.873943381+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    56  100    56    0     0  57259      0 --:--:-- --:--:-- --:--:-- 56000\n{\"status\":\"healthy\",\"agent\":\"self-healing-orchestrator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.026987",
+      "overall_status": "healthy"
+    },
+    "sutazai-gradient-compression-specialist": {
+      "container_name": "sutazai-gradient-compression-specialist",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8576/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.378567135+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    62  100    62    0     0  71100      0 --:--:-- --:--:-- --:--:-- 62000\n{\"status\":\"healthy\",\"agent\":\"gradient-compression-specialist\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.028446",
+      "overall_status": "healthy"
+    },
+    "sutazai-fsdp": {
+      "container_name": "sutazai-fsdp",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8596/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:05.259936955+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    35  100    35    0     0  41617      0 --:--:-- --:--:-- --:--:-- 35000\n{\"status\":\"healthy\",\"agent\":\"fsdp\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.029647",
+      "overall_status": "healthy"
+    },
+    "sutazai-causal-inference-expert": {
+      "container_name": "sutazai-causal-inference-expert",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8566/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.511589353+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    54  100    54    0     0  57324      0 --:--:-- --:--:-- --:--:-- 54000\n{\"status\":\"healthy\",\"agent\":\"causal-inference-expert\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.030749",
+      "overall_status": "healthy"
+    },
+    "sutazai-localagi-orchestration-manager": {
+      "container_name": "sutazai-localagi-orchestration-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8587/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.029226683+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    61  100    61    0     0  63607      0 --:--:-- --:--:-- --:--:-- 61000\n{\"status\":\"healthy\",\"agent\":\"localagi-orchestration-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.032384",
+      "overall_status": "healthy"
+    },
+    "sutazai-memory-persistence-manager": {
+      "container_name": "sutazai-memory-persistence-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8555/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.681584358+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    57  100    57    0     0  54860      0 --:--:-- --:--:-- --:--:-- 57000\n{\"status\":\"healthy\",\"agent\":\"memory-persistence-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.034296",
+      "overall_status": "healthy"
+    },
+    "sutazai-edge-computing-optimizer": {
+      "container_name": "sutazai-edge-computing-optimizer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8560/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.640382092+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    55  100    55    0     0  66505      0 --:--:-- --:--:-- --:--:-- 55000\n{\"status\":\"healthy\",\"agent\":\"edge-computing-optimizer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.035773",
+      "overall_status": "healthy"
+    },
+    "sutazai-synthetic-data-generator": {
+      "container_name": "sutazai-synthetic-data-generator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8569/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.558652694+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    55  100    55    0     0  52132      0 --:--:-- --:--:-- --:--:-- 55000\n{\"status\":\"healthy\",\"agent\":\"synthetic-data-generator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.036776",
+      "overall_status": "healthy"
+    },
+    "sutazai-garbage-collector-coordinator": {
+      "container_name": "sutazai-garbage-collector-coordinator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8556/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:07.615601777+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    60  100    60    0     0  63091      0 --:--:-- --:--:-- --:--:-- 60000\n{\"status\":\"healthy\",\"agent\":\"garbage-collector-coordinator\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.038050",
+      "overall_status": "healthy"
+    },
+    "sutazai-neuromorphic-computing-expert": {
+      "container_name": "sutazai-neuromorphic-computing-expert",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8562/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:06.782332745+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"neuromorphic-computing-expert\"}\r100    60  100    60    0     0  46118      0 --:--:-- --:--:-- --:--:-- 60000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.038869",
+      "overall_status": "healthy"
+    },
+    "sutazai-context-framework": {
+      "container_name": "sutazai-context-framework",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8589/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.643326309+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    48  100    48    0     0  47384      0 --:--:-- --:--:-- --:--:-- 48000\n{\"status\":\"healthy\",\"agent\":\"context-framework\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.039664",
+      "overall_status": "healthy"
+    },
+    "sutazai-senior-frontend-developer": {
+      "container_name": "sutazai-senior-frontend-developer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8542/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.017699741+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    56  100    56    0     0  51235      0 --:--:-- --:--:-- --:--:-- 56000\n{\"status\":\"healthy\",\"agent\":\"senior-frontend-developer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.040558",
+      "overall_status": "healthy"
+    },
+    "sutazai-senior-backend-developer": {
+      "container_name": "sutazai-senior-backend-developer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8541/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.874066219+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"senior-backend-developer\"}\r100    55  100    55    0     0  66265      0 --:--:-- --:--:-- --:--:-- 55000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.041354",
+      "overall_status": "healthy"
+    },
+    "sutazai-ai-scrum-master": {
+      "container_name": "sutazai-ai-scrum-master",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8546/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.153398927+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    46  100    46    0     0  29132      0 --:--:-- --:--:-- --:--:-- 46000\n{\"status\":\"healthy\",\"agent\":\"ai-scrum-master\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.043979",
+      "overall_status": "healthy"
+    },
+    "sutazai-browser-automation-orchestrator": {
+      "container_name": "sutazai-browser-automation-orchestrator",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8544/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.9939296+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"browser-automation-orchestrator\"}\r100    62  100    62    0     0  30288      0 --:--:-- --:--:-- --:--:-- 31000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.045764",
+      "overall_status": "healthy"
+    },
+    "sutazai-ai-product-manager": {
+      "container_name": "sutazai-ai-product-manager",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8545/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.581285235+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    49  100    49    0     0  45623      0 --:--:-- --:--:-- --:--:-- 49000\n{\"status\":\"healthy\",\"agent\":\"ai-product-manager\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.047305",
+      "overall_status": "healthy"
+    },
+    "sutazai-data-analysis-engineer": {
+      "container_name": "sutazai-data-analysis-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8543/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.388306668+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    53  100    53    0     0  20923      0 --:--:-- --:--:-- --:--:-- 26500\n{\"status\":\"healthy\",\"agent\":\"data-analysis-engineer\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.049313",
+      "overall_status": "healthy"
+    },
+    "sutazai-gpt-engineer": {
+      "container_name": "sutazai-gpt-engineer",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8536/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.156395058+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"gpt-engineer\"}\r100    43  100    43    0     0  51008      0 --:--:-- --:--:-- --:--:-- 43000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.051437",
+      "overall_status": "healthy"
+    },
+    "sutazai-devika": {
+      "container_name": "sutazai-devika",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8537/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.316259568+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    37  100    37    0     0  38183      0 --:--:-- --:--:-- --:--:-- 37000\n{\"status\":\"healthy\",\"agent\":\"devika\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.052712",
+      "overall_status": "healthy"
+    },
+    "sutazai-crewai": {
+      "container_name": "sutazai-crewai",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8533/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.662286787+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    37  100    37    0     0  35204      0 --:--:-- --:--:-- --:--:-- 37000\n{\"status\":\"healthy\",\"agent\":\"crewai\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.054870",
+      "overall_status": "healthy"
+    },
+    "sutazai-shellgpt": {
+      "container_name": "sutazai-shellgpt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8539/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.315562968+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    39  100    39    0     0  34240      0 --:--:-- --:--:-- --:--:-- 39000\n{\"status\":\"healthy\",\"agent\":\"shellgpt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.055725",
+      "overall_status": "healthy"
+    },
+    "sutazai-letta": {
+      "container_name": "sutazai-letta",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8534/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:04.154303224+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    36  100    36    0     0  22900      0 --:--:-- --:--:-- --:--:-- 36000\n{\"status\":\"healthy\",\"agent\":\"letta\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.056731",
+      "overall_status": "healthy"
+    },
+    "sutazai-privategpt": {
+      "container_name": "sutazai-privategpt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8538/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.304176447+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    41  100    41    0     0  36251      0 --:--:-- --:--:-- --:--:-- 41000\n{\"status\":\"healthy\",\"agent\":\"privategpt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.057873",
+      "overall_status": "healthy"
+    },
+    "sutazai-autogpt": {
+      "container_name": "sutazai-autogpt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8530/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.662266859+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    38  100    38    0     0  38894      0 --:--:-- --:--:-- --:--:-- 38000\n{\"status\":\"healthy\",\"agent\":\"autogpt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.059018",
+      "overall_status": "healthy"
+    },
+    "sutazai-babyagi": {
+      "container_name": "sutazai-babyagi",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8532/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.156872881+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"babyagi\"}\r100    38  100    38    0     0  40511      0 --:--:-- --:--:-- --:--:-- 38000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.059896",
+      "overall_status": "healthy"
+    },
+    "sutazai-agentgpt": {
+      "container_name": "sutazai-agentgpt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8531/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.015815421+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    39  100    39    0     0  18258      0 --:--:-- --:--:-- --:--:-- 19500\n{\"status\":\"healthy\",\"agent\":\"agentgpt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.061300",
+      "overall_status": "healthy"
+    },
+    "sutazai-pentestgpt": {
+      "container_name": "sutazai-pentestgpt",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8540/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:03.406574508+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    41  100    41    0     0  22714      0 --:--:-- --:--:-- --:--:-- 41000\n{\"status\":\"healthy\",\"agent\":\"pentestgpt\"}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.062138",
+      "overall_status": "healthy"
+    },
+    "sutazai-aider": {
+      "container_name": "sutazai-aider",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8535/health || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 5000000000,
+        "Retries": 3
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:02.994951382+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0{\"status\":\"healthy\",\"agent\":\"aider\"}\r100    36  100    36    0     0  29173      0 --:--:-- --:--:-- --:--:-- 36000\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.063004",
+      "overall_status": "healthy"
+    },
+    "sutazai-complex-problem-solver": {
+      "container_name": "sutazai-complex-problem-solver",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.064332",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-kali-security-specialist": {
+      "container_name": "sutazai-kali-security-specialist",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.065518",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-financial-analysis-specialist": {
+      "container_name": "sutazai-financial-analysis-specialist",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.067272",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-security-pentesting-specialist": {
+      "container_name": "sutazai-security-pentesting-specialist",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.068886",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-infrastructure-devops-manager": {
+      "container_name": "sutazai-infrastructure-devops-manager",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.070316",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-system-optimizer-reorganizer": {
+      "container_name": "sutazai-system-optimizer-reorganizer",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.072124",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-autonomous-system-controller": {
+      "container_name": "sutazai-autonomous-system-controller",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.073017",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-ai-agent-orchestrator": {
+      "container_name": "sutazai-ai-agent-orchestrator",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.074417",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-ollama-integration-specialist": {
+      "container_name": "sutazai-ollama-integration-specialist",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.075798",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-system-architect": {
+      "container_name": "sutazai-system-architect",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.077273",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-shell-automation-specialist": {
+      "container_name": "sutazai-shell-automation-specialist",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.079112",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-ai-agent-creator": {
+      "container_name": "sutazai-ai-agent-creator",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.080719",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-testing-qa-validator": {
+      "container_name": "sutazai-testing-qa-validator",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.081599",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-context-optimization-engineer": {
+      "container_name": "sutazai-context-optimization-engineer",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.083017",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-hardware-resource-optimizer": {
+      "container_name": "sutazai-hardware-resource-optimizer",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {
+        "endpoint_accessible": false,
+        "error": "Connection refused"
+      },
+      "timestamp": "2025-08-02T15:32:27.084275",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-backend": {
+      "container_name": "sutazai-backend",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8000/health"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 60000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:13.757432777+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100   656  100   656    0     0    851      0 --:--:-- --:--:-- --:--:--   851\n{\"status\":\"healthy\",\"service\":\"sutazai-backend\",\"version\":\"17.0.0\",\"enterprise_features\":false,\"timestamp\":\"2025-08-02T15:32:14.367587\",\"gpu_available\":false,\"services\":{\"ollama\":\"connected\",\"chromadb\":\"connected\",\"qdrant\":\"connected\",\"database\":\"connected\",\"redis\":\"connected\",\"models\":{\"status\":\"available\",\"loaded_count\":2},\"agents\":{\"status\":\"active\",\"active_count\":5,\"orchestration_active\":false},\"processing_engine\":{\"status\":\"inactive\",\"system_state_active\":false},\"self_improvement\":{\"status\":\"inactive\",\"last_analysis\":null}},\"system\":{\"cpu_percent\":10.3,\"memory_percent\":68.4,\"memory_used_gb\":10.35,\"memory_total_gb\":15.62,\"gpu_available\":false}}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.085251",
+      "overall_status": "healthy"
+    },
+    "sutazai-qdrant": {
+      "container_name": "sutazai-qdrant",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD",
+          "sh",
+          "-c",
+          "echo 'use IO::Socket::INET; my $s = IO::Socket::INET->new(PeerAddr => q{localhost:6333}, Proto => q{tcp}, Timeout => 2); if ($s) { print $s qq{GET / HTTP/1.0\\r\\n\\r\\n}; while (<$s>) { if (/200 OK/) { exit 0; } } } exit 1;' | perl"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:26.828930134+02:00",
+        "last_output": "",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.086127",
+      "overall_status": "healthy"
+    },
+    "sutazai-chromadb": {
+      "container_name": "sutazai-chromadb",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8000/api/v1/heartbeat"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:24.501434655+02:00",
+        "last_output": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\r  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\r100    44  100    44    0     0  21062      0 --:--:-- --:--:-- --:--:-- 22000\n{\"nanosecond heartbeat\":1754148744539253217}",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.087055",
+      "overall_status": "healthy"
+    },
+    "sutazai-neo4j": {
+      "container_name": "sutazai-neo4j",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "echo 'Neo4j ready'"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 60000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:25.753766995+02:00",
+        "last_output": "Neo4j ready\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.087879",
+      "overall_status": "healthy"
+    },
+    "sutazai-redis": {
+      "container_name": "sutazai-redis",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "redis-cli -a redis_password ping"
+        ],
+        "Interval": 10000000000,
+        "Timeout": 5000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:24.946198317+02:00",
+        "last_output": "Warning: Using a password with '-a' or '-u' option on the command line interface may not be safe.\nPONG\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.088735",
+      "overall_status": "healthy"
+    },
+    "sutazai-ollama": {
+      "container_name": "sutazai-ollama",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "ollama list > /dev/null || exit 1"
+        ],
+        "Interval": 30000000000,
+        "Timeout": 10000000000,
+        "StartPeriod": 60000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:01.952660115+02:00",
+        "last_output": "",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.089554",
+      "overall_status": "healthy"
+    },
+    "sutazai-postgres": {
+      "container_name": "sutazai-postgres",
+      "running": true,
+      "has_healthcheck": true,
+      "healthcheck_config": {
+        "Test": [
+          "CMD-SHELL",
+          "pg_isready -U sutazai"
+        ],
+        "Interval": 10000000000,
+        "Timeout": 5000000000,
+        "StartPeriod": 30000000000,
+        "Retries": 5
+      },
+      "health_status": {
+        "status": "healthy",
+        "failing_streak": 0,
+        "last_check": "2025-08-02T17:32:22.595001387+02:00",
+        "last_output": "/var/run/postgresql:5432 - accepting connections\n",
+        "exit_code": 0
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.090658",
+      "overall_status": "healthy"
+    },
+    "sutazai-frontend": {
+      "container_name": "sutazai-frontend",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.091900",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-grafana": {
+      "container_name": "sutazai-grafana",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.093168",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-prometheus": {
+      "container_name": "sutazai-prometheus",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.094134",
+      "overall_status": "no_healthcheck"
+    },
+    "sutazai-n8n": {
+      "container_name": "sutazai-n8n",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.095707",
+      "overall_status": "no_healthcheck"
+    },
+    "buildx_buildkit_sutazai-builder0": {
+      "container_name": "buildx_buildkit_sutazai-builder0",
+      "running": true,
+      "has_healthcheck": false,
+      "healthcheck_config": {},
+      "health_status": {
+        "status": "none",
+        "failing_streak": 0,
+        "last_check": "Never",
+        "last_output": "",
+        "exit_code": -1
+      },
+      "endpoint_test": {},
+      "timestamp": "2025-08-02T15:32:27.096702",
+      "overall_status": "no_healthcheck"
+    }
+  }
+}

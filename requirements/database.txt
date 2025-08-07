@@ -1,0 +1,16 @@
+# SutazAI Database Requirements - Consolidated 2025-08-03
+# Database and storage dependencies
+
+# SQL Databases
+sqlalchemy>=2.0.36
+alembic>=1.14.0
+psycopg2-binary>=2.9.10
+
+# NoSQL & Cache
+redis>=5.2.1
+pymongo>=4.8.0
+neo4j>=5.27.0
+
+# Async Processing
+celery>=5.4.0
+aiofiles>=24.1.0

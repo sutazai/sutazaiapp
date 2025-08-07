@@ -1,0 +1,385 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-metrics-exporter-config
+  namespace: sutazai
+data:
+  exporter.py: |
+    #!/usr/bin/env python3
+    """
+    AI Metrics Exporter for SutazAI
+    Exports custom metrics for AI workloads to Prometheus
+    """
+    import asyncio
+    import os
+    import time
+    from typing import Dict, List
+    import aiohttp
+    from prometheus_client import start_http_server, Gauge, Counter, Histogram, Info
+    
+    # Metrics definitions
+    ai_model_info = Info('sutazai_ai_model', 'Information about loaded AI models')
+    inference_requests_total = Counter(
+        'sutazai_inference_requests_total',
+        'Total AI inference requests',
+        ['model', 'status', 'service']
+    )
+    inference_duration_seconds = Histogram(
+        'sutazai_inference_duration_seconds',
+        'AI inference duration in seconds',
+        ['model', 'service'],
+        buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0, 60.0]
+    )
+    model_memory_usage_bytes = Gauge(
+        'sutazai_model_memory_usage_bytes',
+        'Memory usage of loaded models in bytes',
+        ['model', 'service']
+    )
+    inference_queue_depth = Gauge(
+        'sutazai_inference_queue_depth',
+        'Current depth of inference request queue',
+        ['service']
+    )
+    agent_task_queue_depth = Gauge(
+        'sutazai_agent_task_queue_depth',
+        'Current depth of agent task queue',
+        ['agent_name']
+    )
+    agent_active_tasks = Gauge(
+        'sutazai_agent_active_tasks',
+        'Number of currently active agent tasks',
+        ['agent_name']
+    )
+    vector_collection_size = Gauge(
+        'sutazai_vector_collection_size',
+        'Number of vectors in collection',
+        ['collection', 'service']
+    )
+    vector_search_latency_seconds = Histogram(
+        'sutazai_vector_search_latency_seconds',
+        'Vector search latency in seconds',
+        ['collection', 'service'],
+        buckets=[0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0]
+    )
+    user_sessions_active = Gauge(
+        'sutazai_user_sessions_active',
+        'Number of active user sessions',
+        ['interface']
+    )
+    
+    class AIMetricsExporter:
+        """Collects and exports AI-specific metrics"""
+        
+        def __init__(self):
+            self.ollama_url = os.getenv('OLLAMA_URL', 'http://sutazai-ollama:10104')
+            self.backend_url = os.getenv('BACKEND_URL', 'http://sutazai-backend:8000')
+            self.autogpt_url = os.getenv('AUTOGPT_URL', 'http://sutazai-autogpt:8100')
+            self.crewai_url = os.getenv('CREWAI_URL', 'http://sutazai-crewai:8200')
+            self.chromadb_url = os.getenv('CHROMADB_URL', 'http://sutazai-chromadb:8001')
+            self.qdrant_url = os.getenv('QDRANT_URL', 'http://sutazai-qdrant:6333')
+            self.session = None
+            
+        async def start(self):
+            """Start the metrics exporter"""
+            # Start Prometheus HTTP server
+            start_http_server(9200)
+            print("AI Metrics Exporter started on port 9200")
+            
+            self.session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=10)
+            )
+            
+            try:
+                while True:
+                    await self.collect_metrics()
+                    await asyncio.sleep(30)  # Collect every 30 seconds
+            finally:
+                if self.session:
+                    await self.session.close()
+        
+        async def collect_metrics(self):
+            """Collect all AI metrics"""
+            tasks = [
+                self.collect_ollama_metrics(),
+                self.collect_agent_metrics(),
+                self.collect_vector_db_metrics(),
+                self.collect_backend_metrics()
+            ]
+            
+            await asyncio.gather(*tasks, return_exceptions=True)
+        
+        async def collect_ollama_metrics(self):
+            """Collect Ollama-specific metrics"""
+            try:
+                # Get loaded models
+                async with self.session.get(f"{self.ollama_url}/api/tags") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        models = data.get('models', [])
+                        
+                        for model in models:
+                            model_name = model.get('name', 'unknown')
+                            size = model.get('size', 0)
+                            
+                            # Update model info
+                            ai_model_info.info({
+                                'model': model_name,
+                                'size': str(size),
+                                'modified': model.get('modified_at', '')
+                            })
+                            
+                            # Update memory usage
+                            model_memory_usage_bytes.labels(
+                                model=model_name,
+                                service='ollama'
+                            ).set(size)
+                
+                # Get running models and queue depth
+                async with self.session.get(f"{self.ollama_url}/api/ps") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        running_models = data.get('models', [])
+                        
+                        # Estimate queue depth based on running models
+                        queue_depth = max(0, len(running_models) - 2)
+                        inference_queue_depth.labels(service='ollama').set(queue_depth)
+                        
+            except Exception as e:
+                print(f"Error collecting Ollama metrics: {e}")
+        
+        async def collect_agent_metrics(self):
+            """Collect agent-specific metrics"""
+            # AutoGPT metrics
+            try:
+                async with self.session.get(f"{self.autogpt_url}/metrics") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        
+                        agent_task_queue_depth.labels(
+                            agent_name='autogpt'
+                        ).set(data.get('queue_depth', 0))
+                        
+                        agent_active_tasks.labels(
+                            agent_name='autogpt'
+                        ).set(data.get('active_tasks', 0))
+            except:
+                # Set default values if API is not available
+                agent_task_queue_depth.labels(agent_name='autogpt').set(0)
+                agent_active_tasks.labels(agent_name='autogpt').set(0)
+            
+            # CrewAI metrics
+            try:
+                async with self.session.get(f"{self.crewai_url}/metrics") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        
+                        agent_task_queue_depth.labels(
+                            agent_name='crewai'
+                        ).set(data.get('queue_depth', 0))
+                        
+                        agent_active_tasks.labels(
+                            agent_name='crewai'
+                        ).set(data.get('active_crews', 0))
+            except:
+                agent_task_queue_depth.labels(agent_name='crewai').set(0)
+                agent_active_tasks.labels(agent_name='crewai').set(0)
+        
+        async def collect_vector_db_metrics(self):
+            """Collect vector database metrics"""
+            # ChromaDB metrics
+            try:
+                async with self.session.get(f"{self.chromadb_url}/api/v1/collections") as resp:
+                    if resp.status == 200:
+                        collections = await resp.json()
+                        
+                        for collection in collections:
+                            col_name = collection.get('name', 'unknown')
+                            count = collection.get('count', 0)
+                            
+                            vector_collection_size.labels(
+                                collection=col_name,
+                                service='chromadb'
+                            ).set(count)
+            except Exception as e:
+                print(f"Error collecting ChromaDB metrics: {e}")
+            
+            # Qdrant metrics
+            try:
+                async with self.session.get(f"{self.qdrant_url}/collections") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        collections = data.get('result', {}).get('collections', [])
+                        
+                        for collection in collections:
+                            col_name = collection.get('name', 'unknown')
+                            
+                            # Get collection info
+                            async with self.session.get(
+                                f"{self.qdrant_url}/collections/{col_name}"
+                            ) as col_resp:
+                                if col_resp.status == 200:
+                                    col_data = await col_resp.json()
+                                    count = col_data.get('result', {}).get('vectors_count', 0)
+                                    
+                                    vector_collection_size.labels(
+                                        collection=col_name,
+                                        service='qdrant'
+                                    ).set(count)
+            except Exception as e:
+                print(f"Error collecting Qdrant metrics: {e}")
+        
+        async def collect_backend_metrics(self):
+            """Collect backend service metrics"""
+            try:
+                async with self.session.get(f"{self.backend_url}/api/metrics") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        
+                        # Active sessions
+                        sessions = data.get('active_sessions', {})
+                        for interface, count in sessions.items():
+                            user_sessions_active.labels(
+                                interface=interface
+                            ).set(count)
+                        
+                        # Recent inference metrics
+                        recent_inferences = data.get('recent_inferences', [])
+                        for inference in recent_inferences:
+                            inference_requests_total.labels(
+                                model=inference.get('model', 'unknown'),
+                                status=inference.get('status', 'unknown'),
+                                service=inference.get('service', 'backend')
+                            ).inc()
+                            
+                            if 'duration' in inference:
+                                inference_duration_seconds.labels(
+                                    model=inference.get('model', 'unknown'),
+                                    service=inference.get('service', 'backend')
+                                ).observe(inference['duration'])
+            except Exception as e:
+                print(f"Error collecting backend metrics: {e}")
+    
+    async def main():
+        """Main entry point"""
+        exporter = AIMetricsExporter()
+        await exporter.start()
+    
+    if __name__ == '__main__':
+        asyncio.run(main())
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-metrics-exporter
+  namespace: sutazai
+  labels:
+    app: ai-metrics-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-metrics-exporter
+  template:
+    metadata:
+      labels:
+        app: ai-metrics-exporter
+    spec:
+      containers:
+        - name: exporter
+          image: python:3.11-slim
+          command:
+            - python
+            - /app/exporter.py
+          ports:
+            - name: metrics
+              containerPort: 9200
+              protocol: TCP
+          env:
+            - name: OLLAMA_URL
+              value: "http://sutazai-ollama:10104"
+            - name: BACKEND_URL
+              value: "http://sutazai-backend:8000"
+            - name: AUTOGPT_URL
+              value: "http://sutazai-autogpt:8100"
+            - name: CREWAI_URL
+              value: "http://sutazai-crewai:8200"
+            - name: CHROMADB_URL
+              value: "http://sutazai-chromadb:8001"
+            - name: QDRANT_URL
+              value: "http://sutazai-qdrant:6333"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: script
+              mountPath: /app
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9200
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9200
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      initContainers:
+        - name: install-deps
+          image: python:3.11-slim
+          command:
+            - sh
+            - -c
+            - |
+              pip install --no-cache-dir aiohttp prometheus-client
+              cp -r /usr/local/lib/python3.11/site-packages/* /deps/
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
+      volumes:
+        - name: script
+          configMap:
+            name: ai-metrics-exporter-config
+            defaultMode: 0755
+        - name: deps
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-metrics-exporter
+  namespace: sutazai
+  labels:
+    app: ai-metrics-exporter
+spec:
+  ports:
+    - name: metrics
+      port: 9200
+      targetPort: 9200
+      protocol: TCP
+  selector:
+    app: ai-metrics-exporter
+
+---
+apiVersion: v1
+kind: ServiceMonitor
+metadata:
+  name: ai-metrics-exporter
+  namespace: sutazai
+  labels:
+    app: ai-metrics-exporter
+spec:
+  selector:
+    matchLabels:
+      app: ai-metrics-exporter
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics

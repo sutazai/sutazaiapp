@@ -4,29 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install Letta (formerly MemGPT)
-RUN pip install --no-cache-dir \
-    letta \
-    fastapi \
-    uvicorn \
-    psycopg2-binary \
-    requests
-
-# Copy service files
-COPY letta_service.py .
+# Copy requirements
 COPY requirements.txt .
 
-# Install additional requirements if any
-RUN pip install --no-cache-dir -r requirements.txt || true
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Create workspace
-RUN mkdir -p /app/workspace
+# Copy application
+COPY app.py .
 
-EXPOSE 8080
+# Set environment variables
+ENV AGENT_ID=letta
+ENV AGENT_NAME="Letta (MemGPT)"
+ENV PORT=8534
 
-CMD ["uvicorn", "letta_service:app", "--host", "0.0.0.0", "--port", "8080"]
+# Expose port
+EXPOSE 8534
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8534/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

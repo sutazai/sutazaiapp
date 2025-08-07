@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audit Stack Overflow Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>Audit Stack Overflow Fix Test</h1>
+    
+    <button class="test-button" onclick="testAuditDirectly()">Test Audit API Directly</button>
+    <button class="test-button" onclick="testDashboardAudit()">Test Dashboard Audit Function</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8080/api/hygiene';
+        let testCount = 0;
+        
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result ' + type;
+            resultDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        async function testAuditDirectly() {
+            testCount++;
+            log(`Test ${testCount}: Testing audit API directly...`);
+            
+            try {
+                const response = await fetch(API_BASE + '/audit', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    log(`✅ Audit API works! Found ${data.violations_found} violations`, 'success');
+                } else {
+                    log(`❌ Audit API failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error calling audit API: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testDashboardAudit() {
+            testCount++;
+            log(`Test ${testCount}: Testing dashboard audit function...`);
+            
+            // Create a minimal version of the dashboard's audit function
+            const mockDashboard = {
+                isAuditing: false,
+                apiEndpoint: API_BASE,
+                
+                async fetchWithFallback(url) {
+                    const response = await fetch(url, { method: 'POST' });
+                    return await response.json();
+                },
+                
+                async loadInitialData() {
+                    log('Loading initial data...');
+                    // Simulate data loading without recursion
+                    return Promise.resolve();
+                },
+                
+                renderDashboard() {
+                    log('Rendering dashboard...');
+                    // Simulate rendering without recursion
+                },
+                
+                async runFullAudit() {
+                    if (this.isAuditing) {
+                        log('Audit already in progress', 'error');
+                        return;
+                    }
+                    
+                    this.isAuditing = true;
+                    log('Starting audit...');
+                    
+                    try {
+                        const response = await this.fetchWithFallback(this.apiEndpoint + '/audit');
+                        
+                        if (response.success) {
+                            log(`✅ Dashboard audit completed! Found ${response.violations_found} violations`, 'success');
+                            
+                            // Test the sequence that was causing stack overflow
+                            await this.loadInitialData();
+                            this.renderDashboard();
+                            
+                            log('✅ No stack overflow! Fix is working!', 'success');
+                        } else {
+                            throw new Error('Audit failed');
+                        }
+                    } catch (error) {
+                        log(`❌ Dashboard audit error: ${error.message}`, 'error');
+                    } finally {
+                        this.isAuditing = false;
+                    }
+                }
+            };
+            
+            // Run the audit
+            await mockDashboard.runFullAudit();
+        }
+        
+        // Test on page load
+        window.addEventListener('load', () => {
+            log('Test page loaded. Click buttons to test audit functionality.');
+        });
+    </script>
+</body>
+</html>

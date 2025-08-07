@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - AI Voice Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            color: #00bcd4;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .header p {
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        
+        .main-container {
+            flex: 1;
+            display: flex;
+            padding: 2rem;
+            gap: 2rem;
+        }
+        
+        .voice-interface {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .status-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00bcd4;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .voice-controls {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00bcd4, #0097a7);
+            border: none;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            margin: 1rem 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 188, 212, 0.4);
+        }
+        
+        .mic-button:active {
+            transform: scale(0.95);
+        }
+        
+        .mic-button.listening {
+            animation: listening-pulse 1s infinite;
+            background: linear-gradient(45deg, #f44336, #e91e63);
+        }
+        
+        @keyframes listening-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(244, 67, 54, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(244, 67, 54, 0.8); }
+        }
+        
+        .command-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .command-input::placeholder {
+            color: #888;
+        }
+        
+        .send-button {
+            background: linear-gradient(45deg, #00bcd4, #0097a7);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .send-button:hover {
+            background: linear-gradient(45deg, #0097a7, #00695c);
+        }
+        
+        .conversation {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            background: rgba(0, 188, 212, 0.2);
+            margin-left: 2rem;
+        }
+        
+        .message.assistant {
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 2rem;
+        }
+        
+        .message-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #00bcd4;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar h3 {
+            color: #00bcd4;
+            margin-bottom: 1rem;
+        }
+        
+        .agent-list {
+            list-style: none;
+        }
+        
+        .agent-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .agent-status {
+            float: right;
+            color: #4caf50;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .control-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>JARVIS</h1>
+        <p>Just A Rather Very Intelligent System - SutazAI Voice Assistant</p>
+    </div>
+    
+    <div class="main-container">
+        <div class="voice-interface">
+            <div class="status-panel">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span id="status-text">Ready to assist</span>
+                </div>
+                <div>
+                    <strong>Connected Agents:</strong> <span id="agent-count">Loading...</span>
+                </div>
+            </div>
+            
+            <div class="voice-controls">
+                <h3>Voice Commands</h3>
+                <button class="mic-button" id="mic-button" onclick="toggleListening()">🎤</button>
+                <p id="listening-status">Click to start voice command</p>
+                
+                <div class="controls-grid">
+                    <button class="control-button" onclick="startContinuousListening()">Continuous Mode</button>
+                    <button class="control-button" onclick="stopListening()">Stop Listening</button>
+                    <button class="control-button" onclick="testVoice()">Test Voice</button>
+                    <button class="control-button" onclick="clearConversation()">Clear History</button>
+                </div>
+                
+                <input type="text" class="command-input" id="text-input" placeholder="Or type your command here..." 
+                       onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="sendTextCommand()">Send Command</button>
+            </div>
+            
+            <div class="conversation" id="conversation">
+                <div class="message assistant">
+                    <div class="message-header">JARVIS</div>
+                    <div>Hello! I'm JARVIS, your AI voice assistant. I can help you with various tasks using the 69 specialized AI agents in the SutazAI system. Try saying "Hey Jarvis" or type a command below.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <h3>Active Agents</h3>
+            <ul class="agent-list" id="agent-list">
+                <li class="agent-item">Loading agents...</li>
+            </ul>
+            
+            <h3>Recent Commands</h3>
+            <ul class="agent-list" id="recent-commands">
+                <li class="agent-item">No recent commands</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>SutazAI JARVIS Interface v1.0 | 
+           <span id="connection-status">Connected</span> | 
+           <span id="voice-status">Voice Ready</span>
+        </p>
+    </div>
+
+    <script>
+        let isListening = false;
+        let isContinuousMode = false;
+        let websocket = null;
+        let recognition = null;
+        
+        // Initialize the interface
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeWebSocket();
+            initializeSpeechRecognition();
+            loadAgents();
+            setInterval(updateStatus, 5000); // Update status every 5 seconds
+        });
+        
+        function initializeWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws`;
+            
+            websocket = new WebSocket(wsUrl);
+            
+            websocket.onopen = function() {
+                updateConnectionStatus('Connected');
+            };
+            
+            websocket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                handleWebSocketMessage(data);
+            };
+            
+            websocket.onclose = function() {
+                updateConnectionStatus('Disconnected');
+                // Attempt to reconnect after 3 seconds
+                setTimeout(initializeWebSocket, 3000);
+            };
+            
+            websocket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+                updateConnectionStatus('Error');
+            };
+        }
+        
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    updateListeningStatus('Listening...', true);
+                };
+                
+                recognition.onresult = function(event) {
+                    const command = event.results[0][0].transcript;
+                    addMessage('user', 'You', command);
+                    sendCommand(command);
+                };
+                
+                recognition.onend = function() {
+                    updateListeningStatus('Click to start voice command', false);
+                    if (isContinuousMode) {
+                        setTimeout(() => {
+                            if (isContinuousMode) {
+                                startListening();
+                            }
+                        }, 1000);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    updateListeningStatus('Voice recognition error', false);
+                };
+                
+                updateVoiceStatus('Voice Ready');
+            } else {
+                updateVoiceStatus('Voice Not Supported');
+                console.warn('Speech recognition not supported');
+            }
+        }
+        
+        function toggleListening() {
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
+        }
+        
+        function startListening() {
+            if (recognition && !isListening) {
+                recognition.start();
+                isListening = true;
+            }
+        }
+        
+        function stopListening() {
+            if (recognition && isListening) {
+                recognition.stop();
+                isListening = false;
+                isContinuousMode = false;
+                updateListeningStatus('Click to start voice command', false);
+            }
+        }
+        
+        function startContinuousListening() {
+            isContinuousMode = true;
+            startListening();
+            updateListeningStatus('Continuous listening mode active', true);
+        }
+        
+        function updateListeningStatus(text, listening) {
+            document.getElementById('listening-status').textContent = text;
+            const micButton = document.getElementById('mic-button');
+            
+            if (listening) {
+                micButton.classList.add('listening');
+                micButton.innerHTML = '🔴';
+            } else {
+                micButton.classList.remove('listening');
+                micButton.innerHTML = '🎤';
+            }
+            
+            isListening = listening;
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendTextCommand();
+            }
+        }
+        
+        function sendTextCommand() {
+            const input = document.getElementById('text-input');
+            const command = input.value.trim();
+            
+            if (command) {
+                addMessage('user', 'You', command);
+                sendCommand(command);
+                input.value = '';
+            }
+        }
+        
+        function sendCommand(command) {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(JSON.stringify({
+                    command: command,
+                    voice_enabled: true,
+                    timestamp: new Date().toISOString()
+                }));
+                
+                addToRecentCommands(command);
+                updateStatus('Processing command...');
+            } else {
+                // Fallback to HTTP API
+                sendCommandHTTP(command);
+            }
+        }
+        
+        async function sendCommandHTTP(command) {
+            try {
+                const response = await fetch('/api/task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        command: command,
+                        voice_enabled: true
+                    })
+                });
+                
+                const data = await response.json();
+                handleCommandResponse(data);
+            } catch (error) {
+                console.error('HTTP request failed:', error);
+                addMessage('assistant', 'JARVIS', 'Sorry, I encountered an error processing your command.');
+            }
+        }
+        
+        function handleWebSocketMessage(data) {
+            if (data.result) {
+                handleCommandResponse(data);
+            }
+        }
+        
+        function handleCommandResponse(data) {
+            const response = data.result || data.error || 'Command completed';
+            const agents = data.agents_used || [];
+            
+            let responseText = response;
+            if (agents.length > 0) {
+                responseText += `\n\n*Agents used: ${agents.join(', ')}*`;
+            }
+            
+            addMessage('assistant', 'JARVIS', responseText);
+            updateStatus('Ready to assist');
+            
+            // Text-to-speech for responses (if enabled)
+            if ('speechSynthesis' in window && data.voice_response) {
+                const utterance = new SpeechSynthesisUtterance(data.voice_response);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function addMessage(type, sender, content) {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            
+            message.innerHTML = `
+                <div class="message-header">${sender}</div>
+                <div>${content.replace(/\n/g, '<br>')}</div>
+            `;
+            
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        function addToRecentCommands(command) {
+            const recentList = document.getElementById('recent-commands');
+            const item = document.createElement('li');
+            item.className = 'agent-item';
+            item.textContent = command.length > 30 ? command.substring(0, 30) + '...' : command;
+            
+            recentList.insertBefore(item, recentList.firstChild);
+            
+            // Keep only last 5 commands
+            while (recentList.children.length > 5) {
+                recentList.removeChild(recentList.lastChild);
+            }
+        }
+        
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/agents');
+                const agents = await response.json();
+                
+                const agentList = document.getElementById('agent-list');
+                agentList.innerHTML = '';
+                
+                agents.forEach(agent => {
+                    const item = document.createElement('li');
+                    item.className = 'agent-item';
+                    item.innerHTML = `
+                        ${agent.name}
+                        <span class="agent-status">${agent.status === 'available' ? '●' : '○'}</span>
+                    `;
+                    agentList.appendChild(item);
+                });
+                
+                document.getElementById('agent-count').textContent = agents.length;
+            } catch (error) {
+                console.error('Failed to load agents:', error);
+                document.getElementById('agent-count').textContent = 'Error';
+            }
+        }
+        
+        async function updateStatus(statusText = null) {
+            if (statusText) {
+                document.getElementById('status-text').textContent = statusText;
+                return;
+            }
+            
+            try {
+                const response = await fetch('/health');
+                const health = await response.json();
+                
+                if (health.status === 'healthy') {
+                    document.getElementById('status-text').textContent = 'System healthy - Ready to assist';
+                } else {
+                    document.getElementById('status-text').textContent = 'System issues detected';
+                }
+            } catch (error) {
+                document.getElementById('status-text').textContent = 'Connection issues';
+            }
+        }
+        
+        function updateConnectionStatus(status) {
+            document.getElementById('connection-status').textContent = status;
+        }
+        
+        function updateVoiceStatus(status) {
+            document.getElementById('voice-status').textContent = status;
+        }
+        
+        function testVoice() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('Voice test successful. JARVIS is ready to assist you.');
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                speechSynthesis.speak(utterance);
+                
+                addMessage('assistant', 'JARVIS', 'Voice test completed successfully.');
+            } else {
+                addMessage('assistant', 'JARVIS', 'Text-to-speech is not supported in this browser.');
+            }
+        }
+        
+        function clearConversation() {
+            const conversation = document.getElementById('conversation');
+            conversation.innerHTML = `
+                <div class="message assistant">
+                    <div class="message-header">JARVIS</div>
+                    <div>Conversation cleared. How can I help you?</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

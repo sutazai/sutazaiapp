@@ -24,7 +24,7 @@ class TaskResponse(BaseModel):
 
 # Native Ollama client
 class OllamaClient:
-    def __init__(self, base_url="http://ollama:11434"):
+    def __init__(self, base_url="http://ollama:10104"):
         self.base_url = base_url
         
     async def chat(self, messages, model="tinyllama:latest"):
@@ -46,7 +46,7 @@ def get_llm_config():
     return {
         "config_list": [{
             "model": "tinyllama:latest",
-            "base_url": "http://ollama:11434",
+            "base_url": "http://ollama:10104",
             "api_type": "ollama"
         }],
         "temperature": 0.7,

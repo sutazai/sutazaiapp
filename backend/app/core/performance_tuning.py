@@ -200,7 +200,7 @@ class APIOptimizer:
             "endpoints": [
                 "/api/v1/models/generate",
                 "/api/v1/vectors/search",
-                "/api/v1/brain/think"
+                "/api/v1/coordinator/think"
             ]
         }
         
@@ -222,7 +222,7 @@ class APIOptimizer:
                     "vary_by": []
                 },
                 {
-                    "path_pattern": "/api/v1/brain/think",
+                    "path_pattern": "/api/v1/coordinator/think",
                     "ttl": 60,
                     "vary_by": ["input_hash", "reasoning_type"]
                 }
@@ -251,7 +251,7 @@ class ModelOptimizer:
             "model_cache": {
                 "max_models": 5,
                 "eviction_policy": "lru",
-                "preload": ["tinyllama", "qwen2.5:3b"]
+                "preload": ["tinyllama"]
             },
             "gpu_memory_fraction": 0.8,
             "allow_growth": True

@@ -1,0 +1,18 @@
+{
+  "name": "cicd-pipeline-orchestrator",
+  "description": "Agent for infrastructure operations",
+  "model": "ollama",
+  "base_model": "tinyllama",
+  "port": 9105,
+  "capabilities": [
+    "deployment",
+    "monitoring",
+    "automation"
+  ],
+  "memory_limit": "1G",
+  "cpu_limit": "1.0",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "infrastructure"
+  }
+}

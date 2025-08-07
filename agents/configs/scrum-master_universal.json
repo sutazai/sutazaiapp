@@ -1,0 +1,18 @@
+{
+  "name": "scrum-master",
+  "description": "Agent for management operations",
+  "model": "ollama",
+  "base_model": "tinyllama2.5-coder:7b",
+  "port": 9440,
+  "capabilities": [
+    "planning",
+    "coordination",
+    "reporting"
+  ],
+  "memory_limit": "512M",
+  "cpu_limit": "0.5",
+  "environment": {
+    "PYTHONUNBUFFERED": "1",
+    "AGENT_TYPE": "management"
+  }
+}

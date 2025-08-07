@@ -1,0 +1,51 @@
+================================================================================
+SUTAZAI DATABASE CONNECTION TEST REPORT
+================================================================================
+Generated: 2025-08-02T23:45:08.765896
+Overall Status: FAILED
+Success Rate: 86.7%
+
+POSTGRES Tests:
+----------------------------------------
+Status: PASSED
+  ✓ basic_connection: Connected successfully in 0.006s
+    Duration: 0.006s
+  ✓ version_check: PostgreSQL version: PostgreSQL 16.3 on x86_64-pc-linux-musl, compiled ...
+    Duration: 0.001s
+  ✓ table_creation: Test table created successfully
+    Duration: 0.002s
+  ✓ data_insertion: Test record inserted with ID: 5
+    Duration: 0.003s
+  ✓ data_query: Query successful, 1 records in test table
+    Duration: 0.001s
+  ✓ transaction_test: Transaction rollback successful
+    Duration: 0.002s
+
+REDIS Tests:
+----------------------------------------
+Status: PASSED
+  ✓ basic_connection: Connected successfully in 0.002s
+    Duration: 0.002s
+  ✓ server_info: Redis version: 7.2.10
+    Duration: 0.001s
+  ✓ set_get_operation: Set/Get operation successful for key: test_key_1754171108
+    Duration: 0.002s
+  ✓ list_operations: List operations successful, length: 3
+    Duration: 0.002s
+  ✓ hash_operations: Hash operations successful, retrieved: value1
+    Duration: 0.002s
+  ✓ ttl_operations: TTL operations successful, TTL: 60s
+    Duration: 0.002s
+
+NEO4J Tests:
+----------------------------------------
+Status: FAILED
+  ✗ connection_error: Error: Couldn't connect to localhost:7687 (resolved to ('127.0.0.1:7687',)):
+Failed to read four byte Bolt handshake response from server ResolvedIPv4Address(('127.0.0.1', 7687)) (deadline Deadline(timeout=60.0))
+
+CHROMADB Tests:
+----------------------------------------
+Status: FAILED
+  ✓ api_heartbeat: API heartbeat successful in 0.008s
+    Duration: 0.008s
+  ✗ connection_error: Error: {"detail":"Not Found"}

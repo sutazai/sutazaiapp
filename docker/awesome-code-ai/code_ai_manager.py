@@ -294,7 +294,7 @@ if __name__ == "__main__":
             "suggestions": [
                 "Add type hints for better code clarity",
                 "Use more descriptive variable names",
-                "Consider using constants for magic numbers"
+                "Consider using constants for specific implementation name (e.g., emailSender, dataProcessor) numbers"
             ],
             "rating": "B+"
         }

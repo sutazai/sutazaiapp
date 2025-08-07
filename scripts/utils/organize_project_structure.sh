@@ -101,7 +101,7 @@ echo "📚 Organizing documentation..."
 
 # System documentation
 mv docs/*ARCHITECTURE*.md docs/system/architecture/ 2>/dev/null
-mv docs/*AGI*.md docs/system/architecture/ 2>/dev/null
+mv docs/*automation*.md docs/system/architecture/ 2>/dev/null
 mv docs/*SYSTEM*.md docs/system/ 2>/dev/null
 
 # Deployment docs
@@ -168,14 +168,14 @@ cat > scripts/README.md << 'EOF'
 
 ### System Deployment
 - `deployment/system/deploy_complete_system.sh` - Main deployment script
-- `deployment/system/start_tinyllama.sh` - Start system with TinyLlama
+- `deployment/system/start_tinyllama.sh` - Start system with tinyllama
 
 ### Agent Management
 - `agents/configuration/configure_all_agents.sh` - Configure all agents
 - `agents/management/update_agents_to_tinyllama.py` - Update agent models
 
 ### Verification
-- `utils/verification/verify_tinyllama_config.sh` - Verify TinyLlama setup
+- `utils/verification/verify_tinyllama_config.sh` - Verify tinyllama setup
 - `utils/verification/verify_litellm_removal.sh` - Verify LiteLLM removal
 
 ### Model Management
@@ -220,10 +220,10 @@ cat > docs/README.md << 'EOF'
 
 ### Getting Started
 - `guides/quickstart/QUICK_START_ENHANCED.md` - Enhanced quick start guide
-- `TINYLLAMA_CONFIGURATION_COMPLETE.md` - TinyLlama setup complete
+- `GPT-OSS_CONFIGURATION_COMPLETE.md` - tinyllama setup complete
 
 ### System Overview
-- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - AGI architecture
+- `system/architecture/OPTIMIZED_AGI_ARCHITECTURE_PLAN.md` - automation architecture
 - `system/SUTAZAI_AGI_ASI_PROJECT_DOCUMENTATION.md` - Complete project docs
 
 ### Deployment

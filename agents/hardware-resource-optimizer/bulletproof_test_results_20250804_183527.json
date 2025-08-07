@@ -1,0 +1,524 @@
+{
+  "bulletproof_test_suite": {
+    "timestamp": "2025-08-04T18:35:27.808574",
+    "total_tests": 15,
+    "passed": 12,
+    "failed": 3,
+    "pass_rate": 0.8,
+    "total_time_seconds": 29.233425617218018,
+    "workspace": "/tmp/bulletproof_test_workspace"
+  },
+  "system_effects_verified": {
+    "total_memory_freed_mb": 165.4765625,
+    "total_disk_freed_mb": -0.00390625,
+    "tests_with_system_effects": 11,
+    "system_optimization_verified": true
+  },
+  "detailed_results": [
+    {
+      "test": "health_endpoint",
+      "success": true,
+      "response_time": 1.003659963607788,
+      "system_changes": {
+        "test_name": "health_check",
+        "duration_seconds": 2.0051770210266113,
+        "memory_freed_mb": 116.94140625,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": -0.40000000000000213,
+        "disk_percent_change": 0.0,
+        "process_count_change": 0,
+        "load_avg_change": [
+          -0.06298828125,
+          -0.0087890625,
+          -0.0029296875
+        ]
+      },
+      "expected_fields": [
+        "status",
+        "agent",
+        "description",
+        "docker_available",
+        "system_status"
+      ],
+      "fields_present": [
+        "status",
+        "agent",
+        "description",
+        "docker_available",
+        "system_status",
+        "timestamp"
+      ],
+      "validation": {
+        "has_required_fields": true,
+        "status_is_healthy": true,
+        "agent_name_correct": true
+      }
+    },
+    {
+      "test": "status_endpoint",
+      "success": true,
+      "response_time": 1.003089189529419,
+      "system_changes": {
+        "test_name": "status_check",
+        "duration_seconds": 2.0043210983276367,
+        "memory_freed_mb": 7.71875,
+        "disk_freed_mb": -0.00390625,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 1,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "data": {
+        "cpu_percent": 2.5,
+        "memory_percent": 23.2,
+        "disk_percent": 20.46827053212862,
+        "memory_available_gb": 22.570167541503906,
+        "disk_free_gb": 749.5527229309082,
+        "timestamp": 1754325303.5943727
+      }
+    },
+    {
+      "test": "memory_optimization",
+      "dry_run_success": true,
+      "dry_run_data": {
+        "status": "success",
+        "optimization_type": "memory",
+        "actions_taken": [
+          "Python garbage collection freed 67 objects"
+        ],
+        "initial_memory_percent": 23.3,
+        "final_memory_percent": 23.3,
+        "memory_freed_mb": -4.0,
+        "timestamp": 1754325305.6253123
+      },
+      "actual_success": true,
+      "actual_data": {
+        "status": "success",
+        "optimization_type": "memory",
+        "actions_taken": [
+          "Python garbage collection freed 5 objects"
+        ],
+        "initial_memory_percent": 23.3,
+        "final_memory_percent": 23.3,
+        "memory_freed_mb": 10.0,
+        "timestamp": 1754325305.6391277
+      },
+      "response_time": 0.013698339462280273,
+      "system_changes": {
+        "test_name": "memory_optimization",
+        "duration_seconds": 1.0326929092407227,
+        "memory_freed_mb": -3.70703125,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": -2,
+        "load_avg_change": [
+          -0.05810546875,
+          -0.0087890625,
+          -0.0029296875
+        ]
+      },
+      "validation": {
+        "has_memory_freed": true,
+        "gc_called": false,
+        "actual_memory_change": -3.70703125
+      }
+    },
+    {
+      "test": "cpu_optimization",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "cpu",
+        "actions_taken": [
+          "No CPU optimization needed - no high-usage processes found"
+        ],
+        "initial_cpu_percent": 2.6,
+        "processes_adjusted": 0,
+        "timestamp": 1754325308.6454585
+      },
+      "response_time": 1.0032660961151123,
+      "system_changes": {
+        "test_name": "cpu_optimization",
+        "duration_seconds": 2.0045664310455322,
+        "memory_freed_mb": -1.92578125,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 2,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "test": "disk_optimization",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "disk",
+        "actions_taken": [
+          "Cleaned old files from /tmp",
+          "Cleaned old files from /var/tmp"
+        ],
+        "initial_disk_percent": 20.46827053212862,
+        "final_disk_percent": 20.46827053212862,
+        "space_freed_mb": 0.0,
+        "timestamp": 1754325310.6566358
+      },
+      "response_time": 0.008880615234375,
+      "system_changes": {
+        "test_name": "disk_optimization",
+        "duration_seconds": 1.009916067123413,
+        "memory_freed_mb": -8.25,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.09999999999999787,
+        "disk_percent_change": 0.0,
+        "process_count_change": 0,
+        "load_avg_change": [
+          0.18701171875,
+          0.04150390625,
+          0.013671875
+        ]
+      }
+    },
+    {
+      "test": "docker_optimization",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "docker",
+        "actions_taken": [
+          "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'"
+        ],
+        "containers_removed": 0,
+        "images_removed": 0,
+        "timestamp": 1754325313.1336315
+      },
+      "response_time": 0.4743483066558838,
+      "system_changes": {
+        "test_name": "docker_optimization",
+        "duration_seconds": 1.4755418300628662,
+        "memory_freed_mb": 5.51953125,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 0,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "docker_available": true
+    },
+    {
+      "test": "storage_analysis",
+      "success": true,
+      "data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /tmp/bulletproof_test_workspace/large_files"
+      },
+      "response_time": 0.002574443817138672,
+      "system_changes": {
+        "test_name": "storage_analysis",
+        "duration_seconds": 1.0037119388580322,
+        "memory_freed_mb": -2.69140625,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 2,
+        "load_avg_change": [
+          0.41259765625,
+          0.0908203125,
+          0.02978515625
+        ]
+      },
+      "test_dir": "/tmp/bulletproof_test_workspace/large_files",
+      "validation": {
+        "found_test_files": false,
+        "has_size_info": false
+      }
+    },
+    {
+      "test": "duplicate_detection",
+      "success": true,
+      "data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /tmp/bulletproof_test_workspace/duplicates"
+      },
+      "response_time": 0.0025954246520996094,
+      "system_changes": {
+        "test_name": "duplicate_detection",
+        "duration_seconds": 1.003711223602295,
+        "memory_freed_mb": 36.58984375,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": -0.09999999999999787,
+        "disk_percent_change": 0.0,
+        "process_count_change": 1,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "test_dir": "/tmp/bulletproof_test_workspace/duplicates",
+      "files_created": 9,
+      "validation": {
+        "found_duplicates": false,
+        "duplicate_groups": 0,
+        "expected_duplicates": true
+      }
+    },
+    {
+      "test": "duplicate_cleanup",
+      "dry_run_success": true,
+      "dry_run_data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /tmp/bulletproof_test_workspace/duplicates"
+      },
+      "actual_success": true,
+      "actual_data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /tmp/bulletproof_test_workspace/duplicates"
+      },
+      "response_time": 0.0016891956329345703,
+      "system_changes": {
+        "test_name": "duplicate_cleanup",
+        "duration_seconds": 1.0052225589752197,
+        "memory_freed_mb": 7.31640625,
+        "disk_freed_mb": 0.0,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 2,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "files_before": 9,
+      "files_after": 9,
+      "files_removed": 0,
+      "validation": {
+        "files_actually_removed": false,
+        "disk_space_freed": false
+      }
+    },
+    {
+      "test": "cache_cleanup",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "cache",
+        "actions_taken": [
+          "Executed: sync",
+          "Executed: apt-get clean",
+          "Failed: find /home/*/.thumbnails -type f -delete - find: \u2018/home/*/.thumbnails\u2019: No such file or directory\n",
+          "Failed: find /home/*/.cache/thumbnails -type f -delete - find: \u2018/home/*/.cache/thumbnails\u2019: No such file or directory\n"
+        ],
+        "timestamp": 1754325321.4179568
+      },
+      "response_time": 0.02319622039794922,
+      "system_changes": {
+        "test_name": "cache_cleanup",
+        "duration_seconds": 1.0246214866638184,
+        "memory_freed_mb": 4.078125,
+        "disk_freed_mb": 0.00390625,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 0,
+        "load_avg_change": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "cache_files_before": 15,
+      "cache_files_after": 15,
+      "cache_files_removed": 0,
+      "validation": {
+        "cache_files_removed": false,
+        "disk_space_freed": true
+      }
+    },
+    {
+      "test": "comprehensive_optimization",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "all",
+        "duration_seconds": 3.357428550720215,
+        "total_actions": 6,
+        "actions_taken": [
+          "Python garbage collection freed 45 objects",
+          "No CPU optimization needed - no high-usage processes found",
+          "Cleaned old files from /tmp",
+          "Cleaned old files from /var/tmp",
+          "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'",
+          "Cleaned cache: /var/cache"
+        ],
+        "detailed_results": {
+          "memory": {
+            "status": "success",
+            "optimization_type": "memory",
+            "actions_taken": [
+              "Python garbage collection freed 45 objects"
+            ],
+            "initial_memory_percent": 23.3,
+            "final_memory_percent": 23.3,
+            "memory_freed_mb": 0.0,
+            "timestamp": 1754325324.440036
+          },
+          "cpu": {
+            "status": "success",
+            "optimization_type": "cpu",
+            "actions_taken": [
+              "No CPU optimization needed - no high-usage processes found"
+            ],
+            "initial_cpu_percent": 3.2,
+            "processes_adjusted": 0,
+            "timestamp": 1754325325.4406605
+          },
+          "disk": {
+            "status": "success",
+            "optimization_type": "disk",
+            "actions_taken": [
+              "Cleaned old files from /tmp",
+              "Cleaned old files from /var/tmp"
+            ],
+            "initial_disk_percent": 20.47652882597875,
+            "final_disk_percent": 20.47652882597875,
+            "space_freed_mb": 0.0,
+            "timestamp": 1754325325.444711
+          },
+          "docker": {
+            "status": "success",
+            "optimization_type": "docker",
+            "actions_taken": [
+              "Could not prune build cache: 'APIClient' object has no attribute 'prune_build_cache'"
+            ],
+            "containers_removed": 0,
+            "images_removed": 0,
+            "timestamp": 1754325325.7762783
+          },
+          "storage": {
+            "status": "success",
+            "optimization_type": "comprehensive_storage",
+            "dry_run": false,
+            "actions_taken": [
+              "Cleaned cache: /var/cache"
+            ],
+            "estimated_space_freed_mb": 0.0,
+            "actual_space_freed_mb": 0.0,
+            "initial_disk_percent": 20.47652882597875,
+            "final_disk_percent": 20.47652882597875,
+            "timestamp": 1754325325.779922
+          }
+        },
+        "before": {
+          "cpu_percent": 2.1,
+          "memory_percent": 23.3,
+          "disk_percent": 20.47652882597875,
+          "memory_available_gb": 22.53783416748047,
+          "disk_free_gb": 749.4695739746094,
+          "timestamp": 1754325324.4234922
+        },
+        "after": {
+          "cpu_percent": 2.5,
+          "memory_percent": 23.3,
+          "disk_percent": 20.47652882597875,
+          "memory_available_gb": 22.54279327392578,
+          "disk_free_gb": 749.4695739746094,
+          "timestamp": 1754325326.7803433
+        },
+        "timestamp": 1754325326.7803488
+      },
+      "response_time": 3.359879970550537,
+      "system_changes": {
+        "test_name": "comprehensive_optimization",
+        "duration_seconds": 4.3611297607421875,
+        "memory_freed_mb": 3.88671875,
+        "disk_freed_mb": -0.00390625,
+        "memory_percent_change": 0.0,
+        "disk_percent_change": 0.0,
+        "process_count_change": 0,
+        "load_avg_change": [
+          -0.09326171875,
+          -0.0107421875,
+          -0.0029296875
+        ]
+      },
+      "validation": {
+        "multiple_optimizations": true,
+        "includes_memory": true,
+        "includes_disk": true
+      }
+    },
+    {
+      "test": "error_condition_nonexistent_endpoint",
+      "success": false,
+      "data": {
+        "status_code": 404,
+        "text": "{\"detail\":\"Not Found\"}"
+      },
+      "response_time": 0.002151012420654297,
+      "expected_failure": true,
+      "validation": {
+        "handles_error_gracefully": true
+      }
+    },
+    {
+      "test": "error_condition_invalid_path",
+      "success": true,
+      "data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /nonexistent/path"
+      },
+      "response_time": 0.0016324520111083984,
+      "expected_failure": true,
+      "validation": {
+        "handles_error_gracefully": true
+      }
+    },
+    {
+      "test": "error_condition_protected_path",
+      "success": true,
+      "data": {
+        "status": "error",
+        "error": "Path not accessible or safe: /etc"
+      },
+      "response_time": 0.002386331558227539,
+      "expected_failure": true,
+      "validation": {
+        "handles_error_gracefully": true
+      }
+    },
+    {
+      "test": "error_condition_invalid_parameters",
+      "success": true,
+      "data": {
+        "status": "success",
+        "optimization_type": "memory",
+        "actions_taken": [
+          "Python garbage collection freed 77 objects"
+        ],
+        "initial_memory_percent": 23.3,
+        "final_memory_percent": 23.3,
+        "memory_freed_mb": 0.0,
+        "timestamp": 1754325327.807697
+      },
+      "response_time": 0.019289731979370117,
+      "expected_failure": true,
+      "validation": {
+        "handles_error_gracefully": false
+      }
+    }
+  ]
+}

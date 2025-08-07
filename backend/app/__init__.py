@@ -1,19 +1,14 @@
 """
-SutazAI AGI/ASI System - Backend Application Package
+SutazAI Task Automation System - Backend Application Package
 """
 
-from .agi_brain import AGIBrain
-from .agent_orchestrator import AgentOrchestrator
-from .knowledge_manager import KnowledgeManager
-from .services.self_improvement import SelfImprovementService as SelfImprovementSystem
-# ReasoningEngine will be implemented later
+# Minimal version - commenting out complex dependencies
+# from .agent_orchestrator import AgentOrchestrator
+# from .knowledge_manager import KnowledgeManager
 
 __all__ = [
-    "AGIBrain",
-    "AgentOrchestrator", 
-    "KnowledgeManager",
-    "SelfImprovementSystem",
-    "ReasoningEngine"
+    # "AgentOrchestrator", 
+    # "KnowledgeManager"
 ]
 
-__version__ = "3.0.0" 
+__version__ = "1.0.0" 

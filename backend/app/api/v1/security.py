@@ -6,6 +6,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel
 import logging
+import os
 
 # Try to import security module
 try:
@@ -37,9 +38,13 @@ except ImportError:
             raise ValueError("Invalid token")
             
         async def authenticate_user(self, username: str, password: str):
-            if username == "admin" and password == "password":
+            # WARNING: This is a mock implementation for testing only
+            # In production, use proper authentication with hashed passwords
+            test_user = os.getenv('TEST_USER', 'testuser')
+            test_pass = os.getenv('TEST_PASS', 'testpass')
+            if username == test_user and password == test_pass:
                 return {
-                    "user_id": "admin_001",
+                    "user_id": "test_001",
                     "username": username,
                     "role": "admin",
                     "scopes": ["read", "write", "admin"]
@@ -180,7 +185,7 @@ async def get_audit_events(
                 "type": "api_request",
                 "severity": "info",
                 "user_id": current_user["user_id"],
-                "details": {"endpoint": "/api/v1/brain/think"}
+                "details": {"endpoint": "/api/v1/coordinator/think"}
             }
         ]
         

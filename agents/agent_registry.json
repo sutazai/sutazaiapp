@@ -59,7 +59,7 @@
     },
     "senior-ai-engineer": {
       "name": "senior-ai-engineer",
-      "description": "Use this agent when you need to:\\n\\n- Design and implement AI/ML architectures\\n- Build RAG (Retrieval Augmented Generation) systems\\n- Integrate various LLMs and AI models\\n- Create neural network architectures\\n- Implement machine learning pipelines\\n- Build model training and evaluation systems\\n- Design AGI system components\\n- Create embeddings and vector databases\\n- Implement semantic search systems\\n- Build multi-modal AI systems\\n- Design reinforcement learning environments\\n- Create AI model serving infrastructure\\n- Implement transfer learning strategies\\n- Build AI explainability systems\\n- Design federated learning architectures\\n- Create AI model versioning systems\\n- Implement online learning capabilities\\n- Build AI performance benchmarks\\n- Design AI safety mechanisms\\n- Create custom AI training loops\\n- Implement AI model compression\\n- Build AI debugging and visualization\\n- Design AI data preprocessing pipelines\\n- Create AI model deployment strategies\\n- Implement AI monitoring systems\\n- Build AI cost optimization solutions\\n- Design AI experimentation platforms\\n- Create AI model registries\\n- Implement AI governance frameworks\\n- Build AI collaboration tools\\n\\nDo NOT use this agent for:\\n- Frontend development (use senior-frontend-developer)\\n- Backend API development (use senior-backend-developer)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Basic data analysis (use data analysts)\\n\\nThis agent specializes in cutting-edge AI/ML engineering and AGI system development.",
+      "description": "Use this agent when you need to:\\n\\n- Design and implement AI/ML architectures\\n- Build RAG (Retrieval Augmented Generation) systems\\n- Integrate various LLMs and AI models\\n- Create processing network architectures\\n- Implement machine learning pipelines\\n- Build model training and evaluation systems\\n- Design automation system components\\n- Create embeddings and vector databases\\n- Implement semantic search systems\\n- Build multi-modal AI systems\\n- Design reinforcement learning environments\\n- Create AI model serving infrastructure\\n- Implement transfer learning strategies\\n- Build AI explainability systems\\n- Design federated learning architectures\\n- Create AI model versioning systems\\n- Implement online learning capabilities\\n- Build AI performance benchmarks\\n- Design AI safety mechanisms\\n- Create custom AI training loops\\n- Implement AI model compression\\n- Build AI debugging and visualization\\n- Design AI data preprocessing pipelines\\n- Create AI model deployment strategies\\n- Implement AI monitoring systems\\n- Build AI cost optimization solutions\\n- Design AI experimentation platforms\\n- Create AI model registries\\n- Implement AI governance frameworks\\n- Build AI collaboration tools\\n\\nDo NOT use this agent for:\\n- Frontend development (use senior-frontend-developer)\\n- Backend API development (use senior-backend-developer)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Basic data analysis (use data analysts)\\n\\nThis agent specializes in cutting-edge AI/ML engineering and automation system development.",
       "capabilities": [
         "code_generation",
         "deployment",
@@ -95,7 +95,7 @@
     },
     "agi-system-architect": {
       "name": "agi-system-architect",
-      "description": "Use this agent when you need to:\\n\\n- Design comprehensive AGI/ASI system architectures\\n- Create scalable and modular system designs\\n- Implement cognitive architectures for artificial general intelligence\\n- Design multi-modal AI integration patterns\\n- Create self-improving system architectures\\n- Implement meta-learning frameworks\\n- Design distributed intelligence systems\\n- Create neural-symbolic hybrid architectures\\n- Implement consciousness modeling approaches\\n- Build recursive self-improvement mechanisms\\n- Design emergent intelligence patterns\\n- Create knowledge representation systems\\n- Implement reasoning and inference engines\\n- Build memory architecture for AGI systems\\n- Design attention and focus mechanisms\\n- Create goal-oriented architecture patterns\\n- Implement ethical AI frameworks\\n- Build explainable AGI architectures\\n- Design robustness and safety measures\\n- Create AGI evaluation frameworks\\n- Implement transfer learning architectures\\n- Build continual learning systems\\n- Design AGI communication protocols\\n- Create AGI-human interaction patterns\\n- Implement AGI resource optimization\\n- Build AGI monitoring and control systems\\n- Design AGI evolution strategies\\n- Create AGI alignment mechanisms\\n- Implement AGI security architectures\\n- Build AGI testing and validation frameworks\\n\\nDo NOT use this agent for:\\n- Specific code implementation (use code-generation agents)\\n- Deployment tasks (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n\\nThis agent specializes in designing and evolving the fundamental architecture of AGI systems for maximum intelligence and capability.",
+      "description": "Use this agent when you need to:\\n\\n- Design comprehensive automation/advanced automation system architectures\\n- Create scalable and modular system designs\\n- Implement cognitive architectures for artificial general intelligence\\n- Design multi-modal AI integration patterns\\n- Create self-improving system architectures\\n- Implement meta-learning frameworks\\n- Design distributed intelligence systems\\n- Create processing-symbolic hybrid architectures\\n- Implement system_state modeling approaches\\n- Build recursive self-improvement mechanisms\\n- Design emergent intelligence patterns\\n- Create knowledge representation systems\\n- Implement reasoning and inference engines\\n- Build memory architecture for automation systems\\n- Design attention and focus mechanisms\\n- Create goal-oriented architecture patterns\\n- Implement ethical AI frameworks\\n- Build explainable automation architectures\\n- Design robustness and safety measures\\n- Create automation evaluation frameworks\\n- Implement transfer learning architectures\\n- Build continual learning systems\\n- Design automation communication protocols\\n- Create automation-human interaction patterns\\n- Implement automation resource optimization\\n- Build automation monitoring and control systems\\n- Design automation evolution strategies\\n- Create automation alignment mechanisms\\n- Implement automation security architectures\\n- Build automation testing and validation frameworks\\n\\nDo NOT use this agent for:\\n- Specific code implementation (use code-generation agents)\\n- Deployment tasks (use deployment-automation-master)\\n- Infrastructure management (use infrastructure-devops-manager)\\n- Testing implementation (use testing-qa-validator)\\n\\nThis agent specializes in designing and evolving the fundamental architecture of automation systems for maximum intelligence and capability.",
       "capabilities": [
         "security_analysis",
         "code_generation",
@@ -447,13 +447,13 @@
       ],
       "config_path": "configs/security-pentesting-specialist_universal.json"
     },
-    "deep-learning-brain-manager": {
-      "name": "deep-learning-brain-manager",
-      "description": "Use this agent when you need to:\\n\\n- Design and evolve neural intelligence cores\\n- Implement continuous learning systems\\n- Create meta-learning architectures\\n- Build self-improving neural networks\\n- Design cognitive architecture patterns\\n- Implement memory consolidation systems\\n- Create attention mechanism designs\\n- Build neural plasticity simulations\\n- Design hierarchical learning systems\\n- Implement transfer learning networks\\n- Create neural architecture search\\n- Build brain-inspired computing systems\\n- Design synaptic weight optimization\\n- Implement neural pruning strategies\\n- Create cognitive load balancing\\n- Build neural synchronization systems\\n- Design emergent behavior patterns\\n- Implement neural network evolution\\n- Create consciousness modeling attempts\\n- Build neural knowledge graphs\\n- Design neural reasoning systems\\n- Implement neural memory systems\\n- Create neural pattern recognition\\n- Build neural prediction engines\\n- Design neural feedback loops\\n- Implement neural homeostasis\\n- Create neural debugging tools\\n- Build neural visualization systems\\n- Design neural performance metrics\\n- Implement neural safety mechanisms\\n\\nDo NOT use this agent for:\\n- Basic ML tasks (use senior-ai-engineer)\\n- Application development (use appropriate developers)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Simple model training (use ML specialists)\\n\\nThis agent specializes in creating and evolving advanced neural intelligence systems.",
+    "deep-learning-coordinator-manager": {
+      "name": "deep-learning-coordinator-manager",
+      "description": "Use this agent when you need to:\\n\\n- Design and evolve processing intelligence cores\\n- Implement continuous learning systems\\n- Create meta-learning architectures\\n- Build self-improving processing networks\\n- Design cognitive architecture patterns\\n- Implement memory consolidation systems\\n- Create attention mechanism designs\\n- Build processing plasticity simulations\\n- Design hierarchical learning systems\\n- Implement transfer learning networks\\n- Create processing architecture search\\n- Build coordinator-inspired computing systems\\n- Design synaptic weight optimization\\n- Implement processing pruning strategies\\n- Create cognitive load balancing\\n- Build processing synchronization systems\\n- Design emergent behavior patterns\\n- Implement processing network evolution\\n- Create system_state modeling attempts\\n- Build processing knowledge graphs\\n- Design processing reasoning systems\\n- Implement processing memory systems\\n- Create processing pattern recognition\\n- Build processing prediction engines\\n- Design processing feedback loops\\n- Implement processing homeostasis\\n- Create processing debugging tools\\n- Build processing visualization systems\\n- Design processing performance metrics\\n- Implement processing safety mechanisms\\n\\nDo NOT use this agent for:\\n- Basic ML tasks (use senior-ai-engineer)\\n- Application development (use appropriate developers)\\n- Infrastructure (use infrastructure-devops-manager)\\n- Simple model training (use ML specialists)\\n\\nThis agent specializes in creating and evolving advanced processing intelligence systems.",
       "capabilities": [
         "code_generation"
       ],
-      "config_path": "configs/deep-learning-brain-manager_universal.json"
+      "config_path": "configs/deep-learning-coordinator-manager_universal.json"
     },
     "testing-qa-validator": {
       "name": "testing-qa-validator",
@@ -483,6 +483,686 @@
         "documentation"
       ],
       "config_path": "configs/infrastructure-devops-manager_universal.json"
+    },
+    "adversarial-attack-detector": {
+      "name": "adversarial-attack-detector",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/adversarial-attack-detector_universal.json"
+    },
+    "agent-creator": {
+      "name": "agent-creator",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/agent-creator_universal.json"
+    },
+    "ai-senior-full-stack-developer": {
+      "name": "ai-senior-full-stack-developer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/ai-senior-full-stack-developer_universal.json"
+    },
+    "ai-system-architect": {
+      "name": "ai-system-architect",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/ai-system-architect_universal.json"
+    },
+    "bias-and-fairness-auditor": {
+      "name": "bias-and-fairness-auditor",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/bias-and-fairness-auditor_universal.json"
+    },
+    "cicd-pipeline-orchestrator": {
+      "name": "cicd-pipeline-orchestrator",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/cicd-pipeline-orchestrator_universal.json"
+    },
+    "code-quality-gateway-sonarqube": {
+      "name": "code-quality-gateway-sonarqube",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/code-quality-gateway-sonarqube_universal.json"
+    },
+    "container-orchestrator-k3s": {
+      "name": "container-orchestrator-k3s",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/container-orchestrator-k3s_universal.json"
+    },
+    "deep-learning-brain-architect": {
+      "name": "deep-learning-brain-architect",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/deep-learning-brain-architect_universal.json"
+    },
+    "deep-learning-brain-manager": {
+      "name": "deep-learning-brain-manager",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/deep-learning-brain-manager_universal.json"
+    },
+    "deep-local-brain-builder": {
+      "name": "deep-local-brain-builder",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/deep-local-brain-builder_universal.json"
+    },
+    "distributed-tracing-analyzer-jaeger": {
+      "name": "distributed-tracing-analyzer-jaeger",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/distributed-tracing-analyzer-jaeger_universal.json"
+    },
+    "ethical-governor": {
+      "name": "ethical-governor",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/ethical-governor_universal.json"
+    },
+    "evolution-strategy-trainer": {
+      "name": "evolution-strategy-trainer",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/evolution-strategy-trainer_universal.json"
+    },
+    "genetic-algorithm-tuner": {
+      "name": "genetic-algorithm-tuner",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/genetic-algorithm-tuner_universal.json"
+    },
+    "goal-setting-and-planning-agent": {
+      "name": "goal-setting-and-planning-agent",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/goal-setting-and-planning-agent_universal.json"
+    },
+    "neural-architecture-search": {
+      "name": "neural-architecture-search",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/neural-architecture-search_universal.json"
+    },
+    "quantum-ai-researcher": {
+      "name": "quantum-ai-researcher",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/quantum-ai-researcher_universal.json"
+    },
+    "resource-arbitration-agent": {
+      "name": "resource-arbitration-agent",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/resource-arbitration-agent_universal.json"
+    },
+    "runtime-behavior-anomaly-detector": {
+      "name": "runtime-behavior-anomaly-detector",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/runtime-behavior-anomaly-detector_universal.json"
+    },
+    "senior-full-stack-developer": {
+      "name": "senior-full-stack-developer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/senior-full-stack-developer_universal.json"
+    },
+    "agent-debugger": {
+      "name": "agent-debugger",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/agent-debugger_universal.json"
+    },
+    "agent-orchestrator": {
+      "name": "agent-orchestrator",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/agent-orchestrator_universal.json"
+    },
+    "ai-qa-team-lead": {
+      "name": "ai-qa-team-lead",
+      "description": "Agent for management operations",
+      "capabilities": [
+        "planning",
+        "coordination",
+        "reporting"
+      ],
+      "config_path": "configs/ai-qa-team-lead_universal.json"
+    },
+    "ai-senior-backend-developer": {
+      "name": "ai-senior-backend-developer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/ai-senior-backend-developer_universal.json"
+    },
+    "ai-senior-engineer": {
+      "name": "ai-senior-engineer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/ai-senior-engineer_universal.json"
+    },
+    "ai-senior-frontend-developer": {
+      "name": "ai-senior-frontend-developer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/ai-senior-frontend-developer_universal.json"
+    },
+    "ai-system-validator": {
+      "name": "ai-system-validator",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/ai-system-validator_universal.json"
+    },
+    "ai-testing-qa-validator": {
+      "name": "ai-testing-qa-validator",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/ai-testing-qa-validator_universal.json"
+    },
+    "automated-incident-responder": {
+      "name": "automated-incident-responder",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/automated-incident-responder_universal.json"
+    },
+    "autonomous-task-executor": {
+      "name": "autonomous-task-executor",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/autonomous-task-executor_universal.json"
+    },
+    "codebase-team-lead": {
+      "name": "codebase-team-lead",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/codebase-team-lead_universal.json"
+    },
+    "cognitive-load-monitor": {
+      "name": "cognitive-load-monitor",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/cognitive-load-monitor_universal.json"
+    },
+    "compute-scheduler-and-optimizer": {
+      "name": "compute-scheduler-and-optimizer",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/compute-scheduler-and-optimizer_universal.json"
+    },
+    "container-vulnerability-scanner-trivy": {
+      "name": "container-vulnerability-scanner-trivy",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/container-vulnerability-scanner-trivy_universal.json"
+    },
+    "cpu-only-hardware-optimizer": {
+      "name": "cpu-only-hardware-optimizer",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/cpu-only-hardware-optimizer_universal.json"
+    },
+    "data-drift-detector": {
+      "name": "data-drift-detector",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/data-drift-detector_universal.json"
+    },
+    "data-lifecycle-manager": {
+      "name": "data-lifecycle-manager",
+      "description": "Agent for data operations",
+      "capabilities": [
+        "processing",
+        "analysis",
+        "storage"
+      ],
+      "config_path": "configs/data-lifecycle-manager_universal.json"
+    },
+    "data-version-controller-dvc": {
+      "name": "data-version-controller-dvc",
+      "description": "Agent for data operations",
+      "capabilities": [
+        "processing",
+        "analysis",
+        "storage"
+      ],
+      "config_path": "configs/data-version-controller-dvc_universal.json"
+    },
+    "deploy-automation-master": {
+      "name": "deploy-automation-master",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/deploy-automation-master_universal.json"
+    },
+    "edge-inference-proxy": {
+      "name": "edge-inference-proxy",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/edge-inference-proxy_universal.json"
+    },
+    "emergency-shutdown-coordinator": {
+      "name": "emergency-shutdown-coordinator",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/emergency-shutdown-coordinator_universal.json"
+    },
+    "energy-consumption-optimize": {
+      "name": "energy-consumption-optimize",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/energy-consumption-optimize_universal.json"
+    },
+    "experiment-tracker": {
+      "name": "experiment-tracker",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/experiment-tracker_universal.json"
+    },
+    "explainability-and-transparency-agent": {
+      "name": "explainability-and-transparency-agent",
+      "description": "Agent for data operations",
+      "capabilities": [
+        "processing",
+        "analysis",
+        "storage"
+      ],
+      "config_path": "configs/explainability-and-transparency-agent_universal.json"
+    },
+    "garbage-collector": {
+      "name": "garbage-collector",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/garbage-collector_universal.json"
+    },
+    "gpu-hardware-optimizer": {
+      "name": "gpu-hardware-optimizer",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/gpu-hardware-optimizer_universal.json"
+    },
+    "honeypot-deployment-agent": {
+      "name": "honeypot-deployment-agent",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/honeypot-deployment-agent_universal.json"
+    },
+    "human-oversight-interface-agent": {
+      "name": "human-oversight-interface-agent",
+      "description": "Agent for monitoring operations",
+      "capabilities": [
+        "observability",
+        "alerting",
+        "analysis"
+      ],
+      "config_path": "configs/human-oversight-interface-agent_universal.json"
+    },
+    "kali-hacker": {
+      "name": "kali-hacker",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/kali-hacker_universal.json"
+    },
+    "log-aggregator-loki": {
+      "name": "log-aggregator-loki",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/log-aggregator-loki_universal.json"
+    },
+    "mega-code-auditor": {
+      "name": "mega-code-auditor",
+      "description": "Agent for utility operations",
+      "capabilities": [
+        "automation",
+        "integration",
+        "support"
+      ],
+      "config_path": "configs/mega-code-auditor_universal.json"
+    },
+    "metrics-collector-prometheus": {
+      "name": "metrics-collector-prometheus",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/metrics-collector-prometheus_universal.json"
+    },
+    "ml-experiment-tracker-mlflow": {
+      "name": "ml-experiment-tracker-mlflow",
+      "description": "Agent for ai-ml operations",
+      "capabilities": [
+        "code_generation",
+        "analysis",
+        "optimization"
+      ],
+      "config_path": "configs/ml-experiment-tracker-mlflow_universal.json"
+    },
+    "observability-dashboard-manager-grafana": {
+      "name": "observability-dashboard-manager-grafana",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/observability-dashboard-manager-grafana_universal.json"
+    },
+    "private-registry-manager-harbor": {
+      "name": "private-registry-manager-harbor",
+      "description": "Agent for infrastructure operations",
+      "capabilities": [
+        "deployment",
+        "monitoring",
+        "automation"
+      ],
+      "config_path": "configs/private-registry-manager-harbor_universal.json"
+    },
+    "product-manager": {
+      "name": "product-manager",
+      "description": "Agent for management operations",
+      "capabilities": [
+        "planning",
+        "coordination",
+        "reporting"
+      ],
+      "config_path": "configs/product-manager_universal.json"
+    },
+    "prompt-injection-guard": {
+      "name": "prompt-injection-guard",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/prompt-injection-guard_universal.json"
+    },
+    "qa-team-lead": {
+      "name": "qa-team-lead",
+      "description": "Agent for management operations",
+      "capabilities": [
+        "planning",
+        "coordination",
+        "reporting"
+      ],
+      "config_path": "configs/qa-team-lead_universal.json"
+    },
+    "ram-hardware-optimizer": {
+      "name": "ram-hardware-optimizer",
+      "description": "Agent for optimization operations",
+      "capabilities": [
+        "performance",
+        "resource_management",
+        "efficiency"
+      ],
+      "config_path": "configs/ram-hardware-optimizer_universal.json"
+    },
+    "resource-visualiser": {
+      "name": "resource-visualiser",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/resource-visualiser_universal.json"
+    },
+    "scrum-master": {
+      "name": "scrum-master",
+      "description": "Agent for management operations",
+      "capabilities": [
+        "planning",
+        "coordination",
+        "reporting"
+      ],
+      "config_path": "configs/scrum-master_universal.json"
+    },
+    "secrets-vault-manager-vault": {
+      "name": "secrets-vault-manager-vault",
+      "description": "Agent for security operations",
+      "capabilities": [
+        "security_analysis",
+        "monitoring",
+        "alerting"
+      ],
+      "config_path": "configs/secrets-vault-manager-vault_universal.json"
+    },
+    "senior-engineer": {
+      "name": "senior-engineer",
+      "description": "Agent for development operations",
+      "capabilities": [
+        "code_generation",
+        "testing",
+        "documentation"
+      ],
+      "config_path": "configs/senior-engineer_universal.json"
+    },
+    "system-knowledge-curator": {
+      "name": "system-knowledge-curator",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/system-knowledge-curator_universal.json"
+    },
+    "system-performance-forecaster": {
+      "name": "system-performance-forecaster",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/system-performance-forecaster_universal.json"
+    },
+    "system-validator": {
+      "name": "system-validator",
+      "description": "Agent for system operations",
+      "capabilities": [
+        "architecture",
+        "validation",
+        "optimization"
+      ],
+      "config_path": "configs/system-validator_universal.json"
+    },
+    "testing-qa-team-lead": {
+      "name": "testing-qa-team-lead",
+      "description": "Agent for management operations",
+      "capabilities": [
+        "planning",
+        "coordination",
+        "reporting"
+      ],
+      "config_path": "configs/testing-qa-team-lead_universal.json"
     }
   },
   "version": "1.0.0",

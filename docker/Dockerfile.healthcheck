@@ -3,23 +3,44 @@ FROM python:3.11-slim
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    wget \
+    postgresql-client \
+    redis-tools \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# Create app directory
 WORKDIR /app
 
+# Copy requirements
+COPY monitoring/requirements.txt .
+
 # Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional monitoring dependencies
 RUN pip install --no-cache-dir \
     docker \
-    psutil \
-    requests \
-    schedule
+    aiohttp \
+    asyncpg \
+    aioredis \
+    neo4j \
+    psutil
 
-# Copy health monitor script
-COPY scripts/health-monitor.py /app/health-monitor.py
+# Copy monitoring scripts
+COPY monitoring/self_healing_monitor.py /app/
+COPY self-healing/circuit_breaker.py /app/
 
-# Create log directory
-RUN mkdir -p /var/log
+# Create logs directory
+RUN mkdir -p /app/logs
 
-# Run health monitor
-CMD ["python", "-u", "/app/health-monitor.py"]
+# Set permissions
+RUN chmod +x /app/self_healing_monitor.py
+RUN chmod +x /app/circuit_breaker.py
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+    CMD python3 -c "import requests; requests.get('http://localhost:8080/health', timeout=5)"
+
+# Default command
+CMD ["python3", "/app/self_healing_monitor.py"]

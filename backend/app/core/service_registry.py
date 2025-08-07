@@ -1,5 +1,5 @@
 """
-Service Registry for AGI/ASI System
+Service Registry for automation/advanced automation System
 Manages inter-service communication and discovery
 """
 from typing import Dict, List, Optional, Any
@@ -16,7 +16,7 @@ class ServiceRegistry:
     def __init__(self):
         self.services: Dict[str, Dict[str, Any]] = {
             # Core Infrastructure
-            "ollama": {"url": "http://ollama:11434", "type": "llm", "priority": 1},
+            "ollama": {"url": "http://ollama:10104", "type": "llm", "priority": 1},
             "postgres": {"url": "postgresql://sutazai:sutazai_password@postgres:5432/sutazai", "type": "database"},
             "redis": {"url": "redis://:redis_password@redis:6379", "type": "cache"},
             "neo4j": {"url": "bolt://neo4j:7687", "type": "graph"},

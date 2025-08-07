@@ -35,22 +35,22 @@ monitoring:
   performance_tracking: true
 
 services:
-  backend-agi:
-    url: "http://backend-agi:8000"
+  backend:
+    url: "http://backend:8000"
     health_check: "/health"
     timeout: 30
     retry_count: 3
     weight: 1
     
-  frontend-agi:
-    url: "http://frontend-agi:8501"
+  frontend:
+    url: "http://frontend:8501"
     health_check: "/"
     timeout: 10
     retry_count: 2
     weight: 1
     
   ollama:
-    url: "http://ollama:11434"
+    url: "http://ollama:10104"
     health_check: "/api/tags"
     timeout: 60
     retry_count: 3

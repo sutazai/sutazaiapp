@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Clone Browser-Use
 RUN git clone https://github.com/browser-use/browser-use.git .
@@ -25,4 +25,10 @@ python -m browser_use --host 0.0.0.0 --port 8080\n\
 
 EXPOSE 8080
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["./start.sh"]

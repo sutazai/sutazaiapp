@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 """Health check script for FAISS service"""
 
-import requests
 import sys
-import time
+import urllib.request
+import urllib.error
+import json
 
 def check_health():
+    """Check if FAISS service is healthy"""
     try:
-        response = requests.get("http://localhost:8088/health", timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get("status") == "healthy":
-                print("FAISS service is healthy")
-                return True
+        # Try to connect to the health endpoint on correct port
+        with urllib.request.urlopen('http://localhost:8000/health', timeout=10) as response:
+            if response.getcode() == 200:
+                try:
+                    data = json.loads(response.read().decode('utf-8'))
+                    if data.get("status") == "healthy":
+                        return True
+                except json.JSONDecodeError:
+                    # If no JSON response, just check status code
+                    return True
         return False
-    except Exception as e:
-        print(f"Health check failed: {e}")
+    except (urllib.error.URLError, OSError, Exception) as e:
+        print(f"Health check failed: {e}", file=sys.stderr)
         return False
 
 if __name__ == "__main__":

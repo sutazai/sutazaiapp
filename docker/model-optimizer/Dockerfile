@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     cmake \
     pkg-config \
     libopenblas-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies for model optimization
 RUN pip install --no-cache-dir \
@@ -67,4 +67,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
 # Start model optimizer
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["python", "model_optimizer.py"] 

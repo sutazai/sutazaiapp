@@ -32,7 +32,7 @@ class AgentGPTService:
     """AgentGPT autonomous agent service"""
     
     def __init__(self):
-        self.ollama_url = "http://ollama:11434"
+        self.ollama_url = "http://ollama:10104"
         self.service_name = "AgentGPT"
         self.active_agents = {}
         
@@ -247,7 +247,7 @@ Provide a concise summary of what was accomplished."""
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "llama3.2:1b",
+                    "model": "tinyllama.2:1b",
                     "prompt": prompt,
                     "stream": False
                 },

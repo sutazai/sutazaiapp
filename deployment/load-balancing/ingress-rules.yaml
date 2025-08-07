@@ -1,0 +1,437 @@
+# Ingress rules for SutazAI services with health checks and load balancing
+
+---
+# Main SutazAI Ingress - Core services
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-core-ingress
+  namespace: sutazai-core
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    # Health check configuration
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri"
+    nginx.ingress.kubernetes.io/load-balance: "ip_hash"
+    # SSL and security
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sutazai.local
+    - api.sutazai.local
+    - frontend.sutazai.local
+    secretName: sutazai-tls-secret
+  rules:
+  # Frontend service
+  - host: sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-frontend
+            port:
+              number: 8501
+  - host: frontend.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-frontend
+            port:
+              number: 8501
+  # Backend API service
+  - host: api.sutazai.local
+    http:
+      paths:
+      - path: /api/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-backend
+            port:
+              number: 8000
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: sutazai-backend
+            port:
+              number: 8000
+      - path: /metrics
+        pathType: Exact
+        backend:
+          service:
+            name: sutazai-backend
+            port:
+              number: 8000
+
+---
+# AI Services Ingress - Ollama and AI infrastructure
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-ai-ingress
+  namespace: sutazai-core
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600" 
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.ingress.kubernetes.io/rate-limit: "50"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    # AI-specific optimizations
+    nginx.ingress.kubernetes.io/upstream-keepalive-connections: "32"
+    nginx.ingress.kubernetes.io/upstream-keepalive-timeout: "600"
+    nginx.ingress.kubernetes.io/load-balance: "least_conn"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - ai.sutazai.local
+    - ollama.sutazai.local
+    secretName: sutazai-ai-tls-secret
+  rules:
+  # Ollama AI service
+  - host: ollama.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-ollama
+            port:
+              number: 10104
+  - host: ai.sutazai.local
+    http:
+      paths:
+      - path: /ollama/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-ollama
+            port:
+              number: 10104
+
+---
+# Vector Database Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-vector-ingress
+  namespace: sutazai-infrastructure
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
+    nginx.ingress.kubernetes.io/rate-limit: "200"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/load-balance: "round_robin"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - vectors.sutazai.local
+    - chromadb.sutazai.local
+    - qdrant.sutazai.local
+    secretName: sutazai-vector-tls-secret
+  rules:
+  # ChromaDB
+  - host: chromadb.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-chromadb
+            port:
+              number: 8000
+  # Qdrant
+  - host: qdrant.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-qdrant
+            port:
+              number: 6333
+  # Unified vector access
+  - host: vectors.sutazai.local
+    http:
+      paths:
+      - path: /chromadb/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-chromadb
+            port:
+              number: 8000
+      - path: /qdrant/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-qdrant
+            port:
+              number: 6333
+
+---
+# Agent Services Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-agents-ingress
+  namespace: sutazai-agents
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/load-balance: "ip_hash" # Sticky sessions for agents
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - agents.sutazai.local
+    - autogpt.sutazai.local
+    - crewai.sutazai.local
+    - aider.sutazai.local
+    secretName: sutazai-agents-tls-secret
+  rules:
+  # AutoGPT
+  - host: autogpt.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-autogpt
+            port:
+              number: 8080
+  # CrewAI  
+  - host: crewai.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-crewai
+            port:
+              number: 8080
+  # Aider
+  - host: aider.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-aider
+            port:
+              number: 8080
+  # Unified agent access
+  - host: agents.sutazai.local
+    http:
+      paths:
+      - path: /autogpt/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-autogpt
+            port:
+              number: 8080
+      - path: /crewai/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-crewai
+            port:
+              number: 8080
+      - path: /aider/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-aider
+            port:
+              number: 8080
+
+---
+# Workflow and Automation Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-workflow-ingress
+  namespace: sutazai-core
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/rate-limit: "150"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - workflows.sutazai.local
+    - langflow.sutazai.local
+    - flowise.sutazai.local
+    - n8n.sutazai.local
+    secretName: sutazai-workflow-tls-secret
+  rules:
+  # Langflow
+  - host: langflow.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-langflow
+            port:
+              number: 7860
+  # Flowise
+  - host: flowise.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-flowise
+            port:
+              number: 3000
+  # n8n
+  - host: n8n.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-n8n
+            port:
+              number: 5678
+  # Unified workflow access
+  - host: workflows.sutazai.local
+    http:
+      paths:
+      - path: /langflow/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-langflow
+            port:
+              number: 7860
+      - path: /flowise/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-flowise
+            port:
+              number: 3000
+      - path: /n8n/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-n8n
+            port:
+              number: 5678
+
+---
+# Monitoring and Observability Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sutazai-monitoring-ingress
+  namespace: sutazai-monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/rate-limit: "500"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    # Monitoring specific auth
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: sutazai-monitoring-auth
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - monitoring.sutazai.local
+    - prometheus.sutazai.local
+    - grafana.sutazai.local
+    secretName: sutazai-monitoring-tls-secret
+  rules:
+  # Prometheus
+  - host: prometheus.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-prometheus
+            port:
+              number: 9090
+  # Grafana
+  - host: grafana.sutazai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-grafana
+            port:
+              number: 3000
+  # Unified monitoring access
+  - host: monitoring.sutazai.local
+    http:
+      paths:
+      - path: /prometheus/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-prometheus
+            port:
+              number: 9090
+      - path: /grafana/
+        pathType: Prefix
+        backend:
+          service:
+            name: sutazai-grafana
+            port:
+              number: 3000

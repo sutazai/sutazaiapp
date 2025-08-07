@@ -72,7 +72,7 @@ class BaseAgentWrapper(ABC):
 # Core System Agents
 
 class AGISystemArchitectWrapper(BaseAgentWrapper):
-    """AGI System Architect API wrapper."""
+    """automation System Architect API wrapper."""
     
     def __init__(self, client: UniversalAgentClient):
         super().__init__(client, AgentType.AGI_SYSTEM_ARCHITECT)
@@ -448,6 +448,7 @@ class OllamaIntegrationSpecialistWrapper(BaseAgentWrapper):
 
     
     def __init__(self, client: UniversalAgentClient):
+        self.client = client
     
     async def configure_proxy(
         self,
@@ -546,20 +547,20 @@ class SeniorAIEngineerWrapper(BaseAgentWrapper):
         )
 
 
-class DeepLearningBrainManagerWrapper(BaseAgentWrapper):
-    """Deep Learning Brain Manager API wrapper."""
+class DeepLearningCoordinatorManagerWrapper(BaseAgentWrapper):
+    """Deep Learning Coordinator Manager API wrapper."""
     
     def __init__(self, client: UniversalAgentClient):
         super().__init__(client, AgentType.DEEP_LEARNING_BRAIN_MANAGER)
     
-    async def evolve_neural_architecture(
+    async def evolve_processing_architecture(
         self,
         current_architecture: Dict[str, Any],
         performance_feedback: Dict[str, Any]
     ) -> ApiResult:
-        """Evolve neural architecture."""
+        """Evolve processing architecture."""
         return await self._execute_task(
-            "Evolve neural architecture",
+            "Evolve processing architecture",
             {
                 "current_arch": current_architecture,
                 "feedback": performance_feedback,
@@ -916,7 +917,7 @@ class SecurityPentestingSpecialistWrapper(BaseAgentWrapper):
             {
                 "target": target_info,
                 "scenarios": test_scenarios,
-                "approach": "black_box",
+                "approach": "external_service, third_party_api",
                 "document_findings": True
             }
         )
@@ -1029,7 +1030,7 @@ class AgentWrapperFactory:
             AgentType.HARDWARE_RESOURCE_OPTIMIZER: HardwareResourceOptimizerWrapper,
             AgentType.OLLAMA_INTEGRATION_SPECIALIST: OllamaIntegrationSpecialistWrapper,
             AgentType.SENIOR_AI_ENGINEER: SeniorAIEngineerWrapper,
-            AgentType.DEEP_LEARNING_BRAIN_MANAGER: DeepLearningBrainManagerWrapper,
+            AgentType.DEEP_LEARNING_BRAIN_MANAGER: DeepLearningCoordinatorManagerWrapper,
             AgentType.CODE_GENERATION_IMPROVER: CodeGenerationImproverWrapper,
             AgentType.OPENDEVIN_CODE_GENERATOR: OpenDevinCodeGeneratorWrapper,
             AgentType.SENIOR_FRONTEND_DEVELOPER: SeniorFrontendDeveloperWrapper,
@@ -1096,7 +1097,7 @@ class UnifiedAgentAPI:
         # AI & ML Specialists
         self.ollama_specialist = self.factory.get_wrapper(AgentType.OLLAMA_INTEGRATION_SPECIALIST)
         self.ai_engineer = self.factory.get_wrapper(AgentType.SENIOR_AI_ENGINEER)
-        self.brain_manager = self.factory.get_wrapper(AgentType.DEEP_LEARNING_BRAIN_MANAGER)
+        self.coordinator_manager = self.factory.get_wrapper(AgentType.DEEP_LEARNING_BRAIN_MANAGER)
         
         # Development Specialists
         self.code_improver = self.factory.get_wrapper(AgentType.CODE_GENERATION_IMPROVER)
@@ -1169,7 +1170,7 @@ if __name__ == "__main__":
             # Create unified API
             api = UnifiedAgentAPI(client)
             
-            # Example: Use AGI System Architect
+            # Example: Use automation System Architect
             result = await api.agi_architect.design_system_architecture(
                 requirements={
                     "type": "microservices",

@@ -119,7 +119,7 @@ class InfrastructureIntegration:
         
         # Ollama Integration
         self.ollama_config = {
-            "base_url": "http://ollama:11434",
+            "base_url": "http://ollama:10104",
             "models": [],
             "model_optimization": True,
             "auto_model_management": True
@@ -255,7 +255,7 @@ class InfrastructureIntegration:
                 container_spec=ContainerSpec(
                     name="sutazai-ollama",
                     image="ollama/ollama:latest",
-                    ports={"11434": 11434},
+                    ports={"10104": 10104},
                     environment={
                         "OLLAMA_HOST": "0.0.0.0",
                         "OLLAMA_ORIGINS": "*",
@@ -310,8 +310,8 @@ class InfrastructureIntegration:
             "restart_policy": "unless-stopped",
             "environment": {
                 "REDIS_URL": "redis://redis:6379",
-                "BACKEND_URL": "http://backend-agi:8000",
-                "OLLAMA_BASE_URL": "http://ollama:11434"
+                "BACKEND_URL": "http://backend:8000",
+                "OLLAMA_BASE_URL": "http://ollama:10104"
             },
             "volumes": {
                 "agent_workspaces": "/app/workspace",
@@ -348,8 +348,8 @@ class InfrastructureIntegration:
                 "ports": {"8204": 8080},
                 "memory_limit": "2G"
             },
-            "deep-learning-brain-manager": {
-                "image": "sutazai/brain-manager:latest",
+            "deep-learning-coordinator-manager": {
+                "image": "sutazai/coordinator-manager:latest",
                 "ports": {"8205": 8080},
                 "memory_limit": "3G",
                 "cpu_limit": "2"
@@ -398,8 +398,6 @@ class InfrastructureIntegration:
             "ollama-integration-specialist": {
                 "image": "sutazai/ollama-specialist:latest",
                 "ports": {"8215": 8080}
-            },
-                "ports": {"8216": 8080}
             },
             "context-optimization-engineer": {
                 "image": "sutazai/context-optimizer:latest",

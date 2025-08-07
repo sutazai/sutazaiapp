@@ -32,7 +32,7 @@ class LocalAGIManager:
         start_time = time.time()
         task_id = str(uuid.uuid4())
         
-        # Simulate AGI processing
+        # Simulate automation processing
         self.active_tasks[task_id] = {
             'status': 'processing',
             'description': request.task_description,
@@ -40,7 +40,7 @@ class LocalAGIManager:
             'start_time': start_time
         }
         
-        # Mock AGI reasoning process
+        # Mock automation reasoning process
         reasoning_steps = [
             f"Analyzing task: {request.task_description}",
             "Breaking down into subtasks",

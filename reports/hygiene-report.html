@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hygiene Scan Report - 2025-08-04 11:35</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #333; }
+        .summary { background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .pass { color: #28a745; font-weight: bold; }
+        .warning { color: #ffc107; font-weight: bold; }
+        .fail { color: #dc3545; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; font-weight: bold; }
+        tr:hover { background-color: #f5f5f5; }
+        .violation-type { padding: 2px 8px; border-radius: 3px; font-size: 12px; }
+        .forbidden { background-color: #ffebee; color: #c62828; }
+        .structure { background-color: #e3f2fd; color: #1565c0; }
+        .duplicate { background-color: #fff3e0; color: #e65100; }
+        .naming { background-color: #f3e5f5; color: #6a1b9a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hygiene Scan Report</h1>
+        <div class="summary">
+            <p><strong>Scan Time:</strong> 2025-08-04T11:34:59.808449</p>
+            <p><strong>Project Root:</strong> /app/project</p>
+            <p><strong>Total Violations:</strong> 5500</p>
+            <p><strong>Status:</strong> <span class="fail">FAIL</span></p>
+        </div>
+        
+        <h2>Violation Summary</h2>
+        <table>
+            <tr>
+                <th>Violation Type</th>
+                <th>Count</th>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>155</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_garbage_patterns</span></td>
+                <td>3250</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_duplicate_patterns</span></td>
+                <td>9</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type misplaced">misplaced_file</span></td>
+                <td>1701</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type naming">naming_convention</span></td>
+                <td>385</td>
+            </tr>
+
+        </table>
+        
+        <h2>Detailed Violations</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>File</th>
+                <th>Details</th>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 93: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 94: magicHandler</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 95: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 93: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 94: wizardService</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/compliance-monitor-core.py</td>
+                <td>Line 93: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/enforce_claude_md_rules.py</td>
+                <td>Line 230: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 268: magic_function</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 274: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 269: wizard_result</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 270: wizard_result</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 269: teleport_data</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-monitoring-integration.py</td>
+                <td>Line 272: teleport_data</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 411: magic_terms</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 411: magic_terms</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 759: magic_terms</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 760: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 762: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 763: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 763: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-all-rule-combinations.py</td>
+                <td>Line 763: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/enforce_claude_md_simple.py</td>
+                <td>Line 80: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/test-hygiene-system.py</td>
+                <td>Line 19: MagicMock</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 26: MagicMock</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 157: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 422: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 157: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 422: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 157: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 422: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 157: black-box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/comprehensive_monitor_validation.py</td>
+                <td>Line 422: black-box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 55: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 154: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 55: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 154: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 55: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 154: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 55: black-box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/monitoring/continuous-compliance-monitor.py</td>
+                <td>Line 154: black-box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 63: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 65: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 70: magically</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 71: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 66: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 67: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 69: someday</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/ci-cd/analyze-rule.py</td>
+                <td>Line 73: dreamAPI</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/cleanup_agent_standards.py</td>
+                <td>Line 100: magick</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/fix_all_agents_compliance.py</td>
+                <td>Line 58: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/fix_all_agents_compliance.py</td>
+                <td>Line 76: magical</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/fix_all_agents_compliance.py</td>
+                <td>Line 57: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/ensure_agent_compliance.py</td>
+                <td>Line 23: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/ensure_agent_compliance.py</td>
+                <td>Line 23: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 38: magic_service</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 44: MagicProcessor</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 45: magical</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 51: magic_transform</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 69: MagicProcessor</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 84: magicEnabled</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 89: magicProcess</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 121: magic_config</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 125: magic_settings</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 131: magic_processor</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 212: magic_service</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 48: wizard_config</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 52: wizardry</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 78: wizard_client</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 126: wizard_mode</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 135: wizard_service</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 49: teleport_enabled</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 54: teleport_data</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 56: teleport_data</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 85: teleportConfig</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 127: teleport_enabled</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 61: black_box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 101: blackBox</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 128: black_box</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 245: unicorn</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/agents/demo-fantasy-elements-enforcement.py</td>
+                <td>Line 250: unicorn</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 15: Magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 16: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 17: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 17: magicHandler</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 17: magicService</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 21: magically</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 22: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 24: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 28: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 29: magic</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 95: magicMailer</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 15: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 16: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 18: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 18: wizardService</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 18: wizardModule</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 22: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 24: wizard</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 16: teleport</td>
+            </tr>
+
+            <tr>
+                <td><span class="violation-type forbidden">forbidden_fantasy_elements</span></td>
+                <td>scripts/pre-commit/check-fantasy-elements.py</td>
+                <td>Line 22: teleport</td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><em>... and 5400 more violations</em></td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>

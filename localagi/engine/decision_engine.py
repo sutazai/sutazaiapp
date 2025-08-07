@@ -36,7 +36,7 @@ class DecisionAlgorithm(Enum):
     REINFORCEMENT_LEARNING = "reinforcement_learning"
     MONTE_CARLO = "monte_carlo"
     BAYESIAN_OPTIMIZATION = "bayesian_optimization"
-    NEURAL_NETWORK = "neural_network"
+    NEURAL_NETWORK = "processing_network"
 
 @dataclass
 class DecisionCriteria:
@@ -238,7 +238,7 @@ class AutonomousDecisionEngine:
             """
             
             response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('planning', 'qwen2.5:14b'),
+                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('planning', 'tinyllama2.5:14b'),
                 "prompt": generation_prompt,
                 "stream": False
             })

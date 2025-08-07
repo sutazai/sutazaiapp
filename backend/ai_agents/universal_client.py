@@ -1,6 +1,6 @@
 """
 Universal Agent Client Library
-Provides unified interface to interact with all 38 AI agents in the SutazAI AGI system.
+Provides unified interface to interact with all 38 AI agents in the SutazAI automation system.
 """
 
 import asyncio
@@ -36,7 +36,7 @@ class AgentType(Enum):
     # AI & ML Specialists
     OLLAMA_INTEGRATION_SPECIALIST = "ollama-integration-specialist"
     SENIOR_AI_ENGINEER = "senior-ai-engineer"
-    DEEP_LEARNING_BRAIN_MANAGER = "deep-learning-brain-manager"
+    DEEP_LEARNING_BRAIN_MANAGER = "deep-learning-coordinator-manager"
     
     # Development Specialists
     CODE_GENERATION_IMPROVER = "code-generation-improver"
@@ -305,8 +305,8 @@ class UniversalAgentClient:
             # Core System Agents
             {
                 "id": "agi-system-architect",
-                "name": "AGI System Architect",
-                "description": "Master architect for AGI system design and optimization",
+                "name": "automation System Architect",
+                "description": "Master architect for automation system design and optimization",
                 "port": 8001,
                 "capabilities": ["system_design", "architecture_optimization", "integration_planning"]
             },
@@ -368,11 +368,11 @@ class UniversalAgentClient:
                 "capabilities": ["ml_architecture", "model_optimization", "rag_development"]
             },
             {
-                "id": "deep-learning-brain-manager",
-                "name": "Deep Learning Brain Manager",
-                "description": "Manages neural intelligence core",
+                "id": "deep-learning-coordinator-manager",
+                "name": "Deep Learning Coordinator Manager",
+                "description": "Manages processing intelligence core",
                 "port": 8010,
-                "capabilities": ["neural_architecture", "continuous_learning", "meta_learning"]
+                "capabilities": ["processing_architecture", "continuous_learning", "meta_learning"]
             },
             
             # Development Specialists
@@ -587,7 +587,7 @@ class UniversalAgentClient:
             {
                 "id": "localagi-orchestration-manager",
                 "name": "LocalAGI Orchestration Manager",
-                "description": "Local AGI system orchestration",
+                "description": "Local automation system orchestration",
                 "port": 8039,
                 "capabilities": ["local_orchestration", "privacy_focused", "offline_capability"]
             }

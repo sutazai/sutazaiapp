@@ -3,7 +3,7 @@ Configuration management using Pydantic Settings
 """
 from typing import List, Optional, Dict, Any
 from pydantic_settings import BaseSettings
-from pydantic import validator, Field
+from pydantic import field_validator, Field
 from functools import lru_cache
 import os
 import secrets
@@ -18,8 +18,15 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(False, env="DEBUG")
     LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
     
+    # System Configuration (environment variables from .env)
+    TZ: str = Field("UTC", env="TZ")
+    SUTAZAI_ENV: str = Field("local", env="SUTAZAI_ENV")
+    LOCAL_IP: str = Field("127.0.0.1", env="LOCAL_IP")
+    DEPLOYMENT_ID: str = Field("", env="DEPLOYMENT_ID")
+    
     # Security
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    SECRET_KEY: str = Field("default-secret-key-change-in-production", env="SECRET_KEY")
+    JWT_SECRET: str = Field("default-jwt-secret-change-in-production", env="JWT_SECRET")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -28,18 +35,19 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
     
     # Database
-    POSTGRES_HOST: str
+    POSTGRES_HOST: str = Field("postgres", env="POSTGRES_HOST")
     POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_USER: str = Field("sutazai", env="POSTGRES_USER")
+    POSTGRES_PASSWORD: str = Field("sutazai_password", env="POSTGRES_PASSWORD")
+    POSTGRES_DB: str = Field("sutazai", env="POSTGRES_DB")
+    DATABASE_URL: Optional[str] = Field(None, env="DATABASE_URL")
     
     @property
-    def DATABASE_URL(self) -> str:
+    def computed_database_url(self) -> str:
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
     
     # Redis
-    REDIS_HOST: str
+    REDIS_HOST: str = Field("redis", env="REDIS_HOST")
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: Optional[str] = None
     
@@ -50,18 +58,28 @@ class Settings(BaseSettings):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
     
     # Vector Databases
-    CHROMADB_HOST: str
-    CHROMADB_PORT: int = 8000
+    CHROMADB_HOST: str = Field("chromadb", env="CHROMADB_HOST")
+    CHROMADB_PORT: int = 8001  # Changed from 8000 to avoid conflict with backend
     CHROMADB_API_KEY: Optional[str] = None
     
-    QDRANT_HOST: str
+    QDRANT_HOST: str = Field("qdrant", env="QDRANT_HOST")
     QDRANT_PORT: int = 6333
     QDRANT_API_KEY: Optional[str] = None
     
+    # Neo4j Configuration
+    NEO4J_PASSWORD: str = Field("neo4j_password", env="NEO4J_PASSWORD")
+    
+    # Monitoring Configuration
+    GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
+    
     # Model Configuration - Emergency small models to prevent freezing
-    OLLAMA_HOST: str = "http://ollama:11434"
-    DEFAULT_MODEL: str = "tinyllama:1.1b"  # Ultra-small model to prevent system overload
-    FALLBACK_MODEL: str = "qwen2.5:3b"  # Larger model for complex tasks when resources allow
+    OLLAMA_HOST: str = Field("http://sutazai-ollama:11434", env="OLLAMA_HOST")
+    OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
+    OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
+    OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
+    
+    DEFAULT_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
+    FALLBACK_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
     
@@ -69,18 +87,29 @@ class Settings(BaseSettings):
     MODEL_PRELOAD_ENABLED: bool = True
     MODEL_CACHE_SIZE: int = 2  # Number of models to keep in memory
     
-    @validator("OLLAMA_HOST", pre=True)
+    @field_validator("OLLAMA_HOST", mode="before")
+    @classmethod
     def validate_ollama_host(cls, v: str) -> str:
         """Ensure OLLAMA_HOST has proper format"""
         if v == "0.0.0.0" or v == "ollama":
-            return "http://ollama:11434"
+            return "http://sutazai-ollama:11434"
         if not v.startswith("http"):
             return f"http://{v}:11434"
         return v
     
     # GPU Configuration
-    ENABLE_GPU: bool = True
+    ENABLE_GPU: bool = Field(False, env="ENABLE_GPU")
     GPU_MEMORY_FRACTION: float = 0.8
+    
+    # Feature Flags
+    ENABLE_MONITORING: bool = Field(True, env="ENABLE_MONITORING")
+    ENABLE_LOGGING: bool = Field(True, env="ENABLE_LOGGING")
+    ENABLE_HEALTH_CHECKS: bool = Field(True, env="ENABLE_HEALTH_CHECKS")
+    
+    # Performance Tuning
+    MAX_WORKERS: int = Field(4, env="MAX_WORKERS")
+    CONNECTION_POOL_SIZE: int = Field(20, env="CONNECTION_POOL_SIZE")
+    CACHE_TTL: int = Field(3600, env="CACHE_TTL")
     
     # Resource Limits
     MAX_CONCURRENT_AGENTS: int = 10
@@ -97,7 +126,8 @@ class Settings(BaseSettings):
     MODELS_PATH: str = "/data/models"
     LOGS_PATH: str = "/logs"
     
-    @validator("SECRET_KEY", pre=True)
+    @field_validator("SECRET_KEY", mode="before")
+    @classmethod
     def validate_secret_key(cls, v: Optional[str]) -> str:
         if not v:
             return secrets.token_urlsafe(32)

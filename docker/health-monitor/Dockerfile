@@ -4,62 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    curl \
+    gcc \
+    g++ \
     git \
-    build-essential \
-    python3-dev \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+    curl \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir \
-    docker \
-    psutil \
-    requests \
-    fastapi \
-    uvicorn
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy application
+COPY app.py .
 
-# Create startup script
-COPY main.py requirements.txt* ./
-RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
+# Set environment variables
+ENV AGENT_ID=health-monitor
+ENV AGENT_NAME="Health Monitor"
+ENV PORT=8598
 
-# Add health check endpoint
-RUN echo '#!/usr/bin/env python3
-import http.server
-import socketserver
-import threading
-import json
-import os
+# Expose port
+EXPOSE 8598
 
-class HealthHandler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "healthy", "agent": "health-monitor"}).encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8598/health || exit 1
 
-def start_health_server():
-    with socketserver.TCPServer(("", 8000), HealthHandler) as httpd:
-        httpd.serve_forever()
+# Run the application
 
-if __name__ == "__main__":
-    # Start health check server in background
-    health_thread = threading.Thread(target=start_health_server)
-    health_thread.daemon = True
-    health_thread.start()
-    
-    # Import and run main application
-    import main
-    main.run()
-' > /app/web_interface.py
+# Run as non-root user
+USER nobody
 
-EXPOSE 8100
-EXPOSE 8000
-
-CMD ["python3", "web_interface.py"]
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

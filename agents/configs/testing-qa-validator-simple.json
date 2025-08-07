@@ -1,0 +1,17 @@
+{
+  "name": "testing-qa-validator",
+  "role": "Quality Assurance Specialist",
+  "capabilities": [
+    "automated_testing",
+    "code_quality_validation",
+    "security_testing",
+    "performance_testing",
+    "integration_testing"
+  ],
+  "ollama_endpoint": "http://ollama:11435",
+  "model": "tinyllama",
+  "max_tokens": 2048,
+  "priority": "high",
+  "agent_type": "qa_specialist",
+  "description": "Testing and QA specialist for code quality validation and automated testing"
+}

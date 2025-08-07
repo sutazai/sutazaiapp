@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick minimal AGI backend for immediate deployment
+Quick minimal automation backend for immediate deployment
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
-    title="SutazAI Backend AGI",
-    description="SutazAI AGI Backend Service - Quick Deploy",
+    title="SutazAI Backend automation",
+    description="SutazAI automation Backend Service - Quick Deploy",
     version="1.0.0"
 )
 
@@ -30,17 +30,17 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {
-        "message": "SutazAI Backend AGI is running!",
+        "message": "SutazAI Backend automation is running!",
         "status": "healthy",
         "version": "1.0.0",
-        "service": "backend-agi"
+        "service": "backend"
     }
 
 @app.get("/health")
 async def health():
     return {
         "status": "healthy",
-        "service": "backend-agi",
+        "service": "backend",
         "uptime": "running"
     }
 

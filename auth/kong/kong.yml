@@ -1,0 +1,338 @@
+_format_version: "3.0"
+
+# JWT Configuration
+_jwt_secrets:
+  - consumer: sutazai-agents
+    secret: sutazai_jwt_secret
+    key: sutazai_jwt_key
+    algorithm: HS256
+
+# OAuth2 Configuration  
+_oauth2_credentials:
+  - consumer: sutazai-agents
+    client_id: sutazai_oauth_client
+    client_secret: sutazai_oauth_secret
+    redirect_uris:
+      - http://localhost:10051/auth/callback
+
+# Consumer definitions for service groups
+consumers:
+  - username: sutazai-agents
+    custom_id: agents-group
+    tags:
+      - ai-agents
+      - system-services
+    
+  - username: sutazai-frontend
+    custom_id: frontend-group
+    tags:
+      - frontend
+      - user-interface
+      
+  - username: sutazai-admin
+    custom_id: admin-group
+    tags:
+      - admin
+      - management
+
+# Service definitions with authentication
+services:
+  # Backend API Service
+  - name: sutazai-backend-api
+    url: http://backend:8000
+    tags:
+      - backend
+      - api
+    routes:
+      - name: backend-api-route
+        paths:
+          - /api
+        strip_path: false
+        preserve_host: true
+    plugins:
+      - name: oidc
+        config:
+          client_id: sutazai-backend
+          client_secret: ${KEYCLOAK_CLIENT_SECRET}
+          discovery: http://keycloak:8080/realms/sutazai/.well-known/openid_configuration
+          realm: sutazai
+          redirect_uri: http://localhost:10051/auth/callback
+          scope: openid profile email
+          response_type: code
+          ssl_verify: false
+          session_secret: ${SESSION_SECRET}
+          
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+          anonymous: null
+          
+      - name: oauth2
+        config:
+          scopes:
+            - read
+            - write
+            - admin
+          mandatory_scope: true
+          provision_key: provision123
+          token_expiration: 3600
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_implicit_grant: false
+          enable_password_grant: true
+          
+      - name: rate-limiting
+        config:
+          minute: 1000
+          hour: 10000
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+          redis_database: 1
+          
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - PATCH
+            - OPTIONS
+          headers:
+            - Accept
+            - Accept-Version
+            - Content-Length
+            - Content-MD5
+            - Content-Type
+            - Date
+            - Authorization
+            - X-Auth-Token
+            - X-API-Key
+          exposed_headers:
+            - X-Auth-Token
+          credentials: true
+          max_age: 3600
+          
+      - name: prometheus
+        config:
+          per_consumer: true
+          status_code_metrics: true
+          latency_metrics: true
+          bandwidth_metrics: true
+
+  # Agent Services - Mass configuration for 69 agents
+  - name: agent-orchestrator-service
+    url: http://agent-orchestrator:8080
+    tags:
+      - agent
+      - orchestration
+    routes:
+      - name: agent-orchestrator-route
+        paths:
+          - /agents/orchestrator
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+          claims_to_verify:
+            - exp
+            - sub
+            - aud
+      - name: rate-limiting
+        config:
+          minute: 500
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+      - name: prometheus
+
+  - name: ai-system-validator-service
+    url: http://ai-system-validator:8080
+    tags:
+      - agent
+      - validation
+    routes:
+      - name: ai-system-validator-route
+        paths:
+          - /agents/validator
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+      - name: rate-limiting
+        config:
+          minute: 200
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+
+  - name: ai-senior-backend-developer-service
+    url: http://ai-senior-backend-developer:8080
+    tags:
+      - agent
+      - development
+    routes:
+      - name: ai-senior-backend-developer-route
+        paths:
+          - /agents/backend-dev
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+      - name: rate-limiting
+        config:
+          minute: 300
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+
+  # Ollama Service with Authentication
+  - name: ollama-service-auth
+    url: http://ollama:11434
+    tags:
+      - llm
+      - inference
+    routes:
+      - name: ollama-auth-route
+        paths:
+          - /ollama
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+          claims_to_verify:
+            - exp
+            - sub
+      - name: rate-limiting
+        config:
+          minute: 200
+          hour: 2000
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+          redis_database: 2
+      - name: prometheus
+
+  # Vector Database Services
+  - name: chromadb-auth-service
+    url: http://chromadb:8000
+    tags:
+      - vector-db
+      - storage
+    routes:
+      - name: chromadb-auth-route
+        paths:
+          - /chromadb
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+
+  - name: qdrant-auth-service
+    url: http://qdrant:6333
+    tags:
+      - vector-db
+      - storage
+    routes:
+      - name: qdrant-auth-route
+        paths:
+          - /qdrant
+        strip_path: true
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+      - name: rate-limiting
+        config:
+          minute: 100
+          policy: redis
+          redis_host: redis
+          redis_port: 6379
+
+  # Monitoring Services with Admin Auth
+  - name: prometheus-admin-service
+    url: http://prometheus:9090
+    tags:
+      - monitoring
+      - admin
+    routes:
+      - name: prometheus-admin-route
+        paths:
+          - /prometheus
+        strip_path: true
+    plugins:
+      - name: oidc
+        config:
+          client_id: sutazai-admin
+          client_secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+          discovery: http://keycloak:8080/realms/sutazai/.well-known/openid_configuration
+          realm: sutazai
+          scope: openid profile email admin
+          ssl_verify: false
+      - name: rate-limiting
+        config:
+          minute: 50
+          policy: local
+
+  - name: grafana-admin-service
+    url: http://grafana:3000
+    tags:
+      - monitoring
+      - admin
+    routes:
+      - name: grafana-admin-route
+        paths:
+          - /grafana
+        strip_path: true
+    plugins:
+      - name: oidc
+        config:
+          client_id: sutazai-admin
+          client_secret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+          discovery: http://keycloak:8080/realms/sutazai/.well-known/openid_configuration
+          realm: sutazai
+          scope: openid profile email admin
+          ssl_verify: false
+
+# Global plugins
+plugins:
+  - name: prometheus
+    config:
+      per_consumer: true
+      status_code_metrics: true
+      latency_metrics: true
+      bandwidth_metrics: true
+      upstream_health_metrics: true
+      
+  - name: correlation-id
+    config:
+      header_name: X-Correlation-ID
+      generator: uuid#counter
+      echo_downstream: true
+
+  - name: request-id
+    config:
+      header_name: X-Request-ID
+      generator: uuid
+      echo_downstream: true

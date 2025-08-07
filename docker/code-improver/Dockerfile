@@ -2,41 +2,40 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies including Docker CLI
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
-    docker.io \
-    cron \
     curl \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies for code improvement
-RUN pip install --no-cache-dir \
-    aider-chat \
-    semgrep \
-    black \
-    isort \
-    pylint \
-    mypy \
-    gitpython \
-    schedule \
-    fastapi \
-    uvicorn \
-    httpx \
-    pydantic
+# Copy requirements
+COPY requirements.txt .
 
-# Copy service implementation
-COPY code_improver.py /app/
-COPY improve_cron.sh /app/
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Make scripts executable
-RUN chmod +x /app/improve_cron.sh
+# Copy application
+COPY app.py .
 
-# Set up cron job for autonomous improvement
-RUN echo "0 */6 * * * /app/improve_cron.sh" | crontab -
+# Set environment variables
+ENV AGENT_ID=code-improver
+ENV AGENT_NAME="Code Improver"
+ENV PORT=8593
 
-EXPOSE 8080
+# Expose port
+EXPOSE 8593
 
-# Start both cron and the web service
-CMD service cron start && uvicorn code_improver:app --host 0.0.0.0 --port 8080
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8593/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

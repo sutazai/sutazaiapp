@@ -1,5 +1,5 @@
 """
-Enhanced Multi-Agent Coordinator for SutazAI AGI/ASI Platform
+Enhanced Multi-Agent Coordinator for SutazAI automation/advanced automation Platform
 ============================================================
 
 Advanced coordination system that integrates with the autonomous system controller

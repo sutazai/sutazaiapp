@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     libespeak-dev \
     portaudio19-dev \
     python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies for JARVIS
 RUN pip install --no-cache-dir \
@@ -69,7 +69,7 @@ RUN mkdir -p /app/data /app/logs /app/models /app/workspace
 ENV PYTHONUNBUFFERED=1
 ENV JARVIS_MODE=autonomous
 ENV OLLAMA_BASE_URL=http://ollama:11434
-ENV BACKEND_URL=http://backend-agi:8000
+ENV BACKEND_URL=http://backend:8000
 
 # Expose port
 EXPOSE 8120
@@ -79,4 +79,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8120/health || exit 1
 
 # Start JARVIS service
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["python", "jarvis_service.py"] 

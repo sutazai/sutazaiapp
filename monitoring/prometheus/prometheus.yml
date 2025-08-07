@@ -1,19 +1,89 @@
-# Prometheus configuration for SutazAI
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
+rule_files:
+  - "/etc/prometheus/alert_rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - sutazai-alertmanager:9093
+
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ["localhost:9090"]
+      - targets: ['localhost:9090']
 
-  - job_name: "backend-agi"
+  - job_name: 'node-exporter'
     static_configs:
-      - targets: ["backend-agi:8000"]
-    metrics_path: "/prometheus-metrics"
+      - targets: ['sutazai-node-exporter:9100']
 
-  # Ollama doesn't expose Prometheus metrics
-  # - job_name: "ollama"
-  #   static_configs:
-  #     - targets: ["ollama:11434"]
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['sutazai-cadvisor:8080']
+
+  - job_name: 'sutazai-backend'
+    static_configs:
+      - targets: ['sutazai-backend:8000']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-frontend'
+    static_configs:
+      - targets: ['sutazai-frontend:8501']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-ollama'
+    static_configs:
+      - targets: ['sutazai-ollama:11434']
+    metrics_path: '/api/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-databases'
+    static_configs:
+      - targets: 
+        - 'sutazai-postgres-exporter-monitoring:9187'
+        - 'sutazai-redis-exporter-monitoring:9121'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  - job_name: 'sutazai-hardware-optimizer'
+    static_configs:
+      - targets: ['sutazai-hardware-resource-optimizer:8080']
+    metrics_path: '/health'
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  - job_name: 'sutazai-agents'
+    static_configs:
+      - targets: 
+        - 'sutazai-data-analysis-engineer-phase3:8080'
+        - 'sutazai-dify-automation-specialist-phase3:8080'
+        - 'sutazai-awesome-code-ai-phase3:8080'
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  - job_name: 'externalService, thirdPartyAPI-http-checks'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://sutazai-backend:8000/health
+        - http://sutazai-redis:6379
+        - http://sutazai-chromadb:8000/api/v1/heartbeat
+        - http://sutazai-qdrant:6333/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sutazai-blackbox-exporter:9115

@@ -1,0 +1,63 @@
+{
+  "oversight_port": 8095,
+  "enable_compliance_reporting": true,
+  "enable_alert_monitoring": true,
+  "enable_automatic_reports": true,
+  "compliance_frameworks": [
+    "ai_ethics",
+    "gdpr",
+    "hipaa",
+    "iso27001",
+    "nist"
+  ],
+  "alert_thresholds": {
+    "agent_failure_threshold": 3,
+    "memory_usage_threshold": 90,
+    "cpu_usage_threshold": 95,
+    "response_time_threshold": 30,
+    "disk_usage_threshold": 85,
+    "queue_depth_threshold": 100
+  },
+  "report_schedule": {
+    "daily_reports": true,
+    "weekly_reports": true,
+    "monthly_reports": true,
+    "quarterly_reports": false,
+    "annual_reports": false
+  },
+  "monitoring_intervals": {
+    "agent_health_check": 60,
+    "system_metrics": 300,
+    "compliance_check": 1800,
+    "alert_escalation": 300,
+    "performance_check": 300,
+    "statistics_report": 3600
+  },
+  "escalation_policy": {
+    "enabled": true,
+    "level_1_timeout": 300,
+    "level_2_timeout": 900,
+    "level_3_timeout": 1800,
+    "level_4_timeout": 3600,
+    "max_escalation_level": 4
+  },
+  "dashboard_config": {
+    "refresh_interval": 10,
+    "max_alerts_display": 50,
+    "max_audit_events": 100,
+    "enable_real_time": true,
+    "websocket_timeout": 30
+  },
+  "security": {
+    "require_authentication": false,
+    "session_timeout": 3600,
+    "max_failed_attempts": 5,
+    "lockout_duration": 300
+  },
+  "logging": {
+    "level": "INFO",
+    "max_file_size": 10485760,
+    "backup_count": 5,
+    "enable_audit_log": true
+  }
+}

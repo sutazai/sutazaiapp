@@ -30,7 +30,7 @@ class TaskRequest(BaseModel):
 
 class AutoGenAgentServer:
     def __init__(self):
-        self.ollama_base = os.getenv("OLLAMA_API_BASE", "http://localhost:11434")
+        self.ollama_base = os.getenv("OLLAMA_API_BASE", "http://localhost:10104")
         self.agents = {}
         self.group_chat = None
         self.setup_agents()
@@ -52,7 +52,7 @@ class AutoGenAgentServer:
             llm_config = {
                 "config_list": [
                     {
-                        "model": "llama3.2:1b",
+                        "model": "tinyllama.2:1b",
                         "base_url": self.ollama_base,
                         "api_key": "dummy"
                     }

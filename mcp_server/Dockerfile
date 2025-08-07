@@ -1,47 +1,37 @@
-FROM node:20-alpine AS base
+# MCP Server Dockerfile
+FROM node:20-slim
 
-# Install dependencies for PostgreSQL and other native modules
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    postgresql-client \
-    redis \
-    curl
-
-# Create app directory
+# Set working directory
 WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Create non-root user
-RUN addgroup -g 1001 -S mcp && \
-    adduser -S mcp -u 1001
+# Install Node.js dependencies
+RUN npm ci --only=production
 
 # Copy application code
-COPY --chown=mcp:mcp . .
+COPY . .
 
-# Create necessary directories
-RUN mkdir -p /app/logs /app/data && \
-    chown -R mcp:mcp /app
+# Create data directory
+RUN mkdir -p /app/data /app/logs
 
-# Switch to non-root user
-USER mcp
+# Create non-root user
+RUN useradd -m -u 1001 nodeuser && chown -R nodeuser:nodeuser /app
+USER nodeuser
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node -e "console.log('Health check passed')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e "process.exit(0)"
 
-# Expose port (if needed for debugging)
+# Expose port
 EXPOSE 3000
 
-# Set default environment
-ENV NODE_ENV=production
-ENV LOG_LEVEL=info
-
-# Start the application
-CMD ["node", "index.js"] 
+# Start the MCP server
+CMD ["node", "index.js"]

@@ -1,51 +1,41 @@
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-devel
+FROM python:3.11-slim
 
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    wget \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install FSDP and distributed training dependencies
-RUN pip install --no-cache-dir \
-    torch \
-    torchvision \
-    torchaudio \
-    transformers \
-    accelerate \
-    deepspeed \
-    fairscale \
-    wandb \
-    tensorboard \
-    scipy \
-    scikit-learn \
-    datasets \
-    tokenizers
+# Copy requirements
+COPY requirements.txt .
 
-# Copy FSDP service files
-COPY fsdp_service.py requirements.txt* ./
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install additional requirements if they exist
-RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
+# Copy application
+COPY app.py .
 
-# Create model storage directory
-RUN mkdir -p /models /data
+# Set environment variables
+ENV AGENT_ID=fsdp
+ENV AGENT_NAME="FSDP"
+ENV PORT=8596
 
-# Environment variables
-ENV PYTHONUNBUFFERED=1
-ENV CUDA_VISIBLE_DEVICES=0
-ENV TORCH_DISTRIBUTED_DEBUG=DETAIL
-
-# Expose port for distributed training coordination
-EXPOSE 29500
+# Expose port
+EXPOSE 8596
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import torch; print('FSDP service healthy')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8596/health || exit 1
 
-# Default command
-CMD ["python", "fsdp_service.py"] 
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

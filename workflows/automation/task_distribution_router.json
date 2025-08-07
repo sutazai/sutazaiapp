@@ -83,7 +83,7 @@
         "model_optimization",
         "rag_development",
         "agi_design",
-        "neural_networks",
+        "processing_networks",
         "deep_learning"
       ],
       "specializations": ["transformer_models", "reinforcement_learning", "computer_vision"],

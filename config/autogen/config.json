@@ -1,15 +1,15 @@
 {
   "config_list": [
     {
-      "model": "deepseek-coder:33b",
+      "model": "tinyllama-coder:33b",
       "api_key": "local",
-      "base_url": "http://ollama:11434/v1",
+      "base_url": "http://ollama:10104/v1",
       "api_type": "openai"
     },
     {
-      "model": "llama3.2:1b",
+      "model": "tinyllama.2:1b",
       "api_key": "local", 
-      "base_url": "http://ollama:11434/v1",
+      "base_url": "http://ollama:10104/v1",
       "api_type": "openai"
     }
   ]

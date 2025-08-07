@@ -38,7 +38,7 @@ class AutoGPTAgent:
     """Real AutoGPT-like agent implementation"""
     
     def __init__(self):
-        self.ollama_url = "http://ollama:11434"
+        self.ollama_url = "http://ollama:10104"
         self.agent_name = "AutoGPT"
         self.capabilities = [
             "task_automation",
@@ -319,7 +319,7 @@ except Exception as e:
             response = requests.post(
                 f"{self.ollama_url}/api/generate",
                 json={
-                    "model": "llama3.2:1b",
+                    "model": "tinyllama.2:1b",
                     "prompt": f"As AutoGPT, help with this task: {task}",
                     "stream": False
                 },
@@ -332,7 +332,7 @@ except Exception as e:
                     "success": True,
                     "result": result.get("response", "Task completed"),
                     "task_type": "general",
-                    "model": "llama3.2:1b"
+                    "model": "tinyllama.2:1b"
                 }
             else:
                 return {

@@ -14,6 +14,7 @@ from datetime import datetime
 import json
 
 from app.core.performance import performance_optimizer, rate_limiter
+from app.core.security import xss_protection
 
 logger = logging.getLogger(__name__)
 
@@ -140,21 +141,119 @@ class CompressionMiddleware(GZipMiddleware):
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    """Add security headers to responses"""
+    """Add comprehensive security headers to prevent XSS and other attacks"""
     
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         response = await call_next(request)
         
-        # Add security headers
+        # Add comprehensive security headers
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=(), fullscreen=(), payment=()"
         
-        # Add CSP for API
-        response.headers["Content-Security-Policy"] = "default-src 'self'"
+        # Enhanced CSP for comprehensive XSS protection
+        csp_directives = [
+            "default-src 'self'",
+            "script-src 'self' 'strict-dynamic'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: https:",
+            "font-src 'self'",
+            "connect-src 'self'",
+            "media-src 'self'",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "upgrade-insecure-requests",
+            "block-all-mixed-content"
+        ]
+        response.headers["Content-Security-Policy"] = "; ".join(csp_directives)
+        
+        # Additional security headers
+        response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Resource-Policy"] = "same-site"
+        
+        return response
+
+
+class XSSProtectionMiddleware(BaseHTTPMiddleware):
+    """Middleware for comprehensive XSS protection"""
+    
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # Sanitize request data
+        if request.method in ["POST", "PUT", "PATCH"]:
+            try:
+                # Get request body if it exists
+                body = await request.body()
+                if body:
+                    # Parse JSON body
+                    try:
+                        request_data = json.loads(body.decode())
+                        
+                        # Sanitize the request data
+                        sanitized_data = await xss_protection.process_request({
+                            "body": request_data,
+                            "path": str(request.url.path),
+                            "method": request.method
+                        })
+                        
+                        # Create new request with sanitized data
+                        sanitized_body = json.dumps(sanitized_data.get("body", {})).encode()
+                        
+                        # Replace request body
+                        request._body = sanitized_body
+                        
+                    except json.JSONDecodeError:
+                        # If not JSON, treat as text and sanitize
+                        text_content = body.decode('utf-8', errors='ignore')
+                        try:
+                            sanitized_text = xss_protection.validator.validate_input(text_content, "text")
+                            request._body = sanitized_text.encode()
+                        except ValueError as e:
+                            logger.warning(f"XSS protection blocked request: {e}")
+                            return JSONResponse(
+                                status_code=400,
+                                content={"error": "Request blocked for security reasons", "details": str(e)}
+                            )
+                            
+            except Exception as e:
+                logger.error(f"XSS protection error: {e}")
+                # Continue with original request if sanitization fails
+                pass
+        
+        # Process the request
+        response = await call_next(request)
+        
+        # Sanitize response if it's JSON
+        if response.headers.get("content-type", "").startswith("application/json"):
+            try:
+                # Read response body
+                body = b""
+                async for chunk in response.body_iterator:
+                    body += chunk
+                
+                if body:
+                    # Parse and sanitize response data
+                    response_data = json.loads(body.decode())
+                    sanitized_response = await xss_protection.sanitize_response(response_data)
+                    
+                    # Create new response with sanitized data
+                    sanitized_body = json.dumps(sanitized_response).encode()
+                    
+                    return Response(
+                        content=sanitized_body,
+                        status_code=response.status_code,
+                        headers=dict(response.headers),
+                        media_type="application/json"
+                    )
+            except Exception as e:
+                logger.error(f"Response sanitization error: {e}")
+                # Return original response if sanitization fails
+                pass
         
         return response
 

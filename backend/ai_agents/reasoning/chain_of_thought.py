@@ -123,7 +123,7 @@ class AdvancedReasoningEngine:
                 1. What is the core question being asked?
                 2. What information do we have?
                 3. What information might we need?
-                4. What approaches could work?
+                4. What approaches tested implementation or proof of concept?
                 5. What are potential challenges?
                 
                 Be specific and show your reasoning.
@@ -177,11 +177,11 @@ class AdvancedReasoningEngine:
         }
         
         # Use the best reasoning agent
-        result = await self._execute_reasoning_task("deepseek-coder", hypothesis_task)
+        result = await self._execute_reasoning_task("tinyllama", hypothesis_task)
         
         step = ReasoningStep(
             stage=ReasoningStage.HYPOTHESIS,
-            agent_id="deepseek-coder",
+            agent_id="tinyllama",
             thought=result.get("hypotheses", ""),
             confidence=result.get("confidence", 0.7),
             evidence=result.get("evidence", []),
@@ -203,7 +203,7 @@ class AdvancedReasoningEngine:
             # Get multiple agents to verify each hypothesis
             verification_tasks = []
             
-            verification_agents = ["llama3", "qwen3", "mistral"]
+            verification_agents = ["tinyllama"]
             
             for agent_type in verification_agents:
                 task = {
@@ -283,11 +283,11 @@ class AdvancedReasoningEngine:
     def _select_agents_for_domain(self, domain: str) -> List[str]:
         """Select best agents for specific domain"""
         domain_mapping = {
-            "code": ["deepseek-coder", "codellama", "starcoder"],
-            "math": ["wizard-math", "tinyllama", "llama3"],
-            "science": ["llama3", "qwen3", "neural-chat"],
-            "general": ["tinyllama", "llama3", "qwen3", "mistral"],
-            "analysis": ["tinyllama", "llama3", "qwen3"]
+            "code": ["tinyllama"],
+            "math": ["tinyllama"],
+            "science": ["tinyllama"],
+            "general": ["tinyllama"],
+            "analysis": ["tinyllama"]
         }
         
         return domain_mapping.get(domain, domain_mapping["general"])

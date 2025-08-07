@@ -1,5 +1,9 @@
 #!/bin/bash
-# SSH key exchange script with enhanced configuration
+# Purpose: SSH key exchange script with enhanced configuration
+# Usage: ./ssh_key_exchange.sh
+# Requires: ssh-keygen, ssh-copy-id, network connectivity
+
+set -euo pipefail
 
 # Source configuration
 source /opt/sutazaiapp/scripts/config/sync_config.sh

@@ -22,18 +22,12 @@ class ModelInfo(BaseModel):
     memory_usage: str
     quantization: str
 
-ollama_url = os.environ.get('OLLAMA_URL', 'http://ollama:11434')
+ollama_url = os.environ.get('OLLAMA_URL', 'http://ollama:10104')
 auto_pull_models = os.environ.get('AUTO_PULL_MODELS', 'true').lower() == 'true'
 models_cache = {}
 
 required_models = [
-    "tinyllama",
-    "qwen3:8b", 
-    "deepseek-coder:33b",
-    "llama2:7b",
-    "llama2:13b",
-    "codellama:7b",
-    "codellama:13b"
+    "tinyllama"
 ]
 
 logging.basicConfig(level=logging.INFO)

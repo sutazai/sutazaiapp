@@ -4,30 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Clone FinRobot repository
-RUN git clone https://github.com/AI4Finance-Foundation/FinRobot.git . || mkdir -p /app
+# Copy requirements
+COPY requirements.txt .
 
-# Install financial analysis dependencies
-RUN pip install --no-cache-dir \
-    yfinance \
-    pandas \
-    numpy \
-    scikit-learn \
-    ta \
-    fastapi \
-    uvicorn \
-    httpx \
-    plotly \
-    matplotlib
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Create FinRobot service
-COPY finrobot_service.py /app/main.py
+# Copy application
+COPY app.py .
 
-EXPOSE 8080
+# Set environment variables
+ENV AGENT_ID=finrobot
+ENV AGENT_NAME="FinRobot"
+ENV PORT=8591
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Expose port
+EXPOSE 8591
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8591/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

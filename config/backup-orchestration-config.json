@@ -1,0 +1,102 @@
+{
+  "orchestration": {
+    "enabled": true,
+    "parallel_execution": true,
+    "max_concurrent_operations": 3,
+    "stop_on_critical_failure": true,
+    "retry_failed_operations": true,
+    "max_retries": 2
+  },
+  "schedule": {
+    "daily_backup_time": "02:00",
+    "weekly_backup_day": "Sunday",
+    "weekly_backup_time": "03:00",
+    "monthly_backup_day": 1,
+    "monthly_backup_time": "04:00"
+  },
+  "operations": {
+    "database": {
+      "enabled": true,
+      "daily": true,
+      "weekly": true,
+      "monthly": true,
+      "priority": 1,
+      "critical": true
+    },
+    "configuration": {
+      "enabled": true,
+      "daily": true,
+      "weekly": true,
+      "monthly": true,
+      "priority": 2,
+      "critical": true
+    },
+    "agent_state": {
+      "enabled": true,
+      "daily": true,
+      "weekly": false,
+      "monthly": false,
+      "priority": 3,
+      "critical": false
+    },
+    "models": {
+      "enabled": true,
+      "daily": false,
+      "weekly": true,
+      "monthly": true,
+      "priority": 4,
+      "critical": false
+    },
+    "monitoring": {
+      "enabled": true,
+      "daily": true,
+      "weekly": false,
+      "monthly": false,
+      "priority": 5,
+      "critical": false
+    },
+    "logs": {
+      "enabled": true,
+      "daily": true,
+      "weekly": false,
+      "monthly": false,
+      "priority": 6,
+      "critical": false
+    }
+  },
+  "post_operations": {
+    "verification": {
+      "enabled": true,
+      "run_after": ["database", "configuration"],
+      "timeout_minutes": 45
+    },
+    "offsite_replication": {
+      "enabled": true,
+      "run_after": ["verification"],
+      "timeout_minutes": 180
+    },
+    "restore_testing": {
+      "enabled": true,
+      "frequency": "weekly",
+      "timeout_minutes": 60
+    },
+    "monitoring": {
+      "enabled": true,
+      "run_always": true,
+      "timeout_minutes": 15
+    }
+  },
+  "3_2_1_validation": {
+    "enabled": true,
+    "local_copies_required": 2,
+    "offsite_copies_required": 1,
+    "verify_different_media": true,
+    "media_types": ["local_disk", "network_storage", "cloud_storage"]
+  },
+  "notification": {
+    "enabled": true,
+    "notify_on_success": false,
+    "notify_on_failure": true,
+    "notify_on_partial_success": true
+  }
+}

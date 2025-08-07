@@ -234,7 +234,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             model_name: {
               type: "string",
-              description: "Name of the model (e.g., 'deepseek-r1:8b')"
+              description: "Name of the model (e.g., 'tinyllama')"
             },
             parameters: {
               type: "object",

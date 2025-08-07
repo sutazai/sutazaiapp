@@ -12,4 +12,7 @@ RUN pip install --no-cache-dir \
 
 EXPOSE 8888
 
+
+# Run as non-root user
+USER nobody
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser"]

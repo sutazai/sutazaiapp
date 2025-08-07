@@ -1,0 +1,197 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "SutazAI System Performance",
+    "tags": ["sutazai", "performance", "ai-agents"],
+    "style": "dark",
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "System Overview",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 24, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU Usage %"
+          },
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "legendFormat": "Memory Usage %"
+          },
+          {
+            "expr": "node_load1",
+            "legendFormat": "Load Average"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 70},
+                {"color": "red", "value": 85}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Container Health Rate",
+        "type": "gauge",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {
+            "expr": "(count(container_last_seen{name=~\"sutazai-.*\"}) - count(container_last_seen{name=~\"sutazai-.*\"} unless on(name) (container_spec_cpu_quota{name=~\"sutazai-.*\"} / container_spec_cpu_period{name=~\"sutazai-.*\"} < 0.1))) / count(container_last_seen{name=~\"sutazai-.*\"}) * 100",
+            "legendFormat": "Healthy Containers %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 80},
+                {"color": "green", "value": 95}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Active AI Agents",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+        "targets": [
+          {
+            "expr": "count(container_last_seen{name=~\"sutazai-.*-phase3\"})",
+            "legendFormat": "Total Phase 3 Agents"
+          },
+          {
+            "expr": "count(container_last_seen{name=~\"sutazai-.*-phase3\"} and container_memory_usage_bytes{name=~\"sutazai-.*-phase3\"} > 100000000)",
+            "legendFormat": "Active Agents (>100MB)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Memory Usage by Container",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{name=~\"sutazai-.*\"} / 1024 / 1024",
+            "legendFormat": "{{name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "MB",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "CPU Usage by Container",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 20},
+        "targets": [
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{name=~\"sutazai-.*\"}[5m]) * 100",
+            "legendFormat": "{{name}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Ollama Model Performance",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28},
+        "targets": [
+          {
+            "expr": "container_memory_usage_bytes{name=\"sutazai-ollama\"} / 1024 / 1024 / 1024",
+            "legendFormat": "Ollama Memory (GB)"
+          },
+          {
+            "expr": "rate(container_cpu_usage_seconds_total{name=\"sutazai-ollama\"}[5m]) * 100",
+            "legendFormat": "Ollama CPU %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Container Restart Count",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28},
+        "targets": [
+          {
+            "expr": "sum(increase(container_start_time_seconds{name=~\"sutazai-.*\"}[1h]))",
+            "legendFormat": "Restarts (1h)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": 0},
+                {"color": "yellow", "value": 5},
+                {"color": "red", "value": 20}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Resource Utilization Forecast",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 36},
+        "targets": [
+          {
+            "expr": "predict_linear(node_memory_MemAvailable_bytes[1h], 3600) / 1024 / 1024 / 1024",
+            "legendFormat": "Predicted Available Memory (GB) +1h"
+          },
+          {
+            "expr": "predict_linear(node_load1[1h], 3600)",
+            "legendFormat": "Predicted Load Average +1h"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      }
+    ]
+  }
+}

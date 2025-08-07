@@ -392,7 +392,7 @@ class RecursiveTaskDecomposer:
             """
             
             response = await self.orchestration_engine.ollama_client.post("/api/generate", json={
-                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('planning', 'qwen2.5:14b'),
+                "model": self.orchestration_engine.config.get('ollama', {}).get('models', {}).get('planning', 'tinyllama2.5:14b'),
                 "prompt": decomposition_prompt,
                 "stream": False
             })

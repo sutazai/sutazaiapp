@@ -30,10 +30,8 @@ ollama_config:
   # Model Priority (for automatic unloading)
   model_priority:
     high_priority:
-      - "qwen2.5:3b"
-      - "llama3.2:3b"
-    low_priority:
-      - "tinyllama"          # Larger models get lower priority
+      - "tinyllama"          # TinyLlama is the exclusive model
+    low_priority: []        # No other models
       
   # Emergency Controls
   emergency_settings:
@@ -63,7 +61,7 @@ container_limits:
     memory: "2G"
     cpus: "2"
     
-  backend_agi:
+  backend:
     memory: "2G"
     cpus: "2"
 

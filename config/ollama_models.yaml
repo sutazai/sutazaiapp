@@ -1,19 +1,19 @@
 ---
 # Ollama Model Configuration for SutazAI
-# Using TinyLlama as default for minimal resource usage
+# Using GPT-OSS as the exclusive model
 
 default_model: "tinyllama:latest"
 
 models:
   tinyllama:
     name: "tinyllama:latest"
-    size: "637MB"
-    context_window: 2048
-    description: "TinyLlama 1.1B - Extremely efficient for basic tasks"
+    size: "8GB"
+    context_window: 4096
+    description: "GPT-OSS - The exclusive model for all tasks"
     pull_command: "ollama pull tinyllama:latest"
     
-  # Fallback models for specific tasks (only pull if needed)
-  code_model: "tinyllama:latest"  # Use same model to save resources
+  # All models use GPT-OSS exclusively
+  code_model: "tinyllama:latest"
   reasoning_model: "tinyllama:latest"
   chat_model: "tinyllama:latest"
 
@@ -21,9 +21,7 @@ models:
 agent_models:
   default: "tinyllama:latest"
   
-  # Override only if absolutely necessary
-  # Example: code_specialist: "codellama:7b"
-  # But for now, all agents use tinyllama
+  # GPT-OSS is the exclusive model for all agents
 
 # Resource limits
 resource_config:
@@ -35,10 +33,10 @@ resource_config:
 # Model initialization script
 init_commands: |
   #!/bin/bash
-  echo "Pulling TinyLlama model..."
+  echo "Pulling GPT-OSS model..."
   ollama pull tinyllama:latest
-  echo "TinyLlama ready!"
+  echo "GPT-OSS ready!"
   
   # Test the model
-  echo "Testing TinyLlama..."
-  ollama run tinyllama:latest "Hello, I am TinyLlama. I am ready to help!" --verbose
+  echo "Testing GPT-OSS..."
+  ollama run tinyllama:latest "Hello, I am GPT-OSS. I am ready to help!" --verbose

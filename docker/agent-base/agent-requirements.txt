@@ -1,0 +1,65 @@
+# Core Web Framework Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+
+# HTTP Client and Networking
+httpx==0.25.2
+requests==2.31.0
+websockets==12.0
+
+# Database and Caching
+redis==5.0.1
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+alembic==1.13.1
+
+# Message Queue and Service Discovery
+pika==1.3.2
+python-consul==1.1.0
+
+# Monitoring and Metrics
+prometheus-client==0.19.0
+psutil==5.9.6
+
+# Async and File Operations
+asyncio-mqtt==0.13.0
+aiofiles==23.2.1
+aioredis==2.0.1
+
+# Configuration and Environment
+python-dotenv==1.0.0
+pyyaml==6.0.1
+toml==0.10.2
+
+# Logging and Utilities
+loguru==0.7.2
+structlog==23.2.0
+
+# Security and Authentication
+cryptography==41.0.8
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Data Processing and Validation
+jsonschema==4.20.0
+marshmallow==3.20.1
+pandas==2.1.4
+numpy==1.24.4
+
+# AI/ML Core Dependencies (lightweight)
+tokenizers==0.15.0
+transformers==4.36.2
+torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers==2.2.2
+
+# Development and Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+flake8==6.1.0
+
+# System and Process Management
+schedule==1.2.0
+supervisor==4.2.5

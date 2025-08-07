@@ -1,0 +1,57 @@
+================================================================================
+SUTAZAI NETWORK VALIDATION REPORT
+================================================================================
+Generated: Sat Aug  2 23:41:13 2025
+Overall Status: WARNING
+
+PORT AVAILABILITY:
+----------------------------------------
+  ✓ Port 5432 (PostgreSQL): PostgreSQL port 5432 is accessible
+    Response time: 0.07ms
+  ✓ Port 6379 (Redis): Redis port 6379 is accessible
+    Response time: 0.04ms
+  ✓ Port 7474 (Neo4j HTTP): Neo4j HTTP port 7474 is accessible
+    Response time: 0.04ms
+  ✓ Port 7687 (Neo4j Bolt): Neo4j Bolt port 7687 is accessible
+    Response time: 0.06ms
+  ✓ Port 8001 (ChromaDB): ChromaDB port 8001 is accessible
+    Response time: 0.03ms
+
+PORT CONFLICTS:
+----------------------------------------
+  ⚠ Port 53 has multiple listeners
+  ⚠ Port 53 has multiple listeners
+  ⚠ Port 22 has multiple listeners
+  ⚠ Port 80 has multiple listeners
+  ⚠ Port 7687 has multiple listeners
+  ⚠ Port 8001 has multiple listeners
+  ⚠ Port 7474 has multiple listeners
+  ⚠ Port 6379 has multiple listeners
+  ⚠ Port 5432 has multiple listeners
+
+SERVICE CONNECTIVITY:
+----------------------------------------
+  ✓ postgres: accessible
+    Response time: 0.15ms
+  ✓ redis: accessible
+    Response time: 0.04ms
+  ✓ neo4j_http: accessible
+    Response time: 56.88ms
+  ✓ neo4j_bolt: accessible
+    Response time: 0.13ms
+  ✓ chromadb: accessible
+    Response time: 4.65ms
+
+DOCKER NETWORKING:
+----------------------------------------
+  Networks found: 5
+    - bridge (bridge)
+    - host (host)
+    - none (null)
+    - sutazai-network (bridge)
+    - sutazai_network (bridge)
+  Container connectivity:
+    ✗ sutazai-postgres: not_running
+    ✗ sutazai-redis: not_running
+    ✗ sutazai-neo4j: not_running
+    ✗ sutazai-chromadb: not_running

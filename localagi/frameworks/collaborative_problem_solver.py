@@ -35,7 +35,7 @@ class ProblemType(Enum):
 
 class CollaborationPattern(Enum):
     DIVIDE_AND_CONQUER = "divide_and_conquer"
-    BRAINSTORM_AND_REFINE = "brainstorm_and_refine"
+    BRAINSTORM_AND_REFINE = "coordinatorstorm_and_refine"
     PEER_REVIEW = "peer_review"
     EXPERT_PANEL = "expert_panel"
     ENSEMBLE_REASONING = "ensemble_reasoning"
@@ -300,7 +300,7 @@ class CollaborativeProblemSolver:
         if pattern == CollaborationPattern.DIVIDE_AND_CONQUER:
             await self._execute_divide_and_conquer(session, time_limit)
         elif pattern == CollaborationPattern.BRAINSTORM_AND_REFINE:
-            await self._execute_brainstorm_and_refine(session, time_limit)
+            await self._execute_coordinatorstorm_and_refine(session, time_limit)
         elif pattern == CollaborationPattern.EXPERT_PANEL:
             await self._execute_expert_panel(session, time_limit)
         elif pattern == CollaborationPattern.COMPETITIVE_SOLUTIONS:
@@ -342,24 +342,24 @@ class CollaborativeProblemSolver:
         if integrated_solution:
             session.final_solution = integrated_solution
     
-    async def _execute_brainstorm_and_refine(self, 
+    async def _execute_coordinatorstorm_and_refine(self, 
                                            session: CollaborationSession,
                                            time_limit: Optional[timedelta]) -> None:
         """
-        Execute brainstorm and refine collaboration pattern.
+        Execute coordinatorstorm and refine collaboration pattern.
         """
-        session.phase = "brainstorming"
+        session.phase = "coordinatorstorming"
         
-        # Step 1: Parallel brainstorming
-        brainstorm_tasks = []
+        # Step 1: Parallel coordinatorstorming
+        coordinatorstorm_tasks = []
         for agent_id in session.participating_agents:
-            task = self._brainstorm_solutions(agent_id, session.problem, session)
-            brainstorm_tasks.append(task)
+            task = self._coordinatorstorm_solutions(agent_id, session.problem, session)
+            coordinatorstorm_tasks.append(task)
         
-        brainstorm_results = await asyncio.gather(*brainstorm_tasks, return_exceptions=True)
+        coordinatorstorm_results = await asyncio.gather(*coordinatorstorm_tasks, return_exceptions=True)
         
         # Collect initial solutions
-        for i, result in enumerate(brainstorm_results):
+        for i, result in enumerate(coordinatorstorm_results):
             if not isinstance(result, Exception) and result:
                 for solution in result:
                     session.solutions[solution.id] = solution
@@ -800,8 +800,8 @@ class CollaborativeProblemSolver:
     
     # Additional helper methods for other collaboration patterns would go here...
     
-    async def _brainstorm_solutions(self, agent_id: str, problem: Problem, session: CollaborationSession) -> List[Solution]:
-        """Generate multiple solution ideas through brainstorming."""
+    async def _coordinatorstorm_solutions(self, agent_id: str, problem: Problem, session: CollaborationSession) -> List[Solution]:
+        """Generate multiple solution ideas through coordinatorstorming."""
         # Simplified implementation - full version would be more sophisticated
         solutions = await self._solve_subproblems(agent_id, [problem], session)
         return solutions

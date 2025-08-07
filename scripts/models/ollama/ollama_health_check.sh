@@ -1,17 +1,21 @@
 #!/bin/bash
-# Ollama Health Check
+# Purpose: Ollama Health Check - Monitor API and container health
+# Usage: ./ollama_health_check.sh
+# Requires: curl, jq, docker access
+
+set -euo pipefail
 
 check_ollama_health() {
     # Check if Ollama is responding
-    if curl -f -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+    if curl -f -s http://localhost:10104/api/tags > /dev/null 2>&1; then
         echo "Ollama is healthy"
         
         # Check loaded models
-        MODELS=$(curl -s http://localhost:11434/api/tags | jq -r '.models[].name' 2>/dev/null | wc -l)
+        MODELS=$(curl -s http://localhost:10104/api/tags | jq -r '.models[].name' 2>/dev/null | wc -l)
         echo "Loaded models: $MODELS"
         
         # Check response time
-        RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:11434/api/tags)
+        RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:10104/api/tags)
         echo "API response time: ${RESPONSE_TIME}s"
         
         # Memory usage

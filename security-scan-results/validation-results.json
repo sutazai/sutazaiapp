@@ -1,0 +1,27 @@
+{
+  "timestamp": "2025-08-05T00:51:11.956827",
+  "overall_score": 10.0,
+  "category_results": {
+    "secrets": {
+      "score": 100,
+      "max": 100,
+      "passed": true
+    },
+    "dependencies": {
+      "score": 100,
+      "max": 100,
+      "passed": true
+    },
+    "containers": {
+      "score": 100,
+      "max": 100,
+      "passed": true
+    },
+    "pipeline": {
+      "score": 100,
+      "max": 100,
+      "passed": true
+    }
+  },
+  "status": "EXCELLENT"
+}

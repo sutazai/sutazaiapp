@@ -1,0 +1,4603 @@
+{
+  "summary": {
+    "total_containers": 201,
+    "total_requirements_files": 134,
+    "orphaned_requirements": 42,
+    "containers_without_requirements": 51
+  },
+  "containers": {
+    "/opt/sutazaiapp/docker/Dockerfile.streamlit": {
+      "dockerfile": "docker/Dockerfile.streamlit",
+      "container_name": "docker",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker"
+    },
+    "/opt/sutazaiapp/docker/Dockerfile.healthcheck": {
+      "dockerfile": "docker/Dockerfile.healthcheck",
+      "container_name": "docker",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker"
+    },
+    "/opt/sutazaiapp/backend/Dockerfile": {
+      "dockerfile": "backend/Dockerfile",
+      "container_name": "backend",
+      "requirements": [
+        {
+          "file": "backend/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements-minimal.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements-test.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements-minimal.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "backend/requirements-test.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.12.8-slim",
+      "build_context": "backend"
+    },
+    "/opt/sutazaiapp/tests/Dockerfile": {
+      "dockerfile": "tests/Dockerfile",
+      "container_name": "tests",
+      "requirements": [
+        {
+          "file": "tests/requirements-test.txt",
+          "exists": true
+        },
+        {
+          "file": "tests/requirements-test.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "tests"
+    },
+    "/opt/sutazaiapp/frontend/Dockerfile": {
+      "dockerfile": "frontend/Dockerfile",
+      "container_name": "frontend",
+      "requirements": [
+        {
+          "file": "frontend/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "frontend/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.12.8-slim",
+      "build_context": "frontend"
+    },
+    "/opt/sutazaiapp/self-healing/Dockerfile": {
+      "dockerfile": "self-healing/Dockerfile",
+      "container_name": "self-healing",
+      "requirements": [
+        {
+          "file": "self-healing/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "self-healing/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "self-healing"
+    },
+    "/opt/sutazaiapp/mcp_server/Dockerfile": {
+      "dockerfile": "mcp_server/Dockerfile",
+      "container_name": "mcp_server",
+      "requirements": [],
+      "base_image": "node:20-alpine",
+      "build_context": "mcp_server"
+    },
+    "/opt/sutazaiapp/agents/Dockerfile": {
+      "dockerfile": "agents/Dockerfile",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "agents/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents"
+    },
+    "/opt/sutazaiapp/docker/autogpt/Dockerfile": {
+      "dockerfile": "docker/autogpt/Dockerfile",
+      "container_name": "autogpt",
+      "requirements": [
+        {
+          "file": "docker/autogpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/autogpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/autogpt"
+    },
+    "/opt/sutazaiapp/docker/autogpt/Dockerfile.simple": {
+      "dockerfile": "docker/autogpt/Dockerfile.simple",
+      "container_name": "autogpt",
+      "requirements": [
+        {
+          "file": "docker/autogpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/autogpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/autogpt"
+    },
+    "/opt/sutazaiapp/docker/autogen/Dockerfile": {
+      "dockerfile": "docker/autogen/Dockerfile",
+      "container_name": "autogen",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/autogen"
+    },
+    "/opt/sutazaiapp/docker/opendevin/Dockerfile": {
+      "dockerfile": "docker/opendevin/Dockerfile",
+      "container_name": "opendevin",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/opendevin"
+    },
+    "/opt/sutazaiapp/docker/jax/Dockerfile": {
+      "dockerfile": "docker/jax/Dockerfile",
+      "container_name": "jax",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/jax"
+    },
+    "/opt/sutazaiapp/docker/health-monitor/Dockerfile": {
+      "dockerfile": "docker/health-monitor/Dockerfile",
+      "container_name": "health-monitor",
+      "requirements": [
+        {
+          "file": "docker/health-monitor/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/health-monitor/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/health-monitor"
+    },
+    "/opt/sutazaiapp/docker/flowise/Dockerfile": {
+      "dockerfile": "docker/flowise/Dockerfile",
+      "container_name": "flowise",
+      "requirements": [],
+      "base_image": "node:18-alpine",
+      "build_context": "docker/flowise"
+    },
+    "/opt/sutazaiapp/docker/agentzero/Dockerfile": {
+      "dockerfile": "docker/agentzero/Dockerfile",
+      "container_name": "agentzero",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agentzero"
+    },
+    "/opt/sutazaiapp/docker/context-engineering/Dockerfile": {
+      "dockerfile": "docker/context-engineering/Dockerfile",
+      "container_name": "context-engineering",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/context-engineering"
+    },
+    "/opt/sutazaiapp/docker/llamaindex/Dockerfile": {
+      "dockerfile": "docker/llamaindex/Dockerfile",
+      "container_name": "llamaindex",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/llamaindex"
+    },
+    "/opt/sutazaiapp/docker/crewai/Dockerfile": {
+      "dockerfile": "docker/crewai/Dockerfile",
+      "container_name": "crewai",
+      "requirements": [
+        {
+          "file": "docker/crewai/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/crewai/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/crewai"
+    },
+    "/opt/sutazaiapp/docker/tensorflow/Dockerfile": {
+      "dockerfile": "docker/tensorflow/Dockerfile",
+      "container_name": "tensorflow",
+      "requirements": [],
+      "base_image": "tensorflow/tensorflow:2.14.0-gpu",
+      "build_context": "docker/tensorflow"
+    },
+    "/opt/sutazaiapp/docker/faiss/Dockerfile": {
+      "dockerfile": "docker/faiss/Dockerfile",
+      "container_name": "faiss",
+      "requirements": [],
+      "base_image": "python:3.12.8-slim",
+      "build_context": "docker/faiss"
+    },
+    "/opt/sutazaiapp/docker/context-framework/Dockerfile": {
+      "dockerfile": "docker/context-framework/Dockerfile",
+      "container_name": "context-framework",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/context-framework"
+    },
+    "/opt/sutazaiapp/docker/enhanced-model-manager/Dockerfile": {
+      "dockerfile": "docker/enhanced-model-manager/Dockerfile",
+      "container_name": "enhanced-model-manager",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/enhanced-model-manager"
+    },
+    "/opt/sutazaiapp/docker/letta/Dockerfile": {
+      "dockerfile": "docker/letta/Dockerfile",
+      "container_name": "letta",
+      "requirements": [
+        {
+          "file": "docker/letta/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/letta/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/letta"
+    },
+    "/opt/sutazaiapp/docker/gpt-engineer/Dockerfile": {
+      "dockerfile": "docker/gpt-engineer/Dockerfile",
+      "container_name": "gpt-engineer",
+      "requirements": [
+        {
+          "file": "docker/gpt-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/gpt-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/gpt-engineer"
+    },
+    "/opt/sutazaiapp/docker/health-check/Dockerfile": {
+      "dockerfile": "docker/health-check/Dockerfile",
+      "container_name": "health-check",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/health-check"
+    },
+    "/opt/sutazaiapp/docker/autogpt-real/Dockerfile": {
+      "dockerfile": "docker/autogpt-real/Dockerfile",
+      "container_name": "autogpt-real",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/autogpt-real"
+    },
+    "/opt/sutazaiapp/docker/awesome-code-ai/Dockerfile": {
+      "dockerfile": "docker/awesome-code-ai/Dockerfile",
+      "container_name": "awesome-code-ai",
+      "requirements": [
+        {
+          "file": "docker/awesome-code-ai/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/awesome-code-ai"
+    },
+    "/opt/sutazaiapp/docker/task-scheduler/Dockerfile": {
+      "dockerfile": "docker/task-scheduler/Dockerfile",
+      "container_name": "task-scheduler",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/task-scheduler"
+    },
+    "/opt/sutazaiapp/docker/tabbyml/Dockerfile": {
+      "dockerfile": "docker/tabbyml/Dockerfile",
+      "container_name": "tabbyml",
+      "requirements": [],
+      "base_image": "nvidia/cuda:11.8-devel-ubuntu22.04",
+      "build_context": "docker/tabbyml"
+    },
+    "/opt/sutazaiapp/docker/api-gateway/Dockerfile": {
+      "dockerfile": "docker/api-gateway/Dockerfile",
+      "container_name": "api-gateway",
+      "requirements": [
+        {
+          "file": "docker/api-gateway/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/api-gateway/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/api-gateway"
+    },
+    "/opt/sutazaiapp/docker/model-optimizer/Dockerfile": {
+      "dockerfile": "docker/model-optimizer/Dockerfile",
+      "container_name": "model-optimizer",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/model-optimizer"
+    },
+    "/opt/sutazaiapp/docker/localagi/Dockerfile": {
+      "dockerfile": "docker/localagi/Dockerfile",
+      "container_name": "localagi",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/localagi"
+    },
+    "/opt/sutazaiapp/docker/localagi/Dockerfile.agi_backup": {
+      "dockerfile": "docker/localagi/Dockerfile.agi_backup",
+      "container_name": "localagi",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/localagi"
+    },
+    "/opt/sutazaiapp/docker/semgrep/Dockerfile": {
+      "dockerfile": "docker/semgrep/Dockerfile",
+      "container_name": "semgrep",
+      "requirements": [
+        {
+          "file": "docker/semgrep/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/semgrep/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/semgrep"
+    },
+    "/opt/sutazaiapp/docker/pytorch/Dockerfile": {
+      "dockerfile": "docker/pytorch/Dockerfile",
+      "container_name": "pytorch",
+      "requirements": [],
+      "base_image": "pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime",
+      "build_context": "docker/pytorch"
+    },
+    "/opt/sutazaiapp/docker/privategpt/Dockerfile": {
+      "dockerfile": "docker/privategpt/Dockerfile",
+      "container_name": "privategpt",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/privategpt"
+    },
+    "/opt/sutazaiapp/docker/fsdp/Dockerfile": {
+      "dockerfile": "docker/fsdp/Dockerfile",
+      "container_name": "fsdp",
+      "requirements": [
+        {
+          "file": "docker/fsdp/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/fsdp/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "pytorch/pytorch:2.2.0-cuda12.1-cudnn8-devel",
+      "build_context": "docker/fsdp"
+    },
+    "/opt/sutazaiapp/docker/dify/Dockerfile": {
+      "dockerfile": "docker/dify/Dockerfile",
+      "container_name": "dify",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/dify"
+    },
+    "/opt/sutazaiapp/docker/agentgpt/Dockerfile": {
+      "dockerfile": "docker/agentgpt/Dockerfile",
+      "container_name": "agentgpt",
+      "requirements": [],
+      "base_image": "node:18-alpine",
+      "build_context": "docker/agentgpt"
+    },
+    "/opt/sutazaiapp/docker/shellgpt/Dockerfile": {
+      "dockerfile": "docker/shellgpt/Dockerfile",
+      "container_name": "shellgpt",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/shellgpt"
+    },
+    "/opt/sutazaiapp/docker/knowledge-manager/Dockerfile": {
+      "dockerfile": "docker/knowledge-manager/Dockerfile",
+      "container_name": "knowledge-manager",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/knowledge-manager"
+    },
+    "/opt/sutazaiapp/docker/documind/Dockerfile": {
+      "dockerfile": "docker/documind/Dockerfile",
+      "container_name": "documind",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/documind"
+    },
+    "/opt/sutazaiapp/docker/langflow/Dockerfile": {
+      "dockerfile": "docker/langflow/Dockerfile",
+      "container_name": "langflow",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/langflow"
+    },
+    "/opt/sutazaiapp/docker/service-hub/Dockerfile": {
+      "dockerfile": "docker/service-hub/Dockerfile",
+      "container_name": "service-hub",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/service-hub"
+    },
+    "/opt/sutazaiapp/docker/bigagi/Dockerfile": {
+      "dockerfile": "docker/bigagi/Dockerfile",
+      "container_name": "bigagi",
+      "requirements": [],
+      "base_image": "node:18-alpine",
+      "build_context": "docker/bigagi"
+    },
+    "/opt/sutazaiapp/docker/tabbyml-cpu/Dockerfile": {
+      "dockerfile": "docker/tabbyml-cpu/Dockerfile",
+      "container_name": "tabbyml-cpu",
+      "requirements": [],
+      "base_image": "tabbyml/tabby:latest",
+      "build_context": "docker/tabbyml-cpu"
+    },
+    "/opt/sutazaiapp/docker/pentestgpt/Dockerfile": {
+      "dockerfile": "docker/pentestgpt/Dockerfile",
+      "container_name": "pentestgpt",
+      "requirements": [
+        {
+          "file": "docker/pentestgpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/pentestgpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/pentestgpt"
+    },
+    "/opt/sutazaiapp/docker/agi-lightweight/Dockerfile": {
+      "dockerfile": "docker/agi-lightweight/Dockerfile",
+      "container_name": "agi-lightweight",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agi-lightweight"
+    },
+    "/opt/sutazaiapp/docker/fms-fsdp/Dockerfile": {
+      "dockerfile": "docker/fms-fsdp/Dockerfile",
+      "container_name": "fms-fsdp",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/fms-fsdp"
+    },
+    "/opt/sutazaiapp/docker/code-improver/Dockerfile": {
+      "dockerfile": "docker/code-improver/Dockerfile",
+      "container_name": "code-improver",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/code-improver"
+    },
+    "/opt/sutazaiapp/docker/skyvern/Dockerfile": {
+      "dockerfile": "docker/skyvern/Dockerfile",
+      "container_name": "skyvern",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/skyvern"
+    },
+    "/opt/sutazaiapp/docker/jarvis-ai/Dockerfile": {
+      "dockerfile": "docker/jarvis-ai/Dockerfile",
+      "container_name": "jarvis-ai",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/jarvis-ai"
+    },
+    "/opt/sutazaiapp/docker/jarvis-ai/Dockerfile.agi_backup": {
+      "dockerfile": "docker/jarvis-ai/Dockerfile.agi_backup",
+      "container_name": "jarvis-ai",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/jarvis-ai"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.pentestgpt": {
+      "dockerfile": "docker/agents/Dockerfile.pentestgpt",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-pentestgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-pentestgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.crewai": {
+      "dockerfile": "docker/agents/Dockerfile.crewai",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.langflow": {
+      "dockerfile": "docker/agents/Dockerfile.langflow",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-langflow.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-langflow.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.privategpt": {
+      "dockerfile": "docker/agents/Dockerfile.privategpt",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-privategpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-privategpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.shellgpt": {
+      "dockerfile": "docker/agents/Dockerfile.shellgpt",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-shellgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-shellgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.gpt-engineer": {
+      "dockerfile": "docker/agents/Dockerfile.gpt-engineer",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.langchain": {
+      "dockerfile": "docker/agents/Dockerfile.langchain",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.agentgpt": {
+      "dockerfile": "docker/agents/Dockerfile.agentgpt",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-agentgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-agentgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.documind": {
+      "dockerfile": "docker/agents/Dockerfile.documind",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-documind.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-documind.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.llamaindex": {
+      "dockerfile": "docker/agents/Dockerfile.llamaindex",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-llamaindex.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-llamaindex.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.agentzero": {
+      "dockerfile": "docker/agents/Dockerfile.agentzero",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-agentzero.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-agentzero.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.finrobot": {
+      "dockerfile": "docker/agents/Dockerfile.finrobot",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-finrobot.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-finrobot.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.autogen": {
+      "dockerfile": "docker/agents/Dockerfile.autogen",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-autogen.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-autogen.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.tabbyml": {
+      "dockerfile": "docker/agents/Dockerfile.tabbyml",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "tabbyml/tabby:latest",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.browseruse": {
+      "dockerfile": "docker/agents/Dockerfile.browseruse",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-browseruse.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-browseruse.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.flowise": {
+      "dockerfile": "docker/agents/Dockerfile.flowise",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-flowise.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-flowise.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.skyvern": {
+      "dockerfile": "docker/agents/Dockerfile.skyvern",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-skyvern.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-skyvern.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.semgrep": {
+      "dockerfile": "docker/agents/Dockerfile.semgrep",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.autogpt": {
+      "dockerfile": "docker/agents/Dockerfile.autogpt",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.aider": {
+      "dockerfile": "docker/agents/Dockerfile.aider",
+      "container_name": "agents",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/agents/Dockerfile.dify": {
+      "dockerfile": "docker/agents/Dockerfile.dify",
+      "container_name": "agents",
+      "requirements": [
+        {
+          "file": "requirements-dify.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-dify.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/agents"
+    },
+    "/opt/sutazaiapp/docker/jarvis-agi/Dockerfile": {
+      "dockerfile": "docker/jarvis-agi/Dockerfile",
+      "container_name": "jarvis-agi",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/jarvis-agi"
+    },
+    "/opt/sutazaiapp/docker/aider/Dockerfile": {
+      "dockerfile": "docker/aider/Dockerfile",
+      "container_name": "aider",
+      "requirements": [
+        {
+          "file": "docker/aider/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "docker/aider/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/aider"
+    },
+    "/opt/sutazaiapp/docker/langchain-agents/Dockerfile": {
+      "dockerfile": "docker/langchain-agents/Dockerfile",
+      "container_name": "langchain-agents",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/langchain-agents"
+    },
+    "/opt/sutazaiapp/docker/browser-use/Dockerfile": {
+      "dockerfile": "docker/browser-use/Dockerfile",
+      "container_name": "browser-use",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/browser-use"
+    },
+    "/opt/sutazaiapp/docker/finrobot/Dockerfile": {
+      "dockerfile": "docker/finrobot/Dockerfile",
+      "container_name": "finrobot",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/finrobot"
+    },
+    "/opt/sutazaiapp/docker/services/backend/Dockerfile": {
+      "dockerfile": "docker/services/backend/Dockerfile",
+      "container_name": "backend",
+      "requirements": [
+        {
+          "file": "requirements*.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "docker/services/backend"
+    },
+    "/opt/sutazaiapp/docker/services/frontend/Dockerfile": {
+      "dockerfile": "docker/services/frontend/Dockerfile",
+      "container_name": "frontend",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-alpine",
+      "build_context": "docker/services/frontend"
+    },
+    "/opt/sutazaiapp/docker/services/infrastructure/ollama/Dockerfile": {
+      "dockerfile": "docker/services/infrastructure/ollama/Dockerfile",
+      "container_name": "ollama",
+      "requirements": [],
+      "base_image": "ollama/ollama:latest",
+      "build_context": "docker/services/infrastructure/ollama"
+    },
+    "/opt/sutazaiapp/docker/services/monitoring/prometheus/Dockerfile": {
+      "dockerfile": "docker/services/monitoring/prometheus/Dockerfile",
+      "container_name": "prometheus",
+      "requirements": [],
+      "base_image": "prom/prometheus:latest",
+      "build_context": "docker/services/monitoring/prometheus"
+    },
+    "/opt/sutazaiapp/docker/services/agents/deployment-automation-master/Dockerfile": {
+      "dockerfile": "docker/services/agents/deployment-automation-master/Dockerfile",
+      "container_name": "deployment-automation-master",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "sutazai/agent-base:latest",
+      "build_context": "docker/services/agents/deployment-automation-master"
+    },
+    "/opt/sutazaiapp/docker/services/agents/infrastructure-devops-manager/Dockerfile": {
+      "dockerfile": "docker/services/agents/infrastructure-devops-manager/Dockerfile",
+      "container_name": "infrastructure-devops-manager",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "sutazai/agent-base:latest",
+      "build_context": "docker/services/agents/infrastructure-devops-manager"
+    },
+    "/opt/sutazaiapp/docker/services/agents/senior-ai-engineer/Dockerfile": {
+      "dockerfile": "docker/services/agents/senior-ai-engineer/Dockerfile",
+      "container_name": "senior-ai-engineer",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "sutazai/agent-base:latest",
+      "build_context": "docker/services/agents/senior-ai-engineer"
+    },
+    "/opt/sutazaiapp/workflows/deployments/Dockerfile.task_router": {
+      "dockerfile": "workflows/deployments/Dockerfile.task_router",
+      "container_name": "deployments",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "workflows/deployments"
+    },
+    "/opt/sutazaiapp/workflows/deployments/Dockerfile.monitor": {
+      "dockerfile": "workflows/deployments/Dockerfile.monitor",
+      "container_name": "deployments",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "workflows/deployments"
+    },
+    "/opt/sutazaiapp/workflows/deployments/Dockerfile.self_healer": {
+      "dockerfile": "workflows/deployments/Dockerfile.self_healer",
+      "container_name": "deployments",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "workflows/deployments"
+    },
+    "/opt/sutazaiapp/workflows/deployments/Dockerfile.workflow_manager": {
+      "dockerfile": "workflows/deployments/Dockerfile.workflow_manager",
+      "container_name": "deployments",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "workflows/deployments"
+    },
+    "/opt/sutazaiapp/monitoring/ai-metrics-exporter/Dockerfile": {
+      "dockerfile": "monitoring/ai-metrics-exporter/Dockerfile",
+      "container_name": "ai-metrics-exporter",
+      "requirements": [
+        {
+          "file": "monitoring/ai-metrics-exporter/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "monitoring/ai-metrics-exporter/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "monitoring/ai-metrics-exporter"
+    },
+    "/opt/sutazaiapp/deployment/docker/Dockerfile.agent-base": {
+      "dockerfile": "deployment/docker/Dockerfile.agent-base",
+      "container_name": "docker",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "deployment/docker"
+    },
+    "/opt/sutazaiapp/deployment/docker/Dockerfile.backend-production": {
+      "dockerfile": "deployment/docker/Dockerfile.backend-production",
+      "container_name": "docker",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "deployment/docker"
+    },
+    "/opt/sutazaiapp/deployment/monitoring/Dockerfile.agent-monitor": {
+      "dockerfile": "deployment/monitoring/Dockerfile.agent-monitor",
+      "container_name": "monitoring",
+      "requirements": [
+        {
+          "file": "deployment/monitoring/requirements-monitor.txt",
+          "exists": true
+        },
+        {
+          "file": "deployment/monitoring/requirements-monitor.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "deployment/monitoring"
+    },
+    "/opt/sutazaiapp/deployment/production/docker/Dockerfile.agent-base": {
+      "dockerfile": "deployment/production/docker/Dockerfile.agent-base",
+      "container_name": "docker",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "deployment/production/docker"
+    },
+    "/opt/sutazaiapp/deployment/production/docker/Dockerfile.brain-optimized": {
+      "dockerfile": "deployment/production/docker/Dockerfile.brain-optimized",
+      "container_name": "docker",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "deployment/production/docker"
+    },
+    "/opt/sutazaiapp/services/llamaindex/Dockerfile": {
+      "dockerfile": "services/llamaindex/Dockerfile",
+      "container_name": "llamaindex",
+      "requirements": [
+        {
+          "file": "services/llamaindex/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "services/llamaindex/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "services/llamaindex"
+    },
+    "/opt/sutazaiapp/services/faiss/Dockerfile": {
+      "dockerfile": "services/faiss/Dockerfile",
+      "container_name": "faiss",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "services/faiss"
+    },
+    "/opt/sutazaiapp/services/chainlit/Dockerfile": {
+      "dockerfile": "services/chainlit/Dockerfile",
+      "container_name": "chainlit",
+      "requirements": [
+        {
+          "file": "services/chainlit/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "services/chainlit/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "services/chainlit"
+    },
+    "/opt/sutazaiapp/agents/distributed-computing-architect/Dockerfile": {
+      "dockerfile": "agents/distributed-computing-architect/Dockerfile",
+      "container_name": "distributed-computing-architect",
+      "requirements": [
+        {
+          "file": "agents/distributed-computing-architect/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/distributed-computing-architect/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/distributed-computing-architect"
+    },
+    "/opt/sutazaiapp/agents/autogpt/Dockerfile": {
+      "dockerfile": "agents/autogpt/Dockerfile",
+      "container_name": "autogpt",
+      "requirements": [
+        {
+          "file": "agents/autogpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/autogpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/autogpt"
+    },
+    "/opt/sutazaiapp/agents/autogen/Dockerfile": {
+      "dockerfile": "agents/autogen/Dockerfile",
+      "container_name": "autogen",
+      "requirements": [
+        {
+          "file": "agents/autogen/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/autogen/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/autogen"
+    },
+    "/opt/sutazaiapp/agents/agentzero-coordinator/Dockerfile": {
+      "dockerfile": "agents/agentzero-coordinator/Dockerfile",
+      "container_name": "agentzero-coordinator",
+      "requirements": [
+        {
+          "file": "agents/agentzero-coordinator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/agentzero-coordinator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/agentzero-coordinator"
+    },
+    "/opt/sutazaiapp/agents/cognitive-architecture-designer/Dockerfile": {
+      "dockerfile": "agents/cognitive-architecture-designer/Dockerfile",
+      "container_name": "cognitive-architecture-designer",
+      "requirements": [
+        {
+          "file": "agents/cognitive-architecture-designer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/cognitive-architecture-designer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/cognitive-architecture-designer"
+    },
+    "/opt/sutazaiapp/agents/product-strategy-architect/Dockerfile": {
+      "dockerfile": "agents/product-strategy-architect/Dockerfile",
+      "container_name": "product-strategy-architect",
+      "requirements": [
+        {
+          "file": "agents/product-strategy-architect/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/product-strategy-architect/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/product-strategy-architect"
+    },
+    "/opt/sutazaiapp/agents/health-monitor/Dockerfile": {
+      "dockerfile": "agents/health-monitor/Dockerfile",
+      "container_name": "health-monitor",
+      "requirements": [
+        {
+          "file": "agents/health-monitor/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/health-monitor/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/health-monitor"
+    },
+    "/opt/sutazaiapp/agents/multi-modal-fusion-coordinator/Dockerfile": {
+      "dockerfile": "agents/multi-modal-fusion-coordinator/Dockerfile",
+      "container_name": "multi-modal-fusion-coordinator",
+      "requirements": [
+        {
+          "file": "agents/multi-modal-fusion-coordinator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/multi-modal-fusion-coordinator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/multi-modal-fusion-coordinator"
+    },
+    "/opt/sutazaiapp/agents/senior-frontend-developer/Dockerfile": {
+      "dockerfile": "agents/senior-frontend-developer/Dockerfile",
+      "container_name": "senior-frontend-developer",
+      "requirements": [
+        {
+          "file": "agents/senior-frontend-developer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/senior-frontend-developer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/senior-frontend-developer"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.pentestgpt": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.pentestgpt",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-pentestgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-pentestgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.crewai": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.crewai",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.langflow": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.langflow",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-langflow.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-langflow.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.privategpt": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.privategpt",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-privategpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-privategpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.localagi.agi_backup": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.localagi.agi_backup",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "golang:1.21-alpine",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.shellgpt": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.shellgpt",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-shellgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-shellgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.gpt-engineer": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.gpt-engineer",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.localagi": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.localagi",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "golang:1.21-alpine",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.langchain": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.langchain",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.agentgpt": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.agentgpt",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-agentgpt.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-agentgpt.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.documind": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.documind",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-documind.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-documind.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.llamaindex": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.llamaindex",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-llamaindex.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-llamaindex.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.bigagi.agi_backup": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.bigagi.agi_backup",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-bigagi.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-bigagi.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.agentzero": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.agentzero",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-agentzero.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-agentzero.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.finrobot": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.finrobot",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-finrobot.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-finrobot.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.autogen": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.autogen",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-autogen.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-autogen.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.tabbyml": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.tabbyml",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "tabbyml/tabby:latest",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.browseruse": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.browseruse",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-browseruse.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-browseruse.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.flowise": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.flowise",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-flowise.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-flowise.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.skyvern": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.skyvern",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-skyvern.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-skyvern.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.bigagi": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.bigagi",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-# bigagi removed.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-# bigagi removed.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "node:18-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.semgrep": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.semgrep",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.autogpt": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.autogpt",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.aider": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.aider",
+      "container_name": "dockerfiles",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/dockerfiles/Dockerfile.dify": {
+      "dockerfile": "agents/dockerfiles/Dockerfile.dify",
+      "container_name": "dockerfiles",
+      "requirements": [
+        {
+          "file": "requirements-dify.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements-dify.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dockerfiles"
+    },
+    "/opt/sutazaiapp/agents/private-data-analyst/Dockerfile": {
+      "dockerfile": "agents/private-data-analyst/Dockerfile",
+      "container_name": "private-data-analyst",
+      "requirements": [
+        {
+          "file": "agents/private-data-analyst/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/private-data-analyst/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/private-data-analyst"
+    },
+    "/opt/sutazaiapp/agents/senior-backend-developer/Dockerfile": {
+      "dockerfile": "agents/senior-backend-developer/Dockerfile",
+      "container_name": "senior-backend-developer",
+      "requirements": [
+        {
+          "file": "agents/senior-backend-developer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/senior-backend-developer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/senior-backend-developer"
+    },
+    "/opt/sutazaiapp/agents/synthetic-data-generator/Dockerfile": {
+      "dockerfile": "agents/synthetic-data-generator/Dockerfile",
+      "container_name": "synthetic-data-generator",
+      "requirements": [
+        {
+          "file": "agents/synthetic-data-generator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/synthetic-data-generator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/synthetic-data-generator"
+    },
+    "/opt/sutazaiapp/agents/reinforcement-learning-trainer/Dockerfile": {
+      "dockerfile": "agents/reinforcement-learning-trainer/Dockerfile",
+      "container_name": "reinforcement-learning-trainer",
+      "requirements": [
+        {
+          "file": "agents/reinforcement-learning-trainer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/reinforcement-learning-trainer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/reinforcement-learning-trainer"
+    },
+    "/opt/sutazaiapp/agents/flowiseai-flow-manager/Dockerfile": {
+      "dockerfile": "agents/flowiseai-flow-manager/Dockerfile",
+      "container_name": "flowiseai-flow-manager",
+      "requirements": [
+        {
+          "file": "agents/flowiseai-flow-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/flowiseai-flow-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/flowiseai-flow-manager"
+    },
+    "/opt/sutazaiapp/agents/ollama-integration/Dockerfile": {
+      "dockerfile": "agents/ollama-integration/Dockerfile",
+      "container_name": "ollama-integration",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/ollama-integration"
+    },
+    "/opt/sutazaiapp/agents/crewai/Dockerfile": {
+      "dockerfile": "agents/crewai/Dockerfile",
+      "container_name": "crewai",
+      "requirements": [
+        {
+          "file": "agents/crewai/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/crewai/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/crewai"
+    },
+    "/opt/sutazaiapp/agents/data-analysis-engineer/Dockerfile": {
+      "dockerfile": "agents/data-analysis-engineer/Dockerfile",
+      "container_name": "data-analysis-engineer",
+      "requirements": [
+        {
+          "file": "agents/data-analysis-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/data-analysis-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/data-analysis-engineer"
+    },
+    "/opt/sutazaiapp/agents/agent-message-bus/Dockerfile": {
+      "dockerfile": "agents/agent-message-bus/Dockerfile",
+      "container_name": "agent-message-bus",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/agent-message-bus"
+    },
+    "/opt/sutazaiapp/agents/meta-learning-specialist/Dockerfile": {
+      "dockerfile": "agents/meta-learning-specialist/Dockerfile",
+      "container_name": "meta-learning-specialist",
+      "requirements": [
+        {
+          "file": "agents/meta-learning-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/meta-learning-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/meta-learning-specialist"
+    },
+    "/opt/sutazaiapp/agents/mcp-server/Dockerfile": {
+      "dockerfile": "agents/mcp-server/Dockerfile",
+      "container_name": "mcp-server",
+      "requirements": [
+        {
+          "file": "agents/mcp-server/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/mcp-server/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/mcp-server"
+    },
+    "/opt/sutazaiapp/agents/ai-product-manager/Dockerfile": {
+      "dockerfile": "agents/ai-product-manager/Dockerfile",
+      "container_name": "ai-product-manager",
+      "requirements": [
+        {
+          "file": "agents/ai-product-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/ai-product-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/ai-product-manager"
+    },
+    "/opt/sutazaiapp/agents/opendevin-code-generator/Dockerfile": {
+      "dockerfile": "agents/opendevin-code-generator/Dockerfile",
+      "container_name": "opendevin-code-generator",
+      "requirements": [
+        {
+          "file": "agents/opendevin-code-generator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/opendevin-code-generator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/opendevin-code-generator"
+    },
+    "/opt/sutazaiapp/agents/context-framework/Dockerfile": {
+      "dockerfile": "agents/context-framework/Dockerfile",
+      "container_name": "context-framework",
+      "requirements": [
+        {
+          "file": "agents/context-framework/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/context-framework/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/context-framework"
+    },
+    "/opt/sutazaiapp/agents/task-assignment-coordinator/Dockerfile": {
+      "dockerfile": "agents/task-assignment-coordinator/Dockerfile",
+      "container_name": "task-assignment-coordinator",
+      "requirements": [
+        {
+          "file": "agents/task-assignment-coordinator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/task-assignment-coordinator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/task-assignment-coordinator"
+    },
+    "/opt/sutazaiapp/agents/letta/Dockerfile": {
+      "dockerfile": "agents/letta/Dockerfile",
+      "container_name": "letta",
+      "requirements": [
+        {
+          "file": "agents/letta/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/letta/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/letta"
+    },
+    "/opt/sutazaiapp/agents/gpt-engineer/Dockerfile": {
+      "dockerfile": "agents/gpt-engineer/Dockerfile",
+      "container_name": "gpt-engineer",
+      "requirements": [
+        {
+          "file": "agents/gpt-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/gpt-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/gpt-engineer"
+    },
+    "/opt/sutazaiapp/agents/agent-registry/Dockerfile": {
+      "dockerfile": "agents/agent-registry/Dockerfile",
+      "container_name": "agent-registry",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/agent-registry"
+    },
+    "/opt/sutazaiapp/agents/infrastructure-devops/Dockerfile": {
+      "dockerfile": "agents/infrastructure-devops/Dockerfile",
+      "container_name": "infrastructure-devops",
+      "requirements": [
+        {
+          "file": "agents/infrastructure-devops/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/infrastructure-devops/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/infrastructure-devops"
+    },
+    "/opt/sutazaiapp/agents/awesome-code-ai/Dockerfile": {
+      "dockerfile": "agents/awesome-code-ai/Dockerfile",
+      "container_name": "awesome-code-ai",
+      "requirements": [
+        {
+          "file": "agents/awesome-code-ai/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/awesome-code-ai/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/awesome-code-ai"
+    },
+    "/opt/sutazaiapp/agents/devika/Dockerfile": {
+      "dockerfile": "agents/devika/Dockerfile",
+      "container_name": "devika",
+      "requirements": [
+        {
+          "file": "agents/devika/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/devika/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/devika"
+    },
+    "/opt/sutazaiapp/agents/model-training-specialist/Dockerfile": {
+      "dockerfile": "agents/model-training-specialist/Dockerfile",
+      "container_name": "model-training-specialist",
+      "requirements": [
+        {
+          "file": "agents/model-training-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/model-training-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/model-training-specialist"
+    },
+    "/opt/sutazaiapp/agents/bigagi-system-manager/Dockerfile": {
+      "dockerfile": "agents/bigagi-system-manager/Dockerfile",
+      "container_name": "bigagi-system-manager",
+      "requirements": [
+        {
+          "file": "agents/bigagi-system-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/bigagi-system-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/bigagi-system-manager"
+    },
+    "/opt/sutazaiapp/agents/episodic-memory-engineer/Dockerfile": {
+      "dockerfile": "agents/episodic-memory-engineer/Dockerfile",
+      "container_name": "episodic-memory-engineer",
+      "requirements": [
+        {
+          "file": "agents/episodic-memory-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/episodic-memory-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/episodic-memory-engineer"
+    },
+    "/opt/sutazaiapp/agents/agentgpt-autonomous-executor/Dockerfile": {
+      "dockerfile": "agents/agentgpt-autonomous-executor/Dockerfile",
+      "container_name": "agentgpt-autonomous-executor",
+      "requirements": [
+        {
+          "file": "agents/agentgpt-autonomous-executor/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/agentgpt-autonomous-executor/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/agentgpt-autonomous-executor"
+    },
+    "/opt/sutazaiapp/agents/langflow-workflow-designer/Dockerfile": {
+      "dockerfile": "agents/langflow-workflow-designer/Dockerfile",
+      "container_name": "langflow-workflow-designer",
+      "requirements": [
+        {
+          "file": "agents/langflow-workflow-designer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/langflow-workflow-designer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/langflow-workflow-designer"
+    },
+    "/opt/sutazaiapp/agents/knowledge-graph-builder/Dockerfile": {
+      "dockerfile": "agents/knowledge-graph-builder/Dockerfile",
+      "container_name": "knowledge-graph-builder",
+      "requirements": [
+        {
+          "file": "agents/knowledge-graph-builder/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/knowledge-graph-builder/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/knowledge-graph-builder"
+    },
+    "/opt/sutazaiapp/agents/browser-automation-orchestrator/Dockerfile": {
+      "dockerfile": "agents/browser-automation-orchestrator/Dockerfile",
+      "container_name": "browser-automation-orchestrator",
+      "requirements": [
+        {
+          "file": "agents/browser-automation-orchestrator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/browser-automation-orchestrator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/browser-automation-orchestrator"
+    },
+    "/opt/sutazaiapp/agents/neuromorphic-computing-expert/Dockerfile": {
+      "dockerfile": "agents/neuromorphic-computing-expert/Dockerfile",
+      "container_name": "neuromorphic-computing-expert",
+      "requirements": [
+        {
+          "file": "agents/neuromorphic-computing-expert/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/neuromorphic-computing-expert/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/neuromorphic-computing-expert"
+    },
+    "/opt/sutazaiapp/agents/dify-automation-specialist/Dockerfile": {
+      "dockerfile": "agents/dify-automation-specialist/Dockerfile",
+      "container_name": "dify-automation-specialist",
+      "requirements": [
+        {
+          "file": "agents/dify-automation-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/dify-automation-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/dify-automation-specialist"
+    },
+    "/opt/sutazaiapp/agents/quantum-computing-optimizer/Dockerfile": {
+      "dockerfile": "agents/quantum-computing-optimizer/Dockerfile",
+      "container_name": "quantum-computing-optimizer",
+      "requirements": [
+        {
+          "file": "agents/quantum-computing-optimizer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/quantum-computing-optimizer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/quantum-computing-optimizer"
+    },
+    "/opt/sutazaiapp/agents/transformers-migration-specialist/Dockerfile": {
+      "dockerfile": "agents/transformers-migration-specialist/Dockerfile",
+      "container_name": "transformers-migration-specialist",
+      "requirements": [
+        {
+          "file": "agents/transformers-migration-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/transformers-migration-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/transformers-migration-specialist"
+    },
+    "/opt/sutazaiapp/agents/semgrep-security-analyzer/Dockerfile": {
+      "dockerfile": "agents/semgrep-security-analyzer/Dockerfile",
+      "container_name": "semgrep-security-analyzer",
+      "requirements": [
+        {
+          "file": "agents/semgrep-security-analyzer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/semgrep-security-analyzer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/semgrep-security-analyzer"
+    },
+    "/opt/sutazaiapp/agents/ai-scrum-master/Dockerfile": {
+      "dockerfile": "agents/ai-scrum-master/Dockerfile",
+      "container_name": "ai-scrum-master",
+      "requirements": [
+        {
+          "file": "agents/ai-scrum-master/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/ai-scrum-master/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/ai-scrum-master"
+    },
+    "/opt/sutazaiapp/agents/context-optimizer/Dockerfile": {
+      "dockerfile": "agents/context-optimizer/Dockerfile",
+      "container_name": "context-optimizer",
+      "requirements": [
+        {
+          "file": "agents/context-optimizer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/context-optimizer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/context-optimizer"
+    },
+    "/opt/sutazaiapp/agents/privategpt/Dockerfile": {
+      "dockerfile": "agents/privategpt/Dockerfile",
+      "container_name": "privategpt",
+      "requirements": [
+        {
+          "file": "agents/privategpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/privategpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/privategpt"
+    },
+    "/opt/sutazaiapp/agents/knowledge-distillation-expert/Dockerfile": {
+      "dockerfile": "agents/knowledge-distillation-expert/Dockerfile",
+      "container_name": "knowledge-distillation-expert",
+      "requirements": [
+        {
+          "file": "agents/knowledge-distillation-expert/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/knowledge-distillation-expert/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/knowledge-distillation-expert"
+    },
+    "/opt/sutazaiapp/agents/memory-persistence-manager/Dockerfile": {
+      "dockerfile": "agents/memory-persistence-manager/Dockerfile",
+      "container_name": "memory-persistence-manager",
+      "requirements": [
+        {
+          "file": "agents/memory-persistence-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/memory-persistence-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/memory-persistence-manager"
+    },
+    "/opt/sutazaiapp/agents/explainable-ai-specialist/Dockerfile": {
+      "dockerfile": "agents/explainable-ai-specialist/Dockerfile",
+      "container_name": "explainable-ai-specialist",
+      "requirements": [
+        {
+          "file": "agents/explainable-ai-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/explainable-ai-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/explainable-ai-specialist"
+    },
+    "/opt/sutazaiapp/agents/jarvis-voice-interface/Dockerfile": {
+      "dockerfile": "agents/jarvis-voice-interface/Dockerfile",
+      "container_name": "jarvis-voice-interface",
+      "requirements": [
+        {
+          "file": "agents/jarvis-voice-interface/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/jarvis-voice-interface/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/jarvis-voice-interface"
+    },
+    "/opt/sutazaiapp/agents/garbage-collector-coordinator/Dockerfile": {
+      "dockerfile": "agents/garbage-collector-coordinator/Dockerfile",
+      "container_name": "garbage-collector-coordinator",
+      "requirements": [
+        {
+          "file": "agents/garbage-collector-coordinator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/garbage-collector-coordinator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/garbage-collector-coordinator"
+    },
+    "/opt/sutazaiapp/agents/fsdp/Dockerfile": {
+      "dockerfile": "agents/fsdp/Dockerfile",
+      "container_name": "fsdp",
+      "requirements": [
+        {
+          "file": "agents/fsdp/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/fsdp/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/fsdp"
+    },
+    "/opt/sutazaiapp/agents/agentgpt/Dockerfile": {
+      "dockerfile": "agents/agentgpt/Dockerfile",
+      "container_name": "agentgpt",
+      "requirements": [
+        {
+          "file": "agents/agentgpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/agentgpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/agentgpt"
+    },
+    "/opt/sutazaiapp/agents/shellgpt/Dockerfile": {
+      "dockerfile": "agents/shellgpt/Dockerfile",
+      "container_name": "shellgpt",
+      "requirements": [
+        {
+          "file": "agents/shellgpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/shellgpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/shellgpt"
+    },
+    "/opt/sutazaiapp/agents/babyagi/Dockerfile": {
+      "dockerfile": "agents/babyagi/Dockerfile",
+      "container_name": "babyagi",
+      "requirements": [
+        {
+          "file": "agents/babyagi/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/babyagi/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/babyagi"
+    },
+    "/opt/sutazaiapp/agents/testing-qa-validator/Dockerfile": {
+      "dockerfile": "agents/testing-qa-validator/Dockerfile",
+      "container_name": "testing-qa-validator",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.12-slim",
+      "build_context": "agents/testing-qa-validator"
+    },
+    "/opt/sutazaiapp/agents/observability-monitoring-engineer/Dockerfile": {
+      "dockerfile": "agents/observability-monitoring-engineer/Dockerfile",
+      "container_name": "observability-monitoring-engineer",
+      "requirements": [
+        {
+          "file": "agents/observability-monitoring-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/observability-monitoring-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/observability-monitoring-engineer"
+    },
+    "/opt/sutazaiapp/agents/service-hub/Dockerfile": {
+      "dockerfile": "agents/service-hub/Dockerfile",
+      "container_name": "service-hub",
+      "requirements": [
+        {
+          "file": "agents/service-hub/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/service-hub/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/service-hub"
+    },
+    "/opt/sutazaiapp/agents/self-healing-orchestrator/Dockerfile": {
+      "dockerfile": "agents/self-healing-orchestrator/Dockerfile",
+      "container_name": "self-healing-orchestrator",
+      "requirements": [
+        {
+          "file": "agents/self-healing-orchestrator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/self-healing-orchestrator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/self-healing-orchestrator"
+    },
+    "/opt/sutazaiapp/agents/symbolic-reasoning-engine/Dockerfile": {
+      "dockerfile": "agents/symbolic-reasoning-engine/Dockerfile",
+      "container_name": "symbolic-reasoning-engine",
+      "requirements": [
+        {
+          "file": "agents/symbolic-reasoning-engine/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/symbolic-reasoning-engine/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/symbolic-reasoning-engine"
+    },
+    "/opt/sutazaiapp/agents/pentestgpt/Dockerfile": {
+      "dockerfile": "agents/pentestgpt/Dockerfile",
+      "container_name": "pentestgpt",
+      "requirements": [
+        {
+          "file": "agents/pentestgpt/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/pentestgpt/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/pentestgpt"
+    },
+    "/opt/sutazaiapp/agents/intelligence-optimization-monitor/Dockerfile": {
+      "dockerfile": "agents/intelligence-optimization-monitor/Dockerfile",
+      "container_name": "intelligence-optimization-monitor",
+      "requirements": [
+        {
+          "file": "agents/intelligence-optimization-monitor/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/intelligence-optimization-monitor/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/intelligence-optimization-monitor"
+    },
+    "/opt/sutazaiapp/agents/attention-optimizer/Dockerfile": {
+      "dockerfile": "agents/attention-optimizer/Dockerfile",
+      "container_name": "attention-optimizer",
+      "requirements": [
+        {
+          "file": "agents/attention-optimizer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/attention-optimizer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/attention-optimizer"
+    },
+    "/opt/sutazaiapp/agents/data-pipeline-engineer/Dockerfile": {
+      "dockerfile": "agents/data-pipeline-engineer/Dockerfile",
+      "container_name": "data-pipeline-engineer",
+      "requirements": [
+        {
+          "file": "agents/data-pipeline-engineer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/data-pipeline-engineer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/data-pipeline-engineer"
+    },
+    "/opt/sutazaiapp/agents/code-improver/Dockerfile": {
+      "dockerfile": "agents/code-improver/Dockerfile",
+      "container_name": "code-improver",
+      "requirements": [
+        {
+          "file": "agents/code-improver/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/code-improver/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/code-improver"
+    },
+    "/opt/sutazaiapp/agents/code-generation-improver/Dockerfile": {
+      "dockerfile": "agents/code-generation-improver/Dockerfile",
+      "container_name": "code-generation-improver",
+      "requirements": [],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/code-generation-improver"
+    },
+    "/opt/sutazaiapp/agents/ai-agent-debugger/Dockerfile": {
+      "dockerfile": "agents/ai-agent-debugger/Dockerfile",
+      "container_name": "ai-agent-debugger",
+      "requirements": [
+        {
+          "file": "agents/ai-agent-debugger/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/ai-agent-debugger/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/ai-agent-debugger"
+    },
+    "/opt/sutazaiapp/agents/causal-inference-expert/Dockerfile": {
+      "dockerfile": "agents/causal-inference-expert/Dockerfile",
+      "container_name": "causal-inference-expert",
+      "requirements": [
+        {
+          "file": "agents/causal-inference-expert/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/causal-inference-expert/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/causal-inference-expert"
+    },
+    "/opt/sutazaiapp/agents/federated-learning-coordinator/Dockerfile": {
+      "dockerfile": "agents/federated-learning-coordinator/Dockerfile",
+      "container_name": "federated-learning-coordinator",
+      "requirements": [
+        {
+          "file": "agents/federated-learning-coordinator/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/federated-learning-coordinator/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/federated-learning-coordinator"
+    },
+    "/opt/sutazaiapp/agents/document-knowledge-manager/Dockerfile": {
+      "dockerfile": "agents/document-knowledge-manager/Dockerfile",
+      "container_name": "document-knowledge-manager",
+      "requirements": [
+        {
+          "file": "agents/document-knowledge-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/document-knowledge-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/document-knowledge-manager"
+    },
+    "/opt/sutazaiapp/agents/aider/Dockerfile": {
+      "dockerfile": "agents/aider/Dockerfile",
+      "container_name": "aider",
+      "requirements": [
+        {
+          "file": "agents/aider/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/aider/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/aider"
+    },
+    "/opt/sutazaiapp/agents/senior-ai-engineer/Dockerfile": {
+      "dockerfile": "agents/senior-ai-engineer/Dockerfile",
+      "container_name": "senior-ai-engineer",
+      "requirements": [
+        {
+          "file": "requirements.txt",
+          "exists": false
+        },
+        {
+          "file": "requirements.txt",
+          "exists": false
+        }
+      ],
+      "base_image": "python:3.12-slim",
+      "build_context": "agents/senior-ai-engineer"
+    },
+    "/opt/sutazaiapp/agents/hardware-optimizer/Dockerfile": {
+      "dockerfile": "agents/hardware-optimizer/Dockerfile",
+      "container_name": "hardware-optimizer",
+      "requirements": [
+        {
+          "file": "agents/hardware-optimizer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/hardware-optimizer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/hardware-optimizer"
+    },
+    "/opt/sutazaiapp/agents/gradient-compression-specialist/Dockerfile": {
+      "dockerfile": "agents/gradient-compression-specialist/Dockerfile",
+      "container_name": "gradient-compression-specialist",
+      "requirements": [
+        {
+          "file": "agents/gradient-compression-specialist/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/gradient-compression-specialist/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/gradient-compression-specialist"
+    },
+    "/opt/sutazaiapp/agents/edge-computing-optimizer/Dockerfile": {
+      "dockerfile": "agents/edge-computing-optimizer/Dockerfile",
+      "container_name": "edge-computing-optimizer",
+      "requirements": [
+        {
+          "file": "agents/edge-computing-optimizer/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/edge-computing-optimizer/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/edge-computing-optimizer"
+    },
+    "/opt/sutazaiapp/agents/localagi-orchestration-manager/Dockerfile": {
+      "dockerfile": "agents/localagi-orchestration-manager/Dockerfile",
+      "container_name": "localagi-orchestration-manager",
+      "requirements": [
+        {
+          "file": "agents/localagi-orchestration-manager/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/localagi-orchestration-manager/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/localagi-orchestration-manager"
+    },
+    "/opt/sutazaiapp/agents/finrobot/Dockerfile": {
+      "dockerfile": "agents/finrobot/Dockerfile",
+      "container_name": "finrobot",
+      "requirements": [
+        {
+          "file": "agents/finrobot/requirements.txt",
+          "exists": true
+        },
+        {
+          "file": "agents/finrobot/requirements.txt",
+          "exists": true
+        }
+      ],
+      "base_image": "python:3.11-slim",
+      "build_context": "agents/finrobot"
+    }
+  },
+  "compose_services": {
+    "faiss": "docker/faiss/Dockerfile",
+    "backend": "backend/Dockerfile",
+    "frontend": "frontend/Dockerfile",
+    "autogpt": "docker/autogpt/Dockerfile",
+    "crewai": "docker/crewai/Dockerfile",
+    "letta": "docker/letta/Dockerfile",
+    "aider": "docker/aider/Dockerfile",
+    "gpt-engineer": "docker/gpt-engineer/Dockerfile",
+    "browser-use": "docker/browser-use/Dockerfile",
+    "skyvern": "docker/skyvern/Dockerfile",
+    "agentgpt": "docker/agentgpt/Dockerfile",
+    "privategpt": "docker/privategpt/Dockerfile",
+    "llamaindex": "docker/llamaindex/Dockerfile",
+    "shellgpt": "docker/shellgpt/Dockerfile",
+    "pentestgpt": "docker/pentestgpt/Dockerfile",
+    "documind": "docker/documind/Dockerfile",
+    "pytorch": "docker/pytorch/Dockerfile",
+    "tensorflow": "docker/tensorflow/Dockerfile",
+    "jax": "docker/jax/Dockerfile",
+    "ai-metrics-exporter": "monitoring/ai-metrics-exporter/Dockerfile",
+    "health-monitor": "docker/health-check/Dockerfile",
+    "context-framework": "docker/context-framework/Dockerfile",
+    "autogen": "docker/autogen/Dockerfile",
+    "opendevin": "docker/opendevin/Dockerfile",
+    "finrobot": "docker/finrobot/Dockerfile",
+    "code-improver": "docker/code-improver/Dockerfile",
+    "service-hub": "docker/service-hub/Dockerfile",
+    "awesome-code-ai": "docker/awesome-code-ai/Dockerfile",
+    "fsdp": "docker/fsdp/Dockerfile",
+    "agentzero": "docker/agentzero/Dockerfile",
+    "mcp-server": "mcp_server/Dockerfile"
+  },
+  "orphaned_requirements": [
+    "requirements.txt",
+    "backend/requirements.secure.txt",
+    "backend/requirements.minimal.txt",
+    "backend/requirements-fast.txt",
+    "system-validator/requirements.txt",
+    "frontend/requirements.secure.txt",
+    "docker/requirements/requirements.secure.txt",
+    "docker/requirements/requirements.txt",
+    "docker/base/requirements-base.txt",
+    "docker/base/requirements-agent.txt",
+    "docker/base/requirements-security.txt",
+    "docs/requirements/autogpt/requirements.txt",
+    "docs/requirements/deployments/requirements.txt",
+    "docs/requirements/system/requirements.txt",
+    "docs/requirements/health-monitor/requirements.txt",
+    "docs/requirements/ollama-integration/requirements.txt",
+    "docs/requirements/crewai/requirements.txt",
+    "docs/requirements/agent-message-bus/requirements.txt",
+    "docs/requirements/requirements/requirements.txt",
+    "docs/requirements/letta/requirements.txt",
+    "docs/requirements/gpt-engineer/requirements.txt",
+    "docs/requirements/agent-registry/requirements.txt",
+    "docs/requirements/infrastructure-devops/requirements.txt",
+    "docs/requirements/awesome-code-ai/requirements.txt",
+    "docs/requirements/backend/requirements-test.txt",
+    "docs/requirements/backend/requirements.txt",
+    "docs/requirements/localagi/requirements.txt",
+    "docs/requirements/brain/requirements_minimal.txt",
+    "docs/requirements/semgrep/requirements.txt",
+    "docs/requirements/web_learning/requirements.txt",
+    "docs/requirements/context-optimizer/requirements.txt",
+    "docs/requirements/tests/requirements-test.txt",
+    "docs/requirements/universal-agent/requirements.txt",
+    "docs/requirements/frontend/requirements.txt",
+    "docs/requirements/pentestgpt/requirements.txt",
+    "docs/requirements/archive/requirements-test.txt",
+    "docs/requirements/archive/requirements-optimized.txt",
+    "docs/requirements/archive/requirements-minimal.txt",
+    "docs/requirements/archive/requirements-agi.txt",
+    "docs/requirements/jarvis-agi/requirements_super.txt",
+    "docs/requirements/aider/requirements.txt",
+    "docs/requirements/hardware-optimizer/requirements.txt"
+  ],
+  "shared_dependencies": {
+    "torch": [
+      "docker/base/requirements-agent.txt",
+      "docker/fsdp/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/devika/requirements.txt",
+      "requirements.txt"
+    ],
+    "transformers": [
+      "docker/base/requirements-agent.txt",
+      "docker/fsdp/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/devika/requirements.txt",
+      "requirements.txt"
+    ],
+    "accelerate": [
+      "docker/fsdp/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "requirements.txt"
+    ],
+    "bitsandbytes": [
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/system/requirements.txt",
+      "requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt"
+    ],
+    "fastapi": [
+      "agents/private-data-analyst/requirements.txt",
+      "agents/crewai/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "agents/code-improver/requirements.txt",
+      "agents/health-monitor/requirements.txt",
+      "agents/symbolic-reasoning-engine/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/product-strategy-architect/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "agents/task-assignment-coordinator/requirements.txt",
+      "agents/gradient-compression-specialist/requirements.txt",
+      "docs/requirements/letta/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "agents/mcp-server/requirements.txt",
+      "agents/ai-scrum-master/requirements.txt",
+      "agents/senior-frontend-developer/requirements.txt",
+      "agents/pentestgpt/requirements.txt",
+      "agents/causal-inference-expert/requirements.txt",
+      "docs/requirements/gpt-engineer/requirements.txt",
+      "agents/ai-product-manager/requirements.txt",
+      "agents/observability-monitoring-engineer/requirements.txt",
+      "agents/quantum-computing-optimizer/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt",
+      "agents/cognitive-architecture-designer/requirements.txt",
+      "agents/edge-computing-optimizer/requirements.txt",
+      "agents/attention-optimizer/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "agents/langflow-workflow-designer/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "backend/requirements.minimal.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "agents/fsdp/requirements.txt",
+      "frontend/requirements.txt",
+      "agents/distributed-computing-architect/requirements.txt",
+      "agents/meta-learning-specialist/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "agents/autogen/requirements.txt",
+      "agents/model-training-specialist/requirements.txt",
+      "agents/senior-backend-developer/requirements.txt",
+      "agents/aider/requirements.txt",
+      "agents/letta/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "agents/episodic-memory-engineer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "agents/ai-agent-debugger/requirements.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "backend/requirements-fast.txt",
+      "docker/autogpt/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "agents/knowledge-distillation-expert/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "agents/transformers-migration-specialist/requirements.txt",
+      "docker/letta/requirements.txt",
+      "agents/jarvis-voice-interface/requirements.txt",
+      "agents/data-analysis-engineer/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "agents/explainable-ai-specialist/requirements.txt",
+      "agents/agentzero-coordinator/requirements.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "agents/synthetic-data-generator/requirements.txt",
+      "docs/requirements/aider/requirements.txt",
+      "agents/semgrep-security-analyzer/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "agents/document-knowledge-manager/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/dify-automation-specialist/requirements.txt",
+      "agents/self-healing-orchestrator/requirements.txt",
+      "agents/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "agents/garbage-collector-coordinator/requirements.txt",
+      "agents/federated-learning-coordinator/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "agents/neuromorphic-computing-expert/requirements.txt",
+      "requirements.txt",
+      "agents/context-framework/requirements.txt",
+      "agents/opendevin-code-generator/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/semgrep/requirements.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/multi-modal-fusion-coordinator/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "agents/localagi-orchestration-manager/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "agents/reinforcement-learning-trainer/requirements.txt",
+      "agents/browser-automation-orchestrator/requirements.txt",
+      "agents/finrobot/requirements.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "agents/memory-persistence-manager/requirements.txt",
+      "agents/knowledge-graph-builder/requirements.txt",
+      "agents/devika/requirements.txt",
+      "agents/bigagi-system-manager/requirements.txt",
+      "docker/fsdp/requirements.txt",
+      "agents/flowiseai-flow-manager/requirements.txt",
+      "agents/service-hub/requirements.txt",
+      "agents/data-pipeline-engineer/requirements.txt",
+      "agents/intelligence-optimization-monitor/requirements.txt"
+    ],
+    "uvicorn": [
+      "agents/private-data-analyst/requirements.txt",
+      "agents/crewai/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "agents/code-improver/requirements.txt",
+      "agents/health-monitor/requirements.txt",
+      "agents/symbolic-reasoning-engine/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/product-strategy-architect/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "agents/task-assignment-coordinator/requirements.txt",
+      "agents/gradient-compression-specialist/requirements.txt",
+      "docs/requirements/letta/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "agents/mcp-server/requirements.txt",
+      "agents/ai-scrum-master/requirements.txt",
+      "agents/senior-frontend-developer/requirements.txt",
+      "agents/pentestgpt/requirements.txt",
+      "agents/causal-inference-expert/requirements.txt",
+      "docs/requirements/gpt-engineer/requirements.txt",
+      "agents/ai-product-manager/requirements.txt",
+      "agents/observability-monitoring-engineer/requirements.txt",
+      "agents/quantum-computing-optimizer/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt",
+      "agents/cognitive-architecture-designer/requirements.txt",
+      "agents/edge-computing-optimizer/requirements.txt",
+      "agents/attention-optimizer/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "agents/langflow-workflow-designer/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "backend/requirements.minimal.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "agents/fsdp/requirements.txt",
+      "frontend/requirements.txt",
+      "agents/distributed-computing-architect/requirements.txt",
+      "agents/meta-learning-specialist/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "agents/autogen/requirements.txt",
+      "agents/model-training-specialist/requirements.txt",
+      "agents/senior-backend-developer/requirements.txt",
+      "agents/aider/requirements.txt",
+      "agents/letta/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "agents/episodic-memory-engineer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "agents/ai-agent-debugger/requirements.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "backend/requirements-fast.txt",
+      "docker/autogpt/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "agents/knowledge-distillation-expert/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "agents/transformers-migration-specialist/requirements.txt",
+      "docker/letta/requirements.txt",
+      "agents/jarvis-voice-interface/requirements.txt",
+      "agents/data-analysis-engineer/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "agents/explainable-ai-specialist/requirements.txt",
+      "agents/agentzero-coordinator/requirements.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "agents/synthetic-data-generator/requirements.txt",
+      "docs/requirements/aider/requirements.txt",
+      "agents/semgrep-security-analyzer/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "agents/document-knowledge-manager/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/dify-automation-specialist/requirements.txt",
+      "agents/self-healing-orchestrator/requirements.txt",
+      "agents/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "agents/garbage-collector-coordinator/requirements.txt",
+      "agents/federated-learning-coordinator/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "agents/neuromorphic-computing-expert/requirements.txt",
+      "requirements.txt",
+      "agents/context-framework/requirements.txt",
+      "agents/opendevin-code-generator/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/semgrep/requirements.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/multi-modal-fusion-coordinator/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "agents/localagi-orchestration-manager/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "agents/reinforcement-learning-trainer/requirements.txt",
+      "agents/browser-automation-orchestrator/requirements.txt",
+      "agents/finrobot/requirements.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "agents/memory-persistence-manager/requirements.txt",
+      "agents/knowledge-graph-builder/requirements.txt",
+      "agents/devika/requirements.txt",
+      "agents/bigagi-system-manager/requirements.txt",
+      "docker/fsdp/requirements.txt",
+      "agents/flowiseai-flow-manager/requirements.txt",
+      "agents/service-hub/requirements.txt",
+      "agents/data-pipeline-engineer/requirements.txt",
+      "agents/intelligence-optimization-monitor/requirements.txt"
+    ],
+    "pydantic": [
+      "agents/private-data-analyst/requirements.txt",
+      "agents/crewai/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "agents/code-improver/requirements.txt",
+      "agents/health-monitor/requirements.txt",
+      "agents/symbolic-reasoning-engine/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/product-strategy-architect/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "agents/task-assignment-coordinator/requirements.txt",
+      "agents/gradient-compression-specialist/requirements.txt",
+      "docs/requirements/letta/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "agents/mcp-server/requirements.txt",
+      "agents/ai-scrum-master/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "agents/senior-frontend-developer/requirements.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "agents/pentestgpt/requirements.txt",
+      "agents/causal-inference-expert/requirements.txt",
+      "docs/requirements/gpt-engineer/requirements.txt",
+      "agents/ai-product-manager/requirements.txt",
+      "agents/observability-monitoring-engineer/requirements.txt",
+      "agents/quantum-computing-optimizer/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt",
+      "agents/cognitive-architecture-designer/requirements.txt",
+      "agents/requirements.txt",
+      "agents/edge-computing-optimizer/requirements.txt",
+      "agents/attention-optimizer/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "agents/langflow-workflow-designer/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "backend/requirements.minimal.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "agents/fsdp/requirements.txt",
+      "agents/distributed-computing-architect/requirements.txt",
+      "agents/meta-learning-specialist/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "agents/autogen/requirements.txt",
+      "agents/senior-backend-developer/requirements.txt",
+      "agents/model-training-specialist/requirements.txt",
+      "agents/aider/requirements.txt",
+      "agents/letta/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "agents/episodic-memory-engineer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "agents/ai-agent-debugger/requirements.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "backend/requirements-fast.txt",
+      "docker/autogpt/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "agents/knowledge-distillation-expert/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "agents/transformers-migration-specialist/requirements.txt",
+      "docker/letta/requirements.txt",
+      "agents/jarvis-voice-interface/requirements.txt",
+      "agents/data-analysis-engineer/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "agents/explainable-ai-specialist/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "agents/agentzero-coordinator/requirements.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "agents/synthetic-data-generator/requirements.txt",
+      "docs/requirements/aider/requirements.txt",
+      "agents/semgrep-security-analyzer/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "agents/document-knowledge-manager/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/dify-automation-specialist/requirements.txt",
+      "agents/self-healing-orchestrator/requirements.txt",
+      "agents/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "agents/garbage-collector-coordinator/requirements.txt",
+      "agents/federated-learning-coordinator/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "agents/neuromorphic-computing-expert/requirements.txt",
+      "requirements.txt",
+      "agents/context-framework/requirements.txt",
+      "agents/opendevin-code-generator/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/semgrep/requirements.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/multi-modal-fusion-coordinator/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "agents/localagi-orchestration-manager/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "agents/reinforcement-learning-trainer/requirements.txt",
+      "agents/browser-automation-orchestrator/requirements.txt",
+      "agents/finrobot/requirements.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "agents/memory-persistence-manager/requirements.txt",
+      "agents/knowledge-graph-builder/requirements.txt",
+      "agents/devika/requirements.txt",
+      "agents/bigagi-system-manager/requirements.txt",
+      "agents/flowiseai-flow-manager/requirements.txt",
+      "agents/service-hub/requirements.txt",
+      "agents/data-pipeline-engineer/requirements.txt",
+      "agents/intelligence-optimization-monitor/requirements.txt"
+    ],
+    "pydantic-settings": [
+      "backend/requirements.minimal.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "sqlalchemy": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docker/letta/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "services/chainlit/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "requirements.txt",
+      "backend/requirements.minimal.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "agents/letta/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-fast.txt",
+      "docker/autogpt/requirements.txt",
+      "docker/requirements/requirements.txt"
+    ],
+    "alembic": [
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "psycopg2-binary": [
+      "backend/requirements.minimal.txt",
+      "system-validator/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "docs/requirements/letta/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "services/chainlit/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "redis": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "backend/requirements.minimal.txt",
+      "system-validator/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-fast.txt",
+      "docker/requirements/requirements.txt"
+    ],
+    "pymongo": [
+      "frontend/requirements.secure.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "requirements.txt"
+    ],
+    "neo4j": [
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "aiohttp": [
+      "agents/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/semgrep/requirements.txt",
+      "frontend/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/backend/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/tests/requirements-test.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docker/autogpt/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/crewai/requirements.txt"
+    ],
+    "httpx": [
+      "agents/private-data-analyst/requirements.txt",
+      "agents/crewai/requirements.txt",
+      "agents/code-improver/requirements.txt",
+      "agents/health-monitor/requirements.txt",
+      "agents/symbolic-reasoning-engine/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/product-strategy-architect/requirements.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docker/base/requirements-security.txt",
+      "agents/task-assignment-coordinator/requirements.txt",
+      "agents/gradient-compression-specialist/requirements.txt",
+      "agents/ai-scrum-master/requirements.txt",
+      "agents/mcp-server/requirements.txt",
+      "agents/senior-frontend-developer/requirements.txt",
+      "agents/pentestgpt/requirements.txt",
+      "agents/causal-inference-expert/requirements.txt",
+      "agents/ai-product-manager/requirements.txt",
+      "agents/observability-monitoring-engineer/requirements.txt",
+      "agents/quantum-computing-optimizer/requirements.txt",
+      "agents/cognitive-architecture-designer/requirements.txt",
+      "agents/requirements.txt",
+      "agents/edge-computing-optimizer/requirements.txt",
+      "agents/attention-optimizer/requirements.txt",
+      "agents/langflow-workflow-designer/requirements.txt",
+      "backend/requirements.minimal.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "agents/fsdp/requirements.txt",
+      "frontend/requirements.txt",
+      "agents/distributed-computing-architect/requirements.txt",
+      "agents/meta-learning-specialist/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "agents/autogen/requirements.txt",
+      "agents/senior-backend-developer/requirements.txt",
+      "agents/model-training-specialist/requirements.txt",
+      "agents/aider/requirements.txt",
+      "agents/letta/requirements.txt",
+      "agents/episodic-memory-engineer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "agents/ai-agent-debugger/requirements.txt",
+      "backend/requirements-fast.txt",
+      "agents/babyagi/requirements.txt",
+      "agents/knowledge-distillation-expert/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "backend/requirements.txt",
+      "agents/transformers-migration-specialist/requirements.txt",
+      "agents/jarvis-voice-interface/requirements.txt",
+      "agents/data-analysis-engineer/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "agents/explainable-ai-specialist/requirements.txt",
+      "agents/agentzero-coordinator/requirements.txt",
+      "agents/synthetic-data-generator/requirements.txt",
+      "agents/semgrep-security-analyzer/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "agents/document-knowledge-manager/requirements.txt",
+      "agents/dify-automation-specialist/requirements.txt",
+      "agents/self-healing-orchestrator/requirements.txt",
+      "agents/awesome-code-ai/requirements.txt",
+      "agents/garbage-collector-coordinator/requirements.txt",
+      "agents/federated-learning-coordinator/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "agents/neuromorphic-computing-expert/requirements.txt",
+      "requirements.txt",
+      "agents/context-framework/requirements.txt",
+      "agents/opendevin-code-generator/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/multi-modal-fusion-coordinator/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "agents/localagi-orchestration-manager/requirements.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "agents/reinforcement-learning-trainer/requirements.txt",
+      "agents/browser-automation-orchestrator/requirements.txt",
+      "agents/finrobot/requirements.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "agents/memory-persistence-manager/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "agents/knowledge-graph-builder/requirements.txt",
+      "agents/devika/requirements.txt",
+      "agents/bigagi-system-manager/requirements.txt",
+      "agents/flowiseai-flow-manager/requirements.txt",
+      "agents/service-hub/requirements.txt",
+      "agents/data-pipeline-engineer/requirements.txt",
+      "agents/intelligence-optimization-monitor/requirements.txt"
+    ],
+    "websockets": [
+      "docker/gpt-engineer/requirements.txt",
+      "backend/requirements.minimal.txt",
+      "docker/aider/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/autogpt/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "frontend/requirements.txt",
+      "docker/letta/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt"
+    ],
+    "requests": [
+      "agents/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "docker/letta/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "backend/requirements.minimal.txt",
+      "system-validator/requirements.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "frontend/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docs/requirements/aider/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/letta/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/tests/requirements-test.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "backend/requirements-fast.txt",
+      "agents/pentestgpt/requirements.txt",
+      "docker/autogpt/requirements.txt",
+      "docs/requirements/gpt-engineer/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt"
+    ],
+    "urllib3": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "cryptography": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements-minimal.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "bcrypt": [
+      "backend/requirements.secure.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "python-jose": [
+      "backend/requirements.minimal.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "passlib": [
+      "backend/requirements.minimal.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "numpy": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "system-validator/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docker/fsdp/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-fast.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "docker/requirements/requirements.txt"
+    ],
+    "pandas": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-fast.txt",
+      "docker/requirements/requirements.txt"
+    ],
+    "scikit-learn": [
+      "docker/base/requirements-agent.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "sentence-transformers": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "chromadb": [
+      "agents/autogpt/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "services/chainlit/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "qdrant-client": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "faiss-cpu": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "openai": [
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docker/letta/requirements.txt",
+      "services/llamaindex/requirements.txt",
+      "services/chainlit/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "requirements.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docker/autogpt/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt"
+    ],
+    "anthropic": [
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "langchain": [
+      "docker/base/requirements-agent.txt",
+      "agents/crewai/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/privategpt/requirements.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "services/chainlit/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "requirements.txt"
+    ],
+    "langchain-community": [
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt"
+    ],
+    "streamlit": [
+      "frontend/requirements.secure.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "plotly": [
+      "frontend/requirements.secure.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docker/requirements/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt"
+    ],
+    "matplotlib": [
+      "docs/requirements/requirements/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "pillow": [
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "beautifulsoup4": [
+      "agents/autogpt/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "agents/agentgpt/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "selenium": [
+      "agents/autogpt/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "playwright": [
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "lxml": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "python-dotenv": [
+      "agents/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "backend/requirements.minimal.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docker/semgrep/requirements.txt",
+      "frontend/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docker/base/requirements-base.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-fast.txt"
+    ],
+    "pyyaml": [
+      "docs/requirements/brain/requirements_minimal.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "jinja2": [
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "click": [
+      "backend/requirements.secure.txt",
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "rich": [
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "agents/shellgpt/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "tqdm": [
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "pytest": [
+      "docs/requirements/tests/requirements-test.txt",
+      "system-validator/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "black": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "coverage": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docs/requirements/backend/requirements.txt",
+      "requirements.txt"
+    ],
+    "prometheus-client": [
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/backend/requirements.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "docker/base/requirements-base.txt"
+    ],
+    "psutil": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "requirements.txt",
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "system-validator/requirements.txt",
+      "backend/requirements.minimal.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt"
+    ],
+    "docker": [
+      "system-validator/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/backend/requirements.txt",
+      "backend/requirements.txt",
+      "agents/infrastructure-devops/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "self-healing/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt"
+    ],
+    "pytest-asyncio": [
+      "docs/requirements/tests/requirements-test.txt",
+      "system-validator/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt"
+    ],
+    "pytest-cov": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt"
+    ],
+    "pytest-mock": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt"
+    ],
+    "factory-boy": [
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "backend/requirements-test.txt",
+      "tests/requirements-test.txt"
+    ],
+    "faker": [
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "backend/requirements-test.txt",
+      "tests/requirements-test.txt"
+    ],
+    "locust": [
+      "docs/requirements/tests/requirements-test.txt",
+      "system-validator/requirements.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt"
+    ],
+    "flake8": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "mypy": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "bandit": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docker/base/requirements-security.txt"
+    ],
+    "safety": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "backend/requirements-test.txt",
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docker/base/requirements-security.txt"
+    ],
+    "celery": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docker/requirements/requirements.secure.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements-minimal.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "python-multipart": [
+      "agents/private-data-analyst/requirements.txt",
+      "agents/crewai/requirements.txt",
+      "agents/code-improver/requirements.txt",
+      "agents/health-monitor/requirements.txt",
+      "agents/symbolic-reasoning-engine/requirements.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "agents/product-strategy-architect/requirements.txt",
+      "self-healing/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "agents/task-assignment-coordinator/requirements.txt",
+      "agents/gradient-compression-specialist/requirements.txt",
+      "agents/ai-scrum-master/requirements.txt",
+      "agents/mcp-server/requirements.txt",
+      "agents/senior-frontend-developer/requirements.txt",
+      "agents/pentestgpt/requirements.txt",
+      "agents/causal-inference-expert/requirements.txt",
+      "agents/ai-product-manager/requirements.txt",
+      "agents/observability-monitoring-engineer/requirements.txt",
+      "agents/quantum-computing-optimizer/requirements.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt",
+      "agents/cognitive-architecture-designer/requirements.txt",
+      "agents/edge-computing-optimizer/requirements.txt",
+      "agents/attention-optimizer/requirements.txt",
+      "agents/langflow-workflow-designer/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "backend/requirements.minimal.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "agents/fsdp/requirements.txt",
+      "frontend/requirements.txt",
+      "agents/distributed-computing-architect/requirements.txt",
+      "agents/meta-learning-specialist/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "agents/gpt-engineer/requirements.txt",
+      "agents/autogen/requirements.txt",
+      "agents/senior-backend-developer/requirements.txt",
+      "agents/model-training-specialist/requirements.txt",
+      "agents/aider/requirements.txt",
+      "agents/letta/requirements.txt",
+      "agents/episodic-memory-engineer/requirements.txt",
+      "agents/ai-agent-debugger/requirements.txt",
+      "docker/gpt-engineer/requirements.txt",
+      "docker/aider/requirements.txt",
+      "backend/requirements-fast.txt",
+      "docker/autogpt/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "agents/knowledge-distillation-expert/requirements.txt",
+      "agents/agentgpt-autonomous-executor/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "agents/transformers-migration-specialist/requirements.txt",
+      "docker/letta/requirements.txt",
+      "agents/jarvis-voice-interface/requirements.txt",
+      "agents/data-analysis-engineer/requirements.txt",
+      "docker/api-gateway/requirements.txt",
+      "agents/explainable-ai-specialist/requirements.txt",
+      "agents/agentzero-coordinator/requirements.txt",
+      "agents/synthetic-data-generator/requirements.txt",
+      "agents/semgrep-security-analyzer/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "agents/document-knowledge-manager/requirements.txt",
+      "docker/awesome-code-ai/requirements.txt",
+      "agents/dify-automation-specialist/requirements.txt",
+      "agents/self-healing-orchestrator/requirements.txt",
+      "agents/awesome-code-ai/requirements.txt",
+      "agents/garbage-collector-coordinator/requirements.txt",
+      "agents/federated-learning-coordinator/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "agents/neuromorphic-computing-expert/requirements.txt",
+      "agents/context-framework/requirements.txt",
+      "agents/opendevin-code-generator/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "agents/privategpt/requirements.txt",
+      "agents/multi-modal-fusion-coordinator/requirements.txt",
+      "agents/autogpt/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "agents/localagi-orchestration-manager/requirements.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "agents/reinforcement-learning-trainer/requirements.txt",
+      "agents/browser-automation-orchestrator/requirements.txt",
+      "agents/finrobot/requirements.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/agentgpt/requirements.txt",
+      "agents/memory-persistence-manager/requirements.txt",
+      "agents/knowledge-graph-builder/requirements.txt",
+      "agents/devika/requirements.txt",
+      "agents/bigagi-system-manager/requirements.txt",
+      "agents/flowiseai-flow-manager/requirements.txt",
+      "agents/service-hub/requirements.txt",
+      "agents/data-pipeline-engineer/requirements.txt",
+      "agents/intelligence-optimization-monitor/requirements.txt"
+    ],
+    "email-validator": [
+      "backend/requirements-minimal.txt",
+      "docs/requirements/backend/requirements.txt",
+      "backend/requirements.txt",
+      "backend/requirements.secure.txt"
+    ],
+    "typer": [
+      "backend/requirements.secure.txt",
+      "docs/requirements/backend/requirements.txt",
+      "backend/requirements.txt",
+      "backend/requirements-minimal.txt",
+      "agents/shellgpt/requirements.txt",
+      "agents/gpt-engineer/requirements.txt"
+    ],
+    "setuptools": [
+      "backend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "frontend/requirements.txt",
+      "backend/requirements.secure.txt"
+    ],
+    "certifi": [
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/backend/requirements.txt"
+    ],
+    "scipy": [
+      "docs/requirements/brain/requirements_minimal.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docker/fsdp/requirements.txt",
+      "docker/requirements/requirements.secure.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "networkx": [
+      "backend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.secure.txt"
+    ],
+    "sympy": [
+      "backend/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "backend/requirements.secure.txt"
+    ],
+    "tiktoken": [
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.txt",
+      "agents/letta/requirements.txt",
+      "agents/babyagi/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "services/llamaindex/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "aiofiles": [
+      "docs/requirements/brain/requirements_minimal.txt",
+      "backend/requirements.minimal.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "backend/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/backend/requirements.txt"
+    ],
+    "schedule": [
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "backend/requirements.secure.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt"
+    ],
+    "asyncio-mqtt": [
+      "docker/base/requirements-agent.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "backend/requirements.secure.txt",
+      "agents/context-optimizer/requirements.txt",
+      "backend/requirements.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt",
+      "docker/base/requirements-base.txt"
+    ],
+    "PyJWT": [
+      "backend/requirements-fast.txt",
+      "backend/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "backend/requirements-minimal.txt"
+    ],
+    "flask": [
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "backend/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt"
+    ],
+    "pylint": [
+      "docs/requirements/tests/requirements-test.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt"
+    ],
+    "pytest-benchmark": [
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "tests/requirements-test.txt",
+      "docs/requirements/archive/requirements-test.txt"
+    ],
+    "asyncio": [
+      "docker/base/requirements-agent.txt",
+      "frontend/requirements.secure.txt",
+      "agents/requirements.txt",
+      "docker/pentestgpt/requirements.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docker/semgrep/requirements.txt",
+      "docker/health-monitor/requirements.txt",
+      "self-healing/requirements.txt",
+      "frontend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "GitPython": [
+      "docker/awesome-code-ai/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "self-healing/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt"
+    ],
+    "PyYAML": [
+      "docker/base/requirements-agent.txt",
+      "agents/requirements.txt",
+      "agents/context-optimizer/requirements.txt",
+      "agents/hardware-optimizer/requirements.txt",
+      "self-healing/requirements.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docker/base/requirements-base.txt"
+    ],
+    "crewai": [
+      "docker/base/requirements-agent.txt",
+      "agents/crewai/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docker/crewai/requirements.txt",
+      "docs/requirements/crewai/requirements.txt"
+    ],
+    "yfinance": [
+      "docker/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docker/requirements/requirements.secure.txt"
+    ],
+    "ta": [
+      "docker/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docker/requirements/requirements.secure.txt"
+    ],
+    "seaborn": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "pytz": [
+      "docker/requirements/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docker/requirements/requirements.secure.txt"
+    ],
+    "openpyxl": [
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docker/requirements/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "ollama": [
+      "docker/base/requirements-agent.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ],
+    "aioredis": [
+      "docs/requirements/brain/requirements_minimal.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docker/api-gateway/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt"
+    ],
+    "asyncpg": [
+      "docs/requirements/brain/requirements_minimal.txt",
+      "monitoring/ai-metrics-exporter/requirements.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-agi.txt",
+      "docs/requirements/agent-registry/requirements.txt"
+    ],
+    "python-json-logger": [
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "deployment/monitoring/requirements-monitor.txt"
+    ],
+    "structlog": [
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt"
+    ]
+  },
+  "validation_commands": [
+    "# Validate backend container",
+    "docker-compose build backend --no-cache",
+    "docker-compose run --rm backend python -c 'import sys; print(sys.version)'",
+    "",
+    "# Validate frontend container",
+    "docker-compose build frontend --no-cache",
+    "docker-compose run --rm frontend python -c 'import sys; print(sys.version)'",
+    "",
+    "# Validate autogpt container",
+    "docker-compose build autogpt --no-cache",
+    "docker-compose run --rm autogpt python -c 'import sys; print(sys.version)'",
+    "",
+    "# Validate crewai container",
+    "docker-compose build crewai --no-cache",
+    "docker-compose run --rm crewai python -c 'import sys; print(sys.version)'",
+    "",
+    "# Validate letta container",
+    "docker-compose build letta --no-cache",
+    "docker-compose run --rm letta python -c 'import sys; print(sys.version)'",
+    "",
+    "# Validate aider container",
+    "docker-compose build aider --no-cache",
+    "docker-compose run --rm aider python -c 'import sys; print(sys.version)'",
+    ""
+  ],
+  "cleanup_recommendations": {
+    "safe_to_remove": [
+      "docs/requirements/backend/requirements-test.txt",
+      "docs/requirements/tests/requirements-test.txt",
+      "docs/requirements/pentestgpt/requirements.txt",
+      "docs/requirements/archive/requirements-test.txt",
+      "docs/requirements/archive/requirements-optimized.txt",
+      "docs/requirements/archive/requirements-minimal.txt",
+      "docs/requirements/archive/requirements-agi.txt"
+    ],
+    "consolidate": [
+      "torch appears in 14 files",
+      "transformers appears in 13 files",
+      "accelerate appears in 6 files",
+      "fastapi appears in 119 files",
+      "uvicorn appears in 119 files",
+      "pydantic appears in 124 files",
+      "pydantic-settings appears in 11 files",
+      "sqlalchemy appears in 20 files",
+      "alembic appears in 7 files",
+      "psycopg2-binary appears in 17 files",
+      "redis appears in 26 files",
+      "pymongo appears in 6 files",
+      "neo4j appears in 6 files",
+      "aiohttp appears in 37 files",
+      "httpx appears in 94 files",
+      "websockets appears in 18 files",
+      "requests appears in 50 files",
+      "urllib3 appears in 6 files",
+      "cryptography appears in 13 files",
+      "bcrypt appears in 8 files",
+      "python-jose appears in 12 files",
+      "passlib appears in 11 files",
+      "numpy appears in 28 files",
+      "pandas appears in 19 files",
+      "scikit-learn appears in 16 files",
+      "sentence-transformers appears in 10 files",
+      "chromadb appears in 14 files",
+      "qdrant-client appears in 8 files",
+      "faiss-cpu appears in 8 files",
+      "openai appears in 23 files",
+      "anthropic appears in 8 files",
+      "langchain appears in 16 files",
+      "streamlit appears in 9 files",
+      "plotly appears in 13 files",
+      "matplotlib appears in 10 files",
+      "pillow appears in 6 files",
+      "beautifulsoup4 appears in 11 files",
+      "selenium appears in 8 files",
+      "playwright appears in 9 files",
+      "python-dotenv appears in 33 files",
+      "pyyaml appears in 9 files",
+      "jinja2 appears in 8 files",
+      "click appears in 7 files",
+      "rich appears in 10 files",
+      "pytest appears in 13 files",
+      "black appears in 12 files",
+      "coverage appears in 8 files",
+      "prometheus-client appears in 17 files",
+      "psutil appears in 22 files",
+      "docker appears in 14 files",
+      "pytest-asyncio appears in 9 files",
+      "pytest-cov appears in 8 files",
+      "pytest-mock appears in 7 files",
+      "locust appears in 6 files",
+      "flake8 appears in 6 files",
+      "mypy appears in 7 files",
+      "bandit appears in 6 files",
+      "safety appears in 6 files",
+      "celery appears in 10 files",
+      "python-multipart appears in 92 files",
+      "typer appears in 6 files",
+      "scipy appears in 11 files",
+      "tiktoken appears in 9 files",
+      "aiofiles appears in 10 files",
+      "schedule appears in 9 files",
+      "asyncio-mqtt appears in 12 files",
+      "flask appears in 7 files",
+      "asyncio appears in 15 files",
+      "PyYAML appears in 8 files"
+    ],
+    "backup_first": [
+      "requirements.txt",
+      "backend/requirements.secure.txt",
+      "backend/requirements.minimal.txt",
+      "backend/requirements-fast.txt",
+      "system-validator/requirements.txt",
+      "frontend/requirements.secure.txt",
+      "docker/requirements/requirements.secure.txt",
+      "docker/requirements/requirements.txt",
+      "docker/base/requirements-base.txt",
+      "docker/base/requirements-agent.txt",
+      "docker/base/requirements-security.txt",
+      "docs/requirements/autogpt/requirements.txt",
+      "docs/requirements/deployments/requirements.txt",
+      "docs/requirements/system/requirements.txt",
+      "docs/requirements/health-monitor/requirements.txt",
+      "docs/requirements/ollama-integration/requirements.txt",
+      "docs/requirements/crewai/requirements.txt",
+      "docs/requirements/agent-message-bus/requirements.txt",
+      "docs/requirements/requirements/requirements.txt",
+      "docs/requirements/letta/requirements.txt",
+      "docs/requirements/gpt-engineer/requirements.txt",
+      "docs/requirements/agent-registry/requirements.txt",
+      "docs/requirements/infrastructure-devops/requirements.txt",
+      "docs/requirements/awesome-code-ai/requirements.txt",
+      "docs/requirements/backend/requirements.txt",
+      "docs/requirements/localagi/requirements.txt",
+      "docs/requirements/brain/requirements_minimal.txt",
+      "docs/requirements/semgrep/requirements.txt",
+      "docs/requirements/web_learning/requirements.txt",
+      "docs/requirements/context-optimizer/requirements.txt",
+      "docs/requirements/universal-agent/requirements.txt",
+      "docs/requirements/frontend/requirements.txt",
+      "docs/requirements/jarvis-agi/requirements_super.txt",
+      "docs/requirements/aider/requirements.txt",
+      "docs/requirements/hardware-optimizer/requirements.txt"
+    ],
+    "keep": []
+  }
+}

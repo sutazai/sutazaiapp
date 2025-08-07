@@ -48,7 +48,7 @@ class CrewManager:
         # CrewAI has direct Ollama support as shown in the guide
         
         # Use the lightweight model for faster testing
-        self.model_name = "ollama/llama3.2:1b"
+        self.model_name = "ollama/tinyllama.2:1b"
         self.llm = None  # Let CrewAI handle LLM initialization with direct Ollama support
         
     def create_agents(self, agent_configs: List[AgentConfig]) -> Dict[str, Agent]:
@@ -98,16 +98,16 @@ class CrewManager:
                 # Test Ollama connection
                 import requests
                 try:
-                    response = requests.get("http://ollama:11434/api/tags", timeout=5)
+                    response = requests.get("http://ollama:10104/api/tags", timeout=5)
                     if response.status_code == 200:
                         # If Ollama is available, use it for a simple response
                         llm_payload = {
-                            "model": "llama3.2:1b",
+                            "model": "tinyllama.2:1b",
                             "prompt": f"As a multi-agent system, briefly respond to: {request.tasks[0].description}",
                             "stream": False
                         }
                         llm_response = requests.post(
-                            "http://ollama:11434/api/generate",
+                            "http://ollama:10104/api/generate",
                             json=llm_payload,
                             timeout=10
                         )

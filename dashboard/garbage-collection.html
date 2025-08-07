@@ -1,0 +1,86 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Garbage Collection Dashboard</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .card { background: #f0f0f0; padding: 20px; margin: 10px 0; border-radius: 5px; }
+                .metric { display: inline-block; margin: 10px 20px 10px 0; }
+                .metric-value { font-size: 24px; font-weight: bold; }
+                .metric-label { color: #666; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #4CAF50; color: white; }
+                .warning { color: #ff9800; }
+                .error { color: #f44336; }
+                .success { color: #4CAF50; }
+            </style>
+            <meta http-equiv="refresh" content="60">
+        </head>
+        <body>
+            <h1>Garbage Collection Dashboard</h1>
+            <div class="card">
+                <h2>Disk Usage</h2>
+                <div class="metric">
+                    <div class="metric-value">698.4%</div>
+                    <div class="metric-label">Disk Used</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">257.2 GB</div>
+                    <div class="metric-label">Free Space</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">26.9 MB</div>
+                    <div class="metric-label">Logs Size</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">178.3 MB</div>
+                    <div class="metric-label">Reports Size</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Last 24 Hours</h2>
+                <div class="metric">
+                    <div class="metric-value">22</div>
+                    <div class="metric-label">Collection Runs</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">289035</div>
+                    <div class="metric-label">Files Processed</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.0 MB</div>
+                    <div class="metric-label">Space Freed</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Latest Run</h2>
+                <table>
+                    <tr>
+                        <th>Time</th>
+                        <th>Files Processed</th>
+                        <th>Archived</th>
+                        <th>Deleted</th>
+                        <th>Space Freed</th>
+                        <th>Duration</th>
+                        <th>Errors</th>
+                    </tr>
+                    <tr>
+                        <td>2025-08-07 14:51:25.143069</td>
+                        <td>2468</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0.0 MB</td>
+                        <td>1.2s</td>
+                        <td class="success">0</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p>Last updated: 2025-08-07 15:35:01</p>
+        </body>
+        </html>
+        

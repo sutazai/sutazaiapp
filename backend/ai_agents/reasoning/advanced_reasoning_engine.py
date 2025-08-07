@@ -1,5 +1,5 @@
 """
-Advanced Reasoning Engine for SutazAI AGI/ASI Platform
+Advanced Reasoning Engine for SutazAI automation/advanced automation Platform
 =====================================================
 
 Implements sophisticated reasoning capabilities including:

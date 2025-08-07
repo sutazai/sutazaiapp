@@ -1,0 +1,232 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: sutazai-monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'sutazai-production'
+        environment: 'production'
+    
+    # Alertmanager configuration
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+    
+    # Load rules
+    rule_files:
+      - '/etc/prometheus/rules/*.yml'
+    
+    # Scrape configurations
+    scrape_configs:
+    # Kubernetes API server
+    - job_name: 'kubernetes-apiservers'
+      kubernetes_sd_configs:
+      - role: endpoints
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: default;kubernetes;https
+    
+    # Kubernetes nodes
+    - job_name: 'kubernetes-nodes'
+      kubernetes_sd_configs:
+      - role: node
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+    
+    # Kubernetes pods
+    - job_name: 'kubernetes-pods'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+    
+    # SutazAI specific targets
+    - job_name: 'sutazai-coordinator'
+      static_configs:
+      - targets: ['coordinator-core.sutazai-core:8000']
+      metrics_path: '/metrics'
+    
+    - job_name: 'sutazai-agents'
+      kubernetes_sd_configs:
+      - role: service
+        namespaces:
+          names: ['sutazai-agents']
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_service_label_monitor]
+        action: keep
+        regex: true
+    
+    - job_name: 'ollama'
+      static_configs:
+      - targets: ['ollama.sutazai-core:10104']
+      metrics_path: '/metrics'
+    
+    - job_name: 'postgres'
+      static_configs:
+      - targets: ['postgres-exporter.sutazai-core:9187']
+    
+    - job_name: 'redis'
+      static_configs:
+      - targets: ['redis-exporter.sutazai-core:9121']
+    
+    - job_name: 'node-exporter'
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - source_labels: [__address__]
+        regex: '(.*):10250'
+        replacement: '${1}:9100'
+        target_label: __address__
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: sutazai-monitoring
+data:
+  sutazai-alerts.yml: |
+    groups:
+    - name: sutazai_coordinator
+      interval: 30s
+      rules:
+      - alert: CoordinatorCoreDown
+        expr: up{job="sutazai-coordinator"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: coordinator
+        annotations:
+          summary: "Coordinator Core is down"
+          description: "Coordinator Core {{ $labels.instance }} has been down for more than 2 minutes."
+      
+      - alert: CoordinatorHighMemory
+        expr: container_memory_usage_bytes{pod=~"coordinator-core-.*"} / container_spec_memory_limit_bytes{pod=~"coordinator-core-.*"} > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          component: coordinator
+        annotations:
+          summary: "Coordinator Core high memory usage"
+          description: "Coordinator Core pod {{ $labels.pod }} memory usage is above 90%"
+      
+      - alert: CoordinatorHighCPU
+        expr: rate(container_cpu_usage_seconds_total{pod=~"coordinator-core-.*"}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: coordinator
+        annotations:
+          summary: "Coordinator Core high CPU usage"
+          description: "Coordinator Core pod {{ $labels.pod }} CPU usage is above 80%"
+    
+    - name: sutazai_agents
+      interval: 30s
+      rules:
+      - alert: AgentDown
+        expr: up{job="sutazai-agents"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          component: agents
+        annotations:
+          summary: "Agent {{ $labels.instance }} is down"
+          description: "Agent {{ $labels.instance }} has been down for more than 5 minutes."
+      
+      - alert: AgentHighErrorRate
+        expr: rate(http_requests_total{job="sutazai-agents",status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: agents
+        annotations:
+          summary: "High error rate for agent {{ $labels.instance }}"
+          description: "Agent {{ $labels.instance }} has error rate above 10%"
+    
+    - name: sutazai_infrastructure
+      interval: 30s
+      rules:
+      - alert: PostgresDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL instance {{ $labels.instance }} is down"
+      
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Redis is down"
+          description: "Redis instance {{ $labels.instance }} is down"
+      
+      - alert: OllamaDown
+        expr: up{job="ollama"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: inference
+        annotations:
+          summary: "Ollama is down"
+          description: "Ollama instance {{ $labels.instance }} is down"
+      
+      - alert: DiskSpaceWarning
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.15
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space on {{ $labels.instance }} is below 15%"
+      
+      - alert: HighMemoryPressure
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High memory pressure on {{ $labels.instance }}"
+          description: "Available memory on {{ $labels.instance }} is below 10%"

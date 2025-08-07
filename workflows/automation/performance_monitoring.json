@@ -315,7 +315,7 @@
       "endpoints": [
         "http://agent-registry:8300/metrics",
         "http://agent-message-bus:8299/metrics",
-        "http://backend-agi:8000/metrics"
+        "http://backend:8000/metrics"
       ]
     },
     "grafana": {

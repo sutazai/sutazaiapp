@@ -12,7 +12,7 @@
       "id": "code-helper",
       "name": "Code Helper",
       "type": "code_assistant",
-      "model": "llama3.2:1b",
+      "model": "tinyllama.2:1b",
       "capabilities": ["code_generation", "debugging", "refactoring"],
       "system_prompt": "You are an expert programming assistant."
     },

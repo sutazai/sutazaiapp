@@ -132,8 +132,8 @@ class FlowiseService {
     async _processLLMNode(node, data) {
         try {
             // Call local Ollama instance
-            const response = await axios.post('http://ollama:11434/api/generate', {
-                model: 'llama3.2:1b',
+            const response = await axios.post('http://ollama:10104/api/generate', {
+                model: 'tinyllama',
                 prompt: data.query || data.prompt || 'Hello',
                 stream: false
             }, { timeout: 30000 });
@@ -141,7 +141,7 @@ class FlowiseService {
             return {
                 type: 'llm_response',
                 response: response.data.response || 'LLM response generated',
-                model: 'llama3.2:1b'
+                model: 'tinyllama'
             };
         } catch (error) {
             return {

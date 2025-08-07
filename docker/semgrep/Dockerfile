@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
     wget \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
 
 # Install Node.js and npm for semgrep
@@ -64,4 +64,10 @@ if __name__ == "__main__":
 EXPOSE 8080
 EXPOSE 8000
 
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
 CMD ["python3", "web_interface.py"]

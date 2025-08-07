@@ -1,37 +1,41 @@
-FROM node:18-alpine
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install git and build dependencies
-RUN apk add --no-cache git python3 make g++
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Clone AgentGPT
-RUN git clone https://github.com/reworkd/AgentGPT.git .
+# Copy requirements
+COPY requirements.txt .
 
-# Change to the next directory where package.json is located
-WORKDIR /app/next
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN npm install
+# Copy application
+COPY app.py .
 
-# Set environment variables for local LLM with Ollama
-ENV DATABASE_URL="postgresql://sutazai:OkI2_5Ob_L5bVwIiyyuSBuWQv@postgres:5432/sutazai"
-ENV NEXTAUTH_SECRET="sutazai-nextauth-secret-2024-local-llm"
-ENV NEXTAUTH_URL="http://localhost:3000"
-ENV OPENAI_API_KEY="sk-local-ollama-key"
-ENV OPENAI_API_HOST="http://ollama:11434"
-ENV OLLAMA_API_BASE="http://ollama:11434/v1"
-ENV OLLAMA_MODEL="llama2"
+# Set environment variables
+ENV AGENT_ID=agentgpt
+ENV AGENT_NAME="AgentGPT"
+ENV PORT=8531
 
-# Create custom configuration for local LLM
-RUN echo '{"openai": {"apiKey": "sk-local-ollama-key", "baseURL": "http://ollama:11434/v1", "model": "llama2"}}' > /app/next/local-llm-config.json
+# Expose port
+EXPOSE 8531
 
-# Build the application
-RUN npm run build
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8531/health || exit 1
 
-EXPOSE 3000
+# Run the application
 
-# Create startup script that configures local LLM
-RUN echo '#!/bin/sh\necho "🚀 Starting AgentGPT with Local LLM (Ollama)..."\necho "📡 Ollama URL: $OLLAMA_API_BASE"\necho "🤖 Model: $OLLAMA_MODEL"\nnpm start' > /app/start.sh && chmod +x /app/start.sh
+# Run as non-root user
+USER nobody
 
-CMD ["/app/start.sh"]
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

@@ -14,14 +14,14 @@
   },
   "ai_models": {
     "reasoning": "tinyllama",
-    "conversation": "llama3.2:1b",
-    "analysis": "qwen2.5:7b",
+    "conversation": "tinyllama.2:1b",
+    "analysis": "tinyllama2.5:7b",
     "coding": "tinyllama",
     "embedding": "nomic-embed-text"
   },
   "integrations": {
-    "ollama_url": "http://ollama:11434",
-    "backend_url": "http://backend-agi:8000",
+    "ollama_url": "http://ollama:10104",
+    "backend_url": "http://backend:8000",
     "chromadb_url": "http://chromadb:8000",
     "qdrant_url": "http://qdrant:6333",
     "neo4j_url": "bolt://neo4j:7687"

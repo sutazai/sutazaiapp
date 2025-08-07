@@ -10,7 +10,7 @@ import logging
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import aiofiles
-import magic
+# Note: Import specific implementation modules as needed
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -284,7 +284,8 @@ async def process_document(file: UploadFile = File(...)):
     
     try:
         # Detect file type
-        file_type = magic.from_file(temp_file_path, mime=True)
+        # TODO: Implement file type detection (e.g., using python-magic)
+        file_type = "application/octet-stream"  # Default file type
         logger.info(f"Processing file: {file.filename}, type: {file_type}")
         
         # Process document

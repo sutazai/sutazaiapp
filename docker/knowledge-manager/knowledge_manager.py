@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Knowledge Manager for SutazAI AGI/ASI System
+Knowledge Manager for SutazAI automation/advanced automation System
 Manages knowledge graphs, semantic relationships, and information retrieval
 """
 

@@ -31,8 +31,8 @@ mv semgrep_custom_rules.yaml config/security/ 2>/dev/null
 
 # Move any remaining status/report files
 echo "📊 Moving status files..."
-mv TINYLLAMA_CONFIGURATION_COMPLETE.md docs/system/ 2>/dev/null
-mv COMPLETE_TINYLLAMA_LITELLM_REMOVAL.md docs/system/ 2>/dev/null
+mv GPT-OSS_CONFIGURATION_COMPLETE.md docs/system/ 2>/dev/null
+mv COMPLETE_GPT-OSS_LITELLM_REMOVAL.md docs/system/ 2>/dev/null
 mv PROJECT_ORGANIZATION_COMPLETE.md docs/system/ 2>/dev/null
 
 # Create symlinks for commonly used files
@@ -43,9 +43,9 @@ ln -sf build/make/Makefile Makefile
 
 # Create a root README for navigation
 cat > README.md << 'EOF'
-# SutazAI AGI/ASI Autonomous System
+# SutazAI automation/advanced automation Autonomous System
 
-A lightweight, fully local AGI system running on TinyLlama.
+A lightweight, fully local automation system running on tinyllama.
 
 ## 🚀 Quick Start
 
@@ -64,7 +64,7 @@ make verify     # Verify configuration
 ├── agents/         # Agent configurations and definitions
 ├── archive/        # Archived files (scripts, docs, configs)
 ├── backend/        # Backend API service
-├── brain/          # AGI brain components
+├── coordinator/          # automation coordinator components
 ├── build/          # Build tools and Makefile
 ├── config/         # All configuration files
 │   ├── docker/     # Docker compose files
@@ -111,7 +111,7 @@ make help       # Show all available commands
 
 ## 🤖 System Status
 
-- **Model**: TinyLlama (637MB)
+- **Model**: tinyllama (637MB)
 - **API**: Native Ollama
 - **Agents**: 37 specialized AI agents
 - **External APIs**: None (100% local)

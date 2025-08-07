@@ -1,4 +1,4 @@
-# Dify Platform Configuration for SutazAI AGI System
+# Dify Platform Configuration for SutazAI automation System
 # Automated workflow management for 38-agent ecosystem
 
 platform:
@@ -25,15 +25,15 @@ models:
   default_provider: "ollama"
   providers:
     ollama:
-      base_url: "http://ollama:11434"
+      base_url: "http://ollama:10104"
       models:
         - name: "tinyllama:latest"
           type: "chat"
           context_length: 2048
-        - name: "llama3.2:1b"
+        - name: "tinyllama.2:1b"
           type: "chat" 
           context_length: 4096
-        - name: "qwen2.5:0.5b"
+        - name: "tinyllama2.5:0.5b"
           type: "code"
           context_length: 8192
     litellm:

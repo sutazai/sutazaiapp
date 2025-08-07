@@ -4,25 +4,38 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
     git \
     curl \
-    wget \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
 
-# Install Aider from PyPI
-RUN pip install --no-cache-dir aider-chat
-
-# Copy service files
-COPY aider_service.py .
+# Copy requirements
 COPY requirements.txt .
 
-# Install service dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create workspace
-RUN mkdir -p /app/workspace
+# Copy application
+COPY app.py .
 
-EXPOSE 8080
+# Set environment variables
+ENV AGENT_ID=aider
+ENV AGENT_NAME="Aider"
+ENV PORT=8535
 
-CMD ["uvicorn", "aider_service:app", "--host", "0.0.0.0", "--port", "8080"]
+# Expose port
+EXPOSE 8535
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8535/health || exit 1
+
+# Run the application
+
+# Run as non-root user
+USER nobody
+
+# Run as non-root user
+USER nobody
+CMD ["python", "app.py"]

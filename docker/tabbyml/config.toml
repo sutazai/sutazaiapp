@@ -1,11 +1,11 @@
 [model]
 kind = "ollama"
 model_id = "tinyllama"
-api_endpoint = "http://ollama:11434"
+api_endpoint = "http://ollama:10104"
 
 [llm]
 provider = "ollama"
-base_url = "http://ollama:11434"
+base_url = "http://ollama:10104"
 model = "tinyllama"
 
 [embeddings]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Enhanced Model Management Service for SutazAI
-Specialized management for DeepSeek-Coder-33B and other advanced models
+Specialized management for GPT-OSS and other advanced models
 """
 
 import os
@@ -16,7 +16,7 @@ import time
 import uvicorn
 from pathlib import Path
 from model_manager import EnhancedModelManager
-from deepseek_integration import DeepSeekIntegration
+from gpt_oss_integration import GPTOSSIntegration
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # FastAPI app
 app = FastAPI(
     title="SutazAI Enhanced Model Manager",
-    description="Advanced model management with DeepSeek-Coder and optimized inference",
+    description="Advanced model management with GPT-OSS and optimized inference",
     version="2.0.0"
 )
 
@@ -51,14 +51,14 @@ class BatchGenerationRequest(BaseModel):
 
 # Initialize Enhanced Model Manager
 model_manager = EnhancedModelManager()
-deepseek_integration = DeepSeekIntegration()
+gpt_oss_integration = GPTOSSIntegration()
 
 @app.on_event("startup")
 async def startup_event():
     """Initialize the enhanced model service"""
     logger.info("Starting Enhanced Model Manager...")
     await model_manager.initialize()
-    await deepseek_integration.initialize()
+    await gpt_oss_integration.initialize()
     logger.info("Enhanced Model Manager initialized successfully")
 
 @app.get("/")
@@ -67,7 +67,7 @@ async def root():
         "service": "SutazAI Enhanced Model Manager",
         "status": "running",
         "version": "2.0.0",
-        "features": ["DeepSeek-Coder", "Llama 2", "Batch Processing", "Model Optimization"]
+        "features": ["GPT-OSS", "Batch Processing", "Model Optimization"]
     }
 
 @app.get("/health")
@@ -154,11 +154,11 @@ async def batch_generate(request: BatchGenerationRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/generate")
-async def generate_code(prompt: str, language: str = "python", model: str = "deepseek-coder"):
-    """Generate code using DeepSeek-Coder or other code models"""
+async def generate_code(prompt: str, language: str = "python", model: str = "tinyllama"):
+    """Generate code using GPT-OSS or other code models"""
     try:
-        if model == "deepseek-coder":
-            result = await deepseek_integration.generate_code(prompt, language)
+        if model == "tinyllama":
+            result = await gpt_oss_integration.generate_code(prompt, language)
         else:
             result = await model_manager.generate_code(prompt, language, model)
         
@@ -172,11 +172,11 @@ async def generate_code(prompt: str, language: str = "python", model: str = "dee
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/complete")
-async def complete_code(code: str, language: str = "python", model: str = "deepseek-coder"):
+async def complete_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Complete partial code"""
     try:
-        if model == "deepseek-coder":
-            result = await deepseek_integration.complete_code(code, language)
+        if model == "tinyllama":
+            result = await gpt_oss_integration.complete_code(code, language)
         else:
             result = await model_manager.complete_code(code, language, model)
         
@@ -190,11 +190,11 @@ async def complete_code(code: str, language: str = "python", model: str = "deeps
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/explain")
-async def explain_code(code: str, language: str = "python", model: str = "deepseek-coder"):
+async def explain_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Explain what a piece of code does"""
     try:
-        if model == "deepseek-coder":
-            explanation = await deepseek_integration.explain_code(code, language)
+        if model == "tinyllama":
+            explanation = await gpt_oss_integration.explain_code(code, language)
         else:
             explanation = await model_manager.explain_code(code, language, model)
         
@@ -209,11 +209,11 @@ async def explain_code(code: str, language: str = "python", model: str = "deepse
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/code/optimize")
-async def optimize_code(code: str, language: str = "python", model: str = "deepseek-coder"):
+async def optimize_code(code: str, language: str = "python", model: str = "tinyllama"):
     """Optimize code for performance and readability"""
     try:
-        if model == "deepseek-coder":
-            optimized = await deepseek_integration.optimize_code(code, language)
+        if model == "tinyllama":
+            optimized = await gpt_oss_integration.optimize_code(code, language)
         else:
             optimized = await model_manager.optimize_code(code, language, model)
         

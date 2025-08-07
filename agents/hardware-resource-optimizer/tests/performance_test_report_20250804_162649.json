@@ -1,0 +1,141 @@
+{
+  "test_summary": {
+    "timestamp": "2025-08-04T16:26:49.741259",
+    "total_tests": 8,
+    "single_request_tests": 5,
+    "concurrent_load_tests": 3,
+    "total_duration_seconds": 142.82234239578247
+  },
+  "single_request_performance": {
+    "avg_response_time": 0.4065662908554077,
+    "max_response_time": 1.0032795071601868,
+    "min_response_time": 0.0017065882682800293,
+    "avg_success_rate": 100.0
+  },
+  "concurrent_load_performance": {
+    "avg_response_time": 4.784868865542942,
+    "max_response_time": 9.11231282711029,
+    "avg_success_rate": 100.0,
+    "total_requests_per_second": 25.62437905942383,
+    "avg_requests_per_second": 8.54145968647461
+  },
+  "detailed_results": [
+    {
+      "endpoint": "/health",
+      "method": "GET",
+      "iterations": 20,
+      "successful_requests": 20,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 1.0032795071601868,
+      "min_response_time": 1.0024785995483398,
+      "max_response_time": 1.0042369365692139,
+      "median_response_time": 1.003440022468567,
+      "std_dev": 0.0005496774984418928
+    },
+    {
+      "endpoint": "/status",
+      "method": "GET",
+      "iterations": 20,
+      "successful_requests": 20,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 1.003026556968689,
+      "min_response_time": 1.0024793148040771,
+      "max_response_time": 1.0041587352752686,
+      "median_response_time": 1.0028493404388428,
+      "std_dev": 0.000494390423604195
+    },
+    {
+      "endpoint": "/optimize/memory",
+      "method": "POST",
+      "iterations": 20,
+      "successful_requests": 20,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.019725167751312257,
+      "min_response_time": 0.012458086013793945,
+      "max_response_time": 0.035681962966918945,
+      "median_response_time": 0.019663572311401367,
+      "std_dev": 0.005346889777835111
+    },
+    {
+      "endpoint": "/analyze/storage",
+      "method": "GET",
+      "iterations": 20,
+      "successful_requests": 20,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.0017065882682800293,
+      "min_response_time": 0.0013303756713867188,
+      "max_response_time": 0.0030851364135742188,
+      "median_response_time": 0.0015190839767456055,
+      "std_dev": 0.0004524100535604676
+    },
+    {
+      "endpoint": "/analyze/storage/report",
+      "method": "GET",
+      "iterations": 20,
+      "successful_requests": 20,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "avg_response_time": 0.005093634128570557,
+      "min_response_time": 0.0037789344787597656,
+      "max_response_time": 0.006659269332885742,
+      "median_response_time": 0.004971027374267578,
+      "std_dev": 0.0007965571765332869
+    },
+    {
+      "test_type": "concurrent_load",
+      "endpoint": "/health",
+      "method": "GET",
+      "concurrent_users": 5,
+      "requests_per_user": 10,
+      "total_requests": 50,
+      "successful_requests": 50,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "total_duration": 51.074552059173584,
+      "requests_per_second": 0.9789611065422827,
+      "avg_response_time": 4.9064519548416134,
+      "min_response_time": 1.0038928985595703,
+      "max_response_time": 6.007065057754517,
+      "median_response_time": 5.005601406097412
+    },
+    {
+      "test_type": "concurrent_load",
+      "endpoint": "/status",
+      "method": "GET",
+      "concurrent_users": 10,
+      "requests_per_user": 5,
+      "total_requests": 50,
+      "successful_requests": 50,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "total_duration": 50.07285952568054,
+      "requests_per_second": 0.9985449298008799,
+      "avg_response_time": 9.11231282711029,
+      "min_response_time": 1.0039982795715332,
+      "max_response_time": 10.01668095588684,
+      "median_response_time": 10.01272702217102
+    },
+    {
+      "test_type": "concurrent_load",
+      "endpoint": "/analyze/storage",
+      "method": "GET",
+      "concurrent_users": 8,
+      "requests_per_user": 3,
+      "total_requests": 24,
+      "successful_requests": 24,
+      "failed_requests": 0,
+      "success_rate": 100.0,
+      "total_duration": 1.0149333477020264,
+      "requests_per_second": 23.64687302308067,
+      "avg_response_time": 0.3358418146769206,
+      "min_response_time": 0.0011703968048095703,
+      "max_response_time": 1.0039503574371338,
+      "median_response_time": 0.005643010139465332
+    }
+  ],
+  "agent_url": "http://localhost:8116"
+}

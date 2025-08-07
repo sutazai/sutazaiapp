@@ -1,0 +1,88 @@
+{
+  "service_mesh": {
+    "consul": {
+      "host": "localhost",
+      "port": 10040,
+      "datacenter": "dc1",
+      "service_prefix": "sutazai-agent",
+      "health_check_interval": "10s",
+      "deregister_critical_after": "1m"
+    },
+    "kong": {
+      "admin_url": "http://localhost:10002",
+      "proxy_url": "http://localhost:10001",
+      "rate_limit": {
+        "agents_per_second": 100,
+        "burst": 200
+      },
+      "circuit_breaker": {
+        "failure_threshold": 5,
+        "success_threshold": 2,
+        "timeout": "30s",
+        "open_duration": "60s"
+      }
+    },
+    "rabbitmq": {
+      "host": "localhost",
+      "port": 10041,
+      "management_port": 10042,
+      "username": "admin",
+      "password": "adminpass",
+      "vhost": "/",
+      "exchange": "agent-exchange",
+      "queues": {
+        "tasks": "agent-tasks",
+        "results": "agent-results",
+        "events": "agent-events",
+        "dlq": "agent-dlq"
+      },
+      "prefetch_count": 10,
+      "message_ttl": 3600000
+    }
+  },
+  "agent_groups": {
+    "core": {
+      "count": 10,
+      "memory_limit": "256M",
+      "cpu_limit": "0.5",
+      "priority": "high"
+    },
+    "processing": {
+      "count": 50,
+      "memory_limit": "128M",
+      "cpu_limit": "0.25",
+      "priority": "medium"
+    },
+    "auxiliary": {
+      "count": 90,
+      "memory_limit": "64M",
+      "cpu_limit": "0.1",
+      "priority": "low"
+    }
+  },
+  "load_balancing": {
+    "algorithm": "least_connections",
+    "health_check": {
+      "enabled": true,
+      "path": "/health",
+      "interval": 5,
+      "timeout": 3,
+      "unhealthy_threshold": 3,
+      "healthy_threshold": 2
+    }
+  },
+  "resource_management": {
+    "total_memory_limit": "16G",
+    "total_cpu_limit": "8",
+    "auto_scaling": {
+      "enabled": true,
+      "min_agents": 50,
+      "max_agents": 200,
+      "cpu_threshold": 80,
+      "memory_threshold": 85,
+      "scale_up_increment": 10,
+      "scale_down_increment": 5,
+      "cooldown_period": 300
+    }
+  }
+}

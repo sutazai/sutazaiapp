@@ -1,0 +1,120 @@
+{
+  "timestamp": "2025-08-02T23:45:08.765896",
+  "postgres": {
+    "status": "passed",
+    "tests": [
+      {
+        "name": "basic_connection",
+        "status": "passed",
+        "duration": 0.006005048751831055,
+        "message": "Connected successfully in 0.006s"
+      },
+      {
+        "name": "version_check",
+        "status": "passed",
+        "duration": 0.001,
+        "message": "PostgreSQL version: PostgreSQL 16.3 on x86_64-pc-linux-musl, compiled ..."
+      },
+      {
+        "name": "table_creation",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "Test table created successfully"
+      },
+      {
+        "name": "data_insertion",
+        "status": "passed",
+        "duration": 0.003,
+        "message": "Test record inserted with ID: 5"
+      },
+      {
+        "name": "data_query",
+        "status": "passed",
+        "duration": 0.001,
+        "message": "Query successful, 1 records in test table"
+      },
+      {
+        "name": "transaction_test",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "Transaction rollback successful"
+      }
+    ]
+  },
+  "redis": {
+    "status": "passed",
+    "tests": [
+      {
+        "name": "basic_connection",
+        "status": "passed",
+        "duration": 0.0015230178833007812,
+        "message": "Connected successfully in 0.002s"
+      },
+      {
+        "name": "server_info",
+        "status": "passed",
+        "duration": 0.001,
+        "message": "Redis version: 7.2.10"
+      },
+      {
+        "name": "set_get_operation",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "Set/Get operation successful for key: test_key_1754171108"
+      },
+      {
+        "name": "list_operations",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "List operations successful, length: 3"
+      },
+      {
+        "name": "hash_operations",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "Hash operations successful, retrieved: value1"
+      },
+      {
+        "name": "ttl_operations",
+        "status": "passed",
+        "duration": 0.002,
+        "message": "TTL operations successful, TTL: 60s"
+      }
+    ]
+  },
+  "neo4j": {
+    "status": "failed",
+    "tests": [
+      {
+        "name": "connection_error",
+        "status": "failed",
+        "duration": 0,
+        "message": "Error: Couldn't connect to localhost:7687 (resolved to ('127.0.0.1:7687',)):\nFailed to read four byte Bolt handshake response from server ResolvedIPv4Address(('127.0.0.1', 7687)) (deadline Deadline(timeout=60.0))"
+      }
+    ]
+  },
+  "chromadb": {
+    "status": "failed",
+    "tests": [
+      {
+        "name": "api_heartbeat",
+        "status": "passed",
+        "duration": 0.00786900520324707,
+        "message": "API heartbeat successful in 0.008s"
+      },
+      {
+        "name": "connection_error",
+        "status": "failed",
+        "duration": 0,
+        "message": "Error: {\"detail\":\"Not Found\"}"
+      }
+    ]
+  },
+  "overall": {
+    "status": "failed",
+    "success_rate": 86.66666666666667,
+    "total_tests": 15,
+    "passed_tests": 13,
+    "failed_tests": 2
+  }
+}

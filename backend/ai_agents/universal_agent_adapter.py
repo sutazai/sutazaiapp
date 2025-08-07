@@ -94,11 +94,7 @@ class UniversalAgentAdapter:
             "frequency_penalty": 0.0,
             "presence_penalty": 0.0,
             "preferred_models": [
-                "ollama/llama2:latest",
-                "ollama/mistral:latest",
-                "ollama/neural-chat:latest",
-                "gpt-3.5-turbo",
-                "gpt-4"
+                "ollama/tinyllama:latest"
             ]
         }
         
@@ -176,7 +172,7 @@ class UniversalAgentAdapter:
     
     def _create_ollama_modelfile(self, agent: UniversalAgent) -> str:
         """Create an Ollama Modelfile for the agent."""
-        modelfile = f"""FROM llama2:latest
+        modelfile = f"""FROM tinyllama:latest
 
 SYSTEM {agent.system_prompt}
 
@@ -190,12 +186,8 @@ PARAMETER top_p {agent.model_config['top_p']}
 """
         return modelfile
     
-        
-        Args:
-            agent_name: Name of the agent
-            
-        Returns:
-        """
+    def _another_method(self, agent_name: str):
+        """Helper method implementation."""
         agent = self.get_agent(agent_name)
         if not agent:
             return None
@@ -214,7 +206,6 @@ PARAMETER top_p {agent.model_config['top_p']}
                     "system_prompt": agent.system_prompt
                 }
             }
-        }
     
     def create_docker_service(self, agent_name: str) -> Optional[Dict[str, Any]]:
         """Create a Docker service configuration for the agent.
@@ -236,7 +227,7 @@ PARAMETER top_p {agent.model_config['top_p']}
                 "AGENT_NAME": agent.name,
                 "AGENT_CAPABILITIES": ",".join(agent.capabilities),
                 "MODEL_PROVIDER": "ollama",
-                "MODEL_NAME": "llama2:latest",
+                "MODEL_NAME": "tinyllama:latest",
                 "MODEL_TEMPERATURE": str(agent.model_config["temperature"]),
                 "MODEL_MAX_TOKENS": str(agent.model_config["max_tokens"]),
                 "SYSTEM_PROMPT": agent.system_prompt
