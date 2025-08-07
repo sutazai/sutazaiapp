@@ -36,7 +36,7 @@ pymongo==4.10.1                    # MongoDB driver
 # ============================================================================
 # VECTOR DATABASES
 # ============================================================================
-chromadb==0.5.23                   # ChromaDB client - latest
+chromadb                   # ChromaDB client - latest
 qdrant-client==1.12.1              # Qdrant vector database
 faiss-cpu==1.9.0                   # Facebook AI similarity search
 neo4j==5.27.0                      # Neo4j graph database
@@ -56,7 +56,7 @@ bleach==6.1.0                      # HTML sanitization
 # AI/ML STACK
 # ============================================================================
 torch==2.5.1                       # PyTorch - latest stable
-transformers==4.48.0               # Hugging Face transformers - security patches
+transformers                       # Hugging Face transformers - security patches
 sentence-transformers==3.3.1       # Sentence embeddings
 openai==1.58.1                     # OpenAI API client - latest
 anthropic==0.42.0                  # Anthropic API client

@@ -132,7 +132,7 @@ def consolidate_requirements():
         "passlib[bcrypt]==1.7.4",
         "python-multipart==0.0.6",
         "httpx==0.25.2",
-        "chromadb==0.4.18",
+        "chromadb",
         "qdrant-client==1.7.0",
         "neo4j==5.14.1"
     ]

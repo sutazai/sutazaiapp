@@ -120,7 +120,7 @@ ollama==0.1.7
 # ================================
 # VECTOR DATABASES (LOCKED)
 # ================================
-chromadb==0.4.22
+chromadb
 qdrant-client==1.7.3
 faiss-cpu==1.7.4
 

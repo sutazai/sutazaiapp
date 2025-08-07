@@ -49,7 +49,7 @@ pandas==2.1.4
 numpy==1.24.4
 
 # AI/ML Core Dependencies (lightweight)
-tokenizers==0.15.0
+tokenizers
 transformers==4.36.2
 torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
 sentence-transformers==2.2.2

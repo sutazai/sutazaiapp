@@ -117,7 +117,7 @@ asynctest==0.13.0                  # Async testing utilities
 # AI/ML TESTING
 # ============================================================================
 torch==2.5.1                       # For AI model testing
-transformers==4.48.0               # For NLP model testing
+transformers                       # For NLP model testing
 scikit-learn==1.6.0                # For ML model evaluation
 mlflow==2.19.0                     # ML experiment tracking
 
@@ -174,7 +174,7 @@ click-testing==0.1.0               # CLI testing utilities
 redis==5.2.1                       # Redis for integration tests
 postgresql-wheel==0.7.0            # PostgreSQL testing utilities (if available)
 neo4j==5.27.0                      # Graph database testing
-chromadb==0.5.23                   # Vector database testing
+chromadb                   # Vector database testing
 
 # ============================================================================
 # MONITORING DURING TESTS

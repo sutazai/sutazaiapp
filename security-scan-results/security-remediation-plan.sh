@@ -141,7 +141,7 @@ sympy==1.13.3
 
 # AI/ML Libraries - PINNED SECURE VERSIONS
 torch==2.5.1
-transformers==4.48.0
+transformers
 sentence-transformers==3.3.1
 openai==1.58.1
 anthropic==0.42.0
@@ -150,7 +150,7 @@ tiktoken==0.8.0
 langchain==0.3.11
 
 # Vector Databases - PINNED VERSIONS
-chromadb==0.5.23
+chromadb
 qdrant-client==1.12.1
 faiss-cpu==1.9.0
 neo4j==5.27.0

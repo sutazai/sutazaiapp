@@ -46,7 +46,7 @@ The following package versions have been security-verified and pinned:
 - `streamlit==1.40.2` - Security validated
 - `torch==2.5.1` - Security validated
 - `tqdm==4.67.1` - Security validated
-- `transformers==4.48.0` - Security validated
+- `transformers` - Security validated
 - `typer==0.15.1` - Security validated
 - `urllib3==2.3.0` - Security validated
 - `uvicorn==0.32.1` - Security validated

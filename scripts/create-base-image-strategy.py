@@ -194,7 +194,7 @@ CMD ["python", "app.py"]
                 # Common AI/ML packages
                 'openai==1.3.0',
                 'langchain==0.0.350',
-                'chromadb==0.4.18',
+                'chromadb',
                 'sentence-transformers==2.2.2',
                 'numpy==1.24.3',
                 'pandas==2.0.3'

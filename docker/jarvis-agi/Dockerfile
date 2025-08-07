@@ -58,7 +58,7 @@ RUN pip install --no-cache-dir \
 
 # Stage 7: Vector Databases (lightweight clients only)
 RUN pip install --no-cache-dir \
-    chromadb==0.4.18 \
+    chromadb \
     faiss-cpu==1.7.4
 
 # Stage 8: Web Interface

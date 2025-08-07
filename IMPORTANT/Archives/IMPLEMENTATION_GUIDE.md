@@ -1432,7 +1432,7 @@
 │ │ pip install langchain==0.3.13 langchain-community langchain-experimental      │ │
 │ │ pip install pyautogen==0.3.2                                                  │ │
 │ │ pip install crewai==0.41.1 crewai-tools                                       │ │
-│ │ pip install chromadb==0.5.23                                                  │ │
+│ │ pip install chromadb                                                  │ │
 │ │ pip install qdrant-client==1.12.1                                             │ │
 │ │                                                                               │ │
 │ │ # 3. Install additional tools                                                 │ │

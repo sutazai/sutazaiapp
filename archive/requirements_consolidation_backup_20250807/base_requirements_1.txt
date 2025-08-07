@@ -40,7 +40,7 @@ passlib[bcrypt]==1.7.4
 # Basic ML/AI (lightweight for agents)
 openai==1.58.1
 langchain==0.3.11
-transformers==4.48.0
+transformers
 torch==2.5.1
 numpy==2.1.3
 

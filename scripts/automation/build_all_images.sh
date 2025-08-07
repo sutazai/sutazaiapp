@@ -557,7 +557,7 @@ def generate_requirements_template(service_name):
             "openai==1.58.1",
             "anthropic==0.42.0",
             "langchain==0.3.11",
-            "transformers==4.48.0",
+            "transformers",
             "torch==2.5.1"
         ]
         return "\\n".join(base_requirements + agent_requirements)

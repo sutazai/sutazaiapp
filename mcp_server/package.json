@@ -26,8 +26,9 @@
   "author": "SutazAI Team",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.4.0",
+    "@modelcontextprotocol/sdk": "^0.5",
     "axios": "^1.6.0",
+    "dotenv": "^16.4.5",
     "pg": "^8.11.0",
     "redis": "^4.6.0"
   },
@@ -46,4 +47,4 @@
     "url": "https://github.com/sutazai/mcp-server/issues"
   },
   "homepage": "https://github.com/sutazai/mcp-server#readme"
-} 
+}
