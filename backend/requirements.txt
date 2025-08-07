@@ -16,7 +16,7 @@ psycopg2-binary==2.9.10
 asyncpg==0.29.0
 redis==5.2.1
 pymongo==4.10.1
-chromadb==0.5.26
+chromadb==0.6.3
 qdrant-client==1.12.1
 faiss-cpu==1.9.0
 neo4j==5.27.0
