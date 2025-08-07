@@ -1,4 +1,4 @@
-# SECURITY: Sensitive files and credentials
+# SECURITY: Sensitive files and credentials - ENHANCED
 *.env
 .env*
 *.key
@@ -8,6 +8,7 @@
 *.cert
 *.crt
 secrets/
+secrets_secure/
 credentials/
 config/secrets/
 .aws/
@@ -16,6 +17,15 @@ id_rsa*
 id_dsa*
 id_ecdsa*
 id_ed25519*
+# Additional security patterns
+*_password.txt
+*_secret.txt
+*_token.txt
+api_keys/
+tokens/
+.env.security
+config.json
+*config.json
 
 # SECURITY: Database files
 *.sqlite

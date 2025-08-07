@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12.8-slim-bookworm
 
 WORKDIR /app
 
@@ -33,9 +33,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run the application
 
-# Run as non-root user
-USER nobody
+# Create and use non-root user
+RUN adduser --disabled-password --gecos '' --uid 1001 frontend
+USER frontend
 
-# Run as non-root user
-USER nobody
 CMD ["python", "app.py"]

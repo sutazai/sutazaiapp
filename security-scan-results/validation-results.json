@@ -1,21 +1,21 @@
 {
-  "timestamp": "2025-08-05T00:51:11.956827",
-  "overall_score": 10.0,
+  "timestamp": "2025-08-07T15:48:57.904512",
+  "overall_score": 4.5,
   "category_results": {
     "secrets": {
-      "score": 100,
+      "score": 20,
       "max": 100,
-      "passed": true
+      "passed": false
     },
     "dependencies": {
-      "score": 100,
+      "score": 76,
       "max": 100,
-      "passed": true
+      "passed": false
     },
     "containers": {
-      "score": 100,
+      "score": 0,
       "max": 100,
-      "passed": true
+      "passed": false
     },
     "pipeline": {
       "score": 100,
@@ -23,5 +23,5 @@
       "passed": true
     }
   },
-  "status": "EXCELLENT"
+  "status": "POOR"
 }
