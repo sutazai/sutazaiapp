@@ -1,5 +1,7 @@
 # SUTAZAI System - Epics and User Stories
 
+> Deployment Reality: Some stories reference RabbitMQ, Kong, and Consul. These services are not provisioned in the current docker-compose. The live system uses Redis Streams for messaging and direct HTTP calls. Keep those items in the backlog as optional enhancements or add the services to compose before implementation.
+
 ## Executive Summary
 This document contains the complete product backlog for the SUTAZAI system, organized into epics and user stories based on the comprehensive architecture analysis. Stories are prioritized as P0 (Critical Blockers), P1 (Core Functionality), and P2 (Technical Debt & Cleanup).
 

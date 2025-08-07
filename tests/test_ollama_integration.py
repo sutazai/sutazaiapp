@@ -10,6 +10,7 @@ from typing import Dict, Any
 
 import sys
 import os
+import socket
 sys.path.append('/opt/sutazaiapp')
 
 from agents.ollama_integration.app import OllamaIntegrationAgent
@@ -21,9 +22,20 @@ from schemas.ollama_schemas import (
 from pydantic import ValidationError
 
 
+def _is_port_open(host: str, port: int, timeout: float = 0.2) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 @pytest.fixture
 async def agent():
     """Create Ollama integration agent for testing."""
+    # Skip if local Ollama is not available (Rule 2: avoid false failures)
+    if not _is_port_open("localhost", 11434):
+        pytest.skip("Ollama not running on localhost:11434; skipping integration tests")
     agent = OllamaIntegrationAgent(
         base_url="http://localhost:11434",
         timeout=30,

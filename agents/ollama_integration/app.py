@@ -27,6 +27,14 @@ from schemas.ollama_schemas import (
     OllamaModelsResponse
 )
 
+# Import metrics module
+try:
+    from agents.core.metrics import AgentMetrics, setup_metrics_endpoint, MetricsTimer
+except ImportError:
+    # Fallback if running in container
+    sys.path.append('/app/agents')
+    from core.metrics import AgentMetrics, setup_metrics_endpoint, MetricsTimer
+
 # Configure structured logging
 logging.basicConfig(
     level=logging.INFO,
@@ -359,18 +367,30 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI(title="Ollama Integration Agent")
 agent: Optional[OllamaIntegrationAgent] = None
+metrics: Optional[AgentMetrics] = None
 
 
 @app.on_event("startup")
 async def startup():
     """Initialize agent on startup."""
-    global agent
-    agent = OllamaIntegrationAgent()
+    global agent, metrics
+    
+    # Initialize metrics
+    metrics = AgentMetrics("ollama_integration")
+    setup_metrics_endpoint(app, metrics)
+    
+    # Get Ollama URL from environment variable, default to localhost
+    ollama_url = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
+    logger.info(f"Initializing Ollama integration with URL: {ollama_url}")
+    agent = OllamaIntegrationAgent(base_url=ollama_url)
     await agent.start()
     
     # Verify model is available
     if not await agent.verify_model("tinyllama"):
         logger.warning("TinyLlama model not found - generation may fail")
+        metrics.set_health_status(False)
+    else:
+        metrics.set_health_status(True)
         
 
 @app.on_event("shutdown")
@@ -389,6 +409,10 @@ async def health():
         models = await agent.list_models()
         has_tinyllama = models.has_model("tinyllama")
         
+        # Update health metric
+        healthy = has_tinyllama
+        metrics.set_health_status(healthy)
+        
         return {
             "status": "healthy" if has_tinyllama else "degraded",
             "ollama_reachable": True,
@@ -396,6 +420,8 @@ async def health():
             "models_count": len(models.models)
         }
     except Exception as e:
+        metrics.set_health_status(False)
+        metrics.increment_error("health_check_error")
         return JSONResponse(
             status_code=503,
             content={
@@ -416,7 +442,20 @@ async def generate(request: OllamaGenerateRequest):
         tokens: Total token count
         latency: Response time in milliseconds
     """
+    # Track metrics
+    metrics.active_requests.labels(agent="ollama_integration").inc()
+    metrics.last_request_timestamp.labels(agent="ollama_integration").set(time.time())
+    
+    start_time = time.time()
+    status = "success"
+    
     try:
+        # Add queue latency simulation (time waiting for resources)
+        queue_start = time.time()
+        # In real scenario, this would be actual queue wait time
+        await asyncio.sleep(0.001)  # Minimal delay
+        metrics.record_queue_latency(time.time() - queue_start)
+        
         result = await agent.generate(
             prompt=request.prompt,
             temperature=request.temperature,
@@ -426,10 +465,27 @@ async def generate(request: OllamaGenerateRequest):
         return result
         
     except ValidationError as e:
+        status = "error"
+        metrics.increment_error("validation_error")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        status = "error"
+        metrics.increment_error(type(e).__name__)
         logger.error(f"Generation failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        # Record request completion
+        duration = time.time() - start_time
+        metrics.request_count.labels(
+            agent="ollama_integration",
+            method="generate",
+            status=status
+        ).inc()
+        metrics.processing_duration.labels(
+            agent="ollama_integration",
+            method="generate"
+        ).observe(duration)
+        metrics.active_requests.labels(agent="ollama_integration").dec()
         
 
 @app.get("/models")

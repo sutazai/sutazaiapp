@@ -72,7 +72,7 @@ class GPTEngineerManager:
             env = os.environ.copy()
             env.update({
                 "OPENAI_API_BASE": "http://ollama:10104/v1",
-                "OLLAMA_HOST": "http://ollama:10104,  # Ollama doesn't need real API key
+                "OLLAMA_HOST": "http://ollama:10104",  # Ollama doesn't need real API key
                 "OPENAI_API_MODEL": request.model or "tinyllama"
             })
             

@@ -1,0 +1,256 @@
+# SutazAI Standard Tier Configuration Overlay
+# Adds monitoring and vector database to minimal tier
+# Requirements: 4 CPU cores, 8GB RAM (in addition to minimal)
+# Services: +5 containers (10 total with minimal)
+
+version: '3.8'
+
+services:
+  # Vector Database - Qdrant
+  qdrant:
+    image: qdrant/qdrant:v1.9.2
+    container_name: sutazai-qdrant
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    environment:
+      QDRANT__SERVICE__HTTP_PORT: 6333
+      QDRANT__SERVICE__GRPC_PORT: 6334
+      QDRANT__LOG_LEVEL: WARN
+      QDRANT__STORAGE__STORAGE_PATH: /qdrant/storage
+      QDRANT__STORAGE__SNAPSHOTS_PATH: /qdrant/snapshots
+      QDRANT__STORAGE__ON_DISK_PAYLOAD: "false"
+      QDRANT__STORAGE__OPTIMIZERS__MEMMAP_THRESHOLD: 20000
+      QDRANT__STORAGE__OPTIMIZERS__INDEXING_THRESHOLD: 10000
+      QDRANT__SERVICE__MAX_REQUEST_SIZE_MB: 32
+      QDRANT__SERVICE__MAX_WORKERS: 2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sutazai-network
+    ports:
+      - "10101:6333"
+      - "10102:6334"
+    restart: unless-stopped
+    volumes:
+      - qdrant_data:/qdrant
+
+  # Metrics Collection - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sutazai-prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.retention.size=500MB'
+      - '--storage.tsdb.wal-compression'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+      - '--query.max-samples=1000000'
+      - '--query.timeout=30s'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sutazai-network
+    ports:
+      - "10200:9090"
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+
+  # Visualization - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sutazai-grafana
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-sutazai_grafana}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: ""
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_SERVER_ROOT_URL: http://localhost:10201
+      GF_PATHS_DATA: /var/lib/grafana
+      GF_PATHS_LOGS: /var/log/grafana
+      GF_PATHS_PLUGINS: /var/lib/grafana/plugins
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_LOG_LEVEL: warn
+      GF_DATABASE_TYPE: sqlite3
+      GF_RENDERING_SERVER_URL: ""
+      GF_RENDERING_CALLBACK_URL: ""
+      GF_UNIFIED_ALERTING_ENABLED: "true"
+      GF_ALERTING_ENABLED: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - sutazai-network
+    ports:
+      - "10201:3000"
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+
+  # Log Aggregation - Loki
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: sutazai-loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    command: -config.file=/etc/loki/config.yml
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - sutazai-network
+    ports:
+      - "10202:3100"
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/loki/config.yml:/etc/loki/config.yml:ro
+      - loki_data:/loki
+
+  # System Metrics - Node Exporter
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: sutazai-node-exporter
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 64M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.netclass.ignored-devices=^(veth.*|br.*|docker.*|lo)$$'
+      - '--collector.diskstats.ignored-devices=^(ram|loop|fd)\\d+$$'
+      - '--no-collector.arp'
+      - '--no-collector.bcache'
+      - '--no-collector.bonding'
+      - '--no-collector.conntrack'
+      - '--no-collector.cpufreq'
+      - '--no-collector.edac'
+      - '--no-collector.entropy'
+      - '--no-collector.filefd'
+      - '--no-collector.hwmon'
+      - '--no-collector.infiniband'
+      - '--no-collector.ipvs'
+      - '--no-collector.mdadm'
+      - '--no-collector.netstat'
+      - '--no-collector.nfs'
+      - '--no-collector.nfsd'
+      - '--no-collector.powersupplyclass'
+      - '--no-collector.pressure'
+      - '--no-collector.rapl'
+      - '--no-collector.schedstat'
+      - '--no-collector.sockstat'
+      - '--no-collector.softnet'
+      - '--no-collector.stat'
+      - '--no-collector.textfile'
+      - '--no-collector.thermal_zone'
+      - '--no-collector.time'
+      - '--no-collector.timex'
+      - '--no-collector.udp_queues'
+      - '--no-collector.uname'
+      - '--no-collector.vmstat'
+      - '--no-collector.xfs'
+      - '--no-collector.zfs'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9100/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - sutazai-network
+    ports:
+      - "10205:9100"
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+  # Update backend with vector DB connection
+  backend:
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+
+volumes:
+  qdrant_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/qdrant
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/prometheus
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/grafana
+  loki_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/loki

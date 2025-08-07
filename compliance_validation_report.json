@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-08-07T21:26:07.802255",
+  "overall_score": 31,
+  "rules": {
+    "Rule 1: No Fantasy Elements": {
+      "score": 0,
+      "status": "\u274c FAIL",
+      "issues": [
+        "detailed_import_analysis.py: contains 'wizard'",
+        "import_audit.py: contains 'wizard'",
+        "test_ollama_integration.py: contains 'quantum'",
+        "scripts/compliance-monitor-core.py: contains 'wizard'",
+        "scripts/validate_ports.py: contains 'agi'",
+        "scripts/update-agent-auth.py: contains 'agi'",
+        "scripts/hygiene-monitor.py: contains 'agi'",
+        "scripts/enforce_claude_md_rules.py: contains 'wizard'",
+        "scripts/analyze-agent-readiness.py: contains 'agi'",
+        "scripts/complete-cleanup-and-prepare.py: contains 'wizard'"
+      ]
+    },
+    "Rule 2: Don't Break Existing": {
+      "score": 80,
+      "status": "\u26a0\ufe0f WARN",
+      "issues": [
+        "Missing essential file: backend/main.py"
+      ]
+    },
+    "Rule 3: Codebase Hygiene": {
+      "score": 20,
+      "status": "\u274c FAIL",
+      "issues": [
+        "Too many docker-compose files: 4 (max 2)",
+        "Too many scripts: 399 (max 50)",
+        "Too many documentation files: 952 (max 50)",
+        "Found 2 junk files"
+      ]
+    },
+    "Rule 4: Reuse Before Creating": {
+      "score": 55,
+      "status": "\u274c FAIL",
+      "issues": [
+        "Potential duplicates: 18 files matching deploy*.sh",
+        "Potential duplicates: 8 files matching validate*.py",
+        "Potential duplicates: 45 files matching requirements*.txt"
+      ]
+    },
+    "Rule 5: Local LLMs Only": {
+      "score": 0,
+      "status": "\u274c FAIL",
+      "issues": [
+        "scripts/create-container-requirements-map.py: references 'anthropic'",
+        "scripts/pin_all_dependencies.py: references 'anthropic'",
+        "scripts/emergency-compliance-fix.py: references 'OPENAI_API_KEY'",
+        "scripts/validate-compliance.py: references 'OPENAI_API_KEY'",
+        "scripts/pre-commit/check-llm-usage.py: references 'anthropic'",
+        "docker/aider/aider_service.py: references 'OPENAI_API_KEY'",
+        "services/adapters/agent_systems/autogpt_adapter.py: references 'gpt-3'",
+        "services/adapters/agent_systems/letta_adapter.py: references 'gpt-4'",
+        "services/adapters/workflow_tools/dify_adapter.py: references 'anthropic'",
+        "opt/sutazaiapp/jarvis/scripts/create-container-requirements-map.py: references 'anthropic'"
+      ]
+    }
+  }
+}

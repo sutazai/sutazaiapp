@@ -1,0 +1,47 @@
+# Minimal Prometheus Configuration
+# Reduced scraping frequency and targets for resource efficiency
+
+global:
+  scrape_interval: 30s      # Reduced from 15s
+  evaluation_interval: 30s  # Reduced from 15s
+  scrape_timeout: 10s
+
+# Only essential scrape configs
+scrape_configs:
+  # Self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 60s
+
+  # Application monitoring
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Database monitoring (if exporters are added)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: []  # Add postgres-exporter:9187 if needed
+    scrape_interval: 60s
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: []  # Add redis-exporter:9121 if needed
+    scrape_interval: 60s
+
+  # Vector database monitoring
+  - job_name: 'qdrant'
+    static_configs:
+      - targets: ['qdrant:6333']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+
+  # LLM monitoring
+  - job_name: 'ollama'
+    static_configs:
+      - targets: ['ollama:11434']
+    metrics_path: '/api/metrics'
+    scrape_interval: 60s

@@ -6,9 +6,21 @@ Simple ChromaDB test using HTTP API directly
 import requests
 import json
 import time
+import socket
+import pytest
+
+
+def _is_port_open(host: str, port: int, timeout: float = 0.2) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
 
 def test_chromadb():
     base_url = "http://localhost:8001/api/v1"
+    if not _is_port_open("localhost", 8001):
+        pytest.skip("ChromaDB not running on localhost:8001; skipping external integration test")
     
     print("Testing ChromaDB HTTP API...")
     

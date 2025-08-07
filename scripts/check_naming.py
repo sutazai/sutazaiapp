@@ -55,10 +55,10 @@ def main():
     code_violations = []
     
     # Check Python files
+    IGNORE_PARTS = ['venv', 'node_modules', '.git', '__pycache__', 'opt/sutazaiapp/jarvis']
     for filepath in Path('.').glob('**/*.py'):
-        # Skip virtual environments and dependencies
-        if any(part in str(filepath) for part in 
-               ['venv', 'node_modules', '.git', '__pycache__']):
+        # Skip virtual environments, dependencies, and archived duplicates
+        if any(part in str(filepath) for part in IGNORE_PARTS):
             continue
         
         # Check filename
@@ -72,6 +72,8 @@ def main():
     
     # Check shell scripts
     for filepath in Path('.').glob('**/*.sh'):
+        if any(part in str(filepath) for part in IGNORE_PARTS):
+            continue
         if not check_filename(str(filepath)):
             file_violations.append(str(filepath))
     

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "sutazai-mcp-server": {
+      "command": "node",
+      "args": ["/opt/sutazaiapp/mcp_server/index.js"],
+      "env": {
+        "BACKEND_API_URL": "http://localhost:8000",
+        "OLLAMA_URL": "http://localhost:11434",
+        "SEQUENTIAL_THINKING_IMAGE": "mcp/sequentialthinking"
+      },
+      "description": "Unified MCP server (SutazAI + SequentialThinking + Context7)"
+    }
+  }
+}

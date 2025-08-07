@@ -112,15 +112,7 @@ class Workflow:
     metadata: Dict[str, Any]
     progress: float = 0.0
 
-class MessageType(Enum):
-    TASK_ASSIGNMENT = "task_assignment"
-    TASK_RESULT = "task_result"
-    HEARTBEAT = "heartbeat"
-    STATUS_UPDATE = "status_update"
-    COORDINATION_REQUEST = "coordination_request"
-    COORDINATION_RESPONSE = "coordination_response"
-    WORKFLOW_EVENT = "workflow_event"
-    SYSTEM_NOTIFICATION = "system_notification"
+from backend.app.schemas.message_types import MessageType
 
 @dataclass
 class Message:

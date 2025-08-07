@@ -9,6 +9,8 @@ import sys
 import os
 import logging
 from datetime import datetime
+import socket
+import pytest
 
 # Add agents directory to path
 sys.path.append('/opt/sutazaiapp/agents')
@@ -16,6 +18,21 @@ sys.path.append('/opt/sutazaiapp/agents')
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def _is_port_open(host: str, port: int, timeout: float = 0.2) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+# Skip entire module if local Ollama is unavailable
+pytestmark = pytest.mark.skipif(
+    not _is_port_open("localhost", 10104),
+    reason="Ollama not running on localhost:10104; skipping live agent integration tests",
+)
 
 class TestAgent:
     """Simple test agent using BaseAgentV2"""

@@ -1,5 +1,5 @@
 [build-system]
-requires==LATEST_SECURE
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,7 +11,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python==LATEST_SECURE
+requires-python = ">=3.8"
 keywords = ["automation", "ai", "testing", "deployment", "multi-agent"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -27,96 +27,47 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
-dependencies = [
-    # Core testing
-"pytest==LATEST_SECURE
-"pytest-asyncio==LATEST_SECURE
-"pytest-cov==LATEST_SECURE
-"pytest-xdist==LATEST_SECURE
-"pytest-mock==LATEST_SECURE
-"pytest-timeout==LATEST_SECURE
-"pytest-html==LATEST_SECURE
-"pytest-benchmark==LATEST_SECURE
-    
-    # HTTP testing
-"httpx==LATEST_SECURE
-"requests==LATEST_SECURE
-"requests-mock==LATEST_SECURE
-"responses==LATEST_SECURE
-    
-    # Database testing
-"pytest-postgresql==LATEST_SECURE
-"pytest-redis==LATEST_SECURE
-"sqlalchemy==LATEST_SECURE
-"alembic==LATEST_SECURE
-    
-    # Web testing
-"selenium==LATEST_SECURE
-"webdriver-manager==LATEST_SECURE
-"playwright==LATEST_SECURE
-"beautifulsoup4==LATEST_SECURE
-    
-    # API testing
-"fastapi[all]==LATEST_SECURE
-"uvicorn==LATEST_SECURE
-"starlette==LATEST_SECURE
-    
-    # Frontend testing
-"streamlit==LATEST_SECURE
-    
-    # Data & Analytics
-"pandas==LATEST_SECURE
-"numpy==LATEST_SECURE
-"plotly==LATEST_SECURE
-    
-    # Performance & Monitoring
-"locust==LATEST_SECURE
-"memory-profiler==LATEST_SECURE
-"psutil==LATEST_SECURE
-    
-    # Security testing
-"bandit==LATEST_SECURE
-"safety==LATEST_SECURE
-    
-    # Mocking & Fixtures
-"factory-boy==LATEST_SECURE
-"faker==LATEST_SECURE
-"freezegun==LATEST_SECURE
-"responses==LATEST_SECURE
-    
-    # Utilities
-"python-dotenv==LATEST_SECURE
-"pyyaml==LATEST_SECURE
-"click==LATEST_SECURE
-"rich==LATEST_SECURE
-"typer==LATEST_SECURE
-]
+# Core dependencies are managed via requirements files
+# Use: pip install -e . to install the project
+# Use: pip install -e .[dev] for development
+# Use: pip install -e .[test] for testing
+dependencies = []
 
 [project.optional-dependencies]
+# Optional dependencies point to requirements files
+# This enables: pip install -e .[dev] or pip install -e .[test]
 dev = [
-"black==LATEST_SECURE
-"isort==LATEST_SECURE
-"flake8==LATEST_SECURE
-"mypy==LATEST_SECURE
-"pre-commit==LATEST_SECURE
+    # Development tools - see requirements-dev.txt for full list
+    "black>=24.10.0",
+    "ruff>=0.8.6", 
+    "mypy>=1.14.1",
+    "pre-commit>=4.0.1",
+]
+
+test = [
+    # Core testing - see requirements-test.txt for full list
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.2",
+    "pytest-cov>=6.0.0",
+    "coverage[toml]>=7.6.9",
 ]
 
 docs = [
-"sphinx==LATEST_SECURE
-"sphinx-rtd-theme==LATEST_SECURE
-"myst-parser==LATEST_SECURE
+    "sphinx>=8.1.3",
+    "sphinx-rtd-theme>=3.0.2",
+    "myst-parser>=4.0.0",
 ]
 
 performance = [
-"line_profiler==LATEST_SECURE
-"pympler==LATEST_SECURE
-"objgraph==LATEST_SECURE
+    "line-profiler>=4.1.3",
+    "memory-profiler>=0.61.0",
+    "py-spy>=0.3.14",
 ]
 
 security = [
-"bandit[toml]==LATEST_SECURE
-"safety==LATEST_SECURE
-"pip-audit==LATEST_SECURE
+    "bandit[toml]>=1.7.10",
+    "safety>=3.2.11",
+    "pip-audit>=2.7.3",
 ]
 
 [project.urls]

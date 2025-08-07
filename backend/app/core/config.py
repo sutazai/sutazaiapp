@@ -2,7 +2,7 @@
 Configuration management using Pydantic Settings
 """
 from typing import List, Optional, Dict, Any
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator, Field
 from functools import lru_cache
 import os
@@ -133,9 +133,12 @@ class Settings(BaseSettings):
             return secrets.token_urlsafe(32)
         return v
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    # Pydantic v2 settings configuration
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra="ignore",  # Ignore unrelated env vars to prevent ValidationError
+    )
 
 @lru_cache()
 def get_settings() -> Settings:

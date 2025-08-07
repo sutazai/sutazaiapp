@@ -165,6 +165,14 @@ class GenericAgentWithHealth:
             format=f'%(asctime)s - {self.agent_name} - %(levelname)s - %(message)s'
         )
         self.logger = logging.getLogger(self.agent_name)
+        # Try mesh registration on startup (optional, non-fatal)
+        try:
+            from backend.app.mesh.redis_bus import register_agent as _mesh_register
+            _mesh_register(self.agent_name, self.agent_type, ttl_seconds=60, meta={"health_port": self.health_port})
+            self.logger.info("Registered agent in mesh registry")
+        except Exception:
+            # Mesh is optional; ignore if unavailable
+            pass
     
     def _start_health_server(self):
         """Start the health check HTTP server"""
@@ -310,6 +318,12 @@ class GenericAgentWithHealth:
                 
         except Exception as e:
             self.logger.error(f"Error sending heartbeat: {e}")
+        # Also update mesh registry TTL (optional)
+        try:
+            from backend.app.mesh.redis_bus import heartbeat_agent as _mesh_hb
+            _mesh_hb(self.agent_name, ttl_seconds=60)
+        except Exception:
+            pass
     
     async def _get_tasks(self) -> List[Dict[str, Any]]:
         """Get tasks from backend for this agent"""

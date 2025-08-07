@@ -1,0 +1,27 @@
+# CODEOWNERS — formal ownership matrix
+#
+# Replace team slugs below with actual GitHub team handles in your org
+# (e.g., @your-org/backend, @your-org/devops). Lines are ordered from
+# specific to general; the last matching rule wins.
+
+# Backend services (FastAPI microservices and core backend)
+/services/**      @sutazai-backend
+/backend/**       @sutazai-backend
+
+# Frontend (Streamlit UI and any future UI code)
+/frontend/**      @sutazai-frontend
+
+# DevOps scripts, CI/CD, deployment, and monitoring configs
+/scripts/**       @sutazai-devops
+/monitoring/**    @sutazai-devops
+/docker/**        @sutazai-devops
+/.github/**       @sutazai-devops
+/deployment/**    @sutazai-devops
+
+# Shared schemas and documentation
+/schemas/**       @sutazai-backend
+/docs/**          @sutazai-docs
+
+# Default catch‑all
+*                @sutazai-maintainers
+

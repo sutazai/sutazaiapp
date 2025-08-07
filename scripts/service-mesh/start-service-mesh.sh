@@ -1,6 +1,12 @@
 #!/bin/bash
 # Service Mesh Startup Script for SutazAI
 # Starts and configures the complete service mesh infrastructure
+#
+# DEPRECATION NOTICE: The Kong/Consul/RabbitMQ service-mesh stack is deprecated.
+# See docs/decisions/2025-08-07-remove-service-mesh.md for context.
+# This script remains for historical reference and may not function in current setups.
+echo "[DEPRECATED] Service mesh scripts are deprecated and retained for reference."
+echo "            See docs/decisions/2025-08-07-remove-service-mesh.md"
 
 set -euo pipefail
 

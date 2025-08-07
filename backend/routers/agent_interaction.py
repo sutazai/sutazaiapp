@@ -35,26 +35,14 @@ except ImportError:
     monitoring_service = None
 
 
-# Request/Response Models
-class AgentTaskRequest(BaseModel):
-    """Request model for agent task execution"""
-    agent_name: str = Field(..., description="Name of the agent to execute task")
-    task_type: str = Field(..., description="Type of task to execute")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Task parameters")
-    priority: int = Field(default=5, ge=1, le=10, description="Task priority (1-10)")
-    timeout: Optional[int] = Field(default=300, description="Task timeout in seconds")
+from backend.app.schemas.agent_protocol import (
+    TaskRequestDetailed as AgentTaskRequest,
+    TaskResponseDetailed as AgentTaskResponse,
+    AgentStatusSingle as AgentStatusResponse,
+)
 
 
-class AgentTaskResponse(BaseModel):
-    """Response model for agent task execution"""
-    task_id: str = Field(..., description="Unique task identifier")
-    agent_name: str = Field(..., description="Name of the executing agent")
-    status: str = Field(..., description="Task status")
-    created_at: datetime = Field(..., description="Task creation timestamp")
-    result: Optional[Dict[str, Any]] = Field(None, description="Task result if completed")
-    error: Optional[str] = Field(None, description="Error message if failed")
-
-
+# Local-only model (no canonical duplication required)
 class AgentCollaborationRequest(BaseModel):
     """Request model for multi-agent collaboration"""
     task_description: str = Field(..., description="Description of the collaborative task")
@@ -71,18 +59,12 @@ class AgentCollaborationResponse(BaseModel):
     results: Dict[str, Any] = Field(default_factory=dict, description="Collaboration results")
 
 
-class AgentStatusResponse(BaseModel):
-    """Response model for agent status"""
-    agent_name: str = Field(..., description="Agent name")
-    status: str = Field(..., description="Agent status (active/inactive/busy)")
-    current_task: Optional[str] = Field(None, description="Current task if any")
-    capabilities: List[str] = Field(default_factory=list, description="Agent capabilities")
-    performance_metrics: Dict[str, float] = Field(default_factory=dict, description="Performance metrics")
+    pass
 
 
 # Create router
 router = APIRouter(
-    prefix="/agents/interaction",
+    prefix="/interaction",
     tags=["agent-interaction"],
     responses={404: {"description": "Not found"}},
 )

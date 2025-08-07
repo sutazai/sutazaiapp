@@ -22,6 +22,15 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field, field_validator
 
+# Feature flags (default enabled to preserve current behavior)
+def _env_truthy(name: str, default: str = "1") -> bool:
+    val = os.getenv(name, default)
+    return str(val).strip().lower() in {"1", "true", "yes", "on"}
+
+ENTERPRISE_FEATURES_FLAG = _env_truthy("SUTAZAI_ENTERPRISE_FEATURES", "1")
+KNOWLEDGE_GRAPH_FLAG = _env_truthy("SUTAZAI_ENABLE_KNOWLEDGE_GRAPH", "1")
+COGNITIVE_ARCH_FLAG = _env_truthy("SUTAZAI_ENABLE_COGNITIVE", "1")
+
 # Import enterprise components
 try:
     from app.core.config import settings
@@ -46,10 +55,10 @@ try:
     from cognitive_architecture.startup import integrate_with_main_app
     from cognitive_architecture.api import router as cognitive_router
     
-    # Enterprise components available
-    ENTERPRISE_FEATURES = True
-    KNOWLEDGE_GRAPH_AVAILABLE = True
-    COGNITIVE_ARCHITECTURE_AVAILABLE = True
+    # Enterprise components available (also honor env flags)
+    ENTERPRISE_FEATURES = bool(ENTERPRISE_FEATURES_FLAG)
+    KNOWLEDGE_GRAPH_AVAILABLE = bool(KNOWLEDGE_GRAPH_FLAG)
+    COGNITIVE_ARCHITECTURE_AVAILABLE = bool(COGNITIVE_ARCH_FLAG)
 except ImportError as e:
     logging.warning(f"Enterprise features not available: {e}")
     ENTERPRISE_FEATURES = False
@@ -112,7 +121,7 @@ if ENTERPRISE_FEATURES:
         logger.warning(f"Monitoring setup failed: {e}")
 
 # Integrate Cognitive Architecture
-if COGNITIVE_ARCHITECTURE_AVAILABLE:
+if COGNITIVE_ARCHITECTURE_AVAILABLE and COGNITIVE_ARCH_FLAG:
     try:
         integrate_with_main_app(app)
         logger.info("Cognitive Architecture integrated successfully")
@@ -127,6 +136,14 @@ try:
     logger.info("Coordinator router loaded successfully")
 except Exception as e:
     logger.warning(f"Coordinator router setup failed: {e}")
+
+# Include agents router (basic agent endpoints)
+try:
+    from app.api.v1.agents import router as agents_router
+    app.include_router(agents_router, prefix="/api/v1/agents", tags=["Agents"])
+    logger.info("Agents router loaded successfully")
+except Exception as e:
+    logger.warning(f"Agents router setup failed: {e}")
 
 # Include models router (always available)
 try:
@@ -192,6 +209,14 @@ try:
 except Exception as e:
     logger.warning(f"Chat router setup failed: {e}")
 
+# Include agents endpoints router (workflow, consensus, delegate)
+try:
+    from app.api.v1.endpoints.agents import router as agents_endpoints_router
+    app.include_router(agents_endpoints_router, prefix="/api/v1/agents", tags=["Agents"])
+    logger.info("Agents endpoints router loaded successfully")
+except Exception as e:
+    logger.warning(f"Agents endpoints router setup failed: {e}")
+
 # Include documents router (always available)
 try:
     from app.api.v1.endpoints.documents import router as documents_router
@@ -216,6 +241,14 @@ try:
 except Exception as e:
     logger.warning(f"Monitoring router setup failed: {e}")
 
+# Include lightweight mesh router (Redis Streams)
+try:
+    from app.api.v1.endpoints.mesh import router as mesh_router
+    app.include_router(mesh_router, prefix="/api/v1/mesh", tags=["Mesh"])
+    logger.info("Mesh router loaded successfully")
+except Exception as e:
+    logger.warning(f"Mesh router setup failed: {e}")
+
 if ENTERPRISE_FEATURES:
     try:
         app.include_router(agent_interaction_router, prefix="/api/v1/agents", tags=["Agent Interaction"])
@@ -223,7 +256,7 @@ if ENTERPRISE_FEATURES:
         logger.warning(f"Agent interaction router setup failed: {e}")
 
 # Knowledge Graph System Router
-if KNOWLEDGE_GRAPH_AVAILABLE:
+if KNOWLEDGE_GRAPH_AVAILABLE and KNOWLEDGE_GRAPH_FLAG:
     try:
         app.include_router(knowledge_graph_router, prefix="/api/v1", tags=["Knowledge Graph"])
         logger.info("Knowledge Graph router loaded successfully")

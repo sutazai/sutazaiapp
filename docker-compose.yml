@@ -2,6 +2,47 @@ networks:
   sutazai-network:
     external: true
 services:
+  mesh-worker:
+    build:
+      context: .
+      dockerfile: docker/mesh-worker/Dockerfile
+    container_name: sutazai-mesh-worker
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: INFO
+      # Defaults, override as needed
+      MESH_TOPIC: nlp
+      MESH_GROUP: nlp
+      MESH_CONSUMER: worker-1
+      MESH_RESULTS: nlp
+    networks:
+    - sutazai-network
+    restart: unless-stopped
+    profiles:
+      - mesh
+  mesh-worker-2:
+    build:
+      context: .
+      dockerfile: docker/mesh-worker/Dockerfile
+    container_name: sutazai-mesh-worker-2
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: INFO
+      MESH_TOPIC: nlp
+      MESH_GROUP: nlp
+      MESH_CONSUMER: worker-2
+      MESH_RESULTS: nlp
+    networks:
+    - sutazai-network
+    restart: unless-stopped
+    profiles:
+      - mesh
   agentgpt:
     build:
       context: ./docker/agentgpt
@@ -351,7 +392,7 @@ services:
       - '--max_housekeeping_interval=35s'
       - '--allow_dynamic_housekeeping=true'
       - '--global_housekeeping_interval=1m'
-      - '--disable_metrics=accelerator,advtcp,cpu_topology,disk,hugetlb,memory_numa,percpu,referenced_memory,resctrl,tcp,udp'
+      - '--disable_metrics=advtcp,cpu_topology,disk,hugetlb,memory_numa,percpu,referenced_memory,resctrl,tcp,udp'
     deploy:
       resources:
         limits:
@@ -1362,6 +1403,48 @@ services:
     - models_data:/models
     - /opt/sutazaiapp/CLAUDE.md:/app/CLAUDE.md:ro
     - /opt/sutazaiapp/config/ollama.yaml:/app/config/ollama.yaml:ro
+  ollama-integration:
+    build:
+      context: ./agents/ollama_integration
+      dockerfile: Dockerfile
+    container_name: sutazai-ollama-integration
+    depends_on:
+      ollama:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    environment:
+      AGENT_TYPE: ollama-integration
+      API_ENDPOINT: http://backend:8000
+      LOG_LEVEL: INFO
+      OLLAMA_BASE_URL: http://ollama:10104
+      PORT: 8090
+      REDIS_URL: redis://redis:6379/0
+      SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
+      TZ: ${TZ:-UTC}
+      MAX_RETRIES: 3
+      BACKOFF_BASE: 2
+      REQUEST_TIMEOUT: 30
+      CONNECTION_POOL_SIZE: 10
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+    - sutazai-network
+    ports:
+    - 8090:8090
+    restart: unless-stopped
   opendevin:
     build:
       context: ./docker/opendevin

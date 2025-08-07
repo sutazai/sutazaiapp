@@ -279,6 +279,15 @@ test:agents:
     reports:
       junit: agent-test-${AGENT_BATCH}.xml
 
+# Infrastructure health smoke test (gated by variable to avoid false fails)
+test:infra-health:
+  stage: test
+  image: python:3.11-slim
+  <<: *default_retry
+  script:
+    - python scripts/devops/check_services_health.py --ollama localhost:10104 --kong localhost:10005 --consul localhost:10006 --vector-range 10100-10103
+  allow_failure: false
+
 # ===============================
 # STAGE 4: SECURITY
 # ===============================

@@ -1,0 +1,37 @@
+version: "3.9"
+
+name: sutazai-mcp
+
+networks:
+  sutazai_mcp_net:
+    driver: bridge
+
+volumes:
+  reports_playwright_mcp:
+
+services:
+  mcp-sequentialthinking:
+    image: mcp/sequentialthinking
+    build:
+      context: ..
+      dockerfile: servers/src/sequentialthinking/Dockerfile
+    networks:
+      - sutazai_mcp_net
+    # No ports exposed; stdio-based MCP server
+    restart: unless-stopped
+
+  playwright-mcp-tests:
+    build:
+      context: ..
+      dockerfile: tests/playwright/Dockerfile
+    environment:
+      - PLAYWRIGHT_MCP_CONTEXTS=${PLAYWRIGHT_MCP_CONTEXTS:-context7,sequentialthinking}
+    volumes:
+      - reports_playwright_mcp:/app/reports/playwright-mcp
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - sutazai_mcp_net
+    depends_on:
+      - mcp-sequentialthinking
+    # Run tests and exit
+    command: []

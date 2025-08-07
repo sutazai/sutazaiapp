@@ -1,0 +1,631 @@
+{
+  "ReasoningEngine": [
+    "backend.processing_engine.reasoning_engine",
+    "backend.knowledge_graph.reasoning_engine"
+  ],
+  "MessageBus": [
+    "backend.ai_agents.communication_protocols",
+    "backend.app.orchestration.message_bus"
+  ],
+  "Message": [
+    "backend.ai_agents.communication_protocols",
+    "backend.ai_agents.protocols.message_protocol",
+    "backend.ai_agents.orchestration.advanced_message_bus",
+    "backend.app.orchestration.agent_orchestrator",
+    "backend.app.orchestration.message_bus",
+    "agents.core.context_manager"
+  ],
+  "AgentStatus": [
+    "backend.ai_agents.agent_status",
+    "backend.ai_agents.universal_client",
+    "backend.agent_orchestration.orchestrator",
+    "backend.ai_agents.core.base_agent",
+    "backend.ai_agents.coordination.continuous_coordinator",
+    "backend.app.orchestration.agent_orchestrator",
+    "backend.app.agents.registry",
+    "agents.compatibility_base_agent",
+    "agents.core.base_agent_v2",
+    "scripts.performance-optimization",
+    "scripts.monitoring.agent-activation-monitor"
+  ],
+  "HealthStatus": [
+    "backend.ai_agents.health_monitor",
+    "backend.edge_inference.failover",
+    "backend.ai_agents.orchestration.infrastructure_integration",
+    "scripts.comprehensive-agent-health-monitor",
+    "scripts.distributed-health-monitor",
+    "scripts.dynamic-load-balancer",
+    "scripts.service-mesh.health-check-server",
+    "scripts.monitoring.multi-system-integration-framework"
+  ],
+  "RecoveryAction": [
+    "backend.ai_agents.health_monitor",
+    "backend.edge_inference.failover"
+  ],
+  "Alert": [
+    "backend.ai_agents.health_monitor",
+    "backend.edge_inference.telemetry",
+    "backend.federated_learning.monitoring",
+    "backend.oversight.alert_notification_system",
+    "backend.app.orchestration.monitoring"
+  ],
+  "AlertManager": [
+    "backend.ai_agents.health_monitor",
+    "backend.edge_inference.telemetry"
+  ],
+  "HealthCheck": [
+    "backend.ai_agents.health_monitor",
+    "backend.ai_agents.health_check",
+    "backend.edge_inference.failover",
+    "backend.app.orchestration.monitoring",
+    "scripts.comprehensive-agent-health-monitor"
+  ],
+  "AlertSeverity": [
+    "backend.ai_agents.health_monitor",
+    "backend.edge_inference.telemetry",
+    "backend.federated_learning.monitoring",
+    "backend.oversight.alert_notification_system",
+    "backend.oversight.human_oversight_interface",
+    "backend.app.orchestration.monitoring"
+  ],
+  "UniversalAgentFactory": [
+    "backend.ai_agents.universal_agent_factory",
+    "backend.ai_agents.core.universal_agent_factory"
+  ],
+  "LoadBalancer": [
+    "backend.ai_agents.discovery_service",
+    "backend.edge_inference.intelligent_router",
+    "backend.app.core.performance",
+    "scripts.resource-pool-coordinator"
+  ],
+  "AgentRegistry": [
+    "backend.ai_agents.discovery_service",
+    "backend.ai_agents.core.agent_registry",
+    "backend.app.services.agent_registry",
+    "backend.app.services.agent_orchestrator",
+    "backend.app.agents.registry"
+  ],
+  "MockAgent": [
+    "backend.ai_agents.agent_factory",
+    "scripts.monitoring.test_static_monitor"
+  ],
+  "AgentMetrics": [
+    "backend.ai_agents.agent_manager",
+    "backend.energy.agent_hibernation",
+    "backend.ai_agents.core.agent_registry",
+    "backend.app.orchestration.task_router",
+    "agents.compatibility_base_agent",
+    "agents.task_assignment_coordinator.metrics",
+    "agents.ollama_integration.metrics",
+    "agents.core.base_agent_v2",
+    "agents.core.metrics",
+    "agents.resource_arbitration_agent.metrics",
+    "agents.ai_agent_orchestrator.metrics",
+    "agents.hardware-resource-optimizer.metrics",
+    "agents.coordinator.metrics"
+  ],
+  "WorkflowStatus": [
+    "backend.ai_agents.workflow_orchestrator",
+    "backend.ai_agents.orchestrator.workflow_engine",
+    "backend.ai_agents.core.orchestration_controller",
+    "backend.app.orchestration.workflow_engine",
+    "backend.app.orchestration.agent_orchestrator"
+  ],
+  "TaskStatus": [
+    "backend.ai_agents.workflow_orchestrator",
+    "backend.agent_orchestration.orchestrator",
+    "backend.ai_agents.orchestrator.workflow_engine",
+    "backend.ai_agents.core.orchestration_controller",
+    "backend.ai_agents.orchestration.unified_orchestrator",
+    "backend.app.models.agent"
+  ],
+  "WorkflowExecution": [
+    "backend.ai_agents.workflow_orchestrator",
+    "backend.app.orchestration.workflow_engine"
+  ],
+  "WorkflowTask": [
+    "backend.ai_agents.workflow_orchestrator",
+    "backend.ai_agents.orchestrator.workflow_engine"
+  ],
+  "WorkflowEngine": [
+    "backend.ai_agents.workflow_orchestrator",
+    "backend.ai_agents.orchestrator.workflow_engine",
+    "backend.app.orchestration.workflow_engine"
+  ],
+  "TaskResponse": [
+    "backend.ai_agents.universal_client",
+    "backend.ai_agents.orchestration.unified_orchestration_api",
+    "services.jarvis.main",
+    "services.jarvis.main_simple",
+    "services.jarvis.main_basic",
+    "agents.fastapi_wrapper",
+    "agents.ai-agent-orchestrator.enhanced_app",
+    "agents.hardware-resource-optimizer.main"
+  ],
+  "Priority": [
+    "backend.ai_agents.universal_client",
+    "agents.core.messaging"
+  ],
+  "TaskRequest": [
+    "backend.ai_agents.universal_client",
+    "backend.app.main",
+    "backend.ai_agents.orchestration.unified_orchestration_api",
+    "backend.app.orchestration.task_router",
+    "services.jarvis.main",
+    "services.jarvis.main_simple",
+    "services.jarvis.main_basic",
+    "agents.fastapi_wrapper",
+    "agents.ai-agent-orchestrator.enhanced_app",
+    "agents.ai_agent_orchestrator.app",
+    "agents.hardware-resource-optimizer.main"
+  ],
+  "AgentType": [
+    "backend.ai_agents.universal_client",
+    "backend.app.agent_orchestrator",
+    "backend.ai_agents.orchestration.master_agent_orchestrator"
+  ],
+  "AgentInfo": [
+    "backend.ai_agents.universal_client",
+    "backend.app.orchestration.agent_discovery",
+    "backend.app.agents.registry",
+    "agents.coordinator.app"
+  ],
+  "AgentCapability": [
+    "backend.ai_agents.universal_client",
+    "backend.agent_orchestration.orchestrator",
+    "backend.ai_agents.core.base_agent",
+    "backend.ai_agents.orchestration.master_agent_orchestrator",
+    "backend.app.orchestration.agent_orchestrator",
+    "agents.ai_agent_orchestrator.app"
+  ],
+  "NodeStatus": [
+    "backend.edge_inference.intelligent_router",
+    "backend.app.orchestration.workflow_engine"
+  ],
+  "PerformancePredictor": [
+    "backend.edge_inference.intelligent_router",
+    "backend.federated_learning.monitoring"
+  ],
+  "RoutingDecision": [
+    "backend.edge_inference.intelligent_router",
+    "backend.ai_agents.orchestration.intelligent_task_router",
+    "backend.app.orchestration.task_router"
+  ],
+  "RequestPriority": [
+    "backend.edge_inference.batch_processor",
+    "agents.core.request_queue"
+  ],
+  "ResultCache": [
+    "backend.edge_inference.batch_processor",
+    "backend.edge_inference.proxy"
+  ],
+  "BatchResult": [
+    "backend.edge_inference.batch_processor",
+    "agents.core.ollama_batch_processor"
+  ],
+  "BatchRequest": [
+    "backend.edge_inference.batch_processor",
+    "backend.app.services.advanced_model_manager",
+    "backend.app.api.v1.endpoints.streaming",
+    "agents.core.ollama_batch_processor"
+  ],
+  "Metric": [
+    "backend.edge_inference.telemetry",
+    "backend.app.orchestration.monitoring"
+  ],
+  "MetricType": [
+    "backend.edge_inference.telemetry",
+    "backend.federated_learning.monitoring",
+    "backend.app.orchestration.monitoring"
+  ],
+  "ModelCache": [
+    "backend.edge_inference.proxy",
+    "agents.core.ollama_pool"
+  ],
+  "RoutingStrategy": [
+    "backend.edge_inference.proxy",
+    "backend.ai_agents.core.agent_message_bus",
+    "backend.ai_agents.orchestration.intelligent_task_router"
+  ],
+  "InferenceRequest": [
+    "backend.edge_inference.proxy",
+    "backend.edge_inference.api"
+  ],
+  "CircuitBreaker": [
+    "backend.edge_inference.failover",
+    "agents.core.circuit_breaker",
+    "scripts.dynamic-load-balancer",
+    "scripts.hygiene-enforcement-coordinator"
+  ],
+  "HealthChecker": [
+    "backend.edge_inference.failover",
+    "scripts.hygiene-system-orchestrator",
+    "scripts.ultimate-deployment-orchestrator"
+  ],
+  "QuantizationConfig": [
+    "backend.edge_inference.quantization",
+    "agents.core.ollama_context_optimizer"
+  ],
+  "MemoryPool": [
+    "backend.edge_inference.memory_manager",
+    "scripts.memory-pool-manager"
+  ],
+  "DeploymentStatus": [
+    "backend.edge_inference.deployment",
+    "scripts.ultimate-deployment-master"
+  ],
+  "AnomalyDetector": [
+    "backend.federated_learning.monitoring",
+    "scripts.monitoring.multi-system-integration-framework"
+  ],
+  "ResourceMonitor": [
+    "backend.federated_learning.monitoring",
+    "scripts.hygiene-enforcement-coordinator"
+  ],
+  "ModelVersion": [
+    "backend.federated_learning.versioning",
+    "agents.core.ollama_model_manager"
+  ],
+  "CompressionType": [
+    "backend.federated_learning.aggregator",
+    "scripts.memory-pool-manager"
+  ],
+  "Config": [
+    "backend.core.config",
+    "backend.app.core.config",
+    "backend.app.models.agent",
+    "agents.core.messaging"
+  ],
+  "CacheManager": [
+    "backend.utils.cache_manager",
+    "backend.app.core.performance"
+  ],
+  "ChatRequest": [
+    "backend.app.main",
+    "backend.app.api.v1.endpoints.chat"
+  ],
+  "WorkflowRequest": [
+    "backend.app.main",
+    "backend.app.api.v1.orchestration",
+    "backend.app.api.v1.endpoints.agents"
+  ],
+  "ConnectionManager": [
+    "backend.app.main",
+    "backend.ai_agents.orchestration.unified_orchestration_api"
+  ],
+  "AgentOrchestrator": [
+    "backend.app.agent_orchestrator",
+    "backend.agent_orchestration.orchestrator",
+    "backend.app.services.agent_orchestrator"
+  ],
+  "AuditEvent": [
+    "backend.data_governance.audit_logger",
+    "backend.oversight.human_oversight_interface"
+  ],
+  "ComplianceViolation": [
+    "backend.data_governance.compliance_manager",
+    "backend.oversight.compliance_reporter",
+    "scripts.compliance-monitor-core"
+  ],
+  "ComplianceManager": [
+    "backend.data_governance.compliance_manager",
+    "backend.app.core.security"
+  ],
+  "ComplianceReport": [
+    "backend.data_governance.compliance_manager",
+    "backend.oversight.compliance_reporter"
+  ],
+  "SearchResult": [
+    "backend.data_governance.data_catalog",
+    "services.faiss-vector.main"
+  ],
+  "TestPerformance": [
+    "backend.tests.test_cognitive_architecture",
+    "backend.tests.test_main_comprehensive"
+  ],
+  "TestIntegration": [
+    "backend.tests.test_cognitive_architecture",
+    "backend.tests.test_main_comprehensive"
+  ],
+  "TestChatEndpoints": [
+    "backend.tests.test_api_endpoints",
+    "backend.tests.test_main_comprehensive"
+  ],
+  "TestErrorHandling": [
+    "backend.tests.test_main_app",
+    "backend.tests.test_api_basic",
+    "backend.tests.test_main_comprehensive"
+  ],
+  "Task": [
+    "backend.agent_orchestration.orchestrator",
+    "backend.energy.workload_scheduler",
+    "backend.ai_agents.core.orchestration_controller",
+    "backend.ai_agents.orchestration.unified_orchestrator",
+    "backend.ai_agents.orchestration.master_agent_orchestrator",
+    "backend.app.orchestration.agent_orchestrator"
+  ],
+  "WorkflowNode": [
+    "backend.knowledge_graph.schema",
+    "backend.app.orchestration.workflow_engine",
+    "backend.app.orchestration.agent_orchestrator"
+  ],
+  "NodeType": [
+    "backend.knowledge_graph.schema",
+    "backend.app.orchestration.workflow_engine"
+  ],
+  "TaskPriority": [
+    "backend.energy.workload_scheduler",
+    "backend.ai_agents.specialized.orchestrator",
+    "backend.ai_agents.core.orchestration_controller",
+    "backend.ai_agents.orchestration.master_agent_orchestrator",
+    "backend.app.models.agent",
+    "backend.app.orchestration.agent_orchestrator",
+    "backend.app.orchestration.task_router",
+    "scripts.distributed-task-queue"
+  ],
+  "ResourceAllocation": [
+    "backend.energy.resource_allocator",
+    "backend.app.orchestration.coordination",
+    "services.resource-manager.main",
+    "agents.resource_arbitration_agent.app",
+    "scripts.resource-pool-coordinator"
+  ],
+  "AllocationStrategy": [
+    "backend.energy.resource_allocator",
+    "scripts.resource-pool-coordinator"
+  ],
+  "ResourceType": [
+    "backend.energy.resource_allocator",
+    "agents.resource_arbitration_agent.app",
+    "scripts.resource-pool-coordinator"
+  ],
+  "SystemResources": [
+    "backend.energy.resource_allocator",
+    "scripts.hardware-optimization-master"
+  ],
+  "MemoryManager": [
+    "backend.ai_agents.memory.agent_memory",
+    "services.jarvis.core.memory_manager",
+    "scripts.hardware-optimization-master"
+  ],
+  "ConfidenceLevel": [
+    "backend.ai_agents.memory.shared_knowledge_base",
+    "backend.ai_agents.reasoning.advanced_reasoning_engine"
+  ],
+  "AgentMessage": [
+    "backend.ai_agents.communication.agent_bus",
+    "backend.ai_agents.core.base_agent",
+    "agents.agent_with_health",
+    "agents.generic_agent"
+  ],
+  "Workflow": [
+    "backend.ai_agents.orchestrator.workflow_engine",
+    "backend.ai_agents.core.orchestration_controller",
+    "backend.app.orchestration.workflow_engine",
+    "backend.app.orchestration.agent_orchestrator"
+  ],
+  "GenericAgent": [
+    "backend.ai_agents.specialized.generic_agent",
+    "agents.generic_agent"
+  ],
+  "MessageStats": [
+    "backend.ai_agents.core.agent_message_bus",
+    "backend.ai_agents.orchestration.advanced_message_bus"
+  ],
+  "AgentHealth": [
+    "backend.ai_agents.core.agent_registry",
+    "backend.app.api.v1.endpoints.monitoring",
+    "scripts.distributed-health-monitor"
+  ],
+  "BaseAgent": [
+    "backend.ai_agents.core.base_agent",
+    "agents.agent_base",
+    "agents.hardware-resource-optimizer.shared.agent_base"
+  ],
+  "AgentConfig": [
+    "backend.ai_agents.core.base_agent",
+    "scripts.ultimate-deployment-orchestrator"
+  ],
+  "ReasoningChain": [
+    "backend.ai_agents.reasoning.advanced_reasoning_engine",
+    "backend.ai_agents.reasoning.chain_of_thought"
+  ],
+  "AdvancedReasoningEngine": [
+    "backend.ai_agents.reasoning.advanced_reasoning_engine",
+    "backend.ai_agents.reasoning.chain_of_thought"
+  ],
+  "ReasoningStep": [
+    "backend.ai_agents.reasoning.advanced_reasoning_engine",
+    "backend.ai_agents.reasoning.chain_of_thought"
+  ],
+  "IntelligentTaskRouter": [
+    "backend.ai_agents.orchestration.intelligent_task_router",
+    "backend.app.orchestration.task_router"
+  ],
+  "CoordinationPattern": [
+    "backend.ai_agents.orchestration.master_agent_orchestrator",
+    "backend.ai_agents.orchestration.enhanced_multi_agent_coordinator"
+  ],
+  "MessageRequest": [
+    "backend.ai_agents.orchestration.unified_orchestration_api",
+    "backend.app.api.v1.orchestration"
+  ],
+  "ServiceStatus": [
+    "backend.ai_agents.orchestration.agent_registry_service",
+    "scripts.hygiene-system-orchestrator",
+    "scripts.ultimate-deployment-orchestrator"
+  ],
+  "MessageType": [
+    "backend.app.schemas.message_types",
+    "agents.core.messaging"
+  ],
+  "ServiceRegistry": [
+    "backend.app.core.service_registry",
+    "services.external-service-registry"
+  ],
+  "XSSProtectionMiddleware": [
+    "backend.app.core.middleware",
+    "backend.app.core.security"
+  ],
+  "PerformanceOptimizer": [
+    "backend.app.core.performance",
+    "scripts.performance-optimization"
+  ],
+  "RateLimiter": [
+    "backend.app.core.performance",
+    "backend.app.core.security"
+  ],
+  "AgentExecutionError": [
+    "backend.app.core.exceptions",
+    "backend.app.services.agent_orchestrator"
+  ],
+  "AgentNotFoundError": [
+    "backend.app.core.exceptions",
+    "backend.app.services.agent_orchestrator"
+  ],
+  "AgentTask": [
+    "backend.app.models.agent",
+    "backend.app.services.agent_orchestrator"
+  ],
+  "RegisteredAgent": [
+    "backend.app.orchestration.agent_orchestrator",
+    "agents.ai_agent_orchestrator.app"
+  ],
+  "LoadBalancingAlgorithm": [
+    "backend.app.orchestration.task_router",
+    "scripts.dynamic-load-balancer"
+  ],
+  "BaseService": [
+    "backend.app.services.base_service",
+    "backend.app.services.agent_orchestrator"
+  ],
+  "SearchRequest": [
+    "backend.app.api.v1.vectors",
+    "services.faiss-vector.main"
+  ],
+  "SystemHealth": [
+    "backend.app.api.v1.endpoints.monitoring",
+    "scripts.monitoring.multi-system-integration-framework"
+  ],
+  "SystemMetrics": [
+    "services.resource-manager.main",
+    "scripts.distributed-health-monitor",
+    "scripts.performance-optimization",
+    "scripts.monitoring.agent-activation-monitor"
+  ],
+  "VoiceInterface": [
+    "services.jarvis.core.voice_interface",
+    "services.jarvis.core.voice_interface_minimal"
+  ],
+  "SimpleAgent": [
+    "agents.fastapi_wrapper",
+    "agents.container_startup"
+  ],
+  "BaseAgentV2": [
+    "agents.compatibility_base_agent",
+    "agents.core.simple_base_agent",
+    "agents.core.base_agent_v2"
+  ],
+  "TaskResult": [
+    "agents.compatibility_base_agent",
+    "agents.core.base_agent_v2"
+  ],
+  "AIAgentOrchestrator": [
+    "agents.ai-agent-orchestrator.enhanced_app",
+    "agents.ai_agent_orchestrator.app"
+  ],
+  "AssignmentStrategy": [
+    "agents.task_assignment_coordinator.app",
+    "agents.coordinator.app"
+  ],
+  "TaskAssignmentCoordinator": [
+    "agents.task_assignment_coordinator.app",
+    "agents.coordinator.app"
+  ],
+  "MetricsTimer": [
+    "agents.task_assignment_coordinator.metrics",
+    "agents.ollama_integration.metrics",
+    "agents.core.metrics",
+    "agents.resource_arbitration_agent.metrics",
+    "agents.ai_agent_orchestrator.metrics",
+    "agents.hardware-resource-optimizer.metrics",
+    "agents.coordinator.metrics"
+  ],
+  "OptimizationConfig": [
+    "agents.core.prompt_optimizer",
+    "scripts.hardware-optimization-master"
+  ],
+  "OllamaConnectionPool": [
+    "agents.core.ollama_connection_pool",
+    "agents.core.ollama_pool"
+  ],
+  "RequestMetrics": [
+    "agents.core.ollama_connection_pool",
+    "scripts.dynamic-load-balancer"
+  ],
+  "PoolStats": [
+    "agents.core.ollama_pool",
+    "scripts.memory-pool-manager"
+  ],
+  "RabbitMQClient": [
+    "agents.core.rabbitmq_client",
+    "agents.core.messaging"
+  ],
+  "CircuitState": [
+    "agents.core.circuit_breaker",
+    "scripts.distributed-health-monitor"
+  ],
+  "IntegrationTestSuite": [
+    "agents.hardware-resource-optimizer.integration_test_suite",
+    "agents.hardware-resource-optimizer.tests.integration_test_suite"
+  ],
+  "ContinuousValidator": [
+    "agents.hardware-resource-optimizer.continuous_validator",
+    "agents.hardware-resource-optimizer.tests.continuous_validator"
+  ],
+  "ServiceConfig": [
+    "scripts.distributed-autoscaler",
+    "scripts.startup_optimizer",
+    "scripts.service-mesh.service-discovery-client"
+  ],
+  "SystemResourceMonitor": [
+    "scripts.startup_optimizer",
+    "scripts.performance-profiler-suite"
+  ],
+  "TestResult": [
+    "scripts.ai-performance-validator",
+    "scripts.verify-hygiene-monitoring-system"
+  ],
+  "ValidationResult": [
+    "scripts.validate-complete-system",
+    "scripts.service-mesh.validate-service-mesh"
+  ],
+  "GarbageCollector": [
+    "scripts.garbage-collection-system",
+    "scripts.enforcement.rule13_garbage_collector"
+  ],
+  "RollbackManager": [
+    "scripts.ultimate-deployment-orchestrator",
+    "scripts.monitoring.multi-system-integration-framework"
+  ],
+  "ContainerHealthMonitor": [
+    "scripts.container-health-monitor",
+    "scripts.permanent-health-monitor"
+  ],
+  "TestStaticMonitor": [
+    "scripts.monitoring.test_static_monitor_simple",
+    "scripts.monitoring.test_static_monitor"
+  ],
+  "MockNetwork": [
+    "scripts.monitoring.test_enhanced_monitor",
+    "scripts.monitoring.test_static_monitor"
+  ],
+  "MockHandler": [
+    "scripts.monitoring.test_static_monitor",
+    "scripts.monitoring.comprehensive_monitor_validation"
+  ],
+  "RuleViolation": [
+    "scripts.monitoring.enhanced-compliance-monitor",
+    "scripts.monitoring.continuous-compliance-monitor"
+  ]
+}

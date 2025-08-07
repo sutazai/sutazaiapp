@@ -5,6 +5,8 @@
 .PHONY: coverage coverage-report lint format security-scan clean setup-dev setup-ci
 .PHONY: docker-build docker-test docker-up docker-down services-up services-down
 .PHONY: deps-update deps-audit report-dashboard
+.PHONY: docs-api docs-api-openapi docs-api-endpoints
+.PHONY: onboarding-deck
 
 # Default target
 .DEFAULT_GOAL := help
@@ -313,6 +315,17 @@ docs: ## Generate documentation
 	cd backend && python -m sphinx -b html docs/ docs/_build/html
 	@echo "$(GREEN)✅ Documentation generated at backend/docs/_build/html/$(NC)"
 
+docs-api: docs-api-openapi docs-api-endpoints ## Export OpenAPI and endpoint summary
+	@echo "$(GREEN)✅ API documentation artifacts updated$(NC)"
+
+docs-api-openapi: ## Export backend OpenAPI to docs/backend_openapi.json
+	@echo "$(YELLOW)📜 Exporting OpenAPI...$(NC)"
+	python3 scripts/export_openapi.py
+
+docs-api-endpoints: ## Generate Markdown endpoints summary from OpenAPI
+	@echo "$(YELLOW)🗂  Generating endpoints summary...$(NC)"
+	python3 scripts/summarize_openapi.py
+
 # Version management
 version: ## Show current version
 	@echo "$(CYAN)Current version:$(NC)"
@@ -321,3 +334,43 @@ version: ## Show current version
 # Complete system check
 check: lint test security-scan ## Run complete system check
 	@echo "$(GREEN)✅ All checks passed!$(NC)"
+
+# Onboarding deck generation (requires python-pptx)
+onboarding-deck: ## Generate onboarding PPTX deck from overview
+	@echo "$(YELLOW)📑 Generating onboarding deck...$(NC)"
+	python scripts/onboarding/generate_kickoff_deck.py
+	@echo "$(GREEN)✅ Deck generated at docs/onboarding/kickoff_deck_v1.pptx$(NC)"
+# --- MCP Orchestration ---
+.PHONY: mcp-build mcp-up mcp-down mcp-logs mcp-restart mcp-health e2e-mcp
+
+mcp-build:
+	docker compose -f docker-compose.mcp.yml build
+
+mcp-up:
+	docker compose -f docker-compose.mcp.yml up -d
+
+mcp-down:
+	docker compose -f docker-compose.mcp.yml down
+
+mcp-logs:
+	docker compose -f docker-compose.mcp.yml logs -f mcp-server
+
+mcp-restart: mcp-down mcp-up
+
+mcp-health:
+	curl -sSf http://localhost:3030/health | jq .
+
+e2e-mcp:
+	npx playwright test e2e/mcp-health.spec.ts
+
+.PHONY: mcp-bootstrap mcp-teardown
+mcp-bootstrap:
+	bash scripts/mcp_bootstrap.sh
+
+mcp-teardown:
+	bash scripts/mcp_teardown.sh
+
+.PHONY: add-mcp-tool
+add-mcp-tool:
+	@if [ -z "$(IMG)" ]; then echo "Usage: make add-mcp-tool IMG=<docker-image>"; exit 1; fi
+	bash scripts/add_mcp_tool.sh $(IMG)

@@ -145,7 +145,8 @@ class RequestQueue:
                  max_concurrent: int = 3,
                  timeout: float = 300.0,
                  max_retries: int = 2,
-                 name: str = "request_queue"):
+                 name: str = "request_queue",
+                 enable_background: bool = True):
         """
         Initialize request queue
         
@@ -186,8 +187,10 @@ class RequestQueue:
         self._metrics_interval = 60   # 1 minute
         self._max_completed_history = 1000
         
-        # Start background processing
-        self._start_background_tasks()
+        # Start background processing if enabled
+        self._background_enabled = enable_background
+        if self._background_enabled:
+            self._start_background_tasks()
         
         logger.info(f"Request queue '{name}' initialized: max_queue={max_queue_size}, max_concurrent={max_concurrent}")
     
@@ -644,15 +647,30 @@ class RequestQueue:
         # Signal shutdown
         self._shutdown_event.set()
         
-        # Cancel background tasks
-        for task in [self._processor_task, self._metrics_task, self._cleanup_task]:
-            if task:
-                task.cancel()
+        # Ask background tasks to finish gracefully, then force-cancel if needed
+        background_tasks = [self._processor_task, self._metrics_task, self._cleanup_task] if self._background_enabled else []
+        for task in background_tasks:
+            if not task:
+                continue
+            if task.done():
+                continue
+            try:
+                # Give the task a moment to exit after shutdown event is set
+                await asyncio.wait_for(task, timeout=1.0)
+            except asyncio.TimeoutError:
+                try:
+                    task.cancel()
+                    await task
+                except asyncio.CancelledError:
+                    pass
+                except Exception as e:
+                    logger.debug(f"Background task forced shutdown error: {e}")
         
         # Cancel all pending futures
-        for future in self._request_futures.values():
+        for future in list(self._request_futures.values()):
             if not future.done():
                 future.cancel()
+        self._request_futures.clear()
         
         # Clear queues
         await self.clear_queue()

@@ -114,7 +114,8 @@ class BaseAgentV2:
         
         # Service endpoints
         self.backend_url = os.getenv('BACKEND_URL', 'http://localhost:8000')
-        self.ollama_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:10104')
+        # Prefer OLLAMA_URL for compatibility with tests/fixtures; fallback to OLLAMA_BASE_URL
+        self.ollama_url = os.getenv('OLLAMA_URL') or os.getenv('OLLAMA_BASE_URL', 'http://localhost:10104')
         
         # Agent state
         self.status = AgentStatus.INITIALIZING
@@ -189,7 +190,8 @@ class BaseAgentV2:
             self.request_queue = RequestQueue(
                 max_queue_size=100,
                 max_concurrent=self.max_concurrent_tasks,
-                timeout=300
+                timeout=300,
+                enable_background=False  # Disable periodic background tasks for cleaner teardown in tests
             )
             
             self.logger.info("Async components initialized successfully")
@@ -203,12 +205,15 @@ class BaseAgentV2:
         try:
             if self.http_client:
                 await self.http_client.aclose()
+                self.http_client = None
             
             if self.ollama_pool:
                 await self.ollama_pool.close()
+                self.ollama_pool = None
             
             if self.request_queue:
                 await self.request_queue.close()
+                self.request_queue = None
                 
             self.logger.info("Async components cleaned up")
             

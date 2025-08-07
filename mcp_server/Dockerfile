@@ -8,13 +8,14 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     curl \
     git \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
 
-# Install Node.js dependencies
-RUN npm ci --only=production
+# Install Node.js dependencies (without requiring a lockfile)
+RUN npm install --omit=dev
 
 # Copy application code
 COPY . .

@@ -1,6 +1,6 @@
 from typing import List, Optional, Union, Dict, Any
 from pydantic import AnyHttpUrl, PostgresDsn, validator, Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from pathlib import Path
 import logging
@@ -85,10 +85,13 @@ class AppSettings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(60 * 24 * 8, env="ACCESS_TOKEN_EXPIRE_MINUTES") # 8 days
     ALGORITHM: str = "HS256"
 
-    class Config:
-        case_sensitive = True
-        env_file = PROJECT_ROOT / ".env" # Load .env file from project root
-        env_file_encoding = 'utf-8'
+    # Pydantic v2 settings configuration
+    model_config = SettingsConfigDict(
+        case_sensitive=True,
+        env_file=str(PROJECT_ROOT / ".env"),  # Load .env from project root
+        env_file_encoding='utf-8',
+        extra="ignore",  # Ignore unrelated env vars (prevents ValidationError)
+    )
 
 @lru_cache() # Cache the settings object for performance
 def get_settings() -> AppSettings:

@@ -9,17 +9,7 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 from dataclasses import dataclass
 
-class MessageType(Enum):
-    """Types of messages that can be sent between agents"""
-    TASK_REQUEST = "task_request"
-    TASK_RESPONSE = "task_response"
-    QUERY = "query"
-    QUERY_RESPONSE = "query_response"
-    STATUS_UPDATE = "status_update"
-    ERROR = "error"
-    HEARTBEAT = "heartbeat"
-    COORDINATION = "coordination"
-    KNOWLEDGE_SHARE = "knowledge_share"
+from backend.app.schemas.message_types import MessageType
 
 @dataclass
 class Message:

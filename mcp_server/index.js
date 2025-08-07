@@ -18,6 +18,9 @@ import {
 import pg from 'pg';
 import redis from 'redis';
 import axios from 'axios';
+import { spawn } from 'child_process';
+import http from 'http';
+import fs from 'fs';
 
 const { Client } = pg;
 
@@ -29,7 +32,29 @@ const CONFIG = {
   OLLAMA_URL: process.env.OLLAMA_URL || 'http://localhost:11434',
   CHROMADB_URL: process.env.CHROMADB_URL || 'http://localhost:8000',
   QDRANT_URL: process.env.QDRANT_URL || 'http://localhost:6333',
+  // External tool integrations
+  SEQUENTIAL_THINKING_IMAGE: process.env.SEQUENTIAL_THINKING_IMAGE || 'mcp/sequentialthinking',
+  CONTEXT7_URL: process.env.CONTEXT7_URL || '',
+  CONTEXT7_API_KEY: process.env.CONTEXT7_API_KEY || ''
 };
+
+// Resolve allowed docker images for generic docker_exec tool
+function getAllowedDockerImages() {
+  const fromEnv = (process.env.DOCKER_TOOL_WHITELIST || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+  let fromFile = [];
+  try {
+    const path = new URL('./external-allowed-images.json', import.meta.url);
+    if (fs.existsSync(path)) {
+      const txt = fs.readFileSync(path, 'utf-8');
+      const arr = JSON.parse(txt);
+      if (Array.isArray(arr)) fromFile = arr.filter(x => typeof x === 'string');
+    }
+  } catch {}
+  return Array.from(new Set([...fromEnv, ...fromFile]));
+}
 
 // Database connections
 let pgClient;
@@ -123,6 +148,12 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
         mimeType: "application/json",
         name: "Agent Workspaces",
         description: "Agent workspace data and outputs"
+      },
+      {
+        uri: "sutazai://context7/status",
+        mimeType: "application/json",
+        name: "Context7 Status",
+        description: "Reachability and configuration status of Context7 service"
       }
     ],
   };
@@ -150,6 +181,8 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
         
       case "sutazai://agents/workspaces":
         return await getAgentWorkspaces();
+      case "sutazai://context7/status":
+        return await getContext7Status();
         
       default:
         throw new McpError(ErrorCode.InvalidRequest, `Unknown resource: ${uri}`);
@@ -347,6 +380,64 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["task_description", "agents"]
         }
       }
+      ,
+      {
+        name: "sequential_thinking_step",
+        description: "Run a Sequential Thinking step via the MCP sequentialthinking container",
+        inputSchema: {
+          type: "object",
+          properties: {
+            thought: { type: "string" },
+            nextThoughtNeeded: { type: "boolean", default: false },
+            thoughtNumber: { type: "integer", default: 1 },
+            totalThoughts: { type: "integer", default: 1 }
+          },
+          required: ["thought"]
+        }
+      },
+      {
+        name: "context7",
+        description: "Interact with an Upstash Context7 service (upsert/query)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            action: { type: "string", enum: ["upsert", "query"], default: "query" },
+            namespace: { type: "string", default: "default" },
+            // upsert
+            id: { type: "string" },
+            text: { type: "string" },
+            metadata: { type: "object" },
+            // query
+            query: { type: "string" },
+            topK: { type: "integer", default: 5 },
+            filter: { type: "object" }
+          },
+          required: ["action", "namespace"]
+        }
+      }
+      ,
+      {
+        name: "sequential_thinking_health",
+        description: "Health-check Sequential Thinking CLI by invoking --help",
+        inputSchema: {
+          type: "object",
+          properties: {},
+          additionalProperties: false
+        }
+      },
+      {
+        name: "docker_exec",
+        description: "Execute a whitelisted Docker image with optional args/stdin and return output",
+        inputSchema: {
+          type: "object",
+          properties: {
+            image: { type: "string", description: "Docker image name (must be whitelisted)" },
+            args: { type: "array", items: { type: "string" }, default: [] },
+            stdin: { type: "string", description: "Optional string piped to stdin" }
+          },
+          required: ["image"]
+        }
+      }
     ],
   };
 });
@@ -376,7 +467,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         
       case "orchestrate_multi_agent":
         return await orchestrateMultiAgent(args);
-        
+      case "sequential_thinking_step":
+        return await sequentialThinkingStep(args);
+      case "sequential_thinking_health":
+        return await sequentialThinkingHealth();
+      case "context7":
+        return await context7Tool(args);
+      case "docker_exec":
+        return await dockerExecTool(args);
+      
       default:
         throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
     }
@@ -963,6 +1062,36 @@ async function main() {
       timestamp: new Date().toISOString()
     }));
 
+    // Start lightweight HTTP health server (optional)
+    const port = Number(process.env.MCP_HTTP_PORT || 3030);
+    const srv = http.createServer(async (req, res) => {
+      try {
+        // CORS
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Content-Type', 'application/json');
+        if (req.method === 'OPTIONS') { res.statusCode = 204; return res.end(); }
+
+        if (req.url === '/health') {
+          const info = await getServerInfo();
+          res.statusCode = 200;
+          return res.end(JSON.stringify({ ok: true, uptime: process.uptime(), ...info }));
+        }
+        if (req.url === '/info') {
+          const info = await getServerInfo();
+          res.statusCode = 200;
+          return res.end(JSON.stringify(info));
+        }
+        res.statusCode = 404;
+        res.end(JSON.stringify({ ok: false, error: 'Not found' }));
+      } catch (e) {
+        res.statusCode = 500;
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    srv.listen(port, () => {
+      console.error(JSON.stringify({ type: 'info', message: `MCP HTTP health listening on :${port}` }));
+    });
+
   } catch (error) {
     console.error(JSON.stringify({
       type: "error",
@@ -972,6 +1101,172 @@ async function main() {
     }));
     process.exit(1);
   }
+}
+
+// ===========================================
+// EXTERNAL INTEGRATIONS
+// ===========================================
+
+async function sequentialThinkingStep(args) {
+  const input = {
+    thought: args.thought ?? "",
+    nextThoughtNeeded: Boolean(args.nextThoughtNeeded ?? false),
+    thoughtNumber: Number(args.thoughtNumber ?? 1),
+    totalThoughts: Number(args.totalThoughts ?? 1)
+  };
+
+  const image = CONFIG.SEQUENTIAL_THINKING_IMAGE;
+
+  return new Promise((resolve) => {
+    const proc = spawn('docker', ['run', '--rm', '-i', image, '--input', JSON.stringify(input)]);
+    let stdout = '';
+    let stderr = '';
+
+    proc.stdout.on('data', (d) => { stdout += d.toString(); });
+    proc.stderr.on('data', (d) => { stderr += d.toString(); });
+    proc.on('close', (code) => {
+      let payload;
+      try {
+        payload = JSON.parse(stdout.trim());
+      } catch (e) {
+        payload = { raw: stdout.trim(), stderr: stderr.trim(), exitCode: code };
+      }
+      resolve({
+        content: [
+          { type: 'text', text: JSON.stringify({ success: code === 0, output: payload, stderr: stderr.trim() }, null, 2) }
+        ]
+      });
+    });
+  });
+}
+
+async function sequentialThinkingHealth() {
+  const image = CONFIG.SEQUENTIAL_THINKING_IMAGE;
+  return new Promise((resolve) => {
+    const proc = spawn('docker', ['run', '--rm', image, '--help']);
+    let stdout = '';
+    let stderr = '';
+    proc.stdout.on('data', (d) => { stdout += d.toString(); });
+    proc.stderr.on('data', (d) => { stderr += d.toString(); });
+    proc.on('close', (code) => {
+      resolve({
+        content: [
+          { type: 'text', text: JSON.stringify({ success: code === 0, exitCode: code, help: stdout.trim(), stderr: stderr.trim() }, null, 2) }
+        ]
+      });
+    });
+  });
+}
+
+async function context7Tool(args) {
+  if (!CONFIG.CONTEXT7_URL) {
+    return {
+      content: [ { type: 'text', text: JSON.stringify({ success: false, error: 'CONTEXT7_URL not configured' }, null, 2) } ]
+    };
+  }
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (CONFIG.CONTEXT7_API_KEY) headers['Authorization'] = `Bearer ${CONFIG.CONTEXT7_API_KEY}`;
+
+  try {
+    if (args.action === 'upsert') {
+      const body = {
+        namespace: args.namespace,
+        id: args.id,
+        text: args.text,
+        metadata: args.metadata || {}
+      };
+      const res = await axios.post(`${CONFIG.CONTEXT7_URL.replace(/\/$/, '')}/upsert`, body, { headers });
+      return { content: [ { type: 'text', text: JSON.stringify({ success: true, result: res.data }, null, 2) } ] };
+    } else if (args.action === 'query') {
+      const body = {
+        namespace: args.namespace,
+        query: args.query,
+        topK: args.topK || 5,
+        filter: args.filter || {}
+      };
+      const res = await axios.post(`${CONFIG.CONTEXT7_URL.replace(/\/$/, '')}/query`, body, { headers });
+      return { content: [ { type: 'text', text: JSON.stringify({ success: true, result: res.data }, null, 2) } ] };
+    }
+    return { content: [ { type: 'text', text: JSON.stringify({ success: false, error: 'Unknown action' }, null, 2) } ] };
+  } catch (error) {
+    return { content: [ { type: 'text', text: JSON.stringify({ success: false, error: error.message }, null, 2) } ] };
+  }
+}
+
+async function getContext7Status() {
+  try {
+    if (!CONFIG.CONTEXT7_URL) {
+      return {
+        contents: [
+          { uri: 'sutazai://context7/status', mimeType: 'application/json', text: JSON.stringify({ configured: false }, null, 2) }
+        ]
+      };
+    }
+    const base = CONFIG.CONTEXT7_URL.replace(/\/$/, '');
+    const headers = {};
+    if (CONFIG.CONTEXT7_API_KEY) headers['Authorization'] = `Bearer ${CONFIG.CONTEXT7_API_KEY}`;
+    let probePath = '/health';
+    let ok = false;
+    try {
+      const res = await axios.get(base + probePath, { headers, timeout: 3000 });
+      ok = res.status >= 200 && res.status < 300;
+    } catch {
+      probePath = '/status';
+      try {
+        const res2 = await axios.get(base + probePath, { headers, timeout: 3000 });
+        ok = res2.status >= 200 && res2.status < 300;
+      } catch {
+        // fall back to root
+        const res3 = await axios.get(base, { headers, timeout: 3000 });
+        ok = res3.status >= 200 && res3.status < 300;
+        probePath = '/';
+      }
+    }
+    return {
+      contents: [
+        { uri: 'sutazai://context7/status', mimeType: 'application/json', text: JSON.stringify({ configured: true, url: base, probe: probePath, reachable: ok, timestamp: new Date().toISOString() }, null, 2) }
+      ]
+    };
+  } catch (error) {
+    return {
+      contents: [
+        { uri: 'sutazai://context7/status', mimeType: 'application/json', text: JSON.stringify({ configured: true, url: CONFIG.CONTEXT7_URL, reachable: false, error: error.message, timestamp: new Date().toISOString() }, null, 2) }
+      ]
+    };
+  }
+}
+
+async function dockerExecTool(args) {
+  const allowed = getAllowedDockerImages();
+  const image = String(args.image || '').trim();
+  const extraArgs = Array.isArray(args.args) ? args.args.map(String) : [];
+  const stdin = typeof args.stdin === 'string' ? args.stdin : undefined;
+
+  if (!image) {
+    return { content: [ { type: 'text', text: JSON.stringify({ success: false, error: 'image required' }, null, 2) } ] };
+  }
+  if (allowed.length && !allowed.includes(image)) {
+    return { content: [ { type: 'text', text: JSON.stringify({ success: false, error: `image not allowed: ${image}`, allowed }, null, 2) } ] };
+  }
+
+  return new Promise((resolve) => {
+    const argv = ['run', '--rm'];
+    if (stdin) argv.push('-i');
+    argv.push(image, ...extraArgs);
+    const proc = spawn('docker', argv);
+    let stdout = '';
+    let stderr = '';
+    if (stdin) proc.stdin.write(stdin);
+    if (stdin) proc.stdin.end();
+    proc.stdout.on('data', (d) => { stdout += d.toString(); });
+    proc.stderr.on('data', (d) => { stderr += d.toString(); });
+    proc.on('close', (code) => {
+      let parsed;
+      try { parsed = JSON.parse(stdout.trim()); } catch { parsed = { raw: stdout.trim() }; }
+      resolve({ content: [ { type: 'text', text: JSON.stringify({ success: code === 0, exitCode: code, output: parsed, stderr: stderr.trim() }, null, 2) } ] });
+    });
+  });
 }
 
 // Handle graceful shutdown
@@ -1004,3 +1299,39 @@ main().catch((error) => {
   }));
   process.exit(1);
 }); 
+
+async function getServerInfo() {
+  // Summaries for resources and tools
+  const resources = [
+    'sutazai://agents/list',
+    'sutazai://models/available',
+    'sutazai://agents/tasks',
+    'sutazai://system/metrics',
+    'sutazai://knowledge/embeddings',
+    'sutazai://agents/workspaces',
+    'sutazai://context7/status'
+  ];
+  const tools = [
+    'deploy_agent',
+    'execute_agent_task',
+    'manage_model',
+    'query_knowledge_base',
+    'monitor_system',
+    'manage_agent_workspace',
+    'orchestrate_multi_agent',
+    'sequential_thinking_step',
+    'sequential_thinking_health',
+    'context7'
+  ];
+  return {
+    name: 'sutazai-mcp-server',
+    version: '1.0.0',
+    resources,
+    tools,
+    env: {
+      BACKEND_API_URL: CONFIG.BACKEND_API_URL,
+      OLLAMA_URL: CONFIG.OLLAMA_URL,
+      CONTEXT7_URL: CONFIG.CONTEXT7_URL ? 'configured' : 'unset'
+    }
+  };
+}

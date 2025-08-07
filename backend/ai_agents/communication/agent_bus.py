@@ -16,6 +16,7 @@ from typing import Dict, List, Any, Optional, Callable, Set
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
 from enum import Enum
+from backend.app.schemas.message_types import MessageType, MessagePriority
 import redis.asyncio as redis
 from collections import defaultdict
 import weakref
@@ -23,24 +24,7 @@ import weakref
 logger = logging.getLogger(__name__)
 
 
-class MessagePriority(Enum):
-    CRITICAL = 1
-    HIGH = 2
-    NORMAL = 3
-    LOW = 4
-    BACKGROUND = 5
-
-
-class MessageType(Enum):
-    TASK_REQUEST = "task_request"
-    TASK_RESPONSE = "task_response"
-    CAPABILITY_QUERY = "capability_query"
-    COLLABORATION_REQUEST = "collaboration_request"
-    RESOURCE_REQUEST = "resource_request"
-    STATUS_UPDATE = "status_update"
-    EMERGENCY_SIGNAL = "emergency_signal"
-    LEARNING_UPDATE = "learning_update"
-    HEALTH_CHECK = "health_check"
+# Using canonical MessageType and MessagePriority
 
 
 @dataclass
@@ -73,7 +57,9 @@ class AgentMessage:
             'sender_id': self.sender_id,
             'recipient_id': self.recipient_id,
             'message_type': self.message_type.value,
+            'message_type_name': self.message_type.name,
             'priority': self.priority.value,
+            'priority_name': self.priority.name,
             'payload': json.dumps(self.payload),
             'timestamp': self.timestamp,
             'correlation_id': self.correlation_id,
@@ -85,12 +71,26 @@ class AgentMessage:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AgentMessage':
         """Create message from dictionary"""
+        # Prefer robust parsing by name if available
+        mt = data.get('message_type_name') or data.get('message_type')
+        pr = data.get('priority_name') if 'priority_name' in data else data.get('priority')
+        try:
+            message_type = MessageType(mt) if isinstance(mt, str) and mt.lower() == mt else MessageType[mt]
+        except Exception:
+            message_type = MessageType.TASK_REQUEST
+        try:
+            if isinstance(pr, str):
+                priority = MessagePriority[pr]
+            else:
+                priority = MessagePriority(pr)
+        except Exception:
+            priority = MessagePriority.NORMAL
         return cls(
             id=data['id'],
             sender_id=data['sender_id'],
             recipient_id=data.get('recipient_id'),
-            message_type=MessageType(data['message_type']),
-            priority=MessagePriority(data['priority']),
+            message_type=message_type,
+            priority=priority,
             payload=json.loads(data['payload']),
             timestamp=data['timestamp'],
             correlation_id=data.get('correlation_id'),

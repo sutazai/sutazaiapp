@@ -9,6 +9,16 @@
         "mcp/sequentialthinking"
       ],
       "description": "Sequential Thinking MCP server for step-by-step reasoning"
+    },
+    "sutazai-mcp-server": {
+      "command": "node",
+      "args": ["/opt/sutazaiapp/mcp_server/index.js"],
+      "env": {
+        "BACKEND_API_URL": "http://localhost:8000",
+        "OLLAMA_URL": "http://localhost:11434",
+        "SEQUENTIAL_THINKING_IMAGE": "mcp/sequentialthinking"
+      },
+      "description": "Primary SutazAI MCP server exposing agents, models, sequential thinking, and Context7"
     }
   }
 }

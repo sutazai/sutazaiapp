@@ -394,6 +394,147 @@ curl -X POST http://localhost:8000/api/v1/agents/deploy \
   -d '{"agent_type": "autogpt", "name": "test-agent"}'
 ```
 
+## ♻️ Run with Docker Compose
+
+We provide a compose file that mounts the Docker socket and exposes an HTTP health port so the MCP server can orchestrate the Sequential Thinking container and be probed by tests:
+
+```bash
+# from repo root
+cp mcp_server/config.example.env mcp_server/.env  # set env vars
+docker compose -f docker-compose.mcp.yml up -d --build
+
+# health
+curl http://localhost:3030/health | jq .
+```
+
+Notes:
+- The service runs as root (user: 0:0) to access `/var/run/docker.sock`.
+- The container installs `docker.io` so it can invoke `docker run`.
+- Override `MCP_HTTP_PORT` in the env file to change the health port.
+
+## ✅ Health endpoints
+
+The MCP process exposes a lightweight HTTP server:
+- `GET /health` → `{ ok: true, uptime, tools, resources }`
+- `GET /info` → `{ name, version, tools, resources, env }`
+
+
+## 🔗 Integrating additional MCP tools (Sequential Thinking, Context7)
+
+This MCP server can orchestrate two additional tools so you can use all three under one MCP server:
+
+1) Sequential Thinking CLI (from modelcontextprotocol/servers)
+
+```bash
+cd /opt/sutazaiapp
+git clone https://github.com/modelcontextprotocol/servers.git
+
+# Option A: build from subdir
+docker build -t mcp/sequentialthinking \
+  -f servers/src/sequentialthinking/Dockerfile \
+  servers/src/sequentialthinking
+
+# Option B: context path root
+docker build -t mcp/sequentialthinking \
+  -f servers/src/sequentialthinking/Dockerfile \
+  servers
+
+# Quick smoke test
+docker run --rm -i mcp/sequentialthinking \
+  --input '{"thought":"Test","nextThoughtNeeded":false,"thoughtNumber":1,"totalThoughts":1}'
+```
+
+Then set `SEQUENTIAL_THINKING_IMAGE=mcp/sequentialthinking` in `mcp_server/.env`. The MCP tool `sequential_thinking_step` will call this container via Docker.
+
+2) Upstash Context7
+
+- Deploy or run a Context7-compatible service (see https://github.com/upstash/context7)
+- Set `CONTEXT7_URL` and optional `CONTEXT7_API_KEY` in `mcp_server/.env`
+- Use the MCP tool `context7` with actions `upsert` and `query`
+
+Example Claude tool calls:
+
+```json
+// Sequential Thinking
+{
+  "tool": "sequential_thinking_step",
+  "arguments": {
+    "thought": "Evaluate next action",
+    "nextThoughtNeeded": true,
+    "thoughtNumber": 2,
+    "totalThoughts": 5
+  }
+}
+
+// Context7 upsert
+{
+  "tool": "context7",
+  "arguments": {
+    "action": "upsert",
+    "namespace": "docs",
+    "id": "doc-1",
+    "text": "Vectorize and store this content",
+    "metadata": {"source": "manual"}
+  }
+}
+
+// Context7 query
+{
+  "tool": "context7",
+  "arguments": {
+    "action": "query",
+    "namespace": "docs",
+    "query": "content",
+    "topK": 5
+  }
+}
+```
+
+With these configured, Claude sees one MCP server (sutazai-mcp-server) exposing all three capabilities.
+
+### Adding more external CLI-based MCP servers
+
+You can run additional MCP-style tools from this single MCP server using the generic `docker_exec` tool.
+
+1) Whitelist the image:
+   - Copy `mcp_server/external-allowed-images.example.json` to `mcp_server/external-allowed-images.json`
+   - Add your image names (e.g., `"myorg/my-mcp-cli"`)
+   - Or set `DOCKER_TOOL_WHITELIST` env var (comma-separated list)
+
+2) Call the tool from Claude/Codex:
+```json
+{
+  "tool": "docker_exec",
+  "arguments": {
+    "image": "myorg/my-mcp-cli",
+    "args": ["--version"]
+  }
+}
+```
+
+You can also pass `stdin` if your CLI reads input:
+```json
+{
+  "tool": "docker_exec",
+  "arguments": {
+    "image": "myorg/my-mcp-cli",
+    "args": ["--input", "-"],
+    "stdin": "{\"hello\":\"world\"}"
+  }
+}
+```
+
+This makes it simple to add more MCP servers in the future while keeping a single unified MCP endpoint for clients.
+
+## 🧩 Client configuration (Claude & Codex)
+
+Two example client configs are provided:
+
+- `claude.code.config.json` includes a `sutazai-mcp-server` entry. Copy relevant parts into your Claude Desktop/CLI config (usually `~/.config/claude/claude_desktop_config.json`).
+- `configs/mcp/codex.mcp.config.example.json` provides a similar mapping for Codex CLI. Copy/merge into Codex CLI’s MCP configuration location.
+
+
+
 ## 🔧 Usage Examples
 
 ### 1. Deploy and Use an Agent

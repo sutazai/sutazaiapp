@@ -31,6 +31,14 @@ from core.messaging import (
     MessageType, Priority
 )
 
+# Import metrics module
+try:
+    from agents.core.metrics import AgentMetrics, setup_metrics_endpoint
+except ImportError:
+    # Fallback if running in container
+    sys.path.append('/app/agents')
+    from core.metrics import AgentMetrics, setup_metrics_endpoint
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -551,10 +559,14 @@ class TaskAssignmentCoordinator:
 
 # Global coordinator instance
 coordinator = TaskAssignmentCoordinator()
+metrics: Optional[AgentMetrics] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global metrics
     # Startup
+    metrics = AgentMetrics("task_assignment_coordinator")
+    setup_metrics_endpoint(app, metrics)
     await coordinator.initialize()
     yield
     # Shutdown
@@ -596,9 +608,9 @@ async def get_queue_status():
         ]
     }
 
-@app.get("/metrics")
-async def get_metrics():
-    """Get detailed metrics"""
+@app.get("/stats")
+async def get_stats():
+    """Get detailed statistics"""
     return coordinator.metrics.dict()
 
 @app.post("/strategy")

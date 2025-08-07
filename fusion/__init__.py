@@ -148,9 +148,15 @@ def get_version_info():
     """Get detailed version information"""
     return VERSION_INFO.copy()
 
-# System requirements check
-def check_requirements():
-    """Check if all required dependencies are available"""
+# System requirements check (lightweight, lazy)
+def check_requirements(lightweight: bool = True):
+    """Check if all required dependencies appear available.
+
+    When lightweight=True, uses importlib.util.find_spec to avoid importing heavy packages
+    at module import time. Returns a tuple (ok: bool, missing: list[str]).
+    """
+    import importlib.util
+
     required_packages = [
         "torch",
         "numpy",
@@ -159,31 +165,27 @@ def check_requirements():
         "streamlit",
         "plotly",
         "pandas",
-        "scikit-learn"
+        "scikit-learn",
     ]
-    
-    missing_packages = []
-    
-    for package in required_packages:
-        try:
-            __import__(package)
-        except ImportError:
-            missing_packages.append(package)
-    
-    if missing_packages:
-        raise ImportError(
-            f"Missing required packages: {', '.join(missing_packages)}. "
-            f"Please install them using: pip install {' '.join(missing_packages)}"
-        )
-    
-    return True
 
-# Initialize system check
-try:
-    check_requirements()
-except ImportError as e:
-    import warnings
-    warnings.warn(f"Fusion system requirements check failed: {e}", ImportWarning)
+    missing_packages = []
+
+    if lightweight:
+        for package in required_packages:
+            if importlib.util.find_spec(package) is None:
+                missing_packages.append(package)
+        return (len(missing_packages) == 0, missing_packages)
+    else:
+        # Fallback to strict check that actually imports modules (heavier)
+        for package in required_packages:
+            try:
+                __import__(package)
+            except ImportError:
+                missing_packages.append(package)
+        return (len(missing_packages) == 0, missing_packages)
+
+# Note: Do not run requirement checks at import time to avoid performance penalties.
+# Call check_requirements() explicitly from runtime paths that truly need full fusion features.
 
 # Configuration defaults
 DEFAULT_CONFIG = {
@@ -256,6 +258,4 @@ def integrate_with_sutazai(agent_orchestrator_url=None, ollama_url=None):
 # Module initialization message
 import logging
 logger = logging.getLogger(__name__)
-logger.info(f"SutazAI Multi-Modal Fusion System v{__version__} initialized")
-logger.info("System components: Coordinator, Representations, Learning, Pipeline, Visualization")
-logger.info("Ready for multi-modal fusion processing with 69 AI agents integration")
+logger.debug(f"SutazAI Multi-Modal Fusion System v{__version__} loaded (lazy requirements check)")

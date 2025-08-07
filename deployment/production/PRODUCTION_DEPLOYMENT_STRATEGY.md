@@ -1,5 +1,7 @@
 # SutazAI automation system Production Deployment Strategy
 
+> Deployment Reality: This strategy references service-mesh components and large agent counts (e.g., 84+ agents). The current docker-compose provisions a lean core (backend, frontend, Ollama, Postgres/Redis, vector stores, monitoring) without Kong/Consul/RabbitMQ. Treat mesh and large-scale claims as target-state guidance unless you extend the deployment.
+
 ## Overview
 This document outlines the comprehensive production deployment strategy for the SutazAI automation system system, supporting 84+ AI agents with high availability, scalability, and security.
 

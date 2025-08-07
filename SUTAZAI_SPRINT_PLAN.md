@@ -1,5 +1,7 @@
 # SUTAZAI System - Sprint Plan
 
+> Deployment Reality: Tasks mentioning RabbitMQ, Kong, and Consul assume those services are deployed. They are not present in the current docker-compose; messaging runs over Redis Streams. Either provision these services first or adjust scope to the existing mesh.
+
 ## Sprint 1: Foundation Fix
 **Duration**: 2 weeks (10 working days)  
 **Goal**: Fix critical blockers and establish core agent functionality  

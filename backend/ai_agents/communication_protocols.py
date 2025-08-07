@@ -10,9 +10,11 @@ import time
 import uuid
 from abc import ABC, abstractmethod
 from collections import defaultdict, deque
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
+from backend.app.schemas.message_types import MessageType, MessagePriority
+from backend.app.schemas.message_model import Message as Message
 from typing import Any, Dict, List, Optional, Set, Union, Callable, Awaitable
 import aiohttp
 from aiohttp import web, WSMsgType
@@ -24,55 +26,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class MessageType(Enum):
-    """Types of messages in the communication protocol."""
-    # Basic communication
-    REQUEST = "request"
-    RESPONSE = "response"
-    NOTIFICATION = "notification"
-    HEARTBEAT = "heartbeat"
-    
-    # Task coordination
-    TASK_ASSIGNMENT = "task_assignment"
-    TASK_COMPLETION = "task_completion"
-    TASK_FAILURE = "task_failure"
-    TASK_PROGRESS = "task_progress"
-    
-    # Agent management
-    AGENT_REGISTER = "agent_register"
-    AGENT_UNREGISTER = "agent_unregister"
-    AGENT_STATUS_UPDATE = "agent_status_update"
-    AGENT_CAPABILITY_UPDATE = "agent_capability_update"
-    
-    # Workflow coordination
-    WORKFLOW_START = "workflow_start"
-    WORKFLOW_COMPLETE = "workflow_complete"
-    WORKFLOW_FAILURE = "workflow_failure"
-    WORKFLOW_PAUSE = "workflow_pause"
-    WORKFLOW_RESUME = "workflow_resume"
-    
-    # System events
-    SYSTEM_ALERT = "system_alert"
-    RESOURCE_UPDATE = "resource_update"
-    CONFIGURATION_CHANGE = "configuration_change"
-    
-    # Collaboration
-    COLLABORATION_REQUEST = "collaboration_request"
-    COLLABORATION_RESPONSE = "collaboration_response"
-    KNOWLEDGE_SHARE = "knowledge_share"
-    
-    # Error handling
-    ERROR = "error"
-    RETRY = "retry"
-
-
-class MessagePriority(Enum):
-    """Message priority levels."""
-    LOW = 0
-    NORMAL = 1
-    HIGH = 2
-    URGENT = 3
-    CRITICAL = 4
+# Using canonical MessageType and MessagePriority
 
 
 class DeliveryMode(Enum):
@@ -83,83 +37,7 @@ class DeliveryMode(Enum):
     REQUEST_RESPONSE = "request_response"
 
 
-@dataclass
-class Message:
-    """Core message structure for agent communication."""
-    id: str
-    type: MessageType
-    sender: str
-    recipient: Optional[str] = None  # None for broadcast
-    payload: Dict[str, Any] = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=datetime.now)
-    priority: MessagePriority = MessagePriority.NORMAL
-    delivery_mode: DeliveryMode = DeliveryMode.FIRE_AND_FORGET
-    correlation_id: Optional[str] = None  # For request-response
-    reply_to: Optional[str] = None
-    ttl: Optional[int] = None  # Time to live in seconds
-    retry_count: int = 0
-    max_retries: int = 3
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert message to dictionary."""
-        return {
-            "id": self.id,
-            "type": self.type.value,
-            "sender": self.sender,
-            "recipient": self.recipient,
-            "payload": self.payload,
-            "timestamp": self.timestamp.isoformat(),
-            "priority": self.priority.value,
-            "delivery_mode": self.delivery_mode.value,
-            "correlation_id": self.correlation_id,
-            "reply_to": self.reply_to,
-            "ttl": self.ttl,
-            "retry_count": self.retry_count,
-            "max_retries": self.max_retries,
-            "metadata": self.metadata
-        }
-    
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Message':
-        """Create message from dictionary."""
-        return cls(
-            id=data["id"],
-            type=MessageType(data["type"]),
-            sender=data["sender"],
-            recipient=data.get("recipient"),
-            payload=data.get("payload", {}),
-            timestamp=datetime.fromisoformat(data["timestamp"]),
-            priority=MessagePriority(data.get("priority", MessagePriority.NORMAL.value)),
-            delivery_mode=DeliveryMode(data.get("delivery_mode", DeliveryMode.FIRE_AND_FORGET.value)),
-            correlation_id=data.get("correlation_id"),
-            reply_to=data.get("reply_to"),
-            ttl=data.get("ttl"),
-            retry_count=data.get("retry_count", 0),
-            max_retries=data.get("max_retries", 3),
-            metadata=data.get("metadata", {})
-        )
-    
-    def is_expired(self) -> bool:
-        """Check if message has expired based on TTL."""
-        if not self.ttl:
-            return False
-        
-        elapsed = (datetime.now() - self.timestamp).total_seconds()
-        return elapsed > self.ttl
-    
-    def create_response(self, payload: Dict[str, Any]) -> 'Message':
-        """Create a response message."""
-        return Message(
-            id=f"resp_{uuid.uuid4().hex[:8]}",
-            type=MessageType.RESPONSE,
-            sender=self.recipient or "system",
-            recipient=self.sender,
-            payload=payload,
-            correlation_id=self.id,
-            priority=self.priority,
-            delivery_mode=DeliveryMode.FIRE_AND_FORGET
-        )
+# Use canonical Message from schemas.message_model
 
 
 @dataclass

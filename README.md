@@ -1,6 +1,6 @@
-# 🚀 SutazAI - Local AI Task Automation
+# 🚀 SutazAI — Local AI Automation
 
-> Practical task automation using local AI with GPT-OSS model. No cloud dependencies, no API costs, just working automation tools for developers.
+Practical task automation with a local LLM (Ollama) backed by a FastAPI backend, Streamlit frontend, vector stores (Qdrant/Chroma/FAISS), and a full monitoring stack. No cloud keys required by default.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org)
@@ -9,49 +9,61 @@
 
 ## 🎯 What It Does
 
-- **Code Review**: Automated code analysis and improvement suggestions
-- **Security Scanning**: Find vulnerabilities and security issues
-- **Test Generation**: Create unit tests automatically
-- **Deployment Automation**: CI/CD pipeline automation
-- **Documentation**: Generate and maintain documentation
-- **All Local**: Runs entirely on your machine, no external APIs
+- Chat and generation via Ollama (default model: `tinyllama`)
+- Code improvement workflow endpoint (background analysis + report)
+- Lightweight task mesh over Redis Streams (enqueue/results/agents)
+- Vector search services (standalone FAISS; LlamaIndex helper)
+- Monitoring with Prometheus, Grafana, Loki/Promtail, system exporters
+- Runs locally; no external API keys required for core flows
 
 ## 🚀 Quick Start
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/sutazai.git
-cd sutazai
+# 1) Start the stack (Docker)
+docker compose up -d
 
-# 2. Start the system
-docker-compose up -d
+# 2) Open core endpoints
+# Backend API (FastAPI):
+open http://localhost:10010/docs  # or visit manually
 
-# 3. System will be available at:
-#    - Backend API: http://localhost:10010/docs
-#    - Frontend UI: http://localhost:10011
-#    - Health: http://localhost:10010/health
+# Frontend (Streamlit):
+open http://localhost:10011
+
+# Health and metrics:
+curl http://localhost:10010/health
+curl http://localhost:10010/public/metrics
+
+# Mesh health (Redis Streams):
+curl http://localhost:10010/api/v1/mesh/health
 ```
 
-The system will start the core infrastructure services.
+Core published ports (external:internal)
+- Backend 10010:8000, Frontend 10011:8501
+- Postgres 10000:5432, Redis 10001:6379
+- Qdrant 10101:6333 + 10102:6334, ChromaDB 10100:8000, FAISS 10103:8000
+- Neo4j 10002:7474 + 10003:7687, Ollama 10104:10104
+- Prometheus 10200:9090, Grafana 10201:3000, Loki 10202:3100
 
-## 💻 Example Usage
+## 💻 Example Calls
 
-### Code Review Workflow
-```python
-# Review your Python code
-python workflows/simple_code_review.py
+Chat (XSS-hardened endpoint)
+```bash
+curl -sS -X POST http://localhost:10010/api/v1/chat/ \
+  -H 'Content-Type: application/json' \
+  -d '{"message": "Hello, SutazAI!"}' | jq .
 ```
 
-### Security Scan
-```python
-# Scan for vulnerabilities
-python workflows/security_scan_workflow.py
+Models
+```bash
+curl -sS http://localhost:10010/api/v1/models/ | jq .
 ```
 
-### Deployment Automation
-```python
-# Automate your deployment
-python workflows/deployment_automation.py
+Mesh enqueue/results
+```bash
+curl -sS -X POST http://localhost:10010/api/v1/mesh/enqueue \
+  -H 'Content-Type: application/json' \
+  -d '{"topic": "code_tasks", "task": {"op": "scan", "path": "/opt/sutazaiapp"}}'
+curl -sS 'http://localhost:10010/api/v1/mesh/results?topic=code_tasks&count=5' | jq .
 ```
 
 ## 🛠️ Requirements
@@ -64,31 +76,29 @@ python workflows/deployment_automation.py
 
 ## 📦 What's Included
 
-### Currently Running Services (13 containers)
-**IMPORTANT**: Most are STUB IMPLEMENTATIONS with basic "Hello World" endpoints
-- `ai-agent-orchestrator` - Basic HTTP service (stub)
-- `multi-agent-coordinator` - Basic HTTP service (stub) 
-- `task-assignment-coordinator` - Basic HTTP service (stub)
-- `ai-senior-engineer-phase1` - Basic HTTP service (stub)
-- Plus 9 other basic container services
-- **ACTUAL AI FUNCTIONALITY**: Limited to Ollama with GPT-OSS model
+Core services (compose)
+- Backend (FastAPI), Frontend (Streamlit), Ollama, Postgres, Redis
+- Vector DBs: Qdrant, ChromaDB; optional FAISS vector service
+- Neo4j (for knowledge-graph features under flags)
+- Monitoring: Prometheus, Grafana, Loki/Promtail, exporters
 
-### Local AI Model
-- **GPT-OSS**: The exclusive model for all AI operations
-- **Ollama**: Local GPT-OSS model serving, no internet required
-- **100% Private**: Your code never leaves your machine
+Agents and tools
+- Hardware Resource Optimizer (privileged agent), GPT engineering tools, LlamaIndex helper, AI metrics exporter, and more. See the overview for the complete list and ports.
+
+Local AI model
+- Default: `tinyllama` via Ollama (`http://localhost:10104`). Other models can be pulled via the `/api/v1/models/pull` endpoint or directly with Ollama.
 
 ## 🎮 Commands
 
 ```bash
 # Start the system
-docker-compose up -d
+docker compose up -d
 
 # Stop the system
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Check status
 curl http://localhost:10010/health
@@ -96,14 +106,16 @@ curl http://localhost:10010/health
 
 ## 📚 Documentation
 
-- [Project Overview](docs/overview.md) - Complete project summary and architecture
-- [Setup Guide](docs/setup/) - Installation and configuration instructions
-- [API Documentation](docs/backend/api_reference.md) - Complete API reference
-- [Frontend Guide](docs/frontend/) - UI components and styling
-- [Deployment Guide](docs/ci-cd/) - CI/CD and deployment processes
-- [Working Agents List](docs/PRACTICAL_AGENTS_LIST.md) - Available AI agents
-- [Example Workflows](workflows/) - Automation workflow examples
-- [Live API Docs](http://localhost:10010/docs) - Interactive API documentation (after starting)
+- SUTAZAI_CODEBASE_OVERVIEW.md — Architecture, components, ports, dependencies
+- docs/backend_openapi.json — Exported OpenAPI schema (generated)
+- docs/backend_endpoints.md — Endpoints list grouped by tag (generated)
+- Live API Docs — http://localhost:10010/docs (after `docker compose up -d`)
+
+Generate or refresh API docs
+```bash
+python3 scripts/export_openapi.py
+python3 scripts/summarize_openapi.py
+```
 
 ## 🔒 Privacy & Security
 
@@ -126,9 +138,6 @@ MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-**CRITICAL WARNING**: 
-- This system is ~90% documentation and ~10% implementation
-- Most "AI agents" are placeholder HTTP services returning stub responses
-- NO AGI, quantum computing, or advanced AI orchestration exists
-- Documentation claiming 149 agents is FALSE - only 13 basic containers run
-- Following old documentation will lead to system failure
+Note:
+- Messaging is currently implemented via Redis Streams (lightweight mesh). RabbitMQ utilities exist in the repo but are not provisioned by default.
+- Some services in docker-compose.yml are optional or disabled; see the overview for the accurate matrix of active ports.

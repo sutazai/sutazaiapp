@@ -1,0 +1,3 @@
+# Python requirements for operational scripts
+python-consul==1.1.0
+

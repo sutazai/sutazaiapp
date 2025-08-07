@@ -25,6 +25,7 @@ from typing import Dict, List, Any, Optional, Set, Callable, Union
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timedelta
 from enum import Enum
+from backend.app.schemas.message_types import MessageType, MessagePriority
 import redis.asyncio as redis
 import aiohttp
 from concurrent.futures import ThreadPoolExecutor
@@ -37,47 +38,7 @@ from cryptography.fernet import Fernet
 logger = logging.getLogger(__name__)
 
 
-class MessageType(Enum):
-    """Message types for agent communication"""
-    # Control Messages
-    TASK_ASSIGNMENT = "task_assignment"
-    TASK_COMPLETION = "task_completion"
-    TASK_STATUS_UPDATE = "task_status_update"
-    COORDINATION_REQUEST = "coordination_request"
-    COORDINATION_RESPONSE = "coordination_response"
-    
-    # Information Sharing
-    KNOWLEDGE_SHARE = "knowledge_share"
-    DATA_BROADCAST = "data_broadcast"
-    SYSTEM_UPDATE = "system_update"
-    AGENT_ANNOUNCEMENT = "agent_announcement"
-    
-    # Real-time Communication
-    CHAT_MESSAGE = "chat_message"
-    NOTIFICATION = "notification"
-    ALERT = "alert"
-    HEARTBEAT = "heartbeat"
-    
-    # Coordination Patterns
-    HIERARCHICAL_COMMAND = "hierarchical_command"
-    COLLABORATIVE_PROPOSAL = "collaborative_proposal"
-    PIPELINE_DATA = "pipeline_data"
-    SWARM_SIGNAL = "swarm_signal"
-    
-    # System Management
-    HEALTH_CHECK = "health_check"
-    PERFORMANCE_METRIC = "performance_metric"
-    RESOURCE_REQUEST = "resource_request"
-    CAPABILITY_QUERY = "capability_query"
-
-
-class MessagePriority(Enum):
-    """Message priority levels"""
-    CRITICAL = 5
-    HIGH = 4
-    NORMAL = 3
-    LOW = 2
-    BACKGROUND = 1
+# Using canonical MessageType and MessagePriority
 
 
 class CommunicationPattern(Enum):
@@ -115,8 +76,10 @@ class Message:
         """Convert message to dictionary for serialization"""
         data = asdict(self)
         data['message_type'] = self.message_type.value
+        data['message_type_name'] = self.message_type.name
         data['pattern'] = self.pattern.value
         data['priority'] = self.priority.value
+        data['priority_name'] = self.priority.name
         data['timestamp'] = self.timestamp.isoformat()
         if self.expires_at:
             data['expires_at'] = self.expires_at.isoformat()
@@ -125,9 +88,18 @@ class Message:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Message":
         """Create message from dictionary"""
-        data['message_type'] = MessageType(data.get('message_type', 'chat_message'))
+        # Prefer by name when provided to avoid enum value drift
+        mt = data.get('message_type_name') or data.get('message_type', 'chat_message')
+        try:
+            data['message_type'] = MessageType(mt) if isinstance(mt, str) and mt.lower() == mt else MessageType[mt]
+        except Exception:
+            data['message_type'] = MessageType.CHAT_MESSAGE
         data['pattern'] = CommunicationPattern(data.get('pattern', 'point_to_point'))
-        data['priority'] = MessagePriority(data.get('priority', 3))
+        pr = data.get('priority_name') if 'priority_name' in data else data.get('priority', 3)
+        try:
+            data['priority'] = MessagePriority(pr) if isinstance(pr, int) else MessagePriority[pr]
+        except Exception:
+            data['priority'] = MessagePriority.NORMAL
         data['timestamp'] = datetime.fromisoformat(data['timestamp'])
         if data.get('expires_at'):
             data['expires_at'] = datetime.fromisoformat(data['expires_at'])

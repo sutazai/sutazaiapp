@@ -8,37 +8,15 @@ import json
 import logging
 from typing import Dict, List, Optional, Callable, Any
 from datetime import datetime
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 from enum import Enum
 import redis.asyncio as redis
 from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-class MessageType(Enum):
-    TASK_ASSIGNMENT = "task_assignment"
-    TASK_RESULT = "task_result"
-    HEARTBEAT = "heartbeat"
-    STATUS_UPDATE = "status_update"
-    COORDINATION_REQUEST = "coordination_request"
-    COORDINATION_RESPONSE = "coordination_response"
-    WORKFLOW_EVENT = "workflow_event"
-    SYSTEM_NOTIFICATION = "system_notification"
-    BROADCAST = "broadcast"
-    DIRECT_MESSAGE = "direct_message"
-
-@dataclass
-class Message:
-    id: str
-    type: MessageType
-    sender_id: str
-    recipient_id: str
-    content: Dict[str, Any]
-    timestamp: datetime
-    priority: int = 1
-    ttl: Optional[int] = None
-    correlation_id: Optional[str] = None
-    requires_response: bool = False
+from backend.app.schemas.message_types import MessageType
+from backend.app.schemas.message_model import Message
 
 class MessageBus:
     """
@@ -92,16 +70,16 @@ class MessageBus:
     async def send_message(self, message: Message) -> bool:
         """Send a message to the bus"""
         try:
-            # Serialize message
-            message_data = json.dumps(asdict(message), default=str)
+            # Serialize message (canonical shape)
+            message_data = json.dumps(message.to_dict(), default=str)
             
             # Determine routing
-            if message.recipient_id == "*":
+            if message.recipient == "*":
                 # Broadcast message
                 await self.redis_client.publish("broadcast", message_data)
             else:
                 # Direct message
-                channel = f"agent:{message.recipient_id}"
+                channel = f"agent:{message.recipient}"
                 await self.redis_client.publish(channel, message_data)
             
             # Store in persistence layer if needed
@@ -161,7 +139,7 @@ class MessageBus:
                     try:
                         # Parse message
                         message_data = json.loads(message["data"])
-                        msg = Message(**message_data)
+                        msg = Message.from_dict(message_data)
                         
                         # Route to handlers
                         await self._route_message(msg, channel)
@@ -221,15 +199,15 @@ class MessageBus:
     async def send_task_assignment(self, agent_id: str, task_data: Dict[str, Any]) -> str:
         """Send task assignment to an agent"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.TASK_ASSIGNMENT,
-            sender_id="orchestrator",
-            recipient_id=agent_id,
-            content=task_data,
+            sender="orchestrator",
+            recipient=agent_id,
+            payload=task_data,
             timestamp=datetime.now(),
-            requires_response=True
+            requires_response=True,
         )
         
         await self.send_message(message)
@@ -238,17 +216,17 @@ class MessageBus:
     async def send_task_result(self, orchestrator_id: str, task_id: str, result: Dict[str, Any]) -> str:
         """Send task result back to orchestrator"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.TASK_RESULT,
-            sender_id="agent",
-            recipient_id=orchestrator_id,
-            content={
+            sender="agent",
+            recipient=orchestrator_id,
+            payload={
                 "task_id": task_id,
-                "result": result
+                "result": result,
             },
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
         
         await self.send_message(message)
@@ -257,14 +235,14 @@ class MessageBus:
     async def send_heartbeat(self, agent_id: str, health_data: Dict[str, Any]) -> str:
         """Send agent heartbeat"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.HEARTBEAT,
-            sender_id=agent_id,
-            recipient_id="orchestrator",
-            content=health_data,
-            timestamp=datetime.now()
+            sender=agent_id,
+            recipient="orchestrator",
+            payload=health_data,
+            timestamp=datetime.now(),
         )
         
         await self.send_message(message)
@@ -273,14 +251,14 @@ class MessageBus:
     async def send_status_update(self, agent_id: str, status_data: Dict[str, Any]) -> str:
         """Send agent status update"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.STATUS_UPDATE,
-            sender_id=agent_id,
-            recipient_id="orchestrator",
-            content=status_data,
-            timestamp=datetime.now()
+            sender=agent_id,
+            recipient="orchestrator",
+            payload=status_data,
+            timestamp=datetime.now(),
         )
         
         await self.send_message(message)
@@ -289,17 +267,17 @@ class MessageBus:
     async def broadcast_system_notification(self, notification: str, data: Dict[str, Any] = None) -> str:
         """Broadcast system notification to all agents"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.SYSTEM_NOTIFICATION,
-            sender_id="system",
-            recipient_id="*",
-            content={
+            sender="system",
+            recipient="*",
+            payload={
                 "notification": notification,
-                "data": data or {}
+                "data": data or {},
             },
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
         
         await self.send_message(message)
@@ -308,18 +286,18 @@ class MessageBus:
     async def request_coordination(self, sender_id: str, coordination_type: str, data: Dict[str, Any]) -> str:
         """Send coordination request"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.COORDINATION_REQUEST,
-            sender_id=sender_id,
-            recipient_id="orchestrator",
-            content={
+            sender=sender_id,
+            recipient="orchestrator",
+            payload={
                 "coordination_type": coordination_type,
-                "data": data
+                "data": data,
             },
             timestamp=datetime.now(),
-            requires_response=True
+            requires_response=True,
         )
         
         await self.send_message(message)
@@ -328,15 +306,15 @@ class MessageBus:
     async def send_coordination_response(self, recipient_id: str, correlation_id: str, response_data: Dict[str, Any]) -> str:
         """Send coordination response"""
         import uuid
-        
+
         message = Message(
             id=str(uuid.uuid4()),
             type=MessageType.COORDINATION_RESPONSE,
-            sender_id="orchestrator",
-            recipient_id=recipient_id,
-            content=response_data,
+            sender="orchestrator",
+            recipient=recipient_id,
+            payload=response_data,
             timestamp=datetime.now(),
-            correlation_id=correlation_id
+            correlation_id=correlation_id,
         )
         
         await self.send_message(message)

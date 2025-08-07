@@ -31,27 +31,10 @@ import aioredis
 from pydantic import BaseModel
 
 from .base_agent import AgentMessage, AgentStatus
+from backend.app.schemas.message_types import MessageType, MessagePriority
 
 
-class MessagePriority(Enum):
-    """Message priority levels"""
-    CRITICAL = 1
-    HIGH = 2
-    NORMAL = 3
-    LOW = 4
-    BACKGROUND = 5
-
-
-class MessageType(Enum):
-    """Standard message types"""
-    REQUEST = "request"
-    RESPONSE = "response"
-    EVENT = "event"
-    NOTIFICATION = "notification"
-    BROADCAST = "broadcast"
-    HEARTBEAT = "heartbeat"
-    ERROR = "error"
-    SYSTEM = "system"
+# Using canonical MessagePriority and MessageType
 
 
 class RoutingStrategy(Enum):

@@ -10,24 +10,11 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Request/Response models
-class AgentTaskRequest(BaseModel):
-    agent_type: str
-    task_type: str
-    task_data: Dict[str, Any]
-    preferred_agents: Optional[List[str]] = None
-
-class AgentTaskResponse(BaseModel):
-    task_id: str
-    status: str
-    agents_used: List[str]
-    results: Optional[List[Dict[str, Any]]] = None
-    error: Optional[str] = None
-
-class AgentStatusResponse(BaseModel):
-    total_agents: int
-    active_agents: int
-    agents: Dict[str, Dict[str, Any]]
+from backend.app.schemas.agent_protocol import (
+    TaskRequestBasic as AgentTaskRequest,
+    TaskResponseBasic as AgentTaskResponse,
+    AgentStatusSummary as AgentStatusResponse,
+)
 
 # Simple agent manager for minimal backend
 class SimpleAgentManager:

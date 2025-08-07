@@ -8,13 +8,13 @@ RUN apt-get update && apt-get install -y \
     g++ \
     git \
     curl \
-    && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/* && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy shared agent requirements
-COPY ../../agents/base_requirements.txt .
+# Copy requirements
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r base_requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application
 COPY app.py .
@@ -31,11 +31,6 @@ EXPOSE 8530
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8530/health || exit 1
 
-# Run the application
-
-# Run as non-root user
-USER nobody
-
-# Run as non-root user
+# Run as non-root user and start
 USER nobody
 CMD ["python", "app.py"]
