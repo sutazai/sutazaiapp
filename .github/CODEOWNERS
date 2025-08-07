@@ -1,3 +1,20 @@
+# CODEOWNERS for SutazAI
+# Replace @sutazai/architecture and @sutazai/docs with your actual org/team handles.
+
+# Root ownership for critical infra files
+/docker-compose.yml            @sutazai/architecture
+/docker-compose.override.yml   @sutazai/architecture
+/config/**                     @sutazai/architecture
+
+# IMPORTANT is the single source of truth
+/IMPORTANT/**                  @sutazai/architecture @sutazai/docs
+
+# Docs
+/docs/**                       @sutazai/docs
+
+# Ensure CODEOWNERS itself is protected
+/.github/CODEOWNERS            @sutazai/architecture
+
 # CODEOWNERS — formal ownership matrix
 #
 # Replace team slugs below with actual GitHub team handles in your org

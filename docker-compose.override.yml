@@ -1,0 +1,149 @@
+version: "3.9"
+
+networks:
+  sutazai-network:
+    external: true
+
+services:
+  # Authoritative additions from IMPORTANT
+  kong:
+    image: kong:3.5
+    container_name: sutazai-kong
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/etc/kong/kong.yml
+      - KONG_LOG_LEVEL=warn
+    volumes:
+      - ./configs/kong/kong.yml:/etc/kong/kong.yml:ro
+    networks:
+      - sutazai-network
+    ports:
+      - "10005:8000"    # proxy
+      # Admin API intentionally not exposed externally by default
+
+  consul:
+    image: hashicorp/consul:latest
+    container_name: sutazai-consul
+    command: consul agent -server -bootstrap -ui -client=0.0.0.0
+    networks:
+      - sutazai-network
+    ports:
+      - "10006:8500"   # UI
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: sutazai-rabbitmq
+    networks:
+      - sutazai-network
+    ports:
+      - "10007:5672"   # AMQP
+      - "10008:15672"  # Mgmt UI
+
+  # Authoritative port overrides for existing services
+  ai-metrics-exporter:
+    ports:
+      - "11063:9200"
+
+  alertmanager:
+    ports:
+      - "10203:9093"
+
+  blackbox-exporter:
+    ports:
+      - "10229:9115"
+
+  node-exporter:
+    ports:
+      - "10220:9100"
+
+  cadvisor:
+    ports:
+      - "10221:8080"
+
+  prometheus:
+    ports:
+      - "10200:9090"
+
+  grafana:
+    ports:
+      - "10201:3000"
+
+  loki:
+    ports:
+      - "10202:3100"
+
+  backend:
+    ports:
+      - "10010:8000"
+
+  frontend:
+    ports:
+      - "10011:8501"
+
+  postgres:
+    ports:
+      - "10000:5432"
+
+  redis:
+    ports:
+      - "10001:6379"
+
+  qdrant:
+    ports:
+      - "10101:6333"
+      - "10102:6334"
+
+  chromadb:
+    ports:
+      - "10100:8000"
+
+  faiss:
+    ports:
+      - "10103:8000"
+
+  neo4j:
+    ports:
+      - "10002:7474"
+      - "10003:7687"
+
+  ollama:
+    ports:
+      - "10104:10104"
+
+  # Disable non-running agents by default via profiles (can be enabled explicitly)
+  agentgpt:
+    profiles: ["disabled"]
+  agentzero:
+    profiles: ["disabled"]
+  aider:
+    profiles: ["disabled"]
+  autogen:
+    profiles: ["disabled"]
+  autogpt:
+    profiles: ["disabled"]
+  browser-use:
+    profiles: ["disabled"]
+  crewai:
+    profiles: ["disabled"]
+  dify:
+    profiles: ["disabled"]
+  flowise:
+    profiles: ["disabled"]
+  gpt-engineer:
+    profiles: ["disabled"]
+  langflow:
+    profiles: ["disabled"]
+  llamaindex:
+    profiles: ["disabled"]
+  pentestgpt:
+    profiles: ["disabled"]
+  privategpt:
+    profiles: ["disabled"]
+  service-hub:
+    profiles: ["disabled"]
+  shellgpt:
+    profiles: ["disabled"]
+  skyvern:
+    profiles: ["disabled"]
+
+

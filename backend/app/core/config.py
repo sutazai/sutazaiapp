@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     
     # Vector Databases
     CHROMADB_HOST: str = Field("chromadb", env="CHROMADB_HOST")
-    CHROMADB_PORT: int = 8001  # Changed from 8000 to avoid conflict with backend
+    CHROMADB_PORT: int = 8000
     CHROMADB_API_KEY: Optional[str] = None
     
     QDRANT_HOST: str = Field("qdrant", env="QDRANT_HOST")
@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
     
     # Model Configuration - Emergency small models to prevent freezing
-    OLLAMA_HOST: str = Field("http://sutazai-ollama:11434", env="OLLAMA_HOST")
+    OLLAMA_HOST: str = Field("http://ollama:10104", env="OLLAMA_HOST")
     OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
     OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
     OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
@@ -92,9 +92,10 @@ class Settings(BaseSettings):
     def validate_ollama_host(cls, v: str) -> str:
         """Ensure OLLAMA_HOST has proper format"""
         if v == "0.0.0.0" or v == "ollama":
-            return "http://sutazai-ollama:11434"
+            return "http://ollama:10104"
         if not v.startswith("http"):
-            return f"http://{v}:11434"
+            # Default to the verified internal port per IMPORTANT docs
+            return f"http://{v}:10104"
         return v
     
     # GPU Configuration

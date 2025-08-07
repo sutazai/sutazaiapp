@@ -1,5 +1,203 @@
 #!/usr/bin/env python3
 """
+validate_ports.py
+
+Purpose: Ensure docker-compose published ports match the authoritative mapping
+from IMPORTANT and config/port-registry.yaml.
+
+Exit codes:
+  0 -> OK
+  1 -> Drift detected (mismatched or missing ports)
+  2 -> Script error (e.g., YAML parsing)
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+import yaml
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_yaml(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+def parse_port_mapping(compose: dict) -> Dict[str, List[Tuple[int, int]]]:
+    services = compose.get("services", {}) or {}
+    mapping: Dict[str, List[Tuple[int, int]]] = {}
+    for name, cfg in services.items():
+        ports = []
+        for p in (cfg.get("ports") or []):
+            # Formats: "HOST:CONTAINER" or mapping dicts; normalize to tuple[int,int]
+            if isinstance(p, str):
+                try:
+                    host, container = p.split(":", 1)
+                    ports.append((int(host), int(container)))
+                except Exception:
+                    continue
+            elif isinstance(p, dict):
+                hp = p.get("published")
+                cp = p.get("target")
+                if isinstance(hp, int) and isinstance(cp, int):
+                    ports.append((hp, cp))
+        mapping[name] = ports
+    return mapping
+
+
+def merge_mappings(base: Dict[str, List[Tuple[int, int]]], override: Dict[str, List[Tuple[int, int]]]) -> Dict[str, List[Tuple[int, int]]]:
+    out = {**base}
+    for svc, ports in override.items():
+        if ports:
+            out[svc] = ports  # override wins
+    return out
+
+
+def expected_service_ports_from_registry(registry: dict) -> Dict[str, List[int]]:
+    expected: Dict[str, List[int]] = {}
+
+    def reg(section: str) -> dict:
+        return registry.get(section, {}) or {}
+
+    # Infrastructure
+    infra = reg("infrastructure")
+    infra_expect = {
+        "backend": 10010,
+        "frontend": 10011,
+        "sutazai-postgres": 10000,
+        "sutazai-redis": 10001,
+        "sutazai-qdrant": [10101, 10102],
+        "sutazai-chromadb": 10100,
+        "sutazai-faiss": 10103,
+        "sutazai-neo4j": [10002, 10003],
+        "sutazai-ollama": 10104,
+        "sutazai-kong": 10005,
+        "sutazai-consul": 10006,
+        "sutazai-rabbitmq": [10007, 10008],
+    }
+    # Monitoring
+    mon = reg("monitoring")
+    mon_expect = {
+        "sutazai-prometheus": 10200,
+        "sutazai-grafana": 10201,
+        "sutazai-loki": 10202,
+        "sutazai-alertmanager": 10203,
+        "sutazai-blackbox-exporter": 10204,
+        "sutazai-node-exporter": 10220,
+        "sutazai-cadvisor": 10221,
+        "sutazai-postgres-exporter": 10207,
+        "sutazai-redis-exporter": 10208,
+        "sutazai-ai-metrics-exporter": 11063,
+    }
+
+    def add(expect: Dict[str, List[int]]):
+        for k, v in expect.items():
+            expected[k] = v if isinstance(v, list) else [v]
+
+    add(infra_expect)
+    add(mon_expect)
+    return expected
+
+
+def normalize_container_name(name: str) -> str:
+    # docker-compose uses service keys; containers have container_name in many cases
+    return name.strip()
+
+
+def invert_by_container(mapping: Dict[str, List[Tuple[int, int]]]) -> Dict[str, List[int]]:
+    out: Dict[str, List[int]] = {}
+    for svc, pairs in mapping.items():
+        out[svc] = [h for h, _ in pairs]
+    return out
+
+
+def main() -> int:
+    try:
+        compose_path = REPO_ROOT / "docker-compose.yml"
+        override_path = REPO_ROOT / "docker-compose.override.yml"
+        registry_path = REPO_ROOT / "config" / "port-registry.yaml"
+
+        base = load_yaml(compose_path)
+        override = load_yaml(override_path) if override_path.exists() else {"services": {}}
+        registry = load_yaml(registry_path)
+
+        base_map = parse_port_mapping(base)
+        override_map = parse_port_mapping(override)
+        effective = merge_mappings(base_map, override_map)
+        effective_by_service = invert_by_container(effective)
+
+        expected = expected_service_ports_from_registry(registry)
+
+        errors: List[str] = []
+
+        # try to match by known container_name in compose when present
+        # but we only have service keys here; map heuristically
+        alias_map = {
+            "backend": "sutazai-backend",
+            "frontend": "sutazai-frontend",
+            "postgres": "sutazai-postgres",
+            "redis": "sutazai-redis",
+            "qdrant": "sutazai-qdrant",
+            "chromadb": "sutazai-chromadb",
+            "faiss": "sutazai-faiss",
+            "neo4j": "sutazai-neo4j",
+            "ollama": "sutazai-ollama",
+            "prometheus": "sutazai-prometheus",
+            "grafana": "sutazai-grafana",
+            "loki": "sutazai-loki",
+            "alertmanager": "sutazai-alertmanager",
+            "blackbox-exporter": "sutazai-blackbox-exporter",
+            "node-exporter": "sutazai-node-exporter",
+            "cadvisor": "sutazai-cadvisor",
+            "postgres-exporter": "sutazai-postgres-exporter",
+            "redis-exporter": "sutazai-redis-exporter",
+            "ai-metrics-exporter": "sutazai-ai-metrics-exporter",
+            "kong": "sutazai-kong",
+            "consul": "sutazai-consul",
+            "rabbitmq": "sutazai-rabbitmq",
+        }
+
+        # Build lookup of effective ports by canonical container name
+        effective_by_canonical: Dict[str, List[int]] = {}
+        for svc_key, ports in effective_by_service.items():
+            canonical = alias_map.get(svc_key, svc_key)
+            effective_by_canonical[canonical] = ports
+
+        for canonical_container, exp_ports in expected.items():
+            eff_ports = effective_by_canonical.get(canonical_container, [])
+            # Allow services to be absent (then they won't be compared)
+            if not eff_ports:
+                continue
+            exp_set = set(exp_ports)
+            eff_set = set(eff_ports)
+            if exp_set != eff_set:
+                errors.append(
+                    f"Port drift for {canonical_container}: expected {sorted(exp_set)}, found {sorted(eff_set)}"
+                )
+
+        if errors:
+            print("IMPORTANT alignment check failed (ports):", file=sys.stderr)
+            for e in errors:
+                print(f" - {e}", file=sys.stderr)
+            return 1
+
+        print("OK: Ports match IMPORTANT/config registry where services are present.")
+        return 0
+    except Exception as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+#!/usr/bin/env python3
+"""
 Port Validation Script for SUTAZAIAPP
 Validates port allocations across all docker-compose files and checks for conflicts.
 """

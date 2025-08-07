@@ -1,0 +1,28 @@
+name: Codebase Hygiene
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+      - name: Rule 1 - Banned keywords
+        run: |
+          python scripts/check_banned_keywords.py
+      - name: IMPORTANT port alignment
+        run: |
+          python scripts/validate_ports.py
+      - name: No localhost references
+        run: |
+          python scripts/scan_localhost.py
+
+
