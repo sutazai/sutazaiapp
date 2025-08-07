@@ -148,9 +148,3 @@ data/tabby/models/
 *.model
 *.safetensors 
 data/repos/
-
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
