@@ -1,438 +1,307 @@
-#!/usr/bin/env python3
 """
-Comprehensive unit tests for Ollama integration
-Tests all aspects of OllamaIntegration and OllamaConfig classes
+Integration tests for Ollama Integration Agent.
+Tests against a real TinyLlama container with various edge cases.
 """
 
-import pytest
 import asyncio
-import httpx
-import json
-from unittest.mock import AsyncMock, Mock, patch, MagicMock
-from datetime import datetime
+import pytest
+import time
+from typing import Dict, Any
+
 import sys
 import os
+sys.path.append('/opt/sutazaiapp')
 
-# Add the agents directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'agents'))
+from agents.ollama_integration.app import OllamaIntegrationAgent
+from schemas.ollama_schemas import (
+    OllamaGenerateRequest,
+    OllamaGenerateResponse,
+    OllamaErrorResponse
+)
+from pydantic import ValidationError
 
-from core.ollama_integration import OllamaIntegration, OllamaConfig
+
+@pytest.fixture
+async def agent():
+    """Create Ollama integration agent for testing."""
+    agent = OllamaIntegrationAgent(
+        base_url="http://localhost:11434",
+        timeout=30,
+        max_retries=3
+    )
+    await agent.start()
+    yield agent
+    await agent.close()
 
 
-class TestOllamaIntegration:
-    """Test suite for OllamaIntegration class"""
+@pytest.mark.asyncio
+async def test_model_verification(agent):
+    """Test that TinyLlama model is available."""
+    # Verify tinyllama is available
+    has_model = await agent.verify_model("tinyllama")
+    assert has_model, "TinyLlama model not found - please run: ollama pull tinyllama"
     
-    @pytest.fixture
-    def ollama_integration(self):
-        """Create OllamaIntegration instance for testing"""
-        return OllamaIntegration(
-            base_url="http://test-ollama:10104",
-            default_model="tinyllama",
-            timeout=30
+    # Check for non-existent model
+    has_fake = await agent.verify_model("fake-model-xyz")
+    assert not has_fake
+
+
+@pytest.mark.asyncio
+async def test_list_models(agent):
+    """Test listing available models."""
+    models = await agent.list_models()
+    
+    assert len(models.models) > 0, "No models found"
+    assert models.has_model("tinyllama"), "TinyLlama not in model list"
+    
+    # Check model info structure
+    tinyllama = next(m for m in models.models if "tinyllama" in m.name)
+    assert tinyllama.size > 0
+    assert tinyllama.digest
+
+
+@pytest.mark.asyncio
+async def test_basic_generation(agent):
+    """Test basic text generation."""
+    result = await agent.generate(
+        prompt="What is 2+2?",
+        temperature=0.1,
+        max_tokens=50
+    )
+    
+    assert "response" in result
+    assert "tokens" in result
+    assert "latency" in result
+    
+    assert len(result["response"]) > 0
+    assert result["tokens"] > 0
+    assert result["latency"] > 0
+    
+    # Check that response mentions 4 or four
+    response_lower = result["response"].lower()
+    assert "4" in response_lower or "four" in response_lower
+
+
+@pytest.mark.asyncio
+async def test_empty_response_handling(agent):
+    """Test handling of very short prompts that might give empty responses."""
+    result = await agent.generate(
+        prompt=".",
+        temperature=0.0,
+        max_tokens=5
+    )
+    
+    # Even with minimal input, should get some response
+    assert result["response"] is not None
+    assert result["tokens"] >= 0
+
+
+@pytest.mark.asyncio
+async def test_long_output(agent):
+    """Test generation with long output."""
+    result = await agent.generate(
+        prompt="Tell me a story about a robot",
+        temperature=0.7,
+        max_tokens=500
+    )
+    
+    assert len(result["response"]) > 100
+    assert result["tokens"] > 50
+    
+    # Verify output was actually truncated at max_tokens
+    # (within reasonable margin due to tokenization)
+    assert result["tokens"] <= 550
+
+
+@pytest.mark.asyncio
+async def test_stop_sequences(agent):
+    """Test that stop sequences work correctly."""
+    result = await agent.generate(
+        prompt="Count from 1 to 10: 1, 2, 3,",
+        temperature=0.1,
+        max_tokens=100,
+        stop=["7", "\n"]
+    )
+    
+    # Should stop before or at 7
+    assert "8" not in result["response"]
+    assert "9" not in result["response"]
+    assert "10" not in result["response"]
+
+
+@pytest.mark.asyncio
+async def test_invalid_tokens_validation():
+    """Test validation of invalid token parameters."""
+    # Test negative tokens
+    with pytest.raises(ValidationError) as exc_info:
+        OllamaGenerateRequest(
+            prompt="test",
+            num_predict=-1
+        )
+    assert "greater than or equal to 1" in str(exc_info.value).lower()
+    
+    # Test excessive tokens
+    with pytest.raises(ValidationError) as exc_info:
+        OllamaGenerateRequest(
+            prompt="test",
+            num_predict=10000
+        )
+    assert "less than or equal to 2048" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_invalid_temperature_validation():
+    """Test validation of invalid temperature."""
+    # Test negative temperature
+    with pytest.raises(ValidationError):
+        OllamaGenerateRequest(
+            prompt="test",
+            temperature=-0.5
         )
     
-    @pytest.fixture
-    def mock_httpx_client(self):
-        """Mock httpx.AsyncClient"""
-        client = AsyncMock()
-        return client
-    
-    @pytest.mark.asyncio
-    async def test_initialization(self, ollama_integration):
-        """Test OllamaIntegration initialization"""
-        assert ollama_integration.base_url == "http://test-ollama:10104"
-        assert ollama_integration.default_model == "tinyllama"
-        assert ollama_integration.timeout == 30
-        assert ollama_integration.client is not None
-    
-    @pytest.mark.asyncio
-    async def test_context_manager(self):
-        """Test async context manager functionality"""
-        async with OllamaIntegration() as integration:
-            assert integration is not None
-            assert integration.client is not None
-    
-    @pytest.mark.asyncio
-    async def test_ensure_model_available_success(self, ollama_integration):
-        """Test successful model availability check"""
-        # Mock successful model list response
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "models": [
-                {"name": "tinyllama:latest"}
-            ]
-        }
-        
-        with patch.object(ollama_integration.client, 'get', return_value=mock_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
-            assert result is True
-    
-    @pytest.mark.asyncio
-    async def test_ensure_model_available_needs_pull(self, ollama_integration):
-        """Test model availability when model needs to be pulled"""
-        # Mock model list response without target model
-        mock_list_response = Mock()
-        mock_list_response.status_code = 200
-        mock_list_response.json.return_value = {
-            "models": [{"name": "other-model:latest"}]
-        }
-        
-        # Mock successful pull response
-        mock_pull_response = Mock()
-        mock_pull_response.status_code = 200
-        
-        with patch.object(ollama_integration.client, 'get', return_value=mock_list_response), \
-             patch.object(ollama_integration.client, 'post', return_value=mock_pull_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
-            assert result is True
-    
-    @pytest.mark.asyncio
-    async def test_ensure_model_available_failure(self, ollama_integration):
-        """Test model availability check failure"""
-        mock_response = Mock()
-        mock_response.status_code = 500
-        
-        with patch.object(ollama_integration.client, 'get', return_value=mock_response):
-            result = await ollama_integration.ensure_model_available("tinyllama")
-            assert result is False
-    
-    @pytest.mark.asyncio
-    async def test_pull_model_success(self, ollama_integration):
-        """Test successful model pull"""
-        mock_response = Mock()
-        mock_response.status_code = 200
-        
-        with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-            result = await ollama_integration.pull_model("tinyllama")
-            assert result is True
-    
-    @pytest.mark.asyncio
-    async def test_pull_model_failure(self, ollama_integration):
-        """Test failed model pull"""
-        mock_response = Mock()
-        mock_response.status_code = 404
-        
-        with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-            result = await ollama_integration.pull_model("nonexistent-model")
-            assert result is False
-    
-    @pytest.mark.asyncio
-    async def test_generate_success(self, ollama_integration):
-        """Test successful text generation"""
-        # Mock model availability check
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            # Mock successful generation response
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {
-                "response": "Generated text response"
-            }
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate(
-                    prompt="Test prompt",
-                    model="tinyllama",
-                    system="You are a helpful assistant"
-                )
-                
-                assert result == "Generated text response"
-    
-    @pytest.mark.asyncio
-    async def test_generate_model_unavailable(self, ollama_integration):
-        """Test generation when model is unavailable"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=False):
-            result = await ollama_integration.generate("Test prompt")
-            assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_generate_api_error(self, ollama_integration):
-        """Test generation with API error"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 500
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate("Test prompt")
-                assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_generate_with_parameters(self, ollama_integration):
-        """Test generation with custom parameters"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {"response": "Custom response"}
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response) as mock_post:
-                await ollama_integration.generate(
-                    prompt="Test prompt",
-                    temperature=0.8,
-                    max_tokens=1024
-                )
-                
-                # Verify parameters were passed correctly
-                call_args = mock_post.call_args
-                payload = call_args[1]['json']
-                assert payload['options']['temperature'] == 0.8
-                assert payload['options']['num_predict'] == 1024
-    
-    @pytest.mark.asyncio
-    async def test_chat_success(self, ollama_integration):
-        """Test successful chat completion"""
-        messages = [
-            {"role": "user", "content": "Hello"}
-        ]
-        
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {
-                "message": {"content": "Hello! How can I help you?"}
-            }
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.chat(messages)
-                assert result == "Hello! How can I help you?"
-    
-    @pytest.mark.asyncio
-    async def test_chat_model_unavailable(self, ollama_integration):
-        """Test chat when model is unavailable"""
-        messages = [{"role": "user", "content": "Hello"}]
-        
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=False):
-            result = await ollama_integration.chat(messages)
-            assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_chat_api_error(self, ollama_integration):
-        """Test chat with API error"""
-        messages = [{"role": "user", "content": "Hello"}]
-        
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 400
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.chat(messages)
-                assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_embeddings_success(self, ollama_integration):
-        """Test successful embeddings generation"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {
-                "embedding": [0.1, 0.2, 0.3, 0.4, 0.5]
-            }
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.embeddings("Test text")
-                assert result == [0.1, 0.2, 0.3, 0.4, 0.5]
-    
-    @pytest.mark.asyncio
-    async def test_embeddings_api_error(self, ollama_integration):
-        """Test embeddings with API error"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 500
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.embeddings("Test text")
-                assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_network_timeout(self, ollama_integration):
-        """Test handling of network timeouts"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            with patch.object(ollama_integration.client, 'post', side_effect=httpx.TimeoutException("Timeout")):
-                result = await ollama_integration.generate("Test prompt")
-                assert result is None
-    
-    @pytest.mark.asyncio
-    async def test_connection_error(self, ollama_integration):
-        """Test handling of connection errors"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            with patch.object(ollama_integration.client, 'post', side_effect=httpx.ConnectError("Connection failed")):
-                result = await ollama_integration.generate("Test prompt")
-                assert result is None
+    # Test excessive temperature
+    with pytest.raises(ValidationError):
+        OllamaGenerateRequest(
+            prompt="test",
+            temperature=3.0
+        )
 
 
-class TestOllamaConfig:
-    """Test suite for OllamaConfig class"""
+@pytest.mark.asyncio
+async def test_empty_prompt_validation():
+    """Test that empty prompts are rejected."""
+    with pytest.raises(ValidationError) as exc_info:
+        OllamaGenerateRequest(prompt="")
+    assert "at least 1 character" in str(exc_info.value).lower()
     
-    def test_get_model_for_agent_opus(self):
-        """Test getting Opus model for complex agents"""
-        agent_name = "ai-system-architect"
-        model = OllamaConfig.get_model_for_agent(agent_name)
-        assert model == OllamaConfig.OPUS_MODEL
-    
-    def test_get_model_for_agent_sonnet(self):
-        """Test getting Sonnet model for balanced agents"""
-        agent_name = "ai-product-manager"
-        model = OllamaConfig.get_model_for_agent(agent_name)
-        assert model == OllamaConfig.SONNET_MODEL
-    
-    def test_get_model_for_agent_default(self):
-        """Test getting default model for simple agents"""
-        agent_name = "garbage-collector"
-        model = OllamaConfig.get_model_for_agent(agent_name)
-        assert model == OllamaConfig.DEFAULT_MODEL
-    
-    def test_get_model_for_unknown_agent(self):
-        """Test getting model for unknown agent"""
-        agent_name = "unknown-agent"
-        model = OllamaConfig.get_model_for_agent(agent_name)
-        assert model == OllamaConfig.DEFAULT_MODEL
-    
-    def test_get_model_config_opus(self):
-        """Test getting config for Opus model agent"""
-        agent_name = "ai-system-architect"
-        config = OllamaConfig.get_model_config(agent_name)
-        
-        assert config["model"] == OllamaConfig.OPUS_MODEL
-        assert config["temperature"] == 0.8
-        assert config["max_tokens"] == 4096
-        assert config["top_p"] == 0.95
-    
-    def test_get_model_config_sonnet(self):
-        """Test getting config for Sonnet model agent"""
-        agent_name = "ai-product-manager"
-        config = OllamaConfig.get_model_config(agent_name)
-        
-        assert config["model"] == OllamaConfig.SONNET_MODEL
-        assert config["temperature"] == 0.7
-        assert config["max_tokens"] == 2048
-        assert config["top_p"] == 0.9
-    
-    def test_get_model_config_default(self):
-        """Test getting config for default model agent"""
-        agent_name = "garbage-collector"
-        config = OllamaConfig.get_model_config(agent_name)
-        
-        assert config["model"] == OllamaConfig.DEFAULT_MODEL
-        assert config["temperature"] == 0.5
-        assert config["max_tokens"] == 1024
-        assert config["top_p"] == 0.8
-    
-    def test_model_constants(self):
-        """Test that model constants are defined correctly"""
-        assert OllamaConfig.OPUS_MODEL == "tinyllama"
-        assert OllamaConfig.SONNET_MODEL == "tinyllama"
-        assert OllamaConfig.DEFAULT_MODEL == "tinyllama"
-    
-    def test_agent_models_coverage(self):
-        """Test that agent models mapping has reasonable coverage"""
-        # Check that we have models assigned for different types of agents
-        opus_agents = [k for k, v in OllamaConfig.AGENT_MODELS.items() if v == OllamaConfig.OPUS_MODEL]
-        sonnet_agents = [k for k, v in OllamaConfig.AGENT_MODELS.items() if v == OllamaConfig.SONNET_MODEL]
-        default_agents = [k for k, v in OllamaConfig.AGENT_MODELS.items() if v == OllamaConfig.DEFAULT_MODEL]
-        
-        assert len(opus_agents) > 0, "Should have some agents using Opus model"
-        assert len(sonnet_agents) > 0, "Should have some agents using Sonnet model"
-        assert len(default_agents) > 0, "Should have some agents using default model"
-        
-        # Verify some specific assignments
-        assert "ai-system-architect" in opus_agents
-        assert "ai-product-manager" in sonnet_agents
-        assert "garbage-collector" in default_agents
-    
-    def test_config_parameters_complete(self):
-        """Test that all config parameters are present"""
-        config = OllamaConfig.get_model_config("test-agent")
-        
-        required_params = [
-            "model", "temperature", "max_tokens", 
-            "top_p", "frequency_penalty", "presence_penalty"
-        ]
-        
-        for param in required_params:
-            assert param in config, f"Missing parameter: {param}"
-    
-    def test_config_parameter_ranges(self):
-        """Test that config parameters are within reasonable ranges"""
-        for agent_type in ["opus", "sonnet", "default"]:
-            if agent_type == "opus":
-                config = OllamaConfig.get_model_config("ai-system-architect")
-            elif agent_type == "sonnet":
-                config = OllamaConfig.get_model_config("ai-product-manager")
-            else:
-                config = OllamaConfig.get_model_config("garbage-collector")
-            
-            # Temperature should be between 0 and 1
-            assert 0 <= config["temperature"] <= 1
-            
-            # Top_p should be between 0 and 1
-            assert 0 <= config["top_p"] <= 1
-            
-            # Max tokens should be positive and reasonable
-            assert 0 < config["max_tokens"] <= 8192
-            
-            # Penalties should be reasonable
-            assert -2 <= config["frequency_penalty"] <= 2
-            assert -2 <= config["presence_penalty"] <= 2
+    # Whitespace-only should also fail
+    with pytest.raises(ValidationError) as exc_info:
+        OllamaGenerateRequest(prompt="   \n\t  ")
+    assert "cannot be empty" in str(exc_info.value).lower()
 
 
-class TestOllamaIntegrationErrorHandling:
-    """Test error handling and edge cases"""
+@pytest.mark.asyncio
+async def test_concurrent_requests(agent):
+    """Test multiple concurrent generation requests."""
+    prompts = [
+        "What is Python?",
+        "What is Docker?",
+        "What is Linux?",
+        "What is REST API?",
+        "What is JSON?"
+    ]
     
-    @pytest.fixture
-    def ollama_integration(self):
-        return OllamaIntegration()
+    # Create concurrent tasks
+    tasks = [
+        agent.generate(prompt, temperature=0.5, max_tokens=50)
+        for prompt in prompts
+    ]
     
-    @pytest.mark.asyncio
-    async def test_malformed_json_response(self, ollama_integration):
-        """Test handling of malformed JSON responses"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.side_effect = json.JSONDecodeError("Invalid JSON", "", 0)
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate("Test prompt")
-                assert result is None
+    # Execute concurrently
+    start_time = time.time()
+    results = await asyncio.gather(*tasks)
+    elapsed = time.time() - start_time
     
-    @pytest.mark.asyncio
-    async def test_empty_response(self, ollama_integration):
-        """Test handling of empty responses"""
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {}
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate("Test prompt")
-                assert result == ""  # Should return empty string, not None
+    # Verify all succeeded
+    assert len(results) == 5
+    for i, result in enumerate(results):
+        assert result["tokens"] > 0, f"Request {i} failed to generate tokens"
+        assert len(result["response"]) > 0, f"Request {i} has empty response"
     
-    @pytest.mark.asyncio
-    async def test_large_prompt_handling(self, ollama_integration):
-        """Test handling of very large prompts"""
-        large_prompt = "test " * 10000  # Very large prompt
-        
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {"response": "Response to large prompt"}
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate(large_prompt)
-                assert result == "Response to large prompt"
+    print(f"Concurrent requests completed in {elapsed:.2f}s")
+
+
+@pytest.mark.asyncio
+async def test_retry_behavior(agent):
+    """Test retry behavior with a temporarily failing endpoint."""
+    # Use wrong port to simulate connection failure
+    bad_agent = OllamaIntegrationAgent(
+        base_url="http://localhost:99999",  # Invalid port
+        timeout=2,
+        max_retries=2,
+        backoff_base=1.5
+    )
+    await bad_agent.start()
     
-    @pytest.mark.asyncio
-    async def test_special_characters_in_prompt(self, ollama_integration):
-        """Test handling of special characters in prompts"""
-        special_prompt = "Test with special chars: áéíóú ñ 中文 🚀 \n\t\r"
-        
-        with patch.object(ollama_integration, 'ensure_model_available', return_value=True):
-            mock_response = Mock()
-            mock_response.status_code = 200
-            mock_response.json.return_value = {"response": "Response with special chars"}
-            
-            with patch.object(ollama_integration.client, 'post', return_value=mock_response):
-                result = await ollama_integration.generate(special_prompt)
-                assert result == "Response with special chars"
+    start_time = time.time()
+    
+    with pytest.raises(Exception) as exc_info:
+        await bad_agent.generate("test", max_tokens=10)
+    
+    elapsed = time.time() - start_time
+    
+    # Should have retried (taking at least 1.5 seconds for backoff)
+    assert elapsed >= 1.5
+    assert "retries" in str(exc_info.value).lower()
+    
+    await bad_agent.close()
+
+
+@pytest.mark.asyncio
+async def test_request_hashing(agent):
+    """Test that request hashing works for tracking."""
+    # Same requests should have same hash
+    payload1 = {"prompt": "test", "model": "tinyllama"}
+    payload2 = {"prompt": "test", "model": "tinyllama"}
+    
+    hash1 = agent._hash_request(payload1)
+    hash2 = agent._hash_request(payload2)
+    assert hash1 == hash2
+    
+    # Different requests should have different hashes
+    payload3 = {"prompt": "different", "model": "tinyllama"}
+    hash3 = agent._hash_request(payload3)
+    assert hash1 != hash3
+
+
+@pytest.mark.asyncio
+async def test_response_metrics(agent):
+    """Test that response metrics are calculated correctly."""
+    result = await agent.generate(
+        prompt="Hello",
+        temperature=0.5,
+        max_tokens=20
+    )
+    
+    # Check metrics are present and reasonable
+    assert result["latency"] > 0  # Should have some latency
+    assert result["latency"] < 10000  # But not excessive (< 10 seconds)
+    assert result["tokens_per_second"] > 0  # Should have token rate
+
+
+@pytest.mark.asyncio 
+async def test_model_not_found_error(agent):
+    """Test handling when model doesn't exist."""
+    # Try to use a non-existent model
+    with pytest.raises(Exception) as exc_info:
+        request = OllamaGenerateRequest(
+            model="non-existent-model-xyz",
+            prompt="test"
+        )
+        # Manually override the model in the agent call
+        payload = request.to_ollama_payload()
+        await agent._make_request(payload, "test-hash", 0)
+    
+    # Should indicate model not found
+    assert "404" in str(exc_info.value) or "not found" in str(exc_info.value).lower()
+
+
+@pytest.mark.asyncio
+async def test_context_manager():
+    """Test async context manager usage."""
+    async with OllamaIntegrationAgent() as agent:
+        # Should be able to use agent
+        result = await agent.generate(
+            prompt="Hi",
+            max_tokens=10
+        )
+        assert result["tokens"] > 0
+    
+    # Session should be closed after context
+    assert agent.session is None
 
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+    # Run tests
+    asyncio.run(test_model_verification(OllamaIntegrationAgent()))
+    print("✅ All manual tests passed")

@@ -77,9 +77,26 @@ scrape_configs:
     static_configs:
       - targets:
         - http://sutazai-backend:8000/health
-        - http://sutazai-redis:6379
         - http://sutazai-chromadb:8000/api/v1/heartbeat
         - http://sutazai-qdrant:6333/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sutazai-blackbox-exporter:9115
+  
+  # TCP checks for non-HTTP services
+  - job_name: 'tcp-service-checks'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+        - sutazai-redis:6379
+        - sutazai-postgres:5432
+        - sutazai-neo4j:7687
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
