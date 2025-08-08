@@ -17,7 +17,7 @@ asyncpg==0.29.0
 redis==5.2.1
 
 # HTTP & Networking
-requests==2.32.3
+requests==2.32.4
 aiohttp==3.11.11
 httpx==0.28.1
 websockets==13.1
