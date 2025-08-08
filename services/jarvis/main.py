@@ -12,24 +12,46 @@ import signal
 import sys
 from typing import Dict, Any, Optional, List
 from datetime import datetime
-import speech_recognition as sr
-import pyttsx3
-from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File
+try:
+    import speech_recognition as sr  # optional
+except Exception:
+    sr = None
+try:
+    import pyttsx3  # optional
+except Exception:
+    pyttsx3 = None
+from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-import consul
-from prometheus_client import Counter, Histogram, generate_latest
+try:
+    import consul  # optional
+except Exception:
+    consul = None
+try:
+    from prometheus_client import Counter, Histogram, Gauge, generate_latest  # optional
+except Exception:
+    class _Counter:
+        def __init__(self, *a, **k):
+            pass
+        def labels(self, *a, **k):
+            return self
+        def inc(self, *a, **k):
+            pass
+    class _Histogram(_Counter):
+        def observe(self, *a, **k):
+            pass
+    class _Gauge(_Counter):
+        def dec(self, *a, **k):
+            pass
+    def generate_latest(*a, **k):
+        return b""
+    Counter = _Counter
+    Histogram = _Histogram
+    Gauge = _Gauge
 from starlette.responses import Response, HTMLResponse
 
-from core.orchestrator import JarvisOrchestrator
-from core.task_planner import TaskPlanner
-try:
-    from core.voice_interface import VoiceInterface
-except ImportError:
-    from core.voice_interface_minimal import VoiceInterface
-from core.plugin_manager import PluginManager
-from core.agent_coordinator import AgentCoordinator
+# Defer heavy core imports to runtime in startup to support minimal test mode
 
 # Configure logging
 logging.basicConfig(
@@ -38,14 +60,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Optional multipart support (for UploadFile)
+try:
+    import multipart  # type: ignore
+    MULTIPART_AVAILABLE = True
+except Exception:
+    MULTIPART_AVAILABLE = False
+
 # Prometheus metrics
 REQUEST_COUNT = Counter('jarvis_requests_total', 'Total requests', ['type', 'status'])
 REQUEST_DURATION = Histogram('jarvis_request_duration_seconds', 'Request duration', ['type'])
-ACTIVE_SESSIONS = Counter('jarvis_active_sessions', 'Active sessions')
+ACTIVE_SESSIONS = Gauge('jarvis_active_sessions', 'Active sessions')
 
 # Global instances
-jarvis: Optional[JarvisOrchestrator] = None
-consul_client: Optional[consul.Consul] = None
+jarvis: Optional[Any] = None
+consul_client: Optional[Any] = None
 
 class TaskRequest(BaseModel):
     """Task request model"""
@@ -77,37 +106,82 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class MinimalJarvis:
+    async def initialize(self):
+        return True
+
+    async def shutdown(self):
+        return True
+
+    async def get_status(self):
+        return {
+            'agents_available': ['echo-agent'],
+            'plugins_loaded': [],
+            'voice_enabled': False
+        }
+
+    async def execute_task(self, command: str, context: Optional[Dict[str, Any]] = None, voice_enabled: bool = False, plugins: Optional[List[str]] = None, session_id: Optional[str] = None):
+        return {
+            'result': f"Echo: {command}",
+            'status': 'completed',
+            'agents_used': ['echo-agent'],
+            'voice_response': None
+        }
+
+    async def process_voice_command(self, file_path: str):
+        return {
+            'transcript': 'test voice input',
+            'result': 'Processed voice (minimal mode)',
+            'confidence': 0.99
+        }
+
+    async def register_session(self, session_id: str, websocket: WebSocket):
+        return True
+
+    async def unregister_session(self, session_id: str):
+        return True
+
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize Jarvis system"""
     global jarvis, consul_client
-    
+
     try:
         # Load configuration
         config_path = os.getenv('JARVIS_CONFIG', '/opt/sutazaiapp/config/jarvis/config.yaml')
-        
-        # Initialize components
+
+        # Minimal/fake mode for local testing
+        if os.getenv('JARVIS_FAKE', '0') in ('1', 'true', 'True'):
+            jarvis = MinimalJarvis()
+            await jarvis.initialize()
+            logger.info("Jarvis started in minimal (fake) mode for testing")
+            return
+
+        # Initialize components (import core modules lazily)
+        from core.orchestrator import JarvisOrchestrator
         jarvis = JarvisOrchestrator(config_path)
         await jarvis.initialize()
-        
-        # Initialize Consul
-        consul_host = os.getenv('CONSUL_HOST', 'localhost')
-        consul_port = int(os.getenv('CONSUL_PORT', '8500'))
-        consul_client = consul.Consul(host=consul_host, port=consul_port)
-        
-        # Register with Consul
-        service_port = int(os.getenv('JARVIS_PORT', '8888'))
-        consul_client.agent.service.register(
-            name='jarvis',
-            service_id=f'jarvis-{os.getpid()}',
-            address=os.getenv('SERVICE_HOST', 'localhost'),
-            port=service_port,
-            check=consul.Check.http(f"http://localhost:{service_port}/health", interval="10s"),
-            tags=['ai', 'jarvis', 'assistant', 'voice']
-        )
-        
+
+        # Consul (optional, enable via CONSUL_ENABLE)
+        if os.getenv('CONSUL_ENABLE', '0') in ('1', 'true', 'True'):
+            consul_host = os.getenv('CONSUL_HOST', 'localhost')
+            consul_port = int(os.getenv('CONSUL_PORT', '8500'))
+            consul_client = consul.Consul(host=consul_host, port=consul_port)
+
+            # Register with Consul
+            service_port = int(os.getenv('JARVIS_PORT', '8888'))
+            consul_client.agent.service.register(
+                name='jarvis',
+                service_id=f'jarvis-{os.getpid()}',
+                address=os.getenv('SERVICE_HOST', 'localhost'),
+                port=service_port,
+                check=consul.Check.http(f"http://localhost:{service_port}/health", interval="10s"),
+                tags=['ai', 'jarvis', 'assistant', 'voice']
+            )
+
         logger.info("Jarvis AI System initialized successfully")
-        
+
     except Exception as e:
         logger.error(f"Failed to initialize Jarvis: {e}")
         raise
@@ -147,10 +221,27 @@ async def health_check():
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail="Service unhealthy")
 
+# Alias for namespaced health check
+@app.get("/jarvis/health")
+async def jarvis_health_check():
+    return await health_check()
+
 @app.get("/metrics")
 async def metrics():
     """Prometheus metrics endpoint"""
     return Response(generate_latest(), media_type="text/plain")
+
+@app.get("/api/agents")
+async def list_agents():
+    """List available agents (for static UI side panel)"""
+    try:
+        status = await jarvis.get_status()
+        agents = status.get('agents_available', [])
+        # Normalize to objects with status for UI
+        return [{"name": a, "status": "available"} for a in agents]
+    except Exception as e:
+        logger.error(f"List agents failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to list agents")
 
 @app.post("/api/task", response_model=TaskResponse)
 async def execute_task(request: TaskRequest):
@@ -184,27 +275,76 @@ async def execute_task(request: TaskRequest):
         logger.error(f"Task execution failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/voice/upload")
-async def process_voice_upload(audio: UploadFile = File(...)):
-    """Process uploaded audio file"""
+async def _process_audio_content(content: bytes, filename: str = "voice_input.webm"):
+    """Common audio processing for both multipart and raw uploads."""
     try:
-        # Save temporary audio file
-        temp_path = f"/tmp/jarvis_audio_{datetime.now().timestamp()}.wav"
+        # Save temporary audio file (preserve extension when possible)
+        _, provided_ext = os.path.splitext(filename or '')
+        safe_ext = provided_ext if provided_ext in {'.wav', '.webm', '.mp3', '.m4a', '.ogg'} else '.webm'
+        temp_path = f"/tmp/jarvis_audio_{datetime.now().timestamp()}{safe_ext}"
         with open(temp_path, "wb") as f:
-            content = await audio.read()
             f.write(content)
-        
+
+        # Convert to WAV if needed for downstream compatibility
+        processed_path = temp_path
+        try:
+            _, ext = os.path.splitext(temp_path)
+            if ext.lower() != '.wav':
+                try:
+                    from pydub import AudioSegment  # Optional dependency
+                    audio_seg = AudioSegment.from_file(temp_path)
+                    wav_path = temp_path.rsplit('.', 1)[0] + '.wav'
+                    audio_seg.export(wav_path, format='wav')
+                    os.remove(temp_path)
+                    processed_path = wav_path
+                except Exception as conv_err:
+                    logger.warning(f"Audio conversion to WAV failed or unavailable; proceeding with original file: {conv_err}")
+        except Exception as e_inner:
+            logger.warning(f"Audio conversion check failed: {e_inner}")
+
         # Process audio
-        result = await jarvis.process_voice_command(temp_path)
-        
+        result = await jarvis.process_voice_command(processed_path)
+
         # Cleanup
-        os.remove(temp_path)
-        
+        try:
+            if os.path.exists(processed_path):
+                os.remove(processed_path)
+        except Exception:
+            pass
+
         return result
-        
     except Exception as e:
         logger.error(f"Voice processing failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+if MULTIPART_AVAILABLE:
+    @app.post("/api/voice/upload")
+    async def process_voice_upload(audio: UploadFile = File(...)):
+        """Process uploaded audio file (multipart)"""
+        content = await audio.read()
+        return await _process_audio_content(content, getattr(audio, 'filename', 'voice_input.webm'))
+else:
+    @app.post("/api/voice/upload")
+    async def process_voice_upload_raw(request: Request):
+        """Process raw uploaded audio when multipart is unavailable"""
+        content = await request.body()
+        return await _process_audio_content(content, 'voice_input.webm')
+
+# Aliases to comply with IMPORTANT canonical API surface
+@app.post("/jarvis/task/plan", response_model=TaskResponse)
+async def jarvis_task_plan(request: TaskRequest):
+    # Delegate to the same handler logic as /api/task
+    return await execute_task(request)
+
+if MULTIPART_AVAILABLE:
+    @app.post("/jarvis/voice/process")
+    async def jarvis_voice_process(audio: UploadFile = File(...)):
+        return await process_voice_upload(audio)
+else:
+    @app.post("/jarvis/voice/process")
+    async def jarvis_voice_process_raw(request: Request):
+        return await process_voice_upload_raw(request)
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

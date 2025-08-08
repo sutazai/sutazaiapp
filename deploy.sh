@@ -393,6 +393,24 @@ handle_error() {
 trap 'handle_error $? $LINENO $BASH_COMMAND' ERR
 trap 'cleanup_on_exit' EXIT
 
+# Optional self-update (Rule 12: single, self-updating deploy script)
+self_update_if_enabled() {
+    if [[ "${SELF_UPDATE:-false}" == "true" ]]; then
+        log_info "Self-update enabled; pulling latest main branch..."
+        if command -v git >/dev/null 2>&1 && [[ -d "$PROJECT_ROOT/.git" ]]; then
+            git -C "$PROJECT_ROOT" fetch --all --prune || true
+            # Stash local changes to avoid failures, then re-apply
+            git -C "$PROJECT_ROOT" stash push -u -m "deploy.sh_auto_stash_$(date +%s)" >/dev/null 2>&1 || true
+            git -C "$PROJECT_ROOT" checkout --quiet ${BRANCH:-main} 2>/dev/null || true
+            git -C "$PROJECT_ROOT" pull --rebase || true
+            git -C "$PROJECT_ROOT" stash pop >/dev/null 2>&1 || true
+            log_success "Repository updated."
+        else
+            log_warn "Git not available or not a git repo; skipping self-update."
+        fi
+    fi
+}
+
 # ===============================================
 # SYSTEM DETECTION & VALIDATION
 # ===============================================

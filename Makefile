@@ -4,6 +4,9 @@
 .PHONY: help install test test-unit test-integration test-e2e test-performance test-security test-docker test-health test-load test-all
 .PHONY: coverage coverage-report lint format security-scan clean setup-dev setup-ci
 .PHONY: docker-build docker-test docker-up docker-down services-up services-down
+.PHONY: network mesh-up monitoring-up dbs-up core-up agents-up stack-up health
+.PHONY: mcp-db-bootstrap
+.PHONY: ensure-network up-minimal down-minimal ps-minimal logs-minimal restart-minimal health-minimal
 .PHONY: deps-update deps-audit report-dashboard
 .PHONY: docs-api docs-api-openapi docs-api-endpoints
 .PHONY: onboarding-deck
@@ -154,11 +157,53 @@ docker-test: docker-build ## Test Docker images
 	docker run --rm sutazai-frontend:latest python -c "import streamlit; print('Frontend dependencies OK')"
 	@echo "$(GREEN)✅ Docker images tested$(NC)"
 
-docker-up: ## Start Docker services
+network: ## Create docker network if missing
+	@echo "$(YELLOW)📡 Ensuring docker network exists...$(NC)"
+	@docker network create sutazai-network 2>/dev/null || true
+	@echo "$(GREEN)✅ Network ready: sutazai-network$(NC)"
+
+docker-up: network ## Start Docker services
 	@echo "$(YELLOW)🐳 Starting Docker services...$(NC)"
 	$(DOCKER_COMPOSE) -f docker-compose.yml up -d
 	$(DOCKER_COMPOSE) -f docker-compose.yml ps
 	@echo "$(GREEN)✅ Docker services started$(NC)"
+
+# Minimal stack helpers (recommended)
+ensure-network: ## Create external docker network if missing
+	@echo "$(YELLOW)🔧 Ensuring external network 'sutazai-network' exists...$(NC)"
+	@docker network ls | grep -q "sutazai-network" || docker network create sutazai-network
+	@echo "$(GREEN)✅ Network ready$(NC)"
+
+up-minimal: ensure-network ## Start minimal 8-service stack
+	@echo "$(YELLOW)🐳 Starting minimal SutazAI stack...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml up -d
+	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+	@echo "$(GREEN)✅ Minimal stack started$(NC)"
+
+down-minimal: ## Stop minimal stack
+	@echo "$(YELLOW)🐳 Stopping minimal SutazAI stack...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml down
+	@echo "$(GREEN)✅ Minimal stack stopped$(NC)"
+
+ps-minimal: ## Show minimal stack status
+	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml ps
+
+logs-minimal: ## Tail minimal stack logs
+	$(DOCKER_COMPOSE) -f docker-compose.minimal.yml logs -f --tail=200
+
+restart-minimal: ## Restart minimal stack
+	$(MAKE) down-minimal
+	$(MAKE) up-minimal
+
+health-minimal: ## Check minimal stack health endpoints
+	@echo "$(YELLOW)🏥 Checking health endpoints...$(NC)"
+	@echo "- Backend:    http://localhost:10010/health" && curl -sf http://localhost:10010/health | head -c 200 && echo || echo "$(RED)Backend health failed$(NC)"
+	@echo "- Frontend:   http://localhost:10011/" && curl -sf http://localhost:10011/ | head -c 100 && echo || echo "$(RED)Frontend check failed$(NC)"
+	@echo "- Ollama:     http://localhost:10104/" && curl -sf http://localhost:10104/ | head -c 100 && echo || echo "$(RED)Ollama check failed$(NC)"
+	@echo "- Qdrant:     http://localhost:10101/healthz" && curl -sf http://localhost:10101/healthz | head -c 100 && echo || echo "$(RED)Qdrant check failed$(NC)"
+	@echo "- Prometheus: http://localhost:10200/-/healthy" && curl -sf http://localhost:10200/-/healthy && echo || echo "$(RED)Prometheus health failed$(NC)"
+	@echo "- Grafana:    http://localhost:10201/api/health" && curl -sf http://localhost:10201/api/health | head -c 200 && echo || echo "$(RED)Grafana health failed$(NC)"
+	@echo "$(GREEN)✅ Health checks attempted$(NC)"
 
 docker-down: ## Stop Docker services
 	@echo "$(YELLOW)🐳 Stopping Docker services...$(NC)"
@@ -184,6 +229,64 @@ services-status: ## Check service status
 	@echo "$(CYAN)Health checks:$(NC)"
 	@curl -s http://localhost:8000/health || echo "$(RED)Backend not responding$(NC)"
 	@curl -s http://localhost:8501 || echo "$(RED)Frontend not responding$(NC)"
+
+# Stack shortcuts
+mesh-up: network ## Start Service Mesh (Kong, Consul, RabbitMQ)
+	@echo "$(YELLOW)🕸  Starting service mesh (Kong, Consul, RabbitMQ)...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d kong consul rabbitmq
+	@echo "$(GREEN)✅ Service mesh started$(NC)"
+
+monitoring-up: network ## Start Monitoring stack (Prometheus, Grafana, Loki, cAdvisor)
+	@echo "$(YELLOW)📊 Starting monitoring stack...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d prometheus grafana loki promtail cadvisor node-exporter alertmanager blackbox-exporter redis-exporter postgres-exporter
+	@echo "$(GREEN)✅ Monitoring stack started$(NC)"
+
+dbs-up: network ## Start databases (Postgres, Redis, Neo4j, ChromaDB, Qdrant, FAISS)
+	@echo "$(YELLOW)🗄  Starting databases...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d postgres redis neo4j chromadb qdrant faiss
+	@echo "$(GREEN)✅ Databases started$(NC)"
+
+core-up: network ## Start core app (Ollama, Backend, Frontend)
+	@echo "$(YELLOW)🧩 Starting core services...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d ollama backend frontend
+	@echo "$(GREEN)✅ Core services started$(NC)"
+
+agents-up: network ## Start key agent services
+	@echo "$(YELLOW)🤖 Starting agent services...$(NC)"
+	$(DOCKER_COMPOSE) -f docker-compose.yml up -d agentgpt agentzero autogen autogpt crewai aider shellgpt context-framework jarvis-voice-interface jarvis-knowledge-management jarvis-automation-agent jarvis-multimodal-ai mcp-server
+	@echo "$(GREEN)✅ Agent services started$(NC)"
+
+stack-up: ## Start full platform (infra + mesh + monitoring + core + agents)
+	@$(MAKE) dbs-up
+	@$(MAKE) mesh-up
+	@$(MAKE) monitoring-up
+	@$(MAKE) core-up
+	@$(MAKE) agents-up
+	@echo "$(GREEN)✅ Full SutazAI stack started$(NC)"
+
+health: ## Run platform health checks
+	@echo "$(YELLOW)🩺 Running health checks...$(NC)"
+	-@curl -fsS http://localhost:10010/health && echo " OK: backend" || echo "$(RED)FAIL: backend$(NC)"
+	-@curl -fsS http://localhost:10104/ || echo "$(RED)WARN: ollama root responds (expected tags at /api/tags)$(NC)"
+	-@curl -fsS http://localhost:10006/v1/status/leader && echo " OK: consul" || echo "$(RED)FAIL: consul$(NC)"
+	-@curl -fsS http://localhost:10005/ || echo "$(RED)WARN: kong proxy reachable (admin at 10015)$(NC)"
+	-@curl -fsS http://localhost:10008/api/health/checks/virtual-hosts && echo " OK: rabbitmq" || echo "$(RED)FAIL: rabbitmq$(NC)"
+	-@curl -fsS http://localhost:10200/-/healthy && echo " OK: prometheus" || echo "$(RED)FAIL: prometheus$(NC)"
+	-@curl -fsS http://localhost:10201/api/health && echo " OK: grafana" || echo "$(RED)FAIL: grafana$(NC)"
+	-@curl -fsS http://localhost:10202/ready && echo " OK: loki" || echo "$(RED)FAIL: loki$(NC)"
+	-@curl -fsS http://localhost:10206/ && echo " OK: cadvisor" || echo "$(RED)FAIL: cadvisor$(NC)"
+	-@curl -fsS http://localhost:10100/api/v1/heartbeat && echo " OK: chromadb" || echo "$(RED)FAIL: chromadb$(NC)"
+	-@curl -fsS http://localhost:10101/ && echo " OK: qdrant (HTTP 200 expected)" || echo "$(RED)FAIL: qdrant$(NC)"
+	-@curl -fsS http://localhost:10002/ && echo " OK: neo4j UI" || echo "$(RED)FAIL: neo4j$(NC)"
+	-@curl -fsS http://localhost:11190/health && echo " OK: mcp-server" || echo "$(RED)FAIL: mcp-server$(NC)"
+	-@curl -fsS http://localhost:10005/mcp/health && echo " OK: kong->mcp route" || echo "$(RED)FAIL: kong->mcp route$(NC)"
+	@echo "$(GREEN)✅ Health checks complete$(NC)"
+
+mcp-db-bootstrap: ## Create MCP tables in Postgres (idempotent)
+	@echo "$(YELLOW)🗄  Bootstrapping MCP DB schema...$(NC)"
+	@docker cp scripts/mcp_bootstrap.sql sutazai-postgres:/tmp/mcp_bootstrap.sql
+	@docker compose exec -T postgres psql -U $${POSTGRES_USER:-sutazai} -d $${POSTGRES_DB:-sutazai} -v ON_ERROR_STOP=1 -f /tmp/mcp_bootstrap.sql
+	@echo "$(GREEN)✅ MCP DB schema ready$(NC)"
 
 # Dependency Management
 deps-update: ## Update dependencies

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  skyvern-test:
+    build:
+      context: ./docker/dockerfiles
+      dockerfile: Dockerfile.skyvern
+    container_name: sutazai-skyvern-test
+    image: sutazai-skyvern:test
+    environment:
+      - PYTHONUNBUFFERED=1
+      - AGENT_NAME=skyvern
+    networks:
+      - sutazai-network
+    volumes:
+      - ./skyvern-data:/app/data
+      - ./skyvern-logs:/app/logs
+    restart: unless-stopped
+
+networks:
+  sutazai-network:
+    external: true

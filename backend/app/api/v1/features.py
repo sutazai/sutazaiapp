@@ -3,9 +3,9 @@ Feature flags API endpoints
 """
 from fastapi import APIRouter, Depends
 from typing import Dict, Any
-from backend.app.core.config import get_settings, Settings
+from app.core.config import get_settings, Settings
 
-router = APIRouter(prefix="/features", tags=["features"])
+router = APIRouter(tags=["features"])
 
 @router.get("/", response_model=Dict[str, Any])
 async def get_feature_flags(settings: Settings = Depends(get_settings)):

@@ -1,3 +1,953 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="9" time="2.738" timestamp="2025-08-07T21:36:47.380522" hostname="DESKTOP-I534C9S"><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_root_endpoint" time="0.026" /><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_execute_agent" time="0.028" /><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_list_agents" time="0.025" /><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_health_endpoint" time="0.028" /><testcase classname="backend.tests.test_api_basic.TestErrorHandling" name="test_method_not_allowed" time="0.025" /><testcase classname="backend.tests.test_api_basic.TestErrorHandling" name="test_404_not_found" time="0.029" /><testcase classname="backend.tests.test_api_basic.TestAsyncEndpoints" name="test_async_health_check" time="0.005"><failure message="TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'">backend/tests/test_api_basic.py:134: in test_async_health_check
-    async with AsyncClient(app=mock_app, base_url="http://test") as ac:
-E   TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'</failure></testcase><testcase classname="backend.tests.test_api_basic.TestAPIStructure" name="test_json_response_format" time="0.008" /><testcase classname="backend.tests.test_api_basic.TestAPIStructure" name="test_api_versioning" time="0.008" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="4" failures="16" skipped="0" tests="21" time="26.317" timestamp="2025-08-08T09:39:33.715217" hostname="DESKTOP-I534C9S"><testcase classname="backend.tests.test_api_basic.TestErrorHandling" name="test_404_not_found" time="0.024"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:117: in test_404_not_found
+    response = client.get("/api/v1/unknown")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_list_agents" time="0.024"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:82: in test_list_agents
+    response = client.get("/api/v1/agents")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_root_endpoint" time="0.022"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:66: in test_root_endpoint
+    response = client.get("/")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestAPIStructure" name="test_json_response_format" time="0.024"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:153: in test_json_response_format
+    response = client.get("/health")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestAsyncEndpoints" name="test_async_health_check" time="0.007"><error message="failed on setup with &quot;PermissionError: [Errno 1] Operation not permitted&quot;">../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:397: in pytest_fixture_setup
+    loop = outcome.get_result()
+../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:567: in event_loop
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</error><error message="failed on teardown with &quot;PermissionError: [Errno 1] Operation not permitted&quot;">../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:446: in _close_event_loop
+    loop = policy.get_event_loop()
+/usr/lib/python3.12/asyncio/events.py:699: in get_event_loop
+    self.set_event_loop(self.new_event_loop())
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</error></testcase><testcase classname="backend.tests.test_api_basic.TestAPIStructure" name="test_api_versioning" time="0.022"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:147: in test_api_versioning
+    response = client.get("/api/v1/agents")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_health_endpoint" time="0.005"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:74: in test_health_endpoint
+    response = client.get("/health")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestErrorHandling" name="test_method_not_allowed" time="0.012"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:122: in test_method_not_allowed
+    response = client.post("/health")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:552: in post
+    return super().post(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_api_basic.TestBasicAPI" name="test_execute_agent" time="0.006"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_api_basic.py:102: in test_execute_agent
+    response = client.post("/api/v1/agents/test-agent/execute", json=task_data)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:552: in post
+    return super().post(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestMainApp" name="test_api_docs_available" time="4.616"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:87: in test_api_docs_available
+    response = client.get("/docs")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestMainApp" name="test_app_creation" time="4.984" /><testcase classname="backend.tests.test_main_app.TestMiddleware" name="test_security_headers" time="0.010"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:138: in test_security_headers
+    response = client.get("/")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestMainApp" name="test_root_endpoint_exists" time="5.669"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:72: in test_root_endpoint_exists
+    response = client.get("/")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestMiddleware" name="test_cors_headers" time="4.655"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:122: in test_cors_headers
+    response = client.options("/")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:502: in options
+    return super().options(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1082: in options
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestAgentEndpoints" name="test_agents_endpoint" time="4.667"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:103: in test_agents_endpoint
+    response = client.get("/api/v1/agents")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestErrorHandling" name="test_404_handling" time="4.663"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:158: in test_404_handling
+    response = client.get("/this-endpoint-does-not-exist")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestErrorHandling" name="test_method_not_allowed" time="0.007"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:172: in test_method_not_allowed
+    response = client.post("/")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:552: in post
+    return super().post(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestMainApp" name="test_health_endpoint_exists" time="0.009"><failure message="PermissionError: [Errno 1] Operation not permitted">backend/tests/test_main_app.py:78: in test_health_endpoint_exists
+    response = client.get("/health")
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:479: in get
+    return super().get(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1053: in get
+    return self.request(
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:451: in request
+    return super().request(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+../sutazai-venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:354: in handle_request
+    raise exc
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:349: in handle_request
+    with self.portal_factory() as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/starlette/testclient.py:424: in _portal_factory
+    with anyio.from_thread.start_blocking_portal(**self.async_backend) as portal:
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:493: in start_blocking_portal
+    portal = future.result()
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+../sutazai-venv/lib/python3.12/site-packages/anyio/from_thread.py:481: in run_blocking_portal
+    _eventloop.run(
+../sutazai-venv/lib/python3.12/site-packages/anyio/_core/_eventloop.py:74: in run
+    return async_backend.run(func, args, {}, backend_options)
+../sutazai-venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py:2309: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+/usr/lib/python3.12/asyncio/runners.py:58: in __enter__
+    self._lazy_init()
+/usr/lib/python3.12/asyncio/runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</failure></testcase><testcase classname="backend.tests.test_main_app.TestAsyncBehavior" name="test_app_is_async" time="0.005"><error message="failed on setup with &quot;PermissionError: [Errno 1] Operation not permitted&quot;">../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:397: in pytest_fixture_setup
+    loop = outcome.get_result()
+../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:567: in event_loop
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</error><error message="failed on teardown with &quot;PermissionError: [Errno 1] Operation not permitted&quot;">../sutazai-venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:446: in _close_event_loop
+    loop = policy.get_event_loop()
+/usr/lib/python3.12/asyncio/events.py:699: in get_event_loop
+    self.set_event_loop(self.new_event_loop())
+/usr/lib/python3.12/asyncio/events.py:720: in new_event_loop
+    return self._loop_factory()
+/usr/lib/python3.12/asyncio/unix_events.py:64: in __init__
+    super().__init__(selector)
+/usr/lib/python3.12/asyncio/selector_events.py:66: in __init__
+    self._make_self_pipe()
+/usr/lib/python3.12/asyncio/selector_events.py:120: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+/usr/lib/python3.12/socket.py:609: in socketpair
+    a, b = _socket.socketpair(family, type, proto)
+E   PermissionError: [Errno 1] Operation not permitted</error></testcase></testsuite></testsuites>

@@ -27,12 +27,12 @@ RUN mkdir -p /app/data /app/logs
 RUN useradd -m -u 1001 nodeuser && chown -R nodeuser:nodeuser /app
 USER nodeuser
 
-# Health check
+# Health check hits HTTP health endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD node -e "process.exit(0)"
+    CMD node -e "fetch('http://localhost:'+(process.env.MCP_HTTP_PORT||3030)+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-# Expose port
-EXPOSE 3000
+# Expose HTTP health port
+EXPOSE 3030
 
 # Start the MCP server
 CMD ["node", "index.js"]

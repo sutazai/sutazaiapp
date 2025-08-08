@@ -198,6 +198,14 @@ repos:
         pass_filenames: false
         always_run: true
 
+      - id: require-changelog-update
+        name: "Rule 19: Require docs/CHANGELOG.md update"
+        entry: python scripts/pre-commit/check-changelog-updated.py
+        language: python
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+
       - id: agent-selection
         name: "Rule 14: Verify correct agent usage"
         entry: python scripts/pre-commit/check-agent-usage.py

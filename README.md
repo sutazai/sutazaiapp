@@ -19,33 +19,26 @@ Practical task automation with a local LLM (Ollama) backed by a FastAPI backend,
   - TabbyML code completion (`ENABLE_TABBY=true`)
 - Runs locally; no external API keys required for core flows
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Minimal Stack — Recommended)
 
 ```bash
-# 1) Start the stack (Docker)
-docker compose up -d
+# 1) Start the minimal stack (8 containers)
+make up-minimal
 
 # 2) Open core endpoints
-# Backend API (FastAPI):
-open http://localhost:10010/docs  # or visit manually
+open http://localhost:10010/docs   # Backend API (FastAPI)
+open http://localhost:10011         # Frontend (Streamlit)
 
-# Frontend (Streamlit):
-open http://localhost:10011
-
-# Health and metrics:
-curl http://localhost:10010/health
-curl http://localhost:10010/public/metrics
-
-# Mesh health (Redis Streams):
-curl http://localhost:10010/api/v1/mesh/health
+# Health checks
+make health-minimal
 ```
 
 Core published ports (external:internal)
 - Backend 10010:8000, Frontend 10011:8501
 - Postgres 10000:5432, Redis 10001:6379
-- Qdrant 10101:6333 + 10102:6334, ChromaDB 10100:8000, FAISS 10103:8000
-- Neo4j 10002:7474 + 10003:7687, Ollama 10104:10104
-- Prometheus 10200:9090, Grafana 10201:3000, Loki 10202:3100
+- Qdrant 10101:6333 + 10102:6334
+- Ollama 10104:11434
+- Prometheus 10200:9090, Grafana 10201:3000
 
 ## 💻 Example Calls
 
@@ -94,7 +87,7 @@ Local AI model
 ## 🎮 Commands
 
 ```bash
-# Start the system
+# Start the full system (advanced users only)
 docker compose up -d
 
 # Stop the system
@@ -152,3 +145,18 @@ MIT License - See [LICENSE](LICENSE) file
 Note:
 - Messaging is currently implemented via Redis Streams (lightweight mesh). RabbitMQ utilities exist in the repo but are not provisioned by default.
 - Some services in docker-compose.yml are optional or disabled; see the overview for the accurate matrix of active ports.
+
+## 🕸 Service Mesh
+
+Service mesh components (Kong, Consul, RabbitMQ) are disabled by default and not required for core functionality. Only enable if you have a concrete need and the configurations in `config/` are updated accordingly.
+
+## 🧰 Makefile Shortcuts
+
+Helpful targets for phased bring-up:
+- `make dbs-up` — Postgres, Redis, Neo4j, ChromaDB, Qdrant, FAISS
+- `make mesh-up` — Kong, Consul, RabbitMQ
+- `make monitoring-up` — Prometheus, Grafana, Loki, exporters
+- `make core-up` — Ollama, Backend, Frontend
+- `make agents-up` — Common agents (AgentGPT, AgentZero, AutoGen, AutoGPT, Jarvis components)
+- `make stack-up` — Full platform (runs the above in order)
+- `make health` — Runs the standard health checks

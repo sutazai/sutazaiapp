@@ -1,24 +1,7 @@
-global:
-  smtp_smarthost: 'localhost:587'
-  smtp_from: 'alerts@sutazai.local'
+global: {}
 
 route:
-  group_by: ['alertname']
-  group_wait: 30s
-  group_interval: 5m
-  repeat_interval: 12h
   receiver: 'default'
 
 receivers:
   - name: 'default'
-    email_configs:
-      - to: 'admin@localhost'
-        subject: 'SutazAI Alert - {{ .GroupLabels.alertname }}'
-        body: |
-          {{ range .Alerts }}
-          Alert: {{ .Annotations.summary }}
-          Description: {{ .Annotations.description }}
-          Severity: {{ .Labels.severity }}
-          {{ end }}
-        headers:
-          From: 'alerts@sutazai.local'

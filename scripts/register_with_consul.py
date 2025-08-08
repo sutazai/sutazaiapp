@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Idempotent Consul service registration utility.
+Idempotent Consul service registration utility with retry logic and exponential backoff.
 
 Usage:
   python scripts/register_with_consul.py \
@@ -11,14 +11,34 @@ Usage:
 
 Behavior:
   - Validates CLI args and fails fast on invalid input.
-  - Uses python-consul to register a service with Consul Agent.
+  - Uses python-consul library to register a service with Consul Agent.
+  - Implements retry logic with exponential backoff for both connection and registration.
   - Idempotent: if the same service (name+address+port) is already registered, exits 0.
   - On differences, updates registration (deregister by ID then register) and logs actions.
-  - Emits timestamped logs to stdout/stderr; exits non-zero on failure.
+  - Emits detailed timestamped logs to stdout/stderr; exits non-zero on failure.
+  - Safe to run multiple times without side effects.
+
+Features:
+  - Exponential backoff retry mechanism (3 attempts with 1-2s base delay).
+  - Comprehensive error handling and logging.
+  - Environment variable configuration support.
+  - Validation of input parameters.
+
+Environment Variables:
+  - CONSUL_HOST: Consul agent hostname (default: 127.0.0.1)
+  - CONSUL_PORT: Consul agent port (default: 10006 for SutazAI system)
+  - CONSUL_SCHEME: HTTP scheme (default: http)
+
+Exit Codes:
+  - 0: Success (service registered or already exists)
+  - 1: Registration/connection failure
+  - 2: Invalid arguments or missing dependencies
 
 Notes:
-  - Consul Agent must be reachable on default host/port or via CONSUL_HOST/CONSUL_PORT env vars.
+  - Consul Agent must be reachable on configured host/port.
   - Service ID is derived as f"{name}-{address}-{port}" to ensure uniqueness across instances.
+  - Default port changed to 10006 to match SutazAI system port registry.
+  - Retry logic handles transient network issues and Consul startup delays.
 """
 from __future__ import annotations
 
@@ -26,6 +46,7 @@ import argparse
 import os
 import sys
 import time
+import random
 from typing import List
 
 try:
@@ -57,9 +78,45 @@ def validate_args(name: str, address: str, port: int) -> None:
         raise ValueError("service_port must be between 1 and 65535")
 
 
+def retry_with_exponential_backoff(func, max_retries=3, base_delay=1.0):
+    """
+    Retry a function with exponential backoff.
+    
+    Args:
+        func: Function to retry
+        max_retries: Maximum number of retry attempts
+        base_delay: Base delay in seconds for backoff
+        
+    Returns:
+        Function result on success
+        
+    Raises:
+        Last exception encountered after all retries failed
+    """
+    last_exception = None
+    
+    for attempt in range(max_retries + 1):
+        try:
+            return func()
+        except Exception as e:
+            last_exception = e
+            if attempt < max_retries:
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"[WARN] {ts()} Attempt {attempt + 1}/{max_retries + 1} failed: {e}. Retrying in {delay:.2f}s...")
+                time.sleep(delay)
+            else:
+                print(f"[ERROR] {ts()} All {max_retries + 1} attempts failed. Last error: {e}")
+    
+    raise last_exception
+
+
 def get_consul_client() -> consul.Consul:
+    """
+    Create and return a Consul client using environment variables or defaults.
+    Uses localhost:10006 as per SutazAI system configuration.
+    """
     host = os.getenv("CONSUL_HOST", "127.0.0.1")
-    port_env = os.getenv("CONSUL_PORT", "8500")
+    port_env = os.getenv("CONSUL_PORT", "10006")  # Updated to match SutazAI port registry
     try:
         port = int(port_env)
     except ValueError:
@@ -78,12 +135,17 @@ def main() -> int:
     service_id = f"{args.service_name}-{args.service_address}-{args.service_port}"
     tags: List[str] = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else []
 
-    try:
+    def connect_to_consul():
         c = get_consul_client()
-        # Fetch current services via local agent
+        # Test connection and fetch current services via local agent
         services = c.agent.services()
+        return c, services
+    
+    try:
+        c, services = retry_with_exponential_backoff(connect_to_consul, max_retries=3, base_delay=2.0)
+        print(f"[INFO] {ts()} Successfully connected to Consul")
     except Exception as e:
-        print(f"[ERROR] {ts()} Failed to connect to Consul Agent: {e}", file=sys.stderr)
+        print(f"[ERROR] {ts()} Failed to connect to Consul Agent after retries: {e}", file=sys.stderr)
         return 1
 
     # Check for idempotency
@@ -106,7 +168,7 @@ def main() -> int:
                 break
 
     # Register (no health check to avoid speculative endpoints)
-    try:
+    def register_service():
         c.agent.service.register(
             name=args.service_name,
             service_id=service_id,
@@ -114,10 +176,14 @@ def main() -> int:
             port=args.service_port,
             tags=tags or None,
         )
-        print(f"[INFO] {ts()} Registered service: {service_id} ({args.service_name}@{args.service_address}:{args.service_port})")
+        return service_id
+    
+    try:
+        result_service_id = retry_with_exponential_backoff(register_service, max_retries=3, base_delay=1.0)
+        print(f"[INFO] {ts()} Registered service: {result_service_id} ({args.service_name}@{args.service_address}:{args.service_port})")
         return 0
     except Exception as e:
-        print(f"[ERROR] {ts()} Registration failed: {e}", file=sys.stderr)
+        print(f"[ERROR] {ts()} Registration failed after retries: {e}", file=sys.stderr)
         return 1
 
 

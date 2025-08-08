@@ -70,7 +70,26 @@
       "Bash(docker builder prune:*)",
       "Bash(docker-compose:*)",
       "Bash(chmod:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm init:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker-compose:*)",
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(/opt/sutazaiapp/scripts/configure_kong.sh:*)",
+      "Bash(curl:*)",
+      "Bash(echo:*)",
+      "Bash(timeout:*)",
+      "Bash(/opt/sutazaiapp/scripts/test_neo4j_config.sh:*)",
+      "Bash(docker logs:*)",
+      "Bash(python:*)",
+      "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -t sutazaiapp-backend:latest ./backend)",
+      "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 -t sutazaiapp-backend:latest backend/)",
+      "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -f backend/Dockerfile.minimal -t sutazaiapp-backend:latest backend/)",
+      "Bash(git stash:*)"
     ],
     "deny": []
   }

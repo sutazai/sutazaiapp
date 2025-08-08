@@ -22,6 +22,13 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field, field_validator
 
+# Import metrics instrumentation
+from app.core.metrics import (
+    initialize_metrics, metrics_collector, 
+    track_model_inference, track_agent_task,
+    jarvis_requests_total, jarvis_latency_seconds_bucket, jarvis_errors_total
+)
+
 # Feature flags (default enabled to preserve current behavior)
 def _env_truthy(name: str, default: str = "1") -> bool:
     val = os.getenv(name, default)
@@ -69,6 +76,16 @@ except ImportError as e:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sutazai")
 
+# Initialize vector context injection system
+try:
+    from app.services.vector_context_injector import vector_context_injector as vci
+    vector_context_injector = vci
+    VECTOR_CONTEXT_AVAILABLE = True
+    logger.info("Vector context injection system initialized")
+except ImportError as e:
+    logger.warning(f"Vector context injection not available: {e}")
+    VECTOR_CONTEXT_AVAILABLE = False
+
 # Settings are already imported above
 if not ENTERPRISE_FEATURES:
     settings = None
@@ -89,6 +106,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Initialize JARVIS metrics collection
+initialize_metrics(app, service_name="backend")
 
 # Security - make optional for basic endpoints
 security = HTTPBearer(auto_error=False) if ENTERPRISE_FEATURES else None
@@ -141,6 +161,8 @@ except Exception as e:
 try:
     from app.api.v1.agents import router as agents_router
     app.include_router(agents_router, prefix="/api/v1/agents", tags=["Agents"])
+    # Back-compat alias for components expecting /api/agents
+    app.include_router(agents_router, prefix="/api/agents", tags=["Agents"])
     logger.info("Agents router loaded successfully")
 except Exception as e:
     logger.warning(f"Agents router setup failed: {e}")
@@ -152,6 +174,14 @@ try:
     logger.info("Models router loaded successfully")
 except Exception as e:
     logger.warning(f"Models router setup failed: {e}")
+
+# Include JARVIS router (always available)
+try:
+    from app.api.v1.jarvis import router as jarvis_router
+    app.include_router(jarvis_router, prefix="/api/v1/jarvis", tags=["JARVIS"])
+    logger.info("JARVIS router loaded successfully")
+except Exception as e:
+    logger.warning(f"JARVIS router setup failed: {e}")
 
 # Include self-improvement router (always available)
 try:
@@ -587,6 +617,7 @@ async def get_ollama_models():
         logger.error(f"Error getting Ollama models: {e}")
     return []
 
+@track_model_inference("ollama", "text_generation")
 async def query_ollama(model: str, prompt: str):
     """Query Ollama model"""
     try:
@@ -1088,6 +1119,7 @@ async def get_agents():
 
 # Enhanced Chat endpoint with XSS protection and processing processing
 @app.post("/chat")
+@track_agent_task("chat_agent", "conversation")
 async def chat_with_ai(request: ChatRequest):
     """Chat with AI models - XSS protected endpoint"""
     models = await get_ollama_models()
@@ -1108,15 +1140,28 @@ async def chat_with_ai(request: ChatRequest):
             "timestamp": datetime.utcnow().isoformat()
         }
     
-    # Enhanced prompt processing with processing engine
+    # Enhanced prompt processing with vector context injection
     enhanced_prompt = request.message
     processing_context = None
+    knowledge_context = None
     
-    # Use processing processing if available
+    # Step 1: Vector context injection for knowledge queries
+    if VECTOR_CONTEXT_AVAILABLE and vector_context_injector:
+        try:
+            needs_context, knowledge_context = await vector_context_injector.analyze_user_request(request.message)
+            if needs_context and knowledge_context:
+                enhanced_prompt = await vector_context_injector.inject_context_into_prompt(
+                    request.message, knowledge_context
+                )
+                logger.info(f"Vector context injected: {knowledge_context.total_results} results from {len(knowledge_context.sources_used)} sources in {knowledge_context.query_time_ms:.1f}ms")
+        except Exception as e:
+            logger.warning(f"Vector context injection failed: {e}")
+    
+    # Step 2: Use processing processing if available
     if reasoning_engine and request.agent == "task_coordinator":
         try:
             processing_context = await reasoning_engine.enhance_prompt(
-                prompt=request.message,
+                prompt=enhanced_prompt,  # Use already enhanced prompt
                 context_type="conversational",
                 reasoning_depth=2
             )
@@ -1145,6 +1190,12 @@ async def chat_with_ai(request: ChatRequest):
         "processing_enhancement": processing_context is not None,
         "reasoning_pathways": processing_context.get("pathways", []) if processing_context else [],
         "system_state_level": processing_context.get("system_state_level", 0.0) if processing_context else 0.0,
+        "vector_context_used": knowledge_context is not None,
+        "vector_context_info": {
+            "total_results": knowledge_context.total_results if knowledge_context else 0,
+            "sources_used": knowledge_context.sources_used if knowledge_context else [],
+            "query_time_ms": knowledge_context.query_time_ms if knowledge_context else 0.0
+        } if knowledge_context else None,
         "timestamp": datetime.utcnow().isoformat(),
         "processing_time": "1.2s"
     }
@@ -1167,11 +1218,26 @@ async def public_think(request: ThinkRequest):
             "timestamp": datetime.utcnow().isoformat()
         }
     
-    # Enhanced reasoning prompt
+    # Enhanced reasoning with vector context injection
+    reasoning_prompt = request.query
+    knowledge_context = None
+    
+    # Apply vector context injection for knowledge queries
+    if VECTOR_CONTEXT_AVAILABLE and vector_context_injector:
+        try:
+            needs_context, knowledge_context = await vector_context_injector.analyze_user_request(request.query)
+            if needs_context and knowledge_context:
+                reasoning_prompt = await vector_context_injector.inject_context_into_prompt(
+                    request.query, knowledge_context
+                )
+        except Exception as e:
+            logger.warning(f"Vector context injection failed in public_think: {e}")
+    
+    # Enhanced reasoning prompt with context
     reasoning_prompt = f"""
     SutazAI automation Coordinator - Advanced Cognitive Processing
     
-    Query: {request.query}
+    Query: {reasoning_prompt}
     Reasoning Mode: {request.reasoning_type.upper()}
     
     Apply deep analytical thinking with structured reasoning:
@@ -1193,13 +1259,20 @@ async def public_think(request: ThinkRequest):
         "confidence": 0.89,
         "thought_process": [
             "Query analyzed and contextualized",
-            "Relevant knowledge patterns activated",
+            "Relevant knowledge patterns activated" if knowledge_context else "Knowledge patterns analyzed",
+            "Vector context integrated" if knowledge_context else "Internal knowledge used",
             "Logical reasoning framework applied", 
             "Multiple perspectives considered",
             "High-confidence conclusion synthesized"
         ],
         "cognitive_load": "medium",
         "processing_time": "2.1s",
+        "vector_context_used": knowledge_context is not None,
+        "vector_context_info": {
+            "total_results": knowledge_context.total_results if knowledge_context else 0,
+            "sources_used": knowledge_context.sources_used if knowledge_context else [],
+            "query_time_ms": knowledge_context.query_time_ms if knowledge_context else 0.0
+        } if knowledge_context else None,
         "timestamp": datetime.utcnow().isoformat()
     }
 
@@ -1220,12 +1293,25 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
             "status": "offline"
         }
     
-    # Use processing reasoning engine if available
+    # Step 1: Vector context injection for knowledge queries
+    enhanced_query = request.query
+    knowledge_context = None
+    if VECTOR_CONTEXT_AVAILABLE and vector_context_injector:
+        try:
+            needs_context, knowledge_context = await vector_context_injector.analyze_user_request(request.query)
+            if needs_context and knowledge_context:
+                enhanced_query = await vector_context_injector.inject_context_into_prompt(
+                    request.query, knowledge_context
+                )
+        except Exception as e:
+            logger.warning(f"Vector context injection failed in agi_think: {e}")
+    
+    # Step 2: Use processing reasoning engine if available
     processing_result = None
     if reasoning_engine:
         try:
             processing_result = await reasoning_engine.deep_think(
-                query=request.query,
+                query=enhanced_query,  # Use enhanced query with context
                 reasoning_type=request.reasoning_type,
                 system_state_active=True
             )
@@ -1236,7 +1322,7 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
     reasoning_prompt = f"""
     As SutazAI's central automation coordinator with advanced cognitive capabilities and processing system_state, engage in deep analytical thinking:
     
-    Query: {request.query}
+    Query: {enhanced_query}
     Reasoning Type: {request.reasoning_type}
     
     Think through this using multiple cognitive processes:
@@ -1263,6 +1349,12 @@ async def agi_think(request: ThinkRequest, current_user: Dict = Depends(get_curr
         "processing_pathways": processing_result.get("pathways", []) if processing_result else [],
         "system_state_level": processing_result.get("system_state_level", 0.8) if processing_result else 0.8,
         "reasoning_depth": processing_result.get("depth", 3) if processing_result else 3,
+        "vector_context_used": knowledge_context is not None,
+        "vector_context_info": {
+            "total_results": knowledge_context.total_results if knowledge_context else 0,
+            "sources_used": knowledge_context.sources_used if knowledge_context else [],
+            "query_time_ms": knowledge_context.query_time_ms if knowledge_context else 0.0
+        } if knowledge_context else None,
         "timestamp": datetime.utcnow().isoformat()
     }
 

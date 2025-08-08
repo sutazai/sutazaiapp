@@ -1,0 +1,97 @@
+{
+  "name": "sutazai-testing-suite",
+  "version": "1.0.0",
+  "description": "Comprehensive testing suite for Jarvis endpoints and services in SutazAI",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:api",
+    "test:api": "node docs/testing/newman_ci_integration.js",
+    "test:e2e": "cypress run --spec docs/testing/cypress_e2e_tests.js",
+    "test:e2e:open": "cypress open",
+    "test:load": "k6 run docs/testing/k6_load_tests.js",
+    "test:all": "./scripts/run-jarvis-tests.sh --full",
+    "test:health": "curl -f http://localhost:10010/health && echo 'Backend OK'",
+    "pretest": "npm run test:health",
+    "posttest": "npm run test:report",
+    "test:report": "node -e \"console.log('Test results available in test-results/ directory')\"",
+    "install:newman": "npm install -g newman newman-reporter-html",
+    "install:k6": "echo 'Please install K6 from https://k6.io/docs/get-started/installation/'",
+    "setup": "npm install && npm run install:newman",
+    "lint": "echo 'Linting test files...' && echo 'No linting configured yet'",
+    "clean": "rm -rf test-results/ cypress/videos/ cypress/screenshots/ load-test-*.html load-test-*.json",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "services:status": "./scripts/run-jarvis-tests.sh --skip-health-check",
+    "ci:install": "npm ci && npm run install:newman",
+    "ci:test": "npm run test:api",
+    "ci:test:full": "./scripts/run-jarvis-tests.sh --full --verbose",
+    "test:unit": "jest --config jest.config.js"
+  },
+  "keywords": [
+    "jarvis",
+    "testing",
+    "api",
+    "e2e",
+    "load-testing",
+    "postman",
+    "newman",
+    "cypress",
+    "k6",
+    "automation"
+  ],
+  "author": "SutazAI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^14.3.1",
+    "babel-jest": "^29.7.0",
+    "cypress": "^13.6.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "newman": "^6.0.0",
+    "newman-reporter-htmlextra": "^1.23.0"
+  },
+  "dependencies": {
+    "immer": "^10.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.7"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sutazai/sutazaiapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sutazai/sutazaiapp/issues"
+  },
+  "homepage": "https://github.com/sutazai/sutazaiapp#readme",
+  "config": {
+    "test_timeout": "30000",
+    "cypress_timeout": "10000",
+    "newman_timeout": "15000"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/tests/**/*.spec.js"
+    ]
+  },
+  "cypress": {
+    "baseUrl": "http://localhost:10011",
+    "viewportWidth": 1280,
+    "viewportHeight": 720,
+    "defaultCommandTimeout": 10000,
+    "requestTimeout": 15000,
+    "responseTimeout": 15000,
+    "video": true,
+    "screenshotOnRunFailure": true
+  }
+}

@@ -25,7 +25,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "5432:5432"
+      - "10000:5432"
     deploy:
       resources:
         limits:
@@ -51,7 +51,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "6379:6379"
+      - "10001:6379"
     deploy:
       resources:
         limits:
@@ -113,7 +113,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "8000:8000"
+      - "10010:8000"
     volumes:
       - ./backend:/app
       - ./data:/data
@@ -150,7 +150,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "8501:8501"
+      - "10011:8501"
     volumes:
       - ./frontend:/app
       - ./data:/data:ro
@@ -163,7 +163,7 @@ services:
           cpus: '0.25'
           memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8501/healthz"]
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(5); exit(0 if s.connect_ex(('localhost', 8501))==0 else 1)"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -191,7 +191,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "11434:11434"
+      - "10104:11434"
     deploy:
       resources:
         limits:
@@ -224,8 +224,8 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "6333:6333"
-      - "6334:6334"
+      - "10101:6333"
+      - "10102:6334"
     deploy:
       resources:
         limits:
@@ -235,7 +235,7 @@ services:
           cpus: '0.25'
           memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:6333/healthz || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -260,7 +260,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "9090:9090"
+      - "10200:9090"
     deploy:
       resources:
         limits:
@@ -290,7 +290,7 @@ services:
     networks:
       - sutazai-network
     ports:
-      - "3000:3000"
+      - "10201:3000"
     depends_on:
       - prometheus
     deploy:
