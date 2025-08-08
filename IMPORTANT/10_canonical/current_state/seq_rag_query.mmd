@@ -1,0 +1,14 @@
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant BE as Backend
+  participant V as Vector DB
+  participant O as Ollama
+
+  U->>FE: Ask question
+  FE->>BE: GET /api/v1/query?q=...
+  BE->>V: similarity_search(k=5)
+  V-->>BE: top-k chunks
+  BE->>O: generate(prompt+context)
+  O-->>BE: answer
+  BE-->>FE: response JSON

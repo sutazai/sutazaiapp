@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant BE as Backend
+  participant O as Ollama
+
+  U->>FE: Submit prompt
+  FE->>BE: POST /api/v1/generate
+  BE->>O: /api/generate (model=TinyLlama)
+  O-->>BE: stream tokens
+  BE-->>FE: stream SSE
+  FE-->>U: render tokens

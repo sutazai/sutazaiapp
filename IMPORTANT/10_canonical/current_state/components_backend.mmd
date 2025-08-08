@@ -1,0 +1,27 @@
+%% Mermaid Components (Backend)
+flowchart TB
+  BE[FastAPI]
+  subgraph Services
+    Auth[Auth Service]
+    AgentSvc[Agent Orchestrator]
+    RAG[RAG Service]
+    Model[Model Manager]
+    TaskQ[Task Queue]
+  end
+  subgraph Integrations
+    PG[(PostgreSQL)]
+    RD[(Redis)]
+    VEC[(Chroma/Qdrant)]
+    OLL[Ollama]
+  end
+
+  BE-->Auth
+  BE-->AgentSvc
+  BE-->RAG
+  BE-->Model
+  BE-->TaskQ
+
+  Auth-->PG
+  AgentSvc-->RD
+  RAG-->VEC
+  Model-->OLL
