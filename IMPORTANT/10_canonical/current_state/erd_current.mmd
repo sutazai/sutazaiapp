@@ -1,0 +1,33 @@
+erDiagram
+  USERS {
+    UUID id PK
+    VARCHAR username
+    VARCHAR email
+    VARCHAR password_hash
+    TIMESTAMP created_at
+    TIMESTAMP updated_at
+  }
+  AGENTS {
+    UUID id PK
+    VARCHAR name
+    VARCHAR type
+    JSONB capabilities
+    BOOLEAN is_active
+    TIMESTAMP created_at
+  }
+  TASKS {
+    UUID id PK
+    VARCHAR title
+    TEXT description
+    UUID agent_id FK
+    UUID user_id FK
+    VARCHAR status
+    INT priority
+    JSONB payload
+    JSONB result
+    TIMESTAMP created_at
+    TIMESTAMP started_at
+    TIMESTAMP completed_at
+  }
+  USERS ||--o{ TASKS : assigned
+  AGENTS ||--o{ TASKS : executes
