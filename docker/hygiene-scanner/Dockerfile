@@ -23,4 +23,10 @@ RUN mkdir -p /app/data /app/logs /app/reports
 RUN useradd -m -u 1000 scanner && chown -R scanner:scanner /app
 USER scanner
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 ENTRYPOINT ["python", "hygiene_scanner.py"]

@@ -11,14 +11,13 @@ from typing import Optional, Dict, Any
 import jwt
 from jwt import PyJWTError
 
-# Generate a secure JWT secret if not provided
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+# JWT secret must be provided via environment variable
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("JWT_SECRET")
 if not JWT_SECRET_KEY:
-    # Generate a secure random secret
-    JWT_SECRET_KEY = secrets.token_urlsafe(64)
-    # In production, this should be stored securely
-    print(f"WARNING: Generated JWT secret. In production, set JWT_SECRET_KEY environment variable")
-    print(f"JWT_SECRET_KEY={JWT_SECRET_KEY}")
+    raise ValueError(
+        "JWT_SECRET_KEY or JWT_SECRET environment variable is required. "
+        "Generate a secure secret with: python -c 'import secrets; print(secrets.token_urlsafe(64))'"
+    )
 
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -29,7 +28,10 @@ class JWTHandler:
     """Handler for JWT token operations"""
     
     def __init__(self, secret_key: str = None, algorithm: str = None):
-        self.secret_key = secret_key or JWT_SECRET_KEY
+        if secret_key:
+            self.secret_key = secret_key
+        else:
+            self.secret_key = JWT_SECRET_KEY
         self.algorithm = algorithm or JWT_ALGORITHM
         self.access_token_expire = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         self.refresh_token_expire = timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)

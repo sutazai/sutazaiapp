@@ -24,6 +24,7 @@ from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from services.jarvis.schemas import TaskRequest, TaskResponse
 try:
     import consul  # optional
 except Exception:
@@ -76,20 +77,7 @@ ACTIVE_SESSIONS = Gauge('jarvis_active_sessions', 'Active sessions')
 jarvis: Optional[Any] = None
 consul_client: Optional[Any] = None
 
-class TaskRequest(BaseModel):
-    """Task request model"""
-    command: str
-    context: Optional[Dict[str, Any]] = {}
-    voice_enabled: bool = False
-    plugins: Optional[List[str]] = []
-
-class TaskResponse(BaseModel):
-    """Task response model"""
-    result: Any
-    status: str
-    execution_time: float
-    agents_used: List[str]
-    voice_response: Optional[str] = None
+    
 
 app = FastAPI(
     title="Jarvis AI System",

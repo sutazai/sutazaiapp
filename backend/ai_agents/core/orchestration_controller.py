@@ -23,6 +23,7 @@ import time
 import uuid
 from datetime import datetime, timedelta
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 from typing import Any, Dict, List, Optional, Set, Union, Callable
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
@@ -53,13 +54,7 @@ class TaskStatus(Enum):
     CANCELLED = "cancelled"
 
 
-class TaskPriority(Enum):
-    """Task priority levels"""
-    CRITICAL = 1
-    HIGH = 2
-    NORMAL = 3
-    LOW = 4
-    BACKGROUND = 5
+# Use canonical TaskPriority from app.schemas.message_types
 
 
 @dataclass
@@ -91,7 +86,7 @@ class Task:
             "name": self.name,
             "description": self.description,
             "task_type": self.task_type,
-            "priority": self.priority.value,
+            "priority": TaskPriority.from_value(self.priority).rank,
             "required_capabilities": [cap.value for cap in self.required_capabilities],
             "input_data": self.input_data,
             "dependencies": self.dependencies,
@@ -276,7 +271,7 @@ class OrchestrationController:
                     name=task_spec["name"],
                     description=task_spec.get("description", ""),
                     task_type=task_spec["task_type"],
-                    priority=TaskPriority(task_spec.get("priority", 3)),
+                    priority=TaskPriority.from_value(task_spec.get("priority", 3)),
                     required_capabilities=[
                         AgentCapability(cap) for cap in task_spec.get("required_capabilities", [])
                     ],

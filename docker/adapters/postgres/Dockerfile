@@ -15,4 +15,10 @@ ENV ADAPTER_PORT=10100
 
 # Add connection pooling support
 ENV PGPOOL_ENABLED=true
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 ENV PGPOOL_SIZE=20

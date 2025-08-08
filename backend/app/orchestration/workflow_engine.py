@@ -9,6 +9,7 @@ import json
 import logging
 import uuid
 from typing import Dict, List, Optional, Any, Set, Callable
+from app.orchestration.event_utils import register_event_handler as _reg_handler
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -903,8 +904,8 @@ class WorkflowEngine:
         }
     
     async def register_event_handler(self, event_type: str, handler: Callable):
-        """Register an event handler"""
-        self.event_handlers[event_type].append(handler)
+        """Register an event handler (canonical util)"""
+        _reg_handler(self.event_handlers, event_type, handler)
     
     async def stop(self):
         """Stop the workflow engine"""

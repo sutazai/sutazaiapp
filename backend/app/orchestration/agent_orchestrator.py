@@ -13,6 +13,7 @@ from typing import Dict, List, Optional, Any, Set
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
+from app.schemas.message_types import TaskPriority, MessageType
 import redis.asyncio as redis
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -30,12 +31,6 @@ class AgentStatus(Enum):
     ERROR = "error"
     MAINTENANCE = "maintenance"
 
-class TaskPriority(Enum):
-    LOW = 1
-    NORMAL = 2
-    HIGH = 3
-    CRITICAL = 4
-    EMERGENCY = 5
 
 class WorkflowStatus(Enum):
     PENDING = "pending"
@@ -112,7 +107,7 @@ class Workflow:
     metadata: Dict[str, Any]
     progress: float = 0.0
 
-from backend.app.schemas.message_types import MessageType
+# MessageType imported above from app.schemas.message_types
 
 @dataclass
 class Message:
@@ -549,7 +544,7 @@ class SutazAIAgentOrchestrator:
                     type=task_def.get("type", "general"),
                     description=task_def.get("description", ""),
                     input_data=task_def.get("input_data"),
-                    priority=TaskPriority(task_def.get("priority", 2)),
+                    priority=TaskPriority.from_value(task_def.get("priority", 2)),
                     requester_id=workflow.created_by
                 )
                 

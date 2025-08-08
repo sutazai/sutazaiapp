@@ -44,4 +44,10 @@ ENV NODE_ENV=production
 ENV LOG_LEVEL=info
 
 # Start the application
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["node", "index.js"] 

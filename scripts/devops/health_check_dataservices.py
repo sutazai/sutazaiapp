@@ -20,6 +20,7 @@ Author: infrastructure-devops-manager agent
 import argparse
 import json
 import logging
+from scripts.lib.logging_utils import setup_logging
 import sys
 import time
 from datetime import datetime
@@ -31,14 +32,6 @@ import socket
 import base64
 
 
-def setup_logging(verbose: bool = False) -> None:
-    """Setup logging configuration with timestamp."""
-    level = logging.DEBUG if verbose else logging.INFO
-    logging.basicConfig(
-        level=level,
-        format='[%(levelname)s] %(asctime)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
 
 
 def check_tcp_connection(host: str, port: int, timeout: float, service_name: str) -> Dict[str, Any]:

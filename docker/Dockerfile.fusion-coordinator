@@ -33,4 +33,10 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD curl -f http://localhost:8766/health || exit 1
 
 # Start the fusion coordinator service
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "-m", "fusion.core.multi_modal_fusion_coordinator"]

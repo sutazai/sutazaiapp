@@ -535,17 +535,7 @@ class BackupVerificationSystem:
         except Exception as e:
             logger.warning(f"Could not store checksum for {backup_file['path']}: {e}")
     
-    def calculate_checksum(self, file_path: Path) -> str:
-        """Calculate SHA256 checksum of a file"""
-        hash_sha256 = hashlib.sha256()
-        try:
-            with open(file_path, "rb") as f:
-                for chunk in iter(lambda: f.read(8192), b""):
-                    hash_sha256.update(chunk)
-            return hash_sha256.hexdigest()
-        except Exception as e:
-            logger.error(f"Error calculating checksum for {file_path}: {e}")
-            return ""
+    # calculate_checksum centralized in scripts.lib.file_utils
     
     def run_backup_verification(self) -> Dict:
         """Run complete backup verification process"""

@@ -24,4 +24,10 @@ ENTRYPOINT ["/opt/tabby/bin/tabby-smart-cpu"]
 
 # Run as non-root user
 USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["serve", "--model", "StarCoder-1B", "--chat-model", "Qwen2-1.5B-Instruct"]

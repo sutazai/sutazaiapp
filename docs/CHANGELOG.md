@@ -82,3 +82,50 @@ All notable changes to the `/docs` workspace are tracked here. Use Conventional 
 - All documentation aligned with 19 codebase rules from COMPREHENSIVE_ENGINEERING_STANDARDS.md
 - Reality-based approach acknowledging current limitations (TinyLlama vs gpt-oss, stub agents)
 
+### Comprehensive Codebase Rules Update
+- docs(standards): Added 19 comprehensive codebase rules to `/opt/sutazaiapp/CLAUDE.md`
+  - Date: December 19, 2024
+  - Agent: Claude Code
+  - Change Type: Standards Enhancement
+  - Impact: Establishes mandatory engineering standards for all contributors
+  - Includes rules for:
+    - Codebase hygiene and consistency
+    - No fantasy elements (production-ready only)
+    - Preserving existing functionality
+    - Documentation requirements
+    - Script organization
+    - Docker best practices
+    - Local LLM usage (Ollama/TinyLlama)
+    - Change tracking requirements
+  - Rules are now part of CLAUDE.md for all future Claude Code instances to follow
+
+### Agents Guidelines Update - AGENTS.md Aligned with Comprehensive Rules
+- docs(agents): Added Comprehensive Codebase Rules to `/AGENTS.md`
+  - Time/Date: 20:03 UTC - 2025-08-08
+  - Version: 0.1.0
+  - Component: Documentation / Agents Guidelines
+  - Change Type: Standards Consolidation
+  - What: Appended “📋 COMPREHENSIVE CODEBASE RULES” (Rules 1–19) to AGENTS.md
+  - Why: Ensure AGENTS.md reflects mandatory engineering standards for contributors
+  - Who: Coding Agent (local)
+  - Impact: Contributors must follow rules; IMPORTANT/ remains the authoritative source
+  - Dependencies: None; documentation only
+  - Notes: Rule 19 observed by recording this change in docs/CHANGELOG.md
+
+### Repo-wide CHANGELOG Presence Enforcement
+- docs(tooling): Added template at `/docs/templates/CHANGELOG_TEMPLATE.md`
+  - Purpose: Standardize folder-scoped CHANGELOG.md content
+- docs(tooling): Added utility at `/scripts/utils/ensure_changelogs.py`
+  - Purpose: Ensure every directory contains a `CHANGELOG.md`
+  - Features: Dry-run, verbose, skip patterns, path annotation
+- docs(ops): Executed utility to create missing `CHANGELOG.md` files
+  - Time/Date: 20:06 UTC - 2025-08-08
+  - Scope: All repository directories (excluding cache/vendor skips)
+  - Result: 0 directories missing `CHANGELOG.md` post-run
+  - Impact: Enables path-scoped change tracking while keeping `/docs/CHANGELOG.md` canonical
+## 2025-08-08 — System-Wide Cleanup and CI Integration
+- Centralized core enums, event registration, agent metrics, logging, checksums, model-name validation, Jarvis schemas, and agent naming utilities.
+- Reduced duplicate groups (static discovery) from 66 to 41; regenerated conflict/dependency reports.
+- Added integration runner (`scripts/run_integration.py`) to execute health checks, tests, lint/type checks, and security scans; emits JSONL artifacts.
+- Added GitHub Actions workflow (`.github/workflows/integration.yml`) to run the full suite and upload artifacts on push/PR.
+- Added Makefile target `integration` for local invocation.

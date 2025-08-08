@@ -59,7 +59,7 @@ services:
     container_name: sutazai-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-sutazai}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-sutazai_rabbit}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:15672/api/health/checks/virtual-hosts"]
       interval: 30s
@@ -796,7 +796,7 @@ services:
           cpus: '0.25'
           memory: 128M
     environment:
-    - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-sutazai_grafana}
+    - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     - GF_USERS_ALLOW_SIGN_UP=false
     - GF_INSTALL_PLUGINS=
     - GF_ANALYTICS_REPORTING_ENABLED=false

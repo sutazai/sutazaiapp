@@ -47,7 +47,9 @@ structlog.configure(
 logger = structlog.get_logger()
 
 # Configuration
-JWT_SECRET = os.getenv('JWT_SECRET', 'sutazai_jwt_secret_key')
+JWT_SECRET = os.getenv('JWT_SECRET')
+if not JWT_SECRET:
+    raise ValueError("JWT_SECRET environment variable is required for security")
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRY = int(os.getenv('JWT_EXPIRY', 3600))
 JWT_ISSUER = os.getenv('JWT_ISSUER', 'sutazai-auth')

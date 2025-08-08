@@ -519,7 +519,7 @@ async def benchmark_all_optimizations():
     config = BenchmarkConfig(
         model_name="tinyllama",
         test_prompts=[
-            "Explain quantum computing",
+            "Explain containerization",
             "Write a Python function to sort a list",
             "What is machine learning?",
             "Describe the water cycle",

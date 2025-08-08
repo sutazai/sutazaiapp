@@ -1,635 +1,899 @@
 {
-  "cycles": [],
-  "duplicate_classes": {
-    "ReasoningEngine": [
-      "backend.processing_engine.reasoning_engine",
-      "backend.knowledge_graph.reasoning_engine"
-    ],
-    "MessageBus": [
-      "backend.ai_agents.communication_protocols",
-      "backend.app.orchestration.message_bus"
-    ],
-    "Message": [
-      "backend.ai_agents.communication_protocols",
-      "backend.ai_agents.protocols.message_protocol",
-      "backend.ai_agents.orchestration.advanced_message_bus",
-      "backend.app.orchestration.agent_orchestrator",
-      "backend.app.orchestration.message_bus",
-      "agents.core.context_manager"
-    ],
-    "AgentStatus": [
-      "backend.ai_agents.agent_status",
-      "backend.ai_agents.universal_client",
-      "backend.agent_orchestration.orchestrator",
-      "backend.ai_agents.core.base_agent",
-      "backend.ai_agents.coordination.continuous_coordinator",
-      "backend.app.orchestration.agent_orchestrator",
-      "backend.app.agents.registry",
-      "agents.compatibility_base_agent",
-      "agents.core.base_agent_v2",
-      "scripts.performance-optimization",
-      "scripts.monitoring.agent-activation-monitor"
-    ],
-    "HealthStatus": [
-      "backend.ai_agents.health_monitor",
-      "backend.edge_inference.failover",
-      "backend.ai_agents.orchestration.infrastructure_integration",
-      "scripts.comprehensive-agent-health-monitor",
-      "scripts.distributed-health-monitor",
-      "scripts.dynamic-load-balancer",
-      "scripts.service-mesh.health-check-server",
-      "scripts.monitoring.multi-system-integration-framework"
-    ],
-    "RecoveryAction": [
-      "backend.ai_agents.health_monitor",
-      "backend.edge_inference.failover"
-    ],
-    "Alert": [
-      "backend.ai_agents.health_monitor",
-      "backend.edge_inference.telemetry",
-      "backend.federated_learning.monitoring",
-      "backend.oversight.alert_notification_system",
-      "backend.app.orchestration.monitoring"
-    ],
-    "AlertManager": [
-      "backend.ai_agents.health_monitor",
-      "backend.edge_inference.telemetry"
-    ],
-    "HealthCheck": [
-      "backend.ai_agents.health_monitor",
-      "backend.ai_agents.health_check",
-      "backend.edge_inference.failover",
-      "backend.app.orchestration.monitoring",
-      "scripts.comprehensive-agent-health-monitor"
-    ],
-    "AlertSeverity": [
-      "backend.ai_agents.health_monitor",
-      "backend.edge_inference.telemetry",
-      "backend.federated_learning.monitoring",
-      "backend.oversight.alert_notification_system",
-      "backend.oversight.human_oversight_interface",
-      "backend.app.orchestration.monitoring"
-    ],
-    "UniversalAgentFactory": [
-      "backend.ai_agents.universal_agent_factory",
-      "backend.ai_agents.core.universal_agent_factory"
-    ],
-    "LoadBalancer": [
-      "backend.ai_agents.discovery_service",
-      "backend.edge_inference.intelligent_router",
-      "backend.app.core.performance",
-      "scripts.resource-pool-coordinator"
-    ],
-    "AgentRegistry": [
-      "backend.ai_agents.discovery_service",
-      "backend.ai_agents.core.agent_registry",
-      "backend.app.services.agent_registry",
-      "backend.app.services.agent_orchestrator",
-      "backend.app.agents.registry"
-    ],
-    "MockAgent": [
-      "backend.ai_agents.agent_factory",
-      "scripts.monitoring.test_static_monitor"
-    ],
-    "AgentMetrics": [
-      "backend.ai_agents.agent_manager",
-      "backend.energy.agent_hibernation",
-      "backend.ai_agents.core.agent_registry",
-      "backend.app.orchestration.task_router",
-      "agents.compatibility_base_agent",
-      "agents.task_assignment_coordinator.metrics",
-      "agents.ollama_integration.metrics",
-      "agents.core.base_agent_v2",
-      "agents.core.metrics",
-      "agents.resource_arbitration_agent.metrics",
-      "agents.ai_agent_orchestrator.metrics",
-      "agents.hardware-resource-optimizer.metrics",
-      "agents.coordinator.metrics"
-    ],
-    "WorkflowStatus": [
-      "backend.ai_agents.workflow_orchestrator",
-      "backend.ai_agents.orchestrator.workflow_engine",
-      "backend.ai_agents.core.orchestration_controller",
-      "backend.app.orchestration.workflow_engine",
-      "backend.app.orchestration.agent_orchestrator"
-    ],
-    "TaskStatus": [
-      "backend.ai_agents.workflow_orchestrator",
-      "backend.agent_orchestration.orchestrator",
-      "backend.ai_agents.orchestrator.workflow_engine",
-      "backend.ai_agents.core.orchestration_controller",
-      "backend.ai_agents.orchestration.unified_orchestrator",
-      "backend.app.models.agent"
-    ],
-    "WorkflowExecution": [
-      "backend.ai_agents.workflow_orchestrator",
-      "backend.app.orchestration.workflow_engine"
-    ],
-    "WorkflowTask": [
-      "backend.ai_agents.workflow_orchestrator",
-      "backend.ai_agents.orchestrator.workflow_engine"
-    ],
-    "WorkflowEngine": [
-      "backend.ai_agents.workflow_orchestrator",
-      "backend.ai_agents.orchestrator.workflow_engine",
-      "backend.app.orchestration.workflow_engine"
-    ],
-    "TaskResponse": [
-      "backend.ai_agents.universal_client",
-      "backend.ai_agents.orchestration.unified_orchestration_api",
-      "services.jarvis.main",
-      "services.jarvis.main_simple",
-      "services.jarvis.main_basic",
-      "agents.fastapi_wrapper",
-      "agents.ai-agent-orchestrator.enhanced_app",
-      "agents.hardware-resource-optimizer.main"
-    ],
-    "Priority": [
-      "backend.ai_agents.universal_client",
-      "agents.core.messaging"
-    ],
-    "TaskRequest": [
-      "backend.ai_agents.universal_client",
-      "backend.app.main",
-      "backend.ai_agents.orchestration.unified_orchestration_api",
-      "backend.app.orchestration.task_router",
-      "services.jarvis.main",
-      "services.jarvis.main_simple",
-      "services.jarvis.main_basic",
-      "agents.fastapi_wrapper",
-      "agents.ai-agent-orchestrator.enhanced_app",
-      "agents.ai_agent_orchestrator.app",
-      "agents.hardware-resource-optimizer.main"
-    ],
-    "AgentType": [
-      "backend.ai_agents.universal_client",
-      "backend.app.agent_orchestrator",
-      "backend.ai_agents.orchestration.master_agent_orchestrator"
-    ],
-    "AgentInfo": [
-      "backend.ai_agents.universal_client",
-      "backend.app.orchestration.agent_discovery",
-      "backend.app.agents.registry",
-      "agents.coordinator.app"
-    ],
-    "AgentCapability": [
-      "backend.ai_agents.universal_client",
-      "backend.agent_orchestration.orchestrator",
-      "backend.ai_agents.core.base_agent",
-      "backend.ai_agents.orchestration.master_agent_orchestrator",
-      "backend.app.orchestration.agent_orchestrator",
-      "agents.ai_agent_orchestrator.app"
-    ],
-    "NodeStatus": [
-      "backend.edge_inference.intelligent_router",
-      "backend.app.orchestration.workflow_engine"
-    ],
-    "PerformancePredictor": [
-      "backend.edge_inference.intelligent_router",
-      "backend.federated_learning.monitoring"
-    ],
-    "RoutingDecision": [
-      "backend.edge_inference.intelligent_router",
-      "backend.ai_agents.orchestration.intelligent_task_router",
-      "backend.app.orchestration.task_router"
-    ],
-    "RequestPriority": [
-      "backend.edge_inference.batch_processor",
-      "agents.core.request_queue"
-    ],
-    "ResultCache": [
-      "backend.edge_inference.batch_processor",
-      "backend.edge_inference.proxy"
-    ],
-    "BatchResult": [
-      "backend.edge_inference.batch_processor",
-      "agents.core.ollama_batch_processor"
-    ],
-    "BatchRequest": [
-      "backend.edge_inference.batch_processor",
-      "backend.app.services.advanced_model_manager",
-      "backend.app.api.v1.endpoints.streaming",
-      "agents.core.ollama_batch_processor"
-    ],
-    "Metric": [
-      "backend.edge_inference.telemetry",
-      "backend.app.orchestration.monitoring"
-    ],
-    "MetricType": [
-      "backend.edge_inference.telemetry",
-      "backend.federated_learning.monitoring",
-      "backend.app.orchestration.monitoring"
-    ],
-    "ModelCache": [
-      "backend.edge_inference.proxy",
-      "agents.core.ollama_pool"
-    ],
-    "RoutingStrategy": [
-      "backend.edge_inference.proxy",
-      "backend.ai_agents.core.agent_message_bus",
-      "backend.ai_agents.orchestration.intelligent_task_router"
-    ],
-    "InferenceRequest": [
-      "backend.edge_inference.proxy",
-      "backend.edge_inference.api"
-    ],
-    "CircuitBreaker": [
-      "backend.edge_inference.failover",
-      "agents.core.circuit_breaker",
-      "scripts.dynamic-load-balancer",
-      "scripts.hygiene-enforcement-coordinator"
-    ],
-    "HealthChecker": [
-      "backend.edge_inference.failover",
-      "scripts.hygiene-system-orchestrator",
-      "scripts.ultimate-deployment-orchestrator"
-    ],
-    "QuantizationConfig": [
-      "backend.edge_inference.quantization",
-      "agents.core.ollama_context_optimizer"
-    ],
-    "MemoryPool": [
-      "backend.edge_inference.memory_manager",
-      "scripts.memory-pool-manager"
-    ],
-    "DeploymentStatus": [
-      "backend.edge_inference.deployment",
-      "scripts.ultimate-deployment-master"
-    ],
-    "AnomalyDetector": [
-      "backend.federated_learning.monitoring",
-      "scripts.monitoring.multi-system-integration-framework"
-    ],
-    "ResourceMonitor": [
-      "backend.federated_learning.monitoring",
-      "scripts.hygiene-enforcement-coordinator"
-    ],
-    "ModelVersion": [
-      "backend.federated_learning.versioning",
-      "agents.core.ollama_model_manager"
-    ],
-    "CompressionType": [
-      "backend.federated_learning.aggregator",
-      "scripts.memory-pool-manager"
-    ],
-    "Config": [
-      "backend.core.config",
-      "backend.app.core.config",
-      "backend.app.models.agent",
-      "agents.core.messaging"
-    ],
-    "CacheManager": [
-      "backend.utils.cache_manager",
-      "backend.app.core.performance"
-    ],
-    "ChatRequest": [
-      "backend.app.main",
-      "backend.app.api.v1.endpoints.chat"
-    ],
-    "WorkflowRequest": [
-      "backend.app.main",
-      "backend.app.api.v1.orchestration",
-      "backend.app.api.v1.endpoints.agents"
-    ],
-    "ConnectionManager": [
-      "backend.app.main",
-      "backend.ai_agents.orchestration.unified_orchestration_api"
-    ],
-    "AgentOrchestrator": [
-      "backend.app.agent_orchestrator",
-      "backend.agent_orchestration.orchestrator",
-      "backend.app.services.agent_orchestrator"
-    ],
-    "AuditEvent": [
-      "backend.data_governance.audit_logger",
-      "backend.oversight.human_oversight_interface"
-    ],
-    "ComplianceViolation": [
-      "backend.data_governance.compliance_manager",
-      "backend.oversight.compliance_reporter",
-      "scripts.compliance-monitor-core"
-    ],
-    "ComplianceManager": [
-      "backend.data_governance.compliance_manager",
-      "backend.app.core.security"
-    ],
-    "ComplianceReport": [
-      "backend.data_governance.compliance_manager",
-      "backend.oversight.compliance_reporter"
-    ],
-    "SearchResult": [
-      "backend.data_governance.data_catalog",
-      "services.faiss-vector.main"
-    ],
-    "TestPerformance": [
-      "backend.tests.test_cognitive_architecture",
-      "backend.tests.test_main_comprehensive"
-    ],
-    "TestIntegration": [
-      "backend.tests.test_cognitive_architecture",
-      "backend.tests.test_main_comprehensive"
-    ],
-    "TestChatEndpoints": [
-      "backend.tests.test_api_endpoints",
-      "backend.tests.test_main_comprehensive"
-    ],
-    "TestErrorHandling": [
-      "backend.tests.test_main_app",
-      "backend.tests.test_api_basic",
-      "backend.tests.test_main_comprehensive"
-    ],
-    "Task": [
-      "backend.agent_orchestration.orchestrator",
-      "backend.energy.workload_scheduler",
-      "backend.ai_agents.core.orchestration_controller",
-      "backend.ai_agents.orchestration.unified_orchestrator",
-      "backend.ai_agents.orchestration.master_agent_orchestrator",
-      "backend.app.orchestration.agent_orchestrator"
-    ],
-    "WorkflowNode": [
-      "backend.knowledge_graph.schema",
-      "backend.app.orchestration.workflow_engine",
-      "backend.app.orchestration.agent_orchestrator"
-    ],
-    "NodeType": [
-      "backend.knowledge_graph.schema",
-      "backend.app.orchestration.workflow_engine"
-    ],
-    "TaskPriority": [
-      "backend.energy.workload_scheduler",
-      "backend.ai_agents.specialized.orchestrator",
-      "backend.ai_agents.core.orchestration_controller",
-      "backend.ai_agents.orchestration.master_agent_orchestrator",
-      "backend.app.models.agent",
-      "backend.app.orchestration.agent_orchestrator",
-      "backend.app.orchestration.task_router",
-      "scripts.distributed-task-queue"
-    ],
-    "ResourceAllocation": [
-      "backend.energy.resource_allocator",
-      "backend.app.orchestration.coordination",
-      "services.resource-manager.main",
-      "agents.resource_arbitration_agent.app",
-      "scripts.resource-pool-coordinator"
-    ],
-    "AllocationStrategy": [
-      "backend.energy.resource_allocator",
-      "scripts.resource-pool-coordinator"
-    ],
-    "ResourceType": [
-      "backend.energy.resource_allocator",
-      "agents.resource_arbitration_agent.app",
-      "scripts.resource-pool-coordinator"
-    ],
-    "SystemResources": [
-      "backend.energy.resource_allocator",
-      "scripts.hardware-optimization-master"
-    ],
-    "MemoryManager": [
-      "backend.ai_agents.memory.agent_memory",
-      "services.jarvis.core.memory_manager",
-      "scripts.hardware-optimization-master"
-    ],
-    "ConfidenceLevel": [
-      "backend.ai_agents.memory.shared_knowledge_base",
-      "backend.ai_agents.reasoning.advanced_reasoning_engine"
-    ],
-    "AgentMessage": [
-      "backend.ai_agents.communication.agent_bus",
-      "backend.ai_agents.core.base_agent",
-      "agents.agent_with_health",
-      "agents.generic_agent"
-    ],
-    "Workflow": [
-      "backend.ai_agents.orchestrator.workflow_engine",
-      "backend.ai_agents.core.orchestration_controller",
-      "backend.app.orchestration.workflow_engine",
-      "backend.app.orchestration.agent_orchestrator"
-    ],
-    "GenericAgent": [
-      "backend.ai_agents.specialized.generic_agent",
-      "agents.generic_agent"
-    ],
-    "MessageStats": [
-      "backend.ai_agents.core.agent_message_bus",
-      "backend.ai_agents.orchestration.advanced_message_bus"
-    ],
-    "AgentHealth": [
-      "backend.ai_agents.core.agent_registry",
-      "backend.app.api.v1.endpoints.monitoring",
-      "scripts.distributed-health-monitor"
-    ],
-    "BaseAgent": [
-      "backend.ai_agents.core.base_agent",
-      "agents.agent_base",
-      "agents.hardware-resource-optimizer.shared.agent_base"
-    ],
-    "AgentConfig": [
-      "backend.ai_agents.core.base_agent",
-      "scripts.ultimate-deployment-orchestrator"
-    ],
-    "ReasoningChain": [
-      "backend.ai_agents.reasoning.advanced_reasoning_engine",
-      "backend.ai_agents.reasoning.chain_of_thought"
-    ],
-    "AdvancedReasoningEngine": [
-      "backend.ai_agents.reasoning.advanced_reasoning_engine",
-      "backend.ai_agents.reasoning.chain_of_thought"
-    ],
-    "ReasoningStep": [
-      "backend.ai_agents.reasoning.advanced_reasoning_engine",
-      "backend.ai_agents.reasoning.chain_of_thought"
-    ],
-    "IntelligentTaskRouter": [
-      "backend.ai_agents.orchestration.intelligent_task_router",
-      "backend.app.orchestration.task_router"
-    ],
-    "CoordinationPattern": [
-      "backend.ai_agents.orchestration.master_agent_orchestrator",
-      "backend.ai_agents.orchestration.enhanced_multi_agent_coordinator"
-    ],
-    "MessageRequest": [
-      "backend.ai_agents.orchestration.unified_orchestration_api",
-      "backend.app.api.v1.orchestration"
-    ],
-    "ServiceStatus": [
-      "backend.ai_agents.orchestration.agent_registry_service",
-      "scripts.hygiene-system-orchestrator",
-      "scripts.ultimate-deployment-orchestrator"
-    ],
-    "MessageType": [
-      "backend.app.schemas.message_types",
-      "agents.core.messaging"
-    ],
-    "ServiceRegistry": [
-      "backend.app.core.service_registry",
-      "services.external-service-registry"
-    ],
-    "XSSProtectionMiddleware": [
-      "backend.app.core.middleware",
-      "backend.app.core.security"
-    ],
-    "PerformanceOptimizer": [
-      "backend.app.core.performance",
-      "scripts.performance-optimization"
-    ],
-    "RateLimiter": [
-      "backend.app.core.performance",
-      "backend.app.core.security"
-    ],
-    "AgentExecutionError": [
-      "backend.app.core.exceptions",
-      "backend.app.services.agent_orchestrator"
-    ],
-    "AgentNotFoundError": [
-      "backend.app.core.exceptions",
-      "backend.app.services.agent_orchestrator"
-    ],
-    "AgentTask": [
-      "backend.app.models.agent",
-      "backend.app.services.agent_orchestrator"
-    ],
-    "RegisteredAgent": [
-      "backend.app.orchestration.agent_orchestrator",
-      "agents.ai_agent_orchestrator.app"
-    ],
-    "LoadBalancingAlgorithm": [
-      "backend.app.orchestration.task_router",
-      "scripts.dynamic-load-balancer"
-    ],
-    "BaseService": [
-      "backend.app.services.base_service",
-      "backend.app.services.agent_orchestrator"
-    ],
-    "SearchRequest": [
-      "backend.app.api.v1.vectors",
-      "services.faiss-vector.main"
-    ],
-    "SystemHealth": [
-      "backend.app.api.v1.endpoints.monitoring",
-      "scripts.monitoring.multi-system-integration-framework"
-    ],
-    "SystemMetrics": [
-      "services.resource-manager.main",
-      "scripts.distributed-health-monitor",
-      "scripts.performance-optimization",
-      "scripts.monitoring.agent-activation-monitor"
-    ],
-    "VoiceInterface": [
-      "services.jarvis.core.voice_interface",
-      "services.jarvis.core.voice_interface_minimal"
-    ],
-    "SimpleAgent": [
-      "agents.fastapi_wrapper",
-      "agents.container_startup"
-    ],
-    "BaseAgentV2": [
-      "agents.compatibility_base_agent",
-      "agents.core.simple_base_agent",
-      "agents.core.base_agent_v2"
-    ],
-    "TaskResult": [
-      "agents.compatibility_base_agent",
-      "agents.core.base_agent_v2"
-    ],
-    "AIAgentOrchestrator": [
-      "agents.ai-agent-orchestrator.enhanced_app",
-      "agents.ai_agent_orchestrator.app"
-    ],
-    "AssignmentStrategy": [
-      "agents.task_assignment_coordinator.app",
-      "agents.coordinator.app"
-    ],
-    "TaskAssignmentCoordinator": [
-      "agents.task_assignment_coordinator.app",
-      "agents.coordinator.app"
-    ],
-    "MetricsTimer": [
-      "agents.task_assignment_coordinator.metrics",
-      "agents.ollama_integration.metrics",
-      "agents.core.metrics",
-      "agents.resource_arbitration_agent.metrics",
-      "agents.ai_agent_orchestrator.metrics",
-      "agents.hardware-resource-optimizer.metrics",
-      "agents.coordinator.metrics"
-    ],
-    "OptimizationConfig": [
-      "agents.core.prompt_optimizer",
-      "scripts.hardware-optimization-master"
-    ],
-    "OllamaConnectionPool": [
-      "agents.core.ollama_connection_pool",
-      "agents.core.ollama_pool"
-    ],
-    "RequestMetrics": [
-      "agents.core.ollama_connection_pool",
-      "scripts.dynamic-load-balancer"
-    ],
-    "PoolStats": [
-      "agents.core.ollama_pool",
-      "scripts.memory-pool-manager"
-    ],
-    "RabbitMQClient": [
-      "agents.core.rabbitmq_client",
-      "agents.core.messaging"
-    ],
-    "CircuitState": [
-      "agents.core.circuit_breaker",
-      "scripts.distributed-health-monitor"
-    ],
-    "IntegrationTestSuite": [
-      "agents.hardware-resource-optimizer.integration_test_suite",
-      "agents.hardware-resource-optimizer.tests.integration_test_suite"
-    ],
-    "ContinuousValidator": [
-      "agents.hardware-resource-optimizer.continuous_validator",
-      "agents.hardware-resource-optimizer.tests.continuous_validator"
-    ],
-    "ServiceConfig": [
-      "scripts.distributed-autoscaler",
-      "scripts.startup_optimizer",
-      "scripts.service-mesh.service-discovery-client"
-    ],
-    "SystemResourceMonitor": [
-      "scripts.startup_optimizer",
-      "scripts.performance-profiler-suite"
-    ],
-    "TestResult": [
-      "scripts.ai-performance-validator",
-      "scripts.verify-hygiene-monitoring-system"
-    ],
-    "ValidationResult": [
-      "scripts.validate-complete-system",
-      "scripts.service-mesh.validate-service-mesh"
-    ],
-    "GarbageCollector": [
-      "scripts.garbage-collection-system",
-      "scripts.enforcement.rule13_garbage_collector"
-    ],
-    "RollbackManager": [
-      "scripts.ultimate-deployment-orchestrator",
-      "scripts.monitoring.multi-system-integration-framework"
-    ],
-    "ContainerHealthMonitor": [
-      "scripts.container-health-monitor",
-      "scripts.permanent-health-monitor"
-    ],
-    "TestStaticMonitor": [
-      "scripts.monitoring.test_static_monitor_simple",
-      "scripts.monitoring.test_static_monitor"
-    ],
-    "MockNetwork": [
-      "scripts.monitoring.test_enhanced_monitor",
-      "scripts.monitoring.test_static_monitor"
-    ],
-    "MockHandler": [
-      "scripts.monitoring.test_static_monitor",
-      "scripts.monitoring.comprehensive_monitor_validation"
-    ],
-    "RuleViolation": [
-      "scripts.monitoring.enhanced-compliance-monitor",
-      "scripts.monitoring.continuous-compliance-monitor"
+  "generated_at": "2025-08-08T20:35:34.701134+00:00",
+  "duplicates": [
+    {
+      "hash": "8d91dddf5a4a473bcef6c69f9f0347d9c98405a7",
+      "symbols": [
+        "func:register_event_handler"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:register_event_handler",
+          "module": "backend.ai_agents.orchestration.agent_registry_service",
+          "path": "backend/ai_agents/orchestration/agent_registry_service.py"
+        },
+        {
+          "symbol": "func:register_event_handler",
+          "module": "backend.ai_agents.core.agent_registry",
+          "path": "backend/ai_agents/core/agent_registry.py"
+        }
+      ]
+    },
+    {
+      "hash": "a0309424487ece0f792ee70d4e11fad6b7028f14",
+      "symbols": [
+        "func:_on_failure"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_on_failure",
+          "module": "backend.edge_inference.failover",
+          "path": "backend/edge_inference/failover.py"
+        },
+        {
+          "symbol": "func:_on_failure",
+          "module": "scripts.dynamic-load-balancer",
+          "path": "scripts/dynamic-load-balancer.py"
+        }
+      ]
+    },
+    {
+      "hash": "abe178e3bc4c9f4d98b0504637309d87fe789dc7",
+      "symbols": [
+        "func:clear"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:clear",
+          "module": "backend.edge_inference.proxy",
+          "path": "backend/edge_inference/proxy.py"
+        },
+        {
+          "symbol": "func:clear",
+          "module": "backend.edge_inference.batch_processor",
+          "path": "backend/edge_inference/batch_processor.py"
+        }
+      ]
+    },
+    {
+      "hash": "afde69c1fb771e2d7f4630435277a19cbe2ac8cf",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "backend.edge_inference.deployment",
+          "path": "backend/edge_inference/deployment.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "backend.edge_inference.deployment",
+          "path": "backend/edge_inference/deployment.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "backend.app.services.agent_orchestrator",
+          "path": "backend/app/services/agent_orchestrator.py"
+        }
+      ]
+    },
+    {
+      "hash": "61668743e9919990b20d77fcc66267eb47ff28b6",
+      "symbols": [
+        "func:_get_main_agent_files"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_get_main_agent_files",
+          "module": "backend.tests.agent_compliance_fixer",
+          "path": "backend/tests/agent_compliance_fixer.py"
+        },
+        {
+          "symbol": "func:_get_main_agent_files",
+          "module": "backend.tests.test_agent_hygiene_compliance",
+          "path": "backend/tests/test_agent_hygiene_compliance.py"
+        }
+      ]
+    },
+    {
+      "hash": "2dfe191188a0ee31a80ac25ba7fb455021318a48",
+      "symbols": [
+        "class:Config"
+      ],
+      "occurrences": [
+        {
+          "symbol": "class:Config",
+          "module": "backend.app.auth.models",
+          "path": "backend/app/auth/models.py"
+        },
+        {
+          "symbol": "class:Config",
+          "module": "backend.app.auth.models",
+          "path": "backend/app/auth/models.py"
+        }
+      ]
+    },
+    {
+      "hash": "ecaca319860dc23be48e88457087a379a2d41b17",
+      "symbols": [
+        "func:validate_model"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:validate_model",
+          "module": "backend.app.api.v1.endpoints.streaming",
+          "path": "backend/app/api/v1/endpoints/streaming.py"
+        },
+        {
+          "symbol": "func:validate_model",
+          "module": "backend.app.api.v1.endpoints.streaming",
+          "path": "backend/app/api/v1/endpoints/streaming.py"
+        },
+        {
+          "symbol": "func:validate_model",
+          "module": "backend.app.api.v1.endpoints.chat",
+          "path": "backend/app/api/v1/endpoints/chat.py"
+        }
+      ]
+    },
+    {
+      "hash": "5d6da440572316e3693f373ab2a8b5c636624238",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "backend.security.database_honeypot",
+          "path": "backend/security/database_honeypot.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "backend.security.ai_agent_honeypot",
+          "path": "backend/security/ai_agent_honeypot.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "backend.security.web_honeypot",
+          "path": "backend/security/web_honeypot.py"
+        }
+      ]
+    },
+    {
+      "hash": "a67d273383b12bcfeaf7c511978aa1e153ce8a07",
+      "symbols": [
+        "func:__post_init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__post_init__",
+          "module": "backend.data_governance.lineage_tracker",
+          "path": "backend/data_governance/lineage_tracker.py"
+        },
+        {
+          "symbol": "func:__post_init__",
+          "module": "backend.data_governance.data_catalog",
+          "path": "backend/data_governance/data_catalog.py"
+        }
+      ]
+    },
+    {
+      "hash": "5387cdbc2bd067fede84af8e8056305cb4dd32c0",
+      "symbols": [
+        "func:__del__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__del__",
+          "module": "services.adapters.ai_frameworks.tensorflow_adapter",
+          "path": "services/adapters/ai_frameworks/tensorflow_adapter.py"
+        },
+        {
+          "symbol": "func:__del__",
+          "module": "services.adapters.ai_frameworks.pytorch_adapter",
+          "path": "services/adapters/ai_frameworks/pytorch_adapter.py"
+        }
+      ]
+    },
+    {
+      "hash": "d1416b348cf62b27df5fec533ae77f45d5f0c1ea",
+      "symbols": [
+        "func:signal_handler"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:signal_handler",
+          "module": "services.jarvis.main",
+          "path": "services/jarvis/main.py"
+        },
+        {
+          "symbol": "func:signal_handler",
+          "module": "scripts.utils.memory_cleanup_service",
+          "path": "scripts/utils/memory_cleanup_service.py"
+        }
+      ]
+    },
+    {
+      "hash": "d17defbf7b92d0b2e28132c15c28dfa6a3dde9c4",
+      "symbols": [
+        "func:set_command_callback"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:set_command_callback",
+          "module": "services.jarvis.core.voice_interface_minimal",
+          "path": "services/jarvis/core/voice_interface_minimal.py"
+        },
+        {
+          "symbol": "func:set_command_callback",
+          "module": "services.jarvis.core.voice_interface",
+          "path": "services/jarvis/core/voice_interface.py"
+        }
+      ]
+    },
+    {
+      "hash": "e6cbada906377c89e702d129a816434c39150722",
+      "symbols": [
+        "func:set_wake_word_callback"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:set_wake_word_callback",
+          "module": "services.jarvis.core.voice_interface_minimal",
+          "path": "services/jarvis/core/voice_interface_minimal.py"
+        },
+        {
+          "symbol": "func:set_wake_word_callback",
+          "module": "services.jarvis.core.voice_interface",
+          "path": "services/jarvis/core/voice_interface.py"
+        }
+      ]
+    },
+    {
+      "hash": "02b4726e407843fb59c5c57b718ce46e3070f1a2",
+      "symbols": [
+        "class:AgentMessage"
+      ],
+      "occurrences": [
+        {
+          "symbol": "class:AgentMessage",
+          "module": "agents.generic_agent",
+          "path": "agents/generic_agent.py"
+        },
+        {
+          "symbol": "class:AgentMessage",
+          "module": "agents.agent_with_health",
+          "path": "agents/agent_with_health.py"
+        }
+      ]
+    },
+    {
+      "hash": "2f414cbfb0aeb6882c79702e5a735e9488ea3e7e",
+      "symbols": [
+        "func:_load_config"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_load_config",
+          "module": "agents.generic_agent",
+          "path": "agents/generic_agent.py"
+        },
+        {
+          "symbol": "func:_load_config",
+          "module": "agents.agent_with_health",
+          "path": "agents/agent_with_health.py"
+        }
+      ]
+    },
+    {
+      "hash": "8b97ff52f934dc742af6a72f312386004f064997",
+      "symbols": [
+        "func:_get_default_config"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_get_default_config",
+          "module": "agents.generic_agent",
+          "path": "agents/generic_agent.py"
+        },
+        {
+          "symbol": "func:_get_default_config",
+          "module": "agents.agent_with_health",
+          "path": "agents/agent_with_health.py"
+        }
+      ]
+    },
+    {
+      "hash": "0a649928118e14e66670a325e0f5d1da9cae25f1",
+      "symbols": [
+        "class:BaseAgent"
+      ],
+      "occurrences": [
+        {
+          "symbol": "class:BaseAgent",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "class:BaseAgent",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "539e5b188281956a8bb52f867a00c5119e70f36f",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "7e40da04d42cebcb1b8637d7e984d692d13f8bd7",
+      "symbols": [
+        "func:_load_config"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_load_config",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:_load_config",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "80799ab7029e64b2c66d6da22f877f0c7b7cad02",
+      "symbols": [
+        "func:register_with_coordinator"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:register_with_coordinator",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:register_with_coordinator",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "e851d5c7a38bb6316226e4ef7d819d3f360d1ddd",
+      "symbols": [
+        "func:send_heartbeat"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:send_heartbeat",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:send_heartbeat",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "e6b4dd990268c7fb63af64374487613744a3f914",
+      "symbols": [
+        "func:get_next_task"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:get_next_task",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:get_next_task",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "6ff0e4e6092db84ad9695bbf6a74ee88236bf408",
+      "symbols": [
+        "func:report_task_complete"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:report_task_complete",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:report_task_complete",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "fed98d0bb9760ace1d6c4b40608ddb776ce8a06a",
+      "symbols": [
+        "func:process_task"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:process_task",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:process_task",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "d705182cd5ca294b7ac5e0ae914c799100c762d1",
+      "symbols": [
+        "func:query_ollama"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:query_ollama",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:query_ollama",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "ec5a767d252572a2b8efa602ea66d930adeb3ee8",
+      "symbols": [
+        "func:run"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:run",
+          "module": "agents.agent_base",
+          "path": "agents/agent_base.py"
+        },
+        {
+          "symbol": "func:run",
+          "module": "agents.hardware-resource-optimizer.shared.agent_base",
+          "path": "agents/hardware-resource-optimizer/shared/agent_base.py"
+        }
+      ]
+    },
+    {
+      "hash": "767a779a5ed0ed87a0bc712902d14055fe3a3b0d",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "agents.fastapi_wrapper",
+          "path": "agents/fastapi_wrapper.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "agents.container_startup",
+          "path": "agents/container_startup.py"
+        }
+      ]
+    },
+    {
+      "hash": "f9c96b885287ef54a95fca1dc8363ac15992676b",
+      "symbols": [
+        "func:health"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:health",
+          "module": "agents.jarvis-automation-agent.app",
+          "path": "agents/jarvis-automation-agent/app.py"
+        },
+        {
+          "symbol": "func:health",
+          "module": "agents.jarvis-voice-interface.app",
+          "path": "agents/jarvis-voice-interface/app.py"
+        }
+      ]
+    },
+    {
+      "hash": "67875dd00978d420ee11eb5bc11e1bdeb137618f",
+      "symbols": [
+        "func:health"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:health",
+          "module": "agents.jarvis-hardware-resource-optimizer.app",
+          "path": "agents/jarvis-hardware-resource-optimizer/app.py"
+        },
+        {
+          "symbol": "func:health",
+          "module": "agents.jarvis-knowledge-management.app",
+          "path": "agents/jarvis-knowledge-management/app.py"
+        },
+        {
+          "symbol": "func:health",
+          "module": "agents.jarvis-multimodal-ai.app",
+          "path": "agents/jarvis-multimodal-ai/app.py"
+        }
+      ]
+    },
+    {
+      "hash": "5ec771a9004af8ccac952ebb86647d4fd827ae6c",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "agents.ollama_integration.example_usage",
+          "path": "agents/ollama_integration/example_usage.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "agents.ollama_integration.example_usage",
+          "path": "agents/ollama_integration/example_usage.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "agents.ollama_integration.example_usage",
+          "path": "agents/ollama_integration/example_usage.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "agents.ollama_integration.example_usage",
+          "path": "agents/ollama_integration/example_usage.py"
+        }
+      ]
+    },
+    {
+      "hash": "78f49a24f1eb863df6e3e27e6737cf5cb4a85146",
+      "symbols": [
+        "func:_call_api"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:_call_api",
+          "module": "agents.hardware-resource-optimizer.bulletproof_quick_test",
+          "path": "agents/hardware-resource-optimizer/bulletproof_quick_test.py"
+        },
+        {
+          "symbol": "func:_call_api",
+          "module": "agents.hardware-resource-optimizer.final_bulletproof_test",
+          "path": "agents/hardware-resource-optimizer/final_bulletproof_test.py"
+        }
+      ]
+    },
+    {
+      "hash": "d52ebf36451653c43d536775bffde666e1013a63",
+      "symbols": [
+        "func:ts"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:ts",
+          "module": "scripts.register_with_consul",
+          "path": "scripts/register_with_consul.py"
+        },
+        {
+          "symbol": "func:ts",
+          "module": "scripts.devops.check_services_health",
+          "path": "scripts/devops/check_services_health.py"
+        }
+      ]
+    },
+    {
+      "hash": "2ec955fd26841edcfa79aba581ca07ecd8877847",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.multi-environment-config-manager",
+          "path": "scripts/multi-environment-config-manager.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.advanced-rollback-system",
+          "path": "scripts/advanced-rollback-system.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.comprehensive-agent-health-monitor",
+          "path": "scripts/comprehensive-agent-health-monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "44a2f9aa197561d9b5d45163abd2c6323046b520",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.pre-commit.check-doc-structure",
+          "path": "scripts/pre-commit/check-doc-structure.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.pre-commit.check-script-duplication",
+          "path": "scripts/pre-commit/check-script-duplication.py"
+        }
+      ]
+    },
+    {
+      "hash": "352c6d014a49697cbff258e138fb0b782e123c9a",
+      "symbols": [
+        "func:log_message"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:log_message",
+          "module": "scripts.monitoring.comprehensive_monitor_validation",
+          "path": "scripts/monitoring/comprehensive_monitor_validation.py"
+        },
+        {
+          "symbol": "func:log_message",
+          "module": "scripts.monitoring.test_static_monitor",
+          "path": "scripts/monitoring/test_static_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "3831fd93e7cd1e37859d8ab589aafe0d0f135107",
+      "symbols": [
+        "func:move_to"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:move_to",
+          "module": "scripts.monitoring.static_monitor",
+          "path": "scripts/monitoring/static_monitor.py"
+        },
+        {
+          "symbol": "func:move_to",
+          "module": "scripts.utils.compact_monitor",
+          "path": "scripts/utils/compact_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "2c89f356f6da458ef181c115ca607cecd32c3de8",
+      "symbols": [
+        "func:clear_line"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:clear_line",
+          "module": "scripts.monitoring.static_monitor",
+          "path": "scripts/monitoring/static_monitor.py"
+        },
+        {
+          "symbol": "func:clear_line",
+          "module": "scripts.utils.compact_monitor",
+          "path": "scripts/utils/compact_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "73011f1f36bb854addd1bb6b64a137a1140b6c4f",
+      "symbols": [
+        "func:create_bar"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:create_bar",
+          "module": "scripts.monitoring.static_monitor",
+          "path": "scripts/monitoring/static_monitor.py"
+        },
+        {
+          "symbol": "func:create_bar",
+          "module": "scripts.utils.compact_monitor",
+          "path": "scripts/utils/compact_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "93a1e7e4b926a45f9afb269ee1752f90fcbe8bcf",
+      "symbols": [
+        "func:get_color"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:get_color",
+          "module": "scripts.monitoring.static_monitor",
+          "path": "scripts/monitoring/static_monitor.py"
+        },
+        {
+          "symbol": "func:get_color",
+          "module": "scripts.utils.compact_monitor",
+          "path": "scripts/utils/compact_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "e8c7020bd018313f7befa157e1932e607fcf0bbe",
+      "symbols": [
+        "func:get_ollama_models"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:get_ollama_models",
+          "module": "scripts.monitoring.static_monitor",
+          "path": "scripts/monitoring/static_monitor.py"
+        },
+        {
+          "symbol": "func:get_ollama_models",
+          "module": "scripts.utils.compact_monitor",
+          "path": "scripts/utils/compact_monitor.py"
+        }
+      ]
+    },
+    {
+      "hash": "9fa2468d342493aa95deeb84b4410be4b92698bd",
+      "symbols": [
+        "func:__init__"
+      ],
+      "occurrences": [
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.monitoring.test_static_monitor",
+          "path": "scripts/monitoring/test_static_monitor.py"
+        },
+        {
+          "symbol": "func:__init__",
+          "module": "scripts.monitoring.test_static_monitor_simple",
+          "path": "scripts/monitoring/test_static_monitor_simple.py"
+        }
+      ]
+    }
+  ],
+  "deprecated_usage": {
+    "backend.ai_agents.orchestration.agent_registry_service": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.telemetry": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.model_cache": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.quantization": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.failover": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.proxy": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.deployment": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.edge_inference.batch_processor": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.app.api.v1.self_improvement": [
+      "\\bimp\\."
+    ],
+    "backend.app.services.training.fsdp_trainer": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.app.services.code_completion.tabby_client": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "backend.federated_learning.client": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.ollama_service": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.adapters.ai_frameworks.tensorflow_adapter": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.adapters.ai_frameworks.pytorch_adapter": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.jarvis.main_simple": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.jarvis.main": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.jarvis.main_basic": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "services.faiss-vector.main": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.request_queue": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.base_agent_v2": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.example_usage": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.circuit_breaker": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.migration_helper": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "agents.core.messaging": [
+      "asyncio\\.get_event_loop\\("
+    ],
+    "scripts.advanced-rollback-system": [
+      "asyncio\\.get_event_loop\\("
     ]
   },
-  "deprecated_markers": []
+  "stub_implementations": {
+    "backend.edge_inference.deployment": [
+      "__init__"
+    ],
+    "backend.app.core.logging": [
+      "add_fields"
+    ],
+    "backend.app.services.agent_orchestrator": [
+      "__init__",
+      "load_agents"
+    ],
+    "backend.monitoring.monitoring": [
+      "dec",
+      "inc",
+      "observe",
+      "set"
+    ],
+    "services.jarvis.main": [
+      "__init__",
+      "dec",
+      "inc",
+      "observe"
+    ],
+    "frontend.app": [
+      "add_enter_key_handler",
+      "show_enter_key_hint"
+    ],
+    "scripts.monitoring.comprehensive_monitor_validation": [
+      "log_message"
+    ],
+    "scripts.monitoring.test_static_monitor": [
+      "log_message"
+    ]
+  },
+  "circular_imports": [],
+  "summary": {
+    "duplicate_groups": 41,
+    "files_with_deprecations": 26,
+    "files_with_stubs": 8,
+    "circular_components": 0
+  }
 }

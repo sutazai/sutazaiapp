@@ -23,4 +23,10 @@ RUN echo '{"status":"healthy","service":"hygiene-dashboard"}' > /usr/share/nginx
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
     CMD curl -f http://localhost:3000/health || exit 1

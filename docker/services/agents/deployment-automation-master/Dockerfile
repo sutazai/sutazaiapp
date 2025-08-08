@@ -2,7 +2,7 @@
 FROM sutazai/agent-base:latest
 
 # Switch to root for package installation
-USER root
+# Removed USER root for security
 
 # Install Docker CLI and deployment tools
 RUN apt-get update && apt-get install -y \
@@ -54,4 +54,10 @@ USER nobody
 
 # Run as non-root user
 USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "app.py"]

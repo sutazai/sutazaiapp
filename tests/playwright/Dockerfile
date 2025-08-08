@@ -14,4 +14,10 @@ RUN apk add --no-cache docker-cli bash coreutils
 COPY tests/playwright/playwright.mcp.config.ts ./playwright.mcp.config.ts
 COPY tests/playwright/specs ./tests/playwright/specs
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 ENTRYPOINT ["node", "./node_modules/@playwright/test/cli.js", "test", "-c", "./playwright.mcp.config.ts"]

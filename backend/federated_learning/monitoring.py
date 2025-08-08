@@ -23,6 +23,7 @@ import time
 import numpy as np
 from datetime import datetime, timedelta
 from enum import Enum
+from app.schemas.message_types import AlertSeverity
 from typing import Any, Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass, field, asdict
 from collections import defaultdict, deque
@@ -46,12 +47,6 @@ class MetricType(Enum):
     ANOMALY_SCORE = "anomaly_score"
 
 
-class AlertSeverity(Enum):
-    """Alert severity levels"""
-    INFO = "info"
-    WARNING = "warning"
-    ERROR = "error"
-    CRITICAL = "critical"
 
 
 @dataclass

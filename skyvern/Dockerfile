@@ -15,3 +15,9 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
 # Clone Skyvern & install
 RUN git clone https://github.com/Skyvern-AI/skyvern.git . \
  && pip install --no-cache-dir -e .
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+

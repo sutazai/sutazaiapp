@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 
 
 class TaskStatus(str, Enum):
@@ -15,14 +16,6 @@ class TaskStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
-
-
-class TaskPriority(str, Enum):
-    """Task priority levels"""
-    LOW = "low"
-    NORMAL = "normal"
-    HIGH = "high"
-    URGENT = "urgent"
 
 
 class AgentTask(BaseModel):

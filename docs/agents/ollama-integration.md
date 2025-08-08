@@ -207,7 +207,7 @@ Response:
 ```python
 async with OllamaIntegrationAgent() as agent:
     result = await agent.generate(
-        prompt="Explain quantum computing",
+        prompt="Explain microservices architecture",
         temperature=0.7,
         max_tokens=200
     )

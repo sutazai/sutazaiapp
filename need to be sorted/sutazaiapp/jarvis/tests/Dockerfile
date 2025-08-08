@@ -19,4 +19,10 @@ COPY . .
 ENV PYTHONPATH=/tests:$PYTHONPATH
 
 # Default command
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["pytest", "-v"]

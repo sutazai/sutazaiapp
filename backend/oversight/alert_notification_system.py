@@ -14,6 +14,7 @@ from typing import Dict, List, Any, Optional, Callable
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from enum import Enum
+from app.schemas.message_types import AlertSeverity
 import uuid
 import aiohttp
 import ssl
@@ -32,11 +33,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-class AlertSeverity(Enum):
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    CRITICAL = "critical"
 
 class AlertCategory(Enum):
     SYSTEM_PERFORMANCE = "system_performance"

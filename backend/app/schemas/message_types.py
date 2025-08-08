@@ -76,3 +76,82 @@ class MessagePriority(Enum):
             except Exception:
                 return cls.NORMAL
         return cls.NORMAL
+
+
+class TaskPriority(str, Enum):
+    """
+    Canonical task priority across the platform.
+
+    - String values preserve API compatibility in models and JSON
+    - Provides rank() for numeric comparisons and scheduling algorithms
+    - Accepts multiple legacy names via from_value()
+    """
+    BACKGROUND = "background"
+    LOW = "low"
+    MEDIUM = "medium"
+    NORMAL = "normal"
+    HIGH = "high"
+    URGENT = "urgent"       # legacy alias often meaning CRITICAL
+    CRITICAL = "critical"
+    EMERGENCY = "emergency"
+
+    _RANK = {
+        BACKGROUND: 0,
+        LOW: 1,
+        MEDIUM: 2,
+        NORMAL: 2,
+        HIGH: 3,
+        URGENT: 4,
+        CRITICAL: 4,
+        EMERGENCY: 5,
+    }
+
+    @property
+    def rank(self) -> int:
+        return self._RANK[self]
+
+    @classmethod
+    def from_value(cls, value):
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, str):
+            v = value.strip().lower()
+            # normalize common synonyms
+            aliases = {
+                "med": "medium",
+                "norm": "normal",
+                "crit": "critical",
+                "urgent": "urgent",
+                "emerg": "emergency",
+            }
+            v = aliases.get(v, v)
+            for member in cls:
+                if member.value == v or member.name.lower() == v:
+                    return member
+            # Numeric-as-string
+            if v.isdigit():
+                return cls.from_value(int(v))
+            return cls.NORMAL
+        if isinstance(value, int):
+            mapping = {
+                0: cls.BACKGROUND,
+                1: cls.LOW,
+                2: cls.NORMAL,
+                3: cls.HIGH,
+                4: cls.CRITICAL,
+                5: cls.EMERGENCY,
+            }
+            return mapping.get(value, cls.NORMAL)
+        return cls.NORMAL
+
+
+class AlertSeverity(str, Enum):
+    """Canonical alert severity for monitoring and oversight"""
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+    @property
+    def level(self) -> int:
+        return {self.INFO: 1, self.WARNING: 2, self.ERROR: 3, self.CRITICAL: 4}[self]

@@ -10,6 +10,7 @@ from typing import Dict, List, Any, Optional, Callable, NamedTuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 import heapq
 import json
 from collections import defaultdict
@@ -24,13 +25,7 @@ class SchedulingPolicy(Enum):
     CARBON_AWARE = "carbon_aware"         # Schedule based on grid carbon intensity
     THERMAL_AWARE = "thermal_aware"       # Consider thermal constraints
 
-class TaskPriority(Enum):
-    """Task priority levels"""
-    CRITICAL = 5
-    HIGH = 4
-    NORMAL = 3
-    LOW = 2
-    BACKGROUND = 1
+# Canonical TaskPriority imported from app.schemas.message_types
 
 @dataclass
 class WorkloadMetrics:
@@ -121,7 +116,7 @@ class EnergyOptimizedQueue:
     
     def _calculate_priority_score(self, task: Task, metrics: WorkloadMetrics) -> float:
         """Calculate energy-aware priority score for a task"""
-        base_score = task.priority.value * 100
+        base_score = TaskPriority.from_value(task.priority).rank * 100
         
         if self.policy == SchedulingPolicy.ENERGY_FIRST:
             # Prioritize tasks that consume less energy

@@ -16,6 +16,7 @@ from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from services.jarvis.schemas import TaskRequest, TaskResponse
 from prometheus_client import Counter, Histogram, generate_latest
 from starlette.responses import Response, HTMLResponse
 
@@ -31,20 +32,7 @@ REQUEST_COUNT = Counter('jarvis_simple_requests_total', 'Total requests', ['type
 REQUEST_DURATION = Histogram('jarvis_simple_request_duration_seconds', 'Request duration', ['type'])
 ACTIVE_SESSIONS = Counter('jarvis_simple_active_sessions', 'Active sessions')
 
-class TaskRequest(BaseModel):
-    """Task request model"""
-    command: str
-    context: Optional[Dict[str, Any]] = {}
-    voice_enabled: bool = False
-    plugins: Optional[List[str]] = []
-
-class TaskResponse(BaseModel):
-    """Task response model"""
-    result: Any
-    status: str
-    execution_time: float
-    agents_used: List[str]
-    voice_response: Optional[str] = None
+    
 
 app = FastAPI(
     title="Jarvis AI System",

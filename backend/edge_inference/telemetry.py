@@ -11,6 +11,7 @@ import sqlite3
 from typing import Dict, List, Optional, Any, Tuple, Callable, Union
 from dataclasses import dataclass, field, asdict
 from enum import Enum
+from app.schemas.message_types import AlertSeverity
 from datetime import datetime, timedelta
 from collections import defaultdict, deque
 import numpy as np
@@ -29,12 +30,6 @@ class MetricType(Enum):
     TIMER = "timer"          # Timing measurements
     RATE = "rate"            # Rate of change
 
-class AlertSeverity(Enum):
-    """Alert severity levels"""
-    INFO = "info"
-    WARNING = "warning"
-    ERROR = "error"
-    CRITICAL = "critical"
 
 @dataclass
 class Metric:

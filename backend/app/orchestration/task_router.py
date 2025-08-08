@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 import heapq
 from collections import defaultdict, deque
 import redis.asyncio as redis
@@ -27,13 +28,6 @@ class LoadBalancingAlgorithm(Enum):
     PERFORMANCE_BASED = "performance_based"
     CAPABILITY_WEIGHTED = "capability_weighted"
     HYBRID_INTELLIGENT = "hybrid_intelligent"
-
-class TaskPriority(Enum):
-    LOW = 1
-    NORMAL = 2
-    HIGH = 3
-    CRITICAL = 4
-    EMERGENCY = 5
 
 @dataclass
 class TaskRequest:
@@ -122,7 +116,8 @@ class PriorityTaskQueue:
     
     def _calculate_priority_score(self, task: TaskRequest) -> float:
         """Calculate dynamic priority score"""
-        base_priority = task.priority.value * -1000  # Negative for min-heap
+        # Use canonical rank for numeric comparison; negative for min-heap
+        base_priority = (-1000) * TaskPriority.from_value(task.priority).rank
         
         # Time urgency factor
         if task.deadline:

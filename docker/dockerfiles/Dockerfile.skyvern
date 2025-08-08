@@ -39,4 +39,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 
 EXPOSE 8512
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "-c", "from playwright.sync_api import sync_playwright; print('Skyvern-lite ready'); import time; time.sleep(3600)"]

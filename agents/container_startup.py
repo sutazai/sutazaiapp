@@ -26,19 +26,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+from agents.core.utils import get_agent_name
 
-def get_agent_name():
-    """Determine agent name from environment or container name"""
-    agent_name = os.getenv('AGENT_NAME')
-    if agent_name:
-        return agent_name
-    
-    # Try to get from container name
-    container_name = os.getenv('HOSTNAME', '')
-    if container_name.startswith('sutazai-'):
-        return container_name.replace('sutazai-', '').replace('-phase1', '').replace('-phase2', '').replace('-phase3', '')
-    
-    return 'base-agent'
+## get_agent_name centralized in agents.core.utils
 
 def load_agent_instance():
     """Load the agent instance from the local app.py"""

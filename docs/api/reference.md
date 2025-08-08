@@ -218,7 +218,7 @@ POST /chat
 **Request:**
 ```json
 {
-  "message": "Explain quantum computing",
+  "message": "Explain Docker containerization",
   "model": "tinyllama",
   "agent": "task_coordinator",
   "temperature": 0.7
@@ -228,7 +228,7 @@ POST /chat
 **Response:**
 ```json
 {
-  "response": "Quantum computing harnesses quantum mechanical phenomena...",
+  "response": "Docker containerization packages applications with dependencies...",
   "model": "tinyllama",
   "agent": "task_coordinator",
   "consciousness_enhancement": true,
@@ -788,7 +788,7 @@ class SutazAIClient {
 // Usage
 const client = new SutazAIClient();
 const health = await client.healthCheck();
-const result = await client.chat("Explain quantum physics");
+const result = await client.chat("Explain Docker containers");
 ```
 
 ---

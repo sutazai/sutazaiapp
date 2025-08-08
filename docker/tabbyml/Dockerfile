@@ -18,4 +18,10 @@ USER nobody
 
 # Run as non-root user
 USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["./tabby", "serve", "--model", "CodeLlama-7B", "--host", "0.0.0.0", "--port", "8080"]

@@ -285,7 +285,7 @@ async def submit_task(task_data: Dict[str, Any]):
             task_id=task_data["task_id"],
             agent_id=task_data["agent_id"],
             task_type=task_data["task_type"],
-            priority=TaskPriority(task_data.get("priority", 3)),
+            priority=TaskPriority.from_value(task_data.get("priority", 3)),
             estimated_duration=task_data["estimated_duration"],
             estimated_cpu_usage=task_data.get("estimated_cpu_usage", 50.0),
             estimated_memory_mb=task_data.get("estimated_memory_mb", 1024.0),

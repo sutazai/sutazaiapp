@@ -13,6 +13,7 @@ import uuid
 from typing import Dict, Any, List, Optional, Set
 from datetime import datetime, timedelta
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 
 from ..core.base_agent import BaseAgent, AgentMessage, AgentStatus, AgentCapability
 from ..core.agent_registry import get_agent_registry
@@ -31,13 +32,7 @@ class WorkflowType(Enum):
     CUSTOM = "custom"
 
 
-class TaskPriority(Enum):
-    """Task priority levels"""
-    CRITICAL = 1
-    HIGH = 2
-    NORMAL = 3
-    LOW = 4
-    BACKGROUND = 5
+# Canonical TaskPriority imported from app.schemas.message_types
 
 
 class OrchestratorAgent(BaseAgent):

@@ -1883,7 +1883,7 @@ def show_agent_control():
                 infrastructure.append(agent)
             elif any(x in name_lower or x in id_lower for x in ['security', 'pentest', 'semgrep', 'kali', 'shellgpt']):
                 security.append(agent)
-            elif any(x in name_lower or x in id_lower for x in ['model', 'training', 'learning', 'neural', 'quantum', 'federated']):
+            elif any(x in name_lower or x in id_lower for x in ['model', 'training', 'learning', 'neural', 'federated']):
                 ml_agents.append(agent)
             else:
                 specialized.append(agent)

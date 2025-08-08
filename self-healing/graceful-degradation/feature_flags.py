@@ -202,11 +202,6 @@ class FeatureFlagManager:
             
             # Experimental Features
             FeatureFlag(
-                name="quantum_optimization",
-                state=FeatureState.DISABLED,
-                description="Experimental quantum optimization features"
-            ),
-            FeatureFlag(
                 name="federated_learning",
                 state=FeatureState.DISABLED,
                 description="Federated learning capabilities"

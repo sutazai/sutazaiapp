@@ -90,7 +90,9 @@
       "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 -t sutazaiapp-backend:latest backend/)",
       "Bash(DOCKER_BUILDKIT=1 docker build --progress=plain -f backend/Dockerfile.minimal -t sutazaiapp-backend:latest backend/)",
       "Bash(git stash:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(apt list:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

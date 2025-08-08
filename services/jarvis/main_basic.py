@@ -15,6 +15,7 @@ from fastapi import FastAPI, WebSocket, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from services.jarvis.schemas import TaskRequest, TaskResponse
 from starlette.responses import Response, HTMLResponse
 
 # Configure logging
@@ -24,20 +25,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class TaskRequest(BaseModel):
-    """Task request model"""
-    command: str
-    context: Optional[Dict[str, Any]] = {}
-    voice_enabled: bool = False
-    plugins: Optional[List[str]] = []
-
-class TaskResponse(BaseModel):
-    """Task response model"""
-    result: Any
-    status: str
-    execution_time: float
-    agents_used: List[str]
-    voice_response: Optional[str] = None
+    
 
 app = FastAPI(
     title="Jarvis AI System",

@@ -35,15 +35,8 @@ class ChatRequest(BaseModel):
     
     @validator('model')
     def validate_model(cls, v):
-        """Validate model name"""
-        if v is not None:
-            # Basic sanitization for model name
-            v = v.strip()
-            # Only allow alphanumeric characters, dots, hyphens, underscores, and colons
-            import re
-            if not re.match(r'^[a-zA-Z0-9._:-]+$', v):
-                raise ValueError("Invalid model name format")
-        return v
+        from app.utils.validation import validate_model_name
+        return validate_model_name(v)
 
 class ChatResponse(BaseModel):
     response: str

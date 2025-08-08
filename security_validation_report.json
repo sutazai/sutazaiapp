@@ -1,0 +1,2885 @@
+{
+  "timestamp": "Fri Aug  8 22:10:44 CEST 2025",
+  "hardcoded_secrets": [
+    {
+      "file": "/opt/sutazaiapp/intrusion_detection_system.py",
+      "line": 303,
+      "type": "potential base64 secret",
+      "content": "log_files = Path('/opt/sutazaiapp/logs').glob('*.log')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/production_validation_final.py",
+      "line": 249,
+      "type": "potential base64 secret",
+      "content": "if os.path.exists(\"/opt/sutazaiapp/secrets\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 91,
+      "type": "potential base64 secret",
+      "content": "\"MultiModalFusionCoordinator\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 92,
+      "type": "potential base64 secret",
+      "content": "\"UnifiedRepresentationFramework\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 93,
+      "type": "potential base64 secret",
+      "content": "\"CrossModalLearningSystem\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 94,
+      "type": "potential base64 secret",
+      "content": "\"RealTimeFusionPipeline\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 102,
+      "type": "potential base64 secret",
+      "content": "\"UnifiedRepresentation\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 112,
+      "type": "potential base64 secret",
+      "content": "\"TemporalSynchronizer\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 114,
+      "type": "potential base64 secret",
+      "content": "\"EarlyFusionProcessor\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 118,
+      "type": "potential base64 secret",
+      "content": "\"ContrastiveLearningModule\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/__init__.py",
+      "line": 119,
+      "type": "potential base64 secret",
+      "content": "\"CrossModalAttentionLearner\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/container-health-monitor.py",
+      "line": 423,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/logs\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/fix-agent-dockerfiles.py",
+      "line": 66,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/coordination_tracker.py",
+      "line": 161,
+      "type": "potential base64 secret",
+      "content": "scripts_path = Path(\"/opt/sutazaiapp/scripts\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/multi-environment-config-manager.py",
+      "line": 99,
+      "type": "hardcoded API key",
+      "content": "API_KEY = \"api_key\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/update_approved_ports.py",
+      "line": 98,
+      "type": "potential base64 secret",
+      "content": "configs_dir = '/opt/sutazaiapp/agents/configs'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/migrate-agents-to-ollama.py",
+      "line": 30,
+      "type": "potential base64 secret",
+      "content": "self.agents_dir = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/analyze-agent-readiness.py",
+      "line": 13,
+      "type": "potential base64 secret",
+      "content": "AGENTS_DIR = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/safe-requirements-cleanup.py",
+      "line": 572,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/reports\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/safe-requirements-cleanup.py",
+      "line": 573,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/logs\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/prepare-20-agents.py",
+      "line": 183,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/system-health-validator.py",
+      "line": 180,
+      "type": "potential base64 secret",
+      "content": "os.makedirs('/opt/sutazaiapp/logs', exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/check_naming.py",
+      "line": 58,
+      "type": "potential base64 secret",
+      "content": "IGNORE_PARTS = ['venv', 'node_modules', '.git', '__pycache__', 'opt/sutazaiapp/jarvis']",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/database_operations.py",
+      "line": 30,
+      "type": "potential base64 secret",
+      "content": "BACKUP_DIR = Path('/opt/sutazaiapp/backups/database')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/bottleneck-eliminator.py",
+      "line": 49,
+      "type": "potential base64 secret",
+      "content": "logger = logging.getLogger('BottleneckEliminator')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/direct_agent_activation.py",
+      "line": 19,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/backend')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/direct_agent_activation.py",
+      "line": 30,
+      "type": "potential base64 secret",
+      "content": "self.agents_dir = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/quick-container-analysis.py",
+      "line": 129,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/reports\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/fix-agent-startup.py",
+      "line": 93,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/verify-hygiene-monitoring-system.py",
+      "line": 124,
+      "type": "potential base64 secret",
+      "content": "(\"/api/hygiene/violations\", \"Hygiene Violations\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/verify-hygiene-monitoring-system.py",
+      "line": 125,
+      "type": "potential base64 secret",
+      "content": "(\"/api/hygiene/metrics\", \"System Metrics\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/verify-hygiene-monitoring-system.py",
+      "line": 127,
+      "type": "potential base64 secret",
+      "content": "(\"/api/hygiene/reports\", \"Hygiene Reports\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/fix-agent-deployment-issues.py",
+      "line": 130,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/fix-agent-app-files.py",
+      "line": 66,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/validate-container-infrastructure.py",
+      "line": 542,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/reports\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/infrastructure-monitor.py",
+      "line": 48,
+      "type": "potential base64 secret",
+      "content": "os.makedirs('/opt/sutazaiapp/logs', exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/infrastructure-monitor.py",
+      "line": 250,
+      "type": "potential base64 secret",
+      "content": "logs_dir = \"/opt/sutazaiapp/logs\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/resource-pool-coordinator.py",
+      "line": 51,
+      "type": "potential base64 secret",
+      "content": "logger = logging.getLogger('ResourcePoolCoordinator')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/optimize-ollama-performance.py",
+      "line": 19,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/agents/core')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/optimize-ollama-performance.py",
+      "line": 498,
+      "type": "potential base64 secret",
+      "content": "os.makedirs('/opt/sutazaiapp/logs', exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/validate_security_improvements.py",
+      "line": 51,
+      "type": "hardcoded secret",
+      "content": "'backup', 'archive', 'test', 'client_secret=\"*****\"', 'invalid_token'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/fix-critical-agents.py",
+      "line": 12,
+      "type": "potential base64 secret",
+      "content": "AGENTS_DIR = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/remove_hardcoded_secrets.py",
+      "line": 75,
+      "type": "potential base64 secret",
+      "content": "for subdir in ['config/docker', 'deployment', 'workflows/deployments']:",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/create-base-image-strategy.py",
+      "line": 562,
+      "type": "potential base64 secret",
+      "content": "os.makedirs(\"/opt/sutazaiapp/reports\", exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/system_messages.py",
+      "line": 73,
+      "type": "potential base64 secret",
+      "content": "ack_status: str = Field(..., description=\"received/processed/rejected\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 12,
+      "type": "potential base64 secret",
+      "content": "'AgentRegistrationMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 13,
+      "type": "potential base64 secret",
+      "content": "'AgentHeartbeatMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 15,
+      "type": "potential base64 secret",
+      "content": "'AgentCapabilityMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 20,
+      "type": "potential base64 secret",
+      "content": "'TaskStatusUpdateMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 21,
+      "type": "potential base64 secret",
+      "content": "'TaskAssignmentMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 22,
+      "type": "potential base64 secret",
+      "content": "'TaskCompletionMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 25,
+      "type": "potential base64 secret",
+      "content": "'ResourceRequestMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 26,
+      "type": "potential base64 secret",
+      "content": "'ResourceAllocationMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 27,
+      "type": "potential base64 secret",
+      "content": "'ResourceReleaseMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 28,
+      "type": "potential base64 secret",
+      "content": "'ResourceStatusMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/schemas/__init__.py",
+      "line": 34,
+      "type": "potential base64 secret",
+      "content": "'AcknowledgementMessage',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 1179,
+      "type": "potential base64 secret",
+      "content": "endpoint: API endpoint (e.g., \"/health\", \"/api/v1/processing/process\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 1769,
+      "type": "potential base64 secret",
+      "content": "response = asyncio.run(call_api(\"/api/v1/coordinator/think\", \"POST\", {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 2911,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/agents/status\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 2913,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/coordinator/think\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 2983,
+      "type": "potential base64 secret",
+      "content": "\"endpoint\": \"/api/v1/agents/status\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 3278,
+      "type": "potential base64 secret",
+      "content": "system_status = asyncio.run(call_api(\"/api/v1/system/status\"))",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 3538,
+      "type": "potential base64 secret",
+      "content": "response = asyncio.run(call_api(\"/api/v1/coordinator/think\", \"POST\", {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 3548,
+      "type": "potential base64 secret",
+      "content": "response = asyncio.run(call_api(\"/api/v1/agents/consensus\", \"POST\", {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 3555,
+      "type": "potential base64 secret",
+      "content": "response = asyncio.run(call_api(\"/api/v1/processing/creative\", \"POST\", {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 3563,
+      "type": "potential base64 secret",
+      "content": "response = asyncio.run(call_api(\"/api/v1/models/generate\", \"POST\", {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/frontend/app.py",
+      "line": 5227,
+      "type": "potential base64 secret",
+      "content": "coordinator_status = asyncio.run(call_api(\"/api/v1/coordinator/status\"))",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/workflows/demo_workflow.py",
+      "line": 29,
+      "type": "potential base64 secret",
+      "content": "target_dir = \"/opt/sutazaiapp/backend/app\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/system-validator/system_validator.py",
+      "line": 140,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/config\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/freeze_prevention.py",
+      "line": 673,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/cache'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/system_performance_benchmark_suite.py",
+      "line": 475,
+      "type": "potential base64 secret",
+      "content": "'report_output_dir': '/opt/sutazaiapp/reports/performance',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/sutazai_realtime_monitor.py",
+      "line": 69,
+      "type": "potential base64 secret",
+      "content": "Path('/opt/sutazaiapp/logs').mkdir(exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/sutazai_realtime_monitor.py",
+      "line": 83,
+      "type": "potential base64 secret",
+      "content": "'sutazai-neo4j': {'port': 10002, 'health_path': '/db/manage/server/version', 'type': 'database'},",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/hygiene-monitor-backend.py",
+      "line": 806,
+      "type": "potential base64 secret",
+      "content": "app.router.add_get('/api/hygiene/violations', violations_handler)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/hygiene-monitor-backend.py",
+      "line": 807,
+      "type": "potential base64 secret",
+      "content": "app.router.add_get('/api/hygiene/actions', actions_handler)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/comprehensive_report_generator.py",
+      "line": 543,
+      "type": "potential base64 secret",
+      "content": "self.reports_dir = Path(self.config.get('report_output_dir', '/opt/sutazaiapp/reports/performance'))",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/comprehensive_report_generator.py",
+      "line": 560,
+      "type": "potential base64 secret",
+      "content": "'report_output_dir': '/opt/sutazaiapp/reports/performance',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/service_health_checker.py",
+      "line": 53,
+      "type": "potential base64 secret",
+      "content": "logger = logging.getLogger('ServiceHealthChecker')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/monitoring/realtime_dashboard.py",
+      "line": 72,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_get('/api/metrics/history', self.get_metrics_history)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/minimal_app.py",
+      "line": 71,
+      "type": "potential base64 secret",
+      "content": "@app.get(\"/api/v1/system/status\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/emergency-shutdown-coordinator.py",
+      "line": 517,
+      "type": "potential base64 secret",
+      "content": "backup_dir = \"/opt/sutazaiapp/backups/emergency\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/emergency-shutdown-coordinator.py",
+      "line": 523,
+      "type": "potential base64 secret",
+      "content": "for root, dirs, files in os.walk(\"/opt/sutazaiapp/data\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/emergency-shutdown-coordinator.py",
+      "line": 702,
+      "type": "potential base64 secret",
+      "content": "state_backup_dir = \"/opt/sutazaiapp/backups/emergency/state\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/validate-disaster-recovery.py",
+      "line": 173,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/backups\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/validate-disaster-recovery.py",
+      "line": 470,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/data\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/validate-disaster-recovery.py",
+      "line": 471,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/logs\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/validate-disaster-recovery.py",
+      "line": 472,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/backups\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 79,
+      "type": "potential base64 secret",
+      "content": "self.base_backup_dir = \"/opt/sutazaiapp/backups\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 179,
+      "type": "potential base64 secret",
+      "content": "source_path=\"/opt/sutazaiapp/data\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 188,
+      "type": "potential base64 secret",
+      "content": "source_path=\"/opt/sutazaiapp/config\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 196,
+      "type": "potential base64 secret",
+      "content": "source_path=\"/opt/sutazaiapp/agents\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 204,
+      "type": "potential base64 secret",
+      "content": "source_path=\"/opt/sutazaiapp/logs\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 213,
+      "type": "potential base64 secret",
+      "content": "source_path=\"/var/lib/docker/volumes\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/backup-coordinator.py",
+      "line": 435,
+      "type": "potential base64 secret",
+      "content": "\"cp\", \"-r\", \"/var/lib/docker/volumes/\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/point-in-time-recovery.py",
+      "line": 202,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/config\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/point-in-time-recovery.py",
+      "line": 203,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/agents\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/disaster-recovery/point-in-time-recovery.py",
+      "line": 204,
+      "type": "potential base64 secret",
+      "content": "\"/opt/sutazaiapp/data\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/core/unified_representation.py",
+      "line": 78,
+      "type": "potential base64 secret",
+      "content": "def from_dict(cls, data: Dict[str, Any]) -> 'UnifiedRepresentation':",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/core/cross_modal_learning.py",
+      "line": 737,
+      "type": "potential base64 secret",
+      "content": "checkpoint_dir = Path(\"/opt/sutazaiapp/fusion/checkpoints\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/fusion/visualization/fusion_visualizer.py",
+      "line": 67,
+      "type": "potential base64 secret",
+      "content": "export_directory: str = \"/opt/sutazaiapp/fusion/exports\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/sutazai-backup-orchestrator.py",
+      "line": 37,
+      "type": "potential base64 secret",
+      "content": "self.backup_root = Path('/opt/sutazaiapp/data/backups')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 957,
+      "type": "potential base64 secret",
+      "content": "full_path = Path('/opt/sutazaiapp/agents') / config_path",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 1075,
+      "type": "potential base64 secret",
+      "content": "agent_dir = Path('/opt/sutazaiapp/agents') / agent_id",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 1413,
+      "type": "potential base64 secret",
+      "content": "gpu_dirs = os.listdir('/proc/driver/nvidia/gpus')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 1524,
+      "type": "potential base64 secret",
+      "content": "gpu_dirs = os.listdir('/proc/driver/nvidia/gpus')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 1985,
+      "type": "potential base64 secret",
+      "content": "if os.path.exists('/proc/driver/nvidia/gpus'):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/static_monitor.py",
+      "line": 1987,
+      "type": "potential base64 secret",
+      "content": "gpu_dirs = os.listdir('/proc/driver/nvidia/gpus')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/identify_working_method.py",
+      "line": 179,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/scripts/monitoring')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/monitoring/production-readiness-validator.py",
+      "line": 403,
+      "type": "potential base64 secret",
+      "content": "nonexistent_path = Path(\"/nonexistent/path/that/should/not/exist\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/service-mesh/service-mesh-orchestrator.py",
+      "line": 130,
+      "type": "potential base64 secret",
+      "content": "'DeregisterCriticalServiceAfter': '1m'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/service-mesh/service-mesh-orchestrator.py",
+      "line": 137,
+      "type": "potential base64 secret",
+      "content": "'DeregisterCriticalServiceAfter': '1m'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/utils/health_monitor.py",
+      "line": 314,
+      "type": "potential base64 secret",
+      "content": "os.makedirs('/opt/sutazaiapp/logs', exist_ok=True)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/utils/optimize_transformers.py",
+      "line": 291,
+      "type": "potential base64 secret",
+      "content": "self.model_dir, export=True, provider=\"CPUExecutionProvider\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/utils/optimize_transformers.py",
+      "line": 295,
+      "type": "potential base64 secret",
+      "content": "self.model_dir, export=True, provider=\"CPUExecutionProvider\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/utils/docs_fix_all_issues.py",
+      "line": 273,
+      "type": "potential base64 secret",
+      "content": "(\"GET\", \"/api/performance/summary\", None),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/core/database-backup-system.py",
+      "line": 40,
+      "type": "potential base64 secret",
+      "content": "self.backup_root = Path(self.config.get('backup_root', '/opt/sutazaiapp/data/backups'))",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/core/database-backup-system.py",
+      "line": 49,
+      "type": "potential base64 secret",
+      "content": "\"backup_root\": \"/opt/sutazaiapp/data/backups\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/core/database-backup-system.py",
+      "line": 75,
+      "type": "potential base64 secret",
+      "content": "\"data_path\": \"/opt/sutazaiapp/data/loki\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/core/database-backup-system.py",
+      "line": 276,
+      "type": "potential base64 secret",
+      "content": "loki_path = loki_config.get('data_path', '/opt/sutazaiapp/data/loki')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/offsite/offsite-backup-replication-system.py",
+      "line": 37,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/offsite/offsite-backup-replication-system.py",
+      "line": 399,
+      "type": "potential base64 secret",
+      "content": "extra_args['ServerSideEncryption'] = 'AES256'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/models/ollama-model-backup-system.py",
+      "line": 35,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/models/ollama-model-backup-system.py",
+      "line": 51,
+      "type": "potential base64 secret",
+      "content": "'model_configs': \"/opt/sutazaiapp/agents/configs\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/models/ollama-model-backup-system.py",
+      "line": 52,
+      "type": "potential base64 secret",
+      "content": "'ollama_scripts': \"/opt/sutazaiapp/scripts/models/ollama\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/verification/backup-verification-system.py",
+      "line": 39,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/monitoring/monitoring-data-retention-system.py",
+      "line": 36,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/monitoring/monitoring-data-retention-system.py",
+      "line": 48,
+      "type": "potential base64 secret",
+      "content": "'loki_data': '/opt/sutazaiapp/data/loki',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/monitoring/monitoring-data-retention-system.py",
+      "line": 49,
+      "type": "potential base64 secret",
+      "content": "'monitoring_configs': '/opt/sutazaiapp/monitoring',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/monitoring/monitoring-data-retention-system.py",
+      "line": 50,
+      "type": "potential base64 secret",
+      "content": "'health_reports': '/opt/sutazaiapp/reports',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/agents/agent-state-backup-system.py",
+      "line": 36,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/agents/agent-state-backup-system.py",
+      "line": 53,
+      "type": "potential base64 secret",
+      "content": "'agent_configs': '/opt/sutazaiapp/agents/configs/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/agents/agent-state-backup-system.py",
+      "line": 57,
+      "type": "potential base64 secret",
+      "content": "'agent_data': '/opt/sutazaiapp/data/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 33,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 44,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/config/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 45,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/agents/configs/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 46,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/secrets/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 51,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/docker/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 52,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/configs/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 53,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/nginx/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 54,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/deployment/'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 57,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/monitoring/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/config/config-backup-system.py",
+      "line": 59,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/security/',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/alerts/backup-monitoring-alerting-system.py",
+      "line": 35,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, backup_root: str = \"/opt/sutazaiapp/data/backups\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/backup-automation/utils/backup-status-checker.py",
+      "line": 16,
+      "type": "potential base64 secret",
+      "content": "backup_root = Path('/opt/sutazaiapp/data/backups')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/intrusion_detection_system.py",
+      "line": 303,
+      "type": "potential base64 secret",
+      "content": "log_files = Path('/opt/sutazaiapp/logs').glob('*.log')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/critical_quality_assessment.py",
+      "line": 15,
+      "type": "potential base64 secret",
+      "content": "backend_path = Path('/opt/sutazaiapp/backend')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/critical_quality_assessment.py",
+      "line": 39,
+      "type": "potential base64 secret",
+      "content": "agents_path = Path('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/production_validation_final.py",
+      "line": 249,
+      "type": "potential base64 secret",
+      "content": "if os.path.exists(\"/opt/sutazaiapp/secrets\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/workflows/demo_workflow.py",
+      "line": 29,
+      "type": "potential base64 secret",
+      "content": "target_dir = \"/opt/sutazaiapp/backend/app\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/system-validator/system_validator.py",
+      "line": 140,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/config\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/workflows/scripts/workflow_manager.py",
+      "line": 84,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/workflows\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/workflows/scripts/deploy_dify_workflows.py",
+      "line": 32,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/workflows\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/workflows/scripts/deploy_dify_workflows.py",
+      "line": 587,
+      "type": "potential base64 secret",
+      "content": "deploy_dir = Path(\"/opt/sutazaiapp/workflows/deployments\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/workflows/scripts/workflow_manager.py",
+      "line": 84,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/workflows\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/workflows/scripts/deploy_dify_workflows.py",
+      "line": 32,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, config_path: str = \"/opt/sutazaiapp/workflows\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/workflows/scripts/deploy_dify_workflows.py",
+      "line": 587,
+      "type": "potential base64 secret",
+      "content": "deploy_dir = Path(\"/opt/sutazaiapp/workflows/deployments\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/deployment/monitoring/agent-monitor/monitor.py",
+      "line": 121,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/orchestration/workflows\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/browser-use/browser_use_server.py",
+      "line": 63,
+      "type": "potential base64 secret",
+      "content": "service = Service('/usr/bin/chromedriver')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 212,
+      "type": "potential base64 secret",
+      "content": "\"loginWithEmailAllowed\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 213,
+      "type": "potential base64 secret",
+      "content": "\"duplicateEmailsAllowed\": False,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 214,
+      "type": "potential base64 secret",
+      "content": "\"resetPasswordAllowed\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 264,
+      "type": "potential base64 secret",
+      "content": "\"clientAuthenticatorType\": \"client-secret\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 269,
+      "type": "potential base64 secret",
+      "content": "\"serviceAccountsEnabled\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 270,
+      "type": "potential base64 secret",
+      "content": "\"authorizationServicesEnabled\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 343,
+      "type": "potential base64 secret",
+      "content": "\"clientAuthenticatorType\": \"client-secret\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 345,
+      "type": "potential base64 secret",
+      "content": "\"serviceAccountsEnabled\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/main.py",
+      "line": 348,
+      "type": "potential base64 secret",
+      "content": "\"directAccessGrantsEnabled\": True,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/jwt-service/main.py",
+      "line": 469,
+      "type": "hardcoded secret",
+      "content": "client_secret=\"*****\",  # Never expose secrets",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/IMPORTANT/00_inventory/generate_inventory.py",
+      "line": 18,
+      "type": "potential base64 secret",
+      "content": "ROOT = Path('/opt/sutazaiapp/IMPORTANT').resolve()",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/models/optimization/performance_benchmark.py",
+      "line": 86,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, output_dir: str = \"/opt/sutazaiapp/benchmarks\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/defense-in-depth/network_security.py",
+      "line": 141,
+      "type": "potential hardcoded hex key",
+      "content": "ThreatIndicator(\"hash\", \"d41d8cd98f00b204e9800998ecf8427e\", ThreatLevel.MEDIUM, \"Suspicious file hash\", \"local_intel\", datetime.utcnow()),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/defense-in-depth/network_security.py",
+      "line": 141,
+      "type": "potential base64 secret",
+      "content": "ThreatIndicator(\"hash\", \"d41d8cd98f00b204e9800998ecf8427e\", ThreatLevel.MEDIUM, \"Suspicious file hash\", \"local_intel\", datetime.utcnow()),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/compliance/compliance_automation.py",
+      "line": 320,
+      "type": "potential base64 secret",
+      "content": "evidence_dir = Path(self.config.get('evidence_path', '/opt/sutazaiapp/compliance/evidence'))",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/compliance/compliance_automation.py",
+      "line": 928,
+      "type": "potential base64 secret",
+      "content": "inventory_path = \"/opt/sutazaiapp/compliance/evidence\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/compliance/compliance_automation.py",
+      "line": 1246,
+      "type": "potential base64 secret",
+      "content": "'evidence_path': '/opt/sutazaiapp/compliance/evidence'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 236,
+      "type": "potential base64 secret",
+      "content": "forensic_path = self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 554,
+      "type": "potential base64 secret",
+      "content": "forensic_path = self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 620,
+      "type": "potential base64 secret",
+      "content": "forensic_path = self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 677,
+      "type": "potential base64 secret",
+      "content": "forensic_path = self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 686,
+      "type": "potential base64 secret",
+      "content": "'/opt/sutazaiapp/logs',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 763,
+      "type": "potential base64 secret",
+      "content": "forensic_path = self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 848,
+      "type": "potential base64 secret",
+      "content": "self.config.get('forensic_storage_path', '/opt/sutazaiapp/forensics'),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/security/incident-response/incident_response.py",
+      "line": 1345,
+      "type": "potential base64 secret",
+      "content": "'forensic_storage_path': '/opt/sutazaiapp/forensics',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/chaos-monkey.py",
+      "line": 25,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/chaos')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/docker-integration.py",
+      "line": 43,
+      "type": "potential base64 secret",
+      "content": "'context': '/opt/sutazaiapp/chaos',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/docker-integration.py",
+      "line": 79,
+      "type": "potential base64 secret",
+      "content": "'context': '/opt/sutazaiapp/chaos',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/docker-integration.py",
+      "line": 114,
+      "type": "potential base64 secret",
+      "content": "'context': '/opt/sutazaiapp/chaos/dashboard',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/docker-integration.py",
+      "line": 252,
+      "type": "potential base64 secret",
+      "content": "dockerfile_path = \"/opt/sutazaiapp/chaos/Dockerfile\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/chaos-engine.py",
+      "line": 25,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/chaos')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/chaos/scripts/chaos-engine.py",
+      "line": 755,
+      "type": "potential base64 secret",
+      "content": "results_dir = \"/opt/sutazaiapp/chaos/reports\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/task_assignment_coordinator/app.py",
+      "line": 26,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/update_agents.py",
+      "line": 45,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/__init__.py",
+      "line": 40,
+      "type": "potential base64 secret",
+      "content": "\"OllamaConnectionPool\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/__init__.py",
+      "line": 55,
+      "type": "potential base64 secret",
+      "content": "\"AgentMigrationValidator\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/migration_helper.py",
+      "line": 23,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/migration_helper.py",
+      "line": 221,
+      "type": "potential base64 secret",
+      "content": "def validate_all_agents(self, agents_base_path: str = \"/opt/sutazaiapp/agents\") -> Dict[str, Any]:",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/migration_helper.py",
+      "line": 321,
+      "type": "potential base64 secret",
+      "content": "agent_path: str = \"/opt/sutazaiapp/agents\") -> Union[BaseAgentV2, LegacyAgentWrapper]:",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/core/migration_helper.py",
+      "line": 369,
+      "type": "potential base64 secret",
+      "content": "agent_path: str = \"/opt/sutazaiapp/agents\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/ai_agent_orchestrator/app.py",
+      "line": 25,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/resource_arbitration_agent/app.py",
+      "line": 25,
+      "type": "potential base64 secret",
+      "content": "sys.path.append('/opt/sutazaiapp/agents')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/continuous_validator.py",
+      "line": 70,
+      "type": "potential base64 secret",
+      "content": "(\"POST\", \"/optimize/storage/cache\", {})",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 52,
+      "type": "potential base64 secret",
+      "content": "(\"GET\", \"/analyze/storage/duplicates\", \"Duplicate Detection\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 54,
+      "type": "potential base64 secret",
+      "content": "(\"GET\", \"/analyze/storage/report\", \"Storage Report\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 55,
+      "type": "potential base64 secret",
+      "content": "(\"POST\", \"/optimize/storage/duplicates\", \"Remove Duplicates\", {\"dry_run\": \"true\"}),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 56,
+      "type": "potential base64 secret",
+      "content": "(\"POST\", \"/optimize/storage/cache\", \"Cache Cleanup\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 57,
+      "type": "potential base64 secret",
+      "content": "(\"POST\", \"/optimize/storage/compress\", \"File Compression\", {\"dry_run\": \"true\"}),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/100_percent_working_proof.py",
+      "line": 58,
+      "type": "potential base64 secret",
+      "content": "(\"POST\", \"/optimize/storage/logs\", \"Log Cleanup\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/debug_tracer.py",
+      "line": 35,
+      "type": "potential base64 secret",
+      "content": "self.logger = logging.getLogger(\"HardwareOptimizerDebug\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 658,
+      "type": "potential base64 secret",
+      "content": "log_paths = ['/var/log', '/opt/sutazaiapp/logs']",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 796,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/analyze/storage/duplicates\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 811,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/analyze/storage/report\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 824,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/optimize/storage/duplicates\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 833,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/optimize/storage/cache\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 839,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/optimize/storage/compress\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/app.py",
+      "line": 848,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/optimize/storage/logs\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 53,
+      "type": "potential base64 secret",
+      "content": "('GET', '/analyze/storage/duplicates', {'path': '/tmp'}),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 55,
+      "type": "potential base64 secret",
+      "content": "('GET', '/analyze/storage/report'),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 57,
+      "type": "potential base64 secret",
+      "content": "('POST', '/optimize/storage/duplicates', {'path': '/tmp', 'dry_run': True}),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 58,
+      "type": "potential base64 secret",
+      "content": "('POST', '/optimize/storage/cache'),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 59,
+      "type": "potential base64 secret",
+      "content": "('POST', '/optimize/storage/compress', {'path': '/var/log', 'days_old': 30}),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/tests/final_validation_summary.py",
+      "line": 60,
+      "type": "potential base64 secret",
+      "content": "('POST', '/optimize/storage/logs')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/edge_inference/__init__.py",
+      "line": 299,
+      "type": "potential base64 secret",
+      "content": "'EdgeQuantizationManager',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/edge_inference/__init__.py",
+      "line": 304,
+      "type": "potential base64 secret",
+      "content": "'EdgeDeploymentManager',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/edge_inference/__init__.py",
+      "line": 313,
+      "type": "potential base64 secret",
+      "content": "'QuantizationStrategy',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 270,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/agents/bulk/pause', self.bulk_pause_agents)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 271,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/agents/bulk/resume', self.bulk_resume_agents)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 782,
+      "type": "potential base64 secret",
+      "content": "<label for=\"overridePreviousValue\">Previous Value:</label>",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 783,
+      "type": "potential base64 secret",
+      "content": "<input type=\"text\" id=\"overridePreviousValue\">",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 1111,
+      "type": "potential base64 secret",
+      "content": "previous_value: document.getElementById('overridePreviousValue').value,",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/human_oversight_interface.py",
+      "line": 1227,
+      "type": "potential base64 secret",
+      "content": "const response = await fetch('/api/agents/bulk/pause', {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/oversight/compliance_reporter.py",
+      "line": 95,
+      "type": "potential base64 secret",
+      "content": "reports_dir: str = \"/opt/sutazaiapp/backend/oversight/reports\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 120,
+      "type": "potential base64 secret",
+      "content": "self_improvement: Optional[\"SelfImprovementSystem\"] = None",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 122,
+      "type": "potential base64 secret",
+      "content": "knowledge_graph_manager: Optional[\"KnowledgeGraphManager\"] = None",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 221,
+      "type": "potential base64 secret",
+      "content": "app.include_router(orchestration_router, prefix=\"/api/v1/orchestration\", tags=[\"Multi-Agent Orchestration\"])",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 673,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/orchestration/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 701,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/orchestration/workflows\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 731,
+      "type": "potential base64 secret",
+      "content": "@app.get(\"/api/v1/orchestration/status\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 756,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/processing/process\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 815,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/processing/creative\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 894,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/improvement/analyze\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 914,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/improvement/apply\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 937,
+      "type": "potential base64 secret",
+      "content": "@app.get(\"/api/v1/system/health\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1814,
+      "type": "potential base64 secret",
+      "content": "@app.get(\"/api/v1/system/status\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1858,
+      "type": "potential base64 secret",
+      "content": "@app.get(\"/api/v1/docs/endpoints\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1887,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/orchestration/agents\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1893,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/orchestration/workflows\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1899,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/orchestration/status\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1907,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/processing/process\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1921,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/improvement/analyze\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1927,
+      "type": "potential base64 secret",
+      "content": "\"path\": \"/api/v1/improvement/apply\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 1941,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/agents/consensus\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/main.py",
+      "line": 2004,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/api/v1/models/generate\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/self_improvement.py",
+      "line": 9,
+      "type": "potential base64 secret",
+      "content": "__all__ = ['SelfImprovementSystem']",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/cowrie_honeypot.py",
+      "line": 27,
+      "type": "potential base64 secret",
+      "content": "def __init__(self, install_dir: str = \"/opt/sutazaiapp/backend/security/cowrie\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 214,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/coordinator/task', self.handle_coordinator_task)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 215,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/coordinator/think', self.handle_coordinator_think)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 216,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_get('/api/v1/coordinator/queue', self.handle_coordinator_queue)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 219,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/chat/completions', self.handle_chat_completions)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 233,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/agents/architect/design', self.handle_system_design)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 236,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_get('/api/v1/admin/config', self.handle_admin_config)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 237,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/admin/restart', self.handle_admin_restart)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/ai_agent_honeypot.py",
+      "line": 685,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/coordinator/task\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/web_honeypot.py",
+      "line": 345,
+      "type": "potential base64 secret",
+      "content": "self.app.router.add_post('/api/v1/coordinator/task', self.handle_api_task)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/security/web_honeypot.py",
+      "line": 1077,
+      "type": "potential base64 secret",
+      "content": "cert_dir = Path(\"/opt/sutazaiapp/backend/security/certs\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/real_time_updater.py",
+      "line": 162,
+      "type": "potential base64 secret",
+      "content": "base_path: str = \"/opt/sutazaiapp/backend\"):",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/api.py",
+      "line": 507,
+      "type": "potential base64 secret",
+      "content": "@router.post(\"/visualization/create\", response_model=Dict[str, Any])",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/api.py",
+      "line": 618,
+      "type": "potential base64 secret",
+      "content": "builder = KnowledgeGraphBuilder(\"/opt/sutazaiapp/backend\", neo4j_manager)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/schema.py",
+      "line": 320,
+      "type": "potential base64 secret",
+      "content": "\"CommunicationCapability\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/schema.py",
+      "line": 321,
+      "type": "potential base64 secret",
+      "content": "\"ProcessingCapability\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/manager.py",
+      "line": 48,
+      "type": "potential base64 secret",
+      "content": "self.base_path = config.get(\"base_path\", \"/opt/sutazaiapp/backend\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/manager.py",
+      "line": 74,
+      "type": "potential base64 secret",
+      "content": "def from_env(cls) -> 'KnowledgeGraphConfig':",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/manager.py",
+      "line": 81,
+      "type": "potential base64 secret",
+      "content": "\"base_path\": os.getenv(\"KG_BASE_PATH\", \"/opt/sutazaiapp/backend\"),",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/__init__.py",
+      "line": 54,
+      "type": "potential base64 secret",
+      "content": "\"RelationshipProperties\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/knowledge_graph/__init__.py",
+      "line": 55,
+      "type": "potential base64 secret",
+      "content": "\"KnowledgeGraphSchema\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/database.py",
+      "line": 53,
+      "type": "hardcoded password",
+      "content": "user, password = 'mlflow', 'mlflow_secure_pwd'",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/integration.py",
+      "line": 388,
+      "type": "potential base64 secret",
+      "content": "response = await self.client.post(\"/api/v1/mlflow/events\", json=payload)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/integration.py",
+      "line": 405,
+      "type": "potential base64 secret",
+      "content": "response = await self.client.post(\"/api/v1/mlflow/events\", json=payload)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/agent_tracker.py",
+      "line": 635,
+      "type": "potential base64 secret",
+      "content": "agents_dir = Path(\"/opt/sutazaiapp/backend/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/__init__.py",
+      "line": 277,
+      "type": "potential base64 secret",
+      "content": "'MLflowTrackingServer',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/mlflow_system/__init__.py",
+      "line": 278,
+      "type": "potential base64 secret",
+      "content": "'AgentExperimentTracker',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 117,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/optimization/stats\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 130,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/api/optimization/strategy\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 152,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/hibernation/stats\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 178,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/scheduling/stats\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 191,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/allocation/stats\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 204,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/sustainability/metrics\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 521,
+      "type": "potential base64 secret",
+      "content": "<div id=\"sustainabilityMetrics\">",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 784,
+      "type": "potential base64 secret",
+      "content": "const response = await fetch('/api/optimization/strategy', {",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 823,
+      "type": "potential base64 secret",
+      "content": "const response = await fetch('/api/sustainability/metrics');",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/monitoring_dashboard.py",
+      "line": 851,
+      "type": "potential base64 secret",
+      "content": "document.getElementById('sustainabilityMetrics').innerHTML = sustainabilityHtml;",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/__init__.py",
+      "line": 48,
+      "type": "potential base64 secret",
+      "content": "'OptimizationStrategy',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/__init__.py",
+      "line": 51,
+      "type": "potential base64 secret",
+      "content": "'AgentHibernationManager',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/__init__.py",
+      "line": 55,
+      "type": "potential base64 secret",
+      "content": "'EnergyAwareScheduler',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/sustainability_manager.py",
+      "line": 150,
+      "type": "potential base64 secret",
+      "content": "renewable_pct = data.get(\"fossilFreePercentage\", 20.0)",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/energy_api.py",
+      "line": 404,
+      "type": "potential base64 secret",
+      "content": "@energy_router.get(\"/sustainability/metrics\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/energy_api.py",
+      "line": 433,
+      "type": "potential base64 secret",
+      "content": "@energy_router.get(\"/sustainability/recommendations\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/energy_api.py",
+      "line": 443,
+      "type": "potential base64 secret",
+      "content": "@energy_router.get(\"/sustainability/forecast\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/energy_api.py",
+      "line": 453,
+      "type": "potential base64 secret",
+      "content": "@energy_router.post(\"/sustainability/budget\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/energy/energy_api.py",
+      "line": 492,
+      "type": "potential base64 secret",
+      "content": "@energy_router.post(\"/export/sustainability\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/utils/logging_setup.py",
+      "line": 58,
+      "type": "potential base64 secret",
+      "content": "LOG_DIR = os.environ.get(\"LOG_DIR\", \"/opt/sutazaiapp/logs\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/utils/logging_setup.py",
+      "line": 62,
+      "type": "potential base64 secret",
+      "content": "METRICS_DIR = os.environ.get(\"METRICS_DIR\", \"/opt/sutazaiapp/metrics\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/data_governance/governance_api.py",
+      "line": 90,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/dashboard/compliance\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/data_governance/__init__.py",
+      "line": 21,
+      "type": "potential base64 secret",
+      "content": "'DataLifecycleManager',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/data_governance/__init__.py",
+      "line": 23,
+      "type": "potential base64 secret",
+      "content": "'DataGovernanceFramework',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/federated_learning/dashboard.py",
+      "line": 340,
+      "type": "potential base64 secret",
+      "content": "@self.app.post(\"/api/client/performance\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/federated_learning/dashboard.py",
+      "line": 450,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/stats/coordinator\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/federated_learning/dashboard.py",
+      "line": 463,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/api/stats/versioning\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/federated_learning/__init__.py",
+      "line": 26,
+      "type": "potential base64 secret",
+      "content": "'FederatedCoordinator',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/orchestration/unified_orchestration_api.py",
+      "line": 529,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/infrastructure/status\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/orchestration/unified_orchestration_api.py",
+      "line": 633,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/analytics/performance\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/orchestration/unified_orchestration_api.py",
+      "line": 682,
+      "type": "potential base64 secret",
+      "content": "@self.app.get(\"/analytics/coordination\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/orchestration/infrastructure_integration.py",
+      "line": 229,
+      "type": "potential base64 secret",
+      "content": "\"postgres_data\": \"/var/lib/postgresql/data\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/core/__init__.py",
+      "line": 98,
+      "type": "potential base64 secret",
+      "content": "\"UniversalAgentFactory\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/core/__init__.py",
+      "line": 120,
+      "type": "potential base64 secret",
+      "content": "\"OrchestrationController\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/core/__init__.py",
+      "line": 139,
+      "type": "potential base64 secret",
+      "content": "\"UniversalAgentSystem\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/reasoning/__init__.py",
+      "line": 9,
+      "type": "potential base64 secret",
+      "content": "'AdvancedReasoningEngine',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/ai_agents/reasoning/__init__.py",
+      "line": 13,
+      "type": "potential base64 secret",
+      "content": "'SelfImprovementEngine',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 201,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/models/generate\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 202,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/vectors/search\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 203,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/coordinator/think\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 220,
+      "type": "potential base64 secret",
+      "content": "\"path_pattern\": \"/api/v1/agents/capabilities\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/performance_tuning.py",
+      "line": 225,
+      "type": "potential base64 secret",
+      "content": "\"path_pattern\": \"/api/v1/coordinator/think\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/core/middleware.py",
+      "line": 97,
+      "type": "potential base64 secret",
+      "content": "\"/api/v1/system/status\"",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_orchestrator.py",
+      "line": 66,
+      "type": "potential base64 secret",
+      "content": "self.agents_dir = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/advanced_model_manager.py",
+      "line": 68,
+      "type": "potential base64 secret",
+      "content": "super().__init__(\"AdvancedModelManager\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/agent_registry.py",
+      "line": 21,
+      "type": "potential base64 secret",
+      "content": "self.agents_dir = Path(\"/opt/sutazaiapp/agents\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 188,
+      "type": "potential base64 secret",
+      "content": "\"details\": {\"endpoint\": \"/api/v1/coordinator/think\"}",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/security.py",
+      "line": 302,
+      "type": "potential base64 secret",
+      "content": "\"download_url\": \"/api/v1/security/gdpr/download/12345\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/self_improvement.py",
+      "line": 148,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/suggestions/pending\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/orchestration.py",
+      "line": 338,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/tasks/routing/history\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/orchestration.py",
+      "line": 670,
+      "type": "potential base64 secret",
+      "content": "@router.post(\"/coordination/consensus\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/honeypot_management.py",
+      "line": 435,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/intelligence/report\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/honeypot_management.py",
+      "line": 457,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/analytics/dashboard\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/api/v1/endpoints/streaming.py",
+      "line": 425,
+      "type": "potential base64 secret",
+      "content": "@router.get(\"/performance/metrics\",",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/services/code_completion/__init__.py",
+      "line": 7,
+      "type": "potential base64 secret",
+      "content": "__all__ = [\"CodeCompletionClient\", \"code_completion_factory\"]",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/main.py",
+      "line": 341,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/jarvis/voice/process\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/main.py",
+      "line": 345,
+      "type": "potential base64 secret",
+      "content": "@app.post(\"/jarvis/voice/process\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/main.py",
+      "line": 421,
+      "type": "potential base64 secret",
+      "content": "app.mount(\"/static\", StaticFiles(directory=\"/opt/sutazaiapp/services/jarvis/static\"), name=\"static\")",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/agent_systems/autogpt_adapter.py",
+      "line": 18,
+      "type": "potential base64 secret",
+      "content": "self.workspace_path = config.get('workspace_path', '/data/autogpt/workspaces')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/agent_systems/autogpt_adapter.py",
+      "line": 19,
+      "type": "potential base64 secret",
+      "content": "self.plugins_path = config.get('plugins_path', '/data/autogpt/plugins')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/agent_systems/autogpt_adapter.py",
+      "line": 281,
+      "type": "potential base64 secret",
+      "content": "'/api/v1/plugins/install',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/agent_systems/letta_adapter.py",
+      "line": 21,
+      "type": "potential base64 secret",
+      "content": "self.memory_path = config.get('memory_path', '/data/letta/memories')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/specialized_tools/finrobot_adapter.py",
+      "line": 119,
+      "type": "potential base64 secret",
+      "content": "'/api/v1/analysis/technical',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/specialized_tools/finrobot_adapter.py",
+      "line": 156,
+      "type": "potential base64 secret",
+      "content": "'/api/v1/analysis/sentiment',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/workflow_tools/langflow_adapter.py",
+      "line": 17,
+      "type": "potential base64 secret",
+      "content": "self.flows_path = config.get('flows_path', '/data/langflow/flows')",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/adapters/workflow_tools/langflow_adapter.py",
+      "line": 294,
+      "type": "potential base64 secret",
+      "content": "'/api/v1/flows/import',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/core/orchestrator.py",
+      "line": 126,
+      "type": "potential base64 secret",
+      "content": "'plugin_dir': '/opt/sutazaiapp/services/jarvis/plugins',",
+      "severity": "HIGH"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/core/plugin_manager.py",
+      "line": 22,
+      "type": "potential base64 secret",
+      "content": "self.plugin_dir = Path(config.get('plugin_dir', '/opt/sutazaiapp/services/jarvis/plugins'))",
+      "severity": "HIGH"
+    }
+  ],
+  "container_security": [
+    {
+      "file": "/opt/sutazaiapp/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/self-healing/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile.fusion-learning",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile.fusion-coordinator",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile.fusion-pipeline",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile.fusion-dashboard",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/Dockerfile.healthcheck",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/tests/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/documind/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/skyvern/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/Dockerfile.minimal",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/service-mesh/Dockerfile.orchestrator",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/service-mesh/Dockerfile.service-discovery",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/scripts/service-mesh/Dockerfile.health-check",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/tests/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/need to be sorted/sutazaiapp/jarvis/tests/fixtures/hygiene/docker_chaos/Dockerfile.test",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/data-analysis-engineer/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/python-agent-base/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/hygiene-reporter/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/ollama-integration/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/base/Dockerfile.python-alpine-agent",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/alpine-base-fix/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/hardware-optimizer/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/adapters/Dockerfile.service-adapter",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/document-knowledge-manager/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/deep-local-brain-builder/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/nginx/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/ollama-monitor/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/mesh-worker/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/agents/Dockerfile.universal",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/agents/Dockerfile.python-agent-v2",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/hygiene-dashboard/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/dockerfiles/Dockerfile.skyvern",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/edge-computing-optimizer/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/infrastructure-devops/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/adapters/postgres/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/mcp_server/playwright/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/services/agents/infrastructure-devops-manager/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/services/agents/deployment-automation-master/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/docker/services/agents/senior-ai-engineer/Dockerfile",
+      "type": "Container running as root",
+      "severity": "HIGH",
+      "recommendation": "Use non-root user"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/service-account-manager/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/jwt-service/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/auth/rbac-engine/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/tests/playwright/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/tests/fixtures/hygiene/docker_chaos/Dockerfile.test",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/newman/docker/images/ubuntu/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/newman/docker/images/alpine/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/ubuntu/13.10/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/ubuntu/14.04/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/alpine/3.3/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/debian/7.6/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/debian/7.3/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/debian/7.5/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/debian/7.4/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/node_modules/getos/tests/fedora/20/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/jarvis-automation-agent/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/jarvis-hardware-resource-optimizer/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/jarvis-knowledge-management/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/jarvis-voice-interface/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/ollama_integration/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/hardware-resource-optimizer/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/jarvis-multimodal-ai/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/agents/ai-agent-orchestrator/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/archive/agent-cleanup-20250806_113152/pentestgpt/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/jarvis/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    },
+    {
+      "file": "/opt/sutazaiapp/services/scaler/Dockerfile",
+      "type": "No USER directive found",
+      "severity": "MEDIUM",
+      "recommendation": "Add USER directive to run as non-root"
+    }
+  ],
+  "environment_security": [],
+  "authentication_security": [
+    {
+      "file": "/opt/sutazaiapp/backend/app/auth/jwt_handler.py",
+      "line": 18,
+      "type": "Potentially hardcoded JWT secret",
+      "severity": "CRITICAL",
+      "recommendation": "Use environment variable without default"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/auth/jwt_handler.py",
+      "line": 21,
+      "type": "Potentially hardcoded JWT secret",
+      "severity": "CRITICAL",
+      "recommendation": "Use environment variable without default"
+    },
+    {
+      "file": "/opt/sutazaiapp/backend/app/auth/jwt_handler.py",
+      "line": 32,
+      "type": "Potentially hardcoded JWT secret",
+      "severity": "CRITICAL",
+      "recommendation": "Use environment variable without default"
+    }
+  ],
+  "summary": {
+    "total_violations": 419,
+    "severity_counts": {
+      "CRITICAL": 3,
+      "HIGH": 354,
+      "MEDIUM": 62,
+      "LOW": 0
+    },
+    "status": "FAIL"
+  }
+}

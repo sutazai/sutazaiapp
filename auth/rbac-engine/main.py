@@ -45,7 +45,9 @@ structlog.configure(
 logger = structlog.get_logger()
 
 # Configuration
-JWT_SECRET = os.getenv('JWT_SECRET', 'sutazai_jwt_secret_key')
+JWT_SECRET = os.getenv('JWT_SECRET')
+if not JWT_SECRET:
+    raise ValueError("JWT_SECRET environment variable is required for security")
 JWT_ALGORITHM = 'HS256'
 
 KEYCLOAK_SERVER_URL = os.getenv('KEYCLOAK_SERVER_URL', 'http://keycloak:8080')

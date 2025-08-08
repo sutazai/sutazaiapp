@@ -55,4 +55,10 @@ USER agent
 EXPOSE 8080
 
 # Default command - to be overridden by specific agents
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "container_startup.py"]

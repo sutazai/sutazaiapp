@@ -37,4 +37,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 RUN adduser --disabled-password --gecos '' --uid 1001 frontend
 USER frontend
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "app.py"]

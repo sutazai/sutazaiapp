@@ -72,14 +72,14 @@ class Settings(BaseSettings):
     # Monitoring Configuration
     GRAFANA_PASSWORD: str = Field("admin", env="GRAFANA_PASSWORD")
     
-    # Model Configuration - Emergency small models to prevent freezing
-    OLLAMA_HOST: str = Field("http://ollama:10104", env="OLLAMA_HOST")
+    # Model Configuration - Fixed to use correct Ollama internal port
+    OLLAMA_HOST: str = Field("http://ollama:11434", env="OLLAMA_HOST")
     OLLAMA_ORIGINS: str = Field("*", env="OLLAMA_ORIGINS")
     OLLAMA_NUM_PARALLEL: str = Field("2", env="OLLAMA_NUM_PARALLEL")
     OLLAMA_MAX_LOADED_MODELS: str = Field("2", env="OLLAMA_MAX_LOADED_MODELS")
     
-    DEFAULT_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
-    FALLBACK_MODEL: str = "tinyllama"  # GPT-OSS as the exclusive model
+    DEFAULT_MODEL: str = "tinyllama"  # Fixed to use available tinyllama model
+    FALLBACK_MODEL: str = "tinyllama"  # Fixed to use available tinyllama model
     EMBEDDING_MODEL: str = "nomic-embed-text"
     MODEL_TIMEOUT: int = 300  # seconds
     
@@ -92,10 +92,10 @@ class Settings(BaseSettings):
     def validate_ollama_host(cls, v: str) -> str:
         """Ensure OLLAMA_HOST has proper format"""
         if v == "0.0.0.0" or v == "ollama":
-            return "http://ollama:10104"
+            return "http://ollama:11434"
         if not v.startswith("http"):
-            # Default to the verified internal port per IMPORTANT docs
-            return f"http://{v}:10104"
+            # Default to the correct Ollama internal port (11434)
+            return f"http://{v}:11434"
         return v
     
     # GPU Configuration

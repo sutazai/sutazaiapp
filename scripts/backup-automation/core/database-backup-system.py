@@ -314,17 +314,7 @@ class DatabaseBackupSystem:
         
         return results
     
-    def calculate_checksum(self, file_path: str) -> str:
-        """Calculate SHA256 checksum of a file"""
-        hash_sha256 = hashlib.sha256()
-        try:
-            with open(file_path, "rb") as f:
-                for chunk in iter(lambda: f.read(4096), b""):
-                    hash_sha256.update(chunk)
-            return hash_sha256.hexdigest()
-        except Exception as e:
-            logger.error(f"Error calculating checksum for {file_path}: {e}")
-            return ""
+    # calculate_checksum centralized in scripts.lib.file_utils
     
     def create_backup_manifest(self, backup_results: List[Dict]) -> str:
         """Create backup manifest file"""

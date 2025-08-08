@@ -477,3 +477,6 @@ mcp-teardown:
 add-mcp-tool:
 	@if [ -z "$(IMG)" ]; then echo "Usage: make add-mcp-tool IMG=<docker-image>"; exit 1; fi
 	bash scripts/add_mcp_tool.sh $(IMG)
+integration:
+\t@echo "Running integration suite (health, tests, lint, security)..."
+\tpython3 scripts/run_integration.py

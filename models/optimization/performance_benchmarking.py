@@ -564,7 +564,7 @@ class BenchmarkSuite:
         """Generate default test prompts"""
         return [
             "What is machine learning?",
-            "Explain quantum computing in simple terms.",
+            "Explain containerization in simple terms.",
             "Write a Python function to sort a list.",
             "Describe the benefits of renewable energy.",
             "How does a neural network work?",

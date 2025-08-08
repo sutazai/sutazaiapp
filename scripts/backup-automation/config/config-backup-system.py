@@ -234,17 +234,7 @@ class ConfigBackupSystem:
                 'error': str(e)
             }
     
-    def calculate_checksum(self, file_path: Path) -> str:
-        """Calculate SHA256 checksum of a file"""
-        hash_sha256 = hashlib.sha256()
-        try:
-            with open(file_path, "rb") as f:
-                for chunk in iter(lambda: f.read(4096), b""):
-                    hash_sha256.update(chunk)
-            return hash_sha256.hexdigest()
-        except Exception as e:
-            logger.error(f"Error calculating checksum for {file_path}: {e}")
-            return ""
+    # calculate_checksum centralized in scripts.lib.file_utils
     
     def run_config_backup(self) -> Dict:
         """Run complete configuration backup"""

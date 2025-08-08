@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
 from enum import Enum
+from app.schemas.message_types import AlertSeverity
 import psutil
 import redis.asyncio as redis
 from collections import defaultdict, deque
@@ -24,11 +25,6 @@ class MetricType(Enum):
     HISTOGRAM = "histogram"
     TIMER = "timer"
 
-class AlertSeverity(Enum):
-    INFO = "info"
-    WARNING = "warning"
-    ERROR = "error"
-    CRITICAL = "critical"
 
 @dataclass
 class Metric:

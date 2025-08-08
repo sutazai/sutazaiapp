@@ -22,24 +22,9 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+from agents.core.utils import get_agent_name
 
-def get_agent_name():
-    """Determine agent name from environment or container name"""
-    agent_name = os.getenv('AGENT_NAME')
-    if agent_name:
-        return agent_name
-    
-    # Try to get from container name
-    container_name = os.getenv('HOSTNAME', '')
-    if container_name.startswith('sutazai-'):
-        # Remove prefixes and suffixes
-        name = container_name.replace('sutazai-', '')
-        for suffix in ['-phase1', '-phase2', '-phase3']:
-            name = name.replace(suffix, '')
-        return name
-    
-    # Try to get from current directory name
-    return Path.cwd().name
+## get_agent_name centralized in agents.core.utils
 
 def load_agent_module():
     """Try to load the agent module from various sources"""

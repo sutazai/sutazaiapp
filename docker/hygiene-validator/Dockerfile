@@ -21,4 +21,10 @@ RUN mkdir -p /app/rules /app/reports
 RUN useradd -m -u 1000 validator && chown -R validator:validator /app
 USER validator
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 ENTRYPOINT ["python", "rule_validator.py"]

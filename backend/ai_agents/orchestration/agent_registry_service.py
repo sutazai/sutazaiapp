@@ -19,6 +19,7 @@ import asyncio
 import json
 import logging
 from typing import Dict, List, Any, Optional, Set, Callable
+from app.orchestration.event_utils import register_event_handler as _reg_handler
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timedelta
 from enum import Enum
@@ -852,8 +853,8 @@ class AgentRegistryService:
                 logger.error(f"Event handler error for {event_type}: {e}")
     
     def register_event_handler(self, event_type: str, handler: Callable):
-        """Register an event handler"""
-        self.event_handlers[event_type].append(handler)
+        """Register an event handler (canonical util)"""
+        _reg_handler(self.event_handlers, event_type, handler)
     
     async def _start_health_monitoring(self, service_id: str):
         """Start health monitoring for a service"""

@@ -8,6 +8,7 @@ detects and runs the appropriate agent based on the environment.
 import os
 import sys
 import logging
+from agents.core.utils import get_agent_name
 from pathlib import Path
 
 # Add current directory and parent to Python path
@@ -23,19 +24,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-def get_agent_name():
-    """Determine agent name from environment or container name"""
-    agent_name = os.getenv('AGENT_NAME')
-    if agent_name:
-        return agent_name
-    
-    # Try to get from container name
-    container_name = os.getenv('HOSTNAME', '')
-    if container_name.startswith('sutazai-'):
-        return container_name.replace('sutazai-', '').replace('-phase1', '').replace('-phase2', '').replace('-phase3', '')
-    
-    # Default fallback
-    return 'base-agent'
+## get_agent_name centralized in agents.core.utils
 
 def import_agent_class(agent_name):
     """Dynamically import the agent class"""

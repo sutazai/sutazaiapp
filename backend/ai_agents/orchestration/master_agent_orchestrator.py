@@ -26,6 +26,7 @@ from typing import Dict, List, Any, Optional, Set, Tuple, Union
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timedelta
 from enum import Enum
+from app.schemas.message_types import TaskPriority
 import numpy as np
 from collections import defaultdict, deque
 import networkx as nx
@@ -149,13 +150,7 @@ class CoordinationPattern(Enum):
     EMERGENT = "emergent"
 
 
-class TaskPriority(Enum):
-    """Task priority levels"""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    BACKGROUND = "background"
+# Canonical TaskPriority imported from app.schemas.message_types
 
 
 @dataclass
@@ -1132,7 +1127,7 @@ class MasterAgentOrchestrator:
             name=task_data.get("name", "Unnamed Task"),
             description=task_data["description"],
             type=task_data.get("type", "general"),
-            priority=TaskPriority(task_data.get("priority", "medium")),
+            priority=TaskPriority.from_value(task_data.get("priority", "medium")),
             requirements=set(AgentCapability(cap) for cap in task_data.get("requirements", [])),
             payload=task_data.get("payload", {}),
             constraints=task_data.get("constraints", {}),

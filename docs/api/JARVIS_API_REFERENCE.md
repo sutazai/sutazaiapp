@@ -227,7 +227,7 @@ Generate text using specific AI models.
 **Request Body:**
 ```json
 {
-  "prompt": "Explain quantum computing",
+  "prompt": "Explain Docker containers",
   "model": "tinyllama",
   "max_tokens": 1024,
   "temperature": 0.7

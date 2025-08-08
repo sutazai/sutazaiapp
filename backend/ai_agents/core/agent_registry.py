@@ -23,6 +23,7 @@ import time
 import uuid
 from datetime import datetime, timedelta
 from enum import Enum
+from app.orchestration.event_utils import register_event_handler as _reg_handler
 from typing import Any, Dict, List, Optional, Set, Union, Callable
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
@@ -805,8 +806,8 @@ class AgentRegistry:
     
     # Event system
     def register_event_handler(self, event_type: str, handler: Callable):
-        """Register an event handler"""
-        self.event_handlers[event_type].append(handler)
+        """Register an event handler (canonical util)"""
+        _reg_handler(self.event_handlers, event_type, handler)
     
     async def _trigger_event(self, event_type: str, event_data: Dict[str, Any]):
         """Trigger an event"""

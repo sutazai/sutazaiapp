@@ -33,4 +33,10 @@ HEALTHCHECK --interval=60s --timeout=15s --start-period=10s --retries=2 \
 EXPOSE 8080
 
 # Start the on-demand optimization agent
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "app.py"]

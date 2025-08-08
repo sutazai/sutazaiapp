@@ -20,4 +20,10 @@ RUN echo '{"status":"healthy","service":"nginx-proxy","timestamp":"'$(date -u +"
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
     CMD curl -f http://localhost/health/ || exit 1

@@ -21,6 +21,7 @@ import asyncio
 import argparse
 import json
 import logging
+from scripts.lib.logging_utils import setup_logging as setup_logging
 import sys
 import time
 from pathlib import Path
@@ -36,18 +37,7 @@ from federated_learning.integration import (
 )
 
 
-def setup_logging(level: str = "INFO"):
-    """Setup logging configuration"""
-    log_level = getattr(logging, level.upper(), logging.INFO)
-    
-    logging.basicConfig(
-        level=log_level,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler('/opt/sutazaiapp/backend/logs/federated_deployment.log')
-        ]
-    )
+    # setup_logging(level="INFO") provides consistent formatting
 
 
 def load_config(config_file: str = None) -> FederatedSystemConfig:

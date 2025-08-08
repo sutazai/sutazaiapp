@@ -24,4 +24,10 @@ EXPOSE 8080
 
 # Run as non-root user provided by Playwright image
 USER pwuser
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["./start.sh"]

@@ -25,5 +25,11 @@ ENV MESH_GROUP=nlp
 ENV MESH_CONSUMER=worker-1
 ENV MESH_RESULTS=nlp
 
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "scripts/mesh/agent_stream_consumer.py", "--topic", "${MESH_TOPIC}", "--group", "${MESH_GROUP}", "--consumer", "${MESH_CONSUMER}", "--results", "${MESH_RESULTS}"]
 

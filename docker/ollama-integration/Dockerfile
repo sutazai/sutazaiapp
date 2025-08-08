@@ -23,7 +23,7 @@ RUN chmod +x /app/app.py
 EXPOSE 8520
 
 # Run as root to access Docker socket
-USER root
+# Removed USER root for security
 
 
 # Run as non-root user
@@ -31,4 +31,10 @@ USER nobody
 
 # Run as non-root user
 USER nobody
+
+# Security: Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser \
+    && mkdir -p /app && chown -R appuser:appuser /app
+USER appuser
+
 CMD ["python", "app.py"]
