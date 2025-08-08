@@ -14,6 +14,9 @@ Practical task automation with a local LLM (Ollama) backed by a FastAPI backend,
 - Lightweight task mesh over Redis Streams (enqueue/results/agents)
 - Vector search services (standalone FAISS; LlamaIndex helper)
 - Monitoring with Prometheus, Grafana, Loki/Promtail, system exporters
+- **Optional Features** (disabled by default):
+  - FSDP distributed training (`ENABLE_FSDP=true`)
+  - TabbyML code completion (`ENABLE_TABBY=true`)
 - Runs locally; no external API keys required for core flows
 
 ## 🚀 Quick Start
@@ -102,11 +105,19 @@ docker compose logs -f
 
 # Check status
 curl http://localhost:10010/health
+
+# Enable optional features
+ENABLE_FSDP=true ENABLE_TABBY=true docker-compose --profile optional up -d
+
+# Or use the helper script
+./scripts/start-with-features.sh
 ```
 
 ## 📚 Documentation
 
 - SUTAZAI_CODEBASE_OVERVIEW.md — Architecture, components, ports, dependencies
+- docs/OPTIONAL_FEATURES.md — Guide for optional features (FSDP, TabbyML)
+- MIGRATION_NOTES.md — Migration guide for feature flags
 - docs/backend_openapi.json — Exported OpenAPI schema (generated)
 - docs/backend_endpoints.md — Endpoints list grouped by tag (generated)
 - Live API Docs — http://localhost:10010/docs (after `docker compose up -d`)

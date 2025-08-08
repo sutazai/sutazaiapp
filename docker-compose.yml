@@ -683,11 +683,15 @@ services:
     environment:
       SUTAZAI_ENV: ${SUTAZAI_ENV:-production}
       TZ: ${TZ:-UTC}
+      ENABLE_FSDP: ${ENABLE_FSDP:-false}
     networks:
     - sutazai-network
     restart: unless-stopped
     volumes:
     - ./data/models:/models
+    profiles:
+    - fsdp
+    - optional
   gpt-engineer:
     build:
       context: ./docker/gpt-engineer
@@ -1801,20 +1805,20 @@ services:
     - cpu
     - --no-webserver
     container_name: sutazai-tabbyml
-    deploy:
-      replicas: 0
-    profiles:
-      - disabled
     environment:
       CUDA_VISIBLE_DEVICES: ''
       RUST_LOG: error
       TABBY_DISABLE_GPU: 'true'
       TABBY_DISABLE_USAGE_COLLECTION: 'true'
+      ENABLE_TABBY: ${ENABLE_TABBY:-false}
     image: tabbyml/tabby:latest
     networks:
     - sutazai-network
     ports:
     - 10303:8080
+    profiles:
+    - tabby
+    - optional
     restart: unless-stopped
     volumes:
     - ./data/tabby:/data

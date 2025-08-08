@@ -1,23 +1,18 @@
 # SUTAZAI Codebase Overview (Authoritative)
 
-Generated: 2025-08-07
-Source of truth: ONLY documents under `/opt/sutazaiapp/IMPORTANT`
-Scope: This overview intentionally ignores all other repository files to reflect the verified, intended and actual state documented in IMPORTANT.
+Generated: 2025-08-08
+Authoritative source: documents under `IMPORTANT/` (all other docs must align)
 
 ---
 
 ## Executive Summary
 
-- Identity: Local, privacy-first AI platform (not a distributed AGI with 69 agents)
-- Core functions: Chatbot, Code Assistant, Research Tool
-- Architecture: Containerized microservices; Ollama for all LLM operations; local databases and monitoring
-- Current runtime reality: TinyLlama is the only loaded model; ~7 agent containers are running (most are stubs)
-- Verified service mesh: Kong (10005), Consul (10006), RabbitMQ (10007/10008)
-- Verified data stores: Postgres (10000), Redis (10001), Neo4j (10002/10003), Qdrant (10101/10102), ChromaDB (10100), FAISS service (10103)
-- Application surfaces: Backend FastAPI (10010), Frontend Streamlit (10011), Ollama (10104)
-- Observability: Prometheus (10200), Grafana (10201), Loki (10202), plus exporters
+- Identity: Local, privacy-first AI platform (Ollama-only, no external LLMs)
+- Primary capabilities: Chatbot, Code Assistant, Research Tool; expandable agents
+- Architecture: Dockerized microservices; service-name addressing; single bridge network
+- Observability-first: Prometheus/Grafana/Loki; exporters; health/metrics endpoints
 
-References: `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md`, `IMPORTANT/REAL_FEATURES_AND_USERSTORIES.md`
+Authoritative references: `IMPORTANT/SUTAZAI_PRD.md`, `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md`, `IMPORTANT/REAL_FEATURES_AND_USERSTORIES.md`
 
 ---
 
@@ -70,6 +65,34 @@ Network: `sutazai-network` (bridge). Port allocation strategy: 10000–10999 cor
 
 ---
 
+## Service & Port Matrix (effective with override)
+
+| Service | Container | Internal | External | Notes |
+|---|---|---:|---:|---|
+| Backend (FastAPI) | `sutazai-backend` | 8000 | 10010 | Primary API |
+| Frontend (Streamlit) | `sutazai-frontend` | 8501 | 10011 | UI |
+| Ollama | `sutazai-ollama` | 10104 | 10104 | Local LLMs |
+| ChromaDB | `sutazai-chromadb` | 8000 | 10100 | Token auth |
+| Qdrant (HTTP) | `sutazai-qdrant` | 6333 | 10101 |  |
+| Qdrant (gRPC) | `sutazai-qdrant` | 6334 | 10102 |  |
+| FAISS svc | `sutazai-faiss` | 8000 | 10103 | Vector service |
+| Postgres | `sutazai-postgres` | 5432 | 10000 | DB `sutazai` |
+| Redis | `sutazai-redis` | 6379 | 10001 | AOF disabled |
+| Neo4j (HTTP/Bolt) | `sutazai-neo4j` | 7474/7687 | 10002/10003 | Optional |
+| Prometheus | `sutazai-prometheus` | 9090 | 10200 | Monitoring |
+| Grafana | `sutazai-grafana` | 3000 | 10201 | Dashboards |
+| Loki | `sutazai-loki` | 3100 | 10202 | Logs |
+| Alertmanager | `sutazai-alertmanager` | 9093 | 10203 | Alerts |
+| Node Exporter | `sutazai-node-exporter` | 9100 | 10220 | Host metrics |
+| cAdvisor | `sutazai-cadvisor` | 8080 | 10221 | Container metrics |
+| Blackbox Exporter | `sutazai-blackbox-exporter` | 9115 | 10229 | Probes |
+| Kong (proxy) | `sutazai-kong` | 8000 | 10005 | override |
+| Consul (UI) | `sutazai-consul` | 8500 | 10006 | override |
+| AI Metrics Exporter | `sutazai-ai-metrics-exporter` | 9200 | 11063 | override |
+| Agents (examples) | jarvis-* | 8080 | 11101/11102/11103/11110/11150 | See compose |
+
+---
+
 ## Core Components and Roles
 
 - Backend API (FastAPI)
@@ -90,7 +113,7 @@ Network: `sutazai-network` (bridge). Port allocation strategy: 10000–10999 cor
 - Observability
   - Prometheus, Grafana, Loki/Promtail, Node Exporter, cAdvisor, Blackbox, Alertmanager
 
-Agent services (runtime reality): 7 agents healthy (or present), mostly stubs — AI Agent Orchestrator (8589), Multi-Agent Coordinator (8587), Hardware Resource Optimizer (8002), Resource Arbitration (8588), Task Assignment Coordinator (8551), Ollama Integration Specialist (11015), AI Metrics Exporter (11063; marked unhealthy).
+Agent services (runtime reality): several active; others behind profiles (disabled by default in override)
 
 ---
 
@@ -182,13 +205,61 @@ Per `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md`:
 
 ---
 
+## API Quick Reference (selection)
+
+- Core
+  - GET `/health`
+  - GET `/metrics`
+  - GET `/prometheus-metrics`
+  - POST `/chat`, `/think`, `/execute`, `/reason`, `/learn`
+- v1 Namespaces
+  - `/api/v1/agents/*`, `/api/v1/models/*`, `/api/v1/documents/*`, `/api/v1/system/*`
+  - `/api/v1/orchestration/{agents,workflows,status}`
+  - `/api/v1/processing/{process,system_state}`
+  - `/api/v1/improvement/{analyze,apply}`
+
+Detailed endpoints (from `backend/app/api/v1/endpoints`):
+- Agents
+  - GET `/api/v1/agents/`
+  - POST `/api/v1/agents/workflows/code-improvement`
+  - GET `/api/v1/agents/workflows/{workflow_id}`
+  - GET `/api/v1/agents/workflows/{workflow_id}/report`
+  - POST `/api/v1/agents/consensus`
+  - POST `/api/v1/agents/delegate`
+- Models
+  - GET `/api/v1/models/`
+  - POST `/api/v1/models/pull`
+- Mesh (Redis Streams)
+  - POST `/api/v1/mesh/enqueue`
+  - GET `/api/v1/mesh/results`
+  - GET `/api/v1/mesh/agents`
+  - GET `/api/v1/mesh/health`
+  - POST `/api/v1/mesh/ollama/generate`
+- Monitoring
+  - GET `/api/v1/monitoring/metrics` (Prometheus format)
+  - GET `/api/v1/monitoring/health`
+  - GET `/api/v1/monitoring/agents/health`
+  - GET `/api/v1/monitoring/agents/{agent_name}/metrics`
+  - GET `/api/v1/monitoring/sla/report`
+
+---
+
+## API Documentation Maintenance (policy)
+
+- Primary reference: FastAPI’s live OpenAPI at `/docs` and `/openapi.json`. Keep Pydantic models and examples accurate.
+- Inline doc comments should follow generator-friendly style (e.g., apidocjs block notation) to keep docs near code [How to keep API documented](https://magda.io/docs/api-documentation-howto.html).
+- Follow reference-guide best practices (overview, auth, endpoints, examples, error codes, rate limits) and keep docs iterative and current in CI [API Documentation Done Right](https://www.getambassador.io/blog/api-documentation-done-right-technical-guide).
+- CI enforces doc centralization and hygiene via `.github/workflows/docs-audit.yml` and `scripts/audit_docs.py`.
+
+---
+
 ## Notes on Code Hygiene and Refactoring (method references)
 
 Given the repository state, tidy and refactor incrementally:
 - Favor structural, non-behavioral edits to improve clarity and symmetry; keep tests green; extract helpers from large blocks; commit small steps [Does this code spark joy?](https://medium.com/gusto-engineering/does-this-code-spark-joy-23b1d7706bc0)
 - Use a stepwise refactor plan: validate inputs, isolate pure logic, separate persistence/IO, add tests around behavior, then split into modules [How to Refactor Messy Code](https://www.codementor.io/@rctushar/how-to-refactor-messy-code-a-step-by-step-guide-2m4pnsl4yx)
 
-These practices should be applied while keeping IMPORTANT as the single source of truth for scope and target behavior.
+These practices should be applied while keeping IMPORTANT as the single source of truth for scope and target behavior. For legacy-code documentation guidance leveraged in this consolidation, see: [Documenting Legacy Code: A Guide for 2024](https://overcast.blog/documenting-legacy-code-a-guide-for-2024-dbc0b3ba06a7?gi=08dfb6cbd48c).
 
 ---
 

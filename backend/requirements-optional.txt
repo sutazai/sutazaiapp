@@ -1,0 +1,21 @@
+# Optional dependencies for features that can be disabled
+# Install with: pip install -r requirements-optional.txt
+
+# FSDP (Fully Sharded Data Parallel) training support
+# Only needed when ENABLE_FSDP=true
+torch>=2.0.0
+transformers>=4.30.0
+accelerate>=0.20.0
+datasets>=2.0.0
+fairscale>=0.4.0
+
+# TabbyML code completion client dependencies
+# Only needed when ENABLE_TABBY=true  
+# (httpx is already in main requirements)
+
+# Additional optional ML libraries
+# These enhance functionality but are not required
+scipy>=1.10.0
+scikit-learn>=1.3.0
+tensorboard>=2.13.0
+wandb>=0.15.0

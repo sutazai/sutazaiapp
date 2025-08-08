@@ -107,6 +107,12 @@ class Settings(BaseSettings):
     ENABLE_LOGGING: bool = Field(True, env="ENABLE_LOGGING")
     ENABLE_HEALTH_CHECKS: bool = Field(True, env="ENABLE_HEALTH_CHECKS")
     
+    # Optional Features (disabled by default)
+    ENABLE_FSDP: bool = Field(False, env="ENABLE_FSDP")
+    ENABLE_TABBY: bool = Field(False, env="ENABLE_TABBY")
+    TABBY_URL: str = Field("http://tabbyml:8080", env="TABBY_URL")
+    TABBY_API_KEY: Optional[str] = Field(None, env="TABBY_API_KEY")
+    
     # Performance Tuning
     MAX_WORKERS: int = Field(4, env="MAX_WORKERS")
     CONNECTION_POOL_SIZE: int = Field(20, env="CONNECTION_POOL_SIZE")
