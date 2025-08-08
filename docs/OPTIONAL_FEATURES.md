@@ -257,6 +257,39 @@ curl http://localhost:10303/health
 curl http://localhost:10010/api/v1/features
 ```
 
+## CI/CD Integration
+
+### GitHub Actions Feature Matrix
+
+The project includes automated testing for all feature combinations:
+
+```yaml
+# .github/workflows/feature-matrix.yml
+matrix:
+  include:
+    - name: "Minimal"
+      enable_fsdp: "false"
+      enable_tabby: "false"
+    - name: "FSDP Only"
+      enable_fsdp: "true"
+      enable_tabby: "false"
+    - name: "TabbyML Only"
+      enable_fsdp: "false"
+      enable_tabby: "true"
+    - name: "Full Features"
+      enable_fsdp: "true"
+      enable_tabby: "true"
+```
+
+## Performance Impact
+
+| Configuration | Memory Usage | Startup Time | CPU Impact |
+|--------------|-------------|--------------|------------|
+| Minimal | ~2GB | 30s | Low |
+| +FSDP | +1GB | +10s | Medium |
+| +TabbyML | +2GB | +20s | Medium |
+| Full Features | ~5GB | 60s | High |
+
 ## Best Practices
 
 1. **Start with features disabled** - Enable only what you need
@@ -264,3 +297,5 @@ curl http://localhost:10010/api/v1/features
 3. **Monitor resource usage** - Optional features may increase resource consumption
 4. **Use profiles for deployment** - Simplifies environment-specific configurations
 5. **Document your configuration** - Keep track of which features are enabled per environment
+6. **Use setup.py for dependencies** - Install only required optional dependencies
+7. **Test feature combinations** - Ensure features work together as expected

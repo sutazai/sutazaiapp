@@ -241,6 +241,14 @@ try:
 except Exception as e:
     logger.warning(f"Monitoring router setup failed: {e}")
 
+# Include features router (feature flags status)
+try:
+    from app.api.v1.endpoints.features import router as features_router
+    app.include_router(features_router, prefix="/api/v1/features", tags=["Features"])
+    logger.info("Features router loaded successfully")
+except Exception as e:
+    logger.warning(f"Features router setup failed: {e}")
+
 # Include lightweight mesh router (Redis Streams)
 try:
     from app.api.v1.endpoints.mesh import router as mesh_router

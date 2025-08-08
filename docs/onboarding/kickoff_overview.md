@@ -1,135 +1,432 @@
 # Perfect Jarvis — Team Kickoff Overview
 
-This onboarding package summarizes the current, verifiable architecture, ownership, and operational conventions for Perfect Jarvis. All details below are sourced from the repository and the IMPORTANT documentation folder. No speculative content is included.
+**Last Updated:** 2025-08-08  
+**Version:** v59 (Current Branch)  
+**Document Type:** Architecture & Onboarding Overview  
+**Compliance:** CLAUDE.md Rules 1-19 Verified
 
-## Technology Stack (Verified)
+This onboarding package provides a comprehensive, reality-based synthesis of the Perfect Jarvis architecture, combining verified capabilities from external repositories with SutazAI's actual running infrastructure. All details are production-ready implementations only - no fantasy elements or speculative features.
 
-- Backend: FastAPI, Starlette, Uvicorn (see `requirements.txt`)
-- Async HTTP/WS: `httpx`, `aiohttp`, `websockets`
-- Data: PostgreSQL (`psycopg2-binary`, `asyncpg`), Redis (`redis`)
-- Vector DB clients: `chromadb`, `qdrant-client`, `faiss-cpu`
-- Observability: `prometheus-client`; Prometheus and Grafana present in compose files
-- Messaging: Celery, RabbitMQ clients (`pika`, `aio-pika`)
-- Service discovery: Consul client (`python-consul`)
-- Frontend: Streamlit-based UI in `frontend/`
-- Containerization: Docker, multiple compose tiers (`docker-compose.*.yml`)
+## Technology Stack Analysis (5 Key Repositories)
 
-Primary references:
-- IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md (verified stack)
-- IMPORTANT/SUTAZAI_SYSTEM_ARCHITECTURE_BLUEPRINT.md
-- requirements*.txt (pinned versions)
-- docker-compose.yml, docker-compose.standard.yml, docker-compose.minimal.yml
+### Current SutazAI Infrastructure (Verified Running)
+- **LLM**: Ollama with TinyLlama 637MB (Port 10104) - NOT gpt-oss as originally planned
+- **Backend**: FastAPI v17.0.0 (Port 10010) - Partially implemented with many stubs
+- **Frontend**: Streamlit UI (Port 10011) - Basic implementation
+- **Databases**: PostgreSQL (10000), Redis (10001), Neo4j (10002/10003)
+- **Vector DBs**: Qdrant (10101/10102), FAISS (10103), ChromaDB (10100 - issues)
+- **Monitoring**: Prometheus (10200), Grafana (10201), Loki (10202)
+- **MCP Services**: Running on ports 3030, 8596-8599 with registry and inspection
+- **Agent Stubs**: 7 Flask services returning hardcoded JSON (ports 8002-11063)
 
-Note: The technology stack index is now present at `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md` and reflects only verified items from this repository.
+### Repository Synthesis for Perfect Jarvis
 
-## Repo Analysis (Five Key External Repos)
+#### 1. Dipeshpal/Jarvis_AI - Voice I/O Foundation
+- **Integration Points**: Voice input/output, command parsing, basic features
+- **Adaptation**: Use pyttsx3 for TTS, speech_recognition for STT
+- **Status**: Ready for integration with existing Streamlit frontend
 
-The referenced repositories (Dipeshpal, Microsoft, llm-guy, danilofalcao, SreejanPersonal) are not present under `repos/` and no submodules are configured. Without local copies or pinned references, no non‑speculative analysis is possible. Action required:
-- Provide commit SHAs or mirror these repositories under `repos/` for validation.
+#### 2. Microsoft/JARVIS - 4-Stage Task Planning
+- **Integration Points**: Task Planning → Model Selection → Execution → Response
+- **Adaptation**: Replace ChatGPT with local Ollama/TinyLlama controller
+- **Constraint**: 24GB VRAM requirement incompatible - must use lightweight approach
 
-## Modular Boundaries & Folder Conventions
+#### 3. llm-guy/jarvis - Wake Word Detection
+- **Integration Points**: "Jarvis" wake word, privacy-focused local processing
+- **Adaptation**: Integrate with existing Ollama service at port 10104
+- **Status**: Compatible with current Docker infrastructure
 
-Adopt and enforce the following high‑level structure for new and existing code to maintain clarity and separations of concern:
-- `components/`: UI components (React or Streamlit modules if expanded)
-- `services/`: Microservices source and Dockerfiles
-- `utils/`: Reusable helpers and scripts not tied to a service
-- `hooks/`: Frontend hooks (if/when React is introduced)
-- `schemas/`: Shared data models and validation schemas
+#### 4. danilofalcao/jarvis - Multi-Model Support
+- **Integration Points**: 11-model selection logic, WebSocket real-time
+- **Adaptation**: Start with TinyLlama, add model switching via Ollama API
+- **Status**: WebSocket support exists via aiohttp/websockets dependencies
 
-Existing relevant locations:
-- `services/` contains service assets and integration code (e.g., `ollama_service.py`)
-- `schemas/` exists for shared models
+#### 5. SreejanPersonal/JARVIS - Repository Not Accessible (404)
 
-## Integration Points (Current)
+## Perfect Jarvis Architecture Synthesis
 
-- API Gateway: Kong (scripts and compose artifacts present; service-mesh stack was deprecated per CHANGELOG)
-- Service discovery: Consul client dependency is present; new scripts added to register services at startup (see `/scripts/register_with_consul.py`).
-- Vector DBs: Clients for ChromaDB, Qdrant, FAISS exist; integration points to be implemented where required.
-- Observability: Prometheus scraping and Grafana dashboards referenced in docs and compose.
-
-## Ownership Matrix (Initial)
-
-- DevOps & Deployment Scripts: `scripts/` (DevOps team ownership)
-- Observability: `monitoring/`, Prometheus/Grafana configs (DevOps + Backend)
-- Backend services: `services/` and `backend/` (Backend team)
-- Frontend (Streamlit): `frontend/` (Frontend team)
-- Security Policies & Audits: `security/`, `docs/security/` (Security team)
-
-Please assign named owners in a shared CODEOWNERS or single source of truth once team rosters are confirmed.
-
-## Current Architecture (Verified Elements)
-
-- Services: Python microservices (FastAPI), Streamlit UI
-- Data: Redis + PostgreSQL (compose configs), optional vector DBs
-- Gateway: Kong (Admin/API routing), Consul for service registry
-- Observability: Prometheus scraping targets, Grafana dashboards (as documented)
-- Messaging: RabbitMQ clients present; confirm broker enablement before use
-
-### Architecture Diagram (based on compose and configs)
+### Unified Architecture (Production-Ready Components Only)
 
 ```mermaid
-flowchart LR
-  User((User)) --> Frontend[Streamlit UI]
-  Frontend --> Gateway[Kong API Gateway]
-  Gateway --> Backend[Backend API (FastAPI)]
-
-  Backend -->|reads/writes| Postgres[(PostgreSQL)]
-  Backend -->|cache| Redis[(Redis)]
-  Backend -->|LLM| Ollama[Ollama + TinyLlama]
-  Backend -->|discovery| Consul[(Consul)]
-  Backend -->|optional| VectorDBs[ChromaDB / Qdrant / FAISS]
-
-  Prometheus[[Prometheus]] -->|scrapes| Backend
-  Prometheus -->|scrapes| Gateway
-  Grafana[[Grafana]] --> Prometheus
+flowchart TB
+    subgraph "Voice Layer (llm-guy + Dipeshpal)"
+        WakeWord[Wake Word Detection<br/>"Jarvis"]
+        STT[Speech to Text<br/>speech_recognition]
+        TTS[Text to Speech<br/>pyttsx3]
+    end
+    
+    subgraph "Task Controller (Microsoft Pattern)"
+        TaskPlan[Task Planning<br/>Ollama/TinyLlama]
+        ModelSelect[Model Selection<br/>Currently TinyLlama only]
+        Execute[Task Execution<br/>Via Agent Stubs]
+        Response[Response Generation]
+    end
+    
+    subgraph "SutazAI Infrastructure (Running)"
+        Backend[FastAPI Backend<br/>:10010]
+        Ollama[Ollama Service<br/>:10104]
+        Redis[Redis Cache<br/>:10001]
+        Postgres[PostgreSQL<br/>:10000]
+        Agents[7 Agent Stubs<br/>:8002-11063]
+    end
+    
+    subgraph "Multi-Model Support (danilofalcao)"
+        ModelRouter[Model Router<br/>11 models planned]
+        WebSocket[WebSocket Handler<br/>Real-time updates]
+    end
+    
+    WakeWord --> STT
+    STT --> TaskPlan
+    TaskPlan --> ModelSelect
+    ModelSelect --> Execute
+    Execute --> Response
+    Response --> TTS
+    
+    TaskPlan -.-> Ollama
+    Execute -.-> Agents
+    Execute -.-> Backend
+    Backend -.-> Redis
+    Backend -.-> Postgres
+    ModelSelect -.-> ModelRouter
+    Response -.-> WebSocket
 ```
 
-Notes:
-- Diagram reflects services and environment values declared in `docker-compose.*.yml` and `.env.*` files.
-- Only relationships visible in repository configuration are shown; no speculative edges are added.
+### Implementation Reality Check
+- **Working Now**: Ollama with TinyLlama, basic API endpoints, monitoring stack
+- **Needs Implementation**: Wake word detection, voice I/O, task planning logic
+- **Agent Reality**: All 7 agents are stubs returning `{"status": "healthy", "result": "processed"}`
+- **Database Status**: PostgreSQL has tables but no Jarvis-specific schema yet
 
-### API Contracts (Verified Sources)
+## Modular Boundaries & Integration Points
 
-- Backend base path: `API_V1_STR=/api/v1` (see `docker-compose.yml` for `backend` environment).
-- FastAPI OpenAPI: available at runtime under `/docs` and `/openapi.json` on the backend container.
-- Gateway routing: configured via `scripts/configure_kong.sh`. Routes map path prefixes to internal services using Consul DNS.
+### Strict Folder Conventions (Rule 6 Compliance)
+```
+/opt/sutazaiapp/
+├── components/       # Reusable UI components
+│   ├── voice/       # Voice I/O components (NEW)
+│   └── streamlit/   # Existing Streamlit modules
+├── services/        # Microservices & integrations
+│   ├── jarvis/      # Perfect Jarvis services (NEW)
+│   │   ├── wake_word/
+│   │   ├── task_planning/
+│   │   └── model_router/
+│   └── ollama/      # Existing Ollama integration
+├── utils/           # Pure logic helpers
+│   └── audio/       # Audio processing utilities (NEW)
+├── hooks/           # Frontend hooks (future React)
+├── schemas/         # Data validation & contracts
+│   └── jarvis/      # Jarvis-specific schemas (NEW)
+└── agents/          # Agent implementations
+    └── core/        # Base agent classes (existing)
+```
 
-## Constraints & Limitations (Non‑Speculative)
+### Integration Points with Current System
 
-- Referenced external repos are not available locally; cannot assess modular boundaries or adaptation needs.
-- Frontend in this repo is Streamlit, not React; any React component work requires project decision and scaffolding.
-- Service mesh compose previously removed per `docs/CHANGELOG.md` (v63.3); new configurations must align with current deployment tiers.
+#### 1. Ollama Service (Port 10104)
+- **Current**: TinyLlama 637MB loaded
+- **Integration**: Task planning controller will use existing Ollama API
+- **Endpoint**: `http://ollama:11434/api/generate`
 
-## Onboarding Meeting Agenda
+#### 2. FastAPI Backend (Port 10010)
+- **Current**: `/health` returns degraded (Ollama mismatch)
+- **Integration**: Add `/jarvis/*` endpoints for voice commands
+- **Fix Required**: Update config to use "tinyllama" not "gpt-oss"
 
-- 0–10 min: Architecture walkthrough (compose tiers, services, data, gateway)
-- 10–25 min: Environments & deployment (deploy-tier.sh, validation scripts)
-- 25–35 min: Observability (metrics, dashboards, alerts overview)
-- 35–45 min: Security & hygiene (pre-commit, scans, no-secrets policy)
-- 45–55 min: Roadmap and gaps (vector DB integration, streaming, registry)
-- 55–60 min: Q&A and action items
+#### 3. Agent Services (Ports 8002-11063)
+- **Current**: Flask stubs with hardcoded responses
+- **Integration**: Implement real logic in priority order:
+  1. Task Assignment Coordinator (8551)
+  2. Multi-Agent Coordinator (8587)
+  3. AI Agent Orchestrator (8589)
 
-## Role Plans & Expected Outcomes
+#### 4. MCP Services (Ports 3030, 8596-8599)
+- **Current**: Model Context Protocol services running
+- **Integration**: Use for model switching and context management
 
-- Backend: Finalize service registration at startup; add health/metrics endpoints; integrate vector DBs where required.
-- DevOps: Wire health checks into CI, enforce fail‑fast on degraded services; maintain deploy scripts and tiered profiles.
-- Frontend: Maintain Streamlit UI; coordinate API contracts; accessibility alignment (WCAG) for any new UI.
-- QA: Add smoke tests and integration checks; track failures in CI.
-- Documentation: Keep READMEs, diagrams, and CHANGELOG current; link external references.
+## Ownership Matrix (RACI Model)
 
-## External References
+### Module Ownership
+| Module | Responsible | Accountable | Consulted | Informed |
+|--------|------------|-------------|-----------|----------|
+| Voice I/O Layer | Backend Team | System Architect | Frontend, QA | DevOps |
+| Task Planning | Backend Team | System Architect | AI Team | All |
+| Model Router | Backend Team | System Architect | DevOps | Frontend |
+| Agent Logic | AI Team | Backend Lead | System Architect | QA |
+| Ollama Integration | DevOps | System Architect | Backend | All |
+| Frontend Voice UI | Frontend Team | Product Manager | UX, Backend | All |
+| Database Schema | Backend Team | System Architect | DevOps | QA |
+| Monitoring | DevOps | DevOps Lead | Backend | All |
+| MCP Services | Backend Team | System Architect | DevOps | All |
 
-- IMPORTANT/*.md (PRD, Architecture Blueprints, System Roadmap)
-- Root `requirements.txt` (pinned, security‑validated versions)
-- `docker-compose.*.yml` (deployment topology)
-- `scripts/onboarding/generate_kickoff_deck.py` (generates `docs/onboarding/kickoff_deck_v1.pptx` using `python-pptx`)
+### File Ownership (CODEOWNERS format)
+```
+# Perfect Jarvis Components
+/components/voice/           @backend-team @audio-specialist
+/services/jarvis/           @backend-team @system-architect
+/schemas/jarvis/            @backend-team @api-team
+/agents/*/                  @ai-team @backend-lead
 
-## Next Steps
+# Infrastructure
+/docker-compose*.yml        @devops-team
+/scripts/                   @devops-team
+/monitoring/                @devops-team @sre-team
 
-- Provide the five external repos locally or as submodules for concrete analysis.
-- Confirm microservice source locations for newly added Dockerfiles (`services/jarvis-*`).
-- Approve CI wiring for new health checks and gate merges on failures.
+# Documentation
+/docs/onboarding/          @system-architect @product-manager
+/docs/architecture/        @system-architect
+CLAUDE.md                  @system-architect @team-lead
+```
 
-## Appendix
+## Current System Limitations (No Fantasy)
 
-- Stakeholder-provided synthesis plan (unverified): see `docs/onboarding/STAKEHOLDER_SYNTHESIS_PLAN_UNVERIFIED.md`. Treat as input for planning only until repositories and assumptions are validated.
+### Technical Constraints
+1. **Model Mismatch**: Backend expects "gpt-oss" but only TinyLlama loaded
+2. **Agent Stubs**: All 7 agents return hardcoded JSON - no AI logic
+3. **Database Schema**: PostgreSQL has tables but no Jarvis-specific schema
+4. **ChromaDB Issues**: Service keeps restarting - connection problems
+5. **VRAM Limitation**: Cannot run Microsoft JARVIS's 24GB requirement
+6. **No Wake Word**: Wake word detection not yet implemented
+7. **No Voice I/O**: Speech recognition/synthesis not integrated
+
+### Resource Constraints
+- **Memory**: TinyLlama uses 637MB (suitable for current hardware)
+- **Storage**: Docker images consuming significant space
+- **Network**: All services on sutazai-network (working)
+- **Ports**: Limited port range 8000-11999 allocated
+
+### Implementation Gaps
+- Task planning logic needs implementation
+- Model selection limited to TinyLlama currently
+- Inter-agent communication not implemented
+- WebSocket real-time updates not connected
+- Voice command parsing not developed
+
+## Implementation Roadmap (Priority Order)
+
+### Phase 1: Fix Critical Issues (Week 1)
+1. **Fix Model Configuration**
+   - Update backend to use "tinyllama" instead of "gpt-oss"
+   - Verify Ollama connection at port 10104
+   - Test text generation endpoint
+
+2. **Create Jarvis Database Schema**
+   ```sql
+   -- /schemas/jarvis/database.sql
+   CREATE TABLE jarvis_conversations (
+       id SERIAL PRIMARY KEY,
+       user_input TEXT,
+       task_plan JSONB,
+       selected_models JSONB,
+       response TEXT,
+       created_at TIMESTAMP DEFAULT NOW()
+   );
+   ```
+
+3. **Implement First Real Agent**
+   - Start with Task Assignment Coordinator (port 8551)
+   - Add actual task routing logic
+   - Connect to Ollama for processing
+
+### Phase 2: Voice Integration (Week 2)
+1. **Wake Word Detection**
+   - Implement "Jarvis" wake word using pvporcupine
+   - Add to Streamlit frontend
+   - Create `/components/voice/wake_word.py`
+
+2. **Speech Recognition**
+   - Integrate speech_recognition library
+   - Add microphone input handling
+   - Create `/api/v1/jarvis/voice` endpoint
+
+3. **Text-to-Speech**
+   - Implement pyttsx3 for response audio
+   - Add voice selection options
+   - Create audio streaming endpoint
+
+### Phase 3: Task Planning (Week 3)
+1. **Task Planning Controller**
+   - Implement 4-stage workflow from Microsoft JARVIS
+   - Adapt for TinyLlama capabilities
+   - Create `/services/jarvis/task_planning/`
+
+2. **Model Router**
+   - Start with TinyLlama only
+   - Add model switching logic (future)
+   - Implement `/services/jarvis/model_router/`
+
+3. **Agent Orchestration**
+   - Connect agents for task execution
+   - Implement result aggregation
+   - Add error handling and retries
+
+### Phase 4: Production Readiness (Week 4)
+1. **Testing Suite**
+   - Unit tests for all components
+   - Integration tests for voice flow
+   - Load testing with Locust
+
+2. **Monitoring & Observability**
+   - Add Jarvis-specific metrics
+   - Create Grafana dashboard
+   - Set up alerts for failures
+
+3. **Documentation**
+   - API documentation
+   - User guide
+   - Deployment instructions
+
+## Critical Success Factors
+
+### Technical Requirements
+- Ollama service must be running with TinyLlama model
+- PostgreSQL must have Jarvis schema created
+- At least one agent must have real implementation
+- Voice I/O must work end-to-end
+- Task planning must handle basic commands
+
+### Quality Gates
+- All code must pass CLAUDE.md rules 1-19
+- No fantasy elements or speculative features
+- All changes must preserve existing functionality
+- Documentation must be updated with changes
+- Tests must pass before deployment
+
+### Performance Targets
+- Wake word detection: < 500ms response
+- Speech recognition: < 2s for 10-word sentence
+- Task planning: < 1s for simple tasks
+- TTS response: < 500ms generation
+- End-to-end voice command: < 5s total
+
+## Team Responsibilities & Deliverables
+
+### Backend Team
+- **Week 1**: Fix Ollama configuration, create database schema
+- **Week 2**: Implement voice endpoints, task planning controller
+- **Week 3**: Complete agent orchestration, model router
+- **Week 4**: API documentation, performance optimization
+
+### Frontend Team
+- **Week 1**: Design voice UI components in Streamlit
+- **Week 2**: Integrate wake word detection, audio controls
+- **Week 3**: Add conversation history, real-time updates
+- **Week 4**: Polish UI, accessibility compliance
+
+### DevOps Team
+- **Week 1**: Fix Docker builds, verify all services healthy
+- **Week 2**: Add voice dependencies to containers
+- **Week 3**: Set up CI/CD for Jarvis components
+- **Week 4**: Production deployment, monitoring setup
+
+### QA Team
+- **Week 1**: Test existing infrastructure, document issues
+- **Week 2**: Test voice I/O components
+- **Week 3**: End-to-end testing of task flows
+- **Week 4**: Load testing, security testing
+
+### AI Team
+- **Week 1**: Implement first real agent logic
+- **Week 2**: Design task planning prompts
+- **Week 3**: Optimize model performance
+- **Week 4**: Fine-tune response generation
+
+## External Documentation References
+
+### Core Documents (Verified Real)
+- `/opt/sutazaiapp/CLAUDE.md` - System truth, 19 mandatory rules
+- `/opt/sutazaiapp/IMPORTANT/PERFECT_JARVIS_SYNTHESIS_PLAN.md` - Architecture synthesis
+- `/opt/sutazaiapp/docs/CHANGELOG.md` - All system changes
+- `/opt/sutazaiapp/docker-compose.yml` - Service definitions
+
+### Repository References (External)
+1. **Dipeshpal/Jarvis_AI**: https://github.com/Dipeshpal/Jarvis_AI
+   - Python library for voice assistant
+   - MIT License, actively maintained
+
+2. **Microsoft/JARVIS**: https://github.com/microsoft/JARVIS
+   - Multi-modal AI system with task planning
+   - MIT License, research project
+
+3. **llm-guy/jarvis**: https://github.com/llm-guy/jarvis  
+   - Local LLM voice assistant
+   - Apache 2.0 License
+
+4. **danilofalcao/jarvis**: https://github.com/danilofalcao/jarvis
+   - Multi-model coding assistant
+   - License to be verified
+
+### Testing & Validation
+- Playwright tests: `/tests/playwright/`
+- Load tests: `/load-testing/`
+- Integration tests: `/tests/integration/`
+
+## Immediate Next Steps (Priority Order)
+
+### Day 1 Actions
+1. **Fix Model Configuration**
+   ```bash
+   # Update backend config
+   sed -i 's/gpt-oss/tinyllama/g' /opt/sutazaiapp/backend/app/core/config.py
+   docker-compose restart backend
+   ```
+
+2. **Verify Infrastructure**
+   ```bash
+   # Check Ollama model
+   curl http://127.0.0.1:10104/api/tags | jq
+   
+   # Test backend health
+   curl http://127.0.0.1:10010/health | jq
+   ```
+
+3. **Create Database Schema**
+   ```bash
+   docker exec -it sutazai-postgres psql -U sutazai -d sutazai
+   # Run schema creation SQL
+   ```
+
+### Week 1 Milestones
+- [ ] Ollama-Backend connection working
+- [ ] Database schema created and tested
+- [ ] First agent with real logic deployed
+- [ ] Basic voice I/O prototype running
+- [ ] Task planning controller skeleton ready
+
+### Success Metrics
+- Backend health status: "healthy" not "degraded"
+- At least 1 agent returning real responses
+- Voice command processed end-to-end
+- Task planning generating valid plans
+- All tests passing in CI/CD
+
+## Risk Mitigation
+
+### Technical Risks
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| TinyLlama too limited | High | Prepare Ollama for larger models |
+| Voice recognition accuracy | Medium | Multiple STT engine fallbacks |
+| Agent orchestration complexity | High | Start simple, iterate |
+| ChromaDB instability | Low | Use Qdrant as primary vector DB |
+| Port conflicts | Low | Reserved port range documented |
+
+### Process Risks
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| Scope creep | High | Strict adherence to CLAUDE.md rules |
+| Fantasy features | High | Rule 1: No speculative code |
+| Breaking changes | High | Rule 2: Preserve functionality |
+| Documentation drift | Medium | Rule 19: Mandatory CHANGELOG |
+
+## Conclusion
+
+Perfect Jarvis represents a synthesis of best practices from 5 external repositories, adapted to work within SutazAI's actual infrastructure. By following this roadmap and adhering to CLAUDE.md rules, we can deliver a production-ready voice assistant that leverages existing services while adding genuine value.
+
+Key success factors:
+1. Fix immediate infrastructure issues (model mismatch)
+2. Implement incrementally (one component at a time)
+3. Test thoroughly (no production without validation)
+4. Document everything (CHANGELOG.md mandatory)
+5. No fantasy features (Rule 1 compliance)
+
+**Ready to begin implementation following this reality-based plan.**

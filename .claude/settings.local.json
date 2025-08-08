@@ -55,7 +55,22 @@
       "Bash(chmod:*)",
       "Bash(docker ps:*)",
       "Bash(docker logs:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker system:*)",
+      "Bash(grep:*)",
+      "Bash(docker compose:*)",
+      "Bash(npm test)",
+      "Bash(docker ps:*)",
+      "Bash(mkdir:*)",
+      "Bash(node:*)",
+      "Bash(npm install)",
+      "Bash(docker inspect:*)",
+      "Bash(docker builder prune:*)",
+      "Bash(docker-compose:*)",
+      "Bash(chmod:*)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

@@ -117,6 +117,27 @@ Agent services (runtime reality): several active; others behind profiles (disabl
 
 ---
 
+## Inter-Component Dependencies & Communication
+
+- Networking
+  - Single bridge network: `sutazai-network`. All services communicate via service names (no localhost in inter-service calls).
+- Backend service dependencies (from `backend/app/core/config.py` and compose env)
+  - Postgres: `postgres:5432` → `DATABASE_URL` or `postgresql+asyncpg://...`
+  - Redis: `redis:6379` → `REDIS_URL` (used for mesh, rate limiting, message bus)
+  - ChromaDB: `chromadb:8000` (token auth via `CHROMADB_API_KEY`)
+  - Qdrant: `qdrant:6333` (HTTP) / `qdrant:6334` (gRPC)
+  - Neo4j: `bolt://neo4j:7687` (optional)
+  - Ollama: `http://ollama:10104` (models, generation)
+- Messaging
+  - Primary in-code bus: Redis (see `app/mesh/redis_bus.py`, `app/orchestration/message_bus.py`, and `ai_agents/*` using `redis.asyncio`/`aioredis`).
+  - RabbitMQ: provisioned in infrastructure and health-checked by scripts; limited/no direct backend runtime usage observed.
+- Observability
+  - Health/metrics endpoints implemented in backend; Prometheus scrapes exporters and services listed in compose.
+- External integrations
+  - None (local-only). LLM via `ollama:10104`.
+
+---
+
 ## Working Endpoints (for quick validation)
 
 From `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md`:
@@ -153,6 +174,20 @@ Note: The schema as documented uses SERIAL keys; migration to UUID and additiona
 
 ---
 
+## Deployment & Orchestration
+
+- Compose
+  - `docker-compose.yml` declares 25+ services; `docker-compose.override.yml` aligns external ports to IMPORTANT and disables most agents via profiles.
+  - Resource limits and healthchecks present for core services; override reduces resource footprints for dev.
+- Addressing
+  - Services address each other by Docker service names. CORS for frontend uses host ports intentionally.
+- Profiles
+  - Most agent services are behind `profiles: ["disabled"]` (enable explicitly when needed).
+- Volumes
+  - Named volumes for data persistence (e.g., `postgres_data`, `chromadb_data`, `qdrant_data`, `ollama_data`).
+
+---
+
 ## Product Scope and Roadmap (Authoritative)
 
 From `IMPORTANT/REAL_FEATURES_AND_USERSTORIES.md`:
@@ -184,6 +219,10 @@ Per `IMPORTANT/TECHNOLOGY_STACK_REPOSITORY_INDEX.md`:
 - Several agents listed in various documents are NOT running (AgentGPT, AgentZero, AutoGen, CrewAI, Dify, Documind, FinRobot, FlowiseAI, GPT-Engineer, Langflow, LlamaIndex, PentestGPT, PrivateGPT, Semgrep, ShellGPT, Skyvern, TabbyML, etc.)
 - Not currently available: Kubernetes/K3s, Terraform, Vault, Jaeger, ELK/Kafka
 - Planned but not implemented: Auto-scaling, circuit breakers, advanced security policies, multi-region, backups
+
+Known misalignments to fix (code vs. IMPORTANT):
+- Backend service checks still probe legacy ports in some helpers (e.g., Ollama `11434`, Chroma `8001`) while config uses `10104` and `8000`. Align `app.main` helpers to `http://ollama:10104` and `http://chromadb:8000` for consistency.
+- Mixed duplication of models endpoints across `backend/app/api/v1/endpoints/models.py` and `backend/app/api/v1/models.py`; keep one as canonical.
 
 ---
 
@@ -244,6 +283,53 @@ Detailed endpoints (from `backend/app/api/v1/endpoints`):
 
 ---
 
+### Additional v1 modules (discovered in code)
+
+- Coordinator (`backend/app/api/v1/coordinator.py`)
+  - GET `/api/v1/coordinator/status`, `/tasks`, `/agents`, `/agents/status`, `/collective/status`, `/deploy/status`
+  - POST `/api/v1/coordinator/task`, `/agents/discover`, `/agents/start-all`, `/agents/activate-agi`, `/agents/stop-all`, `/deploy/mass-activation`, `/deploy/activate-collective`
+
+- Orchestration (`backend/app/api/v1/orchestration.py`)
+  - GET `/api/v1/orchestration/agents`, `/agents/healthy`, `/agents/capability/{capability}`, `/tasks/queue/status`, `/tasks/routing/history`, `/load-balancing/algorithms`, `/system/status`, `/system/metrics`, `/health`
+  - POST `/api/v1/orchestration/agents/register`, `/agents/discover`, `/tasks/submit`, `/load-balancing/configure`, `/workflows/create`, `/workflows/{workflow_id}/{cancel|pause|resume}`, `/messages/send`, `/messages/broadcast`, `/coordination/consensus`
+
+- Security (`backend/app/api/v1/security.py`)
+  - POST `/api/v1/security/login`, `/refresh`, `/logout`, `/encrypt`, `/decrypt`, `/compliance/gdpr/{action}`, `/test/vulnerability-scan`
+  - GET `/api/v1/security/report`, `/audit/events`, `/compliance/status`, `/config`
+
+- Vectors (`backend/app/api/v1/vectors.py`)
+  - POST `/api/v1/vectors/initialize`, `/add`, `/search`, `/optimize`
+  - GET `/api/v1/vectors/stats`
+
+- Models (alt module) (`backend/app/api/v1/models.py`)
+  - GET `/api/v1/models/`, `/status`
+  - POST `/api/v1/models/pull`, `/generate`, `/chat`, `/embed`
+
+- Self-Improvement (`backend/app/api/v1/self_improvement.py`)
+  - POST `/api/v1/self-improvement/start`, `/stop`, `/analyze-file`, `/metrics/add`, `/suggestions/{suggestion_id}/apply`
+  - GET `/api/v1/self-improvement/status`, `/report`, `/suggestions/pending`, `/config`
+  - PUT `/api/v1/self-improvement/config`
+
+- Feedback (`backend/app/api/v1/feedback.py`)
+  - POST `/api/v1/feedback/start`, `/stop`, `/improvements/{improvement_id}/{approve|reject}`
+  - GET `/api/v1/feedback/status`, `/metrics`, `/improvements`, `/health`
+
+---
+
+## CI/CD & Quality Gates
+
+- Workflows (key)
+  - `hygiene.yml`: banned keywords, IMPORTANT port alignment, localhost scan
+  - `important-alignment.yml`: validates ports and localhost alignment on PRs/pushes
+  - `docs-audit.yml`: centralizes docs under `docs/` and `IMPORTANT/`, detects duplicates
+  - Additional workflows: tests, security scans, nightly runs (see `.github/workflows/*`)
+- Scripts enforcing policy
+  - `scripts/validate_ports.py`, `scripts/scan_localhost.py`, `scripts/audit_docs.py`
+- Policy
+  - Service-name addressing; IMPORTANT is source of truth; docs-as-code; observability-first.
+
+---
+
 ## API Documentation Maintenance (policy)
 
 - Primary reference: FastAPI’s live OpenAPI at `/docs` and `/openapi.json`. Keep Pydantic models and examples accurate.
@@ -259,7 +345,36 @@ Given the repository state, tidy and refactor incrementally:
 - Favor structural, non-behavioral edits to improve clarity and symmetry; keep tests green; extract helpers from large blocks; commit small steps [Does this code spark joy?](https://medium.com/gusto-engineering/does-this-code-spark-joy-23b1d7706bc0)
 - Use a stepwise refactor plan: validate inputs, isolate pure logic, separate persistence/IO, add tests around behavior, then split into modules [How to Refactor Messy Code](https://www.codementor.io/@rctushar/how-to-refactor-messy-code-a-step-by-step-guide-2m4pnsl4yx)
 
-These practices should be applied while keeping IMPORTANT as the single source of truth for scope and target behavior. For legacy-code documentation guidance leveraged in this consolidation, see: [Documenting Legacy Code: A Guide for 2024](https://overcast.blog/documenting-legacy-code-a-guide-for-2024-dbc0b3ba06a7?gi=08dfb6cbd48c).
+These practices should be applied while keeping IMPORTANT as the single source of truth for scope and target behavior. For legacy-code documentation guidance leveraged in this consolidation, see: [Documenting Legacy Code: A Guide for 2024](https://overcast.blog/documenting-legacy-code-a-guide-for-2024-dbc0b3ba06a7?gi=08dfb6cbd48c). Static analysis and design x‑rays can be supported with SciTools Understand [company overview](https://www.linkedin.com/company/understandbyscitools) and `scitools.com`.
+
+---
+
+## Operational Runbook & Verification Checklist
+
+- Bring-up (core only)
+  - `docker-compose up -d postgres redis qdrant chromadb faiss ollama backend frontend prometheus grafana loki` 
+- Quick health checks
+  - Backend: `curl -f http://localhost:10010/health`
+  - Frontend: `curl -f http://localhost:10011`
+  - Ollama: `curl -f http://localhost:10104`
+  - ChromaDB: `curl -f http://localhost:10100/api/v1/heartbeat`
+  - Qdrant: `curl -f http://localhost:10101/cluster`
+  - Prometheus: `curl -f http://localhost:10200/-/healthy`
+  - Grafana: `curl -f http://localhost:10201/api/health`
+- Backend metrics
+  - `curl -s http://localhost:10010/prometheus-metrics | head`
+- Agent endpoints (enabled per profile)
+  - Check each agent on its external port under 111xx (see matrix).
+
+---
+
+## Security & Code Scanning (recommendations)
+
+- GitHub code scanning (CodeQL) integration recommended for Python/TS code and workflows. See GitHub’s guidance on enabling and managing code scanning and alerts [GitHub Code Scanning Docs](https://docs.github.com/en/code-security/code-scanning).
+- Optional repo-wide static scanning utility for inventory/metrics: evaluate a containerized scanner approach such as `repo-scanner` to index repos and metadata before CI runs [repo-scanner](https://github.com/trungkh/repo-scanner).
+- Existing hygiene workflows already enforce:
+  - Port alignment with IMPORTANT and service-name addressing
+  - Doc centralization and banned-keyword checks
 
 ---
 
