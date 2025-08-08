@@ -1,6 +1,6 @@
 # SutazAI Canonical Architecture (ASoT)
 
-Authoritative, reconciled documentation. Diagrams provided as Mermaid (.mmd). PNG export pending (requires `@mermaid-js/mermaid-cli`).
+Authoritative, reconciled documentation. Diagrams are provided as Mermaid source (.mmd). PNG rendering is tracked separately (see ISSUE-0013) and will be produced via CI using `@mermaid-js/mermaid-cli`.
 
 - Current State
   - Context: `current_state/context.mmd`
@@ -26,4 +26,6 @@ Authoritative, reconciled documentation. Diagrams provided as Mermaid (.mmd). PN
 - Operations: `operations/operations.md`, `operations/ci_cd_multiarch.md`, `operations/image_scanning.md`, `operations/archive_management.md`, `operations/docs_generation.md`
 - Standards & Governance: `standards/engineering_standards.md`, `standards/ADR-0001.md`, `standards/ADR-0002.md`, `standards/ADR-0003.md`, `standards/ADR-0004.md`
 
-Sources are cited as footnotes with file paths and line ranges.
+Sources are cited as footnotes with file paths and line ranges using the format: [source] /opt/sutazaiapp/IMPORTANT/<path>#L<from>-L<to>.
+
+Assumptions are explicitly labeled where runtime verification is pending; such items also have Issue Cards and backlog links.

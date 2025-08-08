@@ -1,0 +1,19 @@
+%% Mermaid sequence-like data flow (developer view)
+%% Canonical sources: IMPORTANT/10_canonical/current_state/seq_*.mmd
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant API as Backend API
+  participant DB as Database
+  participant AG as Agent Orchestrator
+  participant LLM as LLM Runtime
+
+  U->>FE: Submit Query
+  FE->>API: HTTP POST /query
+  API->>DB: Read context
+  API->>AG: Invoke agent
+  AG->>LLM: Prompt with context
+  LLM-->>AG: Completion
+  AG-->>API: Result
+  API-->>FE: Response
+

@@ -15,7 +15,7 @@ import zipfile
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-ROOT = Path('/workspace/IMPORTANT').resolve()
+ROOT = Path('/opt/sutazaiapp/IMPORTANT').resolve()
 OUT_DIR = ROOT / '00_inventory'
 EXTRACT_DIR = OUT_DIR / '_extracted'
 
@@ -51,12 +51,12 @@ def sha256_file(path: Path) -> str:
 
 def git_provenance(path: Path) -> Dict[str, Optional[str]]:
     try:
-        rel = str(path.relative_to(Path('/workspace')))
+        rel = str(path.relative_to(Path('/opt/sutazaiapp')))
     except ValueError:
         rel = str(path)
     try:
         out = subprocess.check_output([
-            'git', '-C', '/workspace', 'log', '-1', '--format=%H|%an|%ad', '--', rel
+            'git', '-C', '/opt/sutazaiapp', 'log', '-1', '--format=%H|%an|%ad', '--', rel
         ], stderr=subprocess.DEVNULL, text=True).strip()
         if out:
             commit, author, date = out.split('|', 2)

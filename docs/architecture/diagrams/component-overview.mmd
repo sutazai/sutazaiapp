@@ -1,0 +1,20 @@
+%% Mermaid component overview (developer view)
+%% Canonical source: IMPORTANT/10_canonical/current_state/components_backend.mmd
+flowchart TB
+  subgraph Backend
+    api[FastAPI Service]
+    svc[Service Layer]
+    repo[Repositories]
+  end
+  subgraph Data
+    db[(Postgres)]
+    vectordb[(Vector Store)]
+  end
+  subgraph Agents
+    orch[Agent Orchestrator]
+    worker[Agent Workers]
+  end
+  api --> svc --> repo --> db
+  svc --> vectordb
+  api --> orch --> worker
+

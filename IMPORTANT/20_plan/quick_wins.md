@@ -6,3 +6,4 @@
 - Move secrets to `.env`; rotate DB password
 - Create Alembic baseline and UUID migration scripts
 - Implement basic document upload + embedding to ChromaDB
+- Add CI step to render Mermaid .mmd → .png using pinned mermaid-cli

@@ -1,0 +1,9 @@
+%% Mermaid C4-like Context Diagram (developer view)
+%% Canonical source: IMPORTANT/10_canonical/current_state/context.mmd
+flowchart LR
+  user[User] -->|Uses| ui[Frontend]
+  ui -->|Calls| api[Backend API]
+  api -->|Reads/Writes| db[(Database)]
+  api -->|Invokes| agents[Agent Orchestrator]
+  agents -->|LLM| llm[LLM Runtime]
+
