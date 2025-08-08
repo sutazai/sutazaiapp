@@ -11,7 +11,7 @@ starlette==0.41.3
 
 # Database & ORM
 sqlalchemy==2.0.36
-alembic==1.14.0
+alembic==1.16.4
 psycopg2-binary==2.9.10
 asyncpg==0.29.0
 redis==5.2.1
