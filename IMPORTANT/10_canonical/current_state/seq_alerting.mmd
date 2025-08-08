@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant P as Prometheus
+  participant A as AlertManager
+  participant G as Grafana
+  participant O as On-call
+
+  P-->>A: Alert fired
+  A-->>G: Annotation
+  A-->>O: Notification (Slack/Email)

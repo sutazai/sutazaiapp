@@ -19,6 +19,9 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
+import time
+from typing import List, Optional
+from jose import jwt, JWTError
 
 logger = logging.getLogger(__name__)
 
@@ -889,7 +892,28 @@ xss_protection.security_manager = security_manager
 # FastAPI integration
 from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-import time
+
+ALGORITHM = "HS256"
+JWT_SECRET = os.getenv("JWT_SECRET", "")
+
+class AuthError(Exception):
+    pass
+
+def decode_jwt(token: str, required_scopes: Optional[List[str]] = None) -> dict:
+    if not JWT_SECRET:
+        raise AuthError("JWT secret not configured")
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
+    except JWTError as e:
+        raise AuthError(f"Invalid token: {e}")
+    exp = payload.get("exp")
+    if not exp or time.time() > exp:
+        raise AuthError("Token expired or missing exp")
+    if required_scopes:
+        token_scopes = set(payload.get("scopes", []))
+        if not set(required_scopes).issubset(token_scopes):
+            raise AuthError("Insufficient scope")
+    return payload
 
 router = APIRouter()
 security = HTTPBearer()

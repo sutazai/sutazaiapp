@@ -1,0 +1,169 @@
+{
+  "timestamp": "2025-08-05T12:42:41.275418",
+  "tests": [
+    {
+      "name": "docker_container_detection",
+      "status": "passed",
+      "containers_found": 91,
+      "containers": [
+        {
+          "name": "redis",
+          "status": "Up 22 minutes",
+          "ports": "0.0.0.0:6379->6379/tcp, :::6379->6379/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "prompt-injection-guard",
+          "status": "Up About a minute",
+          "ports": "0.0.0.0:8696->8080/tcp, [::]:8696->8080/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "garbage-collector-coordinator",
+          "status": "Restarting (1) 14 seconds ago",
+          "ports": "",
+          "docker_status": "restarting"
+        },
+        {
+          "name": "edge-inference-proxy",
+          "status": "Up 31 seconds",
+          "ports": "0.0.0.0:8855->8080/tcp, [::]:8855->8080/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "experiment-tracker",
+          "status": "Up About a minute",
+          "ports": "0.0.0.0:8501->8080/tcp, [::]:8501->8080/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "data-drift-detector",
+          "status": "Up 7 minutes",
+          "ports": "0.0.0.0:8771->8080/tcp, [::]:8771->8080/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "energy-consumption-optimize",
+          "status": "Restarting (1) 21 seconds ago",
+          "ports": "",
+          "docker_status": "restarting"
+        },
+        {
+          "name": "compute-scheduler-and-optimizer",
+          "status": "Restarting (1) Less than a second ago",
+          "ports": "",
+          "docker_status": "restarting"
+        },
+        {
+          "name": "cognitive-load-monitor",
+          "status": "Up About a minute",
+          "ports": "0.0.0.0:8399->8080/tcp, [::]:8399->8080/tcp",
+          "docker_status": "running"
+        },
+        {
+          "name": "explainability-and-transparency-agent",
+          "status": "Restarting (1) 2 seconds ago",
+          "ports": "",
+          "docker_status": "restarting"
+        }
+      ]
+    },
+    {
+      "name": "agent_health_endpoints",
+      "status": "passed",
+      "healthy_agents": 2,
+      "total_agents": 42,
+      "health_rate": 4.761904761904762,
+      "results": [
+        {
+          "agent": "redis",
+          "port": 6379,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "prompt-injection-guard",
+          "port": 8696,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "edge-inference-proxy",
+          "port": 8855,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "experiment-tracker",
+          "port": 8501,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "data-drift-detector",
+          "port": 8771,
+          "health_status": "healthy"
+        },
+        {
+          "agent": "cognitive-load-monitor",
+          "port": 8399,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "secrets-vault-manager-vault",
+          "port": 8825,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "senior-engineer",
+          "port": 8475,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "private-data-analyst",
+          "port": 8947,
+          "health_status": "unreachable"
+        },
+        {
+          "agent": "private-registry-manager-harbor",
+          "port": 8782,
+          "health_status": "unreachable"
+        }
+      ]
+    },
+    {
+      "name": "monitoring_system_integration",
+      "status": "passed",
+      "health_monitoring_enabled": true,
+      "check_interval": 30,
+      "config_sections": [
+        "version",
+        "communication_protocols",
+        "service_discovery",
+        "message_routing",
+        "agent_endpoints",
+        "timeout_settings",
+        "resource_management",
+        "health_monitoring",
+        "load_balancing"
+      ]
+    },
+    {
+      "name": "status_consistency",
+      "status": "passed",
+      "total_agents": 98,
+      "running_agents": 31,
+      "problem_agents": 61,
+      "status_distribution": {
+        "running": 27,
+        "restarting": 60,
+        "unknown": 5,
+        "healthy": 4,
+        "exited": 1,
+        "unhealthy": 1
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 4,
+    "passed_tests": 4,
+    "failed_tests": 0,
+    "success_rate": 100.0
+  }
+}

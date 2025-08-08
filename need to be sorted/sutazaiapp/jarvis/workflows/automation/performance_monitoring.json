@@ -1,0 +1,332 @@
+{
+  "performance_monitoring_system": {
+    "name": "Agent Performance Monitor",
+    "version": "1.0",
+    "description": "Comprehensive monitoring system for tracking agent performance, health, and optimization opportunities",
+    "enabled": true,
+    "monitoring_interval": 30
+  },
+  "metrics_collection": {
+    "agent_metrics": {
+      "response_time": {
+        "unit": "seconds",
+        "thresholds": {
+          "warning": 30,
+          "critical": 60
+        },
+        "aggregation": ["avg", "p95", "p99"]
+      },
+      "success_rate": {
+        "unit": "percentage",
+        "thresholds": {
+          "warning": 0.85,
+          "critical": 0.75
+        },
+        "window": "1h"
+      },
+      "throughput": {
+        "unit": "tasks/minute",
+        "thresholds": {
+          "warning": 5,
+          "critical": 2
+        },
+        "measurement": "sliding_window"
+      },
+      "error_rate": {
+        "unit": "percentage",
+        "thresholds": {
+          "warning": 0.05,
+          "critical": 0.15
+        },
+        "categorization": ["timeout", "failure", "exception"]
+      },
+      "resource_usage": {
+        "cpu": {
+          "unit": "percentage",
+          "thresholds": {"warning": 80, "critical": 95}
+        },
+        "memory": {
+          "unit": "MB",
+          "thresholds": {"warning": 1536, "critical": 1792}
+        },
+        "queue_depth": {
+          "unit": "count",
+          "thresholds": {"warning": 8, "critical": 15}
+        }
+      }
+    },
+    "system_metrics": {
+      "workflow_execution_time": {
+        "unit": "seconds",
+        "percentiles": [50, 90, 95, 99]
+      },
+      "agent_availability": {
+        "unit": "percentage",
+        "calculation": "healthy_agents / total_agents"
+      },
+      "message_bus_latency": {
+        "unit": "milliseconds",
+        "thresholds": {"warning": 100, "critical": 500}
+      },
+      "database_performance": {
+        "connection_pool_usage": "percentage",
+        "query_time": "milliseconds",
+        "deadlocks": "count"
+      }
+    }
+  },
+  "monitoring_workflows": [
+    {
+      "id": "real_time_health_check",
+      "name": "Real-time Health Monitoring",
+      "description": "Continuously monitor agent health and system vitals",
+      "schedule": "*/30 * * * * *",
+      "nodes": [
+        {
+          "id": "health_collector",
+          "type": "data_collector",
+          "config": {
+            "sources": [
+              "http://agent-registry:8300/health",
+              "http://agent-message-bus:8299/metrics",
+              "http://prometheus:9090/api/v1/query"
+            ],
+            "timeout": 5
+          }
+        },
+        {
+          "id": "health_analyzer",
+          "type": "processor",
+          "config": {
+            "analysis_type": "threshold_check",
+            "rules": "health_thresholds"
+          }
+        },
+        {
+          "id": "alert_dispatcher",
+          "type": "alert",
+          "config": {
+            "channels": ["slack", "email", "webhook"],
+            "severity_routing": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "performance_analysis",
+      "name": "Performance Analysis Workflow",
+      "description": "Analyze performance trends and identify optimization opportunities",
+      "schedule": "0 */15 * * * *",
+      "nodes": [
+        {
+          "id": "metrics_aggregator",
+          "type": "data_processor",
+          "config": {
+            "sources": ["prometheus", "grafana", "application_logs"],
+            "time_window": "15m",
+            "aggregations": ["avg", "max", "p95"]
+          }
+        },
+        {
+          "id": "trend_analyzer",
+          "type": "ml_processor",
+          "config": {
+            "algorithm": "time_series_analysis",
+            "model": "arima",
+            "prediction_horizon": "1h"
+          }
+        },
+        {
+          "id": "bottleneck_detector",
+          "type": "analyzer",
+          "config": {
+            "detection_methods": ["statistical_outliers", "resource_saturation", "queue_depth"],
+            "confidence_threshold": 0.8
+          }
+        },
+        {
+          "id": "optimization_recommender",
+          "type": "agent",
+          "agent_id": "hardware-resource-optimizer",
+          "config": {
+            "action": "generate_recommendations",
+            "priority": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "capacity_planning",
+      "name": "Capacity Planning Workflow",
+      "description": "Forecast resource needs and scaling requirements",
+      "schedule": "0 0 */6 * * *",
+      "nodes": [
+        {
+          "id": "usage_collector",
+          "type": "data_collector",
+          "config": {
+            "metrics": ["cpu_usage", "memory_usage", "task_volume", "response_times"],
+            "time_range": "24h",
+            "resolution": "1m"
+          }
+        },
+        {
+          "id": "capacity_forecaster",
+          "type": "ml_processor",
+          "config": {
+            "algorithm": "linear_regression",
+            "features": ["historical_usage", "growth_rate", "seasonal_patterns"],
+            "forecast_period": "7d"
+          }
+        },
+        {
+          "id": "scaling_planner",
+          "type": "agent",
+          "agent_id": "infrastructure-devops-manager",
+          "config": {
+            "action": "plan_scaling",
+            "considerations": ["cost", "performance", "availability"]
+          }
+        }
+      ]
+    }
+  ],
+  "dashboards": {
+    "agent_overview": {
+      "panels": [
+        {
+          "title": "Agent Health Status",
+          "type": "status_grid",
+          "query": "up{job=\"agent-registry\"}",
+          "refresh": "30s"
+        },
+        {
+          "title": "Response Time Distribution",
+          "type": "histogram",
+          "query": "histogram_quantile(0.95, rate(agent_response_time_bucket[5m]))",
+          "time_range": "1h"
+        },
+        {
+          "title": "Task Throughput",
+          "type": "graph",
+          "query": "rate(agent_tasks_completed_total[5m])",
+          "stack": true
+        },
+        {
+          "title": "Error Rates by Agent",
+          "type": "table",
+          "query": "rate(agent_errors_total[5m]) / rate(agent_requests_total[5m])",
+          "sort": "desc"
+        }
+      ]
+    },
+    "system_performance": {
+      "panels": [
+        {
+          "title": "System Resource Usage",
+          "type": "gauge",
+          "queries": {
+            "cpu": "avg(rate(container_cpu_usage_seconds_total[5m]))",
+            "memory": "avg(container_memory_usage_bytes) / avg(container_spec_memory_limit_bytes)",
+            "disk": "avg(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes))"
+          }
+        },
+        {
+          "title": "Workflow Execution Times",
+          "type": "heatmap",
+          "query": "histogram_quantile(0.95, rate(workflow_duration_bucket[5m]))",
+          "bucket_size": "30s"
+        },
+        {
+          "title": "Message Bus Metrics",
+          "type": "stat",
+          "queries": {
+            "messages_per_second": "rate(message_bus_messages_total[1m])",
+            "queue_depth": "message_bus_queue_depth",
+            "processing_latency": "message_bus_processing_duration_seconds"
+          }
+        }
+      ]
+    }
+  },
+  "alerting_rules": [
+    {
+      "name": "Agent Down",
+      "condition": "up{job=\"agent-registry\"} == 0",
+      "duration": "1m",
+      "severity": "critical",
+      "message": "Agent {{ $labels.agent_id }} is down"
+    },
+    {
+      "name": "High Response Time",
+      "condition": "histogram_quantile(0.95, rate(agent_response_time_bucket[5m])) > 30",
+      "duration": "5m",
+      "severity": "warning",
+      "message": "Agent {{ $labels.agent_id }} has high response time: {{ $value }}s"
+    },
+    {
+      "name": "High Error Rate",
+      "condition": "rate(agent_errors_total[5m]) / rate(agent_requests_total[5m]) > 0.1",
+      "duration": "3m",
+      "severity": "critical",
+      "message": "Agent {{ $labels.agent_id }} error rate is {{ $value | humanizePercentage }}"
+    },
+    {
+      "name": "Resource Exhaustion",
+      "condition": "container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.9",
+      "duration": "2m",  
+      "severity": "warning",
+      "message": "Agent {{ $labels.agent_id }} memory usage is at {{ $value | humanizePercentage }}"
+    },
+    {
+      "name": "Queue Overflow",
+      "condition": "message_bus_queue_depth > 100",
+      "duration": "1m",
+      "severity": "warning",
+      "message": "Message bus queue depth is {{ $value }}"
+    }
+  ],
+  "optimization_triggers": [
+    {
+      "condition": "avg_response_time > threshold AND cpu_usage < 50%",
+      "action": "suggest_parallel_processing",
+      "target_agent": "hardware-resource-optimizer"
+    },
+    {
+      "condition": "error_rate > 0.05 AND queue_depth > 10",
+      "action": "suggest_load_balancing",
+      "target_agent": "infrastructure-devops-manager"
+    },
+    {
+      "condition": "memory_usage > 0.8 AND task_completion_rate < baseline",
+      "action": "suggest_memory_optimization",
+      "target_agent": "context-optimization-engineer"
+    }
+  ],
+  "data_retention": {
+    "raw_metrics": "7d",
+    "aggregated_metrics": "30d",
+    "performance_reports": "90d",
+    "alert_history": "1y"
+  },
+  "integration": {
+    "prometheus": {
+      "scrape_interval": "15s",
+      "endpoints": [
+        "http://agent-registry:8300/metrics",
+        "http://agent-message-bus:8299/metrics",
+        "http://backend:8000/metrics"
+      ]
+    },
+    "grafana": {
+      "dashboard_sync": true,
+      "alert_integration": true,
+      "custom_panels": true
+    },
+    "elasticsearch": {
+      "log_aggregation": true,
+      "search_optimization": true,
+      "index_rotation": "daily"
+    }
+  }
+}

@@ -1,0 +1,370 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "generated": "2025-08-03",
+    "description": "Comprehensive test matrix for all possible rule combinations and their interactions",
+    "total_rules": 16,
+    "total_combinations": 65536,
+    "test_scenarios": {
+      "exhaustive": "Tests all 2^16 possible combinations",
+      "targeted": "Tests specific high-risk combinations",
+      "performance": "Tests impact of rule combinations on system performance",
+      "edge_cases": "Tests conflict scenarios and edge cases"
+    }
+  },
+  "rules": {
+    "rule_01_no_fantasy_elements": {
+      "id": 1,
+      "name": "No Fantasy Elements",
+      "category": "code_quality",
+      "priority": "critical",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "minimal",
+      "test_scenarios": [
+        "validate_no_magic_terms",
+        "validate_concrete_naming",
+        "validate_real_libraries",
+        "validate_no_placeholder_code"
+      ]
+    },
+    "rule_02_no_breaking_functionality": {
+      "id": 2,
+      "name": "Do Not Break Existing Functionality",
+      "category": "stability",
+      "priority": "critical",
+      "dependencies": ["rule_10_functionality_first_cleanup"],
+      "conflicts": [],
+      "performance_impact": "high",
+      "test_scenarios": [
+        "regression_testing",
+        "backward_compatibility_check",
+        "integration_test_suite",
+        "rollback_validation"
+      ]
+    },
+    "rule_03_analyze_everything": {
+      "id": 3,
+      "name": "Analyze Everything—Every Time",
+      "category": "validation",
+      "priority": "high",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "very_high",
+      "test_scenarios": [
+        "comprehensive_file_analysis",
+        "dependency_validation",
+        "security_audit",
+        "performance_analysis"
+      ]
+    },
+    "rule_04_reuse_before_creating": {
+      "id": 4,
+      "name": "Reuse Before Creating",
+      "category": "efficiency",
+      "priority": "medium",
+      "dependencies": ["rule_07_eliminate_script_chaos"],
+      "conflicts": [],
+      "performance_impact": "minimal",
+      "test_scenarios": [
+        "duplicate_detection",
+        "reusability_analysis",
+        "consolidation_opportunities",
+        "code_deduplication"
+      ]
+    },
+    "rule_05_professional_project": {
+      "id": 5,
+      "name": "Treat This as a Professional Project",
+      "category": "standards",
+      "priority": "high",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "minimal",
+      "test_scenarios": [
+        "code_quality_standards",
+        "documentation_completeness",
+        "testing_coverage",
+        "deployment_readiness"
+      ]
+    },
+    "rule_06_centralized_documentation": {
+      "id": 6,
+      "name": "Clear, Centralized, and Structured Documentation",
+      "category": "documentation",
+      "priority": "medium",
+      "dependencies": ["rule_15_clean_documentation"],
+      "conflicts": [],
+      "performance_impact": "minimal",
+      "test_scenarios": [
+        "doc_structure_validation",
+        "duplicate_content_check",
+        "link_validation",
+        "consistency_check"
+      ]
+    },
+    "rule_07_eliminate_script_chaos": {
+      "id": 7,
+      "name": "Eliminate Script Chaos",
+      "category": "organization",
+      "priority": "high",
+      "dependencies": ["rule_08_python_script_sanity"],
+      "conflicts": [],
+      "performance_impact": "medium",
+      "test_scenarios": [
+        "script_organization_check",
+        "duplicate_script_detection",
+        "script_documentation_validation",
+        "execution_path_verification"
+      ]
+    },
+    "rule_08_python_script_sanity": {
+      "id": 8,
+      "name": "Python Script Sanity",
+      "category": "code_quality",
+      "priority": "high",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "low",
+      "test_scenarios": [
+        "python_style_validation",
+        "import_structure_check",
+        "error_handling_validation",
+        "cli_argument_testing"
+      ]
+    },
+    "rule_09_backend_frontend_version_control": {
+      "id": 9,
+      "name": "Backend & Frontend Version Control",
+      "category": "architecture",
+      "priority": "high",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "medium",
+      "test_scenarios": [
+        "single_source_validation",
+        "duplicate_elimination",
+        "version_consistency_check",
+        "architecture_validation"
+      ]
+    },
+    "rule_10_functionality_first_cleanup": {
+      "id": 10,
+      "name": "Functionality-First Cleanup",
+      "category": "safety",
+      "priority": "critical",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "high",
+      "test_scenarios": [
+        "reference_analysis",
+        "impact_assessment",
+        "safe_deletion_validation",
+        "rollback_preparation"
+      ]
+    },
+    "rule_11_docker_structure": {
+      "id": 11,
+      "name": "Docker Structure Must Be Clean",
+      "category": "infrastructure",
+      "priority": "high",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "medium",
+      "test_scenarios": [
+        "dockerfile_validation",
+        "container_structure_check",
+        "security_scanning",
+        "build_optimization"
+      ]
+    },
+    "rule_12_deployment_script": {
+      "id": 12,
+      "name": "One Self-Updating Deployment Script",
+      "category": "deployment",
+      "priority": "critical",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "high",
+      "test_scenarios": [
+        "deployment_script_validation",
+        "idempotency_testing",
+        "rollback_capability",
+        "environment_compatibility"
+      ]
+    },
+    "rule_13_no_garbage": {
+      "id": 13,
+      "name": "No Garbage, No Rot",
+      "category": "cleanliness",
+      "priority": "high",
+      "dependencies": ["rule_10_functionality_first_cleanup"],
+      "conflicts": [],
+      "performance_impact": "low",
+      "test_scenarios": [
+        "garbage_detection",
+        "unused_code_identification",
+        "cleanup_validation",
+        "maintenance_scheduling"
+      ]
+    },
+    "rule_14_correct_ai_agent": {
+      "id": 14,
+      "name": "Engage the Correct AI Agent",
+      "category": "ai_orchestration",
+      "priority": "medium",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "medium",
+      "test_scenarios": [
+        "agent_selection_validation",
+        "capability_matching",
+        "routing_efficiency",
+        "fallback_mechanisms"
+      ]
+    },
+    "rule_15_clean_documentation": {
+      "id": 15,
+      "name": "Keep Documentation Clean",
+      "category": "documentation", 
+      "priority": "medium",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "minimal",
+      "test_scenarios": [
+        "doc_cleanliness_check",
+        "version_sync_validation",
+        "accessibility_testing",
+        "maintenance_tracking"
+      ]
+    },
+    "rule_16_local_llms_ollama": {
+      "id": 16,
+      "name": "Use Local LLMs via Ollama",
+      "category": "ai_infrastructure",
+      "priority": "medium",
+      "dependencies": [],
+      "conflicts": [],
+      "performance_impact": "high",
+      "test_scenarios": [
+        "ollama_integration_check",
+        "model_availability_validation",
+        "performance_benchmarking",
+        "resource_usage_monitoring"
+      ]
+    }
+  },
+  "combination_categories": {
+    "all_enabled": {
+      "description": "All 16 rules enabled simultaneously",
+      "binary_pattern": "1111111111111111",
+      "expected_performance_impact": "very_high",
+      "critical_interactions": [
+        "rule_02_rule_10_interaction",
+        "rule_03_performance_bottleneck",
+        "rule_12_rule_16_resource_conflict"
+      ]
+    },
+    "all_disabled": {
+      "description": "All rules disabled (baseline)",
+      "binary_pattern": "0000000000000000",
+      "expected_performance_impact": "minimal",
+      "use_case": "Performance baseline measurement"
+    },
+    "critical_only": {
+      "description": "Only critical priority rules enabled",
+      "binary_pattern": "1111000010000000",
+      "rules": [1, 2, 10, 12],
+      "expected_performance_impact": "high"
+    },
+    "high_priority": {
+      "description": "Critical and high priority rules",
+      "binary_pattern": "1111111111100000",
+      "rules": [1, 2, 3, 5, 7, 8, 9, 10, 11, 13],
+      "expected_performance_impact": "very_high"
+    },
+    "performance_minimal": {
+      "description": "Rules with minimal performance impact",
+      "binary_pattern": "1000010100001100",
+      "rules": [1, 4, 6, 13, 15],
+      "expected_performance_impact": "low"
+    },
+    "conflict_prone": {
+      "description": "Combinations known to cause conflicts",
+      "scenarios": [
+        {
+          "name": "aggressive_cleanup_vs_safety",
+          "binary_pattern": "0010000000101000",
+          "rules": [2, 10, 13],
+          "conflict_type": "safety_vs_cleanliness"
+        },
+        {
+          "name": "comprehensive_analysis_performance",
+          "binary_pattern": "0010000000000001",
+          "rules": [2, 16],
+          "conflict_type": "analysis_depth_vs_resource_usage"
+        }
+      ]
+    }
+  },
+  "test_execution_plan": {
+    "phase_1_baseline": {
+      "description": "Establish baseline performance with no rules",
+      "combinations": ["all_disabled"],
+      "metrics": ["execution_time", "memory_usage", "cpu_usage", "disk_io"]
+    },
+    "phase_2_individual": {
+      "description": "Test each rule individually",
+      "combinations": "single_rule_combinations",
+      "total_tests": 16,
+      "metrics": ["rule_effectiveness", "performance_impact", "side_effects"]
+    },
+    "phase_3_pairs": {
+      "description": "Test rule pairs for interactions",
+      "combinations": "rule_pair_combinations", 
+      "total_tests": 120,
+      "focus": "dependency_validation"
+    },
+    "phase_4_categories": {
+      "description": "Test predefined rule categories",
+      "combinations": ["critical_only", "high_priority", "performance_minimal"],
+      "focus": "practical_scenarios"
+    },
+    "phase_5_stress": {
+      "description": "Test high-load scenarios",
+      "combinations": ["all_enabled"],
+      "focus": "system_limits"
+    },
+    "phase_6_edge_cases": {
+      "description": "Test conflict scenarios",
+      "combinations": "conflict_prone",
+      "focus": "error_handling"
+    }
+  },
+  "validation_criteria": {
+    "functional": {
+      "rule_enforcement": "Each rule must be properly enforced when enabled",
+      "rule_bypassing": "Rules must be properly bypassed when disabled", 
+      "dependency_handling": "Rule dependencies must be respected",
+      "conflict_resolution": "Rule conflicts must be handled gracefully"
+    },
+    "performance": {
+      "max_overhead": "Total overhead must not exceed 50% of baseline",
+      "memory_usage": "Memory usage must not exceed system limits",
+      "response_time": "Response time degradation must be acceptable",
+      "resource_scaling": "Resource usage must scale predictably"
+    },
+    "reliability": {
+      "no_system_freeze": "No combination should cause system freeze",
+      "graceful_degradation": "System must degrade gracefully under load",
+      "recovery_capability": "System must recover from failures",
+      "data_integrity": "Data integrity must be maintained"
+    },
+    "usability": {
+      "clear_error_messages": "Error messages must be clear and actionable",
+      "configuration_clarity": "Rule configuration must be intuitive", 
+      "debugging_support": "Debugging information must be comprehensive",
+      "documentation_accuracy": "Documentation must match actual behavior"
+    }
+  }
+}

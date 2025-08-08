@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional
 from app.services.model_manager import ModelManager
 from app.core.dependencies import get_model_manager
+from app.core.middleware import jwt_required
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ class PullModelResponse(BaseModel):
     success: bool
     message: str
 
-@router.get("/", response_model=ModelsResponse)
+@router.get("/", response_model=ModelsResponse, dependencies=[Depends(jwt_required(scopes=["models:read"]))])
 async def list_models(
     model_manager: ModelManager = Depends(get_model_manager)
 ):
@@ -57,7 +58,7 @@ async def list_models(
         logger.error(f"Error listing models: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/pull", response_model=PullModelResponse)
+@router.post("/pull", response_model=PullModelResponse, dependencies=[Depends(jwt_required(scopes=["models:write"]))])
 async def pull_model(
     request: PullModelRequest,
     model_manager: ModelManager = Depends(get_model_manager)

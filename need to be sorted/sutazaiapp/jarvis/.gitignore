@@ -1,0 +1,150 @@
+# SECURITY: Sensitive files and credentials
+*.env
+.env*
+*.key
+*.pem
+*.p12
+*.pfx
+*.cert
+*.crt
+secrets/
+credentials/
+config/secrets/
+.aws/
+.ssh/
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# SECURITY: Database files
+*.sqlite
+*.sqlite3
+*.db
+*.dbf
+data/*.db
+
+# SECURITY: Log files that may contain sensitive data
+*.log
+logs/
+*.log.*
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+.pytest_cache/
+.mypy_cache/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Next.js
+.next/
+out/
+
+# Logs
+logs
+*.log
+
+# Large binary files
+*.node
+
+# Prometheus binaries and data
+monitoring/prometheus/prometheus
+monitoring/prometheus/promtool
+monitoring/node_exporter/
+data/prometheus/
+
+# Database files
+data/qdrant/
+
+# Nested git repositories
+packages/superagi/.git/
+old_sutazaiapp/
+sutazaiapp.git/
+
+# Webpack cache
+**/webpack/
+**/cache/
+
+# Build artifacts
+**/*.pack
+**/*.pack.old
+
+# Thevenv directory
+venv-sutazaiapp/ 
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dev-debug.log
+# Dependency directories
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/
+
+# Large model files
+data/tabby/models/
+*.gguf
+*.gguf.tmp
+*.bin
+*.model
+*.safetensors 
+data/repos/

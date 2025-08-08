@@ -5,8 +5,9 @@ Performance and Security Middleware
 import time
 import uuid
 from typing import Callable
-from fastapi import Request, Response, status
+from fastapi import Request, Response, status, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 import logging
@@ -14,9 +15,22 @@ from datetime import datetime
 import json
 
 from app.core.performance import performance_optimizer, rate_limiter
-from app.core.security import xss_protection
+from app.core.security import xss_protection, decode_jwt, AuthError
 
 logger = logging.getLogger(__name__)
+
+security = HTTPBearer(auto_error=False)
+
+def jwt_required(scopes=None):
+    scopes = scopes or []
+    def _dep(credentials: HTTPAuthorizationCredentials = Depends(security)):
+        if credentials is None or credentials.scheme.lower() != "bearer":
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token")
+        try:
+            return decode_jwt(credentials.credentials, required_scopes=scopes)
+        except AuthError as e:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
+    return _dep
 
 
 class PerformanceMiddleware(BaseHTTPMiddleware):

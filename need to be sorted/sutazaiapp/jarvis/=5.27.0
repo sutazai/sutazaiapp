@@ -1,0 +1,10 @@
+Collecting neo4j
+  Downloading neo4j-5.28.2-py3-none-any.whl.metadata (5.9 kB)
+Collecting pytz (from neo4j)
+  Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+Downloading neo4j-5.28.2-py3-none-any.whl (313 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 313.2/313.2 kB 146.8 kB/s eta 0:00:00
+Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 509.2/509.2 kB 25.3 kB/s eta 0:00:00
+Installing collected packages: pytz, neo4j
+Successfully installed neo4j-5.28.2 pytz-2025.2

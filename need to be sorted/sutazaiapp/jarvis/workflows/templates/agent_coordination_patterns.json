@@ -1,0 +1,277 @@
+{
+  "workflow_templates": [
+    {
+      "id": "sequential_agent_chain",
+      "name": "Sequential Agent Chain",
+      "description": "Chain multiple agents in sequence for complex task processing",
+      "pattern": "sequential",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "trigger",
+          "config": {
+            "trigger_type": "manual",
+            "inputs": ["task_description", "requirements"]
+          }
+        },
+        {
+          "id": "task_analyzer",
+          "type": "agent",
+          "agent_id": "ai-product-manager",
+          "config": {
+            "action": "analyze_requirements",
+            "timeout": 300
+          }
+        },
+        {
+          "id": "solution_architect",
+          "type": "agent", 
+          "agent_id": "agi-system-architect",
+          "config": {
+            "action": "design_solution",
+            "timeout": 600
+          }
+        },
+        {
+          "id": "implementation_coordinator",
+          "type": "agent",
+          "agent_id": "deployment-automation-master",
+          "config": {
+            "action": "coordinate_implementation",
+            "timeout": 900
+          }
+        },
+        {
+          "id": "quality_validator",
+          "type": "agent",
+          "agent_id": "testing-qa-validator",
+          "config": {
+            "action": "validate_solution",
+            "timeout": 300
+          }
+        }
+      ],
+      "connections": [
+        {"from": "start", "to": "task_analyzer"},
+        {"from": "task_analyzer", "to": "solution_architect"},
+        {"from": "solution_architect", "to": "implementation_coordinator"},
+        {"from": "implementation_coordinator", "to": "quality_validator"}
+      ]
+    },
+    {
+      "id": "parallel_agent_swarm",
+      "name": "Parallel Agent Swarm",
+      "description": "Execute multiple agents in parallel for distributed processing",
+      "pattern": "parallel",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "trigger",
+          "config": {
+            "trigger_type": "webhook",
+            "inputs": ["task_batch"]
+          }
+        },
+        {
+          "id": "task_splitter",
+          "type": "processor",
+          "config": {
+            "action": "split_tasks",
+            "strategy": "balanced"
+          }
+        },
+        {
+          "id": "frontend_development",
+          "type": "agent",
+          "agent_id": "senior-frontend-developer",
+          "config": {
+            "parallel": true,
+            "timeout": 1800
+          }
+        },
+        {
+          "id": "backend_development",
+          "type": "agent",
+          "agent_id": "senior-backend-developer",
+          "config": {
+            "parallel": true,
+            "timeout": 1800
+          }
+        },
+        {
+          "id": "ai_integration",
+          "type": "agent",
+          "agent_id": "senior-ai-engineer",
+          "config": {
+            "parallel": true,
+            "timeout": 1800
+          }
+        },
+        {
+          "id": "security_audit",
+          "type": "agent",
+          "agent_id": "security-pentesting-specialist",
+          "config": {
+            "parallel": true,
+            "timeout": 900
+          }
+        },
+        {
+          "id": "result_aggregator",
+          "type": "processor",
+          "config": {
+            "action": "aggregate_results",
+            "strategy": "merge"
+          }
+        }
+      ],
+      "connections": [
+        {"from": "start", "to": "task_splitter"},
+        {"from": "task_splitter", "to": "frontend_development"},
+        {"from": "task_splitter", "to": "backend_development"},
+        {"from": "task_splitter", "to": "ai_integration"},
+        {"from": "task_splitter", "to": "security_audit"},
+        {"from": "frontend_development", "to": "result_aggregator"},
+        {"from": "backend_development", "to": "result_aggregator"},
+        {"from": "ai_integration", "to": "result_aggregator"},
+        {"from": "security_audit", "to": "result_aggregator"}
+      ]
+    },
+    {
+      "id": "hierarchical_agent_tree",
+      "name": "Hierarchical Agent Tree",
+      "description": "Tree structure with master agent coordinating specialized sub-agents",
+      "pattern": "hierarchical",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "trigger",
+          "config": {
+            "trigger_type": "api_call",
+            "inputs": ["complex_request"]
+          }
+        },
+        {
+          "id": "master_coordinator",
+          "type": "agent",
+          "agent_id": "autonomous-system-controller",
+          "config": {
+            "role": "master",
+            "delegation_enabled": true
+          }
+        },
+        {
+          "id": "infrastructure_branch",
+          "type": "agent",
+          "agent_id": "infrastructure-devops-manager",
+          "config": {
+            "role": "branch_manager",
+            "sub_agents": ["ollama-integration-specialist", "litellm-proxy-manager"]
+          }
+        },
+        {
+          "id": "development_branch",
+          "type": "agent",
+          "agent_id": "ai-agent-orchestrator",
+          "config": {
+            "role": "branch_manager",
+            "sub_agents": ["code-generation-improver", "testing-qa-validator"]
+          }
+        },
+        {
+          "id": "optimization_branch",
+          "type": "agent",
+          "agent_id": "hardware-resource-optimizer",
+          "config": {
+            "role": "branch_manager",
+            "sub_agents": ["context-optimization-engineer", "system-optimizer-reorganizer"]
+          }
+        }
+      ],
+      "connections": [
+        {"from": "start", "to": "master_coordinator"},
+        {"from": "master_coordinator", "to": "infrastructure_branch"},
+        {"from": "master_coordinator", "to": "development_branch"},
+        {"from": "master_coordinator", "to": "optimization_branch"}
+      ]
+    },
+    {
+      "id": "collaborative_agent_mesh",
+      "name": "Collaborative Agent Mesh",
+      "description": "Agents collaborate dynamically based on expertise and availability",
+      "pattern": "collaborative",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "trigger",
+          "config": {
+            "trigger_type": "event",
+            "inputs": ["collaborative_task"]
+          }
+        },
+        {
+          "id": "collaboration_hub",
+          "type": "processor",
+          "config": {
+            "action": "match_expertise",
+            "strategy": "dynamic"
+          }
+        },
+        {
+          "id": "expert_pool",
+          "type": "agent_pool",
+          "config": {
+            "available_agents": [
+              "ai-product-manager",
+              "complex-problem-solver",
+              "deep-learning-coordinator-manager",
+              "document-knowledge-manager",
+              "financial-analysis-specialist",
+              "browser-automation-orchestrator"
+            ],
+            "selection_criteria": ["expertise_match", "availability", "workload"]
+          }
+        },
+        {
+          "id": "consensus_builder",
+          "type": "processor",
+          "config": {
+            "action": "build_consensus",
+            "minimum_agreement": 0.7
+          }
+        }
+      ],
+      "connections": [
+        {"from": "start", "to": "collaboration_hub"},
+        {"from": "collaboration_hub", "to": "expert_pool"},
+        {"from": "expert_pool", "to": "consensus_builder"}
+      ]
+    }
+  ],
+  "common_patterns": {
+    "error_handling": {
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_strategy": "exponential",
+        "base_delay": 5
+      },
+      "fallback_agents": {
+        "general": "ai-product-manager",
+        "technical": "agi-system-architect",
+        "emergency": "autonomous-system-controller"
+      }
+    },
+    "monitoring": {
+      "health_checks": true,
+      "performance_metrics": true,
+      "alerting": true,
+      "logging_level": "INFO"
+    },
+    "resource_management": {
+      "memory_limits": "2GB",
+      "cpu_limits": "2 cores",
+      "timeout_limits": "1800s",
+      "queue_size": 100
+    }
+  }
+}

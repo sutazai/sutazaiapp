@@ -1,0 +1,74 @@
+# Dify Platform Configuration for SutazAI automation System
+# Automated workflow management for 38-agent ecosystem
+
+platform:
+  name: "SutazAI Dify Automation Platform"
+  version: "2.0"
+  environment: "production"
+  base_url: "http://localhost:8107"
+  api_version: "v1"
+
+database:
+  type: "postgresql"
+  host: "postgres"
+  port: 5432
+  database: "dify"
+  schema: "workflows"
+  
+storage:
+  type: "local"
+  path: "/app/storage"
+  max_file_size: "100MB"
+  allowed_extensions: [".txt", ".pdf", ".docx", ".json", ".yaml", ".py"]
+
+models:
+  default_provider: "ollama"
+  providers:
+    ollama:
+      base_url: "http://ollama:10104"
+      models:
+        - name: "tinyllama:latest"
+          type: "chat"
+          context_length: 2048
+        - name: "tinyllama.2:1b"
+          type: "chat" 
+          context_length: 4096
+        - name: "tinyllama2.5:0.5b"
+          type: "code"
+          context_length: 8192
+    litellm:
+      base_url: "http://litellm:4000/v1"
+      api_key: "sk-local"
+
+workflows:
+  max_concurrent: 50
+  timeout_seconds: 3600
+  retry_attempts: 3
+  auto_save_interval: 30
+  
+agents:
+  registry_url: "http://agent-registry:8300"
+  message_bus_url: "http://agent-message-bus:8299"
+  max_agents: 38
+  heartbeat_interval: 30
+  
+features:
+  visual_builder: true
+  no_code_interface: true
+  agent_orchestration: true
+  monitoring: true
+  auto_healing: true
+  workflow_templates: true
+  api_integration: true
+  
+security:
+  enable_auth: true
+  rate_limiting: true
+  max_requests_per_minute: 1000
+  cors_origins: ["http://localhost:8501", "http://localhost:3000"]
+  
+monitoring:
+  prometheus_endpoint: "http://prometheus:9090"
+  grafana_endpoint: "http://grafana:3000"
+  loki_endpoint: "http://loki:3100"
+  health_check_interval: 60
